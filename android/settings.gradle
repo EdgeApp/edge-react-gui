@@ -1,0 +1,3 @@
+rootProject.name = 'airbitz_ui'
+
+include ':app'
