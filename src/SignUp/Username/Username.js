@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { View, Text, TextInput } from 'react-native'
 
+import { changeUsernameValue } from './action'
 import routes from '../../Navigator/routes'
+
 import style from './style'
 import NextButton from '../NextButton'
 
@@ -11,13 +14,19 @@ class UsernameComponent extends Component {
 		this.props.navigator.push(routes[2])
 	}
 
+	handleOnChangeText = (username) => {
+		this.props.dispatch(changeUsernameValue(username))	
+	}
+
 	render() {
+		const username = this.props.username
 		return (
-			<View style={style.mainView}>
+			<View style={style.container}>
 				<View style={style.inputView}>
 					<TextInput
-					  style={style.usernameInput}
-					  placeholder="User Name"
+					  	style={style.usernameInput}
+					  	placeholder="User Name"
+						onChangeText={ this.handleOnChangeText }
 					/>
 					<Text style={style.paragraph}>
 						This is not your email or real name.
@@ -35,4 +44,6 @@ class UsernameComponent extends Component {
 	}
 }
 
-export default UsernameComponent
+export default connect( state => ({
+	username: state.username
+}) )(UsernameComponent)

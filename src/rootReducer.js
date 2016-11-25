@@ -1,9 +1,14 @@
-import { combineReducers } from 'react'
+import { combineReducers } from 'redux'
+import { username } from './SignUp/Username/reducer'
 
-const foo = (state = {}) => {
+const foo = (state = 'state') => {
 	return state
 }
 
-const store = foo
+const store = combineReducers({
+	foo: foo,
+	username:	username
+})
+
 
 export default store
