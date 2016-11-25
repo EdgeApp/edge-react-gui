@@ -1,8 +1,8 @@
-export const CHANGE_USERNAME_VALUE   = 'CHANGE_USERNAME_VALUE'                                                                                                        
+export const CHANGE_PIN_NUMBER_VALUE   = 'CHANGE_PIN_NUMBER_VALUE'                                                                                                        
 
-export function changeUsernameValue(data) {
+export function changePinNumberValue(data) {
 	return {
-		type: CHANGE_USERNAME_VALUE,
+		type: CHANGE_PIN_NUMBER_VALUE,
 		data
 	}
 }

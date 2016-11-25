@@ -3,8 +3,8 @@ import { Navigator } from 'react-native'
 
 import HomeContainer from '../Home/HomeContainer'
 import Username from '../SignUp/Username/Username'
-import PinNumber from '../SignUp/PinNumber'
-import Password from '../SignUp/Password'
+import PinNumber from '../SignUp/PinNumber/PinNumber'
+import Password from '../SignUp/Password/Password'
 
 import routes from './routes'
 

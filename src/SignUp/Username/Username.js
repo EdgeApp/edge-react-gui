@@ -27,6 +27,7 @@ class UsernameComponent extends Component {
 					  	style={style.usernameInput}
 					  	placeholder="User Name"
 						onChangeText={ this.handleOnChangeText }
+						value={ username }
 					/>
 					<Text style={style.paragraph}>
 						This is not your email or real name.

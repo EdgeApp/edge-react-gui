@@ -6,7 +6,7 @@ import {
 	TextInput
 } from 'react-native'
 
-import NextButton from './NextButton'
+import NextButton from '../NextButton'
 
 class Password extends Component {
 	

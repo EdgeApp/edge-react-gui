@@ -1,13 +1,10 @@
 import { combineReducers } from 'redux'
 import { username } from './SignUp/Username/reducer'
-
-const foo = (state = 'state') => {
-	return state
-}
+import { pinNumber } from './SignUp/PinNumber/reducer'
 
 const store = combineReducers({
-	foo: foo,
-	username:	username
+	username,
+	pinNumber
 })
 
 
