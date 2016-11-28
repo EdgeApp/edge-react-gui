@@ -8,7 +8,7 @@ import {
 
 import NextButton from '../NextButton'
 
-import t from '../lib/LocaleStrings'
+import t from '../../lib/LocaleStrings'
 
 class Password extends Component {
 	

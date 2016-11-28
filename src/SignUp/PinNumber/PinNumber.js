@@ -12,6 +12,8 @@ import routes from '../../Navigator/routes'
 
 import { changePinNumberValue } from './action'
 import style from './style'
+import t from '../../lib/LocaleStrings'
+
 
 class PinComponent extends Component {
 	

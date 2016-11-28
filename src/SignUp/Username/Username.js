@@ -7,7 +7,7 @@ import routes from '../../Navigator/routes'
 
 import style from './style'
 import NextButton from '../NextButton'
-import t from '../lib/LocaleStrings'
+import t from '../../lib/LocaleStrings'
 
 
 class UsernameComponent extends Component {
