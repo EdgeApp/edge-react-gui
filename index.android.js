@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { AppRegistry } from 'react-native';
 
-import Main from './src/MainContainer'
+import App from './src/App'
 
 export default class airbitz_ui extends Component {
-  render() {
-    return (
-		<Main />
-    );
-  }
+	render() {
+		return (
+			<App />
+		);
+	}
 }
 
 AppRegistry.registerComponent('airbitz_ui', () => airbitz_ui);
