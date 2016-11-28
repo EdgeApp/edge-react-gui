@@ -4,24 +4,25 @@ import {
 	Button,
 	View,
 	StyleSheet } from 'react-native'
+import t from '../lib/LocaleStrings'
 
 class HomeComponent extends Component {
 	
 	handleOnPress  = () => {
-		this.props.navigator.push({ title: 'Sign Up', screen: 'createUsername', index: 1})
+		this.props.navigator.push({ title: t('activity_signup_title'), screen: 'createUsername', index: 1})
 	}
 
 	render() {
 		return (
 			<View>
 				<Text style={styles.welcome}>
-					Airbitz
+					{t('app_name')}
 				</Text>
 				<Button
 					onPress={this.handleOnPress}
-					title="Sign Up"
+					title={t('activity_signup_title')}
 					color="#841584"
-					accessibilityLabel="Sign Up To Airbitz Now"
+					accessibilityLabel={t('activity_signup_title')}
 				/>
 			</View>
 		);

@@ -8,10 +8,12 @@ import {
 
 import NextButton from './NextButton'
 
+import t from '../lib/LocaleStrings'
+
 class Password extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push({ title: 'Welcome', screen: 'finished', index: 4})
+		this.props.navigator.push({ title: t('fragment_setup_password_title'), screen: 'finished', index: 4})
 	}
 
 	render() {
@@ -19,17 +21,17 @@ class Password extends Component {
 			<View style={styles.container}>
 				<View style={styles.inputView}>
 					<Text style={styles.paragraph}>
-						The password is used to authenticate your account and to change sensitive settings.
+						{t('fragment_setup_password_text')}
 					</Text>
 					<TextInput
 						style={styles.input}
-						placeholder="Choose a Password"
+						placeholder={t('activity_signup_password_hint')}
 						keyboardType="default"
 						secureTextEntry={true}
 					/>
 					<TextInput
 						style={styles.input}
-						placeholder="Re-enter Password"
+						placeholder={t('activity_signup_password_confirm_hint')}
 						keyboardType="default"
 						secureTextEntry={true}
 					/>

@@ -8,10 +8,12 @@ import {
 
 import NextButton from './NextButton'
 
+import t from '../lib/LocaleStrings'
+
 class CreatePin extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push({ title: 'Sign Up', screen: 'createPassword', index: 3})
+		this.props.navigator.push({ title: t('activity_signup_title'), screen: 'createPassword', index: 3})
 	}
 
 	render() {
@@ -19,16 +21,16 @@ class CreatePin extends Component {
 			<View style={styles.container}>
 				<View style={styles.inputView}>
 					<Text style={styles.inputLabel}>
-						Set a 4 digit PIN
+						{t('fragment_setup_pin_title')}
 					</Text>
 					<TextInput
 						style={styles.input}
-						placeholder="Create Pin"
+						placeholder={t('activity_signup_pin_hint')}
 						keyboardType="numeric"
 						maxLength={4} 
 					/>
 					<Text style={styles.paragraph}>
-						Your PIN is a 4 digit code used to do quick re-logins into your account.
+						{t('fragment_setup_pin_text')}
 					</Text>
 				</View>
 				<NextButton onPress={this.handleSubmit}/>

@@ -8,10 +8,12 @@ import {
 
 import NextButton from './NextButton'
 
+import t from '../lib/LocaleStrings'
+
 class UsernameComponent extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push({ title: 'Sign Up', screen: 'createPin', index: 2})
+		this.props.navigator.push({ title: t('activity_signup_title'), screen: 'createPin', index: 2})
 	}
 
 	render() {
@@ -20,16 +22,10 @@ class UsernameComponent extends Component {
 				<View style={styles.inputView}>
 					<TextInput
 					  style={styles.usernameInput}
-					  placeholder="User Name"
+					  placeholder={t('fragment_landing_username_hint')}
 					/>
 					<Text style={styles.paragraph}>
-						This is not your email or real name.
-					</Text>
-					<Text style={styles.paragraph}>
-						This is the username to login into your account on this and other devices.
-					</Text>
-					<Text style={styles.paragraph}>
-					Your username and password are known only to you and never stored unencrypted.		
+						{t('fragment_setup_username_text')}
 					</Text>
 				</View>
 				<NextButton onPress={this.handleSubmit}/>
