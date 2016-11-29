@@ -1,50 +1,54 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, ActivityIndicator, Text } from 'react-native'
 import Modal from 'react-native-modalbox'
-import Dimensions from 'Dimensions'
 import { connect } from 'react-redux'
 
-const { width, height } = Dimensions.get('window');
-
 class LoaderOverlay extends Component {
-	render() {
-		if(this.props.loading == true && this.props.errorModal.visible == false){
-			return(
-				<View style={style.overlay}> 
-					<ActivityIndicator
-						animating={true}
-						style={style.loader}
-						color="#DDD"
-						size={70}
-					/>
-				</View>
-			)
+
+	checkLoading = () => {
+		if (this.props.loading === true &&  this.props.errorModal.visible === false){
+			return true	
 		}else{
-			return null	
+			return false	
 		}
+	}
+
+	render() {
+		return (
+			<Modal
+			    isOpen={this.checkLoading()}
+				swipeToClose={false}
+			    position={"center"}
+			    style={style.modal}
+			    animationDuration={0}
+				onClosed={this.handleClose}
+			>
+				<ActivityIndicator
+					animating={true}
+					style={style.loader}
+					color="#FFF"
+					size={70}
+				/>
+			</Modal>
+		)
 
 	}
 }
 
 const style = StyleSheet.create({
 
+	modal: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		opacity: 0.5,
+		backgroundColor: "#000"
+	},
+
 	loader: {
 		flex:1,
 		alignItems: 'center',
 		justifyContent: 'center',
 		padding: 8,
-	},
-
-	overlay: {
-		flex: 1,
-		height: height,
-		width: width,
-		position: 'absolute',
-		left: 0,
-		top: 0,
-		backgroundColor: '#000',
-		opacity: 0.8,
-		zIndex: 100
 	}
 });
 

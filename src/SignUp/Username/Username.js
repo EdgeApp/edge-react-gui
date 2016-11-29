@@ -1,32 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TextInput } from 'react-native'
-import LoaderOverlay from '../../Loader/LoaderOverlay'
 
 import { changeUsernameValue } from './action'
-import routes from '../../Navigator/routes'
-import abcContext from '../../abc/abcContext'
+import { checkUsername } from './middleware'
 
-import style from './style'
 import NextButton from '../NextButton'
 import ErrorModal from '../../ErrorModal/ErrorModal'
-import { openErrorModal } from '../../ErrorModal/action'
-import { openLoading, closeLoading } from '../../Loader/action'
+import LoaderOverlay from '../../Loader/LoaderOverlay'
+
+import style from './style'
 
 class UsernameComponent extends Component {
 
 	handleSubmit  = () => {
-		const navigator = this.props.navigator
-		const dispatch = this.props.dispatch
-
-		dispatch(openLoading())
-
-		setTimeout( () => {
-			dispatch(closeLoading())
-			setTimeout ( () => {
-				dispatch(openErrorModal('Username is not available!'))
-			}, 10 )
-		}, 2000 )
+		this.props.dispatch(checkUsername(this.props.username, this.props.navigator))
 	}
 
 	handleOnChangeText = (username) => {

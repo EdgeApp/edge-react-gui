@@ -12,7 +12,7 @@ class ErrorModal extends Component {
 	}
 
 	checkLoading = () => {
-		if (this.props.visible == true &&  this.props.loading == false){
+		if (this.props.visible === true &&  this.props.loading === false){
 			return true	
 		}else{
 			return false	
@@ -25,12 +25,12 @@ class ErrorModal extends Component {
 			  isOpen={this.checkLoading()}
 			  position={"center"}
 			  style={style.modal}
-			  animationDuration={400}
+			  animationDuration={200}
 				onClosed={this.handleClose}
 			>
 				<Text style={style.textError}>{this.props.message}</Text>
 				<TouchableHighlight onPress={ this.handleClose } >
-					<Text style={style.hideModal}>Hide Modal</Text>
+					<Text style={style.hideModal}>Close</Text>
 				</TouchableHighlight>
 			</Modal>
 		)
