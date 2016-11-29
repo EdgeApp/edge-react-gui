@@ -4,7 +4,7 @@ export const LOADING_OFF  	= 'LOADING_OFF'
 export function openLoading(message) {
 	return {
 		type: LOADING_ON,
-		message
+		message : message || 'Please wait'
 	}
 }
 
