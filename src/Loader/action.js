@@ -1,9 +1,10 @@
 export const LOADING_ON    	= 'LOADING_ON'                                                                                                        
 export const LOADING_OFF  	= 'LOADING_OFF'                                                                                                        
 
-export function openLoading() {
+export function openLoading(message) {
 	return {
-		type: LOADING_ON
+		type: LOADING_ON,
+		message
 	}
 }
 

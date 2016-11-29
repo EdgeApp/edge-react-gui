@@ -22,7 +22,7 @@ export const checkUsername = (username, navigator) => {
 			},
 			openLoading: function(callback) {
 
-				dispatch(openLoading())
+				dispatch(openLoading('Checking username availability'))
 				callback(null, null);
 
 			},

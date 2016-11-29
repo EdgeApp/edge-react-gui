@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 class LoaderOverlay extends Component {
 
 	checkLoading = () => {
-		if (this.props.loading === true &&  this.props.errorModal.visible === false){
+		if (this.props.loader.loading === true &&  this.props.errorModal.visible === false){
 			return true	
 		}else{
 			return false	
@@ -16,16 +16,17 @@ class LoaderOverlay extends Component {
 	render() {
 		return (
 			<Modal
-			    isOpen={this.checkLoading()}
+			    isOpen={ this.checkLoading() }
 				swipeToClose={false}
 			    position={"center"}
 			    style={style.modal}
 			    animationDuration={0}
+				backdropPressToClose={false}
 				onClosed={this.handleClose}
 			>
+				<Text style={style.loadingMessage}>{ this.props.loader.message }</Text>
 				<ActivityIndicator
 					animating={true}
-					style={style.loader}
 					color="#FFF"
 					size={70}
 				/>
@@ -40,19 +41,21 @@ const style = StyleSheet.create({
 	modal: {
 		justifyContent: 'center',
 		alignItems: 'center',
-		opacity: 0.5,
-		backgroundColor: "#000"
+		backgroundColor: 'rgba(0,0,0,0)' 
 	},
 
-	loader: {
-		flex:1,
-		alignItems: 'center',
-		justifyContent: 'center',
-		padding: 8,
+	loadingMessage: {
+		color: '#FFF',
+		fontSize: 22,
+		marginBottom: 30,
+		textAlign: center
 	}
+
 });
 
 export default connect( state => ({
-	loading: state.loading,
-	errorModal: state.errorModal
+
+	loader		: state.loader,
+	errorModal	: state.errorModal
+
 }) )(LoaderOverlay)

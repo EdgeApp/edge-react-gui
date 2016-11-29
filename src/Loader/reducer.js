@@ -14,3 +14,18 @@ export const loading = (state = false, action) => {
 	}
 
 }
+
+export const message = (state = 'Please wait', action) => {
+
+	switch (action.type) {
+		case ACTION.LOADING_ON  :
+			return action.message
+
+		case ACTION.LOADING_OFF :
+			return 'Please wait'
+
+		default:      
+			return state
+	}
+
+}
