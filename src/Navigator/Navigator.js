@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Navigator } from 'react-native'
+import { Navigator,View,Text } from 'react-native'
 
 import HomeContainer from '../Home/HomeContainer'
 import Username from '../SignUp/Username/Username'
@@ -13,13 +13,16 @@ class NavigatorContainer extends Component {
 	routeRenderScene = (route, navigator) => {
 		switch(route.screen){
 			case "home":
-				return <HomeContainer {...this.props} navigator={navigator} />
+				return <HomeContainer navigator={navigator} />
 			case "createUsername":
-				return <Username {...this.props} navigator={navigator} />
+				return <Username navigator={navigator} />
+					
 			case "createPin":
-				return <PinNumber {...this.props} navigator={navigator} />
+				return <PinNumber navigator={navigator} />	
+				
 			case "createPassword":
-				return <Password {...this.props} navigator={navigator} />
+				return <Password navigator={navigator} />
+				
 		}
 	}
 

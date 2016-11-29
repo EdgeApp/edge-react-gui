@@ -11,8 +11,6 @@ const enhancer = compose(
 	)
 )
 
-export default (data = {}) => {
+const store = (data = {}) => createStore(rootReducer, data, enhancer)
 
-	return createStore(rootReducer, data, enhancer)
-
-} 
+export default store()

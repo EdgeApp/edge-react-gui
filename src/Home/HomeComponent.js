@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import LoaderOverlay from '../Loader/LoaderOverlay'
 import { 
 	Text, 
 	Button,

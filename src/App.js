@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
+import { Provider } from 'react-redux'
 import Navigator from './Navigator/Navigator'
-import createStore from './createStore'
+import store from './createStore'
 
-const store = createStore()
 
 export default class App extends Component {
 	
 	render() {
 		return (
-		  <Navigator store={store}/>	
+			<Provider store={store}>
+				<Navigator store={store}/>	
+			</Provider>
 		)
 	}
 }

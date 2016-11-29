@@ -1,17 +1,32 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TextInput } from 'react-native'
+import LoaderOverlay from '../../Loader/LoaderOverlay'
 
 import { changeUsernameValue } from './action'
 import routes from '../../Navigator/routes'
+import abcContext from '../../abc/abcContext'
 
 import style from './style'
 import NextButton from '../NextButton'
+import ErrorModal from '../../ErrorModal/ErrorModal'
+import { openErrorModal } from '../../ErrorModal/action'
+import { openLoading, closeLoading } from '../../Loader/action'
 
 class UsernameComponent extends Component {
-	
+
 	handleSubmit  = () => {
-		this.props.navigator.push(routes[2])
+		const navigator = this.props.navigator
+		const dispatch = this.props.dispatch
+
+		dispatch(openLoading())
+
+		setTimeout( () => {
+			dispatch(closeLoading())
+			setTimeout ( () => {
+				dispatch(openErrorModal('Username is not available!'))
+			}, 10 )
+		}, 2000 )
 	}
 
 	handleOnChangeText = (username) => {
@@ -19,7 +34,9 @@ class UsernameComponent extends Component {
 	}
 
 	render() {
-		const username = this.props.username
+
+		const { username } = this.props
+
 		return (
 			<View style={style.container}>
 				<View style={style.inputView}>
@@ -39,12 +56,15 @@ class UsernameComponent extends Component {
 						Your username and password are known only to you and never stored unencrypted.		
 					</Text>
 				</View>
-				<NextButton onPress={this.handleSubmit}/>
+				<NextButton onPress={this.handleSubmit} />
+				<LoaderOverlay />
+				<ErrorModal />
 			</View>
 		)
 	}
 }
 
 export default connect( state => ({
-	username: state.username
+	username: state.username,
+	loading: state.loading
 }) )(UsernameComponent)
