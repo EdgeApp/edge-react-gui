@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ActivityIndicator, Text } from 'react-native'
+import { View, ActivityIndicator, Text } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
+
+import style from './style'
 
 class LoaderOverlay extends Component {
 
@@ -36,22 +38,6 @@ class LoaderOverlay extends Component {
 	}
 }
 
-const style = StyleSheet.create({
-
-	modal: {
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'rgba(0,0,0,0)' 
-	},
-
-	loadingMessage: {
-		color: '#FFF',
-		fontSize: 22,
-		marginBottom: 30,
-		textAlign: 'center'
-	}
-
-});
 
 export default connect( state => ({
 
