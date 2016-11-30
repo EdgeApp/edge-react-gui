@@ -32,7 +32,7 @@ class NavigatorContainer extends Component {
 			initialRoute={routes[0]}
 			initialRouteStack={routes}
 			renderScene={ (route, navigator) => this.routeRenderScene(route, navigator) }
-	      />	
+		/>	
 		)
 	}
 }

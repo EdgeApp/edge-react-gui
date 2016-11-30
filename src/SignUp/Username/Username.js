@@ -7,7 +7,7 @@ import { checkUsername } from './middleware'
 
 import NextButton from '../NextButton'
 import ErrorModal from '../../ErrorModal/ErrorModal'
-import LoaderOverlay from '../../Loader/LoaderOverlay'
+import Loader from '../../Loader/LoaderOverlay'
 
 import style from './style'
 
@@ -45,7 +45,7 @@ class UsernameComponent extends Component {
 					</Text>
 				</View>
 				<NextButton onPress={this.handleSubmit} />
-				<LoaderOverlay />
+				<Loader />
 				<ErrorModal />
 			</View>
 		)

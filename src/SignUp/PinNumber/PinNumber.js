@@ -1,22 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { 
-	View,
-	Text, 
-	StyleSheet,
-	TextInput
-} from 'react-native'
-
-import NextButton from '../NextButton'
-import routes from '../../Navigator/routes'
+import { View, Text, TextInput } from 'react-native'
 
 import { changePinNumberValue } from './action'
+import { checkPIN } from './middleware'
+
+import NextButton from '../NextButton'
+import ErrorModal from '../../ErrorModal/ErrorModal'
 import style from './style'
 
 class PinComponent extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push(routes[3])
+		this.props.dispatch(
+			checkPIN(this.props.pinNumber, this.props.navigator)
+		)
 	}
 
 	handleOnChangeText = (pinNumber) => {
@@ -43,7 +41,8 @@ class PinComponent extends Component {
 						Your PIN is a 4 digit code used to do quick re-logins into your account.
 					</Text>
 				</View>
-				<NextButton onPress={this.handleSubmit}/>
+				<NextButton onPress={this.handleSubmit} />
+				<ErrorModal />
 			</View>
 		);
 	}
@@ -51,5 +50,7 @@ class PinComponent extends Component {
 
 
 export default connect( state => ({
-	username: state.pinNumber
+
+	pinNumber: state.pinNumber
+
 }) )(PinComponent)

@@ -1,6 +1,6 @@
 import * as ACTION from './action'
 
-export const pinNumber = (state = null, action) => {
+export const pinNumber = (state = '', action) => {
 
 	switch (action.type) {
 		case ACTION.CHANGE_PIN_NUMBER_VALUE:
