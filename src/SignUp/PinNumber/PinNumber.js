@@ -8,6 +8,8 @@ import { checkPIN } from './middleware'
 import NextButton from '../NextButton'
 import ErrorModal from '../../ErrorModal/ErrorModal'
 import style from './style'
+import t from '../../lib/LocaleStrings'
+
 
 class PinComponent extends Component {
 	
@@ -27,18 +29,18 @@ class PinComponent extends Component {
 			<View style={style.container}>
 				<View style={style.inputView}>
 					<Text style={style.inputLabel}>
-						Set a 4 digit PIN
+						{t('fragment_setup_pin_title')}
 					</Text>
 					<TextInput
 						style={style.input}
-						placeholder="Create Pin"
+						placeholder={t('activity_signup_pin_hint')}
 						keyboardType="numeric"
 						maxLength={4} 
 						onChangeText={ this.handleOnChangeText }
 						value={ pinNumber }
 					/>
 					<Text style={style.paragraph}>
-						Your PIN is a 4 digit code used to do quick re-logins into your account.
+						{t('fragment_setup_pin_text')}
 					</Text>
 				</View>
 				<NextButton onPress={this.handleSubmit} />

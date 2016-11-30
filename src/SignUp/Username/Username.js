@@ -10,6 +10,7 @@ import ErrorModal from '../../ErrorModal/ErrorModal'
 import Loader from '../../Loader/LoaderOverlay'
 
 import style from './style'
+import t from '../../lib/LocaleStrings'
 
 class UsernameComponent extends Component {
 
@@ -30,18 +31,12 @@ class UsernameComponent extends Component {
 				<View style={style.inputView}>
 					<TextInput
 					  	style={style.usernameInput}
-					  	placeholder="User Name"
+							placeholder={t('fragment_landing_username_hint')}
 						onChangeText={ this.handleOnChangeText }
 						value={ username }
 					/>
 					<Text style={style.paragraph}>
-						This is not your email or real name.
-					</Text>
-					<Text style={style.paragraph}>
-						This is the username to login into your account on this and other devices.
-					</Text>
-					<Text style={style.paragraph}>
-						Your username and password are known only to you and never stored unencrypted.		
+						{t('fragment_setup_username_text')}
 					</Text>
 				</View>
 				<NextButton onPress={this.handleSubmit} />

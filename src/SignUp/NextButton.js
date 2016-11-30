@@ -5,6 +5,7 @@ import {
 	StyleSheet,
 	TouchableHighlight
 } from 'react-native'
+import t from '../lib/LocaleStrings'
 
 class NextButton extends Component {
 
@@ -12,7 +13,7 @@ class NextButton extends Component {
 		return (
 			<View>
 				<TouchableHighlight style={styles.nextButton} onPress={this.props.onPress}>
-					<Text style={styles.nextButtonChange}>Next</Text>
+					<Text style={styles.nextButtonChange}>{t('string_next')}</Text>
 				</TouchableHighlight>
 			</View>
 		);
