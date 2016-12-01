@@ -1,17 +1,37 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { connect } from 'react-redux'
+
+import PasswordValidation from './Password/PasswordValidation/PasswordValidation'
 
 class NavigationBar extends Component {
 
+	checkPasswordStateStyle = () => this.props.passwordState ? {height: 200} : null
+
+	checkPasswordStateOption = () => {
+
+		if(this.props.passwordState){
+			return (
+				<PasswordValidation />
+			)	
+		}else{
+			return null	
+		}
+
+	}
+	
 	render() {
 		return (
-			<View style={style.container}>
-				<View style={style.navigationContainer}>
-					<TouchableHighlight onPress={this.props.onPress}>
-						<Text style={style.text}>Back</Text>
-					</TouchableHighlight>
-					<Text style={[ style.text, style.title ]}>Awesome Title</Text>
-					<Text style={style.text}>     </Text>
+			<View style={[ style.container, this.checkPasswordStateStyle() ]}>
+				<View style={style.navigationBarContainer}>
+					<View style={style.navigationContainer}>
+						<TouchableHighlight onPress={this.props.onPress}>
+							<Text style={style.text}>Back</Text>
+						</TouchableHighlight>
+						<Text style={[ style.text, style.title ]}>Awesome Title</Text>
+						<Text style={style.text}>     </Text>
+					</View>
+					{ this.checkPasswordStateOption() }
 				</View>
 			</View>
 		);
@@ -23,7 +43,12 @@ const style = StyleSheet.create({
 
 
 	container: {
-		height:60	
+		height:60,
+		backgroundColor: 'limegreen'
+	},
+
+	navigationBarContainer: {
+		flex:1
 	},
 
 	navigationContainer: {
@@ -38,7 +63,8 @@ const style = StyleSheet.create({
 		marginLeft: 10,
 		marginRight: 10,
 		color: "#FFF",	
-		fontSize: 20
+		fontSize: 20,
+		width:50
 	},
 
 	title : {
@@ -48,4 +74,8 @@ const style = StyleSheet.create({
 	}
 });
 
-export default NavigationBar
+export default connect( state => ({
+
+	passwordState: state.password.inputState
+
+}) )(NavigationBar)

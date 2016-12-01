@@ -34,10 +34,12 @@ class Password extends Component {
 		this.props.dispatch(changePasswordRepeatValue(passwordRepeat))	
 	}
 
+	checkPasswordInputState = () => this.props.inputState ? { marginTop: 10 } : null
+
 	render() {
 		return (
 			<Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
-				<View style={style.inputView}>
+				<View style={[ style.inputView, this.checkPasswordInputState() ]}>
 					<Text style={style.paragraph}>
 						The password is used to authenticate your account and to change sensitive settings.
 					</Text>
