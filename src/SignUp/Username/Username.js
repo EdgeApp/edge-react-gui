@@ -5,13 +5,19 @@ import { View, Text, TextInput } from 'react-native'
 import { changeUsernameValue } from './action'
 import { checkUsername } from './middleware'
 
+import routes from '../../Navigator/routes'
 import NextButton from '../NextButton'
+import NavigationBar from '../NavigationBar'
 import ErrorModal from '../../ErrorModal/ErrorModal'
 import Loader from '../../Loader/LoaderOverlay'
 
 import style from './style'
 
 class UsernameComponent extends Component {
+
+	handleBack  = () => {
+		this.props.navigator.pop()
+	}
 
 	handleSubmit  = () => {
 		this.props.dispatch(checkUsername(this.props.username, this.props.navigator))
@@ -27,6 +33,7 @@ class UsernameComponent extends Component {
 
 		return (
 			<View style={style.container}>
+				<NavigationBar onPress={this.handleBack}/>
 				<View style={style.inputView}>
 					<TextInput
 					  	style={style.usernameInput}
