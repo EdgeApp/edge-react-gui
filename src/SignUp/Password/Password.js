@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import Container from '../Container'
 import style from './style'
 import { validate } from './PasswordValidation/middleware'
+import { checkPassword } from './middleware'
 
 import { 
 	focusPasswordInput, 
@@ -16,7 +17,14 @@ import {
 class Password extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push({ title: 'Welcome', screen: 'checkSignIn', index: 4})
+		this.props.dispatch(
+			checkPassword(
+				this.props.password,
+				this.props.passwordRepeat,
+				this.props.validation,
+				this.props.navigator
+			)
+		)
 	}
 
 	handlePasswordOnFocus = () => {
@@ -73,6 +81,7 @@ export default connect( state => ({
 
 	inputState		: state.password.inputState,
 	password		: state.password.password,
-	passwordRepeat 	: state.password.passwordRepeat
+	passwordRepeat 	: state.password.passwordRepeat,
+	validation		: state.password.validation
 	
 }) )(Password)
