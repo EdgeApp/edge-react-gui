@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import Container from '../Container'
 import style from './style'
+import { validate } from './PasswordValidation/middleware'
 
 import { 
 	focusPasswordInput, 
@@ -28,6 +29,7 @@ class Password extends Component {
 
 	handleOnChangePassword = (password) => {
 		this.props.dispatch(changePasswordValue(password))	
+		this.props.dispatch(validate(password))	
 	}
 
 	handleOnChangePasswordRepeat = (passwordRepeat) => {

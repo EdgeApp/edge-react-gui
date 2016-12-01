@@ -3,6 +3,7 @@ import { username } from './SignUp/Username/reducer'
 import { pinNumber } from './SignUp/PinNumber/reducer'
 import { loading } from './Loader/reducer'
 import * as PasswordStates from './SignUp/Password/reducer'
+import * as PasswordValidation from './SignUp/Password/PasswordValidation/reducer'
 import * as Loader from './Loader/reducer' 
 import * as ErrorModal from './ErrorModal/reducer' 
 
@@ -13,7 +14,13 @@ const store = combineReducers({
 	password	: combineReducers({
 		inputState		: PasswordStates.inputState,
 		password 		: PasswordStates.password,
-		passwordRepeat 	: PasswordStates.passwordRepeat
+		passwordRepeat 	: PasswordStates.passwordRepeat,
+		validation 		: combineReducers({
+			upperCaseChar	: PasswordValidation.upperCaseChar,
+			lowerCaseChar	: PasswordValidation.lowerCaseChar,
+			number			: PasswordValidation.number,
+			characterLength	: PasswordValidation.characterLength
+		})
 	}),
 	loader 		: combineReducers({
 		loading : 	Loader.loading,

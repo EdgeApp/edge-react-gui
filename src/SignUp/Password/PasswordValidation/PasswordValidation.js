@@ -4,21 +4,22 @@ import { connect } from 'react-redux'
 
 class PasswordRequirement extends Component {
 
-	checkOneUpper = () => this.props.password.match(/[A-Z]/) != null ? { color: 'blue' } : null
+	checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
 
-	checkOneLower = () => this.props.password.match(/[a-z]/) != null ? { color: 'blue' } : null;
+	checkOneLower = (validation) => validation.lowerCaseChar ? { color: 'blue' } : null
 
-	checkOneNumber = () => this.props.password.match(/\d/) != null ? { color: 'blue' } : null;
+	checkOneNumber = (validation) => validation.number ? { color: 'blue' } : null
 
-	checkCharacterLength = () => this.props.password.length >= 10 ? { color: 'blue' } : null;
+	checkCharacterLength = (validation) => validation.characterLength ? { color: 'blue' } : null
+
 	render() {
 		return (
 			<View style={style.container}>
 				<Text style={[ style.text, style.textLead ]}>Password Requirements</Text>
-				<Text style={[ style.text, this.checkOneUpper() ]}>   -   Must have at least one upper case letter</Text>
-				<Text style={[ style.text, this.checkOneLower() ]}>   -   Must have at least one lower case letter</Text>
-				<Text style={[ style.text, this.checkOneNumber() ]}>   -   Must have at least one number</Text>
-				<Text style={[ style.text, this.checkCharacterLength() ]}>   -   Must have at least 10 characters</Text>
+				<Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}>   -   Must have at least one upper case letter</Text>
+				<Text style={[ style.text, this.checkOneLower(this.props.validation) ]}>   -   Must have at least one lower case letter</Text>
+				<Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}>   -   Must have at least one number</Text>
+				<Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}>   -   Must have at least 10 characters</Text>
 			</View>
 		);
 	}
@@ -47,5 +48,6 @@ const style = StyleSheet.create({
 });
 
 export default connect( state => ({
-	password: state.password.password
+	password: state.password.password,
+	validation : state.password.validation
 }) )(PasswordRequirement)

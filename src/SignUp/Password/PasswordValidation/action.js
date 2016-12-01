@@ -7,28 +7,50 @@ export const NUMBER_FAIL		 	= 'NUMBER_FALSE'
 export const CHARACTER_LENGTH_PASS	= 'CHARACTER_LENGTH_PASS'
 export const CHARACTER_LENGTH_FAIL	= 'CHARACTER_LENGTH_FAIL'
 
-export function focusPasswordInput() {
+export function upperCaseCharPass() {
 	return {
-		type: FOCUS_PASSWORD_INPUT	
+		type: UPPER_CASE_PASS	
 	}
 }
 
-export function blurPasswordInput() {
+export function upperCaseCharFail() {
 	return {
-		type: BLUR_PASSWORD_INPUT	
+		type: UPPER_CASE_FAIL	
 	}
 }
 
-export function changePasswordValue(data) {
+export function lowerCaseCharPass() {
 	return {
-		type: CHANGE_PASSWORD_VALUE,
-		data
+		type: LOWER_CASE_PASS	
 	}
 }
 
-export function changePasswordRepeatValue(data) {
+export function lowerCaseCharFail() {
 	return {
-		type: CHANGE_PASSWORD_REPEAT_VALUE,
-		data
+		type: LOWER_CASE_FAIL	
+	}
+}
+
+export function numberPass() {
+	return {
+		type: NUMBER_PASS	
+	}
+}
+
+export function numberFail() {
+	return {
+		type: NUMBER_FAIL	
+	}
+}
+
+export function characterLengthPass() {
+	return {
+		type: CHARACTER_LENGTH_PASS	
+	}
+}
+
+export function characterLengthFail() {
+	return {
+		type: CHARACTER_LENGTH_FAIL	
 	}
 }
