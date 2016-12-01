@@ -21,7 +21,6 @@ class ErrorModal extends Component {
 	}
 
 	render() {
-		console.log(style)
 		return (
 			<Modal
 			    isOpen={this.checkLoading()}

@@ -5,18 +5,11 @@ import { View, Text, TextInput } from 'react-native'
 import { changePinNumberValue } from './action'
 import { checkPIN } from './middleware'
 
-import NavigationBar from '../NavigationBar'
-import NextButton from '../NextButton'
-import ErrorModal from '../../ErrorModal/ErrorModal'
+import Container from '../Container'
 import style from './style'
 
 class PinComponent extends Component {
 	
-
-	handleBack  = () => {
-		this.props.navigator.pop()
-	}
-
 	handleSubmit  = () => {
 		this.props.dispatch(
 			checkPIN(this.props.pinNumber, this.props.navigator)
@@ -30,8 +23,7 @@ class PinComponent extends Component {
 	render() {
 		const pinNumber = this.props.pinNumber
 		return (
-			<View style={style.container}>
-				<NavigationBar onPress={this.handleBack}/>
+			<Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
 				<View style={style.inputView}>
 					<Text style={style.inputLabel}>
 						Set a 4 digit PIN
@@ -48,10 +40,8 @@ class PinComponent extends Component {
 						Your PIN is a 4 digit code used to do quick re-logins into your account.
 					</Text>
 				</View>
-				<NextButton onPress={this.handleSubmit} />
-				<ErrorModal />
-			</View>
-		);
+			</Container>
+		)
 	}
 }
 

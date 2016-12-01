@@ -1,70 +1,74 @@
 import React, { Component } from 'react'
-import { 
-	View,
-	Text, 
-	StyleSheet,
-	TextInput
-} from 'react-native'
+import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { connect } from 'react-redux'
 
-import NextButton from '../NextButton'
+import Container from '../Container'
+import style from './style'
+
+import { 
+	focusPasswordInput, 
+	blurPasswordInput,
+	changePasswordValue,
+	changePasswordRepeatValue
+} from './action'
 
 class Password extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push({ title: 'Welcome', screen: 'finished', index: 4})
+		this.props.navigator.push({ title: 'Welcome', screen: 'checkSignIn', index: 4})
+	}
+
+	handlePasswordOnFocus = () => {
+		this.props.dispatch(focusPasswordInput())		
+	}
+
+	handlePasswordOnBlur = () => {
+		this.props.dispatch(blurPasswordInput())		
+	}
+
+	handleOnChangePassword = (password) => {
+		this.props.dispatch(changePasswordValue(password))	
+	}
+
+	handleOnChangePasswordRepeat = (passwordRepeat) => {
+		this.props.dispatch(changePasswordRepeatValue(passwordRepeat))	
 	}
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<View style={styles.inputView}>
-					<Text style={styles.paragraph}>
+			<Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
+				<View style={style.inputView}>
+					<Text style={style.paragraph}>
 						The password is used to authenticate your account and to change sensitive settings.
 					</Text>
 					<TextInput
-						style={styles.input}
+						style={style.input}
 						placeholder="Choose a Password"
 						keyboardType="default"
 						secureTextEntry={true}
+						onChangeText={ this.handleOnChangePassword }
+						value={ this.props.password }
+						onFocus={this.handlePasswordOnFocus}
+						onBlur={this.handlePasswordOnBlur}
 					/>
 					<TextInput
-						style={styles.input}
+						style={style.input}
 						placeholder="Re-enter Password"
 						keyboardType="default"
 						secureTextEntry={true}
+						onChangeText={ this.handleOnChangePasswordRepeat }
+						value={ this.props.passwordRepeat }
 					/>
 				</View>
-				<NextButton onPress={this.handleSubmit}/>
-			</View>
-		);
+			</Container>
+		)
 	}
 }
 
-const styles = StyleSheet.create({
+export default connect( state => ({
 
-	container: {
-		flex:1,
-		backgroundColor: '#F5FCFF'
-	},
-
-	inputView: {
-		flex:1,
-		marginTop: 50,
-		marginLeft: 30,
-		marginRight: 30,
-	},
-
-	input: {
-		height: 60,
-		fontSize: 22,
-		color: 'skyblue',
-	},
-
-	paragraph: {
-		marginTop:10,
-		fontSize:14	
-	}
-
-});
-
-export default Password
+	inputState		: state.password.inputState,
+	password		: state.password.password,
+	passwordRepeat 	: state.password.passwordRepeat
+	
+}) )(Password)

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import NextButton from '../NextButton'
-import NavigationBar from '../NavigationBar'
-import ErrorModal from '../../ErrorModal/ErrorModal'
-import Loader from '../../Loader/LoaderOverlay'
+import NextButton from './NextButton'
+import NavigationBar from './NavigationBar'
+import ErrorModal from '../ErrorModal/ErrorModal'
+import Loader from '../Loader/LoaderOverlay'
 
 class SignUpContainer extends Component {
 
@@ -17,8 +17,8 @@ class SignUpContainer extends Component {
 		return (
 			<View style={style.container}>
 				<NavigationBar onPress={this.handleBack}/>
-				<NextButton onPress={this.props.handleSubmit} />
 				{this.props.children}
+				<NextButton onPress={this.props.handleSubmit} />
 				<Loader />
 				<ErrorModal />
 			</View>
