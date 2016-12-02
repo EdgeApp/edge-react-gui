@@ -12,10 +12,6 @@ class NavigationBar extends Component {
 		this.props.dispatch(navigatorPop())	
 	}
 
-	checkPasswordStateStyle = () => {
-		this.props.passwordState ? {height: 200} : null
-	}
-
 	checkPasswordStateOption = () => {
 
 		if(this.props.passwordState){
@@ -30,7 +26,7 @@ class NavigationBar extends Component {
 	
 	render() {
 		return (
-			<View style={[ style.container, this.checkPasswordStateStyle() ]}>
+			<View style={[ style.container, this.props.passwordState ? {height: 200} : null ]}>
 				<View style={style.navigationBarContainer}>
 					<View style={style.navigationContainer}>
 						<TouchableHighlight onPress={this.handleOnPress}>

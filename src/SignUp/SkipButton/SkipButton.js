@@ -20,8 +20,8 @@ class SkipButton extends Component {
 		if(this.props.visible) {
 			return (
 				<View>
-					<TouchableHighlight style={styles.button} onPress={this.props.onPress}>
-						<Text style={styles.buttonText}>Skip</Text>
+					<TouchableHighlight style={[ styles.button, this.props.password.length !== 0 ? {backgroundColor: 'rgba(0,0,0,0)'} : null ]} onPress={this.props.onPress}>
+						<Text style={[ styles.buttonText, this.props.password.length !== 0 ? {color: '#000'} : null  ]}>Skip</Text>
 					</TouchableHighlight>
 				</View>
 			);
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
 
 export default connect( state => ({
 	
+	password: state.password.password,
 	visible : state.skipButtonVisible,
 	route	: state.route
 

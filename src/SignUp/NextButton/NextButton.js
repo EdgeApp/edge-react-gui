@@ -6,13 +6,19 @@ import { showNextButton, hideNextButton } from './action'
 class NextButton extends Component {
 
 	componentWillReceiveProps(nextProps){
-		if(this.props.route.index !== nextProps.route.index) {
 
-			if(nextProps.route.screen === "createPassword"){
+		if(nextProps.route.screen === "createPassword"){
+
+			if(nextProps.password.length === 0 ){
 				this.props.dispatch(hideNextButton())
 			}
 
+
+			if(nextProps.password.length !== 0 ){
+				this.props.dispatch(showNextButton())
+			}
 		}
+
 	}
 
 	render() {
@@ -53,7 +59,8 @@ const styles = StyleSheet.create({
 
 export default connect( state => ({
 	
-	visible : state.nextButtonVisible,
-	route	: state.route
+	visible 	: state.nextButtonVisible,
+	password	: state.password.password,
+	route		: state.route
 	
 }) )(NextButton)

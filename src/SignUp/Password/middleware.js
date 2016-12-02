@@ -15,7 +15,7 @@ export const checkPassword = ( password, passwordRepeat, validation) => {
 		}
 
 		if( validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat){
-			return dispatch.navigatorPush()
+			return dispatch(navigatorPush())
 		}
 	}
 } 
