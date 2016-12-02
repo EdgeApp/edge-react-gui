@@ -1,8 +1,19 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { showNextButton, hideNextButton } from './action'
 
 class NextButton extends Component {
+
+	componentWillReceiveProps(nextProps){
+		if(this.props.route.index !== nextProps.route.index) {
+
+			if(nextProps.route.screen === "createPassword"){
+				this.props.dispatch(hideNextButton())
+			}
+
+		}
+	}
 
 	render() {
 
@@ -42,6 +53,7 @@ const styles = StyleSheet.create({
 
 export default connect( state => ({
 	
-	visible : state.nextButtonVisible
-
+	visible : state.nextButtonVisible,
+	route	: state.route
+	
 }) )(NextButton)

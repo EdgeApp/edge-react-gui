@@ -3,12 +3,12 @@ export const SKIP_BUTTON_SHOW   = 'SKIP_BUTTON_SHOW'
 
 export function showSkipButton() {
 	return {
-		type: SKIP_BUTTON_HIDE
+		type: SKIP_BUTTON_SHOW
 	}
 }
 
 export function hideSkipButton() {
 	return {
-		type: SKIP_BUTTON_SHOW
+		type: SKIP_BUTTON_HIDE
 	}
 }

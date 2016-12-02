@@ -3,11 +3,15 @@ import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 
 import Container from '../Container'
+import Notification from './Notification'
 import style from './style'
+
 import { validate } from './PasswordValidation/middleware'
 import { checkPassword } from './middleware'
+import { passwordNotificationShow } from './action'
 import { showNextButton, hideNextButton } from '../NextButton/action'
 import { showSkipButton, hideSkipButton } from '../SkipButton/action'
+import { navigatorPush } from '../../Navigator/action'
 
 import { 
 	focusPasswordInput, 
@@ -27,6 +31,14 @@ class Password extends Component {
 				this.props.navigator
 			)
 		)
+	}
+
+	handlePasswordNotification  = () => {
+		this.props.dispatch(passwordNotificationShow())
+	}
+
+	handleSkipPassword  = () => {
+		this.props.dispatch(navigatorPush())
 	}
 
 	handlePasswordOnFocus = () => {
@@ -50,7 +62,10 @@ class Password extends Component {
 
 	render() {
 		return (
-			<Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
+			<Container 
+				handleSubmit={this.handleSubmit} 
+				handleSkip={this.handlePasswordNotification}
+			>
 				<View style={[ style.inputView, this.checkPasswordInputState() ]}>
 					<Text style={style.paragraph}>
 						The password is used to authenticate your account and to change sensitive settings.
@@ -74,6 +89,7 @@ class Password extends Component {
 						value={ this.props.passwordRepeat }
 					/>
 				</View>
+				<Notification handleSubmit={this.handleSkipPassword}/>
 			</Container>
 		)
 	}

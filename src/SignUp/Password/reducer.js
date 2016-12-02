@@ -39,3 +39,17 @@ export const passwordRepeat = (state = '', action) => {
 
 }
 
+export const notification = (state = false, action) => {
+
+	switch (action.type) {
+		case ACTION.SKIP_PASSWORD_NOTIFICATION_SHOW :
+			return true
+
+		case ACTION.SKIP_PASSWORD_NOTIFICATION_HIDE :
+			return false
+
+		default:      
+			return state
+	}
+
+}

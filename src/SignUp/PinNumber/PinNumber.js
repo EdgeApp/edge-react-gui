@@ -35,6 +35,8 @@ class PinComponent extends Component {
 						maxLength={4} 
 						onChangeText={ this.handleOnChangeText }
 						value={ pinNumber }
+						blurOnSubmit={ true }
+						onSubmitEditing={ this.handleSubmit }	
 					/>
 					<Text style={style.paragraph}>
 						Your PIN is a 4 digit code used to do quick re-logins into your account.

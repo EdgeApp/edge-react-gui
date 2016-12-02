@@ -3,5 +3,5 @@ export default routes = [
 	{ title: 'Enter Username', 	screen: 'createUsername', 	index: 1},
 	{ title: 'Enter Pin', 		screen: 'createPin', 		index: 2},
 	{ title: 'Enter Password', 	screen: 'createPassword', 	index: 3},
-	{ title: 'Welcome', 		screen: 'checkSignIn', 		index: 4}
+	{ title: 'Review Details', 	screen: 'reviewSignIn', 	index: 4}
 ] 

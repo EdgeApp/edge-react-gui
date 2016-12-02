@@ -8,7 +8,6 @@ class Router extends Component {
 	componentWillReceiveProps(nextProps){
 		if(this.props.route.index !== nextProps.route.index) {
 			if(this.props.route.index > nextProps.route.index){
-				console.log('pop')
 				this.props.navigator.pop()
 			}
 			if(this.props.route.index < nextProps.route.index){
