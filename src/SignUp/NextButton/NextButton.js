@@ -19,6 +19,10 @@ class NextButton extends Component {
 			}
 		}
 
+
+		if(nextProps.route.screen !== "createPassword"){
+			this.props.dispatch(showNextButton())
+		}
 	}
 
 	render() {

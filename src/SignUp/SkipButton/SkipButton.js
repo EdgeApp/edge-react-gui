@@ -12,6 +12,10 @@ class SkipButton extends Component {
 				this.props.dispatch(showSkipButton())
 			}
 
+			if(nextProps.route.screen !== "createPassword"){
+				this.props.dispatch(hideSkipButton())
+			}
+
 		}
 	}
 
