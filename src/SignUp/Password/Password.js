@@ -27,8 +27,7 @@ class Password extends Component {
 			checkPassword(
 				this.props.password,
 				this.props.passwordRepeat,
-				this.props.validation,
-				this.props.navigator
+				this.props.validation
 			)
 		)
 	}

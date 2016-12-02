@@ -7,6 +7,7 @@ import { route, navigator } from './Navigator/reducer'
 import { nextButtonVisible } from './SignUp/NextButton/reducer'
 import { skipButtonVisible } from './SignUp/SkipButton/reducer'
 import * as PasswordStates from './SignUp/Password/reducer'
+import { reviewDetails } from './SignUp/ReviewDetails/reducer'
 import * as PasswordValidation from './SignUp/Password/PasswordValidation/reducer'
 import * as Loader from './Loader/reducer' 
 import * as ErrorModal from './ErrorModal/reducer' 
@@ -27,6 +28,7 @@ const store = combineReducers({
 			characterLength	: PasswordValidation.characterLength
 		})
 	}),
+	reviewDetails,
 
 	nextButtonVisible,
 	skipButtonVisible,
