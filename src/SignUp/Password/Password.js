@@ -6,6 +6,8 @@ import Container from '../Container'
 import style from './style'
 import { validate } from './PasswordValidation/middleware'
 import { checkPassword } from './middleware'
+import { showNextButton, hideNextButton } from '../NextButton/action'
+import { showSkipButton, hideSkipButton } from '../SkipButton/action'
 
 import { 
 	focusPasswordInput, 
