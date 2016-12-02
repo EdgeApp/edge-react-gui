@@ -1,39 +1,95 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import Dimensions from 'Dimensions'
+
+const {height, width} = Dimensions.get('window');
+
+class Details extends Component {
+	render(){
+		return (
+			<View style={style.detailsContainer}>
+				<View style={style.detailRow}>
+					<Text style={[ style.text, style.detailText, style.detailTextLeft ]}>Username:</Text>	
+					<Text style={[ style.text, style.detailText, style.detailTextRight ]}>MasterFofofofoafaklfnalsgnlksagoa</Text>	
+				</View>
+				<View style={style.detailRow}>
+					<Text style={[ style.text, style.detailText, style.detailTextLeft ]}>PIN:</Text>	
+					<Text style={[ style.text, style.detailText, style.detailTextRight ]}>7777</Text>	
+				</View>
+				<View style={style.detailRow}>
+					<Text style={[ style.text, style.detailText, style.detailTextLeft ]}>Password:</Text>	
+					<Text style={[ style.text, style.detailText, style.detailTextRight ]}>I_am_the_foo</Text>	
+				</View>
+			</View>
+		)
+	}
+}
+
+class Disclaimer extends Component {
+	render(){
+		return(
+			<View style={style.detailsContainer}>
+				<Text style={style.text}> 
+					Your Username, password, and pin are known only to you and never transmitted or stored unencrypted
+				</Text>
+				<Text style={[ style.text, style.warning ]}> 
+					Write down and store securely!!
+				</Text>
+			</View>
+		)	
+	}
+}
 
 class Review extends Component {
 
+	constructor(props) {
+		super(props)
+		this.state = {
+			showDetails: false
+		}
+	}
+
+	handleHideDetails = () => {
+		if(this.state.showDetails) {
+			this.setState({
+				showDetails: false	
+			})
+		}	
+	}
+
+	handleShowDetails = () => {
+		if(!this.state.showDetails) {
+			this.setState({
+				showDetails: true	
+			})
+		}	
+	}
+
 	render() {
 
-		return (
-			<View style={style.container}>
-				<View style={style.detailsContainer}>
-					<View style={style.detailRow}>
-						<Text style={[ style.text, style.detailText, style.detailTextLeft ]}>Username:</Text>	
-						<Text style={[ style.text, style.detailText, style.detailTextRight ]}>MasterFooFoo</Text>	
-					</View>
-					<View style={style.detailRow}>
-						<Text style={[ style.text, style.detailText, style.detailTextLeft ]}>PIN:</Text>	
-						<Text style={[ style.text, style.detailText, style.detailTextRight ]}>7777</Text>	
-					</View>
-					<View style={style.detailRow}>
-						<Text style={[ style.text, style.detailText, style.detailTextLeft ]}>Password:</Text>	
-						<Text style={[ style.text, style.detailText, style.detailTextRight ]}>I_am_the_foo</Text>	
-					</View>
+		if(this.state.showDetails) {
+			return (
+				<View style={style.container}>
+					<Details />	
+					<TouchableHighlight style={style.button} onPress={this.handleHideDetails}>
+						<Text style={style.buttonText}>Hide</Text>
+					</TouchableHighlight>
 				</View>
-				<View style={style.detailsContainer}>
-					<Text style={style.text}> 
-						Your Username, password, and pin are known only to you and never transmitted or stored unencrypted
-					</Text>
-					<Text style={[ style.text, style.warning ]}> 
-						Write down and store securely!!
-					</Text>
+			)	
+
+		}	
+
+		if(!this.state.showDetails){
+			return (
+				<View style={style.container}>
+					<Disclaimer />
+					<TouchableHighlight style={style.button} onPress={this.handleShowDetails}>
+						<Text style={style.buttonText}>Show</Text>
+					</TouchableHighlight>
 				</View>
-				<TouchableHighlight style={style.button} onPress={this.props.onPress}>
-					<Text style={style.buttonText}>Show</Text>
-				</TouchableHighlight>
-			</View>
-		)
+			)	
+		}
+
 	}
 }
 
@@ -63,12 +119,13 @@ const style = StyleSheet.create({
 
 	detailTextLeft: {
 		textAlign:'right', 
-		width:100
+		width: width * 1 / 3
 	},
 
 	detailTextRight: {
  		textAlign:'left',
-		width:200
+		paddingRight: 30,
+		width: width * 2 / 3
 	},
 
 	text: {
