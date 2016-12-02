@@ -12,7 +12,7 @@ import style from './style'
 class UsernameComponent extends Component {
 
 	handleSubmit  = () => {
-		this.props.dispatch(checkUsername(this.props.username, this.props.navigator))
+		this.props.dispatch(checkUsername(this.props.username))
 	}
 
 	handleOnChangeText = (username) => {
@@ -22,7 +22,7 @@ class UsernameComponent extends Component {
 	render() {
 		const { username } = this.props
 		return (
-			<Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
+			<Container handleSubmit={this.handleSubmit}>
 				<View style={style.inputView}>
 					<TextInput
 					  	style={style.usernameInput}

@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux'
+
 import { username } from './SignUp/Username/reducer'
 import { pinNumber } from './SignUp/PinNumber/reducer'
 import { loading } from './Loader/reducer'
+import { route, navigator } from './Navigator/reducer'
 import { nextButtonVisible } from './SignUp/NextButton/reducer'
 import { skipButtonVisible } from './SignUp/SkipButton/reducer'
 import * as PasswordStates from './SignUp/Password/reducer'
@@ -28,6 +30,7 @@ const store = combineReducers({
 	nextButtonVisible,
 	skipButtonVisible,
 
+	route,
 	loader 		: combineReducers({
 		loading : 	Loader.loading,
 		message :	Loader.message

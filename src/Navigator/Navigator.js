@@ -11,22 +11,25 @@ import routes from './routes'
 class NavigatorContainer extends Component {
 	
 	routeRenderScene = (route, navigator) => {
+
 		switch(route.screen){
 			case "home":
 				return <HomeContainer navigator={navigator} />
 			case "createUsername":
-				return <Username navigator={navigator} />
+				return <Username />
 					
 			case "createPin":
-				return <PinNumber navigator={navigator} />	
+				return <PinNumber />	
 				
 			case "createPassword":
-				return <Password navigator={navigator} />
+				return <Password />
 				
 		}
+
 	}
 
 	render() {
+		
 		return (
 		  <Navigator
 			initialRoute={routes[0]}

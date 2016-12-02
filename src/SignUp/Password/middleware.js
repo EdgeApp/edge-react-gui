@@ -1,4 +1,5 @@
 import routes from '../../Navigator/routes'
+import { navigatorPush } from '../../Navigator/action'
 
 import { openErrorModal } from '../../ErrorModal/action'
 

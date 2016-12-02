@@ -1,15 +1,14 @@
+import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import LoaderOverlay from '../Loader/LoaderOverlay'
-import { 
-	Text, 
-	Button,
-	View,
-	StyleSheet } from 'react-native'
+import { Text, Button, View, StyleSheet } from 'react-native'
 
+import { navigatorPush, navigatorPop } from '../Navigator/action'
+
+import LoaderOverlay from '../Loader/LoaderOverlay'
 class HomeComponent extends Component {
 	
 	handleOnPress  = () => {
-		this.props.navigator.push({ title: 'Sign Up', screen: 'createUsername', index: 1})
+		this.props.dispatch(navigatorPush())
 	}
 
 	render() {
@@ -37,4 +36,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeComponent
+export default connect()(HomeComponent)

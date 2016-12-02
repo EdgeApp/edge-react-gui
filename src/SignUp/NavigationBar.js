@@ -4,9 +4,17 @@ import { connect } from 'react-redux'
 
 import PasswordValidation from './Password/PasswordValidation/PasswordValidation'
 
+import { navigatorPush, navigatorPop } from '../Navigator/action'
+
 class NavigationBar extends Component {
 
-	checkPasswordStateStyle = () => this.props.passwordState ? {height: 200} : null
+	handleOnPress = () => {
+		this.props.dispatch(navigatorPop())	
+	}
+
+	checkPasswordStateStyle = () => {
+		this.props.passwordState ? {height: 200} : null
+	}
 
 	checkPasswordStateOption = () => {
 
@@ -25,10 +33,10 @@ class NavigationBar extends Component {
 			<View style={[ style.container, this.checkPasswordStateStyle() ]}>
 				<View style={style.navigationBarContainer}>
 					<View style={style.navigationContainer}>
-						<TouchableHighlight onPress={this.props.onPress}>
+						<TouchableHighlight onPress={this.handleOnPress}>
 							<Text style={style.text}>Back</Text>
 						</TouchableHighlight>
-						<Text style={[ style.text, style.title ]}>Awesome Title</Text>
+						<Text style={[ style.text, style.title ]}>{this.props.route.title}</Text>
 						<Text style={style.text}>     </Text>
 					</View>
 					{ this.checkPasswordStateOption() }
@@ -76,6 +84,7 @@ const style = StyleSheet.create({
 
 export default connect( state => ({
 
-	passwordState: state.password.inputState
+	route			: state.route,
+	passwordState	: state.password.inputState
 
 }) )(NavigationBar)

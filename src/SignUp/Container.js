@@ -9,15 +9,11 @@ import SkipButton from './SkipButton/SkipButton'
 
 class SignUpContainer extends Component {
 
-	handleBack  = () => {
-		this.props.navigator.pop()
-	}
-
 	render() {
 
 		return (
 			<View style={style.container}>
-				<NavigationBar onPress={this.handleBack}/>
+				<NavigationBar />
 				{this.props.children}
 				<SkipButton onPress={this.props.handleSkip} />
 				<NextButton onPress={this.props.handleSubmit} />
