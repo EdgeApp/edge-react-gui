@@ -1,5 +1,6 @@
 const strings = {
-
+    activity_signup_checking_username: "Checking Username Availability",
+    activity_signup_username_unavailable: "Username is not available",
     loading: "Loading…",
     synchronizing: "Synchronizing…",
 
