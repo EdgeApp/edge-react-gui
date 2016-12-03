@@ -19,7 +19,7 @@ class HomeComponent extends Component {
 				</Text>
 				<Button
 					onPress={this.handleOnPress}
-					accessibilityLabel={t('activity_signup_title')}
+					title={t('activity_signup_title')}
 					color="#841584"
 					accessibilityLabel={t('activity_signup_title')}
 				/>
