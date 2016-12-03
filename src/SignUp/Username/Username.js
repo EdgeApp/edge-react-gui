@@ -30,6 +30,7 @@ class UsernameComponent extends Component {
 							placeholder={t('fragment_landing_username_hint')}
 						onChangeText={ this.handleOnChangeText }
 						value={ username }
+						autoFocus={ true }
 						blurOnSubmit={ true }
 						onSubmitEditing={ this.handleSubmit }	
 					/>

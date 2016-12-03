@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import Details from './Details'
 import Disclaimer from './Disclaimer'
 import { showSignInDetails, hideSignInDetails  } from './action'
-
+import t from "../../lib/LocaleStrings"
 import style from './style'
 
 class Review extends Component {
@@ -29,7 +29,7 @@ class Review extends Component {
 				<View style={style.container}>
 					<Details username={this.props.username} pinNumber={this.props.pinNumber} password={this.props.password}/>	
 					<TouchableHighlight style={style.button} onPress={this.handleHideDetails}>
-						<Text style={style.buttonText}>Hide</Text>
+						<Text style={style.buttonText}>{t('fragment_setup_writeitdown_hide')}</Text>
 					</TouchableHighlight>
 				</View>
 			)	
@@ -41,7 +41,7 @@ class Review extends Component {
 				<View style={style.container}>
 					<Disclaimer />
 					<TouchableHighlight style={style.button} onPress={this.handleShowDetails}>
-						<Text style={style.buttonText}>Show</Text>
+						<Text style={style.buttonText}>{t('fragment_setup_writeitdown_show')}</Text>
 					</TouchableHighlight>
 				</View>
 			)	

@@ -7,11 +7,11 @@ export const checkPassword = ( password, passwordRepeat, validation) => {
 	return dispatch => {
 
 		if( !validation.upperCaseChar || !validation.lowerCaseChar || !validation.number || !validation.characterLength	) {
-			return dispatch(openErrorModal('Your password does not meet the requirements'))	
+			return dispatch(openErrorModal(t('activity_signup_insufficient_password')))	
 		}
 		
 		if( password !== passwordRepeat ) {
-			return dispatch(openErrorModal('Password does not match the re-enter password'))	
+			return dispatch(openErrorModal(t('activity_signup_passwords_dont_match')))	
 		}
 
 		if( validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat){

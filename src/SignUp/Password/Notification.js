@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, TouchableHighlight, StyleSheet } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
-
+import t from "../../lib/LocaleStrings"
 import { passwordNotificationHide } from './action'
 
 class ErrorModal extends Component {
@@ -20,14 +20,14 @@ class ErrorModal extends Component {
 				animationDuration={200}
 				onClosed={this.handleClose}
 			>
-				<Text style={[ style.textError, style.textLead ]}>Account Has No Password</Text>
-				<Text style={style.textError}>Warning. Without a password, you will not be able to login on  a new device if this device is lost or stolen, or if this app is uninstalled</Text>
+				<Text style={[ style.textError, style.textLead ]}>{t('fragment_setup_password_nopassword_title')}</Text>
+				<Text style={style.textError}>{t('fragment_setup_password_nopassword_message')}</Text>
 				<View style={{ flexDirection: 'row' }}>
 					<TouchableHighlight onPress={ this.handleClose } >
-						<Text style={style.hideModal}>Cancel</Text>
+						<Text style={style.hideModal}>{t('string_cancel')}</Text>
 					</TouchableHighlight>
 					<TouchableHighlight onPress={ this.props.handleSubmit } >
-						<Text style={style.hideModal}>Ok</Text>
+						<Text style={style.hideModal}>{t('string_ok')}</Text>
 					</TouchableHighlight>
 				</View>
 			</Modal>

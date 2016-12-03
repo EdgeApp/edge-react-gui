@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { showNextButton, hideNextButton } from './action'
-
+import t from '../../lib/LocaleStrings'
 class NextButton extends Component {
 
 	componentWillReceiveProps(nextProps){
@@ -31,7 +31,7 @@ class NextButton extends Component {
 			return (
 				<View>
 					<TouchableHighlight style={styles.button} onPress={this.props.onPress}>
-						<Text style={styles.buttonText}>Next</Text>
+						<Text style={styles.buttonText}>{t('string_next')}</Text>
 					</TouchableHighlight>
 				</View>
 			)

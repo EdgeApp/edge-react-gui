@@ -35,6 +35,8 @@ class PinComponent extends Component {
 						placeholder={t('activity_signup_pin_hint')}
 						keyboardType="numeric"
 						maxLength={4} 
+						autoFocus={ true }
+						autoCorrect={ false }
 						onChangeText={ this.handleOnChangeText }
 						value={ pinNumber }
 						blurOnSubmit={ true }

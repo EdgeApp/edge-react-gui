@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 
 import { closeErrorModal } from './action'
 import style from './style'
+import t from "../lib/LocaleStrings"
 
 class ErrorModal extends Component {
 
@@ -31,7 +32,7 @@ class ErrorModal extends Component {
 			>
 				<Text style={style.textError}>{this.props.message}</Text>
 				<TouchableHighlight onPress={ this.handleClose } >
-					<Text style={style.hideModal}>Close</Text>
+					<Text style={style.hideModal}>{t('string_ok')}</Text>
 				</TouchableHighlight>
 			</Modal>
 		)

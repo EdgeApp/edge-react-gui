@@ -15,7 +15,7 @@ class HomeComponent extends Component {
 		return (
 			<View>
 				<Text style={styles.welcome}>
-					Airbitz
+					{t('app_name')}
 				</Text>
 				<Button
 					onPress={this.handleOnPress}

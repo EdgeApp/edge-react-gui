@@ -75,6 +75,7 @@ class Password extends Component {
 						placeholder={t('activity_signup_password_hint')}
 						keyboardType="default"
 						secureTextEntry={true}
+						autoFocus={ true }
 						onChangeText={ this.handleOnChangePassword }
 						value={ this.props.password }
 						onFocus={this.handlePasswordOnFocus}

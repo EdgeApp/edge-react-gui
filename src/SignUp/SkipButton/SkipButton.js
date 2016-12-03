@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { showSkipButton, hideSkipButton } from './action'
+import t from "../../lib/LocaleStrings"
 
 class SkipButton extends Component {
 
@@ -25,7 +26,7 @@ class SkipButton extends Component {
 			return (
 				<View>
 					<TouchableHighlight style={[ styles.button, this.props.password.length !== 0 ? {backgroundColor: 'rgba(0,0,0,0)'} : null ]} onPress={this.props.onPress}>
-						<Text style={[ styles.buttonText, this.props.password.length !== 0 ? {color: '#000'} : null  ]}>Skip</Text>
+						<Text style={[ styles.buttonText, this.props.password.length !== 0 ? {color: '#000'} : null  ]}>{t('string_skip')}</Text>
 					</TouchableHighlight>
 				</View>
 			);

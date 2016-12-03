@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-
+import t from "../../../lib/LocaleStrings"
 class PasswordRequirement extends Component {
 
 	checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
@@ -15,11 +15,11 @@ class PasswordRequirement extends Component {
 	render() {
 		return (
 			<View style={style.container}>
-				<Text style={[ style.text, style.textLead ]}>Password Requirements</Text>
-				<Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}>   -   Must have at least one upper case letter</Text>
-				<Text style={[ style.text, this.checkOneLower(this.props.validation) ]}>   -   Must have at least one lower case letter</Text>
-				<Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}>   -   Must have at least one number</Text>
-				<Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}>   -   Must have at least 10 characters</Text>
+				<Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
+				<Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}>   -   {t('password_rule_no_uppercase')}</Text>
+				<Text style={[ style.text, this.checkOneLower(this.props.validation) ]}>   -   {t('password_rule_no_lowercase')}</Text>
+				<Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}>   -   {t('password_rule_no_number')}</Text>
+				<Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}>   -   {t('password_rule_too_short')}</Text>
 			</View>
 		);
 	}

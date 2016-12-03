@@ -1,5 +1,5 @@
 import * as ACTION from './action'
-
+import t from "../lib/LocaleStrings"
 export const loading = (state = false, action) => {
 
 	switch (action.type) {
@@ -22,7 +22,7 @@ export const message = (state = 'Please wait', action) => {
 			return action.message
 
 		case ACTION.LOADING_OFF :
-			return 'Please wait'
+			return t('string_loading')
 
 		default:      
 			return state
