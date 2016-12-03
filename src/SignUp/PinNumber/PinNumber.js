@@ -37,6 +37,7 @@ class PinComponent extends Component {
 						maxLength={4} 
 						autoFocus={ true }
 						autoCorrect={ false }
+						returnKeyType="next"
 						onChangeText={ this.handleOnChangeText }
 						value={ pinNumber }
 						blurOnSubmit={ true }

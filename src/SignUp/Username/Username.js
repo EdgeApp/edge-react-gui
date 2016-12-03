@@ -32,6 +32,7 @@ class UsernameComponent extends Component {
 						value={ username }
 						autoFocus={ true }
 						blurOnSubmit={ true }
+						returnKeyType="next"
 						onSubmitEditing={ this.handleSubmit }	
 					/>
 					<Text style={style.paragraph}>

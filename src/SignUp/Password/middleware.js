@@ -1,7 +1,7 @@
 import { navigatorPush } from '../../Navigator/action'
 
 import { openErrorModal } from '../../ErrorModal/action'
-
+import t from "../../lib/LocaleStrings"
 export const checkPassword = ( password, passwordRepeat, validation) => {
 
 	return dispatch => {
