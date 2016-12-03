@@ -5,9 +5,7 @@ import { View, Text, TextInput } from 'react-native'
 import { changeUsernameValue } from './action'
 import { checkUsername } from './middleware'
 
-import NextButton from '../NextButton'
-import ErrorModal from '../../ErrorModal/ErrorModal'
-import Loader from '../../Loader/LoaderOverlay'
+import Container from '../Container'
 
 import style from './style'
 import t from '../../lib/LocaleStrings'
@@ -15,7 +13,7 @@ import t from '../../lib/LocaleStrings'
 class UsernameComponent extends Component {
 
 	handleSubmit  = () => {
-		this.props.dispatch(checkUsername(this.props.username, this.props.navigator))
+		this.props.dispatch(checkUsername(this.props.username))
 	}
 
 	handleOnChangeText = (username) => {
@@ -23,26 +21,23 @@ class UsernameComponent extends Component {
 	}
 
 	render() {
-
 		const { username } = this.props
-
 		return (
-			<View style={style.container}>
+			<Container handleSubmit={this.handleSubmit}>
 				<View style={style.inputView}>
 					<TextInput
 					  	style={style.usernameInput}
 							placeholder={t('fragment_landing_username_hint')}
 						onChangeText={ this.handleOnChangeText }
 						value={ username }
+						blurOnSubmit={ true }
+						onSubmitEditing={ this.handleSubmit }	
 					/>
 					<Text style={style.paragraph}>
 						{t('fragment_setup_username_text')}
 					</Text>
 				</View>
-				<NextButton onPress={this.handleSubmit} />
-				<Loader />
-				<ErrorModal />
-			</View>
+			</Container>
 		)
 	}
 }

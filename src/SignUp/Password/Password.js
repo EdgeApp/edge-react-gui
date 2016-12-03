@@ -1,72 +1,105 @@
 import React, { Component } from 'react'
-import { 
-	View,
-	Text, 
-	StyleSheet,
-	TextInput
-} from 'react-native'
+import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { connect } from 'react-redux'
 
-import NextButton from '../NextButton'
+import Container from '../Container'
+import Notification from './Notification'
+import style from './style'
+
+import { validate } from './PasswordValidation/middleware'
+import { checkPassword } from './middleware'
+import { passwordNotificationShow } from './action'
+import { showNextButton, hideNextButton } from '../NextButton/action'
+import { showSkipButton, hideSkipButton } from '../SkipButton/action'
+import { navigatorPush } from '../../Navigator/action'
 
 import t from '../../lib/LocaleStrings'
+import { 
+	focusPasswordInput, 
+	blurPasswordInput,
+	changePasswordValue,
+	changePasswordRepeatValue
+} from './action'
 
 class Password extends Component {
 	
 	handleSubmit  = () => {
-		this.props.navigator.push({ title: t('fragment_setup_password_title'), screen: 'finished', index: 4})
+		this.props.dispatch(
+			checkPassword(
+				this.props.password,
+				this.props.passwordRepeat,
+				this.props.validation
+			)
+		)
 	}
+
+	handlePasswordNotification  = () => {
+		this.props.dispatch(passwordNotificationShow())
+	}
+
+	handleSkipPassword  = () => {
+		this.props.dispatch(navigatorPush())
+	}
+
+	handlePasswordOnFocus = () => {
+		this.props.dispatch(focusPasswordInput())		
+	}
+
+	handlePasswordOnBlur = () => {
+		this.props.dispatch(blurPasswordInput())		
+	}
+
+	handleOnChangePassword = (password) => {
+		this.props.dispatch(changePasswordValue(password))	
+		this.props.dispatch(validate(password))	
+	}
+
+	handleOnChangePasswordRepeat = (passwordRepeat) => {
+		this.props.dispatch(changePasswordRepeatValue(passwordRepeat))	
+	}
+
+	checkPasswordInputState = () => this.props.inputState ? { marginTop: 10 } : null
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<View style={styles.inputView}>
-					<Text style={styles.paragraph}>
+			<Container 
+				handleSubmit={this.handleSubmit} 
+				handleSkip={this.handlePasswordNotification}
+			>
+				<View style={[ style.inputView, this.checkPasswordInputState() ]}>
+					<Text style={style.paragraph}>
 						{t('fragment_setup_password_text')}
 					</Text>
 					<TextInput
-						style={styles.input}
+						style={style.input}
 						placeholder={t('activity_signup_password_hint')}
 						keyboardType="default"
 						secureTextEntry={true}
+						onChangeText={ this.handleOnChangePassword }
+						value={ this.props.password }
+						onFocus={this.handlePasswordOnFocus}
+						onBlur={this.handlePasswordOnBlur}
 					/>
 					<TextInput
-						style={styles.input}
+						style={style.input}
 						placeholder={t('activity_signup_password_confirm_hint')}
 						keyboardType="default"
 						secureTextEntry={true}
+						onChangeText={ this.handleOnChangePasswordRepeat }
+						value={ this.props.passwordRepeat }
 					/>
 				</View>
-				<NextButton onPress={this.handleSubmit}/>
-			</View>
-		);
+				<Notification handleSubmit={this.handleSkipPassword}/>
+			</Container>
+		)
 	}
 }
 
-const styles = StyleSheet.create({
+export default connect( state => ({
 
-	container: {
-		flex:1,
-		backgroundColor: '#F5FCFF'
-	},
-
-	inputView: {
-		flex:1,
-		marginTop: 50,
-		marginLeft: 30,
-		marginRight: 30,
-	},
-
-	input: {
-		height: 60,
-		fontSize: 22,
-		color: 'skyblue',
-	},
-
-	paragraph: {
-		marginTop:10,
-		fontSize:14	
-	}
-
-});
-
-export default Password
+	inputState		: state.password.inputState,
+	password		: state.password.password,
+	passwordRepeat 	: state.password.passwordRepeat,
+	validation		: state.password.validation
+	
+}) )(Password)

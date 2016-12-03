@@ -1,12 +1,12 @@
 import async_auto from 'async/auto'
 
-import routes from '../../Navigator/routes'
 import abcContext from '../../abc/abcContext'
 
 import { openErrorModal } from '../../ErrorModal/action'
 import { openLoading, closeLoading } from '../../Loader/action'
+import { navigatorPush } from '../../Navigator/action'
 
-export const checkUsername = (username, navigator) => {
+export const checkUsername = username => {
 
 	return dispatch => {
 
@@ -47,7 +47,7 @@ export const checkUsername = (username, navigator) => {
 				dispatch(openErrorModal(err))
 			}
 			if(!err){
-				navigator.push(routes[2])
+				dispatch(navigatorPush())
 			}
 		});
 	

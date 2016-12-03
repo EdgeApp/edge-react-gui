@@ -1,27 +1,25 @@
+import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import LoaderOverlay from '../Loader/LoaderOverlay'
-import { 
-	Text, 
-	Button,
-	View,
-	StyleSheet } from 'react-native'
-import t from '../lib/LocaleStrings'
+import { Text, Button, View, StyleSheet } from 'react-native'
 
+import { navigatorPush, navigatorPop } from '../Navigator/action'
+import t from '../lib/LocaleStrings'
+import LoaderOverlay from '../Loader/LoaderOverlay'
 class HomeComponent extends Component {
 	
 	handleOnPress  = () => {
-		this.props.navigator.push({ title: t('activity_signup_title'), screen: 'createUsername', index: 1})
+		this.props.dispatch(navigatorPush())
 	}
 
 	render() {
 		return (
 			<View>
 				<Text style={styles.welcome}>
-					{t('app_name')}
+					Airbitz
 				</Text>
 				<Button
 					onPress={this.handleOnPress}
-					title={t('activity_signup_title')}
+					accessibilityLabel={t('activity_signup_title')}
 					color="#841584"
 					accessibilityLabel={t('activity_signup_title')}
 				/>
@@ -38,4 +36,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HomeComponent
+export default connect()(HomeComponent)

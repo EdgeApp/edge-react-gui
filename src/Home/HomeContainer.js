@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 
 import HomeComponent from './HomeComponent'
+import Router from '../Navigator/Router'
 
 class HomeContainer extends Component {
 	render() {
 		return (
 			<View style={styles.home}> 
-				<HomeComponent navigator={this.props.navigator}/>	
+				<HomeComponent />	
+				<Router navigator={this.props.navigator} />
 			</View>
 		)
 	}

@@ -5,8 +5,7 @@ import { View, Text, TextInput } from 'react-native'
 import { changePinNumberValue } from './action'
 import { checkPIN } from './middleware'
 
-import NextButton from '../NextButton'
-import ErrorModal from '../../ErrorModal/ErrorModal'
+import Container from '../Container'
 import style from './style'
 import t from '../../lib/LocaleStrings'
 
@@ -26,7 +25,7 @@ class PinComponent extends Component {
 	render() {
 		const pinNumber = this.props.pinNumber
 		return (
-			<View style={style.container}>
+			<Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
 				<View style={style.inputView}>
 					<Text style={style.inputLabel}>
 						{t('fragment_setup_pin_title')}
@@ -38,15 +37,15 @@ class PinComponent extends Component {
 						maxLength={4} 
 						onChangeText={ this.handleOnChangeText }
 						value={ pinNumber }
+						blurOnSubmit={ true }
+						onSubmitEditing={ this.handleSubmit }	
 					/>
 					<Text style={style.paragraph}>
 						{t('fragment_setup_pin_text')}
 					</Text>
 				</View>
-				<NextButton onPress={this.handleSubmit} />
-				<ErrorModal />
-			</View>
-		);
+			</Container>
+		)
 	}
 }
 
