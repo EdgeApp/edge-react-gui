@@ -13,8 +13,9 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.Arrays;
 import java.util.List;
+import com.reactnativenavigation.NavigationApplication;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends Application implements NavigationApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
@@ -25,8 +26,8 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new RNDeviceInfo()
+          
+          new RNDeviceInfo()
       );
     }
   };
@@ -41,4 +42,19 @@ public class MainApplication extends Application implements ReactApplication {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
   }
+
+  @Override
+  public boolean isDebug() {
+      // Make sure you are using BuildConfig from your own application
+      return BuildConfig.DEBUG;
+  }
+
+  @NonNull
+  @Override
+  public List<ReactPackage> createAdditionalReactPackages() {
+      // Add the packages you require here.
+      // No need to add RnnPackage and MainReactPackage
+      new RNDeviceInfo()
+      return null;
+  }  
 }

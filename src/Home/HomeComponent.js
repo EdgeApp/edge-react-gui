@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Text, Button, View, StyleSheet } from 'react-native'
+import { Text, Button, View, StyleSheet, Image } from 'react-native'
 
 import { navigatorPush, navigatorPop } from '../Navigator/action'
 import t from '../lib/LocaleStrings'
@@ -12,19 +12,21 @@ class HomeComponent extends Component {
 	}
 
 	render() {
-		return (
+		return (	
 			<View>
-				<Text style={styles.welcome}>
-					{t('app_name')}
-				</Text>
-				<Button
-					onPress={this.handleOnPress}
-					title={t('activity_signup_title')}
-					color="#841584"
-					accessibilityLabel={t('activity_signup_title')}
-				/>
+				<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
+					<Text style={styles.welcome}>
+						{t('app_name')}
+					</Text>
+					<Button
+						onPress={this.handleOnPress}
+						title={t('activity_signup_title')}
+						color="#841584"
+						accessibilityLabel={t('activity_signup_title')}
+					/>
+				</Image>
 			</View>
-		);
+		);		
 	}
 }
 
@@ -33,7 +35,12 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'left',
     margin: 10,
-  }
+    color: '#FFFFFF'
+  },
+	backgroundImage: {
+		justifyContent: 'center',
+		alignItems: 'stretch'
+	}	  
 });
 
 export default connect()(HomeComponent)

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		paddingBottom: 100,
 		backgroundColor: '#F5FCFF'
-	}
+	}		
 });
 
 export default HomeContainer
