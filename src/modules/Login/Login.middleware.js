@@ -10,6 +10,7 @@ import t from '../../lib/LocaleStrings'
 export const loginWithPassword = (username,password) => {
 
   return dispatch => {
+    async_auto({
       openLoading: function (callback) {
         dispatch(openLoading('Logging-in'))
         callback(null, null)

@@ -4,13 +4,13 @@ import { View, Text, Image, StyleSheet } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base';
 import t from '../../lib/LocaleStrings'
 import { loginUsername, loginPassword } from './Login.action'
+import { loginWithPassword } from './Login.middleware'
 
 class Login extends Component {
 
   submit = () => {
     console.log(this.props.username)
     console.log(this.props.password)
-    // this.props.dispatch()  
 	this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
   }
 
