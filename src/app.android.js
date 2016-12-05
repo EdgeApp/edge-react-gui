@@ -2,7 +2,7 @@ import tron from './util/reactotron';
 import React, { Component } from 'react'; // eslint-disable-line
 import { Provider as ReduxProvider,connect } from 'react-redux';
 import { AppRegistry, View, StatusBar } from 'react-native';
-import configureStore from './configureStore';
+import configureStore from './lib/configureStore';
 import t from "./lib/LocaleStrings";
 
 const Store = configureStore();

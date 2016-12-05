@@ -44,6 +44,8 @@ class UsernameComponent extends Component {
 	}
 }
 
+
+
 export default connect( state => ({
 
 	username: state.username
