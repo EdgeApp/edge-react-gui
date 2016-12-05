@@ -16,16 +16,16 @@ class HomeComponent extends Component {
 	}
 
 	/**
-    * This is where we can define any route configuration for this
-    * screen. For example, in addition to the navigationBar title we
-    * could add backgroundColor.
-    */
+		* This is where we can define any route configuration for this
+		* screen. For example, in addition to the navigationBar title we
+		* could add backgroundColor.
+		*/
 	static route = {
 		userCacheOpen: false,
-    navigationBar: {
-      title: t('app_name')
-    }
-  };
+		navigationBar: {
+			title: t('app_name')
+		}
+	};
 	_openSignup() {
 		this.props.navigator.push(Router.getRoute('signup'));		
 	}
@@ -37,48 +37,65 @@ class HomeComponent extends Component {
 	}
 	render() {
 		return (
-				<Container>
-          <Content>
-						<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
-							<Text style={styles.welcome}>{t("app_name")}
-							</Text>
-              <Button 
-              	onPress={this._openSignup}
-								color="#841584"
-								accessibilityLabel={t('fragment_landing_signup_button')}
-							>{t('fragment_landing_signup_button')}
-							</Button>
-​              <Button style={{width: 140}} onPress={this._openCrash}>CRASH
-                <Icon size={20} color={'#343'} name={'ios-home'} />
-              </Button>
-​              <Button style={{backgroundColor: '#00c497'}} >
-                <Icon size={20} color={"#384850"} name={'ios-home'} />
-                {t('fragment_landing_signin_button')}
-              </Button>
-              <Button style={{backgroundColor: '#343', width: 40}} >
-                  <Icon size={20} color={"#00c497"} name={'ios-home'} />
-              </Button>
-              <Button transparent >
-                  <Icon size={20} color={"#00c497"} name={'ios-home'} />
-              </Button>
-            </Image>
-          </Content>
-      </Container>
-		);		
+		<Container>
+			<Content>
+				<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
+					<Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
+					<Button
+						style={styles.signupButton}
+						onPress={this._openSignUp}
+						accessibilityLabel={t('fragment_landing_signup_button')}>
+						{t('fragment_landing_signup_button')}
+					</Button>
+					<Button
+						style={styles.signinButton}
+						onPress={this._openLogin}
+						accessibilityLabel={t('fragment_landing_signin_button')}>
+						{t('fragment_landing_signin_button')}
+					</Button>
+					<Button
+						onPress={this._openCrash}>
+						CRASH
+					</Button>					
+				</Image>
+			</Content>
+		</Container>
+		);
 	}
 }
 
 const styles = StyleSheet.create({
-  welcome: {
-    fontSize: 30,
-    textAlign: 'left',
-    margin: 10,
-    color: '#FFFFFF'
-  },
+	welcome: {
+		fontSize: 30,
+		textAlign: 'left',
+		margin: 10,
+		color: '#FFFFFF'
+	},
 	backgroundImage: {
-		justifyContent: 'center',
-		alignItems: 'stretch'
-	}	  
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		resizeMode: Image.resizeMode.cover,
+		flex:1,
+		width: null
+	},
+	logoImage: {
+		flex:0,
+		alignSelf: 'center'
+	},
+	signInButton: {
+		flex: 1,
+		margin: 20,
+		color: '#FFF',
+		alignSelf: 'center',
+		backgroundColor: '#841584'
+	},
+	signUpButton: {
+		flex: 1,
+		margin: 20,
+		color: '#FFF',
+		alignSelf: 'center',
+		backgroundColor: '#000088'
+	}
 });
 
 export default connect()(HomeComponent)
