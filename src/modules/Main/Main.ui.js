@@ -16,8 +16,8 @@ import { Router } from '../../app';
 
 export default class DrawerNavigationExample extends Component {
 
-	static route = {
-		userCacheOpen: false,
+  static route = {
+    userCacheOpen: false,
     navigationBar: {
       title: t('string_cancel')
     }

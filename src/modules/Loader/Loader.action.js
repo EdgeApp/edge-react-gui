@@ -1,5 +1,5 @@
-export const LOADING_ON    	= 'LOADING_ON'
-export const LOADING_OFF  	= 'LOADING_OFF'
+export const LOADING_ON      = 'LOADING_ON'
+export const LOADING_OFF    = 'LOADING_OFF'
 
 import t from '../../lib/LocaleStrings'
 
