@@ -40,21 +40,20 @@ class HomeComponent extends Component {
 				<Container>
           <Content>
 						<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
-							<Text style={styles.welcome}>
-								{t('app_name')}
+							<Text style={styles.welcome}>{t("app_name")}
 							</Text>
               <Button 
               	onPress={this._openSignup}
 								color="#841584"
 								accessibilityLabel={t('fragment_landing_signup_button')}
-							>{t('fragment_landing_signup_button')}</Button>
-​              <Button style={{width: 140}} onPress={this._openCrash}>
-                 	CRASH
-                  <Icon size={20} color={'#343'} name={'ios-home'} />
+							>{t('fragment_landing_signup_button')}
+							</Button>
+​              <Button style={{width: 140}} onPress={this._openCrash}>CRASH
+                <Icon size={20} color={'#343'} name={'ios-home'} />
               </Button>
 ​              <Button style={{backgroundColor: '#00c497'}} >
-                  <Icon size={20} color={"#384850"} name={'ios-home'} />
-                  {t('fragment_landing_signin_button')}
+                <Icon size={20} color={"#384850"} name={'ios-home'} />
+                {t('fragment_landing_signin_button')}
               </Button>
               <Button style={{backgroundColor: '#343', width: 40}} >
                   <Icon size={20} color={"#00c497"} name={'ios-home'} />
