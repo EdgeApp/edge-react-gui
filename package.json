@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "lint": "esw index.ios.js index.android.js src utils",
-    "lint:watch": "npm run lint -- --watch",
+    "droid": "standard --fix --verbose | snazzy; jest; react-native run-android",
     "test": "jest"
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.1.5",
     "@exponent/vector-icons": "^2.0.3",
+    "airbitz-core-js": "0.0.11",
     "async": "^2.1.4",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "install": "^0.8.2",
@@ -27,17 +27,13 @@
     "redux": "^3.6.0",
     "redux-immutable-state-invariant": "^1.2.4",
     "redux-logger": "^2.7.4",
-    "redux-thunk": "^2.1.0"
+    "redux-thunk": "^2.1.0",
+    "snazzy": "^5.0.0",
+    "standard": "^8.6.0"
   },
   "devDependencies": {
     "babel-jest": "17.0.2",
-    "eslint": "^3.11.1",
-    "eslint-watch": "^2.1.14",
     "babel-preset-react-native": "1.9.0",
-    "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.1",
-    "eslint-plugin-react": "^6.7.1",
-    "eslint-plugin-react-native": "^2.2.0",
     "jest": "17.0.3",
     "jest-react-native": "17.0.3",
     "react-test-renderer": "~15.4.0-rc.4",
