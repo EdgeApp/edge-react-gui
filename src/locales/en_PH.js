@@ -1,6 +1,5 @@
 const strings = {
-	"Airbitz": "Airbitz"
-};
-
+  'Airbitz': 'Airbitz'
+}
 
 export default strings

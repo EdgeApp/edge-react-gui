@@ -7,50 +7,50 @@ export const NUMBER_FAIL		 	= 'NUMBER_FALSE'
 export const CHARACTER_LENGTH_PASS	= 'CHARACTER_LENGTH_PASS'
 export const CHARACTER_LENGTH_FAIL	= 'CHARACTER_LENGTH_FAIL'
 
-export function upperCaseCharPass() {
-	return {
-		type: UPPER_CASE_PASS	
-	}
+export function upperCaseCharPass () {
+  return {
+    type: UPPER_CASE_PASS
+  }
 }
 
-export function upperCaseCharFail() {
-	return {
-		type: UPPER_CASE_FAIL	
-	}
+export function upperCaseCharFail () {
+  return {
+    type: UPPER_CASE_FAIL
+  }
 }
 
-export function lowerCaseCharPass() {
-	return {
-		type: LOWER_CASE_PASS	
-	}
+export function lowerCaseCharPass () {
+  return {
+    type: LOWER_CASE_PASS
+  }
 }
 
-export function lowerCaseCharFail() {
-	return {
-		type: LOWER_CASE_FAIL	
-	}
+export function lowerCaseCharFail () {
+  return {
+    type: LOWER_CASE_FAIL
+  }
 }
 
-export function numberPass() {
-	return {
-		type: NUMBER_PASS	
-	}
+export function numberPass () {
+  return {
+    type: NUMBER_PASS
+  }
 }
 
-export function numberFail() {
-	return {
-		type: NUMBER_FAIL	
-	}
+export function numberFail () {
+  return {
+    type: NUMBER_FAIL
+  }
 }
 
-export function characterLengthPass() {
-	return {
-		type: CHARACTER_LENGTH_PASS	
-	}
+export function characterLengthPass () {
+  return {
+    type: CHARACTER_LENGTH_PASS
+  }
 }
 
-export function characterLengthFail() {
-	return {
-		type: CHARACTER_LENGTH_FAIL	
-	}
+export function characterLengthFail () {
+  return {
+    type: CHARACTER_LENGTH_FAIL
+  }
 }
