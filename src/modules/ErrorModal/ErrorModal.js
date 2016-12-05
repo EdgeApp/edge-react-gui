@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import { closeErrorModal } from './action'
 import style from './style'
-import t from "../lib/LocaleStrings"
+import t from "../../lib/LocaleStrings"
 
 class ErrorModal extends Component {
 
