@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 import t from '../../lib/LocaleStrings'
-import style from './style'
+import style from './ReviewDetails.style'
 
 export default class Details extends Component {
   render () {

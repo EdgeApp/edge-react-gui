@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import Details from './Details'
 import Disclaimer from './Disclaimer'
-import { showSignInDetails, hideSignInDetails  } from './action'
+import { showSignInDetails, hideSignInDetails  } from './ReviewDetails.action'
 import t from "../../lib/LocaleStrings"
 import style from './style'
 
@@ -39,7 +39,15 @@ class Review extends Component {
 		if(!this.props.review){
 			return (
 				<View style={style.container}>
-					<Disclaimer />
+
+		      <View style={style.detailsContainer}>
+		        <Text style={style.text}>
+		          {t('fragment_setup_writeitdown_text')}
+		        </Text>
+		        <Text style={[ style.text, style.warning ]}>
+		          {t('fragment_setup_writeitdown_text_warning')}
+		        </Text>
+		      </View>
 					<TouchableHighlight style={style.button} onPress={this.handleShowDetails}>
 						<Text style={style.buttonText}>{t('fragment_setup_writeitdown_show')}</Text>
 					</TouchableHighlight>

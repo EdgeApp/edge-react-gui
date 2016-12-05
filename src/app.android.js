@@ -26,11 +26,11 @@ import {
   * property defined on it, as in HomeScreen below
   */
 
-import Home from './modules/Home'
-import Drawer from './modules/Drawer'
+import Home from './modules/Home.ui'
+import Main from './modules/Main/Main.ui'
 export const Router = createRouter(() => ({
   home: () => Home,
-  signup: () => Drawer
+  main: () => Main
 }))
 
 class App extends Component {

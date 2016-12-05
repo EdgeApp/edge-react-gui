@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 
-import Container from '../Container'
-import Notification from './Notification'
-import style from './style'
+import Container from '../SignUp.ui'
+import Notification from './Notification.ui'
+import style from './Password.style'
 
-import { validate } from './PasswordValidation/middleware'
-import { checkPassword } from './middleware'
-import { passwordNotificationShow } from './action'
-import { showNextButton, hideNextButton } from '../NextButton/action'
-import { showSkipButton, hideSkipButton } from '../SkipButton/action'
-import { navigatorPush } from '../../Navigator/action'
+import { validate } from './PasswordValidation/PasswordValidation.middleware'
+import { checkPassword } from './Password.middleware'
+import { passwordNotificationShow } from './Password.action'
+import { showNextButton, hideNextButton } from '../NextButton/NextButton.action'
+import { showSkipButton, hideSkipButton } from '../SkipButton/SkipButton.action'
+
 
 import t from '../../lib/LocaleStrings'
 import { 

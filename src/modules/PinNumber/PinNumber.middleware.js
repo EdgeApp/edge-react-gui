@@ -1,10 +1,10 @@
-import { openErrorModal } from '../../ErrorModal/action'
-import { navigatorPush } from '../../Navigator/action'
+import { openErrorModal } from '../ErrorModal/ErrorModal.action'
+
 import t from '../../lib/LocaleStrings'
 export const checkPIN = (pin, navigator) => {
   return dispatch => {
     if (pin.length === 4) {
-      dispatch(navigatorPush())
+      dispatch(openErrorModal(t('YAY')))
     } else {
       dispatch(openErrorModal(t('activity_signup_insufficient_pin')))
     }

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
-import { showNextButton, hideNextButton } from './action'
+import { showNextButton, hideNextButton } from './NextButton.action'
 import t from '../../lib/LocaleStrings'
 class NextButton extends Component {
 

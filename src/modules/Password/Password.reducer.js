@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './Password.action'
 
 export const inputState = (state = false, action) => {
   switch (action.type) {

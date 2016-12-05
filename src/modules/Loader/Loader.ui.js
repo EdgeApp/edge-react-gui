@@ -3,7 +3,7 @@ import { View, ActivityIndicator, Text } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
 
-import style from './style'
+import style from './Loader.style'
 
 class Loader extends Component {
 

@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './PasswordValidation.action'
 
 export const upperCaseChar = (state = false, action) => {
   switch (action.type) {

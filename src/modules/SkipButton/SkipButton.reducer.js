@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './SkipButton.action'
 
 export const skipButtonVisible = (state = false, action) => {
   switch (action.type) {

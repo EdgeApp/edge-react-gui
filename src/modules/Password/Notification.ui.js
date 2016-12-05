@@ -3,7 +3,7 @@ import { View, Text, TouchableHighlight, StyleSheet } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
 import t from "../../lib/LocaleStrings"
-import { passwordNotificationHide } from './action'
+import { passwordNotificationHide } from './Password.action'
 
 class ErrorModal extends Component {
 

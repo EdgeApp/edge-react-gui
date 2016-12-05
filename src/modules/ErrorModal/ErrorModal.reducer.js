@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './ErrorModal.action'
 
 export const visible = (state = false, action) => {
   switch (action.type) {

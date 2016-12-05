@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TextInput } from 'react-native'
 
-import { changeUsernameValue } from './action'
-import { checkUsername } from './middleware'
+import { changeUsernameValue } from './Username.action'
+import { checkUsername } from './Username.middleware'
 
-import Container from '../Container'
+import Container from '../SignUp.ui'
 
 import style from './style'
 import t from '../../lib/LocaleStrings'

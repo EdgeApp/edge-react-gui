@@ -1,10 +1,10 @@
 import async_auto from 'async/auto'
 
-import abcContext from '../../abc/abcContext'
+import abcContext from '../../lib/abcContext'
 
-import { openErrorModal } from '../../ErrorModal/action'
-import { openLoading, closeLoading } from '../../Loader/action'
-import { navigatorPush } from '../../Navigator/action'
+import { openErrorModal } from '../../ErrorModal/ErrorModal.action'
+import { openLoading, closeLoading } from '../../Loader/Loader.action'
+
 import t from '../../lib/LocaleStrings'
 export const checkUsername = username => {
   return dispatch => {
@@ -39,7 +39,8 @@ export const checkUsername = username => {
         dispatch(openErrorModal(err))
       }
       if (!err) {
-        dispatch(navigatorPush())
+
+        dispatch(openErrorModal("WOO"))
       }
     })
   }

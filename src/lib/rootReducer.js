@@ -1,16 +1,15 @@
 import { combineReducers } from 'redux'
 
-import { username } from './SignUp/Username/reducer'
-import { pinNumber } from './SignUp/PinNumber/reducer'
-import { loading } from './Loader/reducer'
-import { route, navigator } from './Navigator/reducer'
-import { nextButtonVisible } from './SignUp/NextButton/reducer'
-import { skipButtonVisible } from './SignUp/SkipButton/reducer'
-import * as PasswordStates from './SignUp/Password/reducer'
-import { reviewDetails } from './SignUp/ReviewDetails/reducer'
-import * as PasswordValidation from './SignUp/Password/PasswordValidation/reducer'
-import * as Loader from './Loader/reducer'
-import * as ErrorModal from './ErrorModal/reducer'
+import { username } from '../modules/Username/Username.reducer'
+import { pinNumber } from '../modules/PinNumber/PinNumber.reducer'
+import { loading } from '../modules/Loader/Loader.reducer'
+import { nextButtonVisible } from '../modules/NextButton/NextButton.reducer'
+import { skipButtonVisible } from '../modules/SkipButton/SkipButton.reducer'
+import * as PasswordStates from '../modules/Password/Password.reducer'
+import { reviewDetails } from '../modules/ReviewDetails/ReviewDetails.reducer'
+import * as PasswordValidation from '../modules/Password/PasswordValidation/PasswordValidation.reducer'
+import * as Loader from '../modules/Loader/Loader.reducer'
+import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
 
 const store = combineReducers({
   username,
@@ -29,11 +28,8 @@ const store = combineReducers({
     })
   }),
   reviewDetails,
-
   nextButtonVisible,
   skipButtonVisible,
-
-  route,
   loader: combineReducers({
     loading: Loader.loading,
     message:	Loader.message

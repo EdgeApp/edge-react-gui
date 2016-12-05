@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './ReviewDetails.action'
 
 export const reviewDetails = (state = false, action) => {
   switch (action.type) {

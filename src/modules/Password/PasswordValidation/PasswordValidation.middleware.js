@@ -1,4 +1,4 @@
-import * as action from './action'
+import * as action from './PasswordValidation.action'
 
 export const validate = (password) => {
   return dispatch => {

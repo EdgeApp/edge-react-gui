@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './PinNumber.action'
 
 export const pinNumber = (state = '', action) => {
   switch (action.type) {

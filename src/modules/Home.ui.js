@@ -4,7 +4,7 @@ import React, { Component } from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import {Container, Content, Button, Icon} from 'native-base';
 import t from '../lib/LocaleStrings'
-import LoaderOverlay from '../Loader/LoaderOverlay'
+import LoaderOverlay from '../modules/Loader/Loader.ui'
 import {Router} from "../app"
 class HomeComponent extends Component {
 	constructor(props) {

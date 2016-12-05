@@ -12,7 +12,7 @@ import {
   DrawerNavigationItem,
 } from '@exponent/ex-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Router } from '../app';
+import { Router } from '../../app';
 
 export default class DrawerNavigationExample extends Component {
 

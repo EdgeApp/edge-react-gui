@@ -1,4 +1,4 @@
-import * as ACTION from './action'
+import * as ACTION from './NextButton.action'
 
 export const nextButtonVisible = (state = true, action) => {
   switch (action.type) {

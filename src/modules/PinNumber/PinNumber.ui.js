@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TextInput } from 'react-native'
 
-import { changePinNumberValue } from './action'
-import { checkPIN } from './middleware'
+import { changePinNumberValue } from './PinNumber.action'
+import { checkPIN } from './PinNumber.middleware'
 
-import Container from '../Container'
-import style from './style'
+import Container from '../SignUp.ui'
+import style from './PinNumber.style'
 import t from '../../lib/LocaleStrings'
 
 
