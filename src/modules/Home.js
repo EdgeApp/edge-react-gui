@@ -1,7 +1,8 @@
 import tron from '../util/reactotron';
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Text, Button, View, StyleSheet, Image } from 'react-native'
+import { Text, Image, StyleSheet } from 'react-native'
+import {Container, Content, Button, Icon} from 'native-base';
 import t from '../lib/LocaleStrings'
 import LoaderOverlay from '../Loader/LoaderOverlay'
 import {Router} from "../app"
@@ -35,25 +36,35 @@ class HomeComponent extends Component {
 		this.props.navigator.updateCurrentRouteParams({userCacheOpen:true});
 	}
 	render() {
-		return (	
-			<View>
-				<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
-					<Text style={styles.welcome}>
-						{t('app_name')}
-					</Text>
-					<Button
-						onPress={this._openSignup}
-						title={t('activity_signup_title')}WTF
-						color="#841584"
-						accessibilityLabel={t('activity_signup_title')}
-					/>
-					<Button
-						onPress={this._openCrash}
-						title="crash"
-						color="#FF0000"
-					/>
-				</Image>
-			</View>
+		return (
+				<Container>
+          <Content>
+						<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
+							<Text style={styles.welcome}>
+								{t('app_name')}
+							</Text>
+              <Button 
+              	onPress={this._openSignup}
+								color="#841584"
+								accessibilityLabel={t('fragment_landing_signup_button')}
+							>{t('fragment_landing_signup_button')}</Button>
+​              <Button style={{width: 140}} onPress={this._openCrash}>
+                 	CRASH
+                  <Icon size={20} color={'#343'} name={'ios-home'} />
+              </Button>
+​              <Button style={{backgroundColor: '#00c497'}} >
+                  <Icon size={20} color={"#384850"} name={'ios-home'} />
+                  {t('fragment_landing_signin_button')}
+              </Button>
+              <Button style={{backgroundColor: '#343', width: 40}} >
+                  <Icon size={20} color={"#00c497"} name={'ios-home'} />
+              </Button>
+              <Button transparent >
+                  <Icon size={20} color={"#00c497"} name={'ios-home'} />
+              </Button>
+            </Image>
+          </Content>
+      </Container>
 		);		
 	}
 }
