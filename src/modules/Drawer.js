@@ -1,55 +1,110 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import t from "../lib/LocaleStrings";
 import {
-	Text,
-	View,
-	TouchableOpacity,
-	ToastAndroid
+  StyleSheet,
+  View,
+  Text,
+  Image,
 } from 'react-native';
+import {
+  StackNavigation,
+  DrawerNavigation,
+  DrawerNavigationItem,
+} from '@exponent/ex-navigation';
 import Icon from 'react-native-vector-icons/Ionicons';
-import LinearGradient from 'react-native-linear-gradient';
+import { Router } from '../app';
 
-import styles from './styles/Drawer';
+export default class DrawerNavigationExample extends Component {
 
-class Drawer extends Component {
-	constructor(props) {
-		super(props);
+	static route = {
+		userCacheOpen: false,
+    navigationBar: {
+      title: t('string_cancel')
+    }
+  };
+  _renderHeader = () => {
+    return <Image source={require('../assets/drawable/background.jpg')} style={styles.header} />;
+  };
 
-	}
+  _renderTitle = (text: string, isSelected: bool) => {
+    return (
+      <Text style={[styles.buttonTitleText, isSelected ? styles.selectedText : null]}>
+        {text}
+      </Text>
+    );
+  };
 
+  _renderIcon = (name: string, isSelected: bool) => {
+    let extraStyle = {marginTop: 2};
+    if (name === 'md-alert') {
+      extraStyle = {...extraStyle, marginLeft: -3};
+    }
+    return (
+      <Icon
+        style={[styles.icon, isSelected ? styles.selectedText : null, extraStyle]}
+        name={name}
+        size={24}
+      />
+    );
+  };
 
-
-	_toggleDrawer() {
-		this.props.navigator.toggleDrawer({
-			to: 'closed',
-			side: 'left',
-			animated: true
-		});
-	}
-
-	render() {
-		const iconTV = (<Icon name="ios-desktop" size={26} color="#9F9F9F" style={styles.drawerListIcon} />);
-		return (
-			<LinearGradient colors={['rgba(0, 0, 0, 0.7)', 'rgba(0,0,0, 0.9)', 'rgba(0,0,0, 1)']} style={styles.linearGradient}>
-				<View style={styles.container}>
-					<View style={styles.drawerList}>
-						<View style={styles.drawerListItem}>
-							{iconTV}
-							<Text style={styles.drawerListItemText} onPress={() => ToastAndroid.show('Coming Soon!', ToastAndroid.SHORT)}>
-								TV Shows
-							</Text>
-						</View>
-					</View>
-					<Text style={styles._version}>
-						{/* 'v1.0.0' */}
-					</Text>
-				</View>
-			</LinearGradient>
-		);
-	}
+  render() {
+    return (
+      <DrawerNavigation
+        drawerPosition="right"
+        renderHeader={this._renderHeader}
+        drawerWidth={300}
+        initialItem="home">
+        <DrawerNavigationItem
+          id="home"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('Examples', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-apps', isSelected)}>
+          <StackNavigation
+            id="root"
+            defaultRouteConfig={{
+              navigationBar: {
+                backgroundColor: '#0084FF',
+                tintColor: '#fff',
+              },
+            }}
+            initialRoute={Router.getRoute('home')}
+          />
+        </DrawerNavigationItem>
+        <DrawerNavigationItem
+          id="another"
+          selectedStyle={styles.selectedItemStyle}
+          renderTitle={isSelected => this._renderTitle('About', isSelected)}
+          renderIcon={isSelected => this._renderIcon('md-alert', isSelected)}>
+          <StackNavigation
+            id="about"
+            initialRoute={Router.getRoute('home')}
+          />
+        </DrawerNavigationItem>
+      </DrawerNavigation>
+    );
+  }
 }
 
-Drawer.propTypes = {
-	navigator: PropTypes.object
-};
-
-export default Drawer;
+const styles = StyleSheet.create({
+  header: {
+    flex: 1,
+    height: 180,
+    width: null,
+    resizeMode: 'cover',
+  },
+  buttonTitleText: {
+    color: '#222',
+    fontWeight: 'bold',
+    marginLeft: 18,
+  },
+  icon: {
+    color: '#999',
+  },
+  selectedText: {
+    color: '#0084FF',
+  },
+  selectedItemStyle: {
+    backgroundColor: "#E8E8E8",
+  },
+});
