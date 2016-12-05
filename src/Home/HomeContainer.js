@@ -9,7 +9,6 @@ class HomeContainer extends Component {
 		return (
 			<View style={styles.home}> 
 				<HomeComponent />	
-				<Router navigator={this.props.navigator} />
 			</View>
 		)
 	}

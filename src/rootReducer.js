@@ -11,6 +11,7 @@ import { reviewDetails } from './SignUp/ReviewDetails/reducer'
 import * as PasswordValidation from './SignUp/Password/PasswordValidation/reducer'
 import * as Loader from './Loader/reducer' 
 import * as ErrorModal from './ErrorModal/reducer' 
+import * as Login from './Login/reducer' 
 
 const store = combineReducers({
 	username,
@@ -29,6 +30,13 @@ const store = combineReducers({
 		})
 	}),
 	reviewDetails,
+
+	login: combineReducers({
+		view		: Login.view,
+		username	: Login.username,
+		password 	: Login.password,
+		pin			: Login.pin	
+	}),
 
 	nextButtonVisible,
 	skipButtonVisible,
