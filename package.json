@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "droid": "standard --fix && standard | snazzy && jest && react-native run-android",
+    "droid": "standard --fix --verbose | snazzy; jest; react-native run-android",
     "test": "jest"
   },
   "dependencies": {
     "@exponent/ex-navigation": "^2.1.5",
     "@exponent/vector-icons": "^2.0.3",
+    "airbitz-core-js": "0.0.11",
     "async": "^2.1.4",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "install": "^0.8.2",
