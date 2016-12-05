@@ -1,7 +1,7 @@
 import tron from '../util/reactotron';
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet } from 'react-native'
 import {Container, Content, Button, Icon} from 'native-base';
 import t from '../lib/LocaleStrings'
 import LoaderOverlay from '../Loader/LoaderOverlay'
@@ -41,22 +41,24 @@ class HomeComponent extends Component {
 			<Content>
 				<Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
 					<Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
-					<Button
-						style={styles.signupButton}
-						onPress={this._openSignUp}
-						accessibilityLabel={t('fragment_landing_signup_button')}>
-						{t('fragment_landing_signup_button')}
-					</Button>
-					<Button
-						style={styles.signinButton}
-						onPress={this._openLogin}
-						accessibilityLabel={t('fragment_landing_signin_button')}>
-						{t('fragment_landing_signin_button')}
-					</Button>
-					<Button
-						onPress={this._openCrash}>
-						CRASH
-					</Button>					
+					<View style={styles.buttonView}>
+						<Button
+							style={styles.signInButton}
+							onPress={this._openLogin}
+							accessibilityLabel={t('fragment_landing_signin_button')}>
+							{t('fragment_landing_signin_button')}
+						</Button>
+						<Button
+							style={styles.signUpButton}
+							onPress={this._openSignUp}
+							accessibilityLabel={t('fragment_landing_signup_button')}>
+							{t('fragment_landing_signup_button')}
+						</Button>						
+						<Button
+							onPress={this._openCrash}>
+							CRASH
+						</Button>					
+					</View>
 				</Image>
 			</Content>
 		</Container>
@@ -65,6 +67,11 @@ class HomeComponent extends Component {
 }
 
 const styles = StyleSheet.create({
+	buttonView: {
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		margin: 10
+	},
 	welcome: {
 		fontSize: 30,
 		textAlign: 'left',
@@ -83,16 +90,15 @@ const styles = StyleSheet.create({
 		alignSelf: 'center'
 	},
 	signInButton: {
-		flex: 1,
-		margin: 20,
-		color: '#FFF',
+		flex: 0,
+		width: 280,
 		alignSelf: 'center',
 		backgroundColor: '#841584'
 	},
 	signUpButton: {
-		flex: 1,
+		flex: 0,
+		width: 280,
 		margin: 20,
-		color: '#FFF',
 		alignSelf: 'center',
 		backgroundColor: '#000088'
 	}
