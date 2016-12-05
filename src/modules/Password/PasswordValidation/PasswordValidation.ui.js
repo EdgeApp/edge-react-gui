@@ -4,50 +4,50 @@ import { connect } from 'react-redux'
 import t from "../../../lib/LocaleStrings"
 class PasswordRequirement extends Component {
 
-	checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
+  checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
 
-	checkOneLower = (validation) => validation.lowerCaseChar ? { color: 'blue' } : null
+  checkOneLower = (validation) => validation.lowerCaseChar ? { color: 'blue' } : null
 
-	checkOneNumber = (validation) => validation.number ? { color: 'blue' } : null
+  checkOneNumber = (validation) => validation.number ? { color: 'blue' } : null
 
-	checkCharacterLength = (validation) => validation.characterLength ? { color: 'blue' } : null
+  checkCharacterLength = (validation) => validation.characterLength ? { color: 'blue' } : null
 
-	render() {
-		return (
-			<View style={style.container}>
-				<Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
-				<Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}>   -   {t('password_rule_no_uppercase')}</Text>
-				<Text style={[ style.text, this.checkOneLower(this.props.validation) ]}>   -   {t('password_rule_no_lowercase')}</Text>
-				<Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}>   -   {t('password_rule_no_number')}</Text>
-				<Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}>   -   {t('password_rule_too_short')}</Text>
-			</View>
-		);
-	}
+  render() {
+    return (
+      <View style={style.container}>
+        <Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
+        <Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}>   -   {t('password_rule_no_uppercase')}</Text>
+        <Text style={[ style.text, this.checkOneLower(this.props.validation) ]}>   -   {t('password_rule_no_lowercase')}</Text>
+        <Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}>   -   {t('password_rule_no_number')}</Text>
+        <Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}>   -   {t('password_rule_too_short')}</Text>
+      </View>
+    );
+  }
 
 }
 
 const style = StyleSheet.create({
 
-	container: {
-		flex:3,
-		marginHorizontal:10
-	},
+  container: {
+    flex:3,
+    marginHorizontal:10
+  },
 
-	text: {
-		color: "#FFF",	
-		fontSize: 14,
-	},
+  text: {
+    color: "#FFF",  
+    fontSize: 14,
+  },
 
-	textLead: {
-		marginTop:5,
-		marginBottom:5,
-		fontSize: 18,
-		fontWeight: 'bold'
-	},
+  textLead: {
+    marginTop:5,
+    marginBottom:5,
+    fontSize: 18,
+    fontWeight: 'bold'
+  },
 
 });
 
 export default connect( state => ({
-	password: state.password.password,
-	validation : state.password.validation
+  password: state.password.password,
+  validation : state.password.validation
 }) )(PasswordRequirement)

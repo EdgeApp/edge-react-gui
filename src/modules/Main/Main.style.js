@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
     flex: 1
   },
   linearGradient: {
-		// top: 0,
-		// left: 0,
-		// right: 0,
-		// height: 248,
-		// position: 'absolute'
+    // top: 0,
+    // left: 0,
+    // right: 0,
+    // height: 248,
+    // position: 'absolute'
     flex: 1
   },
   _version: {

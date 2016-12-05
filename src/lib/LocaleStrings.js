@@ -11,7 +11,7 @@ import DeviceInfo from 'react-native-device-info'
 const deviceLocale = DeviceInfo.getDeviceLocale()
 
 const LocaleStrings = function (inputKey, reqLocale) {
-	// if no locale specified, use device
+  // if no locale specified, use device
   if (!reqLocale) {
     reqLocale = deviceLocale
   }
