@@ -1,4 +1,5 @@
-import abc from 'airbitz-core-js'
+// import abc from 'airbitz-core-js'
+import abc from './abc'
 
 const abcContext = abc.makeABCContext('3ad0717b3eb31f745aba7bd9d51e7fd1b2926431', 'account:repo:react-gui', null, function (error, context) {
   if (error) {
