@@ -81,9 +81,9 @@ class HomeComponent extends Component {
               <Button onPress={this._openCrash}> CRASH </Button>          
             </View>
           </Image>
-		  <Loader />
-		  <ErrorModal />
         </Content>
+	    <Loader />
+	    <ErrorModal />
       </Container>
     )
   }
@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     margin: 10,
     color: '#FFFFFF'
   },
+
   backgroundImage: {
     justifyContent: 'flex-start',
     alignItems: 'center',
