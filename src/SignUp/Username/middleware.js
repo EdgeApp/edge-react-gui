@@ -4,22 +4,13 @@ import abcContext from '../../abc/abcContext'
 
 import { openErrorModal } from '../../ErrorModal/action'
 import { openLoading, closeLoading } from '../../Loader/action'
-import { navigatorPush } from '../../Navigator/action'
+
 import t from "../../lib/LocaleStrings"
 export const checkUsername = username => {
 
 	return dispatch => {
 
 		async_auto({
-			checkUsernameLength: function(callback) {
-				
-				if(username.length >= 3){
-					callback(null, null);
-				}else{
-					callback( t('activity_signup_insufficient_username_message'), null);
-				}
-
-			},
 			openLoading: function(callback) {
 
 				dispatch(openLoading(t('activity_signup_checking_username')));
@@ -47,7 +38,7 @@ export const checkUsername = username => {
 				dispatch(openErrorModal(err))
 			}
 			if(!err){
-				dispatch(navigatorPush())
+				dispatch(openErrorModal'You have successfully log in'))
 			}
 		});
 	

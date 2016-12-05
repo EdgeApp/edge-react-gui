@@ -10,7 +10,6 @@ class Login extends Component {
 	submit = () => {
 		console.log(this.props.username)
 		console.log(this.props.password)
-		// this.props.dispatch()	
 	}
 
 	changeUsername = (username) => {
