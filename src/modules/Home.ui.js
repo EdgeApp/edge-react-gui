@@ -3,19 +3,22 @@ import { connect } from 'react-redux'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import {Container, Content, Button, Icon} from 'native-base';
 import t from '../lib/LocaleStrings'
-import {Router} from "../app"
+import { Router } from "../app"
 import appTheme from '../../Themes/appTheme'
 
 import Loader from './Loader/Loader.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import { openLogin } from './Login/Login.action'
+import Dimensions from 'Dimensions'
+
+const { width, height } = Dimensions.get('window');
 
 class HomeComponent extends Component {
 
   constructor(props) {
     super(props);
-    this._openSignup = this._openSignup.bind(this);
+    this._openSignUp = this._openSignUp.bind(this);
     this._openCrash = this._openCrash.bind(this);
     this._openUserCache = this._openUserCache.bind(this);
   }
@@ -27,8 +30,8 @@ class HomeComponent extends Component {
     }
   };
 
-  _openSignup() {
-    this.props.navigator.push(Router.getRoute('signup'));    
+  _openSignUp() {
+    this.props.navigator.push(Router.getRoute('signup',{screen: "username"}));    
   }
 
   _openCrash() {
@@ -43,8 +46,9 @@ class HomeComponent extends Component {
 
     if(!this.props.login) {
       return (
-        <Button
-          style={styles.signInButton}
+        <Button 
+          large
+          style={[ styles.button, { backgroundColor: "#80C342" } ]}
           onPress={this.handleOpenLogin}
           accessibilityLabel={t('fragment_landing_signin_button')}>
           {t('fragment_landing_signin_button')}
@@ -66,27 +70,24 @@ class HomeComponent extends Component {
 
   render() {
     return (
-      <Container theme={appTheme}>
-        <Content>
-          <Image source={require('../assets/drawable/background.jpg')} style={styles.backgroundImage}>
-            <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
-            <View style={styles.buttonView}>
-              { this.checkLoginViewState() }
-              <Button
-                style={styles.signUpButton}
-                onPress={this._openSignUp}
-                accessibilityLabel={t('fragment_landing_signup_button')}>
-                {t('fragment_landing_signup_button')}
-              </Button>            
-              <Button onPress={this._openCrash}> CRASH </Button>          
-            </View>
-          </Image>
-        </Content>
-	    <Loader />
-	    <ErrorModal />
-      </Container>
+      <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={styles.backgroundImage}>
+        <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
+        <View style={styles.buttonView}>
+          { this.checkLoginViewState() }
+          <Button 
+            large
+            style={[ styles.button, { backgroundColor: "#2291CF" } ]}
+            onPress={this._openSignUp}
+            accessibilityLabel={t('fragment_landing_signup_button')}>
+            {t('fragment_landing_signup_button')}
+          </Button>            
+        </View>
+        <Loader />
+        <ErrorModal />
+      </Image>
     )
   }
+  
 }
 
 const styles = StyleSheet.create({
@@ -94,7 +95,8 @@ const styles = StyleSheet.create({
   buttonView: {
     justifyContent: 'flex-start',
     alignItems: 'center',
-    margin: 10
+    margin: 10,
+    flex: 3
   },
 
   welcome: {
@@ -105,32 +107,28 @@ const styles = StyleSheet.create({
   },
 
   backgroundImage: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    resizeMode: Image.resizeMode.cover,
     flex:1,
-    width: null
+    width: null,
+    height: null,
+    resizeMode: 'cover',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
 
   logoImage: {
-    flex:0,
-    alignSelf: 'center'
+    flex: 1,
+    justifyContent: 'center',
+    resizeMode: 'contain',
+    width: width * 0.5,
   },
 
-  signInButton: {
-    flex: 0,
-    width: 280,
+  button: {
+    marginVertical: 10,
+    width: width * 0.6,
     alignSelf: 'center',
-    backgroundColor: '#841584'
+    height: 45
   },
 
-  signUpButton: {
-    flex: 0,
-    width: 280,
-    margin: 20,
-    alignSelf: 'center',
-    backgroundColor: '#000088'
-  }
 });
 
 export default connect( state =>  ({
