@@ -26,21 +26,32 @@ class Login extends Component {
   }
   
   render() {
+    console.log(this.refs)
     return (
       <View style={style.container}>
 
-        <InputGroup 
-          borderType='regular' 
-          style={style.inputGroup} 
-        >
-          <Input placeholder={t('fragment_landing_username_hint')} style={style.input} onChangeText={ this.changeUsername } value={this.props.username}/>    
+        <InputGroup borderType='regular' style={style.inputGroup} >
+          <Input 
+              placeholder={t('fragment_landing_username_hint')} 
+              style={style.input} 
+              onChangeText={ this.changeUsername } 
+              value={this.props.username}
+              returnKeyType = {"next"}
+              onSubmitEditing={ e =>  this.refs.password._textInput.focus() }
+        />    
         </InputGroup>
 
-        <InputGroup 
-          borderType='regular' 
-          style={style.inputGroup} 
-        >
-          <Input placeholder={t('fragment_landing_password_hint')} style={style.input}  secureTextEntry={true} onChangeText={ this.changePassword } value={this.props.password}/>    
+        <InputGroup borderType='regular' style={style.inputGroup} >
+          <Input 
+            ref='password'
+            placeholder={t('fragment_landing_password_hint')} 
+            style={style.input}  
+            secureTextEntry={true} 
+            onChangeText={ this.changePassword } 
+            value={this.props.password}
+            blurOnSubmit={ true }
+            onSubmitEditing={ this.submit }  
+          /> 
         </InputGroup>
 
         <Button style={style.button} block large onPress={this.submit}>Sign In</Button>

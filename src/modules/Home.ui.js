@@ -109,7 +109,7 @@ class HomeComponent extends Component {
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={styles.backgroundImage}>
         <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
-        <Main password={this.props.password} pin={this.props.pin}/>
+        <Main {...this.props}/>
         <Loader />
         <ErrorModal />
       </Image>

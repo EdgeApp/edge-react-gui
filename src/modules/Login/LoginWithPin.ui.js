@@ -41,7 +41,7 @@ class Login extends Component {
               keyboardType="numeric"
               maxLength={4} 
               autoCorrect={ false }
-              returnKeyType="next"
+              returnKeyType="done"
               blurOnSubmit={ true }
               onSubmitEditing={ this.submit }  
           />    
