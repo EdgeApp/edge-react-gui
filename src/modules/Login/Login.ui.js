@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, StyleSheet } from 'react-native'
-import { InputGroup, Input, Button } from 'native-base';
-import t from '../../lib/LocaleStrings'
+
 import { loginUsername, loginPassword } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
 
+import { View, Text, Image, StyleSheet } from 'react-native'
+import { InputGroup, Input, Button } from 'native-base';
+import t from '../../lib/LocaleStrings'
+import Dimensions from 'Dimensions'
+const { width, height } = Dimensions.get('window');
+
 class Login extends Component {
+
 
   submit = () => {
     console.log(this.props.username)
@@ -44,7 +49,7 @@ class Login extends Component {
           <Input placeholder={t('fragment_landing_password_hint')} style={style.input}  secureTextEntry={true} onChangeText={ this.changePassword } value={this.props.password}/>    
         </InputGroup>
 
-        <Button style={style.button} block success onPress={this.submit}>Sign In</Button>
+        <Button style={style.button} block large onPress={this.submit}>Sign In</Button>
       </View>
     )
   }
@@ -57,12 +62,15 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 30,
-    marginVertical:10
+    width: width * 0.6,
+    marginVertical:15
   },
 
-  button : {
-    marginVertical: 10  
-  },
+    button : {
+      backgroundColor: "#80C342",
+      marginVertical: 10,
+      height: 45
+    },
 
   inputGroup: {
     marginVertical: 10,

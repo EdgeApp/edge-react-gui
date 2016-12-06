@@ -17,18 +17,15 @@ export const loginWithPassword = (username,password) => {
       },
       getUsernameAvailability: function (callback) {
         setTimeout(() => {
-			  console.log('before call')
-          abcContext.loginWithPassword(username, password, null, null, (error, account) => {
-			  console.log('after call')
-            if (error) {
-			  console.log(error)
+          // abcContext.loginWithPassword(username, password, null, null, (error, account) => {
+          //   if (error) {
               callback('Error on login sample', null)
-            }
-            if (!error) {
-              callback(null, null)
-            }
-          })
-        }, 500)
+          //   }
+          //   if (!error) {
+          //     callback(null, null)
+          //   }
+          // })
+        }, 3000)
       }
     }, function (err, results) {
       dispatch(closeLoading())

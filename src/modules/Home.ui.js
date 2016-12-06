@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, StyleSheet } from 'react-native'
-import {Container, Content, Button, Icon} from 'native-base';
-import t from '../lib/LocaleStrings'
 import { Router } from "../app"
-import appTheme from '../../Themes/appTheme'
 
 import Loader from './Loader/Loader.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
-import { openLogin } from './Login/Login.action'
-import Dimensions from 'Dimensions'
 
+import { openLogin } from './Login/Login.action'
+
+import { View, Text, Image, StyleSheet } from 'react-native'
+import { Button } from 'native-base';
+import appTheme from '../../Themes/appTheme'
+import t from '../lib/LocaleStrings'
+import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window');
 
 class HomeComponent extends Component {
