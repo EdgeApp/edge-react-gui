@@ -1,12 +1,27 @@
 import * as ACTION from './Login.action'
 
-export const view = (state = false, action) => {
+export const viewPassword = (state = false, action) => {
 
   switch (action.type) {
     case ACTION.OPEN_LOG_IN  :
       return true
 
     case ACTION.CLOSE_LOG_IN :
+      return false
+
+    default:      
+      return state
+  }
+
+}
+
+export const viewPIN = (state = false, action) => {
+
+  switch (action.type) {
+    case ACTION.OPEN_LOG_IN_USING_PIN  :
+      return true
+
+    case ACTION.CLOSE_LOG_IN_USING_PIN :
       return false
 
     default:      

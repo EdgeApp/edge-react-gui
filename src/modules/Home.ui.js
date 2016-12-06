@@ -5,6 +5,7 @@ import { Router } from "../app"
 import Loader from './Loader/Loader.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
+import LoginWithPin from './Login/LoginWithPin.ui'
 
 import { openLogin } from './Login/Login.action'
 
@@ -15,7 +16,7 @@ import t from '../lib/LocaleStrings'
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window');
 
-class HomeComponent extends Component {
+class Main extends Component {
 
   constructor(props) {
     super(props);
@@ -43,46 +44,72 @@ class HomeComponent extends Component {
     this.props.navigator.updateCurrentRouteParams({userCacheOpen:true});
   }
 
-  checkLoginViewState = () => {
-
-    if(!this.props.login) {
-      return (
-        <Button 
-          large
-          style={[ styles.button, { backgroundColor: "#80C342" } ]}
-          onPress={this.handleOpenLogin}
-          accessibilityLabel={t('fragment_landing_signin_button')}>
-          {t('fragment_landing_signin_button')}
-        </Button>
-      )  
-    }  
-
-    if(this.props.login) {
-      return (
-        <Login />
-      )  
-    }  
-
-  }
-
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())  
   }
+
+  render(){
+
+    console.log(this.props)
+    if(this.props.pin) {
+      return (
+          <View style={styles.main}>
+            <LoginWithPin />
+          </View>
+      )  
+    }  
+
+    if(!this.props.pin) {
+
+      if(this.props.password){
+        return(
+          <View style={styles.main}>
+            <Login />
+            <Button 
+              large
+              style={[ styles.button, { backgroundColor: "#2291CF" } ]}
+              onPress={this._openSignUp}
+              accessibilityLabel={t('fragment_landing_signup_button')}>
+              {t('fragment_landing_signup_button')}
+            </Button>            
+          </View>
+        )
+      }
+
+      if(!this.props.password) {
+        return (
+          <View style={styles.main}>
+            <Button 
+              large
+              style={[ styles.button, { backgroundColor: "#80C342" } ]}
+              onPress={this.handleOpenLogin}
+              accessibilityLabel={t('fragment_landing_signin_button')}>
+              {t('fragment_landing_signin_button')}
+            </Button>
+            <Button 
+              large
+              style={[ styles.button, { backgroundColor: "#2291CF" } ]}
+              onPress={this._openSignUp}
+              accessibilityLabel={t('fragment_landing_signup_button')}>
+              {t('fragment_landing_signup_button')}
+            </Button>            
+          </View>
+        )
+      }
+
+    }
+  
+  }
+
+}
+
+class HomeComponent extends Component {
 
   render() {
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={styles.backgroundImage}>
         <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
-        <View style={styles.buttonView}>
-          { this.checkLoginViewState() }
-          <Button 
-            large
-            style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-            onPress={this._openSignUp}
-            accessibilityLabel={t('fragment_landing_signup_button')}>
-            {t('fragment_landing_signup_button')}
-          </Button>            
-        </View>
+        <Main password={this.props.password} pin={this.props.pin}/>
         <Loader />
         <ErrorModal />
       </Image>
@@ -93,7 +120,7 @@ class HomeComponent extends Component {
 
 const styles = StyleSheet.create({
 
-  buttonView: {
+  main: {
     justifyContent: 'flex-start',
     alignItems: 'center',
     margin: 10,
@@ -135,6 +162,7 @@ const styles = StyleSheet.create({
 
 export default connect( state =>  ({
 
-  login  :  state.login.view
+  password  : state.login.viewPassword,
+  pin       : state.login.viewPIN
 
 }) )(HomeComponent)

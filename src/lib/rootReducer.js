@@ -30,10 +30,11 @@ const store = combineReducers({
   reviewDetails,
 
   login: combineReducers({
-    view    : Login.view,
-    username  : Login.username,
-    password  : Login.password,
-    pin     : Login.pin 
+    viewPassword  : Login.viewPassword,
+    viewPIN       : Login.viewPIN,
+    username      : Login.username,
+    password      : Login.password,
+    pin           : Login.pin 
   }),
 
   nextButtonVisible,

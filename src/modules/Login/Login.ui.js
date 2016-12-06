@@ -14,9 +14,7 @@ class Login extends Component {
 
 
   submit = () => {
-    console.log(this.props.username)
-    console.log(this.props.password)
-	this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
+    this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
   }
 
   changeUsername = (username) => {
@@ -27,10 +25,6 @@ class Login extends Component {
     this.props.dispatch(loginPassword(password))  
   }
   
-  changePin = (pin) => {
-  
-  }
-
   render() {
     return (
       <View style={style.container}>
