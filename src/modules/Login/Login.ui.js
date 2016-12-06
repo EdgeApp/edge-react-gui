@@ -26,7 +26,6 @@ class Login extends Component {
   }
   
   render() {
-    console.log(this.refs)
     return (
       <View style={style.container}>
 

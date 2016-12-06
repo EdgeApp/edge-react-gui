@@ -50,7 +50,6 @@ class Main extends Component {
 
   render(){
 
-    console.log(this.props)
     if(this.props.pin) {
       return (
           <View style={styles.main}>
