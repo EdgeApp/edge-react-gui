@@ -24,9 +24,9 @@ class ErrorModal extends Component {
   render() {
     return (
       <Modal
-          isOpen={this.checkLoading()}
-          position={"center"}
-          style={style.modal}
+        isOpen={this.checkLoading()}
+        position={"center"}
+        style={style.modal}
         animationDuration={200}
         onClosed={this.handleClose}
       >

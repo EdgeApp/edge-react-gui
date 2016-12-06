@@ -66,11 +66,11 @@ const style = StyleSheet.create({
     marginVertical:15
   },
 
-    button : {
-      backgroundColor: "#80C342",
-      marginVertical: 10,
-      height: 45
-    },
+  button : {
+    backgroundColor: "#80C342",
+    marginVertical: 10,
+    height: 45
+  },
 
   inputGroup: {
     marginVertical: 10,
