@@ -52,8 +52,8 @@ class Main extends Component {
 
     if(this.props.pin) {
       return (
-          <View style={styles.main}>
-            <LoginWithPin />
+        <View style={styles.main}>
+          <LoginWithPin />
           </View>
       )  
     }  
