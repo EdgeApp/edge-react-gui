@@ -15,7 +15,7 @@ export const viewPassword = (state = false, action) => {
 
 }
 
-export const viewPIN = (state = true, action) => {
+export const viewPIN = (state = false, action) => {
 
   switch (action.type) {
     case ACTION.OPEN_LOG_IN_USING_PIN  :

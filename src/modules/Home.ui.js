@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Router } from "../app"
 import { Actions } from 'react-native-router-flux'
 
 import Loader from './Loader/Loader.ui'
@@ -14,36 +13,11 @@ import { View, Text, Image, StyleSheet } from 'react-native'
 import { Button } from 'native-base';
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
+
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window');
 
 class Main extends Component {
-
-  constructor(props) {
-    super(props);
-    this._openSignUp = this._openSignUp.bind(this);
-    this._openCrash = this._openCrash.bind(this);
-    this._openUserCache = this._openUserCache.bind(this);
-  }
-
-  static route = {
-    userCacheOpen: false,
-    navigationBar: {
-      title: t('app_name')
-    }
-  };
-
-  _openSignUp() {
-    this.props.navigator.push(Router.getRoute('signup',{screen: "username"}));    
-  }
-
-  _openCrash() {
-    this.props.navigator.push(Router.getRoute('fakecrash'));    
-  }  
-
-  _openUserCache() {
-    this.props.navigator.updateCurrentRouteParams({userCacheOpen:true});
-  }
 
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())  
@@ -55,7 +29,7 @@ class Main extends Component {
       return (
         <View style={styles.main}>
           <LoginWithPin />
-          </View>
+        </View>
       )  
     }  
 
@@ -68,7 +42,7 @@ class Main extends Component {
             <Button 
               large
               style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={this._openSignUp}
+              onPress={ Actions.signup }
               accessibilityLabel={t('fragment_landing_signup_button')}>
               {t('fragment_landing_signup_button')}
             </Button>            
@@ -89,7 +63,7 @@ class Main extends Component {
             <Button 
               large
               style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={Actions.username}
+              onPress={ Actions.signup }
               accessibilityLabel={t('fragment_landing_signup_button')}>
               {t('fragment_landing_signup_button')}
             </Button>            

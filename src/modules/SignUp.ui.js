@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import NavigationBar from './NavigationBar'
-import ErrorModal from '../ErrorModal/ErrorModal'
-import Loader from '../Loader/LoaderOverlay'
-import NextButton from './NextButton/NextButton'
-import SkipButton from './SkipButton/SkipButton'
+import NavigationBar from './SignUpNavigationBar.ui'
+import ErrorModal from './ErrorModal/ErrorModal.ui'
+import Loader from './Loader/Loader.ui'
+import NextButton from './NextButton/NextButton.ui'
+import SkipButton from './SkipButton/SkipButton.ui'
 
 class SignUpContainer extends Component {
 

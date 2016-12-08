@@ -11,6 +11,8 @@ import * as PasswordValidation from '../modules/Password/PasswordValidation/Pass
 import * as Loader from '../modules/Loader/Loader.reducer'
 import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
 import * as Login from '../modules/Login/Login.reducer' 
+import routes from './routesReducer'
+
 const store = combineReducers({
   username,
   pinNumber,
@@ -46,7 +48,8 @@ const store = combineReducers({
   errorModal  : combineReducers({
     visible :   ErrorModal.visible,
     message : ErrorModal.message
-  })
+  }),
+  routes
 })
 
 

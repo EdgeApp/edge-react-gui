@@ -7,7 +7,7 @@ import { checkUsername } from './Username.middleware'
 
 import Container from '../SignUp.ui'
 
-import style from './style'
+import style from './Username.style'
 import t from '../../lib/LocaleStrings'
 
 class UsernameComponent extends Component {
@@ -26,8 +26,8 @@ class UsernameComponent extends Component {
       <Container handleSubmit={this.handleSubmit}>
         <View style={style.inputView}>
           <TextInput
-              style={style.usernameInput}
-              placeholder={t('fragment_landing_username_hint')}
+            style={style.usernameInput}
+            placeholder={t('fragment_landing_username_hint')}
             onChangeText={ this.handleOnChangeText }
             value={ username }
             autoFocus={ true }

@@ -3,10 +3,11 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { showNextButton, hideNextButton } from './NextButton.action'
 import t from '../../lib/LocaleStrings'
+
 class NextButton extends Component {
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.route.screen === 'createPassword') {
+    if (nextProps.scene === 'password') {
       if (nextProps.password.length === 0) {
         this.props.dispatch(hideNextButton())
       }
@@ -16,7 +17,7 @@ class NextButton extends Component {
       }
     }
 
-    if (nextProps.route.screen !== 'createPassword') {
+    if (nextProps.scene !== 'password') {
       this.props.dispatch(showNextButton())
     }
   }
@@ -59,6 +60,6 @@ export default connect(state => ({
 
   visible: state.nextButtonVisible,
   password: state.password.password,
-  route: state.route
+  scene: state.routes.scene.sceneKey
 
 }))(NextButton)

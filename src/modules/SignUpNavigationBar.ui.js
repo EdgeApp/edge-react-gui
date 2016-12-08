@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 
-import PasswordValidation from './Password/PasswordValidation/PasswordValidation'
+import PasswordValidation from './Password/PasswordValidation/PasswordValidation.ui'
 
-import { navigatorPush, navigatorPop } from '../Navigator/action'
+import { Actions } from 'react-native-router-flux'
 
 class NavigationBar extends Component {
 
@@ -14,7 +14,7 @@ class NavigationBar extends Component {
 
   checkPasswordStateOption = () => {
 
-    if(this.props.route.screen === "createPassword" && this.props.passwordState){
+    if(this.props.scene === "password" && this.props.passwordState){
       return (
         <PasswordValidation />
       )  
@@ -26,7 +26,7 @@ class NavigationBar extends Component {
 
   checkPasswordStateStyle = () => {
 
-    if(this.props.route.screen === "createPassword" && this.props.passwordState){
+    if(this.props.scene === "password" && this.props.passwordState){
       return {height: 200}    
     }else{
       return null  
@@ -39,10 +39,10 @@ class NavigationBar extends Component {
       <View style={[ style.container, this.checkPasswordStateStyle() ]}>
         <View style={style.navigationBarContainer}>
           <View style={style.navigationContainer}>
-            <TouchableHighlight onPress={this.handleOnPress}>
+            <TouchableHighlight onPress={ Actions.pop }>
               <Text style={style.text}>Back</Text>
             </TouchableHighlight>
-            <Text style={[ style.text, style.title ]}>{this.props.route.title}</Text>
+            <Text style={[ style.text, style.title ]}></Text>
             <Text style={style.text}>     </Text>
           </View>
           { this.checkPasswordStateOption() }
@@ -91,6 +91,7 @@ const style = StyleSheet.create({
 export default connect( state => ({
 
   route      : state.route,
-  passwordState  : state.password.inputState
+  passwordState  : state.password.inputState,
+  scene: state.routes.scene.sceneKey
 
 }) )(NavigationBar)

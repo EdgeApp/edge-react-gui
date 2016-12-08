@@ -1,11 +1,13 @@
 import async_auto from 'async/auto'
+import { Actions } from 'react-native-router-flux'
 
 import abcContext from '../../lib/abcContext'
 
-import { openErrorModal } from '../../ErrorModal/ErrorModal.action'
-import { openLoading, closeLoading } from '../../Loader/Loader.action'
+import { openErrorModal } from '../ErrorModal/ErrorModal.action'
+import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
+
 export const checkUsername = username => {
   return dispatch => {
     async_auto({
@@ -39,8 +41,7 @@ export const checkUsername = username => {
         dispatch(openErrorModal(err))
       }
       if (!err) {
-
-        dispatch(openErrorModal("WOO"))
+        Actions.pin()
       }
     })
   }

@@ -19,7 +19,7 @@ import {
   blurPasswordInput,
   changePasswordValue,
   changePasswordRepeatValue
-} from './action'
+} from './Password.action'
 
 class Password extends Component {
   

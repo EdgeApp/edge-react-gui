@@ -1,6 +1,6 @@
 
 
-import { openErrorModal } from '../../ErrorModal/ErrorModal.action'
+import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import t from '../../lib/LocaleStrings'
 export const checkPassword = (password, passwordRepeat, validation) => {
   return dispatch => {

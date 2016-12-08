@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 
-import Details from './Details'
-import Disclaimer from './Disclaimer'
+import Details from './UserDetails.ReviewDetails.ui'
+// import Disclaimer from './Disclaimer'
 import { showSignInDetails, hideSignInDetails  } from './ReviewDetails.action'
 import t from "../../lib/LocaleStrings"
-import style from './style'
+import style from './ReviewDetails.style'
 
 class Review extends Component {
 
