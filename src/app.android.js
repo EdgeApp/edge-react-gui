@@ -4,7 +4,8 @@ import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
 import { AppRegistry } from 'react-native'
 
-import Home from './modules/Home.ui'
+import Landing from './modules/Landing.ui'
+import Home from './modules/Home/Home.ui'
 import Username from './modules/Username/Username.ui'
 import PinNumber from './modules/PinNumber/PinNumber.ui'
 import Password from './modules/Password/Password.ui'
@@ -26,7 +27,8 @@ export default class App extends Component {
               <Scene key="password" component={Password} title={"Enter Password"} />
               <Scene key="review" component={ReviewDetails} title={"Details"} />
             </Scene>
-            <Scene key="home" component={Home} initial={true} hideNavBar={true}/>
+            <Scene key="landing" component={Landing} initial={true} hideNavBar={true}/>
+            <Scene key="home" component={Home} hideNavBar={true}/>
           </Scene>
         </RouterWithRedux>
 			</Provider>

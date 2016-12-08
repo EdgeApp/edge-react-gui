@@ -1,4 +1,5 @@
 import async_auto from 'async/auto'
+import { Actions } from 'react-native-router-flux'
 
 import abcContext from '../../lib/abcContext'
 
@@ -17,9 +18,15 @@ export const loginWithPassword = (username,password) => {
       },
       getUsernameAvailability: function (callback) {
         setTimeout(() => {
+
+          if(username === "user" && password === "fam") {
+              callback(null, null)
+          }else{
+              callback('Error on login sample', null)
+          }
           // abcContext.loginWithPassword(username, password, null, null, (error, account) => {
           //   if (error) {
-              callback('Error on login sample', null)
+              // callback('Error on login sample', null)
           //   }
           //   if (!error) {
           //     callback(null, null)
@@ -34,8 +41,7 @@ export const loginWithPassword = (username,password) => {
         dispatch(openErrorModal(err))
       }
       if (!err) {
-
-        dispatch(openErrorModal("Login Successfully"))
+        Actions.home()
       }
     })
   }
