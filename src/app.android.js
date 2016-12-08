@@ -28,7 +28,7 @@ export default class App extends Component {
               <Scene key="review" component={ReviewDetails} title={"Details"} />
             </Scene>
             <Scene key="landing" component={Landing} initial={true} hideNavBar={true}/>
-            <Scene key="home" component={Home} hideNavBar={true}/>
+            <Scene key="home" component={Home} hideNavBar={true} type="reset"/>
           </Scene>
         </RouterWithRedux>
 			</Provider>

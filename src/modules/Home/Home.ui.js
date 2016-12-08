@@ -8,13 +8,12 @@ export default class Home extends Component {
   render(){
     return(
       <View style={style.container} >
-        <Text>Welcome!! This is the landing Page!</Text>
+        <Text>Welcome!! This is the Home Page!</Text>
       </View>
     )
   }
 
 }
-
 
 const style = StyleSheet.create({
 

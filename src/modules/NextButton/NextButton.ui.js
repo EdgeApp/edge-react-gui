@@ -22,6 +22,18 @@ class NextButton extends Component {
     }
   }
 
+  checkScene = () => {
+    
+    switch(this.props.scene){
+      case "review":
+        return t('string_finish')
+
+      default:
+        return t('string_next')
+    } 
+
+  }
+
   render () {
     if (this.props.visible) {
       return (
@@ -43,7 +55,7 @@ class NextButton extends Component {
 const styles = StyleSheet.create({
 
   button: {
-    backgroundColor: 'limegreen',
+    backgroundColor: '#80C342',
     height: 60
   },
 

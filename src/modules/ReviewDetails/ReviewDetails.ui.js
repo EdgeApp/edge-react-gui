@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 
 import Details from './UserDetails.ReviewDetails.ui'
-// import Disclaimer from './Disclaimer'
 import { showSignInDetails, hideSignInDetails  } from './ReviewDetails.action'
 import t from "../../lib/LocaleStrings"
 import style from './ReviewDetails.style'
+import NextButton from '../NextButton/NextButton.ui'
 
 class Review extends Component {
 
@@ -22,15 +23,22 @@ class Review extends Component {
     }  
   }
 
+  handleFinish = () => {
+    Actions.home() 
+  }
+
   render() {
 
     if(this.props.review) {
       return (
-        <View style={style.container}>
-          <Details username={this.props.username} pinNumber={this.props.pinNumber} password={this.props.password}/>  
-          <TouchableHighlight style={style.button} onPress={this.handleHideDetails}>
-            <Text style={style.buttonText}>{t('fragment_setup_writeitdown_hide')}</Text>
-          </TouchableHighlight>
+        <View style={{ flex: 1 }}>
+          <View style={style.container}>
+            <Details username={this.props.username} pinNumber={this.props.pinNumber} password={this.props.password}/>  
+            <TouchableHighlight style={style.button} onPress={this.handleHideDetails}>
+              <Text style={style.buttonText}>{t('fragment_setup_writeitdown_hide')}</Text>
+            </TouchableHighlight>
+          </View>
+          <NextButton onPress={ this.handleFinish } />
         </View>
       )  
 
@@ -38,19 +46,21 @@ class Review extends Component {
 
     if(!this.props.review){
       return (
-        <View style={style.container}>
-
-          <View style={style.detailsContainer}>
-            <Text style={style.text}>
-              {t('fragment_setup_writeitdown_text')}
-            </Text>
-            <Text style={[ style.text, style.warning ]}>
-              {t('fragment_setup_writeitdown_text_warning')}
-            </Text>
+        <View style={{ flex: 1 }}>
+          <View style={style.container}>
+            <View style={style.detailsContainer}>
+              <Text style={style.text}>
+                {t('fragment_setup_writeitdown_text')}
+              </Text>
+              <Text style={[ style.text, style.warning ]}>
+                {t('fragment_setup_writeitdown_text_warning')}
+              </Text>
+            </View>
+            <TouchableHighlight style={style.button} onPress={this.handleShowDetails}>
+              <Text style={style.buttonText}>{t('fragment_setup_writeitdown_show')}</Text>
+            </TouchableHighlight>
           </View>
-          <TouchableHighlight style={style.button} onPress={this.handleShowDetails}>
-            <Text style={style.buttonText}>{t('fragment_setup_writeitdown_show')}</Text>
-          </TouchableHighlight>
+          <NextButton onPress={ this.handleFinish } />
         </View>
       )  
     }

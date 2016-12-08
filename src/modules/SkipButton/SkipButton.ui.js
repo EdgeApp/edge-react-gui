@@ -37,7 +37,7 @@ class SkipButton extends Component {
 const styles = StyleSheet.create({
 
   button: {
-    backgroundColor: 'limegreen',
+    backgroundColor: '#80C342',
     height: 60
   },
 

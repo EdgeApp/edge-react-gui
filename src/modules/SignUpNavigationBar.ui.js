@@ -58,7 +58,7 @@ const style = StyleSheet.create({
 
   container: {
     height:60,
-    backgroundColor: 'limegreen'
+    backgroundColor: '#2291CF'
   },
 
   navigationBarContainer: {
@@ -70,7 +70,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'limegreen'
+    backgroundColor: '#2291CF'
   },
 
   text: {
