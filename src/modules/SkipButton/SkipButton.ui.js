@@ -7,11 +7,11 @@ import t from '../../lib/LocaleStrings'
 class SkipButton extends Component {
 
   componentWillReceiveProps (nextProps) {
-      if (nextProps.scene === 'createPassword') {
+      if (nextProps.scene === 'password') {
         this.props.dispatch(showSkipButton())
       }
 
-      if (nextProps.scene !== 'createPassword') {
+      if (nextProps.scene !== 'password') {
         this.props.dispatch(hideSkipButton())
       }
   }

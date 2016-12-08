@@ -1,7 +1,10 @@
-
+import { Actions } from 'react-native-router-flux'
 
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
+import { passwordNotificationHide, changePasswordValue } from './Password.action'
+
 import t from '../../lib/LocaleStrings'
+
 export const checkPassword = (password, passwordRepeat, validation) => {
   return dispatch => {
     if (!validation.upperCaseChar || !validation.lowerCaseChar || !validation.number || !validation.characterLength) {
@@ -13,9 +16,17 @@ export const checkPassword = (password, passwordRepeat, validation) => {
     }
 
     if (validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat) {
-      return dispatch(openErrorModal("YAY!"))
-
-      // return dispatch(navigatorPush())
+      Actions.review()
     }
   }
+}
+
+export const skipPassword = () => {
+
+   return dispatch => {
+    dispatch(changePasswordValue(''))
+    dispatch(passwordNotificationHide())
+    Actions.review()
+   }
+
 }

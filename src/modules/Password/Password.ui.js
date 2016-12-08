@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TextInput } from 'react-native'
 import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 
 import Container from '../SignUp.ui'
 import Notification from './Notification.ui'
 import style from './Password.style'
 
 import { validate } from './PasswordValidation/PasswordValidation.middleware'
-import { checkPassword } from './Password.middleware'
+import { checkPassword, skipPassword } from './Password.middleware'
 import { passwordNotificationShow } from './Password.action'
 import { showNextButton, hideNextButton } from '../NextButton/NextButton.action'
 import { showSkipButton, hideSkipButton } from '../SkipButton/SkipButton.action'
@@ -38,7 +39,7 @@ class Password extends Component {
   }
 
   handleSkipPassword  = () => {
-    this.props.dispatch(navigatorPush())
+    this.props.dispatch(skipPassword())
   }
 
   handlePasswordOnFocus = () => {
