@@ -1,65 +1,34 @@
-import tron from './util/reactotron'
-import React, { Component } from 'react'; // eslint-disable-line
-import { Provider as ReduxProvider, connect } from 'react-redux'
-import { AppRegistry, View, StatusBar } from 'react-native'
-import configureStore from './lib/configureStore'
-import t from './lib/LocaleStrings'
+import React, { Component } from 'react'
+import { Provider } from 'react-redux'
+import store from './createStore'
+import {Scene, Router} from 'react-native-router-flux'
 
-const Store = configureStore()
+import Home from './Home.ui'
+import Username from './Username.ui'
+import PinNumber from './PinNumber.ui'
+import Password from './Password.ui'
+import ReviewDetails from './ReviewDetails.ui'
 
-/**
- * If you're using Exponent, uncomment the line below to import Exponent
- * BEFORE importing `@exponent/ex-navigation`. This sets the status bar
- * offsets properly.
- */
-// import Exponent from 'exponent';
+export default class App extends Component {
+	
+	render() {
+		return (
+			<Provider store={store}>
+        <Router>
+          <Scene key="root">
+            <Scene key="signup">
+              <Scene key="username" component={Username} title={"Enter Username"} />
+              <Scene key="pin" component={PinNumber} title={"Enter Pin"} />
+              <Scene key="password" component={Password} title={"Enter Password"} />
+              <Scene key="review" component={ReviewDetails} title={"Details"} />
+            </Scene>
+            <Scene key="home" component={Home} initial={true} />
+          </Scene>
+        </Router>
+			</Provider>
+		)
+	}
 
-import {
-  createRouter,
-  NavigationProvider,
-  StackNavigation
-} from '@exponent/ex-navigation'
-
-/**
-  * This is where we map route names to route components. Any React
-  * component can be a route, it only needs to have a static `route`
-  * property defined on it, as in HomeScreen below
-  */
-
-import Home from './modules/Home.ui'
-import Main from './modules/Main/Main.ui'
-export const Router = createRouter(() => ({
-  home: () => Home,
-  main: () => Main
-}))
-
-class App extends Component {
-  render () {
-    /**
-      * NavigationProvider is only needed at the top level of the app,
-      * similar to react-redux's Provider component. It passes down
-      * navigation objects and functions through context to children.
-      *
-      * StackNavigation represents a single stack of screens, you can
-      * think of a stack like a stack of playing cards, and each time
-      * you add a screen it slides in on top. Stacks can contain
-      * other stacks, for example if you have a tab bar, each of the
-      * tabs has its own individual stack. This is where the playing
-      * card analogy falls apart, but it's still useful when thinking
-      * of individual stacks.
-      */
-    return (
-      <View style={{flex: 1}}>
-        <NavigationProvider router={Router}>
-          <StatusBar barStyle='default' />
-          <ReduxProvider store={Store}>
-            <StackNavigation
-              id='root'
-              initialRoute={Router.getRoute('home')} />
-          </ReduxProvider>
-        </NavigationProvider>
-      </View>
-    )
-  }
 }
+
 AppRegistry.registerComponent('airbitz_ui', () => App)

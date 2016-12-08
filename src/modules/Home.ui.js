@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Router } from "../app"
+import { Actions } from 'react-native-router-flux'
 
 import Loader from './Loader/Loader.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
@@ -88,7 +89,7 @@ class Main extends Component {
             <Button 
               large
               style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={this._openSignUp}
+              onPress={Actions.username}
               accessibilityLabel={t('fragment_landing_signup_button')}>
               {t('fragment_landing_signup_button')}
             </Button>            
