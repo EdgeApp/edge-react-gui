@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { Provider } from 'react-redux'
-import store from './createStore'
-import {Scene, Router} from 'react-native-router-flux'
+import configureStore from './lib/configureStore'
+import { Scene, Router } from 'react-native-router-flux'
 
-import Home from './Home.ui'
-import Username from './Username.ui'
-import PinNumber from './PinNumber.ui'
-import Password from './Password.ui'
-import ReviewDetails from './ReviewDetails.ui'
+import Home from './modules/Home.ui'
+import Username from './modules/Username/Username.ui'
+import PinNumber from './modules/PinNumber/PinNumber.ui'
+import Password from './modules/Password/Password.ui'
+import ReviewDetails from './modules/ReviewDetails/ReviewDetails.ui'
+
+const store = configureStore()
 
 export default class App extends Component {
 	
