@@ -81,14 +81,16 @@ class Password extends Component {
             value={ this.props.password }
             onFocus={this.handlePasswordOnFocus}
             onBlur={this.handlePasswordOnBlur}
-            returnKeyType="done"
+            returnKeyType="next"
+            onSubmitEditing={ e =>  this.refs.SignupPassword.focus() }
           />
           <TextInput
+            ref='SignupPassword'
             style={style.input}
             placeholder={t('activity_signup_password_confirm_hint')}
             keyboardType="default"
             secureTextEntry={true}
-            returnKeyType="next"
+            returnKeyType="done"
             onChangeText={ this.handleOnChangePasswordRepeat }
             onBlur={ this.handleSubmit }
             value={ this.props.passwordRepeat }

@@ -25,7 +25,7 @@ export default class App extends Component {
               <Scene key="username" component={Username} title={"Enter Username"} initial={true}/>
               <Scene key="pin" component={PinNumber} title={"Enter Pin"} />
               <Scene key="password" component={Password} title={"Enter Password"} />
-              <Scene key="review" component={ReviewDetails} title={"Details"} />
+              <Scene key="review" component={ReviewDetails} title={"Details"} type="reset"/>
             </Scene>
             <Scene key="landing" component={Landing} initial={true} hideNavBar={true}/>
             <Scene key="home" component={Home} hideNavBar={true} type="reset"/>
