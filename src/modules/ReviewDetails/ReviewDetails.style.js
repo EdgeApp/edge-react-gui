@@ -3,12 +3,13 @@ import Dimensions from 'Dimensions'
 
 const {height, width} = Dimensions.get('window')
 
-export default style = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#222',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: height
   },
 
   detailsContainer: {
@@ -64,3 +65,4 @@ export default style = StyleSheet.create({
     fontSize: 22
   }
 })
+export default style

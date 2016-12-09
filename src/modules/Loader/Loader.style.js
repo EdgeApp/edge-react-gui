@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native'
-
-export default style = StyleSheet.create({
+const style = StyleSheet.create({
 
   modal: {
     justifyContent: 'center',
@@ -16,3 +15,4 @@ export default style = StyleSheet.create({
   }
 
 })
+export default style

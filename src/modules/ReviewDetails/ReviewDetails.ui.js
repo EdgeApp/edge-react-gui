@@ -1,50 +1,48 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { View, Text, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
 import Details from './UserDetails.ReviewDetails.ui'
-import { showSignInDetails, hideSignInDetails  } from './ReviewDetails.action'
-import t from "../../lib/LocaleStrings"
+import { showSignInDetails, hideSignInDetails } from './ReviewDetails.action'
+import t from '../../lib/LocaleStrings'
 import style from './ReviewDetails.style'
 import NextButton from '../NextButton/NextButton.ui'
 
 class Review extends Component {
 
   handleHideDetails = () => {
-    if(this.props.review) {
+    if (this.props.review) {
       this.props.dispatch(hideSignInDetails())
-    }  
+    }
   }
 
   handleShowDetails = () => {
-    if(!this.props.review) {
+    if (!this.props.review) {
       this.props.dispatch(showSignInDetails())
-    }  
+    }
   }
 
   handleFinish = () => {
-    Actions.home() 
+    Actions.home()
   }
 
-  render() {
-
-    if(this.props.review) {
+  render () {
+    if (this.props.review) {
       return (
         <View style={{ flex: 1 }}>
           <View style={style.container}>
-            <Details username={this.props.username} pinNumber={this.props.pinNumber} password={this.props.password}/>  
+            <Details username={this.props.username} pinNumber={this.props.pinNumber} password={this.props.password} />
             <TouchableHighlight style={style.button} onPress={this.handleHideDetails}>
               <Text style={style.buttonText}>{t('fragment_setup_writeitdown_hide')}</Text>
             </TouchableHighlight>
           </View>
-          <NextButton onPress={ this.handleFinish } />
+          <NextButton onPress={this.handleFinish} />
         </View>
-      )  
+      )
+    }
 
-    }  
-
-    if(!this.props.review){
+    if (!this.props.review) {
       return (
         <View style={{ flex: 1 }}>
           <View style={style.container}>
@@ -60,19 +58,18 @@ class Review extends Component {
               <Text style={style.buttonText}>{t('fragment_setup_writeitdown_show')}</Text>
             </TouchableHighlight>
           </View>
-          <NextButton onPress={ this.handleFinish } />
+          <NextButton onPress={this.handleFinish} />
         </View>
-      )  
+      )
     }
-
   }
 }
 
-export default connect( state => ({
-  
-  username  : state.username,
-  pinNumber  : state.pinNumber,
-  password  : state.password.password,
-  review    : state.reviewDetails
+export default connect(state => ({
 
-}) )(Review)
+  username: state.username,
+  pinNumber: state.pinNumber,
+  password: state.password.password,
+  review: state.reviewDetails
+
+}))(Review)

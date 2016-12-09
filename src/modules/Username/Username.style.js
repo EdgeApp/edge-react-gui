@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native'
-
-export default style = StyleSheet.create({
+const style = StyleSheet.create({
 
   inputView: {
     flex: 1,
@@ -21,3 +20,5 @@ export default style = StyleSheet.create({
   }
 
 })
+
+export default style

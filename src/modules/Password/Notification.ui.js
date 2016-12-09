@@ -2,31 +2,31 @@ import React, { Component } from 'react'
 import { View, Text, TouchableHighlight, StyleSheet } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
-import t from "../../lib/LocaleStrings"
+import t from '../../lib/LocaleStrings'
 import { passwordNotificationHide } from './Password.action'
 
 class ErrorModal extends Component {
 
   handleClose = () => {
-    this.props.dispatch(passwordNotificationHide())  
+    this.props.dispatch(passwordNotificationHide())
   }
 
-  render() {
+  render () {
     return (
       <Modal
-          isOpen={this.props.visible}
-          position={"center"}
-          style={style.modal}
+        isOpen={this.props.visible}
+        position={'center'}
+        style={style.modal}
         animationDuration={200}
         onClosed={this.handleClose}
       >
         <Text style={[ style.textError, style.textLead ]}>{t('fragment_setup_password_nopassword_title')}</Text>
         <Text style={style.textError}>{t('fragment_setup_password_nopassword_message')}</Text>
         <View style={{ flexDirection: 'row' }}>
-          <TouchableHighlight onPress={ this.handleClose } >
+          <TouchableHighlight onPress={this.handleClose} >
             <Text style={style.hideModal}>{t('string_cancel')}</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={ this.props.handleSubmit } >
+          <TouchableHighlight onPress={this.props.handleSubmit} >
             <Text style={style.hideModal}>{t('string_ok')}</Text>
           </TouchableHighlight>
         </View>
@@ -41,19 +41,19 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 250,
-    padding:20,
+    padding: 20,
     width: 300
   },
 
   textError: {
     fontSize: 16,
-    textAlign: "center",
-    marginBottom:10
+    textAlign: 'center',
+    marginBottom: 10
   },
 
   textLead: {
-    fontWeight: 'bold', 
-    color: 'skyblue', 
+    fontWeight: 'bold',
+    color: 'skyblue',
     fontSize: 18
   },
 
@@ -61,12 +61,12 @@ const style = StyleSheet.create({
     marginTop: 15,
     marginHorizontal: 10,
     fontSize: 18,
-    color: "skyblue",
-    textAlign: "center",
+    color: 'skyblue',
+    textAlign: 'center'
   }
 })
 
-export default connect( state => ({
+export default connect(state => ({
 
   visible: state.password.notification
 

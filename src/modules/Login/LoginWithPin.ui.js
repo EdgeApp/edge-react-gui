@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { closeLoginUsingPin, openLogin, loginPIN } from './Login.action'
-import { loginWithPassword } from './Login.middleware'
 
-import { View, Text, Image, StyleSheet,TouchableHighlight } from 'react-native'
-import { InputGroup, Input, Button } from 'native-base';
+import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { InputGroup, Input } from 'native-base'
 import t from '../../lib/LocaleStrings'
 import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window')
 
 class Login extends Component {
 
@@ -17,15 +16,15 @@ class Login extends Component {
   }
 
   changePin = (pin) => {
-    this.props.dispatch(loginPIN(pin))  
+    this.props.dispatch(loginPIN(pin))
   }
 
   viewPasswordInput = (pin) => {
-    this.props.dispatch(closeLoginUsingPin())  
-    this.props.dispatch(openLogin())  
+    this.props.dispatch(closeLoginUsingPin())
+    this.props.dispatch(openLogin())
   }
-  
-  render() {
+
+  render () {
     return (
       <View style={style.container}>
 
@@ -33,23 +32,23 @@ class Login extends Component {
 
         <View style={{ width: 100 }}>
           <InputGroup borderType='regular' style={style.inputGroup}>
-            <Input 
-              placeholder={t('fragment_landing_enter_pin')} 
-              style={style.input}  
-              onChangeText={ this.changePin } 
+            <Input
+              placeholder={t('fragment_landing_enter_pin')}
+              style={style.input}
+              onChangeText={this.changePin}
               value={this.props.pin}
-              keyboardType="numeric"
-              maxLength={4} 
-              autoCorrect={ false }
-              returnKeyType="done"
-              blurOnSubmit={ true }
-              onSubmitEditing={ this.submit }  
-          />    
+              keyboardType='numeric'
+              maxLength={4}
+              autoCorrect={false}
+              returnKeyType='done'
+              blurOnSubmit
+              onSubmitEditing={this.submit}
+          />
           </InputGroup>
         </View>
 
         <TouchableHighlight onPress={this.viewPasswordInput}>
-          <Text style={ style.text }>{ t('fragment_landing_switch_user') }</Text>
+          <Text style={style.text}>{ t('fragment_landing_switch_user') }</Text>
         </TouchableHighlight>
 
       </View>
@@ -65,28 +64,28 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 30,
     width: width * 0.6,
-    marginVertical:15
+    marginVertical: 15
   },
 
   inputGroup: {
     marginVertical: 30,
-    backgroundColor: "rgba(0,0,0,0.5)"  
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
 
   input: {
     textAlign: 'center',
-    color: '#FFF'  
+    color: '#FFF'
   },
 
   text: {
-    fontSize:15,
-    color: "#CCC"
+    fontSize: 15,
+    color: '#CCC'
   }
 
-});
+})
 
-export default connect( state =>  ({
+export default connect(state => ({
 
-  pin :  state.login.pin
+  pin: state.login.pin
 
-}) )(Login)
+}))(Login)

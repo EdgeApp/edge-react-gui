@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TextInput } from 'react-native'
+import { View, Text, TextInput } from 'react-native'
 import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
 
 import Container from '../SignUp.ui'
 import Notification from './Notification.ui'
@@ -9,22 +8,19 @@ import style from './Password.style'
 
 import { validate } from './PasswordValidation/PasswordValidation.middleware'
 import { checkPassword, skipPassword } from './Password.middleware'
-import { passwordNotificationShow } from './Password.action'
-import { showNextButton, hideNextButton } from '../NextButton/NextButton.action'
-import { showSkipButton, hideSkipButton } from '../SkipButton/SkipButton.action'
-
 
 import t from '../../lib/LocaleStrings'
-import { 
-  focusPasswordInput, 
+import {
+  passwordNotificationShow,
+  focusPasswordInput,
   blurPasswordInput,
   changePasswordValue,
   changePasswordRepeatValue
 } from './Password.action'
 
 class Password extends Component {
-  
-  handleSubmit  = () => {
+
+  handleSubmit = () => {
     this.props.dispatch(
       checkPassword(
         this.props.password,
@@ -34,37 +30,37 @@ class Password extends Component {
     )
   }
 
-  handlePasswordNotification  = () => {
+  handlePasswordNotification = () => {
     this.props.dispatch(passwordNotificationShow())
   }
 
-  handleSkipPassword  = () => {
+  handleSkipPassword = () => {
     this.props.dispatch(skipPassword())
   }
 
   handlePasswordOnFocus = () => {
-    this.props.dispatch(focusPasswordInput())    
+    this.props.dispatch(focusPasswordInput())
   }
 
   handlePasswordOnBlur = () => {
-    this.props.dispatch(blurPasswordInput())    
+    this.props.dispatch(blurPasswordInput())
   }
 
   handleOnChangePassword = (password) => {
-    this.props.dispatch(changePasswordValue(password))  
-    this.props.dispatch(validate(password))  
+    this.props.dispatch(changePasswordValue(password))
+    this.props.dispatch(validate(password))
   }
 
   handleOnChangePasswordRepeat = (passwordRepeat) => {
-    this.props.dispatch(changePasswordRepeatValue(passwordRepeat))  
+    this.props.dispatch(changePasswordRepeatValue(passwordRepeat))
   }
 
   checkPasswordInputState = () => this.props.inputState ? { marginTop: 10 } : null
 
-  render() {
+  render () {
     return (
-      <Container 
-        handleSubmit={this.handleSubmit} 
+      <Container
+        handleSubmit={this.handleSubmit}
         handleSkip={this.handlePasswordNotification}
       >
         <View style={[ style.inputView, this.checkPasswordInputState() ]}>
@@ -74,37 +70,37 @@ class Password extends Component {
           <TextInput
             style={style.input}
             placeholder={t('activity_signup_password_hint')}
-            keyboardType="default"
-            secureTextEntry={true}
-            autoFocus={ true }
-            onChangeText={ this.handleOnChangePassword }
-            value={ this.props.password }
+            keyboardType='default'
+            secureTextEntry
+            autoFocus
+            onChangeText={this.handleOnChangePassword}
+            value={this.props.password}
             onFocus={this.handlePasswordOnFocus}
             onBlur={this.handlePasswordOnBlur}
-            returnKeyType="done"
+            returnKeyType='done'
           />
           <TextInput
             style={style.input}
             placeholder={t('activity_signup_password_confirm_hint')}
-            keyboardType="default"
-            secureTextEntry={true}
-            returnKeyType="next"
-            onChangeText={ this.handleOnChangePasswordRepeat }
-            onBlur={ this.handleSubmit }
-            value={ this.props.passwordRepeat }
+            keyboardType='default'
+            secureTextEntry
+            returnKeyType='next'
+            onChangeText={this.handleOnChangePasswordRepeat}
+            onBlur={this.handleSubmit}
+            value={this.props.passwordRepeat}
           />
         </View>
-        <Notification handleSubmit={this.handleSkipPassword}/>
+        <Notification handleSubmit={this.handleSkipPassword} />
       </Container>
     )
   }
 }
 
-export default connect( state => ({
+export default connect(state => ({
 
-  inputState    : state.password.inputState,
-  password    : state.password.password,
-  passwordRepeat   : state.password.passwordRepeat,
-  validation    : state.password.validation
-  
-}) )(Password)
+  inputState: state.password.inputState,
+  password: state.password.password,
+  passwordRepeat: state.password.passwordRepeat,
+  validation: state.password.validation
+
+}))(Password)

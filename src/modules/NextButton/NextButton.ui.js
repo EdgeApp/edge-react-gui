@@ -23,15 +23,13 @@ class NextButton extends Component {
   }
 
   checkScene = () => {
-    
-    switch(this.props.scene){
-      case "review":
+    switch (this.props.scene) {
+      case 'review':
         return t('string_finish')
 
       default:
         return t('string_next')
-    } 
-
+    }
   }
 
   render () {

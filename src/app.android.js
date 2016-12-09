@@ -13,7 +13,6 @@ import ReviewDetails from './modules/ReviewDetails/ReviewDetails.ui'
 
 const RouterWithRedux = connect()(Router)
 const store = configureStore()
-
 export default class App extends Component {
 
   render () {

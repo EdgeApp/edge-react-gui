@@ -4,14 +4,13 @@ import { connect } from 'react-redux'
 import { loginUsername, loginPassword } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
 
-import { View, Text, Image, StyleSheet } from 'react-native'
-import { InputGroup, Input, Button } from 'native-base';
+import { View, StyleSheet } from 'react-native'
+import { InputGroup, Input, Button } from 'native-base'
 import t from '../../lib/LocaleStrings'
 import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window')
 
 class Login extends Component {
-
 
   submit = () => {
     this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
@@ -22,35 +21,35 @@ class Login extends Component {
   }
 
   changePassword = (password) => {
-    this.props.dispatch(loginPassword(password))  
+    this.props.dispatch(loginPassword(password))
   }
-  
-  render() {
+
+  render () {
     return (
       <View style={style.container}>
 
         <InputGroup borderType='regular' style={style.inputGroup} >
-          <Input 
-              placeholder={t('fragment_landing_username_hint')} 
-              style={style.input} 
-              onChangeText={ this.changeUsername } 
-              value={this.props.username}
-              returnKeyType = {"next"}
-              onSubmitEditing={ e =>  this.refs.password._textInput.focus() }
-        />    
+          <Input
+            placeholder={t('fragment_landing_username_hint')}
+            style={style.input}
+            onChangeText={this.changeUsername}
+            value={this.props.username}
+            returnKeyType={'next'}
+            onSubmitEditing={e => this.refs.password._textInput.focus()}
+        />
         </InputGroup>
 
         <InputGroup borderType='regular' style={style.inputGroup} >
-          <Input 
+          <Input
             ref='password'
-            placeholder={t('fragment_landing_password_hint')} 
-            style={style.input}  
-            secureTextEntry={true} 
-            onChangeText={ this.changePassword } 
+            placeholder={t('fragment_landing_password_hint')}
+            style={style.input}
+            secureTextEntry
+            onChangeText={this.changePassword}
             value={this.props.password}
-            blurOnSubmit={ true }
-            onSubmitEditing={ this.submit }  
-          /> 
+            blurOnSubmit
+            onSubmitEditing={this.submit}
+          />
         </InputGroup>
 
         <Button style={style.button} block large onPress={this.submit}>Sign In</Button>
@@ -67,30 +66,30 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 30,
     width: width * 0.6,
-    marginVertical:15
+    marginVertical: 15
   },
 
-  button : {
-    backgroundColor: "#80C342",
+  button: {
+    backgroundColor: '#80C342',
     marginVertical: 10,
     height: 45
   },
 
   inputGroup: {
     marginVertical: 10,
-    backgroundColor: "rgba(0,0,0,0.5)"  
+    backgroundColor: 'rgba(0,0,0,0.5)'
   },
 
   input: {
-    color: '#FFF'  
+    color: '#FFF'
   }
 
-});
+})
 
-export default connect( state =>  ({
+export default connect(state => ({
 
-  username  :  state.login.username,
-  password  :  state.login.password,
-  pin      :  state.login.pin
+  username: state.login.username,
+  password: state.login.password,
+  pin: state.login.pin
 
-}) )(Login)
+}))(Login)

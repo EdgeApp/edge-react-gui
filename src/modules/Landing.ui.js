@@ -9,87 +9,82 @@ import LoginWithPin from './Login/LoginWithPin.ui'
 
 import { openLogin } from './Login/Login.action'
 
-import { View, Text, Image, StyleSheet } from 'react-native'
-import { Button } from 'native-base';
-import appTheme from '../../Themes/appTheme'
+import { View, Image, StyleSheet } from 'react-native'
+import { Button } from 'native-base'
 import t from '../lib/LocaleStrings'
 
 import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window')
 
 class Main extends Component {
 
   handleOpenLogin = () => {
-    this.props.dispatch(openLogin())  
+    this.props.dispatch(openLogin())
   }
 
-  render(){
-
-    if(this.props.pin) {
+  render () {
+    if (this.props.pin) {
       return (
         <View style={styles.main}>
           <LoginWithPin />
         </View>
-      )  
-    }  
+      )
+    }
 
-    if(!this.props.pin) {
-
-      if(this.props.password){
-        return(
+    if (!this.props.pin) {
+      if (this.props.password) {
+        return (
           <View style={styles.main}>
             <Login />
-            <Button 
+            <Button
               large
-              style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={ Actions.signup }
+              style={[ styles.button, { backgroundColor: '#2291CF' } ]}
+              onPress={Actions.signup}
               accessibilityLabel={t('fragment_landing_signup_button')}>
               {t('fragment_landing_signup_button')}
-            </Button>            
+            </Button>
           </View>
         )
       }
 
-      if(!this.props.password) {
+      if (!this.props.password) {
         return (
           <View style={styles.main}>
-            <Button 
+            <Button
               large
-              style={[ styles.button, { backgroundColor: "#80C342" } ]}
+              style={[ styles.button, { backgroundColor: '#80C342' } ]}
               onPress={this.handleOpenLogin}
               accessibilityLabel={t('fragment_landing_signin_button')}>
               {t('fragment_landing_signin_button')}
             </Button>
-            <Button 
+            <Button
               large
-              style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={ Actions.signup }
+              style={[ styles.button, { backgroundColor: '#2291CF' } ]}
+              onPress={Actions.signup}
               accessibilityLabel={t('fragment_landing_signup_button')}>
               {t('fragment_landing_signup_button')}
-            </Button>            
+            </Button>
           </View>
         )
       }
-
     }
-  
   }
 
 }
 
 class HomeComponent extends Component {
 
-  render() {
+  render () {
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={styles.backgroundImage}>
-        <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage}/>
-        <Main {...this.props}/>
+        <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage} />
+        <Main {...this.props} />
         <Loader />
         <ErrorModal />
       </Image>
     )
   }
-  
+
 }
 
 const styles = StyleSheet.create({
@@ -99,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     flex: 3,
-    zIndex:0
+    zIndex: 0
   },
 
   welcome: {
@@ -110,7 +105,7 @@ const styles = StyleSheet.create({
   },
 
   backgroundImage: {
-    flex:1,
+    flex: 1,
     width: null,
     height: null,
     resizeMode: 'cover',
@@ -122,7 +117,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     resizeMode: 'contain',
-    width: width * 0.5,
+    width: width * 0.5
   },
 
   button: {
@@ -130,13 +125,13 @@ const styles = StyleSheet.create({
     width: width * 0.6,
     alignSelf: 'center',
     height: 45
-  },
+  }
 
-});
+})
 
-export default connect( state =>  ({
+export default connect(state => ({
 
-  password  : state.login.viewPassword,
-  pin       : state.login.viewPIN
+  password: state.login.viewPassword,
+  pin: state.login.viewPIN
 
-}) )(HomeComponent)
+}))(HomeComponent)

@@ -5,33 +5,33 @@ import { connect } from 'react-redux'
 
 import { closeErrorModal } from './ErrorModal.action'
 import style from './ErrorModal.style'
-import t from "../../lib/LocaleStrings"
+import t from '../../lib/LocaleStrings'
 
 class ErrorModal extends Component {
 
   handleClose = () => {
-    this.props.dispatch(closeErrorModal())  
+    this.props.dispatch(closeErrorModal())
   }
 
   checkLoading = () => {
-    if (this.props.visible === true &&  this.props.loader.loading === false){
-      return true  
-    }else{
-      return false  
+    if (this.props.visible === true && this.props.loader.loading === false) {
+      return true
+    } else {
+      return false
     }
   }
 
-  render() {
+  render () {
     return (
       <Modal
         isOpen={this.checkLoading()}
-        position={"center"}
+        position={'center'}
         style={style.modal}
         animationDuration={200}
         onClosed={this.handleClose}
       >
         <Text style={style.textError}>{this.props.message}</Text>
-        <TouchableHighlight onPress={ this.handleClose } >
+        <TouchableHighlight onPress={this.handleClose} >
           <Text style={style.hideModal}>{t('string_ok')}</Text>
         </TouchableHighlight>
       </Modal>
@@ -39,9 +39,7 @@ class ErrorModal extends Component {
   }
 }
 
-
-
-export default connect( state => ({
+export default connect(state => ({
 
   visible: state.errorModal.visible,
   message: state.errorModal.message,

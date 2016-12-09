@@ -1,9 +1,9 @@
 // import abc from 'airbitz-core-js'
-import abc from './abc.webpack'
+import {abc} from './abc.webpack'
 
 const abcContext = abc.makeContext({
-	apiKey:'3ad0717b3eb31f745aba7bd9d51e7fd1b2926431', 
-	accountType:'account:repo:react-gui'
+  apiKey: '3ad0717b3eb31f745aba7bd9d51e7fd1b2926431',
+  accountType: 'account:repo:react-gui'
 })
 
 export default abcContext

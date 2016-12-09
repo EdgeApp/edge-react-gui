@@ -8,65 +8,56 @@ import { Actions } from 'react-native-router-flux'
 
 class NavigationBar extends Component {
 
-  handleOnPress = () => {
-    this.props.dispatch(navigatorPop())  
-  }
-
   checkPasswordStateOption = () => {
-
-    if(this.props.scene === "password" && this.props.passwordState){
+    if (this.props.scene === 'password' && this.props.passwordState) {
       return (
         <PasswordValidation />
-      )  
-    }else{
-      return null  
+      )
+    } else {
+      return null
     }
-
   }
 
   checkPasswordStateStyle = () => {
-
-    if(this.props.scene === "password" && this.props.passwordState){
-      return {height: 200}    
-    }else{
-      return null  
+    if (this.props.scene === 'password' && this.props.passwordState) {
+      return {height: 200}
+    } else {
+      return null
     }
-
   }
-  
-  render() {
+
+  render () {
     return (
       <View style={[ style.container, this.checkPasswordStateStyle() ]}>
         <View style={style.navigationBarContainer}>
           <View style={style.navigationContainer}>
-            <TouchableHighlight onPress={ Actions.pop }>
+            <TouchableHighlight onPress={Actions.pop}>
               <Text style={style.text}>Back</Text>
             </TouchableHighlight>
-            <Text style={[ style.text, style.title ]}></Text>
-            <Text style={style.text}>     </Text>
+            <Text style={[ style.text, style.title ]} />
+            <Text style={style.text} />
           </View>
           { this.checkPasswordStateOption() }
         </View>
       </View>
-    );
+    )
   }
 
 }
 
 const style = StyleSheet.create({
 
-
   container: {
-    height:60,
+    height: 60,
     backgroundColor: '#2291CF'
   },
 
   navigationBarContainer: {
-    flex:1
+    flex: 1
   },
 
   navigationContainer: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -76,22 +67,22 @@ const style = StyleSheet.create({
   text: {
     marginLeft: 10,
     marginRight: 10,
-    color: "#FFF",  
+    color: '#FFF',
     fontSize: 20,
-    width:50
+    width: 50
   },
 
-  title : {
-    textAlign: 'center',  
+  title: {
+    textAlign: 'center',
     fontSize: 18,
     flex: 1
   }
-});
+})
 
-export default connect( state => ({
+export default connect(state => ({
 
-  route      : state.route,
-  passwordState  : state.password.inputState,
+  route: state.route,
+  passwordState: state.password.inputState,
   scene: state.routes.scene.sceneKey
 
-}) )(NavigationBar)
+}))(NavigationBar)

@@ -1,8 +1,7 @@
-import React, { NativeModules } from 'react-native'
 import defaultLang from '../locales/default'
-import en_PH from '../locales/en_PH'
+import enPH from '../locales/en_PH'
 const supportedLocales = {
-  en_PH: en_PH
+  en_PH: enPH
 }
 
 // HEY YOU! just import and then add your locales to the supportedLocales array

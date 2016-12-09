@@ -9,6 +9,7 @@ export default class Home extends Component {
     return (
       <View style={style.container} >
         <Text>Welcome!! This is the Home Page!</Text>
+        <Button>Log Out (coming soon)</Button>
       </View>
     )
   }

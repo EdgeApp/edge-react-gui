@@ -12,15 +12,15 @@ import t from '../../lib/LocaleStrings'
 
 class UsernameComponent extends Component {
 
-  handleSubmit  = () => {
+  handleSubmit = () => {
     this.props.dispatch(checkUsername(this.props.username))
   }
 
   handleOnChangeText = (username) => {
-    this.props.dispatch(changeUsernameValue(username))  
+    this.props.dispatch(changeUsernameValue(username))
   }
 
-  render() {
+  render () {
     const { username } = this.props
     return (
       <Container handleSubmit={this.handleSubmit}>
@@ -28,12 +28,12 @@ class UsernameComponent extends Component {
           <TextInput
             style={style.usernameInput}
             placeholder={t('fragment_landing_username_hint')}
-            onChangeText={ this.handleOnChangeText }
-            value={ username }
-            autoFocus={ true }
-            blurOnSubmit={ true }
-            returnKeyType="next"
-            onSubmitEditing={ this.handleSubmit }  
+            onChangeText={this.handleOnChangeText}
+            value={username}
+            autoFocus
+            blurOnSubmit
+            returnKeyType='next'
+            onSubmitEditing={this.handleSubmit}
           />
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}
@@ -44,10 +44,8 @@ class UsernameComponent extends Component {
   }
 }
 
-
-
-export default connect( state => ({
+export default connect(state => ({
 
   username: state.username
 
-}) )(UsernameComponent)
+}))(UsernameComponent)

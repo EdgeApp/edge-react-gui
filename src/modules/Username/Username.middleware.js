@@ -1,4 +1,4 @@
-import async_auto from 'async/auto'
+import asyncAuto from 'async/auto'
 import { Actions } from 'react-native-router-flux'
 
 import abcContext from '../../lib/abcContext'
@@ -10,7 +10,7 @@ import t from '../../lib/LocaleStrings'
 
 export const checkUsername = username => {
   return dispatch => {
-    async_auto({
+    asyncAuto({
       checkUsernameLength: function (callback) {
         if (username.length >= 3) {
           callback(null, null)

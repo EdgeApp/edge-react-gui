@@ -44,8 +44,8 @@ export default {
     return this.inverseTextColor
   },
   get btnTextSize () {
-    return (Platform.OS === 'ios') ? this.fontSizeBase * 1.1 :
-        this.fontSizeBase - 1
+    return (Platform.OS === 'ios') ? this.fontSizeBase * 1.1
+        : this.fontSizeBase - 1
   },
   get btnTextSizeLarge () {
     return this.fontSizeBase * 1.5
@@ -103,13 +103,13 @@ export default {
     // FooterTab
   tabBarTextColor: (Platform.OS === 'ios') ? '#6b6b6b' : '#b3c7f9',
   tabBarActiveTextColor: (Platform.OS === 'ios') ? '#007aff' : '#fff',
-  tabActiveBgColor: (Platform.OS == 'ios') ? '#cde1f9' : undefined,
+  tabActiveBgColor: (Platform.OS === 'ios') ? '#cde1f9' : undefined,
 
     // Tab
   tabDefaultBg: (Platform.OS === 'ios') ? '#F8F8F8' : '#4179F7',
   topTabBarTextColor: (Platform.OS === 'ios') ? '#6b6b6b' : '#b3c7f9',
   topTabBarActiveTextColor: (Platform.OS === 'ios') ? '#007aff' : '#fff',
-  topTabActiveBgColor: (Platform.OS == 'ios') ? '#cde1f9' : undefined,
+  topTabActiveBgColor: (Platform.OS === 'ios') ? '#cde1f9' : undefined,
   topTabBarBorderColor: (Platform.OS === 'ios') ? '#007aff' : '#fff',
 
     // Header

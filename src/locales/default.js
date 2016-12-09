@@ -786,7 +786,7 @@ const strings = {
   or_choose: '"$1$s" or choose',
 
   request_your_identity_token: 'Request your Identity Token. Please select one below',
-  request_your_identity_token_but_none: "Request your Identity Token but you don\'t have any",
+  request_your_identity_token_but_none: "Request your Identity Token but you don't have any",
 
   bitid_login_message: '%1$s',
   bitid_login_title: 'BitID Login',

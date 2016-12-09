@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import t from "../../../lib/LocaleStrings"
+import t from '../../../lib/LocaleStrings'
 class PasswordRequirement extends Component {
 
   checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
@@ -12,16 +12,16 @@ class PasswordRequirement extends Component {
 
   checkCharacterLength = (validation) => validation.characterLength ? { color: 'blue' } : null
 
-  render() {
+  render () {
     return (
       <View style={style.container}>
         <Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
-        <Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}>   -   {t('password_rule_no_uppercase')}</Text>
-        <Text style={[ style.text, this.checkOneLower(this.props.validation) ]}>   -   {t('password_rule_no_lowercase')}</Text>
-        <Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}>   -   {t('password_rule_no_number')}</Text>
-        <Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}>   -   {t('password_rule_too_short')}</Text>
+        <Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}> - {t('password_rule_no_uppercase')}</Text>
+        <Text style={[ style.text, this.checkOneLower(this.props.validation) ]}> - {t('password_rule_no_lowercase')}</Text>
+        <Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}> - {t('password_rule_no_number')}</Text>
+        <Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}> - {t('password_rule_too_short')}</Text>
       </View>
-    );
+    )
   }
 
 }
@@ -29,25 +29,25 @@ class PasswordRequirement extends Component {
 const style = StyleSheet.create({
 
   container: {
-    flex:3,
-    marginHorizontal:10
+    flex: 3,
+    marginHorizontal: 10
   },
 
   text: {
-    color: "#FFF",  
-    fontSize: 14,
+    color: '#FFF',
+    fontSize: 14
   },
 
   textLead: {
-    marginTop:5,
-    marginBottom:5,
+    marginTop: 5,
+    marginBottom: 5,
     fontSize: 18,
     fontWeight: 'bold'
-  },
+  }
 
-});
+})
 
-export default connect( state => ({
+export default connect(state => ({
   password: state.password.password,
-  validation : state.password.validation
-}) )(PasswordRequirement)
+  validation: state.password.validation
+}))(PasswordRequirement)
