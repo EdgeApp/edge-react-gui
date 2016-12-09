@@ -11,6 +11,7 @@ import * as PasswordValidation from '../modules/Password/PasswordValidation/Pass
 import * as Loader from '../modules/Loader/Loader.reducer'
 import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
 import * as Login from '../modules/Login/Login.reducer' 
+import * as CachedUsers from '../modules/CachedUsers/CachedUsers.reducer' 
 import routes from './routesReducer'
 
 const store = combineReducers({
@@ -29,6 +30,7 @@ const store = combineReducers({
       characterLength : PasswordValidation.characterLength
     })
   }),
+
   reviewDetails,
 
   login: combineReducers({
@@ -48,6 +50,10 @@ const store = combineReducers({
   errorModal  : combineReducers({
     visible :   ErrorModal.visible,
     message : ErrorModal.message
+  }),
+  cachedUsers: combineReducers({
+    users   : CachedUsers.users,
+    view    : CachedUsers.listView
   }),
   routes
 })
