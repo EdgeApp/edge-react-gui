@@ -8,8 +8,7 @@ import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
 
-export const loginWithPassword = (username,password) => {
-
+export const loginWithPassword = (username, password) => {
   return dispatch => {
     async_auto({
       openLoading: function (callback) {
@@ -18,11 +17,10 @@ export const loginWithPassword = (username,password) => {
       },
       getUsernameAvailability: function (callback) {
         setTimeout(() => {
-
-          if(username === "user" && password === "fam") {
-              callback(null, null)
-          }else{
-              callback('Error on login sample', null)
+          if (username === 'user' && password === 'fam') {
+            callback(null, null)
+          } else {
+            callback('Error on login sample', null)
           }
           // abcContext.loginWithPassword(username, password, null, null, (error, account) => {
           //   if (error) {
@@ -45,5 +43,4 @@ export const loginWithPassword = (username,password) => {
       }
     })
   }
-
 }

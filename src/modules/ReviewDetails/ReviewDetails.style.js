@@ -33,7 +33,7 @@ export default style = StyleSheet.create({
   },
 
   detailTextRight: {
-     textAlign: 'left',
+    textAlign: 'left',
     paddingRight: 30,
     width: width * 2 / 3
   },

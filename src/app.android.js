@@ -11,29 +11,29 @@ import PinNumber from './modules/PinNumber/PinNumber.ui'
 import Password from './modules/Password/Password.ui'
 import ReviewDetails from './modules/ReviewDetails/ReviewDetails.ui'
 
-const RouterWithRedux = connect()(Router);
+const RouterWithRedux = connect()(Router)
 const store = configureStore()
 
 export default class App extends Component {
-	
-	render() {
-		return (
-			<Provider store={store}>
+
+  render () {
+    return (
+      <Provider store={store}>
         <RouterWithRedux>
-          <Scene key="root">
-            <Scene key="signup" hideNavBar={true}>
-              <Scene key="username" component={Username} title={"Enter Username"} initial={true}/>
-              <Scene key="pin" component={PinNumber} title={"Enter Pin"} />
-              <Scene key="password" component={Password} title={"Enter Password"} />
-              <Scene key="review" component={ReviewDetails} title={"Details"} />
+          <Scene key='root'>
+            <Scene key='signup' hideNavBar>
+              <Scene key='username' component={Username} title={'Enter Username'} initial />
+              <Scene key='pin' component={PinNumber} title={'Enter Pin'} />
+              <Scene key='password' component={Password} title={'Enter Password'} />
+              <Scene key='review' component={ReviewDetails} title={'Details'} />
             </Scene>
-            <Scene key="landing" component={Landing} initial={true} hideNavBar={true}/>
-            <Scene key="home" component={Home} hideNavBar={true} type="reset"/>
+            <Scene key='landing' component={Landing} initial hideNavBar />
+            <Scene key='home' component={Home} hideNavBar type='reset' />
           </Scene>
         </RouterWithRedux>
-			</Provider>
-		)
-	}
+      </Provider>
+    )
+  }
 
 }
 

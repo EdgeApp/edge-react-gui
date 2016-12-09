@@ -22,11 +22,9 @@ export const checkPassword = (password, passwordRepeat, validation) => {
 }
 
 export const skipPassword = () => {
-
-   return dispatch => {
+  return dispatch => {
     dispatch(changePasswordValue(''))
     dispatch(passwordNotificationHide())
     Actions.review()
-   }
-
+  }
 }

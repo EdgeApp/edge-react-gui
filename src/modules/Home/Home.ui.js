@@ -5,8 +5,8 @@ import { Button } from 'native-base'
 
 export default class Home extends Component {
 
-  render(){
-    return(
+  render () {
+    return (
       <View style={style.container} >
         <Text>Welcome!! This is the Home Page!</Text>
       </View>
@@ -21,7 +21,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  },
+  }
 
-});
+})
 

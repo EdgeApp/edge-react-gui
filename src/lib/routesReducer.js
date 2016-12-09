@@ -1,19 +1,19 @@
-import { ActionConst } from 'react-native-router-flux';
+import { ActionConst } from 'react-native-router-flux'
 
 const initialState = {
-  scene: {},
+  scene: {}
 }
 
-export default function reducer(state = initialState, action = {}) {
+export default function reducer (state = initialState, action = {}) {
   switch (action.type) {
 
     case ActionConst.FOCUS:
       return {
         ...state,
-        scene: action.scene,
-      };
+        scene: action.scene
+      }
 
     default:
-      return state;
+      return state
   }
 }

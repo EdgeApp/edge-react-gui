@@ -10,13 +10,10 @@
   "dependencies": {
     "@exponent/ex-navigation": "^2.1.5",
     "@exponent/vector-icons": "^2.0.3",
-    "airbitz-core-js": "0.0.11",
     "async": "^2.1.4",
     "babel-preset-react-native-stage-0": "^1.0.1",
-    "install": "^0.8.2",
     "lodash": "^4.17.2",
     "native-base": "^0.5.18",
-    "npm": "^4.0.2",
     "react": "~15.4.0-rc.4",
     "react-native": "^0.39.0",
     "react-native-device-info": "^0.9.6",

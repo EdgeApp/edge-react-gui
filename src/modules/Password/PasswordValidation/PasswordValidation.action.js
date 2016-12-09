@@ -1,11 +1,11 @@
-export const UPPER_CASE_PASS     = 'UPPER_CASE_TRUE'
-export const UPPER_CASE_FAIL     = 'UPPER_CASE_FALSE'
-export const LOWER_CASE_PASS     = 'LOWER_CASE_TRUE'
-export const LOWER_CASE_FAIL     = 'LOWER_CASE_FALSE'
-export const NUMBER_PASS       = 'NUMBER_TRUE'
-export const NUMBER_FAIL       = 'NUMBER_FALSE'
-export const CHARACTER_LENGTH_PASS  = 'CHARACTER_LENGTH_PASS'
-export const CHARACTER_LENGTH_FAIL  = 'CHARACTER_LENGTH_FAIL'
+export const UPPER_CASE_PASS = 'UPPER_CASE_TRUE'
+export const UPPER_CASE_FAIL = 'UPPER_CASE_FALSE'
+export const LOWER_CASE_PASS = 'LOWER_CASE_TRUE'
+export const LOWER_CASE_FAIL = 'LOWER_CASE_FALSE'
+export const NUMBER_PASS = 'NUMBER_TRUE'
+export const NUMBER_FAIL = 'NUMBER_FALSE'
+export const CHARACTER_LENGTH_PASS = 'CHARACTER_LENGTH_PASS'
+export const CHARACTER_LENGTH_FAIL = 'CHARACTER_LENGTH_FAIL'
 
 export function upperCaseCharPass () {
   return {

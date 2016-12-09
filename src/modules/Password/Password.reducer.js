@@ -16,7 +16,7 @@ export const inputState = (state = false, action) => {
 export const password = (state = '', action) => {
   switch (action.type) {
     case ACTION.CHANGE_PASSWORD_VALUE :
-     return action.data
+      return action.data
 
     default:
       return state
