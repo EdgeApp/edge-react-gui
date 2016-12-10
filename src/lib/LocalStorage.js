@@ -18,14 +18,13 @@ const writeAsJSON = (pathToDb, data) => {
   }
 }
 
-const readJSONDb = (pathToDb,callback) => {
+const readJSONDb = (pathToDb, callback) => {
   var text = RNFS.readFile(pathToDb).then(function (err) {
-
     return callback(JSON.parse(text))
   }).catch((err) => {
-    console.log("local store load error",err.message);
+    console.log('local store load error', err.message)
     return callback([])
-  });
+  })
 }
 
 const isString = val =>
@@ -83,8 +82,8 @@ const writeToDisk = ctx => {
  * @param {Array} data - List of key value pairs.
  */
 function LocalStorage (absolutePathToDbFile) {
-  var self = this;
-  readJSONDb(absolutePathToDbFile, function(data) {
+  var self = this
+  readJSONDb(absolutePathToDbFile, function (data) {
     init(self, data)
 
     defineLocalVariable(self, 'pathToDb', absolutePathToDbFile)
@@ -102,7 +101,7 @@ function LocalStorage (absolutePathToDbFile) {
       configurable: false,
       enumerable: false
     })
-  });
+  })
 }
 
 LocalStorage.prototype.setItem = function (key, value) {
