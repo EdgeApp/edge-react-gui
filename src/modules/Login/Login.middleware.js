@@ -2,12 +2,11 @@ import asyncAuto from 'async/auto'
 import { Actions } from 'react-native-router-flux'
 
 import abcContext from '../../lib/abcContext'
-
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-
+const timeoutTimer = setTimeout(()=>{},0)
 export const loginWithPassword = (username, password) => {
   return dispatch => {
     asyncAuto({
@@ -15,24 +14,27 @@ export const loginWithPassword = (username, password) => {
         dispatch(openLoading('Logging-in'))
         callback(null, null)
       },
-      getUsernameAvailability: function (callback) {
-        setTimeout(() => {
-          // if (username === 'user' && password === 'fam') {
-          //   callback(null, null)
-          // } else {
-          //   callback('Error on login sample', null)
-          // }
-          abcContext.loginWithPassword(username, password, null, null, (error, account) => {
-            if (error) {
-              callback('Error on login sample', null)
+      loginWithPassword: function (callback) {
+        abcContext.loginWithPassword("david horton3", "L44m201212", null, null, (error, account) => {
+          if (error) {
+            var mess
+            try {
+              mess = JSON.parse(error.message).message
+            } catch (e) {
+              mess = error
             }
-            if (!error) {
-              callback(null, null)
-            }
-          })
-        }, 3000)
+            callback(mess, null)
+          }
+          if (!error) {
+            callback(null, null)
+          }
+        })
+        timeoutTimer = setTimeout(()=>{
+          callback(t('string_no_connection_response'))
+        },10000)
       }
     }, function (err, results) {
+      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
       if (err) {

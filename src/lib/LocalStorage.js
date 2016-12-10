@@ -2,9 +2,8 @@ const MAX_CHARACTERS_IN_FILE = 2048
 const WRITE_TIMEOUT = 50
 var RNFS = require('react-native-fs')
 
-
 const readJSONDb = (pathToDb, callback) => {
-  var text = RNFS.readFile(pathToDb).then(function (err) {
+  RNFS.readFile(RNFS.DocumentDirectoryPath + pathToDb).then(function (text) {
     return callback(JSON.parse(text))
   }).catch((err) => {
     console.log('local store load error', err.message)
@@ -41,10 +40,9 @@ const init = (ctx, data) => {
 }
 
 const writeToDisk = ctx => {
-  RNFS.writeFile(ctx.pathToDb, ctx.list).then(err => {
+  RNFS.writeFile(RNFS.DocumentDirectoryPath + ctx.pathToDb, JSON.stringify(ctx.list), "utf8").then((success) => {
 
   }).catch(err => {
-   console.err("file write error",err)
     throw err
   })
 }
@@ -77,7 +75,9 @@ function LocalStorage (absolutePathToDbFile) {
     })
   })
 }
-
+LocalStorage.prototype.key = function (index) {
+  return this.list[index].key || undefined
+}
 LocalStorage.prototype.setItem = function (key, value) {
   if (!isString(key)) {
     throw new Error('LocalStorage#setItem(key, value): key must be a string')

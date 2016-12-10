@@ -642,8 +642,9 @@ exports["abc"] =
 	    // "otp": null
 	  };
 	  ctx.authRequest('POST', '/v2/login', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
+	    if (err) { 
+	    	return callback(err) 
+	   	}
 	    try {
 	      // Password login:
 	      var passwordKeySnrp = reply['passwordKeySnrp'];
@@ -655,7 +656,6 @@ exports["abc"] =
 	      // Decrypt the dataKey:
 	      var passwordKey = scrypt(username + password, passwordKeySnrp);
 	      var dataKey = decrypt(passwordBox, passwordKey);
-
 	      // Cache everything for future logins:
 	      insert(ctx.localStorage, username, userId);
 	    } catch (e) {
@@ -1755,7 +1755,12 @@ exports["abc"] =
 	    xhr.setRequestHeader('Authorization', 'Token ' + opts.apiKey);
 	    xhr.setRequestHeader('Content-Type', 'application/json');
 	    xhr.setRequestHeader('Accept', 'application/json');
-	    xhr.send(JSON.stringify(body));
+
+	    if(method !== 'GET') {
+	    	xhr.send(JSON.stringify(body));
+	    } else {
+		    xhr.send();
+	    }
 	    console.log('Visit ' + uri);
 	  }
 	  this.authFetch = opts.authRequest || webFetch;
