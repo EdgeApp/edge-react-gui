@@ -7,6 +7,9 @@ import { loginWithPassword } from './Login.middleware'
 import { View, StyleSheet } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base'
 import t from '../../lib/LocaleStrings'
+
+import CachedUsers from '../CachedUsers/CachedUsers.ui'
+
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window')
 
@@ -38,6 +41,8 @@ class Login extends Component {
             onSubmitEditing={e => this.refs.password._textInput.focus()}
         />
         </InputGroup>
+
+        <CachedUsers />
 
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input

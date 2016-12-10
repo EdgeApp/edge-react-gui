@@ -37,7 +37,7 @@ class NextButton extends Component {
       return (
         <View>
           <TouchableHighlight style={styles.button} onPress={this.props.onPress}>
-            <Text style={styles.buttonText}>{t('string_next')}</Text>
+            <Text style={styles.buttonText}>{ this.checkScene() }</Text>
           </TouchableHighlight>
         </View>
       )
