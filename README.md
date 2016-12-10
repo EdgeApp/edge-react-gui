@@ -23,11 +23,13 @@ But you can also run this with zsh (put it in .zshprofile instead)
 `npm start`
 ### install the android app (also runs the packager for Mac users)
 `npm run droid`
+### run android logcat in a separate tab so you can see OS related messages and other errors
+`adb logcat *:E`
 
 ### Troubleshooting
 - Whenever you need to install a new npm module, you'll need to restart the app daemon afterwards in order for your bundle to pick it up.
 - If you're having inexplicable persistent problems, it sometimes helps to clean the project. `cd android && ./gradlew clean && rm -rf build && cd ..`
-- If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:D` and reproduce the error, it should give you some stack information, which MIGHT help.
+- If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:E` and reproduce the error, it should give you some stack information, which MIGHT help.
 
 ### Test production build
 It's required at the moment to set up some gradle properties in your local environment. This will be fixed in a future release, but it takes 30 seconds, so...
