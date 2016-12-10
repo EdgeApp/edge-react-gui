@@ -11,7 +11,7 @@ export const loginWithPassword = (username, password) => {
   return dispatch => {
     asyncAuto({
       openLoading: function (callback) {
-        dispatch(openLoading('Logging-in'))
+        dispatch(openLoading(t('string_loading')))
         callback(null, null)
       },
       loginWithPassword: function (callback) {

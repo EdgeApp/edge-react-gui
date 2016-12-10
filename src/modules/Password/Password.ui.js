@@ -25,7 +25,9 @@ class Password extends Component {
       checkPassword(
         this.props.password,
         this.props.passwordRepeat,
-        this.props.validation
+        this.props.validation,
+        this.props.username,
+        this.props.pinNumber
       )
     )
   }
@@ -35,7 +37,7 @@ class Password extends Component {
   }
 
   handleSkipPassword = () => {
-    this.props.dispatch(skipPassword())
+    this.props.dispatch(skipPassword(this.props.username,this.props.pinNumber))
   }
 
   handlePasswordOnFocus = () => {
@@ -88,7 +90,7 @@ class Password extends Component {
             secureTextEntry
             returnKeyType='done'
             onChangeText={this.handleOnChangePasswordRepeat}
-            onBlur={this.handleSubmit}
+            onSubmitEditing={this.handleSubmit}
             value={this.props.passwordRepeat}
           />
         </View>
@@ -103,6 +105,8 @@ export default connect(state => ({
   inputState: state.password.inputState,
   password: state.password.password,
   passwordRepeat: state.password.passwordRepeat,
-  validation: state.password.validation
+  validation: state.password.validation,
+  username: state.username,
+  pinNumber: state.pinNumber
 
 }))(Password)

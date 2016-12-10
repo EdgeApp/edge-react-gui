@@ -7,7 +7,7 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-
+const timeoutTimer = setTimeout(()=>{},0)
 export const checkUsername = username => {
   return dispatch => {
     asyncAuto({
@@ -23,18 +23,21 @@ export const checkUsername = username => {
         callback(null, null)
       },
       getUsernameAvailability: function (callback) {
-        setTimeout(() => {
-          abcContext.usernameAvailable(username, function (error, available) {
-            if (error) {
-              callback(t('activity_signup_username_unavailable'), null)
-            }
-            if (!error) {
-              callback(null, null)
-            }
-          })
-        }, 500)
+        abcContext.usernameAvailable(username, function (error, available) {
+          if (error) {
+            callback(t('activity_signup_username_unavailable'), null)
+          }
+          if (!error) {
+            callback(null, null)
+          }
+        })
+
+        timeoutTimer = setTimeout(()=>{
+          callback(t('string_no_connection_response'))
+        },10000)
       }
     }, function (err, results) {
+      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
       if (err) {
