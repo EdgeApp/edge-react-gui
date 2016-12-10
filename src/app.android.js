@@ -19,12 +19,12 @@ export default class App extends Component {
     return (
       <Provider store={store}>
         <RouterWithRedux>
-          <Scene key="root">
-            <Scene key="signup" hideNavBar={true}>
-              <Scene key="username" component={Username} title={"Enter Username"} initial={true}/>
-              <Scene key="pin" component={PinNumber} title={"Enter Pin"} />
-              <Scene key="password" component={Password} title={"Enter Password"} />
-              <Scene key="review" component={ReviewDetails} title={"Details"} type="reset"/>
+          <Scene key='root'>
+            <Scene key='signup' hideNavBar>
+              <Scene key='username' component={Username} title={'Enter Username'} initial />
+              <Scene key='pin' component={PinNumber} title={'Enter Pin'} />
+              <Scene key='password' component={Password} title={'Enter Password'} />
+              <Scene key='review' component={ReviewDetails} title={'Details'} type='reset' />
             </Scene>
             <Scene key='landing' component={Landing} initial hideNavBar />
             <Scene key='home' component={Home} hideNavBar type='reset' />

@@ -10,7 +10,6 @@
   "dependencies": {
     "async": "^2.1.4",
     "lodash": "^4.17.2",
-    "node-storage": "0.0.7",
     "react": "^15.4.1",
     "react-native": "^0.39.1",
     "react-native-device-info": "^0.9.6",
@@ -25,8 +24,9 @@
     "native-base": "^0.5.18"
   },
   "devDependencies": {
-    "eslint": "^3.11.1",
     "babel-eslint": "^7.1.1",
+    "babel-preset-react-native": "^1.9.0",
+    "eslint": "^3.11.1",
     "snazzy": "^5.0.0",
     "standard": "^8.6.0"
   },

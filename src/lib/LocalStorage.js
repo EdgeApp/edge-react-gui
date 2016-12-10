@@ -1,5 +1,3 @@
-'use strict'
-
 const MAX_CHARACTERS_IN_FILE = 2048
 const WRITE_TIMEOUT = 50
 var RNFS = require('react-native-fs')

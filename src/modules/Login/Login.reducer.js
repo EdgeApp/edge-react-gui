@@ -1,7 +1,6 @@
 import * as ACTION from './Login.action'
 
 export const viewPassword = (state = true, action) => {
-
   switch (action.type) {
     case ACTION.OPEN_LOG_IN :
       return true

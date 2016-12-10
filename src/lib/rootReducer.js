@@ -9,8 +9,8 @@ import { reviewDetails } from '../modules/ReviewDetails/ReviewDetails.reducer'
 import * as PasswordValidation from '../modules/Password/PasswordValidation/PasswordValidation.reducer'
 import * as Loader from '../modules/Loader/Loader.reducer'
 import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
-import * as Login from '../modules/Login/Login.reducer' 
-import * as CachedUsers from '../modules/CachedUsers/CachedUsers.reducer' 
+import * as Login from '../modules/Login/Login.reducer'
+import * as CachedUsers from '../modules/CachedUsers/CachedUsers.reducer'
 import routes from './routesReducer'
 
 const store = combineReducers({
@@ -50,8 +50,8 @@ const store = combineReducers({
     message: ErrorModal.message
   }),
   cachedUsers: combineReducers({
-    users   : CachedUsers.users,
-    view    : CachedUsers.listView
+    users: CachedUsers.users,
+    view: CachedUsers.listView
   }),
   routes
 })
