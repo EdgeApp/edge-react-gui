@@ -11,7 +11,7 @@ const { width, height } = Dimensions.get('window');
 class UserList extends Component {
 
   handleLoginUserPin = (user) => {
-     ne 
+     this.props.dispatch(selectUserToLogin(user.id)) 
   } 
 
   listUsers = () => {

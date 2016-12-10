@@ -53,7 +53,8 @@ const store = combineReducers({
   }),
   cachedUsers: combineReducers({
     users   : CachedUsers.users,
-    view    : CachedUsers.listView
+    view    : CachedUsers.listView,
+    selectedUserToLogin : CachedUsers.selectedUserToLogin
   }),
   routes
 })
