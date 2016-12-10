@@ -1,20 +1,7 @@
 const MAX_CHARACTERS_IN_FILE = 2048
 const WRITE_TIMEOUT = 50
 var RNFS = require('react-native-fs')
-const writeAsJSON = (pathToDb, data) => {
-  var json = JSON.stringify(data)
 
-  if (json.length < MAX_CHARACTERS_IN_FILE) {
-    RNFS.writeFile(pathToDb, json).then(err => {
-      if (err) {
-        throw err
-      }
-    })
-  } else {
-    throw new Error(`LocalStorage: Count of characters
-      in file must be less then ${MAX_CHARACTERS_IN_FILE + 1}`)
-  }
-}
 
 const readJSONDb = (pathToDb, callback) => {
   var text = RNFS.readFile(pathToDb).then(function (err) {
@@ -54,23 +41,12 @@ const init = (ctx, data) => {
 }
 
 const writeToDisk = ctx => {
-  var timeoutId = ctx.writeTimerId
+  RNFS.writeFile(ctx.pathToDb, ctx.list).then(err => {
 
-  if (timeoutId === -1) {
-    ctx.writeTimerId = setTimeout(() => {
-      if (ctx.pathToDb) {
-        writeAsJSON(ctx.pathToDb, ctx.list)
-      }
-
-      ctx.writeTimerId = -1
-    }, WRITE_TIMEOUT)
-
-    return
-  }
-
-  clearTimeout(ctx.writeTimerId)
-  ctx.writeTimerId = -1
-  writeToDisk(ctx)
+  }).catch(err => {
+   console.err("file write error",err)
+    throw err
+  })
 }
 
 /**
