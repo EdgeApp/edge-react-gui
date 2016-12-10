@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { loginUsername, loginPassword } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
 
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base';
 import t from '../../lib/LocaleStrings'
 
@@ -29,21 +29,36 @@ class Login extends Component {
   }
   
   render() {
+
+    const foo = () => {
+      this.refs.loginUsername._textInput.measure( (ox, oy, width, height, px, py) => {
+        console.log(ox)                
+        console.log(oy)                
+        console.log(width)                
+        console.log(height)                
+        console.log(px)                
+        console.log(py)                
+      })
+    }
+
     return (
       <View style={style.container}>
 
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input 
-              placeholder={t('fragment_landing_username_hint')} 
-              style={style.input} 
-              onChangeText={ this.changeUsername } 
-              value={this.props.username}
-              returnKeyType = {"next"}
-              onSubmitEditing={ e =>  this.refs.password._textInput.focus() }
-        />    
+            ref='loginUsername'
+            placeholder={t('fragment_landing_username_hint')} 
+            style={style.input} 
+            onChangeText={ this.changeUsername } 
+            value={this.props.username}
+            returnKeyType = {"next"}
+            onSubmitEditing={ e =>  this.refs.password._textInput.focus() }
+            autoFocus={ true }
+            selectTextOnFocus={ true }
+            onFocus={ foo }
+        />     
         </InputGroup>
 
-        <CachedUsers />
 
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input 
@@ -58,7 +73,10 @@ class Login extends Component {
           /> 
         </InputGroup>
 
-        <Button style={style.button} block large onPress={this.submit}>Sign In</Button>
+        <TouchableOpacity style={style.button} onPress={this.submit}>
+          <Text style={style.buttonText}> Sign In </Text>
+        </TouchableOpacity>
+
       </View>
     )
   }
@@ -76,9 +94,19 @@ const style = StyleSheet.create({
   },
 
   button : {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: "#80C342",
     marginVertical: 10,
     height: 45
+  },
+
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize:22,
+    flex: 1 
   },
 
   inputGroup: {

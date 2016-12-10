@@ -136,7 +136,8 @@ const styles = StyleSheet.create({
 
 export default connect( state =>  ({
 
-  password  : state.login.viewPassword,
-  pin       : state.login.viewPIN
+  password            : state.login.viewPassword,
+  selectedUserToLogin : state.cachedUsers.selectedUserToLogin,
+  pin                 : state.login.viewPIN
 
 }) )(HomeComponent)

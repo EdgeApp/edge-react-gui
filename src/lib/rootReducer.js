@@ -52,8 +52,8 @@ const store = combineReducers({
     message : ErrorModal.message
   }),
   cachedUsers: combineReducers({
-    users   : CachedUsers.users,
-    view    : CachedUsers.listView,
+    users               : CachedUsers.users,
+    view                : CachedUsers.listView,
     selectedUserToLogin : CachedUsers.selectedUserToLogin
   }),
   routes

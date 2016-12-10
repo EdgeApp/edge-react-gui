@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 
 import { closeLoginUsingPin, openLogin, loginPIN } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
+import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
 import { View, Text, Image, StyleSheet,TouchableHighlight } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base';
 import t from '../../lib/LocaleStrings'
+
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window');
 
@@ -21,7 +23,7 @@ class Login extends Component {
   }
 
   viewPasswordInput = (pin) => {
-    this.props.dispatch(closeLoginUsingPin())  
+    this.props.dispatch(removeUserToLogin())  
     this.props.dispatch(openLogin())  
   }
   
@@ -29,7 +31,7 @@ class Login extends Component {
     return (
       <View style={style.container}>
 
-        <Text style={[ style.text, { fontSize: 20 } ]}>Sample Username</Text>
+        <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user.name : 'No User Selected' }</Text>
 
         <View style={{ width: 100 }}>
           <InputGroup borderType='regular' style={style.inputGroup}>
@@ -87,6 +89,7 @@ const style = StyleSheet.create({
 
 export default connect( state =>  ({
 
-  pin :  state.login.pin
+  pin   :  state.login.pin,
+  user  :  state.cachedUsers.users.find( user => user.id === state.cachedUsers.selectedUserToLogin)
 
 }) )(Login)
