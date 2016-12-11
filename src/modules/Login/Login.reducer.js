@@ -27,7 +27,7 @@ export const viewPIN = (state = false, action) => {
     case REMOVE_USER_LOGIN :
       return false
 
-    default:      
+    default:
       return state
   }
 }
@@ -38,7 +38,7 @@ export const username = (state = '', action) => {
       return action.data
     case SELECT_USER_LOGIN :
       return action.data.name
-    default:      
+    default:
       return state
   }
 }

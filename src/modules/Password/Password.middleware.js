@@ -21,8 +21,8 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
     if (validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat) {
       dispatch(openLoading(t('fragment_signup_creating_account')))
       abcContext.createAccount(username, password, pinNumber, (err, result) => {
-        dispatch(closeLoading())
         clearTimeout(timeoutTimer)
+        dispatch(closeLoading())
         if (err) {
           console.log('account creation error', err)
           var mess
@@ -51,8 +51,8 @@ export const skipPassword = (username, pinNumber) => {
     dispatch(changePasswordValue(''))
     dispatch(passwordNotificationHide())
     abcContext.createAccount(username, null, pinNumber, (err, result) => {
-      dispatch(closeLoading())
       clearTimeout(timeoutTimer)
+      dispatch(closeLoading())
       if (err) {
         console.log('account creation error', err)
         var mess

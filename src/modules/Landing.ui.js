@@ -10,7 +10,7 @@ import LoginWithPin from './Login/LoginWithPin.ui'
 
 import { openLogin } from './Login/Login.action'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import { Button } from 'native-base';
+import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 
@@ -38,7 +38,7 @@ class Main extends Component {
           <View style={styles.main}>
             <Login />
             <CachedUsers />
-            <TouchableOpacity style={[ styles.button, { backgroundColor: "#2291CF" }]} onPress={Actions.signup}>
+            <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
               <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
             </TouchableOpacity>
           </View>
@@ -48,10 +48,10 @@ class Main extends Component {
       if (!this.props.password) {
         return (
           <View style={styles.main}>
-            <TouchableOpacity style={[ styles.button, { backgroundColor: "#80C342" }]} onPress={this.handleOpenLogin}>
+            <TouchableOpacity style={[ styles.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
               <Text style={styles.buttonText}>{t('fragment_landing_signin_button')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[ styles.button, { backgroundColor: "#2291CF" }]} onPress={Actions.signup}>
+            <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
               <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
             </TouchableOpacity>
           </View>
@@ -117,21 +117,21 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     width: width * 0.6,
     height: 45
-  }
+  },
 
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
-    fontSize:22,
-    flex: 1 
-  },
+    fontSize: 22,
+    flex: 1
+  }
 
-});
+})
 
 export default connect(state => ({
 
-  password            : state.login.viewPassword,
-  selectedUserToLogin : state.cachedUsers.selectedUserToLogin,
-  pin                 : state.login.viewPIN
+  password: state.login.viewPassword,
+  selectedUserToLogin: state.cachedUsers.selectedUserToLogin,
+  pin: state.login.viewPIN
 
 }))(HomeComponent)

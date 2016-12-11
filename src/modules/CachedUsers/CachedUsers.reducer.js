@@ -14,10 +14,10 @@ export const users = (state = userList, action) => {
 
 export const selectedUserToLogin = (state = null, action) => {
   switch (action.type) {
-    case ACTION.SELECT_USER_LOGIN  :
+    case ACTION.SELECT_USER_LOGIN :
       return action.data.id
 
-    case ACTION.REMOVE_USER_LOGIN  :
+    case ACTION.REMOVE_USER_LOGIN :
       return null
 
     default:
@@ -33,13 +33,13 @@ export const listView = (state = false, action) => {
     case ACTION.CLOSE_USER_LIST :
       return false
 
-    case ACTION.SELECT_USER_LOGIN  :
+    case ACTION.SELECT_USER_LOGIN :
       return false
 
-    case LOG_IN_USERNAME  :
+    case LOG_IN_USERNAME :
       return false
 
-    default:      
+    default:
       return state
   }
 }

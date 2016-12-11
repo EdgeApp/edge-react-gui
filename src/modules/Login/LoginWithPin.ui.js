@@ -5,7 +5,6 @@ import { closeLoginUsingPin, openLogin, loginPIN } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
 import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
-
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { InputGroup, Input } from 'native-base'
 import t from '../../lib/LocaleStrings'
@@ -24,8 +23,8 @@ class Login extends Component {
   }
 
   viewPasswordInput = (pin) => {
-    this.props.dispatch(removeUserToLogin())  
-    this.props.dispatch(openLogin())  
+    this.props.dispatch(removeUserToLogin())
+    this.props.dispatch(openLogin())
   }
 
   render () {
@@ -89,6 +88,6 @@ const style = StyleSheet.create({
 })
 
 export default connect(state => ({
-  pin   :  state.login.pin,
-  user  :  state.cachedUsers.users.find( user => user.id === state.cachedUsers.selectedUserToLogin)
+  pin: state.login.pin,
+  user: state.cachedUsers.users.find(user => user.id === state.cachedUsers.selectedUserToLogin)
 }))(Login)

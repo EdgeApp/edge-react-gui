@@ -13,38 +13,34 @@ const { width, height } = Dimensions.get('window')
 class UserList extends Component {
 
   handleLoginUserPin = (user) => {
-     this.props.dispatch(selectUserToLogin(user)) 
-  } 
+    this.props.dispatch(selectUserToLogin(user))
+  }
 
   listUsers = () => {
-
     const checkIfLastElementStyle = index => {
-      const lastIndex = this.props.users.length - 1 
-      if(lastIndex !== index){
-        return [style.row, style.border] 
+      const lastIndex = this.props.users.length - 1
+      if (lastIndex !== index) {
+        return [style.row, style.border]
       }
 
-      if(lastIndex === index){
-        return style.row 
+      if (lastIndex === index) {
+        return style.row
       }
     }
 
-    return this.props.users.map( ( user, index  )=> {
-
+    return this.props.users.map((user, index) => {
       return (
-        <View key={index} style={ checkIfLastElementStyle(index) }>
-          <TouchableWithoutFeedback onPress={ () => this.handleLoginUserPin(user) }>
-            <Text style={ style.text }>{ user.name }</Text>
+        <View key={index} style={checkIfLastElementStyle(index)}>
+          <TouchableWithoutFeedback onPress={() => this.handleLoginUserPin(user)}>
+            <Text style={style.text}>{ user.name }</Text>
           </TouchableWithoutFeedback>
         </View>
       )
     })
   }
 
-
-  render() {
-
-    if(this.props.view) {
+  render () {
+    if (this.props.view) {
       return (
         <View style={[ style.container ]}>
           { this.listUsers() }
@@ -52,7 +48,7 @@ class UserList extends Component {
       )
     }
 
-    if(!this.props.view) return null
+    if (!this.props.view) return null
   }
 }
 
