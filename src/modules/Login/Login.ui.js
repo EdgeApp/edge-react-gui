@@ -9,6 +9,7 @@ import { InputGroup, Input, Button } from 'native-base';
 import t from '../../lib/LocaleStrings'
 
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
+import { openUserList, closeUserList } from '../CachedUsers/CachedUsers.action'
 
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window');
@@ -28,18 +29,15 @@ class Login extends Component {
     this.props.dispatch(loginPassword(password))  
   }
   
-  render() {
+  showCachedUsers = () => {
+    this.props.dispatch(openUserList())
+  }
 
-    const foo = () => {
-      this.refs.loginUsername._textInput.measure( (ox, oy, width, height, px, py) => {
-        console.log(ox)                
-        console.log(oy)                
-        console.log(width)                
-        console.log(height)                
-        console.log(px)                
-        console.log(py)                
-      })
-    }
+  hideCachedUsers = () => {
+    this.props.dispatch(closeUserList())
+  }
+
+  render() {
 
     return (
       <View style={style.container}>
@@ -53,12 +51,11 @@ class Login extends Component {
             value={this.props.username}
             returnKeyType = {"next"}
             onSubmitEditing={ e =>  this.refs.password._textInput.focus() }
-            autoFocus={ true }
             selectTextOnFocus={ true }
-            onFocus={ foo }
+            onFocus={ this.showCachedUsers }
+            onBlur={ this.hideCachedUsers }
         />     
         </InputGroup>
-
 
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input 
@@ -124,6 +121,7 @@ export default connect( state =>  ({
 
   username  :  state.login.username,
   password  :  state.login.password,
+  cachedUsersView  :  state.cachedUsers.view,
   pin      :  state.login.pin
 
 }) )(Login)

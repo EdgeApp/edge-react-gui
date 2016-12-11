@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
+import CachedUsers from './CachedUsers/CachedUsers.ui'
 import Loader from './Loader/Loader.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
@@ -9,7 +10,7 @@ import LoginWithPin from './Login/LoginWithPin.ui'
 
 import { openLogin } from './Login/Login.action'
 
-import { View, Text, Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base';
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
@@ -39,13 +40,10 @@ class Main extends Component {
         return(
           <View style={styles.main}>
             <Login />
-            <Button 
-              large
-              style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={ Actions.signup }
-              accessibilityLabel={t('fragment_landing_signup_button')}>
-              {t('fragment_landing_signup_button')}
-            </Button>            
+            <CachedUsers />
+            <TouchableOpacity style={[ styles.button, { backgroundColor: "#2291CF" }]} onPress={Actions.signup}>
+              <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
+            </TouchableOpacity>
           </View>
         )
       }
@@ -53,20 +51,12 @@ class Main extends Component {
       if(!this.props.password) {
         return (
           <View style={styles.main}>
-            <Button 
-              large
-              style={[ styles.button, { backgroundColor: "#80C342" } ]}
-              onPress={this.handleOpenLogin}
-              accessibilityLabel={t('fragment_landing_signin_button')}>
-              {t('fragment_landing_signin_button')}
-            </Button>
-            <Button 
-              large
-              style={[ styles.button, { backgroundColor: "#2291CF" } ]}
-              onPress={ Actions.signup }
-              accessibilityLabel={t('fragment_landing_signup_button')}>
-              {t('fragment_landing_signup_button')}
-            </Button>            
+            <TouchableOpacity style={[ styles.button, { backgroundColor: "#80C342" }]} onPress={this.handleOpenLogin}>
+              <Text style={styles.buttonText}>{t('fragment_landing_signin_button')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[ styles.button, { backgroundColor: "#2291CF" }]} onPress={Actions.signup}>
+              <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
+            </TouchableOpacity>
           </View>
         )
       }
@@ -126,10 +116,19 @@ const styles = StyleSheet.create({
   },
 
   button: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 10,
     width: width * 0.6,
-    alignSelf: 'center',
     height: 45
+  },
+
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize:22,
+    flex: 1 
   },
 
 });

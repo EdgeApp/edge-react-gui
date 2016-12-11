@@ -44,11 +44,17 @@ class UserList extends Component {
   }
 
   render() {
-    return (
-      <View style={style.container}>
-        { this.listUsers() }
-      </View>
-    )
+
+    if(this.props.view) {
+      return (
+        <View style={[ style.container ]}>
+          { this.listUsers() }
+        </View>
+      )
+    }
+
+    if(!this.props.view) return null
+
   }
 }
 
@@ -56,11 +62,11 @@ const style = StyleSheet.create({
 
   container: {
     position: 'absolute',
-    top: 65,
-    zIndex: 100,
+    top: 75,
     backgroundColor: '#FFF',
     justifyContent: 'center',
-    borderRadius: 4
+    borderRadius: 4,
+    zIndex: 1
   },
 
   row: {
