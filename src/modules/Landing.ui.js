@@ -82,8 +82,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     margin: 10,
-    flex: 3,
-    zIndex: 0
+    flex: 3
   },
 
   welcome: {

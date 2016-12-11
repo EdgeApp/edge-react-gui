@@ -40,7 +40,7 @@ class Login extends Component {
       if (this.props.showCachedUsers) {
         return (<CachedUsers  style={style.noflex}/>)
       } else {
-        return (<Text style={style.noflex}></Text>)
+        return null
       }
     }.bind(this)
     return (
