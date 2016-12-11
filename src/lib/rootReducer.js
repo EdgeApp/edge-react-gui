@@ -36,7 +36,8 @@ const store = combineReducers({
     viewPIN: Login.viewPIN,
     username: Login.username,
     password: Login.password,
-    pin: Login.pin
+    pin: Login.pin,
+    showCachedUsers: Login.showCachedUsers
   }),
 
   nextButtonVisible,
@@ -51,7 +52,6 @@ const store = combineReducers({
   }),
   cachedUsers: combineReducers({
     users: CachedUsers.users,
-    view: CachedUsers.listView,
     selectedUserToLogin: CachedUsers.selectedUserToLogin
   }),
   routes

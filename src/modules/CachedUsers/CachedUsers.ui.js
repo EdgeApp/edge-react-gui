@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { View, Text, StyleSheet, TouchableHighlight, TouchableWithoutFeedback } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin } from './CachedUsers.action'
@@ -13,6 +13,9 @@ const { width, height } = Dimensions.get('window')
 class UserList extends Component {
 
   handleLoginUserPin = (user) => {
+    this.props.dispatch(selectUserToLogin(user))
+  }
+  handleDeleteUserCache = (user) => {
     this.props.dispatch(selectUserToLogin(user))
   }
 
@@ -30,42 +33,38 @@ class UserList extends Component {
 
     return this.props.users.map((user, index) => {
       return (
-        <View key={index} style={checkIfLastElementStyle(index)}>
-          <TouchableWithoutFeedback onPress={() => this.handleLoginUserPin(user)}>
-            <Text style={style.text}>{ user.name }</Text>
-          </TouchableWithoutFeedback>
+      <View key={index} style={checkIfLastElementStyle(index)}>
+        <View style={style.cachedItem}>
+          <Text style={style.text} onPress={() => this.handleLoginUserPin(user)}>{ user.name }</Text>
+          <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
         </View>
+      </View>
       )
     })
   }
 
   render () {
-    if (this.props.view) {
       return (
         <View style={[ style.container ]}>
           { this.listUsers() }
         </View>
       )
-    }
-
-    if (!this.props.view) return null
   }
 }
 
 const style = StyleSheet.create({
 
   container: {
-    position: 'absolute',
-    top: 75,
+    position:'absolute',
+    top: 60,
     backgroundColor: '#FFF',
     justifyContent: 'center',
-    borderRadius: 4,
-    zIndex: 1
+    borderRadius: 4
   },
 
   row: {
-    flexDirection: 'row',
-    width: width,
+    flexDirection: 'column',
+    width: width * 0.8,
     padding: 9
   },
 
@@ -75,17 +74,26 @@ const style = StyleSheet.create({
     fontSize: 16
   },
 
+  xbuttontext: {
+    fontSize: 16
+  },  
+
   border: {
     borderBottomColor: '#AAA',
     borderBottomWidth: 1,
     borderStyle: 'solid'
-  }
+  },
 
+  cachedItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  }
 })
 
 export default connect(state => ({
 
-  users: state.cachedUsers.users,
-  view: state.cachedUsers.view
+  users: state.cachedUsers.users
 
 }))(UserList)

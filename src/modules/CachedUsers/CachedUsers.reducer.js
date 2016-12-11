@@ -24,22 +24,3 @@ export const selectedUserToLogin = (state = null, action) => {
       return state
   }
 }
-
-export const listView = (state = false, action) => {
-  switch (action.type) {
-    case ACTION.OPEN_USER_LIST :
-      return true
-
-    case ACTION.CLOSE_USER_LIST :
-      return false
-
-    case ACTION.SELECT_USER_LOGIN :
-      return false
-
-    case LOG_IN_USERNAME :
-      return false
-
-    default:
-      return state
-  }
-}

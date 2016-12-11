@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { loginUsername, loginPassword } from './Login.action'
+import { loginUsername, loginPassword, openUserList, closeUserList } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base'
@@ -9,7 +9,6 @@ import { InputGroup, Input, Button } from 'native-base'
 import t from '../../lib/LocaleStrings'
 
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
-import { openUserList, closeUserList } from '../CachedUsers/CachedUsers.action'
 
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window')
@@ -37,6 +36,13 @@ class Login extends Component {
   }
 
   render () {
+    var cUsers = function() {
+      if (this.props.showCachedUsers) {
+        return (<CachedUsers  style={style.noflex}/>)
+      } else {
+        return (<Text style={style.noflex}></Text>)
+      }
+    }.bind(this)
     return (
       <View style={style.container}>
 
@@ -54,7 +60,6 @@ class Login extends Component {
             onBlur={this.hideCachedUsers}
         />
         </InputGroup>
-
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input
             ref='password'
@@ -72,19 +77,22 @@ class Login extends Component {
           <Text style={style.buttonText}> Sign In </Text>
         </TouchableOpacity>
 
+
+        {cUsers()}
       </View>
     )
   }
 }
 
 const style = StyleSheet.create({
-
+  noflex: {
+    flexShrink: 1
+  },
   container: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 30,
-    width: width * 0.6,
+    width: width * 0.8,
     marginVertical: 15
   },
 
@@ -119,7 +127,7 @@ export default connect(state => ({
 
   username: state.login.username,
   password: state.login.password,
-  cachedUsersView: state.cachedUsers.view,
+  showCachedUsers: state.login.showCachedUsers,
   pin: state.login.pin
 
 }))(Login)

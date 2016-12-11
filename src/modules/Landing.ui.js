@@ -37,7 +37,6 @@ class Main extends Component {
         return (
           <View style={styles.main}>
             <Login />
-            <CachedUsers />
             <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
               <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
             </TouchableOpacity>

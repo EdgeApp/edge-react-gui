@@ -5,6 +5,8 @@ export const CLOSE_LOG_IN_USING_PIN = 'CLOSE_LOG_IN_USING_PIN'
 export const LOG_IN_USERNAME = 'LOG_IN_USERNAME'
 export const LOG_IN_PASSWORD = 'LOG_IN_PASSWORD'
 export const LOG_IN_PIN = 'LOG_IN_PIN'
+export const OPEN_USER_LIST = 'OPEN_USER_LIST'
+export const CLOSE_USER_LIST = 'CLOSE_USER_LIST'
 
 export function openLogin () {
   return {
@@ -48,5 +50,17 @@ export function loginPIN (data) {
   return {
     type: LOG_IN_PIN,
     data
+  }
+}
+
+export function openUserList () {
+  return {
+    type: OPEN_USER_LIST
+  }
+}
+
+export function closeUserList () {
+  return {
+    type: CLOSE_USER_LIST
   }
 }

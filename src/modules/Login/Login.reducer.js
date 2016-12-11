@@ -53,6 +53,21 @@ export const password = (state = '', action) => {
   }
 }
 
+
+export const showCachedUsers = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.OPEN_USER_LIST :
+      return true
+
+    case ACTION.CLOSE_USER_LIST :
+      return false
+
+    default:
+      return state
+  }
+}
+
+
 export const pin = (state = '', action) => {
   switch (action.type) {
     case ACTION.LOG_IN_PIN :
