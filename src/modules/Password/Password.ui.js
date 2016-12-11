@@ -37,7 +37,7 @@ class Password extends Component {
   }
 
   handleSkipPassword = () => {
-    this.props.dispatch(skipPassword(this.props.username,this.props.pinNumber))
+    this.props.dispatch(skipPassword(this.props.username, this.props.pinNumber))
   }
 
   handlePasswordOnFocus = () => {

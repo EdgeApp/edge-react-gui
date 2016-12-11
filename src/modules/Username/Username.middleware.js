@@ -7,7 +7,7 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(()=>{},0)
+const timeoutTimer = setTimeout(() => {}, 0)
 export const checkUsername = username => {
   return dispatch => {
     asyncAuto({
@@ -32,9 +32,9 @@ export const checkUsername = username => {
           }
         })
 
-        timeoutTimer = setTimeout(()=>{
+        timeoutTimer = setTimeout(() => {
           callback(t('string_no_connection_response'))
-        },10000)
+        }, 10000)
       }
     }, function (err, results) {
       clearTimeout(timeoutTimer)

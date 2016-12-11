@@ -1,4 +1,5 @@
 import * as ACTION from './Login.action'
+import { SELECT_USER_LOGIN, REMOVE_USER_LOGIN } from '../CachedUsers/CachedUsers.action'
 
 export const viewPassword = (state = true, action) => {
   switch (action.type) {
@@ -20,8 +21,13 @@ export const viewPIN = (state = false, action) => {
 
     case ACTION.CLOSE_LOG_IN_USING_PIN :
       return false
+    case SELECT_USER_LOGIN :
+      return true
 
-    default:
+    case REMOVE_USER_LOGIN :
+      return false
+
+    default:      
       return state
   }
 }
@@ -30,8 +36,9 @@ export const username = (state = '', action) => {
   switch (action.type) {
     case ACTION.LOG_IN_USERNAME :
       return action.data
-
-    default:
+    case SELECT_USER_LOGIN :
+      return action.data.name
+    default:      
       return state
   }
 }

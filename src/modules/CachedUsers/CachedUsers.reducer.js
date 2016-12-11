@@ -1,4 +1,5 @@
 import * as ACTION from './CachedUsers.action'
+import { LOG_IN_USERNAME } from '../Login/Login.action'
 
 const userList = [
   { id: '1', name: 'foofoo' },
@@ -13,8 +14,11 @@ export const users = (state = userList, action) => {
 
 export const selectedUserToLogin = (state = null, action) => {
   switch (action.type) {
-    case ACTION.SELECT_USER_LOGIN :
-      return action.id
+    case ACTION.SELECT_USER_LOGIN  :
+      return action.data.id
+
+    case ACTION.REMOVE_USER_LOGIN  :
+      return null
 
     default:
       return state
@@ -29,7 +33,13 @@ export const listView = (state = false, action) => {
     case ACTION.CLOSE_USER_LIST :
       return false
 
-    default:
+    case ACTION.SELECT_USER_LOGIN  :
+      return false
+
+    case LOG_IN_USERNAME  :
+      return false
+
+    default:      
       return state
   }
 }

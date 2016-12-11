@@ -3,12 +3,13 @@ import { connect } from 'react-redux'
 
 import { loginUsername, loginPassword } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { InputGroup, Input, Button } from 'native-base';
 
-import { View, StyleSheet } from 'react-native'
-import { InputGroup, Input, Button } from 'native-base'
 import t from '../../lib/LocaleStrings'
 
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
+import { openUserList, closeUserList } from '../CachedUsers/CachedUsers.action'
 
 import Dimensions from 'Dimensions'
 const { width, height } = Dimensions.get('window')
@@ -26,23 +27,34 @@ class Login extends Component {
   changePassword = (password) => {
     this.props.dispatch(loginPassword(password))
   }
+  
+  showCachedUsers = () => {
+    this.props.dispatch(openUserList())
+  }
 
-  render () {
+  hideCachedUsers = () => {
+    this.props.dispatch(closeUserList())
+  }
+
+  render() {
+
     return (
       <View style={style.container}>
 
         <InputGroup borderType='regular' style={style.inputGroup} >
-          <Input
-            placeholder={t('fragment_landing_username_hint')}
-            style={style.input}
-            onChangeText={this.changeUsername}
+          <Input 
+            ref='loginUsername'
+            placeholder={t('fragment_landing_username_hint')} 
+            style={style.input} 
+            onChangeText={ this.changeUsername } 
             value={this.props.username}
-            returnKeyType={'next'}
-            onSubmitEditing={e => this.refs.password._textInput.focus()}
-        />
+            returnKeyType = {"next"}
+            onSubmitEditing={ e =>  this.refs.password._textInput.focus() }
+            selectTextOnFocus={ true }
+            onFocus={ this.showCachedUsers }
+            onBlur={ this.hideCachedUsers }
+        />     
         </InputGroup>
-
-        <CachedUsers />
 
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input
@@ -57,7 +69,10 @@ class Login extends Component {
           />
         </InputGroup>
 
-        <Button style={style.button} block large onPress={this.submit}>Sign In</Button>
+        <TouchableOpacity style={style.button} onPress={this.submit}>
+          <Text style={style.buttonText}> Sign In </Text>
+        </TouchableOpacity>
+
       </View>
     )
   }
@@ -74,10 +89,21 @@ const style = StyleSheet.create({
     marginVertical: 15
   },
 
-  button: {
-    backgroundColor: '#80C342',
+
+  button : {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: "#80C342",
     marginVertical: 10,
     height: 45
+  },
+
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize:22,
+    flex: 1 
   },
 
   inputGroup: {
@@ -93,8 +119,9 @@ const style = StyleSheet.create({
 
 export default connect(state => ({
 
-  username: state.login.username,
-  password: state.login.password,
-  pin: state.login.pin
+  username  :  state.login.username,
+  password  :  state.login.password,
+  cachedUsersView  :  state.cachedUsers.view,
+  pin      :  state.login.pin
 
 }))(Login)

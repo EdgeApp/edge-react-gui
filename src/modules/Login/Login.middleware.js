@@ -6,7 +6,7 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(()=>{},0)
+const timeoutTimer = setTimeout(() => {}, 0)
 export const loginWithPassword = (username, password) => {
   return dispatch => {
     asyncAuto({
@@ -15,7 +15,7 @@ export const loginWithPassword = (username, password) => {
         callback(null, null)
       },
       loginWithPassword: function (callback) {
-        abcContext.loginWithPassword("david horton3", "L44m201212", null, null, (error, account) => {
+        abcContext.loginWithPassword('david horton3', 'L44m201212', null, null, (error, account) => {
           if (error) {
             var mess
             try {
@@ -29,9 +29,9 @@ export const loginWithPassword = (username, password) => {
             callback(null, null)
           }
         })
-        timeoutTimer = setTimeout(()=>{
+        timeoutTimer = setTimeout(() => {
           callback(t('string_no_connection_response'))
-        },10000)
+        }, 10000)
       }
     }, function (err, results) {
       clearTimeout(timeoutTimer)
