@@ -25,6 +25,9 @@ class Login extends Component {
 
   changePin = (pin) => {
     this.props.dispatch(loginPIN(pin))
+    if(pin.length > 3) {
+      this.submit()
+    }
   }
 
   viewPasswordInput = (pin) => {
@@ -47,6 +50,7 @@ class Login extends Component {
               value={this.props.pin}
               keyboardType='numeric'
               maxLength={4}
+              autoFocus={true}
               autoCorrect={false}
               returnKeyType='done'
               blurOnSubmit
