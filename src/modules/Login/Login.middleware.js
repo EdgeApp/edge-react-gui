@@ -23,10 +23,10 @@ export const loginWithPassword = (username, password) => {
             } catch (e) {
               mess = error
             }
-            callback(mess, null)
+            return callback(mess, null)
           }
           if (!error) {
-            callback(null, null)
+            return callback(null, null)
           }
         })
         timeoutTimer = setTimeout(() => {

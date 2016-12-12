@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { View, Text, StyleSheet, TouchableHighlight, TouchableWithoutFeedback } from 'react-native'
+import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableWithoutFeedback } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin } from './CachedUsers.action'
@@ -45,9 +45,9 @@ class UserList extends Component {
 
   render () {
       return (
-        <View style={[ style.container ]}>
+        <ScrollView style={[ style.container ]}>
           { this.listUsers() }
-        </View>
+        </ScrollView>
       )
   }
 }
@@ -57,25 +57,26 @@ const style = StyleSheet.create({
   container: {
     position:'absolute',
     top: 60,
+    height: 160,
     backgroundColor: '#FFF',
-    justifyContent: 'center',
     borderRadius: 4
   },
 
   row: {
     flexDirection: 'column',
-    width: width * 0.8,
-    padding: 9
+    width: width * 0.7,
+    padding: 16,
+    height: 40,
   },
 
   text: {
     flex: 1,
     color: '#222',
-    fontSize: 16
+    fontSize: 18
   },
 
   xbuttontext: {
-    fontSize: 16
+    fontSize: 18
   },  
 
   border: {
