@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+import abc from '../lib/abcContext'
 
 import CachedUsers from './CachedUsers/CachedUsers.ui'
 import Loader from './Loader/Loader.ui'
@@ -19,6 +20,14 @@ const { width, height } = Dimensions.get('window')
 
 class Main extends Component {
 
+  componentWillMount() {
+    const foo = abc.listUsernames((error, usernames) => {
+      console.log(error)
+      console.log(usernames) 
+    }) 
+    console.log(foo)
+  }
+  
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
