@@ -8,7 +8,11 @@ import NextButton from './NextButton/NextButton.ui'
 import SkipButton from './SkipButton/SkipButton.ui'
 
 class SignUpContainer extends Component {
-
+  componentWillMount() {
+    const foo = global.abcContext.listUsernames()
+      console.log(foo)
+    
+  }
   render () {
     return (
       <View style={style.container}>

@@ -53,7 +53,7 @@ const writeToDisk = ctx => {
  * @param {string} absolutePathToDbFile - Absolute path to db.
  * @param {Array} data - List of key value pairs.
  */
-function LocalStorage (absolutePathToDbFile, callback) {
+function LocalStorage (absolutePathToDbFile,callback) {
   var self = this
   readJSONDb(absolutePathToDbFile, function (data) {
     init(self, data)
@@ -73,7 +73,7 @@ function LocalStorage (absolutePathToDbFile, callback) {
       configurable: false,
       enumerable: false
     })
-    callback()
+    callback(self)
   })
 }
 LocalStorage.prototype.key = function (index) {
@@ -107,7 +107,6 @@ LocalStorage.prototype.setItem = function (key, value) {
 }
 
 LocalStorage.prototype.getItem = function (key) {
-  console.log(this.map)
   var map = this.map
   try {
     if (map.has(key)) {
