@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { Actions } from 'react-native-router-flux'
 import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
@@ -49,11 +50,11 @@ class UserList extends Component {
   }
 
   render () {
-      return (
-        <ScrollView style={[ style.container ]}>
-          { this.listUsers() }
-        </ScrollView>
-      )
+    return (
+      <View style={[ style.container ]}>
+        { this.listUsers() }
+      </View>
+    )
   }
 }
 
@@ -72,7 +73,7 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     width: width,
     padding: 16,
-    height: 40,
+    height: 40
   },
   textContainer: {
     flex: 1,
@@ -89,7 +90,7 @@ const style = StyleSheet.create({
 
   xbuttontext: {
     fontSize: 18
-  },  
+  },
   xbutton: {
     height: 40,
     justifyContent: 'center',

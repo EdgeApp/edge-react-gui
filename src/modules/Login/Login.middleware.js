@@ -15,8 +15,7 @@ export const loginWithPassword = (username, password) => {
         callback(null, null)
       },
       loginWithPassword: function (callback) {
-
-        abcctx( context => {
+        abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
             if (error) {
               var mess
@@ -53,9 +52,6 @@ export const loginWithPassword = (username, password) => {
 }
 
 export const loginWithPin = (username, pin) => {
-
-  console.log('foo')
-
   return dispatch => {
     asyncAuto({
       openLoading: function (callback) {

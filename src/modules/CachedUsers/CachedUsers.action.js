@@ -1,6 +1,6 @@
 export const SELECT_USER_LOGIN = 'SELECT_USER_LOGIN'
 export const REMOVE_USER_LOGIN = 'REMOVE_USER_LOGIN'
-export const SET_CACHED_USERS  = 'SET_CACHED_USERS'
+export const SET_CACHED_USERS = 'SET_CACHED_USERS'
 
 export function setCachedUsers (data) {
   return {

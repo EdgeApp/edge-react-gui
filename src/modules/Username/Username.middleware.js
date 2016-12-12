@@ -23,8 +23,7 @@ export const checkUsername = username => {
         callback(null, null)
       },
       getUsernameAvailability: function (callback) {
-
-        abcContext( context => {
+        abcContext(context => {
           context.usernameAvailable(username, function (error, available) {
             if (error) {
               callback(t('activity_signup_username_unavailable'), null)
@@ -34,7 +33,6 @@ export const checkUsername = username => {
             }
           })
         })
-
       }
     }, function (err, results) {
       clearTimeout(timeoutTimer)

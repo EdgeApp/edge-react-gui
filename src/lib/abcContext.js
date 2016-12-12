@@ -1,9 +1,9 @@
 import {abc} from './abc.webpack'
 import LocalStorage from './LocalStorage'
 
-const abcctx = function(callback){
-	if(!global.localStorage) {
-	  new LocalStorage('/db.json', function(ls) {
+const abcctx = function (callback) {
+  if (!global.localStorage) {
+	  new LocalStorage('/db.json', function (ls) {
 	  	global.localStorage = ls
 	    global.abcContext = abc.makeContext({
 	      apiKey: '3ad0717b3eb31f745aba7bd9d51e7fd1b2926431',
@@ -12,9 +12,9 @@ const abcctx = function(callback){
 	    })
 	    callback(global.abcContext)
 	  })
-	  return false;
-	}
-	return callback(global.abcContext)
+	  return false
+  }
+  return callback(global.abcContext)
 }
 
 export default abcctx

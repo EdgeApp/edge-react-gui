@@ -53,7 +53,6 @@ export const password = (state = '', action) => {
   }
 }
 
-
 export const showCachedUsers = (state = false, action) => {
   switch (action.type) {
     case ACTION.OPEN_USER_LIST :
@@ -69,7 +68,6 @@ export const showCachedUsers = (state = false, action) => {
       return state
   }
 }
-
 
 export const pin = (state = '', action) => {
   switch (action.type) {

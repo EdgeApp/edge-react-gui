@@ -21,21 +21,15 @@ const { width, height } = Dimensions.get('window')
 
 class Main extends Component {
 
-  componentWillMount() {
-
+  componentWillMount () {
     const dispatch = this.props.dispatch
-    abcctx( ctx => {
+    abcctx(ctx => {
       const cachedUsers = ctx.listUsernames()
       dispatch(setCachedUsers(cachedUsers))
     })
-
   }
-  
+
   handleOpenLogin = () => {
-    this.props.dispatch(openLogin())
-  }
-
-  containerTouched = (event) => {
     this.props.dispatch(openLogin())
   }
 
@@ -125,7 +119,7 @@ const styles = StyleSheet.create({
     width: width * 0.7,
     height: 45,
     marginVertical: 3
-  },
+  }
 
 })
 

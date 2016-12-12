@@ -38,13 +38,13 @@ class Login extends Component {
   render () {
 
     const cUsers = () => {
+
       if (this.props.showCachedUsers) {
         return (<CachedUsers />)
       } else {
         return null
       }
     }
-
 
     return (
     <View style={style.container}>
@@ -62,49 +62,49 @@ class Login extends Component {
             selectTextOnFocus
             onFocus={this.showCachedUsers}
         />
-        </InputGroup>
+          </InputGroup>
 
-        
-        <InputGroup borderType='regular' style={style.inputGroup} >
-          <Input
-            ref='password'
-            placeholder={t('fragment_landing_password_hint')}
-            style={style.input}
-            secureTextEntry
-            onChangeText={this.changePassword}
-            value={this.props.password}
-            blurOnSubmit
-            onSubmitEditing={this.submit}
+          <InputGroup borderType='regular' style={style.inputGroup} >
+            <Input
+              ref='password'
+              onFocus={this.hideCachedUsers}
+              placeholder={t('fragment_landing_password_hint')}
+              style={style.input}
+              secureTextEntry
+              onChangeText={this.changePassword}
+              value={this.props.password}
+              blurOnSubmit
+              onSubmitEditing={this.submit}
           />
-        </InputGroup>        
-        <TouchableOpacity style={style.button} onPress={this.submit}>
-          <Text style={style.buttonText}> Sign In </Text>
-        </TouchableOpacity>        
-        <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
-          <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
-        </TouchableOpacity>
-        
+          </InputGroup>
+          <TouchableOpacity style={style.button} onPress={this.submit}>
+            <Text style={style.buttonText}> Sign In </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+            <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
+          </TouchableOpacity>
+
+        </View>
+        {cUsers()}
       </View>
-      {cUsers()}
-    </View>
     )
   }
 }
 
 const style = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    width: width,
+    width: width
   },
   form: {
     flexDirection: 'column',
     alignItems: 'flex-start',
     alignSelf: 'center',
     justifyContent: 'center',
-    width: width * 0.7    
+    width: width * 0.7
   },
 
   buttonText: {
