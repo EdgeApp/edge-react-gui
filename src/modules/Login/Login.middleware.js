@@ -15,23 +15,25 @@ export const loginWithPassword = (username, password) => {
         callback(null, null)
       },
       loginWithPassword: function (callback) {
-        abcContext.loginWithPassword('david horton3', 'L44m201212', null, null, (error, account) => {
-          if (error) {
-            var mess
-            try {
-              mess = JSON.parse(error.message).message
-            } catch (e) {
-              mess = error
+        setTimeout(() => {
+          abcContext.loginWithPassword('david horton3', 'L44m201212', null, null, (error, account) => {
+            if (error) {
+              var mess
+              try {
+                mess = JSON.parse(error.message).message
+              } catch (e) {
+                mess = error
+              }
+              callback(mess, null)
             }
-            callback(mess, null)
-          }
-          if (!error) {
-            callback(null, null)
-          }
-        })
-        timeoutTimer = setTimeout(() => {
-          callback(t('string_no_connection_response'))
-        }, 10000)
+            if (!error) {
+              callback(null, null)
+            }
+          })
+        }, 500)
+        // timeoutTimer = setTimeout(() => {
+        //   callback(t('string_no_connection_response'))
+        // }, 10000)
       }
     }, function (err, results) {
       clearTimeout(timeoutTimer)

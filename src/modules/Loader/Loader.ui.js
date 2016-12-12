@@ -8,7 +8,7 @@ import style from './Loader.style'
 class Loader extends Component {
 
   checkLoading = () => {
-    if (this.props.loader.loading === true && this.props.errorModal.visible === false) {
+    if (this.props.loader.loading === true && this.props.errorModal.visible === false && this.props.loader.style === 'grey') {
       return true
     } else {
       return false

@@ -21,11 +21,7 @@ const { width, height } = Dimensions.get('window')
 class Main extends Component {
 
   componentWillMount() {
-    const foo = abc.listUsernames((error, usernames) => {
-      console.log(error)
-      console.log(usernames) 
-    }) 
-    console.log(foo)
+    const listUsers = abc.listUsernames() 
   }
   
   handleOpenLogin = () => {
