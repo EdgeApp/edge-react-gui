@@ -22,7 +22,11 @@ class Main extends Component {
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
-
+  containerTouched = (event) => {
+    console.log('hmm this is for iOs huh')
+    this.refs.loginUsername.blur();
+    return false;
+  }
   render () {
     if (this.props.pin) {
       return (
@@ -35,7 +39,7 @@ class Main extends Component {
     if (!this.props.pin) {
       if (this.props.password) {
         return (
-          <View style={styles.main}>
+          <View style={styles.main} onStartShouldSetResponder={this.containerTouched.bind(this)}>
             <Login />
             <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
               <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
