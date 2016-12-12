@@ -65,7 +65,7 @@ export const loginWithPin = (username, pin) => {
       loginWithPin: function (callback) {
 
         abcctx( context => {
-          context.loginWithPIN(username, pin, null, null, (error, account) => {
+          context.loginWithPIN(username, pin, null, (error, account) => {
             if (error) {
               var mess
               try {
@@ -73,10 +73,12 @@ export const loginWithPin = (username, pin) => {
               } catch (e) {
                 mess = error
               }
+              console.log('error')
               return callback(mess, null)
             }
 
             if (!error) {
+              console.log('success')
               return callback(null, null)
             }
           })
