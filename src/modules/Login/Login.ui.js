@@ -60,6 +60,8 @@ class Login extends Component {
             onBlur={this.hideCachedUsers}
         />
         </InputGroup>
+
+        {cUsers()}
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input
             ref='password'
@@ -78,7 +80,6 @@ class Login extends Component {
         </TouchableOpacity>
 
 
-        {cUsers()}
       </View>
     )
   }
@@ -90,10 +91,9 @@ const style = StyleSheet.create({
   },
   container: {
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    width: width * 0.8,
-    marginVertical: 15
+    width: width * 0.7
   },
 
   button: {
@@ -101,24 +101,31 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#80C342',
-    marginVertical: 10,
-    height: 45
+    height: 45,
+    marginVertical: 3
   },
 
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
-    fontSize: 22,
+    fontSize: 18,
     flex: 1
   },
 
   inputGroup: {
-    marginVertical: 10,
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    marginVertical: 3,
+    padding: 0,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    borderRadius: 4,
+    borderColor: '#666'
   },
 
   input: {
-    color: '#FFF'
+    color: '#FFF',
+    fontSize: 14
   }
 
 })

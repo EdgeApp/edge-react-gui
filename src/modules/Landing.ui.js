@@ -9,7 +9,7 @@ import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
 
-import { openLogin } from './Login/Login.action'
+import { openLogin, blurUsername } from './Login/Login.action'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
@@ -27,7 +27,9 @@ class Main extends Component {
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
-
+  containerTouched = (event) => {
+    this.props.dispatch(openLogin())
+  }
   render () {
     if (this.props.pin) {
       return (
@@ -40,7 +42,7 @@ class Main extends Component {
     if (!this.props.pin) {
       if (this.props.password) {
         return (
-          <View style={styles.main}>
+          <View style={styles.main} onStartShouldSetResponder={this.containerTouched.bind(this)}>
             <Login />
             <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
               <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
@@ -84,10 +86,9 @@ class HomeComponent extends Component {
 const styles = StyleSheet.create({
 
   main: {
+    flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center',
-    margin: 10,
-    flex: 3
+    alignItems: 'flex-start'
   },
 
   welcome: {
@@ -99,33 +100,34 @@ const styles = StyleSheet.create({
 
   backgroundImage: {
     flex: 1,
-    width: null,
-    height: null,
+    width: width,
+    height: height,
     resizeMode: 'cover',
+    flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center'
   },
 
   logoImage: {
-    flex: 1,
-    justifyContent: 'center',
     resizeMode: 'contain',
-    width: width * 0.5
+    width: width * 0.5,
+    marginTop: -14
+
   },
 
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 10,
-    width: width * 0.6,
-    height: 45
+    width: width * 0.7,
+    height: 45,
+    marginVertical: 3
   },
 
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
-    fontSize: 22,
+    fontSize: 18,
     flex: 1
   }
 
