@@ -54,15 +54,17 @@ export const loginWithPassword = (username, password) => {
 
 export const loginWithPin = (username, pin) => {
 
+  console.log('foo')
+
   return dispatch => {
     asyncAuto({
       openLoading: function (callback) {
         dispatch(openLoading(t('string_loading')))
         callback(null, null)
       },
-      loginWithPassword: function (callback) {
+      loginWithPin: function (callback) {
 
-        abcContext( context => {
+        abcctx( context => {
           context.loginWithPIN(username, pin, null, null, (error, account) => {
             if (error) {
               var mess
@@ -80,9 +82,6 @@ export const loginWithPin = (username, pin) => {
           })
         })
 
-        timeoutTimer = setTimeout(() => {
-          return callback(t('string_no_connection_response'), null)
-        }, 10000)
       }
 
     }, function (err, results) {

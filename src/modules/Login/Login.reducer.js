@@ -62,6 +62,9 @@ export const showCachedUsers = (state = false, action) => {
     case ACTION.CLOSE_USER_LIST :
       return false
 
+    case ACTION.LOG_IN_USERNAME :
+      return false
+
     default:
       return state
   }

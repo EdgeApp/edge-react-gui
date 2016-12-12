@@ -7,9 +7,6 @@ export const users = (state = [], action) => {
     case ACTION.SET_CACHED_USERS :
       return action.data
 
-    case ACTION.REMOVE_USER_LOGIN :
-      return null
-
     default:
       return state
   }
@@ -18,6 +15,7 @@ export const users = (state = [], action) => {
 }
 
 export const selectedUserToLogin = (state = null, action) => {
+
   switch (action.type) {
     case ACTION.SELECT_USER_LOGIN :
       return action.data

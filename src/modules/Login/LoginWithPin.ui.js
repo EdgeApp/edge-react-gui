@@ -36,7 +36,7 @@ class Login extends Component {
     return (
       <View style={style.container}>
 
-        <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user.name : 'No User Selected' }</Text>
+        <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
 
         <View style={{ width: 100 }}>
           <InputGroup borderType='regular' style={style.inputGroup}>

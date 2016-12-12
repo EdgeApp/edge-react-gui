@@ -14,11 +14,11 @@ const { width, height } = Dimensions.get('window')
 class UserList extends Component {
 
   handleLoginUserPin = (user) => {
-    console.log('foo')
     this.props.dispatch(selectUserToLogin(user))
   }
 
   handleDeleteUserCache = (user) => {
+    console.log('foo')
     // this.props.dispatch(deleteUserToCached(user))
   }
 
@@ -36,15 +36,14 @@ class UserList extends Component {
 
     return this.props.users.map((user, index) => {
       return (
-      <View key={index} style={checkIfLastElementStyle(index)}>
-        <View style={style.cachedItem}>
-          <TouchableOpacity style={style.textContainer} onPress={this.handleLoginUserPin(user)}>
-            <Text style={style.text}>{ user }</Text>
-          </TouchableOpacity>
-          <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
-
+        <View key={index} style={checkIfLastElementStyle(index)}>
+          <View style={style.cachedItem}>
+            <TouchableOpacity style={style.textContainer} onPress={() => this.handleLoginUserPin(user)}>
+              <Text style={style.text}>{ user }</Text>
+            </TouchableOpacity>
+            <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
+          </View>
         </View>
-      </View>
       )
     })
   }
@@ -66,8 +65,7 @@ const style = StyleSheet.create({
     maxHeight: 150,
     alignSelf: 'flex-end',
     backgroundColor: '#FFF',
-    borderRadius: 4,
-    zIndex: 1
+    borderRadius: 4
   },
 
   row: {
@@ -78,9 +76,9 @@ const style = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     height: 40
   },
   text: {
