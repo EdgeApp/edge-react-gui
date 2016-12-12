@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import abc from '../lib/abcContext'
+import abcctx from '../lib/abcContext'
 
 import CachedUsers from './CachedUsers/CachedUsers.ui'
 import Loader from './Loader/Loader.ui'
@@ -21,11 +21,9 @@ const { width, height } = Dimensions.get('window')
 class Main extends Component {
 
   componentWillMount() {
-    const foo = abc.listUsernames((error, usernames) => {
-      console.log(error)
-      console.log(usernames) 
-    }) 
-    console.log(foo)
+    abcctx(function(ctx) {
+      const foo = ctx.listUsernames()
+    })
   }
   
   handleOpenLogin = () => {
@@ -115,7 +113,8 @@ const styles = StyleSheet.create({
   logoImage: {
     resizeMode: 'contain',
     width: width * 0.5,
-    marginTop: -14
+    marginTop: -14,
+    marginBottom: -14
 
   },
 
