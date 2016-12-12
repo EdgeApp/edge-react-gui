@@ -5,6 +5,7 @@ import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacit
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin } from './CachedUsers.action'
+// import { deleteUserToCached } from './CachedUsers.middleware'
 import { openLoginUsingPin } from '../Login/Login.action'
 
 import Dimensions from 'Dimensions'
@@ -16,8 +17,9 @@ class UserList extends Component {
     console.log('foo')
     this.props.dispatch(selectUserToLogin(user))
   }
+
   handleDeleteUserCache = (user) => {
-    this.props.dispatch(selectUserToLogin(user))
+    // this.props.dispatch(deleteUserToCached(user))
   }
 
   listUsers = () => {

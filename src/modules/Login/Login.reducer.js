@@ -37,7 +37,7 @@ export const username = (state = '', action) => {
     case ACTION.LOG_IN_USERNAME :
       return action.data
     case SELECT_USER_LOGIN :
-      return action.data.name
+      return action.data
     default:
       return state
   }
