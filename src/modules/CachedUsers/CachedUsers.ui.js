@@ -37,10 +37,11 @@ class UserList extends Component {
       return (
       <View key={index} style={checkIfLastElementStyle(index)}>
         <View style={style.cachedItem}>
-          <TouchableOpacity onPress={() => this.handleLoginUserPin(user)}>
+          <TouchableOpacity style={style.textContainer} onPress={() => this.handleLoginUserPin(user)}>
             <Text style={style.text}>{ user }</Text>
           </TouchableOpacity>
           <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
+
         </View>
       </View>
       )
@@ -74,7 +75,13 @@ const style = StyleSheet.create({
     padding: 16,
     height: 40,
   },
-
+  textContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    height: 40
+  },
   text: {
     flex: 1,
     color: '#222',
