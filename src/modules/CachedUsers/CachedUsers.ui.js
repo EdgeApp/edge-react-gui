@@ -59,9 +59,10 @@ class UserList extends Component {
 const style = StyleSheet.create({
 
   container: {
-    position:'absolute',
-    top: 60,
-    height: 160,
+    position: 'absolute',
+    top: 40,
+    maxHeight: 150,
+    alignSelf: 'flex-end',
     backgroundColor: '#FFF',
     borderRadius: 4,
     zIndex: 1
@@ -69,7 +70,7 @@ const style = StyleSheet.create({
 
   row: {
     flexDirection: 'column',
-    width: width * 0.7,
+    width: width,
     padding: 16,
     height: 40,
   },
@@ -83,6 +84,13 @@ const style = StyleSheet.create({
   xbuttontext: {
     fontSize: 18
   },  
+  xbutton: {
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    padding: 10
+  },
 
   border: {
     borderBottomColor: '#AAA',

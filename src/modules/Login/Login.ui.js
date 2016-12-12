@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { Actions } from 'react-native-router-flux'
 import { loginUsername, loginPassword, openUserList, closeUserList } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
@@ -38,13 +39,16 @@ class Login extends Component {
   render () {
     var cUsers = function() {
       if (this.props.showCachedUsers) {
-        return (<CachedUsers  style={style.noflex}/>)
+        return (<CachedUsers />)
       } else {
         return null
       }
     }.bind(this)
+
+
     return (
-      <View style={style.container}>
+    <View style={style.container}>
+      <View style={style.form}>
 
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input
@@ -61,7 +65,7 @@ class Login extends Component {
         />
         </InputGroup>
 
-        {cUsers()}
+        
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input
             ref='password'
@@ -73,27 +77,42 @@ class Login extends Component {
             blurOnSubmit
             onSubmitEditing={this.submit}
           />
-        </InputGroup>
-
+        </InputGroup>        
         <TouchableOpacity style={style.button} onPress={this.submit}>
           <Text style={style.buttonText}> Sign In </Text>
+        </TouchableOpacity>        
+        <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+          <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
         </TouchableOpacity>
-
-
+        
       </View>
+      {cUsers()}
+    </View>
     )
   }
 }
 
 const style = StyleSheet.create({
-  noflex: {
-    flexShrink: 1
+  container: { 
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    width: width,
   },
-  container: {
+  form: {
     flexDirection: 'column',
     alignItems: 'flex-start',
+    alignSelf: 'center',
     justifyContent: 'center',
-    width: width * 0.7
+    width: width * 0.7    
+  },
+
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize: 18,
+    flex: 1
   },
 
   button: {
@@ -120,12 +139,13 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderRadius: 4,
-    borderColor: '#666'
+    borderColor: '#888'
   },
 
   input: {
     color: '#FFF',
-    fontSize: 14
+    fontSize: 14,
+    marginVertical: -5
   }
 
 })

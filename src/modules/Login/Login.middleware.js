@@ -1,7 +1,7 @@
 import asyncAuto from 'async/auto'
 import { Actions } from 'react-native-router-flux'
 
-import abcContext from '../../lib/abcContext'
+import abcctx from '../../lib/abcContext'
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
