@@ -51,9 +51,11 @@ class UserList extends Component {
 
   render () {
     return (
-      <View style={[ style.container ]}>
+      <ScrollView
+        keyboardShouldPersistTaps={true} 
+        style={[ style.container ]}>
         { this.listUsers() }
-      </View>
+      </ScrollView>
     )
   }
 }
