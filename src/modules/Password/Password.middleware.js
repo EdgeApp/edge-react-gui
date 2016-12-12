@@ -34,7 +34,7 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
             }
             return dispatch(openErrorModal(t('activity_signup_failed')))
           }
-          Actions.review()        
+          Actions.review()
         })
       })
       timeoutTimer = setTimeout(() => {
@@ -53,7 +53,7 @@ export const skipPassword = (username, pinNumber) => {
     dispatch(changePasswordValue(''))
     dispatch(passwordNotificationHide())
     abcctx((ctx) => {
-        ctx.createAccount(username, null, pinNumber, (err, result) => {
+      ctx.createAccount(username, null, pinNumber, (err, result) => {
         clearTimeout(timeoutTimer)
         dispatch(closeLoading())
         if (err) {

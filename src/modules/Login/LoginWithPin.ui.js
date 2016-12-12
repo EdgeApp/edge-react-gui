@@ -17,7 +17,7 @@ class Login extends Component {
   submit = () => {
     this.props.dispatch(
       loginWithPin(
-        this.props.user, 
+        this.props.user,
         this.props.pin
       )
     )
@@ -93,6 +93,6 @@ const style = StyleSheet.create({
 })
 
 export default connect(state => ({
-  pin:  state.login.pin,
+  pin: state.login.pin,
   user: state.cachedUsers.selectedUserToLogin
 }))(Login)

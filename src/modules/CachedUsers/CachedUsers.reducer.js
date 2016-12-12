@@ -2,7 +2,6 @@ import * as ACTION from './CachedUsers.action'
 import { LOG_IN_USERNAME } from '../Login/Login.action'
 
 export const users = (state = [], action) => {
-
   switch (action.type) {
     case ACTION.SET_CACHED_USERS :
       return action.data

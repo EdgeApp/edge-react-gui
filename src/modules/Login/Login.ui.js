@@ -35,7 +35,7 @@ class Login extends Component {
     this.props.dispatch(closeUserList())
   }
   keyboardDidShow = () => {
-
+    if(this.refs.loginUsername._textInput.isFocused()) this.props.dispatch(openUserList())
   }
   keyboardDidHide = () => {
     this.props.dispatch(closeUserList())
@@ -75,8 +75,6 @@ class Login extends Component {
             onSubmitEditing={e => this.refs.password._textInput.focus()}
             selectTextOnFocus
             onFocus={this.showCachedUsers}
-            onBlur={this.hideCachedUsers}
-            onBeginEditing={this.hideCachedUsers}
         />
         </InputGroup>
 
@@ -84,6 +82,7 @@ class Login extends Component {
         <InputGroup borderType='regular' style={style.inputGroup} >
           <Input
             ref='password'
+            onFocus={this.hideCachedUsers}
             placeholder={t('fragment_landing_password_hint')}
             style={style.input}
             secureTextEntry

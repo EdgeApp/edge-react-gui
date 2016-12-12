@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { Actions } from 'react-native-router-flux'
 import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
@@ -36,25 +37,30 @@ class UserList extends Component {
 
     return this.props.users.map((user, index) => {
       return (
-      <View key={index} style={checkIfLastElementStyle(index)}>
-        <View style={style.cachedItem}>
-          <TouchableOpacity style={style.textContainer} onPress={this.handleLoginUserPin(user)}>
-            <Text style={style.text}>{ user }</Text>
-          </TouchableOpacity>
-          <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
-
+        <View key={index} style={checkIfLastElementStyle(index)}>
+          <View style={style.cachedItem}>
+            <TouchableOpacity style={style.textContainer}
+              onPress={() => this.handleLoginUserPin(user)}>
+              <Text style={style.text}>{ user }</Text>
+            </TouchableOpacity>
+            <TouchableHighlight
+              onPress={() => this.handleDeleteUserCache(user)}
+              color='#222222'
+              style={style.xbutton}>
+              <Text style={style.xbuttontext}>X</Text>
+            </TouchableHighlight>
+          </View>
         </View>
-      </View>
       )
     })
   }
 
   render () {
-      return (
-        <ScrollView style={[ style.container ]}>
-          { this.listUsers() }
-        </ScrollView>
-      )
+    return (
+      <View style={[ style.container ]}>
+        { this.listUsers() }
+      </View>
+    )
   }
 }
 
@@ -74,7 +80,7 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     width: width,
     padding: 16,
-    height: 40,
+    height: 40
   },
   textContainer: {
     flex: 1,
@@ -91,7 +97,7 @@ const style = StyleSheet.create({
 
   xbuttontext: {
     fontSize: 18
-  },  
+  },
   xbutton: {
     height: 40,
     justifyContent: 'center',
