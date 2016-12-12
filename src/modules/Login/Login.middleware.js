@@ -16,7 +16,7 @@ export const loginWithPassword = (username, password) => {
       },
       loginWithPassword: function (callback) {
 
-        abcContext( context => {
+        abcctx( context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
             if (error) {
               var mess
