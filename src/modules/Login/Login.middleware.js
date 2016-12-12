@@ -33,9 +33,6 @@ export const loginWithPassword = (username, password) => {
           })
         })
 
-        timeoutTimer = setTimeout(() => {
-          return callback(t('string_no_connection_response'), null)
-        }, 10000)
       }
 
     }, function (err, results) {
@@ -61,7 +58,7 @@ export const loginWithPin = (username, pin) => {
       loginWithPin: function (callback) {
 
         abcctx( context => {
-          context.loginWithPIN(username, pin, null, (error, account) => {
+          context.loginWithPIN(username, pin, (error, account) => {
             if (error) {
               var mess
               try {
@@ -69,12 +66,10 @@ export const loginWithPin = (username, pin) => {
               } catch (e) {
                 mess = error
               }
-              console.log('error')
               return callback(mess, null)
             }
 
             if (!error) {
-              console.log('success')
               return callback(null, null)
             }
           })

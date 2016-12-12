@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Actions } from 'react-native-router-flux'
 
 import { View, Text, StyleSheet } from 'react-native'
 import { Button } from 'native-base'
@@ -9,7 +10,7 @@ export default class Home extends Component {
     return (
       <View style={style.container} >
         <Text>Welcome!! This is the Home Page!</Text>
-        <Button>Log Out (coming soon)</Button>
+        <Button onPress={ Actions.home }>Log Out</Button>
       </View>
     )
   }
