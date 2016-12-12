@@ -33,6 +33,9 @@ export const loginWithPassword = (username, password) => {
           })
         })
 
+        timeoutTimer = setTimeout(() => {
+          return callback(t('string_no_connection_response'), null)
+        }, 10000)
       }
 
     }, function (err, results) {
