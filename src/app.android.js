@@ -26,7 +26,7 @@ export default class App extends Component {
               <Scene key='password' component={Password} title={'Enter Password'} />
               <Scene key='review' component={ReviewDetails} title={'Details'} type='reset' />
             </Scene>
-            <Scene key='landing' component={Landing} initial hideNavBar />
+            <Scene key='landing' component={Landing}  type='reset' initial hideNavBar />
             <Scene key='home' component={Home} hideNavBar type='reset' />
           </Scene>
         </RouterWithRedux>
