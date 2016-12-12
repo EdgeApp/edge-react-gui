@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableWithoutFeedback } from 'react-native'
+import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin } from './CachedUsers.action'
@@ -13,6 +13,7 @@ const { width, height } = Dimensions.get('window')
 class UserList extends Component {
 
   handleLoginUserPin = (user) => {
+    console.log('foo')
     this.props.dispatch(selectUserToLogin(user))
   }
   handleDeleteUserCache = (user) => {
@@ -35,8 +36,10 @@ class UserList extends Component {
       return (
       <View key={index} style={checkIfLastElementStyle(index)}>
         <View style={style.cachedItem}>
-          <Text style={style.text} onPress={() => this.handleLoginUserPin(user)}>{ user.name }</Text>
-          <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={[style.xbutton]}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
+          <TouchableOpacity onPress={() => this.handleLoginUserPin(user)}>
+            <Text style={style.text}>{ user }</Text>
+          </TouchableOpacity>
+          <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
         </View>
       </View>
       )
@@ -60,7 +63,8 @@ const style = StyleSheet.create({
     maxHeight: 150,
     alignSelf: 'flex-end',
     backgroundColor: '#FFF',
-    borderRadius: 4
+    borderRadius: 4,
+    zIndex: 1
   },
 
   row: {

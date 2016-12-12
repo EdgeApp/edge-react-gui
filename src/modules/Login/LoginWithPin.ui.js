@@ -88,6 +88,6 @@ const style = StyleSheet.create({
 })
 
 export default connect(state => ({
-  pin: state.login.pin,
-  user: state.cachedUsers.users.find(user => user.id === state.cachedUsers.selectedUserToLogin)
+  pin:  state.login.pin,
+  user: state.cachedUsers.selectedUserToLogin
 }))(Login)

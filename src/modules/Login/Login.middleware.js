@@ -6,7 +6,7 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(() => {}, 0)
+
 export const loginWithPassword = (username, password) => {
   return dispatch => {
     asyncAuto({
@@ -15,31 +15,31 @@ export const loginWithPassword = (username, password) => {
         callback(null, null)
       },
       loginWithPassword: function (callback) {
-        setTimeout(() => {
-          abcctx(function(ctx) {
-            ctx.loginWithPassword(username, password, null, null, (error, account) => {
-              if (error) {
-                var mess
-                try {
-                  mess = JSON.parse(error.message).message
-                } catch (e) {
-                  mess = error
-                }
-                callback(mess, null)
-              }
 
-              if (!error) {
-                callback(null, null)
+        abcContext( context => {
+          context.loginWithPassword(username, password, null, null, (error, account) => {
+            if (error) {
+              var mess
+              try {
+                mess = JSON.parse(error.message).message
+              } catch (e) {
+                mess = error
               }
-            })
+              return callback(mess, null)
+            }
+
+            if (!error) {
+              return callback(null, null)
+            }
           })
-        }, 500)
-        // timeoutTimer = setTimeout(() => {
-        //   callback(t('string_no_connection_response'))
-        // }, 10000)
+        })
+
+        timeoutTimer = setTimeout(() => {
+          return callback(t('string_no_connection_response'), null)
+        }, 10000)
       }
+
     }, function (err, results) {
-      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
       if (err) {

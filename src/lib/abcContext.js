@@ -2,7 +2,6 @@ import {abc} from './abc.webpack'
 import LocalStorage from './LocalStorage'
 
 const abcctx = function(callback){
-
 	if(!global.localStorage) {
 	  new LocalStorage('/db.json', function(ls) {
 	  	global.localStorage = ls
@@ -16,8 +15,6 @@ const abcctx = function(callback){
 	  return false;
 	}
 	return callback(global.abcContext)
-
 }
-
 
 export default abcctx
