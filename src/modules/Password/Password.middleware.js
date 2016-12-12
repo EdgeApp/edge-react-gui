@@ -60,9 +60,9 @@ export const skipPassword = (username, pinNumber) => {
           console.log('account creation error', err)
           var mess
           try {
-            mess = JSON.parse(error.message).message
+            mess = JSON.parse(err.message).message
           } catch (e) {
-            mess = error
+            mess = err
           }
           return dispatch(openErrorModal(t('activity_signup_failed')))
         }
