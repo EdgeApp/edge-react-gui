@@ -44,7 +44,8 @@ const store = combineReducers({
   skipButtonVisible,
   loader: combineReducers({
     loading: Loader.loading,
-    message: Loader.message
+    message: Loader.message,
+    style :  Loader.style
   }),
   errorModal: combineReducers({
     visible: ErrorModal.visible,
