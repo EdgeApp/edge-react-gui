@@ -26,7 +26,6 @@ class Main extends Component {
     const dispatch = this.props.dispatch
     abcctx( ctx => {
       const cachedUsers = ctx.listUsernames()
-      console.log(cachedUsers)
       dispatch(setCachedUsers(cachedUsers))
     })
 

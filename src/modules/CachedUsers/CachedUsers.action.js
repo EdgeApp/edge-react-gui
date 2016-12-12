@@ -3,7 +3,6 @@ export const REMOVE_USER_LOGIN = 'REMOVE_USER_LOGIN'
 export const SET_CACHED_USERS  = 'SET_CACHED_USERS'
 
 export function setCachedUsers (data) {
-  console.log(data)
   return {
     type: SET_CACHED_USERS,
     data
