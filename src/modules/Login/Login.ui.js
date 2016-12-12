@@ -4,11 +4,10 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { loginUsername, loginPassword, openUserList, closeUserList } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
-
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 
 import Dimensions from 'Dimensions'
@@ -34,6 +33,21 @@ class Login extends Component {
 
   hideCachedUsers = () => {
     this.props.dispatch(closeUserList())
+  }
+  keyboardDidShow = () => {
+
+  }
+  keyboardDidHide = () => {
+    this.props.dispatch(closeUserList())
+  }
+  componentWillMount () {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
   }
 
   render () {
@@ -62,6 +76,7 @@ class Login extends Component {
             selectTextOnFocus
             onFocus={this.showCachedUsers}
             onBlur={this.hideCachedUsers}
+            onBeginEditing={this.hideCachedUsers}
         />
         </InputGroup>
 
