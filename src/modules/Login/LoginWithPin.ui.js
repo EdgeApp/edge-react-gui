@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { closeLoginUsingPin, openLogin, loginPIN } from './Login.action'
-import { loginWithPassword } from './Login.middleware'
+import { loginWithPassword, loginWithPin } from './Login.middleware'
 import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
@@ -15,7 +15,12 @@ const { width, height } = Dimensions.get('window')
 class Login extends Component {
 
   submit = () => {
-    console.log(this.props.pin)
+    this.props.dispatch(
+      loginWithPin(
+        this.props.user, 
+        this.props.pin
+      )
+    )
   }
 
   changePin = (pin) => {
