@@ -31,10 +31,6 @@ export const checkUsername = username => {
             callback(null, null)
           }
         })
-
-        timeoutTimer = setTimeout(() => {
-          callback(t('string_no_connection_response'))
-        }, 10000)
       }
     }, function (err, results) {
       clearTimeout(timeoutTimer)
