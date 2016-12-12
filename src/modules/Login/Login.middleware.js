@@ -1,7 +1,7 @@
 import asyncAuto from 'async/auto'
 import { Actions } from 'react-native-router-flux'
 
-import abcContext from '../../lib/abcContext'
+import abcctx from '../../lib/abcContext'
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
@@ -16,20 +16,22 @@ export const loginWithPassword = (username, password) => {
       },
       loginWithPassword: function (callback) {
         setTimeout(() => {
-          abcContext.loginWithPassword('david horton3', 'L44m201212', null, null, (error, account) => {
-            if (error) {
-              var mess
-              try {
-                mess = JSON.parse(error.message).message
-              } catch (e) {
-                mess = error
+          abcctx(function(ctx) {
+            ctx.loginWithPassword(username, password, null, null, (error, account) => {
+              if (error) {
+                var mess
+                try {
+                  mess = JSON.parse(error.message).message
+                } catch (e) {
+                  mess = error
+                }
+                callback(mess, null)
               }
-              callback(mess, null)
-            }
 
-            if (!error) {
-              callback(null, null)
-            }
+              if (!error) {
+                callback(null, null)
+              }
+            })
           })
         }, 500)
         // timeoutTimer = setTimeout(() => {

@@ -43,14 +43,7 @@ class Main extends Component {
 
     if (!this.props.pin) {
       if (this.props.password) {
-        return (
-          <View style={styles.main} onStartShouldSetResponder={this.containerTouched.bind(this)}>
-            <Login />
-            <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
-              <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
-            </TouchableOpacity>
-          </View>
-        )
+        return (<Login />)
       }
 
       if (!this.props.password) {
@@ -126,13 +119,6 @@ const styles = StyleSheet.create({
     height: 45,
     marginVertical: 3
   },
-
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFF',
-    fontSize: 18,
-    flex: 1
-  }
 
 })
 
