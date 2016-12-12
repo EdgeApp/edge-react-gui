@@ -35,7 +35,7 @@ class UserList extends Component {
       return (
       <View key={index} style={checkIfLastElementStyle(index)}>
         <View style={style.cachedItem}>
-          <Text style={style.text} onPress={() => this.handleLoginUserPin(user)}>{ user.name }</Text>
+          <Text style={style.text} onPress={() => this.handleLoginUserPin(user)}>{ user }</Text>
           <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
         </View>
       </View>
@@ -59,7 +59,8 @@ const style = StyleSheet.create({
     top: 60,
     height: 160,
     backgroundColor: '#FFF',
-    borderRadius: 4
+    borderRadius: 4,
+    zIndex: 1
   },
 
   row: {

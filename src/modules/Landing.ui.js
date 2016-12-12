@@ -4,6 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import abcctx from '../lib/abcContext'
 
 import CachedUsers from './CachedUsers/CachedUsers.ui'
+import { setCachedUsers } from './CachedUsers/CachedUsers.action'
 import Loader from './Loader/Loader.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
@@ -21,17 +22,24 @@ const { width, height } = Dimensions.get('window')
 class Main extends Component {
 
   componentWillMount() {
-    abcctx(function(ctx) {
-      const foo = ctx.listUsernames()
+
+    const dispatch = this.props.dispatch
+    abcctx( ctx => {
+      const cachedUsers = ctx.listUsernames()
+      console.log(cachedUsers)
+      dispatch(setCachedUsers(cachedUsers))
     })
+
   }
   
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
+
   containerTouched = (event) => {
     this.props.dispatch(openLogin())
   }
+
   render () {
     if (this.props.pin) {
       return (
