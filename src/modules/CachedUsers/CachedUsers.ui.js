@@ -72,9 +72,7 @@ const style = StyleSheet.create({
     flex: 1,
     alignSelf: 'flex-end',
     backgroundColor: '#FFF',
-    borderRadius: 4,
-    borderWidth: 1,
-    borderColor: '#FF0000'
+    borderRadius: 4
   },
   contentContainer: {
     alignItems: 'stretch'

@@ -112,9 +112,7 @@ const style = StyleSheet.create({
     justifyContent: 'center'
   },
   spacer: {
-    flex: 0.15,
-    borderWidth: 1,
-    borderColor: '#FF0000'
+    flex: 0.15
   },
   form: {
     flexDirection: 'column',
