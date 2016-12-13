@@ -73,7 +73,7 @@ class HomeComponent extends Component {
         <View style={style.logoContainer}>
           <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
         </View>
-        <Main />
+        <Main {...this.props} />
         <Loader />
         <WarningModal />
         <ErrorModal />
