@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { closeLoginUsingPin, openLogin, loginPIN } from './Login.action'
+import { closeLoginUsingPin, openLogin, loginPIN, openUserList, closeUserList} from './Login.action'
 import { loginWithPassword, loginWithPin } from './Login.middleware'
 import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
+import CachedUsers from '../CachedUsers/CachedUsers.ui'
 
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { InputGroup, Input } from 'native-base'
+
 import t from '../../lib/LocaleStrings'
 
 import Dimensions from 'Dimensions'
@@ -35,11 +37,31 @@ class Login extends Component {
     this.props.dispatch(openLogin())
   }
 
+  showCachedUsers = () => {
+    this.props.dispatch(openUserList())
+  }
+
+  hideCachedUsers = () => {
+    this.props.dispatch(closeUserList())
+  }
+
   render () {
+
+    const cUsers = () => {
+
+      if (this.props.showCachedUsers) {
+        return (<CachedUsers />)
+      } else {
+        return null
+      }
+    }
+
     return (
       <View style={style.container}>
 
-        <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
+        <TouchableOpacity onPress={this.showCachedUsers}>
+          <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
+        </TouchableOpacity>
 
         <View style={{ width: 100 }}>
           <InputGroup borderType='regular' style={style.inputGroup}>
@@ -59,10 +81,11 @@ class Login extends Component {
           </InputGroup>
         </View>
 
-        <TouchableHighlight onPress={this.viewPasswordInput}>
+        <TouchableOpacity onPress={this.viewPasswordInput}>
           <Text style={style.text}>{ t('fragment_landing_switch_user') }</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
 
+        {cUsers()}
       </View>
     )
   }
@@ -97,6 +120,9 @@ const style = StyleSheet.create({
 })
 
 export default connect(state => ({
+
   pin: state.login.pin,
-  user: state.cachedUsers.selectedUserToLogin
+  user: state.cachedUsers.selectedUserToLogin,
+  showCachedUsers: state.login.showCachedUsers
+
 }))(Login)

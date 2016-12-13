@@ -20,10 +20,11 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
 
     if (validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat) {
       dispatch(openLoading(t('fragment_signup_creating_account')))
-      abcctx((ctx) => {
-        ctx.createAccount(username, password, pinNumber, (err, result) => {
-          clearTimeout(timeoutTimer)
-          dispatch(closeLoading())
+
+      abcctx( ctx => {
+        ctx.createAccount(username, password, pinNumber, null, (err, result) => {
+          console.log(err)
+
           if (err) {
             console.log('account creation error', err)
             var mess
@@ -34,7 +35,14 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
             }
             return dispatch(openErrorModal(t('activity_signup_failed')))
           }
-          Actions.review()
+
+          if(!err){
+            console.log('no error')
+            Actions.review()
+          }
+
+          clearTimeout(timeoutTimer)
+          dispatch(closeLoading())
         })
         timeoutTimer = setTimeout(() => {
           dispatch(closeLoading())
@@ -42,8 +50,8 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
         }, 10000)
       })
 
+
     } else {
-      // this really should never happen
       return dispatch(openErrorModal(t('activity_signup_insufficient_password')))
     }
   }
