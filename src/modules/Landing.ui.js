@@ -16,8 +16,6 @@ import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 
-import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window')
 
 class Main extends Component {
 
@@ -36,9 +34,7 @@ class Main extends Component {
   render () {
     if (this.props.pin) {
       return (
-        <View style={styles.main}>
           <LoginWithPin />
-        </View>
       )
     }
 
@@ -49,12 +45,12 @@ class Main extends Component {
 
       if (!this.props.password) {
         return (
-          <View style={styles.main}>
-            <TouchableOpacity style={[ styles.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
-              <Text style={styles.buttonText}>{t('fragment_landing_signin_button')}</Text>
+          <View style={style.main}>
+            <TouchableOpacity style={[ style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
+              <Text style={style.buttonText}>{t('fragment_landing_signin_button')}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[ styles.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
-              <Text style={styles.buttonText}>{t('fragment_landing_signup_button')}</Text>
+            <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+              <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
             </TouchableOpacity>
           </View>
         )
@@ -68,8 +64,10 @@ class HomeComponent extends Component {
 
   render () {
     return (
-      <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={styles.backgroundImage}>
-        <Image source={require('../assets/drawable/logo.png')} style={styles.logoImage} />
+      <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
+        <View style={style.logoContainer}>
+          <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
+        </View>
         <Main {...this.props} />
         <Loader />
         <ErrorModal />
@@ -79,12 +77,16 @@ class HomeComponent extends Component {
 
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
 
   main: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    flex: 1
+  },
+  horizontalSpacer: {
+    flex: 0.25
   },
 
   welcome: {
@@ -96,27 +98,31 @@ const styles = StyleSheet.create({
 
   backgroundImage: {
     flex: 1,
-    width: width,
-    height: height,
+    width: null,
+    height: null,
     resizeMode: 'cover',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexWrap: 'wrap'
   },
-
+  logoContainer: {
+     flex: 0.2,
+     flexDirection: 'column',
+     borderWidth: 1,
+     borderColor:'#0FFF00'
+  },
   logoImage: {
-    resizeMode: 'contain',
-    width: width * 0.5,
-    marginTop: -14,
-    marginBottom: -14
-
+    flex: 1,
+    resizeMode: 'contain'
   },
+ 
 
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: width * 0.7,
+    flex: 0.7,
     height: 45,
     marginVertical: 3
   }

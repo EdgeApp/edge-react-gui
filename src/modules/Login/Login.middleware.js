@@ -6,7 +6,8 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-
+const timeoutTimer = setTimeout(() => { },0)
+let isError = false
 export const loginWithPassword = (username, password) => {
   return dispatch => {
     asyncAuto({
@@ -15,8 +16,13 @@ export const loginWithPassword = (username, password) => {
         callback(null, null)
       },
       loginWithPassword: function (callback) {
+        isError = false
         abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
+            if(isError) {
+              isError = false
+              return false;
+            }
             if (error) {
               var mess
               try {
@@ -33,9 +39,14 @@ export const loginWithPassword = (username, password) => {
           })
         })
 
+        timeoutTimer = setTimeout(() => {
+          isError = true
+          return callback(t('string_no_connection_response'), null)
+        }, 10000)
       }
 
     }, function (err, results) {
+      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
       if (err) {
@@ -56,9 +67,14 @@ export const loginWithPin = (username, pin) => {
         callback(null, null)
       },
       loginWithPin: function (callback) {
-
-        abcctx( context => {
+        isError = false
+        abcctx(context => {
           context.loginWithPIN(username, pin, (error, account) => {
+            if(isError) {
+              isError = false
+              return false;
+            }
+
             if (error) {
               var mess
               try {
@@ -73,13 +89,19 @@ export const loginWithPin = (username, pin) => {
               return callback(null, null)
             }
           })
+
+          timeoutTimer = setTimeout(() => {
+            isError = true
+            return callback(t('string_no_connection_response'), null)
+          }, 10000)
         })
 
       }
 
     }, function (err, results) {
-      dispatch(closeLoading())
 
+      clearTimeout(timeoutTimer)
+      dispatch(closeLoading())
       if (err) {
         dispatch(openErrorModal(err))
       }

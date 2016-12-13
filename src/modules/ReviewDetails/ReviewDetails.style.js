@@ -1,15 +1,13 @@
 import { StyleSheet } from 'react-native'
-import Dimensions from 'Dimensions'
 
-const {height, width} = Dimensions.get('window')
+
 
 const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#222',
     justifyContent: 'center',
-    alignItems: 'center',
-    height: height
+    alignItems: 'center'
   },
 
   detailsContainer: {
@@ -30,13 +28,13 @@ const style = StyleSheet.create({
 
   detailTextLeft: {
     textAlign: 'right',
-    width: width * 1 / 3
+    flex: 0.33
   },
 
   detailTextRight: {
     textAlign: 'left',
     paddingRight: 30,
-    width: width * 2 / 3
+    flex: 0.67
   },
 
   text: {

@@ -9,8 +9,8 @@ import { selectUserToLogin } from './CachedUsers.action'
 // import { deleteUserToCached } from './CachedUsers.middleware'
 import { openLoginUsingPin } from '../Login/Login.action'
 
-import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window')
+
+
 
 class UserList extends Component {
 
@@ -50,9 +50,12 @@ class UserList extends Component {
 
   render () {
     return (
-      <View style={[ style.container ]}>
+      <ScrollView
+        keyboardShouldPersistTaps
+        style={style.container}
+        contentContainerStyle={style.contentContainer}>
         { this.listUsers() }
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -61,24 +64,33 @@ const style = StyleSheet.create({
 
   container: {
     position: 'absolute',
-    top: 40,
     maxHeight: 150,
+    left:0,
+    right:0,
+    top: 40,
+    flex: 1,
     alignSelf: 'flex-end',
     backgroundColor: '#FFF',
-    borderRadius: 4
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#FF0000'
+  },
+  contentContainer: {
+    alignItems: 'stretch'
   },
 
   row: {
     flexDirection: 'column',
-    width: width,
     padding: 16,
-    height: 40
+    alignItems: 'stretch',
+    height: 40,
+    flex: 1
   },
   textContainer: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40
   },
   text: {

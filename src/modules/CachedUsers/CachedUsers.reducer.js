@@ -14,7 +14,6 @@ export const users = (state = [], action) => {
 }
 
 export const selectedUserToLogin = (state = null, action) => {
-
   switch (action.type) {
     case ACTION.SELECT_USER_LOGIN :
       return action.data

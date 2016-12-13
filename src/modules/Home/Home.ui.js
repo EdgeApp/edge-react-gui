@@ -10,7 +10,7 @@ export default class Home extends Component {
     return (
       <View style={style.container} >
         <Text>Welcome!! This is the Home Page!</Text>
-        <Button onPress={ Actions.landing }>Log Out</Button>
+        <Button onPress={Actions.landing}>Log Out</Button>
       </View>
     )
   }

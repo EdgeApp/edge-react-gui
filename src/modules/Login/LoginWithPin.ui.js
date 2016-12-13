@@ -11,8 +11,6 @@ import { InputGroup, Input } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
 
-import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window')
 
 class Login extends Component {
 
@@ -27,6 +25,9 @@ class Login extends Component {
 
   changePin = (pin) => {
     this.props.dispatch(loginPIN(pin))
+    if (pin.length > 3) {
+      setTimeout(this.submit, 200)
+    }
   }
 
   viewPasswordInput = (pin) => {
@@ -55,32 +56,33 @@ class Login extends Component {
 
     return (
       <View style={style.container}>
+        <View style={style.form}>
+          <TouchableOpacity onPress={this.showCachedUsers}>
+            <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity onPress={this.showCachedUsers}>
-          <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
-        </TouchableOpacity>
+          <View style={{ width: 100 }}>
+            <InputGroup borderType='regular' style={style.inputGroup}>
+              <Input
+                placeholder={t('fragment_landing_enter_pin')}
+                style={style.input}
+                onChangeText={this.changePin}
+                value={this.props.pin}
+                keyboardType='numeric'
+                maxLength={4}
+                autoFocus
+                autoCorrect={false}
+                returnKeyType='done'
+                blurOnSubmit
+                onSubmitEditing={this.submit}
+            />
+            </InputGroup>
+          </View>
 
-        <View style={{ width: 100 }}>
-          <InputGroup borderType='regular' style={style.inputGroup}>
-            <Input
-              placeholder={t('fragment_landing_enter_pin')}
-              style={style.input}
-              onChangeText={this.changePin}
-              value={this.props.pin}
-              keyboardType='numeric'
-              maxLength={4}
-              autoCorrect={false}
-              returnKeyType='done'
-              blurOnSubmit
-              onSubmitEditing={this.submit}
-          />
-          </InputGroup>
-        </View>
-
-        <TouchableOpacity onPress={this.viewPasswordInput}>
-          <Text style={style.text}>{ t('fragment_landing_switch_user') }</Text>
-        </TouchableOpacity>
-
+          <TouchableOpacity onPress={this.viewPasswordInput}>
+            <Text style={style.text}>{ t('fragment_landing_switch_user') }</Text>
+          </TouchableOpacity>
+       </View>
         {cUsers()}
       </View>
     )
@@ -90,16 +92,22 @@ class Login extends Component {
 const style = StyleSheet.create({
 
   container: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#FF0000'
+  },
+  form: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginHorizontal: 30,
-    width: width * 0.6,
-    marginVertical: 15
+    flex: 0.7
   },
 
   inputGroup: {
-    marginVertical: 30,
+    marginVertical: 10,
     backgroundColor: 'rgba(0,0,0,0.5)'
   },
 
