@@ -87,19 +87,9 @@ const style = StyleSheet.create({
 })
 
 export default connect(state => ({
-
-<<<<<<< HEAD
   visible: state.warningModal.visible,
   module: state.warningModal.module,
   title: state.warningModal.title,
-  message: state.warningModal.message
-=======
-  visible : state.warningModal.visible,
-  module  : state.warningModal.module,
-  title   : state.warningModal.title,
-  message : state.warningModal.message,
-
-  userToDeleteFromUserCache : state.cachedUsers.userToDeleteFromUserCache
->>>>>>> origin/art
-
+  message: state.warningModal.message,
+  userToDeleteFromUserCache: state.cachedUsers.userToDeleteFromUserCache
 }))(WarningModal)

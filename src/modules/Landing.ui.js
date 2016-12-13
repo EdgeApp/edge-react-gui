@@ -75,8 +75,6 @@ class HomeComponent extends Component {
 
 }
 
-
-
 export default connect(state => ({
 
   password: state.login.viewPassword,

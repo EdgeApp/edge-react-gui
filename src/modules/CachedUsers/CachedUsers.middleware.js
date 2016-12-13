@@ -8,13 +8,12 @@ import { closeWarningModal } from '../WarningModal/WarningModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(() => { },0)
+const timeoutTimer = setTimeout(() => { }, 0)
 
 let isError = false
 
 export const deleteUserToCache = username => {
   return dispatch => {
-
     asyncAuto({
       closeWarningModal: function (callback) {
         dispatch(closeWarningModal())
@@ -53,12 +52,11 @@ export const deleteUserToCache = username => {
         //   isError = true
         //   return callback(t('string_no_connection_response'), null)
         // }, 10000)
-        
+
         return callback(null, null)
       }
 
     }, function (err, results) {
-
       clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
@@ -70,5 +68,4 @@ export const deleteUserToCache = username => {
       }
     })
   }
-
 }
