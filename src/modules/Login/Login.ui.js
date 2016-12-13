@@ -35,6 +35,7 @@ class Login extends Component {
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
+        // return (<View style={style.cUsersContainer}><CachedUsers /></View>)
         return (<CachedUsers />)
       } else {
         return null
@@ -83,6 +84,7 @@ class Login extends Component {
         </View>
         <View style={style.spacer} />
         {cUsers()}
+        
       </View>
     )
   }
@@ -93,10 +95,13 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    justifyContent: 'center'
+    justifyContent: 'center',    borderWidth: 1,
+    borderColor: '#FF0000'
   },
   spacer: {
-    flex: 0.15
+    flex: 0.15,
+    borderWidth: 1,
+    borderColor: '#FF0000'
   },
   form: {
     flexDirection: 'column',

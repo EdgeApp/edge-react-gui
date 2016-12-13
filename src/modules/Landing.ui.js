@@ -16,8 +16,6 @@ import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 
-import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window')
 
 class Main extends Component {
 
@@ -36,9 +34,7 @@ class Main extends Component {
   render () {
     if (this.props.pin) {
       return (
-        <View style={style.main}>
           <LoginWithPin />
-        </View>
       )
     }
 
@@ -70,9 +66,7 @@ class HomeComponent extends Component {
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
-          <View style={style.horizontalSpacer} />
           <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
-          <View style={style.horizontalSpacer} />
         </View>
         <Main {...this.props} />
         <Loader />
@@ -88,7 +82,8 @@ const style = StyleSheet.create({
   main: {
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    flex: 1
   },
   horizontalSpacer: {
     flex: 0.25
@@ -108,14 +103,20 @@ const style = StyleSheet.create({
     resizeMode: 'cover',
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
+    flexWrap: 'wrap'
   },
-
   logoContainer: {
-    flex: 0.5
+     flex: 0.2,
+     flexDirection: 'column',
+     borderWidth: 1,
+     borderColor:'#0FFF00'
   },
   logoImage: {
+    flex: 1,
+    resizeMode: 'contain'
   },
+ 
 
   button: {
     flexDirection: 'row',

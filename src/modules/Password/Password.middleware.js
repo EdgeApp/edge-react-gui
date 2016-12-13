@@ -8,6 +8,7 @@ import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
 const timeoutTimer = setTimeout(() => {}, 0)
+
 export const checkPassword = (password, passwordRepeat, validation, username, pinNumber) => {
   return dispatch => {
     if (!validation.upperCaseChar || !validation.lowerCaseChar || !validation.number || !validation.characterLength) {
@@ -23,7 +24,9 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
 
       abcctx( ctx => {
         ctx.createAccount(username, password, pinNumber, null, (err, result) => {
-          console.log(err)
+
+          clearTimeout(timeoutTimer)
+          dispatch(closeLoading())
 
           if (err) {
             console.log('account creation error', err)
@@ -41,8 +44,6 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
             Actions.review()
           }
 
-          clearTimeout(timeoutTimer)
-          dispatch(closeLoading())
         })
         timeoutTimer = setTimeout(() => {
           dispatch(closeLoading())
