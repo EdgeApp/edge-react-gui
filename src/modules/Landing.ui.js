@@ -6,6 +6,7 @@ import abcctx from '../lib/abcContext'
 import CachedUsers from './CachedUsers/CachedUsers.ui'
 import { setCachedUsers } from './CachedUsers/CachedUsers.action'
 import Loader from './Loader/Loader.ui'
+import WarningModal from './WarningModal/WarningModal.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
@@ -68,8 +69,9 @@ class HomeComponent extends Component {
         <View style={style.logoContainer}>
           <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
         </View>
-        <Main {...this.props} />
+        <Main />
         <Loader />
+        <WarningModal />
         <ErrorModal />
       </Image>
     )

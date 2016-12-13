@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import { closeLoginUsingPin, openLogin, loginPIN, openUserList, closeUserList} from './Login.action'
 import { loginWithPassword, loginWithPin } from './Login.middleware'
-import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
+import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
 import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input } from 'native-base'

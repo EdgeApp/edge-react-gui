@@ -6,11 +6,10 @@ import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacit
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin } from './CachedUsers.action'
-// import { deleteUserToCached } from './CachedUsers.middleware'
 import { openLoginUsingPin } from '../Login/Login.action'
+import { openWarningModal } from '../WarningModal/WarningModal.action'
 
-
-
+import t from '../../lib/LocaleStrings'
 
 class UserList extends Component {
 
@@ -19,8 +18,13 @@ class UserList extends Component {
   }
 
   handleDeleteUserCache = (user) => {
-    console.log('foo')
-    // this.props.dispatch(deleteUserToCached(user))
+    this.props.dispatch(
+      openWarningModal(
+        'deleteCachedUser',
+        t('fragment_landing_account_delete_title'),
+        t('fragment_landing_account_delete_message')
+      )
+    )
   }
 
   listUsers = () => {
