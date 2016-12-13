@@ -15,7 +15,7 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 1
+    height: 150
   },
 
   detailRow: {
