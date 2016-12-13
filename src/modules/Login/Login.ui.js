@@ -10,9 +10,6 @@ import { InputGroup, Input, Button } from 'native-base'
 import t from '../../lib/LocaleStrings'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 
-import Dimensions from 'Dimensions'
-const { width, height } = Dimensions.get('window')
-
 class Login extends Component {
 
   submit = () => {
@@ -36,9 +33,7 @@ class Login extends Component {
   }
 
   render () {
-
     const cUsers = () => {
-
       if (this.props.showCachedUsers) {
         return (<CachedUsers />)
       } else {
@@ -47,20 +42,21 @@ class Login extends Component {
     }
 
     return (
-    <View style={style.container}>
-      <View style={style.form}>
+      <View style={style.container}>
+        <View style={style.spacer} />
+        <View style={style.form}>
 
-        <InputGroup borderType='regular' style={style.inputGroup} >
-          <Input
-            ref='loginUsername'
-            placeholder={t('fragment_landing_username_hint')}
-            style={style.input}
-            onChangeText={this.changeUsername}
-            value={this.props.username}
-            returnKeyType={'next'}
-            onSubmitEditing={e => this.refs.password._textInput.focus()}
-            selectTextOnFocus
-            onFocus={this.showCachedUsers}
+          <InputGroup borderType='regular' style={style.inputGroup} >
+            <Input
+              ref='loginUsername'
+              placeholder={t('fragment_landing_username_hint')}
+              style={style.input}
+              onChangeText={this.changeUsername}
+              value={this.props.username}
+              returnKeyType={'next'}
+              onSubmitEditing={e => this.refs.password._textInput.focus()}
+              selectTextOnFocus
+              onFocus={this.showCachedUsers}
         />
           </InputGroup>
 
@@ -75,7 +71,7 @@ class Login extends Component {
               value={this.props.password}
               blurOnSubmit
               onSubmitEditing={this.submit}
-          />
+        />
           </InputGroup>
           <TouchableOpacity style={style.button} onPress={this.submit}>
             <Text style={style.buttonText}> Sign In </Text>
@@ -85,6 +81,7 @@ class Login extends Component {
           </TouchableOpacity>
 
         </View>
+        <View style={style.spacer} />
         {cUsers()}
       </View>
     )
@@ -94,17 +91,18 @@ class Login extends Component {
 const style = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: width
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'center'
+  },
+  spacer: {
+    flex: 0.15
   },
   form: {
     flexDirection: 'column',
     alignItems: 'flex-start',
-    alignSelf: 'center',
     justifyContent: 'center',
-    width: width * 0.7
+    flex: 0.7
   },
 
   buttonText: {

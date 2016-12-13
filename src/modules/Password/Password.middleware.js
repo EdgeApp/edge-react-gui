@@ -36,11 +36,12 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
           }
           Actions.review()
         })
+        timeoutTimer = setTimeout(() => {
+          dispatch(closeLoading())
+          dispatch(openErrorModal(t('string_no_connection_response')))
+        }, 10000)
       })
-      timeoutTimer = setTimeout(() => {
-        dispatch(closeLoading())
-        dispatch(openErrorModal(t('string_no_connection_response')))
-      }, 10000)
+
     } else {
       // this really should never happen
       return dispatch(openErrorModal(t('activity_signup_insufficient_password')))
@@ -68,10 +69,11 @@ export const skipPassword = (username, pinNumber) => {
         }
         Actions.review()
       })
+      timeoutTimer = setTimeout(() => {
+        dispatch(closeLoading())
+        dispatch(openErrorModal(t('string_no_connection_response')))
+      }, 10000)      
     })
-    timeoutTimer = setTimeout(() => {
-      dispatch(closeLoading())
-      dispatch(openErrorModal(t('string_no_connection_response')))
-    }, 10000)
+
   }
 }

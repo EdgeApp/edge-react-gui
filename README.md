@@ -2,6 +2,16 @@
 React Native UI for Airbitz
 ## IMPORTANT
 ### The app will crash with SyntaxError: Strict mode does not allow ... etc ... because of a problem with Babel/React compatibility. To work around this, shake your phone to go into dev mode and press 'debug JS remotely'. The whole react community is interested in a fix and we will provide at least something ASAP to avoid this 'problem'.
+#### On Android genymotion emulator, just click the menu icon from the right toolbar, or if all else fails, type `adb shell input keyevent KEYCODE_MENU`
+
+
+### Debugging on device and getting `E/unknown:React: Exception in native call from JS
+                 com.facebook.react.devsupport.JSException: Could not get BatchedBridge, make sure your bundle is packaged correctly`
+### Or 500 error, cannot connect to development server
+This means your dev app cannot access your workstation to download the app bundle files. To fix this, follow these steps:
+- Check USB connection to your computer from the device
+- Make sure your packager is running `npm start` in your project directory 
+- Re-run the command to create a network bridge `adb -s 64315443 reverse tcp:8081 tcp:8081` replacing 64315443 with your device ID (get your device ID from running `adb devices`)
 
 ### Test production build
 It's *required* at the moment to set up some gradle properties in your local environment. This will be fixed in a future release, but it takes 30 seconds, so...
@@ -12,6 +22,8 @@ MYAPP_RELEASE_KEY_ALIAS=my-key-alias
 MYAPP_RELEASE_STORE_PASSWORD=123456
 MYAPP_RELEASE_KEY_PASSWORD=123456
 ```
+### Android 6.0 permissions issue
+A known issue with permissions in Android version 23+ (6.0) means you'll need to add this app manually to "Apps That Can Draw". To get to this screen, you'll just need to try to run the app, and it will crash, yielding the correct screen where you  need to add the permission. We are working on getting this to happen automatically
 
 ### Global NPM dependencies (requires sudo sometimes):
 `npm install -g snazzy standard react-native-cli@latest`
@@ -40,6 +52,6 @@ But you can also run this with zsh (put it in .zshprofile instead)
 
 ### Troubleshooting
 - Whenever you need to install a new npm module, you'll need to restart the app daemon afterwards in order for your bundle to pick it up.
-- If you're having inexplicable persistent problems, it sometimes helps to clean the project. `cd android && ./gradlew clean && rm -rf build && cd ..`
+- If you're having inexplicable persistent problems, it sometimes helps to clean the project.  delete the app from your phone, run `cd android && ./gradlew clean && rm -rf build && cd .. && npm run droid` and then reset the packager like so: `npm start -- --reset-cache`
 - If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:E` and reproduce the error, it should give you some stack information, which MIGHT help.
 

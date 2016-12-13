@@ -25,8 +25,8 @@ class Login extends Component {
 
   changePin = (pin) => {
     this.props.dispatch(loginPIN(pin))
-    if(pin.length > 3) {
-      this.submit()
+    if (pin.length > 3) {
+      setTimeout(this.submit, 200)
     }
   }
 
@@ -50,7 +50,7 @@ class Login extends Component {
               value={this.props.pin}
               keyboardType='numeric'
               maxLength={4}
-              autoFocus={true}
+              autoFocus
               autoCorrect={false}
               returnKeyType='done'
               blurOnSubmit

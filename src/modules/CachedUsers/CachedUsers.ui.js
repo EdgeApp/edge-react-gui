@@ -52,7 +52,7 @@ class UserList extends Component {
   render () {
     return (
       <ScrollView
-        keyboardShouldPersistTaps={true} 
+        keyboardShouldPersistTaps
         style={[ style.container ]}>
         { this.listUsers() }
       </ScrollView>
@@ -79,9 +79,9 @@ const style = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40
   },
   text: {
