@@ -6,7 +6,7 @@ import { loginWithPassword, loginWithPin } from './Login.middleware'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
@@ -42,7 +42,21 @@ class Login extends Component {
   hideCachedUsers = () => {
     this.props.dispatch(closeUserList())
   }
+  keyboardDidShow = () => {
 
+  }
+  keyboardDidHide = () => {
+    this.props.dispatch(closeUserList())
+  }
+  componentWillMount () {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
+  }
+ 
+  componentWillUnmount () {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
   render () {
 
     const cUsers = () => {
@@ -101,7 +115,8 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 0.7
+    flex: 0.7,
+    marginTop: 10
   },
 
   inputGroup: {

@@ -29,7 +29,8 @@ class PasswordRequirement extends Component {
 const style = StyleSheet.create({
 
   container: {
-    marginHorizontal: 10
+    marginHorizontal: 10,
+    marginBottom: 5
   },
 
   text: {
