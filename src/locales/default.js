@@ -1,6 +1,7 @@
 const strings = {
   activity_signup_checking_username: 'Checking Username Availability',
   activity_signup_username_unavailable: 'Username is not available',
+  activity_signup_camera_text: "You will next see a popup requesting access to your Camera.\n\nThis is necessary to scan QR codes to pay people and merchants.",
   loading: 'Loading…',
   synchronizing: 'Synchronizing…',
 
