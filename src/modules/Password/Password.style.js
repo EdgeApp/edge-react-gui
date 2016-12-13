@@ -12,11 +12,17 @@ const style = StyleSheet.create({
     flexDirection: 'column'
 
   },
-
+  inputContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    flex: 1    
+  },
   input: {
     height: 60,
     fontSize: 22,
-    color: 'skyblue'
+    color: 'skyblue',
+    width: 240
   },
 
   paragraph: {

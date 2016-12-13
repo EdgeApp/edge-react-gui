@@ -31,7 +31,21 @@ class Login extends Component {
   hideCachedUsers = () => {
     this.props.dispatch(closeUserList())
   }
+  keyboardDidShow = () => {
 
+  }
+  keyboardDidHide = () => {
+    this.props.dispatch(closeUserList())
+  }
+  componentWillMount () {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
+  }
+ 
+  componentWillUnmount () {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
