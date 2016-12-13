@@ -39,10 +39,10 @@ export const loginWithPassword = (username, password) => {
           })
         })
 
-        timeoutTimer = setTimeout(() => {
-          isError = true
-          return callback(t('string_no_connection_response'), null)
-        }, 10000)
+        // timeoutTimer = setTimeout(() => {
+        //   isError = true
+        //   return callback(t('string_no_connection_response'), null)
+        // }, 10000)
       }
 
     }, function (err, results) {
@@ -53,6 +53,7 @@ export const loginWithPassword = (username, password) => {
         dispatch(openErrorModal(err))
       }
       if (!err) {
+        global.localStorage.setItem('lastUser', username)
         Actions.home()
       }
     })
@@ -70,6 +71,7 @@ export const loginWithPin = (username, pin) => {
         isError = false
         abcctx(context => {
           context.loginWithPIN(username, pin, (error, account) => {
+
             if(isError) {
               isError = false
               return false;
@@ -89,12 +91,12 @@ export const loginWithPin = (username, pin) => {
               return callback(null, null)
             }
           })
-
-          timeoutTimer = setTimeout(() => {
-            isError = true
-            return callback(t('string_no_connection_response'), null)
-          }, 10000)
         })
+
+        // timeoutTimer = setTimeout(() => {
+        //   isError = true
+        //   return callback(t('string_no_connection_response'), null)
+        // }, 10000)
 
       }
 
@@ -106,6 +108,7 @@ export const loginWithPin = (username, pin) => {
         dispatch(openErrorModal(err))
       }
       if (!err) {
+        global.localStorage.setItem('lastUser', username)
         Actions.home()
       }
     })

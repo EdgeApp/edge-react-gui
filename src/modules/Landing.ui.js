@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import abcctx from '../lib/abcContext'
 
 import CachedUsers from './CachedUsers/CachedUsers.ui'
-import { setCachedUsers } from './CachedUsers/CachedUsers.action'
+import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
@@ -25,6 +25,10 @@ class Main extends Component {
     abcctx(ctx => {
       const cachedUsers = ctx.listUsernames()
       dispatch(setCachedUsers(cachedUsers))
+      const lastUser = global.localStorage.getItem('lastUser')
+      if(lastUser) {
+        dispatch(selectUserToLogin(lastUser))
+      }          
     })
   }
 
