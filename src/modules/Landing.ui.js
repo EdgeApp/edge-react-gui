@@ -108,9 +108,7 @@ const style = StyleSheet.create({
   },
   logoContainer: {
      flex: 0.2,
-     flexDirection: 'column',
-     borderWidth: 1,
-     borderColor:'#0FFF00'
+     flexDirection: 'column'
   },
   logoImage: {
     flex: 1,

@@ -4,9 +4,13 @@ const style = StyleSheet.create({
 
   inputView: {
     flex: 1,
-    marginTop: 50,
+    marginTop: 10,
     marginLeft: 30,
-    marginRight: 30
+    marginRight: 30,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    flexDirection: 'column'
+
   },
 
   input: {

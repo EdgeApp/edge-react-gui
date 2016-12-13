@@ -11,30 +11,39 @@ const style = StyleSheet.create({
   },
 
   detailsContainer: {
-    margin: 25
+    margin: 25,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
   },
 
   detailRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    flex: 1
   },
 
   detailText: {
     fontSize: 18,
     marginVertical: 3,
-    marginHorizontal: 7
+    marginHorizontal: 7,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+
   },
 
   detailTextLeft: {
     textAlign: 'right',
-    flex: 0.33
+    flex: 0.50
   },
 
   detailTextRight: {
     textAlign: 'left',
     paddingRight: 30,
-    flex: 0.67
+    flex: 0.50
   },
 
   text: {

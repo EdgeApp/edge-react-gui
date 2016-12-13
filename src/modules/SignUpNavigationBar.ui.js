@@ -20,9 +20,9 @@ class NavigationBar extends Component {
 
   checkPasswordStateStyle = () => {
     if (this.props.scene === 'password' && this.props.passwordState) {
-      return {height: 200}
+      return {height: 120}
     } else {
-      return null
+      return {height: 60}
     }
   }
 
@@ -48,7 +48,6 @@ class NavigationBar extends Component {
 const style = StyleSheet.create({
 
   container: {
-    height: 60,
     backgroundColor: '#2291CF'
   },
 

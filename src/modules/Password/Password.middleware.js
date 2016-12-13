@@ -23,7 +23,7 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
       dispatch(openLoading(t('fragment_signup_creating_account')))
 
       abcctx( ctx => {
-        ctx.createAccount(username, password, pinNumber, null, (err, result) => {
+        ctx.createAccount(username, password, pinNumber, (err, result) => {
 
           clearTimeout(timeoutTimer)
           dispatch(closeLoading())

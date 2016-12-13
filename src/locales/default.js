@@ -733,7 +733,7 @@ const strings = {
   password_rule_no_uppercase: 'Must have at least one upper case letter',
   password_rule_no_lowercase: 'Must have at least one lower case letter',
   password_rule_no_number: 'Must have at least one number',
-  password_rule_too_short: 'Must have at least %1$s characters',
+  password_rule_too_short: 'Must have at least 10 characters',
 
   transaction_footer_buy_bitcoin: 'Buy Bitcoin',
   transaction_footer_import_gift_card: 'Import Airbitz Gift Card',
