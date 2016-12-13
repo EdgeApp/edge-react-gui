@@ -55,6 +55,7 @@ export const password = (state = '', action) => {
 
 export const showCachedUsers = (state = false, action) => {
   switch (action.type) {
+
     case ACTION.OPEN_USER_LIST :
       return true
 
@@ -62,6 +63,9 @@ export const showCachedUsers = (state = false, action) => {
       return false
 
     case ACTION.LOG_IN_USERNAME :
+      return false
+
+    case SELECT_USER_LOGIN :
       return false
 
     default:
