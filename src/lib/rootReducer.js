@@ -8,6 +8,7 @@ import * as PasswordStates from '../modules/Password/Password.reducer'
 import { reviewDetails } from '../modules/ReviewDetails/ReviewDetails.reducer'
 import * as PasswordValidation from '../modules/Password/PasswordValidation/PasswordValidation.reducer'
 import * as Loader from '../modules/Loader/Loader.reducer'
+import * as WarningModal from '../modules/WarningModal/WarningModal.reducer'
 import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
 import * as Login from '../modules/Login/Login.reducer'
 import * as CachedUsers from '../modules/CachedUsers/CachedUsers.reducer'
@@ -46,6 +47,11 @@ const store = combineReducers({
     loading: Loader.loading,
     message: Loader.message,
     style: Loader.style
+  }),
+  warningModal: combineReducers({
+    visible : WarningModal.visible,
+    title   : WarningModal.title,
+    message : WarningModal.message
   }),
   errorModal: combineReducers({
     visible: ErrorModal.visible,

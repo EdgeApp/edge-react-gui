@@ -1,14 +1,29 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableHighlight, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
-import t from '../../lib/LocaleStrings'
-import { passwordNotificationHide } from './Password.action'
+import { closeWarningModal } from '../CachedUsers/CachedUsers.action'
 
-class ErrorModal extends Component {
+import t from '../../lib/LocaleStrings'
+
+class WarningModal extends Component {
+
+  handleDeleteUsersFromCache = () => {
+    console.log('Deleting foo on bar and baz') 
+  }
+  
+  checkHandleSubmit = () => {
+    switch (this.props.module) {
+      case 'deleteCachedUser' :
+        return this.handleDeleteUsersFromCache
+
+      default:
+        return null
+    }
+  }
 
   handleClose = () => {
-    this.props.dispatch(passwordNotificationHide())
+    this.props.dispatch(closeWarningModal())
   }
 
   render () {
@@ -20,15 +35,15 @@ class ErrorModal extends Component {
         animationDuration={200}
         onClosed={this.handleClose}
       >
-        <Text style={[ style.textError, style.textLead ]}>{t('fragment_setup_password_nopassword_title')}</Text>
-        <Text style={style.textError}>{t('fragment_setup_password_nopassword_message')}</Text>
+        <Text style={[ style.textWarning, style.textLead ]}>{ this.props.title }</Text>
+        <Text style={style.textWarning}>{  this.props.message }</Text>
         <View style={{ flexDirection: 'row' }}>
-          <TouchableHighlight onPress={this.handleClose} >
+          <TouchableOpacity onPress={this.handleClose} >
             <Text style={style.hideModal}>{t('string_cancel')}</Text>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this.props.handleSubmit} >
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.checkHandleSubmit()} >
             <Text style={style.hideModal}>{t('string_ok')}</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       </Modal>
     )
@@ -45,7 +60,7 @@ const style = StyleSheet.create({
     width: 300
   },
 
-  textError: {
+  textWarning: {
     fontSize: 16,
     textAlign: 'center',
     marginBottom: 10
@@ -68,6 +83,9 @@ const style = StyleSheet.create({
 
 export default connect(state => ({
 
-  visible: state.password.notification
+  visible : state.warningModal.visible,
+  module  : state.warningModal.module,
+  title   : state.warningModal.title,
+  message : state.warningModal.message
 
-}))(ErrorModal)
+}))(WarningModal)

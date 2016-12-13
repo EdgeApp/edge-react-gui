@@ -35,7 +35,6 @@ class Login extends Component {
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
-        // return (<View style={style.cUsersContainer}><CachedUsers /></View>)
         return (<CachedUsers />)
       } else {
         return null
