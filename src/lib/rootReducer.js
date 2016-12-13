@@ -50,6 +50,7 @@ const store = combineReducers({
   }),
   warningModal: combineReducers({
     visible : WarningModal.visible,
+    module  : WarningModal.module,
     title   : WarningModal.title,
     message : WarningModal.message
   }),

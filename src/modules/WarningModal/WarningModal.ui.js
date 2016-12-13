@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
-import { closeWarningModal } from '../CachedUsers/CachedUsers.action'
+import { closeWarningModal } from './WarningModal.action'
 
 import t from '../../lib/LocaleStrings'
 
