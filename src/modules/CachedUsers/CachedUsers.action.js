@@ -1,6 +1,7 @@
 export const SELECT_USER_LOGIN          = 'SELECT_USER_LOGIN'
 export const REMOVE_USER_LOGIN          = 'REMOVE_USER_LOGIN'
 export const SET_CACHED_USERS           = 'SET_CACHED_USERS'
+export const USER_TO_DELETE_FROM_CACHE  = 'USER_TO_DELETE_FROM_CACHE'
 export const OPEN_REMOVE_USER_WARNING   = 'OPEN_REMOVE_USER_WARNING'
 export const CLOSE_REMOVE_USER_WARNING  = 'CLOSE_REMOVE_USER_WARNING'
 
@@ -21,6 +22,13 @@ export function selectUserToLogin (data) {
 export function removeUserToLogin () {
   return {
     type: REMOVE_USER_LOGIN
+  }
+}
+
+export function seletUserToDeleteFromUserCache (data) {
+  return {
+    type: USER_TO_DELETE_FROM_CACHE,
+    data
   }
 }
 

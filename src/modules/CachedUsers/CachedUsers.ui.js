@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux'
 import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
-import { selectUserToLogin } from './CachedUsers.action'
+import { selectUserToLogin, seletUserToDeleteFromUserCache } from './CachedUsers.action'
 import { openLoginUsingPin } from '../Login/Login.action'
 import { openWarningModal } from '../WarningModal/WarningModal.action'
 
@@ -18,6 +18,7 @@ class UserList extends Component {
   }
 
   handleDeleteUserCache = (user) => {
+    this.props.dispatch(seletUserToDeleteFromUserCache(user))
     this.props.dispatch(
       openWarningModal(
         'deleteCachedUser',
@@ -46,7 +47,9 @@ class UserList extends Component {
             <TouchableOpacity style={style.textContainer} onPress={() => this.handleLoginUserPin(user)}>
               <Text style={style.text}>{ user }</Text>
             </TouchableOpacity>
-            <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}><Text style={style.xbuttontext}>X</Text></TouchableHighlight>
+            <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}>
+              <Text style={style.xbuttontext}>X</Text>
+            </TouchableHighlight>
           </View>
         </View>
       )
