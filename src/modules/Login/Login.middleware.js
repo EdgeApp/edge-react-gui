@@ -19,6 +19,8 @@ export const loginWithPassword = (username, password) => {
         isError = false
         abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
+            
+            clearTimeout(timeoutTimer)
             if (isError) {
               isError = false
               return false
@@ -46,7 +48,6 @@ export const loginWithPassword = (username, password) => {
       }
 
     }, function (err, results) {
-      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
       if (err) {
@@ -70,6 +71,8 @@ export const loginWithPin = (username, pin) => {
         isError = false
         abcctx(context => {
           context.loginWithPIN(username, pin, (error, account) => {
+
+            clearTimeout(timeoutTimer)
             if (isError) {
               isError = false
               return false
@@ -98,7 +101,6 @@ export const loginWithPin = (username, pin) => {
       }
 
     }, function (err, results) {
-      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
       if (err) {
         dispatch(openErrorModal(err))
