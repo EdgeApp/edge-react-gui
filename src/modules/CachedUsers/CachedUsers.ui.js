@@ -19,8 +19,7 @@ class UserList extends Component {
   }
 
   handleDeleteUserCache = (user) => {
-    console.log('foo')
-    // this.props.dispatch(deleteUserToCached(user))
+    this.props.dispatch(deleteUserToCached(user))
   }
 
   listUsers = () => {
