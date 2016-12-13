@@ -2,14 +2,19 @@ import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
-import { closeWarningModal } from '../CachedUsers/CachedUsers.action'
+import { closeWarningModal } from './WarningModal.action'
+import { deleteUserToCache } from '../CachedUsers/CachedUsers.middleware'
 
 import t from '../../lib/LocaleStrings'
 
 class WarningModal extends Component {
 
   handleDeleteUsersFromCache = () => {
-    console.log('Deleting foo on bar and baz')
+    this.props.dispatch(
+      deleteUserToCache(
+        this.props.userToDeleteFromUserCache
+       )
+    )
   }
 
   checkHandleSubmit = () => {
@@ -83,9 +88,18 @@ const style = StyleSheet.create({
 
 export default connect(state => ({
 
+<<<<<<< HEAD
   visible: state.warningModal.visible,
   module: state.warningModal.module,
   title: state.warningModal.title,
   message: state.warningModal.message
+=======
+  visible : state.warningModal.visible,
+  module  : state.warningModal.module,
+  title   : state.warningModal.title,
+  message : state.warningModal.message,
+
+  userToDeleteFromUserCache : state.cachedUsers.userToDeleteFromUserCache
+>>>>>>> origin/art
 
 }))(WarningModal)

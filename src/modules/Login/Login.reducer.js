@@ -1,5 +1,6 @@
 import * as ACTION from './Login.action'
 import { SELECT_USER_LOGIN, REMOVE_USER_LOGIN } from '../CachedUsers/CachedUsers.action'
+import { WARNING_MODAL_OPEN } from '../WarningModal/WarningModal.action'
 
 export const viewPassword = (state = false, action) => {
   switch (action.type) {
@@ -66,6 +67,9 @@ export const showCachedUsers = (state = false, action) => {
       return false
 
     case SELECT_USER_LOGIN :
+      return false
+
+    case WARNING_MODAL_OPEN :
       return false
 
     default:

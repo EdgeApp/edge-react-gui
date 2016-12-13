@@ -25,3 +25,13 @@ export const selectedUserToLogin = (state = null, action) => {
       return state
   }
 }
+
+export const userToDeleteFromUserCache = (state = '', action) => {
+  switch (action.type) {
+    case ACTION.USER_TO_DELETE_FROM_CACHE :
+      return action.data
+
+    default:
+      return state
+  }
+}

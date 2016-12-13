@@ -49,17 +49,19 @@ const store = combineReducers({
     style: Loader.style
   }),
   warningModal: combineReducers({
-    visible: WarningModal.visible,
-    title: WarningModal.title,
-    message: WarningModal.message
+    visible : WarningModal.visible,
+    module  : WarningModal.module,
+    title   : WarningModal.title,
+    message : WarningModal.message
   }),
   errorModal: combineReducers({
-    visible: ErrorModal.visible,
-    message: ErrorModal.message
+    visible : ErrorModal.visible,
+    message : ErrorModal.message
   }),
   cachedUsers: combineReducers({
-    users: CachedUsers.users,
-    selectedUserToLogin: CachedUsers.selectedUserToLogin
+    users : CachedUsers.users,
+    selectedUserToLogin : CachedUsers.selectedUserToLogin,
+    userToDeleteFromUserCache : CachedUsers.userToDeleteFromUserCache
   }),
   routes
 })
