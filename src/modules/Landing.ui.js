@@ -16,8 +16,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
-
-
+import style from './Style'
 class HomeComponent extends Component {
   componentWillMount = () => {
     const dispatch = this.props.dispatch
@@ -25,7 +24,7 @@ class HomeComponent extends Component {
       const cachedUsers = ctx.listUsernames()
       dispatch(setCachedUsers(cachedUsers))
     })
-  }  
+  }
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
@@ -34,7 +33,7 @@ class HomeComponent extends Component {
     const viewMain = () => {
       if (this.props.pin) {
         return (
-            <LoginWithPin />
+          <LoginWithPin />
         )
       }
 
@@ -46,21 +45,21 @@ class HomeComponent extends Component {
         if (!this.props.password) {
           return (
             <View style={style.container}>
-              <View style={style.spacer}></View>
+              <View style={style.spacer} />
               <View style={style.form}>
                 <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
-                  <Text style={style.buttonText}> Sign In </Text>
+                  <Text style={style.buttonText}>{t('fragment_landing_signin_button')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
                   <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
-                </TouchableOpacity>   
-              </View>         
-              <View style={style.spacer}></View>
+                </TouchableOpacity>
+              </View>
+              <View style={style.spacer} />
             </View>
           )
         }
       }
-    }      
+    }
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
@@ -76,72 +75,7 @@ class HomeComponent extends Component {
 
 }
 
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-  spacer: {
-    flex: 0.15
-  },
-  form: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    flex: 0.7
-  },
-  horizontalSpacer: {
-    flex: 0.25
-  },
 
-  welcome: {
-    fontSize: 30,
-    textAlign: 'left',
-    margin: 10,
-    color: '#FFFFFF'
-  },
-
-  backgroundImage: {
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: 'cover',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexWrap: 'wrap'
-  },
-  logoContainer: {
-     flex: 0.2,
-     flexDirection: 'column',
-     marginVertical: 15
-  },
-  logoImage: {
-    flex: 1,
-    resizeMode: 'contain'
-  },
- 
-
-
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#80C342',
-    height: 45,
-    marginVertical: 3
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFF',
-    fontSize: 18,
-    flex: 1
-  },
-
-
-})
 
 export default connect(state => ({
 

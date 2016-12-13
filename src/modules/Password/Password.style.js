@@ -16,7 +16,7 @@ const style = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    flex: 1    
+    flex: 1
   },
   input: {
     height: 60,

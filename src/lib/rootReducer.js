@@ -49,9 +49,9 @@ const store = combineReducers({
     style: Loader.style
   }),
   warningModal: combineReducers({
-    visible : WarningModal.visible,
-    title   : WarningModal.title,
-    message : WarningModal.message
+    visible: WarningModal.visible,
+    title: WarningModal.title,
+    message: WarningModal.message
   }),
   errorModal: combineReducers({
     visible: ErrorModal.visible,

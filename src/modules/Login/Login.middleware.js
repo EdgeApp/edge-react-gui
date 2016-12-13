@@ -6,7 +6,7 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(() => { },0)
+const timeoutTimer = setTimeout(() => { }, 0)
 let isError = false
 export const loginWithPassword = (username, password) => {
   return dispatch => {
@@ -19,9 +19,9 @@ export const loginWithPassword = (username, password) => {
         isError = false
         abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
-            if(isError) {
+            if (isError) {
               isError = false
-              return false;
+              return false
             }
             if (error) {
               var mess
@@ -70,9 +70,9 @@ export const loginWithPin = (username, pin) => {
         isError = false
         abcctx(context => {
           context.loginWithPIN(username, pin, (error, account) => {
-            if(isError) {
+            if (isError) {
               isError = false
-              return false;
+              return false
             }
 
             if (error) {
@@ -95,11 +95,9 @@ export const loginWithPin = (username, pin) => {
             return callback(t('string_no_connection_response'), null)
           }, 10000)
         })
-
       }
 
     }, function (err, results) {
-
       clearTimeout(timeoutTimer)
       dispatch(closeLoading())
       if (err) {
