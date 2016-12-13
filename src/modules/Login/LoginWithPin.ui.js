@@ -6,7 +6,7 @@ import { loginWithPassword, loginWithPin } from './Login.middleware'
 import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
