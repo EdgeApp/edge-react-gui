@@ -46,13 +46,17 @@ class Main extends Component {
 
       if (!this.props.password) {
         return (
-          <View style={style.main}>
-            <TouchableOpacity style={[ style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
-              <Text style={style.buttonText}>{t('fragment_landing_signin_button')}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
-              <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
-            </TouchableOpacity>
+          <View style={style.container}>
+            <View style={style.spacer}></View>
+            <View style={style.form}>
+              <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
+                <Text style={style.buttonText}> Sign In </Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+                <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
+              </TouchableOpacity>   
+            </View>         
+            <View style={style.spacer}></View>
           </View>
         )
       }
@@ -80,12 +84,20 @@ class HomeComponent extends Component {
 }
 
 const style = StyleSheet.create({
-
-  main: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
+  container: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'flex-start',
-    flex: 1
+    justifyContent: 'center'
+  },
+  spacer: {
+    flex: 0.15
+  },
+  form: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    flex: 0.7
   },
   horizontalSpacer: {
     flex: 0.25
@@ -119,14 +131,22 @@ const style = StyleSheet.create({
   },
  
 
+
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 0.7,
+    backgroundColor: '#80C342',
     height: 45,
     marginVertical: 3
-  }
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: '#FFF',
+    fontSize: 18,
+    flex: 1
+  },
+
 
 })
 
