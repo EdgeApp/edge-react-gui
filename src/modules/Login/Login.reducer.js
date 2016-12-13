@@ -1,7 +1,7 @@
 import * as ACTION from './Login.action'
 import { SELECT_USER_LOGIN, REMOVE_USER_LOGIN } from '../CachedUsers/CachedUsers.action'
 
-export const viewPassword = (state = true, action) => {
+export const viewPassword = (state = false, action) => {
   switch (action.type) {
     case ACTION.OPEN_LOG_IN :
       return true

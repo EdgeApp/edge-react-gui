@@ -11,69 +11,62 @@ import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
 
-import { openLogin, blurUsername } from './Login/Login.action'
+import { openLogin } from './Login/Login.action'
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 
 
-class Main extends Component {
-
-  componentWillMount () {
+class HomeComponent extends Component {
+  componentWillMount = () => {
     const dispatch = this.props.dispatch
     abcctx(ctx => {
       const cachedUsers = ctx.listUsernames()
       dispatch(setCachedUsers(cachedUsers))
     })
-  }
-
+  }  
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
 
   render () {
-    if (this.props.pin) {
-      return (
-          <LoginWithPin />
-      )
-    }
-
-    if (!this.props.pin) {
-      if (this.props.password) {
-        return (<Login />)
-      }
-
-      if (!this.props.password) {
+    const viewMain = () => {
+      if (this.props.pin) {
         return (
-          <View style={style.container}>
-            <View style={style.spacer}></View>
-            <View style={style.form}>
-              <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
-                <Text style={style.buttonText}> Sign In </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
-                <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
-              </TouchableOpacity>   
-            </View>         
-            <View style={style.spacer}></View>
-          </View>
+            <LoginWithPin />
         )
       }
-    }
-  }
 
-}
+      if (!this.props.pin) {
+        if (this.props.password) {
+          return (<Login />)
+        }
 
-class HomeComponent extends Component {
-
-  render () {
+        if (!this.props.password) {
+          return (
+            <View style={style.container}>
+              <View style={style.spacer}></View>
+              <View style={style.form}>
+                <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
+                  <Text style={style.buttonText}> Sign In </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+                  <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
+                </TouchableOpacity>   
+              </View>         
+              <View style={style.spacer}></View>
+            </View>
+          )
+        }
+      }
+    }      
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
           <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
         </View>
-        <Main {...this.props} />
+        {viewMain()}
         <Loader />
         <WarningModal />
         <ErrorModal />
