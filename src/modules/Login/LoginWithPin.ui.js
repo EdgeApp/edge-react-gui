@@ -95,9 +95,7 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#FF0000'
+    justifyContent: 'center'
   },
   form: {
     flexDirection: 'column',

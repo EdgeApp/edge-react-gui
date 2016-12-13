@@ -29,19 +29,17 @@ class PasswordRequirement extends Component {
 const style = StyleSheet.create({
 
   container: {
-    flex: 3,
     marginHorizontal: 10
   },
 
   text: {
     color: '#FFF',
-    fontSize: 14
+    fontSize: 10
   },
 
   textLead: {
-    marginTop: 5,
     marginBottom: 5,
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: 'bold'
   }
 
