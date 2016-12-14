@@ -37,11 +37,11 @@ class HomeComponent extends Component {
   }
   render () {
     const viewDisclaimer = () => {
+      if(this.props.disclaimerAccepted) return null 
       if (global.localStorage) {
         const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
 
         if (!disclaimerAccepted) {
-          console.log('well?')
           return (<Disclaimer />)
         } else {
           return null
@@ -98,6 +98,7 @@ export default connect(state => ({
 
   password: state.login.viewPassword,
   selectedUserToLogin: state.cachedUsers.selectedUserToLogin,
-  pin: state.login.viewPIN
+  pin: state.login.viewPIN,
+  disclaimerAccepted: state.disclaimerAccepted
 
 }))(HomeComponent)
