@@ -6,6 +6,10 @@ export const users = (state = [], action) => {
     case ACTION.SET_CACHED_USERS :
       return action.data
 
+    case ACTION.DELETE_USER_FROM_CACHE :
+      console.log(action.data)
+      return state.filter(user => user !== action.data)
+
     default:
       return state
   }

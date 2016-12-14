@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Actions } from 'react-native-router-flux'
-import { View, ScrollView, Text, StyleSheet, TouchableHighlight, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin, seletUserToDeleteFromUserCache } from './CachedUsers.action'
@@ -47,9 +47,9 @@ class UserList extends Component {
             <TouchableOpacity style={style.textContainer} onPress={() => this.handleLoginUserPin(user)}>
               <Text style={style.text}>{ user }</Text>
             </TouchableOpacity>
-            <TouchableHighlight onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}>
+            <TouchableOpacity  onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}>
               <Text style={style.xbuttontext}>X</Text>
-            </TouchableHighlight>
+            </TouchableOpacity >
           </View>
         </View>
       )

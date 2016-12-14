@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { closeWarningModal } from './WarningModal.action'
 import { deleteUserToCache } from '../CachedUsers/CachedUsers.middleware'
 
+import abcctx from '../../lib/abcContext'
+
 import t from '../../lib/LocaleStrings'
 
 class WarningModal extends Component {
@@ -13,7 +15,7 @@ class WarningModal extends Component {
     this.props.dispatch(
       deleteUserToCache(
         this.props.userToDeleteFromUserCache
-       )
+      )
     )
   }
 

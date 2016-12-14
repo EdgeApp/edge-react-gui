@@ -18,7 +18,6 @@ export const loginWithPassword = (username, password) => {
         abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
             if (error) {
-              console.log("LOGIN ERROR",error)
               var mess
               try {
                 mess = JSON.parse(error.message).message
@@ -27,10 +26,10 @@ export const loginWithPassword = (username, password) => {
               }
               return callback(mess, null)
             }
-
             if (!error) {
               return callback(null, null)
             }
+            console.log(error)
           })
         })
       }
