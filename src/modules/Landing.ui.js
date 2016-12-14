@@ -17,24 +17,34 @@ import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 
-
-class Main extends Component {
+class HomeComponent extends Component {
 
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
 
-  render () {
-    if (this.props.pin) {
-      return (
-          <LoginWithPin />
-      )
-    }
+  componentWillMount () {
+    const dispatch = this.props.dispatch
+    abcctx(ctx => {
+
+      const cachedUsers = ctx.listUsernames()
+      const lastUser = global.localStorage.getItem('lastUser')
+
+      dispatch(setCachedUsers(cachedUsers))
+      if(lastUser) {
+        dispatch(selectUserToLogin(lastUser))
+      }          
+
+    })
+  }
+
+  renderMainComponent = () => {
+
+    if (this.props.pin) return <LoginWithPin />
 
     if (!this.props.pin) {
-      if (this.props.password) {
-        return (<Login />)
-      }
+
+      if (this.props.password) return (<Login />)
 
       if (!this.props.password) {
         return (
@@ -52,26 +62,9 @@ class Main extends Component {
           </View>
         )
       }
+      
     }
-  }
-
-}
-
-class HomeComponent extends Component {
-
-  componentWillMount () {
-    const dispatch = this.props.dispatch
-    abcctx(ctx => {
-
-      const cachedUsers = ctx.listUsernames()
-      const lastUser = global.localStorage.getItem('lastUser')
-
-      dispatch(setCachedUsers(cachedUsers))
-      if(lastUser) {
-        dispatch(selectUserToLogin(lastUser))
-      }          
-
-    })
+  
   }
 
   render () {
@@ -80,7 +73,7 @@ class HomeComponent extends Component {
         <View style={style.logoContainer}>
           <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
         </View>
-        <Main {...this.props} />
+        { this.renderMainComponent() }
         <Loader />
         <WarningModal />
         <ErrorModal />
