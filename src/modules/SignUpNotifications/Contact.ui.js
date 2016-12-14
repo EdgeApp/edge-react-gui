@@ -4,20 +4,17 @@ import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-nat
 
 import Container from '../SignUp.ui'
 
+import { readContactPermissions } from './Notifications.middleware'
+
 import t from '../../lib/LocaleStrings'
-import { requestContactPermission } from '../../lib/permissions'
 
 export default class Contact extends Component {
 
-  // handleSubmit = () => {
-  //   requestContactPermission((error, granted) => {
-  //
-  //     if(!error){
-  //       Actions.contactNotification()
-  //     } 
-  //
-  //   })
-  // }
+  handleSubmit = () => {
+    this.props.dispatch(
+      readContactPermissions()
+    )
+  }
 
   render () {
     return (

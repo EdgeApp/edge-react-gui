@@ -4,22 +4,16 @@ import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-nat
 
 import Container from '../SignUp.ui'
 
+import { cameraPermissions } from './Notifications.middleware'
+
 import t from '../../lib/LocaleStrings'
-import { requestCameraPermission } from '../../lib/permissions'
 
 export default class Camera extends Component {
 
   handleSubmit = () => {
-    requestCameraPermission((error, granted) => {
-
-      console.log(error)
-
-      if(!error){
-        console.log('foo')
-        Actions.contactNotification()
-      } 
-
-    })
+    this.props.dispatch(
+      cameraPermissions()
+    )
   }
 
   render () {

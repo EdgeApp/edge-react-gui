@@ -26,7 +26,6 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
           dispatch(closeLoading())
 
           if (err) {
-            console.log('account creation error', err)
             var mess
             try {
               mess = JSON.parse(err.message).message
@@ -37,7 +36,6 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
           }
 
           if (!err) {
-            console.log('no error')
             Actions.review()
           }
         })
@@ -56,7 +54,6 @@ export const skipPassword = (username, pinNumber) => {
       ctx.createAccount(username, null, pinNumber, (err, result) => {
         dispatch(closeLoading())
         if (err) {
-          console.log('account creation error', err)
           var mess
           try {
             mess = JSON.parse(err.message).message
