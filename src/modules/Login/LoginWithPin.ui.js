@@ -48,6 +48,14 @@ class Login extends Component {
   keyboardDidHide = () => {
     this.props.dispatch(closeUserList())
   }
+  toggleCachedUsers = () => {
+    if(this.props.showCachedUsers) {
+      this.hideCachedUsers()      
+    } else {
+      this.showCachedUsers()
+    }
+  }
+
   componentWillMount () {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
@@ -71,7 +79,7 @@ class Login extends Component {
     return (
       <View style={style.container}>
         <View style={style.form}>
-          <TouchableOpacity onPress={this.showCachedUsers}>
+          <TouchableOpacity onPress={this.toggleCachedUsers}>
             <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
           </TouchableOpacity>
 
