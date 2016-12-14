@@ -20,18 +20,6 @@ import t from '../lib/LocaleStrings'
 
 class Main extends Component {
 
-  componentWillMount () {
-    const dispatch = this.props.dispatch
-    abcctx(ctx => {
-      const cachedUsers = ctx.listUsernames()
-      dispatch(setCachedUsers(cachedUsers))
-      const lastUser = global.localStorage.getItem('lastUser')
-      if(lastUser) {
-        dispatch(selectUserToLogin(lastUser))
-      }          
-    })
-  }
-
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
@@ -71,6 +59,21 @@ class Main extends Component {
 
 class HomeComponent extends Component {
 
+  componentWillMount () {
+    const dispatch = this.props.dispatch
+    abcctx(ctx => {
+
+      const cachedUsers = ctx.listUsernames()
+      const lastUser = global.localStorage.getItem('lastUser')
+
+      dispatch(setCachedUsers(cachedUsers))
+      if(lastUser) {
+        dispatch(selectUserToLogin(lastUser))
+      }          
+
+    })
+  }
+
   render () {
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
@@ -106,14 +109,12 @@ const style = StyleSheet.create({
   horizontalSpacer: {
     flex: 0.25
   },
-
   welcome: {
     fontSize: 30,
     textAlign: 'left',
     margin: 10,
     color: '#FFFFFF'
   },
-
   backgroundImage: {
     flex: 1,
     width: null,
@@ -133,9 +134,6 @@ const style = StyleSheet.create({
     flex: 1,
     resizeMode: 'contain'
   },
- 
-
-
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
