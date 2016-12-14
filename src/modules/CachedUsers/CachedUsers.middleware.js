@@ -10,7 +10,6 @@ import t from '../../lib/LocaleStrings'
 
 export const deleteUserToCache = username => {
   return dispatch => {
-    console.log('foo')
     const lastUser = global.localStorage.getItem('lastUser') 
 
     abcctx(ctx => ctx.removeUsername(username))
