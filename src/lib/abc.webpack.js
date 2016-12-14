@@ -356,6 +356,15 @@ exports["abc"] =
 	}
 
 	/**
+	 * Removes a username from the map.
+	 */
+	function remove (localStorage, username) {
+	  var userMap = load(localStorage);
+	  delete userMap[username];
+	  localStorage.setItem('airbitz.users', JSON.stringify(userMap));
+	}
+
+	/**
 	 * Computes the userId (L1) for the given username.
 	 */
 	function getUserId (localStorage, username) {
@@ -428,6 +437,17 @@ exports["abc"] =
 	    }
 	  }
 	  return keys
+	};
+
+	ScopedStorage.prototype.removeAll = function () {
+	  var this$1 = this;
+
+	  var keys = this.keys();
+	  for (var i = 0, list = keys; i < list.length; i += 1) {
+	    var key = list[i];
+
+	    this$1.removeItem(key);
+	  }
 	};
 
 	/**
@@ -1718,6 +1738,13 @@ exports["abc"] =
 	Context.prototype.listUsernames = Context.prototype.usernameList;
 
 	Context.prototype.fixUsername = normalize;
+
+	Context.prototype.removeUsername = function (username) {
+	  username = normalize(username);
+	  remove(this.localStorage, username);
+	  var store = new UserStorage(this.localStorage, username);
+	  store.removeAll();
+	};
 
 	Context.prototype.usernameAvailable = nodeify(function (username) {
 	  return usernameAvailable(this, username)

@@ -18,6 +18,7 @@ export const loginWithPassword = (username, password) => {
         abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
             if (error) {
+              console.log("LOGIN ERROR",error)
               var mess
               try {
                 mess = JSON.parse(error.message).message
@@ -59,6 +60,7 @@ export const loginWithPin = (username, pin) => {
         abcctx(context => {
           context.loginWithPIN(username, pin, (error, account) => {
             if (error) {
+              console.log("LOGIN WITH PIN ERROR",error)
               var mess
               try {
                 mess = JSON.parse(error.message).message
