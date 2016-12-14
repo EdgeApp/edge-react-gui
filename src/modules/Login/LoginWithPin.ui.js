@@ -80,7 +80,7 @@ class Login extends Component {
             <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
           </TouchableOpacity>
 
-          <View style={{ width: 100 }}>
+          <View style={{ width: 100,marginVertical: 15 }}>
             <InputGroup borderType='regular' style={[style.inputGroup, {alignSelf: 'center'}]}>
               <Input
                 placeholder={t('fragment_landing_enter_pin')}

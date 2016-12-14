@@ -22,18 +22,18 @@ class HomeComponent extends Component {
   componentWillMount () {
     const dispatch = this.props.dispatch
     abcctx(ctx => {
-
       const cachedUsers = ctx.listUsernames()
       const lastUser = global.localStorage.getItem('lastUser')
 
       dispatch(setCachedUsers(cachedUsers))
-      if(lastUser) {
+      if (lastUser) {
         dispatch(selectUserToLogin(lastUser))
-      }          
-
+      }
     })
   }
-
+  handleOpenLogin = () => {
+    this.props.dispatch(openLogin())
+  }
   render () {
     const viewMain = () => {
       if (this.props.pin) {
@@ -64,7 +64,7 @@ class HomeComponent extends Component {
           )
         }
       }
-    }    
+    }
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
@@ -79,7 +79,6 @@ class HomeComponent extends Component {
   }
 
 }
-
 
 export default connect(state => ({
 
