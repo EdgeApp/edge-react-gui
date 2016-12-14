@@ -1,5 +1,5 @@
 import * as ACTION from './Login.action'
-import { SELECT_USER_LOGIN, REMOVE_USER_LOGIN } from '../CachedUsers/CachedUsers.action'
+import { SELECT_USER_LOGIN, REMOVE_USER_LOGIN, DELETE_USER_FROM_CACHE } from '../CachedUsers/CachedUsers.action'
 import { WARNING_MODAL_OPEN } from '../WarningModal/WarningModal.action'
 
 export const viewPassword = (state = false, action) => {
@@ -35,10 +35,16 @@ export const viewPIN = (state = false, action) => {
 
 export const username = (state = '', action) => {
   switch (action.type) {
+
     case ACTION.LOG_IN_USERNAME :
       return action.data
+
     case SELECT_USER_LOGIN :
       return action.data
+
+    case DELETE_USER_FROM_CACHE :
+      return ''
+
     default:
       return state
   }
@@ -46,8 +52,12 @@ export const username = (state = '', action) => {
 
 export const password = (state = '', action) => {
   switch (action.type) {
+
     case ACTION.LOG_IN_PASSWORD :
       return action.data
+
+    case DELETE_USER_FROM_CACHE :
+      return ''
 
     default:
       return state

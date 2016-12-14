@@ -9,6 +9,8 @@ import Home from './modules/Home/Home.ui'
 import Username from './modules/Username/Username.ui'
 import PinNumber from './modules/PinNumber/PinNumber.ui'
 import Password from './modules/Password/Password.ui'
+import CameraNotification from './modules/SignUpNotifications/Camera.ui'
+import ContactNotification from './modules/SignUpNotifications/Contact.ui'
 import ReviewDetails from './modules/ReviewDetails/ReviewDetails.ui'
 
 const RouterWithRedux = connect()(Router)
@@ -21,10 +23,12 @@ export default class App extends Component {
         <RouterWithRedux>
           <Scene key='root'>
             <Scene key='signup' hideNavBar>
-              <Scene key='username' component={Username} title={'Enter Username'} initial />
+              <Scene key='username' component={Username} title={'Enter Username'}/>
               <Scene key='pin' component={PinNumber} title={'Enter Pin'} />
               <Scene key='password' component={Password} title={'Enter Password'} />
-              <Scene key='review' component={ReviewDetails} title={'Details'} type='reset' />
+              <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} type='reset'  initial />
+              <Scene key='contactNotification' component={ContactNotification} title={'Contact Notification'} />
+              <Scene key='review' component={ReviewDetails} title={'Details'} />
             </Scene>
             <Scene key='landing' component={Landing} type='reset' initial hideNavBar />
             <Scene key='home' component={Home} hideNavBar type='reset' />

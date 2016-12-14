@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { showNextButton, hideNextButton } from './NextButton.action'
 import t from '../../lib/LocaleStrings'
 
@@ -36,9 +36,9 @@ class NextButton extends Component {
     if (this.props.visible) {
       return (
         <View>
-          <TouchableHighlight style={styles.button} onPress={this.props.onPress}>
+          <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
             <Text style={styles.buttonText}>{ this.checkScene() }</Text>
-          </TouchableHighlight>
+          </TouchableOpacity>
         </View>
       )
     }
