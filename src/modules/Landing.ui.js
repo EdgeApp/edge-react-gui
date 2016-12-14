@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import abcctx from '../lib/abcContext'
-
+import Disclaimer from './Disclaimer/Disclaimer.ui'
 import CachedUsers from './CachedUsers/CachedUsers.ui'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 import Loader from './Loader/Loader.ui'
@@ -17,6 +17,7 @@ import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 import style from './Style'
+
 class HomeComponent extends Component {
 
   componentWillMount () {
@@ -35,6 +36,18 @@ class HomeComponent extends Component {
     this.props.dispatch(openLogin())
   }
   render () {
+    const viewDisclaimer = () => {
+      if (global.localStorage) {
+        const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
+
+        if (!disclaimerAccepted) {
+          console.log('well?')
+          return (<Disclaimer />)
+        } else {
+          return null
+        }
+      }
+    }
     const viewMain = () => {
       if (this.props.pin) {
         return (
@@ -74,6 +87,7 @@ class HomeComponent extends Component {
         <Loader />
         <WarningModal />
         <ErrorModal />
+        {viewDisclaimer()}
       </Image>
     )
   }

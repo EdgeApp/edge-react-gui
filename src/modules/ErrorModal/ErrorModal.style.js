@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-
+import appTheme from '../../../Themes/appTheme'
 const style = StyleSheet.create({
 
   modal: {
@@ -11,6 +11,7 @@ const style = StyleSheet.create({
   },
 
   textError: {
+    fontFamily: appTheme.fontFamily,
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 10
