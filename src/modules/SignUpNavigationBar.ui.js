@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
+import t from '../lib/LocaleStrings'
 
 import PasswordValidation from './Password/PasswordValidation/PasswordValidation.ui'
 
@@ -26,15 +27,31 @@ class NavigationBar extends Component {
     }
   }
 
+  checkBackText = () => {
+    switch (this.props.scene) {
+      case 'username':
+        return t('string_capitalize_exit')
+  
+      case 'cameraNotification':
+        return ''
+
+      case 'contactNotification':
+        return ''
+
+      default:
+        return t('string_capitalize_back')
+    }
+  }
+
   render () {
     return (
       <View style={[ style.container, this.checkPasswordStateStyle() ]}>
         <View style={style.navigationBarContainer}>
           <View style={style.navigationContainer}>
             <TouchableHighlight onPress={Actions.pop}>
-              <Text style={style.text}>Back</Text>
+              <Text style={style.text}>{ this.checkBackText() }</Text>
             </TouchableHighlight>
-            <Text style={[ style.text, style.title ]} />
+            <Text style={[ style.text, style.title ]} > { this.props.title || '' } </Text>
             <Text style={style.text} />
           </View>
           { this.checkPasswordStateOption() }
@@ -82,6 +99,7 @@ export default connect(state => ({
 
   route: state.route,
   passwordState: state.password.inputState,
-  scene: state.routes.scene.sceneKey
+  scene: state.routes.scene.sceneKey,
+  title: state.routes.scene.title
 
 }))(NavigationBar)
