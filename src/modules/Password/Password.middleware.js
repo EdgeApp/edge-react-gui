@@ -2,6 +2,7 @@ import { Actions } from 'react-native-router-flux'
 
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { passwordNotificationHide, changePasswordValue } from './Password.action'
+import { signupUser } from '../Signup/Signup.middleware'
 
 import abcctx from '../../lib/abcContext'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
@@ -19,27 +20,7 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
     }
 
     if (validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat) {
-      dispatch(openLoading(t('fragment_signup_creating_account')))
-
-      abcctx(ctx => {
-        ctx.createAccount(username, password, pinNumber, (err, result) => {
-          dispatch(closeLoading())
-
-          if (err) {
-            var mess
-            try {
-              mess = JSON.parse(err.message).message
-            } catch (e) {
-              mess = err
-            }
-            return dispatch(openErrorModal(t('activity_signup_failed')))
-          }
-
-          if (!err) {
-            Actions.review()
-          }
-        })
-      })
+      return dispatch(signupUser(username, password, pinNumber))
     } else {
       return dispatch(openErrorModal(t('activity_signup_insufficient_password')))
     }
@@ -50,20 +31,6 @@ export const skipPassword = (username, pinNumber) => {
   return dispatch => {
     dispatch(changePasswordValue(''))
     dispatch(passwordNotificationHide())
-    abcctx((ctx) => {
-      ctx.createAccount(username, null, pinNumber, (err, result) => {
-        dispatch(closeLoading())
-        if (err) {
-          var mess
-          try {
-            mess = JSON.parse(err.message).message
-          } catch (e) {
-            mess = err
-          }
-          return dispatch(openErrorModal(t('activity_signup_failed')))
-        }
-        Actions.review()
-      })
-    })
+    return dispatch(signupUser(username, null, pinNumber))
   }
 }
