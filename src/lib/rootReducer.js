@@ -4,6 +4,7 @@ import { username } from '../modules/Username/Username.reducer'
 import { pinNumber } from '../modules/PinNumber/PinNumber.reducer'
 import { nextButtonVisible } from '../modules/NextButton/NextButton.reducer'
 import { skipButtonVisible } from '../modules/SkipButton/SkipButton.reducer'
+import { disclaimerAccepted } from '../modules/Disclaimer/Disclaimer.reducer'
 import * as PasswordStates from '../modules/Password/Password.reducer'
 import { reviewDetails } from '../modules/ReviewDetails/ReviewDetails.reducer'
 import * as PasswordValidation from '../modules/Password/PasswordValidation/PasswordValidation.reducer'
@@ -63,6 +64,7 @@ const store = combineReducers({
     selectedUserToLogin: CachedUsers.selectedUserToLogin,
     userToDeleteFromUserCache: CachedUsers.userToDeleteFromUserCache
   }),
+  disclaimerAccepted,
   routes
 })
 

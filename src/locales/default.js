@@ -12,6 +12,7 @@ const strings = {
   activity_signup_contact_text_3: 'All tagged information is kept 100% private and encrypted by your password.',
   activity_signup_contact_text_4: 'No one, including Airbitz, has any access to this information.',
   loading: 'Loading…',
+  string_agree: 'Agree',
   synchronizing: 'Synchronizing…',
    
   //  Generic strings

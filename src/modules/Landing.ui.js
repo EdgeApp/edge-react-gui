@@ -4,6 +4,7 @@ import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
+import Disclaimer from './Disclaimer/Disclaimer.ui'
 import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
@@ -69,7 +70,24 @@ class HomeComponent extends Component {
 
   }
 
+
+  renderDisclaimerComponent = () => {
+
+      if(this.props.disclaimerAccepted) return null 
+
+      if (global.localStorage) {
+        const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
+        if (!disclaimerAccepted) {
+          return (<Disclaimer />)
+        } else {
+          return null
+        }
+      }
+
+  }
+  
   render () {
+
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
@@ -79,6 +97,7 @@ class HomeComponent extends Component {
         <Loader />
         <WarningModal />
         <ErrorModal />
+        { this.renderDisclaimerComponent() }
       </Image>
     )
   }
@@ -89,6 +108,7 @@ export default connect(state => ({
 
   password: state.login.viewPassword,
   selectedUserToLogin: state.cachedUsers.selectedUserToLogin,
-  pin: state.login.viewPIN
+  pin: state.login.viewPIN,
+  disclaimerAccepted: state.disclaimerAccepted
 
 }))(HomeComponent)

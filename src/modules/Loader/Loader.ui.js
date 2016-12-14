@@ -3,7 +3,7 @@ import { ActivityIndicator, Text } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
 
-import style from './Loader.style'
+import style from '../Style'
 
 class Loader extends Component {
 
@@ -21,7 +21,7 @@ class Loader extends Component {
         isOpen={this.checkLoading()}
         swipeToClose={false}
         position={'center'}
-        style={style.modal}
+        style={style.loadingModal}
         animationDuration={0}
         backdropPressToClose={false}
         onClosed={this.handleClose}

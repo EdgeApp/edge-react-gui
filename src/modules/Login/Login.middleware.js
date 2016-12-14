@@ -60,7 +60,7 @@ export const loginWithPin = (username, pin) => {
             if (error) {
               var mess
               try {
-                mess = JSON.parse(error.message).message
+                mess = error.message
               } catch (e) {
                 mess = error
               }

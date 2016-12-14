@@ -41,7 +41,6 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
             Actions.review()
           }
         })
-
       })
     } else {
       return dispatch(openErrorModal(t('activity_signup_insufficient_password')))
@@ -68,7 +67,6 @@ export const skipPassword = (username, pinNumber) => {
         }
         Actions.review()
       })
-
     })
   }
 }

@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native'
+import appTheme from '../../Themes/appTheme'
 const style = StyleSheet.create({
+
   container: {
     flex: 1,
     flexDirection: 'row',
@@ -39,7 +41,7 @@ const style = StyleSheet.create({
     textAlign: 'left',
     margin: 10,
     color: '#FFFFFF',
-    fontFamily: 'lato'
+    fontFamily: appTheme.fontFamily
   },
 
   backgroundImage: {
@@ -71,7 +73,7 @@ const style = StyleSheet.create({
     marginVertical: 3
   },
   buttonText: {
-    fontFamily: 'lato',
+    fontFamily: appTheme.fontFamily,
     textAlign: 'center',
     color: '#FFF',
     fontSize: 18,
@@ -80,7 +82,20 @@ const style = StyleSheet.create({
   text: {
     fontSize: 15,
     color: '#CCC',
-    fontFamily: 'lato'
+    fontFamily: appTheme.fontFamily
+  },
+  loadingModal: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0)'
+  },
+
+  loadingMessage: {
+    color: '#FFF',
+    fontSize: 22,
+    fontFamily: appTheme.fontFamily,
+    marginBottom: 30,
+    textAlign: 'center'
   }
 
 })
