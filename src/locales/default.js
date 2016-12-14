@@ -1,11 +1,20 @@
 const strings = {
   activity_signup_checking_username: 'Checking Username Availability',
   activity_signup_username_unavailable: 'Username is not available',
-  activity_signup_camera_text: 'You will next see a popup requesting access to your Camera.\n\nThis is necessary to scan QR codes to pay people and merchants.',
+  activity_signup_camera_header: 'Enable Camera Access',
+  activity_signup_camera_text_1: 'You will next see a popup requesting access to your Camera.',
+  activity_signup_camera_text_2: 'This is necessary to scan QR codes to pay people and merchants.',
+  activity_signup_camera_permission_1: '"Airbitz" would like to access the camera',
+  activity_signup_camera_permission_2: 'Your camera is used to scan QR codes',
+  activity_signup_contact_header: 'Enable Contact Access',
+  activity_signup_contact_text_1: 'You will next see a popup requesting access to your Contacts.',
+  activity_signup_contact_text_2: 'Airbitz uses contacts to help tag information regarding your transactions.',
+  activity_signup_contact_text_3: 'All tagged information is kept 100% private and encrypted by your password.',
+  activity_signup_contact_text_4: 'No one, including Airbitz, has any access to this information.',
   loading: 'Loading…',
   synchronizing: 'Synchronizing…',
-
-    //  Generic strings
+   
+  //  Generic strings
   string_ok: 'OK',
   string_yes: 'Yes',
   string_bundle: 'Bundle',

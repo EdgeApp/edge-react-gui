@@ -5,30 +5,29 @@ import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-nat
 import Container from '../SignUp.ui'
 
 import t from '../../lib/LocaleStrings'
-import { requestCameraPermission } from '../../lib/permissions'
+import { requestContactPermission } from '../../lib/permissions'
 
-export default class Camera extends Component {
+export default class Contact extends Component {
 
-  handleSubmit = () => {
-    requestCameraPermission((error, granted) => {
-
-      console.log(error)
-
-      if(!error){
-        console.log('foo')
-        Actions.contactNotification()
-      } 
-
-    })
-  }
+  // handleSubmit = () => {
+  //   requestContactPermission((error, granted) => {
+  //
+  //     if(!error){
+  //       Actions.contactNotification()
+  //     } 
+  //
+  //   })
+  // }
 
   render () {
     return (
       <Container handleSubmit={this.handleSubmit}>
         <View style={style.inputView}>
-          <Text style={style.lead}>{ t('activity_signup_camera_header') }</Text>
-          <Text style={style.paragraph}>{ t('activity_signup_camera_text_1') }</Text>
-          <Text style={style.paragraph}>{ t('activity_signup_camera_text_2') }</Text>
+          <Text style={style.lead}>{ t('activity_signup_contact_header') }</Text>
+          <Text style={style.paragraph}>{ t('activity_signup_contact_text_1') }</Text>
+          <Text style={style.paragraph}>{ t('activity_signup_contact_text_2') }</Text>
+          <Text style={style.paragraph}>{ t('activity_signup_contact_text_3') }</Text>
+          <Text style={style.paragraph}>{ t('activity_signup_contact_text_4') }</Text>
         </View>
       </Container>
     )
