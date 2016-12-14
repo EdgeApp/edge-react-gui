@@ -18,6 +18,7 @@ class UserList extends Component {
   }
 
   handleDeleteUserCache = (user) => {
+    this.props.blurField._textInput.blur()
     this.props.dispatch(seletUserToDeleteFromUserCache(user))
     this.props.dispatch(
       openWarningModal(
