@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import abcctx from '../lib/abcContext'
 
 import CachedUsers from './CachedUsers/CachedUsers.ui'
-import { setCachedUsers } from './CachedUsers/CachedUsers.action'
+import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
@@ -18,15 +18,20 @@ import appTheme from '../../Themes/appTheme'
 import t from '../lib/LocaleStrings'
 import style from './Style'
 class HomeComponent extends Component {
-  componentWillMount = () => {
+
+  componentWillMount () {
     const dispatch = this.props.dispatch
     abcctx(ctx => {
+
       const cachedUsers = ctx.listUsernames()
+      const lastUser = global.localStorage.getItem('lastUser')
+
       dispatch(setCachedUsers(cachedUsers))
+      if(lastUser) {
+        dispatch(selectUserToLogin(lastUser))
+      }          
+
     })
-  }
-  handleOpenLogin = () => {
-    this.props.dispatch(openLogin())
   }
 
   render () {
@@ -59,7 +64,7 @@ class HomeComponent extends Component {
           )
         }
       }
-    }
+    }    
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
@@ -74,6 +79,7 @@ class HomeComponent extends Component {
   }
 
 }
+
 
 export default connect(state => ({
 
