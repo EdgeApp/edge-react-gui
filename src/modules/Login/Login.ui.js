@@ -49,7 +49,7 @@ class Login extends Component {
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
-        return (<CachedUsers />)
+        return (<CachedUsers blurField={this.refs.loginUsername} />)
       } else {
         return null
       }

@@ -110,7 +110,7 @@ LocalStorage.prototype.getItem = function (key) {
   var map = this.map
   try {
     if (map.has(key)) {
-      console.log(key, map.get(key).value)
+      // console.log(key, map.get(key).value)
       return map.get(key).value
     }
   } catch (e) {
