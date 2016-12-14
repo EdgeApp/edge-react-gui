@@ -1,20 +1,19 @@
 import React, { Component } from 'react'
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import abcctx from '../lib/abcContext'
 
-import CachedUsers from './CachedUsers/CachedUsers.ui'
-import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
-
-import { openLogin, blurUsername } from './Login/Login.action'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import { Button } from 'native-base'
 import appTheme from '../../Themes/appTheme'
+
+import abcctx from '../lib/abcContext'
+import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
+import { openLogin } from './Login/Login.action'
 import t from '../lib/LocaleStrings'
 
 class HomeComponent extends Component {
