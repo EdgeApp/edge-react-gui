@@ -37,7 +37,7 @@ class HomeComponent extends Component {
   }
   render () {
     const viewDisclaimer = () => {
-      if(this.props.disclaimerAccepted) return null 
+      if (this.props.disclaimerAccepted) return null
       if (global.localStorage) {
         const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
 
