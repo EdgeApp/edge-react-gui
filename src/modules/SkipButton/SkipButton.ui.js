@@ -7,6 +7,7 @@ import t from '../../lib/LocaleStrings'
 class SkipButton extends Component {
 
   componentWillReceiveProps (nextProps) {
+    console.log(nextProps.foo)
     if (nextProps.scene === 'password') {
       this.props.dispatch(showSkipButton())
     }
@@ -54,6 +55,7 @@ export default connect(state => ({
 
   password: state.password.password,
   visible: state.skipButtonVisible,
-  scene: state.routes.scene.sceneKey
+  scene: state.routes.scene.sceneKey,
+  foo: state.routes
 
 }))(SkipButton)
