@@ -16,6 +16,8 @@ import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.act
 import { openLogin } from './Login/Login.action'
 import t from '../lib/LocaleStrings'
 
+import style from './Style'
+
 class HomeComponent extends Component {
 
   handleOpenLogin = () => {
@@ -37,11 +39,7 @@ class HomeComponent extends Component {
     })
   }
 
-  renderMainComponent = () => {
-
-    if (this.props.pin) return <LoginWithPin />
-
-    if (!this.props.pin) {
+  renderViewLoginPassword = () => {
 
       if (this.props.password) return (<Login />)
 
@@ -61,9 +59,14 @@ class HomeComponent extends Component {
           </View>
         )
       }
-      
-    }
   
+  }
+
+  renderMainComponent = () => {
+
+    if (this.props.pin) return <LoginWithPin />
+    if (!this.props.pin) return this.renderViewLoginPassword()
+
   }
 
   render () {
@@ -81,68 +84,6 @@ class HomeComponent extends Component {
   }
 
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-  spacer: {
-    flex: 0.15
-  },
-  form: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    flex: 0.7
-  },
-  horizontalSpacer: {
-    flex: 0.25
-  },
-  welcome: {
-    fontSize: 30,
-    textAlign: 'left',
-    margin: 10,
-    color: '#FFFFFF'
-  },
-  backgroundImage: {
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: 'cover',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexWrap: 'wrap'
-  },
-  logoContainer: {
-     flex: 0.2,
-     flexDirection: 'column',
-     marginVertical: 15
-  },
-  logoImage: {
-    flex: 1,
-    resizeMode: 'contain'
-  },
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#80C342',
-    height: 45,
-    marginVertical: 3
-  },
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFF',
-    fontSize: 18,
-    flex: 1
-  },
-
-
-})
 
 export default connect(state => ({
 

@@ -7,7 +7,6 @@ import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(() => {}, 0)
 export const checkUsername = username => {
   return dispatch => {
     asyncAuto({
@@ -35,7 +34,6 @@ export const checkUsername = username => {
         })
       }
     }, function (err, results) {
-      clearTimeout(timeoutTimer)
       dispatch(closeLoading())
 
       if (err) {

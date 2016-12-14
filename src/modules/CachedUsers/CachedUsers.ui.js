@@ -73,8 +73,8 @@ const style = StyleSheet.create({
   container: {
     position: 'absolute',
     maxHeight: 150,
-    left:0,
-    right:0,
+    left: 0,
+    right: 0,
     top: 40,
     flex: 1,
     alignSelf: 'flex-end',

@@ -10,8 +10,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from 'react-native
 import { InputGroup, Input } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
-
-
+import style from '../Style'
 class Login extends Component {
 
   submit = () => {
@@ -49,8 +48,8 @@ class Login extends Component {
     this.props.dispatch(closeUserList())
   }
   toggleCachedUsers = () => {
-    if(this.props.showCachedUsers) {
-      this.hideCachedUsers()      
+    if (this.props.showCachedUsers) {
+      this.hideCachedUsers()
     } else {
       this.showCachedUsers()
     }
@@ -60,15 +59,13 @@ class Login extends Component {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
   }
- 
+
   componentWillUnmount () {
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
   render () {
-
     const cUsers = () => {
-
       if (this.props.showCachedUsers) {
         return (<CachedUsers />)
       } else {
@@ -78,16 +75,16 @@ class Login extends Component {
 
     return (
       <View style={style.container}>
-        <View style={style.form}>
+        <View style={[style.form, {marginTop: 10}]}>
           <TouchableOpacity onPress={this.toggleCachedUsers}>
             <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
           </TouchableOpacity>
 
-          <View style={{ width: 100 }}>
-            <InputGroup borderType='regular' style={style.inputGroup}>
+          <View style={{ width: 100,marginVertical: 15 }}>
+            <InputGroup borderType='regular' style={[style.inputGroup, {alignSelf: 'center'}]}>
               <Input
                 placeholder={t('fragment_landing_enter_pin')}
-                style={style.input}
+                style={[style.input, {textAlign: 'center'}]}
                 onChangeText={this.changePin}
                 value={this.props.pin}
                 keyboardType='numeric'
@@ -104,45 +101,12 @@ class Login extends Component {
           <TouchableOpacity onPress={this.viewPasswordInput}>
             <Text style={style.text}>{ t('fragment_landing_switch_user') }</Text>
           </TouchableOpacity>
-       </View>
+        </View>
         {cUsers()}
       </View>
     )
   }
 }
-
-const style = StyleSheet.create({
-
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-  form: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 0.7,
-    marginTop: 10
-  },
-
-  inputGroup: {
-    marginVertical: 10,
-    backgroundColor: 'rgba(0,0,0,0.5)'
-  },
-
-  input: {
-    textAlign: 'center',
-    color: '#FFF'
-  },
-
-  text: {
-    fontSize: 15,
-    color: '#CCC'
-  }
-
-})
 
 export default connect(state => ({
 

@@ -7,7 +7,6 @@ import abcctx from '../../lib/abcContext'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
-const timeoutTimer = setTimeout(() => {}, 0)
 
 export const checkPassword = (password, passwordRepeat, validation, username, pinNumber) => {
   return dispatch => {
@@ -22,10 +21,8 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
     if (validation.upperCaseChar && validation.lowerCaseChar && validation.number && validation.characterLength && password === passwordRepeat) {
       dispatch(openLoading(t('fragment_signup_creating_account')))
 
-      abcctx( ctx => {
+      abcctx(ctx => {
         ctx.createAccount(username, password, pinNumber, (err, result) => {
-
-          clearTimeout(timeoutTimer)
           dispatch(closeLoading())
 
           if (err) {
@@ -39,19 +36,13 @@ export const checkPassword = (password, passwordRepeat, validation, username, pi
             return dispatch(openErrorModal(t('activity_signup_failed')))
           }
 
-          if(!err){
+          if (!err) {
             console.log('no error')
             Actions.review()
           }
-
         })
-        timeoutTimer = setTimeout(() => {
-          dispatch(closeLoading())
-          dispatch(openErrorModal(t('string_no_connection_response')))
-        }, 10000)
+
       })
-
-
     } else {
       return dispatch(openErrorModal(t('activity_signup_insufficient_password')))
     }
@@ -64,7 +55,6 @@ export const skipPassword = (username, pinNumber) => {
     dispatch(passwordNotificationHide())
     abcctx((ctx) => {
       ctx.createAccount(username, null, pinNumber, (err, result) => {
-        clearTimeout(timeoutTimer)
         dispatch(closeLoading())
         if (err) {
           console.log('account creation error', err)
@@ -78,11 +68,7 @@ export const skipPassword = (username, pinNumber) => {
         }
         Actions.review()
       })
-      timeoutTimer = setTimeout(() => {
-        dispatch(closeLoading())
-        dispatch(openErrorModal(t('string_no_connection_response')))
-      }, 10000)      
-    })
 
+    })
   }
 }

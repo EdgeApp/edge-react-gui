@@ -16,7 +16,7 @@ class WarningModal extends Component {
        )
     )
   }
-  
+
   checkHandleSubmit = () => {
     switch (this.props.module) {
       case 'deleteCachedUser' :
@@ -41,7 +41,7 @@ class WarningModal extends Component {
         onClosed={this.handleClose}
       >
         <Text style={[ style.textWarning, style.textLead ]}>{ this.props.title }</Text>
-        <Text style={style.textWarning}>{  this.props.message }</Text>
+        <Text style={style.textWarning}>{ this.props.message }</Text>
         <View style={{ flexDirection: 'row' }}>
           <TouchableOpacity onPress={this.handleClose} >
             <Text style={style.hideModal}>{t('string_cancel')}</Text>
@@ -87,12 +87,9 @@ const style = StyleSheet.create({
 })
 
 export default connect(state => ({
-
-  visible : state.warningModal.visible,
-  module  : state.warningModal.module,
-  title   : state.warningModal.title,
-  message : state.warningModal.message,
-
-  userToDeleteFromUserCache : state.cachedUsers.userToDeleteFromUserCache
-
+  visible: state.warningModal.visible,
+  module: state.warningModal.module,
+  title: state.warningModal.title,
+  message: state.warningModal.message,
+  userToDeleteFromUserCache: state.cachedUsers.userToDeleteFromUserCache
 }))(WarningModal)

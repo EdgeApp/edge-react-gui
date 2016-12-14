@@ -9,7 +9,7 @@ import { InputGroup, Input, Button } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
-
+import style from '../Style'
 class Login extends Component {
 
   submit = () => {
@@ -41,7 +41,7 @@ class Login extends Component {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide.bind(this))
   }
- 
+
   componentWillUnmount () {
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
@@ -97,70 +97,11 @@ class Login extends Component {
         </View>
         <View style={style.spacer} />
         {cUsers()}
-        
+
       </View>
     )
   }
 }
-
-const style = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'center'
-  },
-  spacer: {
-    flex: 0.15
-  },
-  form: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    flex: 0.7
-  },
-
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFF',
-    fontSize: 18,
-    flex: 1
-  },
-
-  button: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#80C342',
-    height: 45,
-    marginVertical: 3
-  },
-
-  buttonText: {
-    textAlign: 'center',
-    color: '#FFF',
-    fontSize: 18,
-    flex: 1
-  },
-
-  inputGroup: {
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    marginVertical: 3,
-    padding: 0,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    borderRadius: 4,
-    borderColor: '#888'
-  },
-
-  input: {
-    color: '#FFF',
-    fontSize: 14,
-    marginVertical: -5
-  }
-
-})
 
 export default connect(state => ({
 
