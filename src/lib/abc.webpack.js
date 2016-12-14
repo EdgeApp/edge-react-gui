@@ -308,7 +308,7 @@ exports["abc"] =
 	/**
 	 * Creates a blank repo on the sync server.
 	 */
-	function repoCreate (ctx, login, keysJson, callback) {
+	function repoCreate (ctx, login, keysJson) {
 	  keysJson.dataKey = keysJson.dataKey || random(32).toString('hex');
 	  keysJson.syncKey = keysJson.syncKey || random(20).toString('hex');
 
@@ -317,10 +317,7 @@ exports["abc"] =
 	    'lp1': login.passwordAuth.toString('base64'),
 	    'repo_wallet_key': keysJson.syncKey
 	  };
-	  ctx.authRequest('POST', '/v1/wallet/create', request, function (err, reply) {
-	    if (err) { return callback(err) }
-	    callback(null, keysJson);
-	  });
+	  return ctx.authRequest('POST', '/v1/wallet/create', request).then(function (reply) { return keysJson; })
 	}
 
 	/**
@@ -328,16 +325,13 @@ exports["abc"] =
 	 * This should be called after the repo is securely attached
 	 * to the login or account.
 	 */
-	function repoActivate (ctx, login, keysJson, callback) {
+	function repoActivate (ctx, login, keysJson) {
 	  var request = {
 	    'l1': login.userId,
 	    'lp1': login.passwordAuth.toString('base64'),
 	    'repo_wallet_key': keysJson.syncKey
 	  };
-	  ctx.authRequest('POST', '/v1/wallet/activate', request, function (err, reply) {
-	    if (err) { return callback(err) }
-	    callback(null);
-	  });
+	  return ctx.authRequest('POST', '/v1/wallet/activate', request).then(function (reply) { return null; })
 	}
 
 	/**
@@ -574,65 +568,54 @@ exports["abc"] =
 	/**
 	 * Creates and attaches new account repo.
 	 */
-	Login.prototype.accountCreate = function (ctx, type, callback) {
-	  var login = this;
+	Login.prototype.accountCreate = function (ctx, type) {
+	  var this$1 = this;
 
-	  repoCreate(ctx, login, {}, function (err, keysJson) {
-	    if (err) { return callback(err) }
-	    login.accountAttach(ctx, type, keysJson, function (err) {
-	      if (err) { return callback(err) }
-	      repoActivate(ctx, login, keysJson, function (err) {
-	        if (err) { return callback(err) }
-	        callback(null);
-	      });
-	    });
-	  });
+	  return repoCreate(ctx, this, {}).then(function (keysJson) {
+	    return this$1.accountAttach(ctx, type, keysJson).then(function () {
+	      return repoActivate(ctx, this$1, keysJson)
+	    })
+	  })
 	};
 
 	/**
 	 * Attaches an account repo to the login.
 	 */
-	Login.prototype.accountAttach = function (ctx, type, info, callback) {
-	  var login = this;
+	Login.prototype.accountAttach = function (ctx, type, info) {
+	  var this$1 = this;
 
 	  var infoBlob = new Buffer(JSON.stringify(info), 'utf-8');
 	  var data = {
 	    'type': type,
-	    'info': encrypt(infoBlob, login.dataKey)
+	    'info': encrypt(infoBlob, this.dataKey)
 	  };
 
-	  var request = login.authJson();
+	  var request = this.authJson();
 	  request['data'] = data;
-	  ctx.authRequest('POST', '/v2/login/repos', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
-	    login.repos.push(data);
-	    login.userStorage.setJson('repos', login.repos);
-
-	    callback(null);
-	  });
+	  return ctx.authRequest('POST', '/v2/login/repos', request).then(function (reply) {
+	    this$1.repos.push(data);
+	    this$1.userStorage.setJson('repos', this$1.repos);
+	    return null
+	  })
 	};
 
-	function loginOffline (ctx, username, userId, password, callback) {
+	function loginOffline (ctx, username, userId, password) {
 	  // Extract stuff from storage:
 	  var userStorage = new UserStorage(ctx.localStorage, username);
 	  var passwordKeySnrp = userStorage.getJson('passwordKeySnrp');
 	  var passwordBox = userStorage.getJson('passwordBox');
 	  if (!passwordKeySnrp || !passwordBox) {
-	    return callback(Error('Missing data for offline login'))
+	    throw new Error('Missing data for offline login')
 	  }
 
-	  try {
-	    // Decrypt the dataKey:
-	    var passwordKey = scrypt(username + password, passwordKeySnrp);
-	    var dataKey = decrypt(passwordBox, passwordKey);
-	  } catch (e) {
-	    return callback(e)
-	  }
-	  return callback(null, Login.offline(ctx.localStorage, username, dataKey))
+	  // Decrypt the dataKey:
+	  var passwordKey = scrypt(username + password, passwordKeySnrp);
+	  var dataKey = decrypt(passwordBox, passwordKey);
+
+	  return Login.offline(ctx.localStorage, username, dataKey)
 	}
 
-	function loginOnline (ctx, username, userId, password, callback) {
+	function loginOnline (ctx, username, userId, password) {
 	  var passwordAuth = scrypt(username + password, passwordAuthSnrp);
 
 	  // Encode the username:
@@ -641,44 +624,40 @@ exports["abc"] =
 	    'passwordAuth': passwordAuth.toString('base64')
 	    // "otp": null
 	  };
-	  ctx.authRequest('POST', '/v2/login', request, function (err, reply) {
-	    if (err) { 
-	    	return callback(err) 
-	   	}
-	    try {
-	      // Password login:
-	      var passwordKeySnrp = reply['passwordKeySnrp'];
-	      var passwordBox = reply['passwordBox'];
-	      if (!passwordKeySnrp || !passwordBox) {
-	        return callback(Error('Missing data for password login'))
-	      }
-
-	      // Decrypt the dataKey:
-	      var passwordKey = scrypt(username + password, passwordKeySnrp);
-	      var dataKey = decrypt(passwordBox, passwordKey);
-	      // Cache everything for future logins:
-	      insert(ctx.localStorage, username, userId);
-	    } catch (e) {
-	      return callback(e)
+	  return ctx.authRequest('POST', '/v2/login', request).then(function (reply) {
+	    // Password login:
+	    var passwordKeySnrp = reply['passwordKeySnrp'];
+	    var passwordBox = reply['passwordBox'];
+	    if (!passwordKeySnrp || !passwordBox) {
+	      throw new Error('Missing data for password login')
 	    }
-	    return callback(null, Login.online(ctx.localStorage, username, dataKey, reply))
-	  });
+
+	    // Decrypt the dataKey:
+	    var passwordKey = scrypt(username + password, passwordKeySnrp);
+	    var dataKey = decrypt(passwordBox, passwordKey);
+
+	    // Cache everything for future logins:
+	    insert(ctx.localStorage, username, userId);
+
+	    return Login.online(ctx.localStorage, username, dataKey, reply)
+	  })
 	}
 
 	/**
 	 * Logs a user in using a password.
 	 * @param username string
 	 * @param password string
-	 * @param callback function (err, keys)
+	 * @return `Login` object promise
 	 */
-	function login (ctx, username, password, callback) {
+	function login (ctx, username, password) {
 	  username = normalize(username);
 	  var userId = getUserId(ctx.localStorage, username);
 
-	  loginOffline(ctx, username, userId, password, function (err, account) {
-	    if (!err) { return callback(null, account) }
-	    return loginOnline(ctx, username, userId, password, callback)
-	  });
+	  try {
+	    return Promise.resolve(loginOffline(ctx, username, userId, password))
+	  } catch (e) {
+	    return loginOnline(ctx, username, userId, password)
+	  }
 	}
 
 	/**
@@ -705,7 +684,7 @@ exports["abc"] =
 	/**
 	 * Sets up a password for the login.
 	 */
-	function setup (ctx, login, password, callback) {
+	function setup (ctx, login, password) {
 	  var up = login.username + password;
 
 	  // Create new keys:
@@ -725,16 +704,13 @@ exports["abc"] =
 	    'passwordBox': passwordBox,
 	    'passwordAuthBox': passwordAuthBox
 	  };
-	  ctx.authRequest('PUT', '/v2/login/password', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
+	  return ctx.authRequest('PUT', '/v2/login/password', request).then(function (reply) {
 	    login.userStorage.setJson('passwordKeySnrp', passwordKeySnrp);
 	    login.userStorage.setJson('passwordBox', passwordBox);
 	    login.userStorage.setJson('passwordAuthBox', passwordAuthBox);
 	    login.passwordAuth = passwordAuth;
-
-	    return callback(null)
-	  });
+	    return null
+	  })
 	}
 
 	function pin2Id (pin2Key, username) {
@@ -761,9 +737,9 @@ exports["abc"] =
 	 * @param username string
 	 * @param pin2Key the recovery key, as a base58 string.
 	 * @param pin the PIN, as a string.
-	 * @param callback function (err, login)
+	 * @param `Login` object promise
 	 */
-	function login$1 (ctx, pin2Key, username, pin, callback) {
+	function login$1 (ctx, pin2Key, username, pin) {
 	  pin2Key = base58.decode(pin2Key);
 	  username = normalize(username);
 
@@ -772,33 +748,28 @@ exports["abc"] =
 	    'pin2Auth': pin2Auth(pin2Key, pin).toString('base64')
 	    // "otp": null
 	  };
-	  ctx.authRequest('POST', '/v2/login', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
-	    try {
-	      // PIN login:
-	      var pin2Box = reply['pin2Box'];
-	      if (!pin2Box) {
-	        return callback(Error('Missing data for PIN v2 login'))
-	      }
-
-	      // Decrypt the dataKey:
-	      var dataKey = decrypt(pin2Box, pin2Key);
-
-	      // Cache everything for future logins:
-	      var userId = getUserId(ctx.localStorage, username);
-	      insert(ctx.localStorage, username, userId);
-	    } catch (e) {
-	      return callback(e)
+	  return ctx.authRequest('POST', '/v2/login', request).then(function (reply) {
+	    // PIN login:
+	    var pin2Box = reply['pin2Box'];
+	    if (!pin2Box) {
+	      throw new Error('Missing data for PIN v2 login')
 	    }
-	    return callback(null, Login.online(ctx.localStorage, username, dataKey, reply))
-	  });
+
+	    // Decrypt the dataKey:
+	    var dataKey = decrypt(pin2Box, pin2Key);
+
+	    // Cache everything for future logins:
+	    var userId = getUserId(ctx.localStorage, username);
+	    insert(ctx.localStorage, username, userId);
+
+	    return Login.online(ctx.localStorage, username, dataKey, reply)
+	  })
 	}
 
 	/**
 	 * Sets up PIN login v2.
 	 */
-	function setup$1 (ctx, login, pin, callback) {
+	function setup$1 (ctx, login, pin) {
 	  var pin2Key = login.userStorage.getItem('pin2Key');
 	  if (pin2Key) {
 	    pin2Key = base58.decode(pin2Key);
@@ -816,13 +787,11 @@ exports["abc"] =
 	    'pin2Box': pin2Box,
 	    'pin2KeyBox': pin2KeyBox
 	  };
-	  ctx.authRequest('PUT', '/v2/login/pin2', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
+	  return ctx.authRequest('PUT', '/v2/login/pin2', request).then(function (reply) {
 	    pin2Key = base58.encode(pin2Key);
 	    login.userStorage.setItem('pin2Key', pin2Key);
-	    return callback(null, pin2Key)
-	  });
+	    return pin2Key
+	  })
 	}
 
 	function recovery2Id (recovery2Key, username) {
@@ -850,9 +819,9 @@ exports["abc"] =
 	 * @param username string
 	 * @param recovery2Key an ArrayBuffer recovery key
 	 * @param array of answer strings
-	 * @param callback function (err, login)
+	 * @param `Login` object promise
 	 */
-	function login$2 (ctx, recovery2Key, username, answers, callback) {
+	function login$2 (ctx, recovery2Key, username, answers) {
 	  recovery2Key = base58.decode(recovery2Key);
 	  username = normalize(username);
 
@@ -861,36 +830,31 @@ exports["abc"] =
 	    'recovery2Auth': recovery2Auth(recovery2Key, answers)
 	    // "otp": null
 	  };
-	  ctx.authRequest('POST', '/v2/login', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
-	    try {
-	      // Recovery login:
-	      var recovery2Box = reply['recovery2Box'];
-	      if (!recovery2Box) {
-	        return callback(Error('Missing data for recovery v2 login'))
-	      }
-
-	      // Decrypt the dataKey:
-	      var dataKey = decrypt(recovery2Box, recovery2Key);
-
-	      // Cache everything for future logins:
-	      var userId = getUserId(ctx.localStorage, username);
-	      insert(ctx.localStorage, username, userId);
-	    } catch (e) {
-	      return callback(e)
+	  return ctx.authRequest('POST', '/v2/login', request).then(function (reply) {
+	    // Recovery login:
+	    var recovery2Box = reply['recovery2Box'];
+	    if (!recovery2Box) {
+	      throw new Error('Missing data for recovery v2 login')
 	    }
-	    return callback(null, Login.online(ctx.localStorage, username, dataKey, reply))
-	  });
+
+	    // Decrypt the dataKey:
+	    var dataKey = decrypt(recovery2Box, recovery2Key);
+
+	    // Cache everything for future logins:
+	    var userId = getUserId(ctx.localStorage, username);
+	    insert(ctx.localStorage, username, userId);
+
+	    return Login.online(ctx.localStorage, username, dataKey, reply)
+	  })
 	}
 
 	/**
 	 * Fetches the questions for a login
 	 * @param username string
 	 * @param recovery2Key an ArrayBuffer recovery key
-	 * @param callback function (err, question array)
+	 * @param Question array promise
 	 */
-	function questions (ctx, recovery2Key, username, callback) {
+	function questions (ctx, recovery2Key, username) {
 	  recovery2Key = base58.decode(recovery2Key);
 	  username = normalize(username);
 
@@ -898,30 +862,23 @@ exports["abc"] =
 	    'recovery2Id': recovery2Id(recovery2Key, username).toString('base64')
 	    // "otp": null
 	  };
-	  ctx.authRequest('POST', '/v2/login', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
-	    try {
-	      // Recovery login:
-	      var question2Box = reply['question2Box'];
-	      if (!question2Box) {
-	        return callback(Error('Login has no recovery questions'))
-	      }
-
-	      // Decrypt the dataKey:
-	      var questions = decrypt(question2Box, recovery2Key);
-	      questions = JSON.parse(questions.toString('utf8'));
-	    } catch (e) {
-	      return callback(e)
+	  return ctx.authRequest('POST', '/v2/login', request).then(function (reply) {
+	    // Recovery login:
+	    var question2Box = reply['question2Box'];
+	    if (!question2Box) {
+	      throw new Error('Login has no recovery questions')
 	    }
-	    return callback(null, questions)
-	  });
+
+	    // Decrypt the questions:
+	    var questions = decrypt(question2Box, recovery2Key);
+	    return JSON.parse(questions.toString('utf8'))
+	  })
 	}
 
 	/**
 	 * Sets up recovery questions for the login.
 	 */
-	function setup$2 (ctx, login, questions, answers, callback) {
+	function setup$2 (ctx, login, questions, answers) {
 	  if (!(Object.prototype.toString.call(questions) === '[object Array]')) {
 	    throw new TypeError('Questions must be an array of strings')
 	  }
@@ -948,24 +905,16 @@ exports["abc"] =
 	    'recovery2KeyBox': recovery2KeyBox,
 	    'question2Box': question2Box
 	  };
-	  ctx.authRequest('PUT', '/v2/login/recovery2', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
+	  return ctx.authRequest('PUT', '/v2/login/recovery2', request).then(function (reply) {
 	    recovery2Key = base58.encode(recovery2Key);
 	    login.userStorage.setItem('recovery2Key', recovery2Key);
-	    return callback(null, recovery2Key)
-	  });
+	    return recovery2Key
+	  })
 	}
 
-	function listRecoveryQuestionChoices (ctx, callback) {
-	  ctx.authRequest('POST', '/v1/questions', '', function (err, reply) {
-	    if (err) {
-	      return callback(21)
-	    } else {
-	      callback(null, reply);
-	    }
-	  });
-	}
+	var listRecoveryQuestionChoices = function listRecoveryQuestionChoices (ctx) {
+	  return ctx.authRequest('POST', '/v1/questions', '')
+	};
 
 	var syncServers = [
 	  'https://git-js.airbitz.co',
@@ -975,34 +924,30 @@ exports["abc"] =
 	/**
 	 * Fetches some resource from a sync server.
 	 */
-	function syncRequest (authFetch, method, uri, body, callback) {
-	  syncRequestInner(authFetch, method, uri, body, callback, 0);
+	function syncRequest (fetch, method, uri, body, callback) {
+	  return syncRequestInner(fetch, method, uri, body, 0)
 	}
 
-	function syncRequestInner (authFetch, method, uri, body, callback, serverIndex) {
+	function syncRequestInner (fetch, method, uri, body, serverIndex) {
 	  console.log('syncRequestInner: Connecting to ' + syncServers[serverIndex]);
-	  authFetch(method, syncServers[serverIndex] + uri, body, function (err, status, result) {
-	    if (err) {
-	      console.log('syncRequestInner: Failed connecting to ' + syncServers[serverIndex]);
-	      if (serverIndex < syncServers.length - 1) {
-	        return syncRequestInner(authFetch, method, uri, body, callback, (serverIndex + 1))
-	      } else {
-	        return callback(err)
-	      }
+	  var headers = {
+	    method: method,
+	    headers: {
+	      'Accept': 'application/json',
+	      'Content-Type': 'application/json'
 	    }
-	    try {
-	      var reply = JSON.parse(result);
-	    } catch (e) {
-	      console.log('syncRequestInner: Failed parsing response from ' + syncServers[serverIndex]);
-	      if (serverIndex < syncServers.length - 1) {
-	        return syncRequestInner(authFetch, method, uri, body, callback, (serverIndex + 1))
-	      } else {
-	        return callback(Error('Non-JSON reply HTTP status ' + status))
-	      }
-	    }
+	  };
+	  if (method !== 'GET') {
+	    headers.body = JSON.stringify(body);
+	  }
 
-	    return callback(null, reply)
-	  });
+	  return fetch(syncServers[serverIndex] + uri, headers).then(function (response) {
+	    return response.json().catch(function (jsonError) {
+	      throw new Error('Non-JSON reply, HTTP status ' + response.status)
+	    })
+	  }, function (networkError) {
+	    throw new Error('NetworkError: Could not connect to sync server')
+	  })
 	}
 
 	/**
@@ -1052,7 +997,7 @@ exports["abc"] =
 	 * The data inside the repo is encrypted with `dataKey`.
 	 */
 	function Repo (ctx, dataKey, syncKey) {
-	  this.authFetch = ctx.authFetch;
+	  this.fetch = ctx.fetch;
 	  this.dataKey = dataKey;
 	  this.syncKey = syncKey;
 
@@ -1170,7 +1115,7 @@ exports["abc"] =
 	/**
 	 * Synchronizes the local store with the remote server.
 	 */
-	Repo.prototype.sync = function (callback) {
+	Repo.prototype.sync = function () {
 	  var this$1 = this;
 
 	  var self = this;
@@ -1197,45 +1142,59 @@ exports["abc"] =
 	  }
 
 	  // Make the request:
-	  syncRequest(this.authFetch, request.changes ? 'POST' : 'GET', uri, request, function (err, reply) {
-	    if (err) { return callback(err) }
-
+	  return syncRequest(this.fetch, request.changes ? 'POST' : 'GET', uri, request).then(function (reply) {
 	    var changed = false;
-	    try {
-	      // Delete any changed keys (since the upload is done):
-	      for (var i = 0, list = changeKeys; i < list.length; i += 1) {
-	        var key = list[i];
 
-	        self.changeStore.removeItem(key);
-	      }
+	    // Delete any changed keys (since the upload is done):
+	    for (var i = 0, list = changeKeys; i < list.length; i += 1) {
+	      var key = list[i];
 
-	      // Process the change list:
-	      var changes = reply['changes'];
-	      if (changes) {
-	        for (var change in changes) {
-	          if (changes.hasOwnProperty(change)) {
-	            changed = true;
-	            break
-	          }
-	        }
-	        mergeChanges(self.dataStore, changes);
-	      }
-
-	      // Save the current hash:
-	      var hash = reply['hash'];
-	      if (hash) {
-	        self.store.setItem('lastHash', hash);
-	      }
-	    } catch (e) {
-	      return callback(e)
+	      self.changeStore.removeItem(key);
 	    }
-	    callback(null, changed);
-	  });
+
+	    // Process the change list:
+	    var changes = reply['changes'];
+	    if (changes) {
+	      for (var change in changes) {
+	        if (changes.hasOwnProperty(change)) {
+	          changed = true;
+	          break
+	        }
+	      }
+	      mergeChanges(self.dataStore, changes);
+	    }
+
+	    // Save the current hash:
+	    var hash = reply['hash'];
+	    if (hash) {
+	      self.store.setItem('lastHash', hash);
+	    }
+
+	    return changed
+	  })
 	};
 
 	function Wallet (type, keysJson) {
 	  this.type = type;
 	  this.keys = keysJson;
+	}
+
+	/**
+	 * Converts a promise-returning function into a Node-style function,
+	 * but only an extra callback argument is actually passed in.
+	 */
+	function nodeify (f) {
+	  return function () {
+	    var promise = f.apply(this, arguments);
+
+	    // Figure out what to do with the promise:
+	    var callback = arguments[arguments.length - 1];
+	    if (f.length < arguments.length && typeof callback === 'function') {
+	      promise.then(function (reply) { return callback(null, reply); }).catch(function (e) { return callback(e); });
+	    } else {
+	      return promise
+	    }
+	  }
 	}
 
 	function walletType (walletJson) {
@@ -1377,19 +1336,19 @@ exports["abc"] =
 	};
 	Account.prototype.checkPassword = Account.prototype.passwordOk;
 
-	Account.prototype.passwordSetup = function (password, callback) {
-	  return setup(this.ctx, this.login, password, callback)
-	};
+	Account.prototype.passwordSetup = nodeify(function (password) {
+	  return setup(this.ctx, this.login, password)
+	});
 	Account.prototype.changePassword = Account.prototype.passwordSetup;
 
-	Account.prototype.pinSetup = function (pin, callback) {
-	  return setup$1(this.ctx, this.login, pin, callback)
-	};
+	Account.prototype.pinSetup = nodeify(function (pin) {
+	  return setup$1(this.ctx, this.login, pin)
+	});
 	Account.prototype.changePIN = Account.prototype.pinSetup;
 
-	Account.prototype.recovery2Set = function (questions$$1, answers, callback) {
-	  return setup$2(this.ctx, this.login, questions$$1, answers, callback)
-	};
+	Account.prototype.recovery2Set = nodeify(function (questions$$1, answers) {
+	  return setup$2(this.ctx, this.login, questions$$1, answers)
+	});
 
 	Account.prototype.setupRecovery2Questions = Account.prototype.recovery2Set;
 
@@ -1397,16 +1356,16 @@ exports["abc"] =
 	  return this.loggedIn
 	};
 
-	Account.prototype.sync = function (callback) {
-	  var account = this;
-	  this.repo.sync(function (err, changed) {
-	    if (err) { return callback(err) }
+	Account.prototype.sync = nodeify(function () {
+	  var this$1 = this;
+
+	  return this.repo.sync().then(function (changed) {
 	    if (changed) {
-	      account.walletList.load();
+	      this$1.walletList.load();
 	    }
-	    callback(null, changed);
-	  });
-	};
+	    return changed
+	  })
+	});
 
 	Account.prototype.listWalletIds = function () {
 	  return this.walletList.listIds()
@@ -1442,41 +1401,34 @@ exports["abc"] =
 	 * that should be stored along with the wallet. For example,
 	 * Airbitz Bitcoin wallets would place their `bitcoinKey` here.
 	 */
-	Account.prototype.createWallet = function (type, keysJson, callback) {
-	  var account = this;
-	  repoCreate(account.ctx, account.login, keysJson, function (err, keysJson) {
-	    if (err) { return callback(err) }
-	    var id = account.walletList.addWallet(type, keysJson);
-	    account.sync(function (err, dirty) {
-	      if (err) { return callback(err) }
-	      repoActivate(account.ctx, account.login, keysJson, function (err) {
-	        if (err) { return callback(err) }
-	        callback(null, id);
-	      });
-	    });
-	  });
-	};
+	Account.prototype.createWallet = nodeify(function (type, keysJson) {
+	  var this$1 = this;
+
+	  return repoCreate(this.ctx, this.login, keysJson).then(function (keysJson) {
+	    var id = this$1.walletList.addWallet(type, keysJson);
+	    return this$1.sync().then(function (dirty) {
+	      return repoActivate(this$1.ctx, this$1.login, keysJson).then(function () { return id; })
+	    })
+	  })
+	});
 
 	/**
 	 * Determines whether or not a username is available.
 	 */
-	function usernameAvailable (ctx, username, callback) {
+	function usernameAvailable (ctx, username) {
 	  username = normalize(username);
 
 	  var userId = getUserId(ctx.localStorage, username);
 	  var request = {
 	    'l1': userId
 	  };
-	  ctx.authRequest('POST', '/v1/account/available', request, function (err, reply) {
-	    if (err) { return callback(err) }
-	    return callback(null)
-	  });
+	  return ctx.authRequest('POST', '/v1/account/available', request)
 	}
 
 	/**
 	 * Creates a new login on the auth server.
 	 */
-	function create (ctx, username, password, opts, callback) {
+	function create (ctx, username, password, opts) {
 	  username = normalize(username);
 	  var userId = getUserId(ctx.localStorage, username);
 
@@ -1511,9 +1463,7 @@ exports["abc"] =
 	    'repo_account_key': syncKey.toString('hex')
 	  };
 
-	  ctx.authRequest('POST', '/v1/account/create', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
+	  return ctx.authRequest('POST', '/v1/account/create', request).then(function (reply) {
 	    // Cache everything for future logins:
 	    insert(ctx.localStorage, username, userId);
 	    var userStorage = new UserStorage(ctx.localStorage, username);
@@ -1523,23 +1473,20 @@ exports["abc"] =
 	    userStorage.setJson('syncKeyBox', syncKeyBox);
 
 	    // Now upgrade:
-	    upgrade(ctx, userStorage, userId, passwordAuth, dataKey, function (err) {
-	      if (err) { return callback(err) }
-
+	    return upgrade(ctx, userStorage, userId, passwordAuth, dataKey).then(function () {
 	      // Now activate:
 	      var request = {
 	        'l1': userId,
 	        'lp1': passwordAuth.toString('base64')
 	      };
-	      ctx.authRequest('POST', '/v1/account/activate', request, function (err, reply) {
-	        if (err) { return callback(err) }
-	        return callback(null, Login.offline(ctx.localStorage, username, dataKey))
-	      });
-	    });
-	  });
+	      return ctx.authRequest('POST', '/v1/account/activate', request).then(function (reply) {
+	        return Login.offline(ctx.localStorage, username, dataKey)
+	      })
+	    })
+	  })
 	}
 
-	function upgrade (ctx, userStorage, userId, passwordAuth, dataKey, callback) {
+	function upgrade (ctx, userStorage, userId, passwordAuth, dataKey) {
 	  // Create a BIP39 mnemonic, and use it to derive the rootKey:
 	  var entropy = random(256 / 8);
 	  var mnemonic = bip39.entropyToMnemonic(entropy.toString('hex'));
@@ -1558,11 +1505,10 @@ exports["abc"] =
 	    'mnemonicBox': mnemonicBox,
 	    'syncDataKeyBox': dataKeyBox
 	  };
-	  ctx.authRequest('POST', '/v1/account/upgrade', request, function (err, reply) {
-	    if (err) { return callback(err) }
+	  return ctx.authRequest('POST', '/v1/account/upgrade', request).then(function (reply) {
 	    userStorage.setJson('rootKeyBox', rootKeyBox);
-	    return callback(null)
-	  });
+	    return null
+	  })
 	}
 
 	var EllipticCurve = elliptic.ec;
@@ -1580,7 +1526,7 @@ exports["abc"] =
 	/**
 	 * Creates a new login object, and attaches the account repo info to it.
 	 */
-	function createLogin (ctx, accountReply, callback) {
+	function createLogin (ctx, accountReply) {
 	  var username = accountReply.username + '-' + base58.encode(random(4));
 	  var password = base58.encode(random(24));
 	  var pin = accountReply.pinString;
@@ -1590,25 +1536,16 @@ exports["abc"] =
 	    opts.syncKey = new Buffer(accountReply.info['syncKey'], 'hex');
 	  }
 
-	  create(ctx, username, password, opts, function (err, login$$1) {
-	    if (err) { return callback(err) }
-	    login$$1.accountAttach(ctx, accountReply.type, accountReply.info, function (err) {
-	      if (err) { return callback(err) }
-
+	  return create(ctx, username, password, opts).then(function (login$$1) {
+	    return login$$1.accountAttach(ctx, accountReply.type, accountReply.info).then(function () {
 	      if (typeof pin === 'string' && pin.length === 4) {
 	        if (getKey(ctx, username) == null) {
-	          setup$1(ctx, login$$1, pin, function (err) {
-	            if (err) {
-	              // Do nothing
-	            }
-	            callback(null, login$$1);
-	          });
-	          return
+	          return setup$1(ctx, login$$1, pin).then(function () { return login$$1; }, function () { return login$$1; })
 	        }
 	      }
-	      callback(null, login$$1);
-	    });
-	  });
+	      return login$$1
+	    })
+	  })
 	}
 
 	/**
@@ -1653,21 +1590,19 @@ exports["abc"] =
 	  }
 
 	  setTimeout(function () {
-	    ctx.authRequest('GET', '/v2/lobby/' + edgeLogin.id, '', function (err, reply) {
-	      if (err) { return onLogin(err) }
-
-	      try {
-	        var accountReply = decodeAccountReply(keys, reply);
-	        if (!accountReply) {
-	          return pollServer(ctx, edgeLogin, keys, onLogin, onProcessLogin)
-	        }
-	        if (onProcessLogin !== null) {
-	          onProcessLogin(accountReply.username);
-	        }
-	        createLogin(ctx, accountReply, onLogin);
-	      } catch (e) {
-	        return onLogin(e)
+	    ctx.authRequest('GET', '/v2/lobby/' + edgeLogin.id, '').then(function (reply) {
+	      var accountReply = decodeAccountReply(keys, reply);
+	      if (!accountReply) {
+	        return pollServer(ctx, edgeLogin, keys, onLogin, onProcessLogin)
 	      }
+	      if (onProcessLogin !== null) {
+	        onProcessLogin(accountReply.username);
+	      }
+	      return createLogin(ctx, accountReply).then(
+	        function (login$$1) { return onLogin(null, login$$1); }, function (e) { return onLogin(e); }
+	      )
+	    }).catch(function (e) {
+	      return onLogin(e)
 	    });
 	  }, 1000);
 	}
@@ -1675,7 +1610,7 @@ exports["abc"] =
 	/**
 	 * Creates a new account request lobby on the server.
 	 */
-	function create$1 (ctx, opts, callback) {
+	function create$1 (ctx, opts) {
 	  var keys = secp256k1.genKeyPair();
 
 	  var data = {
@@ -1697,21 +1632,15 @@ exports["abc"] =
 	    'data': data
 	  };
 
-	  ctx.authRequest('POST', '/v2/lobby', request, function (err, reply) {
-	    if (err) { return callback(err) }
-
-	    try {
-	      var edgeLogin = new ABCEdgeLoginRequest(reply.id);
-	      var onProcessLogin = null;
-	      if (opts.hasOwnProperty('onProcessLogin')) {
-	        onProcessLogin = opts.onProcessLogin;
-	      }
-	      pollServer(ctx, edgeLogin, keys, opts.onLogin, onProcessLogin);
-	    } catch (e) {
-	      return callback(e)
+	  return ctx.authRequest('POST', '/v2/lobby', request).then(function (reply) {
+	    var edgeLogin = new ABCEdgeLoginRequest(reply.id);
+	    var onProcessLogin = null;
+	    if (opts.hasOwnProperty('onProcessLogin')) {
+	      onProcessLogin = opts.onProcessLogin;
 	    }
-	    return callback(null, edgeLogin)
-	  });
+	    pollServer(ctx, edgeLogin, keys, opts.onLogin, onProcessLogin);
+	    return edgeLogin
+	  })
 	}
 
 	var serverRoot = 'https://auth.airbitz.co/api';
@@ -1735,58 +1664,44 @@ exports["abc"] =
 	}
 
 	/**
-	 * @param authRequest function (method, uri, body, callback (err, status, body))
-	 * @param localStorage an object compatible with the Web Storage API.
+	 * @param opts An object containing optional arguments.
 	 */
 	function Context (opts) {
 	  opts = opts || {};
 	  this.accountType = opts.accountType || 'account:repo:co.airbitz.wallet';
 	  this.localStorage = opts.localStorage || DomWindow.localStorage;
-
-	  function webFetch (method, uri, body, callback) {
-	    var xhr = new DomWindow.XMLHttpRequest();
-	    xhr.addEventListener('load', function () {
-	      callback(null, this.status, this.responseText);
-	    });
-	    xhr.addEventListener('error', function () {
-	      callback(Error('Cannot reach auth server'));
-	    });
-	    xhr.open(method, uri);
-	    xhr.setRequestHeader('Authorization', 'Token ' + opts.apiKey);
-	    xhr.setRequestHeader('Content-Type', 'application/json');
-	    xhr.setRequestHeader('Accept', 'application/json');
-
-	    if(method !== 'GET') {
-	    	xhr.send(JSON.stringify(body));
-	    } else {
-		    xhr.send();
-	    }
-	    console.log('Visit ' + uri);
-	  }
-	  this.authFetch = opts.authRequest || webFetch;
+	  this.fetch = opts.fetch || DomWindow.fetch;
 
 	  /**
 	   * Wraps the raw authRequest function in something more friendly.
-	   * @param body JSON object
-	   * @param callback function (err, reply JSON object)
+	   * @param body JSON object to send
+	   * @return a promise of the server's JSON reply
 	   */
-	  this.authRequest = function (method, uri, body, callback) {
-	    this.authFetch(method, serverRoot + uri, body, function (err, status, body) {
-	      if (err) { return callback(err) }
-	      try {
-	        var reply = JSON.parse(body);
-	      } catch (e) {
-	        return callback(Error('Non-JSON reply, HTTP status ' + status))
+	  this.authRequest = function (method, uri, body) {
+	    var headers = {
+	      method: method,
+	      headers: {
+	        'Accept': 'application/json',
+	        'Content-Type': 'application/json',
+	        'Authorization': 'Token ' + opts.apiKey
 	      }
+	    };
+	    if (method !== 'GET') {
+	      headers.body = JSON.stringify(body);
+	    }
 
-	      // Look at the Airbitz status code:
-	      switch (reply['status_code']) {
-	        case 0:
-	          return callback(null, reply.results)
-	        default:
-	          return callback(Error(body))
-	      }
-	    });
+	    return this.fetch(serverRoot + uri, headers).then(function (response) {
+	      return response.json().then(function (json) {
+	        if (json['status_code'] !== 0) {
+	          throw new Error('Server error ' + JSON.stringify(json))
+	        }
+	        return json['results']
+	      }, function (jsonError) {
+	        throw new Error('Non-JSON reply, HTTP status ' + response.status)
+	      })
+	    }, function (networkError) {
+	      throw new Error('NetworkError: Could not connect to auth server')
+	    })
 	  };
 	}
 
@@ -1804,60 +1719,48 @@ exports["abc"] =
 
 	Context.prototype.fixUsername = normalize;
 
-	Context.prototype.usernameAvailable = function (username, callback) {
-	  return usernameAvailable(this, username, callback)
-	};
+	Context.prototype.usernameAvailable = nodeify(function (username) {
+	  return usernameAvailable(this, username)
+	});
 
 	/**
 	 * Creates a login, then creates and attaches an account to it.
 	 */
-	Context.prototype.createAccount = function (username, password, pin, callback) {
-	  var ctx = this;
-	  return create(ctx, username, password, {}, function (err, login$$1) {
-	    if (err) { return callback(err) }
+	Context.prototype.createAccount = nodeify(function (username, password, pin) {
+	  var this$1 = this;
+
+	  return create(this, username, password, {}).then(function (login$$1) {
 	    try {
-	      login$$1.accountFind(ctx.accountType);
+	      login$$1.accountFind(this$1.accountType);
 	    } catch (e) {
 	      // If the login doesn't have the correct account type, add it first:
-	      return login$$1.accountCreate(ctx, ctx.accountType, function (err) {
-	        if (err) { return callback(err) }
-	        setup$1(ctx, login$$1, pin, function (err) {
-	          if (err) { return callback(err) }
-	          var account = new Account(ctx, login$$1);
+	      return login$$1.accountCreate(this$1, this$1.accountType).then(function () {
+	        setup$1(this$1, login$$1, pin).then(function () {
+	          var account = new Account(this$1, login$$1);
 	          account.newAccount = true;
-	          account.sync(function (err, dirty) {
-	            if (err) { return callback(err) }
-	            callback(null, account);
-	          });
+	          return account.sync().then(function () { return account; })
 	        });
 	      })
 	    }
 
 	    // Otherwise, we have the correct account type, and can simply return:
-	    setup$1(ctx, login$$1, pin, function (err) {
-	      if (err) { return callback(err) }
-	      var account = new Account(ctx, login$$1);
+	    return setup$1(this$1, login$$1, pin).then(function () {
+	      var account = new Account(this$1, login$$1);
 	      account.newAccount = true;
-	      account.sync(function (err, dirty) {
-	        if (err) { return callback(err) }
-	        callback(null, account);
-	      });
-	    });
+	      return account.sync().then(function () { return account; })
+	    })
 	  })
-	};
+	});
 
-	Context.prototype.loginWithPassword = function (username, password, otp, opts, callback) {
-	  var ctx = this;
-	  return login(ctx, username, password, function (err, login$$1) {
-	    if (err) { return callback(err) }
-	    var account = new Account(ctx, login$$1);
+	Context.prototype.loginWithPassword = nodeify(function (username, password, otp, opts) {
+	  var this$1 = this;
+
+	  return login(this, username, password).then(function (login$$1) {
+	    var account = new Account(this$1, login$$1);
 	    account.passwordLogin = true;
-	    account.sync(function (err, dirty) {
-	      if (err) { return callback(err) }
-	      callback(null, account);
-	    });
+	    return account.sync().then(function () { return account; })
 	  })
-	};
+	});
 
 	Context.prototype.pinExists = function (username) {
 	  return getKey(this, username) != null
@@ -1866,49 +1769,43 @@ exports["abc"] =
 	  return getKey(this, username) != null
 	};
 
-	Context.prototype.loginWithPIN = function (username, pin, callback) {
-	  var ctx = this;
+	Context.prototype.loginWithPIN = nodeify(function (username, pin) {
+	  var this$1 = this;
+
 	  var pin2Key = getKey(this, username);
 	  if (!pin2Key) {
 	    throw new Error('No PIN set locally for this account')
 	  }
-	  return login$1(ctx, pin2Key, username, pin, function (err, login$$1) {
-	    if (err) { return callback(err) }
-	    var account = new Account(ctx, login$$1);
+	  return login$1(this, pin2Key, username, pin).then(function (login$$1) {
+	    var account = new Account(this$1, login$$1);
 	    account.pinLogin = true;
-	    account.sync(function (err, dirty) {
-	      if (err) { return callback(err) }
-	      callback(null, account);
-	    });
+	    return account.sync().then(function () { return account; })
 	  })
-	};
+	});
 
-	Context.prototype.getRecovery2Key = function (username, callback) {
+	Context.prototype.getRecovery2Key = nodeify(function (username) {
 	  var userStorage = new UserStorage(this.localStorage, username);
 	  var recovery2Key = userStorage.getItem('recovery2Key');
 	  if (recovery2Key) {
-	    callback(null, recovery2Key);
+	    return Promise.resolve(recovery2Key)
 	  } else {
-	    callback(new Error('No recovery key stored locally.'));
+	    return Promise.reject(new Error('No recovery key stored locally.'))
 	  }
-	};
+	});
 
-	Context.prototype.loginWithRecovery2 = function (recovery2Key, username, answers, otp, options, callback) {
-	  var ctx = this;
-	  return login$2(ctx, recovery2Key, username, answers, function (err, login$$1) {
-	    if (err) { return callback(err) }
-	    var account = new Account(ctx, login$$1);
+	Context.prototype.loginWithRecovery2 = nodeify(function (recovery2Key, username, answers, otp, options) {
+	  var this$1 = this;
+
+	  return login$2(this, recovery2Key, username, answers).then(function (login$$1) {
+	    var account = new Account(this$1, login$$1);
 	    account.recoveryLogin = true;
-	    account.sync(function (err, dirty) {
-	      if (err) { return callback(err) }
-	      callback(null, account);
-	    });
+	    return account.sync().then(function () { return account; })
 	  })
-	};
+	});
 
-	Context.prototype.fetchRecovery2Questions = function (recovery2Key, username, callback) {
-	  return questions(this, recovery2Key, username, callback)
-	};
+	Context.prototype.fetchRecovery2Questions = nodeify(function (recovery2Key, username) {
+	  return questions(this, recovery2Key, username)
+	});
 
 	Context.prototype.runScryptTimingWithParameters = function (n, r, p) {
 	  var snrp = makeSnrp();
@@ -1945,27 +1842,23 @@ exports["abc"] =
 	  }
 	};
 
-	Context.prototype.requestEdgeLogin = function (opts, callback) {
-	  var ctx = this;
+	Context.prototype.requestEdgeLogin = nodeify(function (opts) {
+	  var this$1 = this;
+
 	  var onLogin = opts.onLogin;
 	  opts.onLogin = function (err, login$$1) {
 	    if (err) { return onLogin(err) }
-	    var account = new Account(ctx, login$$1);
+	    var account = new Account(this$1, login$$1);
 	    account.edgeLogin = true;
-	    account.sync(function (err, dirty) {
-	      if (err) { return onLogin(err) }
-	      onLogin(null, account);
-	    });
+	    account.sync().then(function (dirty) { return onLogin(null, account); }, function (err) { return onLogin(err); });
 	  };
-	  opts.type = opts.type || ctx.accountType;
-	  create$1(this, opts, callback);
-	};
+	  opts.type = opts.type || this.accountType;
+	  return create$1(this, opts)
+	});
 
-	Context.prototype.listRecoveryQuestionChoices = function (callback) {
-	  listRecoveryQuestionChoices(this, function (error, questions$$1) {
-	    callback(error, questions$$1);
-	  });
-	};
+	Context.prototype.listRecoveryQuestionChoices = nodeify(function () {
+	  return listRecoveryQuestionChoices(this)
+	});
 
 	/**
 	 * ABCConditionCode
