@@ -18,9 +18,10 @@ export const loginWithPassword = (username, password) => {
         abcctx(context => {
           context.loginWithPassword(username, password, null, null, (error, account) => {
             if (error) {
+              console.log(error)
               var mess
               try {
-                mess = JSON.parse(error.message).message
+                mess = error.message
               } catch (e) {
                 mess = error
               }
@@ -56,21 +57,26 @@ export const loginWithPin = (username, pin) => {
       },
       loginWithPin: function (callback) {
         abcctx(context => {
-          context.loginWithPIN(username, pin, (error, account) => {
-            if (error) {
-              var mess
-              try {
-                mess = error.message
-              } catch (e) {
-                mess = error
+          try {
+            context.loginWithPIN(username, pin, (error, account) => {
+              if (error) {
+                console.log(error)
+                var mess
+                try {
+                  mess = error.message
+                } catch (e) {
+                  mess = error
+                }
+                return callback(mess, null)
               }
-              return callback(mess, null)
-            }
 
-            if (!error) {
-              return callback(null, null)
-            }
-          })
+              if (!error) {
+                return callback(null, null)
+              }
+            })
+          } catch(e) {
+            console.log(e)
+          }
         })
       }
 

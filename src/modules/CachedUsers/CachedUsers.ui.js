@@ -48,7 +48,7 @@ class UserList extends Component {
             <TouchableOpacity style={style.textContainer} onPress={() => this.handleLoginUserPin(user)}>
               <Text style={style.text}>{ user }</Text>
             </TouchableOpacity>
-            <TouchableOpacity  onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}>
+            <TouchableOpacity onPress={() => this.handleDeleteUserCache(user)} color='#222222' style={style.xbutton}>
               <Text style={style.xbuttontext}>X</Text>
             </TouchableOpacity >
           </View>

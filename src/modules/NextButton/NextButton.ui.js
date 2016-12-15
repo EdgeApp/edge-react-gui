@@ -17,10 +17,9 @@ class NextButton extends Component {
   }
 
   render () {
-
-    if ( this.props.scene === 'password' ) {
-      if( this.props.password.length !== 0 ) {
-        return(
+    if (this.props.scene === 'password') {
+      if (this.props.password.length !== 0) {
+        return (
           <View>
             <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
               <Text style={styles.buttonText}>{ this.checkScene() }</Text>
@@ -28,14 +27,13 @@ class NextButton extends Component {
           </View>
         )
       }
-      if( this.props.password.length === 0 ) {
-         return null
-        
+      if (this.props.password.length === 0) {
+        return null
       }
     }
 
-    if ( this.props.scene !== 'password' ) {
-      return(
+    if (this.props.scene !== 'password') {
+      return (
         <View>
           <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
             <Text style={styles.buttonText}>{ this.checkScene() }</Text>

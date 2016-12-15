@@ -9,66 +9,57 @@ import { checkCameraPermission, checkReadContactPermission } from '../../lib/per
 import abcctx from '../../lib/abcContext'
 import t from '../../lib/LocaleStrings'
 
-export const signupUser = ( username, password, pin ) => {
-
+export const signupUser = (username, password, pin) => {
   return dispatch => {
-      dispatch(openLoading(t('fragment_signup_creating_account')))
+    dispatch(openLoading(t('fragment_signup_creating_account')))
 
-      // abcctx(ctx => {
-      //   ctx.createAccount(username, password, pin, (err, result) => {
-      //
-      //     if (err) {
-      //       var mess
-      //       try {
-      //         mess = JSON.parse(err.message).message
-      //       } catch (e) {
-      //         mess = err
-      //       }
-      //       dispatch(closeLoading())
-      //       return dispatch(openErrorModal(t('activity_signup_failed')))
-      //     }
-      //
-      //     if (!err) {
-            // global.localStorage.setItem('lastUser', username)
-            return dispatch(checkPermissions())
-      //     }
-      //
-      //   })
-      // })
+    abcctx(ctx => {
+      ctx.createAccount(username, password, pin, (err, result) => {
+        if (err) {
+          console.log(err)
+          var mess
+          try {
+            mess = error.message
+          } catch (e) {
+            mess = err
+          }
+          dispatch(closeLoading())
+          return dispatch(openErrorModal(t('activity_signup_failed')))
+        }
 
+        if (!err) {
+          global.localStorage.setItem('lastUser', username)
+          return dispatch(checkPermissions())
+        }
+      })
+    })
   }
 }
 
 checkPermissions = () => {
-
   return dispatch => {
-   
     asyncAuto({
       camera: function (callback) {
-
         checkCameraPermission((error, permission) => {
-          if(error){
+          if (error) {
             return callback(error, null)
-          } 
-          if(!error){
-            console.log(permission)
-            return callback(null, permission)
-          } 
-        })
-
-      },
-      contact: function (callback) {
-
-        checkReadContactPermission((error, permission) => {
-          if(error){
-            return callback(error, null)
-          } 
-          if(!error){
+          }
+          if (!error) {
             console.log(permission)
             return callback(null, permission)
           }
         })
-
+      },
+      contact: function (callback) {
+        checkReadContactPermission((error, permission) => {
+          if (error) {
+            return callback(error, null)
+          }
+          if (!error) {
+            console.log(permission)
+            return callback(null, permission)
+          }
+        })
       }
     }, function (err, result) {
       dispatch(closeLoading())
@@ -84,10 +75,6 @@ checkPermissions = () => {
       if (result.camera && result.contact) {
         Actions.review()
       }
-
     })
-  
   }
-
-
 }

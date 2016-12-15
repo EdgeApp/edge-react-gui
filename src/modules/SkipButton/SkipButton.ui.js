@@ -7,7 +7,6 @@ import t from '../../lib/LocaleStrings'
 class SkipButton extends Component {
 
   render () {
-
     if (this.props.scene === 'password') {
       return (
         <View>

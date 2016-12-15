@@ -28,66 +28,56 @@ class HomeComponent extends Component {
   componentWillMount () {
     const dispatch = this.props.dispatch
     abcctx(ctx => {
-
       const cachedUsers = ctx.listUsernames()
       const lastUser = global.localStorage.getItem('lastUser')
 
       dispatch(setCachedUsers(cachedUsers))
-      if(lastUser) {
+      if (lastUser) {
         dispatch(selectUserToLogin(lastUser))
-      }          
-
+      }
     })
   }
 
   renderViewLoginPassword = () => {
+    if (this.props.password) return (<Login />)
 
-      if (this.props.password) return (<Login />)
-
-      if (!this.props.password) {
-        return (
-          <View style={style.container}>
-            <View style={style.spacer}></View>
-            <View style={style.form}>
-              <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
-                <Text style={style.buttonText}> Sign In </Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
-                <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
-              </TouchableOpacity>   
-            </View>         
-            <View style={style.spacer}></View>
+    if (!this.props.password) {
+      return (
+        <View style={style.container}>
+          <View style={style.spacer} />
+          <View style={style.form}>
+            <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
+              <Text style={style.buttonText}> Sign In </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+              <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
+            </TouchableOpacity>
           </View>
-        )
-      }
-  
+          <View style={style.spacer} />
+        </View>
+      )
+    }
   }
 
   renderMainComponent = () => {
-
     if (this.props.pin) return <LoginWithPin />
     if (!this.props.pin) return this.renderViewLoginPassword()
-
   }
-
 
   renderDisclaimerComponent = () => {
+    if (this.props.disclaimerAccepted) return null
 
-      if(this.props.disclaimerAccepted) return null 
-
-      if (global.localStorage) {
-        const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
-        if (!disclaimerAccepted) {
-          return (<Disclaimer />)
-        } else {
-          return null
-        }
+    if (global.localStorage) {
+      const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
+      if (!disclaimerAccepted) {
+        return (<Disclaimer />)
+      } else {
+        return null
       }
-
+    }
   }
-  
-  render () {
 
+  render () {
     return (
       <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>

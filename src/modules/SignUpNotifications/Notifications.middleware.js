@@ -6,33 +6,27 @@ import { requestCameraPermission, checkReadContactPermission, requestReadContacP
 import t from '../../lib/LocaleStrings'
 
 export const cameraPermissions = () => {
-
   return dispatch => {
-
     asyncAuto({
       requestCameraPermissionCall: function (callback) {
-
         requestCameraPermission((error, granted) => {
-          if(error){
+          if (error) {
             return callback(error, null)
-          } 
-          if(!error){
+          }
+          if (!error) {
             return callback(null, null)
-          } 
+          }
         })
-
       },
       checkReadContactPermissionCall: function (callback) {
-
         checkReadContactPermission((error, permission) => {
-          if(error){
+          if (error) {
             return callback(error, null)
-          } 
-          if(!error){
+          }
+          if (!error) {
             return callback(null, permission)
           }
         })
-
       }
     }, function (err, result) {
       if (err) {
@@ -45,27 +39,19 @@ export const cameraPermissions = () => {
         Actions.contactNotification()
       }
     })
-
   }
-
 }
 
 export const readContactPermissions = () => {
-
   return dispatch => {
-
-    requestCameraPermission( (error, granted) => {
-      
-      if(error){
+    requestCameraPermission((error, granted) => {
+      if (error) {
         console.log(error)
-      } 
+      }
 
-      if(!error){
+      if (!error) {
         return Actions.review()
-      } 
-
+      }
     })
-
   }
-
 }

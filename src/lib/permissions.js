@@ -1,25 +1,18 @@
 import t from './LocaleStrings'
 import { PermissionsAndroid } from 'react-native'
 
-export async function checkCameraPermission(callback) {
-  
+export async function checkCameraPermission (callback) {
   try {
-
     const permission = await PermissionsAndroid.checkPermission(PermissionsAndroid.PERMISSIONS.CAMERA)
 
     callback(null, permission)
-  } catch(err) {
-
+  } catch (err) {
     callback(err, null)
-
   }
-  
 }
 
-export async function requestCameraPermission(callback) {
-
+export async function requestCameraPermission (callback) {
   try {
-
     const granted = await PermissionsAndroid.requestPermission(
       PermissionsAndroid.PERMISSIONS.CAMERA,
       {
@@ -28,34 +21,23 @@ export async function requestCameraPermission(callback) {
       }
     )
     callback(null, granted)
-
   } catch (err) {
-
     callback(err, null)
-
   }
-
 }
 
-export async function checkReadContactPermission(callback) {
-  
+export async function checkReadContactPermission (callback) {
   try {
-
     const permission = await PermissionsAndroid.checkPermission(PermissionsAndroid.PERMISSIONS.READ_CONTACTS)
 
     callback(null, permission)
-  } catch(err) {
-
+  } catch (err) {
     callback(err, null)
-
   }
-  
 }
 
-export async function requestReadContacPermission(callback) {
-
+export async function requestReadContacPermission (callback) {
   try {
-
     const granted = await PermissionsAndroid.requestPermission(
       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
       {
@@ -64,11 +46,7 @@ export async function requestReadContacPermission(callback) {
       }
     )
     callback(null, granted)
-
   } catch (err) {
-
     callback(err, null)
-
   }
-
 }

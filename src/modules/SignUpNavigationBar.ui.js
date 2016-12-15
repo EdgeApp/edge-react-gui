@@ -31,7 +31,7 @@ class NavigationBar extends Component {
     switch (this.props.scene) {
       case 'username':
         return t('string_capitalize_exit')
-  
+
       case 'cameraNotification':
         return ''
 

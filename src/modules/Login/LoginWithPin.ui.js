@@ -69,7 +69,7 @@ class Login extends Component {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
         console.log(this.refs.pinInput)
-        return (<CachedUsers blurField={this.refs.pinInput}/>)
+        return (<CachedUsers blurField={this.refs.pinInput} />)
       } else {
         return null
       }
@@ -85,7 +85,7 @@ class Login extends Component {
           <View style={{ width: 150, marginVertical: 15 }}>
             <InputGroup borderType='regular' style={[style.inputGroup, {alignSelf: 'center'}]}>
               <Input
-                ref="pinInput"
+                ref='pinInput'
                 placeholder={t('fragment_landing_enter_pin')}
                 style={[style.input, { height: 60, fontSize: 20, textAlign: 'center'}]}
                 onChangeText={this.changePin}

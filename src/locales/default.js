@@ -14,7 +14,7 @@ const strings = {
   loading: 'Loading…',
   string_agree: 'Agree',
   synchronizing: 'Synchronizing…',
-   
+
   //  Generic strings
   string_ok: 'OK',
   string_yes: 'Yes',
