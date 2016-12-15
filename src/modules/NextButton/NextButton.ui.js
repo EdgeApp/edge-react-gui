@@ -6,22 +6,6 @@ import t from '../../lib/LocaleStrings'
 
 class NextButton extends Component {
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.scene === 'password') {
-      if (nextProps.password.length === 0) {
-        this.props.dispatch(hideNextButton())
-      }
-
-      if (nextProps.password.length !== 0) {
-        this.props.dispatch(showNextButton())
-      }
-    }
-
-    if (nextProps.scene !== 'password') {
-      this.props.dispatch(showNextButton())
-    }
-  }
-
   checkScene = () => {
     switch (this.props.scene) {
       case 'review':
@@ -33,18 +17,31 @@ class NextButton extends Component {
   }
 
   render () {
-    if (this.props.visible) {
-      return (
+
+    if ( this.props.scene === 'password' ) {
+      if( this.props.password.length !== 0 ) {
+        return(
+          <View>
+            <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
+              <Text style={styles.buttonText}>{ this.checkScene() }</Text>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+      if( this.props.password.length === 0 ) {
+         return null
+        
+      }
+    }
+
+    if ( this.props.scene !== 'password' ) {
+      return(
         <View>
           <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
             <Text style={styles.buttonText}>{ this.checkScene() }</Text>
           </TouchableOpacity>
         </View>
       )
-    }
-
-    if (!this.props.visible) {
-      return null
     }
   }
 

@@ -6,19 +6,9 @@ import t from '../../lib/LocaleStrings'
 
 class SkipButton extends Component {
 
-  componentWillReceiveProps (nextProps) {
-    console.log(nextProps.foo)
-    if (nextProps.scene === 'password') {
-      this.props.dispatch(showSkipButton())
-    }
-
-    if (nextProps.scene !== 'password') {
-      this.props.dispatch(hideSkipButton())
-    }
-  }
-
   render () {
-    if (this.props.visible) {
+
+    if (this.props.scene === 'password') {
       return (
         <View>
           <TouchableHighlight style={[ styles.button, this.props.password.length !== 0 ? {backgroundColor: 'rgba(0,0,0,0)'} : null ]} onPress={this.props.onPress}>
@@ -28,7 +18,7 @@ class SkipButton extends Component {
       )
     }
 
-    if (!this.props.visible) {
+    if (this.props.scene !== 'password') {
       return null
     }
   }

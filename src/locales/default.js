@@ -51,6 +51,8 @@ const strings = {
   string_agree: 'Agree',
   string_balance: 'Balance',
   string_wallet: 'Wallet',
+  string_capitalize_back: 'Back',
+  string_capitalize_exit: 'Exit',
 
   loading_wallets: 'Loading Wallets...\nThis may take a few minutes as it is the first time logging into this device.',
   loading_n_wallets: 'Loading %1$d of %2$d wallets.\nThis may take a few minutes as it is the first time logging into this device.',
