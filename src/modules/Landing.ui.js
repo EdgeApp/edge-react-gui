@@ -3,7 +3,6 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-
 import Disclaimer from './Disclaimer/Disclaimer.ui'
 import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
@@ -35,8 +34,11 @@ class HomeComponent extends Component {
       if (lastUser) {
         dispatch(selectUserToLogin(lastUser))
       }
+      const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
+      this.dispatch(acceptDisclaimer(disclaimerAccepted))
     })
   }
+
 
   renderViewLoginPassword = () => {
     if (this.props.password) return (<Login />)
@@ -66,15 +68,17 @@ class HomeComponent extends Component {
 
   renderDisclaimerComponent = () => {
     if (this.props.disclaimerAccepted) return null
-
-    if (global.localStorage) {
-      const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
-      if (!disclaimerAccepted) {
-        return (<Disclaimer />)
-      } else {
-        return null
-      }
+    else {
+      return (<Disclaimer/>)
     }
+    // if (global.localStorage) {
+    //   const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
+    //   if (!disclaimerAccepted) {
+    //     return (<Disclaimer />)
+    //   } else {
+    //     return null
+    //   }
+    // }
   }
 
   render () {
