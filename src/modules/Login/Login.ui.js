@@ -84,7 +84,7 @@ class Login extends Component {
               onChangeText={this.changePassword}
               value={this.props.password}
               blurOnSubmit
-              onSubmitEditing={this.submit}
+              onSubmitEditing={() => { this.submit() }}
         />
           </InputGroup>
           <TouchableOpacity style={style.button} onPress={this.submit}>

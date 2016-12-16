@@ -12,8 +12,9 @@ This means your dev app cannot access your workstation to download the app bundl
 - Check USB connection to your computer from the device
 - Make sure your packager is running `npm start` in your project directory 
 - Re-run the command to create a network bridge `adb -s 64315443 reverse tcp:8081 tcp:8081` replacing 64315443 with your device ID (get your device ID from running `adb devices`)
-
-### Test production build
+### Unsigned production build
+#### `react-native run-android --configuration release`. Uninstall the dev version of the app from the target device first or it will fail.
+### Test SIGNED production build
 It's *required* at the moment to set up some gradle properties in your local environment. This will be fixed in a future release, but it takes 30 seconds, so...
 Edit the file ~/.gradle/gradle.properties and add this
 ```
@@ -54,4 +55,4 @@ But you can also run this with zsh (put it in .zshprofile instead)
 - Whenever you need to install a new npm module, you'll need to restart the app daemon afterwards in order for your bundle to pick it up.
 - If you're having inexplicable persistent problems, it sometimes helps to clean the project.  delete the app from your phone, run `cd android && ./gradlew clean && rm -rf build && cd .. && npm run droid` and then reset the packager like so: `npm start -- --reset-cache`
 - If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:E` and reproduce the error, it should give you some stack information, which MIGHT help.
-
+- If you keep having problems, uninstall the app, restart your phone, `run npm droid` and `npm start -- --reset-cache`.
