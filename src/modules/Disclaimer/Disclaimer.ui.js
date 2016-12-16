@@ -27,7 +27,7 @@ class Disclaimer extends Component {
               ref='webview'
               automaticallyAdjustContentInsets={false}
               style={style.webview}
-              source={require('../../assets/html/disclaimer.html')}
+              source={require('../../raw/disclaimer.html')}
               javaScriptEnabled={false}
               domStorageEnabled={false}
               decelerationRate='normal'
