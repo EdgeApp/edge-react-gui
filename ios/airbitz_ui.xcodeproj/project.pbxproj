@@ -48,6 +48,7 @@
 		93A62E53CBEA45BE8CFB5815 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9A9E966797684067BE71C1BF /* Octicons.ttf */; };
 		5E8DEBF0838B47B48130A0BC /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 47847775A7EF448B96BBAD3A /* SimpleLineIcons.ttf */; };
 		2FAE97B9515342BF872F4970 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D5599483C304349A41C912E /* Zocial.ttf */; };
+		74991691D8BD42EA81E4ABDF /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4F29ECA4F4649DEA71FE44B /* libRNRandomBytes.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,6 +197,8 @@
 		9A9E966797684067BE71C1BF /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		47847775A7EF448B96BBAD3A /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		1D5599483C304349A41C912E /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F3F83564824247FCA12631BD /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; name = "RNRandomBytes.xcodeproj"; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		E4F29ECA4F4649DEA71FE44B /* libRNRandomBytes.a */ = {isa = PBXFileReference; name = "libRNRandomBytes.a"; path = "libRNRandomBytes.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +229,7 @@
 				B0D9D1CA7A5848809A753280 /* libRNDeviceInfo.a in Frameworks */,
 				96663C01F43549CB8CC14A76 /* libBVLinearGradient.a in Frameworks */,
 				8603B6E93B3E4DA4A5928047 /* libRNVectorIcons.a in Frameworks */,
+				74991691D8BD42EA81E4ABDF /* libRNRandomBytes.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +366,7 @@
 				73BFC57C63344B81994CFB3C /* RNDeviceInfo.xcodeproj */,
 				400AA8887ACC4C4B8D7E274C /* BVLinearGradient.xcodeproj */,
 				69F654839DF5418B85404516 /* RNVectorIcons.xcodeproj */,
+				F3F83564824247FCA12631BD /* RNRandomBytes.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -748,6 +753,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -764,6 +770,7 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/airbitz_ui.app/airbitz_ui";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -849,6 +856,7 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -893,6 +901,7 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-linear-gradient/BVLinearGradient",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
+					"$(SRCROOT)/../node_modules/react-native-randombytes",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
