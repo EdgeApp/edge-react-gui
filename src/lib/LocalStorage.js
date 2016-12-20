@@ -71,7 +71,7 @@ function LocalStorage (absolutePathToDbFile, callback) {
       get: () => {
         return self.list.length
       },
-      configurable: false,
+      configurable: true,
       enumerable: false
     })
     callback(self)
