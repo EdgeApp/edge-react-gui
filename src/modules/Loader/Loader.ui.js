@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Text } from 'react-native'
+import { Platform, ActivityIndicator, Text } from 'react-native'
 import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
 
@@ -30,7 +30,7 @@ class Loader extends Component {
         <ActivityIndicator
           animating
           color='#FFF'
-          size={70}
+          size={Platform.OS === 'ios' ? 1 : 70}
         />
       </Modal>
     )
