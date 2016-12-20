@@ -16,6 +16,8 @@ class Disclaimer extends Component {
     })
   }
   render () {
+    const disclaimeruri = '../../html/disclaimer.html'
+    if(Platform.OS === 'ios') disclaimeruri = 'file:///android_asset/disclaimer.html'
     return (
       <View style={style.disclaimerContainer} >
         <View style={style.disclaimerOuterView}>
@@ -27,7 +29,7 @@ class Disclaimer extends Component {
               ref='webview'
               automaticallyAdjustContentInsets={false}
               style={style.webview}
-              source={{ uri:  (Platform.OS === 'ios') ? '../../html/disclaimer.html' : 'file:///android_asset/disclaimer.html' }}
+              source={{uri: disclaimeruri}}
               javaScriptEnabled={false}
               domStorageEnabled={false}
               decelerationRate='normal'

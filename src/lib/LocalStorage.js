@@ -24,7 +24,7 @@ const copy = v => {
 const defineLocalVariable = (ctx, name, value) => {
   Object.defineProperty(ctx, name, {
     value,
-    configurable: false,
+    configurable: true,
     enumerable: false,
     writable: true
   })
