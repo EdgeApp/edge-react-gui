@@ -27,7 +27,7 @@ class Disclaimer extends Component {
               ref='webview'
               automaticallyAdjustContentInsets={false}
               style={style.webview}
-              source={{ uri:  (Platform.OS === 'ios') ? './html/disclaimer.html' : 'file:///android_asset/disclaimer.html' }}
+              source={{ uri:  (Platform.OS === 'ios') ? '../../html/disclaimer.html' : 'file:///android_asset/disclaimer.html' }}
               javaScriptEnabled={false}
               domStorageEnabled={false}
               decelerationRate='normal'

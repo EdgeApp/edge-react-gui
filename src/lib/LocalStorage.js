@@ -25,7 +25,8 @@ const defineLocalVariable = (ctx, name, value) => {
   Object.defineProperty(ctx, name, {
     value,
     configurable: false,
-    enumerable: false
+    enumerable: false,
+    writable: true
   })
 }
 
