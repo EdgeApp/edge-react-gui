@@ -37,7 +37,7 @@ class HomeComponent extends Component {
         dispatch(selectUserToLogin(lastUser))
       }
       const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
-      this.dispatch(acceptDisclaimer(disclaimerAccepted))
+      dispatch(acceptDisclaimer(disclaimerAccepted))
     })
   }
 
