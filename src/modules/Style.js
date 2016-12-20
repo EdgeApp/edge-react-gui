@@ -34,7 +34,7 @@ const style = StyleSheet.create({
   input: {
     color: '#FFF',
     fontSize: 14,
-    fontFamily: 'lato'
+    fontFamily: appTheme.fontFamily
   },
   welcome: {
     fontSize: 30,

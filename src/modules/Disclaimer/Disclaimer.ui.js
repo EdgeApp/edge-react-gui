@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { acceptDisclaimer } from './Disclaimer.action'
 
-import { View, Text, StyleSheet, WebView, Image } from 'react-native'
+import { Platform, View, Text, StyleSheet, WebView, Image } from 'react-native'
 import abcctx from '../../lib/abcContext'
 import { Button } from 'native-base'
 import t from '../../lib/LocaleStrings'
@@ -20,14 +20,14 @@ class Disclaimer extends Component {
       <View style={style.disclaimerContainer} >
         <View style={style.disclaimerOuterView}>
           <View style={style.logoContainer}>
-            <Image source={require('../../assets/drawable/logo.png')} style={style.logoImage} />
+            <Image source={require('../../img/logo.png')} style={style.logoImage} />
           </View>
           <View style={style.disclaimerInnerView}>
             <WebView
               ref='webview'
               automaticallyAdjustContentInsets={false}
               style={style.webview}
-              source={{ uri: 'file:///android_asset/disclaimer.html' }}
+              source={{ uri:  (Platform.OS === 'ios') ? './html/disclaimer.html' : 'file:///android_asset/disclaimer.html' }}
               javaScriptEnabled={false}
               domStorageEnabled={false}
               decelerationRate='normal'

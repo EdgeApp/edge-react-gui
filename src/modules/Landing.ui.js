@@ -12,6 +12,8 @@ import LoginWithPin from './Login/LoginWithPin.ui'
 import appTheme from '../../Themes/appTheme'
 
 import abcctx from '../lib/abcContext'
+
+import { acceptDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 import { openLogin } from './Login/Login.action'
 import t from '../lib/LocaleStrings'
@@ -83,9 +85,9 @@ class HomeComponent extends Component {
 
   render () {
     return (
-      <Image source={require('../assets/drawable/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
+      <Image source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
-          <Image source={require('../assets/drawable/logo.png')} style={style.logoImage} />
+          <Image source={require('../img/logo.png')} style={style.logoImage} />
         </View>
         { this.renderMainComponent() }
         <Loader />
