@@ -4,7 +4,9 @@ import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Disclaimer from './Disclaimer/Disclaimer.ui'
+import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
+import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
 import TemplateView from './tpl/View.ui'
@@ -47,6 +49,7 @@ class HomeComponent extends TemplateView {
         <View style={style.container}>
           <View style={style.spacer} />
           <View style={style.form}>
+            <Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Text>
             <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
               <Text style={style.buttonText}> Sign In </Text>
             </TouchableOpacity>
@@ -72,14 +75,16 @@ class HomeComponent extends TemplateView {
     }
   }
 
-  renderContent () {
+  render () {
     return (
       <Image source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
           <Image source={require('../img/logo.png')} style={style.logoImage} />
         </View>
         { this.renderMainComponent() }
+        <Loader />
         <WarningModal />
+        <ErrorModal />
         { this.renderDisclaimerComponent() }
       </Image>
     )

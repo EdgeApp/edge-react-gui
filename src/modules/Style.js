@@ -80,6 +80,12 @@ const style = StyleSheet.create({
     fontSize: 18,
     flex: 1
   },
+  textTitle: {
+    fontSize: 22,
+    color: '#FFF',
+    fontFamily: appTheme.fontFamily,
+    marginBottom: 10
+  },
   text: {
     fontSize: 15,
     color: '#CCC',

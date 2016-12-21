@@ -13,8 +13,8 @@ import style from '../Style'
 class Login extends Component {
 
   submit = () => {
-    this.refs.loginUsername._textInput.blur()
-    this.refs.password._textInput.blur()
+    this.refs.loginUsername.blur()
+    this.refs.password.blur()
     this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
   }
 
@@ -71,7 +71,7 @@ class Login extends Component {
             onChangeText={this.changeUsername}
             value={this.props.username}
             returnKeyType={'next'}
-            onSubmitEditing={e => this.refs.password._textInput.focus()}
+            onSubmitEditing={e => this.refs.password.focus()}
             selectTextOnFocus
             onFocus={this.showCachedUsers}
             autoCorrect={false}

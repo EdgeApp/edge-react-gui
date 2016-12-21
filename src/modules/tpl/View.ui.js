@@ -1,4 +1,5 @@
 const Device = require('react-native-device-detection')
+const Orientation = require('react-native-orientation')
 import React, { Component } from 'react'
 import { Text } from 'react-native'
 import { Container, Header, Footer, Content } from 'native-base'
@@ -11,7 +12,7 @@ class TemplateView extends Component {
 
   componentWillMount () {
     if (!Device.isTablet) {
-
+      Orientation.lockToPortrait()
     }
   }
   renderHeader () {
