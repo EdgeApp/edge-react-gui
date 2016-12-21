@@ -14,7 +14,8 @@ const style = StyleSheet.create({
     fontFamily: appTheme.fontFamily,
     fontSize: 18,
     textAlign: 'center',
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: appTheme.fontFamily
   },
 
   hideModal: {

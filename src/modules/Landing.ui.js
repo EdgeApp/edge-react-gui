@@ -9,7 +9,6 @@ import WarningModal from './WarningModal/WarningModal.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
-import appTheme from '../../Themes/appTheme'
 
 import abcctx from '../lib/abcContext'
 
@@ -41,7 +40,6 @@ class HomeComponent extends Component {
     })
   }
 
-
   renderViewLoginPassword = () => {
     if (this.props.password) return (<Login />)
 
@@ -71,16 +69,8 @@ class HomeComponent extends Component {
   renderDisclaimerComponent = () => {
     if (this.props.disclaimerAccepted) return null
     else {
-      return (<Disclaimer/>)
+      return (<Disclaimer />)
     }
-    // if (global.localStorage) {
-    //   const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
-    //   if (!disclaimerAccepted) {
-    //     return (<Disclaimer />)
-    //   } else {
-    //     return null
-    //   }
-    // }
   }
 
   render () {

@@ -33,7 +33,7 @@ class UsernameComponent extends Component {
             autoFocus
             blurOnSubmit
             returnKeyType='next'
-            onBlur={() => {this.handleSubmit()}}
+            onBlur={() => { this.handleSubmit() }}
           />
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}

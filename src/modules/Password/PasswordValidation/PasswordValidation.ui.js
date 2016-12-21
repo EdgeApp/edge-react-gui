@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import t from '../../../lib/LocaleStrings'
+
+import appTheme from '../../../../Themes/appTheme'
 class PasswordRequirement extends Component {
 
   checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
@@ -35,13 +37,15 @@ const style = StyleSheet.create({
 
   text: {
     color: '#FFF',
-    fontSize: 10
+    fontSize: 10,
+    fontFamily: appTheme.fontFamily
   },
 
   textLead: {
     marginBottom: 5,
     fontSize: 12,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    fontFamily: appTheme.fontFamily
   }
 
 })

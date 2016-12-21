@@ -4,6 +4,15 @@ import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
 import { AppRegistry } from 'react-native'
 
+String.prototype.format = function () {
+  const args = arguments
+  return this.replace(/{(\d+)}/g, function (match, number) {
+    return typeof args[number] !== 'undefined'
+      ? args[number]
+      : match
+  })
+}
+
 import Landing from './modules/Landing.ui'
 import Home from './modules/Home/Home.ui'
 import Username from './modules/Username/Username.ui'
@@ -15,6 +24,7 @@ import ReviewDetails from './modules/ReviewDetails/ReviewDetails.ui'
 
 const RouterWithRedux = connect()(Router)
 const store = configureStore()
+
 export default class App extends Component {
 
   render () {

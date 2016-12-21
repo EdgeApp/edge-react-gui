@@ -13,6 +13,8 @@ import style from '../Style'
 class Login extends Component {
 
   submit = () => {
+    this.refs.loginUsername._textInput.blur()
+    this.refs.password._textInput.blur()
     this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
   }
 

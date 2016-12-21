@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { showNextButton, hideNextButton } from './NextButton.action'
 import t from '../../lib/LocaleStrings'
 
+import appTheme from '../../../Themes/appTheme'
 class NextButton extends Component {
 
   checkScene = () => {
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFF',
     paddingTop: 10,
-    fontSize: 25
+    fontSize: 25,
+    fontFamily: appTheme.fontFamily
   }
 
 })

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Actions } from 'react-native-router-flux'
 import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-native'
 
+import appTheme from '../../../Themes/appTheme'
 import Container from '../SignUp.ui'
 
 import { readContactPermissions } from './Notifications.middleware'
@@ -46,17 +47,20 @@ const style = StyleSheet.create({
     height: 60,
     fontSize: 22,
     color: 'skyblue',
-    width: 200
+    width: 200,
+    fontFamily: appTheme.fontFamily
   },
 
   paragraph: {
     marginTop: 10,
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: appTheme.fontFamily
   },
 
   lead: {
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: appTheme.fontFamily
   }
 
 })

@@ -52,7 +52,8 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    backgroundColor: '#000'
   },
   logoContainer: {
     flex: 0.2,

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 
+import appTheme from '../../../Themes/appTheme'
 const style = StyleSheet.create({
   container: {
     flex: 1,
@@ -35,23 +36,27 @@ const style = StyleSheet.create({
 
   detailTextLeft: {
     textAlign: 'right',
-    flex: 0.50
+    flex: 0.50,
+    fontFamily: appTheme.fontFamily
   },
 
   detailTextRight: {
     textAlign: 'left',
     paddingRight: 30,
-    flex: 0.50
+    flex: 0.50,
+    fontFamily: appTheme.fontFamily
   },
 
   text: {
     marginVertical: 10,
     color: '#FFF',
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: appTheme.fontFamily
   },
 
   warning: {
-    color: 'yellow'
+    color: 'yellow',
+    fontFamily: appTheme.fontFamily
   },
 
   button: {
@@ -67,7 +72,8 @@ const style = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
-    fontSize: 22
+    fontSize: 22,
+    fontFamily: appTheme.fontFamily
   }
 })
 export default style

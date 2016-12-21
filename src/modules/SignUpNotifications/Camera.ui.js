@@ -4,6 +4,7 @@ import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-nat
 
 import Container from '../SignUp.ui'
 
+import appTheme from '../../../Themes/appTheme'
 import { cameraPermissions } from './Notifications.middleware'
 
 import t from '../../lib/LocaleStrings'
@@ -44,17 +45,20 @@ const style = StyleSheet.create({
     height: 60,
     fontSize: 22,
     color: 'skyblue',
-    width: 200
+    width: 200,
+    fontFamily: appTheme.fontFamily
   },
 
   paragraph: {
     marginTop: 10,
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: appTheme.fontFamily
   },
 
   lead: {
     fontWeight: 'bold',
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: appTheme.fontFamily
   }
 
 })

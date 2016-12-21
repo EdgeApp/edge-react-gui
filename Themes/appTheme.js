@@ -9,7 +9,7 @@ export default {
   badgeColor: '#fff',
 
     // Button
-  btnFontFamily: (Platform.OS === 'ios') ? 'Lato-Regular' : 'Lato',
+  btnFontFamily: (Platform.OS === 'ios') ? 'Lato-Regular' : 'lato',
   btnDisabledBg: '#b5b5b5',
   btnDisabledClr: '#f1f1f1',
 
@@ -83,7 +83,7 @@ export default {
   brandSidebar: '#252932',
 
     // Font
-  fontFamily: (Platform.OS === 'ios') ? 'Lato-Regular' : 'Lato',
+  fontFamily: (Platform.OS === 'ios') ? 'Lato-Regular' : 'lato',
   fontSizeBase: 15,
 
   get fontSizeH1 () {

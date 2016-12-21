@@ -14,6 +14,7 @@ import style from '../Style'
 class Login extends Component {
 
   submit = () => {
+    this.refs.pinInput._textInput.blur()
     this.props.dispatch(
       loginWithPin(
         this.props.user,

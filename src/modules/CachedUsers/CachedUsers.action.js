@@ -26,7 +26,7 @@ export function removeUserToLogin () {
   }
 }
 
-export function seletUserToDeleteFromUserCache (data) {
+export function selectUserToDeleteFromUserCache (data) {
   return {
     type: USER_TO_DELETE_FROM_CACHE,
     data

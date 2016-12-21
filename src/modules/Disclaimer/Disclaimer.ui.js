@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { acceptDisclaimer } from './Disclaimer.action'
 
+import appTheme from '../../../Themes/appTheme'
 import { Platform, View, Text, StyleSheet, WebView, Image } from 'react-native'
 import abcctx from '../../lib/abcContext'
 import { Button } from 'native-base'
@@ -17,8 +18,8 @@ class Disclaimer extends Component {
   }
   render () {
     let disclaimeruri = ''
-    if(Platform.OS === 'ios') disclaimeruri = require('../../html/disclaimer.html')
-    else if(Platform.OS === 'android') disclaimeruri = {uri: 'file:///android_asset/disclaimer.html'}
+    if (Platform.OS === 'ios') disclaimeruri = require('../../html/disclaimer.html')
+    else if (Platform.OS === 'android') disclaimeruri = {uri: 'file:///android_asset/disclaimer.html'}
 
     return (
       <View style={style.disclaimerContainer} >
@@ -107,7 +108,8 @@ const style = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
-    fontSize: 25
+    fontSize: 25,
+    fontFamily: appTheme.fontFamily
   }
 })
 

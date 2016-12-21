@@ -4,6 +4,7 @@ import Modal from 'react-native-modalbox'
 import { connect } from 'react-redux'
 import { closeWarningModal } from './WarningModal.action'
 import { deleteUserToCache } from '../CachedUsers/CachedUsers.middleware'
+import appTheme from '../../../Themes/appTheme'
 
 import abcctx from '../../lib/abcContext'
 
@@ -70,13 +71,15 @@ const style = StyleSheet.create({
   textWarning: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: appTheme.fontFamily
   },
 
   textLead: {
     fontWeight: 'bold',
     color: 'skyblue',
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: appTheme.fontFamily
   },
 
   hideModal: {

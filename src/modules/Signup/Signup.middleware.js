@@ -12,7 +12,7 @@ import t from '../../lib/LocaleStrings'
 export const signupUser = (username, password, pin) => {
   return dispatch => {
     return dispatch(checkPermissions())
-    /// all of this code is unreachable until we solve the crypto randomBytes thing
+    // / all of this code is unreachable until we solve the crypto randomBytes thing
     dispatch(openLoading(t('fragment_signup_creating_account')))
     abcctx(ctx => {
       ctx.createAccount(username, password, pin, (err, result) => {

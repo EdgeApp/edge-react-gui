@@ -2,6 +2,8 @@ import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { showSkipButton, hideSkipButton } from './SkipButton.action'
+
+import appTheme from '../../../Themes/appTheme'
 import t from '../../lib/LocaleStrings'
 
 class SkipButton extends Component {
@@ -35,7 +37,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FFF',
     paddingTop: 10,
-    fontSize: 25
+    fontSize: 25,
+    fontFamily: appTheme.fontFamily
   }
 
 })

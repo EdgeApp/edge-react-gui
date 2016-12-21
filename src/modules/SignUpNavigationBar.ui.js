@@ -6,7 +6,7 @@ import t from '../lib/LocaleStrings'
 import PasswordValidation from './Password/PasswordValidation/PasswordValidation.ui'
 
 import { Actions } from 'react-native-router-flux'
-
+import appTheme from '../../Themes/appTheme'
 class NavigationBar extends Component {
 
   checkPasswordStateOption = () => {
@@ -85,13 +85,15 @@ const style = StyleSheet.create({
     marginRight: 10,
     color: '#FFF',
     fontSize: 20,
-    width: 50
+    width: 50,
+    fontFamily: appTheme.fontFamily
   },
 
   title: {
     textAlign: 'center',
     fontSize: 18,
-    flex: 1
+    flex: 1,
+    fontFamily: appTheme.fontFamily
   }
 })
 

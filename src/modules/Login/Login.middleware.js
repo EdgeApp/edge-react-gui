@@ -33,8 +33,7 @@ export const loginWithPassword = (username, password) => {
               }
             })
           })
-        },200)
-
+        }, 200)
       }
 
     }, function (err, results) {
@@ -77,7 +76,7 @@ export const loginWithPin = (username, pin) => {
                 return callback(null, null)
               }
             })
-          } catch(e) {
+          } catch (e) {
             console.log(e)
           }
         })

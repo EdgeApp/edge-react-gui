@@ -24,7 +24,7 @@ const strings = {
   string_change: 'Change',
   string_cancel: 'CANCEL',
   string_paste: 'Paste',
-  string_paste_address: 'Paste %1$s',
+  string_paste_address: 'Paste {0}',
   string_search: 'Search',
   string_done: 'DONE',
   string_rename: 'Rename',
@@ -45,7 +45,7 @@ const strings = {
   string_help_button: 'Help button shows help for this screen',
   string_add_button: 'Add button adds a new wallet',
   string_payment_received: '** Payment Received **',
-  string_exit_app_question: 'Would you like to exit %1$s?',
+  string_exit_app_question: 'Would you like to exit {0}?',
   string_too_short: 'too short',
   string_show_balance: 'Show Balance',
   string_agree: 'Agree',
@@ -136,11 +136,11 @@ const strings = {
   server_error_bad_pin: 'Invalid PIN',
   server_error_bad_pin_login: 'Invalid PIN. Please log in.',
   server_error_pin_expired: 'PIN has expired. Please log in.',
-  server_error_invalid_pin_wait: 'Too many failed login attempts. Please try again in %1$s seconds.',
+  server_error_invalid_pin_wait: 'Too many failed login attempts. Please try again in {0} seconds.',
   server_error_other: 'An error has occurred.',
   insufficient_amount: 'Amount too small',
   account_needs_password_title: 'WARNING: missing password',
-  account_needs_password_message: 'Account [%1$s] needs a password. Account is not accessible on a new device without a password.',
+  account_needs_password_message: 'Account [{0}] needs a password. Account is not accessible on a new device without a password.',
 
     //  Strings related to Landing
   fragment_landing_logo_description: 'An image of the logo',
@@ -152,7 +152,7 @@ const strings = {
   fragment_landing_signin_button: 'Sign In',
   fragment_landing_signup_button: 'Sign Up',
   fragment_landing_forgot_password: 'Forgot Password',
-  fragment_landing_current_user: 'Current User (%1$s)',
+  fragment_landing_current_user: 'Current User ({0})',
   fragment_landing_switch_user: 'Exit PIN Login',
   fragment_landing_forgot_pin: 'Forgot PIN',
   fragment_landing_enter_pin: 'Enter PIN',
@@ -161,7 +161,7 @@ const strings = {
   fragment_forgot_no_recovery_questions_title: 'No Recovery Questions',
   fragment_forgot_no_recovery_questions_text: 'This user does not have any recovery questions set!',
   fragment_landing_account_delete_title: 'Delete Account',
-  fragment_landing_account_delete_message: 'Delete %1$s on this device only? This will remove the 2FA and PIN access from this device. If 2FA is enabled on this account, you will be unable to access this account for 7 days from new devices',
+  fragment_landing_account_delete_message: 'Delete {0} on this device only? This will remove the 2FA and PIN access from this device. If 2FA is enabled on this account, you will be unable to access this account for 7 days from new devices',
 
     // Strings for Signup and Sign-in
   activity_signup_title: 'Sign Up',
@@ -327,7 +327,7 @@ const strings = {
     //  Strings for Category Fragment
   fragment_category_cancel_title: 'Cancel Changes',
   fragment_category_cancel_message: 'Are you sure you want to cancel any changes you made?',
-  fragment_category_deleted: '%1$s Deleted',
+  fragment_category_deleted: '{0} Deleted',
   fragment_category_add: 'Add Category',
 
     //  Strings for AutoLogoff Dialog
@@ -340,7 +340,7 @@ const strings = {
   send_to_title: 'To:',
   send_scan_text: 'Scan QR Code or use photo',
   send_scan_text_nfc: 'Scan QR Code or tap NFC device',
-  fragment_send_connecting_to_device: 'Connecting to %1$s',
+  fragment_send_connecting_to_device: 'Connecting to {0}',
   fragment_send_incorrect_pin_message: 'You must enter the correct PIN in order to proceed',
   fragment_send_incorrect_pin_title: 'Invalid PIN',
   fragment_send_incorrect_password_message: 'You must enter the correct Password in order to proceed',
@@ -386,7 +386,7 @@ const strings = {
   fragment_send_confirmation_pin_remaining: 'Invalid PIN. Please wait %1$.0f seconds and try again…',
   fragment_send_confirmation_password_remaining: 'Incorrect Password. Please wait %1$.0f seconds and try again…',
   fragment_send_confirmation_dust_alert: 'Amount is too small.',
-  fragment_send_confirmation_dust_alert_more: 'Please send at least %1$s (~%2$s)',
+  fragment_send_confirmation_dust_alert_more: 'Please send at least {0} (~{1})',
   fragment_send_confirmation_error_payment_processor: 'Error connecting to payment processor. Send directly to bitcoin address\n\n%s',
 
     //  Strings for Wallets fragment
@@ -396,8 +396,8 @@ const strings = {
   fragment_wallets_unable_to_delete_wallet: 'Unable to delete wallet',
   fragment_wallets_delete_has_funds: 'Cannot delete wallet as it contains funds. Please transfer out funds first.',
   fragment_wallets_delete_wallet_confirm_title: 'Delete Wallet?',
-  fragment_wallets_delete_wallet_confirm_message: 'Are you sure you want to delete %1$s?',
-  fragment_wallets_delete_wallet_second_confirm_title: 'Delete Wallet: %1$s?',
+  fragment_wallets_delete_wallet_confirm_message: 'Are you sure you want to delete {0}?',
+  fragment_wallets_delete_wallet_second_confirm_title: 'Delete Wallet: {0}?',
   fragment_wallets_delete_wallet_second_confirm_message: 'Are you sure? You will be unable to access any funds in this wallet and any future funds that it may receive.',
   fragment_wallets_wallet_delete: 'Wallet deleted',
   fragment_wallets_rename_wallet: 'Rename Wallet',
@@ -408,7 +408,7 @@ const strings = {
   fragment_wallets_addwallet_currency_textview: 'Currency:',
   fragment_wallets_addwallet_online_textview: 'ONLINE',
   fragment_wallets_addwallet_offline_textview: 'OFFLINE',
-  fragment_wallets_created_wallet: '%1$s created',
+  fragment_wallets_created_wallet: '{0} created',
   fragment_wallets_created_wallet_failed: 'Failed to create wallet',
   fragment_wallets_archive_help: 'To archive a wallet, tap and hold the 3 dots to the right of a wallet and drag it below the [ARCHIVE] header',
 
@@ -429,7 +429,7 @@ const strings = {
 
     //  Strings for Request fragment
   address_request_title: 'Address Request',
-  address_request_message: '%1$s has requested a bitcoin address to send money to. Please choose a wallet to receive funds.',
+  address_request_message: '{0} has requested a bitcoin address to send money to. Please choose a wallet to receive funds.',
   fragment_request_subtitle: 'Request',
   fragment_request_copy_title: 'Copy',
   fragment_request_email_title: 'Email',
@@ -444,7 +444,7 @@ const strings = {
   request_invalid_amount: 'Invalid Amount',
 
     //  Strings for Request QR Code fragment
-  request_qr_email_title: '%1$s Bitcoin Request',
+  request_qr_email_title: '{0} Bitcoin Request',
   request_qr_bitmap_error: 'A QR code could not be attached.',
   request_qr_image_store_error: 'Warning: The QR code cannot be attached to the email.',
   request_qr_unknown: 'Unknown User',
@@ -453,7 +453,7 @@ const strings = {
   request_qr_title: 'Request Bitcoin',
   request_qr_ble_advertise_start_failed: 'Bluetooth advertising failed to start.',
   request_qr_ble_invalid_value: 'Bluetooth sender sent an invalid name. Try again.',
-  request_qr_ble_invalid_service: '%1$s could not advertise the Bluetooth service. Please check Bluetooth on your device.',
+  request_qr_ble_invalid_service: '{0} could not advertise the Bluetooth service. Please check Bluetooth on your device.',
   request_qr_ble_invalid_uri: 'You received an invalid bitcoin request. You can try again.',
   request_qr_ble_copied: 'Request is copied to the clipboard.',
   request_qr_first_usage: 'Present QR code to Sender and have them scan to send you payment',
@@ -470,7 +470,7 @@ const strings = {
   import_wallet_hidden_bits_error_title: 'Error',
   import_wallet_hidden_bits_error_message: 'Failed to import because there is 0 bitcoin remaining at this address',
   import_wallet_private_key_invalid: 'Invalid private key',
-  import_wallet_busy_text: 'Importing funds from %1$s into wallet…',
+  import_wallet_busy_text: 'Importing funds from {0} into wallet…',
   import_wallet_private_key_title: 'Private Key:',
   import_wallet_private_key_hint: 'Enter bitcoin address (optional)',
 
@@ -563,7 +563,7 @@ const strings = {
   bluetoothlistview_discovery_failed: 'Bluetooth service discovery failed. Try again.',
   bluetoothlistview_scan_failed: 'Bluetooth scan failed. Try again.',
   bluetoothlistview_address_mismatch_title: 'Bitcoin address mismatch',
-  bluetoothlistview_address_mismatch_message: 'The bitcoin address of the device you connected with:%1$s does not match the address that was initially advertised:%2$s',
+  bluetoothlistview_address_mismatch_message: 'The bitcoin address of the device you connected with:{0} does not match the address that was initially advertised:{1}',
   ble_invalid_request: 'Invalid Bluetooth Request',
   ble_invalid_contact_support: 'Please have Requestor contact support',
 
@@ -577,14 +577,14 @@ const strings = {
   alert_new_business_message: 'Touch to see new businesses',
 
     //  User Review
-  user_review_title: '%1$s',
-  user_review_message: 'How are you liking %1$s?',
+  user_review_title: '{0}',
+  user_review_message: 'How are you liking {0}?',
   user_review_not_good: 'Not so good',
   user_review_great: "It's great",
   user_review_no_thanks: 'No thanks',
   user_review_ok_message: 'Would you like to send us some feedback?',
   user_review_play_store: 'Would you like to write a review in the Google Play Store?',
-  user_review_support_subject: '%1$s Feedback',
+  user_review_support_subject: '{0} Feedback',
   user_review_support_title: 'Choose Email',
 
     //  Two Factor screens
@@ -621,24 +621,24 @@ const strings = {
   fragment_two_factor_scan_no_thanks: 'No Thanks',
 
   fragment_two_factor_warn_title: '** Warning **',
-  fragment_two_factor_warn_message: 'If you lose your device or uninstall the %1$s app, it will take 7 days to disable 2FA and access your account.',
+  fragment_two_factor_warn_message: 'If you lose your device or uninstall the {0} app, it will take 7 days to disable 2FA and access your account.',
 
-  twofactor_reset_message: 'A two factor reset has been requested. Please login as %1$s and approve or cancel the request.',
+  twofactor_reset_message: 'A two factor reset has been requested. Please login as {0} and approve or cancel the request.',
   twofactor_reset_title: 'Two Factor Reset Request',
 
-  receiver_alert_title: '%1$s Notification',
+  receiver_alert_title: '{0} Notification',
 
     //  Other
   remote_password_change_title: 'Password Changed Remotely',
   remote_password_change_message: 'The Password to this account was changed by another device. Please login using the new credentials',
   received_bitcoin_title: 'Received Bitcoin',
-  received_bitcoin_message: 'Received %1$s(~%2$s).\nTap Details to see transaction.',
-  received_bitcoin_fading_message: 'You received Bitcoin!\n%1$s (~%2$s)\n',
+  received_bitcoin_message: 'Received {0}(~{1}).\nTap Details to see transaction.',
+  received_bitcoin_fading_message: 'You received Bitcoin!\n{0} (~{1})\n',
   received_bitcoin_fading_message_teaching: 'Use the Payee, Category, and Notes field to optionally tag your transaction',
   received_partial_bitcoin_title: '** Warning **',
   received_partial_bitcoin_message: 'Partial Payment Received',
-  bitcoin_remaining: '%1$s Remaining…',
-  bitcoin_received: '%1$s Received',
+  bitcoin_remaining: '{0} Remaining…',
+  bitcoin_received: '{0} Received',
   received_bitcoin_positive: 'Details',
   received_bitcoin_negative: 'Ignore',
   title_cloud_print_dialog_activity: 'PrintDialogActivity',
@@ -680,7 +680,7 @@ const strings = {
   settings_category_title: 'Categories',
 
     //  Logout
-  logout_message: 'Please wait while %1$s gracefully exits your account. This may take a while on slow networks',
+  logout_message: 'Please wait while {0} gracefully exits your account. This may take a while on slow networks',
 
     //  Navigation Drawer
   drawer_signin_or_signup: 'Sign In or Sign Up',
@@ -701,7 +701,7 @@ const strings = {
   affiliate_link: 'Affiliate Link',
   affiliate_link_copied: 'Affiliate Link copied to clipboard',
   affiliate_refer_friends_title: 'Refer Your Friend',
-  affiliate_refer_friends_body: '%1$s\n\nShare this link to receive revenue from users that install and use %2$s. You will receive 0.25%% of all gift card purchases made inside of this app.',
+  affiliate_refer_friends_body: '{0}\n\nShare this link to receive revenue from users that install and use {1}. You will receive 0.25%% of all gift card purchases made inside of this app.',
   affiliate_category: 'Income:Affiliate Revenue',
   affiliate_notes: 'Revenue share from affiliate link %s',
   affiliate_link_error: 'Unable to generate affiliate link at this time.',
@@ -734,7 +734,7 @@ const strings = {
   plugin_homedepot_discount: '(Up to 15% Off)',
   plugin_glidera_title: 'Buy/Sell with Bank Account (USA)',
   plugin_clevercoin_title: 'Europe (EUR)',
-  plugin_popup_notice: 'The following services are not provided by %1$s.\n\nFor issues and feedback, please contact the respective service providers.',
+  plugin_popup_notice: 'The following services are not provided by {0}.\n\nFor issues and feedback, please contact the respective service providers.',
   plugin_bitrefill_title: 'Topup Prepaid Mobile SIM',
 
   intent_choose_an_email: 'Choose an Email client:',
@@ -762,7 +762,7 @@ const strings = {
   save_recovery_token_popup: 'Save Recovery Token',
   save_recovery_token_popup_message: 'To complete account recovery setup you MUST save an account recovery token. This will be required to recover your account in addition to your username and recovery answers. Please enter your email below to send yourself the recovery token.',
   recovery_token_email_subject: '%s Recovery Token',
-  recovery_token_email_body: 'Please click the link below from a mobile device with %1$s installed to initiate account recovery for username [%2$s]\n\n&lt;br&gt;&lt;br&gt;%3$s',
+  recovery_token_email_body: 'Please click the link below from a mobile device with {0} installed to initiate account recovery for username [{1}]\n\n&lt;br&gt;&lt;br&gt;{2}',
   enter_username_to_recover: 'Please enter the username of the account to recover',
   recovery_not_setup: 'Recovery was not setup or was done on another device',
   recovery_not_setup2: 'If recovery was setup, you should have emailed yourself a recovery token with a link',
@@ -793,7 +793,7 @@ const strings = {
   verify_domain_and_approve: 'Please verify the domain above and tap LOGIN to authenticate with this site',
   would_like_to: 'This site would like to:',
   request_payment_address: 'Request a Payment Address',
-  identity_token_created_and_saved: 'Identity token from [%1$s] created and saved',
+  identity_token_created_and_saved: 'Identity token from [{0}] created and saved',
   successfully_verified_identity: 'Successfully Verified Identity',
   create_new_text: 'Create new',
   or_choose: '"$1$s" or choose',
@@ -801,7 +801,7 @@ const strings = {
   request_your_identity_token: 'Request your Identity Token. Please select one below',
   request_your_identity_token_but_none: "Request your Identity Token but you don't have any",
 
-  bitid_login_message: '%1$s',
+  bitid_login_message: '{0}',
   bitid_login_title: 'BitID Login',
 
   bitid_login_success: 'Successfully Logged In',

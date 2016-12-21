@@ -33,7 +33,7 @@ export const checkUsername = username => {
               }
             })
           })
-        },200)
+        }, 200)
       }
     }, function (err, results) {
       dispatch(closeLoading())

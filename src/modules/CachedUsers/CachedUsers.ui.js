@@ -5,9 +5,11 @@ import { Actions } from 'react-native-router-flux'
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
-import { selectUserToLogin, seletUserToDeleteFromUserCache } from './CachedUsers.action'
+import { selectUserToLogin, selectUserToDeleteFromUserCache } from './CachedUsers.action'
 import { openLoginUsingPin } from '../Login/Login.action'
 import { openWarningModal } from '../WarningModal/WarningModal.action'
+
+import appTheme from '../../../Themes/appTheme'
 
 import t from '../../lib/LocaleStrings'
 
@@ -18,13 +20,14 @@ class UserList extends Component {
   }
 
   handleDeleteUserCache = (user) => {
+    console.log(t('fragment_landing_account_delete_message').format(user))
     this.props.blurField._textInput.blur()
-    this.props.dispatch(seletUserToDeleteFromUserCache(user))
+    this.props.dispatch(selectUserToDeleteFromUserCache(user))
     this.props.dispatch(
       openWarningModal(
         'deleteCachedUser',
         t('fragment_landing_account_delete_title'),
-        t('fragment_landing_account_delete_message')
+        t('fragment_landing_account_delete_message').format(user)
       )
     )
   }
@@ -103,11 +106,13 @@ const style = StyleSheet.create({
   text: {
     flex: 1,
     color: '#222',
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: appTheme.fontFamily
   },
 
   xbuttontext: {
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: appTheme.fontFamily
   },
   xbutton: {
     height: 40,

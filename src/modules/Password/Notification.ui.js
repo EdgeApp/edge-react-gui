@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import t from '../../lib/LocaleStrings'
 import { passwordNotificationHide } from './Password.action'
 
+import appTheme from '../../../Themes/appTheme'
 class ErrorModal extends Component {
 
   handleClose = () => {
@@ -48,13 +49,15 @@ const style = StyleSheet.create({
   textError: {
     fontSize: 16,
     textAlign: 'center',
-    marginBottom: 10
+    marginBottom: 10,
+    fontFamily: appTheme.fontFamily
   },
 
   textLead: {
     fontWeight: 'bold',
     color: 'skyblue',
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: appTheme.fontFamily
   },
 
   hideModal: {

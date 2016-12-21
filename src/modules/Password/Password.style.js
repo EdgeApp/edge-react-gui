@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 
+import appTheme from '../../../Themes/appTheme'
 const style = StyleSheet.create({
 
   inputView: {
@@ -22,12 +23,14 @@ const style = StyleSheet.create({
     height: 60,
     fontSize: 22,
     color: 'skyblue',
-    width: 240
+    width: 240,
+    fontFamily: appTheme.fontFamily
   },
 
   paragraph: {
     marginTop: 10,
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: appTheme.fontFamily
   }
 
 })
