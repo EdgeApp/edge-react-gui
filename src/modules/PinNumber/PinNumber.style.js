@@ -39,7 +39,7 @@ const style = StyleSheet.create({
 
   paragraph: {
     marginHorizontal: 30,
-    
+
     marginTop: 10,
     fontSize: 14,
     fontFamily: appTheme.fontFamily

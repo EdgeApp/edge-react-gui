@@ -1,6 +1,8 @@
 package com.airbitz_ui;
 
 import com.facebook.react.ReactActivity;
+import android.content.Intent;
+import android.content.res.Configuration;
 
 public class MainActivity extends ReactActivity {
 

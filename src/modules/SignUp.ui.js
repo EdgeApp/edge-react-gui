@@ -5,7 +5,6 @@ import NavigationBar from './SignUpNavigationBar.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Loader from './Loader/Loader.ui'
 
-
 class SignUpContainer extends Component {
   componentWillMount () {
     const foo = global.abcContext.listUsernames()

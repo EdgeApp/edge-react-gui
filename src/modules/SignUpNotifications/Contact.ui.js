@@ -25,7 +25,7 @@ export default class Contact extends Component {
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_2') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_3') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_4') }</Text>
-          <NextButton onPress={() => { this.handleSubmit() }} /> 
+          <NextButton onPress={() => { this.handleSubmit() }} />
         </View>
       </Container>
     )

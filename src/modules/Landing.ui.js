@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Disclaimer from './Disclaimer/Disclaimer.ui'
-import Loader from './Loader/Loader.ui'
 import WarningModal from './WarningModal/WarningModal.ui'
-import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
-
+import TemplateView from './tpl/View.ui'
 import abcctx from '../lib/abcContext'
 
 import { acceptDisclaimer } from './Disclaimer/Disclaimer.action'
@@ -19,13 +17,14 @@ import t from '../lib/LocaleStrings'
 
 import style from './Style'
 
-class HomeComponent extends Component {
+class HomeComponent extends TemplateView {
 
   handleOpenLogin = () => {
     this.props.dispatch(openLogin())
   }
 
   componentWillMount () {
+    super.componentWillMount()
     const dispatch = this.props.dispatch
     abcctx(ctx => {
       const cachedUsers = ctx.listUsernames()
@@ -73,16 +72,14 @@ class HomeComponent extends Component {
     }
   }
 
-  render () {
+  renderContent () {
     return (
       <Image source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
           <Image source={require('../img/logo.png')} style={style.logoImage} />
         </View>
         { this.renderMainComponent() }
-        <Loader />
         <WarningModal />
-        <ErrorModal />
         { this.renderDisclaimerComponent() }
       </Image>
     )

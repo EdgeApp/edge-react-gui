@@ -28,7 +28,7 @@ class SkipButton extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection:'row',
+    flexDirection: 'row',
     marginTop: 10
   },
   button: {

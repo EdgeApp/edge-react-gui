@@ -35,9 +35,8 @@ class Password extends Component {
   }
 
   handlePasswordNotification = () => {
-
-    this.refs.SignupPasswordFirst._textInput.blur()
-    this.refs.SignupPassword._textInput.blur()
+    this.refs.SignupPasswordFirst.blur()
+    this.refs.SignupPassword.blur()
     this.props.dispatch(passwordNotificationShow())
   }
 
@@ -73,6 +72,7 @@ class Password extends Component {
           </Text>
           <TextInput
             ref='SignupPasswordFirst'
+            autoCorrect={false}
             style={style.input}
             placeholder={t('activity_signup_password_hint')}
             keyboardType='default'
@@ -87,6 +87,7 @@ class Password extends Component {
           />
           <TextInput
             ref='SignupPassword'
+            autoCorrect={false}
             style={style.input}
             placeholder={t('activity_signup_password_confirm_hint')}
             keyboardType='default'
@@ -97,7 +98,7 @@ class Password extends Component {
             value={this.props.passwordRepeat}
           />
           <SkipButton onPress={() => { this.handlePasswordNotification() }} />
-          <NextButton onPress={() => { this.handleSubmit() }} />          
+          <NextButton onPress={() => { this.handleSubmit() }} />
 
         </View>
         <Notification handleSubmit={this.handleSkipPassword} />

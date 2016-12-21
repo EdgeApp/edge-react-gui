@@ -11,7 +11,6 @@ import t from '../../lib/LocaleStrings'
 import NextButton from '../NextButton/NextButton.ui'
 import SkipButton from '../SkipButton/SkipButton.ui'
 
-
 class PinComponent extends Component {
 
   handleSubmit = () => {
@@ -22,6 +21,9 @@ class PinComponent extends Component {
 
   handleOnChangeText = (pinNumber) => {
     this.props.dispatch(changePinNumberValue(pinNumber))
+    if (pinNumber.length > 3) {
+      this.refs.signupPin.blur()
+    }
   }
 
   render () {
@@ -43,12 +45,13 @@ class PinComponent extends Component {
             onChangeText={this.handleOnChangeText}
             value={pinNumber}
             blurOnSubmit
+            ref='signupPin'
             onSubmitEditing={this.handleSubmit}
           />
           <Text style={style.paragraph}>
             {t('fragment_setup_pin_text')}
           </Text>
-          <NextButton onPress={this.handleSubmit} />          
+          <NextButton onPress={this.handleSubmit} />
 
         </View>
       </Container>

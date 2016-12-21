@@ -6,7 +6,7 @@ import { loginUsername, loginPassword, openUserList, closeUserList } from './Log
 import { loginWithPassword } from './Login.middleware'
 import { View, Text, Image, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base'
-
+import TemplateTextInput from '../tpl/TextInput.ui'
 import t from '../../lib/LocaleStrings'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 import style from '../Style'
@@ -62,33 +62,35 @@ class Login extends Component {
         <View style={style.spacer} />
         <View style={style.form}>
 
-          <InputGroup borderType='regular' style={style.inputGroup} >
-            <Input
-              ref='loginUsername'
-              placeholder={t('fragment_landing_username_hint')}
-              style={style.input}
-              onChangeText={this.changeUsername}
-              value={this.props.username}
-              returnKeyType={'next'}
-              onSubmitEditing={e => this.refs.password._textInput.focus()}
-              selectTextOnFocus
-              onFocus={this.showCachedUsers}
+          <TemplateTextInput
+            borderType='underline'
+            inputGroupStyle={style.inputGroup}
+            ref='loginUsername'
+            placeholder={t('fragment_landing_username_hint')}
+            style={style.input}
+            onChangeText={this.changeUsername}
+            value={this.props.username}
+            returnKeyType={'next'}
+            onSubmitEditing={e => this.refs.password._textInput.focus()}
+            selectTextOnFocus
+            onFocus={this.showCachedUsers}
+            autoCorrect={false}
         />
-          </InputGroup>
 
-          <InputGroup borderType='regular' style={style.inputGroup} >
-            <Input
-              ref='password'
-              onFocus={this.hideCachedUsers}
-              placeholder={t('fragment_landing_password_hint')}
-              style={style.input}
-              secureTextEntry
-              onChangeText={this.changePassword}
-              value={this.props.password}
-              blurOnSubmit
-              onSubmitEditing={() => { this.submit() }}
+          <TemplateTextInput
+            borderType='underline'
+            inputGroupStyle={style.inputGroup}
+            ref='password'
+            onFocus={this.hideCachedUsers}
+            placeholder={t('fragment_landing_password_hint')}
+            style={style.input}
+            secureTextEntry
+            onChangeText={this.changePassword}
+            value={this.props.password}
+            blurOnSubmit
+            onSubmitEditing={() => { this.submit() }}
+            autoCorrect={false}
         />
-          </InputGroup>
           <TouchableOpacity style={style.button} onPress={this.submit}>
             <Text style={style.buttonText}> Sign In </Text>
           </TouchableOpacity>

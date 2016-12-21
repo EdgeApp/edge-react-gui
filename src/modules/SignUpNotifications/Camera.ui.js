@@ -24,7 +24,7 @@ export default class Camera extends Component {
           <Text style={style.lead}>{ t('activity_signup_camera_header') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_camera_text_1') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_camera_text_2') }</Text>
-          <NextButton onPress={() => { this.handleSubmit() }} /> 
+          <NextButton onPress={() => { this.handleSubmit() }} />
         </View>
       </Container>
     )
