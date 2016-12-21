@@ -11,8 +11,6 @@ const style = StyleSheet.create({
   inputView: {
     flex: 1,
     marginTop: 10,
-    marginLeft: 30,
-    marginRight: 30,
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
     flexDirection: 'column'
@@ -20,12 +18,16 @@ const style = StyleSheet.create({
   },
 
   inputLabel: {
+    marginHorizontal: 30,
+
     fontWeight: 'bold',
     fontSize: 16,
     fontFamily: appTheme.fontFamily
   },
 
   input: {
+    marginHorizontal: 30,
+
     width: 200,
     height: 60,
     fontSize: 22,
@@ -36,6 +38,8 @@ const style = StyleSheet.create({
   },
 
   paragraph: {
+    marginHorizontal: 30,
+    
     marginTop: 10,
     fontSize: 14,
     fontFamily: appTheme.fontFamily

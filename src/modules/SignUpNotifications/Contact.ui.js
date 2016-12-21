@@ -4,9 +4,8 @@ import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-nat
 
 import appTheme from '../../../Themes/appTheme'
 import Container from '../SignUp.ui'
-
+import NextButton from '../NextButton/NextButton.ui'
 import { readContactPermissions } from './Notifications.middleware'
-
 import t from '../../lib/LocaleStrings'
 
 export default class Contact extends Component {
@@ -26,6 +25,7 @@ export default class Contact extends Component {
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_2') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_3') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_4') }</Text>
+          <NextButton onPress={() => { this.handleSubmit() }} /> 
         </View>
       </Container>
     )
@@ -37,30 +37,22 @@ const style = StyleSheet.create({
   inputView: {
     flex: 1,
     marginTop: 30,
-    marginLeft: 30,
-    marginRight: 30,
     alignItems: 'flex-start',
     justifyContent: 'flex-start'
-  },
-
-  usernameInput: {
-    height: 60,
-    fontSize: 22,
-    color: 'skyblue',
-    width: 200,
-    fontFamily: appTheme.fontFamily
   },
 
   paragraph: {
     marginTop: 10,
     fontSize: 14,
-    fontFamily: appTheme.fontFamily
+    fontFamily: appTheme.fontFamily,
+    marginHorizontal: 30
   },
 
   lead: {
     fontWeight: 'bold',
     fontSize: 16,
-    fontFamily: appTheme.fontFamily
+    fontFamily: appTheme.fontFamily,
+    marginHorizontal: 30
   }
 
 })

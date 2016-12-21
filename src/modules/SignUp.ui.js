@@ -4,8 +4,7 @@ import { View, StyleSheet } from 'react-native'
 import NavigationBar from './SignUpNavigationBar.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Loader from './Loader/Loader.ui'
-import NextButton from './NextButton/NextButton.ui'
-import SkipButton from './SkipButton/SkipButton.ui'
+
 
 class SignUpContainer extends Component {
   componentWillMount () {
@@ -16,8 +15,6 @@ class SignUpContainer extends Component {
       <View style={style.container}>
         <NavigationBar />
         {this.props.children}
-        <SkipButton onPress={this.props.handleSkip} />
-        <NextButton onPress={this.props.handleSubmit} />
         <Loader />
         <ErrorModal />
       </View>

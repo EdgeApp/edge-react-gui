@@ -9,6 +9,8 @@ import Container from '../SignUp.ui'
 
 import style from './Username.style'
 import t from '../../lib/LocaleStrings'
+import NextButton from '../NextButton/NextButton.ui'
+import SkipButton from '../SkipButton/SkipButton.ui'
 
 class UsernameComponent extends Component {
 
@@ -38,6 +40,7 @@ class UsernameComponent extends Component {
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}
           </Text>
+          <NextButton onPress={this.handleSubmit} />          
         </View>
       </Container>
     )

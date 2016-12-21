@@ -8,6 +8,9 @@ import { checkPIN } from './PinNumber.middleware'
 import Container from '../SignUp.ui'
 import style from './PinNumber.style'
 import t from '../../lib/LocaleStrings'
+import NextButton from '../NextButton/NextButton.ui'
+import SkipButton from '../SkipButton/SkipButton.ui'
+
 
 class PinComponent extends Component {
 
@@ -45,6 +48,8 @@ class PinComponent extends Component {
           <Text style={style.paragraph}>
             {t('fragment_setup_pin_text')}
           </Text>
+          <NextButton onPress={this.handleSubmit} />          
+
         </View>
       </Container>
     )

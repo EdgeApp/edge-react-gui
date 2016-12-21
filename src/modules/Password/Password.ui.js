@@ -9,6 +9,8 @@ import style from './Password.style'
 import { validate } from './PasswordValidation/PasswordValidation.middleware'
 import { checkPassword, skipPassword } from './Password.middleware'
 
+import NextButton from '../NextButton/NextButton.ui'
+import SkipButton from '../SkipButton/SkipButton.ui'
 import t from '../../lib/LocaleStrings'
 import {
   passwordNotificationShow,
@@ -33,6 +35,9 @@ class Password extends Component {
   }
 
   handlePasswordNotification = () => {
+
+    this.refs.SignupPasswordFirst._textInput.blur()
+    this.refs.SignupPassword._textInput.blur()
     this.props.dispatch(passwordNotificationShow())
   }
 
@@ -61,15 +66,13 @@ class Password extends Component {
 
   render () {
     return (
-      <Container
-        handleSubmit={this.handleSubmit}
-        handleSkip={this.handlePasswordNotification}
-      >
+      <Container>
         <View style={[ style.inputView, this.checkPasswordInputState() ]}>
           <Text style={style.paragraph}>
             {t('fragment_setup_password_text')}
           </Text>
           <TextInput
+            ref='SignupPasswordFirst'
             style={style.input}
             placeholder={t('activity_signup_password_hint')}
             keyboardType='default'
@@ -93,6 +96,9 @@ class Password extends Component {
             onSubmitEditing={this.handleSubmit}
             value={this.props.passwordRepeat}
           />
+          <SkipButton onPress={() => { this.handlePasswordNotification() }} />
+          <NextButton onPress={() => { this.handleSubmit() }} />          
+
         </View>
         <Notification handleSubmit={this.handleSkipPassword} />
       </Container>

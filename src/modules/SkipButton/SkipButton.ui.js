@@ -11,7 +11,7 @@ class SkipButton extends Component {
   render () {
     if (this.props.scene === 'password') {
       return (
-        <View>
+        <View style={styles.container}>
           <TouchableHighlight style={[ styles.button, this.props.password.length !== 0 ? {backgroundColor: 'rgba(0,0,0,0)'} : null ]} onPress={this.props.onPress}>
             <Text style={[ styles.buttonText, this.props.password.length !== 0 ? {color: '#000'} : null ]}>{t('string_skip')}</Text>
           </TouchableHighlight>
@@ -27,8 +27,12 @@ class SkipButton extends Component {
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    flexDirection:'row',
+    marginTop: 10
+  },
   button: {
+    flex: 1,
     backgroundColor: '#80C342',
     height: 60
   },
@@ -36,7 +40,7 @@ const styles = StyleSheet.create({
   buttonText: {
     textAlign: 'center',
     color: '#FFF',
-    paddingTop: 10,
+    paddingTop: 15,
     fontSize: 25,
     fontFamily: appTheme.fontFamily
   }
