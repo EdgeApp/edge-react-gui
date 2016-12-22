@@ -21,7 +21,7 @@ class UserList extends Component {
 
   handleDeleteUserCache = (user) => {
     console.log(t('fragment_landing_account_delete_message').format(user))
-    this.props.blurField._textInput.blur()
+    this.props.blurField.blur()
     this.props.dispatch(selectUserToDeleteFromUserCache(user))
     this.props.dispatch(
       openWarningModal(

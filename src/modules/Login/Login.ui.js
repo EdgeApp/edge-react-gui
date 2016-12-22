@@ -64,13 +64,21 @@ class Login extends Component {
         return null
       }
     }
+    let heightBelowView = 90
+    let heightFieldsView = 0
+    let opacityFieldsView = 0
+    if(this.props.viewPassword) {
+      heightBelowView = 0
+      heightFieldsView = 90
+      opacityFieldsView = 1
+    }
 
     return (
       <View style={style.container}>
         <View style={style.spacer} />
         <View style={style.form}>
           <Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Text>
-          <Animatable.View ref='fieldsView' style={[style.fieldsView,{opacity:0, height:0}]}>
+          <Animatable.View ref='fieldsView' style={[style.fieldsView,{opacity:opacityFieldsView, height:heightFieldsView}]}>
           <TemplateTextInput
             borderType='underline'
             inputGroupStyle={style.inputGroup}
@@ -104,7 +112,7 @@ class Login extends Component {
           <TouchableOpacity style={style.button} onPress={this.submit}>
             <Text style={style.buttonText}> Sign In </Text>
           </TouchableOpacity>
-          <Animatable.View ref='fieldsBelowView' style={[{height:90}]}/>
+          <Animatable.View ref='fieldsBelowView' style={[{height:heightBelowView}]}/>
 
 
           <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
