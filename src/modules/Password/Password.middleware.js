@@ -1,11 +1,7 @@
-import { Actions } from 'react-native-router-flux'
 
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { passwordNotificationHide, changePasswordValue } from './Password.action'
 import { signupUser } from '../Signup/Signup.middleware'
-
-import abcctx from '../../lib/abcContext'
-import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import t from '../../lib/LocaleStrings'
 

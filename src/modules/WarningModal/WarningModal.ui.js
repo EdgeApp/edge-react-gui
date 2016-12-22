@@ -6,8 +6,6 @@ import { closeWarningModal } from './WarningModal.action'
 import { deleteUserToCache } from '../CachedUsers/CachedUsers.middleware'
 import appTheme from '../../../Themes/appTheme'
 
-import abcctx from '../../lib/abcContext'
-
 import t from '../../lib/LocaleStrings'
 
 class WarningModal extends Component {

@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import * as Animatable from 'react-native-animatable'
-import { Animated, View, Text, Image, TouchableOpacity } from 'react-native'
-import { Button } from 'native-base'
+import { View, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Disclaimer from './Disclaimer/Disclaimer.ui'
@@ -13,38 +12,38 @@ import LoginWithPin from './Login/LoginWithPin.ui'
 import TemplateView from './tpl/View.ui'
 import abcctx from '../lib/abcContext'
 
-import { showWhiteOverlay, hideWhiteOverlay } from './Landing.action'
+import { hideWhiteOverlay } from './Landing.action'
 
-import { acceptDisclaimer, showDisclaimer } from './Disclaimer/Disclaimer.action'
+import { showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
-
-import t from '../lib/LocaleStrings'
 
 import style from './Style'
 
 global.randomBytes = require('react-native-randombytes').randomBytes
 // synchronous API
 // uses SJCL
-var rand = randomBytes(4)
-console.log("SYNC RANDOM BYTES",rand.toString('hex'))
+var rand = global.randomBytes(4)
+console.log('SYNC RANDOM BYTES', rand.toString('hex'))
 
 // asynchronous API
 // uses iOS-side SecRandomCopyBytes
-randomBytes(4, (err, bytes) => {
-  console.log("RANDOM BYTES",bytes.toString('hex'))
+global.randomBytes(4, (err, bytes) => {
+  if (err) console.error(err)
+  console.log('RANDOM BYTES', bytes.toString('hex'))
 })
 
 class HomeComponent extends TemplateView {
 
-
-  componentDidUpdate() {
-    if(this.props.whiteOverlayVisible) {
+  componentDidUpdate () {
+    if (this.props.whiteOverlayVisible) {
       var self = this
       this.refs.whiteOverlay.fadeIn(300).then(endState => {
         Actions.signup()
-        setTimeout(function() {
-            self.props.dispatch(hideWhiteOverlay())
-        },3000)        
+        setTimeout(function () {
+          self.props.dispatch(hideWhiteOverlay())
+        }, 3000)
+      }).catch(e => {
+        console.error(e)
       })
     }
   }
@@ -60,18 +59,17 @@ class HomeComponent extends TemplateView {
         dispatch(selectUserToLogin(lastUser))
       }
       const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
-      if(!disclaimerAccepted) dispatch(showDisclaimer())
+      if (!disclaimerAccepted) dispatch(showDisclaimer())
     })
   }
 
   renderWhiteTransition () {
-    if(this.props.whiteOverlayVisible) {
-      return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade}></Animatable.View>)
+    if (this.props.whiteOverlayVisible) {
+      return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade} />)
     } else {
       return null
     }
   }
-
 
   renderMainComponent = () => {
     if (this.props.pin) return <LoginWithPin />

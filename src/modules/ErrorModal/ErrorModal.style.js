@@ -11,7 +11,6 @@ const style = StyleSheet.create({
   },
 
   textError: {
-    fontFamily: appTheme.fontFamily,
     fontSize: 18,
     textAlign: 'center',
     marginBottom: 10,

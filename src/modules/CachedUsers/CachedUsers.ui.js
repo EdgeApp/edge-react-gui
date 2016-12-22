@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Actions } from 'react-native-router-flux'
 import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { InputGroup, Input, Button, Card, CardItem, Content} from 'native-base'
 
 import { selectUserToLogin, selectUserToDeleteFromUserCache } from './CachedUsers.action'
-import { openLoginUsingPin } from '../Login/Login.action'
 import { openWarningModal } from '../WarningModal/WarningModal.action'
 
 import appTheme from '../../../Themes/appTheme'
@@ -20,14 +17,13 @@ class UserList extends Component {
   }
 
   handleDeleteUserCache = (user) => {
-    console.log(t('fragment_landing_account_delete_message').format(user))
     this.props.blurField.blur()
     this.props.dispatch(selectUserToDeleteFromUserCache(user))
     this.props.dispatch(
       openWarningModal(
         'deleteCachedUser',
         t('fragment_landing_account_delete_title'),
-        t('fragment_landing_account_delete_message').format(user)
+        String.format(t('fragment_landing_account_delete_message'), user)
       )
     )
   }

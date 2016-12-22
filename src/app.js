@@ -4,9 +4,9 @@ import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
 import { AppRegistry } from 'react-native'
 
-String.prototype.format = function () {
-  const args = arguments
-  return this.replace(/{(\d+)}/g, function (match, number) {
+String.format = function (format) {
+  const args = Array.prototype.slice.call(arguments, 1)
+  return format.replace(/{(\d+)}/g, function (match, number) {
     return typeof args[number] !== 'undefined'
       ? args[number]
       : match

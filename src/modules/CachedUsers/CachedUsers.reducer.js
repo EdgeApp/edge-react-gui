@@ -1,5 +1,4 @@
 import * as ACTION from './CachedUsers.action'
-import { LOG_IN_USERNAME } from '../Login/Login.action'
 
 export const users = (state = [], action) => {
   switch (action.type) {
@@ -12,8 +11,6 @@ export const users = (state = [], action) => {
     default:
       return state
   }
-
-  return state
 }
 
 export const selectedUserToLogin = (state = null, action) => {

@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { showNextButton, hideNextButton } from './NextButton.action'
 import t from '../../lib/LocaleStrings'
 
 import appTheme from '../../../Themes/appTheme'

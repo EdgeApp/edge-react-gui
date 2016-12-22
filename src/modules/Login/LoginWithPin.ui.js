@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { closeLoginUsingPin, openLogin, loginPIN, openUserList, closeUserList} from './Login.action'
-import { loginWithPassword, loginWithPin } from './Login.middleware'
+import { openLogin, loginPIN, openUserList, closeUserList } from './Login.action'
+import { loginWithPin } from './Login.middleware'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
-import { View, Text, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
+import { View, Text, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input } from 'native-base'
 
 import t from '../../lib/LocaleStrings'
@@ -88,7 +88,7 @@ class Login extends Component {
               <Input
                 ref='pinInput'
                 placeholder={t('fragment_landing_enter_pin')}
-                style={[style.input, { height: 60, fontSize: 20, textAlign: 'center'}]}
+                style={[style.input, { height: 60, fontSize: 20, textAlign: 'center' }]}
                 onChangeText={this.changePin}
                 value={this.props.pin}
                 keyboardType='numeric'

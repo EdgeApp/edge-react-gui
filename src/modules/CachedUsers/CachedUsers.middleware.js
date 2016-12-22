@@ -1,12 +1,8 @@
-import asyncAuto from 'async/auto'
-import { Actions } from 'react-native-router-flux'
 
 import abcctx from '../../lib/abcContext'
 
 import { closeWarningModal } from '../WarningModal/WarningModal.action'
 import { deleteUserFromUserCache } from './CachedUsers.action'
-
-import t from '../../lib/LocaleStrings'
 
 export const deleteUserToCache = username => {
   return dispatch => {

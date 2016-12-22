@@ -10,7 +10,6 @@ import Container from '../SignUp.ui'
 import style from './Username.style'
 import t from '../../lib/LocaleStrings'
 import NextButton from '../NextButton/NextButton.ui'
-import SkipButton from '../SkipButton/SkipButton.ui'
 
 class UsernameComponent extends Component {
 

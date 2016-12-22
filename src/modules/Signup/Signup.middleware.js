@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
-import { checkCameraPermission, checkReadContactPermission } from '../../lib/permissions'
+import { checkPermissions, checkCameraPermission, checkReadContactPermission } from '../../lib/permissions'
 
 import abcctx from '../../lib/abcContext'
 import t from '../../lib/LocaleStrings'
@@ -20,10 +20,11 @@ export const signupUser = (username, password, pin) => {
           console.log(err)
           var mess
           try {
-            mess = error.message
+            mess = err.message
           } catch (e) {
             mess = err
           }
+          console.log(mess)
           dispatch(closeLoading())
           return dispatch(openErrorModal(t('activity_signup_failed')))
         }

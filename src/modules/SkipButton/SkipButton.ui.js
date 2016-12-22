@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
-import { showSkipButton, hideSkipButton } from './SkipButton.action'
 
 import appTheme from '../../../Themes/appTheme'
 import t from '../../lib/LocaleStrings'

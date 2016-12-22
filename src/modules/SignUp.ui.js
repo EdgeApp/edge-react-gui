@@ -4,11 +4,7 @@ import { connect } from 'react-redux'
 import NavigationBar from './SignUpNavigationBar.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Loader from './Loader/Loader.ui'
-import { hideWhiteOverlay } from './Landing.action'
 class SignUpContainer extends Component {
-  componentWillMount () {
-    const foo = global.abcContext.listUsernames()
-  }
 
   render () {
     return (

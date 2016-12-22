@@ -1,31 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Animatable from 'react-native-animatable'
-import { Actions } from 'react-native-router-flux'
-import { loginUsername, loginPassword, openUserList, closeUserList } from './Login.action'
+import { openLogin, loginUsername, loginPassword, openUserList, closeUserList } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
-import { openLogin } from './Login.action'
-import { View, Text, Image, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
-import { InputGroup, Input, Button } from 'native-base'
+
+import { View, Text, TouchableOpacity, Keyboard } from 'react-native'
+
 import TemplateTextInput from '../tpl/TextInput.ui'
 import t from '../../lib/LocaleStrings'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 import style from '../Style'
 
-import { showWhiteOverlay, hideWhiteOverlay } from '../Landing.action'
+import { showWhiteOverlay } from '../Landing.action'
 
 class Login extends Component {
 
   submit = () => {
-    if(this.props.viewPassword) {
+    if (this.props.viewPassword) {
       this.refs.loginUsername.blur()
       this.refs.password.blur()
-      this.props.dispatch(loginWithPassword(this.props.username, this.props.password))      
+      this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
     } else {
       this.props.dispatch(openLogin())
-      this.refs.fieldsView.transitionTo({opacity:1, height: 90},200)
-      this.refs.fieldsBelowView.transitionTo({height: 0},200)
-
+      this.refs.fieldsView.transitionTo({opacity: 1, height: 90}, 200)
+      this.refs.fieldsBelowView.transitionTo({height: 0}, 200)
     }
   }
 
@@ -64,10 +62,9 @@ class Login extends Component {
   }
 
   renderWhiteTransition () {
-    if(this.props.whiteOverlayVisible) {
+    if (this.props.whiteOverlayVisible) {
       console.log('okay')
-      return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade}></Animatable.View>)
-    
+      return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade} />)
     } else {
       return null
     }
@@ -84,7 +81,7 @@ class Login extends Component {
     let heightBelowView = 90
     let heightFieldsView = 0
     let opacityFieldsView = 0
-    if(this.props.viewPassword) {
+    if (this.props.viewPassword) {
       heightBelowView = 0
       heightFieldsView = 90
       opacityFieldsView = 1
@@ -95,44 +92,43 @@ class Login extends Component {
         <View style={style.spacer} />
         <View style={style.form}>
           <Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Text>
-          <Animatable.View ref='fieldsView' style={[style.fieldsView,{opacity:opacityFieldsView, height:heightFieldsView}]}>
-          <TemplateTextInput
-            borderType='underline'
-            inputGroupStyle={style.inputGroup}
-            ref='loginUsername'
-            placeholder={t('fragment_landing_username_hint')}
-            style={style.input}
-            onChangeText={this.changeUsername}
-            value={this.props.username}
-            returnKeyType={'next'}
-            onSubmitEditing={e => this.refs.password.focus()}
-            selectTextOnFocus
-            onFocus={this.showCachedUsers}
-            autoCorrect={false}
+          <Animatable.View ref='fieldsView' style={[style.fieldsView, {opacity: opacityFieldsView, height: heightFieldsView}]}>
+            <TemplateTextInput
+              borderType='underline'
+              inputGroupStyle={style.inputGroup}
+              ref='loginUsername'
+              placeholder={t('fragment_landing_username_hint')}
+              style={style.input}
+              onChangeText={this.changeUsername}
+              value={this.props.username}
+              returnKeyType={'next'}
+              onSubmitEditing={e => this.refs.password.focus()}
+              selectTextOnFocus
+              onFocus={this.showCachedUsers}
+              autoCorrect={false}
         />
 
-          <TemplateTextInput
-            borderType='underline'
-            inputGroupStyle={style.inputGroup}
-            ref='password'
-            onFocus={this.hideCachedUsers}
-            placeholder={t('fragment_landing_password_hint')}
-            style={style.input}
-            secureTextEntry
-            onChangeText={this.changePassword}
-            value={this.props.password}
-            blurOnSubmit
-            onSubmitEditing={() => { this.submit() }}
-            autoCorrect={false}
+            <TemplateTextInput
+              borderType='underline'
+              inputGroupStyle={style.inputGroup}
+              ref='password'
+              onFocus={this.hideCachedUsers}
+              placeholder={t('fragment_landing_password_hint')}
+              style={style.input}
+              secureTextEntry
+              onChangeText={this.changePassword}
+              value={this.props.password}
+              blurOnSubmit
+              onSubmitEditing={() => { this.submit() }}
+              autoCorrect={false}
         />
           </Animatable.View>
           <TouchableOpacity style={style.button} onPress={this.submit}>
             <Text style={style.buttonText}> Sign In </Text>
           </TouchableOpacity>
-          <Animatable.View ref='fieldsBelowView' style={[{height:heightBelowView}]}/>
+          <Animatable.View ref='fieldsBelowView' style={[{height: heightBelowView}]} />
 
-
-          <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={this.handleSignup}>
+          <TouchableOpacity style={[style.button, { backgroundColor: '#2291CF' }]} onPress={this.handleSignup}>
             <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
           </TouchableOpacity>
 
