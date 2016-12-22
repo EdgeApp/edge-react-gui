@@ -20,8 +20,8 @@ class Login extends Component {
       this.props.dispatch(loginWithPassword(this.props.username, this.props.password))      
     } else {
       this.props.dispatch(openLogin())
-      this.refs.fieldsView.transitionTo({opacity:1, height: 90})
-      this.refs.fieldsBelowView.transitionTo({height: 0})
+      this.refs.fieldsView.transitionTo({opacity:1, height: 90},200)
+      this.refs.fieldsBelowView.transitionTo({height: 0},200)
 
     }
   }
