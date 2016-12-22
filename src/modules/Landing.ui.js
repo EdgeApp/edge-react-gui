@@ -36,18 +36,16 @@ randomBytes(4, (err, bytes) => {
 
 class HomeComponent extends TemplateView {
 
-  handleOpenSignup = () => {
-    this.props.dispatch(showWhiteOverlay())
-  }
+
   componentDidUpdate() {
     if(this.props.whiteOverlayVisible) {
-      this.refs.whiteOverlay.fadeIn(400).then(endState => {
-        Actions.signup()
-      })
       var self = this
-      setTimeout(function() {
+      this.refs.whiteOverlay.fadeIn(300).then(endState => {
+        Actions.signup()
+        setTimeout(function() {
             self.props.dispatch(hideWhiteOverlay())
-      },3000)
+        },3000)        
+      })
     }
   }
 
@@ -73,16 +71,11 @@ class HomeComponent extends TemplateView {
       return null
     }
   }
-  renderViewLoginPassword = () => {
 
-    return (
-      <Login/>
-    )
-   }
 
   renderMainComponent = () => {
     if (this.props.pin) return <LoginWithPin />
-    if (!this.props.pin) return this.renderViewLoginPassword()
+    if (!this.props.pin) return <Login />
   }
 
   renderDisclaimerComponent = () => {

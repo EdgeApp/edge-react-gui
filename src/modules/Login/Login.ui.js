@@ -11,6 +11,9 @@ import TemplateTextInput from '../tpl/TextInput.ui'
 import t from '../../lib/LocaleStrings'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 import style from '../Style'
+
+import { showWhiteOverlay, hideWhiteOverlay } from '../Landing.action'
+
 class Login extends Component {
 
   submit = () => {
@@ -26,6 +29,9 @@ class Login extends Component {
     }
   }
 
+  handleSignup = () => {
+    this.props.dispatch(showWhiteOverlay())
+  }
   changeUsername = (username) => {
     this.props.dispatch(loginUsername(username))
   }
@@ -56,6 +62,17 @@ class Login extends Component {
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
+
+  renderWhiteTransition () {
+    if(this.props.whiteOverlayVisible) {
+      console.log('okay')
+      return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade}></Animatable.View>)
+    
+    } else {
+      return null
+    }
+  }
+
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
@@ -115,14 +132,13 @@ class Login extends Component {
           <Animatable.View ref='fieldsBelowView' style={[{height:heightBelowView}]}/>
 
 
-          <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+          <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={this.handleSignup}>
             <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
           </TouchableOpacity>
 
         </View>
         <View style={style.spacer} />
         {cUsers()}
-
       </View>
     )
   }
@@ -133,6 +149,7 @@ export default connect(state => ({
   username: state.login.username,
   password: state.login.password,
   viewPassword: state.login.viewPassword,
+  whiteOverlayVisible: state.whiteOverlayVisible,
   showCachedUsers: state.login.showCachedUsers,
   pin: state.login.pin
 

@@ -46,7 +46,7 @@ const style = StyleSheet.create({
   whiteTransitionFade: {
     position: 'absolute',
     backgroundColor: '#FFF',
-    opacity: 0,
+    opacity: 1,
     top: 0,
     bottom: 0,
     left: 0,
