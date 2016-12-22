@@ -43,6 +43,15 @@ const style = StyleSheet.create({
     color: '#FFFFFF',
     fontFamily: appTheme.fontFamily
   },
+  whiteTransitionFade: {
+    position: 'absolute',
+    backgroundColor: '#FFF',
+    opacity: 0,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
 
   backgroundImage: {
     flex: 1,

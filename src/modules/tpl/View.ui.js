@@ -1,7 +1,7 @@
 const Device = require('react-native-device-detection')
 const Orientation = require('react-native-orientation')
 import React, { Component } from 'react'
-import { Text } from 'react-native'
+import { LayoutAnimation, Text } from 'react-native'
 import { Container, Header, Footer, Content } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 import Loader from '../Loader/Loader.ui'
@@ -15,6 +15,9 @@ class TemplateView extends Component {
       Orientation.lockToPortrait()
     }
   }
+  componentWillUpdate() {
+    LayoutAnimation.spring();
+  }  
   renderHeader () {
   	return null // (<Header><Text>Replace Me</Text></Header>)
   }

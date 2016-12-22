@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import { username } from '../modules/Username/Username.reducer'
 import { pinNumber } from '../modules/PinNumber/PinNumber.reducer'
+import { whiteOverlayVisible } from '../modules/Landing.reducer'
 import { nextButtonVisible } from '../modules/NextButton/NextButton.reducer'
 import { skipButtonVisible } from '../modules/SkipButton/SkipButton.reducer'
 import { disclaimerAccepted } from '../modules/Disclaimer/Disclaimer.reducer'
@@ -65,6 +66,7 @@ const store = combineReducers({
     userToDeleteFromUserCache: CachedUsers.userToDeleteFromUserCache
   }),
   disclaimerAccepted,
+  whiteOverlayVisible: whiteOverlayVisible,
   routes
 })
 

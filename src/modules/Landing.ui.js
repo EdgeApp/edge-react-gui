@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import * as Animatable from 'react-native-animatable'
+import { Animated, View, Text, Image, TouchableOpacity } from 'react-native'
 import { Button } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
@@ -12,12 +13,26 @@ import LoginWithPin from './Login/LoginWithPin.ui'
 import TemplateView from './tpl/View.ui'
 import abcctx from '../lib/abcContext'
 
-import { acceptDisclaimer } from './Disclaimer/Disclaimer.action'
+import { showWhiteOverlay, hideWhiteOverlay } from './Landing.action'
+
+import { acceptDisclaimer, showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 import { openLogin } from './Login/Login.action'
 import t from '../lib/LocaleStrings'
 
 import style from './Style'
+
+global.randomBytes = require('react-native-randombytes').randomBytes
+// synchronous API
+// uses SJCL
+var rand = randomBytes(4)
+console.log("SYNC RANDOM BYTES",rand.toString('hex'))
+
+// asynchronous API
+// uses iOS-side SecRandomCopyBytes
+randomBytes(4, (err, bytes) => {
+  console.log("RANDOM BYTES",bytes.toString('hex'))
+})
 
 class HomeComponent extends TemplateView {
 
@@ -25,8 +40,22 @@ class HomeComponent extends TemplateView {
     this.props.dispatch(openLogin())
   }
 
+  handleOpenSignup = () => {
+    this.props.dispatch(showWhiteOverlay())
+  }
+  componentDidUpdate() {
+    if(this.props.whiteOverlayVisible) {
+      this.refs.whiteOverlay.fadeIn(400).then((endState) => {
+        Actions.signup()
+      })
+      var self = this
+      setTimeout(function() {
+            self.props.dispatch(hideWhiteOverlay())
+      },3000)
+    }
+  }
+
   componentWillMount () {
-    super.componentWillMount()
     const dispatch = this.props.dispatch
     abcctx(ctx => {
       const cachedUsers = ctx.listUsernames()
@@ -37,10 +66,17 @@ class HomeComponent extends TemplateView {
         dispatch(selectUserToLogin(lastUser))
       }
       const disclaimerAccepted = global.localStorage.getItem('disclaimerAccepted')
-      dispatch(acceptDisclaimer(disclaimerAccepted))
+      if(!disclaimerAccepted) dispatch(showDisclaimer())
     })
   }
 
+  renderWhiteTransition () {
+    if(this.props.whiteOverlayVisible) {
+      return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade}></Animatable.View>)
+    } else {
+      return null
+    }
+  }
   renderViewLoginPassword = () => {
     if (this.props.password) return (<Login />)
 
@@ -53,7 +89,7 @@ class HomeComponent extends TemplateView {
             <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
               <Text style={style.buttonText}> Sign In </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
+            <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={this.handleOpenSignup}>
               <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
             </TouchableOpacity>
           </View>
@@ -86,6 +122,7 @@ class HomeComponent extends TemplateView {
         <WarningModal />
         <ErrorModal />
         { this.renderDisclaimerComponent() }
+        { this.renderWhiteTransition() }
       </Image>
     )
   }
@@ -97,6 +134,7 @@ export default connect(state => ({
   password: state.login.viewPassword,
   selectedUserToLogin: state.cachedUsers.selectedUserToLogin,
   pin: state.login.viewPIN,
-  disclaimerAccepted: state.disclaimerAccepted
+  disclaimerAccepted: state.disclaimerAccepted,
+  whiteOverlayVisible: state.whiteOverlayVisible
 
 }))(HomeComponent)
