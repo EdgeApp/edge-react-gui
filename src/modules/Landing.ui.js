@@ -17,7 +17,7 @@ import { showWhiteOverlay, hideWhiteOverlay } from './Landing.action'
 
 import { acceptDisclaimer, showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
-import { openLogin } from './Login/Login.action'
+
 import t from '../lib/LocaleStrings'
 
 import style from './Style'
@@ -36,16 +36,12 @@ randomBytes(4, (err, bytes) => {
 
 class HomeComponent extends TemplateView {
 
-  handleOpenLogin = () => {
-    this.props.dispatch(openLogin())
-  }
-
   handleOpenSignup = () => {
     this.props.dispatch(showWhiteOverlay())
   }
   componentDidUpdate() {
     if(this.props.whiteOverlayVisible) {
-      this.refs.whiteOverlay.fadeIn(400).then((endState) => {
+      this.refs.whiteOverlay.fadeIn(400).then(endState => {
         Actions.signup()
       })
       var self = this
@@ -78,26 +74,11 @@ class HomeComponent extends TemplateView {
     }
   }
   renderViewLoginPassword = () => {
-    if (this.props.password) return (<Login />)
 
-    if (!this.props.password) {
-      return (
-        <View style={style.container}>
-          <View style={style.spacer} />
-          <View style={style.form}>
-            <Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Text>
-            <TouchableOpacity style={[style.button, { backgroundColor: '#80C342' }]} onPress={this.handleOpenLogin}>
-              <Text style={style.buttonText}> Sign In </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={this.handleOpenSignup}>
-              <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={style.spacer} />
-        </View>
-      )
-    }
-  }
+    return (
+      <Login/>
+    )
+   }
 
   renderMainComponent = () => {
     if (this.props.pin) return <LoginWithPin />
@@ -131,7 +112,6 @@ class HomeComponent extends TemplateView {
 
 export default connect(state => ({
 
-  password: state.login.viewPassword,
   selectedUserToLogin: state.cachedUsers.selectedUserToLogin,
   pin: state.login.viewPIN,
   disclaimerAccepted: state.disclaimerAccepted,

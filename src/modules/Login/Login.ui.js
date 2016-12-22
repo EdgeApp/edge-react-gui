@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
+import * as Animatable from 'react-native-animatable'
 import { Actions } from 'react-native-router-flux'
 import { loginUsername, loginPassword, openUserList, closeUserList } from './Login.action'
 import { loginWithPassword } from './Login.middleware'
+import { openLogin } from './Login.action'
 import { View, Text, Image, StyleSheet, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input, Button } from 'native-base'
 import TemplateTextInput from '../tpl/TextInput.ui'
@@ -13,9 +14,16 @@ import style from '../Style'
 class Login extends Component {
 
   submit = () => {
-    this.refs.loginUsername.blur()
-    this.refs.password.blur()
-    this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
+    if(this.props.viewPassword) {
+      this.refs.loginUsername.blur()
+      this.refs.password.blur()
+      this.props.dispatch(loginWithPassword(this.props.username, this.props.password))      
+    } else {
+      this.props.dispatch(openLogin())
+      this.refs.fieldsView.transitionTo({opacity:1, height: 90})
+      this.refs.fieldsBelowView.transitionTo({height: 0})
+
+    }
   }
 
   changeUsername = (username) => {
@@ -61,7 +69,8 @@ class Login extends Component {
       <View style={style.container}>
         <View style={style.spacer} />
         <View style={style.form}>
-
+          <Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Text>
+          <Animatable.View ref='fieldsView' style={[style.fieldsView,{opacity:0, height:0}]}>
           <TemplateTextInput
             borderType='underline'
             inputGroupStyle={style.inputGroup}
@@ -91,9 +100,13 @@ class Login extends Component {
             onSubmitEditing={() => { this.submit() }}
             autoCorrect={false}
         />
+          </Animatable.View>
           <TouchableOpacity style={style.button} onPress={this.submit}>
             <Text style={style.buttonText}> Sign In </Text>
           </TouchableOpacity>
+          <Animatable.View ref='fieldsBelowView' style={[{height:90}]}/>
+
+
           <TouchableOpacity style={[ style.button, { backgroundColor: '#2291CF' }]} onPress={Actions.signup}>
             <Text style={style.buttonText}>{t('fragment_landing_signup_button')}</Text>
           </TouchableOpacity>
@@ -111,6 +124,7 @@ export default connect(state => ({
 
   username: state.login.username,
   password: state.login.password,
+  viewPassword: state.login.viewPassword,
   showCachedUsers: state.login.showCachedUsers,
   pin: state.login.pin
 

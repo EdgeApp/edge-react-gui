@@ -65,24 +65,29 @@ const style = StyleSheet.create({
     backgroundColor: '#000'
   },
   logoContainer: {
-    flex: 0.2,
+    flex: 0.25,
     flexDirection: 'column',
-    marginVertical: 15
+    marginBottom: 15,
+    marginTop: 30
   },
   logoImage: {
     flex: 1,
     resizeMode: 'contain'
   },
-
+  fieldsView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   button: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#80C342',
     height: 45,
-    marginVertical: 3
+    marginVertical: 10
   },
-  buttonText: {
+  buttonText: { 
     fontFamily: appTheme.fontFamily,
     textAlign: 'center',
     color: '#FFF',
@@ -93,7 +98,7 @@ const style = StyleSheet.create({
     fontSize: 22,
     color: '#FFF',
     fontFamily: appTheme.fontFamily,
-    marginBottom: 10
+    marginBottom: 20
   },
   text: {
     fontSize: 15,
