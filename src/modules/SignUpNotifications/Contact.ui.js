@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Actions } from 'react-native-router-flux'
-import { View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-native'
+import { Image, View, Text, TextInput, StyleSheet, PermissionsAndroid } from 'react-native'
 
 import appTheme from '../../../Themes/appTheme'
 import Container from '../SignUp.ui'
@@ -20,6 +20,8 @@ export default class Contact extends Component {
     return (
       <Container handleSubmit={this.handleSubmit}>
         <View style={style.inputView}>
+          <Image source={require('../../img/enable-contacts.png')} style={[style.logoImage,{margin: 20}} />
+
           <Text style={style.lead}>{ t('activity_signup_contact_header') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_1') }</Text>
           <Text style={style.paragraph}>{ t('activity_signup_contact_text_2') }</Text>
