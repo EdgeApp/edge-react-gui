@@ -39,7 +39,7 @@ export async function checkReadContactPermission (callback) {
   }
 }
 
-export async function requestReadContacPermission (callback) {
+export async function requestReadContactPermission (callback) {
   try {
     const granted = await PermissionsAndroid.requestPermission(
       PermissionsAndroid.PERMISSIONS.READ_CONTACTS,

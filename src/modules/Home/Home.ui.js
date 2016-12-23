@@ -8,8 +8,8 @@ export default class Home extends Component {
     return (
       <View style={style.container} >
         <View style={style.form}>
-          <Text>Welcome!! This is the Home Page!</Text>
-          <Button onPress={Actions.landing}>Log Out</Button>
+          <Text style={{fontSize: 40}}>Home Page</Text>
+          <Button style={{flex:1}} onPress={Actions.landing} title="Log Out">Log Out</Button>
         </View>
       </View>
     )

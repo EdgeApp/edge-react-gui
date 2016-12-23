@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux'
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
-import { checkPermissions, checkCameraPermission, checkReadContactPermission } from '../../lib/permissions'
+import { checkCameraPermission, checkReadContactPermission } from '../../lib/permissions'
 
 import abcctx from '../../lib/abcContext'
 import t from '../../lib/LocaleStrings'

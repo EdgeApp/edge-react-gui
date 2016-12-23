@@ -3,7 +3,7 @@ import LocalStorage from './LocalStorage'
 
 const abcctx = function (callback) {
   if (!global.localStorage) {
-    LocalStorage('/db.json', function (ls) {
+   	const noop = new LocalStorage('/db.json', function (ls) {
       global.localStorage = ls
       global.abcContext = abc.makeContext({
         apiKey: '3ad0717b3eb31f745aba7bd9d51e7fd1b2926431',
