@@ -9,7 +9,6 @@ import Container from '../SignUp.ui'
 import style from './PinNumber.style'
 import t from '../../lib/LocaleStrings'
 import NextButton from '../NextButton/NextButton.ui'
-import SkipButton from '../SkipButton/SkipButton.ui'
 
 class PinComponent extends Component {
 
