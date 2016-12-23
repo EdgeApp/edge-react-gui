@@ -14,6 +14,7 @@ import * as WarningModal from '../modules/WarningModal/WarningModal.reducer'
 import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
 import * as Login from '../modules/Login/Login.reducer'
 import * as CachedUsers from '../modules/CachedUsers/CachedUsers.reducer'
+import { user } from '../modules/User/User.reducer'
 import routes from './routesReducer'
 
 const store = combineReducers({
@@ -67,6 +68,7 @@ const store = combineReducers({
   }),
   disclaimerAccepted,
   whiteOverlayVisible: whiteOverlayVisible,
+  user,
   routes
 })
 

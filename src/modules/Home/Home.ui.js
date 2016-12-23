@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { View, Text, Button } from 'react-native'
 import style from '../Style'
-export default class Home extends Component {
+
+class Home extends Component {
 
   render () {
     return (
@@ -17,3 +19,6 @@ export default class Home extends Component {
 
 }
 
+export default connect( state => ({
+  user : state.user
+}) )(Home)

@@ -10,6 +10,7 @@ export const viewPassword = (state = false, action) => {
     case ACTION.CLOSE_LOG_IN :
       return false
 
+
     default:
       return state
   }
@@ -56,6 +57,9 @@ export const password = (state = '', action) => {
     case ACTION.LOG_IN_PASSWORD :
       return action.data
 
+    case ACTION.USER_LOGIN :
+      return ''
+
     case DELETE_USER_FROM_CACHE :
       return ''
 
@@ -89,8 +93,13 @@ export const showCachedUsers = (state = false, action) => {
 
 export const pin = (state = '', action) => {
   switch (action.type) {
+
     case ACTION.LOG_IN_PIN :
       return action.data
+
+    case ACTION.USER_LOGIN :
+      return ''
+
 
     default:
       return state
