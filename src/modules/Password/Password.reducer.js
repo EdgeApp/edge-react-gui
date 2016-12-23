@@ -1,4 +1,5 @@
 import * as ACTION from './Password.action'
+import { GET_DETAILS } from '../ReviewDetails/ReviewDetails.action'
 
 export const inputState = (state = false, action) => {
   switch (action.type) {
@@ -17,7 +18,8 @@ export const password = (state = '', action) => {
   switch (action.type) {
     case ACTION.CHANGE_PASSWORD_VALUE :
       return action.data
-
+    case GET_DETAILS :
+      return ''
     default:
       return state
   }
@@ -27,7 +29,8 @@ export const passwordRepeat = (state = '', action) => {
   switch (action.type) {
     case ACTION.CHANGE_PASSWORD_REPEAT_VALUE :
       return action.data
-
+    case GET_DETAILS :
+      return ''
     default:
       return state
   }

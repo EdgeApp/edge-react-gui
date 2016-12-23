@@ -3,6 +3,7 @@ import { Actions } from 'react-native-router-flux'
 
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
+import { getDetails } from '../ReviewDetails/ReviewDetails.action'
 
 import { checkCameraPermission, checkReadContactPermission } from '../../lib/permissions'
 
@@ -11,6 +12,13 @@ import t from '../../lib/LocaleStrings'
 
 export const signupUser = (username, password, pin) => {
   return dispatch => {
+    dispatch(
+      getDetails({
+        username  : username,
+        password  : password,
+        pin       : pin
+      })
+    )
     return dispatch(checkPermissions())
     // / all of this code is unreachable until we solve the crypto randomBytes thing
     dispatch(openLoading(t('fragment_signup_creating_account')))
@@ -24,13 +32,19 @@ export const signupUser = (username, password, pin) => {
           } catch (e) {
             mess = err
           }
-          console.log(mess)
           dispatch(closeLoading())
           return dispatch(openErrorModal(t('activity_signup_failed')))
         }
 
         if (!err) {
           global.localStorage.setItem('lastUser', username)
+          dispatch(
+            getDetails({
+              username  : username,
+              password  : password,
+              pin       : pin
+            })
+          )
           return dispatch(checkPermissions())
         }
       })
