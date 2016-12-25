@@ -22,7 +22,7 @@ class Loader extends Component {
         swipeToClose={false}
         position={'center'}
         style={style.loadingModal}
-        animationDuration={300}
+        animationDuration={0}
         backdropPressToClose={false}
       >
         <Text style={style.loadingMessage}>{ this.props.loader.message }</Text>
