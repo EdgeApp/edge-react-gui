@@ -11,54 +11,58 @@ import t from '../../lib/LocaleStrings'
 
 export const loginWithPassword = (username, password) => {
   return dispatch => {
+      setTimeout(() => {
     abcctx(context => {
-      context.loginWithPassword(username, password, null, null, (error, account) => {
-        dispatch(closeLoading())
-        if (error) {
-          console.log(error)
-          var mess
-          try {
-            mess = error.message
-          } catch (e) {
-            mess = error
-          }
-          dispatch(openErrorModal(mess))
-        }
-        if (!error) {
-          global.localStorage.setItem('lastUser', username)
-          dispatch(userLogin(results.loginWithPassword))
-          Actions.home()
-        }
-      })
-    })
-  }
-}
-
-export const loginWithPin = (username, pin) => {
-  return dispatch => {
-    abcctx(context => {
-      try {
-        context.loginWithPIN(username, pin, (error, account) => {
+        context.loginWithPassword(username, password, null, null, (error, account) => {
           dispatch(closeLoading())
           if (error) {
-            console.log(error)
             var mess
             try {
               mess = error.message
             } catch (e) {
               mess = error
             }
+            console.log(error.toString,error,mess)
             dispatch(openErrorModal(mess))
           }
-
           if (!error) {
             global.localStorage.setItem('lastUser', username)
+            dispatch(userLogin(results.loginWithPassword))
             Actions.home()
           }
         })
-      } catch (e) {
-        console.log(e)
-      }
     })
+      },300)
+  }
+}
+
+export const loginWithPin = (username, pin) => {
+  return dispatch => {
+      setTimeout(() => {
+    abcctx(context => {
+        try {
+          context.loginWithPIN(username, pin, (error, account) => {
+            dispatch(closeLoading())
+            if (error) {
+              console.log(error)
+              var mess
+              try {
+                mess = error.message
+              } catch (e) {
+                mess = error
+              }
+              dispatch(openErrorModal(mess))
+            }
+
+            if (!error) {
+              global.localStorage.setItem('lastUser', username)
+              Actions.home()
+            }
+          })
+        } catch (e) {
+          console.log(e)
+        }
+    })
+      },300)
   }
 }

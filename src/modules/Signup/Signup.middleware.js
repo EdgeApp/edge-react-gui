@@ -22,33 +22,35 @@ export const signupUser = (username, password, pin) => {
     return dispatch(checkPermissions())
     // / all of this code is unreachable until we solve the crypto randomBytes thing
     
+      setTimeout(() => {
     abcctx(ctx => {
-      ctx.createAccount(username, password, pin, (err, result) => {
-        if (err) {
-          console.log(err)
-          var mess
-          try {
-            mess = err.message
-          } catch (e) {
-            mess = err
+        ctx.createAccount(username, password, pin, (err, result) => {
+          if (err) {
+            console.log(err)
+            var mess
+            try {
+              mess = err.message
+            } catch (e) {
+              mess = err
+            }
+            dispatch(closeLoading())
+            return dispatch(openErrorModal(t('activity_signup_failed')))
           }
-          dispatch(closeLoading())
-          return dispatch(openErrorModal(t('activity_signup_failed')))
-        }
 
-        if (!err) {
-          global.localStorage.setItem('lastUser', username)
-          dispatch(
-            getDetails({
-              username: username,
-              password: password,
-              pin: pin
-            })
-          )
-          return dispatch(checkPermissions())
-        }
-      })
+          if (!err) {
+            global.localStorage.setItem('lastUser', username)
+            dispatch(
+              getDetails({
+                username: username,
+                password: password,
+                pin: pin
+              })
+            )
+            return dispatch(checkPermissions())
+          }
+        })
     })
+      },300)
   }
 }
 

@@ -14,7 +14,8 @@ import NextButton from '../NextButton/NextButton.ui'
 class UsernameComponent extends Component {
 
   handleSubmit = () => {
-    this.props.dispatch(openLoading())
+    this.refs.usernameInput.blur()
+    this.props.dispatch(openLoading(t('activity_signup_checking_username')))
     this.props.dispatch(checkUsername(this.props.username))
   }
 
@@ -28,6 +29,7 @@ class UsernameComponent extends Component {
       <Container>
         <View style={style.inputView}>
           <TextInput
+            ref='usernameInput'
             autoCorrect={false}
             style={style.usernameInput}
             placeholder={t('fragment_landing_username_hint')}
@@ -35,7 +37,7 @@ class UsernameComponent extends Component {
             value={username}
             autoFocus
             blurOnSubmit
-            returnKeyType='next'
+            returnKeyType='done'
           />
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}
