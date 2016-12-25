@@ -6,7 +6,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "droid": "npm run clean-android && npm run lint; react-native run-android",
     "lint": "standard --fix --verbose | snazzy",
-    "clean-android": "cd android && ./gradlew clean && rm -rf build && cd ../"
+    "clean-android": "cd android && ./gradlew clean && rm -rf build && cd ../",
+    "release-android": "npm run clean-android; cd android && ./gradlew assembleRelease && ./gradlew installRelease; cd ../"
   },
   "dependencies": {
     "async": "^2.1.4",

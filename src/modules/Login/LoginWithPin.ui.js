@@ -89,7 +89,7 @@ class Login extends Component {
               <Input
                 ref='pinInput'
                 placeholder={t('fragment_landing_enter_pin')}
-                style={[style.input, { marginHorizontal: 10, height: 60, marginVertical: 0,  fontSize: 28, textAlign: 'left' }]}
+                style={[style.input, { marginHorizontal: 10, height: 60, marginVertical: 0, fontSize: 28, textAlign: 'left' }]}
                 onChangeText={this.changePin}
                 value={this.props.pin}
                 keyboardType='numeric'
@@ -104,7 +104,7 @@ class Login extends Component {
           </View>
 
           <TouchableOpacity style={{backgroundColor: 'transparent'}} onPress={this.viewPasswordInput}>
-            <Text style={[style.text,{fontSize: 15, color: 'skyblue'}]}>{ t('fragment_landing_switch_user') }</Text>
+            <Text style={[style.text, {fontSize: 15, color: 'skyblue'}]}>{ t('fragment_landing_switch_user') }</Text>
           </TouchableOpacity>
         </View>
         {cUsers()}

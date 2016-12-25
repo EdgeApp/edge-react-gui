@@ -40,7 +40,7 @@ class UsernameComponent extends Component {
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}
           </Text>
-          <NextButton onPress={this.handleSubmit} />
+          <NextButton onPress={() => { this.handleSubmit() }} />
         </View>
       </Container>
     )

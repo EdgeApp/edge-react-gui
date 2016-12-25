@@ -22,9 +22,8 @@ class Loader extends Component {
         swipeToClose={false}
         position={'center'}
         style={style.loadingModal}
-        animationDuration={0}
+        animationDuration={300}
         backdropPressToClose={false}
-        onClosed={this.handleClose}
       >
         <Text style={style.loadingMessage}>{ this.props.loader.message }</Text>
         <ActivityIndicator

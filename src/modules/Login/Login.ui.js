@@ -24,7 +24,6 @@ class Login extends Component {
       this.props.dispatch(openLogin())
       this.refs.fieldsView.transitionTo({opacity: 1, height: 90}, 800)
       this.refs.fieldsBelowView.transitionTo({height: 0}, 800)
-
     }
   }
 
@@ -128,7 +127,7 @@ class Login extends Component {
               autoCorrect={false}
         />
           </Animatable.View>
-          <TouchableOpacity style={style.button} onPress={() => { this.submit }}>
+          <TouchableOpacity style={style.button} onPress={() => { this.submit() }}>
             <Text style={style.buttonText}> Sign In </Text>
           </TouchableOpacity>
           <Animatable.View ref='fieldsBelowView' style={[{height: heightBelowView}]} />

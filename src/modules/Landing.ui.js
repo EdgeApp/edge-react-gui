@@ -48,7 +48,7 @@ class HomeComponent extends TemplateView {
       })
       setTimeout(() => {
         Actions.signup()
-      },700)
+      }, 700)
     }
   }
 

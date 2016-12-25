@@ -52,7 +52,7 @@ export const signupUser = (username, password, pin) => {
   }
 }
 
-checkPermissions = () => {
+const checkPermissions = () => {
   return dispatch => {
     asyncAuto({
       camera: function (callback) {
