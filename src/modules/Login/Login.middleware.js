@@ -11,11 +11,8 @@ import t from '../../lib/LocaleStrings'
 
 export const loginWithPassword = (username, password) => {
   return dispatch => {
-    dispatch(openLoading(t('string_loading')))
     abcctx(context => {
-      console.log('context called')
       context.loginWithPassword(username, password, null, null, (error, account) => {
-        console.log('login processed')
         dispatch(closeLoading())
         if (error) {
           console.log(error)
@@ -29,9 +26,7 @@ export const loginWithPassword = (username, password) => {
         }
         if (!error) {
           global.localStorage.setItem('lastUser', username)
-          console.log('username set', username)
           dispatch(userLogin(results.loginWithPassword))
-          console.log('userlogin dispatched with', results.loginWithPassword)
           Actions.home()
         }
       })
@@ -41,7 +36,6 @@ export const loginWithPassword = (username, password) => {
 
 export const loginWithPin = (username, pin) => {
   return dispatch => {
-    dispatch(openLoading(t('string_loading')))
     abcctx(context => {
       try {
         context.loginWithPIN(username, pin, (error, account) => {
@@ -58,7 +52,7 @@ export const loginWithPin = (username, pin) => {
           }
 
           if (!error) {
-           global.localStorage.setItem('lastUser', username)
+            global.localStorage.setItem('lastUser', username)
             Actions.home()
           }
         })

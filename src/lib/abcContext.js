@@ -13,8 +13,9 @@ const abcctx = function (callback) {
       callback(global.abcContext)
     })
     return false
+  } else {
+    return callback(global.abcContext)
   }
-  return callback(global.abcContext)
 }
 
 export default abcctx

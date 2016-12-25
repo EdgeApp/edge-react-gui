@@ -21,7 +21,7 @@ export const signupUser = (username, password, pin) => {
     )
     return dispatch(checkPermissions())
     // / all of this code is unreachable until we solve the crypto randomBytes thing
-    dispatch(openLoading(t('fragment_signup_creating_account')))
+    
     abcctx(ctx => {
       ctx.createAccount(username, password, pin, (err, result) => {
         if (err) {
@@ -69,13 +69,13 @@ const checkPermissions = () => {
             console.log(contact)
           }
           dispatch(closeLoading())
-          if (!result.camera) {
+          if (!camera) {
             Actions.cameraNotification()
           }
-          if (result.camera && !result.contact) {
+          if (camera && !contact) {
             Actions.contactNotification()
           }
-          if (result.camera && result.contact) {
+          if (camera && contact) {
             Actions.review()
           }
         })

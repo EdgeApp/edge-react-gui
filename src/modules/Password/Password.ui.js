@@ -8,7 +8,7 @@ import style from './Password.style'
 
 import { validate } from './PasswordValidation/PasswordValidation.middleware'
 import { checkPassword, skipPassword } from './Password.middleware'
-
+import { openLoading } from '../Loader/Loader.action'
 import NextButton from '../NextButton/NextButton.ui'
 import SkipButton from '../SkipButton/SkipButton.ui'
 import t from '../../lib/LocaleStrings'
@@ -23,6 +23,7 @@ import {
 class Password extends Component {
 
   handleSubmit = () => {
+    this.props.dispatch(openLoading(t('fragment_signup_creating_account')))
     this.props.dispatch(
       checkPassword(
         this.props.password,
@@ -93,12 +94,12 @@ class Password extends Component {
             keyboardType='default'
             secureTextEntry
             returnKeyType='done'
+            blurOnSubmit
             onChangeText={this.handleOnChangePasswordRepeat}
-            onSubmitEditing={() => { this.handleSubmit() }}
             value={this.props.passwordRepeat}
           />
-          <SkipButton onPress={() => { this.handlePasswordNotification() }} />
-          <NextButton onPress={() => { this.handleSubmit() }} />
+          <SkipButton onPress={this.handlePasswordNotification} />
+          <NextButton onPress={this.handleSubmit} />
 
         </View>
         <Notification handleSubmit={this.handleSkipPassword} />

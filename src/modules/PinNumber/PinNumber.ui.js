@@ -45,7 +45,6 @@ class PinComponent extends Component {
             value={pinNumber}
             blurOnSubmit
             ref='signupPin'
-            onSubmitEditing={this.handleSubmit}
           />
           <Text style={style.paragraph}>
             {t('fragment_setup_pin_text')}

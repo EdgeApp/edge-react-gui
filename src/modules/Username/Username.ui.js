@@ -6,7 +6,7 @@ import { changeUsernameValue } from './Username.action'
 import { checkUsername } from './Username.middleware'
 
 import Container from '../SignUp.ui'
-
+import { openLoading } from '../Loader/Loader.action'
 import style from './Username.style'
 import t from '../../lib/LocaleStrings'
 import NextButton from '../NextButton/NextButton.ui'
@@ -14,6 +14,7 @@ import NextButton from '../NextButton/NextButton.ui'
 class UsernameComponent extends Component {
 
   handleSubmit = () => {
+    this.props.dispatch(openLoading())
     this.props.dispatch(checkUsername(this.props.username))
   }
 
@@ -35,12 +36,11 @@ class UsernameComponent extends Component {
             autoFocus
             blurOnSubmit
             returnKeyType='next'
-            onBlur={() => { this.handleSubmit() }}
           />
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}
           </Text>
-          <NextButton onPress={() => { this.handleSubmit() }} />
+          <NextButton onPress={this.handleSubmit} />
         </View>
       </Container>
     )
@@ -49,6 +49,7 @@ class UsernameComponent extends Component {
 
 export default connect(state => ({
 
-  username: state.username
+  username: state.username,
+  loading: state.loader.loading
 
 }))(UsernameComponent)
