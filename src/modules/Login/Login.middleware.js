@@ -27,7 +27,7 @@ export const loginWithPassword = (username, password) => {
           }
           if (!error) {
             global.localStorage.setItem('lastUser', username)
-            dispatch(userLogin(results.loginWithPassword))
+            dispatch(userLogin(account))
             Actions.home()
           }
         })
