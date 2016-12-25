@@ -94,7 +94,7 @@ class Password extends Component {
             secureTextEntry
             returnKeyType='done'
             onChangeText={this.handleOnChangePasswordRepeat}
-            onSubmitEditing={this.handleSubmit}
+            onSubmitEditing={() => { this.handleSubmit() }}
             value={this.props.passwordRepeat}
           />
           <SkipButton onPress={() => { this.handlePasswordNotification() }} />
