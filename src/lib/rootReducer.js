@@ -7,13 +7,14 @@ import { nextButtonVisible } from '../modules/NextButton/NextButton.reducer'
 import { skipButtonVisible } from '../modules/SkipButton/SkipButton.reducer'
 import { disclaimerAccepted } from '../modules/Disclaimer/Disclaimer.reducer'
 import * as PasswordStates from '../modules/Password/Password.reducer'
-import { reviewDetails } from '../modules/ReviewDetails/ReviewDetails.reducer'
+import * as ReviewDetailsStates from '../modules/ReviewDetails/ReviewDetails.reducer'
 import * as PasswordValidation from '../modules/Password/PasswordValidation/PasswordValidation.reducer'
 import * as Loader from '../modules/Loader/Loader.reducer'
 import * as WarningModal from '../modules/WarningModal/WarningModal.reducer'
 import * as ErrorModal from '../modules/ErrorModal/ErrorModal.reducer'
 import * as Login from '../modules/Login/Login.reducer'
 import * as CachedUsers from '../modules/CachedUsers/CachedUsers.reducer'
+import { user } from '../modules/User/User.reducer'
 import routes from './routesReducer'
 
 const store = combineReducers({
@@ -32,7 +33,10 @@ const store = combineReducers({
     })
   }),
 
-  reviewDetails,
+  reviewDetails: combineReducers({
+    details:  ReviewDetailsStates.details,
+    view: ReviewDetailsStates.view
+  }),
 
   login: combineReducers({
     viewPassword: Login.viewPassword,
@@ -67,6 +71,7 @@ const store = combineReducers({
   }),
   disclaimerAccepted,
   whiteOverlayVisible: whiteOverlayVisible,
+  user,
   routes
 })
 

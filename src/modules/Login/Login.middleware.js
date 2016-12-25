@@ -5,6 +5,8 @@ import abcctx from '../../lib/abcContext'
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
 import { openLoading, closeLoading } from '../Loader/Loader.action'
 
+import { userLogin } from './Login.action'
+
 import t from '../../lib/LocaleStrings'
 
 export const loginWithPassword = (username, password) => {
@@ -29,7 +31,7 @@ export const loginWithPassword = (username, password) => {
                 return callback(mess, null)
               }
               if (!error) {
-                return callback(null, null)
+                return callback(null, account)
               }
             })
           })
@@ -44,6 +46,7 @@ export const loginWithPassword = (username, password) => {
       }
       if (!err) {
         global.localStorage.setItem('lastUser', username)
+        dispatch(userLogin(results.loginWithPassword))
         Actions.home()
       }
     })

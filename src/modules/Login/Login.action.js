@@ -7,6 +7,7 @@ export const LOG_IN_PASSWORD = 'LOG_IN_PASSWORD'
 export const LOG_IN_PIN = 'LOG_IN_PIN'
 export const OPEN_USER_LIST = 'OPEN_USER_LIST'
 export const CLOSE_USER_LIST = 'CLOSE_USER_LIST'
+export const USER_LOGIN = 'USER_LOGIN'
 
 export function openLogin () {
   return {
@@ -62,5 +63,12 @@ export function openUserList () {
 export function closeUserList () {
   return {
     type: CLOSE_USER_LIST
+  }
+}
+
+export function userLogin (data) {
+  return {
+    type: USER_LOGIN,
+    data
   }
 }

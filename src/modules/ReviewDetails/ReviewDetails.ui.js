@@ -4,7 +4,10 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 
 import Details from './UserDetails.ReviewDetails.ui'
+import ErrorModal from '../ErrorModal/ErrorModal.ui'
+import Loader from '../Loader/Loader.ui'
 import { showSignInDetails, hideSignInDetails } from './ReviewDetails.action'
+import { loginWithPassword } from '../Login/Login.middleware'
 import t from '../../lib/LocaleStrings'
 import style from './ReviewDetails.style'
 import NextButton from '../NextButton/NextButton.ui'
@@ -24,6 +27,9 @@ class Review extends Component {
   }
 
   handleFinish = () => {
+    // THIS will be the functions when sign up is working
+    // const { username, password } = this.props.details
+    // this.props.dispatch(loginWithPassword(username,password))
     Actions.home()
   }
 
@@ -32,12 +38,14 @@ class Review extends Component {
       return (
         <View style={{ flex: 1 }}>
           <View style={style.container}>
-            <Details username={this.props.username} pinNumber={this.props.pinNumber} password={this.props.password} />
+            <Details username={this.props.details.username} pinNumber={this.props.details.pin} password={this.props.details.password} />
             <TouchableHighlight style={style.button} onPress={this.handleHideDetails}>
               <Text style={style.buttonText}>{t('fragment_setup_writeitdown_hide')}</Text>
             </TouchableHighlight>
           </View>
           <NextButton onPress={this.handleFinish} />
+          <ErrorModal />
+          <Loader />
         </View>
       )
     }
@@ -59,6 +67,8 @@ class Review extends Component {
             </TouchableHighlight>
           </View>
           <NextButton onPress={this.handleFinish} />
+          <ErrorModal />
+          <Loader />
         </View>
       )
     }
@@ -67,9 +77,7 @@ class Review extends Component {
 
 export default connect(state => ({
 
-  username: state.username,
-  pinNumber: state.pinNumber,
-  password: state.password.password,
-  review: state.reviewDetails
+  details: state.reviewDetails.details,
+  review: state.reviewDetails.view
 
 }))(Review)
