@@ -24,7 +24,7 @@ class UsernameComponent extends Component {
   render () {
     const { username } = this.props
     return (
-      <Container handleSubmit={this.handleSubmit}>
+      <Container>
         <View style={style.inputView}>
           <TextInput
             autoCorrect={false}

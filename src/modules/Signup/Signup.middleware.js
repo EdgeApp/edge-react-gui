@@ -54,42 +54,31 @@ export const signupUser = (username, password, pin) => {
 
 const checkPermissions = () => {
   return dispatch => {
-    asyncAuto({
-      camera: function (callback) {
-        checkCameraPermission((error, permission) => {
-          if (error) {
-            return callback(error, null)
-          }
-          if (!error) {
-            console.log(permission)
-            return callback(null, permission)
-          }
-        })
-      },
-      contact: function (callback) {
-        checkReadContactPermission((error, permission) => {
-          if (error) {
-            return callback(error, null)
-          }
-          if (!error) {
-            console.log(permission)
-            return callback(null, permission)
-          }
-        })
-      }
-    }, function (err, result) {
-      dispatch(closeLoading())
-      if (err) {
+    checkCameraPermission((error, camera) => {
+      if (error) {
         console.log(err)
       }
-      if (!result.camera) {
-        Actions.cameraNotification()
-      }
-      if (result.camera && !result.contact) {
-        Actions.contactNotification()
-      }
-      if (result.camera && result.contact) {
-        Actions.review()
+      if (!error) {
+        console.log(camera)
+
+        checkReadContactPermission((error, contact) => {
+          if (error) {
+            console.log(err)
+          }
+          if (!error) {
+            console.log(contact)
+          }
+          dispatch(closeLoading())
+          if (!result.camera) {
+            Actions.cameraNotification()
+          }
+          if (result.camera && !result.contact) {
+            Actions.contactNotification()
+          }
+          if (result.camera && result.contact) {
+            Actions.review()
+          }
+        })
       }
     })
   }

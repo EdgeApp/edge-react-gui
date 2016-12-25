@@ -28,7 +28,7 @@ class PinComponent extends Component {
   render () {
     const pinNumber = this.props.pinNumber
     return (
-      <Container handleSubmit={this.handleSubmit} navigator={this.props.navigator}>
+      <Container>
         <View style={style.inputView}>
           <Text style={style.inputLabel}>
             {t('fragment_setup_pin_title')}

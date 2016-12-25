@@ -9,39 +9,21 @@ import { openLoading, closeLoading } from '../Loader/Loader.action'
 import t from '../../lib/LocaleStrings'
 export const checkUsername = username => {
   return dispatch => {
-    asyncAuto({
-      checkUsernameLength: function (callback) {
-        if (username.length >= 3) {
-          callback(null, null)
-        } else {
-          callback(t('activity_signup_insufficient_username_message'), null)
-        }
-      },
-      openLoading: function (callback) {
-        dispatch(openLoading(t('activity_signup_checking_username')))
-        callback(null, null)
-      },
-      getUsernameAvailability: function (callback) {
-        abcContext(context => {
-          context.usernameAvailable(username, function (error, available) {
-            if (error) {
-              callback(t('activity_signup_username_unavailable'), null)
-            }
-            if (!error) {
-              callback(null, null)
-            }
-          })
-        })
-      }
-    }, function (err, results) {
-      dispatch(closeLoading())
+    if (username.length < 3) {
+      return dispatch(openErrorModal(t('activity_signup_insufficient_username_message')))
+    }    
+ 
+    dispatch(openLoading(t('activity_signup_checking_username')))
 
-      if (err) {
-        dispatch(openErrorModal(err))
-      }
-      if (!err) {
+    abcContext(context => {
+      console.log('context received')
+      context.usernameAvailable(username, function (err, available) {
+        dispatch(closeLoading())
+        if (err) {
+          return dispatch(openErrorModal(t('activity_signup_username_unavailable')))
+        }
         Actions.pin()
-      }
+      })
     })
   }
 }
