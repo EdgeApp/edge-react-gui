@@ -10,7 +10,6 @@ export const viewPassword = (state = false, action) => {
     case ACTION.CLOSE_LOG_IN :
       return false
 
-
     default:
       return state
   }
@@ -99,7 +98,6 @@ export const pin = (state = '', action) => {
 
     case ACTION.USER_LOGIN :
       return ''
-
 
     default:
       return state

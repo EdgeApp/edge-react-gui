@@ -34,7 +34,7 @@ const store = combineReducers({
   }),
 
   reviewDetails: combineReducers({
-    details:  ReviewDetailsStates.details,
+    details: ReviewDetailsStates.details,
     view: ReviewDetailsStates.view
   }),
 

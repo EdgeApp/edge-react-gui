@@ -14,9 +14,9 @@ export const signupUser = (username, password, pin) => {
   return dispatch => {
     dispatch(
       getDetails({
-        username  : username,
-        password  : password,
-        pin       : pin
+        username: username,
+        password: password,
+        pin: pin
       })
     )
     return dispatch(checkPermissions())
@@ -40,9 +40,9 @@ export const signupUser = (username, password, pin) => {
           global.localStorage.setItem('lastUser', username)
           dispatch(
             getDetails({
-              username  : username,
-              password  : password,
-              pin       : pin
+              username: username,
+              password: password,
+              pin: pin
             })
           )
           return dispatch(checkPermissions())

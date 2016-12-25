@@ -19,6 +19,6 @@ class Home extends Component {
 
 }
 
-export default connect( state => ({
-  user : state.user
-}) )(Home)
+export default connect(state => ({
+  user: state.user
+}))(Home)

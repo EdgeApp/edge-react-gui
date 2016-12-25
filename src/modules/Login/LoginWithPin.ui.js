@@ -79,18 +79,18 @@ class Login extends Component {
     return (
       <View style={style.container}>
         <View style={[style.form, {marginTop: 10}]}>
-          <TouchableOpacity onPress={this.toggleCachedUsers}>
-            <Text style={[ style.text, { fontSize: 20 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
+          <TouchableOpacity style={{backgroundColor: 'transparent'}} onPress={this.toggleCachedUsers}>
+            <Text style={[ style.text, { color: 'skyblue', fontSize: 18, marginTop: 10 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
           </TouchableOpacity>
 
-          <View style={{ width: 150, marginVertical: 15 }}>
-            <InputGroup borderType='regular' style={[style.inputGroup, {alignSelf: 'center'}]}>
+          <View style={{ width: 170, marginBottom: 15, marginTop: 5 }}>
+            <InputGroup borderType='regular' style={[style.inputGroup, {padding: 0, alignSelf: 'center'}]}>
               <Input
                 ref='pinInput'
                 placeholder={t('fragment_landing_enter_pin')}
-                style={[style.input, { height: 60, fontSize: 20, textAlign: 'center' }]}
+                style={[style.input, { marginHorizontal: 10, height: 60, marginVertical: 0,  fontSize: 28, textAlign: 'left' }]}
                 onChangeText={this.changePin}
-                value={this.props.pin}
+                value={this.props.pin}s
                 keyboardType='numeric'
                 maxLength={4}
                 autoFocus
@@ -102,8 +102,8 @@ class Login extends Component {
             </InputGroup>
           </View>
 
-          <TouchableOpacity onPress={this.viewPasswordInput}>
-            <Text style={style.text}>{ t('fragment_landing_switch_user') }</Text>
+          <TouchableOpacity style={{backgroundColor: 'transparent'}} onPress={this.viewPasswordInput}>
+            <Text style={[style.text,{fontSize: 15, color: 'skyblue'}]}>{ t('fragment_landing_switch_user') }</Text>
           </TouchableOpacity>
         </View>
         {cUsers()}

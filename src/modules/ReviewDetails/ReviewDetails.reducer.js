@@ -1,12 +1,12 @@
 import * as ACTION from './ReviewDetails.action'
 
 const defaultDetails = {
-  username  : '',
-  password  : '',
-  pin       : ''
+  username: '',
+  password: '',
+  pin: ''
 }
 
-export const details = ( state = defaultDetails, action ) => {
+export const details = (state = defaultDetails, action) => {
   switch (action.type) {
     case ACTION.GET_DETAILS:
       return Object.assign({}, state, action.data)

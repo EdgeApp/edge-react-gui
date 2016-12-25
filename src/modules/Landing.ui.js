@@ -37,18 +37,23 @@ class HomeComponent extends TemplateView {
   componentDidUpdate () {
     if (this.props.whiteOverlayVisible) {
       var self = this
-      this.refs.whiteOverlay.fadeIn(300).then(endState => {
-        Actions.signup()
+      this.refs.whiteOverlay.fadeIn(1000).then(endState => {
         setTimeout(function () {
-          self.props.dispatch(hideWhiteOverlay())
-        }, 3000)
+          self.refs.whiteOverlay.fadeOut(1000).then(endState => {
+            self.props.dispatch(hideWhiteOverlay())
+          })
+        }, 1000)
       }).catch(e => {
         console.error(e)
       })
+      setTimeout(() => {
+        Actions.signup()
+      },700)
     }
   }
 
   componentWillMount () {
+    super.componentWillMount()
     const dispatch = this.props.dispatch
     abcctx(ctx => {
       const cachedUsers = ctx.listUsernames()

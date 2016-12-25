@@ -22,8 +22,9 @@ class Login extends Component {
       this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
     } else {
       this.props.dispatch(openLogin())
-      this.refs.fieldsView.transitionTo({opacity: 1, height: 90}, 200)
-      this.refs.fieldsBelowView.transitionTo({height: 0}, 200)
+      this.refs.fieldsView.transitionTo({opacity: 1, height: 90}, 800)
+      this.refs.fieldsBelowView.transitionTo({height: 0}, 800)
+
     }
   }
 
@@ -36,6 +37,10 @@ class Login extends Component {
 
   changePassword = (password) => {
     this.props.dispatch(loginPassword(password))
+  }
+  usernameFocused = () => {
+    this.refs.titleText.transitionTo({height: 0}, 800)
+    this.showCachedUsers()
   }
 
   showCachedUsers = () => {
@@ -91,7 +96,7 @@ class Login extends Component {
       <View style={style.container}>
         <View style={style.spacer} />
         <View style={style.form}>
-          <Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Text>
+          <Animatable.Text ref='titleText' style={style.textTitle}>{t('fragment_landing_detail_text')}</Animatable.Text>
           <Animatable.View ref='fieldsView' style={[style.fieldsView, {opacity: opacityFieldsView, height: heightFieldsView}]}>
             <TemplateTextInput
               borderType='underline'
@@ -104,7 +109,7 @@ class Login extends Component {
               returnKeyType={'next'}
               onSubmitEditing={e => this.refs.password.focus()}
               selectTextOnFocus
-              onFocus={this.showCachedUsers}
+              onFocus={this.usernameFocused}
               autoCorrect={false}
         />
 
