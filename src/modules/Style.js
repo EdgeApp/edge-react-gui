@@ -85,7 +85,8 @@ const style = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#80C342',
     height: 45,
-    marginVertical: 10
+    marginVertical: 10,
+        borderRadius: 4
   },
   buttonText: {
     fontFamily: appTheme.fontFamily,

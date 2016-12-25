@@ -17,25 +17,23 @@ export const loginWithPassword = (username, password) => {
         callback(null, null)
       },
       loginWithPassword: function (callback) {
-        setTimeout(() => {
-          abcctx(context => {
-            context.loginWithPassword(username, password, null, null, (error, account) => {
-              if (error) {
-                console.log(error)
-                var mess
-                try {
-                  mess = error.message
-                } catch (e) {
-                  mess = error
-                }
-                return callback(mess, null)
+        abcctx(context => {
+          context.loginWithPassword(username, password, null, null, (error, account) => {
+            if (error) {
+              console.log(error)
+              var mess
+              try {
+                mess = error.message
+              } catch (e) {
+                mess = error
               }
-              if (!error) {
-                return callback(null, account)
-              }
-            })
+              return callback(mess, null)
+            }
+            if (!error) {
+              return callback(null, account)
+            }
           })
-        }, 200)
+        })
       }
 
     }, function (err, results) {

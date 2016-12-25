@@ -38,6 +38,7 @@ class Login extends Component {
 
   showCachedUsers = () => {
     this.props.dispatch(openUserList())
+    this.refs.pinInput._textInput.blur()
   }
 
   hideCachedUsers = () => {
@@ -47,7 +48,7 @@ class Login extends Component {
 
   }
   keyboardDidHide = () => {
-    this.props.dispatch(closeUserList())
+    // this.props.dispatch(closeUserList())
   }
   toggleCachedUsers = () => {
     if (this.props.showCachedUsers) {
@@ -90,7 +91,7 @@ class Login extends Component {
                 placeholder={t('fragment_landing_enter_pin')}
                 style={[style.input, { marginHorizontal: 10, height: 60, marginVertical: 0,  fontSize: 28, textAlign: 'left' }]}
                 onChangeText={this.changePin}
-                value={this.props.pin}s
+                value={this.props.pin}
                 keyboardType='numeric'
                 maxLength={4}
                 autoFocus
