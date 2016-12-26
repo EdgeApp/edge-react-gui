@@ -11,6 +11,7 @@ import Login from './Login/Login.ui'
 import LoginWithPin from './Login/LoginWithPin.ui'
 import TemplateView from './tpl/View.ui'
 import abcctx from '../lib/abcContext'
+import { closeUserList } from './Login/Login.action'
 
 import { hideWhiteOverlay } from './Landing.action'
 
@@ -80,6 +81,10 @@ class HomeComponent extends TemplateView {
     if (this.props.pin) return <LoginWithPin />
     if (!this.props.pin) return <Login />
   }
+  handleViewPress = () => {
+    console.log('the fuck?')
+    this.props.dispatch(closeUserList())
+  }
 
   renderDisclaimerComponent = () => {
     if (this.props.disclaimerAccepted) return null
@@ -90,11 +95,11 @@ class HomeComponent extends TemplateView {
 
   render () {
     return (
-      <Image source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
+      <Image onStartShouldSetResponder={this.handleViewPress} source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
         <View style={style.logoContainer}>
           <Image source={require('../img/logo.png')} style={style.logoImage} />
         </View>
-        { this.renderMainComponent() }
+        {this.renderMainComponent()}
         <Loader />
         <WarningModal />
         <ErrorModal />

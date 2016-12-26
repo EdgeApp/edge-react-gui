@@ -21,9 +21,9 @@ export const signupUser = (username, password, pin) => {
     )
     return dispatch(checkPermissions())
     // / all of this code is unreachable until we solve the crypto randomBytes thing
-    
-      setTimeout(() => {
-    abcctx(ctx => {
+
+    setTimeout(() => {
+      abcctx(ctx => {
         ctx.createAccount(username, password, pin, (err, result) => {
           if (err) {
             console.log(err)
@@ -49,8 +49,8 @@ export const signupUser = (username, password, pin) => {
             return dispatch(checkPermissions())
           }
         })
-    })
-      },300)
+      })
+    }, 300)
   }
 }
 

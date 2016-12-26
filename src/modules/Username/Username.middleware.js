@@ -13,8 +13,7 @@ export const checkUsername = username => {
       return dispatch(openErrorModal(t('activity_signup_insufficient_username_message')))
     }
 
-
-    setTimeout(() => {  
+    setTimeout(() => {
       abcContext(context => {
         context.usernameAvailable(username, function (err, available) {
           dispatch(closeLoading())
@@ -24,6 +23,6 @@ export const checkUsername = username => {
           Actions.pin()
         })
       })
-    },300)
+    }, 300)
   }
 }

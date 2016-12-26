@@ -33,6 +33,7 @@ class Login extends Component {
   }
 
   viewPasswordInput = (pin) => {
+    this.props.dispatch(closeUserList())
     this.props.dispatch(removeUserToLogin())
     this.props.dispatch(openLogin())
   }
@@ -72,7 +73,7 @@ class Login extends Component {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
         console.log(this.refs.pinInput)
-        return (<CachedUsers blurField={this.refs.pinInput} />)
+        return (<CachedUsers blurField={this.refs.pinInput._textInput} />)
       } else {
         return null
       }

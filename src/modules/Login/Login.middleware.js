@@ -11,8 +11,8 @@ import t from '../../lib/LocaleStrings'
 
 export const loginWithPassword = (username, password) => {
   return dispatch => {
-      setTimeout(() => {
-    abcctx(context => {
+    setTimeout(() => {
+      abcctx(context => {
         context.loginWithPassword(username, password, null, null, (error, account) => {
           dispatch(closeLoading())
           if (error) {
@@ -22,7 +22,7 @@ export const loginWithPassword = (username, password) => {
             } catch (e) {
               mess = error
             }
-            console.log(error.toString,error,mess)
+            console.log(error.toString, error, mess)
             dispatch(openErrorModal(mess))
           }
           if (!error) {
@@ -31,15 +31,15 @@ export const loginWithPassword = (username, password) => {
             Actions.home()
           }
         })
-    })
-      },300)
+      })
+    }, 300)
   }
 }
 
 export const loginWithPin = (username, pin) => {
   return dispatch => {
-      setTimeout(() => {
-    abcctx(context => {
+    setTimeout(() => {
+      abcctx(context => {
         try {
           context.loginWithPIN(username, pin, (error, account) => {
             dispatch(closeLoading())
@@ -62,7 +62,7 @@ export const loginWithPin = (username, pin) => {
         } catch (e) {
           console.log(e)
         }
-    })
-      },300)
+      })
+    }, 300)
   }
 }

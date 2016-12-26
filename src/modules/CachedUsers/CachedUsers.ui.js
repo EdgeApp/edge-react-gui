@@ -77,12 +77,12 @@ const style = StyleSheet.create({
     right: 0,
     top: 60,
     flex: 1,
-    alignSelf: 'flex-end',
-    backgroundColor: '#FFF',
-    borderRadius: 4
+    alignSelf: 'flex-end'
   },
   contentContainer: {
-    alignItems: 'stretch'
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
   },
 
   row: {
@@ -90,7 +90,9 @@ const style = StyleSheet.create({
     padding: 16,
     alignItems: 'stretch',
     height: 40,
-    flex: 1
+    width: 200,
+    backgroundColor: '#FFF',
+    borderRadius: 4    
   },
   textContainer: {
     flex: 1,

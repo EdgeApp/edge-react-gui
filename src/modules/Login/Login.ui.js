@@ -68,13 +68,14 @@ class Login extends Component {
 
   renderWhiteTransition () {
     if (this.props.whiteOverlayVisible) {
-      console.log('okay')
       return (<Animatable.View ref='whiteOverlay' style={style.whiteTransitionFade} />)
     } else {
       return null
     }
   }
-
+  handleViewPress () {
+    this.props.dispatch(closeUserList())
+  }
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
