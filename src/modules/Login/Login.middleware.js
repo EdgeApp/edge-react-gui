@@ -1,4 +1,4 @@
-import asyncAuto from 'async/auto'
+
 import { Actions } from 'react-native-router-flux'
 
 import abcctx from '../../lib/abcContext'
@@ -7,10 +7,9 @@ import { openLoading, closeLoading } from '../Loader/Loader.action'
 
 import { userLogin } from './Login.action'
 
-import t from '../../lib/LocaleStrings'
-
 export const loginWithPassword = (username, password) => {
   return dispatch => {
+    this.props.dispatch(openLoading())
     setTimeout(() => {
       abcctx(context => {
         context.loginWithPassword(username, password, null, null, (error, account) => {
@@ -31,6 +30,7 @@ export const loginWithPassword = (username, password) => {
 
 export const loginWithPin = (username, pin) => {
   return dispatch => {
+    this.props.dispatch(openLoading())
     setTimeout(() => {
       abcctx(context => {
         try {

@@ -92,7 +92,7 @@ const style = StyleSheet.create({
     height: 40,
     width: 200,
     backgroundColor: '#FFF',
-    borderRadius: 4    
+    borderRadius: 4
   },
   textContainer: {
     flex: 1,

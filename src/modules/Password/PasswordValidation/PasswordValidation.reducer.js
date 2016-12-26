@@ -26,7 +26,6 @@ export const passwordValid = (state = false, action) => {
   }
 }
 
-
 export const lowerCaseChar = (state = false, action) => {
   switch (action.type) {
     case ACTION.LOWER_CASE_PASS :

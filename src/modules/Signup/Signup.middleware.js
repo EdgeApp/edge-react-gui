@@ -1,4 +1,4 @@
-import asyncAuto from 'async/auto'
+
 import { Actions } from 'react-native-router-flux'
 
 import { openErrorModal } from '../ErrorModal/ErrorModal.action'
@@ -21,14 +21,14 @@ export const signupUser = (username, password, pin) => {
     )
     return dispatch(checkPermissions())
     // / all of this code is unreachable until we solve the crypto randomBytes thing
+    this.props.dispatch(openLoading(t('fragment_signup_creating_account')))
 
     setTimeout(() => {
       abcctx(ctx => {
         ctx.createAccount(username, password, pin, (err, result) => {
-
           dispatch(closeLoading())
           if (err) {
-            return dispatch(openErrorModal(t('activity_signup_failed')+": "+err.message))
+            return dispatch(openErrorModal(t('activity_signup_failed') + ': ' + err.message))
           }
 
           if (!err) {
@@ -50,19 +50,19 @@ export const signupUser = (username, password, pin) => {
 
 const checkPermissions = () => {
   return dispatch => {
-    checkCameraPermission((error, camera) => {
-      if (error) {
-        console.log(err)
+    checkCameraPermission((errorCamera, camera) => {
+      if (errorCamera) {
+        console.log(errorCamera)
       }
-      if (!error) {
-        console.log("camera permissions", camera)
+      if (!errorCamera) {
+        console.log('camera permissions', camera)
 
-        checkReadContactPermission((error, contact) => {
-          if (error) {
-            console.log(err)
+        checkReadContactPermission((errorContact, contact) => {
+          if (errorContact) {
+            console.log(errorContact)
           }
-          if (!error) {
-            console.log("contact permissions",contact)
+          if (!errorContact) {
+            console.log('contact permissions', contact)
           }
           dispatch(closeLoading())
           if (!camera) {

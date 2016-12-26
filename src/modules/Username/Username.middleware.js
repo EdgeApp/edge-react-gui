@@ -1,4 +1,4 @@
-import asyncAuto from 'async/auto'
+
 import { Actions } from 'react-native-router-flux'
 
 import abcContext from '../../lib/abcContext'
@@ -13,6 +13,7 @@ export const checkUsername = username => {
       return dispatch(openErrorModal(t('activity_signup_insufficient_username_message')))
     }
 
+    this.props.dispatch(openLoading(t('activity_signup_checking_username')))
     setTimeout(() => {
       abcContext(context => {
         context.usernameAvailable(username, function (err, available) {

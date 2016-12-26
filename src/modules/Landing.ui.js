@@ -19,15 +19,14 @@ import { showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 
 import style from './Style'
-import { setTheme, MKColor } from 'react-native-material-kit';
+import { setTheme } from 'react-native-material-kit'
 
 // customize the material design theme
 setTheme({
   primaryColor: '#87CEEB',
   primaryColorRGB: '#87CEEB',
   accentColor: '#FF0000'
-});
-
+})
 
 global.randomBytes = require('react-native-randombytes').randomBytes
 // synchronous API

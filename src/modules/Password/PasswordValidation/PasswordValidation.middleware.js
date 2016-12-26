@@ -2,7 +2,7 @@ import * as action from './PasswordValidation.action'
 
 export const validate = (password) => {
   return dispatch => {
-     let valid = true
+    let valid = true
     if (password.match(/[A-Z]/)) {
       dispatch(action.upperCaseCharPass())
     } else {
@@ -30,10 +30,10 @@ export const validate = (password) => {
       dispatch(action.characterLengthFail())
       valid = false
     }
-    if(valid) {
-    dispatch(action.validatePassword())
+    if (valid) {
+      dispatch(action.validatePassword())
     } else {
       dispatch(action.invalidatePassword())
-    } 
+    }
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text, Image, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 
 import * as Animatable from 'react-native-animatable'
@@ -9,14 +9,13 @@ import style from './Password.style'
 
 import { validate } from './PasswordValidation/PasswordValidation.middleware'
 import { checkPassword, skipPassword } from './Password.middleware'
-import { openLoading } from '../Loader/Loader.action'
 import NextButton from '../NextButton/NextButton.ui'
 import SkipButton from '../SkipButton/SkipButton.ui'
 import t from '../../lib/LocaleStrings'
 import {
   passwordNotificationShow,
-  focusPasswordInput,
-  blurPasswordInput,
+  showPassword,
+  hidePassword,
   changePasswordValue,
   changePasswordRepeatValue
 } from './Password.action'
@@ -26,7 +25,6 @@ import { MKTextField } from 'react-native-material-kit'
 class Password extends Component {
 
   handleSubmit = () => {
-    this.props.dispatch(openLoading(t('fragment_signup_creating_account')))
     this.props.dispatch(
       checkPassword(
         this.props.password,
@@ -49,14 +47,11 @@ class Password extends Component {
   }
 
   handlePasswordOnFocus = () => {
-    console.log('focus')
     this.refs.passwordValidation.transitionTo({height: 90}, 800)
-    this.props.dispatch(focusPasswordInput())
   }
 
   handlePasswordOnBlur = () => {
     this.refs.passwordValidation.transitionTo({height: 0}, 800)
-    this.props.dispatch(blurPasswordInput())
   }
 
   handleOnChangePassword = (password) => {
@@ -68,6 +63,14 @@ class Password extends Component {
     this.props.dispatch(changePasswordRepeatValue(passwordRepeat))
   }
 
+  toggleRevealPassword = () => {
+    if (this.props.inputState) {
+      this.props.dispatch(hidePassword())
+    } else {
+      this.props.dispatch(showPassword())
+    }
+  }
+
   render () {
     return (
       <Container>
@@ -75,30 +78,33 @@ class Password extends Component {
           <Text style={style.paragraph}>
             {t('fragment_setup_password_text')}
           </Text>
-          <Animatable.View ref='passwordValidation' style={{position:'absolute',height:0}}>
+          <Animatable.View ref='passwordValidation' style={style.passwordValidationContainer}>
             <PasswordValidation />
           </Animatable.View>
 
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <MKTextField
+              tintColor={this.props.validation.passwordValid ? undefined : '#FF0000'}
+              password={!this.props.inputState}
+              style={{marginLeft: 30, marginRight: 10, marginVertical: 15}}
+              ref='SignupPasswordFirst'
+              autoCorrect={false}
+              textInputStyle={style.input}
+              placeholder={t('activity_signup_password_hint')}
+              keyboardType='default'
+              secureTextEntry
+              onChangeText={this.handleOnChangePassword}
+              value={this.props.password}
+              onFocus={this.handlePasswordOnFocus}
+              onBlur={this.handlePasswordOnBlur}
+              returnKeyType='next'
+              onSubmitEditing={e => this.refs.SignupPassword.focus()}
+            />
+            <TouchableWithoutFeedback onPress={this.toggleRevealPassword}><Image source={require('../../img/icon_export_view.png')} style={style.passwordEye} /></TouchableWithoutFeedback>
+          </View>
           <MKTextField
-            tintColor={this.props.validation.passwordValid ? undefined : '#FF0000'}
-            password={true}
-            style={{marginHorizontal: 30,marginVertical: 15}}
-            ref='SignupPasswordFirst'
-            autoCorrect={false}
-            textInputStyle={style.input}
-            placeholder={t('activity_signup_password_hint')}
-            keyboardType='default'
-            secureTextEntry
-            onChangeText={this.handleOnChangePassword}
-            value={this.props.password}
-            onFocus={this.handlePasswordOnFocus}
-            onBlur={this.handlePasswordOnBlur}
-            returnKeyType='next'
-            onSubmitEditing={e => this.refs.SignupPassword.focus()}
-          />
-          <MKTextField
-            password={true}
-            style={{marginHorizontal: 30,marginBottom: 15}}
+            password
+            style={{marginHorizontal: 30, marginBottom: 15}}
             ref='SignupPassword'
             autoCorrect={false}
             textInputStyle={style.input}

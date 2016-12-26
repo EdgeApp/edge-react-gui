@@ -4,24 +4,25 @@ import { connect } from 'react-redux'
 import t from '../../../lib/LocaleStrings'
 
 import appTheme from '../../../../Themes/appTheme'
+const unselected = require('../../../img/btn_unselected.png')
+const selected = require('../../../img/icon_approved.png')
 class PasswordRequirement extends Component {
+  checkOneUpper = (validation) => validation.upperCaseChar ? selected : unselected
 
-  checkOneUpper = (validation) => validation.upperCaseChar ? { color: 'blue' } : null
+  checkOneLower = (validation) => validation.lowerCaseChar ? selected : unselected
 
-  checkOneLower = (validation) => validation.lowerCaseChar ? { color: 'blue' } : null
+  checkOneNumber = (validation) => validation.number ? selected : unselected
 
-  checkOneNumber = (validation) => validation.number ? { color: 'blue' } : null
-
-  checkCharacterLength = (validation) => validation.characterLength ? { color: 'blue' } : null
+  checkCharacterLength = (validation) => validation.characterLength ? selected : unselected
 
   render () {
     return (
       <View style={style.container}>
         <Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
-        <View><Image /><Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}> - {t('password_rule_no_uppercase')}</Text></View>
-        <View><Image /><Text style={[ style.text, this.checkOneLower(this.props.validation) ]}> - {t('password_rule_no_lowercase')}</Text></View>
-        <View><Image /><Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}> - {t('password_rule_no_number')}</Text></View>
-        <View><Image /><Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}> - {t('password_rule_too_short')}</Text></View>
+        <View style={style.validationContainer}><Image source={this.checkOneUpper(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_uppercase')}</Text></View>
+        <View style={style.validationContainer}><Image source={this.checkOneLower(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_lowercase')}</Text></View>
+        <View style={style.validationContainer}><Image source={this.checkOneNumber(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_number')}</Text></View>
+        <View style={style.validationContainer}><Image source={this.checkCharacterLength(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_too_short')}</Text></View>
       </View>
     )
   }
@@ -32,10 +33,23 @@ const style = StyleSheet.create({
 
   container: {
     height: 90,
-    padding: 10,
-    backgroundColor: '#2291CF'
+    paddingHorizontal: 10,
+    flex: 1,
+    backgroundColor: '#2291CF',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
   },
-
+  validationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  passwordCheckmark: {
+    height: 15,
+    width: 15,
+    marginRight: 5
+  },
   text: {
     color: '#FFF',
     fontSize: 12,

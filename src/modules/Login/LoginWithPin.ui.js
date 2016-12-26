@@ -8,14 +8,12 @@ import { removeUserToLogin } from '../CachedUsers/CachedUsers.action'
 
 import { View, Text, TouchableOpacity, Keyboard } from 'react-native'
 import { InputGroup, Input } from 'native-base'
-import { openLoading } from '../Loader/Loader.action'
 import t from '../../lib/LocaleStrings'
 import style from '../Style'
 class Login extends Component {
 
   submit = () => {
     this.refs.pinInput._textInput.blur()
-    this.props.dispatch(openLoading())
     this.props.dispatch(
       loginWithPin(
         this.props.user,

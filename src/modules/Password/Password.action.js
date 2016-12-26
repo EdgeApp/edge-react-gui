@@ -1,23 +1,22 @@
-export const FOCUS_PASSWORD_INPUT = 'FOCUS_PASSWORD_INPUT'
-export const BLUR_PASSWORD_INPUT = 'BLUR_PASSWORD_INPUT'
+export const SHOW_PASSWORD = 'SHOW_PASSWORD'
+export const HIDE_PASSWORD = 'HIDE_PASSWORD'
 
 export const CHANGE_PASSWORD_VALUE = 'CHANGE_PASSWORD_VALUE'
 export const CHANGE_PASSWORD_REPEAT_VALUE = 'CHANGE_PASSWORD_REPEAT_VALUE'
 export const SKIP_PASSWORD_NOTIFICATION_SHOW = 'SKIP_PASSWORD_NOTIFICATION_SHOW'
 export const SKIP_PASSWORD_NOTIFICATION_HIDE = 'SKIP_PASSWORD_NOTIFICATION_HIDE'
 
-export function focusPasswordInput () {
+export function showPassword () {
   return {
-    type: FOCUS_PASSWORD_INPUT
+    type: SHOW_PASSWORD
   }
 }
 
-export function blurPasswordInput () {
+export function hidePassword () {
   return {
-    type: BLUR_PASSWORD_INPUT
+    type: HIDE_PASSWORD
   }
 }
-
 
 export function changePasswordValue (data) {
   return {

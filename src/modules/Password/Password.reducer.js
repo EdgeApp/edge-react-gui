@@ -3,18 +3,16 @@ import { GET_DETAILS } from '../ReviewDetails/ReviewDetails.action'
 
 export const inputState = (state = false, action) => {
   switch (action.type) {
-    case ACTION.FOCUS_PASSWORD_INPUT :
+    case ACTION.SHOW_PASSWORD :
       return true
 
-    case ACTION.BLUR_PASSWORD_INPUT :
+    case ACTION.HIDE_PASSWORD :
       return false
 
     default:
       return state
   }
 }
-
-
 
 export const password = (state = '', action) => {
   switch (action.type) {

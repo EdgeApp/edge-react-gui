@@ -16,6 +16,17 @@ const style = StyleSheet.create({
     flexDirection: 'column',
     flex: 1
   },
+  passwordValidationContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 0
+  },
+  passwordEye: {
+    width: 40,
+    height: 40,
+    resizeMode: 'center'
+  },
   input: {
     fontSize: 22,
     color: 'skyblue',

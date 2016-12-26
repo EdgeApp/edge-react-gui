@@ -10,7 +10,6 @@ import TemplateTextInput from '../tpl/TextInput.ui'
 import t from '../../lib/LocaleStrings'
 import CachedUsers from '../CachedUsers/CachedUsers.ui'
 import style from '../Style'
-import { openLoading } from '../Loader/Loader.action'
 import { showWhiteOverlay } from '../Landing.action'
 
 class Login extends Component {
@@ -19,7 +18,6 @@ class Login extends Component {
     if (this.props.viewPassword) {
       this.refs.loginUsername.blur()
       this.refs.password.blur()
-      this.props.dispatch(openLoading(t('string_loading')))
       this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
     } else {
       this.props.dispatch(openLogin())

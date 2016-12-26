@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import t from '../lib/LocaleStrings'
 
-
 import { Actions } from 'react-native-router-flux'
 import appTheme from '../../Themes/appTheme'
 class NavigationBar extends Component {
-
 
   checkBackText = () => {
     switch (this.props.scene) {
@@ -31,7 +29,7 @@ class NavigationBar extends Component {
         <View style={style.navigationBarContainer}>
           <View style={style.navigationContainer}>
             <TouchableWithoutFeedback onPress={Actions.pop}>
-              <Text style={style.text}>{ this.checkBackText() }</Text>
+              <View><Text style={style.text}>{ this.checkBackText() }</Text></View>
             </TouchableWithoutFeedback>
             <Text style={[ style.text, style.title ]} > { this.props.title || '' } </Text>
             <Text style={style.text} />
