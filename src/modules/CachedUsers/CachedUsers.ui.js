@@ -75,7 +75,7 @@ const style = StyleSheet.create({
     maxHeight: 150,
     left: 0,
     right: 0,
-    top: 40,
+    top: 60,
     flex: 1,
     alignSelf: 'flex-end',
     backgroundColor: '#FFF',
