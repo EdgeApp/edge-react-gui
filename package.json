@@ -20,6 +20,7 @@
     "react-native-device-info": "^0.9.6",
     "react-native-fs": "^2.0.1-rc.2",
     "react-native-linear-gradient": "^1.5.15",
+    "react-native-material-kit": "^0.3.4",
     "react-native-modalbox": "^1.3.8",
     "react-native-orientation": "git+https://github.com/yamill/react-native-orientation.git",
     "react-native-randombytes": "^2.2.0",

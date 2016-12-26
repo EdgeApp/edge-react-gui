@@ -10,11 +10,10 @@ const style = StyleSheet.create({
   },
 
   usernameInput: {
-    marginHorizontal: 30,
-    height: 60,
+    height: 40,
+    width: 260,
     fontSize: 22,
     color: 'skyblue',
-    width: 200,
     fontFamily: appTheme.fontFamily
   },
 

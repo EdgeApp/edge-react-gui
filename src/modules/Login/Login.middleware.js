@@ -16,14 +16,7 @@ export const loginWithPassword = (username, password) => {
         context.loginWithPassword(username, password, null, null, (error, account) => {
           dispatch(closeLoading())
           if (error) {
-            var mess
-            try {
-              mess = error.message
-            } catch (e) {
-              mess = error
-            }
-            console.log(error.toString, error, mess)
-            dispatch(openErrorModal(mess))
+            dispatch(openErrorModal(error.message))
           }
           if (!error) {
             global.localStorage.setItem('lastUser', username)
@@ -44,14 +37,7 @@ export const loginWithPin = (username, pin) => {
           context.loginWithPIN(username, pin, (error, account) => {
             dispatch(closeLoading())
             if (error) {
-              console.log(error)
-              var mess
-              try {
-                mess = error.message
-              } catch (e) {
-                mess = error
-              }
-              dispatch(openErrorModal(mess))
+              dispatch(openErrorModal(error.message))
             }
 
             if (!error) {

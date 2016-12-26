@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { View, Text, TextInput } from 'react-native'
-
+import { MKTextField } from 'react-native-material-kit'
 import { changeUsernameValue } from './Username.action'
 import { checkUsername } from './Username.middleware'
 
@@ -28,17 +28,18 @@ class UsernameComponent extends Component {
     return (
       <Container>
         <View style={style.inputView}>
-          <TextInput
+          <MKTextField
+            style={{marginHorizontal: 30,marginVertical: 15}}
+            textInputStyle={style.usernameInput}
             ref='usernameInput'
             autoCorrect={false}
-            style={style.usernameInput}
             placeholder={t('fragment_landing_username_hint')}
             onChangeText={this.handleOnChangeText}
             value={username}
             autoFocus
             blurOnSubmit
             returnKeyType='done'
-          />
+          />          
           <Text style={style.paragraph}>
             {t('fragment_setup_username_text')}
           </Text>

@@ -1728,7 +1728,7 @@ exports["abc"] =
 	    return this.fetch(serverRoot + uri, headers).then(function (response) {
 	      return response.json().then(function (json) {
 	        if (json['status_code'] !== 0) {
-	          throw new Error('Server error ' + JSON.stringify(json))
+	          throw new Error('Server error ' + json.message)
 	        }
 	        return json['results']
 	      }, function (jsonError) {

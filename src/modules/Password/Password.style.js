@@ -18,11 +18,9 @@ const style = StyleSheet.create({
     flex: 1
   },
   input: {
-    height: 60,
     fontSize: 22,
     color: 'skyblue',
     width: 240,
-    marginHorizontal: 30,
     fontFamily: appTheme.fontFamily
   },
 

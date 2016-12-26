@@ -25,16 +25,10 @@ export const signupUser = (username, password, pin) => {
     setTimeout(() => {
       abcctx(ctx => {
         ctx.createAccount(username, password, pin, (err, result) => {
+
+          dispatch(closeLoading())
           if (err) {
-            console.log(err)
-            var mess
-            try {
-              mess = err.message
-            } catch (e) {
-              mess = err
-            }
-            dispatch(closeLoading())
-            return dispatch(openErrorModal(t('activity_signup_failed')))
+            return dispatch(openErrorModal(t('activity_signup_failed')+": "+err.message))
           }
 
           if (!err) {
@@ -61,14 +55,14 @@ const checkPermissions = () => {
         console.log(err)
       }
       if (!error) {
-        console.log(camera)
+        console.log("camera permissions", camera)
 
         checkReadContactPermission((error, contact) => {
           if (error) {
             console.log(err)
           }
           if (!error) {
-            console.log(contact)
+            console.log("contact permissions",contact)
           }
           dispatch(closeLoading())
           if (!camera) {

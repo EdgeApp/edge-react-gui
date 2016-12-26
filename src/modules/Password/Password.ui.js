@@ -20,6 +20,7 @@ import {
   changePasswordRepeatValue
 } from './Password.action'
 
+import { MKTextField } from 'react-native-material-kit'
 class Password extends Component {
 
   handleSubmit = () => {
@@ -71,10 +72,14 @@ class Password extends Component {
           <Text style={style.paragraph}>
             {t('fragment_setup_password_text')}
           </Text>
-          <TextInput
+
+          <MKTextField
+            tintColor={this.props.passwordTint}
+            password={true}
+            style={{marginHorizontal: 30,marginVertical: 15}}
             ref='SignupPasswordFirst'
             autoCorrect={false}
-            style={style.input}
+            textInputStyle={style.input}
             placeholder={t('activity_signup_password_hint')}
             keyboardType='default'
             secureTextEntry
@@ -86,10 +91,13 @@ class Password extends Component {
             returnKeyType='next'
             onSubmitEditing={e => this.refs.SignupPassword.focus()}
           />
-          <TextInput
+          <MKTextField
+            tintColor={this.props.passwordTint}
+            password={true}
+            style={{marginHorizontal: 30,marginVertical: 15}}
             ref='SignupPassword'
             autoCorrect={false}
-            style={style.input}
+            textInputStyle={style.input}
             placeholder={t('activity_signup_password_confirm_hint')}
             keyboardType='default'
             secureTextEntry

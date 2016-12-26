@@ -19,6 +19,15 @@ import { showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 
 import style from './Style'
+import { setTheme, MKColor } from 'react-native-material-kit';
+
+// customize the material design theme
+setTheme({
+  primaryColor: '#87CEEB',
+  primaryColorRGB: '#87CEEB',
+  accentColor: '#FF0000'
+});
+
 
 global.randomBytes = require('react-native-randombytes').randomBytes
 // synchronous API
@@ -49,7 +58,7 @@ class HomeComponent extends TemplateView {
       })
       setTimeout(() => {
         Actions.signup()
-      }, 700)
+      }, 500)
     }
   }
 
@@ -82,7 +91,6 @@ class HomeComponent extends TemplateView {
     if (!this.props.pin) return <Login />
   }
   handleViewPress = () => {
-    console.log('the fuck?')
     this.props.dispatch(closeUserList())
   }
 
