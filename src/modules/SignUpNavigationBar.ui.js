@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import t from '../lib/LocaleStrings'
 
@@ -30,9 +30,9 @@ class NavigationBar extends Component {
       <View style={[ style.container ]}>
         <View style={style.navigationBarContainer}>
           <View style={style.navigationContainer}>
-            <TouchableHighlight onPress={Actions.pop}>
+            <TouchableWithoutFeedback onPress={Actions.pop}>
               <Text style={style.text}>{ this.checkBackText() }</Text>
-            </TouchableHighlight>
+            </TouchableWithoutFeedback>
             <Text style={[ style.text, style.title ]} > { this.props.title || '' } </Text>
             <Text style={style.text} />
           </View>
@@ -47,8 +47,6 @@ const style = StyleSheet.create({
 
   container: {
     backgroundColor: '#2291CF',
-    borderWidth:1,
-    borderColor: '#FF0000',
     height: 60
   },
 
