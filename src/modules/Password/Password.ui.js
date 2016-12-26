@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, TextInput } from 'react-native'
 import { connect } from 'react-redux'
 
+import * as Animatable from 'react-native-animatable'
 import Container from '../SignUp.ui'
 import Notification from './Notification.ui'
 import style from './Password.style'
@@ -19,6 +20,7 @@ import {
   changePasswordValue,
   changePasswordRepeatValue
 } from './Password.action'
+import PasswordValidation from './PasswordValidation/PasswordValidation.ui'
 
 import { MKTextField } from 'react-native-material-kit'
 class Password extends Component {
@@ -47,10 +49,13 @@ class Password extends Component {
   }
 
   handlePasswordOnFocus = () => {
+    console.log('focus')
+    this.refs.passwordValidation.transitionTo({height: 90}, 800)
     this.props.dispatch(focusPasswordInput())
   }
 
   handlePasswordOnBlur = () => {
+    this.refs.passwordValidation.transitionTo({height: 0}, 800)
     this.props.dispatch(blurPasswordInput())
   }
 
@@ -63,18 +68,19 @@ class Password extends Component {
     this.props.dispatch(changePasswordRepeatValue(passwordRepeat))
   }
 
-  checkPasswordInputState = () => this.props.inputState ? { marginTop: 10 } : null
-
   render () {
     return (
       <Container>
-        <View style={[ style.inputView, this.checkPasswordInputState() ]}>
+        <View style={[ style.inputView ]}>
           <Text style={style.paragraph}>
             {t('fragment_setup_password_text')}
           </Text>
+          <Animatable.View ref='passwordValidation' style={{borderWidth: 1, borderColor: '#FF0000', position:'absolute',height:0}}>
+            <PasswordValidation />
+          </Animatable.View>
 
           <MKTextField
-            tintColor={this.props.passwordTint}
+            tintColor={this.props.validation.passwordValid ? undefined : '#FF0000'}
             password={true}
             style={{marginHorizontal: 30,marginVertical: 15}}
             ref='SignupPasswordFirst'
@@ -83,7 +89,6 @@ class Password extends Component {
             placeholder={t('activity_signup_password_hint')}
             keyboardType='default'
             secureTextEntry
-            autoFocus
             onChangeText={this.handleOnChangePassword}
             value={this.props.password}
             onFocus={this.handlePasswordOnFocus}
@@ -92,9 +97,8 @@ class Password extends Component {
             onSubmitEditing={e => this.refs.SignupPassword.focus()}
           />
           <MKTextField
-            tintColor={this.props.passwordTint}
             password={true}
-            style={{marginHorizontal: 30,marginVertical: 15}}
+            style={{marginHorizontal: 30,marginBottom: 15}}
             ref='SignupPassword'
             autoCorrect={false}
             textInputStyle={style.input}

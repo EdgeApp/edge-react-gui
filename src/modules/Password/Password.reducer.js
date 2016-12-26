@@ -14,6 +14,8 @@ export const inputState = (state = false, action) => {
   }
 }
 
+
+
 export const password = (state = '', action) => {
   switch (action.type) {
     case ACTION.CHANGE_PASSWORD_VALUE :

@@ -3,29 +3,11 @@ import { View, Text, StyleSheet, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import t from '../lib/LocaleStrings'
 
-import PasswordValidation from './Password/PasswordValidation/PasswordValidation.ui'
 
 import { Actions } from 'react-native-router-flux'
 import appTheme from '../../Themes/appTheme'
 class NavigationBar extends Component {
 
-  checkPasswordStateOption = () => {
-    if (this.props.scene === 'password' && this.props.passwordState) {
-      return (
-        <PasswordValidation />
-      )
-    } else {
-      return null
-    }
-  }
-
-  checkPasswordStateStyle = () => {
-    if (this.props.scene === 'password' && this.props.passwordState) {
-      return {height: 120}
-    } else {
-      return {height: 60}
-    }
-  }
 
   checkBackText = () => {
     switch (this.props.scene) {
@@ -45,7 +27,7 @@ class NavigationBar extends Component {
 
   render () {
     return (
-      <View style={[ style.container, this.checkPasswordStateStyle() ]}>
+      <View style={[ style.container ]}>
         <View style={style.navigationBarContainer}>
           <View style={style.navigationContainer}>
             <TouchableHighlight onPress={Actions.pop}>
@@ -54,7 +36,6 @@ class NavigationBar extends Component {
             <Text style={[ style.text, style.title ]} > { this.props.title || '' } </Text>
             <Text style={style.text} />
           </View>
-          { this.checkPasswordStateOption() }
         </View>
       </View>
     )
@@ -99,8 +80,6 @@ const style = StyleSheet.create({
 
 export default connect(state => ({
 
-  route: state.route,
-  passwordState: state.password.inputState,
   scene: state.routes.scene.sceneKey,
   title: state.routes.scene.title
 

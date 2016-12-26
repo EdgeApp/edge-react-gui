@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 import { connect } from 'react-redux'
 import t from '../../../lib/LocaleStrings'
 
@@ -18,10 +18,10 @@ class PasswordRequirement extends Component {
     return (
       <View style={style.container}>
         <Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
-        <Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}> - {t('password_rule_no_uppercase')}</Text>
-        <Text style={[ style.text, this.checkOneLower(this.props.validation) ]}> - {t('password_rule_no_lowercase')}</Text>
-        <Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}> - {t('password_rule_no_number')}</Text>
-        <Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}> - {t('password_rule_too_short')}</Text>
+        <View><Image /><Text style={[ style.text, this.checkOneUpper(this.props.validation) ]}> - {t('password_rule_no_uppercase')}</Text></View>
+        <View><Image /><Text style={[ style.text, this.checkOneLower(this.props.validation) ]}> - {t('password_rule_no_lowercase')}</Text></View>
+        <View><Image /><Text style={[ style.text, this.checkOneNumber(this.props.validation) ]}> - {t('password_rule_no_number')}</Text></View>
+        <View><Image /><Text style={[ style.text, this.checkCharacterLength(this.props.validation) ]}> - {t('password_rule_too_short')}</Text></View>
       </View>
     )
   }
@@ -31,19 +31,20 @@ class PasswordRequirement extends Component {
 const style = StyleSheet.create({
 
   container: {
-    marginHorizontal: 10,
-    marginBottom: 5
+    height: 90,
+    padding: 10,
+    backgroundColor: '#2291CF'
   },
 
   text: {
     color: '#FFF',
-    fontSize: 10,
+    fontSize: 12,
     fontFamily: appTheme.fontFamily
   },
 
   textLead: {
     marginBottom: 5,
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: 'bold',
     fontFamily: appTheme.fontFamily
   }

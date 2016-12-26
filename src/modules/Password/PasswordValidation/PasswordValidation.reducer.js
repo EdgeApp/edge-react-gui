@@ -13,6 +13,20 @@ export const upperCaseChar = (state = false, action) => {
   }
 }
 
+export const passwordValid = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.VALIDATE_PASSWORD :
+      return true
+
+    case ACTION.INVALIDATE_PASSWORD :
+      return false
+
+    default:
+      return state
+  }
+}
+
+
 export const lowerCaseChar = (state = false, action) => {
   switch (action.type) {
     case ACTION.LOWER_CASE_PASS :
