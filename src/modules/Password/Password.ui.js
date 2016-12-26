@@ -75,7 +75,7 @@ class Password extends Component {
           <Text style={style.paragraph}>
             {t('fragment_setup_password_text')}
           </Text>
-          <Animatable.View ref='passwordValidation' style={{borderWidth: 1, borderColor: '#FF0000', position:'absolute',height:0}}>
+          <Animatable.View ref='passwordValidation' style={{position:'absolute',height:0}}>
             <PasswordValidation />
           </Animatable.View>
 

@@ -46,7 +46,10 @@ class NavigationBar extends Component {
 const style = StyleSheet.create({
 
   container: {
-    backgroundColor: '#2291CF'
+    backgroundColor: '#2291CF',
+    borderWidth:1,
+    borderColor: '#FF0000',
+    height: 60
   },
 
   navigationBarContainer: {
