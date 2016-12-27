@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, TextInput } from 'react-native'
+import { View, Text } from 'react-native'
 
 import { changePinNumberValue } from './PinNumber.action'
 import { checkPIN } from './PinNumber.middleware'
 
+import { MKTextField } from 'react-native-material-kit'
 import Container from '../SignUp.ui'
 import style from './PinNumber.style'
 import t from '../../lib/LocaleStrings'
@@ -33,8 +34,10 @@ class PinComponent extends Component {
           <Text style={style.inputLabel}>
             {t('fragment_setup_pin_title')}
           </Text>
-          <TextInput
-            style={style.input}
+          <MKTextField
+            style={{alignSelf: 'center', marginVertical: 15}}
+            tintColor='#CCC'
+            textInputStyle={style.input}
             placeholder={t('activity_signup_pin_hint')}
             keyboardType='numeric'
             maxLength={4}

@@ -23,9 +23,9 @@ const style = StyleSheet.create({
     height: 0
   },
   passwordEye: {
-    width: 40,
-    height: 40,
-    resizeMode: 'center'
+    width: 30,
+    height: 30,
+    resizeMode: 'contain'
   },
   input: {
     fontSize: 22,

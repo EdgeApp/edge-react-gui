@@ -22,6 +22,9 @@ class Login extends Component {
     )
     this.props.dispatch(loginPIN(''))
   }
+  handleViewPress = () => {
+    this.refs.pinInput._textInput.focus()
+  }
 
   changePin = (pin) => {
     this.props.dispatch(loginPIN(pin))
@@ -70,7 +73,6 @@ class Login extends Component {
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
-        console.log(this.refs.pinInput)
         return (<CachedUsers blurField={this.refs.pinInput._textInput} />)
       } else {
         return null
@@ -84,9 +86,10 @@ class Login extends Component {
             <Text style={[ style.text, { color: 'skyblue', fontSize: 18, marginTop: 10 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
           </TouchableOpacity>
 
-          <View style={{ width: 170, marginBottom: 15, marginTop: 5 }}>
+          <View style={{ width: 160, marginTop: 5 }}>
             <InputGroup borderType='regular' style={[style.inputGroup, {padding: 0, alignSelf: 'center'}]}>
               <Input
+                placeholderTextColor='rgba(200,200,200,0.5)'
                 ref='pinInput'
                 placeholder={t('fragment_landing_enter_pin')}
                 style={[style.input, { marginHorizontal: 10, height: 60, marginVertical: 0, fontSize: 28, textAlign: 'left' }]}
@@ -103,7 +106,7 @@ class Login extends Component {
             </InputGroup>
           </View>
 
-          <TouchableOpacity style={{backgroundColor: 'transparent'}} onPress={this.viewPasswordInput}>
+          <TouchableOpacity style={{padding: 15, backgroundColor: 'transparent'}} onPress={this.viewPasswordInput}>
             <Text style={[style.text, {fontSize: 15, color: 'skyblue'}]}>{ t('fragment_landing_switch_user') }</Text>
           </TouchableOpacity>
         </View>

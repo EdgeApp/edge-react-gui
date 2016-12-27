@@ -1,4 +1,4 @@
-const Device = require('react-native-device-detection')
+const Device = require('../../lib/DeviceDetect')
 const Orientation = require('react-native-orientation')
 import React, { Component } from 'react'
 import { LayoutAnimation, Text } from 'react-native'

@@ -86,11 +86,14 @@ class HomeComponent extends TemplateView {
   }
 
   renderMainComponent = () => {
-    if (this.props.pin) return <LoginWithPin />
-    if (!this.props.pin) return <Login />
+    if (this.props.pin) return <LoginWithPin ref='login' />
+    if (!this.props.pin) return <Login ref='login' />
   }
   handleViewPress = () => {
     this.props.dispatch(closeUserList())
+    if (this.refs.login) {
+      this.refs.login.handleViewPress()
+    }
   }
 
   renderDisclaimerComponent = () => {

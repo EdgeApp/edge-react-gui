@@ -13,6 +13,7 @@ import t from '../../lib/LocaleStrings'
 class UserList extends Component {
 
   handleLoginUserPin = (user) => {
+    this.props.blurField.focus()
     this.props.dispatch(selectUserToLogin(user))
   }
 
@@ -31,7 +32,11 @@ class UserList extends Component {
   listUsers = () => {
     const checkIfLastElementStyle = index => {
       const lastIndex = this.props.users.length - 1
-      if (lastIndex !== index) {
+      if (index === 0) {
+        return [style.row, style.topRadius]
+      } else if (lastIndex === index) {
+        return [style.row, style.bottomRadius]
+      } else if (lastIndex !== index) {
         return [style.row, style.border]
       }
 
@@ -62,7 +67,11 @@ class UserList extends Component {
         keyboardShouldPersistTaps
         style={style.container}
         contentContainerStyle={style.contentContainer}>
-        { this.listUsers() }
+        <View style={style.spacer} />
+        <View style={style.listContainer}>
+          { this.listUsers() }
+        </View>
+        <View style={style.spacer} />
       </ScrollView>
     )
   }
@@ -84,15 +93,28 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row'
   },
+  spacer: {
+    flex: 0.15
+  },
+  listContainer: {
+    flex: 0.7,
+    flexDirection: 'column'
+  },
+  topRadius: {
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 4
+  },
+  bottomRadius: {
+    borderBottomLeftRadius: 4,
+    borderBottomRightRadius: 4
+  },
 
   row: {
-    flexDirection: 'column',
-    padding: 16,
+    flexDirection: 'row',
+    paddingLeft: 10,
     alignItems: 'stretch',
     height: 40,
-    width: 200,
-    backgroundColor: '#FFF',
-    borderRadius: 4
+    backgroundColor: '#FFF'
   },
   textContainer: {
     flex: 1,
@@ -130,7 +152,7 @@ const style = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   }
 })
 

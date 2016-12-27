@@ -25,6 +25,9 @@ class Login extends Component {
       this.refs.fieldsBelowView.transitionTo({height: 0}, 800)
     }
   }
+  handleViewPress = () => {
+
+  }
 
   handleSignup = () => {
     this.props.dispatch(showWhiteOverlay())
