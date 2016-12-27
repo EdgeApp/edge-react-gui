@@ -21,7 +21,7 @@ export const signupUser = (username, password, pin) => {
     )
     return dispatch(checkPermissions())
     // / all of this code is unreachable until we solve the crypto randomBytes thing
-    this.props.dispatch(openLoading(t('fragment_signup_creating_account')))
+    dispatch(openLoading(t('fragment_signup_creating_account')))
 
     setTimeout(() => {
       abcctx(ctx => {

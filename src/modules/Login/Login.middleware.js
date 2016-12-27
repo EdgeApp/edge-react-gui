@@ -9,7 +9,7 @@ import { userLogin } from './Login.action'
 
 export const loginWithPassword = (username, password) => {
   return dispatch => {
-    this.props.dispatch(openLoading())
+    dispatch(openLoading())
     setTimeout(() => {
       abcctx(context => {
         context.loginWithPassword(username, password, null, null, (error, account) => {
@@ -30,7 +30,7 @@ export const loginWithPassword = (username, password) => {
 
 export const loginWithPin = (username, pin) => {
   return dispatch => {
-    this.props.dispatch(openLoading())
+    dispatch(openLoading())
     setTimeout(() => {
       abcctx(context => {
         try {

@@ -13,7 +13,7 @@ export const checkUsername = username => {
       return dispatch(openErrorModal(t('activity_signup_insufficient_username_message')))
     }
 
-    this.props.dispatch(openLoading(t('activity_signup_checking_username')))
+    dispatch(openLoading(t('activity_signup_checking_username')))
     setTimeout(() => {
       abcContext(context => {
         context.usernameAvailable(username, function (err, available) {
