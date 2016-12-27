@@ -1,4 +1,4 @@
-import  {
+import {
   PixelRatio,
   Platform,
   Dimensions

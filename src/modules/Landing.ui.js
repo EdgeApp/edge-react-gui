@@ -91,9 +91,6 @@ class HomeComponent extends TemplateView {
   }
   handleViewPress = () => {
     this.props.dispatch(closeUserList())
-    if (this.refs.login) {
-      this.refs.login.handleViewPress()
-    }
   }
 
   renderDisclaimerComponent = () => {
