@@ -33,7 +33,7 @@
     "redux-thunk": "^2.1.0"
   },
   "config": {
-    "ghooks": {
+    "husky": {
       "pre-commit": "npm run lint",
       "pre-push": "npm run lint"
     }
