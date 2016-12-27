@@ -32,6 +32,11 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0"
   },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run lint"
+    }
+  },  
   "devDependencies": {
     "babel-eslint": "^7.1.1",
     "babel-preset-react-native": "^1.9.0",
