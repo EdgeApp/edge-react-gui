@@ -3,6 +3,7 @@ import LocalStorage from './LocalStorage'
 
 const abcctx = function (callback) {
   if (!global.localStorage) {
+    /* eslint-disable no-unused-vars */
     const noop = new LocalStorage('/db.json', function (ls) {
       global.localStorage = ls
       global.abcContext = abc.makeContext({
@@ -10,6 +11,7 @@ const abcctx = function (callback) {
         accountType: 'account:repo:co.airbitz.wallet',
         localStorage: global.localStorage
       })
+      /* eslint-enable no-unused-vars */
       callback(global.abcContext)
     })
     return false

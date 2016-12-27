@@ -19,10 +19,10 @@ export const signupUser = (username, password, pin) => {
         pin: pin
       })
     )
-    return dispatch(checkPermissions())
-    // / all of this code is unreachable until we solve the crypto randomBytes thing
+    global.localStorage.setItem('lastUser', username)
+    dispatch(checkPermissions())
+    if (username) { return }
     dispatch(openLoading(t('fragment_signup_creating_account')))
-
     setTimeout(() => {
       abcctx(ctx => {
         ctx.createAccount(username, password, pin, (err, result) => {

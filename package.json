@@ -7,7 +7,9 @@
     "droid": "npm run clean-android && npm run lint; react-native run-android",
     "lint": "standard --fix --verbose | snazzy",
     "clean-android": "cd android && ./gradlew clean && rm -rf build && cd ../",
-    "release-android": "npm run clean-android; cd android && ./gradlew assembleRelease && ./gradlew installRelease; cd ../"
+    "release-android": "npm run clean-android; cd android && ./gradlew assembleRelease && ./gradlew installRelease; cd ../",
+    "precommit": "npm run lint",
+    "prepush": "npm run lint"
   },
   "dependencies": {
     "async": "^2.1.4",
@@ -31,12 +33,6 @@
     "redux-immutable-state-invariant": "^1.2.4",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0"
-  },
-  "config": {
-    "husky": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm run lint"
-    }
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",

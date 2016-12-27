@@ -27,9 +27,8 @@ class Review extends Component {
   }
 
   handleFinish = () => {
-    // THIS will be the functions when sign up is working
-    // const { username, password } = this.props.details
-    // this.props.dispatch(loginWithPassword(username,password))
+    const { username, password } = this.props.details
+    this.props.dispatch(loginWithPassword(username, password))
     Actions.home()
   }
 
