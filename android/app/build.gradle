@@ -87,7 +87,7 @@ android {
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "com.airbitz_ui"
+        applicationId "com.airbitz.react"
         minSdkVersion 16
         targetSdkVersion 25
         versionCode 1
