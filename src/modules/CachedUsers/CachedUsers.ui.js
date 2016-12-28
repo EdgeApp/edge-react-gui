@@ -32,17 +32,17 @@ class UserList extends Component {
   listUsers = () => {
     const checkIfLastElementStyle = index => {
       const lastIndex = this.props.users.length - 1
+      let styleArr = [style.row]
       if (index === 0) {
-        return [style.row, style.topRadius]
-      } else if (lastIndex === index) {
-        return [style.row, style.bottomRadius]
+        styleArr.push(style.topRadius)
+      }
+      if (lastIndex === index) {
+        styleArr.push(style.bottomRadius)
       } else if (lastIndex !== index) {
-        return [style.row, style.border]
+        styleArr.push(style.border)
       }
 
-      if (lastIndex === index) {
-        return style.row
-      }
+      return styleArr
     }
 
     return this.props.users.map((user, index) => {
@@ -84,7 +84,7 @@ const style = StyleSheet.create({
     maxHeight: 150,
     left: 0,
     right: 0,
-    top: 60,
+    top: 40,
     flex: 1,
     alignSelf: 'flex-end'
   },

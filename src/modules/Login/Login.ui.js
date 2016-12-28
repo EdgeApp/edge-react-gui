@@ -25,9 +25,6 @@ class Login extends Component {
       this.refs.fieldsBelowView.transitionTo({height: 0}, 800)
     }
   }
-  handleViewPress = () => {
-
-  }
 
   handleSignup = () => {
     this.props.dispatch(showWhiteOverlay())
@@ -40,8 +37,14 @@ class Login extends Component {
     this.props.dispatch(loginPassword(password))
   }
   usernameFocused = () => {
-    this.refs.titleText.transitionTo({height: 0}, 800)
     this.showCachedUsers()
+    this.refs.titleText.transitionTo({height: 0}, 600)
+    this.props.parent.refs.logoContainer.transitionTo({flex: 0.1}, 600)
+  }
+  passwordFocused = () => {
+    this.hideCachedUsers()
+    this.refs.titleText.transitionTo({height: 0}, 600)
+    this.props.parent.refs.logoContainer.transitionTo({flex: 0.1}, 600)
   }
 
   showCachedUsers = () => {
@@ -98,7 +101,9 @@ class Login extends Component {
       <View style={style.container}>
         <View style={style.spacer} />
         <View style={style.form}>
-          <Animatable.Text ref='titleText' style={style.textTitle}>{t('fragment_landing_detail_text')}</Animatable.Text>
+          <Animatable.View ref='titleText' style={{height: 40}}>
+            <Animatable.Text style={style.textTitle}>{t('fragment_landing_detail_text')}</Animatable.Text>
+          </Animatable.View>
           <Animatable.View ref='fieldsView' style={[style.fieldsView, {opacity: opacityFieldsView, height: heightFieldsView}]}>
             <TemplateTextInput
               borderType='underline'
@@ -119,7 +124,7 @@ class Login extends Component {
               borderType='underline'
               inputGroupStyle={style.inputGroup}
               ref='password'
-              onFocus={this.hideCachedUsers}
+              onFocus={this.passwordFocused}
               placeholder={t('fragment_landing_password_hint')}
               style={style.input}
               secureTextEntry

@@ -1,6 +1,6 @@
 import React from 'react'
 import * as Animatable from 'react-native-animatable'
-import { View, Image } from 'react-native'
+import { Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import Disclaimer from './Disclaimer/Disclaimer.ui'
@@ -86,8 +86,8 @@ class HomeComponent extends TemplateView {
   }
 
   renderMainComponent = () => {
-    if (this.props.pin) return <LoginWithPin ref='login' />
-    if (!this.props.pin) return <Login ref='login' />
+    if (this.props.pin) return <LoginWithPin parent={this} />
+    if (!this.props.pin) return <Login parent={this} />
   }
   handleViewPress = () => {
     this.props.dispatch(closeUserList())
@@ -103,9 +103,9 @@ class HomeComponent extends TemplateView {
   render () {
     return (
       <Image onStartShouldSetResponder={this.handleViewPress} source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
-        <View style={style.logoContainer}>
+        <Animatable.View ref='logoContainer' style={style.logoContainer}>
           <Image source={require('../img/logo.png')} style={style.logoImage} />
-        </View>
+        </Animatable.View>
         {this.renderMainComponent()}
         <Loader />
         <WarningModal />

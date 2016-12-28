@@ -5,7 +5,7 @@ import t from '../../../lib/LocaleStrings'
 
 import appTheme from '../../../../Themes/appTheme'
 const unselected = require('../../../img/btn_unselected.png')
-const selected = require('../../../img/icon_approved.png')
+const selected = require('../../../img/Green-check.png')
 class PasswordRequirement extends Component {
   checkOneUpper = (validation) => validation.upperCaseChar ? selected : unselected
 
