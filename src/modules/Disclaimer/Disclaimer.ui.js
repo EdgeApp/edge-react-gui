@@ -114,6 +114,6 @@ const style = StyleSheet.create({
 
 export default connect(state => ({
 
-  disclaimerAccepted: state.disclaimerAccepted
+  disclaimerAccepted: state.landing.disclaimerAccepted
 
 }))(Disclaimer)

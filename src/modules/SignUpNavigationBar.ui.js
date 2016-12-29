@@ -1,12 +1,25 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { Platform, View, Text, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import t from '../lib/LocaleStrings'
 
 import { Actions } from 'react-native-router-flux'
 import appTheme from '../../Themes/appTheme'
+
+import { fadeWhiteOverlay } from './Landing.action'
+
 class NavigationBar extends Component {
 
+  handleBack = () => {
+    switch (this.props.scene) {
+      case 'username':
+        this.props.dispatch(fadeWhiteOverlay())
+        Actions.pop()
+        break;
+      default:
+        Actions.pop()
+    }
+  }
   checkBackText = () => {
     switch (this.props.scene) {
       case 'username':
@@ -24,19 +37,23 @@ class NavigationBar extends Component {
   }
 
   render () {
-    return (
-      <View style={[ style.container ]}>
-        <View style={style.navigationBarContainer}>
-          <View style={style.navigationContainer}>
-            <TouchableWithoutFeedback onPress={Actions.pop}>
-              <View><Text style={style.text}>{ this.checkBackText() }</Text></View>
-            </TouchableWithoutFeedback>
-            <Text style={[ style.text, style.title ]} > { this.props.title || '' } </Text>
-            <Text style={style.text} />
+    if (Platform.OS === 'android') {
+      return (
+        <View style={[ style.container ]}>
+          <View style={style.navigationBarContainer}>
+            <View style={style.navigationContainer}>
+              <TouchableWithoutFeedback onPress={this.handleBack}>
+                <View><Text style={style.text}>{ this.checkBackText() }</Text></View>
+              </TouchableWithoutFeedback>
+              <Text style={[ style.text, style.title ]} > { this.props.title || '' } </Text>
+              <Text style={style.text} />
+            </View>
           </View>
         </View>
-      </View>
-    )
+      )
+    } else {
+      return null
+    }
   }
 
 }
@@ -44,8 +61,8 @@ class NavigationBar extends Component {
 const style = StyleSheet.create({
 
   container: {
-    // backgroundColor: '#2291CF',
-    height: 60
+    backgroundColor: '#2291CF',
+    height: 50
   },
 
   navigationBarContainer: {

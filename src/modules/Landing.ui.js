@@ -13,7 +13,7 @@ import TemplateView from './tpl/View.ui'
 import abcctx from '../lib/abcContext'
 import { closeUserList } from './Login/Login.action'
 
-import { hideWhiteOverlay } from './Landing.action'
+import { removeWhiteOverlay, showWhiteOverlayComplete } from './Landing.action'
 
 import { showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
@@ -43,16 +43,16 @@ global.randomBytes(4, (err, bytes) => {
 
 class HomeComponent extends TemplateView {
 
-  componentDidUpdate () {
-    if (this.props.whiteOverlayVisible) {
-      var self = this
+  componentDidUpdate (prevProps) {
+    let self = this
+    if (this.props.gainedFocus) {
+      this.refs.whiteOverlay.fadeOut(1000).then(endState => {
+        self.props.dispatch(removeWhiteOverlay())
+      })
+    } else if (this.props.lostFocus) {
       this.refs.whiteOverlay.fadeIn(1000).then(endState => {
-        setTimeout(function () {
-          self.refs.whiteOverlay.fadeOut(1000).then(endState => {
-            self.props.dispatch(hideWhiteOverlay())
-          })
-        }, 1000)
       }).catch(e => {
+        self.props.dispatch(showWhiteOverlayComplete())
         console.error(e)
       })
       setTimeout(() => {
@@ -122,7 +122,9 @@ export default connect(state => ({
 
   selectedUserToLogin: state.cachedUsers.selectedUserToLogin,
   pin: state.login.viewPIN,
-  disclaimerAccepted: state.disclaimerAccepted,
-  whiteOverlayVisible: state.whiteOverlayVisible
+  disclaimerAccepted: state.landing.disclaimerAccepted,
+  whiteOverlayVisible: state.landing.whiteOverlayVisible,
+  lostFocus: state.landing.lostFocus,
+  gainedFocus: state.landing.gainedFocus
 
 }))(HomeComponent)
