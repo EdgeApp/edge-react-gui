@@ -11,6 +11,7 @@
 
 #import "RCTBundleURLProvider.h"
 #import "RCTRootView.h"
+#import "Orientation.h"
 
 @implementation AppDelegate
 
