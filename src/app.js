@@ -32,7 +32,7 @@ export default class App extends Component {
       <Provider store={store}>
         <RouterWithRedux>
           <Scene key='root'>
-            <Scene key='signup' hideNavBar>
+            <Scene key='signup'>
               <Scene key='username' component={Username} title={'Enter Username'} initial />
               <Scene key='pin' component={PinNumber} title={'Enter Pin'} />
               <Scene key='password' component={Password} title={'Enter Password'} />
