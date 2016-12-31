@@ -15,7 +15,7 @@ class NavigationBar extends Component {
       case 'username':
         this.props.dispatch(fadeWhiteOverlay())
         Actions.pop()
-        break;
+        break
       default:
         Actions.pop()
     }

@@ -1,7 +1,9 @@
 # airbitz-react-native-ui
 React Native UI for Airbitz
-## IMPORTANT
-### The app will crash with SyntaxError: Strict mode does not allow ... etc ... because of a problem with Babel/React compatibility. To work around this, shake your phone to go into dev mode and press 'debug JS remotely'. The whole react community is interested in a fix and we will provide at least something ASAP to avoid this 'problem'.
+
+
+## OS X
+### install homebrew, run `brew doctor` `brew update` and `brew install watchman`. 
 #### On Android genymotion emulator, just click the menu icon from the right toolbar, or if all else fails, type `adb shell input keyevent KEYCODE_MENU`
 
 
@@ -52,6 +54,7 @@ But you can also run this with zsh (put it in .zshprofile instead)
 `adb logcat *:E`
 
 ### Troubleshooting
+- `npm run android:logcat` is your friend. Check package.json for the raw command if you need to run it while multiple android devices are bridged.
 - Whenever you need to install a new npm module, you'll need to restart the app daemon afterwards in order for your bundle to pick it up.
 - If you're having inexplicable persistent problems, it sometimes helps to clean the project.  delete the app from your phone, run `cd android && ./gradlew clean && rm -rf build && cd .. && npm run droid` and then reset the packager like so: `npm start -- --reset-cache`
 - If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:E` and reproduce the error, it should give you some stack information, which MIGHT help.
