@@ -19,26 +19,18 @@ import { showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 
 import style from './Style'
-import { setTheme } from 'react-native-material-kit'
-
-// customize the material design theme
-setTheme({
-  primaryColor: '#87CEEB',
-  primaryColorRGB: '#87CEEB',
-  accentColor: '#FF0000'
-})
 
 global.randomBytes = require('react-native-randombytes').randomBytes
 // synchronous API
 // uses SJCL
 var rand = global.randomBytes(4)
-console.log('SYNC RANDOM BYTES', rand.toString('hex'))
+console.log('SYNC RANDOM BYTES', rand, rand.toString('hex'))
 
 // asynchronous API
 // uses iOS-side SecRandomCopyBytes
 global.randomBytes(4, (err, bytes) => {
   if (err) console.error(err)
-  console.log('RANDOM BYTES', bytes.toString('hex'))
+  console.log('RANDOM BYTES', bytes, bytes.toString('hex'))
 })
 
 class HomeComponent extends TemplateView {
