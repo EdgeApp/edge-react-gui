@@ -4,7 +4,8 @@ import { View, Text } from 'react-native'
 import { MKTextField } from 'react-native-material-kit'
 import { changeUsernameValue } from './Username.action'
 import { checkUsername } from './Username.middleware'
-
+import { Actions } from 'react-native-router-flux'
+import { fadeWhiteOverlay } from '../Landing.action'
 import Container from '../SignUp.ui'
 import style from './Username.style'
 import t from '../../lib/LocaleStrings'
@@ -15,6 +16,13 @@ class UsernameComponent extends Component {
   handleSubmit = () => {
     this.refs.usernameInput.blur()
     this.props.dispatch(checkUsername(this.props.username))
+  }
+  handleBack = () => {
+    this.props.dispatch(fadeWhiteOverlay())
+    Actions.pop()
+  }
+  componentWillMount = () => {
+    Actions.refresh({lefTitle: 'Exit', onLeft: this.handleBack})
   }
 
   handleOnChangeText = (username) => {
@@ -50,7 +58,6 @@ class UsernameComponent extends Component {
 
 export default connect(state => ({
 
-  username: state.username,
-  loading: state.loader.loading
+  username: state.username
 
 }))(UsernameComponent)

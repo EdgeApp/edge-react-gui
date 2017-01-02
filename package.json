@@ -1,5 +1,5 @@
 {
-  "name": "airbitz_ui",
+  "name": "airbitz.react",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "android:release-install": "npm run android:clean && npm run android:release && cd android && ./gradlew installRelease; cd ../",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
+    "ios:run": "react-native run-ios",
     "precommit": "npm run lint && npm run flow",
     "prepush": "npm run lint  && npm run flow",
     "test": "NODE_ENV=production ava",
@@ -56,7 +57,7 @@
     "react-native-udp": "^1.2.9",
     "react-native-vector-icons": "^3.0.0",
     "react-redux": "^4.4.6",
-    "readable-stream": "^1.0.33",
+    "readable-stream": "1.0.33",
     "redux": "^3.6.0",
     "redux-immutable-state-invariant": "^1.2.4",
     "redux-logger": "^2.7.4",
@@ -66,7 +67,9 @@
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
     "util": "^0.10.3",
-    "vm-browserify": "0.0.4"
+    "vm-browserify": "0.0.4",
+    "inherits": "^2.0.1",
+    "string_decoder": "~0.10.25"
   },
   "devDependencies": {
     "ava": "^0.17.0",

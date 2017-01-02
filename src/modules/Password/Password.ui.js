@@ -35,7 +35,6 @@ class Password extends Component {
       )
     )
   }
-
   handlePasswordNotification = () => {
     this.refs.SignupPasswordFirst.blur()
     this.refs.SignupPassword.blur()

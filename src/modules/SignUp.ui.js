@@ -1,15 +1,31 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { BackAndroid, View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import NavigationBar from './SignUpNavigationBar.ui'
 import ErrorModal from './ErrorModal/ErrorModal.ui'
 import Loader from './Loader/Loader.ui'
+
+import { Actions } from 'react-native-router-flux'
+import { fadeWhiteOverlay } from './Landing.action'
+
 class SignUpContainer extends Component {
+  componentDidMount = () => {
+    let self = this
+    BackAndroid.addEventListener('hardwareBackPress', function () {
+      switch (self.props.scene) {
+        case 'username':
+          self.props.dispatch(fadeWhiteOverlay())
+          Actions.pop()
+          break
+        default:
+          Actions.pop()
+      }
+      return true
+    })
+  }
 
   render () {
     return (
       <View style={style.container}>
-        <NavigationBar />
         {this.props.children}
         <Loader />
         <ErrorModal />
@@ -26,6 +42,6 @@ const style = StyleSheet.create({
 
 })
 export default connect(state => ({
-  whiteOverlayVisible: state.whiteOverlayVisible
+  scene: state.routes.scene.sceneKey
 
 }))(SignUpContainer)

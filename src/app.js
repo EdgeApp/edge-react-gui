@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
-import { AppRegistry } from 'react-native'
+import { Navigator, AppRegistry } from 'react-native'
 
 String.format = function (format) {
   const args = Array.prototype.slice.call(arguments, 1)
@@ -26,14 +26,16 @@ const RouterWithRedux = connect()(Router)
 const store = configureStore()
 
 export default class App extends Component {
-
+  noop = () => {
+    // noop
+  }
   render () {
     return (
       <Provider store={store}>
         <RouterWithRedux>
           <Scene key='root'>
-            <Scene key='signup'>
-              <Scene key='username' component={Username} title={'Enter Username'} initial />
+            <Scene key='signup' sceneStyle={{paddingTop: Navigator.NavigationBar.Styles.General.TotalNavHeight}}>
+              <Scene key='username' leftTitle='Exit' onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
               <Scene key='pin' component={PinNumber} title={'Enter Pin'} />
               <Scene key='password' component={Password} title={'Enter Password'} />
               <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} type='reset' />

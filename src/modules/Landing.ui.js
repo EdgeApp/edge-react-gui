@@ -51,8 +51,8 @@ class HomeComponent extends TemplateView {
       })
     } else if (this.props.lostFocus) {
       this.refs.whiteOverlay.fadeIn(1000).then(endState => {
-      }).catch(e => {
         self.props.dispatch(showWhiteOverlayComplete())
+      }).catch(e => {
         console.error(e)
       })
       setTimeout(() => {
