@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.bitgo.randombytes.RandomBytesPackage;
@@ -32,6 +33,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativePermissionsPackage(),
             new OrientationPackage(),
             new ReactMaterialKitPackage(),
             new RandomBytesPackage(),

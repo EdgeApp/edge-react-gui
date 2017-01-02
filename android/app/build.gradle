@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-permissions')
     compile project(':react-native-orientation')
     compile project(':react-native-material-kit')
     compile project(':react-native-randombytes')

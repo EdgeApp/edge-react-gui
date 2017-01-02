@@ -22,7 +22,7 @@ class UsernameComponent extends Component {
     Actions.pop()
   }
   componentWillMount = () => {
-    Actions.refresh({lefTitle: 'Exit', onLeft: this.handleBack})
+    Actions.refresh({onLeft: this.handleBack})
   }
 
   handleOnChangeText = (username) => {
