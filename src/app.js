@@ -36,7 +36,7 @@ export default class App extends Component {
         <RouterWithRedux>
           <Scene key='root'>
             <Scene key='signup'>
-              <Scene key='username' leftTitle={t('string_exit')} sceneStyle={{paddingTop: 64}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
+              <Scene key='username' leftTitle={t('string_capitalize_exit')} sceneStyle={{paddingTop: 64}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
               <Scene key='pin' component={PinNumber} sceneStyle={{paddingTop: 64}} title={'Enter Pin'} />
               <Scene key='password' component={Password} title={'Enter Password'} sceneStyle={{paddingTop: 64}} />
               <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} sceneStyle={{paddingTop: 64}} type='reset' />
