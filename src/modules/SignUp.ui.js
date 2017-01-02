@@ -11,11 +11,14 @@ class SignUpContainer extends Component {
   componentDidMount = () => {
     let self = this
     BackAndroid.addEventListener('hardwareBackPress', function () {
+      if (this.props.loader.loading === true) {
+        return true
+      }
       switch (self.props.scene) {
         case 'username':
           self.props.dispatch(fadeWhiteOverlay())
           Actions.pop()
-          break
+          break 
         default:
           Actions.pop()
       }
@@ -42,6 +45,7 @@ const style = StyleSheet.create({
 
 })
 export default connect(state => ({
-  scene: state.routes.scene.sceneKey
+  scene: state.routes.scene.sceneKey,
+  loader: state.loader
 
 }))(SignUpContainer)

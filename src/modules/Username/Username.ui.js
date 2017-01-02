@@ -18,8 +18,10 @@ class UsernameComponent extends Component {
     this.props.dispatch(checkUsername(this.props.username))
   }
   handleBack = () => {
-    this.props.dispatch(fadeWhiteOverlay())
-    Actions.pop()
+    if (this.props.loader.loading === false) {
+      this.props.dispatch(fadeWhiteOverlay())
+      Actions.pop()
+    }
   }
   componentWillMount = () => {
     Actions.refresh({onLeft: this.handleBack})
@@ -58,6 +60,7 @@ class UsernameComponent extends Component {
 
 export default connect(state => ({
 
-  username: state.username
+  username: state.username,
+  loader: state.loader
 
 }))(UsernameComponent)

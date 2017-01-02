@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { View, Text, Image, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 
+import { Actions } from 'react-native-router-flux'
 import * as Animatable from 'react-native-animatable'
 import Container from '../SignUp.ui'
 import Notification from './Notification.ui'
@@ -23,6 +24,16 @@ import PasswordValidation from './PasswordValidation/PasswordValidation.ui'
 
 import { MKTextField } from 'react-native-material-kit'
 class Password extends Component {
+  handleBack = () => {
+    if (this.props.loader.loading === true) {
+      return true
+    }    
+    Actions.landing()
+    return true
+  }
+  componentWillMount = () => {
+    Actions.refresh({onLeft: this.handleBack})
+  }
 
   handleSubmit = () => {
     this.props.dispatch(
@@ -132,6 +143,7 @@ export default connect(state => ({
   passwordRepeat: state.password.passwordRepeat,
   validation: state.password.validation,
   username: state.username,
-  pinNumber: state.pinNumber
+  pinNumber: state.pinNumber,
+  loader: state.loader
 
 }))(Password)

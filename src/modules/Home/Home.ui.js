@@ -10,13 +10,17 @@ class Home extends Component {
   componentDidMount = () => {
     let self = this
     BackAndroid.addEventListener('hardwareBackPress', function () {
-      self.handleBack()
+      return self.handleBack()
     })
   }
   handleBack = () => {
+    if (this.props.loader.loading === true) {
+      return true
+    }    
     let self = this
     self.props.dispatch(fadeWhiteOverlay())
     Actions.landing()
+    return true
   }
 
   render () {
@@ -33,5 +37,6 @@ class Home extends Component {
 }
 
 export default connect(state => ({
-  user: state.user
+  user: state.user,
+  loader: state.loader
 }))(Home)
