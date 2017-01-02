@@ -16,7 +16,7 @@ class Home extends Component {
   handleBack = () => {
     if (this.props.loader.loading === true) {
       return true
-    }    
+    }
     let self = this
     self.props.dispatch(fadeWhiteOverlay())
     Actions.landing()

@@ -45,7 +45,7 @@ class HomeComponent extends TemplateView {
 
   componentDidUpdate (prevProps) {
     let self = this
-    if (this.props.gainedFocus) {
+    if (this.props.gainedFocus && this.props.whiteOverlayVisible) {
       this.refs.whiteOverlay.fadeOut(1000).then(endState => {
         self.props.dispatch(removeWhiteOverlay())
       })

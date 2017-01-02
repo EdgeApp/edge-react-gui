@@ -18,7 +18,7 @@ class SignUpContainer extends Component {
         case 'username':
           self.props.dispatch(fadeWhiteOverlay())
           Actions.pop()
-          break 
+          break
         default:
           Actions.pop()
       }

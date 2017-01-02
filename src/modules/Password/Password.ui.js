@@ -27,7 +27,7 @@ class Password extends Component {
   handleBack = () => {
     if (this.props.loader.loading === true) {
       return true
-    }    
+    }
     Actions.landing()
     return true
   }
