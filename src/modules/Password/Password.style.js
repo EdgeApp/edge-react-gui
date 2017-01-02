@@ -28,6 +28,7 @@ const style = StyleSheet.create({
     resizeMode: 'contain'
   },
   input: {
+    height: 40,
     fontSize: 22,
     color: 'skyblue',
     width: 240,

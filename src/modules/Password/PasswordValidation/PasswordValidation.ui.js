@@ -34,7 +34,7 @@ const style = StyleSheet.create({
   container: {
     height: 90,
     paddingHorizontal: 10,
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: '#2291CF',
     flexDirection: 'column',
     alignItems: 'flex-start',

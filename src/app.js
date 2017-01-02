@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
-import { Navigator, AppRegistry } from 'react-native'
+import { AppRegistry } from 'react-native'
 
 String.format = function (format) {
   const args = Array.prototype.slice.call(arguments, 1)
@@ -34,13 +34,13 @@ export default class App extends Component {
       <Provider store={store}>
         <RouterWithRedux>
           <Scene key='root'>
-            <Scene key='signup' sceneStyle={{paddingTop: Navigator.NavigationBar.Styles.General.TotalNavHeight}}>
-              <Scene key='username' leftTitle='Exit' onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
-              <Scene key='pin' component={PinNumber} title={'Enter Pin'} />
-              <Scene key='password' component={Password} title={'Enter Password'} />
-              <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} type='reset' />
-              <Scene key='contactNotification' component={ContactNotification} title={'Contact Notification'} type='reset' />
-              <Scene key='review' component={ReviewDetails} title={'Details'} type='reset' />
+            <Scene key='signup'>
+              <Scene key='username' leftTitle='Exit' sceneStyle={{paddingTop: 64}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
+              <Scene key='pin' component={PinNumber} sceneStyle={{paddingTop: 64}} title={'Enter Pin'} />
+              <Scene key='password' component={Password} title={'Enter Password'} sceneStyle={{paddingTop: 64}} />
+              <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} sceneStyle={{paddingTop: 64}} type='reset' />
+              <Scene key='contactNotification' component={ContactNotification} title={'Contact Notification'} sceneStyle={{paddingTop: 64}} type='reset' />
+              <Scene key='review' component={ReviewDetails} title={'Details'} sceneStyle={{paddingTop: 64}} type='reset' />
             </Scene>
             <Scene key='landing' component={Landing} type='reset' initial hideNavBar />
             <Scene key='home' component={Home} hideNavBar type='reset' />

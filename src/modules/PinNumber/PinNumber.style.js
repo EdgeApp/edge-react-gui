@@ -29,6 +29,7 @@ const style = StyleSheet.create({
     color: 'skyblue',
     alignSelf: 'center',
     width: 120,
+    height: 40,
     fontFamily: appTheme.fontFamily
   },
 
