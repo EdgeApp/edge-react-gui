@@ -3,7 +3,7 @@ import { Provider, connect } from 'react-redux'
 import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
 import { AppRegistry } from 'react-native'
-import t from './LocaleStrings'
+import t from './lib/LocaleStrings'
 
 String.format = function (format) {
   const args = Array.prototype.slice.call(arguments, 1)
