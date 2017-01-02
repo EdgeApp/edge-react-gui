@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Provider, connect } from 'react-redux'
 import configureStore from './lib/configureStore'
 import { Scene, Router } from 'react-native-router-flux'
-import { AppRegistry } from 'react-native'
+import { Platform, AppRegistry } from 'react-native'
 import t from './lib/LocaleStrings'
 
 String.format = function (format) {
@@ -31,17 +31,19 @@ export default class App extends Component {
     // noop
   }
   render () {
+    let paddingOS = 54
+    if (Platform.OS === 'ios') paddingOS = 64
     return (
       <Provider store={store}>
         <RouterWithRedux>
           <Scene key='root'>
             <Scene key='signup'>
-              <Scene key='username' leftTitle={t('string_capitalize_exit')} sceneStyle={{paddingTop: 64}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
-              <Scene key='pin' component={PinNumber} sceneStyle={{paddingTop: 64}} title={'Enter Pin'} />
-              <Scene key='password' component={Password} title={'Enter Password'} sceneStyle={{paddingTop: 64}} />
-              <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} sceneStyle={{paddingTop: 64}} type='reset' />
-              <Scene key='contactNotification' component={ContactNotification} title={'Contact Notification'} sceneStyle={{paddingTop: 64}} type='reset' />
-              <Scene key='review' component={ReviewDetails} title={'Details'} sceneStyle={{paddingTop: 64}} type='reset' />
+              <Scene key='username' leftTitle={t('string_capitalize_exit')} sceneStyle={{paddingTop: paddingOS}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
+              <Scene key='pin' component={PinNumber} sceneStyle={{paddingTop: paddingOS}} title={'Enter Pin'} />
+              <Scene key='password' component={Password} title={'Enter Password'} sceneStyle={{paddingTop: paddingOS}} />
+              <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} sceneStyle={{paddingTop: paddingOS}} type='reset' />
+              <Scene key='contactNotification' component={ContactNotification} title={'Contact Notification'} sceneStyle={{paddingTop: paddingOS}} type='reset' />
+              <Scene key='review' component={ReviewDetails} title={'Details'} sceneStyle={{paddingTop: paddingOS}} type='reset' />
             </Scene>
             <Scene key='landing' component={Landing} type='reset' initial hideNavBar />
             <Scene key='home' component={Home} hideNavBar type='reset' />
