@@ -135,6 +135,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-udp')
+    compile project(':react-native-tcp')
     compile project(':react-native-permissions')
     compile project(':react-native-orientation')
     compile project(':react-native-material-kit')
