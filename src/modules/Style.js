@@ -99,7 +99,8 @@ const style = StyleSheet.create({
     fontSize: 22,
     color: '#FFF',
     fontFamily: appTheme.fontFamily,
-    marginBottom: 20
+    marginBottom: 20,
+    backgroundColor: 'rgba(0,0,0,0)'
   },
   text: {
     fontSize: 15,
