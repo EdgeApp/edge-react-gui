@@ -22,6 +22,10 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 
+# iOS
+ios/Archives
+ios/main.jsbundle*
+
 # Android/IJ
 #
 *.iml
