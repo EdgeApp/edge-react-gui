@@ -19,6 +19,13 @@ import { showDisclaimer } from './Disclaimer/Disclaimer.action'
 import { selectUserToLogin, setCachedUsers } from './CachedUsers/CachedUsers.action'
 
 import style from './Style'
+import { setTheme } from 'react-native-material-kit'
+// customize the material design theme
+setTheme({
+  primaryColor: '#87CEEB',
+  primaryColorRGB: '#87CEEB',
+  accentColor: '#FF0000'
+})
 
 global.randomBytes = require('react-native-randombytes').randomBytes
 // synchronous API
@@ -71,8 +78,8 @@ class HomeComponent extends TemplateView {
   }
 
   renderMainComponent = () => {
-    if (this.props.pin) return <LoginWithPin parent={this} />
-    if (!this.props.pin) return <Login parent={this} />
+    if (this.props.pin) return <LoginWithPin ref='loginView' parent={this} />
+    if (!this.props.pin) return <Login ref='loginView' parent={this} />
   }
   handleViewPress = () => {
     this.props.dispatch(closeUserList())
@@ -88,7 +95,7 @@ class HomeComponent extends TemplateView {
   render () {
     return (
       <Image onStartShouldSetResponder={this.handleViewPress} source={require('../img/background.jpg')} resizeMode='cover' style={style.backgroundImage}>
-        <Animatable.View ref='logoContainer' style={style.logoContainer}>
+        <Animatable.View ref='logoContainer' onStartShouldSetResponder={this.handleViewPress} style={style.logoContainer}>
           <Image source={require('../img/logo.png')} style={style.logoImage} />
         </Animatable.View>
         {this.renderMainComponent()}

@@ -20,7 +20,9 @@ const style = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    height: 0
+    height: 0,
+    borderWidth: 1,
+    borderColor: "#FFFFFF"
   },
   passwordEye: {
     width: 30,
@@ -36,7 +38,7 @@ const style = StyleSheet.create({
   },
 
   paragraph: {
-    marginBottom: 15,
+    marginBottom: 20,
     marginTop: 30,
     fontSize: 14,
     marginHorizontal: 30,

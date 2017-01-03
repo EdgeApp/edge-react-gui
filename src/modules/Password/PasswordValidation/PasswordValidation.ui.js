@@ -34,6 +34,7 @@ const style = StyleSheet.create({
   container: {
     height: 90,
     paddingHorizontal: 10,
+    paddingVertical: 5,
     flexGrow: 1,
     backgroundColor: '#2291CF',
     flexDirection: 'column',

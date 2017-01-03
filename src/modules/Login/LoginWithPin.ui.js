@@ -60,6 +60,11 @@ class Login extends Component {
       this.showCachedUsers()
     }
   }
+  componentDidUpdate(oldProps) {
+    if(oldProps.showCachedUsers && !this.props.showCachedUsers) {
+      this.refs.pinInput._textInput.focus()
+    }
+  }
 
   componentWillMount () {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow.bind(this))
