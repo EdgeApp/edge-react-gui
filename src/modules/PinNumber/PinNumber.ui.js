@@ -37,12 +37,13 @@ class PinComponent extends Component {
           <MKTextField
             style={{alignSelf: 'center', marginVertical: 15}}
             tintColor='#CCC'
-            textInputStyle={style.input}
+            textInputStyle={[style.input, {textAlign: 'center'}]}
             placeholder={t('activity_signup_pin_hint')}
             keyboardType='numeric'
             maxLength={4}
             autoFocus
             autoCorrect={false}
+            secureTextEntry
             returnKeyType='next'
             onChangeText={this.handleOnChangeText}
             value={pinNumber}

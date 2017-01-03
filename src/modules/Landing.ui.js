@@ -23,33 +23,26 @@ import style from './Style'
 global.randomBytes = require('react-native-randombytes').randomBytes
 // synchronous API
 // uses SJCL
-var rand = global.randomBytes(4)
-console.log('SYNC RANDOM BYTES', rand, rand.toString('hex'))
-
-// asynchronous API
-// uses iOS-side SecRandomCopyBytes
-global.randomBytes(4, (err, bytes) => {
-  if (err) console.error(err)
-  console.log('RANDOM BYTES', bytes, bytes.toString('hex'))
-})
+// var rand = global.randomBytes(4)
+// console.log('SYNC RANDOM BYTES', rand, rand.toString('hex'))
 
 class HomeComponent extends TemplateView {
 
   componentDidUpdate (prevProps) {
     let self = this
     if (this.props.gainedFocus && this.props.whiteOverlayVisible) {
-      this.refs.whiteOverlay.fadeOut(1000).then(endState => {
+      this.refs.whiteOverlay.fadeOut(200).then(endState => {
         self.props.dispatch(removeWhiteOverlay())
       })
     } else if (this.props.lostFocus) {
-      this.refs.whiteOverlay.fadeIn(1000).then(endState => {
+      this.refs.whiteOverlay.fadeIn(200).then(endState => {
         self.props.dispatch(showWhiteOverlayComplete())
       }).catch(e => {
         console.error(e)
       })
       setTimeout(() => {
         Actions.signup()
-      }, 500)
+      }, 100)
     }
   }
 

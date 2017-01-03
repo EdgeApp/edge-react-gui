@@ -21,8 +21,8 @@ class Login extends Component {
       this.props.dispatch(loginWithPassword(this.props.username, this.props.password))
     } else {
       this.props.dispatch(openLogin())
-      this.refs.fieldsView.transitionTo({opacity: 1, height: 90}, 800)
-      this.refs.fieldsBelowView.transitionTo({height: 0}, 800)
+      this.refs.fieldsView.transitionTo({opacity: 1, height: 90}, 200)
+      this.refs.fieldsBelowView.transitionTo({height: 0}, 200)
     }
   }
 
@@ -38,13 +38,13 @@ class Login extends Component {
   }
   usernameFocused = () => {
     this.showCachedUsers()
-    this.refs.titleText.transitionTo({height: 0}, 600)
-    this.props.parent.refs.logoContainer.transitionTo({flex: 0.1}, 600)
+    this.refs.titleText.transitionTo({height: 0}, 200)
+    this.props.parent.refs.logoContainer.transitionTo({flex: 0.1}, 200)
   }
   passwordFocused = () => {
     this.hideCachedUsers()
-    this.refs.titleText.transitionTo({height: 0}, 600)
-    this.props.parent.refs.logoContainer.transitionTo({flex: 0.1}, 600)
+    this.refs.titleText.transitionTo({height: 0}, 200)
+    this.props.parent.refs.logoContainer.transitionTo({flex: 0.1}, 200)
   }
 
   showCachedUsers = () => {
@@ -107,6 +107,7 @@ class Login extends Component {
           <Animatable.View ref='fieldsView' style={[style.fieldsView, {opacity: opacityFieldsView, height: heightFieldsView}]}>
             <TemplateTextInput
               borderType='underline'
+              tintColor='#FFFFFF'
               inputGroupStyle={style.inputGroup}
               ref='loginUsername'
               placeholder={t('fragment_landing_username_hint')}
@@ -122,6 +123,7 @@ class Login extends Component {
 
             <TemplateTextInput
               borderType='underline'
+              tintColor='#FFFFFF'
               inputGroupStyle={style.inputGroup}
               ref='password'
               onFocus={this.passwordFocused}

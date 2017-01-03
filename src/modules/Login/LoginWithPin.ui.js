@@ -86,13 +86,15 @@ class Login extends Component {
             <Text style={[ style.text, { color: 'skyblue', fontSize: 18, marginTop: 10 } ]}>{ this.props.user ? this.props.user : 'No User Selected' }</Text>
           </TouchableOpacity>
 
-          <View style={{ width: 160, marginTop: 5 }}>
+          <View style={{ width: 165, marginTop: 5 }}>
             <InputGroup borderType='regular' style={[style.inputGroup, {padding: 0, alignSelf: 'center'}]}>
               <Input
+                selectionColor='#FFFFFF'
                 placeholderTextColor='rgba(200,200,200,0.5)'
                 ref='pinInput'
+                secureTextEntry
                 placeholder={t('fragment_landing_enter_pin')}
-                style={[style.input, { marginHorizontal: 10, height: 60, marginVertical: 0, fontSize: 28, textAlign: 'left' }]}
+                style={[style.input, { padding: 0, marginHorizontal: 10, height: 50, marginVertical: 0, fontSize: 28, textAlign: 'center' }]}
                 onChangeText={this.changePin}
                 value={this.props.pin}
                 keyboardType='numeric'
