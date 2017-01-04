@@ -34,7 +34,10 @@ class PinComponent extends Component {
       this.refs.signupPin.blur()
     }
   }
-
+  pinStyle = () => {
+    if(this.props.pinDummy.length > 0) return {fontSize: 110, paddingTop: 0, paddingBottom: -35}
+      return {}
+  }
   render () {
     return (
       <Container>
@@ -46,7 +49,7 @@ class PinComponent extends Component {
             selectionColor='#CCCCCC'
             style={{alignSelf: 'center', marginVertical: 15}}
             tintColor='#CCC'
-            textInputStyle={[style.input, {textAlign: 'center'}]}
+            textInputStyle={[style.input, {textAlign: 'center'}, this.pinStyle()]}
             placeholder={t('activity_signup_pin_hint')}
             onChangeText={this.changePinDummy}
             onFocus={this.focusPin}

@@ -84,6 +84,10 @@ class Login extends Component {
     this.refs.pinDummyInput.blur()
     this.refs.pinInput.focus()
   }
+  pinStyle = () => {
+    if(this.props.pinDummy.length > 0) return {fontSize: 110, paddingTop: 20, paddingBottom: -20}
+      return {}
+  }
   render () {
     const cUsers = () => {
       if (this.props.showCachedUsers) {
@@ -106,7 +110,7 @@ class Login extends Component {
                 selectionColor='#FFFFFF'
                 placeholderTextColor='rgba(200,200,200,0.5)'
                 placeholder={t('fragment_landing_enter_pin')}
-                style={[style.input, { padding: 0, marginHorizontal: 10, height: 50, marginVertical: 0, fontSize: 28, textAlign: 'center' }]}
+                style={[style.input, { padding: 0, marginHorizontal: 10, height: 50, marginVertical: 0, fontSize: 28, textAlign: 'center' }, this.pinStyle()]}
                 value={this.props.pinDummy}
                 maxLength={4}
                 autoCorrect={false}
