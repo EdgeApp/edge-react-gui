@@ -7,7 +7,7 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
       <item name="android:windowBackground">@drawable/background_splash</item>
-      <item name="colorControlActivated">@android:color/blue</item>
+      <item name="colorControlActivated">@color/blue</item>
     </style>
 
 
