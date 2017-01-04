@@ -37,6 +37,7 @@ class UsernameComponent extends Component {
       <Container>
         <View style={style.inputView}>
           <MKTextField
+            selectionColor="#CCCCCC"
             style={{marginHorizontal: 30, marginVertical: 15}}
             textInputStyle={style.usernameInput}
             ref='usernameInput'

@@ -93,7 +93,8 @@ class Password extends Component {
           </Animatable.View>
 
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <MKTextField
+            <MKTextField              
+              selectionColor="#CCCCCC"
               tintColor={this.props.validation.passwordValid ? undefined : '#FF0000'}
               password={!this.props.inputState}
               style={{marginLeft: 30, marginRight: 10, marginVertical: 15}}
