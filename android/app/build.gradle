@@ -90,7 +90,7 @@ android {
         applicationId "com.airbitz.react"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 999999
+        versionCode 9999999999
         versionName "99.99.99"
         ndk {
             abiFilters "armeabi-v7a", "x86"
