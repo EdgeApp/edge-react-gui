@@ -32,13 +32,17 @@ export default class App extends Component {
   }
   render () {
     let paddingOS = 54
-    if (Platform.OS === 'ios') paddingOS = 64
+    let exitPaddingOS = 0
+    if (Platform.OS === 'ios') {
+      paddingOS = 64
+      exitPaddingOS = 3
+    }
     return (
       <Provider store={store}>
         <RouterWithRedux>
           <Scene key='root'>
             <Scene key='signup'>
-              <Scene key='username' leftTitle={t('string_capitalize_exit')} sceneStyle={{paddingTop: paddingOS}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
+              <Scene key='username' leftButtonTextStyle={{marginTop: exitPaddingOS}} leftTitle={t('string_capitalize_exit')} sceneStyle={{paddingTop: paddingOS}} onLeft={this.noop} ref='usernameView' component={Username} title={'Enter Username'} initial />
               <Scene key='pin' component={PinNumber} sceneStyle={{paddingTop: paddingOS}} title={'Enter Pin'} />
               <Scene key='password' component={Password} title={'Enter Password'} sceneStyle={{paddingTop: paddingOS}} />
               <Scene key='cameraNotification' component={CameraNotification} title={'Camera Notification'} sceneStyle={{paddingTop: paddingOS}} type='reset' />
