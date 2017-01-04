@@ -18,8 +18,9 @@ const style = StyleSheet.create({
   },
   passwordValidationContainer: {
     position: 'absolute',
+    left: 0,
+    right: 0,
     height: 0,
-    flexGrow: 0,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'flex-start'
@@ -46,7 +47,6 @@ const style = StyleSheet.create({
   },
   validationOuterContainer: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
     flexGrow: 1,
     flex: 1,
     backgroundColor: '#2291CF',
@@ -71,7 +71,7 @@ const style = StyleSheet.create({
   },
 
   textLead: {
-    marginBottom: 5,
+    marginVertical: 5,
     fontSize: 13,
     fontWeight: 'bold',
     fontFamily: appTheme.fontFamily

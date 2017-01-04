@@ -104,7 +104,7 @@ class Password extends Component {
               <View style={style.validationContainer}><Image source={this.checkOneUpper(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_uppercase')}</Text></View>
               <View style={style.validationContainer}><Image source={this.checkOneLower(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_lowercase')}</Text></View>
               <View style={style.validationContainer}><Image source={this.checkOneNumber(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_number')}</Text></View>
-              <View style={style.validationContainer}><Image source={this.checkCharacterLength(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_too_short')}</Text></View>
+              <View style={[style.validationContainer,{marginBottom: 5}]}><Image source={this.checkCharacterLength(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_too_short')}</Text></View>
             </View>
           </Animatable.View>
 
