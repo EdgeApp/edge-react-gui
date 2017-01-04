@@ -20,9 +20,11 @@ import {
   changePasswordValue,
   changePasswordRepeatValue
 } from './Password.action'
-import PasswordValidation from './PasswordValidation/PasswordValidation.ui'
 
 import { MKTextField } from 'react-native-material-kit'
+const unselected = require('../../img/btn_unselected.png')
+const selected = require('../../img/Green-check.png')
+
 class Password extends Component {
   handleBack = () => {
     if (this.props.loader.loading === true) {
@@ -34,6 +36,14 @@ class Password extends Component {
   componentWillMount = () => {
     Actions.refresh({onLeft: this.handleBack})
   }
+
+  checkOneUpper = (validation) => validation.upperCaseChar ? selected : unselected
+
+  checkOneLower = (validation) => validation.lowerCaseChar ? selected : unselected
+
+  checkOneNumber = (validation) => validation.number ? selected : unselected
+
+  checkCharacterLength = (validation) => validation.characterLength ? selected : unselected
 
   handleSubmit = () => {
     this.props.dispatch(
@@ -57,11 +67,11 @@ class Password extends Component {
   }
 
   handlePasswordOnFocus = () => {
-    this.refs.passwordValidation.transitionTo({height: 90}, 800)
+    this.refs.passwordValidation.transitionTo({height: 90}, 200)
   }
 
   handlePasswordOnBlur = () => {
-    this.refs.passwordValidation.transitionTo({height: 0}, 800)
+    this.refs.passwordValidation.transitionTo({height: 0}, 200)
   }
 
   handleOnChangePassword = (password) => {
@@ -89,7 +99,13 @@ class Password extends Component {
             {t('fragment_setup_password_text')}
           </Text>
           <Animatable.View ref='passwordValidation' style={style.passwordValidationContainer}>
-            <PasswordValidation />
+            <View style={style.validationOuterContainer}>
+              <Text style={[ style.text, style.textLead ]}>{t('activity_signup_password_requirements')}</Text>
+              <View style={style.validationContainer}><Image source={this.checkOneUpper(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_uppercase')}</Text></View>
+              <View style={style.validationContainer}><Image source={this.checkOneLower(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_lowercase')}</Text></View>
+              <View style={style.validationContainer}><Image source={this.checkOneNumber(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_no_number')}</Text></View>
+              <View style={style.validationContainer}><Image source={this.checkCharacterLength(this.props.validation)} style={style.passwordCheckmark} /><Text style={[ style.text ]}>{t('password_rule_too_short')}</Text></View>
+            </View>
           </Animatable.View>
 
           <View style={{flexDirection: 'row', alignItems: 'center'}}>

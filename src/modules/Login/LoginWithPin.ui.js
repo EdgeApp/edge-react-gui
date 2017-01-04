@@ -60,8 +60,8 @@ class Login extends Component {
       this.showCachedUsers()
     }
   }
-  componentDidUpdate(oldProps) {
-    if(oldProps.showCachedUsers && !this.props.showCachedUsers) {
+  componentDidUpdate (oldProps) {
+    if (oldProps.showCachedUsers && !this.props.showCachedUsers) {
       this.refs.pinInput._textInput.focus()
     }
   }
