@@ -14,6 +14,7 @@ import NextButton from '../NextButton/NextButton.ui'
 class PinComponent extends Component {
 
   handleSubmit = () => {
+    this.refs.signupPin.blur()
     this.props.dispatch(
       checkPIN(this.props.pinNumber, this.props.navigator)
     )

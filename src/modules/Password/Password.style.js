@@ -18,11 +18,11 @@ const style = StyleSheet.create({
   },
   passwordValidationContainer: {
     position: 'absolute',
-    left: 0,
-    right: 0,
     height: 0,
-    borderWidth: 1,
-    borderColor: '#FFFFFF'
+    flexGrow: 0,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
   },
   passwordEye: {
     width: 30,
@@ -42,6 +42,38 @@ const style = StyleSheet.create({
     marginTop: 30,
     fontSize: 14,
     marginHorizontal: 30,
+    fontFamily: appTheme.fontFamily
+  },
+  validationOuterContainer: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    flexGrow: 1,
+    flex: 1,
+    backgroundColor: '#2291CF',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start'
+  },
+  validationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start'
+  },
+  passwordCheckmark: {
+    height: 15,
+    width: 15,
+    marginRight: 5
+  },
+  text: {
+    color: '#FFF',
+    fontSize: 12,
+    fontFamily: appTheme.fontFamily
+  },
+
+  textLead: {
+    marginBottom: 5,
+    fontSize: 13,
+    fontWeight: 'bold',
     fontFamily: appTheme.fontFamily
   }
 
