@@ -35,7 +35,7 @@ class PinComponent extends Component {
             {t('fragment_setup_pin_title')}
           </Text>
           <MKTextField
-            selectionColor="#CCCCCC"
+            selectionColor='#CCCCCC'
             style={{alignSelf: 'center', marginVertical: 15}}
             tintColor='#CCC'
             textInputStyle={[style.input, {textAlign: 'center'}]}

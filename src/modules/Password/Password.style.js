@@ -22,7 +22,7 @@ const style = StyleSheet.create({
     right: 0,
     height: 0,
     borderWidth: 1,
-    borderColor: "#FFFFFF"
+    borderColor: '#FFFFFF'
   },
   passwordEye: {
     width: 30,
