@@ -103,3 +103,19 @@ export const pin = (state = '', action) => {
       return state
   }
 }
+export const pinDummy = (state = '', action) => {
+  switch (action.type) {
+    case ACTION.LOG_IN_PIN:
+      let len = action.data.length
+      let retval = ''
+      for (var i = 0; i < len; i++) {
+        retval += '·'
+      }
+      return retval
+    case ACTION.USER_LOGIN :
+      return ''
+    default:
+      return state
+  }
+}
+

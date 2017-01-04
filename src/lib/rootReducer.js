@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
 import { username } from '../modules/Username/Username.reducer'
-import { pinNumber } from '../modules/PinNumber/PinNumber.reducer'
+import { pinNumber, pinDummy } from '../modules/PinNumber/PinNumber.reducer'
 import { whiteOverlayVisible, lostFocus, gainedFocus } from '../modules/Landing.reducer'
 import { nextButtonVisible } from '../modules/NextButton/NextButton.reducer'
 import { skipButtonVisible } from '../modules/SkipButton/SkipButton.reducer'
@@ -20,6 +20,7 @@ import routes from './routesReducer'
 const store = combineReducers({
   username,
   pinNumber,
+  pinDummy,
   password: combineReducers({
     inputState: PasswordStates.inputState,
     password: PasswordStates.password,
@@ -45,6 +46,7 @@ const store = combineReducers({
     username: Login.username,
     password: Login.password,
     pin: Login.pin,
+    pinDummy: Login.pinDummy,
     showCachedUsers: Login.showCachedUsers
   }),
 
