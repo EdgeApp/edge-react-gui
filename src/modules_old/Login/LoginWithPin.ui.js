@@ -85,8 +85,8 @@ class Login extends Component {
     this.refs.pinInput.focus()
   }
   pinStyle = () => {
-    if(this.props.pinDummy.length > 0) return {fontSize: 110, paddingTop: 20, paddingBottom: -20}
-      return {}
+    if (this.props.pinDummy.length > 0) return {fontSize: 110, paddingTop: 20, paddingBottom: -20}
+    return {}
   }
   render () {
     const cUsers = () => {
