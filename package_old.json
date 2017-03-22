@@ -11,6 +11,8 @@
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "ios:run": "react-native run-ios",
+    "precommit": "npm run lint && npm run flow",
+    "prepush": "npm run lint  && npm run flow",
     "test": "NODE_ENV=production ava",
     "test:watch": "ava --watch",
     "coverage": "nyc ava && nyc report --reporter=html && open coverage/index.html || xdg-open coverage/index.html",
