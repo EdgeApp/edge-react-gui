@@ -23,6 +23,7 @@ class SideMenuComponent extends Component {
       <SideMenu
         isOpen={false}
         style={{ bacgroundColor: '#ededed' }}
+        menuPosition='right'
       >
         {this.props.children}
       </SideMenu>
