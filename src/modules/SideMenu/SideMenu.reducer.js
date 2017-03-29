@@ -5,7 +5,7 @@ export const view = (state = false, action) => {
     case ACTION.OPEN_SIDEBAR :
       return true
     case ACTION.CLOSE_SIDEBAR :
-      return true
+      return false
     default:
       return state
   }

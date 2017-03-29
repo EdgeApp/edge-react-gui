@@ -3,35 +3,19 @@ import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Drawer from 'react-native-drawer'
 
-class ControlPanel extends Component {
-  render () {
-    return (
-      <View style={{backgroundColor: '#e5e5e5', flex: 1, marginBottom: 70}}>
-        <Text>Oh Yeah</Text>
-      </View>
-    )
-  }
-}
+import ControlPanel from '../ControlPanel/ControlPanel.ui'
 
 class SideMenuComponent extends Component {
-  closeControlPanel = () => {
-    this._drawer.close()
-  };
-  openControlPanel = () => {
-    this._drawer.open()
-  };
   render () {
     return (
       <Drawer
         type="overlay"
         open={this.props.view}
         content={<ControlPanel />}
-        openDrawerOffset={100}
+        openDrawerOffset={(viewport) => viewport.width * .25}
+        tapToClose={true}
         styles={drawerStyles}
-        panOpenMask={0.5}
-        panCloseMask={0.5}
-        captureGestures={true}
-        tweenHandler={Drawer.tweenPresets.parallax}
+        panOpenMask={0.1}
         side="right"
       >
         { this.props.children }
@@ -41,10 +25,15 @@ class SideMenuComponent extends Component {
 }
 
 const drawerStyles = {
-  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
-  main: {paddingLeft: 3},
+  drawer: {
+    shadowColor: '#000000',
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+  },
 }
 
 export default connect( state => ({
+
   view: state.sidemenu.view
+
 }) )(SideMenuComponent)

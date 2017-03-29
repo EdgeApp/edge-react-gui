@@ -3,33 +3,24 @@ import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import Tabs from 'react-native-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Actions } from 'react-native-router-flux'
 
-import { openSidebar } from '../SideMenu/SideMenu.action'
+import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 
 class TabBar extends Component {
 
-  constructor() {
-    super()
-    this.state = {
-      selectedTab: 'profile',
-    }
-  }
-
-  changeTab (selectedTab) {
-    this.setState({selectedTab})
+  _handleToggleSideBar = () => {
+    return this.props.dispatch(openSidebar())
   }
 
   render () {
-    const { selectedTab } = this.state
 
     return (
         <Tabs
-            selected={this.state.page}
             style={styles.tab}
             iconStyle={styles.iconStyle}
-            onSelect={el=>this.setState({page:el.props.name})}
         >
-            <View style={styles.iconContainer} name="home">
+            <View style={styles.iconContainer} name="home" onSelect={ () => Actions.directory() }>
               <Icon color={'#5e6977'} name='home' size={44} />
               <Text style={styles.iconText}>Directory</Text>
             </View>
@@ -41,11 +32,11 @@ class TabBar extends Component {
               <Icon color={'#5e6977'} name='file-upload' size={44} />
               <Text style={styles.iconText}>Scan</Text>
             </View>
-            <View style={styles.iconContainer} name="swap-horiz">
+            <View style={styles.iconContainer} name="swap-horiz" onSelect={ () => Actions.transactions()  }>
               <Icon color={'#5e6977'} name='swap-horiz' size={44} />
               <Text style={styles.iconText}>Transactions</Text>
             </View>
-            <View style={styles.iconContainer} name="more-horiz">
+            <View style={styles.iconContainer} name="more-horiz" onSelect={ this._handleToggleSideBar }>
               <Icon color={'#5e6977'} name='more-horiz' size={44} />
               <Text style={styles.iconText}>More</Text>
             </View>
@@ -57,11 +48,12 @@ class TabBar extends Component {
 
 const styles = StyleSheet.create({
   tab: {
-    backgroundColor:'white',
+    backgroundColor:'#eaeaea',
     height:70
   },
   iconStyle: {
-    height: 70
+    height: 70,
+    zIndex: 5
   },
   selectedStyle: {
     color:'#80C342'
@@ -78,4 +70,6 @@ const styles = StyleSheet.create({
 
 
 
-export default connect()(TabBar)
+export default connect( state => ({
+  sidemenu : state.sidemenu.view
+}) )(TabBar)
