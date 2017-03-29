@@ -10,7 +10,7 @@ import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 class TabBar extends Component {
 
   _handleToggleSideBar = () => {
-    return this.props.dispatch(openSidebar())
+    this.props.dispatch(openSidebar())
   }
 
   render () {
@@ -49,7 +49,8 @@ class TabBar extends Component {
 const styles = StyleSheet.create({
   tab: {
     backgroundColor:'#eaeaea',
-    height:70
+    height:70,
+    position: 'relative'
   },
   iconStyle: {
     height: 70,

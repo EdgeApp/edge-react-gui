@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet }  from 'react-native'
 import { connect } from 'react-redux'
-import { Scene, router } from 'react-native-router-flux'
+import { Scene, Router } from 'react-native-router-flux'
 
 import SideMenu from './SideMenu/SideMenu.ui'
 import Header from './Header/Header.ui'
@@ -26,8 +26,8 @@ class Container extends Component {
               </Scene>
             </RouterWithRedux>
           </View>
+          <TabBar />
         </View>
-        <TabBar />
       </SideMenu>
     )
   }

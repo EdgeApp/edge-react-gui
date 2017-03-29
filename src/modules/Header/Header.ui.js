@@ -4,12 +4,15 @@ import { connect } from 'react-redux'
 
 class Header extends Component {
 
+  _renderTitle = () => {
+    return this.props.routes.scene.title || 'header'
+  }
+
   render () {
-    console.log(this.props.routes)
     return (
       <View style={styles.container}>
         <Text style={styles.left}></Text>
-        <Text style={styles.center}>Header</Text>
+        <Text style={styles.center}>{this._renderTitle()}</Text>
         <Text style={styles.right}>Help</Text>
       </View>
     )
