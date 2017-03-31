@@ -59,3 +59,4 @@ But you can also run this with zsh (put it in .zshprofile instead)
 - If you're having inexplicable persistent problems, it sometimes helps to clean the project.  delete the app from your phone, run `cd android && ./gradlew clean && rm -rf build && cd .. && npm run droid` and then reset the packager like so: `npm start -- --reset-cache`
 - If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:E` and reproduce the error, it should give you some stack information, which MIGHT help.
 - If you keep having problems, uninstall the app, restart your phone, `run npm droid` and `npm start -- --reset-cache`.
+- Be aware that the Android build uses multiple versions of the Android SDK, so if you are getting errors related to missing Android SDK versions, that you may need to download and install them (through Android Studio, Homebrew, etc)
