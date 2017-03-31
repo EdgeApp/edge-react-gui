@@ -60,3 +60,5 @@ But you can also run this with zsh (put it in .zshprofile instead)
 - If you get 'airbitz has stopped' from your android device, and you're running a dev build, this means your environment has a problem, NOT the app. Run `adb logcat *:E` and reproduce the error, it should give you some stack information, which MIGHT help.
 - If you keep having problems, uninstall the app, restart your phone, `run npm droid` and `npm start -- --reset-cache`.
 - Be aware that the Android build uses multiple versions of the Android SDK, so if you are getting errors related to missing Android SDK versions, that you may need to download and install them (through Android Studio, Homebrew, etc)
+- If you are using GenyMotion and Android Studio, make sure that the SDK path that GenyMotion is pointing to is the same one that your Android Studio is pointing to.
+- The build process may throw an "Error Type 3" message, but that does not necessarily mean that the build has failed.
