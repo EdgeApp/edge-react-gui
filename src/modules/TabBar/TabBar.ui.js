@@ -48,7 +48,7 @@ class TabBar extends Component {
 
 const styles = StyleSheet.create({
   tab: {
-    backgroundColor:'#eaeaea',
+    backgroundColor:'#f2f2f2',
     height:70,
     position: 'relative'
   },

@@ -23,7 +23,7 @@ class Header extends Component {
 const styles = StyleSheet.create({
 
   container: {
-    backgroundColor:'#eaeaea',
+    backgroundColor:'#f2f2f2',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
