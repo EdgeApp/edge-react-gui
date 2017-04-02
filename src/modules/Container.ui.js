@@ -11,6 +11,9 @@ import Header from './Header/Header.ui'
 import TabBar from './TabBar/TabBar.ui'
 import Transactions from './Transactions/Transactions.ui'
 import Directory from './Directory/Directory.ui'
+import Request from './Request/index.js'
+import Send from './Send/Send.ui.js'
+
 
 const RouterWithRedux = connect()(Router)
 

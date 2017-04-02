@@ -184,4 +184,3 @@ export default connect( state => ({
   sidemenu : state.sidemenu.view
 
 }) )(ControlPanel)
-
