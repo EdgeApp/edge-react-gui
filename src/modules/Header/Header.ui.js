@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
+import { Header, Body, Right, Left, Title } from 'native-base'
 
-class Header extends Component {
+class HeaderUI extends Component {
 
   _renderTitle = () => {
     return this.props.routes.scene.title || 'header'
@@ -10,11 +11,13 @@ class Header extends Component {
 
   render () {
     return (
-      <View style={styles.container}>
-        <Text style={styles.left}></Text>
-        <Text style={styles.center}>{this._renderTitle()}</Text>
-        <Text style={styles.right}>Help</Text>
-      </View>
+      <Header>
+        <Left />
+        <Body>
+          <Title style={{textAlign: 'center'}}>{this._renderTitle()}</Title>
+        </Body>
+        <Right />
+      </Header>
     )
   }
 
@@ -23,12 +26,7 @@ class Header extends Component {
 const styles = StyleSheet.create({
 
   container: {
-    backgroundColor:'#f2f2f2',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 35,
-
+    backgroundColor:'#f2f2f2'
   },
 
   center: {
@@ -55,4 +53,4 @@ const styles = StyleSheet.create({
 
 export default connect( state => ({
   routes: state.routes
-}) )(Header)
+}) )(HeaderUI)
