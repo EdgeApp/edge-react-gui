@@ -72,27 +72,27 @@ class TabBar extends Component {
   render () {
 
     return (
-      <Footer >
-        <FooterTab>
-          <Button>
-            <Icon name='home' />
+      <Footer style={{ height: 70 }} >
+        <FooterTab style={{ height: 70 }}>
+          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }} onPress={ () => Actions.directory() }>
+            <Icon name='home' style={{fontSize: 36}} />
             <Text style={{fontSize: 12}}>Directory</Text>
           </Button>
-          <Button>
-            <Icon name='download' />
-            <Text>Request</Text>
+          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }}>
+            <Icon name='download' style={{fontSize: 36}} />
+            <Text style={{fontSize: 12}}>Request</Text>
           </Button>
-          <Button active>
-            <Icon name='arrow-round-up' />
-            <Text>Scan</Text>
+          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }}>
+            <Icon name='arrow-round-up' style={{fontSize: 36}} />
+            <Text style={{fontSize: 12}}>Scan</Text>
           </Button>
-          <Button>
-            <Icon name='swap' />
-            <Text>Transactions</Text>
+          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }} onPress={ () => Actions.transactions() }>
+            <Icon name='swap' style={{fontSize: 36}} />
+            <Text style={{fontSize: 12}}>Transactions</Text>
           </Button>
-          <Button>
-            <Icon name='list' />
-            <Text>More</Text>
+          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }} onPress={ this._handleToggleSideBar } active ={ this.props.sidemenu ? true : false }>
+            <Icon name='menu' style={{fontSize: 36}} />
+            <Text style={{fontSize: 12}}>More</Text>
           </Button>
         </FooterTab>
       </Footer>
@@ -123,8 +123,6 @@ const styles = StyleSheet.create({
     fontSize: 12
   }
 });
-
-
 
 export default connect( state => ({
   sidemenu : state.sidemenu.view

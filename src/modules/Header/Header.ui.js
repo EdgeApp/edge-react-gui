@@ -17,7 +17,8 @@ class HeaderUI extends Component {
         <Body>
           <Title style={{textAlign: 'center'}}>{this._renderTitle()}</Title>
         </Body>
-        <Right />
+        <Right>
+        </Right>
       </Header>
     )
   }
