@@ -56,7 +56,8 @@ const styles = {
     marginBottom: 70,
     borderStyle: 'solid',
     borderColor: '#e3e3e3',
-    borderWidth: 1
+    borderWidth: 1,
+    backgroundColor: '#FFF'
   },
 
   bitcoin: StyleSheet.create({
@@ -100,7 +101,7 @@ const styles = {
     container: {
       flex: 1,
       flexDirection: 'column',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
     },
 
     link: {

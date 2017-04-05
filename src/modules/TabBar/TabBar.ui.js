@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import Tabs from 'react-native-tabs';
+// import Tabs from 'react-native-tabs';
 import { Actions } from 'react-native-router-flux'
 
-import { Container, Content, Footer, FooterTab, Button, Icon, Badge, Text } from 'native-base';
+import { Footer, FooterTab, Button, Icon, Text } from 'native-base'
+
 import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 
 // class TabBar extends Component {
@@ -70,60 +71,39 @@ class TabBar extends Component {
   }
 
   render () {
-
+    console.log(this.props.sidemenu)
     return (
-      <Footer style={{ height: 70 }} >
-        <FooterTab style={{ height: 70 }}>
-          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }} onPress={ () => Actions.directory() }>
-            <Icon name='home' style={{fontSize: 36}} />
-            <Text style={{fontSize: 12}}>Directory</Text>
-          </Button>
-          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }}>
-            <Icon name='download' style={{fontSize: 36}} />
-            <Text style={{fontSize: 12}}>Request</Text>
-          </Button>
-          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }}>
-            <Icon name='arrow-round-up' style={{fontSize: 36}} />
-            <Text style={{fontSize: 12}}>Scan</Text>
-          </Button>
-          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }} onPress={ () => Actions.transactions() }>
-            <Icon name='swap' style={{fontSize: 36}} />
-            <Text style={{fontSize: 12}}>Transactions</Text>
-          </Button>
-          <Button style={{ paddingLeft: 0, paddingRight: 0, height: 70 }} onPress={ this._handleToggleSideBar } active ={ this.props.sidemenu ? true : false }>
-            <Icon name='menu' style={{fontSize: 36}} />
-            <Text style={{fontSize: 12}}>More</Text>
-          </Button>
-        </FooterTab>
-      </Footer>
+        <Footer>
+          <FooterTab>
+            <Button onPress={ () => Actions.directory() }>
+              <Icon name='home' />
+              <Text>Directory</Text>
+            </Button>
+            <Button>
+              <Icon name='download' />
+              <Text>Request</Text>
+            </Button>
+            <Button>
+              <Icon name='arrow-round-up' />
+              <Text>Scan</Text>
+            </Button>
+            <Button onPress={ () => Actions.transactions() }>
+              <Icon name='swap' />
+              <Text>Transactions</Text>
+            </Button>
+            <Button onPress={ this._handleToggleSideBar } active={ this.props.sidemenu ? true : false }>
+              <Icon name='menu' />
+              <Text>More</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
     )
   }
 
 }
 
-const styles = StyleSheet.create({
-  tab: {
-    backgroundColor:'#f2f2f2',
-    height:70,
-    position: 'relative'
-  },
-  iconStyle: {
-    height: 70,
-    zIndex: 5
-  },
-  selectedStyle: {
-    color:'#80C342'
-  },
-  iconContainer: {
-    flex:1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  iconText: {
-    fontSize: 12
-  }
-});
-
 export default connect( state => ({
+
   sidemenu : state.sidemenu.view
+
 }) )(TabBar)

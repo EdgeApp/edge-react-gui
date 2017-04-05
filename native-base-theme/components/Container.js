@@ -7,6 +7,7 @@ const deviceHeight = Dimensions.get('window').height;
 export default (variables = variable) => {
   const theme = {
     flex: 1,
+    backgroundColor: '#FFF', //custom
     height: (Platform.OS === 'ios') ? deviceHeight : deviceHeight - 20
   };
 
