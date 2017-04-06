@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import Icon from 'react-native-vector-icons/MaterialIcons'
+// import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon_FA from 'react-native-vector-icons/FontAwesome'
+import { Icon } from 'native-base'
+
+import variables from '../../../native-base-theme/variables/platform'
 
 class ControlPanel extends Component {
   render () {
@@ -12,9 +15,9 @@ class ControlPanel extends Component {
           <Text style={styles.bitcoin.value}>Bitcoin: 10000 USD</Text>
         </View>
         <View style={styles.user.container}>
-          <Icon style={styles.user.icon} name='person-outline' size={48} />
+          <Icon style={styles.user.icon} name='person' size={48} />
           <Text style={styles.user.name}>foofoo_user01</Text>
-          <Icon style={styles.userIcon} name='arrow-drop-down' size={43} />
+          <Icon style={styles.user.icon} name='arrow-dropdown' size={43} />
         </View>
         <View style={styles.main.container}>
           <View style={styles.main.link}>
@@ -52,36 +55,30 @@ const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch',
-    elevation: 3,
-    // borderStyle: 'solid',
-    // borderColor: '#e3e3e3',
-    // borderWidth: 1,
     backgroundColor: '#FFF'
   },
 
   bitcoin: StyleSheet.create({
     container:{
-      backgroundColor: '#007AFF',
-      paddingVertical: 13,
-      paddingHorizontal: 18,
-      flexDirection: 'row'
+      backgroundColor: variables.toolbarDefaultBg,
+      height: variables.toolbarHeight,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 20
     },
 
     value: {
       flex: 1,
-      color: '#FFFFFF',
-      fontSize: 15
+      color: '#FFF',
+      fontSize: 17
     }
   }),
 
   user: StyleSheet.create({
     container: {
+      backgroundColor: variables.tabBgColor,
       flexDirection: 'row',
       alignItems: 'center',
-      backgroundColor: '#f3f3f3',
-      borderStyle: 'solid',
-      borderColor: '#e3e3e3',
-      borderWidth: 1,
       paddingVertical: 12
     },
 

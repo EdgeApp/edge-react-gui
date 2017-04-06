@@ -20,6 +20,7 @@ class SideMenuComponent extends Component {
         side="right"
         onOpen={() => this.props.dispatch(openSidebar())}
         onClose={() => this.props.dispatch(closeSidebar())}
+        elevation={4}
       >
         { this.props.children }
       </Drawer>
