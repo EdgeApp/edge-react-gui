@@ -18,9 +18,9 @@ class Main extends Component {
 
   render () {
     return (
-      <SideMenu>
-        <StyleProvider style={getTheme(platform)}>
-          <Container>
+      <StyleProvider style={getTheme(platform)}>
+        <Container>
+          <SideMenu>
             <Header />
             <Content>
               <RouterWithRedux>
@@ -30,27 +30,13 @@ class Main extends Component {
                 </Scene>
               </RouterWithRedux>
             </Content>
-            <TabBar />
-          </Container>
-        </StyleProvider>
-      </SideMenu>
+          </SideMenu>
+          <TabBar />
+        </Container>
+      </StyleProvider>
     )
   }
 
 }
-
-const styles = StyleSheet.create({
-
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    backgroundColor: '#FFF',
-  },
-
-  main: {
-    flex: 1
-  }
-
-})
 
 export default connect()(Main)

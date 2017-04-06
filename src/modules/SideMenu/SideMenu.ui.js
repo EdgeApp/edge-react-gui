@@ -16,7 +16,6 @@ class SideMenuComponent extends Component {
         content={<ControlPanel />}
         openDrawerOffset={(viewport) => viewport.width * .25}
         tapToClose={true}
-        styles={drawerStyles}
         panOpenMask={0.1}
         side="right"
         onOpen={() => this.props.dispatch(openSidebar())}
@@ -26,14 +25,6 @@ class SideMenuComponent extends Component {
       </Drawer>
     )
   }
-}
-
-const drawerStyles = {
-  drawer: {
-    shadowColor: '#000000',
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
 }
 
 export default connect( state => ({

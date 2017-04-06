@@ -52,11 +52,10 @@ const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch',
-    marginTop: 35,
-    marginBottom: 70,
-    borderStyle: 'solid',
-    borderColor: '#e3e3e3',
-    borderWidth: 1,
+    elevation: 3,
+    // borderStyle: 'solid',
+    // borderColor: '#e3e3e3',
+    // borderWidth: 1,
     backgroundColor: '#FFF'
   },
 
