@@ -59,22 +59,25 @@ export default (variables = variable) => {
           },
         },
         'NativeBase.Icon': {
-          color: variables.tabBarTextColor,
+          // color: variables.tabBarTextColor,
+          color: "#FFF",
           fontSize: iconFont, //custom
         },
         'NativeBase.IconNB': {
-          color: variables.tabBarTextColor,
+          // color: variables.tabBarTextColor,
+          color: "#FFF",
           fontSize: iconFont, //custom
         },
         'NativeBase.Text': {
-          color: variables.tabBarTextColor,
+          // color: variables.tabBarTextColor,
+          color: "#FFF",
           fontSize: textFont, //custom
           lineHeight: 16,
         },
         //Custom Style
         paddingHorizontal: 0,
       },
-      backgroundColor: (Platform.OS === 'android') ? variables.tabActiveBgColor : undefined,
+      // backgroundColor: (Platform.OS === 'android') ? variables.tabActiveBgColor : undefined,
       flexDirection: 'row',
       justifyContent: 'space-between',
       flex: 1,

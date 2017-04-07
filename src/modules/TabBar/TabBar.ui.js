@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { Footer, FooterTab, Button, Icon, Text } from 'native-base'
+import LinearGradient from 'react-native-linear-gradient'
 
 import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 
@@ -19,7 +20,8 @@ class TabBar extends Component {
 
   render () {
     return (
-        <Footer>
+        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]}>
+      <Footer>
           <FooterTab>
             <Button onPress={ () => Actions.directory() }>
               <Icon name='home' />
@@ -30,7 +32,7 @@ class TabBar extends Component {
               <Text>Request</Text>
             </Button>
             <Button>
-              <Icon name='arrow-round-up' />
+              <Icon name='share' />
               <Text>Scan</Text>
             </Button>
             <Button onPress={ () => Actions.transactions() }>
@@ -38,11 +40,12 @@ class TabBar extends Component {
               <Text>Transactions</Text>
             </Button>
             <Button onPress={ this._handleToggleSideBar } active={ this.props.sidemenu ? true : false }>
-              <Icon name='menu' />
+              <Icon name='more' />
               <Text>More</Text>
             </Button>
           </FooterTab>
-        </Footer>
+      </Footer>
+        </LinearGradient>
     )
   }
 

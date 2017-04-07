@@ -4,48 +4,50 @@ import { connect } from 'react-redux'
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 import Icon_FA from 'react-native-vector-icons/FontAwesome'
 import { Icon } from 'native-base'
+import LinearGradient from 'react-native-linear-gradient'
 
 import variables from '../../../native-base-theme/variables/platform'
 
 class ControlPanel extends Component {
   render () {
     return (
-      <View style={styles.container}>
-        <View style={styles.bitcoin.container}>
-          <Text style={styles.bitcoin.value}>Bitcoin: 10000 USD</Text>
-        </View>
-        <View style={styles.user.container}>
-          <Icon style={styles.user.icon} name='person' size={48} />
-          <Text style={styles.user.name}>foofoo_user01</Text>
-          <Icon style={styles.user.icon} name='arrow-dropdown' size={43} />
-        </View>
-        <View style={styles.main.container}>
-          <View style={styles.main.link}>
-            <Icon_FA style={styles.main.icon} name='refresh' size={30} />
-            <Text style={styles.main.text}>BUY/SELL BITCOINS</Text>
+      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.container} colors={["#3b7adb","#2b569a"]}>
+          <View style={styles.bitcoin.container}>
+            <Icon name='logo-bitcoin' style={{ color: '#F8F8F8' }}/>
+            <Text style={styles.bitcoin.value}>  = 10000 USD</Text>
           </View>
-          <View style={styles.main.link}>
-            <Icon_FA style={styles.main.icon} name='upload' size={30} />
-            <Text style={styles.main.text}>SPEND BITCOINS (Plugins)</Text>
+          <View style={styles.user.container}>
+            <Icon style={styles.user.icon} name='person' />
+            <Text style={styles.user.name}>foofoo_user01</Text>
+            <Icon style={styles.user.icon} name='arrow-dropdown' />
           </View>
-          <View style={styles.main.link}>
-            <Icon_FA style={styles.main.icon} name='download' size={30} />
-            <Text style={styles.main.text}>REFER YOUR FRIENDS (Earn Bitcoin)</Text>
+          <View style={styles.main.container}>
+            <View style={styles.main.link}>
+              <Icon_FA style={styles.main.icon} name='refresh' size={30} />
+              <Text style={styles.main.text}>BUY/SELL BITCOINS</Text>
+            </View>
+            <View style={styles.main.link}>
+              <Icon_FA style={styles.main.icon} name='upload' size={30} />
+              <Text style={styles.main.text}>SPEND BITCOINS (Plugins)</Text>
+            </View>
+            <View style={styles.main.link}>
+              <Icon_FA style={styles.main.icon} name='download' size={30} />
+              <Text style={styles.main.text}>REFER YOUR FRIENDS (Earn Bitcoin)</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.others.container}>
-          <View style={styles.others.link}>
-            <Icon style={styles.others.icon} name='account-balance-wallet' size={30} />
-            <Text style={styles.others.text}>WALLETS</Text>
+          <View style={styles.others.container}>
+            <View style={styles.others.link}>
+              <Icon style={styles.others.icon} name='cash' />
+              <Text style={styles.others.text}>WALLETS</Text>
+            </View>
+            <View style={styles.others.link}>
+              <Icon style={styles.others.icon} name='log-out' />
+              <Text style={styles.others.text}>LOGOUT</Text>
+              <Icon style={styles.others.icon_settings} name='settings' />
+            </View>
           </View>
-          <View style={styles.others.link}>
-            <Icon_FA style={styles.others.icon} name='arrow-left' size={30} />
-            <Text style={styles.others.text}>LOGOUT</Text>
-            <Icon_FA style={styles.others.icon_settings} name='gears' size={30} />
-          </View>
-        </View>
-      </View>
+      </LinearGradient>
     )
   }
 }
@@ -54,13 +56,13 @@ const styles = {
 
   container: {
     flex: 1,
-    alignItems: 'stretch',
-    backgroundColor: '#FFF'
+    alignItems: 'stretch'
+    // backgroundColor: '#FFF'
   },
 
   bitcoin: StyleSheet.create({
     container:{
-      backgroundColor: variables.toolbarDefaultBg,
+      // backgroundColor: variables.toolbarDefaultBg,
       height: variables.toolbarHeight,
       flexDirection: 'row',
       alignItems: 'center',
@@ -74,24 +76,27 @@ const styles = {
     }
   }),
 
-  user: StyleSheet.create({
+  user: {
     container: {
-      backgroundColor: variables.tabBgColor,
+      // backgroundColor: variables.tabBgColor,
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 12
     },
 
     icon: {
-      marginHorizontal: 10
+      fontSize: 35,
+      color: "#FFF",
+      marginHorizontal: 15
     },
 
     name:{
       flex: 1,
+      color: "#FFF",
       fontSize: 15
     }
 
-  }),
+  },
 
   main: StyleSheet.create({
     container: {
@@ -104,24 +109,26 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 10,
-      borderStyle: 'solid',
-      borderColor: '#e3e3e3',
-      borderWidth: 1
+      // borderStyle: 'solid',
+      // borderColor: '#e3e3e3',
+      // borderWidth: 1
     },
 
 
     icon: {
+      color: "#FFF",
       paddingHorizontal: 15
     },
 
     text: {
       flex: 1,
+      color: "#FFF",
       fontSize: 14
     }
 
   }),
 
-  others: StyleSheet.create({
+  others: {
     container: {
       flexDirection: 'column',
       alignItems: 'flex-start'
@@ -131,25 +138,28 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 10,
-      borderStyle: 'solid',
-      borderColor: '#e3e3e3',
-      borderWidth: 1
+      // borderStyle: 'solid',
+      // borderColor: '#e3e3e3',
+      // borderWidth: 1
     },
 
     icon: {
+      color: "#FFF",
       paddingHorizontal: 15
     },
 
     icon_settings: {
+      color: "#FFF",
       paddingHorizontal: 15
     },
 
     text: {
       flex: 1,
+      color: "#FFF",
       fontSize: 14
     }
 
-  }),
+  },
 
 }
 
