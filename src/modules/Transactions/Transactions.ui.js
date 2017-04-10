@@ -7,6 +7,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
+import styles from './Transactions.style'
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
@@ -111,12 +112,12 @@ class Transactions extends Component {
         var sampleTransactionsWithImages = []
         for(let v of this.state.sampleTransaction) {
           if(v.metaData.name){
-            console.log('inside for loop, this.state.contacts is: ')
-            console.log(this.state.contacts)
+            //console.log('inside for loop, this.state.contacts is: ')
+            //console.log(this.state.contacts)
             let presence = this.contactSearch(v.metaData.name, this.state.contacts)
-            console.log(v.metaData.name , ' exists in a transaction')
+            //console.log(v.metaData.name , ' exists in a transaction')
             if(presence && presence.hasThumbnail){
-              console.log(v.metaData.name , ' also has a thumbnail in contacts')
+              //console.log(v.metaData.name , ' also has a thumbnail in contacts')
               var temporaryContact = {}
               Object.assign(temporaryContact, v)
               v.hasThumbnail = presence.hasThumbnail
@@ -131,7 +132,7 @@ class Transactions extends Component {
         }
         //console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
       }
-        console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
+        //console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
     })
 
     /*this.state.contactNamesWithImages = this.state.contacts.map(function(ctct) {
@@ -230,7 +231,7 @@ class Transactions extends Component {
       var sendReceiveSyntax = 'Receive'
       var expenseIncomeSyntax = 'Income'
     }
-    console.log('this tx.hasThumbnail is: ', tx.hasThumbnail, ', tx.thumbnailPath is: ', tx.thumbnailPath, ' tx is: ', tx)
+    //console.log('this tx.hasThumbnail is: ', tx.hasThumbnail, ', tx.thumbnailPath is: ', tx.thumbnailPath, ' tx is: ', tx)
     return (
       <View style={styles.singleTransactionWrap}>
       {(dateStrings[dateIterator] !== dateStrings[dateIterator - 1]) &&
@@ -274,174 +275,3 @@ class Transactions extends Component {
 }
 
 export default connect()(Transactions)
-
-
-
-const styles = StyleSheet.create({
-
-  container: {
-      flex: 1,
-      alignItems: 'stretch',
-  },
-  currentBalanceBox: {
-    flex: 5,
-    justifyContent: "center"
-  },
-  currentBalanceWrap: {
-    flex: 3,
-    alignItems: 'center'
-  },
-  bitcoinIconWrap: {
-    flex: 1,
-    justifyContent: 'flex-end'
-  },
-  currentBalanceBoxDollarsWrap: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  currentBalanceBoxDollars: {
-    color: "#FFFFFF",
-    fontSize: 36
-  },
-  currentBalanceBoxBits: {
-    color: "#FFFFFF",
-    justifyContent: "space-around",
-    flex: 1
-  },
-  requestSendRow: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingBottom: 10
-  },
-  requestBox: {
-    backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: .9,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 3,
-    flexDirection: "row"
-  },
-  requestWrap: {
-    flexDirection: 'row'
-  },
-  requestIcon: {
-    marginRight: 10
-  },
-  sendBox: {
-    backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: .9,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 3,
-    marginRight: 10,
-    flexDirection: "row"
-  },
-  sendWrap: {
-    flexDirection: 'row'
-  },
-  sendIcon: {
-    marginRight: 10
-  },
-  request: {
-    color: "#ffffff",
-  },
-  send: {
-    color: "#ffffff"
-  },
-
-  // beginning of second half
-  transactionsWrap: {
-    flex: 7
-  },
-
-
-  searchBarView: {
-    paddingLeft: 12,
-    paddingRight: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchBarMagnifyingGlass: {
-
-  },
-  searchBarInput: {
-
-  },
-  searchBarCloseWrap: {
-
-  },
-  searchBarClose: {
-
-  },
-  searchInputWrap: {
-
-  },
-
-
-  transactionsScrollWrap: {
-    flex: 1
-  },
-  singleTransaction: {
-    flex: 4
-  },
-  singleTransactionWrap: {
-    flexDirection: 'column',
-    flex: 1
-  },
-  singleDateArea: {
-    backgroundColor: '#f6f6f6',
-    flex: 3,
-    padding: 8,
-    flexDirection: 'row',
-    paddingRight: 24
-  },
-  leftDateArea: {
-    flex: 1
-  },
-  formattedDate: {
-    color: "#cccccc",
-    fontSize: 12
-  },
-  firstDateSearchIcon: {
-
-  },
-  singleTransaction: {
-    padding: 12,
-    paddingRight: 30
-  },
-  transactionInfoWrap: {
-    flexDirection: "row"
-  },
-  transactionLogo: {
-    flex: 1,
-    marginRight: 10
-  },
-  transactionDollars: {
-    flex: 3
-  },
-  transactionPartner: {
-    fontSize: 16,
-    color: "#000000"
-  },
-  transactionDollarAmount: {
-    fontSize: 16,
-    color: "#000000"
-  },
-  transactionBits: {
-    flex: 2,
-    alignItems: 'flex-end'
-  },
-  transactionType: {
-    fontSize: 10,
-    color: "#9b9b9b"
-  },
-  transactionBitAmount: {
-    fontSize: 10,
-    color: "#9b9b9b"
-  }
-
-});
