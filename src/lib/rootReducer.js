@@ -10,7 +10,9 @@ const store = combineReducers({
     view  : SideMenu.view
   }),
   transactions: combineReducers({
-    transactionsList: Transactions.transactionsList
+    transactionsList: Transactions.transactionsList,
+    searchVisible: Transactions.searchVisible,
+    contactsList: Transactions.contactsList
   }),
 
   routes

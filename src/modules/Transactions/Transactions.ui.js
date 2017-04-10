@@ -5,8 +5,11 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
+import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList,updateTransactionsList, updateContactsList} from './Transactions.action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
+import styles from './Transactions.style'
+
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
@@ -15,7 +18,6 @@ var dateIterator = -1
 class Transactions extends Component {
 
   constructor(props) {
-    console.log('in transactions constructor')
     super(props)
     const sampleTransaction = [
       {
@@ -88,35 +90,20 @@ class Transactions extends Component {
         "signedTx": [],
         "otherParams": {"test": true}
       }
-    ].sort(function(a, b) {
-        a = new Date(a.date);
-        b = new Date(b.date);
-        return a>b ? -1 : a<b ? 1 : 0;
-    });
-    var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    this.state =  {
-      dataSource:  ds.cloneWithRows(sampleTransaction),
-      searchVisible: false
-    }
-    this.state.sampleTransaction = sampleTransaction
+    ]
+    this.props.dispatch(updateTransactionsList(sampleTransaction))
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Contacts.getAll((err, contacts) => {
       if(err && err.type === 'permissionDenied'){
-        console.log('error in getting contacts: ', err)
       } else {
-        console.log('returning all contacts, they are: ', contacts)
-        this.state.contacts = contacts
+        this.props.dispatch(updateContactsList(contacts))
         var sampleTransactionsWithImages = []
-        for(let v of this.state.sampleTransaction) {
+        for(let v of this.props.transactionsList) {
           if(v.metaData.name){
-            console.log('inside for loop, this.state.contacts is: ')
-            console.log(this.state.contacts)
-            let presence = this.contactSearch(v.metaData.name, this.state.contacts)
-            console.log(v.metaData.name , ' exists in a transaction')
+            let presence = this.contactSearch(v.metaData.name, this.props.contactsList)
             if(presence && presence.hasThumbnail){
-              console.log(v.metaData.name , ' also has a thumbnail in contacts')
               var temporaryContact = {}
               Object.assign(temporaryContact, v)
               v.hasThumbnail = presence.hasThumbnail
@@ -129,28 +116,9 @@ class Transactions extends Component {
             sampleTransactionsWithImages.push(v)
           }
         }
-        //console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
+        this.props.dispatch(updateTransactionsList(sampleTransactionsWithImages))
       }
-        console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
     })
-
-    /*this.state.contactNamesWithImages = this.state.contacts.map(function(ctct) {
-      if(ctct.hasThumbnail) {
-        return ctct.givenName
-      }
-    })*/
-
-
-
-    //console.log('sampleTransactionsWithImages: ', sampleTransactionsWithImages)
-
-    /*const sampleTransactionsWithImages = sampleTransaction.map(function(tx) {
-      if(tx.metaData.name && this.state.contactNamesWithImages.includes(tx.metaData.name)) {
-        return{tx, imageUri: this.state.contactNamesWithImage}
-      } else {
-        return tx
-      }
-    })*/
   }
 
   contactSearch(nameKey, myArray){
@@ -162,14 +130,22 @@ class Transactions extends Component {
   }
 
   _onPressSearch (event) {
-    this.setState({searchVisible: true})
+    this.props.dispatch(transactionsSearchVisible)
   }
 
   _onSearchExit(event) {
-    this.setState({searchVisible: false})
+    this.props.dispatch(transactionsSearchHidden)
   }
 
   render () {
+    var renderableTransactionList = this.props.transactionsList.sort(function(a, b) {
+        a = new Date(a.date);
+        b = new Date(b.date);
+        return a>b ? -1 : a<b ? 1 : 0;
+    });
+    var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+    var dataSource =  ds.cloneWithRows(renderableTransactionList)
+
     return (
         <View style={styles.container}>
           <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.currentBalanceBox} colors={["#3b7adb","#2b569a"]}>
@@ -198,7 +174,7 @@ class Transactions extends Component {
             </View>
           </LinearGradient>
           <View style={[styles.transactionsWrap]}>
-            {this.state.searchVisible &&
+            {this.props.searchVisible &&
               <View style={[styles.searchBarView]} >
                 <FAIcon size={14} name="search" style={styles.searchBarMagnifyingGlass} />
                 <Input placeholder="Search" />
@@ -207,7 +183,7 @@ class Transactions extends Component {
                 </TouchableHighlight>
               </View>
             }
-              <ListView style={[styles.transactionsScrollWrap]} dataSource={this.state.dataSource} renderRow={this.renderTx.bind(this)} />
+              <ListView style={[styles.transactionsScrollWrap]} dataSource={dataSource} renderRow={this.renderTx.bind(this)} />
           </View>
         </View>
     )
@@ -230,7 +206,7 @@ class Transactions extends Component {
       var sendReceiveSyntax = 'Receive'
       var expenseIncomeSyntax = 'Income'
     }
-    console.log('this tx.hasThumbnail is: ', tx.hasThumbnail, ', tx.thumbnailPath is: ', tx.thumbnailPath, ' tx is: ', tx)
+
     return (
       <View style={styles.singleTransactionWrap}>
       {(dateStrings[dateIterator] !== dateStrings[dateIterator - 1]) &&
@@ -240,7 +216,7 @@ class Transactions extends Component {
             </View>
             {(dateIterator === 0) && (
               <View style={styles.rightDateSearch}>
-                {!this.state.searchVisible &&
+                {!this.props.searchVisible &&
                     <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
                       <FAIcon name="search" size={16} style={styles.firstDateSearchIcon} color="#cccccc" />
                     </TouchableHighlight>
@@ -250,7 +226,11 @@ class Transactions extends Component {
         }
         <View style={styles.singleTransaction}>
           <View style={styles.transactionInfoWrap}>
-            <Image style={styles.transactionLogo} source={{uri: tx.hasThumbnail ? tx.thumbnailPath : "https://www.shareicon.net/data/128x128/2015/09/01/94011_starbucks_512x512.png"}} />
+              {tx.hasThumbnail ? (
+                <Image style={styles.transactionLogo} source={{ uri: tx.thumbnailPath }} />
+              ) : (
+                <FAIcon name="user" style={styles.transactionLogo} size={50} />
+              )}
             <View style={styles.transactionDollars}>
               <Text style={styles.transactionPartner}>{sendReceiveSyntax}</Text>
               <Text style={styles.transactionType}>{expenseIncomeSyntax}</Text>
@@ -273,175 +253,10 @@ class Transactions extends Component {
   }
 }
 
-export default connect()(Transactions)
+export default connect( state => ({
 
+  transactionsList: state.transactions.transactionsList,
+  searchVisible: state.transactions.searchVisible,
+  contactsList: state.transactions.contactsList
 
-
-const styles = StyleSheet.create({
-
-  container: {
-      flex: 1,
-      alignItems: 'stretch',
-  },
-  currentBalanceBox: {
-    flex: 5,
-    justifyContent: "center"
-  },
-  currentBalanceWrap: {
-    flex: 3,
-    alignItems: 'center'
-  },
-  bitcoinIconWrap: {
-    flex: 1,
-    justifyContent: 'flex-end'
-  },
-  currentBalanceBoxDollarsWrap: {
-    flex: 2,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  currentBalanceBoxDollars: {
-    color: "#FFFFFF",
-    fontSize: 36
-  },
-  currentBalanceBoxBits: {
-    color: "#FFFFFF",
-    justifyContent: "space-around",
-    flex: 1
-  },
-  requestSendRow: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingBottom: 10
-  },
-  requestBox: {
-    backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: .9,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 3,
-    flexDirection: "row"
-  },
-  requestWrap: {
-    flexDirection: 'row'
-  },
-  requestIcon: {
-    marginRight: 10
-  },
-  sendBox: {
-    backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: .9,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginLeft: 3,
-    marginRight: 10,
-    flexDirection: "row"
-  },
-  sendWrap: {
-    flexDirection: 'row'
-  },
-  sendIcon: {
-    marginRight: 10
-  },
-  request: {
-    color: "#ffffff",
-  },
-  send: {
-    color: "#ffffff"
-  },
-
-  // beginning of second half
-  transactionsWrap: {
-    flex: 7
-  },
-
-
-  searchBarView: {
-    paddingLeft: 12,
-    paddingRight: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  searchBarMagnifyingGlass: {
-
-  },
-  searchBarInput: {
-
-  },
-  searchBarCloseWrap: {
-
-  },
-  searchBarClose: {
-
-  },
-  searchInputWrap: {
-
-  },
-
-
-  transactionsScrollWrap: {
-    flex: 1
-  },
-  singleTransaction: {
-    flex: 4
-  },
-  singleTransactionWrap: {
-    flexDirection: 'column',
-    flex: 1
-  },
-  singleDateArea: {
-    backgroundColor: '#f6f6f6',
-    flex: 3,
-    padding: 8,
-    flexDirection: 'row',
-    paddingRight: 24
-  },
-  leftDateArea: {
-    flex: 1
-  },
-  formattedDate: {
-    color: "#cccccc",
-    fontSize: 12
-  },
-  firstDateSearchIcon: {
-
-  },
-  singleTransaction: {
-    padding: 12,
-    paddingRight: 30
-  },
-  transactionInfoWrap: {
-    flexDirection: "row"
-  },
-  transactionLogo: {
-    flex: 1,
-    marginRight: 10
-  },
-  transactionDollars: {
-    flex: 3
-  },
-  transactionPartner: {
-    fontSize: 16,
-    color: "#000000"
-  },
-  transactionDollarAmount: {
-    fontSize: 16,
-    color: "#000000"
-  },
-  transactionBits: {
-    flex: 2,
-    alignItems: 'flex-end'
-  },
-  transactionType: {
-    fontSize: 10,
-    color: "#9b9b9b"
-  },
-  transactionBitAmount: {
-    fontSize: 10,
-    color: "#9b9b9b"
-  }
-
-});
+}) )(Transactions)
