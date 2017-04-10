@@ -38,19 +38,19 @@ class ControlPanel extends Component {
           <View style={styles.main.container}>
             <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
               <View style={styles.main.link}>
-                <Icon_FA style={styles.main.icon} name='refresh' size={30} />
+                <Icon style={styles.main.icon} name='repeat' />
                 <Text style={styles.main.text}>BUY/SELL BITCOINS</Text>
               </View>
             </TouchableNativeFeedback>
             <TouchableNativeFeedback onPress={this._handleOnPressTransaction} background={TouchableNativeFeedback.SelectableBackground()} >
               <View style={styles.main.link}>
-                <Icon_FA style={styles.main.icon} name='upload' size={30} />
+                <Icon style={styles.main.icon} name='arrow-round-down' />
                 <Text style={styles.main.text}>SPEND BITCOINS (Plugins)</Text>
               </View>
             </TouchableNativeFeedback>
             <TouchableNativeFeedback onPress={ e => console.log('pressed3') } background={TouchableNativeFeedback.SelectableBackground()} >
               <View style={styles.main.link}>
-                <Icon_FA style={styles.main.icon} name='download' size={30} />
+                <Icon style={styles.main.icon} name='arrow-round-up' />
                 <Text style={styles.main.text}>REFER YOUR FRIENDS (Earn Bitcoin)</Text>
               </View>
             </TouchableNativeFeedback>
@@ -80,7 +80,7 @@ const styles = {
     backgroundColor: '#FFF'
   },
 
-  bitcoin: StyleSheet.create({
+  bitcoin: {
     container:{
       backgroundColor: '#3b7adb',
       height: variables.toolbarHeight,
@@ -91,10 +91,10 @@ const styles = {
 
     value: {
       flex: 1,
+      fontSize: 17,
       color: '#FFF',
-      fontSize: 17
     }
-  }),
+  },
 
   user: {
     container: {
@@ -135,6 +135,7 @@ const styles = {
 
 
     icon: {
+      fontSize: 35,
       paddingHorizontal: 15
     },
 
@@ -161,6 +162,7 @@ const styles = {
     },
 
     icon: {
+      fontSize: 35,
       paddingHorizontal: 15
     },
 
