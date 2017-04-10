@@ -82,7 +82,7 @@ export default (variables = variable) => {
         alignSelf: 'center',
         alignItems: 'flex-end',
       },
-      backgroundColor: variables.footerDefaultBg,
+      // backgroundColor: variables.footerDefaultBg,
       flexDirection: 'row',
       justifyContent: 'center',
       borderTopWidth: ((platform === 'ios') && (platformStyle!=='material')) ? variables.borderWidth : undefined,

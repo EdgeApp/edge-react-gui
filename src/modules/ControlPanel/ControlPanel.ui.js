@@ -1,17 +1,31 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableNativeFeedback } from 'react-native'
 import { connect } from 'react-redux'
 // import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Text, Button, Icon } from 'native-base'
 import Icon_FA from 'react-native-vector-icons/FontAwesome'
-import { Icon } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
+import { Actions } from 'react-native-router-flux'
+
+import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 
 import variables from '../../../native-base-theme/variables/platform'
 
 class ControlPanel extends Component {
+
+  _handleOnPressDirectory = () => {
+    Actions.directory()
+    return this.props.dispatch(closeSidebar())
+  }
+
+  _handleOnPressTransaction = () => {
+    Actions.transactions()
+    return this.props.dispatch(closeSidebar())
+  }
+
   render () {
-    return (
-      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.container} colors={["#3b7adb","#2b569a"]}>
+    return  (
+        <View style={styles.container}>
           <View style={styles.bitcoin.container}>
             <Icon name='logo-bitcoin' style={{ color: '#F8F8F8' }}/>
             <Text style={styles.bitcoin.value}>  = 10000 USD</Text>
@@ -22,18 +36,24 @@ class ControlPanel extends Component {
             <Icon style={styles.user.icon} name='arrow-dropdown' />
           </View>
           <View style={styles.main.container}>
-            <View style={styles.main.link}>
-              <Icon_FA style={styles.main.icon} name='refresh' size={30} />
-              <Text style={styles.main.text}>BUY/SELL BITCOINS</Text>
-            </View>
-            <View style={styles.main.link}>
-              <Icon_FA style={styles.main.icon} name='upload' size={30} />
-              <Text style={styles.main.text}>SPEND BITCOINS (Plugins)</Text>
-            </View>
-            <View style={styles.main.link}>
-              <Icon_FA style={styles.main.icon} name='download' size={30} />
-              <Text style={styles.main.text}>REFER YOUR FRIENDS (Earn Bitcoin)</Text>
-            </View>
+            <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
+              <View style={styles.main.link}>
+                <Icon_FA style={styles.main.icon} name='refresh' size={30} />
+                <Text style={styles.main.text}>BUY/SELL BITCOINS</Text>
+              </View>
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={this._handleOnPressTransaction} background={TouchableNativeFeedback.SelectableBackground()} >
+              <View style={styles.main.link}>
+                <Icon_FA style={styles.main.icon} name='upload' size={30} />
+                <Text style={styles.main.text}>SPEND BITCOINS (Plugins)</Text>
+              </View>
+            </TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={ e => console.log('pressed3') } background={TouchableNativeFeedback.SelectableBackground()} >
+              <View style={styles.main.link}>
+                <Icon_FA style={styles.main.icon} name='download' size={30} />
+                <Text style={styles.main.text}>REFER YOUR FRIENDS (Earn Bitcoin)</Text>
+              </View>
+            </TouchableNativeFeedback>
           </View>
 
           <View style={styles.others.container}>
@@ -47,7 +67,7 @@ class ControlPanel extends Component {
               <Icon style={styles.others.icon_settings} name='settings' />
             </View>
           </View>
-      </LinearGradient>
+        </View>
     )
   }
 }
@@ -56,13 +76,13 @@ const styles = {
 
   container: {
     flex: 1,
-    alignItems: 'stretch'
-    // backgroundColor: '#FFF'
+    alignItems: 'stretch',
+    backgroundColor: '#FFF'
   },
 
   bitcoin: StyleSheet.create({
     container:{
-      // backgroundColor: variables.toolbarDefaultBg,
+      backgroundColor: '#3b7adb',
       height: variables.toolbarHeight,
       flexDirection: 'row',
       alignItems: 'center',
@@ -78,7 +98,7 @@ const styles = {
 
   user: {
     container: {
-      // backgroundColor: variables.tabBgColor,
+      backgroundColor: variables.tabBgColor,
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 12
@@ -86,19 +106,17 @@ const styles = {
 
     icon: {
       fontSize: 35,
-      color: "#FFF",
       marginHorizontal: 15
     },
 
     name:{
       flex: 1,
-      color: "#FFF",
       fontSize: 15
     }
 
   },
 
-  main: StyleSheet.create({
+  main:{
     container: {
       flex: 1,
       flexDirection: 'column',
@@ -109,6 +127,7 @@ const styles = {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 10,
+      // backgroundColor: 'yellow',
       // borderStyle: 'solid',
       // borderColor: '#e3e3e3',
       // borderWidth: 1
@@ -116,17 +135,15 @@ const styles = {
 
 
     icon: {
-      color: "#FFF",
       paddingHorizontal: 15
     },
 
     text: {
       flex: 1,
-      color: "#FFF",
       fontSize: 14
     }
 
-  }),
+  },
 
   others: {
     container: {
@@ -144,18 +161,15 @@ const styles = {
     },
 
     icon: {
-      color: "#FFF",
       paddingHorizontal: 15
     },
 
     icon_settings: {
-      color: "#FFF",
       paddingHorizontal: 15
     },
 
     text: {
       flex: 1,
-      color: "#FFF",
       fontSize: 14
     }
 
@@ -163,5 +177,9 @@ const styles = {
 
 }
 
-export default connect()(ControlPanel)
+export default connect( state => ({
+
+  sidemenu : state.sidemenu.view
+
+}) )(ControlPanel)
 

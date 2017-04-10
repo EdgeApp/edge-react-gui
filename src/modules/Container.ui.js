@@ -22,14 +22,12 @@ class Main extends Component {
         <Container>
           <SideMenu>
             <Header />
-            <Content>
-              <RouterWithRedux>
-                <Scene key='root' hideNavBar>
-                  <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
-                  <Scene key='directory' component={Directory} title='Directory' duration={0}/>
-                </Scene>
-              </RouterWithRedux>
-            </Content>
+            <RouterWithRedux>
+              <Scene key='root' hideNavBar>
+                <Scene key='directory' component={Directory} title='Directory' duration={0}/>
+                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+              </Scene>
+            </RouterWithRedux>
           </SideMenu>
           <TabBar />
         </Container>

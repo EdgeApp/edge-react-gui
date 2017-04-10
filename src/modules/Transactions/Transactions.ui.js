@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
-import { Text }  from 'react-native'
+import { View, Text }  from 'react-native'
+import { Content }  from 'native-base'
 import { connect } from 'react-redux'
 
 class Transactions extends Component {
 
   render () {
     return (
-      <Text>
-        Transactions Page
-      </Text>
+      <Content>
+        <Text style={{ color: 'black', fontSize: 50 }}>
+          Transactions Page
+        </Text>
+      </Content>
     )
   }
 
