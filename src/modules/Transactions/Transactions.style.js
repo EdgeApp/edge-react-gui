@@ -82,7 +82,6 @@ module.exports = StyleSheet.create({
     flex: 7
   },
 
-
   searchBarView: {
     paddingLeft: 12,
     paddingRight: 24,
@@ -104,7 +103,6 @@ module.exports = StyleSheet.create({
   searchInputWrap: {
 
   },
-
 
   transactionsScrollWrap: {
     flex: 1

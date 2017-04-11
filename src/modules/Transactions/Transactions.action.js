@@ -3,7 +3,8 @@ export const DELETE_TRANSACTIONS_LIST = 'DELETE_TRANSACTIONS_LIST'
 
 export function updateTransactionsList (data) {
   return {
-    type: UPDATE_TRANSACTIONS_LIST
+    type: UPDATE_TRANSACTIONS_LIST,
+    data
   }
 }
 

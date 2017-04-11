@@ -9,6 +9,8 @@ import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './Transactions.style'
 
+import { deleteTransactionsList,updateTransactionsList } from './Transactions.action'
+
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
 var dateIterator = -1
@@ -99,10 +101,10 @@ class Transactions extends Component {
       dataSource:  ds.cloneWithRows(sampleTransaction),
       searchVisible: false
     }
-    this.state.sampleTransaction = sampleTransaction
+    this.props.dispatch(updateTransactionsList(sampleTransaction))
   }
 
-  componentWillMount() {
+  componentDidMount() {
     Contacts.getAll((err, contacts) => {
       if(err && err.type === 'permissionDenied'){
         console.log('error in getting contacts: ', err)
@@ -110,14 +112,10 @@ class Transactions extends Component {
         console.log('returning all contacts, they are: ', contacts)
         this.state.contacts = contacts
         var sampleTransactionsWithImages = []
-        for(let v of this.state.sampleTransaction) {
+        for(let v of this.props.transactionsList) {
           if(v.metaData.name){
-            //console.log('inside for loop, this.state.contacts is: ')
-            //console.log(this.state.contacts)
             let presence = this.contactSearch(v.metaData.name, this.state.contacts)
-            //console.log(v.metaData.name , ' exists in a transaction')
             if(presence && presence.hasThumbnail){
-              //console.log(v.metaData.name , ' also has a thumbnail in contacts')
               var temporaryContact = {}
               Object.assign(temporaryContact, v)
               v.hasThumbnail = presence.hasThumbnail
@@ -130,28 +128,9 @@ class Transactions extends Component {
             sampleTransactionsWithImages.push(v)
           }
         }
-        //console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
+        this.props.dispatch(updateTransactionsList(sampleTransactionsWithImages))
       }
-        //console.log('done with for loop, sampleTransactionsWithImages is: ', sampleTransactionsWithImages)
     })
-
-    /*this.state.contactNamesWithImages = this.state.contacts.map(function(ctct) {
-      if(ctct.hasThumbnail) {
-        return ctct.givenName
-      }
-    })*/
-
-
-
-    //console.log('sampleTransactionsWithImages: ', sampleTransactionsWithImages)
-
-    /*const sampleTransactionsWithImages = sampleTransaction.map(function(tx) {
-      if(tx.metaData.name && this.state.contactNamesWithImages.includes(tx.metaData.name)) {
-        return{tx, imageUri: this.state.contactNamesWithImage}
-      } else {
-        return tx
-      }
-    })*/
   }
 
   contactSearch(nameKey, myArray){
@@ -231,7 +210,9 @@ class Transactions extends Component {
       var sendReceiveSyntax = 'Receive'
       var expenseIncomeSyntax = 'Income'
     }
-    //console.log('this tx.hasThumbnail is: ', tx.hasThumbnail, ', tx.thumbnailPath is: ', tx.thumbnailPath, ' tx is: ', tx)
+
+    console.log('tx.thumbnailPath is: ', tx.thumbnailPath)
+
     return (
       <View style={styles.singleTransactionWrap}>
       {(dateStrings[dateIterator] !== dateStrings[dateIterator - 1]) &&
@@ -251,7 +232,11 @@ class Transactions extends Component {
         }
         <View style={styles.singleTransaction}>
           <View style={styles.transactionInfoWrap}>
-            <Image style={styles.transactionLogo} source={{uri: tx.hasThumbnail ? tx.thumbnailPath : "https://www.shareicon.net/data/128x128/2015/09/01/94011_starbucks_512x512.png"}} />
+              {tx.hasThumbnail ? (
+                <Image style={styles.transactionLogo} source={{ uri: tx.thumbnailPath }} />
+              ) : (
+                <FAIcon name="user" style={styles.transactionLogo} size={50} />
+              )}
             <View style={styles.transactionDollars}>
               <Text style={styles.transactionPartner}>{sendReceiveSyntax}</Text>
               <Text style={styles.transactionType}>{expenseIncomeSyntax}</Text>
@@ -274,4 +259,8 @@ class Transactions extends Component {
   }
 }
 
-export default connect()(Transactions)
+export default connect( state => ({
+
+  transactionsList: state.transactions.transactionsList
+
+}) )(Transactions)
