@@ -6,6 +6,8 @@ export const transactionsList = (state = [], action) => {
       return action.data
     case ACTION.DELETE_TRANSACTIONS_LIST :
       return []
+    case ACTION.UPDATE_SEARCH_RESULTS :
+      return action.data
     default:
       return state
   }
