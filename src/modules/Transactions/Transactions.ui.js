@@ -13,7 +13,6 @@ import styles from './Transactions.style'
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
-var dateIterator = -1
 
 class Transactions extends Component {
 
@@ -145,7 +144,7 @@ class Transactions extends Component {
     });
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
     var dataSource =  ds.cloneWithRows(renderableTransactionList)
-
+    //can also put dateIterator in here
     return (
         <View style={styles.container}>
           <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.currentBalanceBox} colors={["#3b7adb","#2b569a"]}>
@@ -192,7 +191,6 @@ class Transactions extends Component {
 
 
   renderTx(tx) {
-    dateIterator++
     let txDate = new Date(tx.date * 1000)
     let month = txDate.getMonth()
     let day = txDate.getDate()
@@ -209,20 +207,20 @@ class Transactions extends Component {
 
     return (
       <View style={styles.singleTransactionWrap}>
-      {(dateStrings[dateIterator] !== dateStrings[dateIterator - 1]) &&
+      {(dateStrings[tx.key + 1] !== dateStrings[tx.key]) &&
           (<View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
               <Text style={styles.formattedDate}>{dateString}</Text>
             </View>
-            {(dateIterator === 0) && (
-              <View style={styles.rightDateSearch}>
-                {!this.props.searchVisible &&
-                    <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
-                      <FAIcon name="search" size={16} style={styles.firstDateSearchIcon} color="#cccccc" />
-                    </TouchableHighlight>
-                }
-              </View>)}
-          </View>)
+            {tx.key === 1 && (
+            <View style={styles.rightDateSearch}>
+            {(this.props.searchVisible === false) && (
+                <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
+                  <FAIcon name="search" size={16} style={styles.firstDateSearchIcon} color="#cccccc" />
+                </TouchableHighlight>
+            )}
+          </View>)}
+        </View>)
         }
         <View style={styles.singleTransaction}>
           <View style={styles.transactionInfoWrap}>

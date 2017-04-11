@@ -128,6 +128,13 @@ module.exports = StyleSheet.create({
     color: "#cccccc",
     fontSize: 12
   },
+  rightDateSearch: {
+    flex: 1,
+    alignItems: 'flex-end'
+  },
+  firstDateSearchWrap: {
+
+  },
   firstDateSearchIcon: {
 
   },
