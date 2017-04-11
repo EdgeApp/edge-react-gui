@@ -129,11 +129,11 @@ class Transactions extends Component {
   }
 
   _onPressSearch (event) {
-    this.props.dispatch(transactionsSearchVisible)
+    this.props.dispatch(transactionsSearchVisible())
   }
 
   _onSearchExit(event) {
-    this.props.dispatch(transactionsSearchHidden)
+    this.props.dispatch(transactionsSearchHidden())
   }
 
   render () {
