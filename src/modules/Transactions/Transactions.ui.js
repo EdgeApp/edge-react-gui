@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList,updateTransactionsList, updateContactsList} from './Transactions.action'
+import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList,updateTransactionsList, updateContactsList, updateSearchResults} from './Transactions.action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './Transactions.style'
@@ -126,6 +126,10 @@ class Transactions extends Component {
         return myArray[i];
       }
     }
+  }
+
+  _onSearchChange() {
+    this.props.dispatch(updateSearchResults(null))
   }
 
   _onPressSearch (event) {
