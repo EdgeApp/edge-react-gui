@@ -140,6 +140,10 @@ class Transactions extends Component {
     this.props.dispatch(transactionsSearchHidden())
   }
 
+  loadMoreTransactions() {
+    console.log('Transactions.ui->loadMoreTransactions being executed')
+  }
+
   render () {
     var renderableTransactionList = this.props.transactionsList.sort(function(a, b) {
         a = new Date(a.date);
@@ -186,7 +190,7 @@ class Transactions extends Component {
                 </TouchableHighlight>
               </View>
             }
-              <ListView style={[styles.transactionsScrollWrap]} dataSource={dataSource} renderRow={this.renderTx.bind(this)} />
+              <ListView style={[styles.transactionsScrollWrap]} dataSource={dataSource} renderRow={this.renderTx.bind(this)} onEndReached={this.loadMoreTransactions.bind(this)} onEndReachedThreshold={60} />
           </View>
         </View>
     )
