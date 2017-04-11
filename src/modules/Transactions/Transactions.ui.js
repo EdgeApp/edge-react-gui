@@ -5,11 +5,11 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
+import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList,updateTransactionsList, updateContactsList} from './Transactions.action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './Transactions.style'
 
-import { deleteTransactionsList,updateTransactionsList } from './Transactions.action'
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
@@ -18,7 +18,6 @@ var dateIterator = -1
 class Transactions extends Component {
 
   constructor(props) {
-    console.log('in transactions constructor')
     super(props)
     const sampleTransaction = [
       {
@@ -91,30 +90,19 @@ class Transactions extends Component {
         "signedTx": [],
         "otherParams": {"test": true}
       }
-    ].sort(function(a, b) {
-        a = new Date(a.date);
-        b = new Date(b.date);
-        return a>b ? -1 : a<b ? 1 : 0;
-    });
-    var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    this.state =  {
-      dataSource:  ds.cloneWithRows(sampleTransaction),
-      searchVisible: false
-    }
+    ]
     this.props.dispatch(updateTransactionsList(sampleTransaction))
   }
 
   componentDidMount() {
     Contacts.getAll((err, contacts) => {
       if(err && err.type === 'permissionDenied'){
-        console.log('error in getting contacts: ', err)
       } else {
-        console.log('returning all contacts, they are: ', contacts)
-        this.state.contacts = contacts
+        this.props.dispatch(updateContactsList(contacts))
         var sampleTransactionsWithImages = []
         for(let v of this.props.transactionsList) {
           if(v.metaData.name){
-            let presence = this.contactSearch(v.metaData.name, this.state.contacts)
+            let presence = this.contactSearch(v.metaData.name, this.props.contactsList)
             if(presence && presence.hasThumbnail){
               var temporaryContact = {}
               Object.assign(temporaryContact, v)
@@ -142,14 +130,22 @@ class Transactions extends Component {
   }
 
   _onPressSearch (event) {
-    this.setState({searchVisible: true})
+    this.props.dispatch(transactionsSearchVisible)
   }
 
   _onSearchExit(event) {
-    this.setState({searchVisible: false})
+    this.props.dispatch(transactionsSearchHidden)
   }
 
   render () {
+    var renderableTransactionList = this.props.transactionsList.sort(function(a, b) {
+        a = new Date(a.date);
+        b = new Date(b.date);
+        return a>b ? -1 : a<b ? 1 : 0;
+    });
+    var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+    var dataSource =  ds.cloneWithRows(renderableTransactionList)
+
     return (
         <View style={styles.container}>
           <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.currentBalanceBox} colors={["#3b7adb","#2b569a"]}>
@@ -178,7 +174,7 @@ class Transactions extends Component {
             </View>
           </LinearGradient>
           <View style={[styles.transactionsWrap]}>
-            {this.state.searchVisible &&
+            {this.props.searchVisible &&
               <View style={[styles.searchBarView]} >
                 <FAIcon size={14} name="search" style={styles.searchBarMagnifyingGlass} />
                 <Input placeholder="Search" />
@@ -187,7 +183,7 @@ class Transactions extends Component {
                 </TouchableHighlight>
               </View>
             }
-              <ListView style={[styles.transactionsScrollWrap]} dataSource={this.state.dataSource} renderRow={this.renderTx.bind(this)} />
+              <ListView style={[styles.transactionsScrollWrap]} dataSource={dataSource} renderRow={this.renderTx.bind(this)} />
           </View>
         </View>
     )
@@ -211,8 +207,6 @@ class Transactions extends Component {
       var expenseIncomeSyntax = 'Income'
     }
 
-    console.log('tx.thumbnailPath is: ', tx.thumbnailPath)
-
     return (
       <View style={styles.singleTransactionWrap}>
       {(dateStrings[dateIterator] !== dateStrings[dateIterator - 1]) &&
@@ -222,7 +216,7 @@ class Transactions extends Component {
             </View>
             {(dateIterator === 0) && (
               <View style={styles.rightDateSearch}>
-                {!this.state.searchVisible &&
+                {!this.props.searchVisible &&
                     <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
                       <FAIcon name="search" size={16} style={styles.firstDateSearchIcon} color="#cccccc" />
                     </TouchableHighlight>
@@ -261,6 +255,8 @@ class Transactions extends Component {
 
 export default connect( state => ({
 
-  transactionsList: state.transactions.transactionsList
+  transactionsList: state.transactions.transactionsList,
+  searchVisible: state.transactions.searchVisible,
+  contactsList: state.transactions.contactsList
 
 }) )(Transactions)
