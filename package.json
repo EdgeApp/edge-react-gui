@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "android:run": "npm run android:clean; react-native run-android",
+    "android:run": "yarn run android:clean; react-native run-android",
     "lint": "standard --fix --verbose | snazzy",
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
-    "android:release-install": "npm run android:clean && npm run android:release && cd android && ./gradlew installRelease; cd ../",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
+    "android:release-install": "yarn run android:clean && yarn run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "ios:run": "react-native run-ios",
     "test": "NODE_ENV=production ava",
