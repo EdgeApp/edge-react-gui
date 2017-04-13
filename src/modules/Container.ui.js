@@ -28,7 +28,8 @@ class Main extends Component {
             <RouterWithRedux>
               <Scene key='root' hideNavBar>
                 <Scene key='directory' component={Directory} title='Directory' duration={0}/>
-                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+                <Scene key='transactions' component={Transactions} title='Transactions' duration={0}  />
+                <Scene key='send' component={Send} title='Send' duration={0} initial />
               </Scene>
             </RouterWithRedux>
           </SideMenu>
