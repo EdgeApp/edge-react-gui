@@ -35,8 +35,8 @@ const ScreenHeight = Dimensions.get('window').height
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+    padding: 5,
     bottom: 0,
-    padding: 5
   },
   exchangeRate: {
     flex: 1,
@@ -62,8 +62,6 @@ const styles = StyleSheet.create({
   },
   slider: {
     flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
   }
 })
 
@@ -77,7 +75,9 @@ class SendConfirmation extends Component {
       fiatPerCrypto: '1077.75',
       requestAddress: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
       inputCurrencySelected: 'crypto',
-      result: ''
+      result: '',
+      label: 'Amalia Miller',
+      address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
     }
   }
 
@@ -87,7 +87,7 @@ class SendConfirmation extends Component {
         style={styles.view}
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}>
-        
+
         <View style={styles.exchangeRate} >
           <ExchangeRate
             fiatPerCrypto={this.state.fiatPerCrypto} />
@@ -106,7 +106,7 @@ class SendConfirmation extends Component {
 
         <View style={styles.recipientAndPinInput}>
           <View style={{flex: 3}}>
-            <Recipient />
+            <Recipient label={this.state.label} address={this.state.address}/>
           </View>
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -119,7 +119,7 @@ class SendConfirmation extends Component {
         <View style={styles.spacer} />
 
         <View style={styles.slider}>
-          <ABSlider />
+          <ABSlider style={{flex: 1}}/>
         </View>
 
       </LinearGradient>

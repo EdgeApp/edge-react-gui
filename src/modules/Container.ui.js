@@ -34,6 +34,8 @@ class Main extends Component {
 
                 <Scene key='request' component={Request} title='Request' duration={0} />
 
+                <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
+
               </Scene>
             </RouterWithRedux>
           </SideMenu>

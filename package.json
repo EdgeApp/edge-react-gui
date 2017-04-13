@@ -57,6 +57,7 @@
     "react-native-randombytes": "^2.2.0",
     "react-native-router-flux": "^3.37.0",
     "react-native-share": "^1.0.20",
+    "react-native-slider": "^0.9.1",
     "react-native-tabs": "^1.0.9",
     "react-native-tcp": "^2.0.4",
     "react-native-udp": "^1.2.9",

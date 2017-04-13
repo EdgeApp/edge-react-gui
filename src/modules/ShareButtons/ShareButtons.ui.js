@@ -15,8 +15,6 @@ const ShareButtons = (
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
-      borderColor: 'red',
-      borderWidth: 1
     },
     shareButton: {
     }

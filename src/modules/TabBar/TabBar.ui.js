@@ -44,6 +44,11 @@ class TabBar extends Component {
                 <Text>Transactions</Text>
               </Button>
 
+              <Button onPress={ () => Actions.sendConfirmation() }>
+                <Icon name='swap' />
+                <Text>SendC</Text>
+              </Button>
+
               <Button onPress={ this._handleToggleSideBar }
                 active={ this.props.sidemenu ? true : false }>
                 <Icon name='more' />

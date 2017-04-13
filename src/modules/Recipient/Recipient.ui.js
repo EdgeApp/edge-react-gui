@@ -18,31 +18,39 @@ import { connect } from 'react-redux'
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    borderColor: 'red',
-    borderWidth: 1,
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 10
   },
   text: {
     flex: 1,
+  },
+  spacer: {
+    flex: 1
   }
 })
 
-const Recipient = ({to}) => {
-
-  isAddress = () => {
-
-  }
-
-  isBip70 = () => {
-
-  }
-
-  isLabel = () => {
-
-  }
+const Recipient = ({label, address}) => {
 
   return (
     <View style={styles.view}>
-      <Text style={styles.text}>To: Amalia Miller (1a98...4Lfw)</Text>
+      <View style={styles.spacer}></View>
+
+      <View style={styles.row}>
+        <Text>To: {label} </Text>
+        <Text
+          adjustFontToFit
+          ellipsizeMode="middle"
+          numberOfLines={1}
+          style={{
+            flex: 1
+          }}
+          >{address}</Text>
+      </View>
+
+      <View style={styles.spacer}></View>
     </View>
   )
 }
