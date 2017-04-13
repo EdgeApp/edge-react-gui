@@ -1,14 +1,15 @@
 {
-  "name": "bug_test",
+  "name": "airbitz",
   "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "android:run": "npm run android:clean; react-native run-android",
-    "lint": "standard --fix --verbose | snazzy",
+    "android:run": "yarn run android:clean; react-native run-android",
+    "lint": "standard --verbose | snazzy",
+    "lint:fix": "standard --fix --verbose | snazzy",
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
-    "android:release-install": "npm run android:clean && npm run android:release && cd android && ./gradlew installRelease; cd ../",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
+    "android:release-install": "yarn run android:clean && yarn run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "ios:run": "react-native run-ios",
     "test": "NODE_ENV=production ava",
@@ -40,6 +41,7 @@
     "react-native-animatable": "^1.1.0",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-contacts": "^0.8.1",
+    "react-native-contacts-wrapper": "^0.2.3",
     "react-native-crypto": "^2.0.1",
     "react-native-device-info": "^0.10.1",
     "react-native-drawer": "^2.3.0",
@@ -54,6 +56,7 @@
     "react-native-qrcode": "^0.2.3",
     "react-native-randombytes": "^2.2.0",
     "react-native-router-flux": "^3.37.0",
+    "react-native-share": "^1.0.20",
     "react-native-tabs": "^1.0.9",
     "react-native-tcp": "^2.0.4",
     "react-native-udp": "^1.2.9",
@@ -76,6 +79,7 @@
     "babel-preset-react-native": "^1.9.0",
     "eslint": "^3.11.1",
     "flow-bin": "^0.37.4",
+    "git-pre-hooks": "^1.2.0",
     "husky": "^0.12.0",
     "maya-kai": "^0.0.10",
     "nyc": "^10.0.0",
@@ -85,12 +89,11 @@
     "standard": "^8.6.0"
   },
   "standard": {
-    "parser": "babel-eslint",
-    "globals": [
-      "__DEV__"
-    ],
     "ignore": [
-      "src/lib/abc.webpack.js"
+      "/native-base-theme/",
+      "/src/modules_old/",
+      "/src/lib_old/",
+      "/src/lib/abc.webpack.js"
     ]
   },
   "react-native": {
@@ -142,5 +145,6 @@
     "timers": "timers-browserify",
     "tty": "tty-browserify",
     "vm": "vm-browserify"
-  }
+  },
+  "git-pre-hooks": {}
 }

@@ -1,12 +1,8 @@
 import { StyleSheet } from 'react-native'
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.flatten({
   container: {
-    borderRadius: 4,
-    borderWidth: 0.5,
-    borderColor: '#d6d7da',
-            textAlign:'center',
-
+    flex: 1
   }
 })
 

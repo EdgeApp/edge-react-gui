@@ -1,3 +1,3 @@
-import ExchangeRateWrapper from './ExchangeRateWrapper.js'
+import ExchangeRate from './ExchangeRate.ui.js'
 
-export default ExchangeRateWrapper
+export default ExchangeRate

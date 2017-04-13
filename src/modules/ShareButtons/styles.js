@@ -4,10 +4,13 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 4,
     borderWidth: 0.5,
-    borderColor: '#d6d7da',
-    flexDirection: 'row',
-    flex: 1,
-    textAlign: 'center'
+    borderColor: '#3E4EB8',
+    textAlign: 'center',
+    justifyContent: 'flex-end',
+    position: 'relative',
+    bottom: 0,
+    backgroundColor: '#eaeaea'
+
   }
 })
 

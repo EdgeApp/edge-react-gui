@@ -87,7 +87,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.bug_test"
+        applicationId "com.airbitz"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -126,6 +126,8 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-contacts-wrapper')
+    compile project(':react-native-share')
     compile project(':react-native-camera')
     compile project(':react-native-material-kit')
     compile project(':react-native-udp')
