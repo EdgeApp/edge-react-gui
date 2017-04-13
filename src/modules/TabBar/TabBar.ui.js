@@ -23,26 +23,33 @@ class TabBar extends Component {
       <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]}>
         <Footer>
             <FooterTab>
+
               <Button onPress={ () => Actions.directory() }>
                 <Icon name='home' />
                 <Text>Directory</Text>
               </Button>
-              <Button>
+
+              <Button onPress={ () => Actions.request() }>
                 <Icon name='download' />
                 <Text>Request</Text>
               </Button>
+
               <Button>
                 <Icon name='share' />
                 <Text>Scan</Text>
               </Button>
+
               <Button onPress={ () => Actions.transactions() }>
                 <Icon name='swap' />
                 <Text>Transactions</Text>
               </Button>
-              <Button onPress={ this._handleToggleSideBar } active={ this.props.sidemenu ? true : false }>
+
+              <Button onPress={ this._handleToggleSideBar }
+                active={ this.props.sidemenu ? true : false }>
                 <Icon name='more' />
                 <Text>More</Text>
               </Button>
+
             </FooterTab>
         </Footer>
       </LinearGradient>

@@ -4536,6 +4536,10 @@ react-native-animatable@^1.1.0:
   version "0.6.0"
   resolved "git+https://github.com/lwansbrough/react-native-camera.git#5c54275aec3605150fcf0e098b3eda7cc4b2001d"
 
+react-native-contacts-wrapper@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-contacts-wrapper/-/react-native-contacts-wrapper-0.2.3.tgz#5b192b4819efff64921c6388215ff7b6ef6fca78"
+
 react-native-contacts@^0.8.1:
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-0.8.1.tgz#ff1e90ab7da432763d2c5a62bd22e2157caffc70"
@@ -4659,6 +4663,10 @@ react-native-scrollable-tab-view@^0.7.1:
   resolved "https://registry.yarnpkg.com/react-native-scrollable-tab-view/-/react-native-scrollable-tab-view-0.7.3.tgz#1900615390b1735b01d18b36ff10f113c3625a79"
   dependencies:
     react-timer-mixin "^0.13.3"
+
+react-native-share@^1.0.20:
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-1.0.20.tgz#38ba820a4ddfc5afe1dec0e1456ced11f14352bc"
 
 react-native-side-menu@^0.20.1:
   version "0.20.1"

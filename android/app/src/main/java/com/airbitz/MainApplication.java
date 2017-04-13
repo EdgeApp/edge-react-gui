@@ -2,6 +2,8 @@ package com.airbitz;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.lynxit.contactswrapper.ContactsWrapperPackage;
+import cl.json.RNSharePackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.tradle.react.UdpSocketsModule;
@@ -35,6 +37,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ContactsWrapperPackage(),
+            new RNSharePackage(),
             new RCTCameraPackage(),
             new ReactMaterialKitPackage(),
             new UdpSocketsModule(),
