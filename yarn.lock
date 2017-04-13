@@ -2671,6 +2671,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+git-pre-hooks@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/git-pre-hooks/-/git-pre-hooks-1.2.0.tgz#7296704cd74423f08ab82280129df4f173944a4f"
+
 glob-base@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/glob-base/-/glob-base-0.3.0.tgz#dbb164f6221b1c0b1ccf82aea328b497df0ea3c4"
@@ -4528,6 +4532,14 @@ react-native-animatable@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.1.1.tgz#00ddc72985f62f62a11a505abb1a06e77a92cd8a"
 
+"react-native-camera@git+https://github.com/lwansbrough/react-native-camera.git":
+  version "0.6.0"
+  resolved "git+https://github.com/lwansbrough/react-native-camera.git#5c54275aec3605150fcf0e098b3eda7cc4b2001d"
+
+react-native-contacts@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/react-native-contacts/-/react-native-contacts-0.8.1.tgz#ff1e90ab7da432763d2c5a62bd22e2157caffc70"
+
 react-native-crypto@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-native-crypto/-/react-native-crypto-2.0.1.tgz#1acd2c0ca287a60a952c0a7d4768682f1bad1d09"
@@ -4908,7 +4920,7 @@ redux-immutable-state-invariant@^1.2.4:
     invariant "^2.1.0"
     json-stringify-safe "^5.0.1"
 
-redux-logger@^2.7.4:
+redux-logger@^2.10.2:
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-2.10.2.tgz#3c5a5f0a6f32577c1deadf6655f257f82c6c3937"
   dependencies:
