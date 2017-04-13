@@ -1,7 +1,7 @@
-rootProject.name = 'bug_test'
+rootProject.name = 'airbitz'
 include ':react-native-camera'
 project(':react-native-camera').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-camera/android')
-rootProject.name = 'airbitz_ui'
+rootProject.name = 'airbitz'
 include ':react-native-material-kit'
 project(':react-native-material-kit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-material-kit/android')
 include ':react-native-udp'

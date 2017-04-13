@@ -19,4 +19,4 @@ export default class App extends Component {
 
 }
 
-AppRegistry.registerComponent('bug_test', () => App)
+AppRegistry.registerComponent('airbitz', () => App)

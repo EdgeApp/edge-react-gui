@@ -1,4 +1,4 @@
-package com.bug_test;
+package com.airbitz;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;

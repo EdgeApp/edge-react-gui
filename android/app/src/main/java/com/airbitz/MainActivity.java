@@ -1,4 +1,4 @@
-package com.bug_test;
+package com.airbitz;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "bug_test";
+        return "airbitz";
     }
 }
