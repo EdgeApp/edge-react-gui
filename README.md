@@ -62,3 +62,4 @@ But you can also run this with zsh (put it in .zshprofile instead)
 - Be aware that the Android build uses multiple versions of the Android SDK, so if you are getting errors related to missing Android SDK versions, that you may need to download and install them (through Android Studio, Homebrew, etc)
 - If you are using GenyMotion and Android Studio, make sure that the SDK path that GenyMotion is pointing to is the same one that your Android Studio is pointing to.
 - The build process may throw an "Error Type 3" message, but that does not necessarily mean that the build has failed.
+- If you can teh following error: `xcrun: error: unable to find utility "instruments", not a developer tool or in PATH` then set your xCode CLI version by going to **Preferences->Locations** within xCode.
