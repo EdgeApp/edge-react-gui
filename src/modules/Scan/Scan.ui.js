@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import styles from './Scan.style'
+import {toggleEnableTorch} from './Scan.action'
 
 class Scan extends Component {
   constructor (props) {
@@ -10,11 +11,11 @@ class Scan extends Component {
   }
 
   _onToggleTorch() {
-    console.log('toggling torch')
+    this.props.dispatch(toggleEnableTorch())
   }
 
   onBarCodeRead () {
-    console.log('in send->onBarCodeRead')
+
   }
 
   render () {
