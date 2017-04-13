@@ -2,16 +2,16 @@ import React, {  Component } from 'react'
 import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
-import styles from './Send.style'
+import styles from './Scan.style'
 
-class Send extends Component {
+class Scan extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      value: 0
-    }
   }
 
+  _onToggleTorch() {
+    console.log('toggling torch')
+  }
 
   onBarCodeRead () {
     console.log('in send->onBarCodeRead')
@@ -49,4 +49,6 @@ class Send extends Component {
   }
 }
 
-export default connect()(Send)
+export default connect(
+
+)(Scan)

@@ -172,9 +172,9 @@ class Transactions extends Component {
                   <Text style={[styles.request]}>Request</Text>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={() => Actions.send()} style={styles.sendBox}>
+              <TouchableHighlight onPress={() => Actions.scan()} style={styles.sendBox}>
                 <View style={styles.sendWrap}>
-                  <FAIcon name="upload" style={styles.sendIcon} color="#ffffff" size={24} onPress={() => Actions.send()} />
+                  <FAIcon name="upload" style={styles.sendIcon} color="#ffffff" size={24} onPress={() => Actions.scan()} />
                   <Text style={styles.send}>Send</Text>
                 </View>
               </TouchableHighlight>

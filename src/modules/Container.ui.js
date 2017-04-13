@@ -12,7 +12,7 @@ import TabBar from './TabBar/TabBar.ui'
 import Transactions from './Transactions/Transactions.ui'
 import Directory from './Directory/Directory.ui'
 import Request from './Request/index.js'
-import Send from './Send/Send.ui.js'
+import Scan from './Scan/Scan.ui.js'
 
 
 const RouterWithRedux = connect()(Router)
@@ -29,7 +29,7 @@ class Main extends Component {
               <Scene key='root' hideNavBar>
                 <Scene key='directory' component={Directory} title='Directory' duration={0}/>
                 <Scene key='transactions' component={Transactions} title='Transactions' duration={0}  />
-                <Scene key='send' component={Send} title='Send' duration={0} initial />
+                <Scene key='scan' component={Scan} title='Scan' duration={0} initial />
               </Scene>
             </RouterWithRedux>
           </SideMenu>
