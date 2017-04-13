@@ -34,7 +34,7 @@ class Scan extends Component {
               <TouchableHighlight style={[styles.transferButtonWrap]}><Text style={styles.transferButtonText}>Transfer</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.addressButtonWrap]}><Text style={styles.addressButtonText}>Address</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.photosButtonWrap]}><Text style={styles.photosButtonText}>Photos</Text></TouchableHighlight>
-              <TouchableHighlight style={[styles.flashButtonWrap]} activeOpacity={0.5} underlayColor={'#aaaaaa'}><Text style={styles.flashButtonText}>Flash</Text></TouchableHighlight>
+              <TouchableHighlight style={[styles.flashButtonWrap]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.5} underlayColor={'#aaaaaa'}><Text style={styles.flashButtonText}>Flash</Text></TouchableHighlight>
           </View>
         </View>
       </View>
@@ -49,6 +49,7 @@ class Scan extends Component {
   }
 }
 
-export default connect(
-
+export default connect( state => ({
+  torchEnabled: state.scan.torchEnabled
+  })
 )(Scan)
