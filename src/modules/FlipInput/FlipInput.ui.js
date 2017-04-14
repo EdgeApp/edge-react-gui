@@ -15,7 +15,9 @@ const FlipInput = ({
   inputCurrencySelected,
   feesInFiat,
   feesInCrypto,
+  maxMode,
   displayFees}) => {
+
   const fiatPlaceholder = 'FIAT - 0.00'
   const cryptoPlaceholder = 'CRYPTO - 0.00'
 
@@ -33,6 +35,10 @@ const FlipInput = ({
     return amountRequestedInCrypto.toString()
   }
 
+  const textColor = maxMode ?
+    'red' :
+    'black'
+
   const styles = StyleSheet.create({
     view: {
       flex: 1,
@@ -42,14 +48,14 @@ const FlipInput = ({
       flex: 3,
       textAlign: 'center',
       fontSize: 30,
-      color: 'grey',
+      color: textColor,
       padding: 0
     },
     secondaryTextInput: {
       flex: 3,
       textAlign: 'center',
       padding: 0,
-      color: 'grey',
+      color: textColor,
       backgroundColor: 'transparent'
     },
     topRow: {

@@ -38,8 +38,9 @@ const styles = StyleSheet.create({
     padding: 5,
     bottom: 0,
   },
-  exchangeRate: {
+  exchangeRateAndMax: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -75,9 +76,9 @@ class SendConfirmation extends Component {
       fiatPerCrypto: '1077.75',
       requestAddress: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
       inputCurrencySelected: 'crypto',
-      result: '',
       label: 'Amalia Miller',
-      address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX'
+      address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
+      maxMode: false
     }
   }
 
@@ -88,20 +89,32 @@ class SendConfirmation extends Component {
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}>
 
-        <View style={styles.exchangeRate} >
-          <ExchangeRate
-            fiatPerCrypto={this.state.fiatPerCrypto} />
+        <View style={styles.exchangeRateAndMax} >
+          <View style={{flex: 1}}></View>
+
+          <View style={{flex: 3}}>
+            <ExchangeRate
+              style={{flex: 1}}
+              fiatPerCrypto={this.state.fiatPerCrypto} />
+          </View>
+
+          <View style={{flex: 1}}>
+            <MaxButton style={{flex: 1}}
+              onMaxPress={this.onMaxPress}/>
+          </View>
+
         </View>
 
         <View style={styles.flipInput}>
           <FlipInput
-          onInputCurrencyToggle={this.onInputCurrencyToggle}
-          onCryptoInputChange={this.onCryptoInputChange}
-          onFiatInputChange={this.onFiatInputChange}
-          amountRequestedInCrypto={this.state.amountRequestedInCrypto}
-          amountRequestedInFiat={this.state.amountRequestedInFiat}
-          inputCurrencySelected={this.state.inputCurrencySelected}
-          displayFees />
+            onInputCurrencyToggle={this.onInputCurrencyToggle}
+            onCryptoInputChange={this.onCryptoInputChange}
+            onFiatInputChange={this.onFiatInputChange}
+            amountRequestedInCrypto={this.state.amountRequestedInCrypto}
+            amountRequestedInFiat={this.state.amountRequestedInFiat}
+            inputCurrencySelected={this.state.inputCurrencySelected}
+            maxMode={this.state.maxMode}
+            displayFees />
         </View>
 
         <View style={styles.recipientAndPinInput}>
@@ -109,11 +122,9 @@ class SendConfirmation extends Component {
             <Recipient label={this.state.label} address={this.state.address}/>
           </View>
 
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{flex: 1}}>
             <PinInput />
           </View>
-        </TouchableWithoutFeedback>
         </View>
 
         <View style={styles.spacer} />
@@ -124,6 +135,16 @@ class SendConfirmation extends Component {
 
       </LinearGradient>
     )
+  }
+
+  onMaxPress = () => {
+    const newMaxMode = (this.state.maxMode === true) ?
+      false :
+      true
+
+    this.setState({
+      maxMode: newMaxMode
+    })
   }
 
   onInputCurrencyToggle = () => {
