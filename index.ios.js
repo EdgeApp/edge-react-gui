@@ -23,5 +23,6 @@
 // }
 import App from './src/app.js'
 
-import MK from 'maya-kai'
-MK.start()
+// uncomment to enable device mirroring
+// import MK from 'maya-kai'
+// MK.start()

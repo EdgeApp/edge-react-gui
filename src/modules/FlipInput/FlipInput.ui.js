@@ -5,6 +5,7 @@ import styles from './styles.js'
 import { Form, Input } from 'native-base'
 import { devStyle } from '../utils.js'
 import { Icon } from 'native-base'
+import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 const FlipInput = ({
   onFiatInputChange,
@@ -15,8 +16,9 @@ const FlipInput = ({
   inputCurrencySelected,
   feesInFiat,
   feesInCrypto,
-  maxMode,
-  displayFees}) => {
+  displayFees,
+  maxAvailableToSpendInCrypto
+}) => {
 
   const fiatPlaceholder = 'FIAT - 0.00'
   const cryptoPlaceholder = 'CRYPTO - 0.00'
@@ -35,9 +37,14 @@ const FlipInput = ({
     return amountRequestedInCrypto.toString()
   }
 
-  const textColor = maxMode ?
-    'red' :
-    'black'
+  getTextColor = () => {
+    const textColor =
+      amountRequestedInCrypto >= maxAvailableToSpendInCrypto ?
+      'red' :
+      'black'
+
+    return textColor
+  }
 
   const styles = StyleSheet.create({
     view: {
@@ -48,14 +55,14 @@ const FlipInput = ({
       flex: 3,
       textAlign: 'center',
       fontSize: 30,
-      color: textColor,
+      color: getTextColor(),
       padding: 0
     },
     secondaryTextInput: {
       flex: 3,
       textAlign: 'center',
       padding: 0,
-      color: textColor,
+      color: getTextColor(),
       backgroundColor: 'transparent'
     },
     topRow: {
@@ -167,7 +174,7 @@ const FlipInput = ({
 
         <View style={styles.iconContainer}>
           <View style={styles.verticalSpacer} />
-          <Icon name='expand' style={styles.icon}
+          <FAIcon name='swap-vert' size={36} style={styles.icon}
             onPress={onInputCurrencyToggle} />
           <View style={styles.verticalSpacer} />
         </View>

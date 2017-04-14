@@ -78,7 +78,7 @@ class SendConfirmation extends Component {
       inputCurrencySelected: 'crypto',
       label: 'Amalia Miller',
       address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
-      maxMode: false
+      maxAvailableToSpendInCrypto: 123
     }
   }
 
@@ -113,7 +113,7 @@ class SendConfirmation extends Component {
             amountRequestedInCrypto={this.state.amountRequestedInCrypto}
             amountRequestedInFiat={this.state.amountRequestedInFiat}
             inputCurrencySelected={this.state.inputCurrencySelected}
-            maxMode={this.state.maxMode}
+            maxAvailableToSpendInCrypto={this.state.maxAvailableToSpendInCrypto}
             displayFees />
         </View>
 
@@ -138,12 +138,14 @@ class SendConfirmation extends Component {
   }
 
   onMaxPress = () => {
-    const newMaxMode = (this.state.maxMode === true) ?
-      false :
-      true
+    const {
+      maxAvailableToSpendInCrypto,
+      fiatPerCrypto
+     } = this.state
 
     this.setState({
-      maxMode: newMaxMode
+      amountRequestedInCrypto: maxAvailableToSpendInCrypto,
+      amountRequestedInFiat: getFiatFromCrypto(maxAvailableToSpendInCrypto, fiatPerCrypto)
     })
   }
 
