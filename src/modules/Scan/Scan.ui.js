@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import styles from './Scan.style'
 import {toggleEnableTorch} from './Scan.action'
+import ImagePicker from 'react-native-image-picker'
 
 class Scan extends Component {
   constructor (props) {
@@ -18,6 +19,32 @@ class Scan extends Component {
 
   }
 
+  selectPhotoTapped() {
+    const options = { takePhotoButtonTitle: null }
+
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response)
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker')
+      }
+      else if (response.error) {
+        console.log('ImagePicker Error: ', response.error)
+      }
+      else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton)
+      }
+      else {
+        let source = { uri: response.uri }
+        //this.refs.cameraCapture.capture({})
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        console.log('response is: ', response)
+      }
+    });
+  }
+
   render () {
     return (
       <View style={styles.container}>
@@ -25,6 +52,7 @@ class Scan extends Component {
           style={styles.preview}
           barCodeTypes={["qr"]}
           onBarCodeRead={this.onBarCodeRead}
+          ref="cameraCapture"
         />
         <View style={[styles.overlay]}>
           <View style={[styles.overlayTop]}>
@@ -34,7 +62,7 @@ class Scan extends Component {
           <View style={[styles.overlayButtonAreaWrap]}>
               <TouchableHighlight style={[styles.transferButtonWrap]}><Text style={styles.transferButtonText}>Transfer</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.addressButtonWrap]}><Text style={styles.addressButtonText}>Address</Text></TouchableHighlight>
-              <TouchableHighlight style={[styles.photosButtonWrap]}><Text style={styles.photosButtonText}>Photos</Text></TouchableHighlight>
+              <TouchableHighlight style={[styles.photosButtonWrap]} onPress={this.selectPhotoTapped.bind(this)}><Text style={{color: 'white'}}>Photos</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.flashButtonWrap]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.5} underlayColor={'#aaaaaa'}><Text style={styles.flashButtonText}>Flash</Text></TouchableHighlight>
           </View>
         </View>

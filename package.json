@@ -48,6 +48,7 @@
     "react-native-elements": "^0.10.0",
     "react-native-fs": "^2.1.0-rc.1",
     "react-native-http": "github:tradle/react-native-http#834492d",
+    "react-native-image-picker": "^0.24.1",
     "react-native-level-fs": "^3.0.0",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-material-kit": "^0.4.1",

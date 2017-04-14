@@ -5,6 +5,7 @@ import com.facebook.react.ReactApplication;
 import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import cl.json.RNSharePackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
@@ -19,7 +20,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 
 import java.util.Arrays;
@@ -39,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new ContactsWrapperPackage(),
             new RNSharePackage(),
+            new ImagePickerPackage(),
             new RCTCameraPackage(),
             new ReactMaterialKitPackage(),
             new UdpSocketsModule(),

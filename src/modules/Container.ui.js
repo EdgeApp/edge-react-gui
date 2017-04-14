@@ -13,7 +13,7 @@ import Transactions from './Transactions/Transactions.ui'
 import Directory from './Directory/Directory.ui'
 import Request from './Request/index.js'
 import SendConfirmation from './SendConfirmation/index.js'
-import Send from './Send/Send.ui.js'
+import Scan from './Scan/Scan.ui.js'
 
 const RouterWithRedux = connect()(Router)
 
