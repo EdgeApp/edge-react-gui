@@ -25,7 +25,8 @@ class ABSlider extends Component {
     super(props)
 
     this.state = {
-      value: 10
+      value: 10,
+      sliderDisabled: props.sliderDisabled
     }
   }
 
@@ -53,6 +54,7 @@ class ABSlider extends Component {
   render() {
     return (
       <Slider
+        disabled={this.props.sliderDisabled}
         onValueChange={this.onValueChange}
         onSlidingComplete={this.onSlidingComplete}
         minimumValue={0}

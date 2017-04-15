@@ -10,7 +10,8 @@ import {
   Text,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Button
 } from 'react-native'
 import { connect } from 'react-redux'
 // import styles from './styles.js'
@@ -78,7 +79,10 @@ class SendConfirmation extends Component {
       inputCurrencySelected: 'crypto',
       label: 'Amalia Miller',
       address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
-      maxAvailableToSpendInCrypto: 123
+      maxAvailableToSpendInCrypto: 123,
+      pinEnabled: true,
+      pin: 1234,
+      sliderDisabled: true
     }
   }
 
@@ -123,18 +127,39 @@ class SendConfirmation extends Component {
           </View>
 
           <View style={{flex: 1}}>
-            <PinInput />
+            <PinInput onPinChange={this.onPinChange} />
           </View>
         </View>
 
         <View style={styles.spacer} />
 
         <View style={styles.slider}>
-          <ABSlider style={{flex: 1}}/>
+          <ABSlider
+            text={this.state.text}
+            sliderDisabled={this.state.sliderDisabled}/>
         </View>
 
       </LinearGradient>
     )
+  }
+
+  isPinCorrect = (pin) => {
+    const isCorrectPin = (pin === this.state.pin)
+    console.log('Correct PIN')
+
+    return isCorrectPin
+  }
+
+  onPinChange = (pin) => {
+    console.log('pin: ' + pin)
+    if (pin.length >= 4 && this.isPinCorrect(parseInt(pin))) {
+      console.log("Slider Enabled")
+      Keyboard.dismiss()
+
+      this.setState({
+        sliderDisabled: false
+      })
+    }
   }
 
   onMaxPress = () => {
@@ -197,47 +222,3 @@ class SendConfirmation extends Component {
 }
 
 export default connect()(SendConfirmation)
-
-
-// {/* <MaxButton onPressMax={this.onPressMax}/> */}
-{/* <View style={styles.view}>
-  <LinearGradient
-    start={{x:0,y:0}} end={{x:1, y:0}}
-    style={{flex: 1,padding: 10}}
-    colors={["#3b7adb", "#2b569a"]}>
-
-      <ExchangeRate
-        fiatPerCrypto={this.state.fiatPerCrypto}
-        style={styles.exchangeRate} />
-
-      <View style={{
-        flex: 2
-      }}>
-      <FlipInput
-        onInputCurrencyToggle={this.onInputCurrencyToggle}
-        style={styles.flipInput}
-        onCryptoInputChange={this.onCryptoInputChange}
-        onFiatInputChange={this.onFiatInputChange}
-        amountRequestedInCrypto={this.state.amountRequestedInCrypto}
-        amountRequestedInFiat={this.state.amountRequestedInFiat}
-        inputCurrencySelected={this.state.inputCurrencySelected} />
-      </View>
-
-      <View style={styles.row}>
-        <Recipient
-          to={this.getRecipient()}
-          style={{flex: 3}} />
-        <PinInput
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }} />
-      </View>
-
-    <View style={styles.spacer}></View>
-
-  <ABSlider style={styles.slider} />
-
-  </LinearGradient>
-</View> */}
