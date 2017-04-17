@@ -38,32 +38,38 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     bottom: 0,
+    backgroundColor: 'transparent'
   },
   exchangeRateAndMax: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   flipInput: {
     flex: 4,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   spacer: {
     flex: 6,
     padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   recipientAndPinInput: {
     flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   slider: {
     flex: 2,
+    backgroundColor: 'transparent',
   }
 })
 
