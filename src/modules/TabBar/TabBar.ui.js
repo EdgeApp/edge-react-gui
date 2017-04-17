@@ -34,9 +34,9 @@ class TabBar extends Component {
                 <Text>Request</Text>
               </Button>
 
-              <Button>
+              <Button onPress={ () => Actions.send() }>
                 <Icon name='share' />
-                <Text>Scan</Text>
+                <Text>Send</Text>
               </Button>
 
               <Button onPress={ () => Actions.transactions() }>

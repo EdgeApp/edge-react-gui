@@ -36,7 +36,7 @@ class ControlPanel extends Component {
             <Icon style={styles.user.icon} name='arrow-dropdown' />
           </View>
           <View style={styles.main.container}>
-            <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
+            {/* <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
               <View style={styles.main.link}>
                 <Icon style={styles.main.icon} name='repeat' />
                 <Text style={styles.main.text}>BUY/SELL BITCOINS</Text>
@@ -53,7 +53,7 @@ class ControlPanel extends Component {
                 <Icon style={styles.main.icon} name='arrow-round-up' />
                 <Text style={styles.main.text}>REFER YOUR FRIENDS (Earn Bitcoin)</Text>
               </View>
-            </TouchableNativeFeedback>
+            </TouchableNativeFeedback> */}
           </View>
 
           <View style={styles.others.container}>
