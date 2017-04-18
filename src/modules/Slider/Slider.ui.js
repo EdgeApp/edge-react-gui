@@ -1,33 +1,33 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, AlertIOS, Slider } from 'react-native'
+import { Text, View, StyleSheet, AlertIOS } from 'react-native'
 import { connect } from 'react-redux'
 // import styles from './styles.js'
 import { Container, Content } from 'native-base'
+var Slider = require('react-native-slider')
 
 const styles = StyleSheet.create({
-  view: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-  },
   slider: {
     flex: 1,
-    backgroundColor: 'blue',
-    height: 50
+    margin: 10,
+    backgroundColor: '#355ea0',
+  },
+  track: {
+    backgroundColor: '#355ea0',
   },
   thumb: {
-    width: 300,
-    height: 300,
-    borderRadius: 5,
+    width: 50,
+    height: 100,
+    backgroundColor: 'white',
   }
-})
+});
 
 class ABSlider extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      value: 10
+      value: 10,
+      sliderDisabled: props.sliderDisabled
     }
   }
 
@@ -52,27 +52,21 @@ class ABSlider extends Component {
     console.log("Value: " + this.state.value)
   };
 
-  render () {
-    console.log('rendering the slider')
-    console.log('this.state.value: ' + this.state.value)
-
+  render() {
     return (
-      <View style={styles.view}>
-        <Slider
-          onValueChange={this.onValueChange}
-          style={styles.slider}
-          animateTransitions
-          thumbTintColor={'red'}
-          animationType={'spring'}
-          minimumValue={0}
-          minimumTrackTintColor={'red'}
-          maximumValue={10}
-          maximumTrackTintColor={'red'}
-          thumbTintColor={'red'}
-          onSlidingComplete={this.onSlidingComplete}
-          value={this.state.value}
-        />
-      </View>
+      <Slider
+        disabled={this.props.sliderDisabled}
+        onValueChange={this.onValueChange}
+        onSlidingComplete={this.onSlidingComplete}
+        minimumValue={0}
+        maximumValue={10}
+        value={this.state.value}
+        style={styles.slider}
+        trackStyle={styles.track}
+        thumbStyle={styles.thumb}
+        minimumTrackTintColor='transparent'
+        maximumTrackTintColor='transparent'
+      />
     )
   }
 }

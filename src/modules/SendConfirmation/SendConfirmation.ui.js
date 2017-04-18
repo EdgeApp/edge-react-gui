@@ -10,7 +10,8 @@ import {
   Text,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Button
 } from 'react-native'
 import { connect } from 'react-redux'
 // import styles from './styles.js'
@@ -35,35 +36,40 @@ const ScreenHeight = Dimensions.get('window').height
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+    padding: 5,
     bottom: 0,
-    padding: 5
+    backgroundColor: 'transparent'
   },
-  exchangeRate: {
+  exchangeRateAndMax: {
     flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   flipInput: {
     flex: 4,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   spacer: {
     flex: 6,
     padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   recipientAndPinInput: {
     flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent'
   },
   slider: {
     flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: 'transparent',
   }
 })
 
@@ -77,7 +83,12 @@ class SendConfirmation extends Component {
       fiatPerCrypto: '1077.75',
       requestAddress: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
       inputCurrencySelected: 'crypto',
-      result: ''
+      label: 'Amalia Miller',
+      address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
+      maxAvailableToSpendInCrypto: 123,
+      pinEnabled: true,
+      pin: 1234,
+      sliderDisabled: true
     }
   }
 
@@ -87,43 +98,86 @@ class SendConfirmation extends Component {
         style={styles.view}
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}>
-        
-        <View style={styles.exchangeRate} >
-          <ExchangeRate
-            fiatPerCrypto={this.state.fiatPerCrypto} />
+
+        <View style={styles.exchangeRateAndMax} >
+          <View style={{flex: 1}}></View>
+
+          <View style={{flex: 3}}>
+            <ExchangeRate
+              style={{flex: 1}}
+              fiatPerCrypto={this.state.fiatPerCrypto} />
+          </View>
+
+          <View style={{flex: 1}}>
+            <MaxButton style={{flex: 1}}
+              onMaxPress={this.onMaxPress}/>
+          </View>
+
         </View>
 
         <View style={styles.flipInput}>
           <FlipInput
-          onInputCurrencyToggle={this.onInputCurrencyToggle}
-          onCryptoInputChange={this.onCryptoInputChange}
-          onFiatInputChange={this.onFiatInputChange}
-          amountRequestedInCrypto={this.state.amountRequestedInCrypto}
-          amountRequestedInFiat={this.state.amountRequestedInFiat}
-          inputCurrencySelected={this.state.inputCurrencySelected}
-          displayFees />
+            onInputCurrencyToggle={this.onInputCurrencyToggle}
+            onCryptoInputChange={this.onCryptoInputChange}
+            onFiatInputChange={this.onFiatInputChange}
+            amountRequestedInCrypto={this.state.amountRequestedInCrypto}
+            amountRequestedInFiat={this.state.amountRequestedInFiat}
+            inputCurrencySelected={this.state.inputCurrencySelected}
+            maxAvailableToSpendInCrypto={this.state.maxAvailableToSpendInCrypto}
+            displayFees />
         </View>
 
         <View style={styles.recipientAndPinInput}>
           <View style={{flex: 3}}>
-            <Recipient />
+            <Recipient label={this.state.label} address={this.state.address}/>
           </View>
 
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={{flex: 1}}>
-            <PinInput />
+            <PinInput onPinChange={this.onPinChange} />
           </View>
-        </TouchableWithoutFeedback>
         </View>
 
         <View style={styles.spacer} />
 
         <View style={styles.slider}>
-          <ABSlider />
+          <ABSlider
+            text={this.state.text}
+            sliderDisabled={this.state.sliderDisabled}/>
         </View>
 
       </LinearGradient>
     )
+  }
+
+  isPinCorrect = (pin) => {
+    const isCorrectPin = (pin === this.state.pin)
+    console.log('Correct PIN')
+
+    return isCorrectPin
+  }
+
+  onPinChange = (pin) => {
+    console.log('pin: ' + pin)
+    if (pin.length >= 4 && this.isPinCorrect(parseInt(pin))) {
+      console.log("Slider Enabled")
+      Keyboard.dismiss()
+
+      this.setState({
+        sliderDisabled: false
+      })
+    }
+  }
+
+  onMaxPress = () => {
+    const {
+      maxAvailableToSpendInCrypto,
+      fiatPerCrypto
+     } = this.state
+
+    this.setState({
+      amountRequestedInCrypto: maxAvailableToSpendInCrypto,
+      amountRequestedInFiat: getFiatFromCrypto(maxAvailableToSpendInCrypto, fiatPerCrypto)
+    })
   }
 
   onInputCurrencyToggle = () => {
@@ -174,47 +228,3 @@ class SendConfirmation extends Component {
 }
 
 export default connect()(SendConfirmation)
-
-
-// {/* <MaxButton onPressMax={this.onPressMax}/> */}
-{/* <View style={styles.view}>
-  <LinearGradient
-    start={{x:0,y:0}} end={{x:1, y:0}}
-    style={{flex: 1,padding: 10}}
-    colors={["#3b7adb", "#2b569a"]}>
-
-      <ExchangeRate
-        fiatPerCrypto={this.state.fiatPerCrypto}
-        style={styles.exchangeRate} />
-
-      <View style={{
-        flex: 2
-      }}>
-      <FlipInput
-        onInputCurrencyToggle={this.onInputCurrencyToggle}
-        style={styles.flipInput}
-        onCryptoInputChange={this.onCryptoInputChange}
-        onFiatInputChange={this.onFiatInputChange}
-        amountRequestedInCrypto={this.state.amountRequestedInCrypto}
-        amountRequestedInFiat={this.state.amountRequestedInFiat}
-        inputCurrencySelected={this.state.inputCurrencySelected} />
-      </View>
-
-      <View style={styles.row}>
-        <Recipient
-          to={this.getRecipient()}
-          style={{flex: 3}} />
-        <PinInput
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center'
-        }} />
-      </View>
-
-    <View style={styles.spacer}></View>
-
-  <ABSlider style={styles.slider} />
-
-  </LinearGradient>
-</View> */}

@@ -9,10 +9,10 @@ import {
 import { connect } from 'react-redux'
 // import styles from './styles.js'
 
-const MaxButton = ({onPressMax}) => {
+const MaxButton = ({onMaxPress}) => {
 
     return <Button
-      onPress={onPressMax}
+      onPress={onMaxPress}
       title="Max"
       style={{flex: 1}}
     />

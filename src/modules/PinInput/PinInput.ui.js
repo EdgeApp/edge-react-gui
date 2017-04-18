@@ -24,18 +24,7 @@ const styles = StyleSheet.create({
   },
 })
 
-const PinInput = () => {
-
-  const submitIfDone = (pin) => {
-    if(isFullPin(pin)) {
-      Keyboard.dismiss()
-      alert('PIN SUBMIT')
-    }
-  }
-
-  const isFullPin = (pin) => {
-    return pin.length >= 4
-  }
+const PinInput = ({onPinChange}) => {
 
   return (
     <View style={styles.view}>
@@ -45,7 +34,7 @@ const PinInput = () => {
         secureTextEntry
         maxLength={4}
         placeholder={'PIN'}
-        onChangeText={submitIfDone}/>
+        onChangeText={onPinChange}/>
     </View>
   )
 }

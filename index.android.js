@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import App from './src/app'
 
-import MK from 'maya-kai'
-MK.start()
+// uncomment to enable device mirroring
+// import MK from 'maya-kai'
+// MK.start()

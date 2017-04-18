@@ -34,14 +34,19 @@ class TabBar extends Component {
                 <Text>Request</Text>
               </Button>
 
-              <Button>
+              <Button onPress={ () => Actions.send() }>
                 <Icon name='share' />
-                <Text>Scan</Text>
+                <Text>Send</Text>
               </Button>
 
               <Button onPress={ () => Actions.transactions() }>
                 <Icon name='swap' />
                 <Text>Transactions</Text>
+              </Button>
+
+              <Button onPress={ () => Actions.sendConfirmation() }>
+                <Icon name='swap' />
+                <Text>SendC</Text>
               </Button>
 
               <Button onPress={ this._handleToggleSideBar }

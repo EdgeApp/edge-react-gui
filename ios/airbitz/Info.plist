@@ -29,6 +29,7 @@
     <key>UIRequiredDeviceCapabilities</key>
     <array>
       <string>armv7</string>
+      <string/>
     </array>
     <key>UISupportedInterfaceOrientations</key>
     <array>
@@ -38,8 +39,12 @@
     </array>
     <key>UIViewControllerBasedStatusBarAppearance</key>
     <false/>
+    <key>NSContactsUsageDescription</key>
+    <string>Airbitz uses your contacts to add useful information to your transactions.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string/>
+    <key>NSCameraUsageDescription</key>
+    <string>Airbitz uses your camera to scan QR Codes</string>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSExceptionDomains</key>
@@ -87,16 +92,8 @@
       <string>Skia.ttf</string>
       <string>Times New Roman.ttf</string>
       <string>Zocial.ttf</string>
-      <string>Entypo.ttf</string>
-      <string>EvilIcons.ttf</string>
-      <string>FontAwesome.ttf</string>
-      <string>Foundation.ttf</string>
-      <string>Ionicons.ttf</string>
       <string>MaterialCommunityIcons.ttf</string>
-      <string>MaterialIcons.ttf</string>
-      <string>Octicons.ttf</string>
       <string>SimpleLineIcons.ttf</string>
-      <string>Zocial.ttf</string>
     </array>
   </dict>
 </plist>
