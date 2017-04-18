@@ -21,7 +21,7 @@ class Scan extends Component {
   }
 
   onBarCodeRead () {
-
+    console.log('onBarCodeRead executing')
   }
 
   selectPhotoTapped() {
@@ -91,9 +91,9 @@ class Scan extends Component {
         </Modal>*/
 
         <Modal isVisible={this.props.addressModalVisible}>
-          <View style={{ flex: 1 , alignItems: 'center'}}>
+          <View style={{ flex: 1 , alignItems: 'center', borderColor: 'yellow', borderWidth: 2}}>
             <View style={[styles.modalOverlay, this.border('green')]}>
-              <View style={[styles.modalBox, this.border('purple')]}>
+              <View style={[styles.modalBox]}>
                 <View style={[styles.modalTopTextWrap]}>
                   <Text style={styles.modalTopText}>Send to Bitcoin Address or Import Private Key:</Text>
                 </View>
@@ -103,8 +103,17 @@ class Scan extends Component {
                   </View>
                 </View>
                 <View style={[styles.modalBottom]}>
-                  <View></View>
-                  <View></View>
+                  <View style={[styles.emptyBottom]}>
+
+                  </View>
+                  <View style={[styles.buttonsWrap]}>
+                    <View style={[styles.cancelButtonWrap]}>
+                      <Text style={styles.cancelButton}>CANCEL</Text>
+                    </View>
+                    <View style={[styles.doneButtonWrap]}>
+                      <Text style={styles.doneButton}>DONE</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>

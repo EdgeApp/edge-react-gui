@@ -84,24 +84,24 @@ module.exports = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
+    padding: 10
   },
   modalBox: {
-    borderRadius: 5,
+    top: Dimensions.get('window').height /5,
+    borderRadius: 3,
     alignItems: 'stretch',
-    height: (Dimensions.get('window').height) / 3,
+    height: (Dimensions.get('window').height) / 4,
     backgroundColor: 'white',
     padding: 15,
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
   modalTopTextWrap: {
-    flex: 2
+    flex: 1
   },
   modalTopText: {
     textAlign: 'center',
-    color: 'blue',
+    color: '#3c76cd',
     fontWeight: '500'
   },
   modalMiddle: {
@@ -123,9 +123,34 @@ module.exports = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     alignItems: 'center'
-
   },
   modalBottom: {
-    flex: 2
+    flex: 1,
+    flexDirection: 'row'
+  },
+  emptyBottom: {
+    flex: 1
+  },
+  buttonsWrap: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  cancelButtonWrap: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
+  },
+  cancelButton: {
+    fontSize: 12,
+    color: '#3c76cd'
+  },
+  doneButtonWrap: {
+    flex: 1,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
+  },
+  doneButton: {
+    fontSize: 12,
+    color: '#3c76cd'
   }
 })
