@@ -67,7 +67,6 @@
     "readable-stream": "1.0.33",
     "redux": "^3.6.0",
     "redux-immutable-state-invariant": "^1.2.4",
-    "redux-logger": "^2.10.2",
     "redux-thunk": "^2.1.0",
     "stream-browserify": "^1.0.0",
     "timers-browserify": "^1.4.2",
