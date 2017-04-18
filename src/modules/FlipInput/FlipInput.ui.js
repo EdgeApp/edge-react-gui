@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import { Text, TextInput, View, StyleSheet} from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { Form, Input } from 'native-base'
 import { devStyle } from '../utils.js'
-import { Icon } from 'native-base'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
 const FlipInput = ({
+  mode,
   onFiatInputChange,
   onCryptoInputChange,
   amountRequestedInCrypto,
@@ -19,9 +18,6 @@ const FlipInput = ({
   displayFees,
   maxAvailableToSpendInCrypto
 }) => {
-
-  const fiatPlaceholder = 'FIAT - 0.00'
-  const cryptoPlaceholder = 'CRYPTO - 0.00'
 
   const getAmountToDisplayInFiat = () => {
     if ([0, '', undefined, null].includes(amountRequestedInFiat)) {
@@ -38,77 +34,24 @@ const FlipInput = ({
   }
 
   getTextColor = () => {
-    const textColor =
-      amountRequestedInCrypto >= maxAvailableToSpendInCrypto ?
-      'red' :
-      'black'
+    let textColor
+
+    if ( mode === 'over' ) {
+      textColor = 'red'
+    } else if ( mode === 'max' ) {
+      textColor = 'orange'
+    } else {
+      textColor = 'white'
+    }
 
     return textColor
   }
-
-  const styles = StyleSheet.create({
-    view: {
-      flex: 1,
-      flexDirection: 'row'
-    },
-    primaryTextInput: {
-      flex: 3,
-      textAlign: 'center',
-      fontSize: 30,
-      color: getTextColor(),
-      padding: 0
-    },
-    secondaryTextInput: {
-      flex: 3,
-      textAlign: 'center',
-      padding: 0,
-      color: getTextColor(),
-      backgroundColor: 'transparent'
-    },
-    topRow: {
-      flex: 2,
-      flexDirection: 'row'
-    },
-    bottomRow: {
-      flex: 1,
-      flexDirection: 'row'
-    },
-    leftSpacer: {
-      flex: 0.5
-    },
-    iconContainer: {
-      flex: 2,
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
-    verticalSpacer: {
-      flex: 1
-    },
-    right: {
-      flex: 1
-    },
-    topFee: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'flex-end'
-    },
-    bottomFee: {
-      flex: 1,
-      justifyContent: 'flex-start',
-      alignItems: 'flex-end'
-    },
-    row: {
-      flex: 5,
-      flexDirection: 'row'
-    }
-  })
 
   const displayTopFees = (topFee) => {
     if (!displayFees) { topFee = '' }
 
     return (<View style={styles.topFee}>
-      <Text>{topFee}</Text>
+      <Text style={styles.topFeeText}>{topFee}</Text>
     </View>)
   }
 
@@ -117,7 +60,7 @@ const FlipInput = ({
 
     return (
       <View style={styles.bottomFee}>
-        <Text>{bottomFee}</Text>
+        <Text style={styles.topFeeText}>{bottomFee}</Text>
       </View>
     )
   }
@@ -128,39 +71,39 @@ const FlipInput = ({
         <View style={{flex: 10}} name='FlipperContainer'>
           <View style={styles.topRow} name='TopRow'>
             <TextInput
-              style={styles.primaryTextInput}
+              style={[styles.primaryTextInput, styles[mode]]}
               value={getAmountToDisplayInFiat()}
-              placeholder='FIAT - 0.00'
+              placeholder='F 0.00'
               keyboardType='numeric'
               onChangeText={onFiatInputChange} />
-            {displayTopFees('FiatFee')}
+            {displayTopFees('F Fee')}
           </View>
 
           <View style={styles.bottomRow} name='bottomRow'>
             <Text
-              style={[styles.secondaryTextInput ]}>
-              {getAmountToDisplayInCrypto() || 'CRYPTO - 0.00'}
+              style={[styles.secondaryTextInput, styles[mode]]}>
+              {getAmountToDisplayInCrypto() || 'C 0.00'}
             </Text>
-            {displayBottomFees('CryptoFee')}
+            {displayBottomFees('C Fee')}
           </View>
         </View> :
 
         <View style={{flex: 10}} name='FlipperContainer'>
           <View style={styles.topRow} name='TopRow'>
             <TextInput
-              style={[styles.primaryTextInput ]}
+              style={[styles.primaryTextInput, styles[mode]]}
               value={getAmountToDisplayInCrypto()}
-              placeholder='CRYPTO - 0.00'
+              placeholder='C 0.00'
               keyboardType='numeric'
               onChangeText={onCryptoInputChange} />
-            {displayTopFees('CryptoFee')}
+            {displayTopFees('C Fee')}
           </View>
 
           <View style={{flex: 1, flexDirection: 'row'}} name='bottomRow'>
-            <Text style={[styles.secondaryTextInput ]}>
-              {getAmountToDisplayInFiat() || 'FIAT - 0.00'}
+            <Text style={[styles.secondaryTextInput, styles[mode]]}>
+              {getAmountToDisplayInFiat() || 'F 0.00'}
             </Text>
-            {displayBottomFees('FiatFee')}
+            {displayBottomFees('F Fee')}
           </View>
         </View>
 
@@ -174,8 +117,10 @@ const FlipInput = ({
 
         <View style={styles.iconContainer}>
           <View style={styles.verticalSpacer} />
-          <FAIcon name='swap-vert' size={36} style={styles.icon}
-            onPress={onInputCurrencyToggle} />
+          <FAIcon style={styles.icon}
+            onPress={onInputCurrencyToggle}
+            name='swap-vert'
+            size={36} />
           <View style={styles.verticalSpacer} />
         </View>
 

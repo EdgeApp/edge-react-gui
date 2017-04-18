@@ -1,21 +1,14 @@
 import React from 'react'
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableHighlight,
-  Button
-} from 'react-native'
-import { connect } from 'react-redux'
-// import styles from './styles.js'
+import { Button } from 'react-native'
+import styles from './styles.js'
 
-const MaxButton = ({onMaxPress}) => {
-
-    return <Button
+const MaxButton = ({onMaxPress, mode}) => {
+  return (
+    <Button
       onPress={onMaxPress}
-      title="Max"
-      style={{flex: 1}}
-    />
+      title='Max'
+      color={styles[mode]['color']}
+      style={[styles.button]} />)
 }
 
-export default connect()(MaxButton)
+export default MaxButton

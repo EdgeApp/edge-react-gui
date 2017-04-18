@@ -1,20 +1,14 @@
 import React, { Component } from 'react'
 import {
   View,
-  ToastAndroid,
-  AlertIOS,
-  Platform,
-  StyleSheet,
-  Dimensions,
   Share,
   Text,
   TouchableHighlight,
-  TouchableWithoutFeedback,
   Keyboard,
   Button
 } from 'react-native'
 import { connect } from 'react-redux'
-// import styles from './styles.js'
+import styles from './styles.js'
 import ExchangeRate from '../ExchangeRate/index.js'
 import MaxButton from '../MaxButton/index.js'
 import FlipInput from '../FlipInput/index.js'
@@ -31,51 +25,10 @@ import Fees from '../Fees/index.js'
 import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
-const ScreenHeight = Dimensions.get('window').height
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    padding: 5,
-    bottom: 0,
-    backgroundColor: 'transparent'
-  },
-  exchangeRateAndMax: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
-  flipInput: {
-    flex: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
-  spacer: {
-    flex: 6,
-    padding: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
-  recipientAndPinInput: {
-    flex: 2,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
-  slider: {
-    flex: 2,
-    backgroundColor: 'transparent',
-  }
-})
-
 class SendConfirmation extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
       amountRequestedInCrypto: 0,
       amountRequestedInFiat: 0,
@@ -88,7 +41,8 @@ class SendConfirmation extends Component {
       maxAvailableToSpendInCrypto: 123,
       pinEnabled: true,
       pin: 1234,
-      sliderDisabled: true
+      sliderDisabled: true,
+      draftStatus: 'under',
     }
   }
 
@@ -104,12 +58,14 @@ class SendConfirmation extends Component {
 
           <View style={{flex: 3}}>
             <ExchangeRate
+              mode={this.state.draftStatus}
               style={{flex: 1}}
               fiatPerCrypto={this.state.fiatPerCrypto} />
           </View>
 
           <View style={{flex: 1}}>
             <MaxButton style={{flex: 1}}
+              mode={this.state.draftStatus}
               onMaxPress={this.onMaxPress}/>
           </View>
 
@@ -117,6 +73,7 @@ class SendConfirmation extends Component {
 
         <View style={styles.flipInput}>
           <FlipInput
+            mode={this.state.draftStatus}
             onInputCurrencyToggle={this.onInputCurrencyToggle}
             onCryptoInputChange={this.onCryptoInputChange}
             onFiatInputChange={this.onFiatInputChange}
@@ -129,7 +86,7 @@ class SendConfirmation extends Component {
 
         <View style={styles.recipientAndPinInput}>
           <View style={{flex: 3}}>
-            <Recipient label={this.state.label} address={this.state.address}/>
+            <Recipient label={this.state.label} address={this.state.address} />
           </View>
 
           <View style={{flex: 1}}>
@@ -142,7 +99,7 @@ class SendConfirmation extends Component {
         <View style={styles.slider}>
           <ABSlider
             text={this.state.text}
-            sliderDisabled={this.state.sliderDisabled}/>
+            sliderDisabled={this.state.sliderDisabled} />
         </View>
 
       </LinearGradient>
@@ -158,26 +115,44 @@ class SendConfirmation extends Component {
 
   onPinChange = (pin) => {
     console.log('pin: ' + pin)
-    if (pin.length >= 4 && this.isPinCorrect(parseInt(pin))) {
-      console.log("Slider Enabled")
+    if (pin.length >= 4) {
       Keyboard.dismiss()
 
-      this.setState({
-        sliderDisabled: false
-      })
+      if (this.isPinCorrect(parseInt(pin))) {
+        console.log("Slider Enabled")
+        this.setState({
+          sliderDisabled: false
+        })
+      }
     }
   }
 
   onMaxPress = () => {
-    const {
-      maxAvailableToSpendInCrypto,
-      fiatPerCrypto
-     } = this.state
+    const amountRequestedInCrypto = this.getMaxAvailableToSpendInCrypto()
+    const maxAvailableToSpendInCrypto = this.getMaxAvailableToSpendInCrypto()
+    const fiatPerCrypto = this.state.fiatPerCrypto
+    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, fiatPerCrypto)
+    const draftStatus = this.getDraftStatus(amountRequestedInCrypto, maxAvailableToSpendInCrypto)
 
     this.setState({
-      amountRequestedInCrypto: maxAvailableToSpendInCrypto,
-      amountRequestedInFiat: getFiatFromCrypto(maxAvailableToSpendInCrypto, fiatPerCrypto)
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      draftStatus,
     })
+  }
+
+  getDraftStatus = (amountRequestedInCrypto, maxAvailableToSpendInCrypto) => {
+    let draftStatus
+
+    if ( amountRequestedInCrypto > maxAvailableToSpendInCrypto ) {
+      draftStatus = 'over'
+    } else if ( amountRequestedInCrypto === maxAvailableToSpendInCrypto ) {
+      draftStatus = 'max'
+    } else {
+      draftStatus = 'under'
+    }
+
+    return draftStatus
   }
 
   onInputCurrencyToggle = () => {
@@ -196,10 +171,14 @@ class SendConfirmation extends Component {
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
 
+    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
+    const maxAvailableToSpendInCrypto = this.getMaxAvailableToSpendInCrypto()
+    const draftStatus = this.getDraftStatus(amountRequestedInCrypto, maxAvailableToSpendInCrypto)
+
     this.setState({
-      amountRequestedInCrypto: amountRequestedInCrypto,
-      amountRequestedInFiat:
-        getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      draftStatus,
     })
   }
 
@@ -207,10 +186,14 @@ class SendConfirmation extends Component {
     amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
     if (this.invalidInput(amountRequestedInFiat)) { return }
 
+    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto)
+    const maxAvailableToSpendInCrypto = this.getMaxAvailableToSpendInCrypto()
+    const draftStatus = this.getDraftStatus(amountRequestedInCrypto, maxAvailableToSpendInCrypto)
+
     this.setState({
-      amountRequestedInCrypto:
-        getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto),
-      amountRequestedInFiat: amountRequestedInFiat
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      draftStatus,
     })
   }
 
@@ -218,13 +201,14 @@ class SendConfirmation extends Component {
     return (typeof parseInt(input) !== 'number' || isNaN(input))
   }
 
-  onPressMax = () => {
-    console.log('Pressed Max')
-  }
-
   getRecipient = () => {
     return "10c9b2n31cp3nyct13t10x9t39c7"
   }
+
+  getMaxAvailableToSpendInCrypto = () => {
+    return 123
+  }
+
 }
 
 export default connect()(SendConfirmation)

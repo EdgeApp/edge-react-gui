@@ -7,10 +7,14 @@ import { dev } from '../utils.js'
 
 const styles = StyleSheet.create({
   view: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
-  text: {}
+  text: {
+    color: 'white'
+  }
 })
 
 const ExchangeRate = ({fiatPerCrypto}) => {

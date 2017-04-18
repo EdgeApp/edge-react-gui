@@ -5,11 +5,14 @@ import { Icon } from 'native-base'
 const styles = StyleSheet.flatten({
   shareButton: {
     flex: 1,
-    backgroundColor: 'blue',
+    backgroundColor: '#355ea0',
     borderRadius: 0,
+    borderWidth: 1,
+    borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 1,
+    marginHorizontal: 2,
+    marginVertical: 10,
   },
   view: {
     flex: 1,
@@ -21,9 +24,11 @@ const styles = StyleSheet.flatten({
   },
   icon: {
     margin: 5,
+    color: 'white'
   },
   text: {
     margin: 5,
+    color: 'white'
   }
 })
 

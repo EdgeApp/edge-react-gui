@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+    color: 'white',
   },
   spacer: {
     flex: 1
@@ -39,15 +40,13 @@ const Recipient = ({label, address}) => {
       <View style={styles.spacer}></View>
 
       <View style={styles.row}>
-        <Text>To: {label} </Text>
-        <Text
+        <Text style={styles.text}>To: {label} </Text>
+        <Text style={styles.text}
           adjustFontToFit
           ellipsizeMode="middle"
-          numberOfLines={1}
-          style={{
-            flex: 1
-          }}
-          >{address}</Text>
+          numberOfLines={1}>
+          {address}
+        </Text>
       </View>
 
       <View style={styles.spacer}></View>
