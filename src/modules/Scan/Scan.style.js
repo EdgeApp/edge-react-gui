@@ -1,5 +1,5 @@
 import React from 'react-native'
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 module.exports = StyleSheet.create({
   container: {
@@ -78,5 +78,54 @@ module.exports = StyleSheet.create({
   },
   flashButtonText: {
     color: 'white'
+  },
+  modalElement: {
+
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalBox: {
+    borderRadius: 5,
+    alignItems: 'stretch',
+    height: (Dimensions.get('window').height) / 3,
+    backgroundColor: 'white',
+    padding: 15,
+    flexDirection: 'column',
+    justifyContent: 'flex-start'
+  },
+  modalTopTextWrap: {
+    flex: 2
+  },
+  modalTopText: {
+    textAlign: 'center',
+    color: 'blue',
+    fontWeight: '500'
+  },
+  modalMiddle: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'center'
+  },
+  addressInputWrap: {
+
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'stretch',
+    flex: 1,
+
+  },
+  addressInput: {
+    flex: 1,
+    textAlign: 'center',
+    alignItems: 'center'
+
+  },
+  modalBottom: {
+    flex: 2
   }
 })

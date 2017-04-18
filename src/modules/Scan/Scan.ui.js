@@ -1,10 +1,11 @@
 import React, {  Component } from 'react'
-import { StyleSheet, Text, View, TouchableHighlight, Modal, TextInput} from 'react-native'
+import { Dimensions, StyleSheet, Text, View, TouchableHighlight, TextInput} from 'react-native'
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import styles from './Scan.style'
 import {toggleEnableTorch, toggleAddressModal} from './Scan.action'
 import ImagePicker from 'react-native-image-picker'
+import Modal from 'react-native-modal'
 
 class Scan extends Component {
   constructor (props) {
@@ -59,6 +60,7 @@ class Scan extends Component {
           ref="cameraCapture"
         />
         <View style={[styles.overlay]}>
+          {this.renderModal()}
           <View style={[styles.overlayTop]}>
             <Text style={styles.overlayTopText}>Scan, to Send, Import, or Edge Login</Text>
           </View>
@@ -77,25 +79,38 @@ class Scan extends Component {
   border(color) {
     return {
       borderColor: color,
-      borderWidth: 1
+      borderWidth: 2
     }
   }
 
   renderModal() {
-      <View>
-        <Modal style={styles.modal.modalElement} animationType="none" visible={this.props.addressModalVisible} transparent="false" >
-          <View style={styles.modal.topView}>
-            <View style={styles.modal.topTextWrap}>
-              <Text style={styles.modal.topText}>Send to Bitcoin Address or Import Private Key:</Text>
-            </View>
-            <View>
-              <TextInput placeholder="Bitcoin Address or Private Key">
+    console.log('re-rendering modal, this.props is: ', this.props)
+    return(
+        /*<Modal style={[styles.modalElement, this.border('red')]} animationType="none" isVisible={this.props.addressModalVisible} transparent={false} >
 
-              </TextInput>
+        </Modal>*/
+
+        <Modal isVisible={this.props.addressModalVisible}>
+          <View style={{ flex: 1 , alignItems: 'center'}}>
+            <View style={[styles.modalOverlay, this.border('green')]}>
+              <View style={[styles.modalBox, this.border('purple')]}>
+                <View style={[styles.modalTopTextWrap]}>
+                  <Text style={styles.modalTopText}>Send to Bitcoin Address or Import Private Key:</Text>
+                </View>
+                <View style={[styles.modalMiddle]}>
+                  <View style={[styles.addressInputWrap]}>
+                    <TextInput style={[styles.addressInput]} placeholder="Insert Address Here"></TextInput>
+                  </View>
+                </View>
+                <View style={[styles.modalBottom]}>
+                  <View></View>
+                  <View></View>
+                </View>
+              </View>
             </View>
           </View>
         </Modal>
-      </View>
+    )
   }
 
 }
