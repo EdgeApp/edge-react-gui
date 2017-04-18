@@ -10,7 +10,9 @@ const sanitizeInput = (input) => {
   const numbersUptoTwoPrecision = /\d*[.]?\d*/
   const sanitizedInput = input.toString().match(numbersUptoTwoPrecision)
 
-  return sanitizedInput
+  console.log(Number(sanitizedInput))
+
+  return Number(sanitizedInput)
 }
 
 const devStyle = {

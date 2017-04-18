@@ -8,8 +8,10 @@ var Slider = require('react-native-slider')
 const styles = StyleSheet.create({
   slider: {
     flex: 1,
-    margin: 10,
+    marginVertical: 5,
     backgroundColor: '#355ea0',
+    overflow: 'hidden',
+    borderRadius: 2,
   },
   track: {
     backgroundColor: '#355ea0',
@@ -17,6 +19,7 @@ const styles = StyleSheet.create({
   thumb: {
     width: 50,
     height: 100,
+    transform: [{translateY: 50}],
     backgroundColor: 'white',
   }
 });
