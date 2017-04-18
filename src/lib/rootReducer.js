@@ -19,7 +19,8 @@ const store = combineReducers({
 
   scan: combineReducers({
     torchEnabled: Scan.torchEnabled,
-    addressModalVisible: Scan.addressModalVisible
+    addressModalVisible: Scan.addressModalVisible,
+    recipientAddress: Scan.recipientAddress
   }),
 
   routes

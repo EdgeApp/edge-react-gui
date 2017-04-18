@@ -82,6 +82,10 @@ module.exports = StyleSheet.create({
   modalElement: {
 
   },
+  modalContainer: {
+    flex: 1 ,
+    alignItems: 'center'
+  },
   modalOverlay: {
     flex: 1,
     padding: 10
