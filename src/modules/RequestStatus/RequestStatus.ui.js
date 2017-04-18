@@ -6,10 +6,18 @@ import { Container, Content } from 'native-base'
 import { dev } from '../utils.js'
 
 const styles = {
-  flex: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  backgroundColor: 'transparent',
+  view: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  text: {
+    color: 'white'
+  },
+  alert: {
+    color: 'red'
+  }
 }
 
 class RequestStatus extends Component {
@@ -45,10 +53,20 @@ class RequestStatus extends Component {
   }
 
   displayRequestStatus = () => {
+    const outstandingDebt =
+      <Text style={styles.warning}>
+        Outstanding Debt: {this.getOutstandingDebtInCrypto}
+      </Text>
+
+    const waitingForPayment =
+      <Text style={styles.text}>
+        Waiting for payment...
+      </Text>
+
     const displayStatus =
       this.hasReceivedPartialPayment()
-      ? <Text>Outstanding Debt: {this.getOutstandingDebtInCrypto}</Text>
-      : <Text>Waiting for payment...</Text>
+      ? outstandingDebt
+      : waitingForPayment
 
     return displayStatus
   }
@@ -57,8 +75,14 @@ class RequestStatus extends Component {
     return (
       <View style={styles.view}>
         {this.displayRequestStatus()}
-        <Text>{this.state.amountReceivedInCrypto.toString()} b Received</Text>
-        <Text>{this.state.requestAddress}</Text>
+
+        <Text style={styles.text}>
+          {this.state.amountReceivedInCrypto.toString()} b Received
+        </Text>
+
+        <Text style={styles.text}>
+          {this.state.requestAddress}
+        </Text>
       </View>
     )
   }

@@ -17,7 +17,6 @@ const ABQRCode = ({qrCodeText}) => {
       backgroundColor: 'white',
       borderRadius: 4,
       padding: 10,
-      borderWidth: 1,
     }
   }
 

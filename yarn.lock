@@ -232,7 +232,7 @@ async@^1.4.0:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
-async@^2.0.1, async@^2.1.4:
+async@^2.0.1, async@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/async/-/async-2.3.0.tgz#1013d1051047dd320fe24e494d5c66ecaf6147d9"
   dependencies:
@@ -1380,13 +1380,6 @@ buffer@^4.9.1:
     base64-js "^1.0.2"
     ieee754 "^1.1.4"
     isarray "^1.0.0"
-
-buffer@^5.0.0:
-  version "5.0.6"
-  resolved "https://registry.yarnpkg.com/buffer/-/buffer-5.0.6.tgz#2ea669f7eec0b6eda05b08f8b5ff661b28573588"
-  dependencies:
-    base64-js "^1.0.2"
-    ieee754 "^1.1.4"
 
 builtin-modules@^1.0.0:
   version "1.1.1"
@@ -4463,7 +4456,7 @@ process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
 
-process@^0.11.9, process@~0.11.0:
+process@~0.11.0:
   version "0.11.9"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.9.tgz#7bd5ad21aa6253e7da8682264f1e11d11c0318c1"
 
@@ -4770,20 +4763,19 @@ react-native-tabs@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/react-native-tabs/-/react-native-tabs-1.0.9.tgz#75d3c35e8b5b6970869eab282372cb32e2a782cd"
 
-react-native-tcp@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-tcp/-/react-native-tcp-3.2.1.tgz#c9f401a169c5d93ae1f003fa4d151fd9f0a82a99"
+react-native-tcp@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-tcp/-/react-native-tcp-2.0.4.tgz#9be80447b94040f4a55e86c7d8ec49d2b5e8ebe8"
   dependencies:
     base64-js "0.0.8"
-    buffer "^5.0.0"
     events "^1.0.2"
+    inherits "^2.0.1"
     ip-regex "^1.0.3"
-    process "^0.11.9"
     util "^0.10.3"
 
-react-native-udp@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-2.0.0.tgz#555ef4302b46a0e853a12e3b8764203bb7b9fd58"
+react-native-udp@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-1.2.9.tgz#3f71446efa5a9dc3e4d60400fc19e527825d7994"
   dependencies:
     base64-js "0.0.8"
     events "^1.0.2"
@@ -5025,7 +5017,7 @@ redux-immutable-state-invariant@^1.2.4:
     invariant "^2.1.0"
     json-stringify-safe "^5.0.1"
 
-redux-logger@^2.10.2:
+redux-logger@^2.7.4:
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/redux-logger/-/redux-logger-2.10.2.tgz#3c5a5f0a6f32577c1deadf6655f257f82c6c3937"
   dependencies:

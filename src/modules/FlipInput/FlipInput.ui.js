@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Text, TextInput, View, StyleSheet} from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { Form, Input } from 'native-base'
 import { devStyle } from '../utils.js'
 import { Icon } from 'native-base'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -41,7 +40,7 @@ const FlipInput = ({
     const textColor =
       amountRequestedInCrypto >= maxAvailableToSpendInCrypto ?
       'red' :
-      'black'
+      'white'
 
     return textColor
   }
@@ -56,14 +55,15 @@ const FlipInput = ({
       textAlign: 'center',
       fontSize: 30,
       color: getTextColor(),
-      padding: 0
     },
     secondaryTextInput: {
       flex: 3,
       textAlign: 'center',
+      justifyContent: 'center',
       padding: 0,
       color: getTextColor(),
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
+      paddingTop: 15,
     },
     topRow: {
       flex: 2,
@@ -71,7 +71,7 @@ const FlipInput = ({
     },
     bottomRow: {
       flex: 1,
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     leftSpacer: {
       flex: 0.5
@@ -80,7 +80,11 @@ const FlipInput = ({
       flex: 2,
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'center'
+      justifyContent: 'center',
+      backgroundColor: 'transparent'
+    },
+    icon: {
+      color: 'white'
     },
     verticalSpacer: {
       flex: 1

@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   exchangeRateContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
   },
   flipInputContainer: {
     flex: 4,
