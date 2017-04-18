@@ -1,9 +1,9 @@
 import React, {  Component } from 'react'
-import { StyleSheet, Text, View, TouchableHighlight } from 'react-native'
+import { StyleSheet, Text, View, TouchableHighlight, Modal, TextInput} from 'react-native'
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import styles from './Scan.style'
-import {toggleEnableTorch} from './Scan.action'
+import {toggleEnableTorch, toggleAddressModal} from './Scan.action'
 import ImagePicker from 'react-native-image-picker'
 
 class Scan extends Component {
@@ -13,6 +13,10 @@ class Scan extends Component {
 
   _onToggleTorch() {
     this.props.dispatch(toggleEnableTorch())
+  }
+
+  _onToggleAddressModal() {
+    this.props.dispatch(toggleAddressModal())
   }
 
   onBarCodeRead () {
@@ -61,7 +65,7 @@ class Scan extends Component {
           <View style={[styles.overlayBlank]}></View>
           <View style={[styles.overlayButtonAreaWrap]}>
               <TouchableHighlight style={[styles.transferButtonWrap]}><Text style={styles.transferButtonText}>Transfer</Text></TouchableHighlight>
-              <TouchableHighlight style={[styles.addressButtonWrap]}><Text style={styles.addressButtonText}>Address</Text></TouchableHighlight>
+              <TouchableHighlight style={[styles.addressButtonWrap]}  onPress={this._onToggleAddressModal.bind(this)}><Text style={styles.addressButtonText}>Address</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.photosButtonWrap]} onPress={this.selectPhotoTapped.bind(this)}><Text style={{color: 'white'}}>Photos</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.flashButtonWrap]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.5} underlayColor={'#aaaaaa'}><Text style={styles.flashButtonText}>Flash</Text></TouchableHighlight>
           </View>
@@ -76,9 +80,28 @@ class Scan extends Component {
       borderWidth: 1
     }
   }
+
+  renderModal() {
+      <View>
+        <Modal style={styles.modal.modalElement} animationType="none" visible={this.props.addressModalVisible} transparent="false" >
+          <View style={styles.modal.topView}>
+            <View style={styles.modal.topTextWrap}>
+              <Text style={styles.modal.topText}>Send to Bitcoin Address or Import Private Key:</Text>
+            </View>
+            <View>
+              <TextInput placeholder="Bitcoin Address or Private Key">
+
+              </TextInput>
+            </View>
+          </View>
+        </Modal>
+      </View>
+  }
+
 }
 
 export default connect( state => ({
-  torchEnabled: state.scan.torchEnabled
+  torchEnabled: state.scan.torchEnabled,
+  addressModalVisible: state.scan.addressModalVisible
   })
 )(Scan)
