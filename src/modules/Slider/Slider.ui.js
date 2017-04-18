@@ -1,28 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet, AlertIOS } from 'react-native'
 import { connect } from 'react-redux'
-// import styles from './styles.js'
+import styles from './styles.js'
 import { Container, Content } from 'native-base'
 var Slider = require('react-native-slider')
-
-const styles = StyleSheet.create({
-  slider: {
-    flex: 1,
-    marginVertical: 5,
-    backgroundColor: '#355ea0',
-    overflow: 'hidden',
-    borderRadius: 2,
-  },
-  track: {
-    backgroundColor: '#355ea0',
-  },
-  thumb: {
-    width: 50,
-    height: 100,
-    transform: [{translateY: 50}],
-    backgroundColor: 'white',
-  }
-});
 
 class ABSlider extends Component {
   constructor (props) {
