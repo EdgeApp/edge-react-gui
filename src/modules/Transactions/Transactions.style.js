@@ -13,16 +13,19 @@ module.exports = StyleSheet.create({
   },
   currentBalanceWrap: {
     flex: 3,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   bitcoinIconWrap: {
     flex: 1,
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent'
   },
   currentBalanceBoxDollarsWrap: {
     flex: 2,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   currentBalanceBoxDollars: {
     color: "#FFFFFF",

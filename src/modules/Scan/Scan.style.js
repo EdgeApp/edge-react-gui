@@ -19,7 +19,8 @@ module.exports = StyleSheet.create({
   },
   overlayTop: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   overlayTopText: {
     color: 'white'
