@@ -14,6 +14,7 @@ import Directory from './Directory/Directory.ui'
 import Request from './Request/index.js'
 import SendConfirmation from './SendConfirmation/index.js'
 import Scan from './Scan/Scan.ui.js'
+import WalletList from './WalletList/WalletList.ui'
 
 const RouterWithRedux = connect()(Router)
 
@@ -27,7 +28,8 @@ class Main extends Component {
             <Header />
             <RouterWithRedux>
               <Scene key='root' hideNavBar>
-                <Scene key='scan' component={Scan} title='Scan' duration={0} initial />
+                <Scene key='scan' component={Scan} title='Scan' duration={0} />
+                <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
                 <Scene key='directory' component={Directory} title='Directory' duration={0} />
                 <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
                 <Scene key='request' component={Request} title='Request' duration={0} />
