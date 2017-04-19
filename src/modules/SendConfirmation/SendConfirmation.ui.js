@@ -5,7 +5,8 @@ import {
   Text,
   TouchableHighlight,
   Keyboard,
-  Button
+  Button,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
@@ -43,7 +44,55 @@ class SendConfirmation extends Component {
       pin: 1234,
       sliderDisabled: true,
       draftStatus: 'under',
+      keyboardVisible: false,
     }
+  }
+
+  componentWillMount () {
+    const events =
+      (Platform.OS === 'ios') ?
+      { keyboardShows: 'keyboardWillShow',
+        keyboardHides: 'keyboardWillHide' } :
+      { keyboardShows: 'keyboardDidShow',
+        keyboardHides: 'keyboardDidHide' }
+
+    this.keyboardShowsListener = Keyboard.addListener(events.keyboardShows,
+      this._keyboardShows
+    )
+    this.keyboardHidesListener = Keyboard.addListener(events.keyboardHides,
+      this._keyboardHides
+    )
+  }
+
+  componentWillUnmount () {
+    this.keyboardShowsListener.remove()
+    this.keyboardHidesListener.remove()
+  }
+
+  _keyboardShows = () => {
+    this.setState({
+      keyboardVisible: true
+    })
+  }
+
+  _keyboardHides = () => {
+    this.setState({
+      keyboardVisible: false
+    })
+  }
+
+  getPinInputIfEnabled = () => {
+    let pinInputIfEnabled
+
+    if (this.state.pinEnabled) {
+      pinInputIfEnabled = (
+        <View style={{flex: 1}}>
+          <PinInput onPinChange={this.onPinChange} />
+        </View>
+      )
+    }
+
+    return pinInputIfEnabled
   }
 
   render () {
@@ -84,26 +133,45 @@ class SendConfirmation extends Component {
             displayFees />
         </View>
 
-        <View style={styles.recipientAndPinInput}>
+        <View style={styles.recipient}>
           <View style={{flex: 3}}>
             <Recipient label={this.state.label} address={this.state.address} />
           </View>
 
-          <View style={{flex: 1}}>
-            <PinInput onPinChange={this.onPinChange} />
-          </View>
+          {this.getPinInputIfEnabled()}
         </View>
 
-        <View style={styles.spacer} />
+        {this.getTopSpacer()}
 
         <View style={styles.slider}>
           <ABSlider
+            style={{
+              flex: 1,
+            }}
             text={this.state.text}
             sliderDisabled={this.state.sliderDisabled} />
         </View>
 
+        {this.getBottomSpacer()}
+
       </LinearGradient>
     )
+  }
+
+  getTopSpacer = () => {
+    if (this.state.keyboardVisible) {
+      return
+    } else {
+      return <View style={styles.spacer} />
+    }
+  }
+
+  getBottomSpacer = () => {
+    if (!this.state.keyboardVisible) {
+      return
+    } else {
+      return <View style={styles.spacer} />
+    }
   }
 
   isPinCorrect = (pin) => {
@@ -146,7 +214,7 @@ class SendConfirmation extends Component {
 
     if ( amountRequestedInCrypto > maxAvailableToSpendInCrypto ) {
       draftStatus = 'over'
-    } else if ( amountRequestedInCrypto === maxAvailableToSpendInCrypto ) {
+    } else if ( amountRequestedInCrypto == maxAvailableToSpendInCrypto ) {
       draftStatus = 'max'
     } else {
       draftStatus = 'under'

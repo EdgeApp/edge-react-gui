@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { Text, TextInput, View, StyleSheet} from 'react-native'
+import { Text, TextInput, View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { devStyle } from '../utils.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
+
+const CRYPTO_PLACEHOLDER = 'C 0.00'
+const FIAT_PLACEHOLDER = 'F 0.00'
 
 const FlipInput = ({
   mode,
@@ -73,7 +76,7 @@ const FlipInput = ({
             <TextInput
               style={[styles.primaryTextInput, styles[mode]]}
               value={getAmountToDisplayInFiat()}
-              placeholder='F 0.00'
+              placeholder={FIAT_PLACEHOLDER}
               keyboardType='numeric'
               onChangeText={onFiatInputChange} />
             {displayTopFees('F Fee')}
@@ -82,7 +85,7 @@ const FlipInput = ({
           <View style={styles.bottomRow} name='bottomRow'>
             <Text
               style={[styles.secondaryTextInput, styles[mode]]}>
-              {getAmountToDisplayInCrypto() || 'C 0.00'}
+              {getAmountToDisplayInCrypto() || CRYPTO_PLACEHOLDER}
             </Text>
             {displayBottomFees('C Fee')}
           </View>
@@ -93,7 +96,7 @@ const FlipInput = ({
             <TextInput
               style={[styles.primaryTextInput, styles[mode]]}
               value={getAmountToDisplayInCrypto()}
-              placeholder='C 0.00'
+              placeholder={CRYPTO_PLACEHOLDER}
               keyboardType='numeric'
               onChangeText={onCryptoInputChange} />
             {displayTopFees('C Fee')}
@@ -101,7 +104,7 @@ const FlipInput = ({
 
           <View style={{flex: 1, flexDirection: 'row'}} name='bottomRow'>
             <Text style={[styles.secondaryTextInput, styles[mode]]}>
-              {getAmountToDisplayInFiat() || 'F 0.00'}
+              {getAmountToDisplayInFiat() || FIAT_PLACEHOLDER}
             </Text>
             {displayBottomFees('F Fee')}
           </View>

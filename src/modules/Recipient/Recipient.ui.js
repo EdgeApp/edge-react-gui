@@ -3,7 +3,6 @@ import {
   Clipboard,
   View,
   ToastAndroid,
-  AlertIOS,
   Platform,
   StyleSheet,
   Dimensions,
