@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },
-  recipientAndPinInput: {
+  recipient: {
     flex: 2,
     flexDirection: 'row',
     alignItems: 'center',

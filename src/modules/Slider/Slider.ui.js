@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, AlertIOS } from 'react-native'
+import { Text, View, StyleSheet, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { Container, Content } from 'native-base'
@@ -14,10 +14,6 @@ class ABSlider extends Component {
       sliderDisabled: props.sliderDisabled
     }
   }
-
-  resetSlider = () => {
-    this.setState({ value: 10 })
-  };
 
   onSlidingComplete = (value) => {
     console.log('onSlidingComplete')
