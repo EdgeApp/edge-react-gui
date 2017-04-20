@@ -98,10 +98,10 @@ android {
     }
     signingConfigs {
         release {
-                storeFile file("airbitz.keystore")
-                storePassword "password"
-                keyAlias "airbitz"
-                keyPassword "password"
+            storeFile file("airbitz.keystore")
+            storePassword "password"
+            keyAlias "airbitz"
+            keyPassword "password"
         }
     }
     splits {
