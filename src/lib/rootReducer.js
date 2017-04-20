@@ -4,6 +4,7 @@ import routes from './routesReducer'
 import * as SideMenu from '../modules/SideMenu/SideMenu.reducer'
 import * as Transactions from '../modules/Transactions/Transactions.reducer'
 import * as Scan from '../modules/Scan/Scan.reducer'
+import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
 
 const store = combineReducers({
 
@@ -21,6 +22,11 @@ const store = combineReducers({
     torchEnabled: Scan.torchEnabled,
     addressModalVisible: Scan.addressModalVisible,
     recipientAddress: Scan.recipientAddress
+  }),
+
+  walletTransferList: combineReducers({
+    walletTransferList: WalletTransferList.walletTransferList,
+    walletListModalVisible: WalletTransferList.walletListModalVisible
   }),
 
   routes

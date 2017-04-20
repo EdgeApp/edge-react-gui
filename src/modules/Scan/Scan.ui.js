@@ -3,10 +3,13 @@ import { Dimensions, StyleSheet, Text, View, TouchableHighlight, TextInput} from
 import { connect } from 'react-redux'
 import Camera from 'react-native-camera'
 import styles from './Scan.style'
-import {toggleEnableTorch, toggleAddressModal, updateRecipientAddress} from './Scan.action'
+import {toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './Scan.action'
+import {toggleWalletListModal} from '../WalletTransferList/WalletTransferList.action'
 import ImagePicker from 'react-native-image-picker'
 import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
+import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
+import {getWalletTransferList} from '../WalletTransferList/WalletTransferList.middleware'
 
 class Scan extends Component {
   constructor (props) {
@@ -19,6 +22,11 @@ class Scan extends Component {
 
   _onToggleAddressModal() {
     this.props.dispatch(toggleAddressModal())
+  }
+
+  _onToggleWalletListModal() {
+    if(!this.props.walletListModalVisible) this.props.dispatch(getWalletTransferList())
+    this.props.dispatch(toggleWalletListModal())
   }
 
   onBarCodeRead () {
@@ -61,13 +69,14 @@ class Scan extends Component {
           ref="cameraCapture"
         />
         <View style={[styles.overlay]}>
-          {this.renderModal()}
+          {this.renderAddressModal()}
+          {this.renderWalletListModal()}
           <View style={[styles.overlayTop]}>
             <Text style={styles.overlayTopText}>Scan, to Send, Import, or Edge Login</Text>
           </View>
           <View style={[styles.overlayBlank]}></View>
           <View style={[styles.overlayButtonAreaWrap]}>
-              <TouchableHighlight style={[styles.transferButtonWrap]}><Text style={styles.transferButtonText}>Transfer</Text></TouchableHighlight>
+              <TouchableHighlight style={[styles.transferButtonWrap]} onPress={this._onToggleWalletListModal.bind(this)}><Text style={styles.transferButtonText}>Transfer</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.addressButtonWrap]}  onPress={this._onToggleAddressModal.bind(this)}><Text style={styles.addressButtonText}>Address</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.photosButtonWrap]} onPress={this.selectPhotoTapped.bind(this)}><Text style={{color: 'white'}}>Photos</Text></TouchableHighlight>
               <TouchableHighlight style={[styles.flashButtonWrap]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.5} underlayColor={'#aaaaaa'}><Text style={styles.flashButtonText}>Flash</Text></TouchableHighlight>
@@ -93,7 +102,7 @@ class Scan extends Component {
     Actions.sendConfirmation(this.props.receipientAddress)
   }
 
-  renderModal() {
+  renderAddressModal() {
     return(
         <Modal isVisible={this.props.addressModalVisible}>
           <View style={styles.modalContainer}>
@@ -127,11 +136,21 @@ class Scan extends Component {
     )
   }
 
+  renderWalletListModal() {
+    return(
+      <Modal
+        isVisible={this.props.walletListModalVisible}>
+        <WalletTransferList />
+      </Modal>
+    )
+  }
+
 }
 
 export default connect( state => ({
   torchEnabled: state.scan.torchEnabled,
   addressModalVisible: state.scan.addressModalVisible,
-  receipientAddress: state.scan.recipientAddress
+  receipientAddress: state.scan.recipientAddress,
+  walletListModalVisible: state.walletTransferList.walletListModalVisible
   })
 )(Scan)
