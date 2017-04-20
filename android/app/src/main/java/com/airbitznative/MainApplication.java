@@ -1,26 +1,26 @@
-package com.airbitz;
+package com.airbitznative;
 
 import android.app.Application;
+
 import com.facebook.react.ReactApplication;
-import com.lynxit.contactswrapper.ContactsWrapperPackage;
-import cl.json.RNSharePackage;
-import com.lwansbrough.RCTCamera.RCTCameraPackage;
-import com.imagepicker.ImagePickerPackage;
-import com.github.xinthink.rnmk.ReactMaterialKitPackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
+import cl.json.RNSharePackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
-import com.bitgo.randombytes.RandomBytesPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
+import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
+import com.imagepicker.ImagePickerPackage;
 import com.rnfs.RNFSPackage;
 import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.lynxit.contactswrapper.ContactsWrapperPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,20 +37,20 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ContactsWrapperPackage(),
-            new RNSharePackage(),
-            new ImagePickerPackage(),
-            new RCTCameraPackage(),
-            new ReactMaterialKitPackage(),
+            new VectorIconsPackage(),
             new UdpSocketsModule(),
             new TcpSocketsModule(),
-            new ReactNativePermissionsPackage(),
+            new RNSharePackage(),
             new RandomBytesPackage(),
-            new VectorIconsPackage(),
+            new ReactNativePermissionsPackage(),
+            new ReactMaterialKitPackage(),
             new LinearGradientPackage(),
+            new ImagePickerPackage(),
             new RNFSPackage(),
             new RNDeviceInfo(),
-            new ReactNativeContacts()
+            new ContactsWrapperPackage(),
+            new ReactNativeContacts(),
+            new RCTCameraPackage()
       );
     }
   };

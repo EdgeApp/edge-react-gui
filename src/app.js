@@ -19,4 +19,4 @@ export default class App extends Component {
 
 }
 
-AppRegistry.registerComponent('airbitz', () => App)
+AppRegistry.registerComponent('airbitzNative', () => App)
