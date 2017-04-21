@@ -20,6 +20,7 @@
     "postinstall": "./node_modules/.bin/rn-nodeify --install --hack"
   },
   "dependencies": {
+    "airbitz-core-js": "^0.3.0",
     "assert": "^1.4.1",
     "async": "^2.3.0",
     "base64-js": "^1.2.0",
@@ -38,6 +39,7 @@
     "querystring-es3": "^0.2.1",
     "react": "16.0.0-alpha.6",
     "react-native": "^0.43.3",
+    "react-native-airbitz-io": "^0.3.0",
     "react-native-animatable": "^1.1.0",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-contacts": "^0.8.1",

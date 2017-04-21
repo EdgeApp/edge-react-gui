@@ -55,6 +55,20 @@ acorn@^5.0.1:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.0.3.tgz#c460df08491463f028ccb82eab3730bf01087b3d"
 
+aes-js@^2.1.0:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-2.1.1.tgz#68989763bbade2a39172ea48f4953d1272ff38a7"
+
+airbitz-core-js@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/airbitz-core-js/-/airbitz-core-js-0.3.0.tgz#3ac34207f5d5dd204b7a58645b0a15571f286108"
+  dependencies:
+    aes-js "^2.1.0"
+    base-x "^1.0.4"
+    elliptic "^6.4.0"
+    hash.js "^1.0.3"
+    scrypt-js "^2.0.3"
+
 ajv-keywords@^1.0.0:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-1.5.1.tgz#314dd0a4b3368fad3dfcdc54ede6171b886daf3c"
@@ -1158,6 +1172,10 @@ base-64@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
 
+base-x@^1.0.4:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-1.1.0.tgz#42d3d717474f9ea02207f6d1aa1f426913eeb7ac"
+
 base64-js@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-0.0.8.tgz#1101e9544f4a76b1bc3b26d452ca96d7a35e7978"
@@ -2081,7 +2099,7 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
-elliptic@^6.0.0:
+elliptic@^6.0.0, elliptic@^6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.4.0.tgz#cac9af8762c85836187003c8dfe193e5e2eae5df"
   dependencies:
@@ -4608,7 +4626,15 @@ react-devtools-core@^2.0.8:
     cross-env "^3.1.4"
     ws "^2.0.3"
 
-react-native-animatable@^1.1.0:
+react-native-airbitz-io@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-airbitz-io/-/react-native-airbitz-io-0.3.0.tgz#d8a37e0caa0af8193a9966a4b4935eb6603e4d01"
+  dependencies:
+    react-native-fs "^2.1.0-rc.1"
+    react-native-randombytes "^2.2.0"
+    rfc4648 "^0.9.1"
+
+react-native-animatable@^1.1.0, react-native-animatable@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.1.1.tgz#00ddc72985f62f62a11a505abb1a06e77a92cd8a"
 
@@ -4712,6 +4738,12 @@ react-native-material-kit@^0.4.1:
   resolved "https://registry.yarnpkg.com/react-native-material-kit/-/react-native-material-kit-0.4.1.tgz#bdfc4727e4146980e129ee5bbeb7565db6a918cc"
   dependencies:
     ramda "~0.21.0"
+
+react-native-modal@^2.2.0:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-2.3.2.tgz#d616355e312d378a9dcd99de5565523b7b5b4c84"
+  dependencies:
+    react-native-animatable "^1.1.1"
 
 react-native-modalbox@^1.3.8:
   version "1.3.9"
@@ -5207,6 +5239,10 @@ restore-cursor@^1.0.1:
     exit-hook "^1.0.0"
     onetime "^1.0.0"
 
+rfc4648@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/rfc4648/-/rfc4648-0.9.1.tgz#6dff84c2ed0e63381424da2a7caa9b750fa7e477"
+
 right-align@^0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/right-align/-/right-align-0.1.3.tgz#61339b722fe6a3515689210d24e14c96148613ef"
@@ -5288,6 +5324,10 @@ sane@~1.5.0:
 sax@~1.1.1:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.1.6.tgz#5d616be8a5e607d54e114afae55b7eaf2fcc3240"
+
+scrypt-js@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/scrypt-js/-/scrypt-js-2.0.3.tgz#bb0040be03043da9a012a2cea9fc9f852cfc87d4"
 
 semver-diff@^2.0.0:
   version "2.1.0"

@@ -5,8 +5,11 @@ import * as SideMenu from '../modules/SideMenu/SideMenu.reducer'
 import * as Transactions from '../modules/Transactions/Transactions.reducer'
 import * as Scan from '../modules/Scan/Scan.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
+import * as Login from '../modules/Login/Login.reducer.js'
 
 const store = combineReducers({
+  airbitz: Login.airbitz,
+  account: Login.account,
 
   sidemenu: combineReducers({
     view  : SideMenu.view
