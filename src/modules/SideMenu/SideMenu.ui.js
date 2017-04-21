@@ -5,7 +5,7 @@ import Drawer from 'react-native-drawer'
 
 import { openSidebar, closeSidebar } from './SideMenu.action'
 
-import ControlPanel from '../ControlPanel/ControlPanel.ui'
+import ControlPanel from '../ControlPanel'
 
 class SideMenuComponent extends Component {
   render () {
