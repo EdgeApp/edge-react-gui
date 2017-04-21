@@ -6,8 +6,10 @@ import variable from './../variables/platform';
 export default (variables = variable) => {
   const platformStyle = variables.platformStyle;
   const platform = variables.platform;
-  const textFont = 10;
-  const iconFont = 31;
+  const textFont = 11;
+  const iconFont = 33;
+  // const tabActiveBgColor = "#4290e0"
+  const tabActiveBgColor = "#3b7adb"
 
   const footerTabTheme = {
       'NativeBase.Button': {
@@ -25,7 +27,7 @@ export default (variables = variable) => {
             fontSize: iconFont, //custom
             color: variables.tabBarActiveTextColor,
           },
-          backgroundColor: variables.tabActiveBgColor,
+          backgroundColor: (Platform.OS === 'android') ? tabActiveBgColor : null ,
         },
         flexDirection: null,
         backgroundColor: 'transparent',

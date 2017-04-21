@@ -24,33 +24,42 @@ class TabBar extends Component {
         <Footer>
             <FooterTab>
 
-              <Button onPress={ () => Actions.directory() }>
+              <Button
+                onPress={ () => Actions.directory() }
+                active={ this.props.routes.scene.title  === 'Directory' ? true : false }
+              >
                 <Icon name='home' />
                 <Text>Directory</Text>
               </Button>
 
-              <Button onPress={ () => Actions.request() }>
+              <Button
+                onPress={ () => Actions.request() }
+                active={ this.props.routes.scene.title  === 'Request' ? true : false }
+              >
                 <Icon name='download' />
                 <Text>Request</Text>
               </Button>
 
-              <Button onPress={ () => Actions.scan() }>
+              <Button
+                onPress={ () => Actions.scan() }
+                active={ this.props.routes.scene.title  === 'Scan' ? true : false }
+              >
                 <Icon name='share' />
                 <Text>Send</Text>
               </Button>
 
-              <Button onPress={ () => Actions.transactions() }>
+              <Button
+                onPress={ () => Actions.transactions() }
+                active={ this.props.routes.scene.title  === 'Transactions' ? true : false }
+              >
                 <Icon name='swap' />
                 <Text>Transactions</Text>
               </Button>
 
-              <Button onPress={ () => Actions.sendConfirmation() }>
-                <Icon name='swap' />
-                <Text>SendC</Text>
-              </Button>
-
-              <Button onPress={ this._handleToggleSideBar }
-                active={ this.props.sidemenu ? true : false }>
+              <Button
+                onPress={ this._handleToggleSideBar }
+                active={ this.props.sidemenu ? true : false }
+              >
                 <Icon name='more' />
                 <Text>More</Text>
               </Button>
@@ -65,6 +74,7 @@ class TabBar extends Component {
 
 export default connect( state => ({
 
-  sidemenu : state.sidemenu.view
+  sidemenu : state.sidemenu.view,
+  routes: state.routes
 
 }) )(TabBar)
