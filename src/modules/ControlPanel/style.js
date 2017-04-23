@@ -53,7 +53,7 @@ export default {
     link: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: 10,
+      marginVertical: 10,
       // backgroundColor: 'yellow',
       // borderStyle: 'solid',
       // borderColor: '#e3e3e3',
@@ -63,12 +63,13 @@ export default {
 
     icon: {
       fontSize: 35,
-      paddingHorizontal: 15
+      marginHorizontal: 15
     },
 
     text: {
       flex: 1,
-      fontSize: 14
+      fontSize: 14,
+      color: "#000"
     }
 
   },
