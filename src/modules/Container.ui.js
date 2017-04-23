@@ -17,8 +17,9 @@ import Scan from './Scan/Scan.ui'
 
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
-
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
+
+import AddWallet from './AddWallet/index.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -64,7 +65,9 @@ class Main extends Component {
 
                 <Scene key='request' component={Request} title='Request' duration={0} />
 
-                <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} initial />
+                <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
+
+                <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
 
               </Scene>
             </RouterWithRedux>
