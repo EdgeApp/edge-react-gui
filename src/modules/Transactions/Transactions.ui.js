@@ -191,7 +191,14 @@ class Transactions extends Component {
                 </TouchableHighlight>
               </View>
             }
-              <ListView style={[styles.transactionsScrollWrap]} dataSource={dataSource} renderRow={this.renderTx.bind(this)} onEndReached={this.loadMoreTransactions.bind(this)} onEndReachedThreshold={60} />
+              <ListView
+                style={[styles.transactionsScrollWrap]} 
+                dataSource={dataSource}
+                renderRow={this.renderTx.bind(this)}
+                onEndReached={this.loadMoreTransactions.bind(this)}
+                onEndReachedThreshold={60}
+                enableEmptySections
+              />
           </View>
         </View>
     )
