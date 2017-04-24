@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableNativeFeedback } from 'react-native'
+import { View, StyleSheet, TouchableNativeFeedback, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 // import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Text, Button, Icon } from 'native-base'
@@ -57,6 +57,12 @@ class ControlPanel extends Component {
           </View>
 
           <View style={styles.others.container}>
+            <TouchableHighlight onPress={ () => Actions.walletList() }>
+              <View style={styles.others.link}>
+                <Icon style={styles.others.icon} name='cash' />
+                <Text style={styles.others.text}>WALLETS</Text>
+              </View>
+            </TouchableHighlight>
             <View style={styles.others.link}>
               <Icon style={styles.others.icon} name='cash' />
               <Text style={styles.others.text}>WALLETS</Text>
