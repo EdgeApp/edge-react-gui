@@ -79,10 +79,10 @@ class Request extends Component {
 
   render () {
     return (
-        <LinearGradient
-          style={styles.view}
-          start={{x:0,y:0}} end={{x:1, y:0}}
-          colors={["#3b7adb","#2b569a"]}>
+      <LinearGradient
+        style={styles.view}
+        start={{x:0,y:0}} end={{x:1, y:0}}
+        colors={["#3b7adb","#2b569a"]}>
 
         <View style={styles.exchangeRateContainer}>
           <ExchangeRate

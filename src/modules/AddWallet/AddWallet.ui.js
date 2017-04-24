@@ -19,8 +19,8 @@ const WALLET_NAME_INPUT_PLACEHOLDER = 'Name your new wallet'
 const BLOCKCHAIN_PICKER_PLACEHOLDER = 'Choose a blockchain'
 const FIAT_PICKER_PLACEHOLDER       = 'Choose a fiat currency'
 
-const DONE_TEXT = 'DONE'
-const CANCEL_TEXT = 'CANCEL'
+const DONE_TEXT         = 'DONE'
+const CANCEL_TEXT       = 'CANCEL'
 const INVALID_DATA_TEXT = 'Please select valid data'
 
 ////////////////////////////// ROOT ///////////////////////////////////////////
@@ -336,7 +336,7 @@ const DropdownList = (props) => {
   }
 
   return (
-    <View stlye={styles.listView}>
+    <View style={styles.listView}>
       <ListView
         keyboardShouldPersistTaps={'always'}
         style={styles.listView}

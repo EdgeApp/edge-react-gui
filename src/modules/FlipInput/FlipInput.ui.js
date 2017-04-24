@@ -1,47 +1,145 @@
 import React, { Component } from 'react'
-import { Text, TextInput, View, StyleSheet } from 'react-native'
+import {
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  Easing,
+  TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { devStyle } from '../utils.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
+import FlipView from 'react-native-flip-view'
 
 const CRYPTO_PLACEHOLDER = 'C 0.00'
 const FIAT_PLACEHOLDER = 'F 0.00'
 
-const FlipInput = ({
-  mode,
-  onFiatInputChange,
-  onCryptoInputChange,
-  amountRequestedInCrypto,
-  amountRequestedInFiat,
-  onInputCurrencyToggle,
-  inputCurrencySelected,
-  feesInFiat,
-  feesInCrypto,
-  displayFees,
-  maxAvailableToSpendInCrypto
-}) => {
+export default class FlipInput extends Component {
+  constructor (props) {
+    super(props)
 
-  const getAmountToDisplayInFiat = () => {
-    if ([0, '', undefined, null].includes(amountRequestedInFiat)) {
-      return ''
+    this.state = {
+      isFlipped: false,
     }
-    return amountRequestedInFiat.toString()
   }
 
-  const getAmountToDisplayInCrypto = () => {
-    if ([0, '', undefined, null].includes(amountRequestedInCrypto)) {
+  render () {
+    return (
+      <FlipView style={styles.view}
+        front={this._renderFront()}
+        back={this._renderBack()}
+        isFlipped={this.state.isFlipped}
+        onFlipped={(val) => {console.log('Flipped: ' + val);}}
+        flipAxis="x"
+        flipEasing={Easing.out(Easing.ease)}
+        flipDuration={250}
+        perspective={1000} />
+    );
+  };
+
+  flip = () => {
+    this.setState({isFlipped: !this.state.isFlipped})
+    this.props.onInputCurrencyToggle()
+  }
+
+  _renderFront = () => {
+    const {
+      mode,
+      onCryptoInputChange,
+      onFiatInputChange,
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      onInputCurrencyToggle,
+      feeInFiat,
+      feeInCrypto,
+      displayFees,
+    } = this.props
+
+    return (
+      <FlipInputInside
+        style={styles.view}
+        currencySelected={'crypto'}
+        mode={mode}
+        primaryPlaceholder={'c 0.00'}
+        secondaryPlaceholder={'f 0.00'}
+        onInputChange={onCryptoInputChange}
+        amountRequestedPrimary={amountRequestedInCrypto}
+        amountRequestedSecondary={amountRequestedInFiat}
+        onInputCurrencyToggle={this.flip}
+        primaryFee={feeInCrypto}
+        secondaryFee={feeInFiat}
+        displayFees={displayFees} />
+  )}
+
+  _renderBack = () => {
+    const {
+      mode,
+      onFiatInputChange,
+      onCryptoInputChange,
+      amountRequestedInFiat,
+      amountRequestedInCrypto,
+      onInputCurrencyToggle,
+      feeInFiat,
+      feeInCrypto,
+      displayFees,
+    } = this.props
+
+    return (
+      <FlipInputInside
+        syle={styles.view}
+        currencySelected={'fiat'}
+        mode={mode}
+        primaryPlaceholder={'f 0.00'}
+        secondaryPlaceholder={'c 0.00'}
+        onInputChange={onFiatInputChange}
+        amountRequestedPrimary={amountRequestedInFiat}
+        amountRequestedSecondary={amountRequestedInCrypto}
+        onInputCurrencyToggle={this.flip}
+        primaryFee={feeInFiat}
+        secondaryFee={feeInCrypto}
+        displayFees={displayFees} />
+    )
+  }
+
+  _flip = () => {
+    this.setState({isFlipped: !this.state.isFlipped});
+  }
+}
+
+const FlipInputInside = ({
+  mode,
+  onInputChange,
+  amountRequestedPrimary,
+  amountRequestedSecondary,
+  onInputCurrencyToggle,
+  primaryFee,
+  secondaryFee,
+  primaryPlaceholder,
+  secondaryPlaceholder,
+  displayFees,
+}) => {
+
+  const getPrimaryAmount = () => {
+    if ([0, '', undefined, null].includes(amountRequestedPrimary)) {
       return ''
     }
-    return amountRequestedInCrypto.toString()
+    return amountRequestedPrimary.toString()
+  }
+
+  const getSecondaryAmount = () => {
+    if ([0, '', undefined, null].includes(amountRequestedSecondary)) {
+      return ''
+    }
+    return amountRequestedSecondary.toString()
   }
 
   getTextColor = () => {
     let textColor
 
-    if ( mode === 'over' ) {
+    if (mode === 'over') {
       textColor = 'red'
-    } else if ( mode === 'max' ) {
+    } else if (mode === 'max') {
       textColor = 'orange'
     } else {
       textColor = 'white'
@@ -50,67 +148,49 @@ const FlipInput = ({
     return textColor
   }
 
-  const displayTopFees = (topFee) => {
+  const displayPrimaryFees = (primaryFee) => {
     if (!displayFees) { topFee = '' }
 
-    return (<View style={styles.topFee}>
-      <Text style={styles.topFeeText}>{topFee}</Text>
-    </View>)
-  }
-
-  const displayBottomFees = (bottomFee) => {
-    if (!displayFees) { bottomFee = '' }
-
     return (
-      <View style={styles.bottomFee}>
-        <Text style={styles.topFeeText}>{bottomFee}</Text>
+      <View style={styles.primaryFee}>
+        <Text style={styles.primaryFeeText}>{primaryFee}</Text>
       </View>
     )
   }
 
-  const getFlippingElement = () => {
-    const inputs =
-      inputCurrencySelected === 'fiat' ?
-        <View style={{flex: 10}} name='FlipperContainer'>
-          <View style={styles.topRow} name='TopRow'>
-            <TextInput
-              style={[styles.primaryTextInput, styles[mode]]}
-              value={getAmountToDisplayInFiat()}
-              placeholder={FIAT_PLACEHOLDER}
-              keyboardType='numeric'
-              onChangeText={onFiatInputChange} />
-            {displayTopFees('F Fee')}
-          </View>
+  const displaySecondaryFees = (secondaryFee) => {
+    if (!displayFees) { secondaryFee = '' }
 
-          <View style={styles.bottomRow} name='bottomRow'>
-            <Text
-              style={[styles.secondaryTextInput, styles[mode]]}>
-              {getAmountToDisplayInCrypto() || CRYPTO_PLACEHOLDER}
-            </Text>
-            {displayBottomFees('C Fee')}
-          </View>
-        </View> :
+    return (
+      <View style={styles.secondaryFee}>
+        <Text style={styles.primaryFeeText}>{secondaryFee}</Text>
+      </View>
+    )
+  }
 
-        <View style={{flex: 10}} name='FlipperContainer'>
-          <View style={styles.topRow} name='TopRow'>
-            <TextInput
-              style={[styles.primaryTextInput, styles[mode]]}
-              value={getAmountToDisplayInCrypto()}
-              placeholder={CRYPTO_PLACEHOLDER}
-              keyboardType='numeric'
-              onChangeText={onCryptoInputChange} />
-            {displayTopFees('C Fee')}
-          </View>
-
-          <View style={{flex: 1, flexDirection: 'row'}} name='bottomRow'>
-            <Text style={[styles.secondaryTextInput, styles[mode]]}>
-              {getAmountToDisplayInFiat() || FIAT_PLACEHOLDER}
-            </Text>
-            {displayBottomFees('F Fee')}
-          </View>
+  const getInputAndFeesElement = () => {
+    const inputAndFeesElement =
+      <View style={{flex: 10}} name='InputAndFeesElement'>
+        <View style={styles.primaryRow} name='PrimaryRow'>
+          <TextInput
+            style={[styles.primaryTextInput, styles[mode]]}
+            value={getPrimaryAmount()}
+            placeholder={primaryPlaceholder}
+            keyboardType='numeric'
+            onChangeText={onInputChange} />
+          {displayPrimaryFees(primaryFee)}
         </View>
 
-    return inputs
+        <View style={styles.secondaryRow} name='SecondaryRow'>
+          <Text style={[styles.secondaryText, styles[mode]]}>
+            {getSecondaryAmount() || secondaryPlaceholder}
+          </Text>
+          {displaySecondaryFees(secondaryFee)}
+        </View>
+
+      </View>
+
+    return inputAndFeesElement
   }
 
   return (
@@ -127,10 +207,8 @@ const FlipInput = ({
           <View style={styles.verticalSpacer} />
         </View>
 
-        {getFlippingElement()}
+        {getInputAndFeesElement()}
       </View>
     </View>
   )
 }
-
-export default connect()(FlipInput)
