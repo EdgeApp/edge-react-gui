@@ -23,16 +23,16 @@ export const getUsersList = (data) => {
   }
 }
 
-export const getUsersList = (data) => {
+export const selectUsersList = (id) => {
   return {
-    type: LIST_USERS_SIDEBAR,
-    data
+    type: SELECT_USERS_SIDEBAR,
+    id
   }
 }
 
-export const getUsersList = (data) => {
+export const removeUsersList = (id) => {
   return {
-    type: LIST_USERS_SIDEBAR,
-    data
+    type: REMOVE_USERS_SIDEBAR,
+    id
   }
 }

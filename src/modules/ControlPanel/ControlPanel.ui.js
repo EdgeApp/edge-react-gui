@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import _ from 'lodash'
 
-import { openSelectUser, closeSelectUser, getUsersList } from './action'
+import { openSelectUser, closeSelectUser, getUsersList, selectUsersList, removeUsersList } from './action'
 import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 
 import styles from './style'
@@ -54,6 +54,15 @@ class ControlPanel extends Component {
     }
   }
 
+  _handlePressUserSelect = (id) => {
+    this.props.dispatch(selectUsersList(id))
+    return this.props.dispatch(closeSelectUser(id))
+  }
+
+  _handlePressUserRemove = (id) => {
+    return this.props.dispatch(removeUsersList(id))
+  }
+
   _handleOnPressDirectory = () => {
     Actions.directory()
     return this.props.dispatch(closeSidebar())
@@ -66,15 +75,22 @@ class ControlPanel extends Component {
 
   render () {
 
+    const {
+      sidemenu,
+      usersView,
+      usersList,
+      selectedUser
+    } = this.props
+
     const renderMain = () => {
 
-      if(this.props.usersView) {
+      if(usersView) {
         const rows = () => {
-          return _.map(this.props.usersList, (user, index) => {
+          return _.map(usersList, (user, index) => {
             return (
-              <View style={styles.userList.row}>
-                <Text style={styles.userList.text}>{user.name}</Text>
-                <Icon name='close' />
+              <View key={index} style={styles.userList.row}>
+                <Text style={styles.userList.text} onPress={ e => this._handlePressUserSelect(user.id) }>{user.name}</Text>
+                <Icon name='close' onPress={ e => this._handlePressUserRemove(user.id) }/>
               </View>
             )
           })
@@ -86,7 +102,7 @@ class ControlPanel extends Component {
         )
       }
 
-      if(!this.props.usersView) {
+      if(!usersView) {
         if(platform === 'android') {
           return(
 
@@ -182,7 +198,7 @@ class ControlPanel extends Component {
           </View>
           <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
             <Icon style={styles.user.icon} name='person' />
-            <Text style={styles.user.name}>foofoo_user01</Text>
+            <Text style={styles.user.name}>{ selectedUser ? selectedUser.name : 'Account' }</Text>
             <Icon style={styles.user.icon} name='arrow-dropdown' />
           </TouchableOpacity>
           {renderMain()}
@@ -195,6 +211,12 @@ export default connect( state => ({
 
   sidemenu : state.sidemenu.view,
   usersView : state.controlPanel.usersView,
-  usersList : state.controlPanel.usersList
+  usersList : state.controlPanel.selectedUser !== null ?
+    _.filter(state.controlPanel.usersList, item => item.id !== state.controlPanel.selectedUser) :
+    state.controlPanel.usersList,
+
+  selectedUser : state.controlPanel.selectedUser !== null ?
+    _.find(state.controlPanel.usersList, item => item.id === state.controlPanel.selectedUser) :
+    null
 
 }) )(ControlPanel)
