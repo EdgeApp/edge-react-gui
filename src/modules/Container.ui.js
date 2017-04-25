@@ -33,10 +33,8 @@ class Main extends Component {
   }
 
   componentDidMount () {
-    console.log('componentDidMount')
     makeReactNativeIo()
       .then(io => {
-        console.log('makeContext')
         const context = makeContext({
           apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
           io
@@ -59,11 +57,8 @@ class Main extends Component {
   }
 
   render () {
-    console.log('render')
-    console.log('this.props.account', this.props.account)
-
     if (this.state.loadingScreenVisible) {
-      console.log('loading the account')
+      console.log('logging in...')
       return (
         <ActivityIndicator
           animating={this.state.animating}
@@ -77,7 +72,8 @@ class Main extends Component {
       )
     }
 
-    console.log('loading the app')
+    console.log('logged in')
+    console.log('loading the app...')
     return (
       <StyleProvider style={getTheme(platform)}>
         <Container>

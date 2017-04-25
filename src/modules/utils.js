@@ -19,9 +19,24 @@ const devStyle = {
   backgroundColor: 'yellow'
 }
 
+const logInfo = (msg) => {
+  console.log('%c ' + msg, 'background: grey; font-weight: bold; display: block;')
+}
+
+const logWarning = (msg) => {
+  console.log('%c ' + msg, 'background: yellow; font-weight: bold; display: block;')
+}
+
+const logError = (msg) => {
+  console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
+}
+
 export {
   getFiatFromCrypto,
   getCryptoFromFiat,
   sanitizeInput,
-  devStyle
+  devStyle,
+  logInfo,
+  logError,
+  logWarning
 }

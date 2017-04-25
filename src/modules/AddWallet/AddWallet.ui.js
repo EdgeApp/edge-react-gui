@@ -13,6 +13,9 @@ import styles from './styles.js'
 import { dev } from '../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
+import { addWallet } from '../Wallets/Wallets.action.js'
+import FakeAccount from './FakeAccount.js'
+
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = 'Name your new wallet'
@@ -122,6 +125,25 @@ class AddWallet extends Component {
       alert(INVALID_DATA_TEXT)
     } else {
       alert('walletName: ' + this.state.selectedWalletName + ' blockchain: ' + this.state.selectedBlockchain + ' fiat: ' + this.state.selectedFiat)
+
+
+
+      // determine wallet type
+      const walletType = 'wallet.repo.myFakeWalletType'
+      // get new keys from txLib
+      const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
+      // create new wallet from airbitz.createWallet(this.selectedBlockchain, fake keys), returns wallet ID
+      // const walletId = this.props.account.createWallet(walletType, walletKeys)
+      FakeAccount.createWallet(walletType, walletKeys)
+        .then(walletId => {
+          // get wallet by ID from the account
+          // const newWallet = this.props.account.getWallet(walletID)
+          const newWallet = FakeAccount.getWallet(walletId)
+          // save new wallet in redux
+          this.props.dispatch(addWallet(newWallet))
+          // ??? wallet.rename(this.state.selectedWalletName) ???
+          // ??? wallet.addFiat(this.state.selectedFiat) ???
+        })
     }
   }
 
