@@ -53,22 +53,23 @@ export default {
     link: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginVertical: 10,
-      // backgroundColor: 'yellow',
-      // borderStyle: 'solid',
-      // borderColor: '#e3e3e3',
-      // borderWidth: 1
+      paddingVertical: 10,
+      borderStyle: 'solid',
+      borderColor: '#efefef',
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5
     },
 
 
     icon: {
+      flex:1,
       fontSize: 35,
       marginHorizontal: 15
     },
 
     text: {
-      flex: 1,
-      fontSize: 14,
+      flex: 8,
+      fontSize: 13,
       color: "#000"
     }
 
@@ -84,9 +85,10 @@ export default {
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 10,
-      // borderStyle: 'solid',
-      // borderColor: '#e3e3e3',
-      // borderWidth: 1
+      borderStyle: 'solid',
+      borderColor: '#efefef',
+      borderTopWidth: 0.5,
+      borderBottomWidth: 0.5
     },
 
     icon: {
