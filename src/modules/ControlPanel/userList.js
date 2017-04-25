@@ -1,0 +1,22 @@
+export default [
+  {id: 1, name: 'foofoo_user1'},
+  {id: 2, name: 'foofoo_user2'},
+  {id: 3, name: 'foofoo_user3'},
+  {id: 4, name: 'foofoo_user4'},
+  {id: 5, name: 'foofoo_user5'},
+  {id: 6, name: 'foofoo_user6'},
+  {id: 7, name: 'foofoo_user7'},
+  {id: 8, name: 'foofoo_user8'},
+  {id: 9, name: 'foofoo_user9'},
+  {id: 10, name: 'foofoo_user10'},
+  {id: 11, name: 'foofoo_user11'},
+  {id: 12, name: 'foofoo_user12'},
+  {id: 13, name: 'foofoo_user13'},
+  {id: 14, name: 'foofoo_user14'},
+  {id: 15, name: 'foofoo_user15'},
+  {id: 16, name: 'foofoo_user16'},
+  {id: 17, name: 'foofoo_user17'},
+  {id: 18, name: 'foofoo_user18'},
+  {id: 19, name: 'foofoo_user19'},
+  {id: 20, name: 'foofoo_user20'}
+]
