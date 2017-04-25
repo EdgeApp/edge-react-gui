@@ -111,13 +111,16 @@ export default {
     row: {
       flexDirection: 'row',
       alignItems: 'center',
-      padding: 13,
       borderStyle: 'solid',
       borderColor: '#efefef',
       borderBottomWidth: 0.5
     },
     text:{
+      padding: 13,
       flex: 1
+    },
+    icon:{
+      padding: 13
     }
   }
 

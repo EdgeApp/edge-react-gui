@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, ScrollView, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
+import { Platform, View, ScrollView, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Text, Icon  } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
@@ -9,6 +9,7 @@ import _ from 'lodash'
 import { closeSelectUser, selectUsersList, removeUsersList } from '../action'
 
 import styles from '../style'
+const platform = Platform.OS;
 
 class UserListComponent extends Component {
 
@@ -25,12 +26,30 @@ class UserListComponent extends Component {
 
     const rows = () => {
       return _.map(this.props.usersList, (user, index) => {
-        return (
-          <View key={index} style={styles.userList.row}>
-            <Text style={styles.userList.text} onPress={ e => this._handlePressUserSelect(user.id) }>{user.name}</Text>
-            <Icon name='close' onPress={ e => this._handlePressUserRemove(user.id) }/>
-          </View>
-        )
+        if(platform === 'android') {
+          return (
+            <View key={index} style={styles.userList.row}>
+              <TouchableNativeFeedback onPress={ e => this._handlePressUserSelect(user.id) } background={TouchableNativeFeedback.SelectableBackground()} >
+                <Text style={styles.userList.text}>{user.name}</Text>
+              </TouchableNativeFeedback>
+              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user.id) }>
+                <Icon name='close'/>
+              </TouchableOpacity>
+            </View>
+          )
+        }
+        if(platform !== 'android') {
+          return (
+            <View key={index} style={styles.userList.row}>
+              <TouchableOpacity  style={styles.userList.text} onPress={ e => this._handlePressUserSelect(user.id) }>
+                <Text>{user.name}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user.id) }>
+                <Icon name='close'/>
+              </TouchableOpacity>
+            </View>
+          )
+        }
       })
     }
 
