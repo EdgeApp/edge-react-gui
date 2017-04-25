@@ -29,7 +29,9 @@ const store = combineReducers({
   }),
 
   walletList: combineReducers({
-    walletList: WalletList.walletList
+    walletList: WalletList.walletList,
+    walletsVisible: WalletList.walletsVisible,
+    archiveVisible: WalletList.archiveVisible
   }),
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,

@@ -9,9 +9,9 @@ import { Actions } from 'react-native-router-flux'
 import styles from './WalletList.style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
-import { updateWalletListOrder } from './WalletList.action'
+import { updateWalletListOrder, updateArchiveListOrder, toggleWalletsVisibility, toggleArchiveVisibility } from './WalletList.action'
 
-let data = {
+let wallets = {
   world1: {text: 'world'},
   areyou2: {text: 'are you'},
   t123: {text: 123},
@@ -31,13 +31,35 @@ let data = {
   kk: {text: 'kk'}
 }
 
-let order = Object.keys(data)
+let archive = {
+  firstArchive: {text: 'firstArchive'},
+  secondArchive: {text: 'secondArchive'},
+  thirdArchive: {text: 'thirdArchive'},
+  fourthArchive: {text: 'fourthArchive'},
+  fifthArchive: {text: 'fifthArchive'},
+  sixthArchive: {text: 'sixthArchive'}
+}
+
+let walletOrder = Object.keys(wallets)
+let archiveOrder = Object.keys(archive)
+
 
 class WalletList extends Component {
-  // render row
-  //do top banner
-  forceUpdate(order) {
-    this.props.dispatch(updateWalletListOrder(order))
+
+  forceWalletListUpdate(walletOrder) {
+    this.props.dispatch(updateWalletListOrder(walletOrder))
+  }
+
+  forceArchiveListUpdate(archiveOrder) {
+    this.props.dispatch(updateArchiveListOrder(archiveOrder))
+  }
+
+  toggleWalletsDropdown() {
+    this.props.dispatch(toggleWalletsVisibility(this.props.walletsVisible, this.props.archiveVisible))
+  }
+
+  toggleArchiveDropdown() {
+    this.props.dispatch(toggleArchiveVisibility(this.props.archiveVisible, this.props.walletsVisible))
   }
 
   render() {
@@ -55,21 +77,49 @@ class WalletList extends Component {
           </View>
         </LinearGradient>          
         <View style={styles.walletsBox}>
-          <SortableListView
-            style={styles.sortableWalletList}
-            data={data}
-            order={order}
-            onRowMoved={e => {
-              order.splice(e.to, 0, order.splice(e.from, 1)[0]);
-              console.log('order is: ', order)
-              this.forceUpdate(order);
-            }}
-            //onRowMoved={this._onRowMoved}
-            //onMoveStart={this._onMoveStart}
-            //onMoveEnd={this._onMoveEnd}
-            //rowHasChanged={this._rowHasChanged}
-            renderRow={ row => <WalletListRow data={row} />}
-          />
+          <View style={styles.walletsBoxHeaderWrap}>
+            <View style={[styles.walletsBoxHeaderTextWrap]}>
+              <Text style={styles.walletsBoxHeaderText}>Wallets</Text>
+            </View>
+            <TouchableHighlight onPress={this.toggleWalletsDropdown.bind(this)} style={[styles.walletsBoxHeaderDropdown]}>
+              <FAIcon name="chevron-down" size={18} style={[styles.dropdownIcon]}  color="#666666" />
+            </TouchableHighlight>
+          </View>
+          {this.props.walletsVisible && 
+            <SortableListView
+              style={styles.sortableWalletList}
+              data={wallets}
+              order={walletOrder}
+              onRowMoved={e => {
+                walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0]);
+                console.log('walletOrder is: ', walletOrder)
+                this.forceWalletListUpdate(walletOrder);
+              }}
+              renderRow={ row => <WalletListRow data={row} />}
+            />
+          }
+
+          <View style={styles.archiveBoxHeaderWrap}>
+            <View style={[styles.archiveBoxHeaderTextWrap]}>
+              <Text style={styles.archiveBoxHeaderText}>Archive</Text>
+            </View>
+            <TouchableHighlight onPress={this.toggleArchiveDropdown.bind(this)} style={[styles.archiveBoxHeaderDropdown]}>
+              <FAIcon name="chevron-down" size={18} style={[styles.dropdownIcon]}  color="#666666" />
+            </TouchableHighlight>
+          </View>          
+          {this.props.archiveVisible && 
+            <SortableListView
+              style={styles.sortableWalletList}
+              data={archive}
+              order={archiveOrder}
+              onRowMoved={e => {
+                archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0]);
+                console.log('archiveOrder is: ', archiveOrder)
+                this.forceArchiveListUpdate(archiveOrder);
+              }}
+              renderRow={ row => <WalletListRow data={row} />}
+            />             
+          }
         </View>
       </View>
     )
@@ -84,11 +134,15 @@ class WalletList extends Component {
 }
 
 WalletList.propTypes = {
-  walletList: PropTypes.array
+  walletList: PropTypes.array,
+  archiveList: PropTypes.array
 }
 
 export default connect( state => ({
 
-  walletList: state.walletList.walletList
+  walletList: state.walletList.walletList,
+  archiveList: state.walletList.archiveList,
+  walletsVisible: state.walletList.walletsVisible,
+  archiveVisible: state.walletList.archiveVisible
 
 }) )(WalletList)

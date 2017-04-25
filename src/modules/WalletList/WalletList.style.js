@@ -48,11 +48,49 @@ module.exports = StyleSheet.create({
     walletsBox: {
       flex:8
     },
+    walletsBoxHeaderWrap: {
+      padding: 12,
+      backgroundColor: '#C8C8C8',
+      borderBottomWidth: 1,
+      borderColor: '#BBB',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    walletsBoxHeaderTextWrap: {
+
+    },
+    walletsBoxHeaderText: {
+      fontWeight: 'bold',
+      fontSize: 18
+    },
+    walletsBoxHeaderDropdown: {
+  
+    },
+
+    archiveBoxHeaderWrap: {
+      padding: 12,
+      backgroundColor: '#C8C8C8',
+      borderBottomWidth: 1,
+      borderColor: '#BBB',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    archiveBoxHeaderTextWrap: {
+
+    },
+    archiveBoxHeaderText: {
+      fontWeight: 'bold',
+      fontSize: 18
+    },
+    archiveBoxHeaderDropdown: {
+  
+    },
+
     rowContainer: {
-      padding: 18,
+      padding: 16,
       backgroundColor: "#F8F8F8",
       borderBottomWidth:1,
-      borderColor: '#eee' 
+      borderColor: '#EEE' 
     },
     rowNameText: {
 
