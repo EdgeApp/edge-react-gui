@@ -43,10 +43,10 @@ class WalletList extends Component {
   render() {
     return(
       <View style={styles.container}>
-        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, styles.totalBalanceBox]} colors={["#3b7adb","#2b569a"]}>
-          <View style={[styles.currentBalanceWrap]}>
-            <View style={[styles.bitcoinIconWrap]}>
-              <Text style={[styles.bitcoinIcon]}>Total Balance</Text>
+        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.totalBalanceBox]} colors={["#3b7adb","#2b569a"]}>
+          <View style={[styles.totalBalanceWrap]}>
+            <View style={[styles.totalBalanceHeader]}>
+              <Text style={[styles.totalBalanceText]}>Total Balance</Text>
             </View>
             <View style={styles.currentBalanceBoxDollarsWrap}>
               <Text style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</Text>

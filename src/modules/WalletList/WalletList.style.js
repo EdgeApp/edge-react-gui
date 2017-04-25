@@ -8,23 +8,23 @@ module.exports = StyleSheet.create({
       alignItems: 'stretch',
   },
     totalBalanceBox: {
-      flex: 5,
+      flex: 4,
       justifyContent: "center"
     },
 
-  currentBalanceBox: {
-    flex: 5,
-    justifyContent: "center"
-  },
-  currentBalanceWrap: {
+  totalBalanceWrap: {
     flex: 3,
     alignItems: 'center',
     backgroundColor: 'transparent'
   },
-  bitcoinIconWrap: {
+  totalBalanceHeader: {
     flex: 1,
     justifyContent: 'flex-end',
     backgroundColor: 'transparent'
+  },
+  totalBalanceText: {
+    fontSize: 24,
+    color: 'white'
   },
   currentBalanceBoxDollarsWrap: {
     flex: 2,
@@ -46,6 +46,15 @@ module.exports = StyleSheet.create({
 
     //bottom major portion of screen
     walletsBox: {
-      flex:7
+      flex:8
+    },
+    rowContainer: {
+      padding: 18,
+      backgroundColor: "#F8F8F8",
+      borderBottomWidth:1,
+      borderColor: '#eee' 
+    },
+    rowNameText: {
+
     }
 })
