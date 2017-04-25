@@ -1,18 +1,58 @@
 import React, { Component } from 'react'
-import { Platform, View, StyleSheet, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
+import { Platform, View, StyleSheet, ScrollView, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 // import Icon from 'react-native-vector-icons/MaterialIcons'
-import { Text, Button, Icon } from 'native-base'
+import { Text, Button, Icon, List, ListItem  } from 'native-base'
 import Icon_FA from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
+import _ from 'lodash'
 
+import { openSelectUser, closeSelectUser, getUsersList } from './action'
 import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
 
 import styles from './style'
 const platform = Platform.OS;
 
 class ControlPanel extends Component {
+
+  componentWillMount = () => {
+    return this.props.dispatch(
+      getUsersList(
+        [
+          {id: 1, name: 'foofoo_user1'},
+          {id: 2, name: 'foofoo_user2'},
+          {id: 3, name: 'foofoo_user3'},
+          {id: 4, name: 'foofoo_user4'},
+          {id: 5, name: 'foofoo_user5'},
+          {id: 6, name: 'foofoo_user6'},
+          {id: 7, name: 'foofoo_user7'},
+          {id: 8, name: 'foofoo_user8'},
+          {id: 9, name: 'foofoo_user9'},
+          {id: 10, name: 'foofoo_user10'},
+          {id: 11, name: 'foofoo_user11'},
+          {id: 12, name: 'foofoo_user12'},
+          {id: 13, name: 'foofoo_user13'},
+          {id: 14, name: 'foofoo_user14'},
+          {id: 15, name: 'foofoo_user15'},
+          {id: 16, name: 'foofoo_user16'},
+          {id: 17, name: 'foofoo_user17'},
+          {id: 18, name: 'foofoo_user18'},
+          {id: 19, name: 'foofoo_user19'},
+          {id: 20, name: 'foofoo_user20'},
+        ]
+      )
+    )
+  }
+
+  _handlePressUserList = () => {
+    if(!this.props.usersView){
+      return this.props.dispatch(openSelectUser())
+    }
+    if(this.props.usersView){
+      return this.props.dispatch(closeSelectUser())
+    }
+  }
 
   _handleOnPressDirectory = () => {
     Actions.directory()
@@ -27,10 +67,22 @@ class ControlPanel extends Component {
   render () {
 
     const renderMain = () => {
-      console.log(this.props.usersView)
+
       if(this.props.usersView) {
+        const rows = () => {
+          return _.map(this.props.usersList, (user, index) => {
+            return (
+              <View style={styles.userList.row}>
+                <Text style={styles.userList.text}>{user.name}</Text>
+                <Icon name='close' />
+              </View>
+            )
+          })
+        }
         return(
-          <h1>Fuck Yeah</h1>
+          <ScrollView>
+            {rows()}
+          </ScrollView>
         )
       }
 
@@ -128,11 +180,11 @@ class ControlPanel extends Component {
             <Icon name='logo-bitcoin' style={{ color: '#F8F8F8' }}/>
             <Text style={styles.bitcoin.value}>  = 10000 USD</Text>
           </View>
-          <View style={styles.user.container}>
+          <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
             <Icon style={styles.user.icon} name='person' />
             <Text style={styles.user.name}>foofoo_user01</Text>
             <Icon style={styles.user.icon} name='arrow-dropdown' />
-          </View>
+          </TouchableOpacity>
           {renderMain()}
         </View>
     )
@@ -142,6 +194,7 @@ class ControlPanel extends Component {
 export default connect( state => ({
 
   sidemenu : state.sidemenu.view,
-  usersView : state.controlPanel.usersView
+  usersView : state.controlPanel.usersView,
+  usersList : state.controlPanel.usersList
 
 }) )(ControlPanel)

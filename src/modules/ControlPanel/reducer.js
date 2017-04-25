@@ -10,3 +10,12 @@ export const usersView = (state = false, action) => {
       return state
   }
 }
+
+export const usersList = (state = [], action) => {
+  switch (action.type) {
+    case ACTION.LIST_USERS_SIDEBAR :
+      return action.data
+    default:
+      return state
+  }
+}

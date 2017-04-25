@@ -107,4 +107,18 @@ export default {
 
   },
 
+  userList : {
+    row: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 13,
+      borderStyle: 'solid',
+      borderColor: '#efefef',
+      borderBottomWidth: 0.5
+    },
+    text:{
+      flex: 1
+    }
+  }
+
 }

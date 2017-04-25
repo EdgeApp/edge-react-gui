@@ -25,7 +25,8 @@ const store = combineReducers({
   }),
 
   controlPanel: combineReducers({
-    usersView: ControlPanel.usersView
+    usersView: ControlPanel.usersView,
+    usersList: ControlPanel.usersList
   }),
 
   routes
