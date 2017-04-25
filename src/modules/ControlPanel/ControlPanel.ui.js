@@ -29,7 +29,7 @@ class ControlPanel extends Component {
   }
 
   render () {
-
+    console.log(this.props.usersView)
     return  (
         <View style={styles.container}>
           <View style={styles.bitcoin.container}>
@@ -49,6 +49,7 @@ class ControlPanel extends Component {
 
 export default connect( state => ({
 
+  usersView: state.controlPanel.usersView,
   selectedUser : state.controlPanel.selectedUser !== null ?
     _.find(state.controlPanel.usersList, item => item.id === state.controlPanel.selectedUser) :
     null

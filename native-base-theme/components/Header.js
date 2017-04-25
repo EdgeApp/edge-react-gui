@@ -199,6 +199,10 @@ export default (variables = variable) => {
       flex: 1,
       alignItems: ((platform === 'ios') && (platformStyle!=='material')) ? 'center' : 'flex-start',
       alignSelf: 'center',
+      backgroundColor: 'transparent', // custom
+      'NativeBase.Title': {
+        color: '#FFF',
+      }, // custom
       'NativeBase.Segment': {
         borderWidth: 0,
         alignSelf: 'flex-end',
