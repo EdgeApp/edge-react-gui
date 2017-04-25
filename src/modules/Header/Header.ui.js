@@ -25,36 +25,6 @@ class HeaderUI extends Component {
     )
   }
 
-}
-
-// const styles = StyleSheet.create({
-//
-//   container: {
-//     backgroundColor:'#f2f2f2'
-//   },
-//
-//   center: {
-//     flex: 1,
-//     fontSize: 16,
-//     textAlign: 'center'
-//   },
-//
-//   left: {
-//     fontSize: 16,
-//     paddingLeft: 15,
-//     width: 50
-//   },
-//
-//   right: {
-//     fontSize: 16,
-//     paddingRight: 15,
-//     width: 50
-//   },
-//
-// });
-//
-
-
 export default connect( state => ({
 
   routes: state.routes

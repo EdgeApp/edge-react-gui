@@ -29,7 +29,6 @@ class ControlPanel extends Component {
   }
 
   render () {
-    console.log(this.props.usersView)
     return  (
         <View style={styles.container}>
           <View style={styles.bitcoin.container}>
