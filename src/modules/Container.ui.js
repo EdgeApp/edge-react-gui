@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, Content, StyleProvider } from 'native-base'
@@ -27,28 +27,57 @@ class Main extends Component {
   constructor (props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      loadingScreenVisible: true
+    }
   }
 
   componentDidMount () {
+    console.log('componentDidMount')
     makeReactNativeIo()
       .then(io => {
+        console.log('makeContext')
         const context = makeContext({
           apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
           io
         })
         this.props.dispatch(addAirbitzToRedux(context))
+        const account = context.loginWithPassword('bob19', 'Funtimes19')
 
-        return context.loginWithPassword('bob19', 'Funtimes19')
+        return account
       })
       .then(account => {
         this.props.dispatch(addAccountToRedux(account))
 
         return account
       })
+      .then(() => {
+        this.setState({
+          loadingScreenVisible: false
+        })
+      })
   }
 
   render () {
+    console.log('render')
+    console.log('this.props.account', this.props.account)
+
+    if (this.state.loadingScreenVisible) {
+      console.log('loading the account')
+      return (
+        <ActivityIndicator
+          animating={this.state.animating}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          size='large'
+        />
+      )
+    }
+
+    console.log('loading the app')
     return (
       <StyleProvider style={getTheme(platform)}>
         <Container>
