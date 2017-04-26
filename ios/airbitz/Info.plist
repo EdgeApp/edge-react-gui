@@ -5,7 +5,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>en</string>
     <key>CFBundleDisplayName</key>
-    <string>airbitzNative</string>
+    <string>airbitz</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -20,8 +20,6 @@
     <string>1.0</string>
     <key>CFBundleSignature</key>
     <string>????</string>
-    <key>LSApplicationCategoryType</key>
-    <string/>
     <key>CFBundleVersion</key>
     <string>1</string>
     <key>LSRequiresIPhoneOS</key>

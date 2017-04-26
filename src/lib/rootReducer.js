@@ -29,14 +29,12 @@ const store = combineReducers({
     recipientAddress: Scan.recipientAddress
   }),
 
-<<<<<<< HEAD
   controlPanel: combineReducers({
     usersView: ControlPanel.usersView,
     usersList: ControlPanel.usersList,
     selectedUser: ControlPanel.selectedUser
   }),
 
-=======
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,
     walletListModalVisible: WalletTransferList.walletListModalVisible
@@ -44,7 +42,6 @@ const store = combineReducers({
 
   wallets: Wallets,
 
->>>>>>> develop
   routes
 })
 

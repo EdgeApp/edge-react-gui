@@ -24,6 +24,7 @@ class HeaderUI extends Component {
       </LinearGradient>
     )
   }
+}
 
 export default connect( state => ({
 

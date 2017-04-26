@@ -1,4 +1,4 @@
-package com.airbitznative;
+package com.airbitz;
 
 import android.app.Application;
 
