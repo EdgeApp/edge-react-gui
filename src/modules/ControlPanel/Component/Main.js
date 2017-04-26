@@ -23,6 +23,11 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
+  _handleOnPressWallets = () => {
+    Actions.walletList();
+    return this.props.dispatch(closeSidebar())
+  }
+
   render () {
 
     if(this.props.usersView) {
@@ -95,10 +100,10 @@ class MainComponent extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.others.container}>
-              <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed4') }>
+              <TouchableOpacity style={styles.others.link} onPress={this._handleOnPressWallets}>
                 <Icon style={styles.others.icon} name='cash' />
                 <Text style={styles.others.text}>WALLETS</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>             
               <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed5') }>
                 <Icon style={styles.others.icon} name='log-out' />
                 <Text style={styles.others.text}>LOGOUT</Text>
