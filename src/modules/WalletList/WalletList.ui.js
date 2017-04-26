@@ -11,6 +11,12 @@ import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
 import { updateWalletListOrder, updateArchiveListOrder, toggleWalletsVisibility, toggleArchiveVisibility } from './WalletList.action'
 
+// Fake stuff to be removed
+import FakeAccount from '../AddWallet/FakeAccount.js'
+import { addWallet } from '../Wallets/Wallets.action.js'
+// End of fake stuff to be removed later
+
+
 /*
 let archive = {
   firstArchive: {text: 'firstArchive'},
@@ -25,6 +31,25 @@ let archiveOrder = Object.keys(archive)
 */
 
 class WalletList extends Component {
+
+  componentWillMount() {
+    // determine wallet type
+    const walletType = 'wallet.repo.myFakeWalletType'
+    // get new keys from txLib
+    const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
+    // create new wallet from airbitz.createWallet(this.selectedBlockchain, fake keys), returns wallet ID
+    // const walletId = this.props.account.createWallet(walletType, walletKeys)
+    FakeAccount.createWallet(walletType, walletKeys)
+      .then(walletId => {
+        // get wallet by ID from the account
+        // const newWallet = this.props.account.getWallet(walletID)
+        const newWallet = FakeAccount.getWallet(walletId)
+        // save new wallet in redux
+        this.props.dispatch(addWallet(newWallet))
+        // ??? wallet.rename(this.state.selectedWalletName) ???
+        // ??? wallet.addFiat(this.state.selectedFiat) ???
+      }).catch( error => {console.log('error is: ', error)})    
+  }
 
   forceWalletListUpdate(walletOrder) {
     this.props.dispatch(updateWalletListOrder(walletOrder))
@@ -120,7 +145,7 @@ WalletList.propTypes = {
 
 export default connect( state => ({
 
-  walletList: state.account.walletList.wallets,
+  walletList: state.wallets,
   archiveList: state.walletList.archiveList,
   walletsVisible: state.walletList.walletsVisible,
   archiveVisible: state.walletList.archiveVisible

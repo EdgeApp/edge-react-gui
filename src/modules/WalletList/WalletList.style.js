@@ -89,10 +89,23 @@ module.exports = StyleSheet.create({
     rowContainer: {
       padding: 16,
       backgroundColor: "#F8F8F8",
-      borderBottomWidth:1,
-      borderColor: '#EEE' 
+      borderBottomWidth: 1,
+      borderColor: '#EEE'
+    },
+    rowContent: {
+      justifyContent: 'space-between',
+      flexDirection: 'row' 
+    },
+    rowNameTextWrap: {
+      justifyContent: 'center'
     },
     rowNameText: {
 
+    },
+    rowDotsRap: {
+      
+    },
+    rowDots: {
+      
     }
 })
