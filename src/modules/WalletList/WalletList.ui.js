@@ -11,26 +11,7 @@ import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
 import { updateWalletListOrder, updateArchiveListOrder, toggleWalletsVisibility, toggleArchiveVisibility } from './WalletList.action'
 
-let wallets = {
-  world1: {text: 'world'},
-  areyou2: {text: 'are you'},
-  t123: {text: 123},
-  this: {text: 'this'},
-  a: {text: 'a'},
-  real: {text: 'real'},
-  drag: {text: 'drag and drop'},
-  bb: {text: 'bb'},
-  cc: {text: 'cc'},
-  dd: {text: 'dd'},
-  ee: {text: 'ee'},
-  ff: {text: 'ff'},
-  gg: {text: 'gg'},
-  hh: {text: 'hh'},
-  ii: {text: 'ii'},
-  jj: {text: 'jj'},
-  kk: {text: 'kk'}
-}
-
+/*
 let archive = {
   firstArchive: {text: 'firstArchive'},
   secondArchive: {text: 'secondArchive'},
@@ -40,9 +21,8 @@ let archive = {
   sixthArchive: {text: 'sixthArchive'}
 }
 
-let walletOrder = Object.keys(wallets)
 let archiveOrder = Object.keys(archive)
-
+*/
 
 class WalletList extends Component {
 
@@ -63,6 +43,7 @@ class WalletList extends Component {
   }
 
   render() {
+    let walletOrder = Object.keys(this.props.walletList)
     return(
       <View style={styles.container}>
         <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.totalBalanceBox]} colors={["#3b7adb","#2b569a"]}>
@@ -88,7 +69,7 @@ class WalletList extends Component {
           {this.props.walletsVisible && 
             <SortableListView
               style={styles.sortableWalletList}
-              data={wallets}
+              data={this.props.walletList}
               order={walletOrder}
               onRowMoved={e => {
                 walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0]);
@@ -134,13 +115,12 @@ class WalletList extends Component {
 }
 
 WalletList.propTypes = {
-  walletList: PropTypes.array,
   archiveList: PropTypes.array
 }
 
 export default connect( state => ({
 
-  walletList: state.walletList.walletList,
+  walletList: state.account.walletList.wallets,
   archiveList: state.walletList.archiveList,
   walletsVisible: state.walletList.walletsVisible,
   archiveVisible: state.walletList.archiveVisible
