@@ -95,6 +95,14 @@ class SendConfirmation extends Component {
     return pinInputIfEnabled
   }
 
+  getFeeInFiat = () => {
+    return '0.51'
+  }
+
+  getFeeInCrypto = () => {
+    return '0.001'
+  }
+
   render () {
     return (
       <LinearGradient
@@ -130,7 +138,9 @@ class SendConfirmation extends Component {
             amountRequestedInFiat={this.state.amountRequestedInFiat}
             inputCurrencySelected={this.state.inputCurrencySelected}
             maxAvailableToSpendInCrypto={this.state.maxAvailableToSpendInCrypto}
-            displayFees />
+            displayFees
+            feeInCrypto={this.getFeeInCrypto()}
+            feeInFiat={this.getFeeInFiat()} />
         </View>
 
         <View style={styles.recipient}>
