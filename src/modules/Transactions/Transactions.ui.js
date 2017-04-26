@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated }  from 'react-native'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
 import { connect } from 'react-redux'
@@ -264,6 +265,12 @@ class Transactions extends Component {
       borderWidth: 1
     }
   }
+}
+
+Transactions.propTypes = {
+  transactionsList: PropTypes.array,
+  searchVisible: PropTypes.bool,
+  contactsList: PropTypes.array
 }
 
 export default connect( state => ({

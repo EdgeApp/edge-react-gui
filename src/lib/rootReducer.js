@@ -4,6 +4,7 @@ import routes from './routesReducer'
 import * as SideMenu from '../modules/SideMenu/SideMenu.reducer'
 import * as Transactions from '../modules/Transactions/Transactions.reducer'
 import * as Scan from '../modules/Scan/Scan.reducer'
+import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
 import Login from '../modules/Login/Login.reducer.js'
 import Wallets from '../modules/Wallets/Wallets.reducer.js'
@@ -28,6 +29,11 @@ const store = combineReducers({
     recipientAddress: Scan.recipientAddress
   }),
 
+  walletList: combineReducers({
+    walletList: WalletList.walletList,
+    walletsVisible: WalletList.walletsVisible,
+    archiveVisible: WalletList.archiveVisible
+  }),
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,
     walletListModalVisible: WalletTransferList.walletListModalVisible

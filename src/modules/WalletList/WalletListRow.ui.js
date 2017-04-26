@@ -12,9 +12,13 @@ class WalletListRow extends Component {
 
   render() {
     return(
-      <View style={styles.container}>
-        <Text>This is a row</Text>
-      </View>
+      <TouchableHighlight style={styles.rowContainer}
+        underlayColor={'#eee'}
+        delayLongPress={500}
+        {...this.props.sortHandlers}
+      >
+        <Text style={styles.rowNameText}>{this.props.data.text}</Text>
+      </TouchableHighlight>
     )
   }
 
