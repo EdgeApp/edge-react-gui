@@ -11,13 +11,18 @@ import styles from './WalletList.style'
 class WalletListRow extends Component {
 
   render() {
+    console.log('this is: ', this)
+    let btcSeed = this.props.data.BitcoinSeed.slice(0,5) + '...'
     return(
-      <View style={styles.container}>
-        <Text>This is a row</Text>
-      </View>
+      <TouchableHighlight style={styles.rowContainer}
+        underlayColor={'#eee'}
+        delayLongPress={500}
+        {...this.props.sortHandlers}
+      >
+        <Text style={styles.rowNameText}>{btcSeed}</Text>
+      </TouchableHighlight>
     )
   }
-
 
   border(color) {
     return {
@@ -32,7 +37,5 @@ WalletListRow.propTypes = {
 }
 
 export default connect( state => ({
-
-
 
 }) )(WalletListRow)

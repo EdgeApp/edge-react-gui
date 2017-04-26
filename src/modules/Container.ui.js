@@ -14,6 +14,7 @@ import Directory from './Directory/Directory.ui'
 import Request from './Request/index'
 import SendConfirmation from './SendConfirmation/index'
 import Scan from './Scan/Scan.ui'
+import WalletList from './WalletList/WalletList.ui'
 
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
@@ -84,6 +85,8 @@ class Main extends Component {
 
                 <Scene key='scan' component={Scan} title='Scan' duration={0} />
 
+                <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
+                
                 <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
                 <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />

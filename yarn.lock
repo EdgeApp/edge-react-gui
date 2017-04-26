@@ -4804,6 +4804,12 @@ react-native-slider@^0.9.1:
     react-addons-shallow-compare "^15.0.2"
     style-equal "^1.0.0"
 
+react-native-sortable-listview@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-sortable-listview/-/react-native-sortable-listview-0.2.2.tgz#f0405ddc52b3dda5e7faaac8314068a1734a0773"
+  dependencies:
+    react-timer-mixin "^0.13.3"
+
 react-native-tab-navigator@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-native-tab-navigator/-/react-native-tab-navigator-0.3.3.tgz#b222bad21fbe773c8d28f9a0de30ce62b08724d3"
@@ -4814,7 +4820,7 @@ react-native-tabs@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/react-native-tabs/-/react-native-tabs-1.0.9.tgz#75d3c35e8b5b6970869eab282372cb32e2a782cd"
 
-react-native-tcp@^3.2.1:
+react-native-tcp@3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/react-native-tcp/-/react-native-tcp-3.2.1.tgz#c9f401a169c5d93ae1f003fa4d151fd9f0a82a99"
   dependencies:
@@ -4825,7 +4831,7 @@ react-native-tcp@^3.2.1:
     process "^0.11.9"
     util "^0.10.3"
 
-react-native-udp@^2.0.0:
+react-native-udp@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-2.0.0.tgz#555ef4302b46a0e853a12e3b8764203bb7b9fd58"
   dependencies:

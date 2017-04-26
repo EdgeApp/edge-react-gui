@@ -45,7 +45,7 @@ class TabBar extends Component {
                 active={ this.props.routes.scene.title  === 'Scan' ? true : false }
               >
                 <Icon name='share' />
-                <Text>Send</Text>
+                <Text>Scan</Text>
               </Button>
 
               <Button
