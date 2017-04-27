@@ -102,10 +102,10 @@ module.exports = StyleSheet.create({
     rowNameText: {
 
     },
-    rowDotsRap: {
+    rowDotsWrap: {
       
     },
     rowDots: {
-      
+
     }
 })

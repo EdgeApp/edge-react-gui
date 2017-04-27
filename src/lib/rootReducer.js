@@ -36,9 +36,10 @@ const store = combineReducers({
     selectedUser: ControlPanel.selectedUser
   }),
   walletList: combineReducers({
-    walletList: WalletList.walletList,
     walletsVisible: WalletList.walletsVisible,
-    archiveVisible: WalletList.archiveVisible
+    archiveVisible: WalletList.archiveVisible,
+    renameWalletVisible: WalletList.renameWalletVisible,
+    deleteWalletVisible: WalletList.deleteWalletVisible
   }),
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,

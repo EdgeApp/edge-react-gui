@@ -148,6 +148,8 @@ export default connect( state => ({
   walletList: state.wallets,
   archiveList: state.walletList.archiveList,
   walletsVisible: state.walletList.walletsVisible,
-  archiveVisible: state.walletList.archiveVisible
+  archiveVisible: state.walletList.archiveVisible,
+  renameWalletVisible: state.walletList.renameWalletVisible,
+  deleteWalletVisible: state.walletList.deleteWalletVisible
 
 }) )(WalletList)

@@ -19,6 +19,7 @@ import WalletList from './WalletList/WalletList.ui'
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
+import { MenuContext } from 'react-native-menu';
 
 import AddWallet from './AddWallet/index.js'
 
@@ -77,6 +78,7 @@ class Main extends Component {
     console.log('loading the app...')
     return (
       <StyleProvider style={getTheme(platform)}>
+        <MenuContext style={{ flex: 1 }}>
         <Container>
           <SideMenu>
             <Header />
@@ -85,23 +87,24 @@ class Main extends Component {
 
                 <Scene key='scan' component={Scan} title='Scan' duration={0} />
 
-                <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
+                <Scene key='walletList' component={WalletList} title='Wallets' duration={0} />
                 
                 <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} />
 
                 <Scene key='request' component={Request} title='Request' duration={0} />
 
                 <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
 
-                <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
+                <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} initial />
 
               </Scene>
             </RouterWithRedux>
           </SideMenu>
           <TabBar />
         </Container>
+        </MenuContext>
       </StyleProvider>
     )
   }

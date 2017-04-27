@@ -1,6 +1,6 @@
 import * as ACTION from './WalletList.action'
 
-export const walletList = (state = [], action) => {
+/*export const walletList = (state = [], action) => {
   switch (action.type) {
     case ACTION.UPDATE_WALLET_LIST :
       return action.data
@@ -9,8 +9,25 @@ export const walletList = (state = [], action) => {
     default:
       return state
   }
+}*/
+
+export const renameWalletVisible = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.START_RENAME_WALLET : 
+      return true
+    default : 
+      return state
+  }
 }
 
+export const deleteWalletVisible = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.START_DELETE_WALLET : 
+      return true
+    default : 
+      return state
+  }
+}
 
 export const archiveList = (state = [], action) => {
   switch (action.type) {
