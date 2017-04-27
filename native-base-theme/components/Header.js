@@ -6,6 +6,7 @@ import variable from './../variables/platform';
 export default (variables = variable) => {
   const platformStyle = variables.platformStyle;
   const platform = variables.platform;
+  const textColor = "#FFFFFF"
 
   const headerTheme = {
     '.span': {
@@ -194,6 +195,16 @@ export default (variables = variable) => {
       flex: ((platform === 'ios') && (platformStyle!=='material')) ? 1 : 0.5,
       alignSelf: 'center',
       alignItems: 'flex-start',
+      backgroundColor: 'transparent', // custom
+      'NativeBase.Icon': {
+        color: textColor,
+      }, // custom
+      'NativeBase.IconNB': {
+        color: textColor,
+      }, // custom
+      'NativeBase.Text': {
+        color: textColor,
+      }, // custom
     },
     'NativeBase.Body': {
       flex: 1,
@@ -201,7 +212,7 @@ export default (variables = variable) => {
       alignSelf: 'center',
       backgroundColor: 'transparent', // custom
       'NativeBase.Title': {
-        color: '#FFF',
+        color: textColor,
       }, // custom
       'NativeBase.Segment': {
         borderWidth: 0,
@@ -293,6 +304,16 @@ export default (variables = variable) => {
       alignItems: 'flex-end',
       flexDirection: 'row',
       justifyContent: 'flex-end',
+      backgroundColor: 'transparent', // custom
+      'NativeBase.Icon': {
+        color: textColor,
+      }, // custom
+      'NativeBase.IconNB': {
+        color: textColor,
+      }, // custom
+      'NativeBase.Text': {
+        color: textColor,
+      }, // custom
     },
     // backgroundColor: variables.toolbarDefaultBg,
     flexDirection: 'row',
