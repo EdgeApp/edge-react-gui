@@ -29,13 +29,11 @@ const wallets = [
 ];
 
 export const fakeGetWallets = () => {
-  console.log('in fakeGetWallets, wallets is: ', wallets)
   return Promise.resolve(wallets)
 }
 
 export const getWalletTransferList = () => {
   return (dispatch, getState, imports) => {
-    console.log('in getWalletTransferList, fakeGetWallets is: ', fakeGetWallets)
     fakeGetWallets().then( wallets => {
       return dispatch(updateWalletTransferList(wallets))
     })
