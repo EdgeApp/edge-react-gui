@@ -4,6 +4,8 @@ import { Text, Header, Left, Title, Right, Body, Button, Icon } from 'native-bas
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 
+import LeftComponent from './Component/Left.js'
+
 class HeaderUI extends Component {
 
   _renderTitle = () => {
@@ -23,7 +25,7 @@ class HeaderUI extends Component {
       <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]}>
         <Header>
           <Left>
-            {this._renderLeftButton()}
+            <LeftComponent routes={this.props.routes} />
           </Left>
           <Body>
             <Title>{this._renderTitle()}</Title>

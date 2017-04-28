@@ -12,7 +12,6 @@ const platform = Platform.OS;
 
 class MainComponent extends Component {
 
-
   _handleOnPressDirectory = () => {
     Actions.directory()
     return this.props.dispatch(closeSidebar())
