@@ -13,12 +13,9 @@ import RowOptions from './WalletListRowOptions.ui'
 
 class WalletListRow extends Component {
 
-  constructor(props) {
-    super(props)
-  }
+
 
   render() {
-    //console.log('this is: ', this)
     let btcSeed = this.props.data.id
 
     return(

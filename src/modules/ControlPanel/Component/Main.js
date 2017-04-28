@@ -59,7 +59,7 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>
             </View>
             <View style={styles.others.container}>
-              <TouchableNativeFeedback onPress={ e => console.log('pressed4') }>
+              <TouchableNativeFeedback onPress={ this._handleOnPressWallets }>
                 <View style={styles.others.link}>
                   <Icon style={styles.others.icon} name='cash' />
                   <Text style={styles.others.text}>WALLETS</Text>

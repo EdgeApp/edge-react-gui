@@ -19,6 +19,9 @@ class Transactions extends Component {
 
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
     const sampleTransaction = [
       {
         "key": 1,

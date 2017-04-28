@@ -3,7 +3,6 @@ import * as ACTION from './Wallets.action'
 export const wallets = (state = [], action) => {
   switch (action.type) {
     case ACTION.ADD_WALLET :
-      console.warn('Adding new wallet')
 
       return [...state, action.newWallet]
     default:
