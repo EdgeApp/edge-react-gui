@@ -1,20 +1,18 @@
 import * as ACTION from './WalletList.action'
 
-/*export const walletList = (state = [], action) => {
+export const walletOrder = ( state = [], action) => {
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_LIST :
+    case ACTION.UPDATE_WALL_ORDER :
       return action.data
-    case ACTION.UPDATE_WALLET_LIST_ORDER :
-      return action.data
-    default:
+    default: 
       return state
   }
-}*/
+}
 
 export const renameWalletVisible = (state = false, action) => {
   switch (action.type) {
-    case ACTION.START_RENAME_WALLET : 
-      return true
+    case ACTION.TOGGLE_RENAME_WALLET_MODAL : 
+      return !state
     default : 
       return state
   }
@@ -56,6 +54,15 @@ export const archiveVisible = (state = false, action) => {
     case ACTION.UPDATE_WALLETS_ARCHIVE_VISIBILITY:
       return action.archiveVisibility
     default:
+      return state
+  }
+}
+
+export const currentWalletRename = (state = '', action) => {
+  switch (action.type) {
+    case ACTION.UPDATE_WALLET_RENAME_INPUT : 
+      return action.data
+    default : 
       return state
   }
 }

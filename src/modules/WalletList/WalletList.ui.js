@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated }  from 'react-native'
+import { Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated }  from 'react-native'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -9,26 +9,24 @@ import { Actions } from 'react-native-router-flux'
 import styles from './WalletList.style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
-import { updateWalletListOrder, updateArchiveListOrder, toggleWalletsVisibility, toggleArchiveVisibility } from './WalletList.action'
+import { 
+          updateWalletOrder, 
+          updateWalletListOrder, 
+          updateArchiveListOrder, 
+          toggleWalletsVisibility, 
+          toggleArchiveVisibility, 
+          completeRenamWallet, 
+          updateWalletRenameInput, 
+          toggleWalletRenameModal 
+        } from './WalletList.action'
+
+import { forceWalletListUpdate } from './WalletList.middleware'
+import Modal from 'react-native-modal'
 
 // Fake stuff to be removed
 import FakeAccount from '../AddWallet/FakeAccount.js'
 import { addWallet } from '../Wallets/Wallets.action.js'
 // End of fake stuff to be removed later
-
-
-/*
-let archive = {
-  firstArchive: {text: 'firstArchive'},
-  secondArchive: {text: 'secondArchive'},
-  thirdArchive: {text: 'thirdArchive'},
-  fourthArchive: {text: 'fourthArchive'},
-  fifthArchive: {text: 'fifthArchive'},
-  sixthArchive: {text: 'sixthArchive'}
-}
-
-let archiveOrder = Object.keys(archive)
-*/
 
 class WalletList extends Component {
 
@@ -51,10 +49,6 @@ class WalletList extends Component {
       }).catch( error => {console.log('error is: ', error)})    
   }
 
-  forceWalletListUpdate(walletOrder) {
-    this.props.dispatch(updateWalletListOrder(walletOrder))
-  }
-
   forceArchiveListUpdate(archiveOrder) {
     this.props.dispatch(updateArchiveListOrder(archiveOrder))
   }
@@ -68,9 +62,12 @@ class WalletList extends Component {
   }
 
   render() {
-    let walletOrder = Object.keys(this.props.walletList)
+    let walletOrder = Object.keys(this.props.walletList)    
     return(
       <View style={styles.container}>
+          {this.renderDeleteWalletModal()}
+          {this.renderRenameWalletModal()}
+
         <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.totalBalanceBox]} colors={["#3b7adb","#2b569a"]}>
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader]}>
@@ -97,10 +94,9 @@ class WalletList extends Component {
               data={this.props.walletList}
               order={walletOrder}
               onRowMoved={e => {
-                walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0]);
-                console.log('walletOrder is: ', walletOrder)
-                this.forceWalletListUpdate(walletOrder);
-              }}
+                walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
+                this.props.dispatch(forceWalletListUpdate(walletOrder, this.props.walletList))
+              }}            
               renderRow={ row => <WalletListRow data={row} />}
             />
           }
@@ -120,14 +116,77 @@ class WalletList extends Component {
               order={archiveOrder}
               onRowMoved={e => {
                 archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0]);
-                console.log('archiveOrder is: ', archiveOrder)
                 this.forceArchiveListUpdate(archiveOrder);
               }}
+              onRowMoved={this._onRowMoved}
+              onMoveStart={this._onMoveStart}
+              onMoveEnd={this._onMoveEnd}
+              rowHasChanged={this._rowHasChanged}              
               renderRow={ row => <WalletListRow data={row} />}
             />             
           }
         </View>
       </View>
+    )
+  }
+
+  renderDeleteWalletModal() {
+    return(
+        <Modal isVisible={this.props.deleteWalletVisible}>
+          <View style={styles.modalContainer}>
+          </View>
+        </Modal>      
+    )
+  }
+
+  _onToggleRenameModal() {
+    this.props.dispatch(toggleWalletRenameModal())
+  }
+
+  _onCancelRenameModal() {
+    this.props.dispatch(toggleWalletRenameModal())
+    this.props.dispatch(updateWalletRenameInput(''))
+  }
+
+  _onNameModalDone() {
+    this.props.dispatch(completeRenamWallet())
+  }
+
+  _onNameInputChange(input) {
+    this.props.dispatch(updateWalletRenameInput(input))
+  }
+
+  renderRenameWalletModal() {
+    return(
+      <Modal isVisible={this.props.renameWalletVisible}>
+        <View style={styles.modalContainer}>
+
+            <View style={[styles.modalOverlay]}>
+              <View style={[styles.modalBox]}>
+                <View style={[styles.modalTopTextWrap]}>
+                  <Text style={styles.modalTopText}>Rename Wallet:</Text>
+                </View>
+                <View style={[styles.modalMiddle]}>
+                  <View style={[styles.nameInputWrap]}>
+                    <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)}></TextInput>
+                  </View>
+                </View>
+                <View style={[styles.modalBottom]}>
+                  <View style={[styles.emptyBottom]}>
+                  </View>
+                  <View style={[styles.buttonsWrap]}>
+                    <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
+                      <Text style={styles.cancelButton}>CANCEL</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={ this._onNameModalDone.bind(this) } style={[styles.doneButtonWrap]}>
+                      <Text style={styles.doneButton}>DONE</Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              </View>
+            </View>
+        </View>    
+      </Modal>
     )
   }
 
@@ -145,11 +204,13 @@ WalletList.propTypes = {
 
 export default connect( state => ({
 
-  walletList: state.wallets,
+  walletList: state.wallets.wallets,
   archiveList: state.walletList.archiveList,
   walletsVisible: state.walletList.walletsVisible,
   archiveVisible: state.walletList.archiveVisible,
   renameWalletVisible: state.walletList.renameWalletVisible,
-  deleteWalletVisible: state.walletList.deleteWalletVisible
+  deleteWalletVisible: state.walletList.deleteWalletVisible,
+  currentWalletRename: state.walletList.currentWalletRename,
+  walletOrder: state.wallets.walletListOrder
 
 }) )(WalletList)

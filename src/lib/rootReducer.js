@@ -8,7 +8,7 @@ import * as ControlPanel from '../modules/ControlPanel/reducer'
 import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
 import Login from '../modules/Login/Login.reducer.js'
-import Wallets from '../modules/Wallets/Wallets.reducer.js'
+import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
 
 const store = combineReducers({
   airbitz: Login,
@@ -39,14 +39,20 @@ const store = combineReducers({
     walletsVisible: WalletList.walletsVisible,
     archiveVisible: WalletList.archiveVisible,
     renameWalletVisible: WalletList.renameWalletVisible,
-    deleteWalletVisible: WalletList.deleteWalletVisible
+    deleteWalletVisible: WalletList.deleteWalletVisible,
+    currentWalletRename: WalletList.currentWalletRename,
+    walletOrder: WalletList.walletOrder
   }),
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,
     walletListModalVisible: WalletTransferList.walletListModalVisible
   }),
 
-  wallets: Wallets,
+  wallets: combineReducers({
+    wallets: Wallets.wallets,
+    walletList: Wallets.walletList,
+    walletListOrder: Wallets.walletListOrder
+  }),
 
   routes
 })
