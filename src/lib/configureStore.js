@@ -5,20 +5,20 @@ import rootReducer from './rootReducer'
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 
-
 let middleware = [thunk]
 
 // if (__DEV__) {
-   //const createLogger = require('redux-logger')
-   const logger = createLogger({ collapsed: true })
-   middleware = [...middleware, logger]
+   // const createLogger = require('redux-logger')
+const logger = createLogger({ collapsed: true })
+middleware = [...middleware, logger]
 // } else {
-  //middleware = [...middleware]
+  // middleware = [...middleware]
 // }
 
 export default function configureStore (initialState) {
   return createStore(
     rootReducer,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     initialState,
     applyMiddleware(...middleware)
   )

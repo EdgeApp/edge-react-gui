@@ -14,7 +14,7 @@ import { dev } from '../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { addWallet } from '../Wallets/Wallets.action.js'
-import FakeAccount from './FakeAccount.js'
+import FakeAccount from '../../Fakes/FakeAccount.js'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 

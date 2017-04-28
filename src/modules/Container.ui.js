@@ -19,8 +19,11 @@ import WalletList from './WalletList/WalletList.ui'
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
+import { addWallet, selectWallet } from './Wallets/Wallets.action.js'
 
 import AddWallet from './AddWallet/index.js'
+
+import FakeAccount from '../Fakes/FakeAccount.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -51,6 +54,17 @@ class Main extends Component {
         return account
       })
       .then(() => {
+        // create a fake wallet, select first wallet
+        const walletType = 'wallet.repo.myFakeWalletType'
+        const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
+        const newWalletId = FakeAccount.createWallet(walletType, walletKeys)
+          .then(walletId => {
+            const newWallet = FakeAccount.getWallet(walletId)
+            // add wallet to redux, select wallet
+            this.props.dispatch(addWallet(newWallet))
+            this.props.dispatch(selectWallet(newWallet))
+          })
+
         this.setState({
           loadingScreenVisible: false
         })
@@ -86,10 +100,10 @@ class Main extends Component {
                 <Scene key='scan' component={Scan} title='Scan' duration={0} />
 
                 <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
-                
+
                 <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} />
 
                 <Scene key='request' component={Request} title='Request' duration={0} />
 

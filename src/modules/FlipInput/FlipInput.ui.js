@@ -40,7 +40,6 @@ export default class FlipInput extends Component {
 
   flip = () => {
     this.setState({isFlipped: !this.state.isFlipped})
-    this.props.onInputCurrencyToggle()
   }
 
   _renderFront = () => {
