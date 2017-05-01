@@ -10,7 +10,7 @@ const styles = {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   text: {
     color: 'white'
@@ -20,72 +20,78 @@ const styles = {
   }
 }
 
-class RequestStatus extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      requestAddress: props.requestAddress,
-      amountRequestedInCrypto: props.amountRequestedInCrypto,
-      amountReceivedInCrypto: props.amountReceivedInCrypto,
-      outstandingDebtInCrypto:
-        (this.amountReceivedInCrypto - this.amountRequestedInCrypto),
-      hasReceivedPayment: true
-    }
+const RequestStatus = ({request}) => {
+  hasReceivedPartialPayment = () => {
+    const hasReceivedPartialPayment =
+      (hasReceivedPayment() && !isPaymentSufficient())
+
+    return hasReceivedPartialPayment
+  }
+
+  hasReceivedPayment = () => {
+    const hasReceivedPayment = !!request.amountReceivedInCrypto
+
+    return hasReceivedPayment
   }
 
   isPaymentSufficient = () => {
-    return this.state.amountReceivedInCrypto >= this.state.amountRequestedInCrypto
-  }
+    const isPaymentSufficient =
+      request.amountReceivedInCrypto >= request.amountRequestedInCrypto
 
-  hasReceivedPartialPayment = () => {
-    const status =
-      (this.state.hasReceivedPayment === true && this.hasOutstandingDebtInCrypto())
-
-    return status
-  }
-
-  hasOutstandingDebtInCrypto = () => {
-    return (this.state.amountRequestedInCrypto - this.state.amountReceivedInCrypto) > 0
+    return isPaymentSufficient
   }
 
   getOutstandingDebtInCrypto = () => {
-    return (this.state.amountRequestedInCrypto - this.state.amountReceivedInCrypto)
+    const outstandingDebtInCrypto =
+      (request.amountRequestedInCrypto - request.amountReceivedInCrypto)
+
+    return outstandingDebtInCrypto
   }
 
-  displayRequestStatus = () => {
-    const outstandingDebt =
-      <Text style={styles.warning}>
-        Outstanding Debt: {this.getOutstandingDebtInCrypto}
-      </Text>
-
+  getDisplayRequestStatus = () => {
     const waitingForPayment =
-      <Text style={styles.text}>
-        Waiting for payment...
-      </Text>
+      <View style={styles.view}>
+        <Text style={styles.text}>
+          Waiting for payment...
+        </Text>
+
+        <Text style={styles.text}>
+          {request.receiveAddress}
+        </Text>
+      </View>
+
+    const partialPaymentReceived =
+      <View style={styles.view}>
+        <Text style={styles.text}>
+          {request.amountReceivedInCrypto} received
+        </Text>
+
+        <Text style={styles.text}>
+          {getOutstandingDebtInCrypto()} remaining...
+        </Text>
+
+        <Text style={styles.text}>
+          {request.receiveAddress}
+        </Text>
+      </View>
 
     const displayStatus =
-      this.hasReceivedPartialPayment()
-      ? outstandingDebt
+      hasReceivedPartialPayment()
+      ? partialPaymentReceived
       : waitingForPayment
 
     return displayStatus
   }
 
-  render () {
-    return (
-      <View style={styles.view}>
-        {this.displayRequestStatus()}
-
-        <Text style={styles.text}>
-          {this.state.amountReceivedInCrypto.toString()} b Received
-        </Text>
-
-        <Text style={styles.text}>
-          {this.state.requestAddress}
-        </Text>
-      </View>
-    )
-  }
+  return (
+    <View style={styles.view}>
+      {getDisplayRequestStatus()}
+    </View>
+  )
 }
 
-export default connect()(RequestStatus)
+export default connect(state => ({
+
+  request: state.request
+
+}))(RequestStatus)

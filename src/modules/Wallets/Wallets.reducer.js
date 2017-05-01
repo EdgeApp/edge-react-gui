@@ -3,7 +3,6 @@ import * as ACTION from './Wallets.action'
 export const wallets = (state = [], action) => {
   switch (action.type) {
     case ACTION.ADD_WALLET :
-
       return [...state, action.newWallet]
     default:
       return state
@@ -21,6 +20,16 @@ export const walletList = (state = [], action) => {
       return state
   }
 }
+
+export const selectedWallet = (state = null, action) => {
+  switch (action.type) {
+    case ACTION.SELECT_WALLET :
+      return action.data
+    default:
+      return state
+  }
+}
+
 
 export const walletListOrder = (state = [], action) => {
   switch (action.type) {

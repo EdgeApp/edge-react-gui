@@ -9,7 +9,6 @@ export const UPDATE_WALLET_RENAME_INPUT = 'UPDATE_WALLET_RENAME_INPUT'
 export const UPDATE_WALLET_ORDER = 'UPDATE_WALLET_ORDER'
 
 export function updateWalletOrder(walletOrder) {
-  console.log('in action.updateWalletOrder, walletOrder is: ', walletOrder)
   return {
     type: UPDATE_WALLET_ORDER,
     data: walletOrder

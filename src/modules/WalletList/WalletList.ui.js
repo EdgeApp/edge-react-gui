@@ -24,29 +24,13 @@ import { forceWalletListUpdate } from './WalletList.middleware'
 import Modal from 'react-native-modal'
 
 // Fake stuff to be removed
-import FakeAccount from '../AddWallet/FakeAccount.js'
 import { addWallet } from '../Wallets/Wallets.action.js'
 // End of fake stuff to be removed later
 
 class WalletList extends Component {
 
   componentWillMount() {
-    // determine wallet type
-    const walletType = 'wallet.repo.myFakeWalletType'
-    // get new keys from txLib
-    const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
-    // create new wallet from airbitz.createWallet(this.selectedBlockchain, fake keys), returns wallet ID
-    // const walletId = this.props.account.createWallet(walletType, walletKeys)
-    FakeAccount.createWallet(walletType, walletKeys)
-      .then(walletId => {
-        // get wallet by ID from the account
-        // const newWallet = this.props.account.getWallet(walletID)
-        const newWallet = FakeAccount.getWallet(walletId)
-        // save new wallet in redux
-        this.props.dispatch(addWallet(newWallet))
-        // ??? wallet.rename(this.state.selectedWalletName) ???
-        // ??? wallet.addFiat(this.state.selectedFiat) ???
-      }).catch( error => {console.log('error is: ', error)})    
+   
   }
 
   forceArchiveListUpdate(archiveOrder) {

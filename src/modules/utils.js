@@ -1,9 +1,13 @@
 const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
-  return crypto * fiatPerCrypto
+  const fiatFromCrypto = (crypto * fiatPerCrypto)
+
+  return fiatFromCrypto
 }
 
 const getCryptoFromFiat = (fiat, fiatPerCrypto) => {
-  return fiat / fiatPerCrypto
+  const cryptoFromFiat = (fiat / fiatPerCrypto)
+
+  return cryptoFromFiat
 }
 
 const sanitizeInput = (input) => {

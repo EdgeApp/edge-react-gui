@@ -9,10 +9,11 @@ import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
 import Login from '../modules/Login/Login.reducer.js'
 import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
+import Request from '../modules/Request/Request.reducer.js'
 
 const store = combineReducers({
-  airbitz: Login,
-  account: Login,
+  airbitz: Login.airbitz,
+  account: Login.account,
 
   sidemenu: combineReducers({
     view: SideMenu.view
@@ -51,8 +52,12 @@ const store = combineReducers({
   wallets: combineReducers({
     wallets: Wallets.wallets,
     walletList: Wallets.walletList,
-    walletListOrder: Wallets.walletListOrder
+    walletListOrder: Wallets.walletListOrder,
+    selectedWallet: Wallets.selectedWallet,    
   }),
+
+
+  request: Request,
 
   routes
 })
