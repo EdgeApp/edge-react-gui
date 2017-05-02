@@ -36,23 +36,10 @@ export const archiveList = (state = [], action) => {
   }
 }
 
-export const walletsVisible = (state = true, action) => {
-  switch (action.type) {
-    case ACTION.TOGGLE_WALLETS_VISIBILITY: 
-      return action.walletsVisibility
-    case ACTION.UPDATE_WALLETS_ARCHIVE_VISIBILITY:
-      return action.walletsVisibility
-    default:
-      return state
-  }
-}
-
 export const archiveVisible = (state = false, action) => {
   switch (action.type) {
-    case ACTION.TOGGLE_ARCHIVE_VISIBILITY: 
-      return action.archiveVisibility
-    case ACTION.UPDATE_WALLETS_ARCHIVE_VISIBILITY:
-      return action.archiveVisibility
+    case ACTION.TOGGLE_WALLETS_ARCHIVE_VISIBILITY:
+      return !state
     default:
       return state
   }

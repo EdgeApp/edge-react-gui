@@ -37,12 +37,8 @@ class WalletList extends Component {
     this.props.dispatch(updateArchiveListOrder(archiveOrder))
   }
 
-  toggleWalletsDropdown() {
-    this.props.dispatch(toggleWalletsVisibility(this.props.walletsVisible, this.props.archiveVisible))
-  }
-
   toggleArchiveDropdown() {
-    this.props.dispatch(toggleArchiveVisibility(this.props.archiveVisible, this.props.walletsVisible))
+    this.props.dispatch(toggleArchiveVisibility())
   }
 
   render() {
@@ -68,22 +64,20 @@ class WalletList extends Component {
             <View style={[styles.walletsBoxHeaderTextWrap]}>
               <Text style={styles.walletsBoxHeaderText}>Wallets</Text>
             </View>
-            <TouchableHighlight onPress={this.toggleWalletsDropdown.bind(this)} style={[styles.walletsBoxHeaderDropdown]}>
-              <FAIcon name="chevron-down" size={18} style={[styles.dropdownIcon]}  color="#666666" />
+            <TouchableHighlight onPress={() => Actions.addWallet()} style={[styles.walletsBoxHeaderAddWallet]}>
+              <FAIcon name="plus" size={18} style={[styles.dropdownIcon]}  color="#666666" />
             </TouchableHighlight>
           </View>
-          {this.props.walletsVisible && 
-            <SortableListView
-              style={styles.sortableWalletList}
-              data={this.props.walletList}
-              order={walletOrder}
-              onRowMoved={e => {
-                walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
-                this.props.dispatch(forceWalletListUpdate(walletOrder, this.props.walletList))
-              }}            
-              renderRow={ row => <WalletListRow data={row} />}
-            />
-          }
+          <SortableListView
+            style={styles.sortableWalletList}
+            data={this.props.walletList}
+            order={walletOrder}
+            onRowMoved={e => {
+              walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
+              this.props.dispatch(forceWalletListUpdate(walletOrder, this.props.walletList))
+            }}            
+            renderRow={ row => <WalletListRow data={row} />}
+          />
 
           <View style={styles.archiveBoxHeaderWrap}>
             <View style={[styles.archiveBoxHeaderTextWrap]}>
@@ -190,7 +184,6 @@ export default connect( state => ({
 
   walletList: state.wallets.wallets,
   archiveList: state.walletList.archiveList,
-  walletsVisible: state.walletList.walletsVisible,
   archiveVisible: state.walletList.archiveVisible,
   renameWalletVisible: state.walletList.renameWalletVisible,
   deleteWalletVisible: state.walletList.deleteWalletVisible,

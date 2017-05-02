@@ -63,7 +63,7 @@ module.exports = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 18
     },
-    walletsBoxHeaderDropdown: {
+    walletsBoxHeaderAddWallet: {
   
     },
 
