@@ -106,7 +106,7 @@ class Main extends Component {
 
                 <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} />
+                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
 
                 <Scene key='request' component={Request} title='Request' duration={0} />
 

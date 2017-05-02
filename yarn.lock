@@ -4702,9 +4702,9 @@ react-native-experimental-navigation@0.26.x:
     fbjs "^0.8.1"
     react-addons-pure-render-mixin "^15.0.2"
 
-react-native-flip-view@^1.0.5:
+"react-native-flip-view@https://github.com/Airbitz/react-native-flip-view.git":
   version "1.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-flip-view/-/react-native-flip-view-1.0.5.tgz#6f18ac4da021d0672c8531676c8cb08ef4f36915"
+  resolved "https://github.com/Airbitz/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
 react-native-fs@^2.1.0-rc.1:
   version v2.1.0-rc.1
@@ -4803,6 +4803,10 @@ react-native-side-menu@^0.20.1:
   version "0.20.1"
   resolved "https://registry.yarnpkg.com/react-native-side-menu/-/react-native-side-menu-0.20.1.tgz#df21b4bb9d8a1aa3bae53d74ddf8a739eb59bfc5"
 
+react-native-simple-gesture@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-simple-gesture/-/react-native-simple-gesture-0.0.2.tgz#7ce5ba6eb59132b65effe4f33eb8a28953272d17"
+
 react-native-slider@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/react-native-slider/-/react-native-slider-0.9.1.tgz#f8ea5e3c48aa3577656719b911fd7dd4c62bf81a"
@@ -4816,6 +4820,12 @@ react-native-sortable-listview@^0.2.2:
   dependencies:
     react-timer-mixin "^0.13.3"
 
+react-native-swipe-flip@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-swipe-flip/-/react-native-swipe-flip-1.0.2.tgz#241441681fa24f57bd33647ecb8b4242aba48e45"
+  dependencies:
+    react-native-simple-gesture "0.0.2"
+
 react-native-tab-navigator@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/react-native-tab-navigator/-/react-native-tab-navigator-0.3.3.tgz#b222bad21fbe773c8d28f9a0de30ce62b08724d3"
@@ -4826,7 +4836,7 @@ react-native-tabs@^1.0.9:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/react-native-tabs/-/react-native-tabs-1.0.9.tgz#75d3c35e8b5b6970869eab282372cb32e2a782cd"
 
-react-native-tcp@3.2.1:
+react-native-tcp@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/react-native-tcp/-/react-native-tcp-3.2.1.tgz#c9f401a169c5d93ae1f003fa4d151fd9f0a82a99"
   dependencies:
@@ -4837,7 +4847,7 @@ react-native-tcp@3.2.1:
     process "^0.11.9"
     util "^0.10.3"
 
-react-native-udp@2.0.0:
+react-native-udp@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-2.0.0.tgz#555ef4302b46a0e853a12e3b8764203bb7b9fd58"
   dependencies:

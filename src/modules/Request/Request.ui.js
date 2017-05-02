@@ -21,6 +21,7 @@ import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../utils.js
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 import { dev } from '../utils.js'
+import { Actions } from 'react-native-router-flux'
 
 import {
   addReceiveAddress,
@@ -31,11 +32,22 @@ import {
 class Request extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
+      request: props.request,
       amountRequestedInFiat: 0,
       fiatPerCrypto: '1077.75',
       inputCurrencySelected: 'crypto',
       result: ''
+    }
+  }
+
+  componentWillMount () {
+    const { request } = this.props
+
+    if (request.amountRequestedInCrypto != 0 && request.amountReceivedInCrypto >= request.amountRequestedInCrypto) {
+      alert("Asd")
+      Actions.directory()
     }
   }
 
@@ -45,8 +57,8 @@ class Request extends Component {
       this.props.dispatch(addReceiveAddress(receiveAddress))
     }
 
-    // setTimeout(() => {
-    //   this.props.dispatch(updateAmountReceivedInCrypto(Math.random() * 5))}, 3000)
+    setTimeout(() => {
+      this.props.dispatch(updateAmountReceivedInCrypto(Math.random() * 5))}, 3000)
   }
 
   render () {
@@ -133,20 +145,27 @@ class Request extends Component {
   }
 
   getQrCodeText = () => {
-    const qrCodeText = 'bitcoin:' + this.props.request.requestAddress +
-    '?amount=' + this.props.request.amountRequestedInCrypto
-    return 'bitcoin:' + this.props.request.requestAddress +
-    '?amount=' + this.props.request.amountRequestedInCrypto
+    const qrCodeText =
+      'bitcoin:' + this.props.request.receiveAddress +
+      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+
+    return qrCodeText
   }
 
   getRequestInfoForClipboard = () => {
-    return 'bitcoin:' + this.props.request.requestAddress +
-    '?amount=' + this.props.request.amountRequestedInCrypto
+    const requestInfoForClipboard =
+      'bitcoin:' + this.props.request.requestAddress +
+      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+
+    return requestInfoForClipboard
   }
 
   getRequestInfoForShare = () => {
-    return 'bitcoin:' + this.props.request.requestAddress +
-    '?amount=' + this.props.request.amountRequestedInCrypto
+    const requestInforForShare =
+      'bitcoin:' + this.props.request.requestAddress +
+      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+
+    return requestInforForShare
   }
 
   invalidInput = (input) => {
@@ -209,7 +228,8 @@ class Request extends Component {
 }
 
 export default connect(state => ({
+
   request: state.request,
   selectedWallet: state.selectedWallet
-})
-)(Request)
+
+}))(Request)
