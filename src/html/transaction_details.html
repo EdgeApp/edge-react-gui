@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Airbitz Info</title>
+<style type="text/css">
+<!--
+a:link {
+    text-decoration: none;
+}
+* {font-family: Lato-Regular; font-size: 12px}
+.container { padding: 5px; }
+.wrapped { width: 100%; word-wrap:break-word; }
+.header { font-family: Lato-Black }
+.section { margin-bottom: 20px; }
+-->
+</style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="section">
+            <div class="header">Transaction ID</div>
+            [[abtag TXID]]
+        </div>
+        <div class="section">
+            <div class="header">Total Sent</div>
+            [[abtag BTCTOTAL]]
+        </div>
+        <div class="section">
+            <div class="header">Source</div>
+            [[abtag INPUT_ADDRESSES]]
+        </div>
+        <div class="section">
+            <div class="header">Destination</div>
+            [[abtag OUTPUT_ADDRESSES]]
+        </div>
+        <div class="section">
+            <div class="header">Transaction Fee</div>
+            [[abtag FEES]]
+        </div>
+        <div class="section">
+            <div class="header">Confirmations</div>
+            [[abtag CONFIRMATIONS]]
+        </div>
+    </div>
+    [[abtag INFO_FOOTER]]
+</body>
+</html>

@@ -5,6 +5,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 
 import LeftComponent from './Component/Left.js'
+import RightComponent from './Component/Right.js'
 
 class HeaderUI extends Component {
 
@@ -31,7 +32,7 @@ class HeaderUI extends Component {
             <Title>{this._renderTitle()}</Title>
           </Body>
           <Right>
-            <Text>Help</Text>
+            <RightComponent />
           </Right>
         </Header>
       </LinearGradient>

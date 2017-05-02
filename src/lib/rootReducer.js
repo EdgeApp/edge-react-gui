@@ -9,6 +9,7 @@ import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
 import Login from '../modules/Login/Login.reducer.js'
 import Wallets from '../modules/Wallets/Wallets.reducer.js'
+import { helpModal } from '../modules/HelpModal/reducer.js'
 
 const store = combineReducers({
   airbitz: Login,
@@ -46,6 +47,7 @@ const store = combineReducers({
   }),
 
   wallets: Wallets,
+  helpModal,
 
   routes
 })

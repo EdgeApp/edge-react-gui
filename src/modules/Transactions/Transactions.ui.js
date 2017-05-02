@@ -192,7 +192,7 @@ class Transactions extends Component {
               </View>
             }
               <ListView
-                style={[styles.transactionsScrollWrap]} 
+                style={[styles.transactionsScrollWrap]}
                 dataSource={dataSource}
                 renderRow={this.renderTx.bind(this)}
                 onEndReached={this.loadMoreTransactions.bind(this)}
