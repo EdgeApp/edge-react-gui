@@ -1,9 +1,13 @@
-import * as ACTION from './Wallets.action'
+import * as WALLETS_ACTION from './Wallets.action'
+import * as WALLET_LIST_ACTION from './../WalletList/WalletList.action'
 
-export const wallets = (state = [], action) => {
+export const wallets = (state = {}, action) => {
   switch (action.type) {
-    case ACTION.ADD_WALLET :
-      return [...state, action.newWallet]
+    case WALLETS_ACTION.ADD_WALLET :
+      state[action.data.newWallet.id] = action.data.newWallet
+      return state
+    case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER : 
+      return state
     default:
       return state
   }
@@ -12,9 +16,7 @@ export const wallets = (state = [], action) => {
 // may need to sort
 export const walletList = (state = [], action) => {
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_LIST :
-      return action.data
-    case ACTION.UPDATE_WALLET_LIST_ORDER :
+    case WALLETS_ACTION.UPDATE_WALLET_LIST :
       return action.data
     default:
       return state
@@ -23,7 +25,7 @@ export const walletList = (state = [], action) => {
 
 export const selectedWallet = (state = null, action) => {
   switch (action.type) {
-    case ACTION.SELECT_WALLET :
+    case WALLETS_ACTION.SELECT_WALLET :
       return action.data
     default:
       return state
@@ -33,8 +35,8 @@ export const selectedWallet = (state = null, action) => {
 
 export const walletListOrder = (state = [], action) => {
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_ORDER : 
-      return action.data
+    case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER :
+      return action.data      
     default: 
       return state
   }

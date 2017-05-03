@@ -6,6 +6,7 @@ const FakeAccount = {
       id: Math.floor(Math.random() * 99999),
       type,
       keys,
+      archived: false,
       addresses: [
         {
           address: '1_1_PN3opiupq98G4ctfSq8ry3',

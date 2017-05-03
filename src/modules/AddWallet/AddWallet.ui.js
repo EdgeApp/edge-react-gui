@@ -140,7 +140,8 @@ class AddWallet extends Component {
           // const newWallet = this.props.account.getWallet(walletID)
           const newWallet = FakeAccount.getWallet(walletId)
           // save new wallet in redux
-          this.props.dispatch(addWallet(newWallet))
+          const order = Object.keys(this.props.wallets).length
+          this.props.dispatch(addWallet(newWallet, order))
           // ??? wallet.rename(this.state.selectedWalletName) ???
           // ??? wallet.addFiat(this.state.selectedFiat) ???
         })
@@ -204,7 +205,9 @@ class AddWallet extends Component {
   }
 }
 
-export default connect()(AddWallet)
+export default connect( state => ({
+  wallets: state.wallets.wallets,
+}))(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
 

@@ -42,7 +42,27 @@ class WalletList extends Component {
   }
 
   render() {
-    let walletOrder = Object.keys(this.props.walletList)    
+    const walletOrder = []
+    const walletListArray = []
+    for (var idx in this.props.walletList) {
+      console.log('idx is : ', idx, ' this.props.walletList is: ', this.props.walletList)
+      walletOrder.push(this.props.walletList[idx].order)
+      walletListArray.push(this.props.walletList[idx])
+    }
+    //let walletOrder = Object.keys(this.props.walletList)   
+    console.log('in render and walletOrder is now: ', walletOrder)
+    console.log('in render and walletListArray is: ', walletListArray)
+    // initialize archiveList?
+    let archiveList = []
+    /*for (var idx of this.props.walletList) {
+      //console.log('render clause, iterating and idx is: ', idx)
+      if(idx.archived) {
+        archiveList.push(idx)
+      } 
+    }*/
+
+
+
     return(
       <View style={styles.container}>
           {this.renderDeleteWalletModal()}
@@ -70,11 +90,12 @@ class WalletList extends Component {
           </View>
           <SortableListView
             style={styles.sortableWalletList}
-            data={this.props.walletList}
+            data={walletListArray}
             order={walletOrder}
             onRowMoved={e => {
+              console.log('within onRowMoved')
               walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
-              this.props.dispatch(forceWalletListUpdate(walletOrder, this.props.walletList))
+              this.props.dispatch(updateWalletListOrder(walletOrder, this.props.walletList, walletListArray))
             }}            
             renderRow={ row => <WalletListRow data={row} />}
           />
@@ -90,7 +111,7 @@ class WalletList extends Component {
           {this.props.archiveVisible && 
             <SortableListView
               style={styles.sortableWalletList}
-              data={archive}
+              data={archiveList}
               order={archiveOrder}
               onRowMoved={e => {
                 archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0]);

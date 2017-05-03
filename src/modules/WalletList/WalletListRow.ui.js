@@ -16,6 +16,7 @@ class WalletListRow extends Component {
 
 
   render() {
+    console.log('inside WalletListRow->render, this.props.data is: ', this.props.data)
     let btcSeed = this.props.data.id
 
     return(

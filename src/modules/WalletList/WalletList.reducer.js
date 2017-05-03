@@ -1,13 +1,13 @@
 import * as ACTION from './WalletList.action'
 
-export const walletOrder = ( state = [], action) => {
+/*export const walletOrder = ( state = [], action) => {
   switch (action.type) {
     case ACTION.UPDATE_WALL_ORDER :
       return action.data
     default: 
       return state
   }
-}
+}*/
 
 export const renameWalletVisible = (state = false, action) => {
   switch (action.type) {
