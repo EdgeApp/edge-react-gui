@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import { addWallet } from '../Wallets/Wallets.action.js'
 import FakeAccount from '../../Fakes/FakeAccount.js'
+import { Actions } from 'react-native-router-flux'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
@@ -124,10 +125,6 @@ class AddWallet extends Component {
     if (!this.isValidData()) {
       alert(INVALID_DATA_TEXT)
     } else {
-      alert('walletName: ' + this.state.selectedWalletName + ' blockchain: ' + this.state.selectedBlockchain + ' fiat: ' + this.state.selectedFiat)
-
-
-
       // determine wallet type
       const walletType = 'wallet.repo.myFakeWalletType'
       // get new keys from txLib
@@ -144,6 +141,7 @@ class AddWallet extends Component {
           this.props.dispatch(addWallet(newWallet, order))
           // ??? wallet.rename(this.state.selectedWalletName) ???
           // ??? wallet.addFiat(this.state.selectedFiat) ???
+          Actions.walletList() //redirect to the list of wallets
         })
     }
   }
