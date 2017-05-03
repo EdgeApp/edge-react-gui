@@ -45,22 +45,9 @@ class WalletList extends Component {
     const walletOrder = []
     const walletListArray = []
     for (var idx in this.props.walletList) {
-      console.log('idx is : ', idx, ' this.props.walletList is: ', this.props.walletList)
       walletOrder.push(this.props.walletList[idx].order)
       walletListArray.push(this.props.walletList[idx])
     }
-    //let walletOrder = Object.keys(this.props.walletList)   
-    console.log('in render and walletOrder is now: ', walletOrder)
-    console.log('in render and walletListArray is: ', walletListArray)
-    // initialize archiveList?
-    let archiveList = []
-    /*for (var idx of this.props.walletList) {
-      //console.log('render clause, iterating and idx is: ', idx)
-      if(idx.archived) {
-        archiveList.push(idx)
-      } 
-    }*/
-
 
 
     return(
@@ -93,7 +80,6 @@ class WalletList extends Component {
             data={walletListArray}
             order={walletOrder}
             onRowMoved={e => {
-              console.log('within onRowMoved')
               walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
               this.props.dispatch(updateWalletListOrder(walletOrder, this.props.walletList, walletListArray))
             }}            

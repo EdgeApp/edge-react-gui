@@ -15,8 +15,6 @@ export function updateWalletOrder(walletOrder) {
 }
 
 export function updateWalletListOrder (order, list, listArray) {
-  console.log('inside WalletList.action->updateWalletListOrder, and order is: ', order, ', and list is : ', list, ' , and listArray is: ', listArray)
-
   const walletOrder = order
   const walletList = list
   const walletOrderWithIds = []
@@ -24,13 +22,9 @@ export function updateWalletListOrder (order, list, listArray) {
   var iterator = 0
 
   for (let prop of order) {
-    console.log('inside for loop, prop is: ', prop)
-    console.log(' and order is: ', order)
     newWalletList[listArray[prop].id] = listArray[prop] //.push(list[parseInt(prop)].id)
     newWalletList[listArray[prop].id].order = prop
-    console.log('after newWallList[prop] set, newWalletList is: ', newWalletList)
     //newWalletList[prop].order = iterator
-    console.log('newWalletList is now: ', newWalletList)
     iterator++
   }  
   let data = newWalletList
