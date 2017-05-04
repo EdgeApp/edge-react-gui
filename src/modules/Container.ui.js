@@ -62,6 +62,7 @@ class Main extends Component {
         const newWalletId = FakeAccount.createWallet(walletType, walletKeys)
           .then(walletId => {
             const newWallet = FakeAccount.getWallet(walletId)
+            newWallet.name = 'Original'
             // add wallet to redux, select wallet
             this.props.dispatch(addWallet(newWallet, 0))
             this.props.dispatch(selectWallet(newWallet.id))

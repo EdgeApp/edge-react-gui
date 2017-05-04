@@ -11,6 +11,7 @@ import {
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { dev } from '../utils.js'
+import {updateNewWalletName} from './action'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { addWallet } from '../Wallets/Wallets.action.js'
@@ -92,7 +93,7 @@ class AddWallet extends Component {
   }
 
   isValidWalletName = () => {
-    const isValid = this.state.selectedWalletName
+    const isValid = this.props.nameInput
 
     return isValid
   }
@@ -136,6 +137,7 @@ class AddWallet extends Component {
           // get wallet by ID from the account
           // const newWallet = this.props.account.getWallet(walletID)
           const newWallet = FakeAccount.getWallet(walletId)
+          newWallet.name = this.props.nameInput
           // save new wallet in redux
           const order = Object.keys(this.props.wallets).length
           this.props.dispatch(addWallet(newWallet, order))
@@ -148,6 +150,10 @@ class AddWallet extends Component {
 
   handleOnCancel = () => {
     alert('onCancel')
+  }
+
+  handleChangeWalletName = (input) => {
+    this.props.dispatch(updateNewWalletName(input))
   }
 
   handleSelectWalletName = (selectedWalletName) => {
@@ -179,7 +185,8 @@ class AddWallet extends Component {
 
         <WalletNameInput
           placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
-          onSelect={this.handleSelectWalletName} />
+          onSelect={ this.handleSelectWalletName }
+          onChangeText={this.handleChangeWalletName} />
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
@@ -205,6 +212,7 @@ class AddWallet extends Component {
 
 export default connect( state => ({
   wallets: state.wallets.wallets,
+  nameInput: state.addWallet.newWalletName
 }))(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
@@ -247,7 +255,8 @@ class WalletNameInput extends Component {
           onChangeText={this.props.onSelect}
           autoCorrect={false}
           autoFocus={true}
-          placeholder={this.props.placeholder} />
+          placeholder={this.props.placeholder}
+          onChangeText={this.props.onChangeText} />
       </View>
     )
   }

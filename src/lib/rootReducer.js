@@ -7,8 +7,9 @@ import * as Scan from '../modules/Scan/Scan.reducer'
 import * as ControlPanel from '../modules/ControlPanel/reducer'
 import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
-import Login from '../modules/Login/Login.reducer.js'
+import * as AddWallet from '../modules/AddWallet/reducer'
 import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
+import Login from '../modules/Login/Login.reducer.js'
 import Request from '../modules/Request/Request.reducer.js'
 
 const store = combineReducers({
@@ -54,6 +55,9 @@ const store = combineReducers({
     selectedWallet: Wallets.selectedWallet
   }),
 
+  addWallet: combineReducers({
+    newWalletName: AddWallet.newWalletName
+  }),
 
   request: Request,
 
