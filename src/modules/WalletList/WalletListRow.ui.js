@@ -13,10 +13,7 @@ import RowOptions from './WalletListRowOptions.ui'
 
 class WalletListRow extends Component {
 
-
-
   render() {
-    console.log('inside WalletListRow->render, this.props.data is: ', this.props.data)
     let btcSeed = this.props.data.id
 
     return(
@@ -29,7 +26,7 @@ class WalletListRow extends Component {
           <View style={[styles.rowNameTextWrap]}>
             <Text style={[styles.rowNameText]}>{btcSeed}</Text>
           </View>
-          <RowOptions walletKey={btcSeed} />
+          <RowOptions walletKey={btcSeed} archiveLabel={this.props.archiveLabel} />
         </View>
       </TouchableHighlight>
     )

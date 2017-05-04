@@ -44,11 +44,21 @@ class WalletList extends Component {
   render() {
     const walletOrder = []
     const walletListArray = []
+    const archiveOrder = []
+    const archiveListArray = []
+    let walletIterator = 0
+    let archiveIterator = 0
     for (var idx in this.props.walletList) {
-      walletOrder.push(this.props.walletList[idx].order)
-      walletListArray.push(this.props.walletList[idx])
+      if(this.props.walletList[idx].archived === true){
+        archiveOrder.push(archiveIterator)
+        archiveListArray.push(this.props.walletList[idx])
+        archiveIterator++
+      } else {
+        walletOrder.push(walletIterator)
+        walletListArray.push(this.props.walletList[idx])
+        walletIterator++
+      }
     }
-
 
     return(
       <View style={styles.container}>
@@ -82,8 +92,8 @@ class WalletList extends Component {
             onRowMoved={e => {
               walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
               this.props.dispatch(updateWalletListOrder(walletOrder, this.props.walletList, walletListArray))
-            }}            
-            renderRow={ row => <WalletListRow data={row} />}
+            }}           
+            renderRow={ row => <WalletListRow data={row} archiveLabel='Archive' />}
           />
 
           <View style={styles.archiveBoxHeaderWrap}>
@@ -94,22 +104,19 @@ class WalletList extends Component {
               <FAIcon name="chevron-down" size={18} style={[styles.dropdownIcon]}  color="#666666" />
             </TouchableHighlight>
           </View>          
-          {this.props.archiveVisible && 
-            <SortableListView
-              style={styles.sortableWalletList}
-              data={archiveList}
-              order={archiveOrder}
-              onRowMoved={e => {
-                archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0]);
-                this.forceArchiveListUpdate(archiveOrder);
-              }}
-              onRowMoved={this._onRowMoved}
-              onMoveStart={this._onMoveStart}
-              onMoveEnd={this._onMoveEnd}
-              rowHasChanged={this._rowHasChanged}              
-              renderRow={ row => <WalletListRow data={row} />}
-            />             
-          }
+            {this.props.archiveVisible &&           
+              <SortableListView
+                style={styles.sortableWalletList}
+                data={archiveListArray}
+                order={archiveOrder}
+                render='archive'
+                onRowMoved={e => {
+                  archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0]);
+                  this.forceArchiveListUpdate(archiveOrder);
+                }}             
+                renderRow={ row => <WalletListRow archiveLabel='Restore' data={row} />}
+              />  
+            }           
         </View>
       </View>
     )

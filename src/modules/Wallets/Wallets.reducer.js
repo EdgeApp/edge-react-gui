@@ -2,12 +2,16 @@ import * as WALLETS_ACTION from './Wallets.action'
 import * as WALLET_LIST_ACTION from './../WalletList/WalletList.action'
 
 export const wallets = (state = {}, action) => {
+
   switch (action.type) {
     case WALLETS_ACTION.ADD_WALLET :
       state[action.data.newWallet.id] = action.data.newWallet
       return state
     case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER : 
       return state
+    case WALLET_LIST_ACTION.TOGGLE_ARCHIVE_WALLET : 
+      let key = action.data
+      return { ...state, [key] : { ...state[key], archived: !state[key].archived } }
     default:
       return state
   }

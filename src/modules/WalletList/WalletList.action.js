@@ -6,6 +6,7 @@ export const TOGGLE_RENAME_WALLET_MODAL = 'TOGGLE_RENAME_WALLET_MODAL'
 export const START_DELETE_WALLET = 'START_DELETE WALLET'
 export const UPDATE_WALLET_RENAME_INPUT = 'UPDATE_WALLET_RENAME_INPUT'
 export const UPDATE_WALLET_ORDER = 'UPDATE_WALLET_ORDER'
+export const TOGGLE_ARCHIVE_WALLET = 'TOGGLE_ARCHIVE_WALLET'
 
 export function updateWalletOrder(walletOrder) {
   return {
@@ -39,6 +40,8 @@ export function executeWalletRowOption(walletKey, optionKey) {
     type = START_DELETE_WALLET
   } else if (optionKey === 'Rename') {
     type = TOGGLE_RENAME_WALLET_MODAL
+  } else if (optionKey === 'Archive' || optionKey === 'Restore') {
+    type = TOGGLE_ARCHIVE_WALLET
   }
   data = walletKey
 
