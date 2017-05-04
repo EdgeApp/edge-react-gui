@@ -8,9 +8,26 @@ import Modal from 'react-native-modal'
 import { closeHelpModal } from './actions.js'
 
 const logo = require("../../img/logo.png")
-const webView = require("../../html/info.html")
+const webView = require("../../html/disclaimer.ios.html")
 
 class HelpModal extends Component {
+
+  _renderWebView = () => {
+    switch(this.props.routes.scene.sceneKey) {
+      case 'scan':
+        return require("../../html/info_send.html")
+      case 'walletList':
+        return require("../../html/info_wallets.html")
+      case 'transactions':
+        return require("../../html/info_transactions.html")
+      case 'request':
+        return require("../../html/info_request.html")
+      case 'sendConfirmation':
+        return require("../../html/info_send_confirmation.html")
+      default:
+        return require("../../html/info_disclaimer.html")
+    }
+  }
 
   render () {
     return (
@@ -27,7 +44,9 @@ class HelpModal extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <WebView source={webView}/>
+              <View style={{ flex: 1, paddingHorizontal: 20}}>
+                <WebView source={ this._renderWebView() }/>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
@@ -39,6 +58,7 @@ class HelpModal extends Component {
 
 export default connect( state => ({
 
-  modal: state.helpModal
+  modal: state.helpModal,
+  routes: state.routes
 
 }) )(HelpModal)

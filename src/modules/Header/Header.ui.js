@@ -32,7 +32,7 @@ class HeaderUI extends Component {
             <Title>{this._renderTitle()}</Title>
           </Body>
           <Right>
-            <RightComponent />
+            <RightComponent routes={this.props.routes} />
           </Right>
         </Header>
       </LinearGradient>
