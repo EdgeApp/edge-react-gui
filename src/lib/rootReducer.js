@@ -41,7 +41,9 @@ const store = combineReducers({
     archiveVisible: WalletList.archiveVisible,
     renameWalletVisible: WalletList.renameWalletVisible,
     deleteWalletVisible: WalletList.deleteWalletVisible,
-    currentWalletRename: WalletList.currentWalletRename
+    currentWalletRename: WalletList.currentWalletRename,
+    currentWalletBeingRenamed: WalletList.currentWalletBeingRenamed,
+    currentWalletBeingDeleted: WalletList.currentWalletBeingDeleted
   }),
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,

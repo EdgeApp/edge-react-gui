@@ -10,8 +10,14 @@ export const wallets = (state = {}, action) => {
     case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER : 
       return state
     case WALLET_LIST_ACTION.TOGGLE_ARCHIVE_WALLET : 
-      let key = action.data
+      let key = action.data.key
       return { ...state, [key] : { ...state[key], archived: !state[key].archived } }
+    case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET : 
+      return { ...state, [action.key] : { ...state[action.key], name: action.input } }
+    case WALLETS_ACTION.COMPLETE_DELETE_WALLET : {
+      delete state[action.data]
+      return state
+    }
     default:
       return state
   }

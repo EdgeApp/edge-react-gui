@@ -149,7 +149,7 @@ class AddWallet extends Component {
   }
 
   handleOnCancel = () => {
-    alert('onCancel')
+    Actions.walletList() //redirect to the list of wallets
   }
 
   handleChangeWalletName = (input) => {

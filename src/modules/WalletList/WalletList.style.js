@@ -144,6 +144,12 @@ module.exports = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center'
   },
+  modalMiddleTextWrap: {
+
+  },
+  modalMiddleText: {
+
+  },
   nameInputWrap: {
 
     borderBottomColor: '#dddddd',
