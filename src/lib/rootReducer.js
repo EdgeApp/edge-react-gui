@@ -8,13 +8,14 @@ import * as ControlPanel from '../modules/ControlPanel/reducer'
 import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
 import * as AddWallet from '../modules/AddWallet/reducer'
+import { airbitz, account } from '../modules/Login/Login.reducer.js'
 import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
 import Login from '../modules/Login/Login.reducer.js'
 import Request from '../modules/Request/Request.reducer.js'
 
 const store = combineReducers({
-  airbitz: Login.airbitz,
-  account: Login.account,
+  airbitz,
+  account,
 
   sidemenu: combineReducers({
     view: SideMenu.view
