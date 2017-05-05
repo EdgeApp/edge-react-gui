@@ -244,13 +244,13 @@ WalletList.propTypes = {
 export default connect( state => ({
 
   walletList: state.wallets.wallets,
-  archiveList: state.walletList.archiveList,
-  archiveVisible: state.walletList.archiveVisible,
-  renameWalletVisible: state.walletList.renameWalletVisible,
-  deleteWalletVisible: state.walletList.deleteWalletVisible,
-  currentWalletRename: state.walletList.currentWalletRename,
-  currentWalletBeingRenamed: state.walletList.currentWalletBeingRenamed,
+  archiveList: state.ui.walletList.archiveList,
+  archiveVisible: state.ui.walletList.archiveVisible,
+  renameWalletVisible: state.ui.walletList.renameWalletVisible,
+  deleteWalletVisible: state.ui.walletList.deleteWalletVisible,
+  currentWalletRename: state.ui.walletList.currentWalletRename,
+  currentWalletBeingRenamed: state.ui.walletList.currentWalletBeingRenamed,
   walletOrder: state.wallets.walletListOrder,
-  currentWalletBeingDeleted: state.walletList.currentWalletBeingDeleted
+  currentWalletBeingDeleted: state.ui.walletList.currentWalletBeingDeleted
 
 }) )(WalletList)

@@ -123,6 +123,6 @@ class MainComponent extends Component {
 
 export default connect( state => ({
 
-  usersView : state.controlPanel.usersView
+  usersView : state.ui.controlPanel.usersView
 
 }) )(MainComponent)

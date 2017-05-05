@@ -278,8 +278,8 @@ Transactions.propTypes = {
 
 export default connect( state => ({
 
-  transactionsList: state.transactions.transactionsList,
-  searchVisible: state.transactions.searchVisible,
-  contactsList: state.transactions.contactsList
+  transactionsList: state.ui.transactionList.transactionsList,
+  searchVisible: state.ui.transactionList.searchVisible,
+  contactsList: state.ui.transactionList.contactsList
 
 }) )(Transactions)

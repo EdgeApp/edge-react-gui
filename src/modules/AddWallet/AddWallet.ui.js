@@ -212,7 +212,7 @@ class AddWallet extends Component {
 
 export default connect( state => ({
   wallets: state.wallets.wallets,
-  nameInput: state.addWallet.newWalletName
+  nameInput: state.ui.addWallet.newWalletName
 }))(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////

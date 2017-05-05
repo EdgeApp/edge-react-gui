@@ -148,9 +148,9 @@ class Scan extends Component {
 }
 
 export default connect( state => ({
-  torchEnabled: state.scan.torchEnabled,
-  addressModalVisible: state.scan.addressModalVisible,
-  receipientAddress: state.scan.recipientAddress,
-  walletListModalVisible: state.walletTransferList.walletListModalVisible
+  torchEnabled: state.ui.scan.torchEnabled,
+  addressModalVisible: state.ui.scan.addressModalVisible,
+  receipientAddress: state.ui.scan.recipientAddress,
+  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
   })
 )(Scan)

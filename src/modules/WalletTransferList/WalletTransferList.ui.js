@@ -66,7 +66,7 @@ class WalletTransferList extends Component {
 
 export default connect( state => ({
 
-  walletTransferList: state.walletTransferList.walletTransferList,
-  walletListModalVisible: state.walletTransferList.walletListModalVisible
+  walletTransferList: state.ui.walletTransferList.walletTransferList,
+  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
 
 }) )(WalletTransferList)

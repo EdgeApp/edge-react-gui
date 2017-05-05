@@ -74,7 +74,7 @@ class TabBar extends Component {
 
 export default connect( state => ({
 
-  sidemenu : state.sidemenu.view,
+  sidemenu : state.ui.sideMenu.view,
   routes: state.routes
 
 }) )(TabBar)
