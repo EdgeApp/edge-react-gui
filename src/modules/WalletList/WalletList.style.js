@@ -63,7 +63,7 @@ module.exports = StyleSheet.create({
       fontWeight: 'bold',
       fontSize: 18
     },
-    walletsBoxHeaderDropdown: {
+    walletsBoxHeaderAddWallet: {
   
     },
 
@@ -143,6 +143,12 @@ module.exports = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center'
+  },
+  modalMiddleTextWrap: {
+
+  },
+  modalMiddleText: {
+
   },
   nameInputWrap: {
 

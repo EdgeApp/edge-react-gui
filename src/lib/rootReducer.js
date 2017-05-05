@@ -7,8 +7,9 @@ import * as Scan from '../modules/Scan/Scan.reducer'
 import * as ControlPanel from '../modules/ControlPanel/reducer'
 import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
-import Login from '../modules/Login/Login.reducer.js'
+import * as AddWallet from '../modules/AddWallet/reducer'
 import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
+import Login from '../modules/Login/Login.reducer.js'
 import Request from '../modules/Request/Request.reducer.js'
 
 const store = combineReducers({
@@ -37,12 +38,12 @@ const store = combineReducers({
     selectedUser: ControlPanel.selectedUser
   }),
   walletList: combineReducers({
-    walletsVisible: WalletList.walletsVisible,
     archiveVisible: WalletList.archiveVisible,
     renameWalletVisible: WalletList.renameWalletVisible,
     deleteWalletVisible: WalletList.deleteWalletVisible,
     currentWalletRename: WalletList.currentWalletRename,
-    walletOrder: WalletList.walletOrder
+    currentWalletBeingRenamed: WalletList.currentWalletBeingRenamed,
+    currentWalletBeingDeleted: WalletList.currentWalletBeingDeleted
   }),
   walletTransferList: combineReducers({
     walletTransferList: WalletTransferList.walletTransferList,
@@ -53,9 +54,12 @@ const store = combineReducers({
     wallets: Wallets.wallets,
     walletList: Wallets.walletList,
     walletListOrder: Wallets.walletListOrder,
-    selectedWallet: Wallets.selectedWallet,    
+    selectedWallet: Wallets.selectedWallet
   }),
 
+  addWallet: combineReducers({
+    newWalletName: AddWallet.newWalletName
+  }),
 
   request: Request,
 

@@ -4,7 +4,7 @@ import { Text, View, StyleSheet }  from 'react-native'
 import { connect } from 'react-redux'
 import styles from './WalletList.style'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
-import {executeWalletRowOption} from './WalletList.action'
+import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateWalletRenameInput } from './WalletList.action'
 
 class WalletListRowOptions extends Component { 
 
@@ -13,11 +13,15 @@ class WalletListRowOptions extends Component {
   }
 
   optionAction(optionKey) {
-    this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey))
+    this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
+    if(optionKey === 'Rename') {
+      this.props.dispatch(updateCurrentWalletBeingRenamed(this.props.walletKey))
+      this.props.dispatch(updateWalletRenameInput(this.props.wallets[this.props.walletKey].name))
+    }
   }
 
   render() {
-    const options = ['Rename', 'Delete'] 
+    const options = ['Rename', 'Add Token', this.props.archiveLabel, 'Delete'] 
 
     return(
     <View style={{ padding: 10, flexDirection: 'row' }} style={styles.rowDotsWrap}>
@@ -32,6 +36,12 @@ class WalletListRowOptions extends Component {
           <MenuOption value={options[1]}>
             <Text>{options[1]}</Text>
           </MenuOption>
+          <MenuOption value={options[2]}>
+            <Text>{options[2]}</Text>
+          </MenuOption>
+          <MenuOption value={options[3]}>
+            <Text>{options[3]}</Text>
+          </MenuOption>          
         </MenuOptions>
       </Menu>
     </View>
@@ -40,5 +50,6 @@ class WalletListRowOptions extends Component {
 }
 
 export default connect( state => ({
-
+  wallets: state.wallets.wallets,
+  archives: state.wallets.archives
 }) )(WalletListRowOptions)

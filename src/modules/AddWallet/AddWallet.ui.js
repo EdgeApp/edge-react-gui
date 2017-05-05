@@ -11,10 +11,12 @@ import {
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { dev } from '../utils.js'
+import {updateNewWalletName} from './action'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { addWallet } from '../Wallets/Wallets.action.js'
 import FakeAccount from '../../Fakes/FakeAccount.js'
+import { Actions } from 'react-native-router-flux'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
@@ -91,7 +93,7 @@ class AddWallet extends Component {
   }
 
   isValidWalletName = () => {
-    const isValid = this.state.selectedWalletName
+    const isValid = this.props.nameInput
 
     return isValid
   }
@@ -124,10 +126,6 @@ class AddWallet extends Component {
     if (!this.isValidData()) {
       alert(INVALID_DATA_TEXT)
     } else {
-      alert('walletName: ' + this.state.selectedWalletName + ' blockchain: ' + this.state.selectedBlockchain + ' fiat: ' + this.state.selectedFiat)
-
-
-
       // determine wallet type
       const walletType = 'wallet.repo.myFakeWalletType'
       // get new keys from txLib
@@ -139,16 +137,23 @@ class AddWallet extends Component {
           // get wallet by ID from the account
           // const newWallet = this.props.account.getWallet(walletID)
           const newWallet = FakeAccount.getWallet(walletId)
+          newWallet.name = this.props.nameInput
           // save new wallet in redux
-          this.props.dispatch(addWallet(newWallet))
+          const order = Object.keys(this.props.wallets).length
+          this.props.dispatch(addWallet(newWallet, order))
           // ??? wallet.rename(this.state.selectedWalletName) ???
           // ??? wallet.addFiat(this.state.selectedFiat) ???
+          Actions.walletList() //redirect to the list of wallets
         })
     }
   }
 
   handleOnCancel = () => {
-    alert('onCancel')
+    Actions.walletList() //redirect to the list of wallets
+  }
+
+  handleChangeWalletName = (input) => {
+    this.props.dispatch(updateNewWalletName(input))
   }
 
   handleSelectWalletName = (selectedWalletName) => {
@@ -180,7 +185,8 @@ class AddWallet extends Component {
 
         <WalletNameInput
           placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
-          onSelect={this.handleSelectWalletName} />
+          onSelect={ this.handleSelectWalletName }
+          onChangeText={this.handleChangeWalletName} />
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
@@ -204,7 +210,10 @@ class AddWallet extends Component {
   }
 }
 
-export default connect()(AddWallet)
+export default connect( state => ({
+  wallets: state.wallets.wallets,
+  nameInput: state.addWallet.newWalletName
+}))(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
 
@@ -246,7 +255,8 @@ class WalletNameInput extends Component {
           onChangeText={this.props.onSelect}
           autoCorrect={false}
           autoFocus={true}
-          placeholder={this.props.placeholder} />
+          placeholder={this.props.placeholder}
+          onChangeText={this.props.onChangeText} />
       </View>
     )
   }

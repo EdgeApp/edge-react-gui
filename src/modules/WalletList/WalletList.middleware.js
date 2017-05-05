@@ -3,13 +3,13 @@ import {updateWalletOrder, updateWalletListOrder} from './WalletList.action'
 export const forceWalletListUpdate = (order, list) => {
     const walletOrder = order
     const walletList = list
-    return (dispatch, getState) => {
-        startWalletOrderUpdate(walletOrder, dispatch).then( () => {
-            let newWalletList = walletList.sort(walletReSortWrapper(walletOrder, walletList))
-            dispatch(updateWalletListOrder(walletOrder, newWalletList))
-        })
+    const walletOrderWithIds = []
+
+    for (let prop of order) {
+      walletOrderWithIds.push(list[parseInt(prop)].id)
     }
-  }
+    dispatch(updateWalletListOrder(walletOrderWithIds))
+}
 
 export const walletReSort = ( a, b) => {
     if(walletOrder[walletList.indexOf(a)] < walletOrder[walletList.indexOf(b)]) {
