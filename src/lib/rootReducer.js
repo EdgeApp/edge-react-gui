@@ -7,13 +7,13 @@ import * as Scan from '../modules/Scan/Scan.reducer'
 import * as ControlPanel from '../modules/ControlPanel/reducer'
 import * as WalletList from '../modules/WalletList/WalletList.reducer'
 import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
-import Login from '../modules/Login/Login.reducer.js'
+import { airbitz, account } from '../modules/Login/Login.reducer.js'
 import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
 import Request from '../modules/Request/Request.reducer.js'
 
 const store = combineReducers({
-  airbitz: Login.airbitz,
-  account: Login.account,
+  airbitz,
+  account,
 
   sidemenu: combineReducers({
     view: SideMenu.view
@@ -53,9 +53,8 @@ const store = combineReducers({
     wallets: Wallets.wallets,
     walletList: Wallets.walletList,
     walletListOrder: Wallets.walletListOrder,
-    selectedWallet: Wallets.selectedWallet,    
+    selectedWallet: Wallets.selectedWallet
   }),
-
 
   request: Request,
 

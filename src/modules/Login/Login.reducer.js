@@ -1,6 +1,6 @@
 import * as ACTION from './Login.action'
 
-const airbitz = (state = {}, action) => {
+export const airbitz = (state = {}, action) => {
   switch (action.type) {
     case ACTION.ADD_AIRBITZ_TO_REDUX :
       return action.airbitz
@@ -9,16 +9,11 @@ const airbitz = (state = {}, action) => {
   }
 }
 
-const account = (state = {}, action) => {
+export const account = (state = {}, action) => {
   switch (action.type) {
     case ACTION.ADD_ACCOUNT_TO_REDUX :
       return action.account
     default:
       return state
   }
-}
-
-export default {
-  airbitz,
-  account
 }
