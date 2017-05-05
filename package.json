@@ -67,8 +67,8 @@
     "react-native-sortable-listview": "^0.2.2",
     "react-native-swipe-flip": "^1.0.2",
     "react-native-tabs": "^1.0.9",
-    "react-native-tcp": "^3.2.1",
-    "react-native-udp": "^2.0.0",
+    "react-native-tcp": "^2.0.4",
+    "react-native-udp": "^1.2.9",
     "react-native-vector-icons": "^4.0.0",
     "react-redux": "^5.0.3",
     "readable-stream": "1.0.33",
@@ -91,7 +91,6 @@
     "husky": "^0.12.0",
     "maya-kai": "^0.0.10",
     "nyc": "^10.0.0",
-    "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",
     "standard": "^8.6.0"
