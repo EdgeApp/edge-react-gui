@@ -21,6 +21,8 @@ import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { MenuContext } from 'react-native-menu'
 import { addWallet, selectWallet } from './Wallets/Wallets.action.js'
+import { initializeAccount } from './Container.middleware'
+import {enableLoadingScreenVisibility} from './Container.action'
 
 import AddWallet from './AddWallet/index.js'
 
@@ -32,49 +34,17 @@ class Main extends Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      loadingScreenVisible: true
-    }
+    this.props.dispatch(enableLoadingScreenVisibility())
+
   }
 
   componentDidMount () {
-    makeReactNativeIo()
-      .then(io => {
-        const context = makeContext({
-          apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
-          io
-        })
-        this.props.dispatch(addAirbitzToRedux(context))
-        const account = context.loginWithPassword('bob19', 'Funtimes19')
-
-        return account
-      })
-      .then(account => {
-        this.props.dispatch(addAccountToRedux(account))
-
-        return account
-      })
-      .then(() => {
-        // create a fake wallet, select first wallet
-        const walletType = 'wallet.repo.myFakeWalletType'
-        const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
-        const newWalletId = FakeAccount.createWallet(walletType, walletKeys)
-          .then(walletId => {
-            const newWallet = FakeAccount.getWallet(walletId)
-            newWallet.name = 'Original'
-            // add wallet to redux, select wallet
-            this.props.dispatch(addWallet(newWallet, 0))
-            this.props.dispatch(selectWallet(newWallet.id))
-          })
-
-        this.setState({
-          loadingScreenVisible: false
-        })
-      })
+    console.log('about to initializeAccount')
+    this.props.dispatch(initializeAccount())
   }
 
   render () {
-    if (this.state.loadingScreenVisible) {
+    if (this.props.loadingScreenVisible) {
       console.log('logging in...')
       return (
         <ActivityIndicator
@@ -126,4 +96,6 @@ class Main extends Component {
 
 }
 
-export default connect()(Main)
+export default connect( state => ({
+  loadingScreenVisible: state.ui.main.loadingScreenVisible
+}) )(Main)

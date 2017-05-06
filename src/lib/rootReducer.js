@@ -8,6 +8,7 @@ import controlPanel from '../modules/ControlPanel/reducer'
 import walletList from '../modules/WalletList/WalletList.reducer'
 import walletTransferListReducer from '../modules/WalletTransferList/WalletTransferList.reducer'
 import addWallet from '../modules/AddWallet/reducer'
+import container from '../modules/Container.reducer'
 
 import { airbitz, account } from '../modules/Login/Login.reducer.js'
 import * as Wallets from '../modules/Wallets/Wallets.reducer.js'
@@ -36,7 +37,8 @@ const store = combineReducers({
     walletList,
     walletTransferList: walletTransferListReducer,
     sideMenu,
-    addWallet
+    addWallet,
+    main: container
   })
 
 })

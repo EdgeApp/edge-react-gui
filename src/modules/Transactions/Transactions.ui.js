@@ -22,7 +22,7 @@ class Transactions extends Component {
   }
 
   componentWillMount() {
-    const sampleTransaction = [
+    const sampleTransaction = [ /*
       {
         "key": 1,
         "abcWalletTx": "345efgd435refd",
@@ -92,7 +92,7 @@ class Transactions extends Component {
         "runningBalance": 7877332,
         "signedTx": [],
         "otherParams": {"test": true}
-      }
+      }*/
     ]
     this.props.dispatch(updateTransactionsList(sampleTransaction))
   }
