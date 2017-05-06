@@ -19,6 +19,11 @@
     "flow": "flow --show-all-errors",
     "postinstall": "./node_modules/.bin/rn-nodeify --install --hack"
   },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
+  },
   "dependencies": {
     "airbitz-core-js": "^0.3.0",
     "assert": "^1.4.1",
@@ -91,6 +96,7 @@
     "husky": "^0.12.0",
     "maya-kai": "^0.0.10",
     "nyc": "^10.0.0",
+    "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",
     "standard": "^8.6.0"
