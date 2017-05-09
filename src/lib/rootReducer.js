@@ -24,10 +24,10 @@ const store = combineReducers({
 
 
   wallets: combineReducers({
-    wallets: Wallets.wallets,
-    walletList: Wallets.walletList,
-    walletListOrder: Wallets.walletListOrder,
-    selectedWallet: Wallets.selectedWallet
+    wallets: Wallets.wallets, // wallets
+    walletList: Wallets.walletList, // ?
+    walletListOrder: Wallets.walletListOrder, // ?
+    selectedWallet: Wallets.selectedWallet // UI
   }),
 
   ui: combineReducers({

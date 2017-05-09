@@ -1,67 +1,54 @@
-const FakeAccount = {
-  walletList: [],
+import { FakeWallet } from './index.js'
 
-  createWallet: function (type, keys) {
-    const newWallet = {
-      id: Math.floor(Math.random() * 99999),
-      type,
-      keys,
-      archived: false,
-      addresses: [
-        {
-          address: '1_1_PN3opiupq98G4ctfSq8ry3',
-          amountReceived: 0,
-          used: false
-        },
-        {
-          address: '1_2_PN3opiupq98G4ctfSq8ry3',
-          amountReceived: 0,
-          used: false
-        },
-        {
-          address: '1_3_PN3opiupq98G4ctfSq8ry3',
-          amountReceived: 0,
-          used: false
-        },
-        {
-          address: '1_4_PN3opiupq98G4ctfSq8ry3',
-          amountReceived: 0,
-          used: false
-        },
-        {
-          address: '1_5_PN3opiupq98G4ctfSq8ry3',
-          amountReceived: 0,
-          used: false
-        }
-      ],
-      getReceiveAddress: function () {
-        const receiveAddress = this.addresses.find(address => {
-          return (address.amountReceived === 0 && address.used === false)
-        })
-
-        return receiveAddress
-      },
-      lockAddress: function (targetAddress) {
-        const addressToLock = this.addresses.find(address => {
-          return address.address === targetAddress
-        })
-
-        addressToLock.used = true
-      }
-    }
-    this.walletList.push(newWallet)
-
-    return Promise.resolve(newWallet.id)
-  },
-
-  getWallet: function (id) {
-    const wallet = this.walletList.find((wallet) => {
-      return wallet.id === id
-    })
-
-    return wallet
+export class FakeAccount {
+  constructor (username, password) {
+    this.username = username
+    this.password = password
+    this.walletList = []
   }
 
-}
+  // async
+  checkPassword (password) {
+    const isCorrectPassword =
+      password === this.password
 
-export default FakeAccount
+    return Promise.resolve(isCorrectPassword)
+  }
+
+  // sync
+  listWalletIds () {
+    const walletIds = this.walletList.map(wallet => {
+      return wallet.walletId
+    })
+
+    return walletIds
+  }
+
+  // sync
+  getWallet (walletId) {
+    const targetWallet = this.walletList.find(wallet => {
+      return wallet.walletId === walletId
+    })
+
+    return targetWallet
+  }
+
+  // sync
+  getFirstWallet (walletType) {
+    const firstWallet = this.walletList.find(wallet => {
+      return wallet.walletType === walletType
+    })
+
+    return firstWallet
+  }
+
+  // async
+  createWallet (walletType, walletKeys, walletName = 'myFakeWallet') {
+    const walletId = this.walletList.length
+    const newWallet = new FakeWallet(walletType, walletName, walletKeys, walletId)
+    const newWalletId = newWallet.walletId
+    this.walletList.push(newWallet)
+
+    return Promise.resolve(newWalletId)
+  }
+}

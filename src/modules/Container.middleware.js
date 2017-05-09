@@ -5,9 +5,7 @@ import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
 
-export const initializeAccount = () => {
-
-  return (dispatch, getState, imports) => {
+export const initializeAccount = (dispatch) => {
     makeReactNativeIo().then( io => {
         const context = makeContext({
             apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
@@ -19,11 +17,12 @@ export const initializeAccount = () => {
         return account
     })
     .then(account => {
+        console.log('inside second then clause')
         dispatch(addAccountToRedux(account))
 
         return account
     })
-    .then(() => {
+    .then((FakeAccount) => {
     // create a fake wallet, select first wallet
     const walletType = 'wallet.repo.myFakeWalletType'
     const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
@@ -33,11 +32,9 @@ export const initializeAccount = () => {
         newWallet.name = 'Original'
         // add wallet to redux, select wallet
         dispatch(addWallet(newWallet, 0))
-        dispatch(selectWallet(newWallet.id))
+        dispatch(selectWallet(newWallet.name)) // this part will need to be modified to use an actual id!!
         })
 
-        
     }) 
     return dispatch(disableLoadingScreenVisibility())
-  }
 }

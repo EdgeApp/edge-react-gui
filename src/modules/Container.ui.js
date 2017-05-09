@@ -40,7 +40,7 @@ class Main extends Component {
 
   componentDidMount () {
     console.log('about to initializeAccount')
-    this.props.dispatch(initializeAccount())
+    initializeAccount(this.props.dispatch)
   }
 
   render () {
@@ -48,7 +48,7 @@ class Main extends Component {
       console.log('logging in...')
       return (
         <ActivityIndicator
-          animating={this.state.animating}
+          animating={this.props.loadingScreenVisible}
           style={{
             flex: 1,
             alignItems: 'center',
