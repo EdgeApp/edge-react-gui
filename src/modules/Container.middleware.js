@@ -1,6 +1,6 @@
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import FakeAccount from '../Fakes/FakeAccount.js'
-import { addWallet, selectWallet } from './Wallets/Wallets.action.js'
+import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
@@ -67,6 +67,7 @@ export class ABCDataStore {
 }
 
 const BTCEngine = {}
+const engineStarted = {}
 
 const callbacks = {
     addressesChecked (...rest) {
@@ -88,6 +89,7 @@ const abcTxLibAccess = {
 }
 
 export const initializeAccount = (dispatch) => {
+
     console.log('walletLocalDataStore is: ', abcTxLibAccess.walletLocalDataStore)
     makeReactNativeIo().then( io => {
         const context = makeContext({
@@ -105,33 +107,42 @@ export const initializeAccount = (dispatch) => {
         console.log('mk: ', mk)
         dispatch(addAirbitzToRedux(context))
         const account = context.loginWithPassword('bob19', 'Funtimes19')
-        BTCEngine = TxLibBTC.makeEngine(abcTxLibAccess, options, callbacks, function(error, abcTxEngine) {
+        console.log('about to makeEngine')
+        BTCEngine = TxLibBTC.makeEngine(abcTxLibAccess, options, callbacks).then(BTCEngine => {
+          console.log('insideTxLibBTC.makeEngine callback')
             if (error == null) {
                 console.log('success and BTCEngine is: ', BTCEngine)
+                var engineStarted = BTCEngine.startEngine()
+                console.log('blockHeight is: ', BTCEngine.getBlockHeight())
+            } else {
+              console.log('error is: ', error)
             }
         })
+        console.log('makeEngine supposedly completed, BTCEngine is: ', BTCEngine)
         return account
+
     })
     .then(account => {
-        console.log('inside second then clause')
-        dispatch(addAccountToRedux(account))
+      console.log('inside second then clause, engineStarted is: ', engineStarted)
+      
+      dispatch(addAccountToRedux(account))
 
-        return account
+      return account
     })
-    .then((FakeAccount) => {
-    // create a fake wallet, select first wallet
-    const walletType = 'wallet.repo.myFakeWalletType'
-    const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
-    const newWalletId = FakeAccount.createWallet(walletType, walletKeys)
-        .then(walletId => {
-            const newWallet = FakeAccount.getWallet(walletId)
-            newWallet.name = 'Original'
-            // add wallet to redux, select wallet
-            dispatch(addWallet(newWallet, 0))
-            dispatch(selectWallet(newWallet.name)) // this part will need to be modified to use an actual id!!
-        })
-        console.log(BTCEngine)
-        BTCEngine.startEngine().then(() => { console.log('blockHeight is: ', BTCEngine.getBlockHeight()) })
-    }) 
+    .then((account) => {
+      const walletIds = account.listWalletIds()
+      const wallets = walletIds.map(id => {
+        wallet = account.getWallet(id)
+        wallet.id = id
+        wallet.name = 'myFakeWallet - ' + id.slice(0, 5)
+
+        return wallet
+      })
+
+      wallets.slice(0,5).forEach(wallet => {
+        dispatch(addWallet(wallet, wallets.length))
+      })
+    })
     return dispatch(disableLoadingScreenVisibility())
+
 }
