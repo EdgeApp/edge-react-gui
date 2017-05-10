@@ -13,7 +13,7 @@ import container from '../modules/Container.reducer'
 import { airbitz, account } from '../modules/Login/Login.reducer.js'
 
 import { walletsOld } from '../modules/UI/Wallets/Wallets.reducer.js'
-import * as wallets from '../modules/Wallets/Wallets.reducer.js'
+import { wallets } from '../modules/Wallets/Wallets.reducer.js'
 
 import Login from '../modules/Login/Login.reducer.js'
 import request from '../modules/Request/Request.reducer.js'
@@ -22,6 +22,8 @@ const store = combineReducers({
   routes,
   airbitz,
   account,
+
+  wallets,
 
   request,
 

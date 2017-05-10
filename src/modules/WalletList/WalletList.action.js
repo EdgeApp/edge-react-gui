@@ -32,7 +32,7 @@ export function updateWalletListOrder (order, list, listArray) {
     newWalletList[listArray[prop].id].order = prop
     //newWalletList[prop].order = iterator
     iterator++
-  }  
+  }
   let data = newWalletList
   return {
     type: UPDATE_WALLET_LIST_ORDER,
@@ -49,7 +49,7 @@ export function executeWalletRowOption(key, optionKey, wallets) {
   } else if (optionKey === 'Rename') {
     type = OPEN_RENAME_WALLET_MODAL
     let currentName = wallets[key].name
-    data = {key, currentName}    
+    data = {key, currentName}
   } else if (optionKey === 'Archive' || optionKey === 'Restore') {
     type = TOGGLE_ARCHIVE_WALLET
     data = {key}

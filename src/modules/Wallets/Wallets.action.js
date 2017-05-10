@@ -1,17 +1,21 @@
-// this goes into UI/Wallets
-// export const ARCHIVE_WALLET         = 'ARCHIVE_WALLET'
-// export const ARCHIVE_WALLET_SUCCESS = 'ARCHIVE_WALLET_SUCCESS'
-// export const ARCHIVE_WALLET_ERROR   = 'ARCHIVE_WALLET_ERROR'
-//
-// export const DE_ARCHIVE_WALLET         = 'DE_ARCHIVE_WALLET'
-// export const DE_ARCHIVE_WALLET_SUCCESS = 'DE_ARCHIVE_WALLET_SUCCESS'
-// export const DE_ARCHIVE_WALLET_ERROR   = 'DE_ARCHIVE_WALLET_ERROR'
+export const ADD_WALLET = 'ADD_WALLET'
+export const CREATE_WALLET = 'CREATE_WALLET'
+export const RENAME_WALLET = 'RENAME_WALLET'
+export const ARCHIVE_WALLET = 'ARCHIVE_WALLET'
+export const DE_ARCHIVE_WALLET = 'DE_ARCHIVE_WALLET'
 
 import {
   createWalletStart,
   createWalletSuccess,
   createWalletFailure
 } from '../AddWallet/action.js'
+
+export const addWallet = (wallet) => {
+  return {
+    type: ADD_WALLET,
+    data: { wallet }
+  }
+}
 
 export const createWallet = (wallet) => {
   return (dispatch, getState) => {

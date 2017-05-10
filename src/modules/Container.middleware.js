@@ -1,6 +1,7 @@
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import FakeAccount from '../Fakes/FakeAccount.js'
-import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
+import { addWallet as addWalletUI } from './UI/Wallets/Wallets.action.js'
+import { selectWallet as selectWalletUI } from './UI/Wallets/Wallets.action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
@@ -16,25 +17,28 @@ export const initializeAccount = (dispatch) => {
 
     return account
   })
-    .then(account => {
-      console.log('inside second then clause')
-      dispatch(addAccountToRedux(account))
+  .then(account => {
+    dispatch(addAccountToRedux(account))
 
-      return account
+    return account
+  })
+  .then(account => {
+    const walletIds = account.listWalletIds()
+
+    const wallets = walletIds.map(id => {
+      wallet = account.getWallet(id)
+      wallet.id = id
+      wallet.name = 'myFakeWallet - ' + id.slice(0, 5)
+
+      return wallet
     })
-    .then((account) => {
-      const walletIds = account.listWalletIds()
-      const wallets = walletIds.map(id => {
-        wallet = account.getWallet(id)
-        wallet.id = id
-        wallet.name = 'myFakeWallet - ' + id.slice(0, 5)
 
-        return wallet
-      })
-
-      wallets.forEach(wallet => {
-        dispatch(addWallet(wallet, 0))
-      })
+    wallets.slice(0, 5).forEach(wallet => {
+      dispatch(addWalletUI(wallet, 0))
     })
+
+    dispatch(selectWalletUI(account.listWalletIds()[0]))
+  })
+
   return dispatch(disableLoadingScreenVisibility())
 }

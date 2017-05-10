@@ -1,7 +1,7 @@
 // Do not send actions to this reducer
 // Only the core should send actions to this reducer
 
-import { ACTION } from './Wallets.action'
+import * as ACTION from './Wallets.action.js'
 
 const initialState = {
   byId: {},
@@ -9,7 +9,7 @@ const initialState = {
   archivedWalletIds: []
 }
 
-const wallets = (state = initialState, action) => {
+export const wallets = (state = initialState, action) => {
   return {
     byId: byId(state.byId, action),
     activeWalletIds: activeWalletIds(state.activeWalletIds, action),
@@ -21,7 +21,12 @@ const byId = (state, action) => {
   switch (action.type) {
     case ACTION.ADD_WALLET:
       const wallet = schema(action.data.wallet)
-      return {...state, wallet}
+      newState = {
+        ...state,
+        [wallet.id]: wallet
+      }
+
+      return newState
 
     default:
       return state
@@ -29,19 +34,19 @@ const byId = (state, action) => {
 }
 
 const activeWalletIds = (state, action) => {
-  let walletId
+  let id
   switch (action.type) {
     case ACTION.ARCHIVE_WALLET:
-      walletId = action.data.walletId
-      return getNewArrayWithoutItem(state, walletId)
+      id = action.data.id
+      return getNewArrayWithoutItem(state, id)
 
     case ACTION.ADD_WALLET:
-      walletId = action.data.wallet.walletId
-      return getNewArrayWithItem(state, walletId)
+      id = action.data.wallet.id
+      return getNewArrayWithItem(state, id)
 
     case ACTION.DE_ARCHIVE_WALLET:
-      walletId = action.data.walletId
-      return getNewArrayWithItem(state, walletId)
+      id = action.data.id
+      return getNewArrayWithItem(state, id)
 
     default:
       return state
@@ -49,15 +54,15 @@ const activeWalletIds = (state, action) => {
 }
 
 const archivedWalletIds = (state, action) => {
-  let walletId
+  let id
   switch (action.type) {
     case ACTION.ARCHIVE_WALLET:
-      walletId = action.data.walletId
-      return getNewArrayWithItem(state, walletId)
+      id = action.data.id
+      return getNewArrayWithItem(state, id)
 
     case ACTION.DE_ARCHIVE_WALLET:
-      walletId = action.data.walletId
-      return getNewArrayWithoutItem(state, walletId)
+      id = action.data.id
+      return getNewArrayWithoutItem(state, id)
 
     default:
       return state
@@ -65,16 +70,14 @@ const archivedWalletIds = (state, action) => {
 }
 
 const schema = (wallet) => {
-  walletId = wallet.walletId
-  walletType = wallet.walletType
-  walletName = wallet.walletName
+  id = wallet.id
+  type = wallet.type
+  name = wallet.name
 
   newWallet = {
-    [walletId]: {
-      walletId,
-      walletType,
-      walletName
-    }
+    id,
+    type,
+    name
   }
 
   return newWallet
