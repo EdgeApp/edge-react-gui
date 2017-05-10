@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux'
 import * as WALLETS_ACTION from './Wallets.action'
-import * as WALLET_LIST_ACTION from './../WalletList/WalletList.action'
+import * as WALLET_LIST_ACTION from '../../WalletList/WalletList.action'
 
 export const wallets = (state = {}, action) => {
   switch (action.type) {
     case WALLETS_ACTION.ADD_WALLET :
-      let newState = {}
-      state[action.data.newWallet.id] = action.data.newWallet
-      Object.assign(newState, state) //
+      const newState = {}
+      newState[action.data.newWallet.id] = action.data.newWallet
+      newState = Object.assign(newState, state) //
       return newState
     case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER :
       return state

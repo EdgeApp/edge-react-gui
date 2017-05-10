@@ -23,13 +23,6 @@ const store = combineReducers({
   airbitz,
   account,
 
-  wallets: combineReducers({
-    wallets: Wallets.wallets, // wallets
-    walletList: Wallets.walletList, // ?
-    walletListOrder: Wallets.walletListOrder, // ?
-    selectedWallet: Wallets.selectedWallet // UI
-  }),
-
   request,
 
   ui: combineReducers({
