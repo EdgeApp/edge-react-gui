@@ -14,7 +14,7 @@ import { dev } from '../utils.js'
 import {updateNewWalletName} from './action'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { addWallet } from '../Wallets/Wallets.action.js'
+import { addWallet } from '../UI/Wallets/Wallets.action.js'
 import FakeAccount from '../../Fakes/FakeAccount.js'
 import { Actions } from 'react-native-router-flux'
 
@@ -40,6 +40,7 @@ class AddWallet extends Component {
       selectedWalletName: '',
       selectedBlockchain: '',
       selectedFiat: '',
+      displaySpinner: false,
     }
   }
 
@@ -126,25 +127,37 @@ class AddWallet extends Component {
     if (!this.isValidData()) {
       alert(INVALID_DATA_TEXT)
     } else {
+      const wallet = {
+        name: this.props.nameInput,
+        type: this.state.selectedBlockchain,
+        keys: ['private', 'public'],
+        id: '123',
+      }
+      this.props.dispatch(addWallet(wallet))
+      Actions.walletList()
       // determine wallet type
-      const walletType = 'wallet.repo.myFakeWalletType'
-      // get new keys from txLib
-      const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
-      // create new wallet from airbitz.createWallet(this.selectedBlockchain, fake keys), returns wallet ID
-      // const walletId = this.props.account.createWallet(walletType, walletKeys)
-      FakeAccount.createWallet(walletType, walletKeys)
-        .then(walletId => {
-          // get wallet by ID from the account
-          // const newWallet = this.props.account.getWallet(walletID)
-          const newWallet = FakeAccount.getWallet(walletId)
-          newWallet.name = this.props.nameInput
-          // save new wallet in redux
-          const order = Object.keys(this.props.wallets).length
-          this.props.dispatch(addWallet(newWallet, order))
-          // ??? wallet.rename(this.state.selectedWalletName) ???
-          // ??? wallet.addFiat(this.state.selectedFiat) ???
-          Actions.walletList() //redirect to the list of wallets
-        })
+      // const walletType = 'wallet.repo.myFakeWalletType'
+      // // get new keys from txLib
+      // const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
+      //
+      // // create new wallet
+      // this.props.account.createWallet(walletType, walletKeys)
+      // .then(walletId => {
+      //   // get wallet by ID from the account
+      //   const wallet = this.props.account.getWallet(walletId)
+      //
+      //   // manually add wallet name
+      //   wallet.name = this.props.nameInput
+      //
+      //   // manually add wallet id
+      //   wallet.walletId = walletId
+      //
+      //   // save new wallet in redux
+      //   this.props.dispatch(addWallet(wallet))
+      //
+      //   //redirect to the list of wallets
+      //   Actions.walletList()
+      // })
     }
   }
 
@@ -211,8 +224,10 @@ class AddWallet extends Component {
 }
 
 export default connect( state => ({
-  wallets: state.wallets.wallets,
+
+  wallets: state.ui.wallets.wallets,
   nameInput: state.ui.addWallet.newWalletName
+
 }))(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
