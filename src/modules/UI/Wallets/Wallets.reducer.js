@@ -5,7 +5,6 @@ import * as WALLET_LIST_ACTION from '../../WalletList/WalletList.action'
 export const wallets = (state = {}, action) => {
   switch (action.type) {
     case WALLETS_ACTION.ADD_WALLET :
-      console.log('ui wallet', wallet)
       return {
         ...state,
         [action.data.wallet.id]: action.data.wallet
