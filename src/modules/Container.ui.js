@@ -28,6 +28,8 @@ import AddWallet from './AddWallet/index.js'
 
 import FakeAccount from '../Fakes/FakeAccount.js'
 
+import { TxLibBTC, abcTxEngine } from 'airbitz-txlib-shitcoin'
+
 const RouterWithRedux = connect()(Router)
 
 class Main extends Component {
@@ -35,7 +37,8 @@ class Main extends Component {
     super(props)
 
     this.props.dispatch(enableLoadingScreenVisibility())
-
+    console.log(TxLibBTC.getInfo())
+    //console.log(TxLibBTC.makeEngine())
   }
 
   componentDidMount () {
