@@ -1,10 +1,11 @@
 import { makeReactNativeIo } from 'react-native-airbitz-io'
-import FakeAccount from '../Fakes/FakeAccount.js'
+import { FakeTxEngine } from '../Fakes/FakeTxEngine.js'
 import { addWallet as addWalletUI } from './UI/Wallets/Wallets.action.js'
 import { selectWallet as selectWalletUI } from './UI/Wallets/Wallets.action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
-import {disableLoadingScreenVisibility} from './Container.action'
+import { disableLoadingScreenVisibility } from './Container.action'
+import { addTransaction } from './Transactions/Transactions.action.js'
 
 export const initializeAccount = (dispatch) => {
   makeReactNativeIo().then(io => {
@@ -38,6 +39,17 @@ export const initializeAccount = (dispatch) => {
     })
 
     dispatch(selectWalletUI(account.listWalletIds()[0]))
+  })
+  .then(() => {
+    const engine = new FakeTxEngine()
+    const transactions = engine.getTransactions()
+
+    return transactions
+  })
+  .then(transactions => {
+    transactions.forEach(transaction => {
+      dispatch(addTransaction(transaction))
+    })
   })
 
   return dispatch(disableLoadingScreenVisibility())

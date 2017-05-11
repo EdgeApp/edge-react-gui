@@ -18,8 +18,8 @@ middleware = [...middleware, logger]
 export default function configureStore (initialState) {
   return createStore(
     rootReducer,
-    initialState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(...middleware)  
+    initialState,
+    applyMiddleware(...middleware)
   )
 }

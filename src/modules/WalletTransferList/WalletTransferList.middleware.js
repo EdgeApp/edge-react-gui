@@ -30,8 +30,19 @@ export const fakeGetWallets = () => {
 
 export const getWalletTransferList = () => {
   return (dispatch, getState, imports) => {
-    fakeGetWallets().then(wallets => {
-      return dispatch(updateWalletTransferList(wallets))
-    })
+    dispatch(updateWalletTransferList(wallets))
+  }
+}
+
+export const createWallet = (wallet) => {
+  return (dispatch, getState) => {
+    dispatch(createWalletStart())
+
+    // send command to account to add wallet
+    getState().account.createWallet(wallet.type, wallet.keys)
+    .then(
+      dispatch(createWalletSuccess),
+      dispatch(createWalletFailure),
+    )
   }
 }
