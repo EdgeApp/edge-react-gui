@@ -4,7 +4,7 @@ import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
-import { TxLibBTC, abcTxEngine } from 'airbitz-txlib-shitcoin'
+import { TxLibBTC, abcTxEngine, abcTxLib } from 'airbitz-txlib-shitcoin'
 
 export class ABCDataStore {
   constructor (directory = '', data = {}) {
@@ -71,10 +71,10 @@ const engineStarted = {}
 
 const callbacks = {
     addressesChecked (...rest) {
-    //console.log('addressesChecked', rest)
+    console.log('addressesChecked', rest)
     },
     transactionsChanged (...rest) {
-    //console.log('transactionsChanged', rest)
+    console.log('transactionsChanged', rest)
     },
     blockHeightChanged (...rest) {
     console.log('blockHeightChanged', rest)
@@ -98,27 +98,18 @@ export const initializeAccount = (dispatch) => {
         })
         console.log('io is: ', io)
         abcTxLibAccess.io = io
-        let mk = TxLibBTC.createMasterKeys('shitcoin')
+        var mk = TxLibBTC.createMasterKeys(io, 'shitcoin')
+        console.log('mk: ', mk)
         let options = {
             walletType: "shitcoin",
             masterPrivateKey: mk.masterPrivateKey,
             masterPublicKey: mk.masterPublicKey
         }
-        console.log('mk: ', mk)
         dispatch(addAirbitzToRedux(context))
         const account = context.loginWithPassword('bob19', 'Funtimes19')
         console.log('about to makeEngine')
-        BTCEngine = TxLibBTC.makeEngine(abcTxLibAccess, options, callbacks).then(BTCEngine => {
-          console.log('insideTxLibBTC.makeEngine callback')
-            if (error == null) {
-                console.log('success and BTCEngine is: ', BTCEngine)
-                var engineStarted = BTCEngine.startEngine()
-                console.log('blockHeight is: ', BTCEngine.getBlockHeight())
-            } else {
-              console.log('error is: ', error)
-            }
-        })
-        console.log('makeEngine supposedly completed, BTCEngine is: ', BTCEngine)
+        BTCEngine = TxLibBTC.makeEngine(abcTxLibAccess, options, callbacks)
+        console.log('after BTCEngine')
         return account
 
     })
@@ -142,6 +133,9 @@ export const initializeAccount = (dispatch) => {
       wallets.slice(0,5).forEach(wallet => {
         dispatch(addWallet(wallet, wallets.length))
       })
+
+      BTCEngine.startEngine().then(() => { console.log('blockHeight is: ', BTCEngine.getBlockHeight()) })
+
     })
     return dispatch(disableLoadingScreenVisibility())
 
