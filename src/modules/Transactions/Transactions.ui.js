@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated }  from 'react-native'
+import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator }  from 'react-native'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -160,15 +160,29 @@ class Transactions extends Component {
     return (
         <View style={styles.container}>
           <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.currentBalanceBox} colors={["#3b7adb","#2b569a"]}>
-            <View style={[styles.currentBalanceWrap]}>
-              <View style={[styles.bitcoinIconWrap]}>
-                <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={16} />
-              </View>
-              <View style={styles.currentBalanceBoxDollarsWrap}>
-                <Text style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</Text>
-              </View>
-              <Text style={[styles.currentBalanceBoxBits]}>b 6.4616</Text>
-            </View>
+
+              {this.props.updatingBalance ? (
+                <View style={[styles.currentBalanceWrap/*, this.border('orange')*/]}>     
+                  <View style={[/*this.border('red'),*/ styles.updatingBalanceWrap]}>           
+                    <ActivityIndicator
+                      animating={this.props.updatingBalance}
+                      style={[styles.updatingBalance, {height: 40}/*, this.border('green')*/]}
+                      size="small"
+                    />     
+                  </View>
+                </View>           
+              ) : (
+                <View style={[styles.currentBalanceWrap]}>
+                  <View style={[styles.bitcoinIconWrap]}>
+                    <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={16} />
+                  </View>
+                  <View style={styles.currentBalanceBoxDollarsWrap}>
+                    <Text style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</Text>
+                  </View>
+                  <Text style={[styles.currentBalanceBoxBits]}>b 6.4616</Text>
+              </View>  
+              )}
+
             <View style={styles.requestSendRow}>
               <TouchableHighlight style={styles.requestBox}>
                 <View  style={styles.requestWrap}>
@@ -277,7 +291,7 @@ Transactions.propTypes = {
 }
 
 export default connect( state => ({
-
+  updatingBalance: state.ui.transactionList.updatingBalance,
   transactionsList: state.ui.transactionList.transactionsList,
   searchVisible: state.ui.transactionList.searchVisible,
   contactsList: state.ui.transactionList.contactsList

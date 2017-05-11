@@ -9,7 +9,18 @@ module.exports = StyleSheet.create({
   },
   currentBalanceBox: {
     flex: 5,
-    justifyContent: "center"
+    justifyContent: "center",
+
+  },
+  updatingBalanceWrap: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    flex: 1
+  },
+  updatingBalance: {
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   currentBalanceWrap: {
     flex: 3,

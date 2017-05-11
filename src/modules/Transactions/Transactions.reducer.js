@@ -34,10 +34,24 @@ const contactsList = (state = [], action) => {
   }
 }
 
+const updatingBalance = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.ENABLE_UPDATING_BALANCE : 
+      return true
+    case ACTION.DISABLE_UPDATING_BALANCE : 
+      return false
+    case ACTION.TOGGLE_UPDATING_BALANCE :
+      return !state
+    default :
+      return state
+  }
+}
+
 const transactionList = combineReducers({
   transactionsList,
   searchVisible,
-  contactsList
+  contactsList,
+  updatingBalance
 })
 
 export default transactionList
