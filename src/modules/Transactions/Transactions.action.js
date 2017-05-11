@@ -46,3 +46,11 @@ export function updateSearchResults (data) {
     data
   }
 }
+
+export function updatingBalance(data) {
+  console.log('inside updatingBalance, data is: ', data)
+  let type = [data] + '_UPDATING_BALANCE'
+  return {
+    type
+  }
+}

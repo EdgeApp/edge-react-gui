@@ -34,7 +34,7 @@ const contactsList = (state = [], action) => {
   }
 }
 
-const updatingBalance = (state = false, action) => {
+const updatingBalance = (state = true, action) => {
   switch (action.type) {
     case ACTION.ENABLE_UPDATING_BALANCE : 
       return true

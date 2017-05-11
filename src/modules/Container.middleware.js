@@ -4,6 +4,7 @@ import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
+import { updatingBalance } from './Transactions/Transactions.action'
 import { TxLibBTC, abcTxEngine, abcTxLib } from 'airbitz-txlib-shitcoin'
 
 export class ABCDataStore {
@@ -69,18 +70,6 @@ export class ABCDataStore {
 const BTCEngine = {}
 const engineStarted = {}
 
-const callbacks = {
-    addressesChecked (...rest) {
-    console.log('addressesChecked', rest)
-    },
-    transactionsChanged (...rest) {
-    console.log('transactionsChanged', rest)
-    },
-    blockHeightChanged (...rest) {
-    console.log('blockHeightChanged', rest)
-    }
-}
-
 const abcTxLibAccess = {
   accountDataStore: new ABCDataStore(),
   accountLocalDataStore: new ABCDataStore(),
@@ -107,6 +96,24 @@ export const initializeAccount = (dispatch) => {
         }
         dispatch(addAirbitzToRedux(context))
         const account = context.loginWithPassword('bob19', 'Funtimes19')
+
+        const callbacks = {
+            addressesChecked ( ...rest) {
+              console.log('addressesChecked', rest)
+              if(rest[0] === 1) {
+                console.log('addresses done checking')
+                dispatch(updatingBalance('DISABLE'))
+              }
+            },
+            transactionsChanged ( ...rest) {
+              // core will cache previous transactions, should have trigger for updating UI and re-do getTransactions(). Start off with a getTransactions()
+            console.log('transactionsChanged', rest)
+            },
+            blockHeightChanged ( ...rest) {
+            console.log('blockHeightChanged', rest) // will also trigger transactionsChanged if that is the case.
+            }
+        }
+
         console.log('about to makeEngine')
         BTCEngine = TxLibBTC.makeEngine(abcTxLibAccess, options, callbacks)
         console.log('after BTCEngine')
@@ -134,7 +141,7 @@ export const initializeAccount = (dispatch) => {
         dispatch(addWallet(wallet, wallets.length))
       })
 
-      BTCEngine.startEngine().then(() => { console.log('blockHeight is: ', BTCEngine.getBlockHeight()) })
+      BTCEngine.startEngine()
 
     })
     return dispatch(disableLoadingScreenVisibility())
