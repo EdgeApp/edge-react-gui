@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="15px" height="19px" viewBox="0 0 15 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs></defs>
+    <g id="My-Wallets" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Wallet-List_options" transform="translate(-196.000000, -301.000000)" stroke="#58595C">
+            <g id="Group" transform="translate(183.000000, 242.000000)">
+                <g id="ic_delete" transform="translate(13.000000, 60.000000)">
+                    <polyline id="Shape" points="0 3.33333333 1.66666667 3.33333333 15 3.33333333"></polyline>
+                    <path d="M13.3333333,3.33333333 L13.3333333,15 C13.3333333,15.9204746 12.5871412,16.6666667 11.6666667,16.6666667 L3.33333333,16.6666667 C2.41285875,16.6666667 1.66666667,15.9204746 1.66666667,15 L1.66666667,3.33333333" id="Shape"></path>
+                    <path d="M4.16666667,3.33333333 L4.16666667,1.66666667 C4.16666667,0.746192084 4.91285875,0 5.83333333,0 L9.16666667,0 C10.0871412,0 10.8333333,0.746192084 10.8333333,1.66666667 L10.8333333,3.33333333" id="Shape"></path>
+                    <path d="M5,7.5 L5,12.5" id="Shape"></path>
+                    <path d="M7.5,7.5 L7.5,12.5" id="Shape"></path>
+                    <path d="M10,7.5 L10,12.5" id="Shape"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

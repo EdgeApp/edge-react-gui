@@ -105,7 +105,7 @@
   },
   "standard": {
     "ignore": [
-      "/native-base-theme/",
+      "/theme/",
       "/src/modules_old/",
       "/src/lib_old/",
       "/src/lib/abc.webpack.js"
