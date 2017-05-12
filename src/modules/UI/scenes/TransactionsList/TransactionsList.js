@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList,updateTransactionsList, updateContactsList, updateSearchResults} from './Transactions.action'
+import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList,updateTransactionsList, updateContactsList, updateSearchResults} from './action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
-import styles from './Transactions.style'
+import styles from './style'
 
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']

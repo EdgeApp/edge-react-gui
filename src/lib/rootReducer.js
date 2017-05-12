@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import routes from './routesReducer'
 
 import sideMenu from '../modules/SideMenu/SideMenu.reducer'
-import transactionList from '../modules/UI/Transactions/Transactions.reducer'
+import transactionList from '../modules/UI/scenes/TransactionsList/reducer'
 import scan from '../modules/Scan/Scan.reducer'
 import controlPanel from '../modules/ControlPanel/reducer'
 import walletList from '../modules/WalletList/WalletList.reducer'

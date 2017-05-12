@@ -9,7 +9,7 @@ import platform from '../theme/variables/platform'
 import SideMenu from './SideMenu/SideMenu.ui'
 import Header from './Header/Header.ui'
 import TabBar from './TabBar/TabBar.ui'
-import Transactions from './UI/Transactions/Transactions.ui'
+import TransactionsList from './UI/scenes/TransactionsList'
 import Directory from './Directory/Directory.ui'
 import Request from './Request/index'
 import SendConfirmation from './SendConfirmation/index'
@@ -79,7 +79,7 @@ class Main extends Component {
 
                   <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                  <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+                  <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} initial />
 
                   <Scene key='request' component={Request} title='Request' duration={0} />
 

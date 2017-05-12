@@ -1,4 +1,4 @@
-  import * as ACTION from './Transactions.action'
+  import * as ACTION from './action'
   import {combineReducers} from 'redux'
 
 const transactionsList = (state = [], action) => {
