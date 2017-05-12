@@ -9,6 +9,7 @@ import walletList from '../modules/WalletList/WalletList.reducer'
 import walletTransferListReducer from '../modules/WalletTransferList/WalletTransferList.reducer'
 import addWallet from '../modules/AddWallet/reducer'
 import container from '../modules/Container.reducer'
+import exchangeRate from '../modules/ExchangeRate/reducer'
 
 import { airbitz, account } from '../modules/Login/Login.reducer.js'
 
@@ -26,7 +27,7 @@ const store = combineReducers({
 
   wallets,
   transactions,
-
+  exchangeRate,
   request,
 
   ui: combineReducers({

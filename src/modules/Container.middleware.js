@@ -7,6 +7,7 @@ import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
 import { updatingBalance } from './Transactions/Transactions.action'
 import { TxLibBTC, abcTxEngine, abcTxLib } from 'airbitz-txlib-shitcoin'
+import { updateExchangeRates } from './ExchangeRate/action'
 
 export class ABCDataStore {
   constructor (directory = '', data = {}) {
@@ -151,6 +152,7 @@ export const initializeAccount = (dispatch) => {
         let BTCEngine = TxLibBTC.makeEngine(abcTxLibAccess, options, callbacks)
         console.log('kylan: after BTCEngine')   
         BTCEngine.startEngine()
+        dispatch(updateExchangeRates())
       })
     })
   return dispatch(disableLoadingScreenVisibility())

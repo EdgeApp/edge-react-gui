@@ -157,6 +157,7 @@ class Transactions extends Component {
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
     var dataSource =  ds.cloneWithRows(renderableTransactionList)
     //can also put dateIterator in here
+    console.log('about to render transactionsList')
     return (
         <View style={styles.container}>
           <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.currentBalanceBox} colors={["#3b7adb","#2b569a"]}>
@@ -177,9 +178,9 @@ class Transactions extends Component {
                     <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={16} />
                   </View>
                   <View style={styles.currentBalanceBoxDollarsWrap}>
-                    <Text style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</Text>
+                    <Text style={[styles.currentBalanceBoxDollars]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</Text>
                   </View>
-                  <Text style={[styles.currentBalanceBoxBits]}>b 6.4616</Text>
+                  <Text style={[styles.currentBalanceBoxBits]}>b 600000</Text>
               </View>  
               )}
 
@@ -294,6 +295,7 @@ export default connect( state => ({
   updatingBalance: state.ui.transactionList.updatingBalance,
   transactionsList: state.ui.transactionList.transactionsList,
   searchVisible: state.ui.transactionList.searchVisible,
-  contactsList: state.ui.transactionList.contactsList
+  contactsList: state.ui.transactionList.contactsList,
+  exchangeRates: state.exchangeRate.exchangeRates
 
 }) )(Transactions)
