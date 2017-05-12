@@ -5,6 +5,7 @@ import { Scene, Router } from 'react-native-router-flux'
 import { Container, Content, StyleProvider } from 'native-base'
 import getTheme from '../../native-base-theme/components'
 import platform from '../../native-base-theme/variables/platform'
+import Menu, { MenuContext } from 'react-native-menu';
 
 import SideMenu from './SideMenu/SideMenu.ui'
 import Header from './Header/Header.ui'
@@ -73,37 +74,38 @@ class Main extends Component {
         />
       )
     }
-
     console.log('logged in')
     console.log('loading the app...')
     return (
       <StyleProvider style={getTheme(platform)}>
-        <Container>
-          <SideMenu>
-            <Header />
-            <RouterWithRedux>
-              <Scene key='root' hideNavBar>
+        <MenuContext style={{ flex: 1 }}>
+          <Container>
+            <SideMenu>
+              <Header />
+              <RouterWithRedux>
+                <Scene key='root' hideNavBar>
 
-                <Scene key='scan' component={Scan} title='Scan' duration={0} />
+                  <Scene key='scan' component={Scan} title='Scan' duration={0} />
 
-                <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
+                  <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
 
-                <Scene key='directory' component={Directory} title='Directory' duration={0} />
+                  <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+                  <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
 
-                <Scene key='request' component={Request} title='Request' duration={0} />
+                  <Scene key='request' component={Request} title='Request' duration={0} />
 
-                <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
+                  <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
 
-                <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
+                  <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
 
-              </Scene>
-            </RouterWithRedux>
-            <HelpModal/>
-          </SideMenu>
-          <TabBar />
-        </Container>
+                </Scene>
+              </RouterWithRedux>
+              <HelpModal/>
+            </SideMenu>
+            <TabBar />
+          </Container>
+        </MenuContext>
       </StyleProvider>
     )
   }

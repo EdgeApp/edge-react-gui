@@ -3,9 +3,11 @@ import { connect } from 'react-redux'
 import { Text, Header, Left, Title, Right, Body, Button, Icon } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
+import Menu, { MenuContext } from 'react-native-menu';
 
 import LeftComponent from './Component/Left.js'
 import RightComponent from './Component/Right.js'
+import BodyComponent from './Component/Body.js'
 
 class HeaderUI extends Component {
 
@@ -29,7 +31,7 @@ class HeaderUI extends Component {
             <LeftComponent routes={this.props.routes} />
           </Left>
           <Body>
-            <Title>{this._renderTitle()}</Title>
+            <BodyComponent routes={this.props.routes} />
           </Body>
           <Right>
             <RightComponent routes={this.props.routes} />
