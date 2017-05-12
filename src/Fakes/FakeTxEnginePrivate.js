@@ -24,7 +24,7 @@ export const FakeTxEnginePrivate = {
   blockHeight: 1,
   transactions: [
     { // 00
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Income:Block Reward',
@@ -48,7 +48,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 01
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -72,7 +72,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 02
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -96,7 +96,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 03
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -120,7 +120,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 04
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -144,7 +144,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 05
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -168,7 +168,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 06
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -192,7 +192,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 07
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -216,7 +216,7 @@ export const FakeTxEnginePrivate = {
       }
     },
     { // 08
-      abcWalletTransaction: '',
+      abcWalletTx: '',
       metadata: {
         payeeName: 'Satoshi Nakamoto',
         category: 'Tips',
@@ -282,8 +282,13 @@ export const FakeTxEnginePrivate = {
   },
 
   init: function (abcTxLibAccess, options, callbacks) {
+    const defaultCallbacks = {
+      abcWalletTxAddressesChecked: () => { console.log('abcWalletTxAddressesChecked') },
+      abcWalletTxTransactionsChanged: () => { console.log('abcWalletTxTransactionsChanged') },
+      abcWalletTxBlockHeightChanged: () => { console.log('abcWalletTxBlockHeightChanged') }
+    }
     this.setABCTxLibAccess(abcTxLibAccess)
-    this.setCallbacks(callbacks)
+    this.setCallbacks(callbacks || defaultCallbacks)
     this.setKeys(options)
     // check all address for funds, then call abcWalletTxAddressesChecked aka logging into the app
     const progressRatio = 1
@@ -292,7 +297,7 @@ export const FakeTxEnginePrivate = {
     return true
   },
 
-  setKeys: function (keys) {
+  setKeys: function (keys = {masterPrivateKey: 'masterPrivateKey', masterPublicKey: 'masterPublicKey'}) {
     const {
       masterPrivateKey,
       masterPublicKey
@@ -302,13 +307,13 @@ export const FakeTxEnginePrivate = {
     this.setMasterPublicKey(masterPublicKey)
   },
 
-  setMasterPrivateKey: function (masterPrivateKey) {
+  setMasterPrivateKey: function (masterPrivateKey = 'masterPrivateKey') {
     this.masterPrivateKey = masterPrivateKey
 
     return true
   },
 
-  setMasterPublicKey: function (masterPublicKey) {
+  setMasterPublicKey: function (masterPublicKey = 'masterPublicKey') {
     this.masterPublicKey = masterPublicKey
 
     return true
@@ -467,7 +472,7 @@ export const FakeTxEnginePrivate = {
 
   getNewTransaction: function (options = {}) {
     const {
-      abcWalletTransaction,
+      abcWalletTx,
       txid,
       date,
       blockHeight,
@@ -480,7 +485,7 @@ export const FakeTxEnginePrivate = {
     } = options
 
     const newTransaction = {
-      abcWalletTransaction: abcWalletTransaction || '',
+      abcWalletTx: abcWalletTx || '',
       txid: txid || '4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b',
       date: date || faker.date.past(),
       blockHeight: blockHeight || faker.random.number(100000),

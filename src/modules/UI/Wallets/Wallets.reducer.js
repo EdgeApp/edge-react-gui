@@ -5,22 +5,32 @@ import * as WALLET_LIST_ACTION from '../../WalletList/WalletList.action'
 export const wallets = (state = {}, action) => {
   switch (action.type) {
     case WALLETS_ACTION.ADD_WALLET :
-      const newState = {}
-      newState[action.data.newWallet.id] = action.data.newWallet
-      newState = Object.assign(newState, state) //
-      return newState
+      return {
+        ...state,
+        [action.data.wallet.id]: action.data.wallet
+      }
+
     case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER :
       return state
+
     case WALLET_LIST_ACTION.TOGGLE_ARCHIVE_WALLET :
       let key = action.data.key
-      let stateChanged = { ...state, [key]: { ...state[key], archived: !state[key].archived } }
+      let stateChanged = {
+        ...state,
+        [key]: {
+          ...state[key],
+          archived: !state[key].archived
+        }
+      }
       return stateChanged
+
     case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET :
       return { ...state, [action.key]: { ...state[action.key], name: action.input } }
-    case WALLETS_ACTION.COMPLETE_DELETE_WALLET : {
+
+    case WALLETS_ACTION.COMPLETE_DELETE_WALLET :
       delete state[action.data]
       return state
-    }
+
     default:
       return state
   }

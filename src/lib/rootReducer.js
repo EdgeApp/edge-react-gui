@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import routes from './routesReducer'
 
 import sideMenu from '../modules/SideMenu/SideMenu.reducer'
-import transactionList from '../modules/Transactions/Transactions.reducer'
+import transactionList from '../modules/UI/Transactions/Transactions.reducer'
 import scan from '../modules/Scan/Scan.reducer'
 import controlPanel from '../modules/ControlPanel/reducer'
 import walletList from '../modules/WalletList/WalletList.reducer'
@@ -13,7 +13,8 @@ import container from '../modules/Container.reducer'
 import { airbitz, account } from '../modules/Login/Login.reducer.js'
 
 import { walletsOld } from '../modules/UI/Wallets/Wallets.reducer.js'
-import * as wallets from '../modules/Wallets/Wallets.reducer.js'
+import { wallets } from '../modules/Wallets/Wallets.reducer.js'
+import { transactions } from '../modules/Transactions/Transactions.reducer.js'
 
 import Login from '../modules/Login/Login.reducer.js'
 import request from '../modules/Request/Request.reducer.js'
@@ -22,6 +23,9 @@ const store = combineReducers({
   routes,
   airbitz,
   account,
+
+  wallets,
+  transactions,
 
   request,
 

@@ -1,6 +1,7 @@
 import { makeReactNativeIo } from 'react-native-airbitz-io'
-import FakeAccount from '../Fakes/FakeAccount.js'
-import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
+import { FakeTxEngine } from '../Fakes/FakeTxEngine.js'
+import { addWallet as addWalletUI } from './UI/Wallets/Wallets.action.js'
+import { selectWallet as selectWalletUI } from './UI/Wallets/Wallets.action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
 import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
@@ -13,7 +14,7 @@ export class ABCDataStore {
     this.data = data
   }
 
-// abcWallet.dataStore.listKeys(folder, callback)
+  // abcWallet.dataStore.listKeys(folder, callback)
   listKeys (folder) {
     const targetFolder = this.data[folder]
     let keys
@@ -25,7 +26,7 @@ export class ABCDataStore {
     }
   }
 
-// abcWallet.dataStore.removeKey(folder, key, callback)
+  // abcWallet.dataStore.removeKey(folder, key, callback)
   removeKey (folder, key) {
     const targetFolder = this.data[folder]
     if (targetFolder) {
@@ -36,7 +37,7 @@ export class ABCDataStore {
     }
   }
 
-// abcWallet.dataStore.readData(folder, key, callback)
+  // abcWallet.dataStore.readData(folder, key, callback)
   readData (folder, key) {
     const targetFolder = this.data[folder]
     let targetData
@@ -49,7 +50,7 @@ export class ABCDataStore {
     }
   }
 
-// writeData(folder, key, value, callback)
+  // writeData(folder, key, value, callback)
   writeData (folder, key, newValue) {
     const folderExists = Object.keys(this.data).includes(folder)
 
@@ -60,7 +61,7 @@ export class ABCDataStore {
     return Promise.resolve()
   }
 
-// abcWallet.dataStore.removeFolder(folder, callback)
+  // abcWallet.dataStore.removeFolder(folder, callback)
   removeFolder (folder) {
     delete this.data[folder]
     return Promise.resolve()
@@ -78,6 +79,7 @@ const abcTxLibAccess = {
   walletLocalDataStore: new ABCDataStore()
 }
 
+
 export const initializeAccount = (dispatch) => {
     console.log('kylan: walletLocalDataStore is: ', abcTxLibAccess.walletLocalDataStore)
     makeReactNativeIo().then( io => {
@@ -91,6 +93,7 @@ export const initializeAccount = (dispatch) => {
         dispatch(addAirbitzToRedux(context))
         const account = context.loginWithPassword('bob19', 'Funtimes19')
 
+
         return account
 
     })
@@ -99,8 +102,8 @@ export const initializeAccount = (dispatch) => {
       
       dispatch(addAccountToRedux(account))
 
-      return account
-    })
+    return account
+  })
     .then((account) => {
       console.log('kylan: third io is: ', ioObject)
       const walletIds = account.listWalletIds()
@@ -113,7 +116,7 @@ export const initializeAccount = (dispatch) => {
       })
 
       wallets.slice(0,1).forEach((wallet) => {
-        dispatch(addWallet(wallet, wallets.length))
+        dispatch(addWalletUI(wallet, wallets.length))
 
         abcTxLibAccess.io = ioObject
         console.log('kylan: TxLibBTC is: ', TxLibBTC, ' , io is : ', ioObject)
@@ -149,10 +152,7 @@ export const initializeAccount = (dispatch) => {
         console.log('kylan: after BTCEngine')   
         BTCEngine.startEngine()
       })
-
-
-
     })
-    return dispatch(disableLoadingScreenVisibility())
+  return dispatch(disableLoadingScreenVisibility())
 
 }

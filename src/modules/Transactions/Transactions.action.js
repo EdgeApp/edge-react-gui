@@ -7,43 +7,12 @@ export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS'
 export const ENABLE_UPDATING_BALANCE = 'ENABLE_UPDATING_BALANCE'
 export const DISABLE_UPDATING_BALANCE = 'DISABLE_UPDATING_BALANCE'
 export const TOGGLE_UPDATING_BALANCE = 'TOGGLE_UPDATING_BALANCE'
+export const ADD_TRANSACTION = 'ADD_TRANSACTION'
 
-export function updateTransactionsList (data) {
+export const addTransaction = (transaction) => {
   return {
-    type: UPDATE_TRANSACTIONS_LIST,
-    data
-  }
-}
-
-export function deleteTransactionsList () {
-  return {
-    type: DELETE_TRANSACTIONS_LIST
-  }
-}
-
-export function transactionsSearchVisible () {
-  return {
-    type: TRANSACTIONS_SEARCH_VISIBLE
-  }
-}
-
-export function transactionsSearchHidden () {
-  return {
-    type: TRANSACTIONS_SEARCH_HIDDEN
-  }
-}
-
-export function updateContactsList(data) {
-  return {
-    type: UPDATE_CONTACTS_LIST,
-    data
-  }
-}
-
-export function updateSearchResults (data) {
-  return {
-    type: UPDATE_SEARCH_RESULTS,
-    data
+    type: ADD_TRANSACTION,
+    data: { transaction }
   }
 }
 
