@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Text, Header, Left, Title, Right, Body, Button, Icon } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import Menu, { MenuContext } from 'react-native-menu';
 
 import LeftComponent from './Component/Left.js'
 import RightComponent from './Component/Right.js'
