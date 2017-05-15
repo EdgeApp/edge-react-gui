@@ -8,7 +8,7 @@ import {
   createWalletStart,
   createWalletSuccess,
   createWalletFailure
-} from '../AddWallet/action.js'
+} from '../UI/scenes/AddWallet/action.js'
 
 export const addWallet = (wallet) => {
   return {

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import styles from './styles.js'
 import QrCode from 'react-native-qrcode'
 
-import { dev } from '../utils.js'
+import { dev } from '../../../utils.js'
 const devMode = true
 
 const ABQRCode = ({qrCodeText}) => {

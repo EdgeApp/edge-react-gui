@@ -8,7 +8,7 @@ import {
   TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { devStyle } from '../utils.js'
+import { devStyle } from '../../../utils.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import FlipView from 'react-native-flip-view'
 

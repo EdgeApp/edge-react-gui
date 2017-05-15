@@ -7,7 +7,7 @@ import { makeContext } from 'airbitz-core-js'
 import {disableLoadingScreenVisibility} from './Container.action'
 import { updatingBalance } from './Transactions/Transactions.action'
 import { TxLibBTC, abcTxEngine, abcTxLib } from 'airbitz-txlib-shitcoin'
-import { updateExchangeRates } from './ExchangeRate/action'
+import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 
 export class ABCDataStore {
   constructor (directory = '', data = {}) {

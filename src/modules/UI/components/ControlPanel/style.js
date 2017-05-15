@@ -1,4 +1,4 @@
-import variables from '../../theme/variables/platform'
+import variables from '../../../../theme/variables/platform'
 export default {
 
   container: {

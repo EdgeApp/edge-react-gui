@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import * as WALLETS_ACTION from './Wallets.action'
-import * as WALLET_LIST_ACTION from '../../WalletList/WalletList.action'
+import * as WALLET_LIST_ACTION from '../scenes/WalletList/WalletList.action'
 
 export const wallets = (state = {}, action) => {
   switch (action.type) {

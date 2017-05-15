@@ -26,7 +26,7 @@ import { forceWalletListUpdate } from './WalletList.middleware'
 import Modal from 'react-native-modal'
 
 // Fake stuff to be removed
-import { addWallet, completeDeleteWallet } from '../UI/Wallets/Wallets.action.js'
+import { addWallet, completeDeleteWallet } from '../../Wallets/Wallets.action.js'
 // End of fake stuff to be removed later
 
 class WalletList extends Component {

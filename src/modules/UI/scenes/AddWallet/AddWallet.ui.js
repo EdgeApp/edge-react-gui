@@ -10,12 +10,12 @@ import {
   TextInput } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { dev } from '../utils.js'
+import { dev } from '../../../utils.js'
 import {updateNewWalletName} from './action'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { addWallet } from '../UI/Wallets/Wallets.action.js'
-import FakeAccount from '../../Fakes/FakeAccount.js'
+import { addWallet } from '../../Wallets/Wallets.action.js'
+import FakeAccount from '../../../../Fakes/FakeAccount.js'
 import { Actions } from 'react-native-router-flux'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'

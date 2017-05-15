@@ -10,20 +10,20 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import ExchangeRate from '../ExchangeRate/index.js'
-import MaxButton from '../MaxButton/index.js'
-import FlipInput from '../FlipInput/index.js'
+import ExchangeRate from '../../components/ExchangeRate/index.js'
+import MaxButton from '../../components/MaxButton/index.js'
+import FlipInput from '../../components/FlipInput/index.js'
 
-import ABQRCode from '../QRCode/index.js'
-import RequestStatus from '../RequestStatus/index.js'
-import ShareButtons from '../ShareButtons/index.js'
+import ABQRCode from '../../components/QRCode/index.js'
+import RequestStatus from '../../components/RequestStatus/index.js'
+import ShareButtons from '../../components/ShareButtons/index.js'
 
-import Recipient from '../Recipient/index.js'
-import PinInput from '../PinInput/index.js'
-import ABSlider from '../Slider/index.js'
-import Fees from '../Fees/index.js'
+import Recipient from '../../components/Recipient/index.js'
+import PinInput from '../../components/PinInput/index.js'
+import ABSlider from '../../components/Slider/index.js'
+import Fees from '../../components/Fees/index.js'
 
-import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../utils.js'
+import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../../../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
 class SendConfirmation extends Component {

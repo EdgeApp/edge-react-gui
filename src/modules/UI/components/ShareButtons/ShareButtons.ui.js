@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import styles from './styles.js'
 import ShareButton from '../ShareButton/index.js'
 import { Container, Content, Button, Text, Icon, Segment } from 'native-base'
-import { dev } from '../utils.js'
+import { dev } from '../../../utils.js'
 
 const ShareButtons = (
   {copyToClipboard, shareViaEmail, shareViaSMS, shareViaShare}) => {
