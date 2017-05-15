@@ -7,7 +7,7 @@ import Modal from 'react-native-modal'
 
 import { closeHelpModal } from './actions.js'
 
-const logo = require("../../img/logo.png")
+const logo = require("../../img/logo2x.png")
 const webView = require("../../html/disclaimer.ios.html")
 
 class HelpModal extends Component {

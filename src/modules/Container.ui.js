@@ -21,7 +21,6 @@ import HelpModal from './HelpModal'
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
-import { MenuContext } from 'react-native-menu'
 
 import { initializeAccount } from './Container.middleware'
 import {enableLoadingScreenVisibility} from './Container.action'

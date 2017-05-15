@@ -16,8 +16,7 @@
     "test:watch": "ava --watch",
     "coverage": "nyc ava && nyc report --reporter=html && open coverage/index.html || xdg-open coverage/index.html",
     "tron": "node_modules/.bin/reactotron",
-    "flow": "flow --show-all-errors",
-    "postinstall": "./node_modules/.bin/rn-nodeify --install --hack"
+    "flow": "flow --show-all-errors"
   },
   "rnpm": {
     "assets": [
@@ -75,8 +74,8 @@
     "react-native-sortable-listview": "^0.2.2",
     "react-native-swipe-flip": "^1.0.2",
     "react-native-tabs": "^1.0.9",
-    "react-native-tcp": "3.2.1",
-    "react-native-udp": "2.0.0",
+    "react-native-tcp": "^3.2.1",
+    "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.0.0",
     "react-redux": "^5.0.3",
     "readable-stream": "1.0.33",
