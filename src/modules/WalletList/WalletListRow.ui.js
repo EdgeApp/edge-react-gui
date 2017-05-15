@@ -1,25 +1,34 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated }  from 'react-native'
+import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, Picker }  from 'react-native'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import styles from './WalletList.style'
+import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
+import {executeWalletRowOption} from './WalletList.action'
+import RowOptions from './WalletListRowOptions.ui'
 
 class WalletListRow extends Component {
 
   render() {
-    console.log('this is: ', this)
-    let btcSeed = this.props.data.BitcoinSeed.slice(0,5) + '...'
+    let id = this.props.data.id
+    let name = this.props.data.name || 'No name'
+
     return(
-      <TouchableHighlight style={styles.rowContainer}
+      <TouchableHighlight style={[styles.rowContainer]}
         underlayColor={'#eee'}
         delayLongPress={500}
         {...this.props.sortHandlers}
       >
-        <Text style={styles.rowNameText}>{btcSeed}</Text>
+        <View style={[styles.rowContent]}>
+          <View style={[styles.rowNameTextWrap]}>
+            <Text style={[styles.rowNameText]}>{name}</Text>
+          </View>
+          <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
+        </View>
       </TouchableHighlight>
     )
   }

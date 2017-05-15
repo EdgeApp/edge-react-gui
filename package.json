@@ -19,8 +19,14 @@
     "flow": "flow --show-all-errors",
     "postinstall": "./node_modules/.bin/rn-nodeify --install --hack"
   },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
+  },
   "dependencies": {
     "airbitz-core-js": "^0.3.0",
+    "airbitz-txlib-shitcoin": "git+https://github.com/Airbitz/airbitz-txlib-shitcoin.git",
     "assert": "^1.4.1",
     "async": "^2.3.0",
     "base64-js": "^1.2.0",
@@ -50,7 +56,7 @@
     "react-native-drawer": "^2.3.0",
     "react-native-dropdown": "git+https://github.com/g6ling/react-native-dropdown.git",
     "react-native-elements": "^0.10.0",
-    "react-native-flip-view": "^1.0.5",
+    "react-native-flip-view": "https://github.com/Airbitz/react-native-flip-view.git",
     "react-native-fs": "^2.1.0-rc.1",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-image-picker": "^0.24.1",
@@ -67,13 +73,15 @@
     "react-native-share": "^1.0.20",
     "react-native-slider": "^0.9.1",
     "react-native-sortable-listview": "^0.2.2",
+    "react-native-swipe-flip": "^1.0.2",
     "react-native-tabs": "^1.0.9",
-    "react-native-tcp": "^3.2.1",
-    "react-native-udp": "^2.0.0",
+    "react-native-tcp": "3.2.1",
+    "react-native-udp": "2.0.0",
     "react-native-vector-icons": "^4.0.0",
     "react-redux": "^5.0.3",
     "readable-stream": "1.0.33",
     "redux": "^3.6.0",
+    "redux-devtools-extension": "^2.13.2",
     "redux-immutable-state-invariant": "^1.2.4",
     "redux-thunk": "^2.1.0",
     "stream-browserify": "^1.0.0",
@@ -88,6 +96,7 @@
     "babel-eslint": "^7.1.1",
     "babel-preset-react-native": "^1.9.0",
     "eslint": "^3.11.1",
+    "faker": "^4.1.0",
     "flow-bin": "^0.37.4",
     "git-pre-hooks": "^1.2.0",
     "husky": "^0.12.0",
@@ -100,7 +109,7 @@
   },
   "standard": {
     "ignore": [
-      "/native-base-theme/",
+      "/theme/",
       "/src/modules_old/",
       "/src/lib_old/",
       "/src/lib/abc.webpack.js"

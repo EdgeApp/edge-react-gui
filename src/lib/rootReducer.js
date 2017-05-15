@@ -1,55 +1,50 @@
 import { combineReducers } from 'redux'
 import routes from './routesReducer'
 
-import * as SideMenu from '../modules/SideMenu/SideMenu.reducer'
-import * as Transactions from '../modules/Transactions/Transactions.reducer'
-import * as Scan from '../modules/Scan/Scan.reducer'
-import * as ControlPanel from '../modules/ControlPanel/reducer'
-import * as WalletList from '../modules/WalletList/WalletList.reducer'
-import * as WalletTransferList from '../modules/WalletTransferList/WalletTransferList.reducer'
+import sideMenu from '../modules/SideMenu/SideMenu.reducer'
+import transactionList from '../modules/UI/Transactions/Transactions.reducer'
+import scan from '../modules/Scan/Scan.reducer'
+import controlPanel from '../modules/ControlPanel/reducer'
+import walletList from '../modules/WalletList/WalletList.reducer'
+import walletTransferListReducer from '../modules/WalletTransferList/WalletTransferList.reducer'
+import addWallet from '../modules/AddWallet/reducer'
+import container from '../modules/Container.reducer'
+
+import { airbitz, account } from '../modules/Login/Login.reducer.js'
+
+import { walletsOld } from '../modules/UI/Wallets/Wallets.reducer.js'
+import { wallets } from '../modules/Wallets/Wallets.reducer.js'
+import { transactions } from '../modules/Transactions/Transactions.reducer.js'
+
 import Login from '../modules/Login/Login.reducer.js'
-import Wallets from '../modules/Wallets/Wallets.reducer.js'
 import { helpModal } from '../modules/HelpModal/reducer.js'
 
+import request from '../modules/Request/Request.reducer.js'
+
 const store = combineReducers({
-  airbitz: Login,
-  account: Login,
+  routes,
+  airbitz,
+  account,
 
-  sidemenu: combineReducers({
-    view: SideMenu.view
-  }),
+  wallets,
+  transactions,
 
-  transactions: combineReducers({
-    transactionsList: Transactions.transactionsList,
-    searchVisible: Transactions.searchVisible,
-    contactsList: Transactions.contactsList
-  }),
+  request,
 
-  scan: combineReducers({
-    torchEnabled: Scan.torchEnabled,
-    addressModalVisible: Scan.addressModalVisible,
-    recipientAddress: Scan.recipientAddress
-  }),
-
-  controlPanel: combineReducers({
-    usersView: ControlPanel.usersView,
-    usersList: ControlPanel.usersList,
-    selectedUser: ControlPanel.selectedUser
-  }),
-  walletList: combineReducers({
-    walletList: WalletList.walletList,
-    walletsVisible: WalletList.walletsVisible,
-    archiveVisible: WalletList.archiveVisible
-  }),
-  walletTransferList: combineReducers({
-    walletTransferList: WalletTransferList.walletTransferList,
-    walletListModalVisible: WalletTransferList.walletListModalVisible
+  ui: combineReducers({
+    scan,
+    transactionList,
+    controlPanel,
+    walletList,
+    walletTransferList: walletTransferListReducer,
+    wallets: walletsOld,
+    sideMenu,
+    addWallet,
+    main: container
   }),
 
-  wallets: Wallets,
   helpModal,
 
-  routes
 })
 
 export default store

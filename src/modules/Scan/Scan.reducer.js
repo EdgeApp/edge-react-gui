@@ -1,6 +1,7 @@
 import * as ACTION from './Scan.action'
+import {combineReducers} from 'redux'
 
-export const torchEnabled = (state = false, action) => {
+const torchEnabled = (state = false, action) => {
   switch (action.type) {
     case ACTION.TOGGLE_ENABLE_TORCH :
       return !state
@@ -9,7 +10,7 @@ export const torchEnabled = (state = false, action) => {
   }
 }
 
-export const addressModalVisible = (state = false, action) => {
+const addressModalVisible = (state = false, action) => {
   switch (action.type) {
     case ACTION.TOGGLE_ADDRESS_MODAL_VISIBILITY:
       return !state
@@ -18,7 +19,7 @@ export const addressModalVisible = (state = false, action) => {
   }
 }
 
-export const recipientAddress = (state = '', action) => {
+const recipientAddress = (state = '', action) => {
   switch (action.type) {
     case ACTION.UPDATE_RECIPIENT_ADDRESS:
       return action.data
@@ -26,3 +27,11 @@ export const recipientAddress = (state = '', action) => {
       return state
   }
 }
+
+const scan = combineReducers({
+  torchEnabled,
+  addressModalVisible,
+  recipientAddress
+})
+
+export default scan

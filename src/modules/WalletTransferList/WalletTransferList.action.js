@@ -8,7 +8,7 @@ export function updateWalletTransferList (data) {
   }
 }
 
-export function toggleWalletListModal() {
+export function toggleWalletListModal () {
   return {
     type: TOGGLE_WALLET_LIST_MODAL_VISIBILITY
   }

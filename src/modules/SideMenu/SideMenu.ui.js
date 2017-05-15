@@ -30,6 +30,6 @@ class SideMenuComponent extends Component {
 
 export default connect( state => ({
 
-  view: state.sidemenu.view
+  view: state.ui.sideMenu.view
 
 }) )(SideMenuComponent)

@@ -5,14 +5,13 @@ import {
   ToastAndroid,
   AlertIOS,
   Platform,
-  StyleSheet,
   Dimensions,
   Share,
   Text,
   TouchableHighlight
 } from 'react-native'
 import { connect } from 'react-redux'
-// import styles from './styles.js'
+import styles from './styles.js'
 import ExchangeRate from '../ExchangeRate/index.js'
 import FlipInput from '../FlipInput/index.js'
 import ABQRCode from '../QRCode/index.js'
@@ -21,63 +20,50 @@ import ShareButtons from '../ShareButtons/index.js'
 import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
-
-const ScreenHeight = Dimensions.get('window').height
-
 import { dev } from '../utils.js'
+import { Actions } from 'react-native-router-flux'
 
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    padding: 5,
-    bottom: 0,
-  },
-  exchangeRateContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
-  flipInputContainer: {
-    flex: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  abQRCodeContainer: {
-    flex: 6,
-    padding: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  requestStatusContainer: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  shareButtonsContainer: {
-    flex: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  shareButtons: {
-    flex: 1
-  }
-})
+import {
+  addReceiveAddress,
+  updateAmountRequestedInCrypto,
+  updateAmountReceivedInCrypto,
+} from './Request.action.js'
 
 class Request extends Component {
   constructor (props) {
     super(props)
+
     this.state = {
-      amountRequestedInCrypto: 0,
+      request: props.request,
       amountRequestedInFiat: 0,
-      amountReceivedInCrypto: 0.75,
       fiatPerCrypto: '1077.75',
-      requestAddress: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
       inputCurrencySelected: 'crypto',
       result: ''
     }
   }
 
+  componentWillMount () {
+    const { request } = this.props
+
+    if (request.amountRequestedInCrypto != 0 && request.amountReceivedInCrypto >= request.amountRequestedInCrypto) {
+      alert("Asd")
+      Actions.directory()
+    }
+  }
+
+  componentDidMount () {
+    if (!this.props.request.receiveAddress && this.props.selectedWallet) {
+      const receiveAddress = this.props.selectedWallet.getReceiveAddress().address
+      this.props.dispatch(addReceiveAddress(receiveAddress))
+    }
+
+    setTimeout(() => {
+      this.props.dispatch(updateAmountReceivedInCrypto(Math.random() * 5))}, 3000)
+  }
+
   render () {
+    const { request } = this.props
+
     return (
       <LinearGradient
         style={styles.view}
@@ -86,15 +72,14 @@ class Request extends Component {
 
         <View style={styles.exchangeRateContainer}>
           <ExchangeRate
-            fiatPerCrypto={this.state.fiatPerCrypto} />
+            fiatPerCrypto={this.props.fiatPerCrypto} />
         </View>
 
         <View style={styles.flipInputContainer}>
           <FlipInput
-            onInputCurrencyToggle={this.onInputCurrencyToggle}
             onCryptoInputChange={this.onCryptoInputChange}
             onFiatInputChange={this.onFiatInputChange}
-            amountRequestedInCrypto={this.state.amountRequestedInCrypto}
+            amountRequestedInCrypto={request.amountRequestedInCrypto}
             amountRequestedInFiat={this.state.amountRequestedInFiat}
             inputCurrencySelected={this.state.inputCurrencySelected} />
         </View>
@@ -105,8 +90,9 @@ class Request extends Component {
 
         <View style={styles.requestStatusContainer}>
           <RequestStatus
-            requestAddress={this.state.requestAddress}
-            amountRequestedInCrypto={this.state.amountRequestedInCrypto} amountReceivedInCrypto={this.state.amountReceivedInCrypto} />
+            requestAddress={request.requestAddress}
+            amountRequestedInCrypto={request.amountRequestedInCrypto}
+            amountReceivedInCrypto={request.amountReceivedInCrypto} />
         </View>
 
         <View style={styles.shareButtonsContainer}>
@@ -122,24 +108,13 @@ class Request extends Component {
     )
   }
 
-  onInputCurrencyToggle = () => {
-    console.log("toggle currency")
-    const currency =
-      this.state.inputCurrencySelected === 'crypto'
-        ? 'fiat'
-        : 'crypto'
-
-      this.setState({
-        inputCurrencySelected: currency
-      })
-  }
-
   onCryptoInputChange = (amountRequestedInCrypto) => {
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
 
+    this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
+
     this.setState({
-      amountRequestedInCrypto: amountRequestedInCrypto,
       amountRequestedInFiat:
         getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
     })
@@ -149,9 +124,10 @@ class Request extends Component {
     amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
     if (this.invalidInput(amountRequestedInFiat)) { return }
 
+    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto)
+    this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
+
     this.setState({
-      amountRequestedInCrypto:
-        getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto),
       amountRequestedInFiat: amountRequestedInFiat
     })
   }
@@ -169,18 +145,27 @@ class Request extends Component {
   }
 
   getQrCodeText = () => {
-    return 'bitcoin:' + this.state.requestAddress +
-    '?amount=' + this.state.amountRequestedInCrypto
+    const qrCodeText =
+      'bitcoin:' + this.props.request.receiveAddress +
+      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+
+    return qrCodeText
   }
 
   getRequestInfoForClipboard = () => {
-    return 'bitcoin:' + this.state.requestAddress +
-    '?amount=' + this.state.amountRequestedInCrypto
+    const requestInfoForClipboard =
+      'bitcoin:' + this.props.request.requestAddress +
+      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+
+    return requestInfoForClipboard
   }
 
   getRequestInfoForShare = () => {
-    return 'bitcoin:' + this.state.requestAddress +
-    '?amount=' + this.state.amountRequestedInCrypto
+    const requestInforForShare =
+      'bitcoin:' + this.props.request.requestAddress +
+      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+
+    return requestInforForShare
   }
 
   invalidInput = (input) => {
@@ -242,4 +227,9 @@ class Request extends Component {
 
 }
 
-export default connect()(Request)
+export default connect(state => ({
+
+  request: state.request,
+  selectedWallet: state.selectedWallet
+
+}))(Request)

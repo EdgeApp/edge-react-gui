@@ -3,14 +3,14 @@ import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, Content, StyleProvider } from 'native-base'
-import getTheme from '../../native-base-theme/components'
-import platform from '../../native-base-theme/variables/platform'
 import Menu, { MenuContext } from 'react-native-menu';
+import getTheme from '../theme/components'
+import platform from '../theme/variables/platform'
 
 import SideMenu from './SideMenu/SideMenu.ui'
 import Header from './Header/Header.ui'
 import TabBar from './TabBar/TabBar.ui'
-import Transactions from './Transactions/Transactions.ui'
+import Transactions from './UI/Transactions/Transactions.ui'
 import Directory from './Directory/Directory.ui'
 import Request from './Request/index'
 import SendConfirmation from './SendConfirmation/index'
@@ -21,8 +21,18 @@ import HelpModal from './HelpModal'
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
+import { MenuContext } from 'react-native-menu'
+
+import { initializeAccount } from './Container.middleware'
+import {enableLoadingScreenVisibility} from './Container.action'
+
+import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
 
 import AddWallet from './AddWallet/index.js'
+
+import FakeAccount from '../Fakes/FakeAccount.js'
+
+import { TxLibBTC, abcTxEngine } from 'airbitz-txlib-shitcoin'
 
 const RouterWithRedux = connect()(Router)
 
@@ -30,41 +40,20 @@ class Main extends Component {
   constructor (props) {
     super(props)
 
-    this.state = {
-      loadingScreenVisible: true
-    }
+    this.props.dispatch(enableLoadingScreenVisibility())
   }
 
   componentDidMount () {
-    makeReactNativeIo()
-      .then(io => {
-        const context = makeContext({
-          apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
-          io
-        })
-        this.props.dispatch(addAirbitzToRedux(context))
-        const account = context.loginWithPassword('bob19', 'Funtimes19')
-
-        return account
-      })
-      .then(account => {
-        this.props.dispatch(addAccountToRedux(account))
-
-        return account
-      })
-      .then(() => {
-        this.setState({
-          loadingScreenVisible: false
-        })
-      })
+    console.log('about to initializeAccount')
+    initializeAccount(this.props.dispatch)
   }
 
   render () {
-    if (this.state.loadingScreenVisible) {
+    if (this.props.loadingScreenVisible) {
       console.log('logging in...')
       return (
         <ActivityIndicator
-          animating={this.state.animating}
+          animating={this.props.loadingScreenVisible}
           style={{
             flex: 1,
             alignItems: 'center',
@@ -112,4 +101,6 @@ class Main extends Component {
 
 }
 
-export default connect()(Main)
+export default connect(state => ({
+  loadingScreenVisible: state.ui.main.loadingScreenVisible
+}))(Main)

@@ -1,6 +1,7 @@
 import * as ACTION from './SideMenu.action'
+import {combineReducers} from 'redux'
 
-export const view = (state = false, action) => {
+const view = (state = false, action) => {
   switch (action.type) {
     case ACTION.OPEN_SIDEBAR :
       return true
@@ -10,3 +11,9 @@ export const view = (state = false, action) => {
       return state
   }
 }
+
+const sideMenu = combineReducers({
+  view
+})
+
+export default sideMenu

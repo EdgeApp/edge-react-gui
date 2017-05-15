@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="22px" height="21px" viewBox="0 0 22 21" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs></defs>
+    <g id="Side-Menu" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="Navigation_sidemenu_dropdown" transform="translate(-115.000000, -247.000000)" stroke="#FFFFFF">
+            <g id="Group-4" transform="translate(100.000000, 20.000000)">
+                <g id="ic_wallet" transform="translate(16.000000, 228.000000)">
+                    <polygon id="Stroke-61" points="18.9567726 0 19.8650165 2.94905131 0 2.94905131"></polygon>
+                    <polygon id="Stroke-63" points="15.4545455 12.832989 19.9873597 12.832989 19.9873597 9.04761905 15.4545455 9.04761905"></polygon>
+                    <polygon id="Stroke-65" points="19.9442059 14.9742433 19.9442059 18.7655543 0 18.7655543 0 3.61904762 0.0875948884 3.61904762 19.8464358 3.61904762 19.9442059 3.61904762 19.9442059 7.40396052"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

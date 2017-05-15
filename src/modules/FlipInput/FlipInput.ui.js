@@ -13,7 +13,7 @@ import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import FlipView from 'react-native-flip-view'
 
 const CRYPTO_PLACEHOLDER = 'C 0.00'
-const FIAT_PLACEHOLDER = 'F 0.00'
+const FIAT_PLACEHOLDER   = 'F 0.00'
 
 export default class FlipInput extends Component {
   constructor (props) {
@@ -40,7 +40,6 @@ export default class FlipInput extends Component {
 
   flip = () => {
     this.setState({isFlipped: !this.state.isFlipped})
-    this.props.onInputCurrencyToggle()
   }
 
   _renderFront = () => {
@@ -87,7 +86,7 @@ export default class FlipInput extends Component {
 
     return (
       <FlipInputInside
-        syle={styles.view}
+        style={styles.view}
         currencySelected={'fiat'}
         mode={mode}
         primaryPlaceholder={'f 0.00'}

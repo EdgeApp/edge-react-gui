@@ -48,9 +48,9 @@ class ControlPanel extends Component {
 
 export default connect( state => ({
 
-  usersView: state.controlPanel.usersView,
-  selectedUser : state.controlPanel.selectedUser !== null ?
-    _.find(state.controlPanel.usersList, item => item.id === state.controlPanel.selectedUser) :
+  usersView: state.ui.controlPanel.usersView,
+  selectedUser : state.ui.controlPanel.selectedUser !== null ?
+    _.find(state.ui.controlPanel.usersList, item => item.id === state.ui.controlPanel.selectedUser) :
     null
 
 }) )(ControlPanel)

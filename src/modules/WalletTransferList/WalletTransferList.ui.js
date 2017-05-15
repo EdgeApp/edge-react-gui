@@ -1,40 +1,40 @@
 import React, { Component } from 'react'
-import { ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight }  from 'react-native'
-import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
+import { ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight } from 'react-native'
+import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import {getWalletTransferList} from './WalletTransferList.middleware'
+import { getWalletTransferList } from './WalletTransferList.middleware'
 import styles from './WalletTransferList.style'
-import {toggleWalletListModal} from './WalletTransferList.action'
+import { toggleWalletListModal } from './WalletTransferList.action'
 
 class WalletTransferList extends Component {
 
-  _closeWalletListModal() {
+  _closeWalletListModal () {
     this.props.dispatch(toggleWalletListModal())
   }
 
-  componentWillMount() {
+  componentWillMount () {
     this.props.dispatch(getWalletTransferList())
   }
 
-  _selectWalletToSendConfirmation() {
+  _selectWalletToSendConfirmation () {
     this.props.dispatch(toggleWalletListModal())
     Actions.sendConfirmation('wallet address')
   }
 
-  render() {
+  render () {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     let walletRowSource = ds.cloneWithRows(this.props.walletTransferList)
-    return(
+    return (
       <View style={styles.container}>
         <View style={[styles.headerRowWrap]}>
           <View style={[styles.headerTextWrap]}>
             <Text style={styles.headerText}>Select destination wallet:</Text>
           </View>
           <TouchableHighlight style={[styles.exitIconWrap]} onPress={this._closeWalletListModal.bind(this)}>
-            <FAIcon name="close" size={24} style={[styles.exitIcon]}  color="#666666" />
+            <FAIcon name='close' size={24} style={[styles.exitIcon]} color='#666666' />
           </TouchableHighlight>
         </View>
 
@@ -48,15 +48,15 @@ class WalletTransferList extends Component {
     )
   }
 
-  renderWalletRow(walletData) {
-    return(
-      <TouchableHighlight style={styles.individualRowWrap} onPress={ this._selectWalletToSendConfirmation.bind(this) }>
+  renderWalletRow (walletData) {
+    return (
+      <TouchableHighlight style={styles.individualRowWrap} onPress={this._selectWalletToSendConfirmation.bind(this)}>
         <Text style={styles.individualRowText}>{walletData.walletName} ($ {walletData.amount})</Text>
       </TouchableHighlight>
     )
   }
 
-  border(color) {
+  border (color) {
     return {
       borderColor: color,
       borderWidth: 2
@@ -64,9 +64,9 @@ class WalletTransferList extends Component {
   }
 }
 
-export default connect( state => ({
+export default connect(state => ({
 
-  walletTransferList: state.walletTransferList.walletTransferList,
-  walletListModalVisible: state.walletTransferList.walletListModalVisible
+  walletTransferList: state.ui.walletTransferList.walletTransferList,
+  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
 
-}) )(WalletTransferList)
+}))(WalletTransferList)

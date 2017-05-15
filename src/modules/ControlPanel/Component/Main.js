@@ -22,6 +22,11 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
+  _handleOnPressWallets = () => {
+    Actions.walletList();
+    return this.props.dispatch(closeSidebar())
+  }
+
   render () {
 
     if(this.props.usersView) {
@@ -53,7 +58,7 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>
             </View>
             <View style={styles.others.container}>
-              <TouchableNativeFeedback onPress={ e => console.log('pressed4') }>
+              <TouchableNativeFeedback onPress={ this._handleOnPressWallets }>
                 <View style={styles.others.link}>
                   <Icon style={styles.others.icon} name='cash' />
                   <Text style={styles.others.text}>WALLETS</Text>
@@ -94,10 +99,10 @@ class MainComponent extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.others.container}>
-              <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed4') }>
+              <TouchableOpacity style={styles.others.link} onPress={this._handleOnPressWallets}>
                 <Icon style={styles.others.icon} name='cash' />
                 <Text style={styles.others.text}>WALLETS</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>             
               <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed5') }>
                 <Icon style={styles.others.icon} name='log-out' />
                 <Text style={styles.others.text}>LOGOUT</Text>
@@ -117,6 +122,6 @@ class MainComponent extends Component {
 
 export default connect( state => ({
 
-  usersView : state.controlPanel.usersView
+  usersView : state.ui.controlPanel.usersView
 
 }) )(MainComponent)

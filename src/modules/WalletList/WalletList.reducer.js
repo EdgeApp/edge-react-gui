@@ -1,44 +1,96 @@
-import * as ACTION from './WalletList.action'
+import * as WALLET_LIST_ACTION from './WalletList.action'
+import * as WALLET_ACTION from '../UI/Wallets/Wallets.action'
+import { combineReducers } from 'redux'
 
-export const walletList = (state = [], action) => {
+const renameWalletVisible = (state = false, action) => {
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_LIST :
-      return action.data
-    case ACTION.UPDATE_WALLET_LIST_ORDER :
+    case WALLET_LIST_ACTION.OPEN_RENAME_WALLET_MODAL :
+      return true
+    case WALLET_LIST_ACTION.CLOSE_RENAME_WALLET_MODAL :
+      return false
+    case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET :
+      return false
+    default :
+      return state
+  }
+}
+
+const deleteWalletVisible = (state = false, action) => {
+  switch (action.type) {
+    case WALLET_LIST_ACTION.START_DELETE_WALLET :
+      return true
+    case WALLET_ACTION.COMPLETE_DELETE_WALLET :
+      return false
+    case WALLET_LIST_ACTION.CLOSE_DELETE_WALLET_MODAL :
+      return false
+    default :
+      return state
+  }
+}
+
+const archiveList = (state = [], action) => {
+  switch (action.type) {
+    case WALLET_LIST_ACTION.UPDATE_ARCHIVE_LIST_ORDER:
       return action.data
     default:
       return state
   }
 }
 
-
-export const archiveList = (state = [], action) => {
+const archiveVisible = (state = false, action) => {
   switch (action.type) {
-    case ACTION.UPDATE_ARCHIVE_LIST_ORDER: 
+    case WALLET_LIST_ACTION.TOGGLE_WALLETS_ARCHIVE_VISIBILITY:
+      return !state
+    default:
+      return state
+  }
+}
+
+const currentWalletRename = (state = '', action) => {
+  switch (action.type) {
+    case WALLET_LIST_ACTION.UPDATE_WALLET_RENAME_INPUT :
       return action.data
-    default: 
+    case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET :
+      return ''
+    default :
       return state
   }
 }
 
-export const walletsVisible = (state = true, action) => {
+const currentWalletBeingRenamed = (state = null, action) => {
   switch (action.type) {
-    case ACTION.TOGGLE_WALLETS_VISIBILITY: 
-      return action.walletsVisibility
-    case ACTION.UPDATE_WALLETS_ARCHIVE_VISIBILITY:
-      return action.walletsVisibility
+    case WALLET_LIST_ACTION.OPEN_RENAME_WALLET_MODAL:
+      return action.data.key
+    case WALLET_LIST_ACTION.UPDATE_CURRENT_RENAME_WALLET :
+      return action.key
+    case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET :
+      return null
     default:
       return state
   }
 }
 
-export const archiveVisible = (state = false, action) => {
+const currentWalletBeingDeleted = (state = null, action) => {
   switch (action.type) {
-    case ACTION.TOGGLE_ARCHIVE_VISIBILITY: 
-      return action.archiveVisibility
-    case ACTION.UPDATE_WALLETS_ARCHIVE_VISIBILITY:
-      return action.archiveVisibility
-    default:
+    case WALLET_LIST_ACTION.CLOSE_DELETE_WALLET_MODAL:
+      return null
+    case WALLET_LIST_ACTION.START_DELETE_WALLET :
+      return action.data.key
+    case WALLET_ACTION.COMPLETE_DELETE_WALLET :
+      return null
+    default :
       return state
   }
 }
+
+const walletList = combineReducers({
+  renameWalletVisible,
+  deleteWalletVisible,
+  archiveList,
+  archiveVisible,
+  currentWalletRename,
+  currentWalletBeingRenamed,
+  currentWalletBeingDeleted
+})
+
+export default walletList
