@@ -6,28 +6,28 @@ import { Container, Content, StyleProvider } from 'native-base'
 import Menu, { MenuContext } from 'react-native-menu';
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
-
-import SideMenu from './SideMenu/SideMenu.ui'
-import Header from './Header/Header.ui'
-import TabBar from './TabBar/TabBar.ui'
-import Transactions from './UI/Transactions/Transactions.ui'
-import Directory from './Directory/Directory.ui'
-import Request from './Request/index'
-import SendConfirmation from './SendConfirmation/index'
-import Scan from './Scan/Scan.ui'
-import WalletList from './WalletList/WalletList.ui'
-import HelpModal from './HelpModal'
+import SideMenu from './UI/components/SideMenu/SideMenu.ui'
+import Header from './UI/components/Header/Header.ui'
+import TabBar from './UI/components/TabBar/TabBar.ui'
+import TransactionsList from './UI/scenes/TransactionsList'
+import Directory from './UI/scenes/Directory/Directory.ui'
+import Request from './UI/scenes/Request/index'
+import SendConfirmation from './UI/scenes/SendConfirmation/index'
+import Scan from './UI/scenes/Scan/Scan.ui'
+import WalletList from './UI/scenes/WalletList/WalletList.ui'
+import HelpModal from './UI/components/HelpModal'
 
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
-import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
+import { addAccountToRedux, addAirbitzToRedux } from './Login/action.js'
 
-import { initializeAccount } from './Container.middleware'
-import {enableLoadingScreenVisibility} from './Container.action'
 
-import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
+import { initializeAccount } from './middleware'
+import {enableLoadingScreenVisibility} from './action'
 
-import AddWallet from './AddWallet/index.js'
+import { addWallet, selectWallet } from './UI/Wallets/action.js'
+
+import AddWallet from './UI/scenes/AddWallet/index.js'
 
 import FakeAccount from '../Fakes/FakeAccount.js'
 
@@ -79,7 +79,7 @@ class Main extends Component {
 
                   <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                  <Scene key='transactions' component={Transactions} title='Transactions' duration={0} initial />
+                  <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} initial />
 
                   <Scene key='request' component={Request} title='Request' duration={0} />
 
