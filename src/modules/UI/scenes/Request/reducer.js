@@ -1,4 +1,4 @@
-import * as ACTION from './Request.action'
+import * as ACTION from './action'
 
 const newRequest = {
   receiveAddress: '',

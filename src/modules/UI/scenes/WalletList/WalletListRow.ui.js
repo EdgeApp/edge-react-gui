@@ -6,9 +6,9 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import styles from './WalletList.style'
+import styles from './style'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
-import {executeWalletRowOption} from './WalletList.action'
+import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
 
 class WalletListRow extends Component {

@@ -1,4 +1,4 @@
-import * as ACTION from './Scan.action'
+import * as ACTION from './action'
 import {combineReducers} from 'redux'
 
 const torchEnabled = (state = false, action) => {

@@ -1,4 +1,4 @@
-import {updateWalletOrder, updateWalletListOrder} from './WalletList.action'
+import {updateWalletOrder, updateWalletListOrder} from './action'
 
 export const forceWalletListUpdate = (order, list) => {
     const walletOrder = order

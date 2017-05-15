@@ -18,13 +18,13 @@ import WalletList from './UI/scenes/WalletList/WalletList.ui'
 
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
-import { addAccountToRedux, addAirbitzToRedux } from './Login/Login.action.js'
+import { addAccountToRedux, addAirbitzToRedux } from './Login/action.js'
 import { MenuContext } from 'react-native-menu'
 
-import { initializeAccount } from './Container.middleware'
-import {enableLoadingScreenVisibility} from './Container.action'
+import { initializeAccount } from './middleware'
+import {enableLoadingScreenVisibility} from './action'
 
-import { addWallet, selectWallet } from './UI/Wallets/Wallets.action.js'
+import { addWallet, selectWallet } from './UI/Wallets/action.js'
 
 import AddWallet from './UI/scenes/AddWallet/index.js'
 

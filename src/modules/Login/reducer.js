@@ -1,4 +1,4 @@
-import * as ACTION from './Login.action'
+import * as ACTION from './action'
 
 export const airbitz = (state = {}, action) => {
   switch (action.type) {

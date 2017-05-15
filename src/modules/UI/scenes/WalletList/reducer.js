@@ -1,5 +1,5 @@
-import * as WALLET_LIST_ACTION from './WalletList.action'
-import * as WALLET_ACTION from '../../Wallets/Wallets.action'
+import * as WALLET_LIST_ACTION from './action'
+import * as WALLET_ACTION from '../../Wallets/action'
 import { combineReducers } from 'redux'
 
 const renameWalletVisible = (state = false, action) => {

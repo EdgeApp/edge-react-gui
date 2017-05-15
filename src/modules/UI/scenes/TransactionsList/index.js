@@ -1,3 +1,3 @@
-import TransactionsList from './TransactionsList'
+import TransactionsList from './TransactionsList.ui'
 
 export default TransactionsList

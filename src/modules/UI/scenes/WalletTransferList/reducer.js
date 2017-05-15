@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import * as ACTION from './WalletTransferList.action'
+import * as ACTION from './action'
 
 const walletTransferList = (state = [], action) => {
   switch (action.type) {

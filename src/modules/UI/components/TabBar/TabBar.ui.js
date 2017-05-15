@@ -5,7 +5,7 @@ import { Actions } from 'react-native-router-flux'
 import { Footer, FooterTab, Button, Icon, Text } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { openSidebar, closeSidebar } from '../SideMenu/SideMenu.action'
+import { openSidebar, closeSidebar } from '../SideMenu/action'
 
 class TabBar extends Component {
 

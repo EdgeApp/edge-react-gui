@@ -1,7 +1,7 @@
 // Do not send actions to this reducer
 // Only the core should send actions to this reducer
 
-import * as ACTION from './Wallets.action.js'
+import * as ACTION from './action.js'
 
 const initialState = {
   byId: {},

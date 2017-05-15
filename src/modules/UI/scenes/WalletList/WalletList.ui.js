@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import styles from './WalletList.style'
+import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
 import {
@@ -21,12 +21,12 @@ import {
           closeWalletDeleteModal,
           updateCurrentWalletBeingRenamed,
           closeWalletRenameModal
-        } from './WalletList.action'
-import { forceWalletListUpdate } from './WalletList.middleware'
+        } from './action'
+import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
 
 // Fake stuff to be removed
-import { addWallet, completeDeleteWallet } from '../../Wallets/Wallets.action.js'
+import { addWallet, completeDeleteWallet } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
 
 class WalletList extends Component {

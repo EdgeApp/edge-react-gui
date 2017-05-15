@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Text, View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import styles from './WalletList.style'
+import styles from './style'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
-import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateWalletRenameInput } from './WalletList.action'
+import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateWalletRenameInput } from './action'
 
 class WalletListRowOptions extends Component {
 

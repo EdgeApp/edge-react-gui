@@ -6,11 +6,11 @@ import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
-import styles from './Scan.style'
+import styles from './style'
 
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './Scan.action'
-import { toggleWalletListModal } from '../WalletTransferList/WalletTransferList.action'
-import { getWalletTransferList } from '../WalletTransferList/WalletTransferList.middleware'
+import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './action'
+import { toggleWalletListModal } from '../WalletTransferList/action'
+import { getWalletTransferList } from '../WalletTransferList/middleware'
 
 class Scan extends Component {
   constructor (props) {

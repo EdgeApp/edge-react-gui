@@ -5,9 +5,9 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import { getWalletTransferList } from './WalletTransferList.middleware'
-import styles from './WalletTransferList.style'
-import { toggleWalletListModal } from './WalletTransferList.action'
+import { getWalletTransferList } from './middleware'
+import styles from './style'
+import { toggleWalletListModal } from './action'
 
 class WalletTransferList extends Component {
 

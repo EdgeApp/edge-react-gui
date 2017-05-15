@@ -26,7 +26,7 @@ import {
   addReceiveAddress,
   updateAmountRequestedInCrypto,
   updateAmountReceivedInCrypto,
-} from './Request.action.js'
+} from './action.js'
 
 class Request extends Component {
   constructor (props) {

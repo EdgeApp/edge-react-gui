@@ -14,7 +14,7 @@ import { dev } from '../../../utils.js'
 import {updateNewWalletName} from './action'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { addWallet } from '../../Wallets/Wallets.action.js'
+import { addWallet } from '../../Wallets/action.js'
 import FakeAccount from '../../../../Fakes/FakeAccount.js'
 import { Actions } from 'react-native-router-flux'
 

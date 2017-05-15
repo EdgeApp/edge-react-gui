@@ -1,4 +1,4 @@
-import * as ACTION from './SideMenu.action'
+import * as ACTION from './action'
 import {combineReducers} from 'redux'
 
 const view = (state = false, action) => {

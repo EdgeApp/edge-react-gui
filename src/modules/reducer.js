@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import * as ACTION from './Container.action'
+import * as ACTION from './action'
 
 const loadingScreenVisible = ( state = false, action) => {
   switch(action.type){

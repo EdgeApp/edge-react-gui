@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 
-import { closeSidebar } from '../../SideMenu/SideMenu.action'
+import { closeSidebar } from '../../SideMenu/action'
 import UserList from './UserList'
 
 import styles from '../style'

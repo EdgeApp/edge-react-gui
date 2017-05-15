@@ -1,4 +1,4 @@
-import { updateWalletTransferList } from './WalletTransferList.action'
+import { updateWalletTransferList } from './action'
 
 const wallets = [
   {

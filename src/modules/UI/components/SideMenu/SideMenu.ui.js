@@ -3,7 +3,7 @@ import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Drawer from 'react-native-drawer'
 
-import { openSidebar, closeSidebar } from './SideMenu.action'
+import { openSidebar, closeSidebar } from './action'
 
 import ControlPanel from '../ControlPanel'
 
