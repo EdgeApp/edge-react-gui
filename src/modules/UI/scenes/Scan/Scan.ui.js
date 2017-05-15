@@ -68,7 +68,7 @@ class Scan extends Component {
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
         />
-        <View style={[styles.overlay, this.border('green')]}>
+        <View style={[styles.overlay]}>
           {this.renderAddressModal()}
           {this.renderWalletListModal()}
           <View style={[styles.overlayTop]}>
