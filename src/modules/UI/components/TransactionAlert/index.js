@@ -21,8 +21,8 @@ class TransactionAlert extends Component {
       'Transaction Received',
       props.message,
       [
-        {text: 'Cancel', onPress: () => this._closeAlert(), style: 'cancel'},
-        {text: 'OK', onPress: () => this._onPress(props)},
+        {text: 'Later', onPress: () => this._closeAlert(), style: 'cancel'},
+        {text: 'Check Now', onPress: () => this._onPress(props)},
       ],
       {  onDismiss: () => { this._closeAlert() } }
     )
