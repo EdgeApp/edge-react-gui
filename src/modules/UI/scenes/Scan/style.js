@@ -18,21 +18,26 @@ module.exports = StyleSheet.create({
     bottom: 0
   },
   overlayTop: {
-    flex: 1,
+    height: 37,
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    justifyContent: 'center',
+    backgroundColor: '#58595C',
+    opacity: 0.95
   },
   overlayTopText: {
-    color: 'white'
+    color: 'white',
+    fontSize: 14    
   },
   overlayBlank: {
     flex: 10
   },
   overlayButtonAreaWrap: {
-    flex: 1,
+    height: 72,
     flexDirection: 'row',
-    borderTopColor: '#aaaaaa',
-    borderTopWidth: 1
+    paddingTop: 11,
+    paddingBottom: 11,
+    paddingRight: 8,
+    paddingLeft: 8
   },
   overLayButtonArea: {
     flex: 1,
@@ -41,43 +46,77 @@ module.exports = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
+  bottomButton: {
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 3,
+    height: 50,
+    marginLeft: 1,
+    marginRight: 1,
+  },
+  bottomButtonTextWrap: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'    
+  },
+  bottomButtonText: {
+    opacity: 1,
+    color: 'white',
+    fontSize: 14,
+    backgroundColor: 'transparent'
+  },
   transferButtonWrap: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRightColor: "#aaaaaa",
-    borderRightWidth: 1
+  },
+  transferArrowIcon: {
+    color: 'white',
+    fontSize: 22,
+    height: 18,
+    transform: [{scaleX: 1.2}]
   },
   addressButtonWrap: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRightColor: "#aaaaaa",
-    borderRightWidth: 1
+  },
+  addressBookIcon: {
+    color: 'white',
+    fontSize: 16,
+    height: 16,   
+    transform: [{scaleX: -1.0}]     
   },
   photosButtonWrap: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRightColor: "#aaaaaa",
-    borderRightWidth: 1
+  },
+  cameraIcon: {
+    color: 'white',
+    fontSize: 22,
+    height: 18,    
   },
   flashButtonWrap: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
+  flashIcon: {
+    color: 'white',
+    fontSize: 22,
+    height: 18,       
+  },
   transferButtonText: {
-    color: 'white'
+
   },
   addressButtonText: {
-    color: 'white'
+
   },
   photosButtonText: {
-    color: 'white'
+
   },
   flashButtonText: {
-    color: 'white'
+
   },
   modalElement: {
 

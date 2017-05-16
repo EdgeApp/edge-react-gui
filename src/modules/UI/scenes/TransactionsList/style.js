@@ -10,7 +10,8 @@ module.exports = StyleSheet.create({
   currentBalanceBox: {
     flex: 5,
     justifyContent: "center",
-
+    paddingTop: 10,
+    paddingBottom: 20,    
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -22,35 +23,41 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  currentBalanceWrap: {
+  currentBalanceWrap: { //one
     flex: 3,
     alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  bitcoinIconWrap: { //two
+    flex: 4,
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent'
   },
-  bitcoinIconWrap: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    backgroundColor: 'transparent'
-  },
-  currentBalanceBoxDollarsWrap: {
-    flex: 2,
-    justifyContent: 'center',
+  currentBalanceBoxDollarsWrap: { //two
+    flex: 4,
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'transparent'
   },
   currentBalanceBoxDollars: {
     color: "#FFFFFF",
-    fontSize: 36
+    fontSize: 40
   },
-  currentBalanceBoxBits: {
+  currentBalanceBoxBitsWrap: {
+    justifyContent: "flex-start",
+    flex: 4,    
+    paddingTop: 4
+  },
+  currentBalanceBoxBits: { //two
     color: "#FFFFFF",
-    justifyContent: "space-around",
-    flex: 1
+    fontSize: 20
   },
-  requestSendRow: {
+  requestSendRow: { //two
     flex: 1,
-    flexDirection: 'row',
-    paddingBottom: 10
+    flexDirection: 'row'
+  },
+  button: {
+    borderRadius: 3
   },
   requestBox: {
     backgroundColor: 'rgba(37,69,123, .3)',
@@ -58,14 +65,16 @@ module.exports = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 3,
+    marginLeft: 8,
+    marginRight: 1,
     flexDirection: "row"
   },
   requestWrap: {
     flexDirection: 'row'
   },
   requestIcon: {
+    textAlignVertical: 'center',
+    alignSelf: 'center',
     marginRight: 10
   },
   sendBox: {
@@ -74,20 +83,24 @@ module.exports = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 3,
-    marginRight: 10,
+    marginLeft: 1,
+    marginRight: 8,
     flexDirection: "row"
   },
   sendWrap: {
     flexDirection: 'row'
   },
   sendIcon: {
+    textAlignVertical: 'center',
+    alignSelf: 'center',    
     marginRight: 10
   },
   request: {
+    fontSize: 18,
     color: "#ffffff",
   },
   send: {
+    fontSize: 18,
     color: "#ffffff"
   },
 

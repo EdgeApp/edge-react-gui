@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		009458D283FE4A8BAB096CFB /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -62,6 +63,8 @@
 		63FFCF0F620740B882FDC1CA /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BB5EBBCFE2B64F81B45B5759 /* Ionicons.ttf */; };
 		640BB86917E1416C9E413B51 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CBAE8624715C462591962AA1 /* Foundation.ttf */; };
 		648AB5EA2FDD4B378F94F154 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1EFA42249E0742F1A5A8B879 /* SimpleLineIcons.ttf */; };
+		65A8B1FB1ECBA6AA0030AFB1 /* SourceSansPro-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65A8B1FA1ECBA6AA0030AFB1 /* SourceSansPro-Regular.ttf */; };
+		65A8B2241ECBAF6C0030AFB1 /* SourceSansPro-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65A8B2231ECBAF6C0030AFB1 /* SourceSansPro-Light.ttf */; };
 		69AFB07AD91E441F8764B1F2 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27844D9AB0634668B762C55E /* MaterialIcons.ttf */; };
 		6A73A10974D448EC998087EC /* libRCTContacts.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5D6824DDD854B41A4A6D426 /* libRCTContacts.a */; };
 		6CB59FDC89A74AF5A0604BD5 /* libRCTMaterialKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DF9D1093281430AA1DA9CCF /* libRCTMaterialKit.a */; };
@@ -447,6 +450,8 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		637389EB2F4F40F1B11E9520 /* Rubik-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-BoldItalic.ttf"; path = "../node_modules/native-base/Fonts/Rubik-BoldItalic.ttf"; sourceTree = "<group>"; };
 		64CB8EE55CFF4E239DDD7EEE /* RNShare.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNShare.xcodeproj; path = "../node_modules/react-native-share/ios/RNShare.xcodeproj"; sourceTree = "<group>"; };
+		65A8B1FA1ECBA6AA0030AFB1 /* SourceSansPro-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Regular.ttf"; sourceTree = "<group>"; };
+		65A8B2231ECBAF6C0030AFB1 /* SourceSansPro-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceSansPro-Light.ttf"; sourceTree = "<group>"; };
 		69A59568A85845658D254B7C /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		6C76AEF12D72473FB9C5A6B8 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		733258B537C541F89427D375 /* SF-UI-Text-Regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SF-UI-Text-Regular.otf"; path = "../node_modules/native-base/Fonts/SF-UI-Text-Regular.otf"; sourceTree = "<group>"; };
@@ -881,6 +886,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				65A8B2231ECBAF6C0030AFB1 /* SourceSansPro-Light.ttf */,
+				65A8B1FA1ECBA6AA0030AFB1 /* SourceSansPro-Regular.ttf */,
 				13B07FAE1A68108700A75B9A /* airbitz */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* airbitzTests */,
@@ -1412,6 +1419,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65A8B2241ECBAF6C0030AFB1 /* SourceSansPro-Light.ttf in Resources */,
+				65A8B1FB1ECBA6AA0030AFB1 /* SourceSansPro-Regular.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				BCEA065C003D495EB57A3BC4 /* Andale Mono.ttf in Resources */,

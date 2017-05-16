@@ -8,6 +8,7 @@ import {
   Button,
   TouchableOpacity,
   TextInput } from 'react-native'
+  import FormattedText from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { dev } from '../../../utils.js'
@@ -24,8 +25,8 @@ const WALLET_NAME_INPUT_PLACEHOLDER = 'Name your new wallet'
 const BLOCKCHAIN_PICKER_PLACEHOLDER = 'Choose a blockchain'
 const FIAT_PICKER_PLACEHOLDER       = 'Choose a fiat currency'
 
-const DONE_TEXT         = 'DONE'
-const CANCEL_TEXT       = 'CANCEL'
+const DONE_TEXT         = 'Create Wallet'
+const CANCEL_TEXT       = 'Cancel'
 const INVALID_DATA_TEXT = 'Please select valid data'
 
 ////////////////////////////// ROOT ///////////////////////////////////////////
@@ -190,12 +191,8 @@ class AddWallet extends Component {
   render () {
 
     return (
-      <LinearGradient
-        style={styles.view}
-        start={{x:0,y:0}} end={{x:1, y:0}}
-        colors={["#3b7adb","#2b569a"]}
-        centerContent={true}>
-
+      <View
+        style={styles.view}>
         <WalletNameInput
           placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
           onSelect={ this.handleSelectWalletName }
@@ -218,7 +215,7 @@ class AddWallet extends Component {
           onDone={this.handleOnDone}
           onCancel={this.handleOnCancel} />
 
-      </LinearGradient>
+      </View>
     )
   }
 }
@@ -238,15 +235,15 @@ const Buttons = (props) => {
     <View style={styles.buttons}>
 
       <TouchableOpacity
-        style={styles.cancel}
+        style={[styles.cancel]}
         onPress={props.onCancel}>
-        <Text style={styles.buttonText}>{CANCEL_TEXT}</Text>
+        <FormattedText style={styles.buttonText}>{CANCEL_TEXT}</FormattedText>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.submit}
+        style={[styles.submit]}
         onPress={props.onDone}>
-        <Text style={styles.buttonText}>{DONE_TEXT}</Text>
+        <FormattedText style={styles.buttonText}>{DONE_TEXT}</FormattedText>
       </TouchableOpacity>
 
     </View>
@@ -377,7 +374,7 @@ const DropdownList = (props) => {
       <TouchableOpacity
         style={{backgroundColor: 'white', padding: 10,}}
         onPress={() => props.onPress(data)}>
-        <Text>{data}</Text>
+        <FormattedText>{data}</FormattedText>
       </TouchableOpacity>
     )
   }
