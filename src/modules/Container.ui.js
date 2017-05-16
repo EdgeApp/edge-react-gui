@@ -16,6 +16,7 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import HelpModal from './UI/components/HelpModal'
+import TransactionAlert from './UI/components/TransactionAlert'
 
 import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
@@ -90,6 +91,7 @@ class Main extends Component {
                 </Scene>
               </RouterWithRedux>
               <HelpModal/>
+              <TransactionAlert/>
             </SideMenu>
             <TabBar />
           </Container>

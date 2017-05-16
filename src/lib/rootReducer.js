@@ -10,6 +10,7 @@ import walletTransferListReducer from '../modules/UI/scenes/WalletTransferList/r
 import addWallet from '../modules/UI/scenes/AddWallet/reducer'
 import container from '../modules/reducer'
 import exchangeRate from '../modules/UI/components/ExchangeRate/reducer'
+import transactionAlert from '../modules/UI/components/TransactionAlert/reducer.js'
 
 import { airbitz, account } from '../modules/Login/reducer.js'
 
@@ -19,7 +20,6 @@ import { transactions } from '../modules/Transactions/reducer.js'
 import { helpModal } from '../modules/UI/components/HelpModal/reducer.js'
 import Login from '../modules/Login/reducer.js'
 import request from '../modules/UI/scenes/Request/reducer.js'
-
 
 const store = combineReducers({
   routes,
@@ -44,6 +44,7 @@ const store = combineReducers({
   }),
 
   helpModal,
+  transactionAlert
 
 })
 
