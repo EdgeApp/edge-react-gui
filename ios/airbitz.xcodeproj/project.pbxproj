@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		009458D283FE4A8BAB096CFB /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -95,7 +96,6 @@
 		E810B4010EFD487D8F348079 /* Rubik-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4BAB2556EDEF4487A590E955 /* Rubik-Light.ttf */; };
 		EA7D47520726443AA0FF60C0 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D8ED136E6EA41088A3862B9 /* Octicons.ttf */; };
 		F23C4CC5402F4E25AFD7437C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6C76AEF12D72473FB9C5A6B8 /* Zocial.ttf */; };
-		8F7F8D08AE474D56A41CD981 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62B27F3DBE344A75AC236F58 /* SimpleLineIcons.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -487,7 +487,6 @@
 		F26E8A5C8E81402E91DB24A3 /* libUdpSockets.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libUdpSockets.a; sourceTree = "<group>"; };
 		F4D44BFC0C7E41B4BEBA4B07 /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TcpSockets.xcodeproj; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; };
 		FFF1BE4D8CAB46BABA171DAE /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/native-base/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
-		62B27F3DBE344A75AC236F58 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -709,7 +708,6 @@
 				C54B36513AE04DF49C989A77 /* Octicons.ttf */,
 				1EFA42249E0742F1A5A8B879 /* SimpleLineIcons.ttf */,
 				9EE5AAFEC2F44BCD8616DCBA /* Zocial.ttf */,
-				62B27F3DBE344A75AC236F58 /* SimpleLineIcons.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1469,7 +1467,6 @@
 				A5CE7ADE547145DDB018AFBF /* Octicons.ttf in Resources */,
 				648AB5EA2FDD4B378F94F154 /* SimpleLineIcons.ttf in Resources */,
 				866F9F1238A543DEB353721C /* Zocial.ttf in Resources */,
-				8F7F8D08AE474D56A41CD981 /* SimpleLineIcons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
