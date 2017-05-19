@@ -2,7 +2,7 @@ import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addWallet as addWalletUI } from './UI/Wallets/action.js'
 import { addWalletByKey } from './Login/action.js'
 
-import { selectWallet as selectWalletUI } from './UI/Wallets/action.js'
+import { selectWalletById } from './UI/Wallets/action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/action.js'
 import { makeContext } from 'airbitz-core-js'
 import { disableLoadingScreenVisibility } from './action'
@@ -43,6 +43,9 @@ export const initializeAccount = (dispatch) => {
     keys.forEach(key => {
       dispatch(addWalletByKey(key))
     })
+
+    const firstWalletId = keys[0].id
+    dispatch(selectWalletById(firstWalletId))
   })
 }
 

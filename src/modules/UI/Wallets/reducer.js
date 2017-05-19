@@ -2,12 +2,12 @@ import { combineReducers } from 'redux'
 import * as WALLETS_ACTION from './action'
 import * as WALLET_LIST_ACTION from '../scenes/WalletList/action'
 
-export const wallets = (state = {}, action) => {
+export const byId = (state = {}, action) => {
   switch (action.type) {
     case WALLETS_ACTION.ADD_WALLET :
       return {
         ...state,
-        [action.data.wallet.id]: action.data.wallet
+        [action.data.wallet.id]: schema(action.data.wallet)
       }
 
     case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER :
@@ -36,7 +36,6 @@ export const wallets = (state = {}, action) => {
   }
 }
 
-// may need to sort
 export const walletList = (state = [], action) => {
   switch (action.type) {
     case WALLETS_ACTION.UPDATE_WALLET_LIST :
@@ -46,10 +45,10 @@ export const walletList = (state = [], action) => {
   }
 }
 
-export const selectedWallet = (state = null, action) => {
+export const selectedWalletId = (state = '', action) => {
   switch (action.type) {
-    case WALLETS_ACTION.SELECT_WALLET :
-      return action.data
+    case WALLETS_ACTION.SELECT_WALLET_BY_ID :
+      return action.data.id
     default:
       return state
   }
@@ -64,9 +63,23 @@ export const walletListOrder = (state = [], action) => {
   }
 }
 
-export const walletsOld = combineReducers({
-  wallets: wallets,
+const schema = (wallet) => {
+  id = wallet.id
+  type = wallet.type
+  name = wallet.name
+
+  newWallet = {
+    id,
+    type,
+    name
+  }
+
+  return newWallet
+}
+
+export const walletsUI = combineReducers({
+  byId: byId,
   walletList: walletList,
   walletListOrder: walletListOrder,
-  selectedWallet: selectedWallet
+  selectedWalletId: selectedWalletId
 })
