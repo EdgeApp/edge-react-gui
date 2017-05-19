@@ -9,7 +9,7 @@ class Directory extends Component {
   render () {
     return (
       <Content>
-        <TouchableOpacity onPress={ e => this.props.dispatch(openTransactionAlert('Fucking message', 1234)) }>
+        <TouchableOpacity onPress={ e => this.props.dispatch(openTransactionAlert('Changed of message', 1234)) }>
         <Text style={{ color: 'black', fontSize: 50 }}>
           Directory Page
         </Text>

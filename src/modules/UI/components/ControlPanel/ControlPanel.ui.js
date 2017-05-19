@@ -3,6 +3,7 @@ import { View, TouchableOpacity } from 'react-native'
 import { Text, Icon } from 'native-base'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+import LinearGradient from 'react-native-linear-gradient'
 import _ from 'lodash'
 
 import { openSelectUser, closeSelectUser, getUsersList } from './action'
@@ -30,10 +31,10 @@ class ControlPanel extends Component {
 
   render () {
     return  (
-        <View style={styles.container}>
+      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#2B5698","#3B7ADA"]} style={styles.container}>
           <View style={styles.bitcoin.container}>
-            <Icon name='logo-bitcoin' style={{ color: '#F8F8F8' }}/>
-            <Text style={styles.bitcoin.value}>  = 10000 USD</Text>
+            <Icon name='logo-bitcoin' style={{ color: '#F8F8F8', paddingRight: 25, fontSize: 25 }}/>
+            <Text style={styles.bitcoin.value}>1000 b = $1.129 USD</Text>
           </View>
           <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
             <Icon style={styles.user.icon} name='person' />
@@ -41,7 +42,7 @@ class ControlPanel extends Component {
             <Icon style={styles.user.icon} name='arrow-dropdown' />
           </TouchableOpacity>
           <Main/>
-        </View>
+      </LinearGradient>
     )
   }
 }

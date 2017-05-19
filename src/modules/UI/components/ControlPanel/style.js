@@ -4,28 +4,27 @@ export default {
   container: {
     flex: 1,
     alignItems: 'stretch',
-    backgroundColor: '#FFF'
   },
 
   bitcoin: {
     container:{
-      backgroundColor: '#3A73C8',
-      height: variables.toolbarHeight,
+      backgroundColor: '#7FC343',
+      height: 36,
       flexDirection: 'row',
       alignItems: 'center',
-      paddingHorizontal: 20
+      paddingHorizontal: 25
     },
 
     value: {
       flex: 1,
-      fontSize: 17,
+      fontSize: 15,
       color: '#FFF',
     }
   },
 
   user: {
     container: {
-      backgroundColor: variables.tabBgColor,
+      backgroundColor: '#2B5698',
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: 12
@@ -33,11 +32,13 @@ export default {
 
     icon: {
       fontSize: 35,
+      color: '#FFF',
       marginHorizontal: 15
     },
 
     name:{
       flex: 1,
+      color: '#FFF',
       fontSize: 15
     }
 
