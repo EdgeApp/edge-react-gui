@@ -210,30 +210,33 @@ class WalletList extends Component {
         <View style={[styles.modalContainer, this.border('yellow')]}>
 
           <View style={[styles.modalOverlay]}>
-            <View style={[styles.modalBox]}>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']} style={{position: 'relative', bottom: 50, left: 100, borderRadius: 27, backgroundColor: 'white', zIndex: 1001, height: 54, width: 54}}>
-                <View style={{position: 'relative', top: 3, left: 3, borderRadius: 27, backgroundColor: 'white', zIndex: 1002, height: 48, width: 48}}>
-                  <MAIcon name="edit" size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent'}]} />      
-                </View>
-              </LinearGradient>
-
-              <View style={[styles.modalTopTextWrap]}>
-                <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
+            <View style={[styles.modalBox, this.border('purple')]}>
+              <View>
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.modalHeaderIconWrapBottom]} colors={['#3B7ADA', '#2B5698']}>
+                  <View style={styles.modalHeaderIconWrapTop}>
+                    <MAIcon name="edit" size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent'}]} />      
+                  </View>
+                </LinearGradient>
               </View>
-              <View style={[styles.modalMiddle]}>
-                <View style={[styles.nameInputWrap]}>
-                  <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+              <View style={[styles.modalBody, this.border('yellow')]}>
+                <View style={[styles.modalTopTextWrap, this.border('red')]}>
+                  <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
                 </View>
-              </View>
-              <View style={[styles.modalBottom]}>
-                <View style={[styles.emptyBottom]} />
-                <View style={[styles.buttonsWrap]}>
-                  <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                    <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
-                  </TouchableHighlight>
-                  <TouchableHighlight onPress={this._onRenameModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                    <FormattedText style={styles.doneButton}>DONE</FormattedText>
-                  </TouchableHighlight>
+                <View style={[styles.modalMiddle]}>
+                  <View style={[styles.nameInputWrap]}>
+                    <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+                  </View>
+                </View>
+                <View style={[styles.modalBottom]}>
+                  <View style={[styles.emptyBottom]} />
+                  <View style={[styles.buttonsWrap]}>
+                    <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
+                      <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={this._onRenameModalDone.bind(this)} style={[styles.doneButtonWrap]}>
+                      <FormattedText style={styles.doneButton}>DONE</FormattedText>
+                    </TouchableHighlight>
+                  </View>
                 </View>
               </View>
             </View>

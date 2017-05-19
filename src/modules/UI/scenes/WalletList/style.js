@@ -1,5 +1,12 @@
 import React, {StyleSheet, Dimensions} from 'react-native';
 
+const screenDimensions = {
+  height: Dimensions.get('window').height,
+  width: Dimensions.get('window').width
+}
+
+console.log('screenDimensions is: ', screenDimensions)
+
 module.exports = StyleSheet.create({
     container: {
       flex: 1,
@@ -172,25 +179,50 @@ module.exports = StyleSheet.create({
     padding: 10
   },
   modalBox: {
-    top: Dimensions.get('window').height /5,
-    width: Dimensions.get('window').width * 3 / 4,
+    top: screenDimensions.height / 5,
+    width: screenDimensions.width * 3 / 4,
     borderRadius: 3,
     alignItems: 'stretch',
-    height: (Dimensions.get('window').height) / 4,
+    height: (screenDimensions.height) / 4,
     backgroundColor: 'white',
     padding: 15,
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
+  modalHeaderIconWrapBottom: {
+    position: 'relative', 
+    bottom: 50, 
+    left: 100, 
+    borderRadius: 27,
+    backgroundColor: 'white', 
+    zIndex: 1001, 
+    height: 54, 
+    width: 54    
+  },
+  modalHeaderIconWrapTop: {
+    position: 'relative', 
+    top: 3, 
+    left: 3, 
+    borderRadius: 27, 
+    backgroundColor: 'white', 
+    zIndex: 1002, 
+    height: 48, 
+    width: 48
+  },
 
   // beginning of rename wallet modal
+  modalBody: {
+    position: 'relative',
+    bottom: 48,
+    height: ((screenDimensions.height) / 4) - 30,
+  },
   modalTopTextWrap: {
     flex: 1
   },
   modalTopText: {
     textAlign: 'center',
-    color: '#3c76cd',
-    fontWeight: '500'
+    color: '#2A5799',
+    fontSize: 16
   },
   modalMiddle: {
     flex: 1,
