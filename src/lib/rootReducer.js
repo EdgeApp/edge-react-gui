@@ -14,7 +14,7 @@ import transactionAlert from '../modules/UI/components/TransactionAlert/reducer.
 
 import { airbitz, account } from '../modules/Login/reducer.js'
 
-import { walletsOld } from '../modules/UI/Wallets/reducer.js'
+import { walletsUI } from '../modules/UI/Wallets/reducer.js'
 import { wallets } from '../modules/Wallets/reducer.js'
 import { transactions } from '../modules/Transactions/reducer.js'
 import { helpModal } from '../modules/UI/components/HelpModal/reducer.js'
@@ -37,7 +37,7 @@ const store = combineReducers({
     controlPanel,
     walletList,
     walletTransferList: walletTransferListReducer,
-    wallets: walletsOld,
+    wallets: walletsUI,
     sideMenu,
     addWallet,
     main: container
