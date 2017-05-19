@@ -5,6 +5,7 @@ import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -206,10 +207,16 @@ class WalletList extends Component {
 
     return (
       <Modal isVisible={this.props.renameWalletVisible}>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, this.border('yellow')]}>
 
           <View style={[styles.modalOverlay]}>
             <View style={[styles.modalBox]}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']} style={{position: 'relative', bottom: 50, left: 100, borderRadius: 27, backgroundColor: 'white', zIndex: 1001, height: 54, width: 54}}>
+                <View style={{position: 'relative', top: 3, left: 3, borderRadius: 27, backgroundColor: 'white', zIndex: 1002, height: 48, width: 48}}>
+                  <MAIcon name="edit" size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent'}]} />      
+                </View>
+              </LinearGradient>
+
               <View style={[styles.modalTopTextWrap]}>
                 <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
               </View>
@@ -239,7 +246,7 @@ class WalletList extends Component {
   border (color) {
     return {
       borderColor: color,
-      borderWidth: 0
+      borderWidth: 1
     }
   }
 }
