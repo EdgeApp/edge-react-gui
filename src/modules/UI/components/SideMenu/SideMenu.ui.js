@@ -14,13 +14,22 @@ class SideMenuComponent extends Component {
         type="overlay"
         open={this.props.view}
         content={<ControlPanel />}
-        openDrawerOffset={(viewport) => viewport.width * .25}
+        openDrawerOffset={(viewport) => viewport.width * .30}
         tapToClose={true}
         panOpenMask={0.1}
         side="right"
         onOpen={() => this.props.dispatch(openSidebar())}
         onClose={() => this.props.dispatch(closeSidebar())}
         elevation={2}
+        tweenHandler={ratio => ({
+          main: {
+            opacity: 1,
+          },
+          mainOverlay: {
+            opacity: ratio / 2,
+            backgroundColor: 'white',
+          },
+        })}
       >
         { this.props.children }
       </Drawer>

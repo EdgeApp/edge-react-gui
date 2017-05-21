@@ -4,6 +4,7 @@ export default {
   container: {
     flex: 1,
     alignItems: 'stretch',
+    marginTop: 20,
   },
 
   bitcoin: {

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, Content, StyleProvider } from 'native-base'
@@ -69,6 +69,7 @@ class Main extends Component {
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{ flex: 1 }}>
           <Container>
+            <StatusBar backgroundColor="green" barStyle="light-content" />
             <SideMenu>
               <Header />
               <RouterWithRedux>
