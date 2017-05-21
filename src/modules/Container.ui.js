@@ -34,6 +34,8 @@ import FakeAccount from '../Fakes/FakeAccount.js'
 
 import { TxLibBTC, abcTxEngine } from 'airbitz-txlib-shitcoin'
 
+import styles from './style.js'
+
 const RouterWithRedux = connect()(Router)
 
 class Main extends Component {
@@ -68,7 +70,7 @@ class Main extends Component {
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{ flex: 1 }}>
-          <View style={{marginTop: 20, flex: 1}}>
+          <View style={styles.statusBarHack}>
           <Container>
             <StatusBar backgroundColor="green" barStyle="light-content" />
             <SideMenu>

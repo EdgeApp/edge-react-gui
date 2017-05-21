@@ -38,7 +38,7 @@ export default {
     },
 
     icon: {
-      fontSize: 28,
+      fontSize: 25,
       color: '#FFF',
       paddingHorizontal: 23
     },
@@ -64,7 +64,7 @@ export default {
       alignItems: 'center',
       paddingVertical: 10,
       borderStyle: 'solid',
-      borderColor: '#efefef',
+      borderColor:'rgba(255,255,255,0.2)',
       borderTopWidth: 0.5,
       borderBottomWidth: 0.5
     },
