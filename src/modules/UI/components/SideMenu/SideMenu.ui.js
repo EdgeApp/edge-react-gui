@@ -12,9 +12,10 @@ class SideMenuComponent extends Component {
     return (
       <Drawer
         type="overlay"
-        open={this.props.view}
+        style={drawerStyles}
         content={<ControlPanel />}
-        openDrawerOffset={(viewport) => viewport.width * .30}
+        open={this.props.view}
+        openDrawerOffset={0.30}
         tapToClose={true}
         panOpenMask={0.1}
         side="right"
@@ -27,7 +28,7 @@ class SideMenuComponent extends Component {
           },
           mainOverlay: {
             opacity: ratio / 2,
-            backgroundColor: 'white',
+            backgroundColor: '#FFF',
           },
         })}
       >
@@ -35,6 +36,15 @@ class SideMenuComponent extends Component {
       </Drawer>
     )
   }
+}
+
+const drawerStyles = {
+  drawer: {
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    shadowRadius: 3
+  },
+  main: { paddingLeft: 3 },
 }
 
 export default connect( state => ({

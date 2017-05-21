@@ -3,22 +3,27 @@ export default {
 
   container: {
     flex: 1,
-    alignItems: 'stretch',
-    marginTop: 20,
+    alignItems: 'stretch'
   },
 
   bitcoin: {
     container:{
       backgroundColor: '#7FC343',
-      height: 36,
+      height: 48,
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 25
+    },
+
+    icon: {
+      color: '#FFF',
+      paddingHorizontal: 23,
+      fontSize: 28
     },
 
     value: {
       flex: 1,
-      fontSize: 15,
+      fontSize: 17,
       color: '#FFF',
     }
   },
@@ -27,20 +32,21 @@ export default {
     container: {
       backgroundColor: '#2B5698',
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
-      paddingVertical: 12
+      height: 58,
     },
 
     icon: {
-      fontSize: 35,
+      fontSize: 28,
       color: '#FFF',
-      marginHorizontal: 15
+      paddingHorizontal: 23
     },
 
     name:{
       flex: 1,
       color: '#FFF',
-      fontSize: 15
+      fontSize: 17
     }
 
   },
@@ -54,6 +60,7 @@ export default {
 
     link: {
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
       borderStyle: 'solid',
@@ -66,13 +73,26 @@ export default {
     icon: {
       flex:1,
       fontSize: 35,
-      marginHorizontal: 15
+      paddingHorizontal: 23,
+      backgroundColor: 'transparent',
+      color: '#FFF'
+    },
+
+    textContainer: {
+      flex: 8,
+      backgroundColor: 'transparent',
     },
 
     text: {
-      flex: 8,
+      fontSize: 15,
+      color: '#FFF'
+    },
+
+    textItalic: {
+      marginTop: 3,
+      fontStyle: 'italic',
       fontSize: 13,
-      color: "#000"
+      color: '#FFF'
     }
 
   },

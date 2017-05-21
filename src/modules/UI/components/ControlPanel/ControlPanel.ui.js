@@ -33,7 +33,7 @@ class ControlPanel extends Component {
     return  (
       <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#2B5698","#3B7ADA"]} style={styles.container}>
           <View style={styles.bitcoin.container}>
-            <Icon name='logo-bitcoin' style={{ color: '#F8F8F8', paddingRight: 25, fontSize: 25 }}/>
+            <Icon name='logo-bitcoin' style={styles.bitcoin.icon}/>
             <Text style={styles.bitcoin.value}>1000 b = $1.129 USD</Text>
           </View>
           <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>

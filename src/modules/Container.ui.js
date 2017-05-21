@@ -68,6 +68,7 @@ class Main extends Component {
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{ flex: 1 }}>
+          <View style={{marginTop: 20, flex: 1}}>
           <Container>
             <StatusBar backgroundColor="green" barStyle="light-content" />
             <SideMenu>
@@ -96,6 +97,7 @@ class Main extends Component {
             </SideMenu>
             <TabBar />
           </Container>
+        </View>
         </MenuContext>
       </StyleProvider>
     )
