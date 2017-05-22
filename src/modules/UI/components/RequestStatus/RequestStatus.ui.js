@@ -20,7 +20,12 @@ const styles = {
   }
 }
 
-const RequestStatus = ({request}) => {
+const RequestStatus = (props) => {
+  const amountRequestedInCrypto = props.amountSatoshi
+  const amountReceivedInCrypto = props.amountSatoshi
+  const amountRequestedInFiat = props.amountFiat
+  const { publicAddress } = props
+
   hasReceivedPartialPayment = () => {
     const hasReceivedPartialPayment =
       (hasReceivedPayment() && !isPaymentSufficient())
@@ -29,21 +34,21 @@ const RequestStatus = ({request}) => {
   }
 
   hasReceivedPayment = () => {
-    const hasReceivedPayment = !!request.amountReceivedInCrypto
+    const hasReceivedPayment = !!amountReceivedInCrypto
 
     return hasReceivedPayment
   }
 
   isPaymentSufficient = () => {
     const isPaymentSufficient =
-      request.amountReceivedInCrypto >= request.amountRequestedInCrypto
+      amountReceivedInCrypto >= amountRequestedInCrypto
 
     return isPaymentSufficient
   }
 
   getOutstandingDebtInCrypto = () => {
     const outstandingDebtInCrypto =
-      (request.amountRequestedInCrypto - request.amountReceivedInCrypto)
+      (amountRequestedInCrypto - amountReceivedInCrypto)
 
     return outstandingDebtInCrypto
   }
@@ -56,14 +61,14 @@ const RequestStatus = ({request}) => {
         </Text>
 
         <Text style={styles.text}>
-          {request.receiveAddress}
+          {publicAddress}
         </Text>
       </View>
 
     const partialPaymentReceived =
       <View style={styles.view}>
         <Text style={styles.text}>
-          {request.amountReceivedInCrypto} received
+          {amountReceivedInCrypto} received
         </Text>
 
         <Text style={styles.text}>
@@ -71,7 +76,7 @@ const RequestStatus = ({request}) => {
         </Text>
 
         <Text style={styles.text}>
-          {request.receiveAddress}
+          {publicAddress}
         </Text>
       </View>
 

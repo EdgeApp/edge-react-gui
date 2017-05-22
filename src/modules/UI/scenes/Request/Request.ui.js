@@ -20,12 +20,14 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput, dev } from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
-import { Actions } from 'react-native-router-flux'
 
 import {
   addReceiveAddress,
+  updateReceiveAddress,
   updateAmountRequestedInCrypto,
+  updateAmountRequestedInFiat,
   updateAmountReceivedInCrypto,
+  saveReceiveAddress
 } from './action.js'
 
 class Request extends Component {
@@ -33,41 +35,26 @@ class Request extends Component {
     super(props)
 
     this.state = {
-      request: props.request,
-      amountRequestedInFiat: 0,
       fiatPerCrypto: '1077.75',
-      inputCurrencySelected: 'crypto',
-      result: ''
-    }
-  }
-
-  componentWillMount () {
-    const { request } = this.props
-
-    if (request.amountRequestedInCrypto != 0 && request.amountReceivedInCrypto >= request.amountRequestedInCrypto) {
-      alert("Asd")
-      Actions.directory()
+      inputCurrencySelected: 'crypto'
     }
   }
 
   componentDidMount () {
-    if (!this.props.request.receiveAddress && this.props.selectedWallet) {
-      const receiveAddress = this.props.selectedWallet.getReceiveAddress().address
-      this.props.dispatch(addReceiveAddress(receiveAddress))
-    }
-
-    setTimeout(() => {
-      this.props.dispatch(updateAmountReceivedInCrypto(Math.random() * 5))}, 3000)
+    this.props.dispatch(updateReceiveAddress())
   }
 
   render () {
-    const { request } = this.props
+    const { request = {} } = this.props
+    const { receiveAddress = {} } = request
+    const { publicAddress = '', amountSatoshi = null, metadata = {} } = receiveAddress
+    const { amountFiat = null } = metadata
 
     return (
       <LinearGradient
         style={styles.view}
-        start={{x:0,y:0}} end={{x:1, y:0}}
-        colors={["#3b7adb","#2b569a"]}>
+        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+        colors={['#3b7adb', '#2b569a']}>
 
         <View style={styles.exchangeRateContainer}>
           <ExchangeRate
@@ -78,20 +65,20 @@ class Request extends Component {
           <FlipInput
             onCryptoInputChange={this.onCryptoInputChange}
             onFiatInputChange={this.onFiatInputChange}
-            amountRequestedInCrypto={request.amountRequestedInCrypto}
-            amountRequestedInFiat={this.state.amountRequestedInFiat}
+            amountRequestedInCrypto={amountSatoshi}
+            amountRequestedInFiat={amountFiat}
             inputCurrencySelected={this.state.inputCurrencySelected} />
         </View>
 
         <View style={styles.abQRCodeContainer}>
-          <ABQRCode qrCodeText={this.getQrCodeText()} />
+          <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
         </View>
 
         <View style={styles.requestStatusContainer}>
           <RequestStatus
-            requestAddress={request.requestAddress}
-            amountRequestedInCrypto={request.amountRequestedInCrypto}
-            amountReceivedInCrypto={request.amountReceivedInCrypto} />
+            requestAddress={publicAddress}
+            amountRequestedInCrypto={amountSatoshi}
+            amountReceivedInCrypto={amountFiat} />
         </View>
 
         <View style={styles.shareButtonsContainer}>
@@ -100,7 +87,7 @@ class Request extends Component {
             shareViaEmail={this.shareViaEmail}
             shareViaSMS={this.shareViaSMS}
             shareViaShare={this.shareViaShare}
-            copyToClipboard={this.copyToClipboard} />
+            copyToClipboard={() => this.copyToClipboard(publicAddress, amountSatoshi)} />
         </View>
 
       </LinearGradient>
@@ -110,13 +97,10 @@ class Request extends Component {
   onCryptoInputChange = (amountRequestedInCrypto) => {
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
+    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
 
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
-
-    this.setState({
-      amountRequestedInFiat:
-        getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
-    })
+    this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
 
   onFiatInputChange = (amountRequestedInFiat) => {
@@ -125,15 +109,12 @@ class Request extends Component {
 
     const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto)
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
-
-    this.setState({
-      amountRequestedInFiat: amountRequestedInFiat
-    })
+    this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
 
-  copyToClipboard = () => {
+  copyToClipboard = (publicAddress, amountSatoshi) => {
     Clipboard.setString(
-      this.getRequestInfoForClipboard()
+      this.getRequestInfoForClipboard(publicAddress, amountSatoshi)
     )
 
     if (Platform.OS === 'android') {
@@ -143,26 +124,26 @@ class Request extends Component {
     }
   }
 
-  getQrCodeText = () => {
+  getQrCodeText = (publicAddress, amountSatoshi) => {
     const qrCodeText =
-      'bitcoin:' + this.props.request.receiveAddress +
-      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+      'bitcoin:' + publicAddress +
+      '?amount=' + (amountSatoshi)
 
     return qrCodeText
   }
 
-  getRequestInfoForClipboard = () => {
+  getRequestInfoForClipboard = (publicAddress, amountSatoshi) => {
     const requestInfoForClipboard =
-      'bitcoin:' + this.props.request.requestAddress +
-      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+      'bitcoin:' + publicAddress +
+      '?amount=' + (amountSatoshi)
 
     return requestInfoForClipboard
   }
 
-  getRequestInfoForShare = () => {
+  getRequestInfoForShare = (publicAddress, amountSatoshi) => {
     const requestInforForShare =
-      'bitcoin:' + this.props.request.requestAddress +
-      '?amount=' + (this.props.request.amountRequestedInCrypto - this.props.request.amountReceivedInCrypto)
+      'bitcoin:' + publicAddress +
+      '?amount=' + (amountSatoshi)
 
     return requestInforForShare
   }
@@ -171,15 +152,17 @@ class Request extends Component {
     return (typeof parseInt(input) !== 'number' || isNaN(input))
   }
 
-  showResult(result) {
+  showResult = (result) => {
     if (result.action === Share.sharedAction) {
+      this.props.dispatch(saveReceiveAddress(this.props.request.receiveAddress))
+
       if (result.activityType) {
-        this.setState({result: 'shared with an activityType: ' + result.activityType});
+        this.setState({result: 'shared with an activityType: ' + result.activityType})
       } else {
-        this.setState({result: 'shared'});
+        this.setState({result: 'shared'})
       }
     } else if (result.action === Share.dismissedAction) {
-      this.setState({result: 'dismissed'});
+      this.setState({result: 'dismissed'})
     }
   }
 
@@ -189,46 +172,45 @@ class Request extends Component {
       url: 'https://airbitz.co',
       title: 'Share Airbitz Request'
     }, {
-      dialogTitle: 'Share Airbitz Request',
+      dialogTitle: 'Share Airbitz Request'
     })
     .then(this.showResult)
-    .catch((error) => this.setState({result: 'error: ' + error.message}));
+    .catch((error) => this.setState({result: 'error: ' + error.message}))
   }
 
   shareViaEmail = () => {
     ContactsWrapper.getContact()
-        .then((contact) => {
-            this.shareMessage()
-            console.log('shareViaEmail')
-        })
-        .catch((error) => {
-            console.log("ERROR CODE: ", error.code);
-            console.log("ERROR MESSAGE: ", error.message);
-        })
+    .then((contact) => {
+      this.shareMessage()
+      console.log('shareViaEmail')
+    })
+    .catch((error) => {
+      console.log('ERROR CODE: ', error.code)
+      console.log('ERROR MESSAGE: ', error.message)
+    })
   }
 
   shareViaSMS = () => {
     ContactsWrapper.getContact()
-        .then((contact) => {
-            this.shareMessage()
-            console.log('shareViaSMS')
-        })
-        .catch((error) => {
-            console.log("ERROR CODE: ", error.code);
-            console.log("ERROR MESSAGE: ", error.message);
-        })
+    .then((contact) => {
+      this.shareMessage()
+      console.log('shareViaSMS')
+    })
+    .catch((error) => {
+      console.log('ERROR CODE: ', error.code)
+      console.log('ERROR MESSAGE: ', error.message)
+    })
   }
 
   shareViaShare = () => {
     this.shareMessage()
-    console.log("shareViaShare")
+    console.log('shareViaShare')
   }
-
 }
 
 export default connect(state => ({
 
-  request: state.request,
-  selectedWallet: state.selectedWallet
+  request: state.ui.requestUI,
+  wallets: state.ui.wallets
 
 }))(Request)
