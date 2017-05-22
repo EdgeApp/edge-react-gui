@@ -69,6 +69,12 @@ export default {
       height: 56
     },
 
+    iosTouchableHighlight: {
+      flexDirection: 'row'
+    },
+
+    iosTouchableHighlightUnderlayColor: 'rgba(255,255,255,0.1)',
+
     borderVertical: {
       borderStyle: 'solid',
       borderColor:'rgba(255,255,255,0.2)',
@@ -123,6 +129,12 @@ export default {
       paddingVertical: 10,
       height: 56
     },
+
+    iosTouchableHighlight: {
+      flexDirection: 'row'
+    },
+
+    iosTouchableHighlightUnderlayColor: 'rgba(255,255,255,0.1)',
 
     borderVertical: {
       borderStyle: 'solid',

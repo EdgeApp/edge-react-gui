@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform, View, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
+import { Platform, View, TouchableNativeFeedback, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import { Actions } from 'react-native-router-flux'
@@ -100,47 +100,59 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
-              <TouchableOpacity style={[ styles.main.link, styles.main.borderVertical ]} onPress={this._handleOnPressDirectory} >
-                <Icon style={styles.main.icon} name='repeat' />
-                <View style={styles.main.textContainer}>
-                  <Text style={styles.main.text}>Buy/Sell Digital Currency</Text>
-                  <Text style={styles.main.textItalic}>i.e Bitcoin/Ether</Text>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
+                <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
+                  <Icon style={styles.main.icon} name='repeat' />
+                  <View style={styles.main.textContainer}>
+                    <Text style={styles.main.text}>Buy/Sell Digital Currency</Text>
+                    <Text style={styles.main.textItalic}>i.e Bitcoin/Ether</Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={[ styles.main.link, styles.main.borderBottom ]} onPress={this._handleOnPressTransaction} >
-                <Icon style={styles.main.icon} name='basket' />
-                <View style={styles.main.textContainer}>
-                  <Text style={styles.main.text}>Spend Bitcoins</Text>
-                  <Text style={styles.main.textItalic}>Plugins</Text>
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressTransaction} >
+                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+                  <Icon style={styles.main.icon} name='basket' />
+                  <View style={styles.main.textContainer}>
+                    <Text style={styles.main.text}>Spend Bitcoins</Text>
+                    <Text style={styles.main.textItalic}>Plugins</Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={[ styles.main.link, styles.main.borderBottom ]} onPress={ e => console.log('pressed3') } >
-                <Icon style={styles.main.icon} name='share' />
-                <View style={styles.main.textContainer}>
-                  <Text style={styles.main.text}>Refer Your Friends</Text>
-                  <Text style={styles.main.textItalic}>Earn Money</Text>
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed3') } >
+                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+                  <Icon style={styles.main.icon} name='share' />
+                  <View style={styles.main.textContainer}>
+                    <Text style={styles.main.text}>Refer Your Friends</Text>
+                    <Text style={styles.main.textItalic}>Earn Money</Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={[ styles.main.link, styles.main.borderBottom ]} onPress={this._handleOnPressWallets}>
-                <Icon style={styles.main.icon} name='cash' />
-                <View style={styles.main.textContainer}>
-                  <Text style={styles.main.text}>Wallets</Text>
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressWallets} >
+                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+                  <Icon style={styles.main.icon} name='cash' />
+                  <View style={styles.main.textContainer}>
+                    <Text style={styles.main.text}>Wallets</Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableHighlight>
             </View>
             <View style={styles.others.container}>
-              <TouchableOpacity style={[ styles.others.link, styles.others.borderVertical ]} onPress={ e => console.log('pressed5') }>
-                <Icon style={styles.others.icon} name='log-out' />
-                <View style={styles.others.textContainer}>
-                  <Text style={styles.others.text}>Logout</Text>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed5') } >
+                <View style={[ styles.others.link, styles.others.borderVertical, { flex: 1 } ]}>
+                  <Icon style={styles.others.icon} name='log-out' />
+                  <View style={styles.others.textContainer}>
+                    <Text style={styles.others.text}>Logout</Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed6') }>
-                <Icon style={styles.others.icon} name='settings' />
-                <View style={styles.others.textContainer}>
-                  <Text style={styles.others.text}>Settings</Text>
+              </TouchableHighlight>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed6') } >
+                <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
+                  <Icon style={styles.others.icon} name='settings' />
+                  <View style={styles.others.textContainer}>
+                    <Text style={styles.others.text}>Settings</Text>
+                  </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableHighlight>
             </View>
           </View>
         )
