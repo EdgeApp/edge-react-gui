@@ -23,7 +23,6 @@ module.exports = StyleSheet.create({
       height: 200,
       width: Dimensions.get('window').width,
       zIndex: -1,
-      elevation: -1,
-      paddingTop: 40
+      elevation: -1
   }
 })

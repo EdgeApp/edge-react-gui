@@ -48,10 +48,6 @@ class Main extends Component {
     initializeAccount(this.props.dispatch)
   }
 
-  _onLayout = (event) => {
-    var {x, y, width, height} = event.nativeEvent.layout;
-    console.log('onLayout occurred', x , y , width , height)
-  }
 
   render () {
     if (this.props.loadingScreenVisible) {
@@ -75,7 +71,7 @@ class Main extends Component {
         <MenuContext style={{ flex: 1 }}>
           <Container>
             <SideMenu>
-              <Header style={{zIndex: 1000, elevation: 1000}} onLayout={this._onLayout} />
+              <Header />
               <RouterWithRedux>
                 <Scene key='root' hideNavBar>
 
