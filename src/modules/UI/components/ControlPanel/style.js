@@ -160,6 +160,11 @@ export default {
   },
 
   userList : {
+    container: {
+      backgroundColor: '#FFF',
+      flex: 1
+    },
+
     row: {
       flexDirection: 'row',
       alignItems: 'center',
