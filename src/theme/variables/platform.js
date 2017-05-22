@@ -22,7 +22,7 @@ export default {
   badgePadding: (platform === 'ios') ? 3 : 0,
 
     // Button
-  btnFontFamily: (platform === 'ios') ? 'System' : 'Roboto_medium',
+  btnFontFamily: (platform === 'ios') ? 'Source Sans Pro' : 'Roboto_medium',
   btnDisabledBg: '#b5b5b5',
   btnDisabledClr: '#f1f1f1',
 
@@ -121,7 +121,7 @@ export default {
 
 
     // Font
-  fontFamily: (platform === 'ios') ? 'System' : 'Roboto',
+  fontFamily: (platform === 'ios') ? 'Source Sans Pro' : 'Roboto',
   fontSizeBase: 15,
 
   get fontSizeH1() {

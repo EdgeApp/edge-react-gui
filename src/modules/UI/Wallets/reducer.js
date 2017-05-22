@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import * as WALLETS_ACTION from './action'
 import * as WALLET_LIST_ACTION from '../scenes/WalletList/action'
+import { FakeTxPrivate } from '../../../Fakes/FakeTxPrivate.js'
 
 export const byId = (state = {}, action) => {
   switch (action.type) {
@@ -64,14 +65,25 @@ export const walletListOrder = (state = [], action) => {
 }
 
 const schema = (wallet) => {
-  id = wallet.id
-  type = wallet.type
-  name = wallet.name
+  const id = wallet.id
+  const type = wallet.type
+  const name = wallet.name
 
-  newWallet = {
+  const info = FakeTxPrivate.getInfo
+  const {
+    currencyCode,
+    denominations,
+    symbolImage,
+    metaTokens } = info
+
+  const newWallet = {
     id,
     type,
-    name
+    name,
+    currencyCode,
+    denominations,
+    symbolImage,
+    metaTokens
   }
 
   return newWallet

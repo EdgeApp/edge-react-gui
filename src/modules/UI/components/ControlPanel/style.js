@@ -1,44 +1,55 @@
 import variables from '../../../../theme/variables/platform'
+import { Platform } from 'react-native';
+const platform = Platform.OS;
+
 export default {
 
   container: {
     flex: 1,
-    alignItems: 'stretch',
-    backgroundColor: '#FFF'
+    alignItems: 'stretch'
   },
 
   bitcoin: {
     container:{
-      backgroundColor: '#3A73C8',
-      height: variables.toolbarHeight,
+      backgroundColor: '#7FC343',
+      height: 48,
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
-      paddingHorizontal: 20
+    },
+
+    icon: {
+      color: '#FFF',
+      paddingHorizontal: 23,
+      fontSize: 26
     },
 
     value: {
       flex: 1,
-      fontSize: 17,
+      fontSize: 16,
       color: '#FFF',
     }
   },
 
   user: {
     container: {
-      backgroundColor: variables.tabBgColor,
+      backgroundColor: '#2B5698',
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
-      paddingVertical: 12
+      height: 58,
     },
 
     icon: {
-      fontSize: 35,
-      marginHorizontal: 15
+      fontSize: 25,
+      color: '#FFF',
+      paddingHorizontal: 23
     },
 
     name:{
       flex: 1,
-      fontSize: 15
+      color: '#FFF',
+      fontSize: 16
     }
 
   },
@@ -52,25 +63,55 @@ export default {
 
     link: {
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
-      borderStyle: 'solid',
-      borderColor: '#efefef',
-      borderTopWidth: 0.5,
-      borderBottomWidth: 0.5
+      height: 56
     },
 
+    iosTouchableHighlight: {
+      flexDirection: 'row'
+    },
+
+    iosTouchableHighlightUnderlayColor: 'rgba(255,255,255,0.1)',
+
+    borderVertical: {
+      borderStyle: 'solid',
+      borderColor:'rgba(255,255,255,0.2)',
+      borderTopWidth: 1,
+      borderBottomWidth: 1
+    },
+
+    borderBottom: {
+      borderStyle: 'solid',
+      borderColor:'rgba(255,255,255,0.2)',
+      borderBottomWidth: 1
+    },
 
     icon: {
       flex:1,
-      fontSize: 35,
-      marginHorizontal: 15
+
+      fontSize: (platform !== 'ios') ? 26 : 32,
+      paddingHorizontal: 23,
+      backgroundColor: 'transparent',
+      color: '#FFF'
+    },
+
+    textContainer: {
+      flex: 8,
+      backgroundColor: 'transparent',
     },
 
     text: {
-      flex: 8,
+      fontSize: 15,
+      color: '#FFF'
+    },
+
+    textItalic: {
+      marginTop: 3,
+      fontStyle: 'italic',
       fontSize: 13,
-      color: "#000"
+      color: '#FFF'
     }
 
   },
@@ -83,31 +124,65 @@ export default {
 
     link: {
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
+      height: 56
+    },
+
+    iosTouchableHighlight: {
+      flexDirection: 'row'
+    },
+
+    iosTouchableHighlightUnderlayColor: 'rgba(255,255,255,0.1)',
+
+    borderVertical: {
       borderStyle: 'solid',
-      borderColor: '#efefef',
-      borderTopWidth: 0.5,
-      borderBottomWidth: 0.5
+      borderColor:'rgba(255,255,255,0.2)',
+      borderTopWidth: 1,
+      borderBottomWidth: 1
+    },
+
+    borderBottom: {
+      borderStyle: 'solid',
+      borderColor:'rgba(255,255,255,0.2)',
+      borderBottomWidth: 1
     },
 
     icon: {
-      fontSize: 35,
-      paddingHorizontal: 15
+      flex:1,
+      fontSize: (platform !== 'ios') ? 26 : 32,
+      paddingHorizontal: 23,
+      backgroundColor: 'transparent',
+      color: '#FFF'
     },
 
-    icon_settings: {
-      paddingHorizontal: 15
+    textContainer: {
+      flex: 8,
+      backgroundColor: 'transparent',
     },
 
     text: {
-      flex: 1,
-      fontSize: 14
+      fontSize: 15,
+      color: '#FFF'
+    },
+
+    textItalic: {
+      marginTop: 3,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: '#FFF'
     }
+
 
   },
 
   userList : {
+    container: {
+      backgroundColor: '#FFF',
+      flex: 1
+    },
+
     row: {
       flexDirection: 'row',
       alignItems: 'center',

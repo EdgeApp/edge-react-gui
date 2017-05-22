@@ -54,7 +54,7 @@ class UserListComponent extends Component {
     }
 
     return(
-      <ScrollView>
+      <ScrollView style={styles.userList.container}>
         {rows()}
       </ScrollView>
     )
