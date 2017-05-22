@@ -1,18 +1,22 @@
 import * as ACTION from './action'
 
 export const airbitz = (state = {}, action) => {
-  switch (action.type) {
+  const { type, data = {} } = action
+  const { airbitz } = data
+  switch (type) {
     case ACTION.ADD_AIRBITZ_TO_REDUX :
-      return action.airbitz
+      return airbitz
     default:
       return state
   }
 }
 
 export const account = (state = {}, action) => {
-  switch (action.type) {
+  const { type, data = {} } = action
+  const { account = {} } = data
+  switch (type) {
     case ACTION.ADD_ACCOUNT_TO_REDUX :
-      return action.account
+      return account
     default:
       return state
   }

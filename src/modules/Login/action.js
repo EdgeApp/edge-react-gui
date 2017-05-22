@@ -14,23 +14,21 @@ import { makeCurrencyWallet } from 'airbitz-core-js'
 export const addAirbitzToRedux = airbitz => {
   return {
     type: ADD_AIRBITZ_TO_REDUX,
-    airbitz
+    data: { airbitz }
   }
 }
 
 export const setAccountLoadingStatus = (status) => {
   return {
     type: SET_ACCOUNT_LOADING_STATUS,
-    data: {
-      status
-    }
+    data: { status }
   }
 }
 
 export const addAccountToRedux = account => {
   return {
     type: ADD_ACCOUNT_TO_REDUX,
-    account
+    data: { account }
   }
 }
 
