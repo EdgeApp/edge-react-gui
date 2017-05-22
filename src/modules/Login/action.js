@@ -8,29 +8,27 @@ export const ACTIVATE_WALLET_ID = 'ACTIVATE_WALLET'
 export const ARCHIVE_WALLET = 'ARCHIVE_WALLET'
 export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET'
 
-import shitcoinPlugin from 'airbitz-txlib-shitcoin'
+import { makeShitcoinPlugin } from 'airbitz-txlib-shitcoin'
 import { makeCurrencyWallet } from 'airbitz-core-js'
 
 export const addAirbitzToRedux = airbitz => {
   return {
     type: ADD_AIRBITZ_TO_REDUX,
-    airbitz
+    data: { airbitz }
   }
 }
 
 export const setAccountLoadingStatus = (status) => {
   return {
     type: SET_ACCOUNT_LOADING_STATUS,
-    data: {
-      status
-    }
+    data: { status }
   }
 }
 
 export const addAccountToRedux = account => {
   return {
     type: ADD_ACCOUNT_TO_REDUX,
-    account
+    data: { account }
   }
 }
 
@@ -38,7 +36,9 @@ export const addWalletByKey = key => {
   return (dispatch, getState) => {
     const { id, type, archived } = key
     const account = getState().account
-    const plugin = shitcoinPlugin
+    const plugin = makeShitcoinPlugin({
+      io: getState().account.io
+    })
     const callbacks = makeCallbacks(dispatch, id)
     const opts = {
       account,

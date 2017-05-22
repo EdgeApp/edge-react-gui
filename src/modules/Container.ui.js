@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, StatusBar } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, Content, StyleProvider } from 'native-base'
-import Menu, { MenuContext } from 'react-native-menu';
+import Menu, { MenuContext } from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import SideMenu from './UI/components/SideMenu/SideMenu.ui'
@@ -22,7 +22,6 @@ import { makeContext } from 'airbitz-core-js'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/action.js'
 
-
 import { initializeAccount } from './middleware'
 import {enableLoadingScreenVisibility} from './action'
 
@@ -33,6 +32,8 @@ import AddWallet from './UI/scenes/AddWallet/index.js'
 import FakeAccount from '../Fakes/FakeAccount.js'
 
 import { TxLibBTC, abcTxEngine } from 'airbitz-txlib-shitcoin'
+
+import styles from './style.js'
 
 const RouterWithRedux = connect()(Router)
 
@@ -68,7 +69,9 @@ class Main extends Component {
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{ flex: 1 }}>
+          <View style={styles.statusBarHack}>
           <Container>
+            <StatusBar backgroundColor="green" barStyle="light-content" />
             <SideMenu>
               <Header />
               <RouterWithRedux>
@@ -82,7 +85,7 @@ class Main extends Component {
 
                   <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} />
 
-                  <Scene key='request' component={Request} title='Request' duration={0} />
+                  <Scene key='request' component={Request} title='Request' duration={0} initial />
 
                   <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
 
@@ -90,11 +93,12 @@ class Main extends Component {
 
                 </Scene>
               </RouterWithRedux>
-              <HelpModal/>
-              <TransactionAlert/>
+              <HelpModal />
+              <TransactionAlert />
             </SideMenu>
             <TabBar />
           </Container>
+        </View>
         </MenuContext>
       </StyleProvider>
     )

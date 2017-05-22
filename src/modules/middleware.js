@@ -6,7 +6,6 @@ import { selectWalletById } from './UI/Wallets/action.js'
 import { addAccountToRedux, addAirbitzToRedux } from './Login/action.js'
 import { makeContext } from 'airbitz-core-js'
 import { disableLoadingScreenVisibility } from './action'
-import { updatingBalance } from './Transactions/action'
 import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 
 export const initializeAccount = (dispatch) => {
