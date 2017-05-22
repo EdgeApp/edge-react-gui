@@ -4,16 +4,29 @@ import { Icon, Title } from 'native-base';
 import { Actions } from 'react-native-router-flux'
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu';
 
+import { 
+  toggleWalletListModalVisibility, 
+  enableWalletListModalVisibility, 
+  disableWalletListModalVisibility
+} from '../../WalletListModal/action'
+import WalletListModal from '../../WalletListModal/WalletListModal.ui'
+import { connect } from 'react-redux'
+import ExampleToWallet from './ExampleToWallet.ui'
+
 export default class Body extends Component {
+  constructor(props) {
+    super(props)
+  }
 
   render () {
+    console.log('in Body and HeaderHeight is: ', this.props.headerHeight)
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
         return <ExampleMyWallet />
       case 'request':
         return <ExampleMyWallet />
       case 'transactions':
-        return <ExampleToWallet />
+        return <ExampleToWallet headerHeight={this.props.headerHeight} />
       default:
         return <DefaultHeader routes={this.props.routes} />
     }
@@ -64,7 +77,7 @@ class ExampleMyWallet extends Component {
 
 }
 
-class ExampleToWallet extends Component {
+/*class ExampleToWallet extends Component {
 
   render () {
     return (
@@ -94,3 +107,4 @@ class ExampleToWallet extends Component {
   }
 
 }
+*/

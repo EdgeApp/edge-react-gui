@@ -55,6 +55,7 @@ class WalletList extends Component {
     let walletIterator = 0
     let archiveIterator = 0
     for (var idx in this.props.walletList) {
+      console.log('iterating over wallets, current wallet is: ', this.props.walletList[idx])      
       if (this.props.walletList[idx].archived === true) {
         archiveOrder.push(archiveIterator)
         archiveListArray.push(this.props.walletList[idx])
@@ -250,7 +251,7 @@ WalletList.propTypes = {
 
 export default connect(state => ({
 
-  walletList: state.ui.wallets.wallets,
+  walletList: state.ui.wallets.byId,
   archiveList: state.ui.walletList.archiveList,
   archiveVisible: state.ui.walletList.archiveVisible,
   renameWalletVisible: state.ui.walletList.renameWalletVisible,

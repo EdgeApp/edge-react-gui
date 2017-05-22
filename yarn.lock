@@ -4876,6 +4876,10 @@ react-native-tcp@^3.2.1:
     process "^0.11.9"
     util "^0.10.3"
 
+react-native-text@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/react-native-text/-/react-native-text-0.0.4.tgz#9875215509b53bd7818a41b9aa17ccbf886668ba"
+
 react-native-udp@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-udp/-/react-native-udp-2.0.0.tgz#555ef4302b46a0e853a12e3b8764203bb7b9fd58"
