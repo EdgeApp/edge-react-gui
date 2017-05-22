@@ -1,4 +1,7 @@
 import variables from '../../../../theme/variables/platform'
+import { Platform } from 'react-native';
+const platform = Platform.OS;
+
 export default {
 
   container: {
@@ -18,12 +21,12 @@ export default {
     icon: {
       color: '#FFF',
       paddingHorizontal: 23,
-      fontSize: 28
+      fontSize: 26
     },
 
     value: {
       flex: 1,
-      fontSize: 17,
+      fontSize: 16,
       color: '#FFF',
     }
   },
@@ -46,7 +49,7 @@ export default {
     name:{
       flex: 1,
       color: '#FFF',
-      fontSize: 17
+      fontSize: 16
     }
 
   },
@@ -63,6 +66,7 @@ export default {
       justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
+      height: 56
     },
 
     borderVertical: {
@@ -80,7 +84,8 @@ export default {
 
     icon: {
       flex:1,
-      fontSize: 35,
+
+      fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
       backgroundColor: 'transparent',
       color: '#FFF'
@@ -116,6 +121,7 @@ export default {
       justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
+      height: 56
     },
 
     borderVertical: {
@@ -133,7 +139,7 @@ export default {
 
     icon: {
       flex:1,
-      fontSize: 35,
+      fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
       backgroundColor: 'transparent',
       color: '#FFF'
