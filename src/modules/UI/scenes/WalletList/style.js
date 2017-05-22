@@ -1,15 +1,13 @@
-import React from 'react-native'
-import {StyleSheet, Dimensions} from 'react-native';
+import React, {StyleSheet, Dimensions} from 'react-native';
 
 module.exports = StyleSheet.create({
-
-  container: {
+    container: {
       flex: 1,
       alignItems: 'stretch',
-  },
-    totalBalanceBox: {
-      flex: 4,
-      justifyContent: "center"
+    },
+    totalBalanceBox: {//one
+      flex: 3,
+      justifyContent: "center",
     },
 
   totalBalanceWrap: {
@@ -18,23 +16,24 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   totalBalanceHeader: {
-    flex: 1,
+    flex: 2,
     justifyContent: 'flex-end',
     backgroundColor: 'transparent'
   },
   totalBalanceText: {
-    fontSize: 24,
-    color: 'white'
+    fontSize: 18,
+    color: '#2A5799'
   },
   currentBalanceBoxDollarsWrap: {
-    flex: 2,
-    justifyContent: 'center',
+    flex: 3,
+    justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'transparent'
   },
   currentBalanceBoxDollars: {
-    color: "#FFFFFF",
-    fontSize: 36
+    color: "#2A5799",
+    fontSize: 44,
+    fontFamily: 'SourceSansPro-Light'
   },
   currentBalanceBoxBits: {
     color: "#FFFFFF",
@@ -42,48 +41,65 @@ module.exports = StyleSheet.create({
     flex: 1
   },
 
-
-
     //bottom major portion of screen
-    walletsBox: {
-      flex:8
+    walletsBox: { //one
+      flex:9
     },
     walletsBoxHeaderWrap: {
       padding: 12,
-      backgroundColor: '#C8C8C8',
-      borderBottomWidth: 1,
-      borderColor: '#BBB',
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      height: 50
     },
     walletsBoxHeaderTextWrap: {
-
+      
+    },
+    leftArea: {
+      flexDirection: 'row'
+    },
+    walletIcon: {
+      backgroundColor: 'transparent',
+      fontSize: 22
     },
     walletsBoxHeaderText: {
-      fontWeight: 'bold',
-      fontSize: 18
+      fontSize: 18,
+      color: 'white',
+      backgroundColor: 'transparent',
+      marginLeft: 16
     },
     walletsBoxHeaderAddWallet: {
-  
+      flexDirection: 'row'
     },
-
+    dropdownIcon: {
+      textAlignVertical: 'center',
+      alignSelf: 'center',
+      height: 24,
+      fontSize: 24,
+      backgroundColor: 'transparent'
+    },
     archiveBoxHeaderWrap: {
       padding: 12,
-      backgroundColor: '#C8C8C8',
       borderBottomWidth: 1,
       borderColor: '#BBB',
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      height: 50
     },
     archiveBoxHeaderTextWrap: {
 
     },
+    archiveIcon: {
+      backgroundColor: 'transparent',
+      fontSize: 28
+    },
     archiveBoxHeaderText: {
-      fontWeight: 'bold',
-      fontSize: 18
+      fontSize: 18,
+      backgroundColor: 'transparent',
+      color: 'white',
+      marginLeft: 14
     },
     archiveBoxHeaderDropdown: {
-  
+      flexDirection: 'row'
     },
 
     rowContainer: {
@@ -108,6 +124,44 @@ module.exports = StyleSheet.create({
     rowDots: {
 
     },
+    
+    //beginning of options component
+    menuOption: {
+      height: 45,
+      borderBottomColor: '#D4D4D4',
+      borderBottomWidth: 1,
+      paddingLeft: 13,
+      paddingRight: 13,
+      justifyContent: 'center'
+    },
+    menuOptionItem: {
+      flexDirection: 'row'
+    },
+    optionIcon: {
+      color: '#58595C',
+      marginRight: 10
+    },
+    optionText: {
+      color: '#58595C',
+      fontSize: 18
+    },
+    editIcon: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlignVertical: 'center'
+    },
+    trashIcon: {
+      marginRight: 13,
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlignVertical: 'center'      
+    },
+    archive: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlignVertical: 'center'   
+    },
+
   // modal styles
   modalContainer: {
     flex: 1 ,

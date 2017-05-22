@@ -1,9 +1,10 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
     padding: 20,
+    backgroundColor: "#F6F6F6"
   },
   walletNameInputView: {
     height: 50,
@@ -12,19 +13,19 @@ const styles = StyleSheet.create({
   walletNameInput: {
     flex: 1,
     padding: 5,
-    backgroundColor: 'white',
   },
   pickerView: {
     marginBottom: 15,
+    borderBottomWidth: (Platform.OS === 'ios') ?  1 : 0,
+    borderColor: '#CCCCCC'
   },
   picker: {
     height: 50,
-    backgroundColor: 'white',
     padding: 5,
+    fontFamily: 'SourceSansPro-Regular'    
   },
   listView: {
     maxHeight: 200,
-    backgroundColor: 'white',
   },
   listItem: {
     margin: 0,
@@ -40,89 +41,30 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   buttons: {
-    height: 50,
-    flexDirection: 'row',
+    marginTop: 24,
+    height: 44,
+    flexDirection: 'row'
   },
   submit: {
     flex: 1,
-    marginLeft: 5,
-    backgroundColor: 'green',
+    marginLeft: 2,
+    backgroundColor: '#4977BB',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 3    
   },
   buttonText: {
     color: 'white',
+    fontSize: 18
   },
   cancel: {
     flex: 1,
-    marginRight: 5,
-    backgroundColor: 'red',
+    marginRight: 2,
+    backgroundColor: '#909091',
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 3    
   },
 })
 
 export default styles
-
-
-// import { StyleSheet } from 'react-native'
-//
-// const styles = StyleSheet.create({
-//   view: {
-//     flex: 1,
-//     padding: 20,
-//   },
-//   scrollView: {
-//     flex: 1,
-//   },
-//   walletNameInput: {
-//     flex: 1,
-//     marginBottom: 20,
-//     zIndex: 3,
-//   },
-//   blockchainPicker: {
-//     flex: 1,
-//     marginBottom: 20,
-//     zIndex: 2,
-//   },
-//   fiatPicker: {
-//     flex: 1,
-//     marginBottom: 20,
-//     zIndex: 1,
-//   },
-//   list: {
-//     flex: 1,
-//     margin: 0,
-//     padding: 0,
-//     marginBottom: 10,
-//   },
-//   listItem: {
-//     margin: 0,
-//     padding: 5,
-//     borderColor: 'grey',
-//     borderBottomWidth: 1,
-//     fontSize: 20,
-//   },
-//   textInput: {
-//     flex: 1,
-//   },
-//   text: {
-//     color: 'white'
-//   },
-//   buttons: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     // justifyContent: 'space-around',
-//   },
-//   submit: {
-//     flex: 1
-//   },
-//   cancel: {
-//     flex: 1
-//   },
-//   spacer: {
-//     height: 100,
-//   }
-// })
-//
-// export default styles

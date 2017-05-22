@@ -80,17 +80,17 @@ class Main extends Component {
 
                   <Scene key='scan' component={Scan} title='Scan' duration={0} />
 
-                  <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
+                  <Scene key='walletList' component={WalletList} title='Wallets' duration={0} />
 
                   <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                  <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} initial />
+                  <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} />
 
                   <Scene key='request' component={Request} title='Request' duration={0} />
 
                   <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
 
-                  <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
+                  <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} initial />
 
                 </Scene>
               </RouterWithRedux>

@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import { TouchableWithoutFeedback,Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import Ionicon from 'react-native-vector-icons/Ionicons'
+import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import styles from './style'
@@ -67,26 +71,28 @@ class WalletList extends Component {
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
 
-        <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.totalBalanceBox]} colors={['#3b7adb', '#2b569a']}>
+        <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader]}>
-              <Text style={[styles.totalBalanceText]}>Total Balance</Text>
+            <View style={[styles.totalBalanceHeader, this.border('red')]}>
+              <FormattedText style={[styles.totalBalanceText]}>Total Balance</FormattedText>
             </View>
-            <View style={styles.currentBalanceBoxDollarsWrap}>
-              <Text style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</Text>
+            <View style={[styles.currentBalanceBoxDollarsWrap, this.border('green')]}>
+              <FormattedText style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</FormattedText>
             </View>
-            <Text style={[styles.currentBalanceBoxBits]}>b 6.4616</Text>
           </View>
-        </LinearGradient>
+        </View>
         <View style={styles.walletsBox}>
-          <View style={styles.walletsBoxHeaderWrap}>
-            <View style={[styles.walletsBoxHeaderTextWrap]}>
-              <Text style={styles.walletsBoxHeaderText}>Wallets</Text>
+          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
+            <View style={[styles.walletsBoxHeaderTextWrap, this.border('yellow')]}>
+              <View style={styles.leftArea}>
+                <SimpleLineIcons name='wallet' style={[styles.walletIcon, this.border('green')]} color='white' />              
+                <FormattedText style={styles.walletsBoxHeaderText}>My Wallets</FormattedText>
+              </View>
             </View>
-            <TouchableHighlight onPress={() => Actions.addWallet()} style={[styles.walletsBoxHeaderAddWallet]}>
-              <FAIcon name='plus' size={18} style={[styles.dropdownIcon]} color='#666666' />
-            </TouchableHighlight>
-          </View>
+            <TouchableWithoutFeedback onPress={() => Actions.addWallet()} style={[styles.walletsBoxHeaderAddWallet, this.border('red')]}>
+              <Ionicon name='md-add'style={[styles.dropdownIcon, this.border('green')]} color='white' />
+            </TouchableWithoutFeedback>
+          </LinearGradient>
           <SortableListView
             style={styles.sortableWalletList}
             data={walletListArray}
@@ -98,14 +104,17 @@ class WalletList extends Component {
             renderRow={row => <WalletListRow data={row} archiveLabel='Archive' />}
           />
 
-          <View style={styles.archiveBoxHeaderWrap}>
+          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.archiveBoxHeaderTextWrap]}>
-              <Text style={styles.archiveBoxHeaderText}>Archive</Text>
+              <View style={styles.leftArea}>
+                <EvilIcons name='archive' style={[styles.archiveIcon, this.border('green')]} color='white' />
+                <FormattedText style={styles.archiveBoxHeaderText}>Archive</FormattedText>
+              </View>
             </View>
-            <TouchableHighlight onPress={this.toggleArchiveDropdown.bind(this)} style={[styles.archiveBoxHeaderDropdown]}>
-              <FAIcon name='chevron-down' size={18} style={[styles.dropdownIcon]} color='#666666' />
-            </TouchableHighlight>
-          </View>
+            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown.bind(this)} style={[styles.archiveBoxHeaderDropdown, this.border('red')]}>
+              <FAIcon name='angle-down' style={[styles.dropdownIcon, this.border('green')]} color='white' />
+            </TouchableWithoutFeedback>
+          </LinearGradient>
           {this.props.archiveVisible &&
           <SortableListView
             style={styles.sortableWalletList}
@@ -144,21 +153,21 @@ class WalletList extends Component {
           <View style={[styles.modalOverlay]}>
             <View style={[styles.modalBox]}>
               <View style={[styles.modalTopTextWrap]}>
-                <Text style={styles.modalTopText}>Delete Wallet?</Text>
+                <FormattedText style={styles.modalTopText}>Delete Wallet?</FormattedText>
               </View>
               <View style={[styles.modalMiddle]}>
                 <View style={[styles.modalMiddleTextWrap]}>
-                  <Text style={styles.modalMiddleText}>Are you sure you would like to delete {currentWalletBeingDeletedName}?</Text>
+                  <FormattedText style={styles.modalMiddleText}>Are you sure you would like to delete {currentWalletBeingDeletedName}?</FormattedText>
                 </View>
               </View>
               <View style={[styles.modalBottom]}>
                 <View style={[styles.emptyBottom]} />
                 <View style={[styles.buttonsWrap]}>
                   <TouchableHighlight onPress={this._onCancelDeleteModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                    <Text style={styles.cancelButton}>CANCEL</Text>
+                    <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
                   </TouchableHighlight>
                   <TouchableHighlight onPress={this._onDeleteModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                    <Text style={styles.doneButton}>DONE</Text>
+                    <FormattedText style={styles.doneButton}>DONE</FormattedText>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -202,7 +211,7 @@ class WalletList extends Component {
           <View style={[styles.modalOverlay]}>
             <View style={[styles.modalBox]}>
               <View style={[styles.modalTopTextWrap]}>
-                <Text style={styles.modalTopText}>Rename Wallet:</Text>
+                <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
               </View>
               <View style={[styles.modalMiddle]}>
                 <View style={[styles.nameInputWrap]}>
@@ -213,10 +222,10 @@ class WalletList extends Component {
                 <View style={[styles.emptyBottom]} />
                 <View style={[styles.buttonsWrap]}>
                   <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                    <Text style={styles.cancelButton}>CANCEL</Text>
+                    <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
                   </TouchableHighlight>
                   <TouchableHighlight onPress={this._onRenameModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                    <Text style={styles.doneButton}>DONE</Text>
+                    <FormattedText style={styles.doneButton}>DONE</FormattedText>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -230,7 +239,7 @@ class WalletList extends Component {
   border (color) {
     return {
       borderColor: color,
-      borderWidth: 2
+      borderWidth: 0
     }
   }
 }

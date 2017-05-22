@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator }  from 'react-native'
+import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -163,38 +164,40 @@ class Transactions extends Component {
           <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={styles.currentBalanceBox} colors={["#3b7adb","#2b569a"]}>
 
               {this.props.updatingBalance ? (
-                <View style={[styles.currentBalanceWrap/*, this.border('orange')*/]}>     
-                  <View style={[/*this.border('red'),*/ styles.updatingBalanceWrap]}>           
+                <View style={[styles.currentBalanceWrap]}>     
+                  <View style={[ styles.updatingBalanceWrap]}>           
                     <ActivityIndicator
                       animating={this.props.updatingBalance}
-                      style={[styles.updatingBalance, {height: 40}/*, this.border('green')*/]}
+                      style={[styles.updatingBalance, {height: 40}]}
                       size="small"
                     />     
                   </View>
                 </View>           
               ) : (
-                <View style={[styles.currentBalanceWrap]}>
-                  <View style={[styles.bitcoinIconWrap]}>
-                    <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={16} />
+                <View style={[styles.currentBalanceWrap, this.border('green')]}>
+                  <View style={[styles.bitcoinIconWrap, this.border('yellow')]}>
+                    <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                   </View>
-                  <View style={styles.currentBalanceBoxDollarsWrap}>
-                    <Text style={[styles.currentBalanceBoxDollars]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</Text>
+                  <View style={[styles.currentBalanceBoxDollarsWrap, this.border('yellow')]}>
+                    <FormattedText style={[styles.currentBalanceBoxDollars, this.border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</FormattedText>
                   </View>
-                  <Text style={[styles.currentBalanceBoxBits]}>b 600000</Text>
+                  <View style={[styles.currentBalanceBoxBitsWrap, this.border('red')]}>
+                    <FormattedText style={[styles.currentBalanceBoxBits, this.border('yellow')]}>b 600000</FormattedText>
+                  </View>
               </View>  
               )}
 
-            <View style={styles.requestSendRow}>
-              <TouchableHighlight style={styles.requestBox}>
-                <View  style={styles.requestWrap}>
-                  <FAIcon name="download" style={[styles.requestIcon]}color="#ffffff" size={24} />
-                  <Text style={[styles.request]}>Request</Text>
+            <View style={[styles.requestSendRow, this.border('yellow')]}>
+              <TouchableHighlight style={[styles.requestBox, styles.button]}>
+                <View  style={[styles.requestWrap]}>
+                  <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
+                  <FormattedText style={[styles.request]}>Request</FormattedText>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={() => Actions.scan()} style={styles.sendBox}>
-                <View style={styles.sendWrap}>
-                  <FAIcon name="upload" style={styles.sendIcon} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                  <Text style={styles.send}>Send</Text>
+              <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                <View style={[styles.sendWrap]}>
+                  <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
+                  <FormattedText style={styles.send}>Send</FormattedText>
                 </View>
               </TouchableHighlight>
             </View>
@@ -280,7 +283,7 @@ class Transactions extends Component {
   border(color) {
     return {
       borderColor: color,
-      borderWidth: 1
+      borderWidth: 0
     }
   }
 }

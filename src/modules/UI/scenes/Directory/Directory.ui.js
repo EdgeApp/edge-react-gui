@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { Text, TouchableOpacity }  from 'react-native'
-import { Content }  from 'native-base'
+import { Text, TouchableOpacity } from 'react-native'
+import { Content } from 'native-base'
 import { connect } from 'react-redux'
 import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
 
@@ -17,7 +17,6 @@ class Directory extends Component {
       </Content>
     )
   }
-
 }
 
 export default connect()(Directory)
