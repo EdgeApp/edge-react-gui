@@ -20,7 +20,7 @@
   },
   "rnpm": {
     "assets": [
-      "./assets/fonts"
+      "./path to your fonts"
     ]
   },
   "dependencies": {
