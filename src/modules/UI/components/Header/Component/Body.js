@@ -11,9 +11,9 @@ import {
 } from '../../WalletListModal/action'
 import WalletListModal from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
-import ExampleToWallet from './ExampleToWallet.ui'
+//import ExampleToWallet from './ExampleToWallet.ui'
 
-export default class Body extends Component {
+class Body extends Component {
   constructor(props) {
     super(props)
   }
@@ -22,17 +22,20 @@ export default class Body extends Component {
     console.log('in Body and HeaderHeight is: ', this.props.headerHeight)
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
-        return <ExampleMyWallet />
+        return <ExampleMyWallet  walletList={this.props.walletList} /> 
       case 'request':
-        return <ExampleMyWallet />
+        return <ExampleMyWallet  walletList={this.props.walletList} />
       case 'transactions':
-        return <ExampleToWallet headerHeight={this.props.headerHeight} />
+        return <ExampleToWallet headerHeight={this.props.headerHeight} walletList={this.props.walletList} />
       default:
         return <DefaultHeader routes={this.props.routes} />
     }
   }
-
 }
+export default connect((state) => ({
+  walletList: state.ui.wallets.byId
+}))(Body)
+
 
 class DefaultHeader extends Component {
 
@@ -47,8 +50,12 @@ class DefaultHeader extends Component {
 }
 
 class ExampleMyWallet extends Component {
+  constructor(props) {
+    super(props)
+  }
 
   render () {
+    console.log('ExampleMyWallet this.props is: ', this.props)
     return (
       <Menu onSelect={(value) => alert(`User selected your ${value}`)}>
         <MenuTrigger>
@@ -58,18 +65,13 @@ class ExampleMyWallet extends Component {
           </View>
         </MenuTrigger>
         <MenuOptions>
-          <MenuOption value='My First Wallet'>
-            <Text>Wallet 1 - jsdkaj</Text>
-          </MenuOption>
-          <MenuOption value='My Second Wallet'>
-            <Text>Wallet 2 - e13j29djak</Text>
-          </MenuOption>
-          <MenuOption value='My Third Wallet'>
-            <Text>Wallet 3 - 9i349jd</Text>
-          </MenuOption>
-          <MenuOption value='My Fourth Wallet'>
-            <Text>Wallet 4 - ajdliewr</Text>
-          </MenuOption>
+          {Object.keys(this.props.walletList).map( (key) => {
+            return (
+              <MenuOption value={key.slice(0,5)} key={key}>
+                <Text>{key.slice(0,5)}</Text>
+              </MenuOption>
+            )
+          })}        
         </MenuOptions>
       </Menu>
     )
@@ -77,9 +79,13 @@ class ExampleMyWallet extends Component {
 
 }
 
-/*class ExampleToWallet extends Component {
+class ExampleToWallet extends Component {
+  constructor(props) {
+    super(props)
+  }
 
   render () {
+  console.log('in ExampleToMyWallet this.props.walletList is: ', this.props.walletList)       
     return (
       <Menu onSelect={(value) => alert(`User selected ${value} to transfer to`)}>
         <MenuTrigger>
@@ -89,22 +95,15 @@ class ExampleMyWallet extends Component {
           </View>
         </MenuTrigger>
         <MenuOptions>
-          <MenuOption value='jsdkaj'>
-            <Text>Transfer Wallet 1</Text>
-          </MenuOption>
-          <MenuOption value='asjdakl'>
-            <Text>Transfer Wallet 2</Text>
-          </MenuOption>
-          <MenuOption value='pipoipqwe'>
-            <Text>Transfer Wallet 3</Text>
-          </MenuOption>
-          <MenuOption value='lklnmmh'>
-            <Text>Transfer Wallet 4</Text>
-          </MenuOption>
+          {Object.keys(this.props.walletList).map( (key) => {
+            return (
+              <MenuOption value={key.slice(0,5)} key={key}>
+                <Text>{key.slice(0,5)}</Text>
+              </MenuOption>
+            )
+          })} 
         </MenuOptions>
       </Menu>
     )
   }
-
 }
-*/
