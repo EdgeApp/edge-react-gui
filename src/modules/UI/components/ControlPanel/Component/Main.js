@@ -85,28 +85,28 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
-              <TouchableOpacity style={styles.main.link} onPress={this._handleOnPressDirectory} >
+              <TouchableOpacity style={[ styles.main.link, styles.main.borderVertical ]} onPress={this._handleOnPressDirectory} >
                 <Icon style={styles.main.icon} name='repeat' />
                 <View style={styles.main.textContainer}>
                   <Text style={styles.main.text}>Buy/Sell Digital Currency</Text>
                   <Text style={styles.main.textItalic}>i.e Bitcoin/Ether</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.main.link} onPress={this._handleOnPressTransaction} >
+              <TouchableOpacity style={[ styles.main.link, styles.main.borderBottom ]} onPress={this._handleOnPressTransaction} >
                 <Icon style={styles.main.icon} name='basket' />
                 <View style={styles.main.textContainer}>
                   <Text style={styles.main.text}>Spend Bitcoins</Text>
                   <Text style={styles.main.textItalic}>Plugins</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.main.link} onPress={ e => console.log('pressed3') } >
+              <TouchableOpacity style={[ styles.main.link, styles.main.borderBottom ]} onPress={ e => console.log('pressed3') } >
                 <Icon style={styles.main.icon} name='share' />
                 <View style={styles.main.textContainer}>
                   <Text style={styles.main.text}>Refer Your Friends</Text>
                   <Text style={styles.main.textItalic}>Earn Money</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.main.link} onPress={this._handleOnPressWallets}>
+              <TouchableOpacity style={[ styles.main.link, styles.main.borderBottom ]} onPress={this._handleOnPressWallets}>
                 <Icon style={styles.main.icon} name='cash' />
                 <View style={styles.main.textContainer}>
                   <Text style={styles.main.text}>Wallets</Text>
@@ -114,13 +114,17 @@ class MainComponent extends Component {
               </TouchableOpacity>
             </View>
             <View style={styles.others.container}>
-              <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed5') }>
+              <TouchableOpacity style={[ styles.others.link, styles.others.borderVertical ]} onPress={ e => console.log('pressed5') }>
                 <Icon style={styles.others.icon} name='log-out' />
-                <Text style={styles.others.text}>LOGOUT</Text>
+                <View style={styles.others.textContainer}>
+                  <Text style={styles.others.text}>Logout</Text>
+                </View>
               </TouchableOpacity>
               <TouchableOpacity style={styles.others.link} onPress={ e => console.log('pressed6') }>
-                <Icon style={styles.others.icon_settings} name='settings' />
-                <Text style={styles.others.text}>SETTINGS</Text>
+                <Icon style={styles.others.icon} name='settings' />
+                <View style={styles.others.textContainer}>
+                  <Text style={styles.others.text}>Settings</Text>
+                </View>
               </TouchableOpacity>
             </View>
           </View>

@@ -63,12 +63,20 @@ export default {
       justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
-      borderStyle: 'solid',
-      borderColor:'rgba(255,255,255,0.2)',
-      borderTopWidth: 0.5,
-      borderBottomWidth: 0.5
     },
 
+    borderVertical: {
+      borderStyle: 'solid',
+      borderColor:'rgba(255,255,255,0.2)',
+      borderTopWidth: 1,
+      borderBottomWidth: 1
+    },
+
+    borderBottom: {
+      borderStyle: 'solid',
+      borderColor:'rgba(255,255,255,0.2)',
+      borderBottomWidth: 1
+    },
 
     icon: {
       flex:1,
@@ -105,27 +113,49 @@ export default {
 
     link: {
       flexDirection: 'row',
+      justifyContent: 'center',
       alignItems: 'center',
       paddingVertical: 10,
+    },
+
+    borderVertical: {
       borderStyle: 'solid',
-      borderColor: '#efefef',
-      borderTopWidth: 0.5,
-      borderBottomWidth: 0.5
+      borderColor:'rgba(255,255,255,0.2)',
+      borderTopWidth: 1,
+      borderBottomWidth: 1
+    },
+
+    borderBottom: {
+      borderStyle: 'solid',
+      borderColor:'rgba(255,255,255,0.2)',
+      borderBottomWidth: 1
     },
 
     icon: {
+      flex:1,
       fontSize: 35,
-      paddingHorizontal: 15
+      paddingHorizontal: 23,
+      backgroundColor: 'transparent',
+      color: '#FFF'
     },
 
-    icon_settings: {
-      paddingHorizontal: 15
+    textContainer: {
+      flex: 8,
+      backgroundColor: 'transparent',
     },
 
     text: {
-      flex: 1,
-      fontSize: 14
+      fontSize: 15,
+      color: '#FFF'
+    },
+
+    textItalic: {
+      marginTop: 3,
+      fontStyle: 'italic',
+      fontSize: 13,
+      color: '#FFF'
     }
+
 
   },
 
