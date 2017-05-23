@@ -9,6 +9,8 @@ const walletListModalVisible = (state = false, action) => {
       return true
     case ACTION.DISABLE_WALLET_LIST_MODAL_VISIBILITY :
       return false
+    case ACTION.REACT_NATIVE_ROUTER_FLUX_FOCUS : 
+      return false
     default :
       return state
   }

@@ -2,27 +2,37 @@ import React from 'react-native'
 import {Dimensions, StyleSheet} from 'react-native';
 
 module.exports = StyleSheet.create({
-    topLevel: {
-         zIndex: -1,
-         elevation: -1,
-         width: 100,
-         height: 100,
-         paddingTop: 50,
-         backgroundColor: 'transparent',
-         borderWidth: 1,
-         borderColor: 'yellow',
-         position: 'absolute',
-         top: 50
+    topLevel: { 
+        zIndex: 10,
+         width: Dimensions.get('window').width,
+         backgroundColor: 'white',
+         alignSelf: 'stretch'
     },
   modalRoot: {
     paddingTop: 50,
     borderWidth: 1,
     borderColor: 'red'
   },
+  headerContainer: {
+    height: 44,
+    backgroundColor: '#5c5d5f'
+  },
   modalBody: {
-      height: 200,
       width: Dimensions.get('window').width,
-      zIndex: -1,
-      elevation: -1
-  }
+      zIndex: 4,
+    },
+      rowContainer: {
+      backgroundColor: 'white',
+      height: 44,      
+      padding: 16,
+      borderBottomWidth: 1,
+      borderColor: '#EEE'
+    },
+    rowContent: {
+      justifyContent: 'space-between',
+      flexDirection: 'row' 
+    },
+    rowNameTextWrap: {
+      justifyContent: 'center'
+    },  
 })

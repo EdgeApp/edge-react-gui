@@ -12,6 +12,7 @@ import container from '../modules/reducer'
 import exchangeRate from '../modules/UI/components/ExchangeRate/reducer'
 import transactionAlert from '../modules/UI/components/TransactionAlert/reducer.js'
 import walletListModal from '../modules/UI/components/WalletListModal/reducer'
+import dimensions from '../modules/UI/dimensions/reducer'
 
 import { airbitz, account } from '../modules/Login/reducer.js'
 
@@ -42,7 +43,8 @@ const store = combineReducers({
     sideMenu,
     addWallet,
     requestUI,
-    main: container
+    main: container,
+    dimensions
 
   }),
 

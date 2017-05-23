@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
+import {WalletListModalConnect} from '../../components/WalletListModal/WalletListModal.ui'
 
 import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './action'
 import { toggleWalletListModal } from '../WalletTransferList/action'
@@ -72,10 +73,12 @@ class Scan extends Component {
           barCodeTypes={['qr']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
-        />
-        <View style={[styles.overlay]}>
+        />      
+        <View style={[styles.overlay, this.border('red')]}>
+          {this.props.walletListModalVisible && 
+            <WalletListModalConnect topDisplacement={0} />
+            }            
           {this.renderAddressModal()}
-          {this.renderWalletListModal()}
           <View style={[styles.overlayTop, this.border('yellow')]}>
             <FormattedText style={[styles.overlayTopText, this.border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
           </View>
@@ -114,7 +117,7 @@ class Scan extends Component {
   border (color) {
     return {
       borderColor: color,
-      borderWidth: 0
+      borderWidth: 1
     }
   }
 
@@ -158,16 +161,6 @@ class Scan extends Component {
       </Modal>
     )
   }
-
-  renderWalletListModal () {
-    return (
-      <Modal
-        isVisible={this.props.walletListModalVisible}>
-        <WalletTransferList />
-      </Modal>
-    )
-  }
-
 }
 
 export default connect(state => ({

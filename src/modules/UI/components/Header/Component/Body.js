@@ -11,7 +11,7 @@ import {
 } from '../../WalletListModal/action'
 import WalletListModal from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
-//import ExampleToWallet from './ExampleToWallet.ui'
+import ExampleToWallet from './ExampleToWallet.ui'
 
 class Body extends Component {
   constructor(props) {
@@ -19,14 +19,13 @@ class Body extends Component {
   }
 
   render () {
-    console.log('in Body and HeaderHeight is: ', this.props.headerHeight)
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
         return <ExampleMyWallet  walletList={this.props.walletList} /> 
       case 'request':
         return <ExampleMyWallet  walletList={this.props.walletList} />
       case 'transactions':
-        return <ExampleToWallet headerHeight={this.props.headerHeight} walletList={this.props.walletList} />
+        return <ExampleToWallet />
       default:
         return <DefaultHeader routes={this.props.routes} />
     }
@@ -55,7 +54,6 @@ class ExampleMyWallet extends Component {
   }
 
   render () {
-    console.log('ExampleMyWallet this.props is: ', this.props)
     return (
       <Menu onSelect={(value) => alert(`User selected your ${value}`)}>
         <MenuTrigger>
@@ -79,7 +77,7 @@ class ExampleMyWallet extends Component {
 
 }
 
-class ExampleToWallet extends Component {
+/*class ExampleToWallet extends Component {
   constructor(props) {
     super(props)
   }
@@ -107,3 +105,4 @@ class ExampleToWallet extends Component {
     )
   }
 }
+*/

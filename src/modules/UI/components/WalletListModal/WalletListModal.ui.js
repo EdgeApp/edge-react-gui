@@ -1,7 +1,6 @@
 import React, { Dimensions, Component } from 'react'
-import { Modal, Text, View } from 'react-native'
+import { Modal, Text, View, TouchableHighlight } from 'react-native'
 import PropTypes from 'prop-types'
-import { } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -11,44 +10,26 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import { Actions } from 'react-native-router-flux'
 import styles from './style'
 import {  } from './action'
+import * as Animatable from 'react-native-animatable'
 
 
 class WalletListModal extends Component {
-    constructor(props) {
+    constructor(props){
         super(props)
-    }
-
-    render() {
-        console.log('in WalletListModal and headerHeight is: ', this.props.headerHeight)
-        return(
-            <Modal style={styles.modalRoot} visible={this.props.dropdownWalletListVisible} transparent={true} animationType={'none'}>
-                {this.props.currentScene === 'scan' && 
-                    <WalletListModalHeader />
-                }
-                <WalletListModalBody headerHeight={this.props.headerHeight} />
-            </Modal>     
-        ) 
-
-
-    }
-
-    border (color) {
-        return {
-            borderColor: color,
-            borderWidth: 1
+        console.log('after superProps in WalletListModal, this.props is: ', this.props)
+        if(!this.props.topDisplacement){
+            this.props.topDisplacement = this.props.headerHeight + 4
         }
-    }    
-}
-
-class WalletListModalBody extends Component {
+    }
     render() {
-        console.log('in walletListModalBody and headerHeight is: ', this.props.headerHeight)
+    console.log('rendering WalletListModal and this.props is:', this.props, ' this.props.topDisplacement is:' , this.props.topDisplacement)        
         return(
-            <View style={[styles.modalBody, {backgroundColor: 'transparent'}, this.border('green'), ]}>
-                <View style={{height: 40, width: 40, backgroundColor: 'white', marginTop: this.props.headerHeight, paddingTop: this.props.headerHeight}}>
-
-                </View>
-            </View>
+                <Animatable.View animation="fadeInDown" style={[this.border('green'), styles.topLevel,{position:'absolute', top: this.props.topDisplacement}]} duration={100} >
+                {this.props.walletTransferModalVisible && 
+                    <WalletListModalHeader />
+                }                    
+                    <WalletListModalBodyConnect onPress={this.props.onPress} />
+                </Animatable.View>
         )
     }
 
@@ -57,17 +38,38 @@ class WalletListModalBody extends Component {
             borderColor: color,
             borderWidth: 1
         }
-    }     
+    }  
 }
+WalletListModal.propTypes = {
+    dropdownWalletListVisible: PropTypes.bool,
+    currentScene: PropTypes.string
+}
+export const WalletListModalConnect =  connect( state => ({
+    headerHeight: state.ui.dimensions.headerHeight,
+    walletList: state.ui.wallets.byId,
+    dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,   
+    walletTransferModalVisible: state.ui.walletTransferList.walletListModalVisible
+}))(WalletListModal)
 
-class WalletListModalHeader extends Component {
-    render() {
-        return(
-            <View>
-                <Text>Choose a wallet to transfer funds to:</Text>
-            </View>
-        )        
+
+class WalletListModalBody extends Component {
+    constructor(props) {
+        super(props)
     }
+    render() {
+            for (var idx in this.props.walletList) {
+                return(
+                    <TouchableHighlight style={[styles.rowContainer]}>
+                        <View style={[styles.rowContent]}>
+                        <View style={[styles.rowNameTextWrap]}>
+                            <Text style={[styles.rowNameText]}>{idx.slice(0,5)}</Text>
+                        </View>
+                        </View>
+                    </TouchableHighlight>
+                )
+            }
+    }
+
     border (color) {
         return {
             borderColor: color,
@@ -75,15 +77,23 @@ class WalletListModalHeader extends Component {
         }
     }     
 }
+export const WalletListModalBodyConnect  = connect( state => ({
+    walletList: state.ui.wallets.byId
+}))(WalletListModalBody)
 
 
-WalletListModal.propTypes = {
-    dropdownWalletListVisible: PropTypes.bool,
-    currentScene: PropTypes.string
+class WalletListModalHeader extends Component {
+    render() {
+        return(
+            <View style={styles.headerContainer}>
+                <Text>Choose a wallet to transfer funds to:</Text>
+            </View>
+        )        
+    }
+    border (color) {
+        return {
+            borderColor: color,
+            borderWidth: 0
+        }
+    }     
 }
-
-export default connect(state => ({
-    walletList: state.ui.wallets.byId,
-    dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,
-    currentScene: state.routes.scene.sceneKey
-}))(WalletListModal)

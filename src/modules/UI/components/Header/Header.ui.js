@@ -7,6 +7,7 @@ import { Actions } from 'react-native-router-flux'
 import LeftComponent from './Component/Left.js'
 import RightComponent from './Component/Right.js'
 import BodyComponent from './Component/Body.js'
+import {setHeaderHeight} from '../../dimensions/action'
 
 import styles from './style'
 
@@ -28,20 +29,18 @@ class HeaderUI extends Component {
   _onLayout = (event) => {
     var {x, y, width, height} = event.nativeEvent.layout;
     console.log('onLayout occurred', x , y , width , height)
-    this.props.width = width
-    this.props.height = height
+    this.props.dispatch(setHeaderHeight(height))
   }
 
   render () {
-    console.log('in Header.ui render and this.props.height is: ', this.props.height)
     return (
-        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={[styles.headerRoot]} onLayout={this._onLayout}>
-          <Header>
+        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={[styles.headerRoot, {zIndex: 10}]}>
+          <Header style={ {zIndex: 10}}>
             <Left>
               <LeftComponent routes={this.props.routes} />
             </Left>
-            <Body>
-              <BodyComponent routes={this.props.routes} headerHeight={this.props.height} />
+            <Body onLayout={this._onLayout}>
+              <BodyComponent routes={this.props.routes} />
             </Body>
             <Right>
               <RightComponent routes={this.props.routes} />
