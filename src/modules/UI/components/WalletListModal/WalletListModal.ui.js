@@ -36,7 +36,7 @@ class WalletListModal extends Component {
     border (color) {
         return {
             borderColor: color,
-            borderWidth: 1
+            borderWidth: 0
         }
     }  
 }
@@ -61,9 +61,9 @@ class WalletListModalBody extends Component {
                 return(
                     <TouchableHighlight style={[styles.rowContainer]}>
                         <View style={[styles.rowContent]}>
-                        <View style={[styles.rowNameTextWrap]}>
-                            <Text style={[styles.rowNameText]}>{idx.slice(0,5)}</Text>
-                        </View>
+                            <View style={[styles.rowNameTextWrap]}>
+                                <FormattedText style={[styles.rowNameText]}>{idx.slice(0,5)}</FormattedText>
+                            </View>
                         </View>
                     </TouchableHighlight>
                 )
@@ -73,7 +73,7 @@ class WalletListModalBody extends Component {
     border (color) {
         return {
             borderColor: color,
-            borderWidth: 1
+            borderWidth: 0
         }
     }     
 }
@@ -83,17 +83,29 @@ export const WalletListModalBodyConnect  = connect( state => ({
 
 
 class WalletListModalHeader extends Component {
+
+    _onSearchExit = () => {
+
+    }
+
     render() {
         return(
-            <View style={styles.headerContainer}>
-                <Text>Choose a wallet to transfer funds to:</Text>
+            <View style={[styles.rowContainer, styles.headerContainer ]}>
+                <View style={[styles.headerContent, this.border('yellow')]}>
+                    <View style={[styles.headerTextWrap, this.border('green')]}>
+                        <FormattedText style={[styles.headerText, {color:'white'}, this.border('purple')]} >Choose a wallet to transfer funds to:</FormattedText>
+                    </View>
+                    <TouchableHighlight style={[styles.modalCloseWrap, this.border('orange')]} onPress={this._onSearchExit}>
+                        <View></View>
+                    </TouchableHighlight>
+                </View>
             </View>
         )        
     }
     border (color) {
         return {
             borderColor: color,
-            borderWidth: 0
+            borderWidth: 1
         }
     }     
 }
