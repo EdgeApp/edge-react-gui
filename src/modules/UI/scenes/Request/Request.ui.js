@@ -125,25 +125,19 @@ class Request extends Component {
   }
 
   getQrCodeText = (publicAddress, amountSatoshi) => {
-    const qrCodeText =
-      'bitcoin:' + publicAddress +
-      '?amount=' + (amountSatoshi)
+    const qrCodeText = publicAddress
 
     return qrCodeText
   }
 
   getRequestInfoForClipboard = (publicAddress, amountSatoshi) => {
-    const requestInfoForClipboard =
-      'bitcoin:' + publicAddress +
-      '?amount=' + (amountSatoshi)
+    const requestInfoForClipboard = publicAddress
 
     return requestInfoForClipboard
   }
 
   getRequestInfoForShare = (publicAddress, amountSatoshi) => {
-    const requestInforForShare =
-      'bitcoin:' + publicAddress +
-      '?amount=' + (amountSatoshi)
+    const requestInforForShare = publicAddress
 
     return requestInforForShare
   }
