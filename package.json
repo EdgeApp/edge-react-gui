@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "airbitz-core-js": "^0.3.0",
-    "airbitz-txlib-shitcoin": "git+https://github.com/Airbitz/airbitz-txlib-shitcoin.git",
+    "airbitz-currency-shitcoin": "file:../airbitz-currency-shitcoin",
     "assert": "^1.4.1",
     "async": "^2.3.0",
     "base64-js": "^1.2.0",

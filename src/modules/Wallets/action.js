@@ -23,10 +23,8 @@ export const createWallet = (wallet) => {
 
     // send command to account to add wallet
     getState().account.createWallet(wallet.type, wallet.keys)
-    .then(
-      dispatch(createWalletSuccess),
-      dispatch(createWalletFailure),
-    )
+    .then(dispatch(createWalletSuccess))
+    .catch(dispatch(createWalletFailure))
   }
 }
 
@@ -36,10 +34,8 @@ export const archiveWallet = (walletId) => {
 
     // send command to account to archive wallet
     getState().account.archiveWallet(walletId)
-    .then(
-      dispatch(archiveWalletSuccess),
-      dispatch(archiveWalletFailure),
-    )
+    // .then(dispatch(archiveWalletSuccess))
+    // .catch(dispatch(archiveWalletFailure))
   }
 }
 
@@ -49,9 +45,7 @@ export const deArchiveWallet = (walletId) => {
 
     // send command to account to de-archive wallet
     getState().account.deArchiveWallet(walletId)
-    .then(
-      dispatch(deArchiveWalletSuccess),
-      dispatch(deArchiveWalletFailure),
-    )
+    // .then(dispatch(deArchiveWalletSuccess))
+    // .catch(dispatch(deArchiveWalletFailure))
   }
 }

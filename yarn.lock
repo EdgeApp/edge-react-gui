@@ -71,9 +71,8 @@ airbitz-core-js@^0.3.0:
     hash.js "^1.0.3"
     scrypt-js "^2.0.3"
 
-"airbitz-txlib-shitcoin@git+https://github.com/Airbitz/airbitz-txlib-shitcoin.git":
+"airbitz-currency-shitcoin@file:../airbitz-currency-shitcoin":
   version "0.1.1"
-  resolved "git+https://github.com/Airbitz/airbitz-txlib-shitcoin.git#6cdcb19bb4a13aa1823e77aa3ec87a2040f6a0e9"
   dependencies:
     rfc4648 "^0.9.1"
 
