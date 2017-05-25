@@ -11,8 +11,9 @@ import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
-
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress, updateUri } from './action'
+import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
+import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
+import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress, updateUri  } from './action'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
 
@@ -25,11 +26,8 @@ class Scan extends Component {
     this.props.dispatch(toggleAddressModal())
   }
 
-  _onToggleWalletListModal = () => {
-    if (!this.props.walletListModalVisible) {
-      this.props.dispatch(getWalletTransferList())
-    }
-    this.props.dispatch(toggleWalletListModal())
+  _onToggleWalletListModal () {
+    this.props.dispatch(toggleScanToWalletListModal())
   }
 
   onBarCodeRead = (data) => {
@@ -69,10 +67,10 @@ class Scan extends Component {
           barCodeTypes={['qr']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
-        />
-        <View style={[styles.overlay]}>
+        />      
+        <View style={[styles.overlay, this.border('red')]}>
+                 
           {this.renderAddressModal()}
-          {this.renderWalletListModal()}
           <View style={[styles.overlayTop, this.border('yellow')]}>
             <FormattedText style={[styles.overlayTopText, this.border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
           </View>
@@ -155,22 +153,14 @@ class Scan extends Component {
       </Modal>
     )
   }
-
-  renderWalletListModal = () => {
-    return (
-      <Modal
-        isVisible={this.props.walletListModalVisible}>
-        <WalletTransferList />
-      </Modal>
-    )
-  }
-
 }
 
 export default connect(state => ({
   torchEnabled: state.ui.scan.torchEnabled,
   addressModalVisible: state.ui.scan.addressModalVisible,
   receipientAddress: state.ui.scan.recipientAddress,
-  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
+  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
+  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+  scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
 })
 )(Scan)

@@ -7,6 +7,7 @@ export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS'
 export const ENABLE_UPDATING_BALANCE = 'ENABLE_UPDATING_BALANCE'
 export const DISABLE_UPDATING_BALANCE = 'DISABLE_UPDATING_BALANCE'
 export const TOGGLE_UPDATING_BALANCE = 'TOGGLE_UPDATING_BALANCE'
+export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
 
 export function updateTransactionsList (data) {
   return {
@@ -44,6 +45,12 @@ export function updateSearchResults (data) {
   return {
     type: UPDATE_SEARCH_RESULTS,
     data
+  }
+}
+
+export function toggleTransactionsWalletListModal () {
+  return {
+    type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
   }
 }
 

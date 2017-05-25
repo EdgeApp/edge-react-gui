@@ -41,6 +41,7 @@ class Main extends Component {
     initializeAccount(this.props.dispatch)
   }
 
+
   render () {
     if (this.props.loadingScreenVisible) {
       console.log('Logging in...')
