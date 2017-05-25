@@ -3,16 +3,19 @@
 // Can't access sub-properties if using Stylesheet.create({})
 const styles = {
   over: {
-    color: 'red',
+    color: 'red'
   },
   max: {
-    color: 'orange',
+    color: 'orange'
   },
   under: {
     color: 'green'
   },
   button: {
     flex: 1
+  },
+  undefined: {
+    color: 'purple'
   }
 }
 

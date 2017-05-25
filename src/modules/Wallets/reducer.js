@@ -17,12 +17,10 @@ const byId = (state, action) => {
   switch (action.type) {
     case ACTION.ADD_WALLET:
       const wallet = action.data.wallet
-      newState = {
+      return {
         ...state,
         [wallet.id]: wallet
       }
-
-      return newState
 
     default:
       return state

@@ -12,4 +12,4 @@ copy_build () {
 }
 
 copy_build airbitz-core-js
-copy_build airbitz-txlib-shitcoin
+copy_build airbitz-currency-shitcoin

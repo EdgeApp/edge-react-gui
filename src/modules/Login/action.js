@@ -8,7 +8,7 @@ export const ACTIVATE_WALLET_ID = 'ACTIVATE_WALLET'
 export const ARCHIVE_WALLET = 'ARCHIVE_WALLET'
 export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET'
 
-import { makeShitcoinPlugin } from 'airbitz-txlib-shitcoin'
+import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeCurrencyWallet } from 'airbitz-core-js'
 
 export const addAirbitzToRedux = airbitz => {
@@ -34,7 +34,7 @@ export const addAccountToRedux = account => {
 
 export const addWalletByKey = key => {
   return (dispatch, getState) => {
-    const { id, type, archived } = key
+    const { id, archived } = key
     const account = getState().account
     const plugin = makeShitcoinPlugin({
       io: getState().account.io
@@ -108,22 +108,22 @@ const makeCallbacks = (dispatch, id) => {
 
     onBalanceChanged (balance) {
       console.log('onBalanceChanged', balance)
-      dispatch(setBalance(id, balance))
+      // dispatch(setBalance(id, balance))
     },
 
     onTransactionsChanged (transactions) {
       console.log('onTransactionsChanged', transactions)
-      dispatch(updateTransactions(id, transactions))
+      // dispatch(updateTransactions(id, transactions))
     },
 
     onNewTransactions (transactions) {
       console.log('onNewTransaction', transactions)
-      dispatch(insertTransactions(id, transactions))
+      // dispatch(insertTransactions(id, transactions))
     },
 
-    onBlockHeightChange (blockHeight) {
+    onBlockHeightChanged (blockHeight) {
       console.log('onBlockHeightChanged', blockHeight)
-      dispatch(setBlockHeight(id, blockHeight))
+      // dispatch(setBlockHeight(id, blockHeight))
     }
   }
 

@@ -8,6 +8,8 @@ import controlPanel from '../modules/UI/components/ControlPanel/reducer'
 import walletList from '../modules/UI/scenes/WalletList/reducer'
 import walletTransferListReducer from '../modules/UI/scenes/WalletTransferList/reducer'
 import addWallet from '../modules/UI/scenes/AddWallet/reducer'
+import { sendConfirmation } from '../modules/UI/scenes/SendConfirmation/reducer'
+
 import container from '../modules/reducer'
 import exchangeRate from '../modules/UI/components/ExchangeRate/reducer'
 import transactionAlert from '../modules/UI/components/TransactionAlert/reducer.js'
@@ -34,6 +36,7 @@ const store = combineReducers({
 
   ui: combineReducers({
     scan,
+    sendConfirmation,
     transactionList,
     controlPanel,
     walletList,

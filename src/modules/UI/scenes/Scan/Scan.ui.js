@@ -1,11 +1,10 @@
 import React, { Component } from 'react'
-import { Dimensions, StyleSheet, Text, View, TouchableHighlight, TextInput} from 'react-native'
+import { Text, View, TouchableHighlight, TextInput} from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import MAIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 import ImagePicker from 'react-native-image-picker'
 import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
@@ -14,20 +13,16 @@ import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
 import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './action'
+import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress, updateUri  } from './action'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
 
 class Scan extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   _onToggleTorch () {
     this.props.dispatch(toggleEnableTorch())
   }
 
-  _onToggleAddressModal () {
+  _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())
   }
 
@@ -35,11 +30,13 @@ class Scan extends Component {
     this.props.dispatch(toggleScanToWalletListModal())
   }
 
-  onBarCodeRead () {
-    console.log('onBarCodeRead executing')
+  onBarCodeRead = (data) => {
+    console.log('onBarCodeRead', data)
+    this.props.dispatch(updateUri(data))
+    Actions.sendConfirmation()
   }
 
-  selectPhotoTapped () {
+  selectPhotoTapped = () => {
     const options = { takePhotoButtonTitle: null }
 
     ImagePicker.showImagePicker(options, (response) => {
@@ -81,25 +78,25 @@ class Scan extends Component {
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, this.border('red')]}>
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name="ios-arrow-round-forward" size={24} style={[styles.transferArrowIcon, this.border('green')]} />
+                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, this.border('green')]} />
                 <FormattedText style={[styles.transferButtonText, styles.bottomButtonText]}>Transfer</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, this.border('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <FAIcon name="address-book-o" size={18} style={[styles.addressBookIcon, this.border('green')]} />
+                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, this.border('green')]} />
                 <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, this.border('purple')]}>Address</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name="ios-camera-outline" size={24} style={[styles.cameraIcon, this.border('green')]} />
+                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, this.border('green')]} />
                 <FormattedText style={[styles.bottomButtonText]}>Photos</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name="ios-flash-outline" size={24} style={[styles.flashIcon, this.border('green')]} />
+                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, this.border('green')]} />
                 <FormattedText style={[styles.flashButtonText, styles.bottomButtonText]}>Flash</FormattedText>
               </View>
             </TouchableHighlight>
@@ -116,16 +113,16 @@ class Scan extends Component {
     }
   }
 
-  _onRecipientAddressChange (input) {
+  _onRecipientAddressChange = (input) => {
     this.props.dispatch(updateRecipientAddress(input))
   }
 
-  _onModalDone () {
+  _onModalDone = () => {
     this._onToggleAddressModal()
     Actions.sendConfirmation(this.props.receipientAddress)
   }
 
-  renderAddressModal () {
+  renderAddressModal = () => {
     return (
       <Modal isVisible={this.props.addressModalVisible}>
         <View style={styles.modalContainer}>
