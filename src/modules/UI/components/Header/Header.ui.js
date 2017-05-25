@@ -28,18 +28,19 @@ class HeaderUI extends Component {
 
   _onLayout = (event) => {
     var {x, y, width, height} = event.nativeEvent.layout;
+    console.log('event.nativeEvent is : ', event.nativeEvent)
     console.log('onLayout occurred', x , y , width , height)
     this.props.dispatch(setHeaderHeight(height))
   }
 
   render () {
     return (
-        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={[styles.headerRoot, {zIndex: 10}]}>
-          <Header style={ {zIndex: 10}}>
+        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={[styles.headerRoot]} onLayout={this._onLayout}>
+          <Header>
             <Left>
               <LeftComponent routes={this.props.routes} />
             </Left>
-            <Body onLayout={this._onLayout}>
+            <Body>
               <BodyComponent routes={this.props.routes} />
             </Body>
             <Right>

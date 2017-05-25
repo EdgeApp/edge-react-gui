@@ -193,7 +193,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   doneButton: {
-    fontSize: 12,
+    fontSize: 28,
     color: '#3c76cd'
   }
 })

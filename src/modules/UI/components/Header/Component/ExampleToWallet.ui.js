@@ -19,6 +19,7 @@ class ExampleToWallet extends Component {
 
   render () {
     let topDisplacement =  this.props.headerHeight + 2
+    let selectionFunction = 'selectToWallet'
     return (
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: "#FFF", fontSize: 20 }}>My Wallet  </Text>
@@ -30,7 +31,7 @@ class ExampleToWallet extends Component {
                     
                 </View>
             </TouchableHighlight>
-            {this.props.walletListModalVisible && <WalletListModalConnect topDisplacement={topDisplacement} /> }
+            {this.props.walletListModalVisible && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
           </View>
     )
   }
@@ -38,9 +39,7 @@ class ExampleToWallet extends Component {
 
 export default connect(state => ({
   headerHeight: state.ui.dimensions.headerHeight,  
-  torchEnabled: state.ui.scan.torchEnabled,
   addressModalVisible: state.ui.scan.addressModalVisible,
-  receipientAddress: state.ui.scan.recipientAddress,
   walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
 })
 )(ExampleToWallet)

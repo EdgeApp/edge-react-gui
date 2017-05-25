@@ -75,9 +75,7 @@ class Scan extends Component {
           ref='cameraCapture'
         />      
         <View style={[styles.overlay, this.border('red')]}>
-          {this.props.walletListModalVisible && 
-            <WalletListModalConnect topDisplacement={0} />
-            }            
+                 
           {this.renderAddressModal()}
           <View style={[styles.overlayTop, this.border('yellow')]}>
             <FormattedText style={[styles.overlayTopText, this.border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
@@ -167,6 +165,8 @@ export default connect(state => ({
   torchEnabled: state.ui.scan.torchEnabled,
   addressModalVisible: state.ui.scan.addressModalVisible,
   receipientAddress: state.ui.scan.recipientAddress,
-  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
+  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
+  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+  scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
 })
 )(Scan)

@@ -47,11 +47,21 @@ const updatingBalance = (state = true, action) => {
   }
 }
 
+const transactionsWalletListModalVisibility = (state = false, action) => {
+  switch (action.type) {
+    case ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL :
+      return !state
+    default: 
+      return state
+  }
+}
+
 const transactionList = combineReducers({
   transactionsList,
   searchVisible,
   contactsList,
-  updatingBalance
+  updatingBalance,
+  transactionsWalletListModalVisibility
 })
 
 export default transactionList

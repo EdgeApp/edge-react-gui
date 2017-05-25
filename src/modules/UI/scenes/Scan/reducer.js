@@ -1,4 +1,5 @@
 import * as ACTION from './action'
+import * as WALLET_LIST_MODAL_ACTION from '../../components/WalletListModal/action'
 import {combineReducers} from 'redux'
 
 const torchEnabled = (state = false, action) => {
@@ -28,10 +29,30 @@ const recipientAddress = (state = '', action) => {
   }
 }
 
+const scanFromWalletListModalVisibility = (state = false, action) => {
+  switch (action.type) {
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
+      return !state
+    default: 
+      return state
+  }
+}
+
+const scanToWalletListModalVisibility = (state = false, action) => {
+  switch (action.type) {
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_TO_WALLET_LIST_MODAL :
+      return !state
+    default: 
+      return state
+  }
+}
+
 const scan = combineReducers({
   torchEnabled,
   addressModalVisible,
-  recipientAddress
+  recipientAddress,
+  scanFromWalletListModalVisibility,
+  scanToWalletListModalVisibility
 })
 
 export default scan
