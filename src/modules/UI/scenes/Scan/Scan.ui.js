@@ -12,8 +12,8 @@ import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
-import {WalletListModalConnect} from '../../components/WalletListModal/WalletListModal.ui'
-
+import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
+import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
 import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './action'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
@@ -32,10 +32,7 @@ class Scan extends Component {
   }
 
   _onToggleWalletListModal () {
-    if (!this.props.walletListModalVisible) {
-      this.props.dispatch(getWalletTransferList())
-    }
-    this.props.dispatch(toggleWalletListModal())
+    this.props.dispatch(toggleScanToWalletListModal())
   }
 
   onBarCodeRead () {

@@ -33,6 +33,8 @@ const scanFromWalletListModalVisibility = (state = false, action) => {
   switch (action.type) {
     case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
       return !state
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_TO_WALLET_LIST_MODAL :
+      return false
     default: 
       return state
   }
@@ -42,6 +44,8 @@ const scanToWalletListModalVisibility = (state = false, action) => {
   switch (action.type) {
     case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_TO_WALLET_LIST_MODAL :
       return !state
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
+      return false      
     default: 
       return state
   }

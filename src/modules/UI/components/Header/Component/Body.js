@@ -6,7 +6,6 @@ import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import { toggleScanFromWalletListModal, toggleScanToWalletListModal} from '../../WalletListModal/action'
 
 import { 
-  toggleWalletListModalVisibility, 
   enableWalletListModalVisibility, 
   disableWalletListModalVisibility
 } from '../../WalletListModal/action'
@@ -22,7 +21,7 @@ class Body extends Component {
   render () {  
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
-        return <ExampleFromWalletConnect  walletList={this.props.walletList} toggleFunction='_onPressScanFromDropdownToggle' visibleFlag='scanFromWalletListModalVisibility' /> 
+            return <ExampleFromWalletConnect  walletList={this.props.walletList} toggleFunction='_onPressScanFromDropdownToggle' visibleFlag='scanFromWalletListModalVisibility' />
       case 'request':
         return <ExampleFromWalletConnect  walletList={this.props.walletList} />
       case 'transactions':
@@ -34,7 +33,9 @@ class Body extends Component {
 }
 export default connect((state) => ({
   walletList: state.ui.wallets.byId,
-  headerHeight: state.ui.dimensions.headerHeight
+  headerHeight: state.ui.dimensions.headerHeight,
+  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+  scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
 }))(Body)
 
 
@@ -52,10 +53,6 @@ class DefaultHeader extends Component {
 
 class ExampleFromWallet extends Component {
 
-  _onPressDropdownToggle = () => {
-    this.props.dispatch(toggleWalletListModalVisibility())
-  }
-
   _onPressTransactionsDropdownToggle = () => {
     console.log('inside onPressTransactionsDropdownToggle')
   }
@@ -67,6 +64,7 @@ class ExampleFromWallet extends Component {
 
   _onPressScanToDropdownToggle = () => {
     console.log('inside onPressScanToDropdownToggle')
+    this.props.dispatch(toggleScanToWalletListModal())
   }  
 
   render () {
@@ -78,13 +76,14 @@ class ExampleFromWallet extends Component {
             <Text style={{ color: "#FFF", fontSize: 20 }}>My Wallet  </Text>
             <TouchableHighlight onPress={this[this.props.toggleFunction]}>
                 <View>
-                  {!this.props.walletListModalVisible && !this.props.addressModalVisible && 
+                  {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible && 
                   <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25 }} />
                   }
                     
                 </View>
             </TouchableHighlight>
             {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
+            {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} /> }
           </View>
     )
   }

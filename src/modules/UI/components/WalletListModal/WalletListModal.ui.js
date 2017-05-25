@@ -9,7 +9,11 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import { Actions } from 'react-native-router-flux'
 import styles from './style'
-import { toggleWalletListModalVisibility, toggleScanFromWalletListModal, toggleScanToWalletListModal } from './action'
+import { 
+    toggleWalletListModalVisibility, 
+    toggleScanFromWalletListModal, 
+    toggleScanToWalletListModal 
+} from './action'
 import * as Animatable from 'react-native-animatable'
 
 
@@ -25,8 +29,8 @@ class WalletListModal extends Component {
     render() {
 
         return(
-                <Animatable.View animation='fadeInDown' style={[this.border('green'), styles.topLevel,{position:'absolute', top: this.props.topDisplacement}]} duration={100} >
-                {this.props.walletTransferModalVisible && 
+                <Animatable.View animation='fadeInDown' style={[this.border('green'), styles.topLevel,{position:'absolute', top: 38}]} duration={100} >
+                {this.props.scanToWalletListModalVisibility && 
                     <WalletListModalHeaderConnect />
                 }                    
                     <WalletListModalBodyConnect onPress={this.props.onPress} selectionFunction={this.props.selectionFunction} />
@@ -49,7 +53,8 @@ export const WalletListModalConnect =  connect( state => ({
     headerHeight: state.ui.dimensions.headerHeight,
     walletList: state.ui.wallets.byId,
     dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,   
-    walletTransferModalVisible: state.ui.walletTransferList.walletListModalVisible
+    walletTransferModalVisible: state.ui.walletTransferList.walletListModalVisible,
+    scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
 }))(WalletListModal)
 
 
@@ -66,7 +71,7 @@ class WalletListModalBody extends Component {
 
     selectToWallet = () => {
         LayoutAnimation.easeInEaseOut()        
-        console.log('selectingFromWallet')
+        console.log('selectingToWallet')
         this.props.dispatch(toggleScanToWalletListModal())
     }
 
@@ -102,7 +107,7 @@ export const WalletListModalBodyConnect  = connect( state => ({
 class WalletListModalHeader extends Component {
 
     _onSearchExit = () => {
-        this.props.dispatch(toggleWalletListModalVisibility())
+        this.props.dispatch(toggleScanToWalletListModal()) 
     }
 
     render() {
