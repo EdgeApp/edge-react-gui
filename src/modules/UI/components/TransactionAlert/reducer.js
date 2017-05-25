@@ -1,7 +1,7 @@
 import * as ACTION from './action'
 import { combineReducers } from 'redux'
 
-const view = (state = null, action) => {
+const view = (state = '', action) => {
   switch (action.type) {
     case ACTION.OPEN_TRANSACTION_ALERT :
       return true
@@ -23,19 +23,19 @@ const message = (state = '', action) => {
   }
 }
 
-const route = (state = null, action) => {
-  switch (action.type) {
-    case ACTION.OPEN_TRANSACTION_ALERT :
-      return action.data.route
-    case ACTION.CLOSE_TRANSACTION_ALERT :
-      return null
-    default:
-      return state
-  }
-}
+// const route = (state = {}, action) => {
+//   switch (action.type) {
+//     case ACTION.OPEN_TRANSACTION_ALERT :
+//       return action.data.route
+//     case ACTION.CLOSE_TRANSACTION_ALERT :
+//       return null
+//     default:
+//       return state
+//   }
+// }
 
 export default combineReducers({
   view,
-  message,
-  route
+  message
+  // route
 })

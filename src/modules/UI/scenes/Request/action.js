@@ -9,6 +9,9 @@ export const updateReceiveAddress = () => {
     const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = getState()
     const wallet = byId[selectedWalletId]
 
+    console.log('byId', byId)
+    console.log('selectedWalletId', selectedWalletId)
+
     const onSuccess = (receiveAddress) => {
       dispatch(updateReceiveAddressSuccess(receiveAddress))
     }

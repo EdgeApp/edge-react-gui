@@ -11,19 +11,17 @@ class ABSlider extends Component {
 
     this.state = {
       value: 10,
-      sliderDisabled: props.sliderDisabled
+      sliderDisabled: props.sliderDisabled,
+      onSlidingComplete: props.onSlidingComplete
     }
   }
 
   onSlidingComplete = (value) => {
     console.log('onSlidingComplete')
     if(value <= 1) {
-      alert("Transaction Sent!")
-      console.log("Transaction Sent!")
+      this.props.onSlidingComplete()
     } else {
-      alert("Transaction NOT Sent!")
       this.setState({ value: 10 })
-      console.log("Transaction NOT Sent!")
     }
   };
 
@@ -33,6 +31,8 @@ class ABSlider extends Component {
   };
 
   render() {
+    console.log('slider props', this.props)
+    console.log('slider state', this.state)
     return (
       <Slider
         disabled={this.props.sliderDisabled}

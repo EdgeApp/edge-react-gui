@@ -6,7 +6,7 @@ import {
   TouchableHighlight,
   Keyboard,
   Button,
-  Platform
+  Platform,
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
@@ -26,25 +26,56 @@ import Fees from '../../components/Fees/index.js'
 import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../../../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
+import {
+  setAmountRequestedInCrypto,
+  setAmountRequestedInFiat,
+  setAmountReceivedInCrypto,
+  setFiatPerCrypto,
+  setInputCurrencySelected,
+  setLabel,
+  setMaxAvailableToSpendInCrypto,
+  setIsPinEnabled,
+  setIsSliderEnabled,
+  setDraftStatus,
+  setIsKeyboardVisible,
+  makeSignBroadcastAndSave,
+} from './action.js'
+
 class SendConfirmation extends Component {
   constructor (props) {
     super(props)
 
+    const {
+      isKeyboardVisible,
+      isPinEnabled,
+      uri,
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      amountReceivedInCrypto,
+      fiatPerCrypto,
+      inputCurrencySelected,
+      publicAddress,
+      label,
+      maxAvailableToSpendInCrypto,
+      draftStatus,
+      isSliderEnabled,
+    } = props.sendConfirmation
+
     this.state = {
-      amountRequestedInCrypto: 0,
-      amountRequestedInFiat: 0,
-      amountReceivedInCrypto: 0.75,
-      fiatPerCrypto: '1077.75',
-      requestAddress: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
-      inputCurrencySelected: 'crypto',
-      label: 'Amalia Miller',
-      address: '1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX',
-      maxAvailableToSpendInCrypto: 123,
-      pinEnabled: true,
+      isKeyboardVisible,
+      isPinEnabled,
+      uri,
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      amountReceivedInCrypto,
+      fiatPerCrypto,
+      inputCurrencySelected,
+      publicAddress,
+      label,
+      maxAvailableToSpendInCrypto,
+      draftStatus,
+      isSliderEnabled,
       pin: 1234,
-      sliderDisabled: true,
-      draftStatus: 'under',
-      keyboardVisible: false,
     }
   }
 
@@ -70,21 +101,17 @@ class SendConfirmation extends Component {
   }
 
   _keyboardShows = () => {
-    this.setState({
-      keyboardVisible: true
-    })
+    this.props.dispatch(setIsKeyboardVisible(true))
   }
 
   _keyboardHides = () => {
-    this.setState({
-      keyboardVisible: false
-    })
+    this.props.dispatch(setIsKeyboardVisible(false))
   }
 
   getPinInputIfEnabled = () => {
     let pinInputIfEnabled
 
-    if (this.state.pinEnabled) {
+    if (this.state.isPinEnabled) {
       pinInputIfEnabled = (
         <View style={{flex: 1}}>
           <PinInput onPinChange={this.onPinChange} />
@@ -104,6 +131,25 @@ class SendConfirmation extends Component {
   }
 
   render () {
+    const {
+      amountRequestedInCrypto,
+      amountRequestedInFiat,
+      amountReceivedInCrypto,
+      publicAddress,
+      draftStatus,
+      fiatPerCrypto,
+      inputCurrencySelected,
+      label,
+      isKeyboardVisible,
+      isPinEnabled,
+      isSliderEnabled,
+      maxAvailableToSpendInCrypto,
+    } = this.state
+
+    console.log('this.state', this.state)
+    console.log('this.props', this.props)
+
+
     return (
       <LinearGradient
         style={styles.view}
@@ -115,14 +161,14 @@ class SendConfirmation extends Component {
 
           <View style={{flex: 3}}>
             <ExchangeRate
-              mode={this.state.draftStatus}
+              mode={draftStatus}
               style={{flex: 1}}
-              fiatPerCrypto={this.state.fiatPerCrypto} />
+              fiatPerCrypto={fiatPerCrypto || 1077.75} />
           </View>
 
           <View style={{flex: 1}}>
             <MaxButton style={{flex: 1}}
-              mode={this.state.draftStatus}
+              mode={draftStatus}
               onMaxPress={this.onMaxPress}/>
           </View>
 
@@ -130,14 +176,14 @@ class SendConfirmation extends Component {
 
         <View style={styles.flipInput}>
           <FlipInput
-            mode={this.state.draftStatus}
+            mode={draftStatus}
             onInputCurrencyToggle={this.onInputCurrencyToggle}
             onCryptoInputChange={this.onCryptoInputChange}
             onFiatInputChange={this.onFiatInputChange}
-            amountRequestedInCrypto={this.state.amountRequestedInCrypto}
-            amountRequestedInFiat={this.state.amountRequestedInFiat}
-            inputCurrencySelected={this.state.inputCurrencySelected}
-            maxAvailableToSpendInCrypto={this.state.maxAvailableToSpendInCrypto}
+            amountRequestedInCrypto={amountRequestedInCrypto}
+            amountRequestedInFiat={amountRequestedInFiat}
+            inputCurrencySelected={inputCurrencySelected}
+            maxAvailableToSpendInCrypto={maxAvailableToSpendInCrypto}
             displayFees
             feeInCrypto={this.getFeeInCrypto()}
             feeInFiat={this.getFeeInFiat()} />
@@ -145,7 +191,7 @@ class SendConfirmation extends Component {
 
         <View style={styles.recipient}>
           <View style={{flex: 3}}>
-            <Recipient label={this.state.label} address={this.state.address} />
+            <Recipient label={label} address={publicAddress} />
           </View>
 
           {this.getPinInputIfEnabled()}
@@ -158,8 +204,8 @@ class SendConfirmation extends Component {
             style={{
               flex: 1,
             }}
-            text={this.state.text}
-            sliderDisabled={this.state.sliderDisabled} />
+            onSlidingComplete={this.signBroadcastAndSave}
+            sliderDisabled={!isSliderEnabled} />
         </View>
 
         {this.getBottomSpacer()}
@@ -168,8 +214,21 @@ class SendConfirmation extends Component {
     )
   }
 
+  signBroadcastAndSave = () => {
+    console.log('this.props', this.props)
+    const spendInfo = {
+      spendTargets: [
+        { publicAddress: this.state.uri, amount: this.props.amountRequestedInCrypto }
+      ],
+      networkFeeOption: 'standard',
+      metadata: {}
+    }
+
+    this.props.dispatch(makeSignBroadcastAndSave(spendInfo))
+  }
+
   getTopSpacer = () => {
-    if (this.state.keyboardVisible) {
+    if (this.state.keyboardIsVisible) {
       return
     } else {
       return <View style={styles.spacer} />
@@ -177,7 +236,7 @@ class SendConfirmation extends Component {
   }
 
   getBottomSpacer = () => {
-    if (!this.state.keyboardVisible) {
+    if (!this.state.keyboardIsVisible) {
       return
     } else {
       return <View style={styles.spacer} />
@@ -185,7 +244,7 @@ class SendConfirmation extends Component {
   }
 
   isPinCorrect = (pin) => {
-    const isCorrectPin = (pin === this.state.pin)
+    const isCorrectPin = (this.state.pin === pin)
     console.log('Correct PIN')
 
     return isCorrectPin
@@ -199,8 +258,9 @@ class SendConfirmation extends Component {
       if (this.isPinCorrect(parseInt(pin))) {
         console.log("Slider Enabled")
         this.setState({
-          sliderDisabled: false
+          isSliderEnabled: true
         })
+        this.props.dispatch(setIsSliderEnabled(true))
       }
     }
   }
@@ -208,15 +268,13 @@ class SendConfirmation extends Component {
   onMaxPress = () => {
     const amountRequestedInCrypto = this.getMaxAvailableToSpendInCrypto()
     const maxAvailableToSpendInCrypto = this.getMaxAvailableToSpendInCrypto()
-    const fiatPerCrypto = this.state.fiatPerCrypto
+    const { fiatPerCrypto = 1077.75} = this.state
     const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, fiatPerCrypto)
     const draftStatus = this.getDraftStatus(amountRequestedInCrypto, maxAvailableToSpendInCrypto)
 
-    this.setState({
-      amountRequestedInCrypto,
-      amountRequestedInFiat,
-      draftStatus,
-    })
+    this.props.dispatch(setAmountReceivedInCrypto(amountRequestedInCrypto))
+    this.props.dispatch(setAmountRequestedInFiat(amountRequestedInFiat))
+    this.props.dispatch(setDraftStatus(draftStatus))
   }
 
   getDraftStatus = (amountRequestedInCrypto, maxAvailableToSpendInCrypto) => {
@@ -235,44 +293,38 @@ class SendConfirmation extends Component {
 
   onInputCurrencyToggle = () => {
     console.log("toggle currency")
-    const currency =
-      this.state.inputCurrencySelected === 'crypto'
+    const inputCurrencySelected =
+      inputCurrencySelected === 'crypto'
         ? 'fiat'
         : 'crypto'
 
-      this.setState({
-        inputCurrencySelected: currency
-      })
+      this.props.dispatch(setInputCurrencySelected(inputCurrencySelected))
   }
 
   onCryptoInputChange = (amountRequestedInCrypto) => {
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
 
-    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
+    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, fiatPerCrypto)
     const maxAvailableToSpendInCrypto = this.getMaxAvailableToSpendInCrypto()
     const draftStatus = this.getDraftStatus(amountRequestedInCrypto, maxAvailableToSpendInCrypto)
 
-    this.setState({
-      amountRequestedInCrypto,
-      amountRequestedInFiat,
-      draftStatus,
-    })
+    this.props.dispatch(setAmountReceivedInCrypto(amountRequestedInCrypto))
+    this.props.dispatch(setAmountRequestedInFiat(amountRequestedInFiat))
+    this.props.dispatch(setDraftStatus(draftStatus))
   }
 
   onFiatInputChange = (amountRequestedInFiat) => {
     amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
     if (this.invalidInput(amountRequestedInFiat)) { return }
 
-    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto)
+    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, fiatPerCrypto)
     const maxAvailableToSpendInCrypto = this.getMaxAvailableToSpendInCrypto()
     const draftStatus = this.getDraftStatus(amountRequestedInCrypto, maxAvailableToSpendInCrypto)
 
-    this.setState({
-      amountRequestedInCrypto,
-      amountRequestedInFiat,
-      draftStatus,
-    })
+    this.props.dispatch(setAmountReceivedInCrypto(amountRequestedInCrypto))
+    this.props.dispatch(setAmountRequestedInFiat(amountRequestedInFiat))
+    this.props.dispatch(setDraftStatus(draftStatus))
   }
 
   invalidInput = (input) => {
@@ -280,7 +332,7 @@ class SendConfirmation extends Component {
   }
 
   getRecipient = () => {
-    return "10c9b2n31cp3nyct13t10x9t39c7"
+    return this.props.uri
   }
 
   getMaxAvailableToSpendInCrypto = () => {
@@ -289,4 +341,7 @@ class SendConfirmation extends Component {
 
 }
 
-export default connect()(SendConfirmation)
+export default connect(state => ({
+  sendConfirmation: state.ui.sendConfirmation
+})
+)(SendConfirmation)

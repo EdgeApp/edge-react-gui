@@ -1,5 +1,5 @@
 import * as ACTION from './action'
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 
 const torchEnabled = (state = false, action) => {
   switch (action.type) {
