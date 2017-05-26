@@ -5,6 +5,7 @@ import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -207,27 +208,36 @@ class WalletList extends Component {
 
     return (
       <Modal isVisible={this.props.renameWalletVisible}>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, this.border('yellow')]}>
 
           <View style={[styles.modalOverlay]}>
-            <View style={[styles.modalBox]}>
-              <View style={[styles.modalTopTextWrap]}>
-                <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
+            <View style={[styles.modalBox, this.border('purple')]}>
+              <View>
+                <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.modalHeaderIconWrapBottom]} colors={['#3B7ADA', '#2B5698']}>
+                  <View style={styles.modalHeaderIconWrapTop}>
+                    <MAIcon name="edit" size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent'}]} />      
+                  </View>
+                </LinearGradient>
               </View>
-              <View style={[styles.modalMiddle]}>
-                <View style={[styles.nameInputWrap]}>
-                  <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+              <View style={[styles.modalBody, this.border('yellow')]}>
+                <View style={[styles.modalTopTextWrap, this.border('red')]}>
+                  <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
                 </View>
-              </View>
-              <View style={[styles.modalBottom]}>
-                <View style={[styles.emptyBottom]} />
-                <View style={[styles.buttonsWrap]}>
-                  <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                    <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
-                  </TouchableHighlight>
-                  <TouchableHighlight onPress={this._onRenameModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                    <FormattedText style={styles.doneButton}>DONE</FormattedText>
-                  </TouchableHighlight>
+                <View style={[styles.modalMiddle]}>
+                  <View style={[styles.nameInputWrap]}>
+                    <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+                  </View>
+                </View>
+                <View style={[styles.modalBottom]}>
+                  <View style={[styles.emptyBottom]} />
+                  <View style={[styles.buttonsWrap]}>
+                    <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
+                      <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={this._onRenameModalDone.bind(this)} style={[styles.doneButtonWrap]}>
+                      <FormattedText style={styles.doneButton}>DONE</FormattedText>
+                    </TouchableHighlight>
+                  </View>
                 </View>
               </View>
             </View>
@@ -240,7 +250,7 @@ class WalletList extends Component {
   border (color) {
     return {
       borderColor: color,
-      borderWidth: 0
+      borderWidth: 1
     }
   }
 }
