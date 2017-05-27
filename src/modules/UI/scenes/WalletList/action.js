@@ -41,6 +41,7 @@ export function updateWalletListOrder (order, list, listArray) {
 }
 
 export function executeWalletRowOption(key, optionKey, wallets) {
+  console.info('inside action.executeWalletRowOption and arguments are: ', key, optionKey, wallets)
   let data = null
   if(optionKey === 'Delete') {
     type = START_DELETE_WALLET
@@ -48,7 +49,8 @@ export function executeWalletRowOption(key, optionKey, wallets) {
     data = {key, currentName}
   } else if (optionKey === 'Rename') {
     type = OPEN_RENAME_WALLET_MODAL
-    let currentName = wallets[key].name
+    // will have to eventually use real name!
+    let currentName = wallets[key].id.slice(0,5)
     data = {key, currentName}
   } else if (optionKey === 'Archive' || optionKey === 'Restore') {
     type = TOGGLE_ARCHIVE_WALLET

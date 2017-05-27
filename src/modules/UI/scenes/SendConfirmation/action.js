@@ -91,6 +91,7 @@ export const setIsKeyboardVisible = isKeyboardVisible => {
   }
 }
 
+// need to separate make with signBroadCastAndSave 
 export const makeSignBroadcastAndSave = spendInfo => {
   return (dispatch, getState) => {
     const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = getState()

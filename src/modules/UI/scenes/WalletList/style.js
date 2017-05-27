@@ -183,7 +183,7 @@ module.exports = StyleSheet.create({
     width: screenDimensions.width * 3 / 4,
     borderRadius: 3,
     alignItems: 'stretch',
-    height: (screenDimensions.height) / 4,
+    //height: (screenDimensions.height) / 4,
     backgroundColor: 'white',
     padding: 15,
     flexDirection: 'column',
@@ -224,6 +224,12 @@ module.exports = StyleSheet.create({
     color: '#2A5799',
     fontSize: 16
   },
+  modalTopSubtext  : {
+    fontSize: 14,
+    color: '#58595C',
+    textAlign: 'center',
+    marginTop: 3
+  },
   modalMiddle: {
     flex: 1,
     flexDirection: 'column',
@@ -242,8 +248,9 @@ module.exports = StyleSheet.create({
     borderBottomWidth: 1,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    flex: 1,
-    marginBottom: 30    
+    height: 20,
+    marginBottom: 30,
+    marginTop: 14    
 
   },
   nameInput: {
@@ -258,26 +265,36 @@ module.exports = StyleSheet.create({
   emptyBottom: {
     flex: 1
   },
+
+  //buttons
   buttonsWrap: {
     flex: 1,
     flexDirection: 'row'
   },
-  cancelButtonWrap: {
-    flex: 1,
+  stylizedButton: {
+    height: 44,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    flex: 1,
+    borderRadius: 3
+  },
+  stylizedButtonTextWrap: {
+
+  },  
+  stylizedButtonText: {
+    color: 'white',
+    fontSize: 16,    
+  },
+  cancelButtonWrap: {
+    backgroundColor: '#909091'
   },
   cancelButton: {
-    fontSize: 12,
     color: '#3c76cd'
   },
   doneButtonWrap: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#4977BB'
   },
   doneButton: {
-    fontSize: 12,
     color: '#3c76cd'
   }       
 })

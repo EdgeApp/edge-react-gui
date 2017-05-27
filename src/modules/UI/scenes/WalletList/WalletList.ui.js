@@ -187,14 +187,14 @@ class WalletList extends Component {
     // this.props.dispatch(toggleWalletRenameModal())
   }
 
-  _onCancelRenameModal () {
+  _onCancelRenameModal = () => {
     this.props.dispatch(toggleWalletRenameModal())
     this.props.dispatch(closeWalletRenameModal())
     this.props.dispatch(updateWalletRenameInput(''))
     this.props.dispatch(updateCurrentWalletBeingRenamed(null))
   }
 
-  _onRenameModalDone () {
+  _onRenameModalDone = () => {
     this.props.dispatch(completeRenameWallet(this.props.currentWalletBeingRenamed, this.props.currentWalletRename))
   }
 
@@ -203,8 +203,7 @@ class WalletList extends Component {
   }
 
   renderRenameWalletModal () {
-    let walletName = ''
-    if (this.props.currentWalletRename) walletName = this.props.currentWalletRename
+    let walletName = this.props.currentWalletRename ? this.props.currentWalletRename : ''
 
     return (
       <Modal isVisible={this.props.renameWalletVisible}>
@@ -222,20 +221,22 @@ class WalletList extends Component {
               <View style={[styles.modalBody, this.border('yellow')]}>
                 <View style={[styles.modalTopTextWrap, this.border('red')]}>
                   <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
+                  <Text adjustsFontSizeToFit={true} numberOfLines={2} style={styles.modalTopSubtext}>{this.props.currentWalletBeingRenamed}</Text>
                 </View>
-                <View style={[styles.modalMiddle]}>
-                  <View style={[styles.nameInputWrap]}>
-                    <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+                <View style={[styles.modalMiddle, this.border('orange')]}>
+                  <View style={[styles.nameInputWrap, this.border('green')]}>
+                    <TextInput style={[styles.nameInput, this.border('blue')]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
                   </View>
                 </View>
                 <View style={[styles.modalBottom]}>
-                  <View style={[styles.emptyBottom]} />
                   <View style={[styles.buttonsWrap]}>
-                    <TouchableHighlight onPress={this._onCancelRenameModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                      <FormattedText style={styles.cancelButton}>CANCEL</FormattedText>
+                    <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton, {marginLeft: this.checkIndexIsEven(this.props.index) ? 4 : 0}]}>
+                      <View style={styles.stylizedButtonTextWrap}>
+                        <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>Cancel</FormattedText>
+                      </View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={this._onRenameModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                      <FormattedText style={styles.doneButton}>DONE</FormattedText>
+                    <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton, {marginLeft: this.checkIndexIsEven(this.props.index) ? 4 : 0}]}>
+                      <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>Done</FormattedText>
                     </TouchableHighlight>
                   </View>
                 </View>
@@ -247,10 +248,14 @@ class WalletList extends Component {
     )
   }
 
+  checkIndexIsEven (n) {
+      return n % 2 == 0;
+  }
+
   border (color) {
     return {
       borderColor: color,
-      borderWidth: 1
+      borderWidth: 0
     }
   }
 }
