@@ -9,7 +9,7 @@ let middleware = [thunk]
 
 // if (__DEV__) {
    // const createLogger = require('redux-logger')
-const logger = createLogger({ collapsed: true })
+const logger = createLogger({ collapsed: true, level: 'info' })
 middleware = [...middleware, logger]
 // } else {
   // middleware = [...middleware]
