@@ -218,24 +218,24 @@ class WalletList extends Component {
                   </View>
                 </LinearGradient>
               </View>
-              <View style={[styles.modalBody, this.border('yellow')]}>
-                <View style={[styles.modalTopTextWrap, this.border('red')]}>
+              <View style={[styles.modalBody]}>
+                <View style={[styles.modalTopTextWrap]}>
                   <FormattedText style={styles.modalTopText}>Rename Wallet:</FormattedText>
                   <Text adjustsFontSizeToFit={true} numberOfLines={2} style={styles.modalTopSubtext}>{this.props.currentWalletBeingRenamed}</Text>
                 </View>
-                <View style={[styles.modalMiddle, this.border('orange')]}>
-                  <View style={[styles.nameInputWrap, this.border('green')]}>
-                    <TextInput style={[styles.nameInput, this.border('blue')]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+                <View style={[styles.modalMiddle, this.border('green')]}>
+                  <View style={[styles.nameInputWrap, this.border('yellow')]}>
+                    <TextInput style={[styles.nameInput, this.border('red')]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
                   </View>
                 </View>
                 <View style={[styles.modalBottom]}>
                   <View style={[styles.buttonsWrap]}>
-                    <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton, {marginLeft: this.checkIndexIsEven(this.props.index) ? 4 : 0}]}>
+                    <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
                       <View style={styles.stylizedButtonTextWrap}>
                         <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>Cancel</FormattedText>
                       </View>
                     </TouchableHighlight>
-                    <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton, {marginLeft: this.checkIndexIsEven(this.props.index) ? 4 : 0}]}>
+                    <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
                       <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>Done</FormattedText>
                     </TouchableHighlight>
                   </View>
@@ -249,6 +249,7 @@ class WalletList extends Component {
   }
 
   checkIndexIsEven (n) {
+    console.info('n is: ' , n)
       return n % 2 == 0;
   }
 

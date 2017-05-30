@@ -183,7 +183,7 @@ module.exports = StyleSheet.create({
     width: screenDimensions.width * 3 / 4,
     borderRadius: 3,
     alignItems: 'stretch',
-    //height: (screenDimensions.height) / 4,
+    height: (screenDimensions.height) / 4,
     backgroundColor: 'white',
     padding: 15,
     flexDirection: 'column',
@@ -249,17 +249,16 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     height: 20,
-    marginBottom: 30,
     marginTop: 14    
 
   },
   nameInput: {
-    flex: 1,
+    height: 20,
     textAlign: 'center',
     alignItems: 'center'
   },
   modalBottom: {
-    height: 30,
+    height: 50,
     flexDirection: 'row'
   },
   emptyBottom: {
@@ -269,7 +268,8 @@ module.exports = StyleSheet.create({
   //buttons
   buttonsWrap: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignSelf: 'flex-end'
   },
   stylizedButton: {
     height: 44,
@@ -286,13 +286,16 @@ module.exports = StyleSheet.create({
     fontSize: 16,    
   },
   cancelButtonWrap: {
-    backgroundColor: '#909091'
+    backgroundColor: '#909091',
+    alignSelf: 'flex-start'
   },
   cancelButton: {
     color: '#3c76cd'
   },
   doneButtonWrap: {
-    backgroundColor: '#4977BB'
+    backgroundColor: '#4977BB',
+    alignSelf: 'flex-end',
+    marginLeft: 4    
   },
   doneButton: {
     color: '#3c76cd'
