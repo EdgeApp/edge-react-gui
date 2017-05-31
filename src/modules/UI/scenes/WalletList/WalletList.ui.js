@@ -230,7 +230,7 @@ export default connect(state => ({
 class AddressIcon extends Component {
   render() {
     return(
-      <MAIcon name="edit" size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent'}]} />        
+      <MAIcon name="edit" size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />        
     )
   }
 }
@@ -251,11 +251,17 @@ class WalletNameInput extends Component {
   render() {
     let walletName = this.props.currentWalletRename ? this.props.currentWalletRename : ''    
     return(
-      <View style={[styles.nameInputWrap]}>
-          <TextInput style={[styles.nameInput]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+      <View style={[styles.nameInputWrap, this.border('orange')]}>
+          <TextInput style={[styles.nameInput, this.border('red')]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
       </View>      
     )
   }
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+  }  
 }
 export const WalletNameInputConnect = connect( state => ({
   currentWalletBeingRenamed: state.ui.walletList.currentWalletBeingRenamed,
@@ -278,18 +284,28 @@ class RenameWalletButtons extends Component {
 
   render() {
     return(
-      <View style={[styles.buttonsWrap]}>
+      <View style={[styles.buttonsWrap, this.border('gray')]}>
           <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
-          <View style={styles.stylizedButtonTextWrap}>
-              <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>Cancel</FormattedText>
-          </View>
+            <View style={styles.stylizedButtonTextWrap}>
+                <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>Cancel</FormattedText>
+            </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
-          <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>Done</FormattedText>
+            <View style={styles.stylizedButtonTextWrap}>            
+              <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>Done</FormattedText>
+            </View>
           </TouchableHighlight>
       </View>      
     )
   }
+
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 1
+    }
+  }    
+
 }
 export const RenameWalletButtonsConnect = connect( state => ({
 

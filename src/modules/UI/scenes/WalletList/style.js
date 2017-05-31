@@ -1,4 +1,4 @@
-import React, {StyleSheet, Dimensions} from 'react-native';
+import React, {StyleSheet, Dimensions, Platform} from 'react-native';
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
@@ -169,98 +169,21 @@ module.exports = StyleSheet.create({
       textAlignVertical: 'center'   
     },
 
-  // modal styles
-  modalContainer: {
-    flex: 1 ,
-    alignItems: 'center'
-  },
-  modalOverlay: {
-    flex: 1,
-    padding: 10
-  },
-  modalBox: {
-    top: screenDimensions.height / 5,
-    width: screenDimensions.width * 3 / 4,
-    borderRadius: 3,
-    alignItems: 'stretch',
-    height: (screenDimensions.height) / 4,
-    backgroundColor: 'white',
-    padding: 15,
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
-  },
-  modalHeaderIconWrapBottom: {
-    position: 'relative', 
-    bottom: 50, 
-    left: 100, 
-    borderRadius: 27,
-    backgroundColor: 'white', 
-    zIndex: 1001, 
-    height: 54, 
-    width: 54    
-  },
-  modalHeaderIconWrapTop: {
-    position: 'relative', 
-    top: 3, 
-    left: 3, 
-    borderRadius: 27, 
-    backgroundColor: 'white', 
-    zIndex: 1002, 
-    height: 48, 
-    width: 48
-  },
-
-  // beginning of rename wallet modal
-  modalBody: {
-    position: 'relative',
-    bottom: 48,
-    height: ((screenDimensions.height) / 4) - 30,
-  },
-  modalTopTextWrap: {
-    flex: 1
-  },
-  modalTopText: {
-    textAlign: 'center',
-    color: '#2A5799',
-    fontSize: 16
-  },
-  modalTopSubtext  : {
-    fontSize: 14,
-    color: '#58595C',
-    textAlign: 'center',
-    marginTop: 3
-  },
-  modalMiddle: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    justifyContent: 'center'
-  },
-  modalMiddleTextWrap: {
-
-  },
-  modalMiddleText: {
-
-  },
   nameInputWrap: {
 
     borderBottomColor: '#dddddd',
     borderBottomWidth: 1,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    height: 20,
-    marginTop: 14    
+    height: '80%',
+    marginTop: 16    
 
   },
   nameInput: {
-    height: 20,
+    height: '80%',
     textAlign: 'center',
-    alignItems: 'center'
   },
-  modalBottom: {
-    height: 50,
-    flexDirection: 'row'
-  },
+
   emptyBottom: {
     flex: 1
   },

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text} from 'react-native'
+import { View, Text, Platform} from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import styles from './style'
@@ -20,32 +20,32 @@ class StylizedModal extends Component {
     render = () => {
         return(
             <Modal isVisible={this.props.visibilityBoolean}>
-                <View style={[styles.modalContainer, this.border('yellow')]}>
-
-                <View style={[styles.modalOverlay]}>
-                    <View style={[styles.modalBox, this.border('purple')]}>
-                    <View>
-                        <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.modalHeaderIconWrapBottom]} colors={['#3B7ADA', '#2B5698']}>
-                        <View style={styles.modalHeaderIconWrapTop}>
-                            {this.props.featuredIcon}
-                                
+                <View style={[styles.modalContainer]}>
+                    <View style={[styles.modalOverlay]}>
+                        <View style={[styles.modalBox]}>
+                            <View style={[styles.iconWrapper]}>
+                                {Platform.OS === 'ios' && 
+                                    <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.modalHeaderIconWrapBottom]} colors={['#3B7ADA', '#2B5698']}>
+                                        <View style={styles.modalHeaderIconWrapTop}>
+                                            {this.props.featuredIcon}  
+                                        </View>
+                                    </LinearGradient>
+                                }
+                            </View>
+                            <View style={[styles.modalBody, this.border('purple')]}>
+                                <View style={[styles.modalTopTextWrap]}>
+                                    <FormattedText style={styles.modalTopText}>{this.props.headerText}</FormattedText>
+                                    <FormattedText numberOfLines={2} style={styles.modalTopSubtext}>{this.props.headerSubtext}</FormattedText>
+                                </View>
+                                <View style={[styles.modalMiddle]}>
+                                    {this.props.modalMiddle}
+                                </View>
+                                <View style={[styles.modalBottom, this.border('green')]}>
+                                    {this.props.modalBottom}
+                                </View>
+                            </View>
                         </View>
-                        </LinearGradient>
                     </View>
-                    <View style={[styles.modalBody]}>
-                        <View style={[styles.modalTopTextWrap]}>
-                        <FormattedText style={styles.modalTopText}>{this.props.headerText}</FormattedText>
-                        <FormattedText numberOfLines={2} style={styles.modalTopSubtext}>{this.props.headerSubtext}</FormattedText>
-                        </View>
-                        <View style={[styles.modalMiddle, this.border('green')]}>
-                            {this.props.modalMiddle}
-                        </View>
-                        <View style={[styles.modalBottom]}>
-                            {this.props.modalBottom}
-                        </View>
-                    </View>
-                    </View>
-                </View>
                 </View>
             </Modal> 
         )       
