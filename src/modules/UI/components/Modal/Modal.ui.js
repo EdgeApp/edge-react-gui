@@ -37,7 +37,7 @@ class StylizedModal extends Component {
                                     <FormattedText style={styles.modalTopText}>{this.props.headerText}</FormattedText>
                                     <FormattedText numberOfLines={2} style={styles.modalTopSubtext}>{this.props.headerSubtext}</FormattedText>
                                 </View>
-                                <View style={[styles.modalMiddle]}>
+                                <View style={[styles.modalMiddle, this.border('brown')]}>
                                     {this.props.modalMiddle}
                                 </View>
                                 <View style={[styles.modalBottom, this.border('green')]}>

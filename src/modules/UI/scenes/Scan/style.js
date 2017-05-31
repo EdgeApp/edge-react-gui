@@ -1,5 +1,5 @@
 import React from 'react-native'
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet, Platform} from 'react-native';
 
 module.exports = StyleSheet.create({
   container: {
@@ -154,18 +154,19 @@ module.exports = StyleSheet.create({
     justifyContent: 'center'
   },
   addressInputWrap: {
-
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    flex: 1,
+    height: '80%',
+    marginTop: 16,   
+    marginBottom: 16,
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
 
   },
   addressInput: {
-    flex: 1,
-    textAlign: 'center',
-    alignItems: 'center'
+    height: (Platform.OS === 'ios') ? 26 : '100%',
+    textAlign: 'center', 
+    fontSize: 20
   },
   modalBottom: {
     flex: 1,

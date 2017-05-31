@@ -4,6 +4,7 @@ import FormattedText from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import Modal from 'react-native-modal'
@@ -16,6 +17,9 @@ import { toggleScanToWalletListModal } from '../../components/WalletListModal/ac
 import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress, updateUri  } from './action'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
+import StylizedModal from '../../components/Modal/Modal.ui'
+import ModalStyle from '../../components/Modal/style'
+
 
 class Scan extends Component {
   _onToggleTorch () {
@@ -70,7 +74,8 @@ class Scan extends Component {
         />      
         <View style={[styles.overlay, this.border('red')]}>
                  
-          {this.renderAddressModal()}
+          <WalletAddressModalConnect />
+
           <View style={[styles.overlayTop, this.border('yellow')]}>
             <FormattedText style={[styles.overlayTopText, this.border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
           </View>
@@ -112,9 +117,46 @@ class Scan extends Component {
       borderWidth: 0
     }
   }
+}
 
-  _onRecipientAddressChange = (input) => {
-    this.props.dispatch(updateRecipientAddress(input))
+export default connect(state => ({
+  torchEnabled: state.ui.scan.torchEnabled,
+  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
+  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+  scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
+})
+)(Scan)
+
+class WalletAddressModal extends Component {
+  render() {
+    return(
+      <StylizedModal 
+        featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />} 
+        headerText='Send to Bitcoin Address or Import Private Key:'
+        headerSubtext='' 
+        modalMiddle={<AddressInputRecipientConnect />}
+        modalBottom={<SendAddressButtonsConnect />}
+        visibilityBoolean={this.props.addressModalVisible}
+      />         
+    )
+  }
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+  }  
+}
+
+export const WalletAddressModalConnect = connect( state => ({
+  addressModalVisible: state.ui.scan.addressModalVisible,
+}))(WalletAddressModal)
+
+class AddressInputRecipient extends Component {
+    _onToggleRenameModal () {
+    // this.props.dispatch(updateCurrentWalletBeingRenamed(null))
+    // this.props.dispatch(updateWalletRenameInput(''))
+    // this.props.dispatch(toggleWalletRenameModal())
   }
 
   _onModalDone = () => {
@@ -122,45 +164,66 @@ class Scan extends Component {
     Actions.sendConfirmation(this.props.receipientAddress)
   }
 
-  renderAddressModal = () => {
-    return (
-      <Modal isVisible={this.props.addressModalVisible}>
-        <View style={styles.modalContainer}>
-          <View style={[styles.modalOverlay]}>
-            <View style={[styles.modalBox]}>
-              <View style={[styles.modalTopTextWrap]}>
-                <Text style={styles.modalTopText}>Send to Bitcoin Address or Import Private Key:</Text>
-              </View>
-              <View style={[styles.modalMiddle]}>
-                <View style={[styles.addressInputWrap]}>
-                  <TextInput style={[styles.addressInput]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
-                </View>
-              </View>
-              <View style={[styles.modalBottom]}>
-                <View style={[styles.emptyBottom]} />
-                <View style={[styles.buttonsWrap]}>
-                  <TouchableHighlight onPress={this._onToggleAddressModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                    <Text style={styles.cancelButton}>CANCEL</Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight onPress={this._onModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                    <Text style={styles.doneButton}>DONE</Text>
-                  </TouchableHighlight>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
+  _onRecipientAddressChange = (input) => {
+    this.props.dispatch(updateRecipientAddress(input))
+  }
+
+  render() {
+  
+    return(
+      <View style={[styles.addressInputWrap, this.border('orange')]}>
+          <TextInput style={[styles.addressInput, this.border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+      </View>      
     )
+  }
+
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+  }  
+}
+
+export const AddressInputRecipientConnect = connect( state => ({
+
+}))(AddressInputRecipient)
+
+
+
+class SendAddressButtons extends Component {
+  _onModalDone = () => {
+    this._onToggleAddressModal()
+    Actions.sendConfirmation(this.props.receipientAddress)
+  }
+  _onToggleAddressModal = () => {
+    this.props.dispatch(toggleAddressModal())
+  }
+
+  render( ) {
+    return(
+      <View style={[ModalStyle.buttonsWrap, this.border('gray')]}>
+          <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
+            <View style={ModalStyle.stylizedButtonTextWrap}>
+                <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>Cancel</FormattedText>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
+            <View style={ModalStyle.stylizedButtonTextWrap}>            
+              <FormattedText style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>Done</FormattedText>
+            </View>
+          </TouchableHighlight>
+      </View>       
+    )
+  }
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
   }
 }
 
-export default connect(state => ({
-  torchEnabled: state.ui.scan.torchEnabled,
-  addressModalVisible: state.ui.scan.addressModalVisible,
+const SendAddressButtonsConnect = connect(state => ({
   receipientAddress: state.ui.scan.recipientAddress,
-  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
-  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
-  scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
-})
-)(Scan)
+}))(SendAddressButtons)
