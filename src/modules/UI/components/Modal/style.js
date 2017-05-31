@@ -62,7 +62,7 @@ module.exports = StyleSheet.create({
   modalBody: {
     position: 'relative',
     bottom: 48,
-    height: ((screenDimensions.height) / 3) - 20,
+    height: (Platform.OS === 'android') ? ((screenDimensions.height) / 3) - 20 : ((screenDimensions.height) / 3) - 30,
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {

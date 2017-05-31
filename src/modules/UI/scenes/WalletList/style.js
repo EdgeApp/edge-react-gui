@@ -170,16 +170,19 @@ module.exports = StyleSheet.create({
     },
 
   nameInputWrap: {
-
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     height: '80%',
-    marginTop: 16    
+    marginTop: 16,   
+    marginBottom: 16,
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
 
   },
   nameInput: {
-    height: '80%',
-    textAlign: 'center',
+    height: (Platform.OS === 'ios') ? 26 : '100%',
+    textAlign: 'center', 
+    fontSize: 20
   },
 
   emptyBottom: {
