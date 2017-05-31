@@ -171,8 +171,6 @@ module.exports = StyleSheet.create({
 
   nameInputWrap: {
 
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     height: '80%',

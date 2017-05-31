@@ -302,7 +302,7 @@ class RenameWalletButtons extends Component {
   border (color) {
     return {
       borderColor: color,
-      borderWidth: 1
+      borderWidth: 0
     }
   }    
 
