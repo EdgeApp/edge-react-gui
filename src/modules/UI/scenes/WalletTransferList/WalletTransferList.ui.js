@@ -21,7 +21,7 @@ class WalletTransferList extends Component {
 
   _selectWalletToSendConfirmation () {
     this.props.dispatch(toggleWalletListModal())
-    Actions.sendConfirmation('wallet address')
+    Actions.sendConfirmation()
   }
 
   render () {

@@ -22,34 +22,34 @@ class TabBar extends Component {
     return (
       <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={{ borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid' }}>
         <Footer>
-            <FooterTab>
+          <FooterTab>
 
-              <Button
-                onPress={ () => Actions.directory() }
-                active={ this.props.routes.scene.title  === 'Directory' ? true : false }
-              >
-                <Icon name='home' />
-                <Text>Directory</Text>
-              </Button>
+            <Button
+              onPress={ () => Actions.directory() }
+              active={ this.props.routes.scene.title  === 'Directory' ? true : false }
+            >
+              <Icon name='home' />
+              <Text>Directory</Text>
+            </Button>
 
-              <Button
-                onPress={ () => Actions.request() }
-                active={ this.props.routes.scene.title  === 'Request' ? true : false }
-              >
-                <Icon name='download' />
-                <Text>Request</Text>
-              </Button>
+            <Button
+              onPress={ () => Actions.request() }
+              active={ this.props.routes.scene.title  === 'Request' ? true : false }
+            >
+              <Icon name='download' />
+              <Text>Request</Text>
+            </Button>
 
-              <Button
-                onPress={ () => Actions.scan() }
-                active={ this.props.routes.scene.title  === 'Scan' ? true : false }
-              >
-                <Icon name='share' />
-                <Text>Scan</Text>
-              </Button>
+            <Button
+              onPress={ () => Actions.scan() }
+              active={ this.props.routes.scene.title  === 'Scan' ? true : false }
+            >
+              <Icon name='share' />
+              <Text>Scan</Text>
+            </Button>
 
-              <Button
-                onPress={ () => Actions.transactions() }
+            <Button
+              onPress={ () => Actions.transactions() }
                 active={ this.props.routes.scene.title  === 'Transactions' ? true : false }
               >
                 <Icon name='swap' />

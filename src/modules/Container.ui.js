@@ -41,7 +41,6 @@ class Main extends Component {
     initializeAccount(this.props.dispatch)
   }
 
-
   render () {
     if (this.props.loadingScreenVisible) {
       console.log('Logging in...')
@@ -72,11 +71,11 @@ class Main extends Component {
 
                     <Scene key='scan' component={Scan} title='Scan' duration={0} />
 
-                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} />
+                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
 
                     <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                    <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} initial />
+                    <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} />
 
                     <Scene key='request' component={Request} title='Request' duration={0} />
 

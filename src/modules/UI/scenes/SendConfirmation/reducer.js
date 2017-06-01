@@ -1,104 +1,106 @@
 import * as ACTION from './action'
-import { combineReducers } from 'redux'
 
 const initialState = {
-  amountRequestedInCrypto: 0,
-  amountRequestedInFiat: 0,
-  amountReceivedInCrypto: 0,
-  fiatPerCrypto: 0,
+  amountSatoshi: 0,
+  fiatPerCrypto: 1000,
   publicAddress: '',
-  inputCurrencySelected: 'crypto',
   label: '',
-  maxAvailableToSpendInCrypto: 0,
+  inputCurrencySelected: 'crypto',
+  maxSatoshi: 10,
   isPinEnabled: true,
-  isSliderEnabled: false,
+  isSliderLocked: true,
   draftStatus: 'over',
   isKeyboardVisible: false,
-  uri: ''
+  feeSatoshi: 0,
+  transaction: {},
+  spendInfo: {}
 }
 
 export const sendConfirmation = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
-    case ACTION.UPDATE_URI_SUCCESS:
-      console.log('UPDATE_URI_SUCCESS')
-      const { uri } = data
+    case ACTION.UPDATE_AMOUNT_SATOSHI:
+      const { amountSatoshi } = data
       return {
         ...state,
-        uri
+        amountSatoshi
       }
-    case ACTION.SET_AMOUNT_REQUESTED_IN_CRYPTO:
-      const { amountRequestedInCrypto } = data
-      return {
-        ...state,
-        amountRequestedInCrypto
-      }
-    case ACTION.SET_AMOUNT_REQUESTED_IN_FIAT:
-      const { amountRequestedInFiat } = data
-      return {
-        ...state,
-        amountRequestedInFiat
-      }
-    case ACTION.SET_AMOUNT_RECEIVED_IN_CRYPTO:
-      const { amountReceivedInCrypto } = data
-      return {
-        ...state,
-        amountReceivedInCrypto
-      }
-    case ACTION.SET_FIAT_PER_CRYPTO:
+    case ACTION.UPDATE_FIAT_PER_CRYPTO:
       const { fiatPerCrypto } = data
       return {
         ...state,
         fiatPerCrypto
       }
-    case ACTION.SET_PUBLIC_ADDRESS:
+    case ACTION.UPDATE_PUBLIC_ADDRESS:
       const { publicAddress } = data
       return {
         ...state,
         publicAddress
       }
-    case ACTION.SET_INPUT_CURRENCY_SELECTED:
-      const { inputCurrencySelected } = data
-      return {
-        ...state,
-        inputCurrencySelected
-      }
-    case ACTION.SET_LABEL:
+    case ACTION.UPDATE_LABEL:
       const { label } = data
       return {
         ...state,
         label
       }
-    case ACTION.SET_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO:
-      const { maxAvailableToSpendInCrypto } = data
+    case ACTION.UPDATE_INPUT_CURRENCY_SELECTED:
+      const { inputCurrencySelected } = data
       return {
         ...state,
-        maxAvailableToSpendInCrypto
+        inputCurrencySelected
       }
-    case ACTION.SET_IS_PIN_ENABLED:
-      const { isPinEnabled } = data
+    case ACTION.UPDATE_MAX_SATOSHI:
+      const { maxSatoshi } = data
       return {
         ...state,
-        isPinEnabled
+        maxSatoshi
       }
-    case ACTION.SET_IS_SLIDER_ENABLED:
-      const { isSliderEnabled } = data
+    case ACTION.USE_MAX_SATOSHI: {
+      const { maxSatoshi } = data
       return {
         ...state,
-        isSliderEnabled
+        maxSatoshi,
+        amountSatoshi: maxSatoshi
       }
-    case ACTION.SET_DRAFT_STATUS:
+    }
+    case ACTION.UNLOCK_SLIDER:
+      const { isSliderLocked } = data
+      return {
+        ...state,
+        isSliderLocked
+      }
+    case ACTION.UPDATE_DRAFT_STATUS:
       const { draftStatus } = data
       return {
         ...state,
         draftStatus
       }
-    case ACTION.SET_IS_KEYBOARD_VISIBLE:
+    case ACTION.UPDATE_IS_KEYBOARD_VISIBLE:
       const { isKeyboardVisible } = data
       return {
         ...state,
         isKeyboardVisible
       }
+    case ACTION.UPDATE_FEE:
+      const { feeSatoshi } = data
+      return {
+        ...state,
+        feeSatoshi
+      }
+    case ACTION.UPDATE_TRANSACTION:
+      const { transaction = {} } = data
+      return {
+        ...state,
+        transaction
+      }
+    case ACTION.UPDATE_SPEND_INFO:
+      const { spendInfo = {} } = data
+      return {
+        ...state,
+        spendInfo
+      }
+    case ACTION.RESET:
+      return initialState
     default:
       return state
   }

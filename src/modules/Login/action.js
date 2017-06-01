@@ -11,6 +11,8 @@ export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET'
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeCurrencyWallet } from 'airbitz-core-js'
 
+import { openTransactionAlert } from '../../modules/UI/components/TransactionAlert/action.js'
+
 export const addAirbitzToRedux = airbitz => {
   return {
     type: ADD_AIRBITZ_TO_REDUX,
@@ -39,7 +41,7 @@ export const addWalletByKey = key => {
     const plugin = makeShitcoinPlugin({
       io: getState().account.io
     })
-    const callbacks = makeCallbacks(dispatch, id)
+    const callbacks = makeWalletCallbacks(dispatch, getState, id)
     const opts = {
       account,
       plugin,
@@ -100,10 +102,24 @@ export const addWallet = wallet => {
   }
 }
 
-const makeCallbacks = (dispatch, id) => {
+export const updateTransactions = (id, transactions) => {
+  return (dispatch, getState) => {
+    const wallet = getState().ui.wallets.byId[id]
+    const updatedWallet = {
+      ...wallet,
+      transactions: transactions
+    }
+
+    dispatch(addWallet(updatedWallet))
+  }
+}
+
+const makeWalletCallbacks = (dispatch, getState, id) => {
   const callbacks = {
     onAddressesChecked (progressRatio) {
-      console.log('onAddressesChecked', progressRatio)
+      if (progressRatio === 1) {
+        console.log('onAddressesChecked', progressRatio)
+      }
     },
 
     onBalanceChanged (balance) {
@@ -113,7 +129,7 @@ const makeCallbacks = (dispatch, id) => {
 
     onTransactionsChanged (transactions) {
       console.log('onTransactionsChanged', transactions)
-      // dispatch(updateTransactions(id, transactions))
+      dispatch(updateTransactions(id, transactions))
     },
 
     onNewTransactions (transactions) {

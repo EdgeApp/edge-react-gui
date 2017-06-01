@@ -15,40 +15,27 @@ import FlipView from 'react-native-flip-view'
 const CRYPTO_PLACEHOLDER = 'C 0.00'
 const FIAT_PLACEHOLDER   = 'F 0.00'
 
-export default class FlipInput extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      isFlipped: false,
-    }
-  }
-
-  render () {
+class FlipInput extends Component {
+render () {
     return (
       <FlipView style={styles.view}
         front={this._renderFront()}
         back={this._renderBack()}
-        isFlipped={this.state.isFlipped}
-        onFlipped={(val) => {console.log('Flipped: ' + val);}}
-        flipAxis="x"
+        isFlipped={this.props.inputCurrencySelected === 'fiat'}
+        flipAxis='x'
         flipEasing={Easing.out(Easing.ease)}
         flipDuration={250}
         perspective={1000} />
     );
   };
 
-  flip = () => {
-    this.setState({isFlipped: !this.state.isFlipped})
-  }
-
   _renderFront = () => {
     const {
       mode,
       onCryptoInputChange,
       onFiatInputChange,
-      amountRequestedInCrypto,
-      amountRequestedInFiat,
+      amountSatoshi,
+      amountFiat,
       onInputCurrencyToggle,
       feeInFiat,
       feeInCrypto,
@@ -63,9 +50,9 @@ export default class FlipInput extends Component {
         primaryPlaceholder={'c 0.00'}
         secondaryPlaceholder={'f 0.00'}
         onInputChange={onCryptoInputChange}
-        amountRequestedPrimary={amountRequestedInCrypto}
-        amountRequestedSecondary={amountRequestedInFiat}
-        onInputCurrencyToggle={this.flip}
+        amountRequestedPrimary={amountSatoshi}
+        amountRequestedSecondary={amountFiat}
+        onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInCrypto}
         secondaryFee={feeInFiat}
         displayFees={displayFees} />
@@ -76,8 +63,8 @@ export default class FlipInput extends Component {
       mode,
       onFiatInputChange,
       onCryptoInputChange,
-      amountRequestedInFiat,
-      amountRequestedInCrypto,
+      amountFiat,
+      amountSatoshi,
       onInputCurrencyToggle,
       feeInFiat,
       feeInCrypto,
@@ -92,19 +79,20 @@ export default class FlipInput extends Component {
         primaryPlaceholder={'f 0.00'}
         secondaryPlaceholder={'c 0.00'}
         onInputChange={onFiatInputChange}
-        amountRequestedPrimary={amountRequestedInFiat}
-        amountRequestedSecondary={amountRequestedInCrypto}
-        onInputCurrencyToggle={this.flip}
+        amountRequestedPrimary={amountFiat}
+        amountRequestedSecondary={amountSatoshi}
+        onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInFiat}
         secondaryFee={feeInCrypto}
         displayFees={displayFees} />
     )
   }
-
-  _flip = () => {
-    this.setState({isFlipped: !this.state.isFlipped});
-  }
 }
+
+export default connect(state => ({
+  sendConfirmation: state.ui.sendConfirmation
+})
+)(FlipInput)
 
 const FlipInputInside = ({
   mode,
