@@ -23,16 +23,15 @@ class UserListComponent extends Component {
   }
 
   render () {
-
     const rows = () => {
       return _.map(this.props.usersList, (user, index) => {
         if(platform === 'android') {
           return (
             <View key={index} style={styles.userList.row}>
-              <TouchableNativeFeedback onPress={ e => this._handlePressUserSelect(user.id) } background={TouchableNativeFeedback.SelectableBackground()} >
-                <Text style={styles.userList.text}>{user.name}</Text>
+              <TouchableNativeFeedback onPress={ e => this._handlePressUserSelect(user) } background={TouchableNativeFeedback.SelectableBackground()} >
+                <Text style={styles.userList.text}>{user}</Text>
               </TouchableNativeFeedback>
-              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user.id) }>
+              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user) }>
                 <Icon name='close'/>
               </TouchableOpacity>
             </View>
@@ -41,10 +40,10 @@ class UserListComponent extends Component {
         if(platform !== 'android') {
           return (
             <View key={index} style={styles.userList.row}>
-              <TouchableOpacity  style={styles.userList.text} onPress={ e => this._handlePressUserSelect(user.id) }>
-                <Text>{user.name}</Text>
+              <TouchableOpacity  style={styles.userList.text} onPress={ e => this._handlePressUserSelect(user) }>
+                <Text>{user}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user.id) }>
+              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user) }>
                 <Icon name='close'/>
               </TouchableOpacity>
             </View>
@@ -64,8 +63,10 @@ class UserListComponent extends Component {
 
 export default connect( state => ({
 
-  usersList : state.ui.controlPanel.selectedUser !== null ?
-    _.filter(state.ui.controlPanel.usersList, item => item.id !== state.ui.controlPanel.selectedUser) :
-    state.ui.controlPanel.usersList,
+  usersList: state.ui.controlPanel.usersList
+
+  // usersList : state.ui.controlPanel.selectedUser !== null ?
+  //   _.filter(state.ui.controlPanel.usersList, item => item.id !== state.ui.controlPanel.selectedUser) :
+  //   state.ui.controlPanel.usersList,
 
 }) )(UserListComponent)

@@ -8,6 +8,8 @@ import { makeContext } from 'airbitz-core-js'
 import { disableLoadingScreenVisibility } from './action'
 import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 
+import { getUsersList } from './UI/components/ControlPanel/action.js'
+
 export const initializeAccount = (dispatch) => {
   makeReactNativeIo().then(io => {
     const context = makeContext({
@@ -16,6 +18,7 @@ export const initializeAccount = (dispatch) => {
     })
 
     dispatch(addAirbitzToRedux(context))
+    getListUsernames(context,dispatch)
     const callbacks = makeAccountCallbacks(dispatch)
     const account = context.loginWithPassword(
       'bob19',
@@ -68,4 +71,12 @@ makeAccountCallbacks = (dispatch) => {
   }
 
   return callbacks
+}
+
+getListUsernames = (context, dispatch) => {
+
+  context.listUsernames((error, usernames) => {
+    return dispatch(getUsersList(usernames))
+  })
+
 }

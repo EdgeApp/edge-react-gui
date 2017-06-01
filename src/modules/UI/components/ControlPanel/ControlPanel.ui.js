@@ -6,19 +6,13 @@ import { Actions } from 'react-native-router-flux'
 import LinearGradient from 'react-native-linear-gradient'
 import _ from 'lodash'
 
-import { openSelectUser, closeSelectUser, getUsersList } from './action'
+import { openSelectUser, closeSelectUser } from './action'
 
 import Main from './Component/Main'
 import usersListObject from './userList'
 import styles from './style'
 
 class ControlPanel extends Component {
-
-  componentWillMount = () => {
-    return this.props.dispatch(
-      getUsersList(usersListObject)
-    )
-  }
 
   _handlePressUserList = () => {
     if(!this.props.usersView){
