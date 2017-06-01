@@ -33,7 +33,6 @@ class TransactionAlert extends Component {
   }
 
   _onPress = (props) => {
-    console.log(props.route)
     return this._closeAlert()
   }
 

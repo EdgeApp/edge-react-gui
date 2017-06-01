@@ -23,16 +23,16 @@ export const getUsersList = (data) => {
   }
 }
 
-export const selectUsersList = (id) => {
+export const selectUsersList = (name) => {
   return {
     type: SELECT_USERS_SIDEBAR,
-    id
+    name
   }
 }
 
-export const removeUsersList = (id) => {
+export const removeUsersList = (name) => {
   return {
     type: REMOVE_USERS_SIDEBAR,
-    id
+    name
   }
 }

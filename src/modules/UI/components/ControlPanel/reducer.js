@@ -18,7 +18,7 @@ const usersList = (state = [], action) => {
     case ACTION.LIST_USERS_SIDEBAR :
       return action.data
     case ACTION.REMOVE_USERS_SIDEBAR :
-      return _.filter(state, item => item.id !== action.id)
+      return _.filter(state, item => item !== action.name)
     default:
       return state
   }

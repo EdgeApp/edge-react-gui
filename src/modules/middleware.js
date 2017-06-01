@@ -21,8 +21,8 @@ export const initializeAccount = (dispatch) => {
     getListUsernames(context,dispatch)
     const callbacks = makeAccountCallbacks(dispatch)
     const account = context.loginWithPassword(
-      'bob19',
-      'Funtimes19',
+      'foofoo101',
+      'P@ssw0rd12',
       null,
       callbacks
     )
