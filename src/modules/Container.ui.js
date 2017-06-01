@@ -33,12 +33,12 @@ class Main extends Component {
   constructor (props) {
     super(props)
 
+    initializeAccount(this.props.dispatch)
     this.props.dispatch(enableLoadingScreenVisibility())
   }
 
-  componentDidMount () {
+  componentWillMount () {
     console.log('about to initializeAccount')
-    initializeAccount(this.props.dispatch)
   }
 
   render () {

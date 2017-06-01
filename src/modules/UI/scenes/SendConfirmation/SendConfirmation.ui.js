@@ -115,8 +115,8 @@ class SendConfirmation extends Component {
   }
 
   signBroadcastAndSave = () => {
-    const { spendInfo } = this.props
-    this.props.signBroadcastAndSave(spendInfo)
+    const { transaction } = this.props
+    this.props.signBroadcastAndSave(transaction)
   }
 
   getTopSpacer = () => {
@@ -163,8 +163,8 @@ class SendConfirmation extends Component {
       this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
   }
 
-  onCryptoInputChange = (amountSatoshi) => {
-    this.props.updateAmountSatoshi(amountSatoshi)
+  onCryptoInputChange = amountSatoshi => {
+    this.props.updateAmountSatoshi(parseInt(amountSatoshi))
   }
 
   onFiatInputChange = (amountFiat) => {

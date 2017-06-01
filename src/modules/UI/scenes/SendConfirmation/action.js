@@ -109,7 +109,7 @@ export const signBroadcastAndSave = unsignedTransaction => {
       // dispatch(reset())
     })
     .then(() => {
-      Actions.transactions()
+      Actions.transactionList()
     })
   }
 }

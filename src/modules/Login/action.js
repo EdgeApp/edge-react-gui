@@ -37,31 +37,23 @@ export const addAccountToRedux = account => {
 export const addWalletByKey = key => {
   return (dispatch, getState) => {
     const { id, archived } = key
-    const account = getState().account
-    const plugin = makeShitcoinPlugin({
-      io: getState().account.io
-    })
+    const { account, airbitz: { io } } = getState()
+    const plugin = makeShitcoinPlugin({ io })
     const callbacks = makeWalletCallbacks(dispatch, getState, id)
     const opts = {
       account,
       plugin,
-      callbacks
+      callbacks,
+      io
     }
+    // TODO: If the wallet is archived, don't even bother coming here
     makeCurrencyWallet(key, opts)
     .then(wallet => {
-      dispatch(addWallet(wallet))
-      // if (!archived) { TODO: update with loading optimizations
-      // else {}
-      dispatch(activateWallet(wallet))
-    })
-  }
-}
-
-const activateWallet = wallet => {
-  return (dispatch, getState) => {
-    wallet.startEngine()
-    .then(() => {
-      dispatch(activateWalletId(wallet.id))
+      wallet.startEngine()
+      .then(() => {
+        dispatch(addWallet(wallet))
+        dispatch(activateWalletId(wallet.id))
+      })
     })
   }
 }
@@ -69,9 +61,7 @@ const activateWallet = wallet => {
 const activateWalletId = (id) => {
   return {
     type: ACTIVATE_WALLET_ID,
-    data: {
-      id
-    }
+    data: { id }
   }
 }
 

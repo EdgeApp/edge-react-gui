@@ -257,22 +257,22 @@ class TransactionList extends Component {
               <Text style={styles.formattedDate}>{dateString}</Text>
             </View>
             {tx.key === 1 && (
-            <View style={styles.rightDateSearch}>
-              {(this.props.searchVisible === false) && (
-              <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
-                <FAIcon name='search' size={16} style={styles.firstDateSearchIcon} color='#cccccc' />
-              </TouchableHighlight>
-            )}
-            </View>)}
+              <View style={styles.rightDateSearch}>
+                {(this.props.searchVisible === false) && (
+                  <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
+                    <FAIcon name='search' size={16} style={styles.firstDateSearchIcon} color='#cccccc' />
+                  </TouchableHighlight>
+                )}
+              </View>)}
           </View>)
         }
         <View style={styles.singleTransaction}>
           <View style={styles.transactionInfoWrap}>
             {tx.hasThumbnail ? (
               <Image style={styles.transactionLogo} source={{ uri: tx.thumbnailPath }} />
-              ) : (
-                <FAIcon name='user' style={styles.transactionLogo} size={50} />
-              )}
+            ) : (
+              <FAIcon name='user' style={styles.transactionLogo} size={50} />
+            )}
             <View style={styles.transactionDollars}>
               <Text style={styles.transactionPartner}>{sendReceiveSyntax}</Text>
               <Text style={styles.transactionType}>{expenseIncomeSyntax}</Text>

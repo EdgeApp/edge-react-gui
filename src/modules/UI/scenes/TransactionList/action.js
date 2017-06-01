@@ -22,18 +22,25 @@ export const updateTransactionsRequest = (walletId, transactions) => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
-
-    console.log('selectedWalletId', selectedWalletId)
-    console.log('walletId', walletId)
+    const wallet = getSelectedWallet(state)
 
     if (selectedWalletId === walletId) {
       console.log('adding transactions for selectedWallet')
-      dispatch(updateTransactions(transactions))
+      return wallet.getTransactions({}).then(transactions => {
+        dispatch(updateTransactions(transactions))
+      })
     } else {
       const message = 'New transactions received'
       dispatch(openTransactionAlert(message))
     }
   }
+}
+
+const getSelectedWallet = state => {
+  const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = state
+  const selectedWallet = byId[selectedWalletId]
+
+  return selectedWallet
 }
 
 export const updateTransactions = transactions => {

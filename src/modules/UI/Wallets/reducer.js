@@ -74,7 +74,7 @@ const schema = wallet => {
     console.log('error', error)
   }
 
-  const info = wallet._plugin.getInfo()
+  const info = wallet.currencyInfo
   const {
     currencyCode,
     denominations,

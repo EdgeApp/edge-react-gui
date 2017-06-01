@@ -25,7 +25,6 @@ export const initializeAccount = (dispatch) => {
   })
   .then((account) => {
     dispatch(addAccountToRedux(account))
-    dispatch(disableLoadingScreenVisibility())
 
     const supportedTypes = [
       'wallet:shitcoin'
@@ -42,6 +41,7 @@ export const initializeAccount = (dispatch) => {
 
     const firstWalletId = keys[0].id
     dispatch(selectWalletById(firstWalletId))
+    dispatch(disableLoadingScreenVisibility())
   })
 }
 
