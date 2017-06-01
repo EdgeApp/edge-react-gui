@@ -1,6 +1,17 @@
   import * as ACTION from './action'
   import {combineReducers} from 'redux'
 
+  const transactions = (state = [], action) => {
+    const { type, data = {} } = action
+    const { transactions } = data
+    switch (type) {
+      case ACTION.UPDATE_TRANSACTIONS:
+        return transactions
+      default:
+        return state
+    }
+  }
+
   const transactionsList = (state = [], action) => {
     switch (action.type) {
       case ACTION.UPDATE_TRANSACTIONS_LIST :
@@ -57,7 +68,7 @@
   }
 
   const transactionList = combineReducers({
-    transactionsList,
+    transactions,
     searchVisible,
     contactsList,
     updatingBalance,

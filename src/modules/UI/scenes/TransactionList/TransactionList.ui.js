@@ -7,7 +7,14 @@ import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
-import {transactionsSearchVisible, transactionsSearchHidden, deleteTransactionsList, updateTransactionsList, updateContactsList, updateSearchResults} from './action'
+import {
+  transactionsSearchVisible,
+  transactionsSearchHidden,
+  deleteTransactionsList,
+  updateTransactionsList,
+  updateContactsList,
+  updateSearchResults } from './action'
+
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
@@ -15,7 +22,7 @@ import styles from './style'
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
 
-class Transactions extends Component {
+class TransactionList extends Component {
   // constructor(props) {
   //   super(props)
   // }
@@ -148,7 +155,7 @@ class Transactions extends Component {
   }
 
   render () {
-    var renderableTransactionList = this.props.wallet.transactions.sort(function (a, b) {
+    var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
@@ -172,16 +179,20 @@ class Transactions extends Component {
               </View>
             </View>
           ) : (
+
             <View style={[styles.currentBalanceWrap, this.border('green')]}>
               <View style={[styles.bitcoinIconWrap, this.border('yellow')]}>
                 <FAIcon style={[styles.bitcoinIcon]} name='bitcoin' color='white' size={24} />
               </View>
+
               <View style={[styles.currentBalanceBoxDollarsWrap, this.border('yellow')]}>
                 <FormattedText style={[styles.currentBalanceBoxDollars, this.border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</FormattedText>
               </View>
+
               <View style={[styles.currentBalanceBoxBitsWrap, this.border('red')]}>
-                <FormattedText style={[styles.currentBalanceBoxBits, this.border('yellow')]}>b 600000</FormattedText>
+                <FormattedText style={[styles.currentBalanceBoxBits, this.border('yellow')]}>b {this.props.wallet.balance}</FormattedText>
               </View>
+
             </View>
           )}
 
@@ -284,18 +295,21 @@ class Transactions extends Component {
   }
 }
 
-Transactions.propTypes = {
+TransactionList.propTypes = {
   transactionsList: PropTypes.array,
   searchVisible: PropTypes.bool,
   contactsList: PropTypes.array
 }
 
-export default connect(state => ({
-  updatingBalance: state.ui.transactionList.updatingBalance,
-  transactionsList: state.ui.transactionList.transactionsList,
+const mapStateToProps = state => ({
+  // updatingBalance: state.ui.transactionList.updatingBalance,
+  updatingBalance: false,
+  transactions: state.ui.transactionList.transactions,
   searchVisible: state.ui.transactionList.searchVisible,
   contactsList: state.ui.transactionList.contactsList,
   exchangeRates: state.exchangeRate.exchangeRates,
   wallet: state.wallets.byId[state.ui.wallets.selectedWalletId]
+})
+const mapDispatchToProps = dispatch => ({})
 
-}))(Transactions)
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

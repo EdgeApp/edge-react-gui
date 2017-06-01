@@ -8,7 +8,7 @@ import { MenuContext } from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 
-import TransactionsList from './UI/scenes/TransactionsList'
+import TransactionList from './UI/scenes/TransactionList'
 import Directory from './UI/scenes/Directory/Directory.ui'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
@@ -75,7 +75,7 @@ class Main extends Component {
 
                     <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                    <Scene key='transactions' component={TransactionsList} title='Transactions' duration={0} />
+                    <Scene key='transactionList' component={TransactionList} title='Transactions' duration={0} />
 
                     <Scene key='request' component={Request} title='Request' duration={0} />
 

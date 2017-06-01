@@ -49,7 +49,7 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={ () => Actions.transactions() }
+              onPress={ () => Actions.transactionList() }
                 active={ this.props.routes.scene.title  === 'Transactions' ? true : false }
               >
                 <Icon name='swap' />

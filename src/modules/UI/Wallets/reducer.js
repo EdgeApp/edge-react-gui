@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux'
-import * as WALLETS_ACTION from './action'
+import * as ACTION from './action'
 import * as WALLET_LIST_ACTION from '../scenes/WalletList/action'
-import { FakeTxPrivate } from '../../../Fakes/FakeTxPrivate.js'
 
 export const byId = (state = {}, action) => {
   switch (action.type) {
-    case WALLETS_ACTION.ADD_WALLET :
+    case ACTION.ADD_WALLET :
       return {
         ...state,
         [action.data.wallet.id]: schema(action.data.wallet)
@@ -28,7 +27,7 @@ export const byId = (state = {}, action) => {
     case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET :
       return { ...state, [action.key]: { ...state[action.key], name: action.input } }
 
-    case WALLETS_ACTION.COMPLETE_DELETE_WALLET :
+    case ACTION.COMPLETE_DELETE_WALLET :
       delete state[action.data]
       return state
 
@@ -39,7 +38,7 @@ export const byId = (state = {}, action) => {
 
 export const walletList = (state = [], action) => {
   switch (action.type) {
-    case WALLETS_ACTION.UPDATE_WALLET_LIST :
+    case ACTION.UPDATE_WALLET_LIST :
       return action.data
     default:
       return state
@@ -48,7 +47,7 @@ export const walletList = (state = [], action) => {
 
 export const selectedWalletId = (state = '', action) => {
   switch (action.type) {
-    case WALLETS_ACTION.SELECT_WALLET_BY_ID :
+    case ACTION.SELECT_WALLET_BY_ID :
       return action.data.id
     default:
       return state
@@ -64,12 +63,18 @@ export const walletListOrder = (state = [], action) => {
   }
 }
 
-const schema = (wallet) => {
+const schema = wallet => {
   const id = wallet.id
   const type = wallet.type
   const name = wallet.name
+  let balance = 0
+  try {
+    balance = wallet.getBalance()
+  } catch (error) {
+    console.log('error', error)
+  }
 
-  const info = FakeTxPrivate.getInfo
+  const info = wallet._plugin.getInfo()
   const {
     currencyCode,
     denominations,
@@ -80,6 +85,7 @@ const schema = (wallet) => {
     id,
     type,
     name,
+    balance,
     currencyCode,
     denominations,
     symbolImage,

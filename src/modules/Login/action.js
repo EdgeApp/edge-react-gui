@@ -11,7 +11,7 @@ export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET'
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeCurrencyWallet } from 'airbitz-core-js'
 
-import { openTransactionAlert } from '../../modules/UI/components/TransactionAlert/action.js'
+import { updateTransactionsRequest } from '../UI/scenes/TransactionList/action.js'
 
 export const addAirbitzToRedux = airbitz => {
   return {
@@ -49,22 +49,20 @@ export const addWalletByKey = key => {
     }
     makeCurrencyWallet(key, opts)
     .then(wallet => {
-      if (!archived) {
-        dispatch(activateWallet(wallet))
-      } else {
-        dispatch(archiveWallet(wallet))
-      }
-
-      console.log('wallet', wallet)
-      return dispatch(addWallet(wallet))
+      dispatch(addWallet(wallet))
+      // if (!archived) { TODO: update with loading optimizations
+      // else {}
+      dispatch(activateWallet(wallet))
     })
   }
 }
 
 const activateWallet = wallet => {
-  wallet.startEngine()
   return (dispatch, getState) => {
-    dispatch(activateWalletId(wallet.id))
+    wallet.startEngine()
+    .then(() => {
+      dispatch(activateWalletId(wallet.id))
+    })
   }
 }
 
@@ -96,25 +94,11 @@ const archiveWalletId = (id) => {
 export const addWallet = wallet => {
   return {
     type: ADD_WALLET,
-    data: {
-      wallet
-    }
+    data: { wallet }
   }
 }
 
-export const updateTransactions = (id, transactions) => {
-  return (dispatch, getState) => {
-    const wallet = getState().ui.wallets.byId[id]
-    const updatedWallet = {
-      ...wallet,
-      transactions: transactions
-    }
-
-    dispatch(addWallet(updatedWallet))
-  }
-}
-
-const makeWalletCallbacks = (dispatch, getState, id) => {
+const makeWalletCallbacks = (dispatch, getState, walletId) => {
   const callbacks = {
     onAddressesChecked (progressRatio) {
       if (progressRatio === 1) {
@@ -124,22 +108,22 @@ const makeWalletCallbacks = (dispatch, getState, id) => {
 
     onBalanceChanged (balance) {
       console.log('onBalanceChanged', balance)
-      // dispatch(setBalance(id, balance))
+      // dispatch(setBalance(walletId, balance))
     },
 
     onTransactionsChanged (transactions) {
       console.log('onTransactionsChanged', transactions)
-      dispatch(updateTransactions(id, transactions))
+      dispatch(updateTransactionsRequest(walletId, transactions))
     },
 
     onNewTransactions (transactions) {
       console.log('onNewTransaction', transactions)
-      // dispatch(insertTransactions(id, transactions))
+      dispatch(updateTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (blockHeight) {
       console.log('onBlockHeightChanged', blockHeight)
-      // dispatch(setBlockHeight(id, blockHeight))
+      // dispatch(setBlockHeight(walletId, blockHeight))
     }
   }
 
