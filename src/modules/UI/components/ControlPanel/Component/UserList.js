@@ -63,10 +63,8 @@ class UserListComponent extends Component {
 
 export default connect( state => ({
 
-  usersList: state.ui.controlPanel.usersList
-
-  // usersList : state.ui.controlPanel.selectedUser !== null ?
-  //   _.filter(state.ui.controlPanel.usersList, item => item.id !== state.ui.controlPanel.selectedUser) :
-  //   state.ui.controlPanel.usersList,
+  usersList : state.account.username !== null ?
+    _.filter(state.ui.controlPanel.usersList, item => item !== state.account.username) :
+    state.ui.controlPanel.usersList,
 
 }) )(UserListComponent)

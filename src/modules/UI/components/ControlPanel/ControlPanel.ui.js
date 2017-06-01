@@ -32,7 +32,7 @@ class ControlPanel extends Component {
           </View>
           <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
             <Icon style={styles.user.icon} name='person' />
-            <Text style={styles.user.name}>{ this.props.selectedUser ? this.props.selectedUser.name : 'Account' }</Text>
+            <Text style={styles.user.name}>{ this.props.account.username ? this.props.account.username : 'Account' }</Text>
             <Icon style={styles.user.icon} name='arrow-dropdown' />
           </TouchableOpacity>
           <Main/>
@@ -43,9 +43,7 @@ class ControlPanel extends Component {
 
 export default connect( state => ({
 
-  usersView: state.ui.controlPanel.usersView,
-  selectedUser : state.ui.controlPanel.selectedUser !== null ?
-    _.find(state.ui.controlPanel.usersList, item => item.id === state.ui.controlPanel.selectedUser) :
-    null
+  account: state.account,
+  usersView: state.ui.controlPanel.usersView
 
 }) )(ControlPanel)
