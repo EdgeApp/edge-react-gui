@@ -12,6 +12,7 @@ import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeCurrencyWallet } from 'airbitz-core-js'
 
 import { updateTransactionsRequest } from '../UI/scenes/TransactionList/action.js'
+import { selectWalletById } from '../UI/Wallets/action.js'
 
 export const addAirbitzToRedux = airbitz => {
   return {
@@ -27,10 +28,36 @@ export const setAccountLoadingStatus = (status) => {
   }
 }
 
+export const initializeAccount = account => {
+  return dispatch => {
+    dispatch(addAccountToRedux(account))
+    const supportedTypes = [
+      'wallet:shitcoin'
+    ]
+    let allKeys = account.allKeys
+
+    const keys = allKeys.filter(key => {
+      return supportedTypes.includes(key.type)
+    })
+
+    const firstWalletId = keys[0].id
+    dispatch(selectWalletById(firstWalletId))
+    dispatch(addWalletsByKeys(keys))
+  }
+}
+
 export const addAccountToRedux = account => {
   return {
     type: ADD_ACCOUNT_TO_REDUX,
     data: { account }
+  }
+}
+
+export const addWalletsByKeys = keys => {
+  return dispatch => {
+    keys.forEach(key => {
+      dispatch(addWalletByKey(key))
+    })
   }
 }
 
