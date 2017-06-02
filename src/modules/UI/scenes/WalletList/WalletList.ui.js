@@ -260,7 +260,7 @@ class WalletNameInput extends Component {
       </View>
     )
   }
-  
+
   border (color) {
     return {
       borderColor: color,

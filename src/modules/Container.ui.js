@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
+import LinearGradient from 'react-native-linear-gradient'
 
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
@@ -16,14 +17,19 @@ import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import AddWallet from './UI/scenes/AddWallet/index.js'
 
+import Login from './UI/scenes/Login/index.js'
+
 import SideMenu from './UI/components/SideMenu/SideMenu.ui'
 import Header from './UI/components/Header/Header.ui'
 import TabBar from './UI/components/TabBar/TabBar.ui'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert'
 
-import { initializeAccount } from './middleware'
-import { enableLoadingScreenVisibility } from './action'
+import { initializeAccount, addAirbitzToRedux, addWalletByKey } from './Login/action.js'
+import { selectWalletById } from './UI/Wallets/action.js'
+
+import { makeReactNativeIo } from 'react-native-airbitz-io'
+import { makeContext } from 'airbitz-core-js'
 
 import styles from './style.js'
 
@@ -33,43 +39,78 @@ class Main extends Component {
   constructor (props) {
     super(props)
 
-    initializeAccount(this.props.dispatch)
-    this.props.dispatch(enableLoadingScreenVisibility())
+    console.log('main constructor props', props)
+
+    this.state = {
+      loading: true,
+      loginVisible: true,
+      context: {}
+    }
   }
 
-  componentWillMount () {
-    console.log('about to initializeAccount')
+  componentDidMount = () => {
+    makeReactNativeIo()
+    .then(io => {
+      const context = makeContext({
+        apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
+        io
+      })
+
+      this.props.dispatch(addAirbitzToRedux(context))
+      this.setState({
+        context,
+        loading: false
+      })
+    })
   }
 
   render () {
-    if (this.props.loadingScreenVisible) {
-      console.log('Logging in...')
+    if (this.state.loading) {
       return (
-        <ActivityIndicator
-          animating={this.props.loadingScreenVisible}
+        <LinearGradient
+          style={styles.background}
+          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+          colors={['#3b7adb', '#2b569a']}>
+        </LinearGradient>
+      )
+    }
+
+    if (this.state.loginVisible) {
+      return (
+        <Login
+          callbacks={makeAccountCallbacks(this.props.dispatch)}
+          context={this.state.context}
+          onLoggedIn={account => {
+            this.props.dispatch(initializeAccount(account))
+            this.setState({ loginVisible: false })
+          }}
           style={{
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center'
           }}
-          size='large'
         />
       )
     }
-    console.log('Logged in')
-    console.log('Loading the app...')
+
     return (
       <StyleProvider style={getTheme(platform)}>
+
         <MenuContext style={{ flex: 1 }}>
+
           <View style={styles.statusBarHack}>
+
             <Container>
+
               <StatusBar backgroundColor='green' barStyle='light-content' />
               <SideMenu>
                 <Header />
+
                 <RouterWithRedux>
+
                   <Scene key='root' hideNavBar>
 
-                    <Scene key='scan' component={Scan} title='Scan' duration={0} />
+                    <Scene key='scan' component={Scan} title='Scan' duration={0} test={console.log('this.props', this.props)}/>
 
                     <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
 
@@ -98,6 +139,37 @@ class Main extends Component {
 
 }
 
-export default connect(state => ({
-  loadingScreenVisible: state.ui.main.loadingScreenVisible
-}))(Main)
+const mapStateToProps = state => ({})
+const mapDispatchToProps = dispatch => ({})
+
+export default connect()(Main)
+
+const makeAccountCallbacks = dispatch => {
+  const callbacks = {
+    onDataChanged: () => {
+      console.log('onDataChanged')
+    },
+
+    onKeyListChanged: () => {
+      console.log('onKeyListChanged')
+    },
+
+    onLoggedOut: () => {
+      console.log('onLoggedOut')
+    },
+
+    onOTPRequired: () => {
+      console.log('onOTPRequired')
+    },
+
+    onOTPSkew: () => {
+      console.log('onOTPSkew')
+    },
+
+    onRemotePasswordChanged: () => {
+      console.log('onRemotePasswordChanged')
+    }
+  }
+
+  return callbacks
+}
