@@ -27,12 +27,9 @@ class ABSlider extends Component {
 
   onValueChange = value => {
     this.setState({value})
-    console.log("Value: " + this.state.value)
-  };
+  }
 
   render() {
-    console.log('slider props', this.props)
-    console.log('slider state', this.state)
     return (
       <Slider
         disabled={this.props.sliderDisabled}

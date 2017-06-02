@@ -1,12 +1,9 @@
 import { makeReactNativeIo } from 'react-native-airbitz-io'
-import { addWallet as addWalletUI } from './UI/Wallets/action.js'
-import { addWalletByKey } from './Login/action.js'
+import { addAccountToRedux, addAirbitzToRedux, addWalletByKey } from './Login/action.js'
 
 import { selectWalletById } from './UI/Wallets/action.js'
-import { addAccountToRedux, addAirbitzToRedux } from './Login/action.js'
 import { makeContext } from 'airbitz-core-js'
 import { disableLoadingScreenVisibility } from './action'
-import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 
 export const initializeAccount = (dispatch) => {
   makeReactNativeIo().then(io => {
@@ -18,8 +15,8 @@ export const initializeAccount = (dispatch) => {
     dispatch(addAirbitzToRedux(context))
     const callbacks = makeAccountCallbacks(dispatch)
     const account = context.loginWithPassword(
-      'bob19',
-      'Funtimes19',
+      'bob2',
+      'bob2',
       null,
       callbacks
     )
@@ -27,15 +24,14 @@ export const initializeAccount = (dispatch) => {
     return account
   })
   .then((account) => {
-    dispatch(disableLoadingScreenVisibility())
     dispatch(addAccountToRedux(account))
 
     const supportedTypes = [
-      'account-repo:co.airbitz.wallet'
+      'wallet:shitcoin'
     ]
     let allKeys = account.allKeys
 
-    keys = allKeys.filter(key => {
+    const keys = allKeys.filter(key => {
       return supportedTypes.includes(key.type)
     })
 
@@ -45,10 +41,11 @@ export const initializeAccount = (dispatch) => {
 
     const firstWalletId = keys[0].id
     dispatch(selectWalletById(firstWalletId))
+    dispatch(disableLoadingScreenVisibility())
   })
 }
 
-makeAccountCallbacks = (dispatch) => {
+const makeAccountCallbacks = (dispatch) => {
   const callbacks = {
     onRemotePasswordChange: () => {
       console.log('onRemotePasswordChange')
@@ -62,8 +59,8 @@ makeAccountCallbacks = (dispatch) => {
       console.log('onOTPSkew')
     },
 
-    onKeysChanged: () => {
-      console.log('onKeysChanged')
+    onKeyListChanged: () => {
+      console.log('onKeyListChanged')
     }
   }
 

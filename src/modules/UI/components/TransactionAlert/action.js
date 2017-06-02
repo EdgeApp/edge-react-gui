@@ -1,14 +1,14 @@
 export const OPEN_TRANSACTION_ALERT = 'OPEN_TRANSACTION_ALERT'
 export const CLOSE_TRANSACTION_ALERT = 'CLOSE_TRANSACTION_ALERT'
 
-export function openTransactionAlert (message = "Transaction Received", route) {
+export const openTransactionAlert = message => {
   return {
     type: OPEN_TRANSACTION_ALERT,
-    data: { message, route }
+    data: { message }
   }
 }
 
-export function closeTransactionAlert () {
+export const closeTransactionAlert = () => {
   return {
     type: CLOSE_TRANSACTION_ALERT
   }

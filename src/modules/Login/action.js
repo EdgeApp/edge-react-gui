@@ -11,6 +11,8 @@ export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET'
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeCurrencyWallet } from 'airbitz-core-js'
 
+import { updateTransactionsRequest } from '../UI/scenes/TransactionList/action.js'
+
 export const addAirbitzToRedux = airbitz => {
   return {
     type: ADD_AIRBITZ_TO_REDUX,
@@ -35,43 +37,31 @@ export const addAccountToRedux = account => {
 export const addWalletByKey = key => {
   return (dispatch, getState) => {
     const { id, archived } = key
-    const account = getState().account
-    const plugin = makeShitcoinPlugin({
-      io: getState().account.io
-    })
-    const callbacks = makeCallbacks(dispatch, id)
+    const { account, airbitz: { io } } = getState()
+    const plugin = makeShitcoinPlugin({ io })
+    const callbacks = makeWalletCallbacks(dispatch, getState, id)
     const opts = {
       account,
       plugin,
-      callbacks
+      callbacks,
+      io
     }
+    // TODO: If the wallet is archived, don't even bother coming here
     makeCurrencyWallet(key, opts)
     .then(wallet => {
-      if (!archived) {
-        dispatch(activateWallet(wallet))
-      } else {
-        dispatch(archiveWallet(wallet))
-      }
-
-      console.log('wallet', wallet)
-      return dispatch(addWallet(wallet))
+      wallet.startEngine()
+      .then(() => {
+        dispatch(addWallet(wallet))
+        dispatch(activateWalletId(wallet.id))
+      })
     })
-  }
-}
-
-const activateWallet = wallet => {
-  wallet.startEngine()
-  return (dispatch, getState) => {
-    dispatch(activateWalletId(wallet.id))
   }
 }
 
 const activateWalletId = (id) => {
   return {
     type: ACTIVATE_WALLET_ID,
-    data: {
-      id
-    }
+    data: { id }
   }
 }
 
@@ -94,36 +84,36 @@ const archiveWalletId = (id) => {
 export const addWallet = wallet => {
   return {
     type: ADD_WALLET,
-    data: {
-      wallet
-    }
+    data: { wallet }
   }
 }
 
-const makeCallbacks = (dispatch, id) => {
+const makeWalletCallbacks = (dispatch, getState, walletId) => {
   const callbacks = {
     onAddressesChecked (progressRatio) {
-      console.log('onAddressesChecked', progressRatio)
+      if (progressRatio === 1) {
+        console.log('onAddressesChecked', progressRatio)
+      }
     },
 
     onBalanceChanged (balance) {
       console.log('onBalanceChanged', balance)
-      // dispatch(setBalance(id, balance))
+      // dispatch(setBalance(walletId, balance))
     },
 
     onTransactionsChanged (transactions) {
       console.log('onTransactionsChanged', transactions)
-      // dispatch(updateTransactions(id, transactions))
+      dispatch(updateTransactionsRequest(walletId, transactions))
     },
 
     onNewTransactions (transactions) {
       console.log('onNewTransaction', transactions)
-      // dispatch(insertTransactions(id, transactions))
+      dispatch(updateTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (blockHeight) {
       console.log('onBlockHeightChanged', blockHeight)
-      // dispatch(setBlockHeight(id, blockHeight))
+      // dispatch(setBlockHeight(walletId, blockHeight))
     }
   }
 
