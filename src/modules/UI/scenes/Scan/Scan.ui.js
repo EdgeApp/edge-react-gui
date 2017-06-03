@@ -180,13 +180,13 @@ export const WalletAddressModalConnect = connect( state => ({
 
 class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
 
-  _onModalDone = () => {
+  /*_onModalDone = () => {
     this._onToggleAddressModal()
-    Actions.sendConfirmation(this.props.receipientAddress)
-  }
+    Actions.sendConfirmation(this.props.recipientAddress)
+  }*/
 
-  _onPublicAddressChange = (input) => {
-    this.props.updatePublicAddress(input)
+  _onRecipientAddressChange = (input) => {
+    this.props.dispatch(updateRecipientAddress(input))
   }
 
   render() {
@@ -207,15 +207,17 @@ class AddressInputRecipient extends Component { // this component is for the inp
 }
 
 export const AddressInputRecipientConnect = connect( state => ({
-
+  recipientAddress: state.ui.scan.recipientAddress
 }))(AddressInputRecipient)
 
 
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
-    this._onToggleAddressModal()
-    Actions.sendConfirmation({ type: 'reset' })
+    updateUri(this.props.recipientAddress)   
+    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))  
+    this._onToggleAddressModal()   
+    Actions.sendConfirmation({ type: 'reset' }) 
   }
   _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())
@@ -246,5 +248,5 @@ class SendAddressButtons extends Component { // this component is for the button
 }
 
 const SendAddressButtonsConnect = connect(state => ({
-  receipientAddress: state.ui.scan.recipientAddress,
+  recipientAddress: state.ui.scan.recipientAddress,
 }))(SendAddressButtons)
