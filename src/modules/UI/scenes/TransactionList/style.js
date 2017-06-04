@@ -19,7 +19,8 @@ module.exports = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     paddingRight: 10,
-    paddingLeft: 10
+    paddingLeft: 10,
+    flexDirection: 'row'
   },
   innerSearch: {
     backgroundColor: 'white',
@@ -41,6 +42,14 @@ module.exports = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center'        
   },
+  cancelButton: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingLeft: 6,
+    paddingRight: 6,
+    height: 28
+  },
+
   // end of searchbar stuff
 
   currentBalanceBox: {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
+import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -82,6 +82,10 @@ class TransactionList extends Component {
     console.log('Transactions.ui->loadMoreTransactions being executed')
   }
 
+  onFocus = () => {
+
+  }
+
   render () {
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
@@ -94,12 +98,7 @@ class TransactionList extends Component {
     console.log('about to render transactionsList')
     return (
         <ScrollView style={[this.border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>     
-          <View style={[styles.searchContainer, this.border('green')]}>
-            <View style={[ styles.innerSearch, this.border('orange')]}>
-              <EvilIcons name='search' style={[styles.searchIcon, this.border('purple')]} color='#9C9C9D' size={20} />
-              <TextInput style={[styles.searchInput, this.border('yellow')]} onChangeText={this._onSearchChange} placeholder='Search' />
-            </View>
-          </View> 
+          <SearchBar />
           <View style={[styles.container, this.border('green')]}>
             <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, this.border('purple')]} colors={["#3b7adb","#2b569a"]}>
                 {this.props.updatingBalance ? (
@@ -236,3 +235,90 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
+
+
+class SearchBar extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {focused: false}
+  }
+
+  _onFocus = () => {
+    this.setState({
+      focused: true
+    })
+  }
+
+  _onBlur = () => {
+    this.setState({
+      focused: false
+    })
+  }
+
+  render() {
+    return(
+      <View style={[styles.searchContainer, this.border('green')]}>
+        <View style={[ styles.innerSearch, this.border('orange')]}>
+          <EvilIcons name='search' style={[styles.searchIcon, this.border('purple')]} color='#9C9C9D' size={20} />
+          <TextInput style={[styles.searchInput, this.border('yellow')]} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} placeholder='Search' />
+        </View>
+        {this.state.focused && 
+          <SearchBarCancelButton {...this.state}/>   
+        }
+      </View>     
+    )
+  }
+
+  border(color) {
+    return {
+      borderColor: color,
+      borderWidth: 1
+    }
+  }
+}
+
+class SearchBarCancelButton extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fadeAnim: new Animated.Value(100),      
+    }
+  }
+
+  componentDidMount() {
+    Animated.timing(           
+      this.state.fadeAnim,     
+      {
+        toValue: 0,   
+        duration: 1000              
+      }
+    ).start();                          
+  }
+
+  componentWillUnmount() {
+    Animated.timing(            
+      this.state.fadeAnim,           
+      {
+        toValue: 100,        
+        duration: 1000        
+      }
+    ).start();                                  
+  }
+
+  render() {
+    return(
+      <Animated.View style={{position: 'relative', left: this.state.fadeAnim}}>
+        <TouchableHighlight onPress={this._onPressButton} style={[this.border('red'), styles.cancelButton]}>
+          <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
+        </TouchableHighlight>
+      </Animated.View>
+    )
+  }
+
+  border(color) {
+    return {
+      borderColor: color,
+      borderWidth: 1
+    }
+  }
+}
