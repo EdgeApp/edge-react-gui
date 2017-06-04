@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
+import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -82,6 +82,10 @@ class TransactionList extends Component {
     console.log('Transactions.ui->loadMoreTransactions being executed')
   }
 
+  onFocus = () => {
+
+  }
+
   render () {
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
@@ -94,12 +98,7 @@ class TransactionList extends Component {
     console.log('about to render transactionsList')
     return (
         <ScrollView style={[this.border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>     
-          <View style={[styles.searchContainer, this.border('green')]}>
-            <View style={[ styles.innerSearch, this.border('orange')]}>
-              <EvilIcons name='search' style={[styles.searchIcon, this.border('purple')]} color='#9C9C9D' size={20} />
-              <TextInput style={[styles.searchInput, this.border('yellow')]} onChangeText={this._onSearchChange} placeholder='Search' />
-            </View>
-          </View> 
+          <SearchBar />
           <View style={[styles.container, this.border('green')]}>
             <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, this.border('purple')]} colors={["#3b7adb","#2b569a"]}>
                 {this.props.updatingBalance ? (
@@ -236,3 +235,103 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
+
+
+class SearchBar extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      focused: false,
+      animation: new Animated.Value(0),
+      op: new Animated.Value(0)
+    }
+  }
+
+  _onFocus = () => {
+    this.setState({
+      focused: true, 
+    })
+    this._toggleCancelVisibility()
+  }
+
+  _onBlur = () => {
+    this.setState({
+      focused: false,
+    })
+    this._toggleCancelVisibility()    
+  }
+
+  _toggleCancelVisibility = () => {
+    let toOpacity, toWidth
+    if(this.state.focused){
+      toOpacity = 0
+      toWidth = 0
+
+      Animated.sequence([
+        Animated.timing(
+          this.state.op,
+          {
+            toValue: toOpacity,
+            duration: 100
+          }
+        ),
+        Animated.timing(
+          this.state.animation,
+          {
+            toValue: toWidth,
+            duration: 100
+          }
+        )        
+      ]).start()      
+    } else {
+      toOpacity = 1
+      toWidth = 60
+
+      Animated.sequence([
+        Animated.timing(
+          this.state.animation,
+          {
+            toValue: toWidth,
+            duration: 100
+          }
+        ),
+        Animated.timing(
+          this.state.op,
+          {
+            toValue: toOpacity,
+            duration: 100
+          }
+        )
+      ]).start()      
+    }
+  }
+
+  _onCancel = () => {
+    this.setState({
+      width: 0
+    })
+  }
+
+  render() {
+    return(
+      <View style={[styles.searchContainer, this.border('green')]}>
+        <View style={[ styles.innerSearch, this.border('orange')]}>
+          <EvilIcons name='search' style={[styles.searchIcon, this.border('purple')]} color='#9C9C9D' size={20} />
+          <TextInput style={[styles.searchInput, this.border('yellow')]} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} placeholder='Search' />
+        </View>
+          <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
+            <TouchableHighlight onPress={this._onCancel} style={[this.border('red'), styles.cancelButton]}>
+              <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
+            </TouchableHighlight>
+          </Animated.View>
+      </View>     
+    )
+  }
+
+  border(color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+  }
+}
