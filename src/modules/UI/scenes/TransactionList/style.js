@@ -7,8 +7,44 @@ module.exports = StyleSheet.create({
       flex: 1,
       alignItems: 'stretch',
   },
+
+  // searchbar stuff
+
+  scrollView: {
+    flex: 1
+  },
+  searchContainer: {
+    backgroundColor: '#1C4F98',
+    height: 44,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingRight: 10,
+    paddingLeft: 10
+  },
+  innerSearch: {
+    backgroundColor: 'white',
+    height: 28,
+    borderRadius: 3,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 8,
+    paddingRight: 8
+  },
+  searchIcon: {
+
+  },
+  searchInput: {
+    height: 18,
+    flex: 1,
+    alignSelf: 'center',
+    textAlign: 'center'        
+  },
+  // end of searchbar stuff
+
   currentBalanceBox: {
-    flex: 5,
+    height: 200,
     justifyContent: "center",
     paddingTop: 10,
     paddingBottom: 20,    
