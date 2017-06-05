@@ -257,30 +257,53 @@ class SearchBar extends Component {
   _onBlur = () => {
     this.setState({
       focused: false,
-
     })
+    this._toggleCancelVisibility()    
   }
 
   _toggleCancelVisibility = () => {
-    this.state.animation.setValue(0)
-    this.state.op.setValue(0)
+    let toOpacity, toWidth
+    if(this.state.focused){
+      toOpacity = 0
+      toWidth = 0
 
-    Animated.sequence([
-      Animated.timing(
-        this.state.animation,
-        {
-          toValue: 60,
-          duration: 100
-        }
-      ),
-      Animated.timing(
-        this.state.op,
-        {
-          toValue: 1,
-          duration: 100
-        }
-      )
-    ]).start()
+      Animated.sequence([
+        Animated.timing(
+          this.state.op,
+          {
+            toValue: toOpacity,
+            duration: 100
+          }
+        ),
+        Animated.timing(
+          this.state.animation,
+          {
+            toValue: toWidth,
+            duration: 100
+          }
+        )        
+      ]).start()      
+    } else {
+      toOpacity = 1
+      toWidth = 60
+
+      Animated.sequence([
+        Animated.timing(
+          this.state.animation,
+          {
+            toValue: toWidth,
+            duration: 100
+          }
+        ),
+        Animated.timing(
+          this.state.op,
+          {
+            toValue: toOpacity,
+            duration: 100
+          }
+        )
+      ]).start()      
+    }
   }
 
   _onCancel = () => {
@@ -308,7 +331,7 @@ class SearchBar extends Component {
   border(color) {
     return {
       borderColor: color,
-      borderWidth: 1
+      borderWidth: 0
     }
   }
 }
