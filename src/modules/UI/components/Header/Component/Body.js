@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, TouchableHighlight } from 'react-native'
 import { Icon, Title } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
-import { toggleScanFromWalletListModal, toggleScanToWalletListModal} from '../../WalletListModal/action'
+import { toggleSelectedWalletListModal, toggleScanToWalletListModal, toggleTransactionsWalletListModal} from '../../WalletListModal/action'
 
 import { 
   enableWalletListModalVisibility, 
@@ -21,11 +21,11 @@ class Body extends Component {
   render () {  
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
-            return <ExampleFromWalletConnect  walletList={this.props.walletList} toggleFunction='_onPressScanFromDropdownToggle' visibleFlag='scanFromWalletListModalVisibility' />
+            return <ExampleFromWalletConnect  walletList={this.props.walletList} toggleFunction='_onPressToggleSelectedWalletModal' visibleFlag='selectedWalletListModalVisibility' />
       case 'request':
         return <ExampleFromWalletConnect  walletList={this.props.walletList} />
       case 'transactions':
-        return <ExampleFromWalletConnect walletList={this.props.walletList} toggleFunction='_onPressTransactionsDropdownToggle' visibleFlag='walletListModalVisible' />
+        return <ExampleFromWalletConnect walletList={this.props.walletList} toggleFunction='_onPressToggleSelectedWalletModal' visibleFlag='selectedWalletListModalVisibility' />
       default:
         return <DefaultHeader routes={this.props.routes} />
     }
@@ -34,7 +34,7 @@ class Body extends Component {
 export default connect((state) => ({
   walletList: state.ui.wallets.byId,
   headerHeight: state.ui.dimensions.headerHeight,
-  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+  selectedWalletListModalVisibility: state.ui.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
 }))(Body)
 
@@ -53,13 +53,9 @@ class DefaultHeader extends Component {
 
 class ExampleFromWallet extends Component {
 
-  _onPressTransactionsDropdownToggle = () => {
-    console.log('inside onPressTransactionsDropdownToggle')
-  }
-
-  _onPressScanFromDropdownToggle = () => {
+  _onPressToggleSelectedWalletModal = () => {
     console.log('inside onPressScanFromDropdownToggle')
-    this.props.dispatch(toggleScanFromWalletListModal())
+    this.props.dispatch(toggleSelectedWalletListModal())
   }
 
   _onPressScanToDropdownToggle = () => {
@@ -90,7 +86,7 @@ class ExampleFromWallet extends Component {
 }
 export const ExampleFromWalletConnect  = connect( state => ({
     walletList: state.ui.wallets.byId,
-    scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+    selectedWalletListModalVisibility: state.ui.scan.selectedWalletListModalVisibility,
     scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility,
     headerHeight: state.ui.dimensions.headerHeight    
 }))(ExampleFromWallet)

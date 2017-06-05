@@ -11,8 +11,8 @@ const getCryptoFromFiat = (fiat, fiatPerCrypto) => {
 }
 
 const sanitizeInput = (input) => {
-  const numbersUptoTwoPrecision = /\d*[.]?\d*/
-  const sanitizedInput = input.toString().match(numbersUptoTwoPrecision)[0]
+  const numbers = /\d*[.]?\d*/
+  const sanitizedInput = input.toString().match(numbers)[0]
 
   return sanitizedInput
 }

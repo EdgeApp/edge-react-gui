@@ -1,4 +1,11 @@
-import React, {StyleSheet, Dimensions} from 'react-native';
+import React, {StyleSheet, Dimensions, Platform} from 'react-native';
+
+const screenDimensions = {
+  height: Dimensions.get('window').height,
+  width: Dimensions.get('window').width
+}
+
+console.log('screenDimensions is: ', screenDimensions)
 
 module.exports = StyleSheet.create({
     container: {
@@ -162,90 +169,59 @@ module.exports = StyleSheet.create({
       textAlignVertical: 'center'   
     },
 
-  // modal styles
-  modalContainer: {
-    flex: 1 ,
-    alignItems: 'center'
-  },
-  modalOverlay: {
-    flex: 1,
-    padding: 10
-  },
-  modalBox: {
-    top: Dimensions.get('window').height /5,
-    width: Dimensions.get('window').width * 3 / 4,
-    borderRadius: 3,
-    alignItems: 'stretch',
-    height: (Dimensions.get('window').height) / 4,
-    backgroundColor: 'white',
-    padding: 15,
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
-  },
-
-  // beginning of rename wallet modal
-  modalTopTextWrap: {
-    flex: 1
-  },
-  modalTopText: {
-    textAlign: 'center',
-    color: '#3c76cd',
-    fontWeight: '500'
-  },
-  modalMiddle: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    justifyContent: 'center'
-  },
-  modalMiddleTextWrap: {
-
-  },
-  modalMiddleText: {
-
-  },
   nameInputWrap: {
-
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    flex: 1,
-    marginBottom: 30    
+    height: '80%',
+    marginTop: 16,   
+    marginBottom: 16,
+    borderBottomColor: '#dddddd',
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
 
   },
   nameInput: {
-    flex: 1,
-    textAlign: 'center',
-    alignItems: 'center'
+    height: (Platform.OS === 'ios') ? 26 : '100%',
+    textAlign: 'center', 
+    fontSize: 20
   },
-  modalBottom: {
-    height: 30,
-    flexDirection: 'row'
-  },
+
   emptyBottom: {
     flex: 1
   },
+
+  //buttons
   buttonsWrap: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignSelf: 'flex-end'
+  },
+  stylizedButton: {
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    borderRadius: 3
+  },
+  stylizedButtonTextWrap: {
+
+  },  
+  stylizedButtonText: {
+    color: 'white',
+    fontSize: 16,    
   },
   cancelButtonWrap: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#909091',
+    alignSelf: 'flex-start'
   },
   cancelButton: {
-    fontSize: 12,
     color: '#3c76cd'
   },
   doneButtonWrap: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    backgroundColor: '#4977BB',
+    alignSelf: 'flex-end',
+    marginLeft: 4    
   },
   doneButton: {
-    fontSize: 12,
     color: '#3c76cd'
   }       
 })

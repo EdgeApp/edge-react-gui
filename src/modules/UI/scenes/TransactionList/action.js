@@ -8,11 +8,45 @@ export const ENABLE_UPDATING_BALANCE = 'ENABLE_UPDATING_BALANCE'
 export const DISABLE_UPDATING_BALANCE = 'DISABLE_UPDATING_BALANCE'
 export const TOGGLE_UPDATING_BALANCE = 'TOGGLE_UPDATING_BALANCE'
 export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
+export const UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
 
-export function updateTransactionsList (data) {
+import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
+
+export const updateBalance = () => {
   return {
-    type: UPDATE_TRANSACTIONS_LIST,
-    data
+    type: 'noop'
+  }
+}
+
+export const updateTransactionsRequest = (walletId, transactions) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+    const wallet = getSelectedWallet(state)
+
+    if (selectedWalletId === walletId) {
+      console.log('adding transactions for selectedWallet')
+      return wallet.getTransactions({}).then(transactions => {
+        dispatch(updateTransactions(transactions))
+      })
+    } else {
+      const message = 'New transactions received'
+      dispatch(openTransactionAlert(message))
+    }
+  }
+}
+
+const getSelectedWallet = state => {
+  const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = state
+  const selectedWallet = byId[selectedWalletId]
+
+  return selectedWallet
+}
+
+export const updateTransactions = transactions => {
+  return {
+    type: UPDATE_TRANSACTIONS,
+    data: { transactions }
   }
 }
 
@@ -34,7 +68,7 @@ export function transactionsSearchHidden () {
   }
 }
 
-export function updateContactsList(data) {
+export function updateContactsList (data) {
   return {
     type: UPDATE_CONTACTS_LIST,
     data
@@ -54,7 +88,7 @@ export function toggleTransactionsWalletListModal () {
   }
 }
 
-export function updatingBalance(data) {
+export function updatingBalance (data) {
   console.log('inside updatingBalance, data is: ', data)
   let type = [data] + '_UPDATING_BALANCE'
   return {

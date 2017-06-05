@@ -6,11 +6,8 @@ export const SAVE_RECEIVE_ADDRESS = 'SAVE_RECEIVE_ADDRESS'
 
 export const updateReceiveAddress = () => {
   return (dispatch, getState) => {
-    const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = getState()
-    const wallet = byId[selectedWalletId]
-
-    console.log('byId', byId)
-    console.log('selectedWalletId', selectedWalletId)
+    const state = getState()
+    const wallet = getSelectedWallet(state)
 
     const onSuccess = (receiveAddress) => {
       dispatch(updateReceiveAddressSuccess(receiveAddress))
@@ -80,6 +77,13 @@ export const updateAmountRequestedInFiat = (amountRequestedInFiat) => {
     type: UPDATE_AMOUNT_REQUESTED_IN_FIAT,
     data: { amountRequestedInFiat }
   }
+}
+
+const getSelectedWallet = state => {
+  const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = state
+  const selectedWallet = byId[selectedWalletId]
+
+  return selectedWallet
 }
 
 export const UPDATE_METADATA = 'UPDATE_METADATA'

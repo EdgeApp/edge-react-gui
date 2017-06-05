@@ -21,13 +21,14 @@ class WalletListRowOptions extends Component {
     this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
     if (optionKey === 'Rename') {
       this.props.dispatch(updateCurrentWalletBeingRenamed(this.props.walletKey))
-      this.props.dispatch(updateWalletRenameInput(this.props.wallets[this.props.walletKey].name))
+      this.props.dispatch(updateWalletRenameInput(this.props.wallets[this.props.walletKey].id.slice(0,5)))
     }
   }
 
   render () {
     const options = ['Rename', 'Add Token', this.props.archiveLabel, 'Delete']
 
+    // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (
       <View style={{ padding: 10, flexDirection: 'row' }} style={styles.rowDotsWrap}>
         <Menu onSelect={(value) => this.optionAction(value)}>
@@ -74,6 +75,6 @@ class WalletListRowOptions extends Component {
 }
 
 export default connect(state => ({
-  wallets: state.ui.wallets.wallets,
+  wallets: state.ui.wallets.byId,
   archives: state.ui.wallets.archives
 }))(WalletListRowOptions)

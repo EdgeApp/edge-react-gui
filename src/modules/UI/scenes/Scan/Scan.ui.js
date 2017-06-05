@@ -4,6 +4,7 @@ import FormattedText from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
+import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import Modal from 'react-native-modal'
@@ -13,17 +14,27 @@ import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
 import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress, updateUri  } from './action'
+import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress  } from './action'
+
+import {
+  updateUri,
+  updatePublicAddress,
+  updateWalletTransfer
+} from '../SendConfirmation/action.js'
+
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
+import StylizedModal from '../../components/Modal/Modal.ui'
+import ModalStyle from '../../components/Modal/style'
+
 
 class Scan extends Component {
-  _onToggleTorch () {
-    this.props.dispatch(toggleEnableTorch())
+  _onToggleTorch = () => {
+    this.props.toggleEnableTorch()
   }
 
   _onToggleAddressModal = () => {
-    this.props.dispatch(toggleAddressModal())
+    this.props.toggleAddressModal()
   }
 
   _onToggleWalletListModal () {
@@ -32,11 +43,14 @@ class Scan extends Component {
 
   onBarCodeRead = (data) => {
     console.log('onBarCodeRead', data)
-    this.props.dispatch(updateUri(data))
-    Actions.sendConfirmation()
+    this.props.updateUri(data)
+    Actions.sendConfirmation({ type: 'reset' })
+    // React Native Router Flux does not fully unmount scenes when transitioning
+    // {type: 'reset'} is needed to fully unmount the Scan scene, or else the camera will keep scanning
   }
 
   selectPhotoTapped = () => {
+    console.log('selectPhotoTapped')
     const options = { takePhotoButtonTitle: null }
 
     ImagePicker.showImagePicker(options, (response) => {
@@ -54,7 +68,7 @@ class Scan extends Component {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        console.log('response is: ', response)
+        Actions.sendConfirmation({ type: 'reset' })
       }
     })
   }
@@ -67,10 +81,11 @@ class Scan extends Component {
           barCodeTypes={['qr']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
-        />      
+        />
         <View style={[styles.overlay, this.border('red')]}>
-                 
-          {this.renderAddressModal()}
+
+          <WalletAddressModalConnect />
+
           <View style={[styles.overlayTop, this.border('yellow')]}>
             <FormattedText style={[styles.overlayTopText, this.border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
           </View>
@@ -112,55 +127,126 @@ class Scan extends Component {
       borderWidth: 0
     }
   }
+}
+
+const mapStateToProps = state => {
+  return {
+    torchEnabled: state.ui.scan.torchEnabled,
+    walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
+    scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
+    scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleEnableTorch: () => dispatch(toggleEnableTorch()),
+    toggleAddressModal: () => dispatch(toggleAddressModal()),
+    toggleWalletListModal: () => dispatch(toggleWalletListModal()),
+    getWalletTransferList: () => dispatch(getWalletTransferList()),
+
+    updateUri: uri => dispatch(updateUri(uri)),
+    updatePublicAddress: publicAddress => dispatch(updatePublicAddress(publicAddress)),
+    updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Scan)
+
+class WalletAddressModal extends Component {
+  render() {
+    return(
+      <StylizedModal
+        featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
+        headerText='Send to Bitcoin Address or Import Private Key:'
+        headerSubtext=''
+        modalMiddle={<AddressInputRecipientConnect />}
+        modalBottom={<SendAddressButtonsConnect />}
+        visibilityBoolean={this.props.addressModalVisible}
+      />
+    )
+  }
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+  }
+}
+
+export const WalletAddressModalConnect = connect( state => ({
+  addressModalVisible: state.ui.scan.addressModalVisible,
+}))(WalletAddressModal)
+
+class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
+
+  /*_onModalDone = () => {
+    this._onToggleAddressModal()
+    Actions.sendConfirmation(this.props.recipientAddress)
+  }*/
 
   _onRecipientAddressChange = (input) => {
     this.props.dispatch(updateRecipientAddress(input))
   }
 
-  _onModalDone = () => {
-    this._onToggleAddressModal()
-    Actions.sendConfirmation(this.props.receipientAddress)
+  render() {
+
+    return(
+      <View style={[styles.addressInputWrap, this.border('orange')]}>
+          <TextInput style={[styles.addressInput, this.border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+      </View>
+    )
   }
 
-  renderAddressModal = () => {
-    return (
-      <Modal isVisible={this.props.addressModalVisible}>
-        <View style={styles.modalContainer}>
-          <View style={[styles.modalOverlay]}>
-            <View style={[styles.modalBox]}>
-              <View style={[styles.modalTopTextWrap]}>
-                <Text style={styles.modalTopText}>Send to Bitcoin Address or Import Private Key:</Text>
-              </View>
-              <View style={[styles.modalMiddle]}>
-                <View style={[styles.addressInputWrap]}>
-                  <TextInput style={[styles.addressInput]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
-                </View>
-              </View>
-              <View style={[styles.modalBottom]}>
-                <View style={[styles.emptyBottom]} />
-                <View style={[styles.buttonsWrap]}>
-                  <TouchableHighlight onPress={this._onToggleAddressModal.bind(this)} style={[styles.cancelButtonWrap]}>
-                    <Text style={styles.cancelButton}>CANCEL</Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight onPress={this._onModalDone.bind(this)} style={[styles.doneButtonWrap]}>
-                    <Text style={styles.doneButton}>DONE</Text>
-                  </TouchableHighlight>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    )
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
   }
 }
 
-export default connect(state => ({
-  torchEnabled: state.ui.scan.torchEnabled,
-  addressModalVisible: state.ui.scan.addressModalVisible,
-  receipientAddress: state.ui.scan.recipientAddress,
-  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
-  scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
-  scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
-})
-)(Scan)
+export const AddressInputRecipientConnect = connect( state => ({
+  recipientAddress: state.ui.scan.recipientAddress
+}))(AddressInputRecipient)
+
+
+
+class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
+  _onModalDone = () => {
+    updateUri(this.props.recipientAddress)   
+    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))  
+    this._onToggleAddressModal()   
+    Actions.sendConfirmation({ type: 'reset' }) 
+  }
+  _onToggleAddressModal = () => {
+    this.props.dispatch(toggleAddressModal())
+  }
+
+  render( ) {
+    return(
+      <View style={[ModalStyle.buttonsWrap, this.border('gray')]}>
+        <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
+          <View style={ModalStyle.stylizedButtonTextWrap}>
+            <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>Cancel</FormattedText>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
+            <View style={ModalStyle.stylizedButtonTextWrap}>
+              <FormattedText style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>Done</FormattedText>
+            </View>
+          </TouchableHighlight>
+      </View>
+    )
+  }
+  border (color) {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+  }
+}
+
+const SendAddressButtonsConnect = connect(state => ({
+  recipientAddress: state.ui.scan.recipientAddress,
+}))(SendAddressButtons)

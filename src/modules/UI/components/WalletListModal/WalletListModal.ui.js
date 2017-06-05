@@ -11,7 +11,7 @@ import { Actions } from 'react-native-router-flux'
 import styles from './style'
 import { 
     toggleWalletListModalVisibility, 
-    toggleScanFromWalletListModal, 
+    toggleSelectedWalletListModal, 
     toggleScanToWalletListModal 
 } from './action'
 import * as Animatable from 'react-native-animatable'
@@ -66,7 +66,7 @@ class WalletListModalBody extends Component {
     selectFromWallet = () => {
         LayoutAnimation.easeInEaseOut()        
         console.log('selectingFromWallet')
-        this.props.dispatch(toggleScanFromWalletListModal())
+        this.props.dispatch(toggleSelectedWalletListModal())
     }
 
     selectToWallet = () => {
