@@ -82,10 +82,6 @@ class Login extends Component {
     }
   }
 
-  componentWillMount () {
-    this.login()
-  }
-
   render () {
     InteractionManager.runAfterInteractions(this.login)
     console.log('render', this.state)
