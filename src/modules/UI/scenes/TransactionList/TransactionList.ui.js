@@ -15,6 +15,7 @@ import {
   updateTransactionsList,
   updateContactsList,
   updateSearchResults } from './action'
+import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
@@ -28,8 +29,8 @@ class TransactionList extends Component {
      super(props)
    }
   
-   componentWillMount() {
-   
+  componentWillMount() {
+    this.props.dispatch(updateExchangeRates())
   }
   
   componentDidMount() {
