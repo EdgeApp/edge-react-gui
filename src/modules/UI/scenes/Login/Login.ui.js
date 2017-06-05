@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Button, Image, InteractionManager, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
@@ -87,6 +87,7 @@ class Login extends Component {
   }
 
   render () {
+    InteractionManager.runAfterInteractions(this.login)
     console.log('render', this.state)
 
     return (
@@ -140,7 +141,14 @@ class Login extends Component {
     this.setState({
       loggingInModalVisible: true,
       shouldLogin: true,
-    }, () => {setTimeout(this.login, 1)} )
+    })
+  }
+
+  closeModel = () => {
+    this.setState({
+      loggingInModalVisible: true,
+      shouldLogin: true,
+    })
   }
 
   login = () => {
@@ -157,18 +165,17 @@ class Login extends Component {
       callbacks
     )
     .then(account => {
+      this.setState({
+        loggingInModalVisible: false,
+        shouldLogin: false,
+      })
       this.props.onLoggedIn(account)
     })
     .catch(error => {
       this.setState({
-        loggingInModalVisible: false
-      })
-      console.log('error', error)
-      Alert.alert(
-        'Alert Title',
-        error.msg,
-        [{text: 'OK', onPress: () => console.log('OK Pressed!')},]
-      )
+        loggingInModalVisible: false,
+        shouldLogin: false,
+      }, console.log(error))
     })
   }
 
