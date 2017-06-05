@@ -18,6 +18,7 @@ import {
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
+import { border } from '../../../../util/border'
 
 const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
 var dateStrings = []
@@ -97,10 +98,10 @@ class TransactionList extends Component {
     // can also put dateIterator in here
     console.log('about to render transactionsList')
     return (
-        <ScrollView style={[this.border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>     
+        <ScrollView style={[border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>     
           <SearchBar />
-          <View style={[styles.container, this.border('green')]}>
-            <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, this.border('purple')]} colors={["#3b7adb","#2b569a"]}>
+          <View style={[styles.container, border('green')]}>
+            <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
                 {this.props.updatingBalance ? (
                   <View style={[styles.currentBalanceWrap]}>     
                     <View style={[ styles.updatingBalanceWrap]}>           
@@ -112,20 +113,20 @@ class TransactionList extends Component {
                     </View>
                   </View>           
                 ) : (
-                  <View style={[styles.currentBalanceWrap, this.border('green')]}>
-                    <View style={[styles.bitcoinIconWrap, this.border('yellow')]}>
+                  <View style={[styles.currentBalanceWrap, border('green')]}>
+                    <View style={[styles.bitcoinIconWrap, border('yellow')]}>
                       <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                     </View>
-                    <View style={[styles.currentBalanceBoxDollarsWrap, this.border('yellow')]}>
-                      <FormattedText style={[styles.currentBalanceBoxDollars, this.border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</FormattedText>
+                    <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
+                      <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</FormattedText>
                     </View>
-                    <View style={[styles.currentBalanceBoxBitsWrap, this.border('red')]}>
-                      <FormattedText style={[styles.currentBalanceBoxBits, this.border('yellow')]}>b 600000</FormattedText>
+                    <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
+                      <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
                     </View>
                 </View>  
                 )}
 
-              <View style={[styles.requestSendRow, this.border('yellow')]}>
+              <View style={[styles.requestSendRow, border('yellow')]}>
                 <TouchableHighlight style={[styles.requestBox, styles.button]}>
                   <View  style={[styles.requestWrap]}>
                     <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
@@ -207,13 +208,6 @@ class TransactionList extends Component {
         </View>
       </View>
     )
-  }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 
@@ -314,13 +308,13 @@ class SearchBar extends Component {
 
   render() {
     return(
-      <View style={[styles.searchContainer, this.border('green')]}>
-        <View style={[ styles.innerSearch, this.border('orange')]}>
-          <EvilIcons name='search' style={[styles.searchIcon, this.border('purple')]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, this.border('yellow')]} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} placeholder='Search' />
+      <View style={[styles.searchContainer, border('green')]}>
+        <View style={[ styles.innerSearch, border('orange')]}>
+          <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
+          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} placeholder='Search' />
         </View>
           <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-            <TouchableHighlight onPress={this._onCancel} style={[this.border('red'), styles.cancelButton]}>
+            <TouchableHighlight onPress={this._onCancel} style={[border('red'), styles.cancelButton]}>
               <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
             </TouchableHighlight>
           </Animated.View>
@@ -328,10 +322,4 @@ class SearchBar extends Component {
     )
   }
 
-  border(color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
-  }
 }
