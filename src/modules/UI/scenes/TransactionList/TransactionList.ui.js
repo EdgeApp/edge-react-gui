@@ -321,5 +321,4 @@ class SearchBar extends Component {
       </View>     
     )
   }
-
 }
