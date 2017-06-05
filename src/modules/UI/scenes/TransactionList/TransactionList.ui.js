@@ -240,18 +240,52 @@ export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
 class SearchBar extends Component {
   constructor(props) {
     super(props)
-    this.state = {focused: false}
+    this.state = {
+      focused: false,
+      animation: new Animated.Value(0),
+      op: new Animated.Value(0)
+    }
   }
 
   _onFocus = () => {
     this.setState({
-      focused: true
+      focused: true, 
     })
+    this._toggleCancelVisibility()
   }
 
   _onBlur = () => {
     this.setState({
-      focused: false
+      focused: false,
+
+    })
+  }
+
+  _toggleCancelVisibility = () => {
+    this.state.animation.setValue(0)
+    this.state.op.setValue(0)
+
+    Animated.sequence([
+      Animated.timing(
+        this.state.animation,
+        {
+          toValue: 60,
+          duration: 100
+        }
+      ),
+      Animated.timing(
+        this.state.op,
+        {
+          toValue: 1,
+          duration: 100
+        }
+      )
+    ]).start()
+  }
+
+  _onCancel = () => {
+    this.setState({
+      width: 0
     })
   }
 
@@ -262,56 +296,12 @@ class SearchBar extends Component {
           <EvilIcons name='search' style={[styles.searchIcon, this.border('purple')]} color='#9C9C9D' size={20} />
           <TextInput style={[styles.searchInput, this.border('yellow')]} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} placeholder='Search' />
         </View>
-        {this.state.focused && 
-          <SearchBarCancelButton {...this.state}/>   
-        }
+          <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
+            <TouchableHighlight onPress={this._onCancel} style={[this.border('red'), styles.cancelButton]}>
+              <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
+            </TouchableHighlight>
+          </Animated.View>
       </View>     
-    )
-  }
-
-  border(color) {
-    return {
-      borderColor: color,
-      borderWidth: 1
-    }
-  }
-}
-
-class SearchBarCancelButton extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      fadeAnim: new Animated.Value(100),      
-    }
-  }
-
-  componentDidMount() {
-    Animated.timing(           
-      this.state.fadeAnim,     
-      {
-        toValue: 0,   
-        duration: 1000              
-      }
-    ).start();                          
-  }
-
-  componentWillUnmount() {
-    Animated.timing(            
-      this.state.fadeAnim,           
-      {
-        toValue: 100,        
-        duration: 1000        
-      }
-    ).start();                                  
-  }
-
-  render() {
-    return(
-      <Animated.View style={{position: 'relative', left: this.state.fadeAnim}}>
-        <TouchableHighlight onPress={this._onPressButton} style={[this.border('red'), styles.cancelButton]}>
-          <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
-        </TouchableHighlight>
-      </Animated.View>
     )
   }
 
