@@ -27,10 +27,16 @@ var dateStrings = []
 class TransactionList extends Component {
    constructor(props) {
      super(props)
+     this.state = {
+       balance: 0
+     }
    }
   
   componentWillMount() {
-    this.props.dispatch(updateExchangeRates())
+    this.props.dispatch(updateExchangeRates())         
+    this.setState({
+      balance: this.props.wallet.getBalance()
+    })
   }
   
   componentDidMount() {
@@ -80,7 +86,7 @@ class TransactionList extends Component {
     this.props.dispatch(transactionsSearchHidden())
   }
 
-  loadMoreTransactions () {
+  loadMoreTransactions = () => {
     console.log('Transactions.ui->loadMoreTransactions being executed')
   }
 
@@ -89,6 +95,7 @@ class TransactionList extends Component {
   }
 
   render () {
+    console.log('the balance is: ', this.state.balance)
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -119,7 +126,7 @@ class TransactionList extends Component {
                       <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                     </View>
                     <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
-                      <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.USD.TRD) : ''}</FormattedText>
+                      <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
                     </View>
                     <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
                       <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
@@ -147,8 +154,8 @@ class TransactionList extends Component {
               <ListView
                 style={[styles.transactionsScrollWrap]}
                 dataSource={dataSource}
-                renderRow={this.renderTx.bind(this)}
-                onEndReached={this.loadMoreTransactions.bind(this)}
+                renderRow={this.renderTx}
+                onEndReached={this.loadMoreTransactions}
                 onEndReachedThreshold={60}
                 enableEmptySections
               />
@@ -158,52 +165,57 @@ class TransactionList extends Component {
     )
   }
 
-  renderTx (tx) {
+  renderTx = (tx) => {
     let txDate = new Date(tx.date * 1000)
     let month = txDate.getMonth()
     let day = txDate.getDate()
     let year = txDate.getFullYear()
     let dateString = monthNames[month] + ' ' + day + ', ' + year
+    let sendReceiveSyntax, expenseIncomeSyntax, txColor
     dateStrings.push(dateString)
     if (tx.providerFee <= 0) {
-      var sendReceiveSyntax = 'Send'
-      var expenseIncomeSyntax = 'Expense'
+      sendReceiveSyntax = 'Send'
+      expenseIncomeSyntax = 'Expense'
+      txColor = '#F03A47'
     } else {
-      var sendReceiveSyntax = 'Receive'
-      var expenseIncomeSyntax = 'Income'
+      sendReceiveSyntax = 'Receive'
+      expenseIncomeSyntax = 'Income'
+      txColor = '#7FC343'
     }
+
+    console.log('this.props is: ', this.props)
 
     return (
       <View style={styles.singleTransactionWrap}>
         {(dateStrings[tx.key + 1] !== dateStrings[tx.key]) &&
           (<View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
-              <Text style={styles.formattedDate}>{dateString}</Text>
+              <FormattedText style={styles.formattedDate}>{dateString}</FormattedText>
             </View>
             {tx.key === 1 && (
               <View style={styles.rightDateSearch}>
                 {(this.props.searchVisible === false) && (
-                  <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch.bind(this)}>
+                  <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch}>
                     <FAIcon name='search' size={16} style={styles.firstDateSearchIcon} color='#cccccc' />
                   </TouchableHighlight>
                 )}
               </View>)}
           </View>)
         }
-        <View style={styles.singleTransaction}>
-          <View style={styles.transactionInfoWrap}>
+        <View style={[styles.singleTransaction, border('red')]}>
+          <View style={[styles.transactionInfoWrap, border('yellow')]}>
             {tx.hasThumbnail ? (
-              <Image style={styles.transactionLogo} source={{ uri: tx.thumbnailPath }} />
+              <Image style={[styles.transactionLogo, border('orange')]} source={{ uri: tx.thumbnailPath }} />
             ) : (
-              <FAIcon name='user' style={styles.transactionLogo} size={50} />
+              <FAIcon name='user' style={[styles.transactionLogo, border('orange')]} size={50} />
             )}
-            <View style={styles.transactionDollars}>
-              <Text style={styles.transactionPartner}>{sendReceiveSyntax}</Text>
-              <Text style={styles.transactionType}>{expenseIncomeSyntax}</Text>
+            <View style={[styles.transactionDollars, border('blue')]}>
+              <FormattedText style={[styles.transactionPartner, border('black')]}>Contact Name</FormattedText>
+              <FormattedText style={[styles.transactionType, border('brown')]}>12:12 PM</FormattedText>
             </View>
-            <View style={styles.transactionBits}>
-              <Text style={styles.transactionDollarAmount}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</Text>
-              <Text style={styles.transactionBitAmount}>{tx.amountSatoshi}</Text>
+            <View style={[styles.transactionBits, border('purple')]}>
+              <FormattedText style={[styles.transactionDollarAmount, border('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</FormattedText>
+              <FormattedText style={[styles.transactionBitAmount, border('brown')]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
             </View>
           </View>
         </View>
@@ -218,7 +230,7 @@ TransactionList.propTypes = {
   contactsList: PropTypes.array
 }
 
-const mapStateToProps = state => ({
+export default TransactionListConnect = connect ( state => ({
   // updatingBalance: state.ui.transactionList.updatingBalance,
   updatingBalance: false,
   transactions: state.ui.transactionList.transactions,
@@ -226,10 +238,7 @@ const mapStateToProps = state => ({
   contactsList: state.ui.transactionList.contactsList,
   exchangeRates: state.exchangeRate.exchangeRates,
   wallet: state.wallets.byId[state.ui.wallets.selectedWalletId]
-})
-const mapDispatchToProps = dispatch => ({})
-
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
+}))(TransactionList)
 
 
 class SearchBar extends Component {
