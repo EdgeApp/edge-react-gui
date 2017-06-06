@@ -28,6 +28,7 @@ import TransactionAlert from './UI/components/TransactionAlert'
 import { initializeAccount, addAirbitzToRedux, addWalletByKey } from './Login/action.js'
 import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 import { selectWalletById } from './UI/Wallets/action.js'
+import { setDeviceDimensions } from './UI/dimensions/action'
 
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { makeContext } from 'airbitz-core-js'
@@ -64,6 +65,12 @@ class Main extends Component {
       })
     })
     this.props.dispatch(updateExchangeRates()) // this is dummy data and this function will need to be moved         
+  }
+  _onLayout = (event) => {
+    var {x, y, width, height} = event.nativeEvent.layout
+    let xScale = (width / 375).toFixed(2)
+    let yScale = (height / 647).toFixed(2)
+    this.props.dispatch(setDeviceDimensions({width, height, xScale, yScale}))  
   }
 
   render () {
@@ -102,7 +109,7 @@ class Main extends Component {
 
           <View style={styles.statusBarHack}>
 
-            <Container>
+            <Container onLayout={this._onLayout}>
 
               <StatusBar backgroundColor='green' barStyle='light-content' />
               <SideMenu>

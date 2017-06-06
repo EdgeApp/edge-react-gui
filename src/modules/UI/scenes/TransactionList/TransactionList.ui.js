@@ -28,7 +28,13 @@ class TransactionList extends Component {
    constructor(props) {
      super(props)
      this.state = {
-       balance: 0
+      balance: 0,
+      focused: false,
+      animation: new Animated.Value(0),
+      op: new Animated.Value(0),
+      balanceBoxHeight: new Animated.Value(200),    
+      balanceBoxOpacity: new Animated.Value(1),
+      balanceBoxVisible: true   
      }
    }
   
@@ -75,7 +81,8 @@ class TransactionList extends Component {
   }
 
   _onSearchChange = () => {
-    this.props.dispatch(updateSearchResults(null))
+    //this.props.dispatch(updateSearchResults(null))
+    console.log('this._onSearchChange executing')
   }
 
   _onPressSearch = (event) => {
@@ -90,8 +97,113 @@ class TransactionList extends Component {
     console.log('Transactions.ui->loadMoreTransactions being executed')
   }
 
-  onFocus = () => {
+  _onFocus = () => {
+    this.setState({
+      focused: true, 
+    })
+    this._toggleCancelVisibility()
+  }
 
+  _onBlur = () => {
+    this.setState({
+      focused: false,
+    })
+    this._toggleCancelVisibility()    
+  }
+
+  _toggleCancelVisibility = () => {
+
+    let toOpacity, toWidth, toBalanceBoxHeight
+    if(this.state.focused){        
+      toOpacity = 0
+      toWidth = 0
+      toBalanceBoxHeight = 200
+      toBalanceBoxOpacity = 1.0
+      this.setState({balanceBoxVisible: true}  )    
+
+      Animated.parallel([
+        Animated.sequence([
+          Animated.timing(
+            this.state.op,
+            {
+              toValue: toOpacity,
+              duration: 200
+            }
+          ),
+          Animated.timing(
+            this.state.animation,
+            {
+              toValue: toWidth,
+              duration: 200
+            }
+          )        
+        ]),
+        Animated.sequence([
+          Animated.timing(
+            this.state.balanceBoxHeight,
+            {
+              toValue: toBalanceBoxHeight,
+              duration: 400
+            }
+          ),
+          Animated.timing(
+            this.state.balanceBoxOpacity,
+            {
+              toValue: toBalanceBoxOpacity,
+              duration: 400
+            }
+          )
+        ])
+      ]).start()
+    } else {       
+      toOpacity = 1
+      toWidth = 60
+      toBalanceBoxHeight = 0
+      toBalanceBoxOpacity= 0.0
+
+      Animated.parallel([
+        Animated.sequence([
+          Animated.timing(
+            this.state.animation,
+            {
+              toValue: toWidth,
+              duration: 200
+            }
+          ),
+          Animated.timing(
+            this.state.op,
+            {
+              toValue: toOpacity,
+              duration: 200
+            }
+          )
+        ]),
+        Animated.sequence([
+          Animated.sequence([
+            Animated.timing(
+              this.state.balanceBoxOpacity,
+              {
+                toValue: toBalanceBoxOpacity,
+                duration: 400
+              }
+            ) 
+        ]),        
+          Animated.timing(
+            this.state.balanceBoxHeight,
+            {
+              toValue: toBalanceBoxHeight,
+              duration: 400
+            }
+          )
+        ])
+      ]).start(() => this.setState({balanceBoxVisible: false}))        
+    }
+  }
+
+  _onCancel = () => {
+    this.setState({
+      width: 0
+    })
   }
 
   render () {
@@ -104,52 +216,58 @@ class TransactionList extends Component {
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
     var dataSource = ds.cloneWithRows(renderableTransactionList)
     // can also put dateIterator in here
-    console.log('about to render transactionsList')
+    console.log('about to render transactionsList , this.state.balanceBoxVisible is: ' , this.state.balanceBoxVisible)
+    console.log('about to render again, this.state.balanceBoxOpacity is: ', this.state.balanceBoxOpacity)
     return (
         <ScrollView style={[border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>     
-          <SearchBar />
+          <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
           <View style={[styles.container, border('green')]}>
-            <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
-                {this.props.updatingBalance ? (
-                  <View style={[styles.currentBalanceWrap]}>     
-                    <View style={[ styles.updatingBalanceWrap]}>           
-                      <ActivityIndicator
-                        animating={this.props.updatingBalance}
-                        style={[styles.updatingBalance, {height: 40}]}
-                        size="small"
-                      />     
-                    </View>
-                  </View>           
-                ) : (
-                  <View style={[styles.currentBalanceWrap, border('green')]}>
-                    <View style={[styles.bitcoinIconWrap, border('yellow')]}>
-                      <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
-                    </View>
-                    <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
-                      <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
-                    </View>
-                    <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
-                      <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
-                    </View>
-                </View>  
-                )}
+            <Animated.View style={[{height: this.state.balanceBoxHeight}, border('red')]}>
+                <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
+                  {this.state.balanceBoxVisible && 
+                      <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+                          {this.props.updatingBalance ? (
+                            <View style={[styles.currentBalanceWrap]}>     
+                              <View style={[ styles.updatingBalanceWrap]}>           
+                                <ActivityIndicator
+                                  animating={this.props.updatingBalance}
+                                  style={[styles.updatingBalance, {height: 40}]}
+                                  size="small"
+                                />     
+                              </View>
+                            </View>           
+                          ) : (
+                            <View style={[styles.currentBalanceWrap, border('green')]}>
+                              <View style={[styles.bitcoinIconWrap, border('yellow')]}>
+                                <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
+                              </View>
+                              <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
+                                <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+                              </View>
+                              <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
+                                <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
+                              </View>
+                          </View>  
+                          )}
 
-              <View style={[styles.requestSendRow, border('yellow')]}>
-                <TouchableHighlight style={[styles.requestBox, styles.button]}>
-                  <View  style={[styles.requestWrap]}>
-                    <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                    <FormattedText style={[styles.request]}>Request</FormattedText>
-                  </View>
-                </TouchableHighlight>
-                <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
-                  <View style={[styles.sendWrap]}>
-                    <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                    <FormattedText style={styles.send}>Send</FormattedText>
-                  </View>
-                </TouchableHighlight>
-              </View>
-            </LinearGradient>
-
+                        <View style={[styles.requestSendRow, border('yellow')]}>
+                          <TouchableHighlight style={[styles.requestBox, styles.button]}>
+                            <View  style={[styles.requestWrap]}>
+                              <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
+                              <FormattedText style={[styles.request]}>Request</FormattedText>
+                            </View>
+                          </TouchableHighlight>
+                          <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                            <View style={[styles.sendWrap]}>
+                              <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
+                              <FormattedText style={styles.send}>Send</FormattedText>
+                            </View>
+                          </TouchableHighlight>
+                        </View>
+                      </Animated.View>
+                    }
+                </LinearGradient>
+            </Animated.View>
           <View style={[styles.transactionsWrap]}>
               <ListView
                 style={[styles.transactionsScrollWrap]}
@@ -173,7 +291,7 @@ class TransactionList extends Component {
     let dateString = monthNames[month] + ' ' + day + ', ' + year
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     dateStrings.push(dateString)
-    if (tx.providerFee <= 0) {
+    if (tx.amountSatoshi <= 0) {
       sendReceiveSyntax = 'Send'
       expenseIncomeSyntax = 'Expense'
       txColor = '#F03A47'
@@ -182,8 +300,6 @@ class TransactionList extends Component {
       expenseIncomeSyntax = 'Income'
       txColor = '#7FC343'
     }
-
-    console.log('this.props is: ', this.props)
 
     return (
       <View style={styles.singleTransactionWrap}>
@@ -207,15 +323,15 @@ class TransactionList extends Component {
             {tx.hasThumbnail ? (
               <Image style={[styles.transactionLogo, border('orange')]} source={{ uri: tx.thumbnailPath }} />
             ) : (
-              <FAIcon name='user' style={[styles.transactionLogo, border('orange')]} size={50} />
+              <FAIcon name='user' style={[styles.transactionLogo, border('orange')]} size={54} />
             )}
             <View style={[styles.transactionDollars, border('blue')]}>
               <FormattedText style={[styles.transactionPartner, border('black')]}>Contact Name</FormattedText>
-              <FormattedText style={[styles.transactionType, border('brown')]}>12:12 PM</FormattedText>
+              <FormattedText style={[styles.transactionTime, border('brown')]}>12:12 PM</FormattedText>
             </View>
             <View style={[styles.transactionBits, border('purple')]}>
               <FormattedText style={[styles.transactionDollarAmount, border('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</FormattedText>
-              <FormattedText style={[styles.transactionBitAmount, border('brown')]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+              <FormattedText style={[styles.transactionBitAmount, border('brown'), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
             </View>
           </View>
         </View>
@@ -244,76 +360,7 @@ export default TransactionListConnect = connect ( state => ({
 class SearchBar extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      focused: false,
-      animation: new Animated.Value(0),
-      op: new Animated.Value(0)
-    }
-  }
-
-  _onFocus = () => {
-    this.setState({
-      focused: true, 
-    })
-    this._toggleCancelVisibility()
-  }
-
-  _onBlur = () => {
-    this.setState({
-      focused: false,
-    })
-    this._toggleCancelVisibility()    
-  }
-
-  _toggleCancelVisibility = () => {
-    let toOpacity, toWidth
-    if(this.state.focused){
-      toOpacity = 0
-      toWidth = 0
-
-      Animated.sequence([
-        Animated.timing(
-          this.state.op,
-          {
-            toValue: toOpacity,
-            duration: 100
-          }
-        ),
-        Animated.timing(
-          this.state.animation,
-          {
-            toValue: toWidth,
-            duration: 100
-          }
-        )        
-      ]).start()      
-    } else {
-      toOpacity = 1
-      toWidth = 60
-
-      Animated.sequence([
-        Animated.timing(
-          this.state.animation,
-          {
-            toValue: toWidth,
-            duration: 100
-          }
-        ),
-        Animated.timing(
-          this.state.op,
-          {
-            toValue: toOpacity,
-            duration: 100
-          }
-        )
-      ]).start()      
-    }
-  }
-
-  _onCancel = () => {
-    this.setState({
-      width: 0
-    })
+    this.state = this.props.state
   }
 
   render() {
@@ -321,10 +368,10 @@ class SearchBar extends Component {
       <View style={[styles.searchContainer, border('green')]}>
         <View style={[ styles.innerSearch, border('orange')]}>
           <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} placeholder='Search' />
+          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder='Search' />
         </View>
           <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-            <TouchableHighlight onPress={this._onCancel} style={[border('red'), styles.cancelButton]}>
+            <TouchableHighlight onPress={this.props.onPress} style={[border('red'), styles.cancelButton]}>
               <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
             </TouchableHighlight>
           </Animated.View>

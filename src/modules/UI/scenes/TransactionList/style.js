@@ -53,10 +53,8 @@ module.exports = StyleSheet.create({
   // end of searchbar stuff
 
   currentBalanceBox: {
-    height: 200,
-    justifyContent: "center",
-    paddingTop: 10,
-    paddingBottom: 20,    
+    flex:1,  
+    justifyContent: "center" 
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -151,7 +149,7 @@ module.exports = StyleSheet.create({
 
   // beginning of second half
   transactionsWrap: {
-    flex: 7
+    flex: 1
   },
 
   searchBarView: {
@@ -227,28 +225,36 @@ module.exports = StyleSheet.create({
   },
   transactionDollars: {
     flex: 3,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   transactionPartner: {
     fontSize: 14,
-    color: "#58595C"
+    color: "#58595C",
+    textAlignVertical: 'center'    
   },
   transactionDollarAmount: {
     fontSize: 14,
-    color: "#000000"
+    color: "#000000",
+    textAlignVertical: 'center'    
   },
   transactionBits: {
     flex: 2,
     alignItems: 'flex-end',
     justifyContent: 'center'    
   },
-  transactionType: {
+  transactionTime: {
     fontSize: 10,
-    color: "#58595C"
+    color: "#58595C",
+    textAlignVertical: 'bottom',
+    position: 'relative',
+    top: 4
   },
   transactionBitAmount: {
     fontSize: 10,
-    color: "#909091"
+    color: "#909091",
+    textAlignVertical: 'center',
+    position: 'relative',
+    top: 4
   }
 
 });
