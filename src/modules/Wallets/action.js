@@ -10,6 +10,8 @@ import {
   createWalletFailure
 } from '../UI/scenes/AddWallet/action.js'
 
+import { refreshAccount } from '../Login/action.js'
+
 export const addWallet = (wallet) => {
   return {
     type: ADD_WALLET,
@@ -47,5 +49,13 @@ export const deArchiveWallet = (walletId) => {
     getState().account.deArchiveWallet(walletId)
     // .then(dispatch(deArchiveWalletSuccess))
     // .catch(dispatch(deArchiveWalletFailure))
+  }
+}
+
+export const renameWallet = (walletId, name) => {
+  return (dispatch, getState) => {
+    const wallet = getState().wallets.byId[walletId]
+    wallet.renameWallet(name)
+    .then(dispatch(refreshAccount()))
   }
 }

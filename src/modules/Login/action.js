@@ -28,6 +28,28 @@ export const setAccountLoadingStatus = (status) => {
   }
 }
 
+export const refreshAccount = () => {
+  return (dispatch, getState) => {
+    const { byId } = getState().wallets
+
+    console.log('getState().wallets', getState().wallets)
+    console.log('getState().wallets.byId', getState().wallets.byId)
+
+    Object.values(byId).forEach(wallet => {
+      dispatch(addWallet(wallet))
+    })
+  }
+}
+
+export const refreshWallet = walletId => {
+  return (dispatch, getState) => {
+    const wallet = getState().wallets.byId[walletId]
+    if (wallet) {
+      dispatch(addWallet(wallet))
+    }
+  }
+}
+
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(addAccountToRedux(account))
@@ -41,8 +63,8 @@ export const initializeAccount = account => {
     })
 
     const firstWalletId = keys[0].id
-    dispatch(selectWalletById(firstWalletId))
     dispatch(addWalletsByKeys(keys))
+    dispatch(selectWalletById(firstWalletId))
   }
 }
 
@@ -85,7 +107,7 @@ export const addWalletByKey = key => {
   }
 }
 
-const activateWalletId = (id) => {
+const activateWalletId = id => {
   return {
     type: ACTIVATE_WALLET_ID,
     data: { id }
@@ -99,7 +121,7 @@ const archiveWallet = wallet => {
   }
 }
 
-const archiveWalletId = (id) => {
+const archiveWalletId = id => {
   return {
     type: ARCHIVE_WALLET_ID,
     data: {
@@ -126,21 +148,29 @@ const makeWalletCallbacks = (dispatch, getState, walletId) => {
     onBalanceChanged (balance) {
       console.log('onBalanceChanged', balance)
       // dispatch(setBalance(walletId, balance))
+      dispatch(refreshWallet(walletId))
     },
 
     onTransactionsChanged (transactions) {
       console.log('onTransactionsChanged', transactions)
+      // dispatch(refreshWallet(walletId))
       dispatch(updateTransactionsRequest(walletId, transactions))
     },
 
     onNewTransactions (transactions) {
       console.log('onNewTransaction', transactions)
+      // dispatch(refreshWallet(walletId))
       dispatch(updateTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (blockHeight) {
       console.log('onBlockHeightChanged', blockHeight)
       // dispatch(setBlockHeight(walletId, blockHeight))
+    },
+
+    onWalletNameChanged (newWalletName) {
+      console.log('onWalletNameChanged', newWalletName)
+      dispatch(refreshWallet(walletId))
     }
   }
 

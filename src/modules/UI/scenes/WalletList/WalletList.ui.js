@@ -15,18 +15,22 @@ import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
 import {
-          updateWalletOrder,
-          updateWalletListOrder,
-          updateArchiveListOrder,
-          toggleWalletsVisibility,
-          toggleArchiveVisibility,
-          completeRenameWallet,
-          updateWalletRenameInput,
-          toggleWalletRenameModal,
-          closeWalletDeleteModal,
-          updateCurrentWalletBeingRenamed,
-          closeWalletRenameModal
-        } from './action'
+  updateWalletOrder,
+  updateWalletListOrder,
+  updateArchiveListOrder,
+  toggleWalletsVisibility,
+  toggleArchiveVisibility,
+  completeRenameWallet,
+  updateWalletRenameInput,
+  toggleWalletRenameModal,
+  closeWalletDeleteModal,
+  updateCurrentWalletBeingRenamed,
+  closeWalletRenameModal
+} from './action'
+
+import { renameWallet } from '../../../Wallets/action.js'
+
+
 import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
 import StylizedModal from '../../components/Modal/Modal.ui'
@@ -36,11 +40,6 @@ import { addWallet, completeDeleteWallet } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
 
 class WalletList extends Component {
-
-  componentWillMount () {
-
-  }
-
   forceArchiveListUpdate (archiveOrder) {
     this.props.dispatch(updateArchiveListOrder(archiveOrder))
   }
@@ -194,7 +193,9 @@ class WalletList extends Component {
         headerText='Rename Wallet:'
         headerSubtext={this.props.currentWalletBeingRenamed}
         modalMiddle={<WalletNameInputConnect />}
-        modalBottom={<RenameWalletButtonsConnect />}
+        modalBottom={<RenameWalletButtonsConnect
+          currentWalletBeingRenamed={this.props.currentWalletBeingRenamed}
+          currentWalletRename={this.props.currentWalletRename} />}
         visibilityBoolean={this.props.renameWalletVisible}
       />
     )
@@ -256,7 +257,9 @@ class WalletNameInput extends Component {
     let walletName = this.props.currentWalletRename ? this.props.currentWalletRename : ''
     return(
       <View style={[styles.nameInputWrap, this.border('orange')]}>
-          <TextInput style={[styles.nameInput, this.border('red')]} onChangeText={(input) => this._onNameInputChange(input)} value={walletName} />
+        <TextInput style={[styles.nameInput, this.border('red')]}
+          onChangeText={(input) => this._onNameInputChange(input)}
+          value={walletName} />
       </View>
     )
   }
@@ -277,7 +280,10 @@ export const WalletNameInputConnect = connect( state => ({
 class RenameWalletButtons extends Component {
 
   _onRenameModalDone = () => {
-    this.props.dispatch(completeRenameWallet(this.props.currentWalletBeingRenamed, this.props.currentWalletRename))
+    console.log('this.props', this.props)
+    this.props.dispatch(toggleWalletRenameModal())
+    this.props.dispatch(closeWalletRenameModal())
+    this.props.dispatch(renameWallet(this.props.currentWalletBeingRenamed, this.props.currentWalletRename))
   }
 
   _onCancelRenameModal = () => {
@@ -290,16 +296,23 @@ class RenameWalletButtons extends Component {
   render() {
     return(
       <View style={[styles.buttonsWrap, this.border('gray')]}>
-          <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
-            <View style={styles.stylizedButtonTextWrap}>
-                <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>Cancel</FormattedText>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
-            <View style={styles.stylizedButtonTextWrap}>
-              <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>Done</FormattedText>
-            </View>
-          </TouchableHighlight>
+
+        <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
+
+          <View style={styles.stylizedButtonTextWrap}>
+            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>Cancel</FormattedText>
+          </View>
+
+        </TouchableHighlight>
+
+        <TouchableHighlight onPress={this._onRenameModalDone}
+          style={[styles.doneButtonWrap, styles.stylizedButton]}>
+
+          <View style={styles.stylizedButtonTextWrap}>
+            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>Done</FormattedText>
+          </View>
+
+        </TouchableHighlight>
       </View>
     )
   }
@@ -312,6 +325,4 @@ class RenameWalletButtons extends Component {
   }
 
 }
-export const RenameWalletButtonsConnect = connect( state => ({
-
-}))(RenameWalletButtons)
+export const RenameWalletButtonsConnect = connect()(RenameWalletButtons)

@@ -4,7 +4,7 @@ import * as WALLET_LIST_ACTION from '../scenes/WalletList/action'
 
 export const byId = (state = {}, action) => {
   switch (action.type) {
-    case ACTION.ADD_WALLET :
+    case ACTION.ADD_WALLET:
       return {
         ...state,
         [action.data.wallet.id]: schema(action.data.wallet)
