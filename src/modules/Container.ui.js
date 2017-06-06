@@ -9,7 +9,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 
-import TransactionList from './UI/scenes/TransactionList'
+import TransactionListConnect from './UI/scenes/TransactionList'
 import Directory from './UI/scenes/Directory/Directory.ui'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
@@ -26,6 +26,7 @@ import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert'
 
 import { initializeAccount, addAirbitzToRedux, addWalletByKey } from './Login/action.js'
+import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 import { selectWalletById } from './UI/Wallets/action.js'
 
 import { makeReactNativeIo } from 'react-native-airbitz-io'
@@ -62,6 +63,7 @@ class Main extends Component {
         loading: false
       })
     })
+    this.props.dispatch(updateExchangeRates()) // this is dummy data and this function will need to be moved         
   }
 
   render () {
@@ -116,7 +118,7 @@ class Main extends Component {
 
                     <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
-                    <Scene key='transactionList' component={TransactionList} title='Transactions' duration={0} />
+                    <Scene key='transactionList' component={TransactionListConnect} title='Transactions' duration={0} />
 
                     <Scene key='request' component={Request} title='Request' duration={0} />
 
