@@ -10,8 +10,18 @@ const headerHeight = ( state = 0, action) => {
   }
 }
 
+const deviceDimensions = (state = {}, action) => {
+  switch(action.type) {
+    case ACTION.SET_DEVICE_DIMENSIONS:
+      return action.data
+    default:
+      return state
+  }
+}
+
 const dimensions = combineReducers({
-  headerHeight
+  headerHeight,
+  deviceDimensions
 })
 
 export default dimensions

@@ -53,10 +53,8 @@ module.exports = StyleSheet.create({
   // end of searchbar stuff
 
   currentBalanceBox: {
-    height: 200,
-    justifyContent: "center",
-    paddingTop: 10,
-    paddingBottom: 20,    
+    flex:1,  
+    justifyContent: "center" 
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -151,7 +149,7 @@ module.exports = StyleSheet.create({
 
   // beginning of second half
   transactionsWrap: {
-    flex: 7
+    flex: 1
   },
 
   searchBarView: {
@@ -180,7 +178,13 @@ module.exports = StyleSheet.create({
     flex: 1
   },
   singleTransaction: {
-    flex: 4
+    height: 60,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D8D6D6',
+    padding: 10,
+    paddingRight: 30,
+    paddingLeft: 3,
+    marginLeft: 15,    
   },
   singleTransactionWrap: {
     flexDirection: 'column',
@@ -210,39 +214,47 @@ module.exports = StyleSheet.create({
   firstDateSearchIcon: {
 
   },
-  singleTransaction: {
-    padding: 12,
-    paddingRight: 30
-  },
   transactionInfoWrap: {
-    flexDirection: "row"
+    flexDirection: "row",
+    height: 40
   },
   transactionLogo: {
-    flex: 1,
+    width: 40,
+    height: 40,
     marginRight: 10
   },
   transactionDollars: {
-    flex: 3
+    flex: 3,
+    justifyContent: 'center',
   },
   transactionPartner: {
-    fontSize: 16,
-    color: "#000000"
+    fontSize: 14,
+    color: "#58595C",
+    textAlignVertical: 'center'    
   },
   transactionDollarAmount: {
-    fontSize: 16,
-    color: "#000000"
+    fontSize: 14,
+    color: "#000000",
+    textAlignVertical: 'center'    
   },
   transactionBits: {
     flex: 2,
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    justifyContent: 'center'    
   },
-  transactionType: {
+  transactionTime: {
     fontSize: 10,
-    color: "#9b9b9b"
+    color: "#58595C",
+    textAlignVertical: 'bottom',
+    position: 'relative',
+    top: 4
   },
   transactionBitAmount: {
     fontSize: 10,
-    color: "#9b9b9b"
+    color: "#909091",
+    textAlignVertical: 'center',
+    position: 'relative',
+    top: 4
   }
 
 });
