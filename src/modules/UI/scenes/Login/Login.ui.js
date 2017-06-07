@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { connect } from 'react-redux'
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { makeContext } from 'airbitz-core-js'
+import { getUsersList } from '../../components/ControlPanel/action.js'
+
 const Logo = require('../../../../img/logo2x.png')
 
 const styles = StyleSheet.create({
@@ -157,6 +160,7 @@ class Login extends Component {
       callbacks
     )
     .then(account => {
+      getListUsernames(this.props.context, this.props.dispatch)
       this.props.onLoggedIn(account)
     })
     .catch(error => {
@@ -174,4 +178,12 @@ class Login extends Component {
 
 }
 
-export default Login
+export default connect()(Login)
+
+const getListUsernames = (context, dispatch) => {
+
+  context.listUsernames((error, usernames) => {
+    return dispatch(getUsersList(usernames))
+  })
+
+}
