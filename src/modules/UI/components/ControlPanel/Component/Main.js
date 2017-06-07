@@ -27,6 +27,36 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
+  _render2FAenabling = () => {
+    if(platform === 'android') {
+      return (
+        <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
+          <View style={[ styles.main.link, styles.main.borderVertical ]}>
+            <Icon style={styles.main.icon} name='lock' />
+            <View style={styles.main.textContainer}>
+              <Text style={styles.main.text}>Secure Your Account</Text>
+              <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+      )
+    }
+
+    if(platform !== 'android') {
+      return (
+        <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
+          <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
+            <Icon style={styles.main.icon} name='lock' />
+            <View style={styles.main.textContainer}>
+              <Text style={styles.main.text}>Secure Your Account</Text>
+              <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+      )
+    }
+  }
+
   render () {
 
     if(this.props.usersView) {
@@ -38,6 +68,7 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
+              { this._render2FAenabling() }
               <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderVertical ]}>
                   <Icon style={styles.main.icon} name='repeat' />
@@ -65,11 +96,12 @@ class MainComponent extends Component {
                 </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={ this._handleOnPressWallets }>
+              <TouchableNativeFeedback onPress={ this._handleOnPressDirectory }>
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
-                  <Icon style={styles.main.icon} name='cash' />
+                  <Icon style={styles.main.icon} name='home' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Wallets</Text>
+                    <Text style={styles.main.text}>Directory</Text>
+                    <Text style={styles.main.textItalic}>Find Local Business</Text>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -100,6 +132,7 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
+              { this._render2FAenabling() }
               <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
                 <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
                   <Icon style={styles.main.icon} name='repeat' />
@@ -127,11 +160,12 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressWallets} >
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
                 <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
-                  <Icon style={styles.main.icon} name='cash' />
+                  <Icon style={styles.main.icon} name='home' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Wallets</Text>
+                    <Text style={styles.main.text}>Directory</Text>
+                    <Text style={styles.main.textItalic}>Find Local Business</Text>
                   </View>
                 </View>
               </TouchableHighlight>
