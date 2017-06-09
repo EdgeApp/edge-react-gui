@@ -26,6 +26,7 @@ import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import ModalStyle from '../../components/Modal/style'
+import {border} from '../../../../util/border'
 
 
 class Scan extends Component {
@@ -82,36 +83,36 @@ class Scan extends Component {
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
         />
-        <View style={[styles.overlay, this.border('red')]}>
+        <View style={[styles.overlay, border('red')]}>
 
           <WalletAddressModalConnect />
 
-          <View style={[styles.overlayTop, this.border('yellow')]}>
-            <FormattedText style={[styles.overlayTopText, this.border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
+          <View style={[styles.overlayTop, border('yellow')]}>
+            <FormattedText style={[styles.overlayTopText, border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
           </View>
           <View style={[styles.overlayBlank]} />
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, this.border('red')]}>
+          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, border('red')]}>
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, this.border('green')]} />
+                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, border('green')]} />
                 <FormattedText style={[styles.transferButtonText, styles.bottomButtonText]}>Transfer</FormattedText>
               </View>
             </TouchableHighlight>
-            <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, this.border('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
+            <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, border('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, this.border('green')]} />
-                <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, this.border('purple')]}>Address</FormattedText>
+                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, border('green')]} />
+                <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, border('purple')]}>Address</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, this.border('green')]} />
+                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, border('green')]} />
                 <FormattedText style={[styles.bottomButtonText]}>Photos</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, this.border('green')]} />
+                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, border('green')]} />
                 <FormattedText style={[styles.flashButtonText, styles.bottomButtonText]}>Flash</FormattedText>
               </View>
             </TouchableHighlight>
@@ -119,13 +120,6 @@ class Scan extends Component {
         </View>
       </View>
     )
-  }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 
@@ -157,20 +151,13 @@ class WalletAddressModal extends Component {
   render() {
     return(
       <StylizedModal
-        featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:12, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
+        featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
         headerText='Send to Bitcoin Address or Import Private Key:'
-        headerSubtext=''
         modalMiddle={<AddressInputRecipientConnect />}
         modalBottom={<SendAddressButtonsConnect />}
         visibilityBoolean={this.props.addressModalVisible}
       />
     )
-  }
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 
@@ -192,17 +179,10 @@ class AddressInputRecipient extends Component { // this component is for the inp
   render() {
 
     return(
-      <View style={[styles.addressInputWrap, this.border('orange')]}>
-          <TextInput style={[styles.addressInput, this.border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+      <View style={[styles.addressInputWrap, border('orange')]}>
+          <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
       </View>
     )
-  }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 
@@ -225,7 +205,7 @@ class SendAddressButtons extends Component { // this component is for the button
 
   render( ) {
     return(
-      <View style={[ModalStyle.buttonsWrap, this.border('gray')]}>
+      <View style={[ModalStyle.buttonsWrap, border('gray')]}>
         <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
             <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>Cancel</FormattedText>
@@ -238,12 +218,6 @@ class SendAddressButtons extends Component { // this component is for the button
           </TouchableHighlight>
       </View>
     )
-  }
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 

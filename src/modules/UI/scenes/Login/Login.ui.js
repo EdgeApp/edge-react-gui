@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
+<<<<<<< HEAD
 import { ActivityIndicator, Alert, Button, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { connect } from 'react-redux'
+=======
+import { ActivityIndicator, Alert, Button, Image, InteractionManager, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+>>>>>>> develop
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
@@ -18,9 +22,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   logo: {
+    alignSelf: 'center',
     width: 200
   },
   textInput: {
@@ -85,11 +89,8 @@ class Login extends Component {
     }
   }
 
-  componentWillMount () {
-    this.login()
-  }
-
   render () {
+    InteractionManager.runAfterInteractions(this.login)
     console.log('render', this.state)
 
     return (
@@ -143,7 +144,14 @@ class Login extends Component {
     this.setState({
       loggingInModalVisible: true,
       shouldLogin: true,
-    }, () => {setTimeout(this.login, 1)} )
+    })
+  }
+
+  closeModel = () => {
+    this.setState({
+      loggingInModalVisible: true,
+      shouldLogin: true,
+    })
   }
 
   login = () => {
@@ -161,18 +169,17 @@ class Login extends Component {
     )
     .then(account => {
       getListUsernames(this.props.context, this.props.dispatch)
+      this.setState({
+        loggingInModalVisible: false,
+        shouldLogin: false,
+      })
       this.props.onLoggedIn(account)
     })
     .catch(error => {
       this.setState({
-        loggingInModalVisible: false
-      })
-      console.log('error', error)
-      Alert.alert(
-        'Alert Title',
-        error.msg,
-        [{text: 'OK', onPress: () => console.log('OK Pressed!')},]
-      )
+        loggingInModalVisible: false,
+        shouldLogin: false,
+      }, console.log(error))
     })
   }
 

@@ -156,9 +156,6 @@ module.exports = StyleSheet.create({
   addressInputWrap: {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    height: '80%',
-    marginTop: 16,   
-    marginBottom: 16,
     borderBottomColor: '#dddddd',
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
 

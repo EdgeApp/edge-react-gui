@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, Picker }  from 'react-native'
-import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base';
+import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, Picker } from 'react-native'
+import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
@@ -13,11 +13,11 @@ import RowOptions from './WalletListRowOptions.ui'
 
 class WalletListRow extends Component {
 
-  render() {
+  render () {
     let id = this.props.data.id
     let name = this.props.data.name || 'No name'
 
-    return(
+    return (
       <TouchableHighlight style={[styles.rowContainer]}
         underlayColor={'#eee'}
         delayLongPress={500}
@@ -27,13 +27,13 @@ class WalletListRow extends Component {
           <View style={[styles.rowNameTextWrap]}>
             <Text style={[styles.rowNameText]}>{name}</Text>
           </View>
-          <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
+          <RowOptions style={{borderColor: 'red', borderWidth: 1}} walletKey={id} archiveLabel={this.props.archiveLabel} />
         </View>
       </TouchableHighlight>
     )
   }
 
-  border(color) {
+  border (color) {
     return {
       borderColor: color,
       borderWidth: 2
@@ -45,6 +45,6 @@ WalletListRow.propTypes = {
 
 }
 
-export default connect( state => ({
+export default connect(state => ({
 
-}) )(WalletListRow)
+}))(WalletListRow)

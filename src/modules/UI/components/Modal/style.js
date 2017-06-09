@@ -9,22 +9,30 @@ const screenDimensions = {
 module.exports = StyleSheet.create({
 
   // modal styles
+  topLevelModal: {
+
+  },
   modalContainer: {
     flex: 1 ,
-    alignItems: 'center'
+    alignItems: 'center',
+    zIndex: 1,
+    elevation: 1
   },
   modalOverlay: {
     flex: 1,
     padding: 10
   },
   modalBox: {
-    top: screenDimensions.height / 8,
+    top: (screenDimensions.height / 8),
+    left: (screenDimensions.width / 8) - 20,
     width: screenDimensions.width * 3 / 4,
     borderRadius: 3,
     alignItems: 'stretch',
-    height: (screenDimensions.height) / 3,
+    position: 'absolute',
+    //height: (screenDimensions.height) / 3,
     backgroundColor: 'white',
     padding: 15,
+    paddingTop: 25,
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
@@ -36,13 +44,11 @@ module.exports = StyleSheet.create({
     })
   },
   modalHeaderIconWrapBottom: {
-    position: 'relative', 
-    bottom: 50, 
-    left: 100, 
+    position: 'absolute', 
+    left: (screenDimensions.width / 2) - 47, 
+    top: (screenDimensions.height / 8) - 28,
     borderRadius: 27,
     backgroundColor: 'white', 
-    zIndex: 99, 
-    elevation: 99,
     height: 54, 
     width: 54    
   },
@@ -61,12 +67,16 @@ module.exports = StyleSheet.create({
   // beginning of rename wallet modal
   modalBody: {
     position: 'relative',
-    bottom: 48,
-    height: (Platform.OS === 'android') ? ((screenDimensions.height) / 3) - 20 : ((screenDimensions.height) / 3) - 30,
+        ...Platform.select({
+      android: {
+        height: ((screenDimensions.height) / 3) - 30,
+      }
+    }),    
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {
-    height: '30%'
+    padding: 10,
+    paddingBottom: 4
   },
   modalTopText: {
     textAlign: 'center',
@@ -77,13 +87,15 @@ module.exports = StyleSheet.create({
     fontSize: 14,
     color: '#58595C',
     textAlign: 'center',
-    marginTop: 3
+    paddingTop: 4
   },
   modalMiddle: {
-    height: '33%',
     flexDirection: 'column',
     alignItems: 'stretch',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 10,
+    paddingTop: 4
+
   },
   modalMiddleTextWrap: {
 
