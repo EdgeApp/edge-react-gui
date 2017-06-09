@@ -87,6 +87,7 @@ module.exports = StyleSheet.create({
     fontSize: 14,
     color: '#58595C',
     textAlign: 'center',
+    paddingTop: 4
   },
   modalMiddle: {
     flexDirection: 'column',

@@ -275,6 +275,10 @@ export const DeleteWalletButtonsConnect = connect(state => ({
 /////////End of Delete Area //////////
 
 
+/////// Beginning of Rename Area ////////
+
+
+
 class AddressIcon extends Component {
   render() {
     return(
@@ -282,8 +286,6 @@ class AddressIcon extends Component {
     )
   }
 }
-
-/////// Beginning of Rename Area ////////
 
 class WalletNameInput extends Component {
   _onToggleRenameModal () {
