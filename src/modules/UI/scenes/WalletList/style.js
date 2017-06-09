@@ -172,14 +172,14 @@ module.exports = StyleSheet.create({
   nameInputWrap: {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    marginTop: 16,   
-    marginBottom: 16,
+    marginTop: 0,   
+    marginBottom: 0,
     borderBottomColor: '#dddddd',
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
 
   },
   nameInput: {
-    height: (Platform.OS === 'ios') ? 26 : '100%',
+    height: (Platform.OS === 'ios') ? 26 : 46,
     textAlign: 'center', 
     fontSize: 20
   },

@@ -37,13 +37,12 @@ class StylizedModal extends Component {
                         </View>
                     </View>
                 </View>
-                {Platform.OS === 'ios' && 
+
                 <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.modalHeaderIconWrapBottom]} colors={['#3B7ADA', '#2B5698']}>
                     <View style={styles.modalHeaderIconWrapTop}>
                         {this.props.featuredIcon}  
                     </View>
                 </LinearGradient>
-                }                 
             </Modal> 
         )       
     }

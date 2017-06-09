@@ -37,11 +37,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   iconWrapper: {
-        ...Platform.select({
-      android: {
-        height: 44,
-      }
-    })
+
   },
   modalHeaderIconWrapBottom: {
     position: 'absolute', 
@@ -67,11 +63,7 @@ module.exports = StyleSheet.create({
   // beginning of rename wallet modal
   modalBody: {
     position: 'relative',
-        ...Platform.select({
-      android: {
-        height: ((screenDimensions.height) / 3) - 30,
-      }
-    }),    
+   
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {

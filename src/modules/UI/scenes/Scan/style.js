@@ -161,7 +161,7 @@ module.exports = StyleSheet.create({
 
   },
   addressInput: {
-    height: (Platform.OS === 'ios') ? 26 : '100%',
+    height: 26,
     textAlign: 'center', 
     fontSize: 20
   },

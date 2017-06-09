@@ -217,7 +217,7 @@ class DeleteSubtext extends Component {
     return(
       <FormattedText style={styles.subHeaderSyntax}>Are you sure you want to delete      
         {(this.props.currentWalletBeingDeleted) ? (
-          <FormattedText style={{fontWeight: 'bold'}}>{this.props.currentWalletBeingDeleted}?</FormattedText>
+          <FormattedText style={{fontWeight: 'bold'}}> {this.props.currentWalletBeingDeleted}?</FormattedText>
         )
         :(
           <FormattedText>this wallet?</FormattedText>
