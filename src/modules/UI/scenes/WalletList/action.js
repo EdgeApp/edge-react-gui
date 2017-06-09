@@ -16,6 +16,8 @@ export const OPEN_RENAME_WALLET_MODAL = 'OPEN_RENAME_WALLET_MODAL'
 export const CLOSE_RENAME_WALLET_MODAL = 'CLOSE_RENAME_WALLET_MODAL'
 export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 
+export const ADD_TOKEN = 'ADD_TOKEN'
+
 import { activateWalletRequest, archiveWalletRequest, deleteWalletRequest } from '../../../Core/Account/api.js'
 
 export const executeWalletRowOption = (walletId, option) => {
@@ -40,6 +42,18 @@ export const executeWalletRowOption = (walletId, option) => {
       return dispatch => {
         dispatch(openRenameWalletModal(walletId))
       }
+
+    case 'Add Token':
+      return dispatch => {
+        dispatch(addToken(walletId))
+      }
+  }
+}
+
+export const addToken = walletId => {
+  return {
+    type: ADD_TOKEN,
+    data: { walletId }
   }
 }
 
