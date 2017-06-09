@@ -71,7 +71,7 @@ class WalletList extends Component {
 
     return (
       <View style={styles.container}>
-        {(this.props.deleteWalletVisible && this.props.currentWalletBeingDeleted) && this.renderDeleteWalletModal()}
+        {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
 
         <View style={[styles.totalBalanceBox]}>
@@ -145,11 +145,9 @@ class WalletList extends Component {
       <StylizedModal
         featuredIcon={<DeleteIcon />}
         headerText='Delete Wallet'
-        modalMiddle={<DeleteSubtext currentWalletBeingDeleted={this.props.currentWalletBeingDeleted} />}
+        modalMiddle={<DeleteSubtext />}
         modalBottom={<DeleteWalletButtonsConnect />}
-        visibilityBoolean={this.props.deleteWalletVisible}
-        name={this.props.walletList[this.props.currentWalletBeingDeleted].name}
-        currentWalletBeingDeleted={this.props.currentWalletBeingDeleted}
+        visibilityBoolean={this.props.deleteWalletModalVisible}
       />
     )
   }
@@ -212,12 +210,18 @@ class DeleteSubtext extends Component {
 
     return(
       <FormattedText style={styles.subHeaderSyntax}>Are you sure you want to delete
-        {(this.props.currentWalletBeingDeleted) ? (
-          <FormattedText style={{fontWeight: 'bold'}}>{this.props.currentWalletBeingDeleted}?</FormattedText>
-        )
-        :(
-          <FormattedText>this wallet?</FormattedText>
-      )}
+        {
+          (this.props.currentWalletBeingDeleted) ?
+          (
+            <FormattedText
+              style={{fontWeight: 'bold'}}>
+              {this.props.currentWalletBeingDeleted}?
+            </FormattedText>
+          ):
+          (
+            <FormattedText> this wallet?</FormattedText>
+          )
+        }
       </FormattedText>
     )
   }
@@ -232,8 +236,7 @@ class DeleteWalletButtons extends Component {
   }
 
   _onDeleteModalDone = () => {
-    this.props.dispatch(completeDeleteWallet(this.props.currentWalletBeingDeleted))
-    this.props.dispatch(deleteWalletRequest(this.props.currentWalletBeingDeleted))
+    this.props.dispatch(deleteWallet(this.props.walletId))
   }
 
   render() {

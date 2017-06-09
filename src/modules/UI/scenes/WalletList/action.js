@@ -95,6 +95,12 @@ export const updateRenameWalletInput = renameWalletInput => {
   }
 }
 
+export const deleteWallet = walletId => {
+  return dispatch => {
+    dispatch(deleteWalletRequest(walletId))
+  }
+}
+
 export function updateWalletOrder (walletOrder) {
   return {
     type: UPDATE_WALLET_ORDER,
