@@ -175,13 +175,7 @@ class WalletList extends Component {
     console.info('n is: ' , n)
       return n % 2 == 0;
   }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
-  }
+  
 }
 
 WalletList.propTypes = {
