@@ -27,6 +27,11 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
+  _handleOnPressSettings =() => {
+    Actions.settingsOverview()
+    return this.props.dispatch(closeSidebar())
+  }
+
   render () {
 
     if(this.props.usersView) {
@@ -83,14 +88,14 @@ class MainComponent extends Component {
                 </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={ e => console.log('pressed6') }>
+              <TouchableNativeFeedback onPress={this._handleOnPressTransaction} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={styles.others.link}>
                 <Icon style={styles.others.icon} name='settings' />
                 <View style={styles.others.textContainer}>
                   <Text style={styles.others.text}>Settings</Text>
                 </View>
                 </View>
-              </TouchableNativeFeedback>
+              </TouchableNativeFeedback>           
             </View>
           </View>
         )
@@ -145,7 +150,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed6') } >
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressSettings} >
                 <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
                   <Icon style={styles.others.icon} name='settings' />
                   <View style={styles.others.textContainer}>
