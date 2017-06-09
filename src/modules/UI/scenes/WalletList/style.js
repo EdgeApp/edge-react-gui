@@ -172,7 +172,6 @@ module.exports = StyleSheet.create({
   nameInputWrap: {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    height: '80%',
     marginTop: 16,   
     marginBottom: 16,
     borderBottomColor: '#dddddd',
@@ -187,6 +186,11 @@ module.exports = StyleSheet.create({
 
   emptyBottom: {
     flex: 1
+  },
+  subHeaderSyntax: {
+    color: '#58595C',
+    textAlign: 'center',
+    fontSize: 14
   },
 
   //buttons
