@@ -18,8 +18,6 @@ class WalletListRowOptions extends Component {
   }
 
   optionAction (optionKey) {
-    console.log('this.props', this.props)
-    console.log('optionKey', optionKey)
     this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
     if (optionKey === 'Rename') {
       this.props.dispatch(updateRenameWalletInput(this.props.wallets[this.props.walletKey].id.slice(0, 5)))

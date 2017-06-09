@@ -141,7 +141,6 @@ class WalletList extends Component {
   }
 
   renderDeleteWalletModal () {
-
     return (
       <StylizedModal
         featuredIcon={<DeleteIcon />}
@@ -156,7 +155,6 @@ class WalletList extends Component {
   }
 
   renderRenameWalletModal = () => {
-    console.log('this.props', this.props)
     return (
       <StylizedModal
         featuredIcon={<AddressIcon />}
@@ -164,15 +162,10 @@ class WalletList extends Component {
         headerSubtext={this.props.walletName}
         modalMiddle={<WalletNameInputConnect />}
         modalBottom={<RenameWalletButtonsConnect
-          // <<<<<<< HEAD
-          // currentWalletBeingRenamed={this.props.currentWalletBeingRenamed}
-          // currentWalletRename={this.props.currentWalletRename} />}
-          // visibilityBoolean={this.props.renameWalletVisible}
-        // =======
-        walletId={this.props.walletId}
-        renameWalletInput={this.props.renameWalletInput} />}
+          walletId={this.props.walletId}
+          renameWalletInput={this.props.renameWalletInput} />}
         visibilityBoolean={this.props.renameWalletModalVisible}
-// >>>>>>> WIP
+
       />
     )
   }
@@ -310,7 +303,6 @@ export const WalletNameInputConnect = connect( state => ({
 class RenameWalletButtons extends Component {
 
   _onRenameModalDone = () => {
-    console.log('this.props', this.props)
     this.props.dispatch(closeRenameWalletModal())
     this.props.dispatch(renameWalletRequest(this.props.walletId, this.props.renameWalletInput))
   }
