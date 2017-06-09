@@ -9,7 +9,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import EvilIcon from 'react-native-vector-icons/EvilIcons'
-import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateWalletRenameInput } from './action'
+import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
 
 class WalletListRowOptions extends Component {
 
@@ -20,8 +20,7 @@ class WalletListRowOptions extends Component {
   optionAction (optionKey) {
     this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
     if (optionKey === 'Rename') {
-      this.props.dispatch(updateCurrentWalletBeingRenamed(this.props.walletKey))
-      this.props.dispatch(updateWalletRenameInput(this.props.wallets[this.props.walletKey].id.slice(0,5)))
+      this.props.dispatch(updateRenameWalletInput(this.props.wallets[this.props.walletKey].id.slice(0, 5)))
     }
   }
 
@@ -38,27 +37,27 @@ class WalletListRowOptions extends Component {
           <MenuOptions>
             <MenuOption value={options[0]} style={styles.menuOption}>
               <View style={[styles.menuOptionItem, this.border('green')]}>
-                <MAIcon name="edit" size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />
+                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[0]}</FormattedText>
               </View>
             </MenuOption>
             <MenuOption value={options[1]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, this.border('green')]}>  
-                <MAIcon name="edit" size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />                            
+              <View style={[styles.menuOptionItem, this.border('green')]}>
+                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[1]}</FormattedText>
               </View>
             </MenuOption>
             <MenuOption value={options[2]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, this.border('green')]}>                   
-                <EvilIcon name="archive" size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />                          
+              <View style={[styles.menuOptionItem, this.border('green')]}>
+                <EvilIcon name='archive' size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[2]}</FormattedText>
-              </View>                
+              </View>
             </MenuOption>
             <MenuOption value={options[3]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, this.border('green')]}>    
-                <FAIcon name="trash-o" size={24} style={[styles.optionIcon, styles.trashIcon, this.border('red')]} />                          
+              <View style={[styles.menuOptionItem, this.border('green')]}>
+                <FAIcon name='trash-o' size={24} style={[styles.optionIcon, styles.trashIcon, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[3]}</FormattedText>
-                </View>
+              </View>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -66,7 +65,7 @@ class WalletListRowOptions extends Component {
     )
   }
 
-  border(color) {
+  border (color) {
     return {
       borderColor: color,
       borderWidth: 0

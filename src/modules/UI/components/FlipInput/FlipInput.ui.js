@@ -16,7 +16,7 @@ const CRYPTO_PLACEHOLDER = 'C 0.00'
 const FIAT_PLACEHOLDER   = 'F 0.00'
 
 class FlipInput extends Component {
-render () {
+  render () {
     return (
       <FlipView style={styles.view}
         front={this._renderFront()}

@@ -84,7 +84,6 @@ class Login extends Component {
 
   render () {
     InteractionManager.runAfterInteractions(this.login)
-    console.log('render', this.state)
 
     return (
       <LinearGradient
@@ -140,13 +139,6 @@ class Login extends Component {
     })
   }
 
-  closeModel = () => {
-    this.setState({
-      loggingInModalVisible: true,
-      shouldLogin: true,
-    })
-  }
-
   login = () => {
     if (!this.state.shouldLogin) { return }
     console.log('logging in')
@@ -167,12 +159,12 @@ class Login extends Component {
       })
       this.props.onLoggedIn(account)
     })
-    .catch(error => {
-      this.setState({
-        loggingInModalVisible: false,
-        shouldLogin: false,
-      }, console.log(error))
-    })
+    // .catch(error => {
+    //   this.setState({
+    //     loggingInModalVisible: false,
+    //     shouldLogin: false,
+    //   }, console.log(error))
+    // })
   }
 
 }
