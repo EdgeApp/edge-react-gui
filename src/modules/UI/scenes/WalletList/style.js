@@ -1,4 +1,4 @@
-import React, {StyleSheet, Dimensions, Platform} from 'react-native';
+import React, {StyleSheet, Dimensions, Platform} from 'react-native'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
