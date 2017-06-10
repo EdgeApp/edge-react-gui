@@ -29,5 +29,31 @@ module.exports = StyleSheet.create({
       height: 24,
       fontSize: 24,
       backgroundColor: 'transparent'
+    },
+    
+    ////// Beginning of Settings Row ///////
+    settingsRowContainer: {
+        height: 44,
+        borderBottomWidth: 1,
+        borderBottomColor: '#CCCCCC',
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 15,
+        paddingBottom: 15,
+        justifyContent: 'space-around'        
+    },
+    settingsRowTextRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    settingsRowLeftText: {
+        color: '#58595C',
+        fontSize: 16        
+    },
+    settingsRowRightArrow: {
+        color: '#58595C',
+        height: 20        
     }
+    ///////// End of Settings Row /////////
+
 })
