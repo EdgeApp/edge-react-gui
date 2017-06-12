@@ -14,14 +14,13 @@ const byId = (state, action) => {
   const { type, data } = action
   switch (type) {
     case ACTION.ADD_WALLET:
-      const wallet = data.wallet
+      const { wallet } = data
       return {
         ...state,
         [wallet.id]: wallet
       }
 
-    case ACTION.ARCHIVE_WALLET:
-    case ACTION.DELETE_WALLET:
+    case ACTION.REMOVE_WALLET:
       const { walletId } = data
       const newState = Object.assign({}, state)
       delete newState[walletId]

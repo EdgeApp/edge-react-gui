@@ -54,6 +54,6 @@ const archiveWallet = (account, walletId) => {
 const deleteWallet = (account, walletId) => {
   console.log('deleting wallet', walletId)
   return account.changeKeyStates({
-    walletId: { delete: true }
+    walletId: { deleted: true }
   })
 }

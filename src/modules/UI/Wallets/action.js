@@ -6,6 +6,19 @@ export const SELECT_WALLET_ID = 'SELECT_WALLET_ID'
 export const ADD_WALLET = 'ADD_WALLET'
 
 export const activateWalletId = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    dispatch(activateWalletId(walletId))
+
+    if (!selectedWalletId) {
+      dispatch(selectedWalletId(walletId))
+    }
+  }
+}
+
+const activateWalletId = walletId => {
   return {
     type: ACTIVATE_WALLET_ID,
     data: { walletId }
@@ -13,9 +26,35 @@ export const activateWalletId = walletId => {
 }
 
 export const archiveWalletId = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    dispatch(archiveWalletId(walletId))
+
+    if (selectedWalletId === walletId) {
+      dispatch(selectNextWalletId())
+    }
+  }
+}
+
+export const archiveWalletId = walletId => {
   return {
     type: ARCHIVE_WALLET_ID,
     data: { walletId }
+  }
+}
+
+export const deleteWalletId = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    dispatch(deleteWalletId(walletId))
+
+    if (selectedWalletId === walletId) {
+      dispatch(selectNextWalletId())
+    }
   }
 }
 
@@ -30,6 +69,12 @@ export const selectWalletId = walletId => {
   return {
     type: SELECT_WALLET_ID,
     data: { walletId }
+  }
+}
+
+const selectNextWalletId = () => {
+  return (dispatch, getState) => {
+    
   }
 }
 
