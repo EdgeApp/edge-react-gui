@@ -2,7 +2,7 @@ import { addAccount } from '../Core/Account/action.js'
 import { addWallet, removeWallet } from '../Core/Wallets/action.js'
 import { activateWalletIdRequest, archiveWalletIdRequest, deleteWalletIdRequest } from '../UI/Wallets/action.js'
 
-import { activateWalletRequest, archiveWalletRequest, deleteWalletRequest } from '../Core/Wallets/api.js'
+import * as WALLET_API from '../Core/Wallets/api.js'
 
 import { makeCurrencyWallet } from 'airbitz-core-js'
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
@@ -78,7 +78,7 @@ const activateWallet = keyInfo => {
     makeCurrencyWallet(keyInfo, opts)
     .then(wallet => {
       // wallet.startEngine() should return the wallet
-      activateWalletRequest(wallet)
+      WALLET_API.activateWalletRequest(wallet)
       .then(() => {
         // update core state
         dispatch(addWallet(wallet))
@@ -90,10 +90,9 @@ const activateWallet = keyInfo => {
 }
 
 const archiveWallet = walletId => {
-  return (dispatch, getState) => {
-    const wallet = getState().core.wallets.byId[walletId]
+  return dispatch => {
     // wallet.stopEngine() might be async, but if it throws an error, nothing can be done, so no need to wait
-    archiveWalletRequest(wallet)
+    WALLET_API.archiveWalletRequest(walletId)
     // update core state
     dispatch(removeWallet(walletId))
     // update ui state
@@ -102,10 +101,9 @@ const archiveWallet = walletId => {
 }
 
 const deleteWallet = walletId => {
-  return (dispatch, getState) => {
-    const wallet = getState().core.wallets.byId[walletId]
+  return dispatch => {
     // wallet.stopEngine() might be async, but if it throws an error, nothing can be done, so no need to wait
-    deleteWalletRequest(wallet)
+    WALLET_API.deleteWalletRequest(walletId)
     // update core state
     dispatch(removeWallet(walletId))
     // update ui state

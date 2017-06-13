@@ -18,19 +18,20 @@ export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 
-import { activateWalletRequest, archiveWalletRequest, deleteWalletRequest } from '../../../Core/Account/api.js'
+import * as ACCOUNT_API from '../../../Core/Account/api.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
 
 export const executeWalletRowOption = (walletId, option) => {
   switch (option) {
     case 'Restore':
     case 'Activate':
       return dispatch => {
-        dispatch(activateWalletRequest(walletId))
+        dispatch(ACCOUNT_API.activateWalletRequest(walletId))
       }
 
     case 'Archive':
       return dispatch => {
-        dispatch(archiveWalletRequest(walletId))
+        dispatch(ACCOUNT_API.archiveWalletRequest(walletId))
       }
 
     case 'Delete':
@@ -95,9 +96,15 @@ export const updateRenameWalletInput = renameWalletInput => {
   }
 }
 
+export const renameWallet = (walletId, walletName) => {
+  return (dispatch, getState) => {
+    dispatch(WALLET_API.renameWalletRequest(walletId, walletName))
+  }
+}
+
 export const deleteWallet = walletId => {
   return dispatch => {
-    dispatch(deleteWalletRequest(walletId))
+    dispatch(ACCOUNT_API.deleteWalletRequest(walletId))
   }
 }
 

@@ -55,8 +55,6 @@ const walletName = (state = '', action) => {
   switch (type) {
     case ACTION.OPEN_RENAME_WALLET_MODAL:
       return walletName
-    case ACTION.CLOSE_RENAME_WALLET_MODAL:
-      return ''
     default:
       return state
   }

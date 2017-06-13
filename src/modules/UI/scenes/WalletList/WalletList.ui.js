@@ -25,12 +25,10 @@ import {
   toggleWalletRenameModal,
   closeWalletDeleteModal,
   updateCurrentWalletBeingRenamed,
-  closeRenameWalletModal
+  closeRenameWalletModal,
+  renameWallet
 } from './action'
 import {border} from '../../../../util/border'
-
-import { renameWalletRequest } from '../../../Core/Wallets/api.js'
-import { activateWalletRequest, archiveWalletRequest } from '../../../Core/Account/api.js'
 
 import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
@@ -307,7 +305,7 @@ class RenameWalletButtons extends Component {
 
   _onRenameModalDone = () => {
     this.props.dispatch(closeRenameWalletModal())
-    this.props.dispatch(renameWalletRequest(this.props.walletId, this.props.renameWalletInput))
+    this.props.dispatch(renameWallet(this.props.walletId, this.props.renameWalletInput))
   }
 
   _onCancelRenameModal = () => {

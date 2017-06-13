@@ -32,6 +32,36 @@ export const deleteWalletRequest = walletId => {
   }
 }
 
+export const enablePinLoginRequest = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { core: account } = state
+
+    account.root.file('settings').setText()
+    .then(text => {
+      const settings = JSON.parse(text)
+      settings.pinLoginEnabled = true
+
+      account.root.file('settings').setText(settings)
+    })
+  }
+}
+
+export const disablePinLogin = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { core: account } = state
+
+    account.root.file('settings').setText()
+    .then(text => {
+      const settings = JSON.parse(text)
+      settings.pinLoginEnabled = false
+
+      account.root.file('settings').setText(settings)
+    })
+  }
+}
+
 //  Helper functions
 const createWallet = (account, walletType, keys) => {
   return account.createWallet(walletType, keys)

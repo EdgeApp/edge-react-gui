@@ -18,7 +18,8 @@ export default function configureStore (initialState) {
   return createStore(
     rootReducer,
     initialState,
-    //window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(
-    applyMiddleware(...middleware)
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__(
+      applyMiddleware(...middleware)
+    )
   )
 }
