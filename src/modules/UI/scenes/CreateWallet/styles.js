@@ -4,38 +4,38 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#F6F6F6"
+    backgroundColor: '#F6F6F6'
   },
   walletNameInputView: {
     height: 50,
-    marginBottom: 10,
+    marginBottom: 10
   },
   walletNameInput: {
     flex: 1,
-    padding: 5,
+    padding: 5
   },
   pickerView: {
     marginBottom: 15,
-    borderBottomWidth: (Platform.OS === 'ios') ?  1 : 0,
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
     borderColor: '#CCCCCC'
   },
   picker: {
     height: 50,
     padding: 5,
-    fontFamily: 'SourceSansPro-Regular'    
+    fontFamily: 'SourceSansPro-Regular'
   },
   listView: {
-    maxHeight: 200,
+    maxHeight: 200
   },
   listItem: {
     margin: 0,
     padding: 5,
     borderColor: 'grey',
     borderBottomWidth: 1,
-    fontSize: 20,
+    fontSize: 20
   },
   textInput: {
-    flex: 1,
+    flex: 1
   },
   text: {
     color: 'white'
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4977BB',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 3    
+    borderRadius: 3
   },
   buttonText: {
     color: 'white',
@@ -63,8 +63,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#909091',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 3    
-  },
+    borderRadius: 3
+  }
 })
 
 export default styles

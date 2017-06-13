@@ -54,12 +54,11 @@ class HelpModal extends Component {
       </TouchableWithoutFeedback>
     )
   }
-
 }
 
-export default connect( state => ({
-
-  modal: state.ui.helpModal,
+const mapStateToProps = state => ({
+  modal: state.ui.scenes.helpModal,
   routes: state.routes
+})
 
-}) )(HelpModal)
+export default connect(mapStateToProps)(HelpModal)

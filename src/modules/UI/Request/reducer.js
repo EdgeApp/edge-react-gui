@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux'
 import * as ACTION from './action'
 
 const initialState = {
@@ -16,13 +15,7 @@ const initialState = {
   }
 }
 
-export const request = (state = initialState, action) => {
-  return {
-    receiveAddress: receiveAddress(state.receiveAddress, action)
-  }
-}
-
-const receiveAddress = (state = {}, action) => {
+export default request = (state = initialState, action) => {
   const { type, data = {} } = action
   const { receiveAddress } = data
   switch (type) {

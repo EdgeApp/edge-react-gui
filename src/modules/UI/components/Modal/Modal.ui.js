@@ -22,10 +22,10 @@ class StylizedModal extends Component {
           <View style={[styles.modalBody, border('purple')]}>
             <View style={[styles.modalTopTextWrap,  border('blue')]}>
               <FormattedText style={[styles.modalTopText, border('yellow')]}>{this.props.headerText}</FormattedText>
-              {this.props.headerSubtext &&
+              {
                 <FormattedText style={[styles.modalTopSubtext, border('green')]}
                   numberOfLines={2}>
-                  {this.props.headerSubtext}
+                  {this.props.headerSubtext || ''}
                 </FormattedText>
               }
             </View>

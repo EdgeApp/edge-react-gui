@@ -12,7 +12,8 @@ export const initializeAccount = account => {
   return dispatch => {
     dispatch(addAccount(account))
     const supportedTypes = [
-      'wallet:shitcoin'
+      'wallet:shitcoin',
+      'wallet:bitcoin'
     ]
     let allKeys = account.allKeys
 
@@ -75,7 +76,7 @@ const activateWallet = keyInfo => {
       io
     }
 
-    makeCurrencyWallet(keyInfo, opts)
+    return makeCurrencyWallet(keyInfo, opts)
     .then(wallet => {
       // wallet.startEngine() should return the wallet
       WALLET_API.activateWalletRequest(wallet)

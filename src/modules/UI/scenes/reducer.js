@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 import scan from './Scan/reducer'
-import { sendConfirmation } from './SendConfirmation/reducer'
+import sendConfirmation from './SendConfirmation/reducer'
 import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
 import walletTransferListReducer from './WalletTransferList/reducer'
-import { request } from './Request/reducer.js'
-import addWallet from './AddWallet/reducer'
+import request from './Request/reducer.js'
+import createWallet from './CreateWallet/reducer'
 
 import controlPanel from '../components/ControlPanel/reducer.js'
 import sideMenu from '../components/SideMenu/reducer'
@@ -15,7 +15,7 @@ import walletListModal from '../components/WalletListModal/reducer'
 import exchangeRate from '../components/ExchangeRate/reducer.js'
 import dimensions from '../dimensions/reducer'
 
-export const scenes = combineReducers({
+export default scenes = combineReducers({
   scan,
   sendConfirmation,
   transactionList,
@@ -24,7 +24,7 @@ export const scenes = combineReducers({
   walletTransferList: walletTransferListReducer,
   walletListModal,
   sideMenu,
-  addWallet,
+  createWallet,
   request,
   dimensions,
   helpModal,

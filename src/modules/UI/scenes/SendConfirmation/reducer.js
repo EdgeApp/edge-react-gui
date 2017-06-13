@@ -16,7 +16,7 @@ const initialState = {
   spendInfo: {}
 }
 
-export const sendConfirmation = (state = initialState, action) => {
+export default sendConfirmation = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_AMOUNT_SATOSHI:

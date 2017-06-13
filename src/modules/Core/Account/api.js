@@ -1,10 +1,17 @@
 // import { activateWalletSuccess, archiveWalletSuccess } from ''
 
-export const createWalletRequest = (walletType, keys) => {
+import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
+
+export const createWalletRequest = (walletName, walletType) => {
   return (dispatch, getState) => {
     // dispatch(activateWalletStart(walletId))
-    const { account } = getState().core
-    return createWallet(account, walletType, keys)
+    const { account, context } = getState().core
+    const { io } = context
+
+    const keys = makeShitcoinPlugin({ io }).createMasterKeys('shitcoin')
+
+    const formattedWalletType = 'wallet:' + walletType.toLowerCase()
+    return createWallet(account, formattedWalletType, keys)
   }
 }
 
@@ -39,7 +46,7 @@ export const enablePinLoginRequest = () => {
 
     account.pinLogin = true
 
-    account.folder.file('settings').getText()
+    account.folder.file('settings.json').getText()
     .then(currentSettings => {
       const settings = JSON.parse(currentSettings)
       settings.pinLogin = true
@@ -57,7 +64,7 @@ export const disablePinLoginRequest = () => {
 
     account.pinLogin = false
 
-    account.folder.file('settings').getText()
+    account.folder.file('settings.json').getText()
     .then(text => {
       const settings = JSON.parse(text)
       settings.pinLogin = false
@@ -127,3 +134,16 @@ const deleteWallet = (account, walletId) => {
     walletId: { deleted: true }
   })
 }
+
+// Account: [username]
+// --------------------
+// Security
+// --------
+// Auto logoff (3 way selector) (seconds) (default: 3600)
+//
+// Currencies
+// ------------------
+// Bitcoin >
+  // Denomination (txlib -> getInfo -> denominations)
+// Ethereum >
+  // Denomination (txlib -> getInfo -> denominations)

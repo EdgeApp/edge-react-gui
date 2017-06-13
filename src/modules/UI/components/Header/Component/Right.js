@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { TouchableOpacity } from 'react-native';
-import { Text, Icon } from 'native-base';
+import { TouchableOpacity } from 'react-native'
+import { Text, Icon } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 import { openHelpModal } from '../../HelpModal/actions.js'
 import { connect } from 'react-redux'
@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 class HelpButton extends Component {
   render () {
     return (
-      <TouchableOpacity onPress={ e => this.props.dispatch(openHelpModal()) }>
+      <TouchableOpacity onPress={e => this.props.dispatch(openHelpModal())}>
         <Text>Help</Text>
       </TouchableOpacity>
     )
@@ -20,7 +20,7 @@ HelpButton = connect()(HelpButton)
 export default class Right extends Component {
 
   render () {
-    switch(this.props.routes.scene.sceneKey) {
+    switch (this.props.routes.scene.sceneKey) {
       case 'scan':
         return <HelpButton />
       case 'walletList':
@@ -33,7 +33,7 @@ export default class Right extends Component {
         return <HelpButton />
       case 'sendConfirmation':
         return <HelpButton />
-      case 'addWallet':
+      case 'createWallet':
         return <HelpButton />
       default:
         return null
@@ -41,4 +41,3 @@ export default class Right extends Component {
   }
 
 }
-

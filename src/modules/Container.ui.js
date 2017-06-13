@@ -15,7 +15,7 @@ import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
-import AddWallet from './UI/scenes/AddWallet/index.js'
+import CreateWallet from './UI/scenes/CreateWallet/index.js'
 import * as Settings from './UI/scenes/Settings'
 
 import Login from './UI/scenes/Login/index.js'
@@ -135,7 +135,7 @@ class Main extends Component {
 
                     <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
 
-                    <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
+                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' duration={0} />
 
                     <Scene key='settingsOverview' component={Settings.SettingsOverview} title='Settings' duration={0} />
 

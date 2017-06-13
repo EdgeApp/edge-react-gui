@@ -26,7 +26,8 @@ import {
   closeWalletDeleteModal,
   updateCurrentWalletBeingRenamed,
   closeRenameWalletModal,
-  renameWallet
+  renameWallet,
+  deleteWallet
 } from './action'
 import {border} from '../../../../util/border'
 
@@ -75,10 +76,14 @@ class WalletList extends Component {
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader, border('red')]}>
-              <FormattedText style={[styles.totalBalanceText]}>Total Balance</FormattedText>
+              <FormattedText style={[styles.totalBalanceText]}>
+                Total Balance
+              </FormattedText>
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap, border('green')]}>
-              <FormattedText style={[styles.currentBalanceBoxDollars]}>$ 8,200.00</FormattedText>
+              <FormattedText style={[styles.currentBalanceBoxDollars]}>
+                $ 8,200.00
+              </FormattedText>
             </View>
           </View>
         </View>
@@ -87,10 +92,12 @@ class WalletList extends Component {
             <View style={[styles.walletsBoxHeaderTextWrap, border('yellow')]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon, border('green')]} color='white' />
-                <FormattedText style={styles.walletsBoxHeaderText}>My Wallets</FormattedText>
+                <FormattedText style={styles.walletsBoxHeaderText}>
+                  My Wallets
+                </FormattedText>
               </View>
             </View>
-            <TouchableWithoutFeedback onPress={() => Actions.addWallet()} style={[styles.walletsBoxHeaderAddWallet, border('red')]}>
+            <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, border('red')]}>
               <Ionicon name='md-add'style={[styles.dropdownIcon, border('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
@@ -113,7 +120,9 @@ class WalletList extends Component {
             <View style={[styles.archiveBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
                 <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' />
-                <FormattedText style={styles.archiveBoxHeaderText}>Archive</FormattedText>
+                <FormattedText style={styles.archiveBoxHeaderText}>
+                  Archive
+                </FormattedText>
               </View>
             </View>
             <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown.bind(this)} style={[styles.archiveBoxHeaderDropdown, border('red')]}>
@@ -161,7 +170,6 @@ class WalletList extends Component {
           walletId={this.props.walletId}
           renameWalletInput={this.props.renameWalletInput} />}
         visibilityBoolean={this.props.renameWalletModalVisible}
-
       />
     )
   }
@@ -170,7 +178,6 @@ class WalletList extends Component {
     console.info('n is: ' , n)
       return n % 2 == 0;
   }
-
 }
 
 WalletList.propTypes = {
@@ -209,7 +216,8 @@ class DeleteSubtext extends Component {
     console.log('deleteSubtext being rendered, this is: ', this)
 
     return(
-      <FormattedText style={styles.subHeaderSyntax}>Are you sure you want to delete
+      <FormattedText style={styles.subHeaderSyntax}>
+        Are you sure you want to delete
         {
           (this.props.currentWalletBeingDeleted) ?
           (

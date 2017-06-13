@@ -124,7 +124,7 @@ const getNewArrayWithItem = (list, item) => {
   return list
 }
 
-export const wallets = combineReducers({
+export default wallets = combineReducers({
   byId,
   activeWalletIds,
   archivedWalletIds,
