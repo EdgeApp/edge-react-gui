@@ -1,6 +1,6 @@
 import { addAccount } from '../Core/Account/action.js'
 import { addWallet, removeWallet } from '../Core/Wallets/action.js'
-import { activateWalletId, archiveWalletId, deleteWalletId } from '../UI/Wallets/action.js'
+import { activateWalletIdRequest, archiveWalletIdRequest, deleteWalletIdRequest } from '../UI/Wallets/action.js'
 
 import { activateWalletRequest, archiveWalletRequest, deleteWalletRequest } from '../Core/Wallets/api.js'
 
@@ -83,7 +83,7 @@ const activateWallet = keyInfo => {
         // update core state
         dispatch(addWallet(wallet))
         // update ui state
-        dispatch(activateWalletId(wallet.id))
+        dispatch(activateWalletIdRequest(wallet.id))
       })
     })
   }
@@ -97,7 +97,7 @@ const archiveWallet = walletId => {
     // update core state
     dispatch(removeWallet(walletId))
     // update ui state
-    dispatch(archiveWalletId(walletId))
+    dispatch(archiveWalletIdRequest(walletId))
   }
 }
 
@@ -109,7 +109,7 @@ const deleteWallet = walletId => {
     // update core state
     dispatch(removeWallet(walletId))
     // update ui state
-    dispatch(deleteWalletId(walletId))
+    dispatch(deleteWalletIdRequest(walletId))
   }
 }
 
