@@ -221,11 +221,11 @@ class AddWallet extends Component {
 }
 
 const mapStateToProps = state => ({
-  wallets:   state.ui.scenes.wallets.wallets,
+  wallets:   state.ui.wallets.wallets,
   nameInput: state.ui.scenes.addWallet.newWalletName
 })
 
-export default connect( state => (mapStateToProps))(AddWallet)
+export default connect(mapStateToProps)(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
 
