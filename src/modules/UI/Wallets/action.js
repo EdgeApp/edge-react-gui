@@ -9,12 +9,11 @@ export const activateWalletIdRequest = walletId => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
-
-    dispatch(activateWalletId(walletId))
-
+    // automatically select the first active wallet
     if (!selectedWalletId) {
       dispatch(selectWalletId(walletId))
     }
+    dispatch(activateWalletId(walletId))
   }
 }
 
@@ -22,13 +21,12 @@ export const archiveWalletIdRequest = walletId => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
-
-    dispatch(archiveWalletId(walletId))
-
+    // automatically select the next active wallet
     if (selectedWalletId === walletId) {
       const { activeWalletIds } = state.ui.wallets
-      dispatch(selectWalletId(activeWalletIds[0]))
+      dispatch(selectWalletId(activeWalletIds[1]))
     }
+    dispatch(archiveWalletId(walletId))
   }
 }
 
@@ -36,13 +34,12 @@ export const deleteWalletIdRequest = walletId => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
-
-    dispatch(deleteWalletId(walletId))
-
+    // automatically select the next active wallet
     if (selectedWalletId === walletId) {
       const { activeWalletIds } = state.ui.wallets
-      dispatch(selectWalletId(activeWalletIds[0]))
+      dispatch(selectWalletId(activeWalletIds[1]))
     }
+    dispatch(deleteWalletId(walletId))
   }
 }
 

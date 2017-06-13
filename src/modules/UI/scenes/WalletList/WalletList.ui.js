@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TouchableWithoutFeedback,Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import { TouchableWithoutFeedback, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'

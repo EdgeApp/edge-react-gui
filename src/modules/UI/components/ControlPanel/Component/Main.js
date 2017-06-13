@@ -22,11 +22,6 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
-  _handleOnPressWallets = () => {
-    Actions.walletList();
-    return this.props.dispatch(closeSidebar())
-  }
-
   render () {
 
     if(this.props.usersView) {
@@ -38,16 +33,22 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
-              <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
+              <TouchableNativeFeedback onPress={this._handleOnPressDirectory}
+                background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderVertical ]}>
                   <Icon style={styles.main.icon} name='repeat' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Buy/Sell Digital Currency</Text>
-                    <Text style={styles.main.textItalic}>i.e Bitcoin/Ether</Text>
+                    <Text style={styles.main.text}>
+                      Buy/Sell Digital Currency
+                    </Text>
+                    <Text style={styles.main.textItalic}>
+                      i.e Bitcoin/Ether
+                    </Text>
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={this._handleOnPressTransaction} background={TouchableNativeFeedback.SelectableBackground()} >
+              <TouchableNativeFeedback onPress={this._handleOnPressTransaction}
+                background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <Icon style={styles.main.icon} name='basket' />
                   <View style={styles.main.textContainer}>
@@ -56,39 +57,40 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={ e => console.log('pressed3') } background={TouchableNativeFeedback.SelectableBackground()} >
+              <TouchableNativeFeedback onPress={ e => console.log('pressed3') }
+                background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
-                <Icon style={styles.main.icon} name='share' />
-                <View style={styles.main.textContainer}>
-                  <Text style={styles.main.text}>Refer Your Friends</Text>
-                  <Text style={styles.main.textItalic}>Earn Money</Text>
-                </View>
+                  <Icon style={styles.main.icon} name='share' />
+                  <View style={styles.main.textContainer}>
+                    <Text style={styles.main.text}>Refer Your Friends</Text>
+                    <Text style={styles.main.textItalic}>Earn Money</Text>
+                  </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={ this._handleOnPressWallets }>
+              <TouchableNativeFeedback onPress={ this._handleOnPressDirectory }>
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
-                  <Icon style={styles.main.icon} name='cash' />
+                  <Icon style={styles.main.icon} name='ios-home-outline' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Wallets</Text>
+                    <Text style={styles.main.text}>Directory</Text>
                   </View>
                 </View>
               </TouchableNativeFeedback>
             </View>
             <View style={styles.others.container}>
               <TouchableNativeFeedback onPress={ e => console.log('pressed5') }>
-                <View style={[ styles.others.link, styles.others.borderVertical ]}>
-                <Icon style={styles.others.icon} name='log-out' />
-                <View style={styles.others.textContainer}>
-                  <Text style={styles.others.text}>Logout</Text>
-                </View>
+                <View style={[styles.others.link, styles.others.borderVertical]}>
+                  <Icon style={styles.others.icon} name='log-out' />
+                  <View style={styles.others.textContainer}>
+                    <Text style={styles.others.text}>Logout</Text>
+                  </View>
                 </View>
               </TouchableNativeFeedback>
               <TouchableNativeFeedback onPress={ e => console.log('pressed6') }>
                 <View style={styles.others.link}>
-                <Icon style={styles.others.icon} name='settings' />
-                <View style={styles.others.textContainer}>
-                  <Text style={styles.others.text}>Settings</Text>
-                </View>
+                  <Icon style={styles.others.icon} name='settings' />
+                  <View style={styles.others.textContainer}>
+                    <Text style={styles.others.text}>Settings</Text>
+                  </View>
                 </View>
               </TouchableNativeFeedback>
             </View>
@@ -100,17 +102,25 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
-                <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight}
+                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+                onPress={this._handleOnPressDirectory} >
+                <View style={[styles.main.link, styles.main.borderVertical, {flex: 1}]}>
                   <Icon style={styles.main.icon} name='repeat' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Buy/Sell Digital Currency</Text>
-                    <Text style={styles.main.textItalic}>i.e Bitcoin/Ether</Text>
+                    <Text style={styles.main.text}>
+                      Buy/Sell Digital Currency
+                    </Text>
+                    <Text style={styles.main.textItalic}>
+                      i.e Bitcoin/Ether
+                    </Text>
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressTransaction} >
-                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight}
+                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+                onPress={this._handleOnPressTransaction} >
+                <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
                   <Icon style={styles.main.icon} name='basket' />
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Spend Bitcoins</Text>
@@ -118,8 +128,10 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed3') } >
-                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight}
+                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+                onPress={ e => console.log('pressed3') } >
+                <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
                   <Icon style={styles.main.icon} name='share' />
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Refer Your Friends</Text>
@@ -127,26 +139,32 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressWallets} >
-                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
-                  <Icon style={styles.main.icon} name='cash' />
+              <TouchableHighlight style={styles.main.iosTouchableHighlight}
+                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+                onPress={this._handleOnPressDirectory} >
+                <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
+                  <Icon style={styles.main.icon} name='ios-home-outline' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Wallets</Text>
+                    <Text style={styles.main.text}>Directory</Text>
                   </View>
                 </View>
               </TouchableHighlight>
             </View>
             <View style={styles.others.container}>
-              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed5') } >
-                <View style={[ styles.others.link, styles.others.borderVertical, { flex: 1 } ]}>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight}
+                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+                onPress={ e => console.log('pressed5') } >
+                <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1 }]}>
                   <Icon style={styles.others.icon} name='log-out' />
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Logout</Text>
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('pressed6') } >
-                <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight}
+                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+                onPress={ e => console.log('pressed6') } >
+                <View style={[ styles.others.link, styles.others.borderBottom, {flex: 1}]}>
                   <Icon style={styles.others.icon} name='settings' />
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Settings</Text>
@@ -158,7 +176,6 @@ class MainComponent extends Component {
         )
       }
     }
-
   }
 }
 

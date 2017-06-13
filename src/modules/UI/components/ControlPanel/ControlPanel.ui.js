@@ -31,17 +31,21 @@ class ControlPanel extends Component {
 
   render () {
     return  (
-      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#2B5698","#3B7ADA"]} style={styles.container}>
-          <View style={styles.bitcoin.container}>
-            <Icon name='logo-bitcoin' style={styles.bitcoin.icon}/>
-            <Text style={styles.bitcoin.value}>1000 b = $1.129 USD</Text>
-          </View>
-          <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
-            <Icon style={styles.user.icon} name='person' />
-            <Text style={styles.user.name}>{ this.props.selectedUser ? this.props.selectedUser.name : 'Account' }</Text>
-            <Icon style={styles.user.icon} name='arrow-dropdown' />
-          </TouchableOpacity>
-          <Main/>
+      <LinearGradient style={styles.container}
+        start={{x:0,y:0}}
+        end={{x:1, y:0}}
+        colors={["#2B5698","#3B7ADA"]}>
+        <View style={styles.bitcoin.container}>
+          <Icon name='logo-bitcoin' style={styles.bitcoin.icon}/>
+          <Text style={styles.bitcoin.value}>1000 b = $1.129 USD</Text>
+        </View>
+        <TouchableOpacity style={styles.user.container}
+          onPress={this._handlePressUserList}>
+          <Icon style={styles.user.icon} name='person' />
+          <Text style={styles.user.name}>{ this.props.selectedUser ? this.props.selectedUser.name : 'Account' }</Text>
+          <Icon style={styles.user.icon} name='arrow-dropdown' />
+        </TouchableOpacity>
+        <Main/>
       </LinearGradient>
     )
   }

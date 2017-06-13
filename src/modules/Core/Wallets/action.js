@@ -2,7 +2,6 @@ export const ADD_WALLET = 'ADD_WALLET'
 export const REMOVE_WALLET = 'REMOVE_WALLET'
 
 export const addWallet = wallet => {
-  console.log('wallet', wallet)
   return {
     type: ADD_WALLET,
     data: { wallet }
