@@ -209,14 +209,20 @@ class DeleteSubtext extends Component {
     console.log('deleteSubtext being rendered, this is: ', this)
 
     return(
-      <FormattedText style={styles.subHeaderSyntax}>Are you sure you want to delete      
-        {(this.props.currentWalletBeingDeleted) ? (
-          <FormattedText style={{fontWeight: 'bold'}}> {this.props.currentWalletBeingDeleted}?</FormattedText>
-        )
-        :(
-          <FormattedText>this wallet?</FormattedText>
-      )}
-      </FormattedText>      
+      <FormattedText style={styles.subHeaderSyntax}>Are you sure you want to delete
+        {
+          (this.props.currentWalletBeingDeleted) ?
+          (
+            <FormattedText
+              style={{fontWeight: 'bold'}}>
+              {this.props.currentWalletBeingDeleted}?
+            </FormattedText>
+          ):
+          (
+            <FormattedText> this wallet?</FormattedText>
+          )
+        }
+      </FormattedText>
     )
   }
 }

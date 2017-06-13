@@ -12,13 +12,11 @@ const platform = Platform.OS;
 
 class MainComponent extends Component {
 
-  _handleOnPressDirectory = () => {
-    Actions.directory()
-    return this.props.dispatch(closeSidebar())
-  }
 
-  _handleOnPressTransaction = () => {
-    Actions.transactions()
+  _handleOnPressRouting = (route) => {
+    let goRoute = Actions[route]
+    goRoute()
+
     return this.props.dispatch(closeSidebar())
   }
 
@@ -33,8 +31,7 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
-              <TouchableNativeFeedback onPress={this._handleOnPressDirectory}
-                background={TouchableNativeFeedback.SelectableBackground()} >
+              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('directory')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderVertical ]}>
                   <Icon style={styles.main.icon} name='repeat' />
                   <View style={styles.main.textContainer}>
@@ -47,8 +44,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={this._handleOnPressTransaction}
-                background={TouchableNativeFeedback.SelectableBackground()} >
+              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('transactions')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <Icon style={styles.main.icon} name='basket' />
                   <View style={styles.main.textContainer}>
@@ -67,7 +63,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={ this._handleOnPressDirectory }>
+              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('walletList')}>
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <Icon style={styles.main.icon} name='ios-home-outline' />
                   <View style={styles.main.textContainer}>
@@ -85,14 +81,14 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback onPress={ e => console.log('pressed6') }>
+              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('settingsOverview')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={styles.others.link}>
                   <Icon style={styles.others.icon} name='settings' />
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>
+              </TouchableNativeFeedback>           
             </View>
           </View>
         )
@@ -102,10 +98,8 @@ class MainComponent extends Component {
         return(
           <View style={{flex:1}}>
             <View style={styles.main.container}>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight}
-                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-                onPress={this._handleOnPressDirectory} >
-                <View style={[styles.main.link, styles.main.borderVertical, {flex: 1}]}>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('directory')} >
+                <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
                   <Icon style={styles.main.icon} name='repeat' />
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>
@@ -117,10 +111,8 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight}
-                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-                onPress={this._handleOnPressTransaction} >
-                <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('transactions')} >
+                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
                   <Icon style={styles.main.icon} name='basket' />
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Spend Bitcoins</Text>
@@ -139,11 +131,9 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight}
-                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-                onPress={this._handleOnPressDirectory} >
-                <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
-                  <Icon style={styles.main.icon} name='ios-home-outline' />
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('walletList')} >
+                <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+                  <Icon style={styles.main.icon} name='cash' />
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Directory</Text>
                   </View>
@@ -161,10 +151,8 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.others.iosTouchableHighlight}
-                underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-                onPress={ e => console.log('pressed6') } >
-                <View style={[ styles.others.link, styles.others.borderBottom, {flex: 1}]}>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('settingsOverview')} >
+                <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
                   <Icon style={styles.others.icon} name='settings' />
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Settings</Text>
