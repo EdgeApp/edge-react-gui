@@ -1,63 +1,79 @@
 import { combineReducers } from 'redux'
 import * as ACTION from './action'
-import * as WALLET_LIST_ACTION from '../scenes/WalletList/action'
 
 export const byId = (state = {}, action) => {
-  switch (action.type) {
+  const { type, data = {} } = action
+  switch (type) {
     case ACTION.ADD_WALLET:
       return {
         ...state,
-        [action.data.wallet.id]: schema(action.data.wallet)
+        [data.wallet.id]: schema(data.wallet)
       }
 
-    case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER :
-      return state
-
-    case WALLET_LIST_ACTION.TOGGLE_ARCHIVE_WALLET :
-      let key = action.data.key
-      let stateChanged = {
-        ...state,
-        [key]: {
-          ...state[key],
-          archived: !state[key].archived
-        }
-      }
-      return stateChanged
-
-    case WALLET_LIST_ACTION.COMPLETE_RENAME_WALLET :
-      return { ...state, [action.key]: { ...state[action.key], name: action.input } }
-
-    case ACTION.COMPLETE_DELETE_WALLET :
-      delete state[action.data]
-      return state
+    case ACTION.DELETE_WALLET:
+      const { walletId } = data
+      const newState = Object.assign({}, state)
+      delete newState[walletId]
+      return newState
 
     default:
       return state
   }
 }
 
-export const walletList = (state = [], action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_WALLET_LIST :
-      return action.data
+export const activeWalletIds = (state = [], action) => {
+  const { type, data = {} } = action
+  let id
+  switch (type) {
+    case ACTION.ARCHIVE_WALLET:
+      id = data.id
+      return getNewArrayWithoutItem(state, id)
+
+    case ACTION.ADD_WALLET:
+      id = data.wallet.id
+      return getNewArrayWithItem(state, id)
+
+    case ACTION.ACTIVATE_WALLET:
+      id = data.id
+      return getNewArrayWithItem(state, id)
+
+    case ACTION.DELETE_WALLET:
+      id = data.id
+      return getNewArrayWithoutItem(state, id)
+
+    default:
+      return state
+  }
+}
+
+export const archivedWalletIds = (state = [], action) => {
+  const { type, data = {} } = action
+  let id
+  switch (type) {
+    case ACTION.ARCHIVE_WALLET:
+      id = data.id
+      return getNewArrayWithItem(state, id)
+
+    case ACTION.ACTIVATE_WALLET:
+      id = data.id
+      return getNewArrayWithoutItem(state, id)
+
+    case ACTION.DELETE_WALLET:
+      id = data.id
+      return getNewArrayWithoutItem(state, id)
+
     default:
       return state
   }
 }
 
 export const selectedWalletId = (state = '', action) => {
-  switch (action.type) {
-    case ACTION.SELECT_WALLET_BY_ID :
-      return action.data.id
-    default:
-      return state
-  }
-}
+  const { type, data = {} } = action
+  const { walletId } = data
 
-export const walletListOrder = (state = [], action) => {
-  switch (action.type) {
-    case WALLET_LIST_ACTION.UPDATE_WALLET_LIST_ORDER :
-      return action.data
+  switch (type) {
+    case ACTION.SELECT_WALLET_ID :
+      return walletId
     default:
       return state
   }
@@ -95,9 +111,22 @@ const schema = wallet => {
   return newWallet
 }
 
-export const walletsUI = combineReducers({
-  byId: byId,
-  walletList: walletList,
-  walletListOrder: walletListOrder,
-  selectedWalletId: selectedWalletId
+const getNewArrayWithoutItem = (list, targetItem) => {
+  return list.filter(item => {
+    return item !== targetItem
+  })
+}
+
+const getNewArrayWithItem = (list, item) => {
+  if (!list.includes(item)) {
+    return [...list, item]
+  }
+  return list
+}
+
+export const wallets = combineReducers({
+  byId,
+  activeWalletIds,
+  archivedWalletIds,
+  selectedWalletId
 })

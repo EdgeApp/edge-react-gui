@@ -46,13 +46,10 @@ class StylizedModal extends Component {
             </Modal> 
         )       
     }
-
 }
 
 StylizedModal.propTypes = {
   visibilityBoolean: PropTypes.bool
 }
 
-export default connect(state => ({
-
-}))(StylizedModal)
+export default connect()(StylizedModal)

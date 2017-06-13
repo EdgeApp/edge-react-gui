@@ -1,92 +1,71 @@
-export const ADD_AIRBITZ_TO_REDUX = 'ADD_AIRBITZ_TO_REDUX'
-export const SET_ACCOUNT_LOADING_STATUS = 'SET_ACCOUNT_LOADING_STATUS'
-export const ADD_ACCOUNT_TO_REDUX = 'ADD_ACCOUNT_TO_REDUX'
-export const ADD_WALLET_BY_KEY = 'ADD_WALLET_BY_KEY'
-export const ADD_WALLET = 'ADD_WALLET'
-export const ACTIVATE_WALLET = 'ACTIVATE_WALLET'
-export const ACTIVATE_WALLET_ID = 'ACTIVATE_WALLET'
-export const ARCHIVE_WALLET = 'ARCHIVE_WALLET'
-export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET'
+import { addAccount } from '../Core/Account/action.js'
+import { addWallet, removeWallet } from '../Core/Wallets/action.js'
+import { activateWalletIdRequest, archiveWalletIdRequest, deleteWalletIdRequest } from '../UI/Wallets/action.js'
 
-import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
+import { activateWalletRequest, archiveWalletRequest, deleteWalletRequest } from '../Core/Wallets/api.js'
+
 import { makeCurrencyWallet } from 'airbitz-core-js'
-
-import { updateTransactionsRequest } from '../UI/scenes/TransactionList/action.js'
-import { selectWalletById } from '../UI/Wallets/action.js'
-
-export const addAirbitzToRedux = airbitz => {
-  return {
-    type: ADD_AIRBITZ_TO_REDUX,
-    data: { airbitz }
-  }
-}
-
-export const setAccountLoadingStatus = (status) => {
-  return {
-    type: SET_ACCOUNT_LOADING_STATUS,
-    data: { status }
-  }
-}
-
-export const refreshAccount = () => {
-  return (dispatch, getState) => {
-    const { byId } = getState().wallets
-
-    console.log('getState().wallets', getState().wallets)
-    console.log('getState().wallets.byId', getState().wallets.byId)
-
-    Object.values(byId).forEach(wallet => {
-      dispatch(addWallet(wallet))
-    })
-  }
-}
-
-export const refreshWallet = walletId => {
-  return (dispatch, getState) => {
-    const wallet = getState().wallets.byId[walletId]
-    if (wallet) {
-      dispatch(addWallet(wallet))
-    }
-  }
-}
+import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
+import { makeWalletCallbacks } from '../Core/Wallets/callbacks.js'
 
 export const initializeAccount = account => {
   return dispatch => {
-    dispatch(addAccountToRedux(account))
+    dispatch(addAccount(account))
     const supportedTypes = [
       'wallet:shitcoin'
     ]
     let allKeys = account.allKeys
 
-    const keys = allKeys.filter(key => {
-      return supportedTypes.includes(key.type)
+    const keyInfos = allKeys.filter(keyInfo => {
+      return supportedTypes.includes(keyInfo.type)
     })
-
-    const firstWalletId = keys[0].id
-    dispatch(addWalletsByKeys(keys))
-    dispatch(selectWalletById(firstWalletId))
+    dispatch(updateWallets(keyInfos))
   }
 }
 
-export const addAccountToRedux = account => {
-  return {
-    type: ADD_ACCOUNT_TO_REDUX,
-    data: { account }
-  }
-}
-
-export const addWalletsByKeys = keys => {
-  return dispatch => {
-    keys.forEach(key => {
-      dispatch(addWalletByKey(key))
-    })
-  }
-}
-
-export const addWalletByKey = key => {
+const updateWallets = keyInfos => {
   return (dispatch, getState) => {
-    const { id, archived } = key
-    const { account, airbitz: { io } } = getState()
+    // dispatch(updateWalletsStart())
+    const state = getState()
+    const walletIds = Object.keys(state.core.wallets.byId)
+
+    const filteredSortedKeyInfos = keyInfos
+      .filter(key => { return !key.deleted })
+      .sort((a, b) => a.sortIndex - b.sortIndex)
+
+    const activatedKeyInfos = getActivatedKeyInfos(filteredSortedKeyInfos)
+    const archivedWalletIds = getArchivedWalletIds(filteredSortedKeyInfos)
+    const deletedWalletIds = getDeletedWalletIds(walletIds, filteredSortedKeyInfos)
+
+    activatedKeyInfos.forEach(keyInfo => {
+      // startEngine if not already started (update core wallets)
+      dispatch(activateWallet(keyInfo))
+    })
+
+    archivedWalletIds.forEach(walletId => {
+      // stopEngine if not already stopped (update core wallets)
+      // remove from core state
+      dispatch(archiveWallet(walletId))
+    })
+
+    deletedWalletIds.forEach(walletId => {
+      // stopEngine if not already stopped (update core wallets)
+      // remove from core state
+      dispatch(deleteWallet(walletId))
+    })
+  }
+}
+
+const activateWallet = keyInfo => {
+  return (dispatch, getState) => {
+    const { id } = keyInfo
+    const state = getState()
+    const wallet = state.core.wallets.byId[id]
+    // if wallet is already in state.core.wallets, assume it's already active
+    if (wallet) { return }
+
+    const { account, context } = state.core
+    const { io } = context
     const plugin = makeShitcoinPlugin({ io })
     const callbacks = makeWalletCallbacks(dispatch, getState, id)
     const opts = {
@@ -95,84 +74,64 @@ export const addWalletByKey = key => {
       callbacks,
       io
     }
-    // TODO: If the wallet is archived, don't even bother coming here
-    makeCurrencyWallet(key, opts)
+
+    makeCurrencyWallet(keyInfo, opts)
     .then(wallet => {
-      wallet.startEngine()
+      // wallet.startEngine() should return the wallet
+      activateWalletRequest(wallet)
       .then(() => {
+        // update core state
         dispatch(addWallet(wallet))
-        dispatch(activateWalletId(wallet.id))
+        // update ui state
+        dispatch(activateWalletIdRequest(wallet.id))
       })
     })
   }
 }
 
-const activateWalletId = id => {
-  return {
-    type: ACTIVATE_WALLET_ID,
-    data: { id }
-  }
-}
-
-const archiveWallet = wallet => {
-  wallet.stopEngine()
+const archiveWallet = walletId => {
   return (dispatch, getState) => {
-    dispatch(archiveWalletId(wallet.id))
+    const wallet = getState().core.wallets.byId[walletId]
+    // wallet.stopEngine() might be async, but if it throws an error, nothing can be done, so no need to wait
+    archiveWalletRequest(wallet)
+    // update core state
+    dispatch(removeWallet(walletId))
+    // update ui state
+    dispatch(archiveWalletIdRequest(walletId))
   }
 }
 
-const archiveWalletId = id => {
-  return {
-    type: ARCHIVE_WALLET_ID,
-    data: {
-      id
-    }
+const deleteWallet = walletId => {
+  return (dispatch, getState) => {
+    const wallet = getState().core.wallets.byId[walletId]
+    // wallet.stopEngine() might be async, but if it throws an error, nothing can be done, so no need to wait
+    deleteWalletRequest(wallet)
+    // update core state
+    dispatch(removeWallet(walletId))
+    // update ui state
+    dispatch(deleteWalletIdRequest(walletId))
   }
 }
 
-export const addWallet = wallet => {
-  return {
-    type: ADD_WALLET,
-    data: { wallet }
-  }
+const getActivatedKeyInfos = keyInfos => {
+  const activatedKeyInfos = keyInfos.filter(keyInfo => {
+    return !keyInfo.archived
+  })
+  return activatedKeyInfos
 }
 
-const makeWalletCallbacks = (dispatch, getState, walletId) => {
-  const callbacks = {
-    onAddressesChecked (progressRatio) {
-      if (progressRatio === 1) {
-        console.log('onAddressesChecked', progressRatio)
-      }
-    },
+const getArchivedWalletIds = keyInfos => {
+  const archivedKeyInfos = keyInfos.filter(keyInfo => {
+    return keyInfo.archived
+  })
+  return archivedKeyInfos
+}
 
-    onBalanceChanged (balance) {
-      console.log('onBalanceChanged', balance)
-      // dispatch(setBalance(walletId, balance))
-      dispatch(refreshWallet(walletId))
-    },
+const getDeletedWalletIds = (walletIds, keyInfos) => {
+  const deletedWalletIds = walletIds
+    .filter(walletId => {
+      return !keyInfos.find(info => info.id === walletId)
+    })
 
-    onTransactionsChanged (transactions) {
-      console.log('onTransactionsChanged', transactions)
-      // dispatch(refreshWallet(walletId))
-      dispatch(updateTransactionsRequest(walletId, transactions))
-    },
-
-    onNewTransactions (transactions) {
-      console.log('onNewTransaction', transactions)
-      // dispatch(refreshWallet(walletId))
-      dispatch(updateTransactionsRequest(walletId, transactions))
-    },
-
-    onBlockHeightChanged (blockHeight) {
-      console.log('onBlockHeightChanged', blockHeight)
-      // dispatch(setBlockHeight(walletId, blockHeight))
-    },
-
-    onWalletNameChanged (newWalletName) {
-      console.log('onWalletNameChanged', newWalletName)
-      dispatch(refreshWallet(walletId))
-    }
-  }
-
-  return callbacks
+  return deletedWalletIds
 }

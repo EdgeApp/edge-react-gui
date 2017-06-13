@@ -25,11 +25,11 @@ class TabBar extends Component {
           <FooterTab>
 
             <Button
-              onPress={ () => Actions.directory() }
+              onPress={ () => Actions.walletList() }
               active={ this.props.routes.scene.title  === 'Directory' ? true : false }
             >
-              <Icon name='home' />
-              <Text>Directory</Text>
+              <Icon name='ios-cash-outline' />
+              <Text>Wallets</Text>
             </Button>
 
             <Button

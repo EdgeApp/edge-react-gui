@@ -45,8 +45,8 @@ class TransactionAlert extends Component {
 
 export default connect( state => ({
 
-  view    : state.transactionAlert.view,
-  message : state.transactionAlert.message,
-  route   : state.transactionAlert.route
+  view    : state.ui.transactionAlert.view,
+  message : state.ui.transactionAlert.message,
+  route   : state.ui.transactionAlert.route
 
 }) )(TransactionAlert)

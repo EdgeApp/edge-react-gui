@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TouchableWithoutFeedback,Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import { TouchableWithoutFeedback, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -21,16 +21,16 @@ import {
   toggleWalletsVisibility,
   toggleArchiveVisibility,
   completeRenameWallet,
-  updateWalletRenameInput,
+  updateRenameWalletInput,
   toggleWalletRenameModal,
   closeWalletDeleteModal,
   updateCurrentWalletBeingRenamed,
-  closeWalletRenameModal
+  closeRenameWalletModal
 } from './action'
 import {border} from '../../../../util/border'
 
-import { renameWallet } from '../../../Wallets/action.js'
-
+import { renameWalletRequest } from '../../../Core/Wallets/api.js'
+import { activateWalletRequest, archiveWalletRequest } from '../../../Core/Account/api.js'
 
 import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
@@ -71,7 +71,7 @@ class WalletList extends Component {
 
     return (
       <View style={styles.container}>
-        {(this.props.deleteWalletVisible && this.props.currentWalletBeingDeleted) && this.renderDeleteWalletModal()}
+        {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
 
         <View style={[styles.totalBalanceBox]}>
@@ -133,40 +133,37 @@ class WalletList extends Component {
                 this.forceArchiveListUpdate(archiveOrder)
               }}
               renderRow={row => <WalletListRow archiveLabel='Restore' data={row} />}
-              />
-            }
+            />
+          }
         </View>
       </View>
     )
   }
 
   renderDeleteWalletModal () {
-
     return (
-      <StylizedModal 
+      <StylizedModal
         featuredIcon={<DeleteIcon />}
         headerText='Delete Wallet'
-        modalMiddle={<DeleteSubtext currentWalletBeingDeleted={this.props.currentWalletBeingDeleted} />}
+        modalMiddle={<DeleteSubtext />}
         modalBottom={<DeleteWalletButtonsConnect />}
-        visibilityBoolean={this.props.deleteWalletVisible}
-        name={this.props.walletList[this.props.currentWalletBeingDeleted].name}
-        currentWalletBeingDeleted={this.props.currentWalletBeingDeleted}
-      />      
+        visibilityBoolean={this.props.deleteWalletModalVisible}
+      />
     )
   }
 
   renderRenameWalletModal = () => {
-
     return (
       <StylizedModal
         featuredIcon={<AddressIcon />}
         headerText='Rename Wallet:'
-        headerSubtext={this.props.currentWalletBeingRenamed}
+        headerSubtext={this.props.walletName}
         modalMiddle={<WalletNameInputConnect />}
         modalBottom={<RenameWalletButtonsConnect
-        currentWalletBeingRenamed={this.props.currentWalletBeingRenamed}
-        currentWalletRename={this.props.currentWalletRename} />}
-        visibilityBoolean={this.props.renameWalletVisible}
+          walletId={this.props.walletId}
+          renameWalletInput={this.props.renameWalletInput} />}
+        visibilityBoolean={this.props.renameWalletModalVisible}
+
       />
     )
   }
@@ -175,7 +172,7 @@ class WalletList extends Component {
     console.info('n is: ' , n)
       return n % 2 == 0;
   }
-  
+
 }
 
 WalletList.propTypes = {
@@ -183,17 +180,14 @@ WalletList.propTypes = {
 }
 
 export default connect(state => ({
-
   walletList: state.ui.wallets.byId,
-  archiveList: state.ui.walletList.archiveList,
-  archiveVisible: state.ui.walletList.archiveVisible,
-  renameWalletVisible: state.ui.walletList.renameWalletVisible,
-  deleteWalletVisible: state.ui.walletList.deleteWalletVisible,
-  currentWalletRename: state.ui.walletList.currentWalletRename,
-  currentWalletBeingRenamed: state.ui.walletList.currentWalletBeingRenamed,
-  walletOrder: state.ui.wallets.walletListOrder,
-  currentWalletBeingDeleted: state.ui.walletList.currentWalletBeingDeleted
-
+  walletArchivesVisible: state.ui.walletList.walletArchivesVisible,
+  renameWalletModalVisible: state.ui.walletList.renameWalletModalVisible,
+  deleteWalletModalVisible: state.ui.walletList.deleteWalletModalVisible,
+  walletName: state.ui.walletList.walletName,
+  walletId: state.ui.walletList.walletId,
+  renameWalletInput: state.ui.walletList.renameWalletInput,
+  walletOrder: state.ui.wallets.walletListOrder
 }))(WalletList)
 
 ////// Beginning of Delete Area ////////
@@ -236,7 +230,7 @@ class DeleteWalletButtons extends Component {
   }
 
   _onDeleteModalDone = () => {
-    this.props.dispatch(completeDeleteWallet(this.props.currentWalletBeingDeleted))
+    this.props.dispatch(deleteWallet(this.props.walletId))
   }
 
   render() {
@@ -258,7 +252,7 @@ class DeleteWalletButtons extends Component {
           </View>
 
         </TouchableHighlight>
-      </View>      
+      </View>
     )
   }
 }
@@ -282,12 +276,8 @@ class AddressIcon extends Component {
 }
 
 class WalletNameInput extends Component {
-  _onToggleRenameModal () {
-
-  }
-
-  _onNameInputChange (input) {
-    this.props.dispatch(updateWalletRenameInput(input))
+  _onNameInputChange = (input) => {
+    this.props.dispatch(updateRenameWalletInput(input))
   }
 
   render() {
@@ -296,7 +286,7 @@ class WalletNameInput extends Component {
       <View style={[styles.nameInputWrap, border('orange')]}>
         <TextInput style={[styles.nameInput, border('red')]}
           onChangeText={(input) => this._onNameInputChange(input)}
-          value={walletName} />
+          value={this.props.renameWalletInput} />
       </View>
     )
   }
@@ -310,17 +300,13 @@ export const WalletNameInputConnect = connect( state => ({
 class RenameWalletButtons extends Component {
 
   _onRenameModalDone = () => {
-    console.log('this.props', this.props)
-    this.props.dispatch(toggleWalletRenameModal())
-    this.props.dispatch(closeWalletRenameModal())
-    this.props.dispatch(renameWallet(this.props.currentWalletBeingRenamed, this.props.currentWalletRename))
+    this.props.dispatch(closeRenameWalletModal())
+    this.props.dispatch(renameWalletRequest(this.props.walletId, this.props.renameWalletInput))
   }
 
   _onCancelRenameModal = () => {
-    this.props.dispatch(toggleWalletRenameModal())
-    this.props.dispatch(closeWalletRenameModal())
-    this.props.dispatch(updateWalletRenameInput(''))
-    this.props.dispatch(updateCurrentWalletBeingRenamed(null))
+    this.props.dispatch(closeRenameWalletModal())
+    this.props.dispatch(updateRenameWalletInput(''))
   }
 
   render() {
