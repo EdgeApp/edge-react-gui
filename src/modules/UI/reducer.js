@@ -5,7 +5,7 @@ import transactionList from './scenes/TransactionList/reducer'
 import controlPanel from './components/ControlPanel/reducer'
 import walletList from './scenes/WalletList/reducer'
 import walletTransferListReducer from './scenes/WalletTransferList/reducer'
-import { walletsUI } from './Wallets/reducer.js'
+import { wallets } from './Wallets/reducer.js'
 import { requestUI } from './scenes/Request/reducer.js'
 import sideMenu from './components/SideMenu/reducer'
 import addWallet from './scenes/AddWallet/reducer'
@@ -24,7 +24,7 @@ export const ui = combineReducers({
   walletList,
   walletTransferList: walletTransferListReducer,
   walletListModal,
-  wallets: walletsUI,
+  wallets,
   sideMenu,
   addWallet,
   requestUI,

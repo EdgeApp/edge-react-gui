@@ -5,28 +5,69 @@ export const SELECT_WALLET_ID = 'SELECT_WALLET_ID'
 
 export const ADD_WALLET = 'ADD_WALLET'
 
-export const activateWalletId = walletId => {
+export const activateWalletIdRequest = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    dispatch(activateWalletId(walletId))
+
+    if (!selectedWalletId) {
+      dispatch(selectWalletId(walletId))
+    }
+  }
+}
+
+export const archiveWalletIdRequest = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    dispatch(archiveWalletId(walletId))
+
+    if (selectedWalletId === walletId) {
+      const { activeWalletIds } = state.ui.wallets
+      dispatch(selectWalletId(activeWalletIds[0]))
+    }
+  }
+}
+
+export const deleteWalletIdRequest = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    dispatch(deleteWalletId(walletId))
+
+    if (selectedWalletId === walletId) {
+      const { activeWalletIds } = state.ui.wallets
+      dispatch(selectWalletId(activeWalletIds[0]))
+    }
+  }
+}
+
+const activateWalletId = walletId => {
   return {
     type: ACTIVATE_WALLET_ID,
     data: { walletId }
   }
 }
 
-export const archiveWalletId = walletId => {
+const archiveWalletId = walletId => {
   return {
     type: ARCHIVE_WALLET_ID,
     data: { walletId }
   }
 }
 
-export const deleteWalletId = walletId => {
+const deleteWalletId = walletId => {
   return {
     type: DELETE_WALLET_ID,
     data: { walletId }
   }
 }
 
-export const selectWalletId = walletId => {
+const selectWalletId = walletId => {
   return {
     type: SELECT_WALLET_ID,
     data: { walletId }

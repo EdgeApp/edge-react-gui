@@ -6,9 +6,10 @@ import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'
 
 let middleware = [thunk]
+let logger = createLogger()
 
 if (__DEV__) {
-  middleware = [...middleware]
+  middleware = [...middleware, logger]
 } else {
   middleware = [...middleware]
 }
