@@ -62,10 +62,10 @@ class UserListComponent extends Component {
   }
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  usersList : state.ui.scenes.controlPanel.selectedUser !== null ?
+    _.filter(state.ui.scenes.controlPanel.usersList, item => item.id !== state.ui.scenes.controlPanel.selectedUser) :
+    state.ui.scenes.controlPanel.usersList,
+})
 
-  usersList : state.ui.controlPanel.selectedUser !== null ?
-    _.filter(state.ui.controlPanel.usersList, item => item.id !== state.ui.controlPanel.selectedUser) :
-    state.ui.controlPanel.usersList,
-
-}) )(UserListComponent)
+export default connect(mapStateToProps)(UserListComponent)
