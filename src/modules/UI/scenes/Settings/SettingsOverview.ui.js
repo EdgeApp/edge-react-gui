@@ -28,38 +28,24 @@ class SettingsOverview extends Component {
             {
                 key: 'passwordRecovery',
                 text: 'Setup / Change Password Recovery'
-            },
+            }    
+        ]
+
+        this.securityRoute = [
             {
-                key: 'twoFactor',
-                text: '2 Factor (Enhanced Security)'
-            },
-            {
-                key: 'personalVault',
-                text: 'Personal Vault'
+                key: 'setup2Factor',
+                text: 'Setup 2 Factor'
             }
-    
         ]
 
         this.options = {
-            merchantMode: {
-                text: 'Merchant Mode',
-                key: 'merchantMode'
-            },
-            defaultCurrency: {
-                text: 'Bluetooth',
-                key: 'bluetooth'
-            },
-            changeCategories: {
+            pinRelogin: {
                 text: 'PIN Re-Login',
                 key: 'pinRelogin'
             },
             useTouchID: {
                 text: 'Use TouchID',
                 key: 'useTouchID'
-            },
-            overrideBitcoinServers: {
-                text: 'Override Bitcoin Servers (Advanced)',
-                key: 'overrideBitcoinServers'
             }
         }
 
@@ -67,9 +53,16 @@ class SettingsOverview extends Component {
             {
                 key: 'autoLogoff',
                 text: 'Auto log off after'
+            }
+        ]
+
+        this.currencies = [
+            {
+                key: 'bitcoinSettings',
+                text: 'Bitcoin'
             },{
-                key: 'defaultCurrency',
-                text: 'Default currency'
+                key: 'ethereumSettings',
+                text: 'Ethereum'
             }
         ]
     }
@@ -125,32 +118,17 @@ class SettingsOverview extends Component {
                     {this.optionModals.map((x,i) => 
                         <SettingsItemWithModal leftText={x.text} key={x.key} modal={x.key} />
                     )}
-                    <SettingsItemWithRoute leftText='Change Categories' key='changeCategories' scene='changeCategories' />                    
+                    {this.securityRoute.map((x, i) => 
+                        <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} />
+                    )}                   
                     {Object.keys(this.options).map((x, i) => 
-                        <SettingsItemWithSwitch leftText={this.options[x].text} key={this.options[x].key} />
-                    )}                    
+                        <SettingsItemWithSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
+                    )}
+                    {this.currencies.map((x, i) => 
+                        <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} />
+                    )}           
                 </View>        
             </ScrollView>
-        )
-    }
-}
-
-class SettingsOverviewItem extends Component {
-    constructor(props) {
-        super(props)
-    }
-
-    render() {
-        console.log('rendering settingsOverviewItem, this is: ', this)
-        return(
-            <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._handleOnPressRouting(this.props.scene)} >
-                <View style={[s.settingsRowTextRow, border('red')]}>
-                    <View style={[s.settingsRowLeftContainer, border('blue')]}>
-                        <T style={[s.settingsRowLeftText, border('green')]}>{this.props.leftText}</T>
-                    </View>
-                    {this.props.rightArea}                     
-                </View>
-            </TouchableOpacity>
         )
     }
 }

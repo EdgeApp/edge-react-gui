@@ -61,6 +61,10 @@ module.exports = StyleSheet.create({
         color: '#58595C',
         height: 20        
     },
+    modalRightText: {
+        color: '#4977BB',
+        fontWeight: 'bold'
+    }
     
     ///////// End of Settings Row /////////
 

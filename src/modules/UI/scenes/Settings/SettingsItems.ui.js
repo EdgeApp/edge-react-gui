@@ -35,6 +35,10 @@ class SettingsItemWithRoute extends Component {
         )
     }
 }
+SettingsItemWithRoute.propTypes = {
+  scene: PropTypes.string,
+  leftText: PropTypes.string
+}
 
 class SettingsItemWithModal extends Component {
     constructor(props) {
@@ -59,6 +63,10 @@ class SettingsItemWithModal extends Component {
         )
     }
 }
+SettingsItemWithModal.propTypes = {
+  modal: PropTypes.string,
+  leftText: PropTypes.string
+}
 
 class SettingsItemWithSwitch extends Component {
     constructor(props) {
@@ -72,16 +80,20 @@ class SettingsItemWithSwitch extends Component {
     render() {
         console.log('rendering settingsOverviewItem, this is: ', this)
         return(
-            <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._handleOnPressToggleSetting(this.props.scene)} >
+            <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._handleOnPressToggleSetting(this.props.property)} >
                 <View style={[s.settingsRowTextRow, border('red')]}>
                     <View style={[s.settingsRowLeftContainer, border('blue')]}>
                         <T style={[s.settingsRowLeftText, border('green')]}>{this.props.leftText}</T>
                     </View>
-                    <Switch onValueChange={ () => { this._onToggleOption(property) } } value={false} />                    
+                    <Switch onValueChange={ () => { this._onToggleOption(this.props.property) } } value={false} />                    
                 </View>
             </TouchableOpacity>
         )
     }
+}
+SettingsItemWithSwitch.propTypes = {
+  leftText: PropTypes.string,
+  property: PropTypes.string
 }
 
 export {SettingsItemWithRoute, SettingsItemWithModal, SettingsItemWithSwitch}
