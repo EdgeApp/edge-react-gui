@@ -177,16 +177,18 @@ WalletList.propTypes = {
   archiveList: PropTypes.array
 }
 
-export default connect(state => ({
-  walletList: state.ui.wallets.byId,
-  walletArchivesVisible: state.ui.walletList.walletArchivesVisible,
-  renameWalletModalVisible: state.ui.walletList.renameWalletModalVisible,
-  deleteWalletModalVisible: state.ui.walletList.deleteWalletModalVisible,
-  walletName: state.ui.walletList.walletName,
-  walletId: state.ui.walletList.walletId,
-  renameWalletInput: state.ui.walletList.renameWalletInput,
-  walletOrder: state.ui.wallets.walletListOrder
-}))(WalletList)
+const mapStateToProps = state => ({
+  walletList:               state.ui.wallets.byId,
+  walletArchivesVisible:    state.ui.scenes.walletList.walletArchivesVisible,
+  renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
+  deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
+  walletName:               state.ui.scenes.walletList.walletName,
+  walletId:                 state.ui.scenes.walletList.walletId,
+  renameWalletInput:        state.ui.scenes.walletList.renameWalletInput,
+  walletOrder:              state.ui.wallets.walletListOrder
+})
+
+export default connect(state => (mapStateToProps))(WalletList)
 
 ////// Beginning of Delete Area ////////
 
@@ -225,7 +227,7 @@ class DeleteSubtext extends Component {
   }
 }
 export const DeleteSubtextConnect = connect( state => ({
-  currentWalletBeingDeleted: state.ui.walletList.currentWalletBeingDeleted
+  currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted
 }))(DeleteSubtext)
 
 class DeleteWalletButtons extends Component {
@@ -296,9 +298,9 @@ class WalletNameInput extends Component {
   }
 }
 export const WalletNameInputConnect = connect( state => ({
-  currentWalletBeingRenamed: state.ui.walletList.currentWalletBeingRenamed,
-  currentWalletRename: state.ui.walletList.currentWalletRename,
-  renameWalletVisible: state.ui.walletList.renameWalletVisible,
+  currentWalletBeingRenamed: state.ui.scenes.walletList.currentWalletBeingRenamed,
+  currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
+  renameWalletVisible:       state.ui.scenes.walletList.renameWalletVisible,
 }))(WalletNameInput)
 
 class RenameWalletButtons extends Component {

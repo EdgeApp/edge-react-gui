@@ -220,12 +220,12 @@ class AddWallet extends Component {
   }
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  wallets:   state.ui.scenes.wallets.wallets,
+  nameInput: state.ui.scenes.addWallet.newWalletName
+})
 
-  wallets: state.ui.wallets.wallets,
-  nameInput: state.ui.addWallet.newWalletName
-
-}))(AddWallet)
+export default connect( state => (mapStateToProps))(AddWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
 

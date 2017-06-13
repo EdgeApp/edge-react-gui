@@ -189,14 +189,14 @@ class SendConfirmation extends Component {
 
 const mapStateToProps = state => {
   return {
-    sendConfirmation:      state.ui.sendConfirmation,
-    amountSatoshi:         state.ui.sendConfirmation.amountSatoshi,
-    feeSatoshi:            state.ui.sendConfirmation.feeSatoshi,
-    fiatPerCrypto:         state.ui.sendConfirmation.fiatPerCrypto,
-    inputCurrencySelected: state.ui.sendConfirmation.inputCurrencySelected,
-    publicAddress:         state.ui.sendConfirmation.publicAddress,
-    spendInfo:             state.ui.sendConfirmation.spendInfo,
-    transaction:           state.ui.sendConfirmation.transaction,
+    sendConfirmation:      state.ui.scenes.sendConfirmation,
+    amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
+    feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
+    fiatPerCrypto:         state.ui.scenes.sendConfirmation.fiatPerCrypto,
+    inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
+    publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
+    spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
+    transaction:           state.ui.scenes.sendConfirmation.transaction,
   }
 }
 

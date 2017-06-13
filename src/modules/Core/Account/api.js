@@ -4,7 +4,7 @@ export const createWalletRequest = (walletType, keys) => {
   return (dispatch, getState) => {
     // dispatch(activateWalletStart(walletId))
     const { account } = getState().core
-    createWallet(account, walletType, keys)
+    return createWallet(account, walletType, keys)
   }
 }
 
@@ -12,7 +12,7 @@ export const activateWalletRequest = walletId => {
   return (dispatch, getState) => {
     // dispatch(activateWalletStart(walletId))
     const { account } = getState().core
-    activateWallet(account, walletId)
+    return activateWallet(account, walletId)
   }
 }
 
@@ -20,7 +20,7 @@ export const archiveWalletRequest = walletId => {
   return (dispatch, getState) => {
     // dispatch(archiveWalletStart(walletId))
     const { account } = getState().core
-    archiveWallet(account, walletId)
+    return archiveWallet(account, walletId)
   }
 }
 
@@ -28,36 +28,76 @@ export const deleteWalletRequest = walletId => {
   return (dispatch, getState) => {
     // dispatch(archiveWalletStart(walletId))
     const { account } = getState().core
-    deleteWallet(account, walletId)
+    return deleteWallet(account, walletId)
   }
 }
 
 export const enablePinLoginRequest = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const { core: account } = state
+    const { account } = state.core
 
-    account.root.file('settings').setText()
-    .then(text => {
-      const settings = JSON.parse(text)
-      settings.pinLoginEnabled = true
+    account.pinLogin = true
 
-      account.root.file('settings').setText(settings)
+    account.folder.file('settings').getText()
+    .then(currentSettings => {
+      const settings = JSON.parse(currentSettings)
+      settings.pinLogin = true
+      const newSettings = JSON.stringify(settings)
+
+      return account.folder.file('settings').setText(newSettings)
     })
   }
 }
 
-export const disablePinLogin = () => {
+export const disablePinLoginRequest = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const { core: account } = state
+    const { account } = state.core
 
-    account.root.file('settings').setText()
+    account.pinLogin = false
+
+    account.folder.file('settings').getText()
     .then(text => {
       const settings = JSON.parse(text)
-      settings.pinLoginEnabled = false
+      settings.pinLogin = false
 
-      account.root.file('settings').setText(settings)
+      return account.folder.file('settings').setText(settings)
+    })
+  }
+}
+
+export const enableTouchIdRequest = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+
+    account.touchId = true
+
+    account.folder.file('settings').getText()
+    .then(currentSettings => {
+      const settings = JSON.parse(currentSettings)
+      settings.touchId = true
+      const newSettings = JSON.stringify(settings)
+
+      return account.folder.file('settings').setText(newSettings)
+    })
+  }
+}
+
+export const disableTouchIdLoginRequest = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+
+    account.touchId = false
+
+    account.folder.file('settings').getText()
+    .then(text => {
+      const settings = JSON.parse(text)
+      settings.touchId = false
+
+      return account.folder.file('settings').setText(settings)
     })
   }
 }

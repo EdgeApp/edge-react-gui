@@ -40,13 +40,12 @@ class TransactionAlert extends Component {
   render () {
     return null
   }
-
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  view:    state.ui.scenes.transactionAlert.view,
+  message: state.ui.scenes.transactionAlert.message,
+  route:   state.ui.scenes.transactionAlert.route
+})
 
-  view    : state.ui.transactionAlert.view,
-  message : state.ui.transactionAlert.message,
-  route   : state.ui.transactionAlert.route
-
-}) )(TransactionAlert)
+export default connect(mapStateToProps)(TransactionAlert)

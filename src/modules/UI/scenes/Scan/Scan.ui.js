@@ -125,10 +125,10 @@ class Scan extends Component {
 
 const mapStateToProps = state => {
   return {
-    torchEnabled: state.ui.scan.torchEnabled,
-    walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
-    scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
-    scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
+    torchEnabled:                      state.ui.scenes.scan.torchEnabled,
+    walletListModalVisible:            state.ui.scenes.walletTransferList.walletListModalVisible,
+    scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
+    scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 
@@ -162,7 +162,7 @@ class WalletAddressModal extends Component {
 }
 
 export const WalletAddressModalConnect = connect( state => ({
-  addressModalVisible: state.ui.scan.addressModalVisible,
+  addressModalVisible: state.ui.scenes.scan.addressModalVisible,
 }))(WalletAddressModal)
 
 class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
@@ -187,17 +187,17 @@ class AddressInputRecipient extends Component { // this component is for the inp
 }
 
 export const AddressInputRecipientConnect = connect( state => ({
-  recipientAddress: state.ui.scan.recipientAddress
+  recipientAddress: state.ui.scenes.scan.recipientAddress
 }))(AddressInputRecipient)
 
 
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
-    updateUri(this.props.recipientAddress)   
-    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))  
-    this._onToggleAddressModal()   
-    Actions.sendConfirmation({ type: 'reset' }) 
+    updateUri(this.props.recipientAddress)
+    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))
+    this._onToggleAddressModal()
+    Actions.sendConfirmation({ type: 'reset' })
   }
   _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())
@@ -222,5 +222,5 @@ class SendAddressButtons extends Component { // this component is for the button
 }
 
 const SendAddressButtonsConnect = connect(state => ({
-  recipientAddress: state.ui.scan.recipientAddress,
+  recipientAddress: state.ui.scenes.scan.recipientAddress,
 }))(SendAddressButtons)

@@ -46,8 +46,8 @@ const drawerStyles = {
   main: { paddingLeft: 3 }
 }
 
-export default connect(state => ({
+const mapStateToProps = state => ({
+  view: state.ui.scenes.sideMenu.view
+})
 
-  view: state.ui.sideMenu.view
-
-}))(SideMenuComponent)
+export default connect(mapStateToProps)(SideMenuComponent)

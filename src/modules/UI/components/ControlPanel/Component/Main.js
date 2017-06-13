@@ -88,7 +88,7 @@ class MainComponent extends Component {
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>           
+              </TouchableNativeFeedback>
             </View>
           </View>
         )
@@ -167,8 +167,8 @@ class MainComponent extends Component {
   }
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  usersView : state.ui.scenes.controlPanel.usersView
+})
 
-  usersView : state.ui.controlPanel.usersView
-
-}) )(MainComponent)
+export default connect(mapStateToProps)(MainComponent)

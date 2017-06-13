@@ -51,11 +51,11 @@ class ControlPanel extends Component {
   }
 }
 
-export default connect( state => ({
-
-  usersView: state.ui.controlPanel.usersView,
-  selectedUser : state.ui.controlPanel.selectedUser !== null ?
-    _.find(state.ui.controlPanel.usersList, item => item.id === state.ui.controlPanel.selectedUser) :
+const mapStateToProps = state => ({
+  usersView:    state.ui.scenes.controlPanel.usersView,
+  selectedUser: state.ui.scenes.controlPanel.selectedUser !== null ?
+    _.find(state.ui.scenes.controlPanel.usersList, item => item.id === state.ui.scenes.controlPanel.selectedUser) :
     null
+})
 
-}) )(ControlPanel)
+export default connect(mapStateToProps)(ControlPanel)

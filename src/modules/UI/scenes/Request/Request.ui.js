@@ -204,7 +204,7 @@ class Request extends Component {
 
 export default connect(state => ({
 
-  request: state.ui.requestUI,
-  wallets: state.ui.wallets
+  request: state.ui.scenes.request,
+  wallets: state.ui.scenes.wallets
 
 }))(Request)

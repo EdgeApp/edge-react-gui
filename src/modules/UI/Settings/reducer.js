@@ -8,6 +8,6 @@ export const settings = (state = {}, action) => {
     case ACTION.UPDATE_SETTINGS:
       return settings
     default:
-      state
+      return state
   }
 }

@@ -196,26 +196,26 @@ class TransactionList extends Component {
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
           <View style={[styles.container, border('green')]}>
             <Animated.View style={[{height: this.state.balanceBoxHeight}, border('red')]}>
-                <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
-                  {this.state.balanceBoxVisible &&
-                      <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
-                          {this.props.updatingBalance ? (
-                            <View style={[styles.currentBalanceWrap]}>
-                              <View style={[ styles.updatingBalanceWrap]}>
-                                <ActivityIndicator
-                                  animating={this.props.updatingBalance}
-                                  style={[styles.updatingBalance, {height: 40}]}
-                                  size="small"
-                                />
-                              </View>
-                            </View>
-                          ) : (
-                            <View style={[styles.currentBalanceWrap, border('green')]}>
-                              <View style={[styles.bitcoinIconWrap, border('yellow')]}>
-                                <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
-                              </View>
-                              <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
-                                <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
+                {this.state.balanceBoxVisible &&
+                  <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+                    {this.props.updatingBalance ? (
+                      <View style={[styles.currentBalanceWrap]}>
+                        <View style={[ styles.updatingBalanceWrap]}>
+                          <ActivityIndicator
+                            animating={this.props.updatingBalance}
+                            style={[styles.updatingBalance, {height: 40}]}
+                            size="small"
+                          />
+                        </View>
+                      </View>
+                    ) : (
+                      <View style={[styles.currentBalanceWrap, border('green')]}>
+                        <View style={[styles.bitcoinIconWrap, border('yellow')]}>
+                          <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
+                        </View>
+                        <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
+                          <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
                               </View>
                               <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
                                 <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
@@ -319,15 +319,17 @@ class TransactionList extends Component {
     contactsList: PropTypes.array
   }
 
-  export default TransactionListConnect = connect ( state => ({
-    // updatingBalance: state.ui.transactionList.updatingBalance,
-    updatingBalance: false,
-    transactions: state.ui.transactionList.transactions,
-    searchVisible: state.ui.transactionList.searchVisible,
-    contactsList: state.ui.transactionList.contactsList,
-    exchangeRates: state.ui.exchangeRate.exchangeRates,
-    wallet: state.core.wallets.byId[state.ui.wallets.selectedWalletId]
-}))(TransactionList)
+const mapStateToProps = state => ({
+  // updatingBalance: state.ui.transactionList.updatingBalance,
+  updatingBalance: false,
+  transactions:  state.ui.scenes.transactionList.transactions,
+  searchVisible: state.ui.scenes.transactionList.searchVisible,
+  contactsList:  state.ui.scenes.transactionList.contactsList,
+  exchangeRates: state.ui.scenes.exchangeRate.exchangeRates,
+  wallet:        state.core.wallets.byId[state.ui.wallets.selectedWalletId]
+})
+
+export default TransactionListConnect = connect (mapStateToProps)(TransactionList)
 
 class SearchBar extends Component {
   constructor(props) {

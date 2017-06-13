@@ -15,7 +15,7 @@ const initialState = {
   }
 }
 
-export const requestUI = (state = initialState, action) => {
+export const request = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS: {

@@ -69,12 +69,11 @@ class TabBar extends Component {
       </LinearGradient>
     )
   }
-
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  sidemenu: state.ui.scenes.sideMenu.view,
+  routes:   state.routes
+})
 
-  sidemenu : state.ui.sideMenu.view,
-  routes: state.routes
-
-}) )(TabBar)
+export default connect(mapStateToProps)(TabBar)
