@@ -30,7 +30,11 @@ module.exports = StyleSheet.create({
       fontSize: 24,
       backgroundColor: 'transparent'
     },
-    
+    optionsIcon: {
+        backgroundColor: 'transparent',
+        fontSize: 22
+    },
+
     ////// Beginning of Settings Row ///////
     settingsRowContainer: {
         height: 44,
@@ -46,14 +50,18 @@ module.exports = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
+    settingsRowLeftContainer: {
+        justifyContent: 'center'
+    },  
     settingsRowLeftText: {
         color: '#58595C',
-        fontSize: 16        
+        fontSize: 16      
     },
     settingsRowRightArrow: {
         color: '#58595C',
         height: 20        
-    }
+    },
+    
     ///////// End of Settings Row /////////
 
 })
