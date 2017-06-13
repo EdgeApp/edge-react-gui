@@ -292,7 +292,8 @@ class WalletNameInput extends Component {
       <View style={[styles.nameInputWrap, border('orange')]}>
         <TextInput style={[styles.nameInput, border('red')]}
           onChangeText={(input) => this._onNameInputChange(input)}
-          value={this.props.renameWalletInput} />
+          value={this.props.renameWalletInput}
+          autoFocus />
       </View>
     )
   }
