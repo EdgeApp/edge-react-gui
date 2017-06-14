@@ -9,10 +9,10 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import { Actions } from 'react-native-router-flux'
 import styles from './style'
-import { 
-    toggleWalletListModalVisibility, 
-    toggleSelectedWalletListModal, 
-    toggleScanToWalletListModal 
+import {
+    toggleWalletListModalVisibility,
+    toggleSelectedWalletListModal,
+    toggleScanToWalletListModal
 } from './action'
 import * as Animatable from 'react-native-animatable'
 
@@ -30,9 +30,9 @@ class WalletListModal extends Component {
 
         return(
                 <Animatable.View animation='fadeInDown' style={[this.border('green'), styles.topLevel,{position:'absolute', top: 38}]} duration={100} >
-                {this.props.scanToWalletListModalVisibility && 
+                {this.props.scanToWalletListModalVisibility &&
                     <WalletListModalHeaderConnect />
-                }                    
+                }
                     <WalletListModalBodyConnect onPress={this.props.onPress} selectionFunction={this.props.selectionFunction} />
                 </Animatable.View>
         )
@@ -43,7 +43,7 @@ class WalletListModal extends Component {
             borderColor: color,
             borderWidth: 0
         }
-    }  
+    }
 }
 WalletListModal.propTypes = {
     dropdownWalletListVisible: PropTypes.bool,
@@ -52,7 +52,7 @@ WalletListModal.propTypes = {
 export const WalletListModalConnect =  connect( state => ({
     headerHeight: state.ui.dimensions.headerHeight,
     walletList: state.ui.wallets.byId,
-    dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,   
+    dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,
     walletTransferModalVisible: state.ui.walletTransferList.walletListModalVisible,
     scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
 }))(WalletListModal)
@@ -64,13 +64,13 @@ class WalletListModalBody extends Component {
     }
 
     selectFromWallet = () => {
-        LayoutAnimation.easeInEaseOut()        
+        LayoutAnimation.easeInEaseOut()
         console.log('selectingFromWallet')
         this.props.dispatch(toggleSelectedWalletListModal())
     }
 
     selectToWallet = () => {
-        LayoutAnimation.easeInEaseOut()        
+        LayoutAnimation.easeInEaseOut()
         console.log('selectingToWallet')
         this.props.dispatch(toggleScanToWalletListModal())
     }
@@ -94,7 +94,7 @@ class WalletListModalBody extends Component {
             borderColor: color,
             borderWidth: 0
         }
-    }     
+    }
 }
 WalletListModalBody.propTypes = {
     selectionFunction: PropTypes.string,
@@ -107,7 +107,7 @@ export const WalletListModalBodyConnect  = connect( state => ({
 class WalletListModalHeader extends Component {
 
     _onSearchExit = () => {
-        this.props.dispatch(toggleScanToWalletListModal()) 
+        this.props.dispatch(toggleScanToWalletListModal())
     }
 
     render() {
@@ -122,14 +122,14 @@ class WalletListModalHeader extends Component {
                     </TouchableHighlight>
                 </View>
             </View>
-        )        
+        )
     }
     border (color) {
         return {
             borderColor: color,
             borderWidth: 0
         }
-    }     
+    }
 }
 
 export const WalletListModalHeaderConnect = connect( state => ({

@@ -8,7 +8,7 @@ import FormattedText from '../../components/FormattedText'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
-import EvilIcon from 'react-native-vector-icons/EvilIcons'
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
 
 class WalletListRowOptions extends Component {
@@ -49,7 +49,7 @@ class WalletListRowOptions extends Component {
             </MenuOption>
             <MenuOption value={options[2]} style={styles.menuOption}>
               <View style={[styles.menuOptionItem, this.border('green')]}>
-                <EvilIcon name='archive' size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />
+                <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[2]}</FormattedText>
               </View>
             </MenuOption>

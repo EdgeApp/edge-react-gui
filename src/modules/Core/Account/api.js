@@ -117,21 +117,21 @@ const createWallet = (account, walletType, keys) => {
 const activateWallet = (account, walletId) => {
   console.log('activating wallet', walletId)
   return account.changeKeyStates({
-    walletId: { archived: false }
+    [walletId]: { archived: false }
   })
 }
 
 const archiveWallet = (account, walletId) => {
   console.log('archiving wallet', walletId)
   return account.changeKeyStates({
-    walletId: { archived: true }
+    [walletId]: { archived: true }
   })
 }
 
 const deleteWallet = (account, walletId) => {
   console.log('deleting wallet', walletId)
   return account.changeKeyStates({
-    walletId: { deleted: true }
+    [walletId]: { deleted: true }
   })
 }
 

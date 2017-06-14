@@ -1,17 +1,8 @@
+import { combineReducers } from 'redux'
 import * as ACTION from './action.js'
 
-const initialState = {
-  byId: {}
-}
-
-export const wallets = (state = initialState, action) => {
-  return {
-    byId: byId(state.byId, action)
-  }
-}
-
-const byId = (state, action) => {
-  const { type, data } = action
+const byId = (state = {}, action) => {
+  const { type, data = {} } = action
   switch (type) {
     case ACTION.ADD_WALLET:
       const { wallet } = data
@@ -30,3 +21,34 @@ const byId = (state, action) => {
       return state
   }
 }
+
+const pendingWalletIds = (state = [], action) => {
+  const { type, data = {} } = action
+  const { walletId } = data
+  switch (type) {
+    case ACTION.WALLET_UPDATE_START:
+      return getNewArrayWithItem(state, walletId)
+    case ACTION.WALLET_UPDATE_COMPLETE:
+      return getNewArrayWithoutItem(state, walletId)
+    default:
+      return state
+  }
+}
+
+const getNewArrayWithoutItem = (list, targetItem) => {
+  return list.filter(item => {
+    return item !== targetItem
+  })
+}
+
+const getNewArrayWithItem = (list, item) => {
+  if (!list.includes(item)) {
+    return [...list, item]
+  }
+  return list
+}
+
+export const wallets = combineReducers({
+  byId,
+  pendingWalletIds
+})
