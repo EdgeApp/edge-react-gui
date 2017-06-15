@@ -72,7 +72,26 @@ class BTCSettings extends Component {
 class ETHSettings extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            denominations: {
+                ethereum: {
+                    boolean: true
+                }
+            }
+        }
+
+        this.denominations = [
+            {
+                value: 'ethereum',
+                text: 'Ethereum = (1 Ethereum)',
+                boolean: this.state.denominations.ethereum.boolean
+            }
+        ]
     }
+
+    _onPressToggleDenomination = (value, option) => {
+        console.log('toggling bitcoin denomination, value is: ', value, ' , option is : ' , option)
+    }    
 
     render() {
         return(
@@ -84,7 +103,8 @@ class ETHSettings extends Component {
                             <T style={s.headerText}>Ethereum Denomination</T>
                         </View>
                     </View>
-                </LinearGradient>                
+                </LinearGradient>     
+                <RadioRows options={this.denominations} onPressFunction={this._onPressToggleDenomination} style={border('green')} option='eth' />                                         
             </View>
         )
     }
