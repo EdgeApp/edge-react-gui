@@ -125,7 +125,7 @@ class Main extends Component {
 
                     <Scene key='scan' component={Scan} title='Scan' duration={0} test={console.log('this.props', this.props)}/>
 
-                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} />
+                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
 
                     <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
@@ -137,7 +137,7 @@ class Main extends Component {
 
                     <Scene key='createWallet' component={CreateWallet} title='Create Wallet' duration={0} />
 
-                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' duration={0} initial />
+                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' duration={0} />
 
                     <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' duration={0} />
 

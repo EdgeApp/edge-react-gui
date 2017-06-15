@@ -35,6 +35,13 @@ const logError = (msg) => {
   console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
 }
 
+const border = (color) => {
+    return {
+      borderColor: color,
+      borderWidth: 0
+    }
+}
+
 export {
   getFiatFromCrypto,
   getCryptoFromFiat,
@@ -42,5 +49,6 @@ export {
   devStyle,
   logInfo,
   logError,
-  logWarning
+  logWarning,
+  border
 }
