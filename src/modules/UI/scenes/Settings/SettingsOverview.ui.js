@@ -7,6 +7,7 @@ import {
   SettingsItemWithModal,
   SettingsItemWithSwitch
 } from './SettingsItems.ui'
+import {BlueButton} from '../../components/Buttons'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -39,13 +40,14 @@ class SettingsOverview extends Component {
     ]
 
     this.currencies = [
-      { key: 'bitcoinSettings', text: 'Bitcoin' },
-      { key: 'ethereumSettings', text: 'Ethereum' }
+      { key: 'btcSettings', text: 'Bitcoin', routeFunction: Actions.btcSettings },
+      { key: 'ethSettings', text: 'Ethereum', routeFunction: Actions.ethSettings }
     ]
   }
 
 
   _handleOnPressRouting = (route) => {
+    console.log('in SettingsOverview.ui.js, route is: ', route)
     let goRoute = Actions[route]
     goRoute()
   }
@@ -64,6 +66,10 @@ class SettingsOverview extends Component {
 
   _onToggleOption = (property) => {
     console.log('toggling option: ', option)
+  }
+
+  _onToggleDebug = () => {
+    console.log('debug button pressed')
   }
 
   render() {
@@ -105,13 +111,17 @@ class SettingsOverview extends Component {
           {this.securityRoute.map(this.renderSettingsItemWithRoute)}
           {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
           {this.currencies.map(this.renderSettingsItemWithRoute)}
+          <View style={[s.debugArea, border('green')]}>
+            <BlueButton text='Debug' onPressFunction={this._onToggleDebug} />
+          </View>
+          <View style={s.emptyBottom}></View>
         </View>
       </ScrollView>
     )
   }
 
   renderSettingsItemWithRoute = (x, i) => {
-    return <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} />
+    return <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
   }
 
   renderSettingsItemWithSwitch = (x, i) => {

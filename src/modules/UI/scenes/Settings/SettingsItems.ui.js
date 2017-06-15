@@ -16,15 +16,17 @@ class SettingsItemWithRoute extends Component {
         super(props)
     }
 
-    _handleOnPressRouting = (route) => {
-        let goRoute = Actions[route]
+    _handleOnPressRouting (route) {
+        console.log('in SettingsItems.ui.js, route is: ', route)
+        Actions[route]()
+        console.log('goRoute is: ', goRoute)
         goRoute()        
     }
 
     render() {
         console.log('rendering settingsOverviewItem, this is: ', this)
         return(
-            <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._handleOnPressRouting(this.props.scene)} >
+            <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this.props.routeFunction()} >
                 <View style={[s.settingsRowTextRow, border('red')]}>
                     <View style={[s.settingsRowLeftContainer, border('blue')]}>
                         <T style={[s.settingsRowLeftText, border('green')]}>{this.props.leftText}</T>

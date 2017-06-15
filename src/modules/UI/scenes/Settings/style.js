@@ -64,8 +64,45 @@ module.exports = StyleSheet.create({
     modalRightText: {
         color: '#4977BB',
         fontWeight: 'bold'
-    }
+    },
     
     ///////// End of Settings Row /////////
+
+    debugArea: {
+        padding: 20,
+        flex: 1
+    },
+
+    emptyBottom: {
+        height: 51,
+        flex: 1
+    },
+
+    ////////// Start of Currency Settings//////
+    bitcoinSettings: {
+        flex: 1
+    },
+
+    headerRow: {
+      padding: 12,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      height: 50
+    },   
+    headerTextWrap: {
+        height: 10
+    },
+    headerText: {
+      fontSize: 18,
+      color: 'white',
+      backgroundColor: 'transparent',
+      marginLeft: 16
+    },     
+    headerIcon: {
+      backgroundColor: 'transparent',
+      fontSize: 22
+    },    
+
+    ////////// End of Currency Settings//////
 
 })

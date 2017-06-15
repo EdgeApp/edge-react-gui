@@ -1,3 +1,4 @@
-import SettingsOverview from './SettingsOverview.ui'
+import SettingsOverviewConnect from './SettingsOverview.ui'
+import {BTCSettings, ETHSettings} from './CurrencySettings.ui'
 
-export {SettingsOverview}
+export {SettingsOverviewConnect as SettingsOverview, BTCSettings, ETHSettings}
