@@ -51,9 +51,9 @@ WalletListModal.propTypes = {
 }
 export const WalletListModalConnect =  connect( state => ({
     walletList: state.ui.wallets.byId,
-    dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,   
-    walletTransferModalVisible: state.ui.walletTransferList.walletListModalVisible,
-    scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
+    dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,   
+    walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
+    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
 }))(WalletListModal)
 
 

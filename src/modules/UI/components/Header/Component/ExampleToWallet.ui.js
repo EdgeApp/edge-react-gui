@@ -12,8 +12,13 @@ import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
 
 class ExampleToWallet extends Component {
+  constructor(props) {
+    super(props)
+    //this.state = { walletListModalVisibility: true }
+  }
 
   _onPressDropdownToggle = () => {
+    //this.setState({walletListModalVisibility: !this.state.walletListModalVisibility})
     this.props.dispatch(toggleWalletListModalVisibility())
   }
 
@@ -38,7 +43,7 @@ class ExampleToWallet extends Component {
 }
 
 export default connect(state => ({ 
-  addressModalVisible: state.ui.scan.addressModalVisible,
-  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
+  addressModalVisible: state.ui.scenes.scan.addressModalVisible,
+  walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible
 })
 )(ExampleToWallet)
