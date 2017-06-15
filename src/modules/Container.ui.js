@@ -16,7 +16,7 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import AddWallet from './UI/scenes/AddWallet/index.js'
-import * as Settings from './UI/scenes/Settings'
+import {SettingsOverview, BTCSettings, ETHSettings} from './UI/scenes/Settings'
 
 import Login from './UI/scenes/Login/index.js'
 
@@ -125,7 +125,7 @@ class Main extends Component {
 
                     <Scene key='scan' component={Scan} title='Scan' duration={0} test={console.log('this.props', this.props)}/>
 
-                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
+                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} />
 
                     <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
@@ -137,7 +137,11 @@ class Main extends Component {
 
                     <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
 
-                    <Scene key='settingsOverview' component={Settings.SettingsOverview} title='Settings' duration={0} />
+                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' duration={0} initial />
+
+                    <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' duration={0} />
+
+                    <Scene key='ethSettings' component={ETHSettings} title='ETH Settings' duration={0} />
 
                   </Scene>
                 </RouterWithRedux>
