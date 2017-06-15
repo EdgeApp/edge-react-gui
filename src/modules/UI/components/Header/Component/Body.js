@@ -34,7 +34,6 @@ class Body extends Component {
 
 const mapStateToProps = state => ({
   walletList:                        state.ui.wallets.byId,
-  headerHeight:                      state.ui.scenes.dimensions.headerHeight,
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility
 })
@@ -66,7 +65,7 @@ class ExampleFromWallet extends Component {
   }
 
   render () {
-    let topDisplacement =  this.props.headerHeight + 2
+    let topDisplacement =  66
     let selectionFunction = 'selectFromWallet'
 
     return (
@@ -90,5 +89,4 @@ export const ExampleFromWalletConnect  = connect( state => ({
     walletList:                        state.ui.wallets.byId,
     selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
     scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility,
-    headerHeight:                      state.ui.scenes.dimensions.headerHeight
 }))(ExampleFromWallet)

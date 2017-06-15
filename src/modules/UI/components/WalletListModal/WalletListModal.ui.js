@@ -21,7 +21,7 @@ class WalletListModal extends Component {
     constructor(props){
         super(props)
         if(!this.props.topDisplacement){
-            this.props.topDisplacement = this.props.headerHeight + 4
+            this.props.topDisplacement = 68
         }
         console.log('topDisplacement is now: ', this.props.topDisplacement)
     }
@@ -50,7 +50,6 @@ WalletListModal.propTypes = {
     currentScene: PropTypes.string
 }
 export const WalletListModalConnect =  connect( state => ({
-    headerHeight: state.ui.dimensions.headerHeight,
     walletList: state.ui.wallets.byId,
     dropdownWalletListVisible: state.ui.walletListModal.walletListModalVisible,   
     walletTransferModalVisible: state.ui.walletTransferList.walletListModalVisible,

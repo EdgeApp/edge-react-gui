@@ -18,7 +18,7 @@ class ExampleToWallet extends Component {
   }
 
   render () {
-    let topDisplacement =  this.props.headerHeight + 2
+    let topDisplacement =  66
     let selectionFunction = 'selectToWallet'
     return (
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -37,8 +37,7 @@ class ExampleToWallet extends Component {
   }
 }
 
-export default connect(state => ({
-  headerHeight: state.ui.dimensions.headerHeight,  
+export default connect(state => ({ 
   addressModalVisible: state.ui.scan.addressModalVisible,
   walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
 })
