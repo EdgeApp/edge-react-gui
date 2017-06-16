@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableHighlight, TextInput} from 'react-native'
+import { Text, View, TouchableHighlight, TextInput, Clipboard} from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
@@ -171,13 +171,17 @@ class AddressInputRecipient extends Component { // this component is for the inp
   constructor(props) {
     super(props)
     this.state = {
-      copiedString: 'Blah blah',
+      copiedString: '',
       recipientAddressInput: ''
     }
   }
 
+  componentWillMount() {
+    Clipboard.getString().then(string => this.setState({copiedString: string}))    
+  }
+
   _onRecipientAddressChange = (input) => {
-    this.setState({ recipientAddressInput: input })
+    //this.setState({ recipientAddressInput: input })
     this.props.dispatch(updateRecipientAddress(input))    
   }
 
@@ -187,13 +191,15 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   render() {
+    console.log('rendering addressinputrecipient, this is: ', this)
     let innerText = 'Paste "' + this.state.copiedString + '"'
+    console.log('innerText is: ', innerText)
     return(
       <View>
         <View style={[styles.addressInputWrap, border('orange')]}>
             <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} value={this.props.recipientAddress} />
         </View>
-        {this.state.copiedString &&
+        {!!this.state.copiedString &&
           <View style={styles.pasteButtonRow}>
             <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} />
           </View>
