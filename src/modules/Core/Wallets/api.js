@@ -14,9 +14,9 @@ export const activateWalletRequest = wallet => {
 }
 
 export const archiveWalletRequest = wallet => {
-  wallet.stopEngine()
+  return wallet.stopEngine()
 }
 
 export const deleteWalletRequest = wallet => {
-  wallet.stopEngine()
+  return wallet.stopEngine()
 }

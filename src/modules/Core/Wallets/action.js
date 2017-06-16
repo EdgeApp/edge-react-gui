@@ -163,22 +163,16 @@ const archiveWallet = (dispatch, state, walletId) => {
   // Update Redux UI first when archiving a wallet.
   dispatch(UI_ACTIONS.archiveWalletId(walletId))
 
-  // Update Redux Core only after Redux UI has been updated.
-  dispatch(removeWallet(walletId))
-
-  // Set the wallet's pending status to false to allow future updates
-  dispatch(walletUpdateComplete(walletId))
-
   const wallet = state.core.wallets.byId[walletId]
   WALLET_API.archiveWalletRequest(wallet)
-  // .then(() => {
-  //   // Update Redux Core only after Redux UI has been updated.
-  //   dispatch(removeWallet(walletId))
-  //
-  //   // Set the wallet's pending status to false to allow future updates
-  //   dispatch(walletUpdateComplete(walletId))
-  // })
-  // .catch(e => { console.log(e) })
+  .then(() => {
+    // Update Redux Core only after Redux UI has been updated.
+    dispatch(removeWallet(walletId))
+
+    // Set the wallet's pending status to false to allow future updates
+    dispatch(walletUpdateComplete(walletId))
+  })
+  .catch(e => { console.log(e) })
 }
 
 const deleteActiveWallet = (dispatch, state, walletId) => {
@@ -191,14 +185,14 @@ const deleteActiveWallet = (dispatch, state, walletId) => {
 
   const wallet = state.core.wallets.byId[walletId]
   WALLET_API.deleteWalletRequest(wallet)
-  // .then(() => {
-  //   // Update Redux Core only after Redux UI has been updated.
-  //   dispatch(removeWallet(walletId))
-  //
-  //   // Set the wallet's pending status to false to allow future updates
-  //   dispatch(walletUpdateComplete(walletId))
-  // })
-  // .catch(e => { console.log(e) })
+  .then(() => {
+    // Update Redux Core only after Redux UI has been updated.
+    dispatch(removeWallet(walletId))
+
+    // Set the wallet's pending status to false to allow future updates
+    dispatch(walletUpdateComplete(walletId))
+  })
+  .catch(e => { console.log(e) })
 }
 
 const deleteArchivedWallet = (dispatch, walletId) => {
