@@ -12,11 +12,6 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
 
 class WalletListRowOptions extends Component {
-
-  constructor (props) {
-    super(props)
-  }
-
   optionAction (optionKey) {
     this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
     if (optionKey === 'Rename') {
@@ -29,9 +24,9 @@ class WalletListRowOptions extends Component {
 
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (
-      <View style={{ padding: 10, flexDirection: 'row' }} style={styles.rowDotsWrap}>
-        <Menu onSelect={(value) => this.optionAction(value)}>
-          <MenuTrigger>
+      <View style={styles.rowDotsWrap}>
+        <Menu style={styles.menuButton} onSelect={(value) => this.optionAction(value)}>
+          <MenuTrigger style={styles.menuTrigger}>
             <Text style={{fontSize: 20 }}>&#8942;</Text>
           </MenuTrigger>
           <MenuOptions>

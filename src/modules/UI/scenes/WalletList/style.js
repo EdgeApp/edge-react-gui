@@ -8,15 +8,14 @@ const screenDimensions = {
 console.log('screenDimensions is: ', screenDimensions)
 
 module.exports = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'stretch',
-    },
-    totalBalanceBox: {//one
-      flex: 3,
-      justifyContent: "center",
-    },
-
+  container: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  totalBalanceBox: { // one
+    flex: 3,
+    justifyContent: 'center'
+  },
   totalBalanceWrap: {
     flex: 3,
     alignItems: 'center',
@@ -38,151 +37,148 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   currentBalanceBoxDollars: {
-    color: "#2A5799",
+    color: '#2A5799',
     fontSize: 44
   },
   currentBalanceBoxBits: {
-    color: "#FFFFFF",
-    justifyContent: "space-around",
+    color: '#FFFFFF',
+    justifyContent: 'space-around',
     flex: 1
   },
-
-    //bottom major portion of screen
-    walletsBox: { //one
-      flex:9
-    },
-    walletsBoxHeaderWrap: {
-      padding: 12,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      height: 50
-    },
-    walletsBoxHeaderTextWrap: {
-      
-    },
-    leftArea: {
-      flexDirection: 'row'
-    },
-    walletIcon: {
-      backgroundColor: 'transparent',
-      fontSize: 22
-    },
-    walletsBoxHeaderText: {
-      fontSize: 18,
-      color: 'white',
-      backgroundColor: 'transparent',
-      marginLeft: 16
-    },
-    walletsBoxHeaderAddWallet: {
-      flexDirection: 'row'
-    },
-    dropdownIcon: {
-      textAlignVertical: 'center',
-      alignSelf: 'center',
-      height: 24,
-      fontSize: 24,
-      backgroundColor: 'transparent'
-    },
-    archiveBoxHeaderWrap: {
-      padding: 12,
-      borderBottomWidth: 1,
-      borderColor: '#BBB',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      height: 50
-    },
-    archiveBoxHeaderTextWrap: {
-
-    },
-    archiveIcon: {
-      backgroundColor: 'transparent',
-      fontSize: 28
-    },
-    archiveBoxHeaderText: {
-      fontSize: 18,
-      backgroundColor: 'transparent',
-      color: 'white',
-      marginLeft: 14
-    },
-    archiveBoxHeaderDropdown: {
-      flexDirection: 'row'
-    },
-
-    rowContainer: {
-      padding: 16,
-      backgroundColor: 'white',
-      borderBottomWidth: 1,
-      borderColor: '#EEE'
-    },
-    rowContent: {
-      justifyContent: 'space-between',
-      flexDirection: 'row' 
-    },
-    rowNameTextWrap: {
-      justifyContent: 'center'
-    },
-    rowNameText: {
-      color: '#58595C'
-    },
-    rowDotsWrap: {
-      
-    },
-    rowDots: {
-
-    },
-    
-    //beginning of options component
-    menuOption: {
-      height: 45,
-      borderBottomColor: '#D4D4D4',
-      borderBottomWidth: 1,
-      paddingLeft: 13,
-      paddingRight: 13,
-      justifyContent: 'center'
-    },
-    menuOptionItem: {
-      flexDirection: 'row'
-    },
-    optionIcon: {
-      color: '#58595C',
-      marginRight: 10
-    },
-    optionText: {
-      color: '#58595C',
-      fontSize: 18
-    },
-    editIcon: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlignVertical: 'center'
-    },
-    trashIcon: {
-      marginRight: 13,
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlignVertical: 'center'      
-    },
-    archive: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlignVertical: 'center'   
-    },
-
+    // bottom major portion of screen
+  walletsBox: { // one
+    flex: 9
+  },
+  walletsBoxHeaderWrap: {
+    padding: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 50
+  },
+  walletsBoxHeaderTextWrap: {
+  },
+  leftArea: {
+    flexDirection: 'row'
+  },
+  walletIcon: {
+    backgroundColor: 'transparent',
+    fontSize: 22
+  },
+  walletsBoxHeaderText: {
+    fontSize: 18,
+    color: 'white',
+    backgroundColor: 'transparent',
+    marginLeft: 16
+  },
+  walletsBoxHeaderAddWallet: {
+    flexDirection: 'row'
+  },
+  dropdownIcon: {
+    textAlignVertical: 'center',
+    alignSelf: 'center',
+    height: 24,
+    fontSize: 24,
+    backgroundColor: 'transparent'
+  },
+  archiveBoxHeaderWrap: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderColor: '#BBB',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 50
+  },
+  archiveBoxHeaderTextWrap: {
+  },
+  archiveIcon: {
+    backgroundColor: 'transparent',
+    fontSize: 28
+  },
+  archiveBoxHeaderText: {
+    fontSize: 18,
+    backgroundColor: 'transparent',
+    color: 'white',
+    marginLeft: 14
+  },
+  archiveBoxHeaderDropdown: {
+    flexDirection: 'row'
+  },
+  rowContainer: {
+    flex: 1,
+    height: 50,
+    paddingLeft: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderColor: '#EEE'
+  },
+  rowContent: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  rowNameTextWrap: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  rowNameText: {
+    color: '#58595C'
+  },
+  rowDotsWrap: {
+    flexDirection: 'row'
+  },
+  menuTrigger: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 10
+  },
+    // beginning of options component
+  menuOption: {
+    borderBottomColor: '#D4D4D4',
+    borderBottomWidth: 1,
+    justifyContent: 'center'
+  },
+  menuOptionItem: {
+    flexDirection: 'row'
+  },
+  optionIcon: {
+    color: '#58595C',
+    marginRight: 10
+  },
+  optionText: {
+    color: '#58595C',
+    fontSize: 18
+  },
+  editIcon: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center'
+  },
+  trashIcon: {
+    marginRight: 13,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center'
+  },
+  archive: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center'
+  },
   nameInputWrap: {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    marginTop: 0,   
+    marginTop: 0,
     marginBottom: 0,
     borderBottomColor: '#dddddd',
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
 
   },
   nameInput: {
     height: (Platform.OS === 'ios') ? 26 : 46,
-    textAlign: 'center', 
+    textAlign: 'center',
     fontSize: 20
   },
-
   emptyBottom: {
     flex: 1
   },
@@ -191,8 +187,7 @@ module.exports = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14
   },
-
-  //buttons
+  // buttons
   buttonsWrap: {
     flex: 1,
     flexDirection: 'row',
@@ -206,11 +201,10 @@ module.exports = StyleSheet.create({
     borderRadius: 3
   },
   stylizedButtonTextWrap: {
-
-  },  
+  },
   stylizedButtonText: {
     color: 'white',
-    fontSize: 16,    
+    fontSize: 16
   },
   cancelButtonWrap: {
     backgroundColor: '#909091',
@@ -222,29 +216,28 @@ module.exports = StyleSheet.create({
   doneButtonWrap: {
     backgroundColor: '#4977BB',
     alignSelf: 'flex-end',
-    marginLeft: 4    
+    marginLeft: 4
   },
   doneButton: {
     color: '#3c76cd'
   },
-
   // beginning of token rows //
   tokenRowContainer: {
     padding: 16,
     paddingLeft: 30,
-    backgroundColor: "#F6F6F6",
+    backgroundColor: '#F6F6F6',
     borderBottomWidth: 1,
     borderColor: '#EEE'
   },
   tokenRowContent: {
     justifyContent: 'space-between',
-    flexDirection: 'row' 
+    flexDirection: 'row'
   },
   tokenRowNameTextWrap: {
     justifyContent: 'center'
   },
   tokenRowNameText: {
     color: '#58595C'
-  },
-    // end of token rows //       
+  }
+    // end of token rows //
 })

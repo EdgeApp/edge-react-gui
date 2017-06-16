@@ -14,7 +14,6 @@ import RowOptions from './WalletListRowOptions.ui'
 import {border} from '../../../utils'
 
 class WalletListRow extends Component {
-
   render () {
     let id = this.props.data.id
     let name = this.props.data.name || 'No name'
@@ -24,40 +23,33 @@ class WalletListRow extends Component {
         <TouchableHighlight style={[styles.rowContainer]}
           underlayColor={'#eee'}
           delayLongPress={500}
-          {...this.props.sortHandlers}
-        >
+          {...this.props.sortHandlers}>
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <Text style={[styles.rowNameText]}>{name}</Text>
             </View>
-            <RowOptions style={{borderColor: 'red', borderWidth: 1}} walletKey={id} archiveLabel={this.props.archiveLabel} />
+            <RowOptions style={{borderColor: 'red', borderWidth: 1}}
+              walletKey={id}
+              archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
         {this.props.wallets[id].metaTokens.map((x, i) => (
           <WalletListTokenRow metaToken={x} key={x.currencyCode} />
-        ))
-
-        }
+        ))}
       </View>
     )
   }
 }
 
-WalletListRow.propTypes = {
-
-}
+WalletListRow.propTypes = {}
 
 export default connect(state => ({
   wallets: state.ui.wallets.byId
 }))(WalletListRow)
 
 class WalletListTokenRow extends Component {
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return(
+  render () {
+    return (
       <View style={[styles.tokenRowContainer]}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
