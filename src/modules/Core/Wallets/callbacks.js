@@ -33,7 +33,7 @@ export const makeWalletCallbacks = (dispatch, getState, walletId) => {
 
     onWalletNameChanged (newWalletName) {
       console.log('onWalletNameChanged', newWalletName)
-      dispatch(renameWalletSuccess(walletId))
+      // dispatch(renameWalletSuccess(walletId))
     }
   }
 

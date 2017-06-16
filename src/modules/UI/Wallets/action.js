@@ -43,28 +43,28 @@ export const deleteWalletIdRequest = walletId => {
   }
 }
 
-const activateWalletId = walletId => {
+export const activateWalletId = walletId => {
   return {
     type: ACTIVATE_WALLET_ID,
     data: { walletId }
   }
 }
 
-const archiveWalletId = walletId => {
+export const archiveWalletId = walletId => {
   return {
     type: ARCHIVE_WALLET_ID,
     data: { walletId }
   }
 }
 
-const deleteWalletId = walletId => {
+export const deleteWalletId = walletId => {
   return {
     type: DELETE_WALLET_ID,
     data: { walletId }
   }
 }
 
-const selectWalletId = walletId => {
+export const selectWalletId = walletId => {
   return {
     type: SELECT_WALLET_ID,
     data: { walletId }
