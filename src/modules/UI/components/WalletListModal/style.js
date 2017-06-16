@@ -40,10 +40,30 @@ module.exports = StyleSheet.create({
   headerCloseWrap: {
     alignSelf: 'flex-end'
   },
-  modadlCloseWrap: {
+  modalCloseWrap: {
 
   },
   modalClose: {
     width: 20
-  }
+  },
+  
+  // beginning of token rows //
+  tokenRowContainer: {
+    padding: 16,
+    paddingLeft: 30,
+    backgroundColor: "#F6F6F6",
+    borderBottomWidth: 1,
+    borderColor: '#EEE'
+  },
+  tokenRowContent: {
+    justifyContent: 'space-between',
+    flexDirection: 'row' 
+  },
+  tokenRowNameTextWrap: {
+    justifyContent: 'center'
+  },
+  tokenRowNameText: {
+    color: '#58595C'
+  },
+    // end of token rows //    
 })

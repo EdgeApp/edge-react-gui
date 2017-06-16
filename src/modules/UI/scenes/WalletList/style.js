@@ -39,8 +39,7 @@ module.exports = StyleSheet.create({
   },
   currentBalanceBoxDollars: {
     color: "#2A5799",
-    fontSize: 44,
-    fontFamily: 'SourceSansPro-Light'
+    fontSize: 44
   },
   currentBalanceBoxBits: {
     color: "#FFFFFF",

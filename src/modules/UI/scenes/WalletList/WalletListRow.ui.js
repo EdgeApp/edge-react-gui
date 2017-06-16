@@ -7,6 +7,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import styles from './style'
+import T from '../../components/FormattedText'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
@@ -60,7 +61,7 @@ class WalletListTokenRow extends Component {
       <View style={[styles.tokenRowContainer]}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
-            <Text style={[styles.tokenRowNameText]}>{this.props.metaToken.currencyCode}</Text>
+            <T style={[styles.tokenRowNameText]}>{this.props.metaToken.currencyCode}</T>
           </View>
         </View>
       </View>
