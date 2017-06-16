@@ -171,12 +171,19 @@ class AddressInputRecipient extends Component { // this component is for the inp
   constructor(props) {
     super(props)
     this.state = {
-      copiedString: 'Blah blah'
+      copiedString: 'Blah blah',
+      recipientAddressInput: ''
     }
   }
 
   _onRecipientAddressChange = (input) => {
-    this.props.dispatch(updateRecipientAddress(input))
+    this.setState({ recipientAddressInput: input })
+    this.props.dispatch(updateRecipientAddress(input))    
+  }
+
+  _copyOverAddress = () => {
+    this.setState({ recipientAddressInput: this.state.copiedString })
+    this.props.dispatch(updateRecipientAddress(this.state.copiedString))
   }
 
   render() {
@@ -184,11 +191,11 @@ class AddressInputRecipient extends Component { // this component is for the inp
     return(
       <View>
         <View style={[styles.addressInputWrap, border('orange')]}>
-            <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+            <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} value={this.props.recipientAddress} />
         </View>
         {this.state.copiedString &&
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={innerText} />
+            <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} />
           </View>
         }
       </View>
