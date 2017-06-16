@@ -71,14 +71,14 @@ class ExampleFromWallet extends Component {
     return (
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: "#FFF", fontSize: 20 }}>My Wallet  </Text>
-            <TouchableHighlight onPress={this[this.props.toggleFunction]}>
+            <TouchableOpacity onPress={this[this.props.toggleFunction]}>
                 <View>
                   {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
                   <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25 }} />
                   }
 
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
             {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
             {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} /> }
           </View>
