@@ -23,23 +23,16 @@ export const byId = (state = {}, action) => {
 
 export const activeWalletIds = (state = [], action) => {
   const { type, data = {} } = action
-  let id
+  const { walletId } = data
   switch (type) {
-    case ACTION.ARCHIVE_WALLET:
-      id = data.id
-      return getNewArrayWithoutItem(state, id)
+    case ACTION.ACTIVATE_WALLET_ID:
+      return getNewArrayWithItem(state, walletId)
 
-    case ACTION.ADD_WALLET:
-      id = data.wallet.id
-      return getNewArrayWithItem(state, id)
+    case ACTION.ARCHIVE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
 
-    case ACTION.ACTIVATE_WALLET:
-      id = data.id
-      return getNewArrayWithItem(state, id)
-
-    case ACTION.DELETE_WALLET:
-      id = data.id
-      return getNewArrayWithoutItem(state, id)
+    case ACTION.DELETE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
 
     default:
       return state
@@ -48,19 +41,16 @@ export const activeWalletIds = (state = [], action) => {
 
 export const archivedWalletIds = (state = [], action) => {
   const { type, data = {} } = action
-  let id
+  const { walletId } = data
   switch (type) {
-    case ACTION.ARCHIVE_WALLET:
-      id = data.id
-      return getNewArrayWithItem(state, id)
+    case ACTION.ACTIVATE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
 
-    case ACTION.ACTIVATE_WALLET:
-      id = data.id
-      return getNewArrayWithoutItem(state, id)
+    case ACTION.ARCHIVE_WALLET_ID:
+      return getNewArrayWithItem(state, walletId)
 
-    case ACTION.DELETE_WALLET:
-      id = data.id
-      return getNewArrayWithoutItem(state, id)
+    case ACTION.DELETE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
 
     default:
       return state
@@ -72,7 +62,7 @@ export const selectedWalletId = (state = '', action) => {
   const { walletId } = data
 
   switch (type) {
-    case ACTION.SELECT_WALLET_ID :
+    case ACTION.SELECT_WALLET_ID:
       return walletId
     default:
       return state
