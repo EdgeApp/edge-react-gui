@@ -7,7 +7,7 @@ import {
   SettingsItemWithModal,
   SettingsItemWithSwitch
 } from './SettingsItems.ui'
-import {BlueButton} from '../../components/Buttons'
+import {PrimaryButton} from '../../components/Buttons'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -112,7 +112,7 @@ class SettingsOverview extends Component {
           {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
           {this.currencies.map(this.renderSettingsItemWithRoute)}
           <View style={[s.debugArea, border('green')]}>
-            <BlueButton text='Debug' onPressFunction={this._onToggleDebug} />
+            <PrimaryButton text='Debug' onPressFunction={this._onToggleDebug} />
           </View>
           <View style={s.emptyBottom}></View>
         </View>

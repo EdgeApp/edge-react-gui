@@ -85,9 +85,7 @@ module.exports = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'stretch',
     justifyContent: 'center',
-    padding: 10,
     paddingTop: 4
-
   },
   modalMiddleTextWrap: {
 

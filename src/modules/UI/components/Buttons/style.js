@@ -23,17 +23,28 @@ import React, {StyleSheet, Platform} from 'react-native'
     color: 'white',
     fontSize: 16,    
   },
-  cancelButtonWrap: {
+
+  primaryButtonWrap: {
+    backgroundColor: '#4977BB', 
+  },
+  primaryButton: {
+    color: '#3c76cd'
+  },  
+
+  secondaryButtonWrap: {
     backgroundColor: '#909091',
     alignSelf: 'flex-start'
   },
-  cancelButton: {
+  secondaryButton: {
     color: '#3c76cd'
   },
-  doneButtonWrap: {
-    backgroundColor: '#4977BB', 
+
+  tertiaryButtonWrap: {
+    backgroundColor: 'white', 
+    borderWidth: 1,
+    borderColor: '#4977BB'
   },
-  doneButton: {
-    color: '#3c76cd'
-  }  
+  tertiaryButton: {
+    color: '#4977BB'
+  }    
 })

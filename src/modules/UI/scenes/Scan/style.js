@@ -165,6 +165,9 @@ module.exports = StyleSheet.create({
     textAlign: 'center', 
     fontSize: 20
   },
+  pasteButtonRow: {
+    paddingTop: 14
+  },
   modalBottom: {
     flex: 1,
     flexDirection: 'row'
@@ -193,5 +196,6 @@ module.exports = StyleSheet.create({
   doneButton: {
     fontSize: 28,
     color: '#3c76cd'
-  }
+  },
+
 })

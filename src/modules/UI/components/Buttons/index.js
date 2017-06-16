@@ -1,3 +1,3 @@
-import {BlueButton, GreyButton} from './Buttons.ui'
+import {PrimaryButton, SecondaryButton, TertiaryButton} from './Buttons.ui'
 
-export {BlueButton, GreyButton}
+export {PrimaryButton, SecondaryButton, TertiaryButton}

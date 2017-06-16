@@ -25,6 +25,7 @@ import {
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
+import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
 import {border} from '../../../../util/border'
 
@@ -148,6 +149,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
+
   render() {
     return(
       <StylizedModal
@@ -166,21 +168,29 @@ export const WalletAddressModalConnect = connect( state => ({
 }))(WalletAddressModal)
 
 class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
-
-  /*_onModalDone = () => {
-    this._onToggleAddressModal()
-    Actions.sendConfirmation(this.props.recipientAddress)
-  }*/
+  constructor(props) {
+    super(props)
+    this.state = {
+      copiedString: 'Blah blah'
+    }
+  }
 
   _onRecipientAddressChange = (input) => {
     this.props.dispatch(updateRecipientAddress(input))
   }
 
   render() {
-
+    let innerText = 'Paste "' + this.state.copiedString + '"'
     return(
-      <View style={[styles.addressInputWrap, border('orange')]}>
-          <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+      <View>
+        <View style={[styles.addressInputWrap, border('orange')]}>
+            <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+        </View>
+        {this.state.copiedString &&
+          <View style={styles.pasteButtonRow}>
+            <TertiaryButton text={innerText} />
+          </View>
+        }
       </View>
     )
   }
