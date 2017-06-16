@@ -62,15 +62,15 @@ export const WalletListModalConnect = connect( state => ({
 
 
 class WalletListModalBody extends Component {
-  selectFromWallet = () => {
+  selectFromWallet = (id, currencyCode) => {
     LayoutAnimation.easeInEaseOut()
-    console.log('selectingFromWallet')
+    console.log('selectingFromWallet, id is: ', id, ' and currencyCode is: ', currencyCode)
     this.props.dispatch(toggleSelectedWalletListModal())
   }
 
-  selectToWallet = () => {
+  selectToWallet = (idx, currencyCode) => {
     LayoutAnimation.easeInEaseOut()
-    console.log('selectingToWallet')
+    console.log('selectingToWallet, id is: ', id, ' and currencyCode is: ', currencyCode)
     this.props.dispatch(toggleScanToWalletListModal())
   }
 
@@ -92,7 +92,7 @@ class WalletListModalBody extends Component {
 
           {this.props.walletList[idx].metaTokens.map((x, i) => (
             <TouchableOpacity style={[styles.tokenRowContainer]}
-              key={x.currencyCode}>
+              key={x.currencyCode} onPress={() => this[this.props.selectionFunction](idx, x.currencyCode)}>
               <View style={[styles.tokenRowContent]}>
                 <View style={[styles.tokenRowNameTextWrap]}>
                   <T style={[styles.tokenRowNameText]}>
