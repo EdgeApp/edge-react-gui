@@ -67,7 +67,7 @@ class MainComponent extends Component {
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <Icon style={styles.main.icon} name='ios-home-outline' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Directory</Text>
+                    <Text style={styles.main.text}>Wallets</Text>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -135,7 +135,7 @@ class MainComponent extends Component {
                 <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
                   <Icon style={styles.main.icon} name='cash' />
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>Directory</Text>
+                    <Text style={styles.main.text}>Wallets</Text>
                   </View>
                 </View>
               </TouchableHighlight>

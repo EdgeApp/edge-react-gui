@@ -1,7 +1,7 @@
 import React, { Dimensions, Component } from 'react'
-import { Modal, Text, View, TouchableHighlight,  LayoutAnimation } from 'react-native'
+import { Modal, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
-import FormattedText from '../../components/FormattedText'
+import T from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -12,9 +12,10 @@ import styles from './style'
 import { 
     toggleWalletListModalVisibility, 
     toggleSelectedWalletListModal, 
-    toggleScanToWalletListModal 
+    toggleScanToWalletListModal  
 } from './action'
 import * as Animatable from 'react-native-animatable'
+import {border} from '../../../utils'
 
 
 class WalletListModal extends Component {
@@ -75,25 +76,31 @@ class WalletListModalBody extends Component {
     }
 
     render() {
-            for (var idx in this.props.walletList) {
-                return(
-                    <TouchableHighlight style={[styles.rowContainer]} onPress={this[this.props.selectionFunction]}>
+        for (var idx in this.props.walletList) {
+            console.log('idx is: ', idx)
+            return(
+                <ScrollView>
+                    <TouchableOpacity style={[styles.rowContainer]} onPress={this[this.props.selectionFunction]}>
                         <View style={[styles.rowContent]}>
                             <View style={[styles.rowNameTextWrap]}>
-                                <FormattedText style={[styles.rowNameText]}>{idx.slice(0,5)}</FormattedText>
+                                <T style={[styles.rowNameText]}>{idx.slice(0,5)}</T>
                             </View>
                         </View>
-                    </TouchableHighlight>
-                )
-            }
-    }
+                    </TouchableOpacity>
 
-    border (color) {
-        return {
-            borderColor: color,
-            borderWidth: 0
+                    {this.props.walletList[idx].metaTokens.map((x, i) => (
+                        <TouchableOpacity style={[styles.tokenRowContainer]} key={x.currencyCode}>
+                            <View style={[styles.tokenRowContent]}>
+                            <View style={[styles.tokenRowNameTextWrap]}>
+                                <T style={[styles.tokenRowNameText]}>{x.currencyCode}</T>
+                            </View>
+                            </View>
+                        </TouchableOpacity>                          
+                    ))}
+                </ScrollView>
+            )                  
         }
-    }     
+    }   
 }
 WalletListModalBody.propTypes = {
     selectionFunction: PropTypes.string,
@@ -114,7 +121,7 @@ class WalletListModalHeader extends Component {
             <View style={[styles.rowContainer, styles.headerContainer ]}>
                 <View style={[styles.headerContent, this.border('yellow')]}>
                     <View style={[styles.headerTextWrap, this.border('green')]}>
-                        <FormattedText style={[styles.headerText, {color:'white'}, this.border('purple')]} >Choose a wallet to transfer funds to:</FormattedText>
+                        <T style={[styles.headerText, {color:'white'}, this.border('purple')]} >Choose a wallet to transfer funds to:</T>
                     </View>
                     <TouchableHighlight style={[styles.modalCloseWrap, this.border('orange')]} onPress={this._onSearchExit}>
                         <Ionicon name="ios-close" size={24} style={[styles.donebutton, this.border('purple')]} color='white' />

@@ -39,8 +39,7 @@ module.exports = StyleSheet.create({
   },
   currentBalanceBoxDollars: {
     color: "#2A5799",
-    fontSize: 44,
-    fontFamily: 'SourceSansPro-Light'
+    fontSize: 44
   },
   currentBalanceBoxBits: {
     color: "#FFFFFF",
@@ -111,7 +110,7 @@ module.exports = StyleSheet.create({
 
     rowContainer: {
       padding: 16,
-      backgroundColor: "#F8F8F8",
+      backgroundColor: 'white',
       borderBottomWidth: 1,
       borderColor: '#EEE'
     },
@@ -123,7 +122,7 @@ module.exports = StyleSheet.create({
       justifyContent: 'center'
     },
     rowNameText: {
-
+      color: '#58595C'
     },
     rowDotsWrap: {
       
@@ -227,5 +226,25 @@ module.exports = StyleSheet.create({
   },
   doneButton: {
     color: '#3c76cd'
-  }       
+  },
+
+  // beginning of token rows //
+  tokenRowContainer: {
+    padding: 16,
+    paddingLeft: 30,
+    backgroundColor: "#F6F6F6",
+    borderBottomWidth: 1,
+    borderColor: '#EEE'
+  },
+  tokenRowContent: {
+    justifyContent: 'space-between',
+    flexDirection: 'row' 
+  },
+  tokenRowNameTextWrap: {
+    justifyContent: 'center'
+  },
+  tokenRowNameText: {
+    color: '#58595C'
+  },
+    // end of token rows //       
 })
