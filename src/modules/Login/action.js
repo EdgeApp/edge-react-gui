@@ -4,7 +4,15 @@ import * as WALLET_ACTIONS from '../Core/Wallets/action.js'
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
+    dispatch(updateWallets(account))
+  }
+}
 
+export const updateWallets = account => {
+  return (dispatch, getState) => {
+    console.log('updating wallets')
+    // dispatch(updateWalletsStart())
+    const state = getState()
     const supportedTypes = [
       'wallet:shitcoin',
       'wallet:bitcoin'
@@ -14,14 +22,6 @@ export const initializeAccount = account => {
       return supportedTypes.includes(keyInfo.type)
     })
 
-    dispatch(updateWallets(keyInfos))
-  }
-}
-
-const updateWallets = keyInfos => {
-  return (dispatch, getState) => {
-    // dispatch(updateWalletsStart())
-    const state = getState()
     const walletIds = Object.keys(state.core.wallets.byId)
 
     const filteredSortedKeyInfos = keyInfos

@@ -20,18 +20,25 @@ export const ADD_TOKEN = 'ADD_TOKEN'
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as LOGIN from '../../../Login/action.js'
 
 export const executeWalletRowOption = (walletId, option) => {
   switch (option) {
     case 'Restore':
     case 'Activate':
-      return dispatch => {
-        dispatch(ACCOUNT_API.activateWalletRequest(walletId))
+      return (dispatch, getState) => {
+        const state = getState()
+        const account = state.core.account
+        ACCOUNT_API.activateWalletRequest(account, walletId)
+        .then(dispatch(LOGIN.updateWallets(account)))
       }
 
     case 'Archive':
-      return dispatch => {
-        dispatch(ACCOUNT_API.archiveWalletRequest(walletId))
+      return (dispatch, getState) => {
+        const state = getState()
+        const account = state.core.account
+        ACCOUNT_API.archiveWalletRequest(account, walletId)
+        .then(dispatch(LOGIN.updateWallets(account)))
       }
 
     case 'Delete':
@@ -48,6 +55,25 @@ export const executeWalletRowOption = (walletId, option) => {
       return dispatch => {
         dispatch(addToken(walletId))
       }
+  }
+}
+
+export const renameWallet = (walletId, walletName) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const account = state.core.account
+    const wallet = state.core.wallets.byId[walletId]
+    WALLET_API.renameWalletRequest(wallet, walletName)
+    .then(dispatch(LOGIN.updateWallets(account)))
+  }
+}
+
+export const deleteWallet = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const account = state.core.account
+    ACCOUNT_API.deleteWalletRequest(account, walletId)
+    .then(dispatch(LOGIN.updateWallets(account)))
   }
 }
 
@@ -96,54 +122,34 @@ export const updateRenameWalletInput = renameWalletInput => {
   }
 }
 
-export const renameWallet = (walletId, walletName) => {
-  return (dispatch, getState) => {
-    dispatch(WALLET_API.renameWalletRequest(walletId, walletName))
-  }
-}
-
-export const deleteWallet = walletId => {
-  return dispatch => {
-    dispatch(ACCOUNT_API.deleteWalletRequest(walletId))
-  }
-}
-
-export function updateWalletOrder (walletOrder) {
-  return {
-    type: UPDATE_WALLET_ORDER,
-    data: walletOrder
-  }
-}
-
-export function updateWalletListOrder (order, list, listArray) {
-  const walletOrder = order
-  const walletList = list
-  const walletOrderWithIds = []
-  const newWalletList = {}
-  var iterator = 0
-
-  for (let prop of order) {
-    newWalletList[listArray[prop].id] = listArray[prop] // .push(list[parseInt(prop)].id)
-    newWalletList[listArray[prop].id].order = prop
-    // newWalletList[prop].order = iterator
-    iterator++
-  }
-  let data = newWalletList
-  return {
-    type: UPDATE_WALLET_LIST_ORDER,
-    data
-  }
-}
-
-export function updateArchiveListOrder (data) {
-  return {
-    type: UPDATE_ARCHIVE_LIST_ORDER,
-    data
-  }
-}
-
 export function toggleArchiveVisibility () {
   return {
     type: TOGGLE_WALLETS_ARCHIVE_VISIBILITY
+  }
+}
+
+export const updateActiveWalletsOrder = activeWalletIds => {
+  console.log('updating active wallet ids')
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+
+    ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
+    .then(response => {
+      console.log('finished updated activeWalletIds', response)
+    })
+  }
+}
+
+export const updateArchivedWalletsOrder = archivedWalletIds => {
+  console.log('updating archived wallet ids')
+  return (dispatch, getState) => {
+    const state = getState()
+    const { account } = state.core
+
+    ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds)
+    .then(response => {
+      console.log('finished updated archivedWalletIds', response)
+    })
   }
 }

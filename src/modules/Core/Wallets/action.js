@@ -59,6 +59,7 @@ export const archiveWalletRequest = keyInfo => {
       case 'new':
       // If wallet is new, activate it to populate Redux UI,
       // then let the callback archive it
+        console.log('keyInfo', keyInfo)
         return activateWallet(dispatch, getState, state, keyInfo, walletId)
     }
   }
@@ -108,6 +109,7 @@ const getWalletStatus = (state, walletId) => {
 }
 
 const activateWallet = (dispatch, getState, state, keyInfo, walletId) => {
+  console.log('keyInfo', keyInfo)
   // Set the wallet's pending status to true to prevent additional updates
   // during the activation period
   dispatch(walletUpdateStart(walletId))
@@ -128,7 +130,8 @@ const activateWallet = (dispatch, getState, state, keyInfo, walletId) => {
     WALLET_API.activateWalletRequest(wallet)
     .then(() => {
       // Update Redux Core first when activating a wallet.
-      dispatch(addWallet(wallet))
+      console.log('keyInfo', keyInfo)
+      dispatch(addWallet(wallet, keyInfo))
 
       // Update Redux UI only after Redux Core has been updated.
       dispatch(UI_ACTIONS.activateWalletId(walletId))
@@ -205,10 +208,10 @@ const deleteArchivedWallet = (dispatch, walletId) => {
   dispatch(UI_ACTIONS.deleteWalletId(walletId))
 }
 
-const addWallet = wallet => {
+const addWallet = (wallet, keyInfo) => {
   return {
     type: ADD_WALLET,
-    data: { wallet }
+    data: { wallet, keyInfo }
   }
 }
 

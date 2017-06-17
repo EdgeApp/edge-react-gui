@@ -7,7 +7,7 @@ export const byId = (state = {}, action) => {
     case ACTION.ADD_WALLET:
       return {
         ...state,
-        [data.wallet.id]: schema(data.wallet)
+        [data.wallet.id]: schema(data.wallet, data.keyInfo)
       }
 
     case ACTION.DELETE_WALLET:
@@ -69,10 +69,14 @@ export const selectedWalletId = (state = '', action) => {
   }
 }
 
-const schema = wallet => {
+const schema = (wallet, keyInfo) => {
   const id = wallet.id
   const type = wallet.type
   const name = wallet.name
+  const sortIndex = keyInfo.sortIndex
+  const archived = keyInfo.archived
+  const deleted = keyInfo.deleted
+
   let balance = 0
   try {
     balance = wallet.getBalance()
@@ -95,7 +99,10 @@ const schema = wallet => {
     currencyCode,
     denominations,
     symbolImage,
-    metaTokens
+    metaTokens,
+    sortIndex,
+    archived,
+    deleted
   }
 
   return newWallet
@@ -114,7 +121,7 @@ const getNewArrayWithItem = (list, item) => {
   return list
 }
 
-export default wallets = combineReducers({
+export const wallets = combineReducers({
   byId,
   activeWalletIds,
   archivedWalletIds,
