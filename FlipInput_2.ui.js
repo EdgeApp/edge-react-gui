@@ -146,6 +146,7 @@ class FlipInputInside extends Component {
 
     const displaySecondaryFees = (secondaryFee) => {
       if (!displayFees) { secondaryFee = '' }
+
       return (
         <View style={styles.secondaryFee}>
           <Text style={styles.primaryFeeText}>{secondaryFee}</Text>
@@ -154,33 +155,40 @@ class FlipInputInside extends Component {
     }
 
     const getInputAndFeesElement = () => {
-      return (
-        <View style={{flex: 1, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.6)'}} name='InputAndFeesElement'>
+      const inputAndFeesElement =
+        <View style={{flex: 10}} name='InputAndFeesElement'>
+          <View style={styles.primaryRow} name='PrimaryRow'>
             <TextInput
               style={[styles.primaryTextInput, styles[mode]]}
               value={getPrimaryAmount()}
               placeholder={primaryPlaceholder}
               keyboardType='numeric'
-              onChangeText={onInputChange}
-              placeholderTextColor='#FFF'
-            />
-            {/* {displayPrimaryFees(primaryFee)} */}
+              onChangeText={onInputChange} />
+            {displayPrimaryFees(primaryFee)}
+          </View>
+
+          <View style={styles.secondaryRow} name='SecondaryRow'>
+            <Text style={[styles.secondaryText, styles[mode]]}>
+              {getSecondaryAmount() || secondaryPlaceholder}
+            </Text>
+            {displaySecondaryFees(secondaryFee)}
+          </View>
+
         </View>
-      )
+
+        return inputAndFeesElement
     }
 
     return (
       <View style={styles.view}>
+        <View style={styles.leftSpacer} />
         <View style={styles.row}>
-          <FAIcon style={styles.icon} onPress={onInputCurrencyToggle} name='swap-vert' size={36} />
+          <View style={styles.iconContainer}>
+            <View style={styles.verticalSpacer} />
+            <FAIcon style={styles.icon} onPress={onInputCurrencyToggle} name='swap-vert' size={36} />
+            <View style={styles.verticalSpacer} />
+          </View>
           {getInputAndFeesElement()}
-          <Text style={styles.icon}>BTC</Text>
-        </View>
-        <View style={styles.secondaryRow} name='SecondaryRow'>
-          <Text style={[styles.secondaryText, styles[mode]]}>
-            {getSecondaryAmount() || secondaryPlaceholder}
-          </Text>
-          {displaySecondaryFees(secondaryFee)}
         </View>
       </View>
     )

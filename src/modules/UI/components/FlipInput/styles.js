@@ -3,8 +3,13 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    alignSelf: 'stretch',
-    flexDirection: 'row'
+    alignSelf: 'stretch'
+  },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end'
   },
   over: {
     color: 'red'
@@ -16,10 +21,10 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   primaryTextInput: {
-    flex: 3,
+    flex: 1,
+    fontSize: 42,
     textAlign: 'center',
-    fontSize: 30,
-    color: 'white'
+    color: '#FFF'
   },
   secondaryText: {
     flex: 3,
@@ -31,7 +36,7 @@ const styles = StyleSheet.create({
     paddingTop: 15
   },
   primaryRow: {
-    flex: 2,
+    flex: 1,
     flexDirection: 'row'
   },
   secondaryRow: {
@@ -41,15 +46,15 @@ const styles = StyleSheet.create({
   leftSpacer: {
     flex: 0.5
   },
-  iconContainer: {
-    flex: 2,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
   icon: {
-    color: 'white'
+    backgroundColor: 'transparent',
+    color: 'rgba(255,255,255,0.6)',
+    paddingHorizontal: 20
+  },
+  currency: {
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    paddingHorizontal: 20
   },
   verticalSpacer: {
     flex: 1
@@ -73,10 +78,6 @@ const styles = StyleSheet.create({
   secondaryFeeText: {
     color: 'white'
   },
-  row: {
-    flex: 5,
-    flexDirection: 'row'
-  }
 })
 
 export default styles

@@ -54,41 +54,38 @@ class Request extends Component {
       <LinearGradient
         style={styles.view}
         start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}>
+        colors={['#3b7adb', '#2b569a']}
+      >
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate
-            fiatPerCrypto={this.props.fiatPerCrypto} />
+          <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} />
         </View>
 
-        <View style={styles.flipInputContainer}>
+        <View style={styles.main}>
           <FlipInput
             onCryptoInputChange={this.onCryptoInputChange}
             onFiatInputChange={this.onFiatInputChange}
             amountRequestedInCrypto={amountSatoshi}
             amountRequestedInFiat={amountFiat}
-            inputCurrencySelected={this.state.inputCurrencySelected} />
-        </View>
-
-        <View style={styles.abQRCodeContainer}>
+            inputCurrencySelected={this.state.inputCurrencySelected}
+          />
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
-        </View>
-
-        <View style={styles.requestStatusContainer}>
           <RequestStatus
             requestAddress={publicAddress}
             amountRequestedInCrypto={amountSatoshi}
-            amountReceivedInCrypto={amountFiat} />
+            amountReceivedInCrypto={amountFiat}
+          />
         </View>
 
-        <View style={styles.shareButtonsContainer}>
-          <ShareButtons
-            styles={styles.shareButtons}
-            shareViaEmail={this.shareViaEmail}
-            shareViaSMS={this.shareViaSMS}
-            shareViaShare={this.shareViaShare}
-            copyToClipboard={() => this.copyToClipboard(publicAddress, amountSatoshi)} />
-        </View>
+        {/* <View style={styles.shareButtonsContainer}> */}
+        {/*   <ShareButtons */}
+        {/*     styles={styles.shareButtons} */}
+        {/*     shareViaEmail={this.shareViaEmail} */}
+        {/*     shareViaSMS={this.shareViaSMS} */}
+        {/*     shareViaShare={this.shareViaShare} */}
+        {/*     copyToClipboard={() => this.copyToClipboard(publicAddress, amountSatoshi)} */}
+        {/*   /> */}
+        {/* </View> */}
 
       </LinearGradient>
     )
@@ -208,3 +205,13 @@ export default connect(state => ({
   wallets: state.ui.wallets
 
 }))(Request)
+
+class FlipInputs extends Component {
+
+  render () {
+    return {
+
+    }
+  }
+
+}
