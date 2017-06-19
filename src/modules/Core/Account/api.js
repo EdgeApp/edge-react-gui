@@ -5,7 +5,7 @@ export const createWalletRequest = (account, keys, walletType) => {
   return account.createWallet(formattedWalletType, keys)
 }
 
-export const activateWalletRquest = (account, walletId) => {
+export const activateWalletRequest = (account, walletId) => {
   return account.changeKeyStates({
     [walletId]: { archived: false }
   })
@@ -17,7 +17,7 @@ export const archiveWalletRequest = (account, walletId) => {
   })
 }
 
-export const deleteWalletRquest = (account, walletId) => {
+export const deleteWalletRequest = (account, walletId) => {
   return account.changeKeyStates({
     [walletId]: { deleted: true }
   })
@@ -45,7 +45,7 @@ export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) =>
     })
   })
   return Promise.all(promises)
-  
+
   // archivedWalletIds.forEach((id, index) => {
   //   account.changeKeyStates({
   //     [id]: { sortIndex: index }

@@ -5,8 +5,7 @@ export const renameWalletRequest = (wallet, name) => {
 }
 
 export const activateWalletRequest = wallet => {
-  // return wallet.startEngine()
-  return Promise.resolve()
+  return wallet.startEngine()
 }
 
 export const archiveWalletRequest = wallet => {

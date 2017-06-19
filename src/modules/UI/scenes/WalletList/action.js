@@ -135,7 +135,6 @@ export function toggleArchiveVisibility () {
 }
 
 export const updateActiveWalletsOrder = activeWalletIds => {
-  console.log('updating active wallet ids', activeWalletIds)
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
