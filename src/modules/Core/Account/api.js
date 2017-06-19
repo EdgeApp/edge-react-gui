@@ -30,6 +30,12 @@ export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
     })
   })
   return Promise.all(promises)
+
+  // activeWalletIds.forEach((id, index) => {
+  //   account.changeKeyStates({
+  //     [id]: { sortIndex: index }
+  //   })
+  // })
 }
 
 export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) => {
@@ -39,6 +45,12 @@ export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) =>
     })
   })
   return Promise.all(promises)
+  
+  // archivedWalletIds.forEach((id, index) => {
+  //   account.changeKeyStates({
+  //     [id]: { sortIndex: index }
+  //   })
+  // })
 }
 
 export const enablePinLoginRequest = () => {

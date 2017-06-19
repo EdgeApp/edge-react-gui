@@ -16,6 +16,12 @@ export const OPEN_RENAME_WALLET_MODAL = 'OPEN_RENAME_WALLET_MODAL'
 export const CLOSE_RENAME_WALLET_MODAL = 'CLOSE_RENAME_WALLET_MODAL'
 export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 
+export const UPDATE_ACTIVE_WALLETS_ORDER_START = 'UPDATE_ACTIVE_WALLETS_ORDER_START'
+export const UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS = 'UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS'
+
+export const UPDATE_ARCHIVED_WALLETS_ORDER_START = 'UPDATE_ARCHIVED_WALLETS_ORDER_START'
+export const UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS = 'UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS'
+
 export const ADD_TOKEN = 'ADD_TOKEN'
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
@@ -129,27 +135,62 @@ export function toggleArchiveVisibility () {
 }
 
 export const updateActiveWalletsOrder = activeWalletIds => {
-  console.log('updating active wallet ids')
+  console.log('updating active wallet ids', activeWalletIds)
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
+    dispatch(updateActiveWalletsOrderStart(activeWalletIds))
+
     ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
     .then(response => {
-      console.log('finished updated activeWalletIds', response)
+      dispatch(dispatch(updateActiveWalletsOrderSuccess(activeWalletIds)))
+      dispatch(LOGIN.updateWallets(account))
     })
+    .catch(e => console.log(e))
   }
 }
 
 export const updateArchivedWalletsOrder = archivedWalletIds => {
-  console.log('updating archived wallet ids')
   return (dispatch, getState) => {
     const state = getState()
     const { account } = state.core
 
+    dispatch(updateArchivedWalletsOrderStart(archivedWalletIds))
+
     ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds)
     .then(response => {
-      console.log('finished updated archivedWalletIds', response)
+      dispatch(updateArchivedWalletsOrderSuccess(response))
+      dispatch(LOGIN.updateWallets(account))
     })
+    .catch(e => console.log(e))
+  }
+}
+
+const updateActiveWalletsOrderStart = activeWalletIds => {
+  return {
+    type: UPDATE_ACTIVE_WALLETS_ORDER_START,
+    data: { activeWalletIds }
+  }
+}
+
+const updateActiveWalletsOrderSuccess = activeWalletIds => {
+  return {
+    type: UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS,
+    data: { activeWalletIds }
+  }
+}
+
+const updateArchivedWalletsOrderStart = archivedWalletIds => {
+  return {
+    type: UPDATE_ARCHIVED_WALLETS_ORDER_START,
+    data: { archivedWalletIds }
+  }
+}
+
+const updateArchivedWalletsOrderSuccess = archivedWalletIds => {
+  return {
+    type: UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS,
+    data: { archivedWalletIds }
   }
 }

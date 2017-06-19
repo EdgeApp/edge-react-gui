@@ -1,4 +1,4 @@
-import { updateWallets } from '../Wallets/action.js'
+import { updateWallets } from '../../Login/action.js'
 
 export const makeAccountCallbacks = dispatch => {
   const callbacks = {

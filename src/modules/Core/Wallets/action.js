@@ -11,6 +11,7 @@ import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeWalletCallbacks } from '../../Core/Wallets/callbacks.js'
 
 export const activateWalletRequest = keyInfo => {
+  console.log('keyInfo', keyInfo)
   return (dispatch, getState) => {
     const walletId = keyInfo.id
     const state = getState()
@@ -31,6 +32,7 @@ export const activateWalletRequest = keyInfo => {
       case 'new':
       // New Wallets and previously archived wallets are treated the same.
       // Start the wallet, add to Redux core, and add to Redux UI
+        console.log('keyInfo', keyInfo)
         return activateWallet(dispatch, getState, state, keyInfo, walletId)
     }
   }
@@ -59,7 +61,6 @@ export const archiveWalletRequest = keyInfo => {
       case 'new':
       // If wallet is new, activate it to populate Redux UI,
       // then let the callback archive it
-        console.log('keyInfo', keyInfo)
         return activateWallet(dispatch, getState, state, keyInfo, walletId)
     }
   }

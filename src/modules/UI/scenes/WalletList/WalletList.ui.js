@@ -40,6 +40,7 @@ class WalletList extends Component {
   }
 
   render () {
+    console.log('WalletList', this.props.wallets)
     const { wallets, activeWalletIds, archivedWalletIds } = this.props
     return (
       <View style={styles.container}>
@@ -78,7 +79,6 @@ class WalletList extends Component {
           {
             this.renderActiveSortableList(
               wallets,
-              activeWalletIds,
               'Archive',
               this.renderActiveRow,
               this.onActiveRowMoved
@@ -88,7 +88,7 @@ class WalletList extends Component {
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.archiveBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' />
+                {/* <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' /> */}
                 <FormattedText style={styles.archiveBoxHeaderText}>
                   Archive
                 </FormattedText>
@@ -102,7 +102,6 @@ class WalletList extends Component {
           {
             this.renderArchivedSortableList(
               wallets,
-              archivedWalletIds,
               'Restore',
               this.renderArchivedRow,
               this.onArchivedRowMoved
@@ -113,7 +112,11 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveSortableList = (data, order, label, renderRow, onRowMoved) => {
+  renderActiveSortableList = (data, label, renderRow, onRowMoved) => {
+    const order = Object.keys(data)
+      .filter((a) => !data[a].archived)
+      .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
+
     if (order) {
       console.log('order', order)
       return (
@@ -129,7 +132,11 @@ class WalletList extends Component {
     }
   }
 
-  renderArchivedSortableList = (data, order, label, renderRow, onRowMoved) => {
+  renderArchivedSortableList = (data, label, renderRow, onRowMoved) => {
+    const order = Object.keys(data)
+      .filter((a) => data[a].archived)
+      .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
+
     if (order) {
       console.log('order', order)
       return (
@@ -174,6 +181,8 @@ class WalletList extends Component {
     const newOrder = [].concat(order)
     newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
 
+    console.log('order', order)
+    console.log('newOrder', newOrder)
     return newOrder
   }
 

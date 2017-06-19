@@ -15,7 +15,9 @@ export const updateWallets = account => {
     const state = getState()
     const supportedTypes = [
       'wallet:shitcoin',
-      'wallet:bitcoin'
+      'wallet:bitcoin',
+      'wallet:ethereum',
+      'account-repo:co.airbitz.wallet'
     ]
     let allKeys = account.allKeys
     const keyInfos = allKeys.filter(keyInfo => {
@@ -33,6 +35,7 @@ export const updateWallets = account => {
     const deletedWalletIds = getDeletedWalletIds(walletIds, filteredSortedKeyInfos)
 
     activatedKeyInfos.forEach(keyInfo => {
+      console.log('activatedKeyInfos', activatedKeyInfos)
       dispatch(WALLET_ACTIONS.activateWalletRequest(keyInfo))
     })
 
