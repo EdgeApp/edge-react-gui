@@ -2,6 +2,16 @@ import React from 'react'
 import { View, StyleSheet, TouchableHighlight, Text } from 'react-native'
 import { Icon } from 'native-base'
 
+const ShareButton = ({displayName, iconName, onPress, style}) => {
+  return (
+    <TouchableHighlight onPress={onPress} style={[ styles.shareButton, style ]}>
+      <View style={styles.view}>
+        <Text style={styles.text}>{displayName}</Text>
+      </View>
+    </TouchableHighlight>
+  )
+}
+
 const styles = StyleSheet.flatten({
   shareButton: {
     flex:1,
@@ -23,15 +33,5 @@ const styles = StyleSheet.flatten({
     color: 'rgba(255,255,255,.7)'
   }
 })
-
-const ShareButton = ({displayName, iconName, onPress, style}) => {
-  return (
-    <TouchableHighlight onPress={onPress} style={[ styles.shareButton, style ]}>
-       <View style={styles.view}>
-         <Text style={styles.text}>{displayName}</Text>
-       </View>
-   </TouchableHighlight>
-  )
-}
 
 export default ShareButton

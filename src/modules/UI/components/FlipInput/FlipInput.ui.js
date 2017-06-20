@@ -89,7 +89,6 @@ export default connect(state => ({
 })
 )(FlipInput)
 
-
 class FlipInputInside extends Component {
 
   render () {
@@ -180,10 +179,10 @@ class FlipInputInside extends Component {
         <View style={styles.row}>
           <FAIcon style={styles.icon} onPress={onInputCurrencyToggle} name='swap-vert' size={36} />
           {getInputAndFeesElement()}
-          <Text style={styles.icon}>BTC</Text>
+          <Text style={styles.currency}>BTC</Text>
         </View>
         <View style={styles.secondaryRow} name='SecondaryRow'>
-          <Text style={[styles.secondaryText, styles[mode]]}>
+          <Text style={styles.secondaryText}>
             {getSecondaryAmount() || secondaryPlaceholder}
           </Text>
           {displaySecondaryFees(secondaryFee)}

@@ -9,7 +9,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    marginBottom: 13
   },
   primaryTextInput: {
     flex: 1,
@@ -25,6 +26,8 @@ const styles = StyleSheet.create({
   currency: {
     backgroundColor: 'transparent',
     color: '#FFF',
+    paddingBottom: 8,
+    fontSize: 16,
     paddingHorizontal: 20
   },
   over: {
@@ -36,20 +39,18 @@ const styles = StyleSheet.create({
   under: {
     color: 'white'
   },
-  secondaryText: {
-    flex: 3,
-    textAlign: 'center',
+  secondaryRow: {
+    flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
-    padding: 0,
-    color: 'white',
+  },
+  secondaryText: {
+    fontSize: 20,
+    color: "#FFF",
+    textAlign: 'center',
     backgroundColor: 'transparent',
-    paddingTop: 15
   },
   primaryRow: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  secondaryRow: {
     flex: 1,
     flexDirection: 'row'
   },
@@ -68,7 +69,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   primaryFeeText: {
-    color: 'white'
+    color: 'white',
+    fontSize: 15
   },
   secondaryFee: {
     flex: 1,
