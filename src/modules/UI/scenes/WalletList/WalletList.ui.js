@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TouchableWithoutFeedback, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import {
+  TouchableWithoutFeedback,
+  Image,
+  ScrollView,
+  ListView,
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  Animated } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -40,18 +50,6 @@ class WalletList extends Component {
   }
 
   render () {
-    console.log('WalletList', this.props.wallets)
-    const data = this.props.wallets
-    const activeWallets = Object.keys(this.props.wallets)
-      .filter((a) => !data[a].archived)
-      .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
-
-    const archivedWallets = Object.keys(this.props.wallets)
-    .filter((a) => data[a].archived)
-    .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
-
-    console.log('Active Wallets', activeWallets)
-    console.log('Archived Wallets', archivedWallets)
     const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
     return (
       <View style={styles.container}>
@@ -72,6 +70,7 @@ class WalletList extends Component {
             </View>
           </View>
         </View>
+
         <View style={styles.walletsBox}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.walletsBoxHeaderTextWrap, border('yellow')]}>
@@ -82,6 +81,7 @@ class WalletList extends Component {
                 </FormattedText>
               </View>
             </View>
+
             <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, border('red')]}>
               <Ionicon name='md-add'style={[styles.dropdownIcon, border('green')]} color='white' />
             </TouchableWithoutFeedback>
@@ -99,12 +99,13 @@ class WalletList extends Component {
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.archiveBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                {/* <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' /> */}
+                <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' />
                 <FormattedText style={styles.archiveBoxHeaderText}>
                   Archive
                 </FormattedText>
               </View>
             </View>
+
             <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, border('red')]}>
               <FAIcon name='angle-down' style={[styles.dropdownIcon, border('green')]} color='white' />
             </TouchableWithoutFeedback>
@@ -124,6 +125,7 @@ class WalletList extends Component {
   }
 
   renderActiveSortableList = (data, label, renderRow, onRowMoved) => {
+    return
     const order = Object.keys(data)
       .filter((a) => !data[a].archived)
       .sort((a, b) => data[a].sortIndex - data[b].sortIndex)

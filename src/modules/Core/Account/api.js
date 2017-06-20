@@ -24,33 +24,26 @@ export const deleteWalletRequest = (account, walletId) => {
 }
 
 export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
-  const promises = activeWalletIds.map((id, index) => {
-    return account.changeKeyStates({
-      [id]: { sortIndex: index }
-    })
-  })
-  return Promise.all(promises)
-
-  // activeWalletIds.forEach((id, index) => {
-  //   account.changeKeyStates({
-  //     [id]: { sortIndex: index }
-  //   })
-  // })
+  // const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
+  //   keyStates[id] = { sortIndex: index }
+  //   return keyStates
+  // }, {})
+  //
+  // return account.changeKeyStates(newKeyStates)
 }
 
 export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) => {
-  const promises = archivedWalletIds.map((id, index) => {
-    return account.changeKeyStates({
-      [id]: { sortIndex: index }
-    })
-  })
-  return Promise.all(promises)
+  // const newKeyStates = archivedWalletIds.reduce((newKeyStates, id, index) => {
+  //   newKeyStates[id] = index
+  //   return newKeyStates
+  // }, {})
+  //
+  // return account.changeKeyStates(newKeyStates)
 
-  // archivedWalletIds.forEach((id, index) => {
-  //   account.changeKeyStates({
-  //     [id]: { sortIndex: index }
-  //   })
-  // })
+  return account.changeKeyStates({
+    [archivedWalletIds[0]]: { sortIndex: parseInt(Math.random() * 10) },
+    [archivedWalletIds[1]]: { sortIndex: parseInt(Math.random() * 10) }
+  })
 }
 
 export const enablePinLoginRequest = () => {

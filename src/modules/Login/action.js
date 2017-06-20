@@ -1,6 +1,8 @@
 import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as WALLET_ACTIONS from '../Core/Wallets/action.js'
 
+import { compare } from '../utils.js'
+
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
@@ -52,6 +54,9 @@ export const updateWallets = account => {
 
 const getActivatedKeyInfos = keyInfos => {
   const activatedKeyInfos = keyInfos.filter(keyInfo => {
+    // return if compare(old, new) returns true and active
+    const hasChanged = compare(keyInfo, currentKeyInfo)
+
     return !keyInfo.archived
   })
   return activatedKeyInfos
@@ -59,6 +64,7 @@ const getActivatedKeyInfos = keyInfos => {
 
 const getArchivedKeyInfos = keyInfos => {
   const archivedKeyInfos = keyInfos.filter(keyInfo => {
+    // return if compare(old, new) returns true and archived
     return keyInfo.archived
   })
   return archivedKeyInfos

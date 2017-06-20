@@ -24,6 +24,8 @@ export const activateWalletRequest = keyInfo => {
         return
 
       case 'active':
+      // assume sortIndex has changed
+
       // If wallet is already active,
       // then do nothing.
         return
@@ -57,6 +59,8 @@ export const archiveWalletRequest = keyInfo => {
       case 'archived':
       // If the wallet is already archived,
       // then do nothing.
+
+      // assume sortIndex has changed
         console.log('wallet: ' + walletId + ' is already archived')
         return
 
@@ -93,6 +97,7 @@ export const deleteWalletRequest = walletId => {
   }
 }
 
+// Update to hasChanged () => { const hasChanged = ...; return hasChanged }
 const getWalletStatus = (state, walletId) => {
   const walletIsActive = (
     state.ui.wallets.activeWalletIds.includes(walletId) &&
@@ -112,7 +117,7 @@ const getWalletStatus = (state, walletId) => {
 }
 
 const activateWallet = (dispatch, getState, state, keyInfo, walletId) => {
-  console.log('keyInfo', keyInfo)
+  // console.log('keyInfo', keyInfo)
   // Set the wallet's pending status to true to prevent additional updates
   // during the activation period
   dispatch(walletUpdateStart(walletId))
@@ -133,7 +138,7 @@ const activateWallet = (dispatch, getState, state, keyInfo, walletId) => {
     WALLET_API.activateWalletRequest(wallet)
     .then(() => {
       // Update Redux Core first when activating a wallet.
-      console.log('keyInfo', keyInfo)
+      // console.log('keyInfo', keyInfo)
       dispatch(addWallet(wallet, keyInfo))
 
       // Update Redux UI only after Redux Core has been updated.
