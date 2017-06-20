@@ -11,6 +11,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
+  primaryTextInput: {
+    flex: 1,
+    fontSize: 42,
+    textAlign: 'center',
+    color: '#FFF'
+  },
+  icon: {
+    backgroundColor: 'transparent',
+    color: 'rgba(255,255,255,0.6)',
+    paddingHorizontal: 20
+  },
+  currency: {
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    paddingHorizontal: 20
+  },
   over: {
     color: 'red'
   },
@@ -19,12 +35,6 @@ const styles = StyleSheet.create({
   },
   under: {
     color: 'white'
-  },
-  primaryTextInput: {
-    flex: 1,
-    fontSize: 42,
-    textAlign: 'center',
-    color: '#FFF'
   },
   secondaryText: {
     flex: 3,
@@ -45,16 +55,6 @@ const styles = StyleSheet.create({
   },
   leftSpacer: {
     flex: 0.5
-  },
-  icon: {
-    backgroundColor: 'transparent',
-    color: 'rgba(255,255,255,0.6)',
-    paddingHorizontal: 20
-  },
-  currency: {
-    backgroundColor: 'transparent',
-    color: '#FFF',
-    paddingHorizontal: 20
   },
   verticalSpacer: {
     flex: 1

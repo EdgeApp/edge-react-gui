@@ -11,12 +11,14 @@ const ShareButtons = (
 
   const styles = StyleSheet.create({
     view: {
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
       flexDirection: 'row',
+      backgroundColor: '#294F85'
     },
-    shareButton: {
+    border: {
+      borderRightWidth: 0.5,
+      borderRightColor: "#FFF"
     }
   })
 
@@ -24,23 +26,18 @@ const ShareButtons = (
     <View
       style={styles.view}>
       <ShareButton
-        style={styles.shareButton}
-        iconName='md-copy'
+        style={styles.border}
         displayName='Copy'
         onPress={copyToClipboard} />
       <ShareButton
-        style={styles.shareButton}
-        iconName='md-mail'
+        style={styles.border}
         displayName='Email'
         onPress={shareViaEmail} />
       <ShareButton
-        style={styles.shareButton}
-        iconName='md-chatbubbles'
+        style={styles.border}
         displayName='SMS'
         onPress={shareViaSMS} />
       <ShareButton
-        style={styles.shareButton}
-        iconName='share'
         displayName='Share'
         onPress={shareViaShare} />
     </View>

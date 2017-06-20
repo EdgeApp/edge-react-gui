@@ -3,7 +3,6 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    padding: 5,
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'stretch'
@@ -32,11 +31,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   shareButtonsContainer: {
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center'
   },
   shareButtons: {
-    flex: 1
   }
 })
 

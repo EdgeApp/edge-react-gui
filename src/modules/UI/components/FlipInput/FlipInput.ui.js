@@ -135,22 +135,28 @@ class FlipInputInside extends Component {
     }
 
     const displayPrimaryFees = (primaryFee) => {
-      if (!displayFees) { topFee = '' }
+      if (!displayFees) {
+        return null
+      }else {
+        return (
+          <View style={styles.primaryFee}>
+            <Text style={styles.primaryFeeText}>{primaryFee}</Text>
+          </View>
+        )
+      }
 
-      return (
-        <View style={styles.primaryFee}>
-          <Text style={styles.primaryFeeText}>{primaryFee}</Text>
-        </View>
-      )
     }
 
     const displaySecondaryFees = (secondaryFee) => {
-      if (!displayFees) { secondaryFee = '' }
-      return (
-        <View style={styles.secondaryFee}>
-          <Text style={styles.primaryFeeText}>{secondaryFee}</Text>
-        </View>
-      )
+      if (!displayFees) {
+        return null
+      }else {
+        return (
+          <View style={styles.secondaryFee}>
+            <Text style={styles.primaryFeeText}>{secondaryFee}</Text>
+          </View>
+        )
+      }
     }
 
     const getInputAndFeesElement = () => {
@@ -164,7 +170,7 @@ class FlipInputInside extends Component {
               onChangeText={onInputChange}
               placeholderTextColor='#FFF'
             />
-            {/* {displayPrimaryFees(primaryFee)} */}
+            {displayPrimaryFees(primaryFee)}
         </View>
       )
     }
