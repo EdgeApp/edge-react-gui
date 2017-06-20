@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TouchableOpacity, Text, View, TouchableHighlight, Animated } from 'react-native'
+import { Button, TouchableOpacity, Text, View, TouchableHighlight, Animated } from 'react-native'
 import T from '../FormattedText'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -53,15 +53,21 @@ SecondaryButton.propTypes = {
 class TertiaryButton extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            bgColor: 'white'
+        }
+    }
+
+    _onPress = () => {
+        this.setState({bgColor: 'rgba(73,119,187,0.2)'})
+        this.props.onPressFunction()
     }
 
     render() {
         console.log('tertiaryButon props are: ', this.props)
         return(
-            <TouchableHighlight onPress={this.props.onPressFunction} style={[s.stylizedButton, s.tertiaryButtonWrap]}>
-                <View style={s.stylizedButtonTextWrap}>
-                    <T style={[s.stylizedButtonText, s.tertiaryButton]}>{this.props.text}</T>
-                </View>
+            <TouchableHighlight onPress={this._onPress} underlayColor={'rgba(73,119,187,0.1)'} style={[s.stylizedButton, s.tertiaryButtonWrap,{backgroundColor: 'white'}]} >
+                <Text style={s.tertiaryButton} >{this.props.text}</Text>
             </TouchableHighlight>
         )
     }

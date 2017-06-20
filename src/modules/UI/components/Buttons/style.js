@@ -46,5 +46,5 @@ import React, {StyleSheet, Platform} from 'react-native'
   },
   tertiaryButton: {
     color: '#4977BB'
-  }    
+  }     
 })
