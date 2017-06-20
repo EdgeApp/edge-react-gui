@@ -10,11 +10,24 @@ export const byId = (state = {}, action) => {
         [data.wallet.id]: schema(data.wallet, data.keyInfo)
       }
 
-    case ACTION.DELETE_WALLET:
+    case ACTION.ARCHIVE_WALLET_ID: {
+      const { walletId } = data
+      const wallet = state[walletId]
+      return {
+        ...state,
+        [walletId]: {
+          ...wallet,
+          archived: true
+        }
+      }
+    }
+
+    case ACTION.DELETE_WALLET: {
       const { walletId } = data
       const newState = Object.assign({}, state)
       delete newState[walletId]
       return newState
+    }
 
     default:
       return state

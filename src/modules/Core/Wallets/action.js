@@ -51,11 +51,13 @@ export const archiveWalletRequest = keyInfo => {
         return
 
       case 'active':
+        console.log('archiving wallet: ' + walletId)
         return archiveWallet(dispatch, state, walletId)
 
       case 'archived':
       // If the wallet is already archived,
       // then do nothing.
+        console.log('wallet: ' + walletId + ' is already archived')
         return
 
       case 'new':

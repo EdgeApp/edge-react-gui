@@ -41,7 +41,18 @@ class WalletList extends Component {
 
   render () {
     console.log('WalletList', this.props.wallets)
-    const { wallets, activeWalletIds, archivedWalletIds } = this.props
+    const data = this.props.wallets
+    const activeWallets = Object.keys(this.props.wallets)
+      .filter((a) => !data[a].archived)
+      .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
+
+    const archivedWallets = Object.keys(this.props.wallets)
+    .filter((a) => data[a].archived)
+    .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
+
+    console.log('Active Wallets', activeWallets)
+    console.log('Archived Wallets', archivedWallets)
+    const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
     return (
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
@@ -118,7 +129,7 @@ class WalletList extends Component {
       .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
 
     if (order) {
-      console.log('order', order)
+      console.log('active order', order)
       return (
         <SortableListView
           style={styles.sortableWalletList}
@@ -138,7 +149,7 @@ class WalletList extends Component {
       .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
 
     if (order) {
-      console.log('order', order)
+      console.log('archive order', order)
       return (
         <SortableListView
           style={styles.sortableWalletList}
@@ -222,6 +233,7 @@ class WalletList extends Component {
 WalletList.propTypes = {}
 
 const mapStateToProps = state => ({
+  coreWallets:              state.core.wallets.byId,
   wallets:                  state.ui.wallets.byId,
   activeWalletIds:          state.ui.wallets.activeWalletIds,
   archivedWalletIds:        state.ui.wallets.archivedWalletIds,
