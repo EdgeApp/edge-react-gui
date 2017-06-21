@@ -1,6 +1,6 @@
 import { renameWalletSuccess } from '../../UI/Wallets/action.js'
 
-export const makeWalletCallbacks = (dispatch, getState, walletId) => {
+export const makeWalletCallbacks = (dispatch, walletId) => {
   const callbacks = {
     onAddressesChecked (progressRatio) {
       if (progressRatio === 1) {
