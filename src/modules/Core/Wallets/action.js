@@ -133,6 +133,9 @@ const activateWallet = (dispatch, getState, state, keyInfo, walletId) => {
       // Update Redux UI only after Redux Core has been updated.
       dispatch(UI_ACTIONS.activateWalletId(walletId))
 
+      // Select default wallet. This selects the first wallet passed in
+      // when the application loads. This depends on the keys being passed
+      // into the cycle in the sortIndex order.
       dispatch(UI_ACTIONS.selectWalletIdRequest(walletId))
 
       // Set the wallet's pending status to false to allow future updates
