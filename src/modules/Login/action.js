@@ -31,12 +31,12 @@ export const updateWallets = () => {
 
     filteredSortedKeyInfos.forEach(keyInfo => {
       const wallet = state.ui.wallets.byId[keyInfo.id]
-      processKeyInfo(keyInfo, wallet, dispatch, state, io, account)
+      processKeyInfo(keyInfo, wallet, dispatch, getState, io, account)
     })
   }
 }
 
-const processKeyInfo = (keyInfo, wallet, dispatch, state, io, account) => {
+const processKeyInfo = (keyInfo, wallet, dispatch, getState, io, account) => {
   const walletStatus = getWalletStatus(keyInfo, wallet)
 
   if (walletStatus === 'same') { return }
@@ -54,6 +54,14 @@ const processKeyInfo = (keyInfo, wallet, dispatch, state, io, account) => {
       // Destructure the wallet and add it to Redux UI
       dispatch(UI_ACTIONS.activateWalletRequest(wallet))
     })
+
+    // Grab the most recent version of the wallet in the UI
+    const wallet = getState().UI.wallets.byId[keyInfo.id]
+    const walletStatus = getWalletStatus(keyInfo, wallet)
+    // If the Core and UI are still out of sync, repeat the function
+    if (walletStatus !== 'same') {
+      processKeyInfo(keyInfo, wallet, dispatch, getState, io, account)
+    }
   }
 
   if (walletStatus === 'archive') {
