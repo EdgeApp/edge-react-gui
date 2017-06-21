@@ -133,6 +133,8 @@ const activateWallet = (dispatch, getState, state, keyInfo, walletId) => {
       // Update Redux UI only after Redux Core has been updated.
       dispatch(UI_ACTIONS.activateWalletId(walletId))
 
+      dispatch(UI_ACTIONS.selectWalletIdRequest(walletId))
+
       // Set the wallet's pending status to false to allow future updates
       dispatch(walletUpdateComplete(walletId))
 
