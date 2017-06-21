@@ -43,6 +43,17 @@ export const deleteWalletIdRequest = walletId => {
   }
 }
 
+export const selectWalletIdRequest = walletId => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    if (!selectedWalletId) {
+      dispatch(selectWalletId(walletId))
+    }
+  }
+}
+
 export const activateWalletId = walletId => {
   return {
     type: ACTIVATE_WALLET_ID,
