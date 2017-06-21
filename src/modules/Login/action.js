@@ -3,8 +3,6 @@ import * as WALLET_API from '../Core/Wallets/api.js'
 import * as WALLET_ACTIONS from '../Core/Wallets/action.js'
 import * as UI_ACTIONS from '../UI/Wallets/action.js'
 
-import { compare } from '../utils.js'
-
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
@@ -31,25 +29,21 @@ export const updateWallets = () => {
       })
       .sort((a, b) => a.sortIndex - b.sortIndex)
 
-    filteredSortedKeyInfos.forEach(nextKeyInfo => {
-      const prevKeyInfo = state.ui.wallets.keyInfos.byId[nextKeyInfo.id]
-      processKeyInfo(prevKeyInfo, nextKeyInfo, dispatch, state, io, account)
+    filteredSortedKeyInfos.forEach(keyInfo => {
+      const wallet = state.ui.wallets.byId[keyInfo.id]
+      processKeyInfo(keyInfo, wallet, dispatch, state, io, account)
     })
   }
 }
 
-const processKeyInfo = (prevKeyInfo, nextKeyInfo, dispatch, state, io, account) => {
-  const hasChanged = !compare(prevKeyInfo, nextKeyInfo)
-  const isNew = (prevKeyInfo === undefined)
-  const needsActivating = (prevKeyInfo && prevKeyInfo.archived && !nextKeyInfo.archived)
-  const needsArchiving = (prevKeyInfo && !prevKeyInfo.archived && nextKeyInfo.archived)
-  const needsReordering = (prevKeyInfo && prevKeyInfo.archived && !nextKeyInfo.archived)
+const processKeyInfo = (keyInfo, wallet, dispatch, state, io, account) => {
+  const walletStatus = getWalletStatus(keyInfo, wallet)
 
-  if (!hasChanged) { return }
+  if (walletStatus === 'same') { return }
 
-  if (isNew || needsActivating) {
+  if (walletStatus === 'new' || walletStatus === 'activate') {
     // Instantiate a new wallet object
-    WALLET_API.makeCurrencyWalletRequest(nextKeyInfo, dispatch, io, account)
+    WALLET_API.makeCurrencyWalletRequest(keyInfo, dispatch, io, account)
     .then(wallet => {
       // Turn the wallet on
       WALLET_API.activateWalletRequest(wallet)
@@ -58,41 +52,48 @@ const processKeyInfo = (prevKeyInfo, nextKeyInfo, dispatch, state, io, account) 
       // Add the wallet to Redux Core
       dispatch(WALLET_ACTIONS.addWallet(wallet))
       // Destructure the wallet and add it to Redux UI
-      dispatch(UI_ACTIONS.addWallet(wallet))
-      // Update the keyInfo stored in Redux UI to reflect activation
-      dispatch(UI_ACTIONS.activateKeyInfo(prevKeyInfo))
+      dispatch(UI_ACTIONS.activateWalletRequest(wallet))
     })
   }
 
-  if (needsArchiving) {
-    const wallet = state.core.wallets.byId[nextKeyInfo.id]
+  if (walletStatus === 'archive') {
+    const wallet = state.core.wallets.byId[keyInfo.id]
     // Turn the wallet off
     WALLET_API.archiveWalletRequest(wallet)
     .then(() => {
-      // Remove the wallet from Redux Core
-      // Eventually this step will be removed, and archived wallets will remain
-      // in Redux Core.
-      dispatch(WALLET_ACTIONS.removeWallet(wallet))
       // Destructure the wallet and add it to Redux UI
-      dispatch(UI_ACTIONS.addWallet(wallet))
-      // Update the keyInfo stored in Redux UI to reflect archiving
-      dispatch(UI_ACTIONS.archiveKeyInfo(prevKeyInfo))
+      dispatch(UI_ACTIONS.archiveWalletRequest(wallet))
     })
   }
 
-  if (needsReordering) {
-    const wallet = state.core.wallets.byId[nextKeyInfo.id]
+  if (walletStatus === 'reorder') {
+    const wallet = state.core.wallets.byId[keyInfo.id]
     // Destructure the wallet and add it to Redux UI
     dispatch(UI_ACTIONS.addWallet(wallet))
-    // Update the keyInfo stored in Redux UI to reflect reordering
-    dispatch(UI_ACTIONS.reorderKeyInfo(prevKeyInfo))
+  }
+}
+
+const getWalletStatus = (keyInfo, wallet) => {
+  if (
+    keyInfo.archived === wallet.archived &&
+    keyInfo.sortIndex === wallet.sortIndex
+  ) {
+    return 'same'
   }
 
-  const currentAccountKeyInfo = account.allKeys.find(keyInfo => {
-    return keyInfo.id === keyInfo.id
-  })
+  if (!wallet) {
+    return 'new'
+  }
 
-  const currentUIKeyInfo = state.wallets.keyInfos.byId[nextKeyInfo.id]
+  if (!keyInfo.archived && wallet.archived) {
+    return 'activate'
+  }
 
-  processKeyInfo(currentUIKeyInfo, currentAccountKeyInfo, dispatch, state, io, account)
+  if (keyInfo.archived && !wallet.archived) {
+    return 'archive'
+  }
+
+  if (keyInfo.sortIndex === wallet.sortIndex) {
+    return 'reorder'
+  }
 }

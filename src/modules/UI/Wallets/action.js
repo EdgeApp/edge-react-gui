@@ -3,17 +3,16 @@ export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET_ID'
 export const DELETE_WALLET_ID = 'DELETE_WALLET_ID'
 export const SELECT_WALLET_ID = 'SELECT_WALLET_ID'
 
-export const ADD_WALLET = 'ADD_WALLET'
-
-export const activateWalletIdRequest = walletId => {
+export const activateWallet = wallet => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
     // automatically select the first active wallet
     if (!selectedWalletId) {
-      dispatch(selectWalletId(walletId))
+      dispatch(selectWalletId(wallet.id))
     }
-    dispatch(activateWalletId(walletId))
+
+    dispatch(activateWallet(wallet))
   }
 }
 
@@ -57,13 +56,6 @@ export const selectWalletIdRequest = walletId => {
 export const activateWalletId = walletId => {
   return {
     type: ACTIVATE_WALLET_ID,
-    data: { walletId }
-  }
-}
-
-export const archiveWalletId = walletId => {
-  return {
-    type: ARCHIVE_WALLET_ID,
     data: { walletId }
   }
 }
