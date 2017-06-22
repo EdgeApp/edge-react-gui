@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import t from '../../../../lib/LocaleStrings'
+import {sprintf} from 'sprintf-js'
 import { Text, View, TouchableHighlight, TextInput, Clipboard} from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
@@ -44,7 +46,6 @@ class Scan extends Component {
   }
 
   onBarCodeRead = (data) => {
-    console.log('onBarCodeRead', data)
     this.props.updateUri(data)
     Actions.sendConfirmation({ type: 'reset' })
     // React Native Router Flux does not fully unmount scenes when transitioning
@@ -52,11 +53,9 @@ class Scan extends Component {
   }
 
   selectPhotoTapped = () => {
-    console.log('selectPhotoTapped')
     const options = { takePhotoButtonTitle: null }
 
     ImagePicker.showImagePicker(options, (response) => {
-      console.log('Response = ', response)
 
       if (response.didCancel) {
         console.log('User cancelled photo picker')
@@ -89,32 +88,32 @@ class Scan extends Component {
           <WalletAddressModalConnect />
 
           <View style={[styles.overlayTop, border('yellow')]}>
-            <FormattedText style={[styles.overlayTopText, border('green')]}>Scan, to Send, import, or Edge Login</FormattedText>
+            <FormattedText style={[styles.overlayTopText, border('green')]}>{sprintf('%s', t('send_scan_header_text'))}</FormattedText>
           </View>
           <View style={[styles.overlayBlank]} />
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, border('red')]}>
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, border('green')]} />
-                <FormattedText style={[styles.transferButtonText, styles.bottomButtonText]}>Transfer</FormattedText>
+                <FormattedText style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf('%s', t('fragment_send_transfer'))}</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, border('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, border('green')]} />
-                <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, border('purple')]}>Address</FormattedText>
+                <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, border('purple')]}>{sprintf('%s', t('fragment_send_address'))}</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, border('green')]} />
-                <FormattedText style={[styles.bottomButtonText]}>Photos</FormattedText>
+                <FormattedText style={[styles.bottomButtonText]}>{sprintf('%s', t('fragment_send_photos'))}</FormattedText>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, border('green')]} />
-                <FormattedText style={[styles.flashButtonText, styles.bottomButtonText]}>Flash</FormattedText>
+                <FormattedText style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf('%s', t('fragment_send_flash'))}</FormattedText>
               </View>
             </TouchableHighlight>
           </LinearGradient>
@@ -151,10 +150,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 class WalletAddressModal extends Component {
 
   render() {
+
     return(
       <StylizedModal
         featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
-        headerText='Send to Bitcoin Address or Import Private Key:'
+        headerText='fragment_send_address_dialog_title'
         modalMiddle={<AddressInputRecipientConnect />}
         modalBottom={<SendAddressButtonsConnect />}
         visibilityBoolean={this.props.addressModalVisible}
@@ -191,7 +191,6 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   render() {
-    console.log('rendering addressinputrecipient, this is: ', this)
     let innerText = 'Paste "' + this.state.copiedString + '"'
     console.log('innerText is: ', innerText)
     return(

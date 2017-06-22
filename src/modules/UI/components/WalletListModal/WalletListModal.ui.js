@@ -1,4 +1,6 @@
 import React, { Dimensions, Component } from 'react'
+import t from '../../../../lib/LocaleStrings'
+import {sprintf} from 'sprintf-js'
 import { Modal, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
@@ -24,7 +26,6 @@ class WalletListModal extends Component {
     if(!this.props.topDisplacement){
       this.props.topDisplacement = 68
     }
-    console.log('topDisplacement is now: ', this.props.topDisplacement)
   }
 
   render () {
@@ -127,7 +128,7 @@ class WalletListModalHeader extends Component {
         <View style={[styles.headerContent, this.border('yellow')]}>
           <View style={[styles.headerTextWrap, this.border('green')]}>
             <T style={[styles.headerText, {color:'white'}, this.border('purple')]}>
-              Choose a wallet to transfer funds to:
+              {sprintf('%s', t('fragment_send_other_wallet_header_title'))}
             </T>
           </View>
           <TouchableHighlight style={[styles.modalCloseWrap, this.border('orange')]}

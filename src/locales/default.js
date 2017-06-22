@@ -21,12 +21,14 @@ const strings = {
   string_no: 'No',
   string_continue: 'Continue',
   string_change: 'Change',
-  string_cancel: 'CANCEL',
+  string_cancel_uc: 'CANCEL',
+  string_cancel_cap: 'Cancel',
   string_paste: 'Paste',
   string_paste_address: 'Paste {0}',
   string_search: 'Search',
   string_done: 'DONE',
   string_rename: 'Rename',
+  string_no_name: 'No name',
   string_delete: 'Delete',
   string_save: 'Save',
   string_back: 'BACK',
@@ -338,6 +340,7 @@ const strings = {
   send_from_title: 'From:',
   send_to_title: 'To:',
   send_scan_text: 'Scan QR Code or use photo',
+  send_scan_header_text: 'Scan, to Send, import, or Edge Login',
   send_scan_text_nfc: 'Scan QR Code or tap NFC device',
   fragment_send_connecting_to_device: 'Connecting to {0}',
   fragment_send_incorrect_pin_message: 'You must enter the correct PIN in order to proceed',
@@ -360,6 +363,7 @@ const strings = {
   fragment_send_flash: 'Flash',
   fragment_send_address_dialog_title: 'Send to Bitcoin Address or Import Private Key',
   fragment_import_address_dialog_title: 'Sweep Funds From Private Key',
+  title_Header: 'Header', 
   fragment_send_other_wallet_header_title: 'Choose a wallet to transfer funds to:',
   fragment_send_create_wallet_to_transfer: 'Create a new wallet to transfer funds to',
 
@@ -389,27 +393,49 @@ const strings = {
   fragment_send_confirmation_error_payment_processor: 'Error connecting to payment processor. Send directly to bitcoin address\n\n%s',
 
     //  Strings for Wallets fragment
+  title_Wallets: 'Wallets',
   fragment_wallets_title: 'Wallets',
+  fragment_wallets_header: 'My Wallets',
   fragment_wallets_add_wallet: 'Add Wallet',
   fragment_wallets_deleting_wallet: 'Deleting wallet...',
+  fragment_wallets_delete_wallet: 'Delete Wallet',
   fragment_wallets_unable_to_delete_wallet: 'Unable to delete wallet',
   fragment_wallets_delete_has_funds: 'Cannot delete wallet as it contains funds. Please transfer out funds first.',
   fragment_wallets_delete_wallet_confirm_title: 'Delete Wallet?',
   fragment_wallets_delete_wallet_confirm_message: 'Are you sure you want to delete {0}?',
   fragment_wallets_delete_wallet_second_confirm_title: 'Delete Wallet: {0}?',
   fragment_wallets_delete_wallet_second_confirm_message: 'Are you sure? You will be unable to access any funds in this wallet and any future funds that it may receive.',
+  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
+  fragmet_wallets_delete_wallet_second_confirm_message_mobile: ' this wallet?',
   fragment_wallets_wallet_delete: 'Wallet deleted',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_list_wallets_title: 'WALLETS',
   fragment_wallets_list_archive_title: 'ARCHIVE',
   fragment_wallets_balance_text: 'Total Balance',
+  fragmet_wallets_list_archive_title_lowercase: 'Archive',
   fragment_wallets_addwallet_name_hint: 'Name your new wallet',
+  fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
+  fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
   fragment_wallets_addwallet_currency_textview: 'Currency:',
+  fragmet_wallets_addtoken_option: 'Add Token',
   fragment_wallets_addwallet_online_textview: 'ONLINE',
   fragment_wallets_addwallet_offline_textview: 'OFFLINE',
   fragment_wallets_created_wallet: '{0} created',
   fragment_wallets_created_wallet_failed: 'Failed to create wallet',
   fragment_wallets_archive_help: 'To archive a wallet, tap and hold the 3 dots to the right of a wallet and drag it below the [ARCHIVE] header',
+
+  // Wallet creation Scene
+  title_Create_Wallet: 'Create Wallet',
+  fragment_create_wallet_create_wallet: 'Create Wallet',
+  fragment_create_wallet_select_valid: 'Please select valid data',
+  fragment_blockchain_btc: 'Bitcoin',
+  fragment_blockchain_eth: 'Ethereum',
+  fragment_fiat_usd: 'US Dollar',
+  fragment_fiat_eur: 'European Euro',
+  fragment_fiat_gbp: 'British Pound',
+  fragment_fiat_jpy: 'Japanese Yen',
+  fragment_fiat_cnh: 'Chinese Yuan',
+  fragment_fiat_mxp: 'Mexican Peso',
 
     //  Strings for Wallet fragment
   fragment_wallet_title: 'Transactions',
@@ -805,6 +831,18 @@ const strings = {
 
   bitid_login_success: 'Successfully Logged In',
   bitid_login_failure: 'Error Logging In'
+
+
+
+
+
+  ///////////// start of mobile app ////////////////////
+
+  //////// Wallet List Scene ////////////////
+
+
+
+  //////// End Wallet List Scene //////////
 }
 
 export default strings

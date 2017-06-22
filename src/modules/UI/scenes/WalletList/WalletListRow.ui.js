@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import {sprintf} from 'sprintf-js'
 import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, Picker } from 'react-native'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -12,11 +13,12 @@ import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-n
 import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
 import {border} from '../../../utils'
+import t from '../../../../lib/LocaleStrings'
 
 class WalletListRow extends Component {
   render () {
     let id = this.props.data.id
-    let name = this.props.data.name || 'No name'
+    let name = this.props.data.name || sprintf('%s', t('string_no_name'))
 
     return (
       <View>
@@ -28,9 +30,7 @@ class WalletListRow extends Component {
             <View style={[styles.rowNameTextWrap]}>
               <Text style={[styles.rowNameText]}>{name}</Text>
             </View>
-            <RowOptions style={{borderColor: 'red', borderWidth: 1}}
-              walletKey={id}
-              archiveLabel={this.props.archiveLabel} />
+            <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
         {this.props.wallets[id].metaTokens.map((x, i) => (

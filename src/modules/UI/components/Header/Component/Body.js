@@ -12,6 +12,8 @@ import {
 import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
 import ExampleToWallet from './ExampleToWallet.ui'
+import t from '../../../../../lib/LocaleStrings'
+import {sprintf} from 'sprintf-js'
 
 class Body extends Component {
   constructor(props) {
@@ -43,11 +45,12 @@ export default connect((state) => (mapStateToProps))(Body)
 class DefaultHeader extends Component {
 
   _renderTitle = () => {
-    return this.props.routes.scene.title || 'Header'
+    return this.props.routes.scene.title || t('title_Header')
   }
 
   render () {
-    return <Title>{ this._renderTitle() }</Title>
+    console.log('title is: ', t('title_' + this._renderTitle().replace(/ /g,"_")))
+    return <Title>{ sprintf('%s', t('title_' + this._renderTitle().replace(/ /g,"_"))) }</Title>
   }
 
 }
