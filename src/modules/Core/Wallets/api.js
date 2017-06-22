@@ -4,7 +4,9 @@ import { makeCurrencyWallet } from 'airbitz-core-js'
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeWalletCallbacks } from './callbacks.js'
 
-export const makeCurrencyWalletRequest = (keyInfo, dispatch, io, account) => {
+export const makeCurrencyWalletRequest = (keyInfo, dispatch, getState) => {
+  const state = getState()
+  const { account, context: { io } } = state.core
   const plugin = makeShitcoinPlugin({ io })
   const walletId = keyInfo.id
   const callbacks = makeWalletCallbacks(dispatch, walletId)

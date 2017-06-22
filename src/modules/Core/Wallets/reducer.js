@@ -28,6 +28,7 @@ const pendingWalletIds = (state = [], action) => {
   switch (type) {
     case ACTION.WALLET_UPDATE_START:
       return getNewArrayWithItem(state, walletId)
+    case ACTION.REMOVE_PENDING_STATUS:
     case ACTION.WALLET_UPDATE_COMPLETE:
       return getNewArrayWithoutItem(state, walletId)
     default:

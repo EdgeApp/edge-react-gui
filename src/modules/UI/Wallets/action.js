@@ -11,9 +11,7 @@ export const activateWallet = wallet => {
     if (!selectedWalletId) {
       dispatch(selectWalletId(wallet.id))
     }
-
     dispatch(activateWallet(wallet))
-    return getState().ui.wallets.byId[wallet.id]
   }
 }
 
