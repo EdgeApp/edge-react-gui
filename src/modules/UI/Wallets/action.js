@@ -1,9 +1,9 @@
-export const ACTIVATE_WALLET_ID = 'ACTIVATE_WALLET_ID'
-export const ARCHIVE_WALLET_ID = 'ARCHIVE_WALLET_ID'
-export const DELETE_WALLET_ID = 'DELETE_WALLET_ID'
-export const SELECT_WALLET_ID = 'SELECT_WALLET_ID'
+export const PREFIX = 'UI/Wallets/'
+export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
+export const DELETE_WALLET = PREFIX + 'DELETE_WALLET'
+export const SELECT_WALLET_ID = PREFIX + 'SELECT_WALLET_ID'
 
-export const activateWallet = wallet => {
+export const activateWalletRequest = wallet => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
@@ -11,58 +11,33 @@ export const activateWallet = wallet => {
     if (!selectedWalletId) {
       dispatch(selectWalletId(wallet.id))
     }
-    dispatch(activateWallet(wallet))
+    dispatch(upsertWallet(wallet))
   }
 }
 
-export const archiveWalletIdRequest = walletId => {
+export const archiveWalletRequest = wallet => {
+  return (dispatch, getState) => {
+    const state = getState()
+    // const { selectedWalletId } = state.ui.wallets
+    // automatically select the next active wallet
+    // if (selectedWalletId === wallet.id) {
+    //   const { activeWalletIds } = state.ui.wallets
+    //   dispatch(selectWalletId(activeWalletIds[1]))
+    // }
+    dispatch(upsertWallet(wallet))
+  }
+}
+
+export const deleteWalletRequest = walletId => {
   return (dispatch, getState) => {
     const state = getState()
     const { selectedWalletId } = state.ui.wallets
     // automatically select the next active wallet
-    if (selectedWalletId === walletId) {
-      const { activeWalletIds } = state.ui.wallets
-      dispatch(selectWalletId(activeWalletIds[1]))
-    }
-    dispatch(archiveWalletId(walletId))
-  }
-}
-
-export const deleteWalletIdRequest = walletId => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { selectedWalletId } = state.ui.wallets
-    // automatically select the next active wallet
-    if (selectedWalletId === walletId) {
-      const { activeWalletIds } = state.ui.wallets
-      dispatch(selectWalletId(activeWalletIds[1]))
-    }
-    dispatch(deleteWalletId(walletId))
-  }
-}
-
-export const selectWalletIdRequest = walletId => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { selectedWalletId } = state.ui.wallets
-
-    if (!selectedWalletId) {
-      dispatch(selectWalletId(walletId))
-    }
-  }
-}
-
-export const activateWalletId = walletId => {
-  return {
-    type: ACTIVATE_WALLET_ID,
-    data: { walletId }
-  }
-}
-
-export const deleteWalletId = walletId => {
-  return {
-    type: DELETE_WALLET_ID,
-    data: { walletId }
+    // if (selectedWalletId === walletId) {
+    //   const { activeWalletIds } = state.ui.wallets
+    //   dispatch(selectWalletId(activeWalletIds[1]))
+    // }
+    dispatch(deleteWallet(walletId))
   }
 }
 
@@ -83,17 +58,21 @@ export const refreshWallet = walletId => {
   return (dispatch, getState) => {
     const wallet = getState().core.wallets.byId[walletId]
     if (wallet) {
-      dispatch(addWallet(wallet))
+      dispatch(upsertWallet(wallet))
     }
   }
 }
 
-export const addWallet = (wallet, order) => {
+export const upsertWallet = wallet => {
   return {
-    type: ADD_WALLET,
-    data: {
-      wallet,
-      order
-    }
+    type: UPSERT_WALLET,
+    data: { wallet }
+  }
+}
+
+export const deleteWallet = walletId => {
+  return {
+    type: DELETE_WALLET,
+    data: { walletId }
   }
 }

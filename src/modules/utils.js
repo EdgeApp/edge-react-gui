@@ -50,6 +50,5 @@ export {
   logInfo,
   logError,
   logWarning,
-  border,
-  compare
+  border
 }

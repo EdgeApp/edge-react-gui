@@ -1,41 +1,41 @@
-const PREFIX = 'Core/Wallets/'
-const ADD_WALLET = 'ADD_WALLET'
-const DELETE_WALLET = 'DELETE_WALLET'
-const WALLET_UPDATE_START = 'WALLET_UPDATE_START'
-const WALLET_UPDATE_COMPLETE = 'WALLET_UPDATE_COMPLETE'
-const REMOVE_PENDING_STATUS = 'REMOVE_PENDING_STATUS'
+export const PREFIX = 'Core/Wallets/'
+export const ADD_WALLET = PREFIX + 'ADD_WALLET'
+export const DELETE_WALLET = PREFIX + 'DELETE_WALLET'
+export const UPDATE_WALLET_START = PREFIX + 'UPDATE_WALLET_START'
+export const UPDATE_WALLET_COMPLETE = PREFIX + 'UPDATE_WALLET_COMPLETE'
+export const REMOVE_PENDING_STATUS = PREFIX + 'REMOVE_PENDING_STATUS'
 
-export const addWallet = (wallet, keyInfo) => {
+export const addWallet = wallet => {
   return {
-    type: PREFIX + ADD_WALLET,
-    data: { wallet, keyInfo }
+    type: ADD_WALLET,
+    data: { wallet }
   }
 }
 
 export const deleteWallet = walletId => {
   return {
-    type: PREFIX + DELETE_WALLET,
+    type: DELETE_WALLET,
     data: { walletId }
   }
 }
 
-export const walletUpdateStart = walletId => {
+export const updateWalletStart = walletId => {
   return {
-    type: PREFIX + WALLET_UPDATE_START,
+    type: UPDATE_WALLET_START,
     data: { walletId }
   }
 }
 
-export const walletUpdateComplete = walletId => {
+export const updateWalletComplete = walletId => {
   return {
-    type: PREFIX + WALLET_UPDATE_COMPLETE,
+    type: UPDATE_WALLET_COMPLETE,
     data: { walletId }
   }
 }
 
 export const removePendingStatus = walletId => {
   return {
-    type: PREFIX + REMOVE_PENDING_STATUS,
+    type: REMOVE_PENDING_STATUS,
     data: { walletId }
   }
 }

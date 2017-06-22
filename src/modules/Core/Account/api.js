@@ -1,5 +1,3 @@
-// import { activateWalletSuccess, archiveWalletSuccess } from ''
-
 export const createWalletRequest = (account, keys, walletType) => {
   const formattedWalletType = 'wallet:' + walletType.toLowerCase()
   return account.createWallet(formattedWalletType, keys)
@@ -24,26 +22,25 @@ export const deleteWalletRequest = (account, walletId) => {
 }
 
 export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
-  // const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
-  //   keyStates[id] = { sortIndex: index }
-  //   return keyStates
-  // }, {})
-  //
-  // return account.changeKeyStates(newKeyStates)
+  const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
+    keyStates[id] = { sortIndex: index }
+    return keyStates
+  }, {})
+
+  console.log('newKeyStates', newKeyStates)
+
+  return account.changeKeyStates(newKeyStates)
 }
 
 export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) => {
-  // const newKeyStates = archivedWalletIds.reduce((newKeyStates, id, index) => {
-  //   newKeyStates[id] = index
-  //   return newKeyStates
-  // }, {})
-  //
-  // return account.changeKeyStates(newKeyStates)
+  const newKeyStates = archivedWalletIds.reduce((keyStates, id, index) => {
+    keyStates[id] = { sortIndex: index }
+    return keyStates
+  }, {})
 
-  return account.changeKeyStates({
-    [archivedWalletIds[0]]: { sortIndex: parseInt(Math.random() * 10) },
-    [archivedWalletIds[1]]: { sortIndex: parseInt(Math.random() * 10) }
-  })
+  console.log('newKeyStates', newKeyStates)
+
+  return account.changeKeyStates(newKeyStates)
 }
 
 export const enablePinLoginRequest = () => {

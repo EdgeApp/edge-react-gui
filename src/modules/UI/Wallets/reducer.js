@@ -4,23 +4,11 @@ import * as ACTION from './action'
 export const byId = (state = {}, action) => {
   const { type, data = {} } = action
   switch (type) {
-    case ACTION.ADD_WALLET:
+    case ACTION.UPSERT_WALLET:
       return {
         ...state,
-        [data.wallet.id]: schema(data.wallet, data.keyInfo)
+        [data.wallet.id]: schema(data.wallet)
       }
-
-    case ACTION.ARCHIVE_WALLET_ID: {
-      const { walletId } = data
-      const wallet = state[walletId]
-      return {
-        ...state,
-        [walletId]: {
-          ...wallet,
-          archived: true
-        }
-      }
-    }
 
     case ACTION.DELETE_WALLET: {
       const { walletId } = data
@@ -28,42 +16,6 @@ export const byId = (state = {}, action) => {
       delete newState[walletId]
       return newState
     }
-
-    default:
-      return state
-  }
-}
-
-export const activeWalletIds = (state = [], action) => {
-  const { type, data = {} } = action
-  const { walletId } = data
-  switch (type) {
-    case ACTION.ACTIVATE_WALLET_ID:
-      return getNewArrayWithItem(state, walletId)
-
-    case ACTION.ARCHIVE_WALLET_ID:
-      return getNewArrayWithoutItem(state, walletId)
-
-    case ACTION.DELETE_WALLET_ID:
-      return getNewArrayWithoutItem(state, walletId)
-
-    default:
-      return state
-  }
-}
-
-export const archivedWalletIds = (state = [], action) => {
-  const { type, data = {} } = action
-  const { walletId } = data
-  switch (type) {
-    case ACTION.ACTIVATE_WALLET_ID:
-      return getNewArrayWithoutItem(state, walletId)
-
-    case ACTION.ARCHIVE_WALLET_ID:
-      return getNewArrayWithItem(state, walletId)
-
-    case ACTION.DELETE_WALLET_ID:
-      return getNewArrayWithoutItem(state, walletId)
 
     default:
       return state
@@ -82,13 +34,13 @@ export const selectedWalletId = (state = '', action) => {
   }
 }
 
-const schema = (wallet, keyInfo) => {
+const schema = wallet => {
   const id = wallet.id
   const type = wallet.type
   const name = wallet.name
-  const sortIndex = keyInfo.sortIndex
-  const archived = keyInfo.archived
-  const deleted = keyInfo.deleted
+  const sortIndex = wallet.sortIndex
+  const archived = wallet.archived
+  const deleted = wallet.deleted
 
   let balance = 0
   try {
@@ -136,7 +88,5 @@ const getNewArrayWithItem = (list, item) => {
 
 export const wallets = combineReducers({
   byId,
-  activeWalletIds,
-  archivedWalletIds,
   selectedWalletId
 })

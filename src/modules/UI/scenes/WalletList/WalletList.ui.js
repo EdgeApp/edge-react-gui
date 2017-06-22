@@ -174,7 +174,11 @@ class WalletList extends Component {
   }
 
   onActiveRowMoved = action => {
-    const order = this.props.activeWalletIds
+    const wallets = this.props.wallets
+    const activeOrderedWallets = Object.keys(wallets)
+      .filter(key => { return wallets[key].archived })
+      .sort((a, b) => { return wallets[a].sortIndex - wallets[b].sortIndex })
+    const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action)
 
     this.props.dispatch(updateActiveWalletsOrder(newOrder))
@@ -182,7 +186,11 @@ class WalletList extends Component {
   }
 
   onArchivedRowMoved = action => {
-    const order = this.props.archivedWalletIds
+    const wallets = this.props.wallets
+    const activeOrderedWallets = Object.keys(wallets)
+      .filter(key => { return wallets[key].archived })
+      .sort((a, b) => { return wallets[a].sortIndex - wallets[b].sortIndex })
+    const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action)
 
     this.props.dispatch(updateArchivedWalletsOrder(newOrder))
@@ -237,8 +245,6 @@ WalletList.propTypes = {}
 const mapStateToProps = state => ({
   coreWallets:              state.core.wallets.byId,
   wallets:                  state.ui.wallets.byId,
-  activeWalletIds:          state.ui.wallets.activeWalletIds,
-  archivedWalletIds:        state.ui.wallets.archivedWalletIds,
   walletArchivesVisible:    state.ui.scenes.walletList.walletArchivesVisible,
   renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
   deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
