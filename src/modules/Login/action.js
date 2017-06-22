@@ -62,9 +62,12 @@ const activateWallet = (keyInfo, dispatch, getState) => {
   .then(wallet => {
     // If changed were made during the wallet activation process,
     // start over
-    const nextKeyInfo = account.allKeys.filter(keyInfo => {
+    const nextKeyInfo = getState().core.account.allKeys.find(keyInfo => {
       return keyInfo.id === wallet.id
     })
+    wallet.archived = false
+    wallet.deleted = false
+    wallet.sortIndex = keyInfo.sortIndex
     if (hasChanged(wallet, nextKeyInfo)) {
       dispatch(WALLET_ACTIONS.removePendingStatus(wallet.Id))
       return processKeyInfo(nextKeyInfo, dispatch, getState)
@@ -72,9 +75,6 @@ const activateWallet = (keyInfo, dispatch, getState) => {
 
     dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
     // Add the wallet to Redux Core
-    wallet.archived = keyInfo.archived
-    wallet.deleted = keyInfo.deleted
-    wallet.sortIndex = keyInfo.sortIndex
     dispatch(WALLET_ACTIONS.addWallet(wallet))
     // Destructure the wallet and add it to Redux UI
     dispatch(UI_ACTIONS.activateWalletRequest(wallet))
@@ -90,9 +90,13 @@ const archiveWallet = (keyInfo, dispatch, getState) => {
   // Turn the wallet off
   WALLET_API.archiveWalletRequest(wallet)
   .then(() => {
+    wallet.archived = true
+    wallet.deleted = false
+    wallet.sortIndex = keyInfo.sortIndex
+
     // If changed were made during the wallet activation process,
     // start over
-    const nextKeyInfo = account.allKeys.filter(keyInfo => {
+    const nextKeyInfo = getState().core.account.allKeys.find(keyInfo => {
       return keyInfo.id === wallet.id
     })
     if (hasChanged(wallet, nextKeyInfo)) {
@@ -158,15 +162,15 @@ const shouldDelete = (keyInfo, getState) => {
 }
 
 const hasChanged = (wallet, nextKeyInfo) => {
-  return false
   console.log('wallet', wallet)
-  console.log('nextKeyInfo', nextKeyInfo)
   console.log('wallet.archived', wallet.archived)
+  console.log('nextKeyInfo', nextKeyInfo)
+  console.log('nextKeyInfo.sortIndex', nextKeyInfo.sortIndex)
   console.log('nextKeyInfo.archived', nextKeyInfo.archived)
   const hasChanged = (
-    wallet.archived === nextKeyInfo.archived &&
-    wallet.sortOrder === nextKeyInfo.sortOrder &&
-    wallet.deleted === nextKeyInfo.deleted
+    wallet.archived !== nextKeyInfo.archived ||
+    wallet.sortOrder !== nextKeyInfo.sortOrder ||
+    wallet.deleted !== nextKeyInfo.deleted
   )
 
   return hasChanged

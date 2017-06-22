@@ -22,6 +22,42 @@ export const byId = (state = {}, action) => {
   }
 }
 
+export const activeWalletIds = (state = [], action) => {
+  const { type, data = {} } = action
+  const { walletId } = data
+  switch (type) {
+    case ACTION.ACTIVATE_WALLET_ID:
+      return getNewArrayWithItem(state, walletId)
+
+    case ACTION.ARCHIVE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
+
+    case ACTION.DELETE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
+
+    default:
+      return state
+  }
+}
+
+export const archivedWalletIds = (state = [], action) => {
+  const { type, data = {} } = action
+  const { walletId } = data
+  switch (type) {
+    case ACTION.ACTIVATE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
+
+    case ACTION.ARCHIVE_WALLET_ID:
+      return getNewArrayWithItem(state, walletId)
+
+    case ACTION.DELETE_WALLET_ID:
+      return getNewArrayWithoutItem(state, walletId)
+
+    default:
+      return state
+  }
+}
+
 export const selectedWalletId = (state = '', action) => {
   const { type, data = {} } = action
   const { walletId } = data
@@ -88,5 +124,7 @@ const getNewArrayWithItem = (list, item) => {
 
 export const wallets = combineReducers({
   byId,
+  activeWalletIds,
+  archivedWalletIds,
   selectedWalletId
 })
