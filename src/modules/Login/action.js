@@ -52,20 +52,19 @@ const processKeyInfo = (keyInfo, wallet, dispatch, getState, io, account) => {
       // Add the wallet to Redux Core
       dispatch(WALLET_ACTIONS.addWallet(wallet))
       // Destructure the wallet and add it to Redux UI
-      dispatch(UI_ACTIONS.activateWalletRequest(wallet))
+      return dispatch(UI_ACTIONS.activateWalletRequest(wallet))
     })
-
-    // Grab the most recent version of the wallet in the UI
-    const wallet = getState().UI.wallets.byId[keyInfo.id]
-    const walletStatus = getWalletStatus(keyInfo, wallet)
-    // If the Core and UI are still out of sync, repeat the function
-    if (walletStatus !== 'same') {
-      processKeyInfo(keyInfo, wallet, dispatch, getState, io, account)
-    }
+    .then(wallet => {
+      const walletStatus = getWalletStatus(keyInfo, wallet)
+      // If the Core and UI are still out of sync, repeat the function
+      if (walletStatus !== 'same') {
+        processKeyInfo(keyInfo, wallet, dispatch, getState, io, account)
+      }
+    })
   }
 
   if (walletStatus === 'archive') {
-    const wallet = state.core.wallets.byId[keyInfo.id]
+    const wallet = getState().core.wallets.byId[keyInfo.id]
     // Turn the wallet off
     WALLET_API.archiveWalletRequest(wallet)
     .then(() => {

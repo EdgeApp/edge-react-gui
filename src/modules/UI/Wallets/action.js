@@ -13,6 +13,7 @@ export const activateWallet = wallet => {
     }
 
     dispatch(activateWallet(wallet))
+    return getState().ui.wallets.byId[wallet.id]
   }
 }
 
