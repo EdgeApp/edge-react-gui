@@ -30,6 +30,8 @@ export const renameWalletRequest = (wallet, name) => {
 export const activateWalletRequest = wallet => {
   return wallet.startEngine()
   .then(() => {
+    wallet.archived = false
+    wallet.deleted = false
     return Promise.resolve(wallet)
   })
 }
@@ -37,6 +39,8 @@ export const activateWalletRequest = wallet => {
 export const archiveWalletRequest = wallet => {
   return wallet.stopEngine()
   .then(() => {
+    wallet.archived = true
+    wallet.deleted = false
     return Promise.resolve(wallet)
   })
 }

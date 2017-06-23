@@ -82,6 +82,17 @@ export const refreshWallet = walletId => {
   }
 }
 
+export const refreshWallets = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const wallets = Object.values(state.core.wallets.byId)
+
+    wallets.forEach(wallet => {
+      dispatch(upsertWallet(wallet))
+    })
+  }
+}
+
 export const upsertWallet = wallet => {
   return {
     type: UPSERT_WALLET,

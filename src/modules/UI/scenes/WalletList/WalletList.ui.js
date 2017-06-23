@@ -90,6 +90,7 @@ class WalletList extends Component {
           {
             this.renderActiveSortableList(
               wallets,
+              activeWalletIds,
               'Archive',
               this.renderActiveRow,
               this.onActiveRowMoved
@@ -114,6 +115,7 @@ class WalletList extends Component {
           {
             this.renderArchivedSortableList(
               wallets,
+              archivedWalletIds,
               'Restore',
               this.renderArchivedRow,
               this.onArchivedRowMoved
@@ -124,12 +126,7 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveSortableList = (data, label, renderRow, onRowMoved) => {
-    return
-    const order = Object.keys(data)
-      .filter((a) => !data[a].archived)
-      .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
-
+  renderActiveSortableList = (data, order, label, renderRow, onRowMoved) => {
     if (order) {
       console.log('active order', order)
       return (
@@ -145,11 +142,7 @@ class WalletList extends Component {
     }
   }
 
-  renderArchivedSortableList = (data, label, renderRow, onRowMoved) => {
-    const order = Object.keys(data)
-      .filter((a) => data[a].archived)
-      .sort((a, b) => data[a].sortIndex - data[b].sortIndex)
-
+  renderArchivedSortableList = (data, order, label, renderRow, onRowMoved) => {
     if (order) {
       console.log('archive order', order)
       return (
@@ -245,6 +238,8 @@ WalletList.propTypes = {}
 const mapStateToProps = state => ({
   coreWallets:              state.core.wallets.byId,
   wallets:                  state.ui.wallets.byId,
+  activeWalletIds:          state.ui.wallets.activeWalletIds,
+  archivedWalletIds:        state.ui.wallets.archivedWalletIds,
   walletArchivesVisible:    state.ui.scenes.walletList.walletArchivesVisible,
   renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
   deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
@@ -288,10 +283,10 @@ class DeleteSubtext extends Component {
         Are you sure you want to delete
         {
           (this.props.currentWalletBeingDeleted) ?
-          (
-            <FormattedText
-              style={{fontWeight: 'bold'}}>
-              {this.props.currentWalletBeingDeleted}?
+            (
+              <FormattedText
+                style={{fontWeight: 'bold'}}>
+                {this.props.currentWalletBeingDeleted}?
             </FormattedText>
           ):
           (

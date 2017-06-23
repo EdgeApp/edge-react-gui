@@ -41,86 +41,93 @@ const processKeyInfo = (keyInfo, dispatch, getState) => {
     activateWallet(keyInfo, dispatch, getState)
   } else if (shouldArchive(keyInfo, getState)) {
     archiveWallet(keyInfo, dispatch, getState)
-  } else if (shouldReorder(keyInfo, getState)) {
-    reorderWallet(keyInfo, getState)
   } else if (shouldDelete(keyInfo, getState)) {
-    deleteWallet(keyInfo, getState)
+    deleteWallet(keyInfo, dispatch, getState)
   }
 }
 
 const activateWallet = (keyInfo, dispatch, getState) => {
   dispatch(WALLET_ACTIONS.updateWalletStart(keyInfo.id))
+
   const state = getState()
-  const { account } = state.core
-  // Instantiate a new wallet object
-  WALLET_API.makeCurrencyWalletRequest(keyInfo, dispatch, getState)
+  // Retreive or instantiate a wallet object
+  const getOrMakeWallet = () => {
+    const wallet = state.core.wallets.byId[keyInfo.id]
+    if (wallet) {
+      return Promise.resolve(wallet)
+    }
+    return WALLET_API.makeCurrencyWalletRequest(keyInfo, dispatch, getState)
+  }
+
+  getOrMakeWallet()
   .then(wallet => {
+    wallet.sortIndex = keyInfo.sortIndex
+    if (!wallet.name) { wallet.name = 'no name' }
     // Turn the wallet on
-    WALLET_API.activateWalletRequest(wallet)
-    return Promise.resolve(wallet)
+    return WALLET_API.activateWalletRequest(wallet)
   })
   .then(wallet => {
-    // If changed were made during the wallet activation process,
-    // start over
-    const nextKeyInfo = getState().core.account.allKeys.find(keyInfo => {
-      return keyInfo.id === wallet.id
-    })
     wallet.archived = false
     wallet.deleted = false
-    wallet.sortIndex = keyInfo.sortIndex
-    if (hasChanged(wallet, nextKeyInfo)) {
-      dispatch(WALLET_ACTIONS.removePendingStatus(wallet.Id))
-      return processKeyInfo(nextKeyInfo, dispatch, getState)
+    // Add the wallet to Redux Core
+    dispatch(WALLET_ACTIONS.addWallet(wallet))
+
+    // If changes were made during the wallet activation process,
+    // start over
+    const keyInfo = getState().core.account.allKeys.find(keyInfo => {
+      return keyInfo.id === wallet.id
+    })
+    if (!isInSync(wallet, keyInfo)) {
+      dispatch(WALLET_ACTIONS.removePendingStatus(wallet.id))
+      return processKeyInfo(keyInfo, dispatch, getState)
     }
 
     dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
-    // Add the wallet to Redux Core
-    dispatch(WALLET_ACTIONS.addWallet(wallet))
-    // Destructure the wallet and add it to Redux UI
-    dispatch(UI_ACTIONS.activateWalletRequest(wallet))
+    const wallets = getState().core.wallets.byId
+    Object.keys(wallets).forEach(id => {
+      dispatch(UI_ACTIONS.upsertWallet(wallets[id]))
+    })
   })
 }
 
 const archiveWallet = (keyInfo, dispatch, getState) => {
   dispatch(WALLET_ACTIONS.updateWalletStart(keyInfo.id))
-  const state = getState()
-  const { account } = state.core
-  const wallet = state.core.wallets.byId[keyInfo.id]
 
+  const state = getState()
+  const wallet = state.core.wallets.byId[keyInfo.id]
+  wallet.sortIndex = keyInfo.sortIndex
   // Turn the wallet off
   WALLET_API.archiveWalletRequest(wallet)
   .then(() => {
     wallet.archived = true
     wallet.deleted = false
-    wallet.sortIndex = keyInfo.sortIndex
-
-    // If changed were made during the wallet activation process,
+    // If changes were made during the wallet activation process,
     // start over
-    const nextKeyInfo = getState().core.account.allKeys.find(keyInfo => {
+    const keyInfo = getState().core.account.allKeys.find(keyInfo => {
       return keyInfo.id === wallet.id
     })
-    if (hasChanged(wallet, nextKeyInfo)) {
-      dispatch(WALLET_ACTIONS.removePendingStatus(wallet.Id))
-      return processKeyInfo(nextKeyInfo, dispatch, getState)
+    if (!isInSync(wallet, keyInfo)) {
+      dispatch(WALLET_ACTIONS.removePendingStatus(wallet.id))
+      return processKeyInfo(keyInfo, dispatch, getState)
     }
-    dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
 
-    // Destructure the wallet and add it to Redux UI
-    dispatch(UI_ACTIONS.archiveWalletRequest(wallet))
+    dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
+    const wallets = getState().core.wallets.byId
+    Object.keys(wallets).forEach(id => {
+      dispatch(UI_ACTIONS.upsertWallet(wallets[id]))
+    })
   })
 }
 
-const reorderWallet = (keyInfo, dispatch, getState) => {
-  const state = getState()
-  const wallet = state.core.wallets.byId[keyInfo.id]
-
-  dispatch(UI_ACTIONS.upsertWallet(wallet))
-}
-
-const deleteWallet = (keyInfo, dispatch) => {
+const deleteWallet = (keyInfo, dispatch, getState) => {
   // Remove the wallet from Redux Core
   // Remove the wallet from Redux UI
   dispatch(deleteWallet(keyInfo.id))
+  const state = getState()
+  const wallets = state.core.wallets.byId
+  Object.keys(wallets).forEach(id => {
+    dispatch(UI_ACTIONS.upsertWallet(wallets[id]))
+  })
 }
 
 const isPending = (keyInfo, getState) => {
@@ -134,44 +141,32 @@ const shouldActivate = (keyInfo, getState) => {
   const state = getState()
   const wallet = state.core.wallets.byId[keyInfo.id]
   const isNew = (!wallet)
-  const isActivating = !isNew && (!keyInfo.archived && wallet.archived)
-  const shouldActivate = (isNew || isActivating)
+  const outOfSync = !isNew && (!keyInfo.archived && wallet.archived)
+  const shouldActivate = (isNew || outOfSync)
 
   return shouldActivate
 }
 const shouldArchive = (keyInfo, getState) => {
   const state = getState()
   const wallet = state.core.wallets.byId[keyInfo.id]
-  const isArchiving = (keyInfo.archived && !wallet.archived)
+  const outOfSync = ((keyInfo.archived || keyInfo.deleted) && !wallet.archived)
+  const shouldArchive = outOfSync
 
-  return isArchiving
-}
-const shouldReorder = (keyInfo, getState) => {
-  const state = getState()
-  const wallet = state.core.wallets.byId[keyInfo.id]
-  const shouldReorder = (keyInfo.sortOrder !== wallet.sortOrder)
-
-  return shouldReorder
+  return shouldArchive
 }
 const shouldDelete = (keyInfo, getState) => {
   const state = getState()
   const wallet = state.core.wallets.byId[keyInfo.id]
-  const shouldDelete = (keyInfo.deleted && (!!wallet || wallet.archived))
+  const shouldDelete = (keyInfo.deleted && wallet)
 
   return shouldDelete
 }
 
-const hasChanged = (wallet, nextKeyInfo) => {
-  console.log('wallet', wallet)
-  console.log('wallet.archived', wallet.archived)
-  console.log('nextKeyInfo', nextKeyInfo)
-  console.log('nextKeyInfo.sortIndex', nextKeyInfo.sortIndex)
-  console.log('nextKeyInfo.archived', nextKeyInfo.archived)
-  const hasChanged = (
-    wallet.archived !== nextKeyInfo.archived ||
-    wallet.sortOrder !== nextKeyInfo.sortOrder ||
-    wallet.deleted !== nextKeyInfo.deleted
+const isInSync = (wallet, keyInfo) => {
+  const isInSync = (
+    wallet.archived === !!keyInfo.archived &&
+    wallet.deleted === !!keyInfo.deleted
   )
 
-  return hasChanged
+  return isInSync
 }

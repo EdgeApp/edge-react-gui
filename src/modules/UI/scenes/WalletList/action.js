@@ -30,6 +30,7 @@ export const ADD_TOKEN = 'ADD_TOKEN'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as LOGIN from '../../../Login/action.js'
+import * as UI_ACTIONS from '../../Wallets/action.js'
 
 export const executeWalletRowOption = (walletId, option) => {
   switch (option) {
@@ -61,6 +62,7 @@ export const executeWalletRowOption = (walletId, option) => {
           dispatch(archiveWalletSuccess(walletId))
           dispatch(LOGIN.updateWallets(account))
         })
+        .catch(e => console.log(e))
       }
 
     case 'Delete':
@@ -83,7 +85,6 @@ export const executeWalletRowOption = (walletId, option) => {
 export const renameWallet = (walletId, walletName) => {
   return (dispatch, getState) => {
     const state = getState()
-    const account = state.core.account
     const wallet = state.core.wallets.byId[walletId]
 
     dispatch(renameWalletStart(walletId))
@@ -91,7 +92,7 @@ export const renameWallet = (walletId, walletName) => {
     WALLET_API.renameWalletRequest(wallet, walletName)
     .then(() => {
       dispatch(renameWalletSuccess(walletId))
-      dispatch(LOGIN.updateWallets(account))
+      dispatch(UI_ACTIONS.refreshWallets())
     })
     .catch(e => console.log(e))
   }
