@@ -148,6 +148,12 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+
+    }
+  }
 
   render() {
 
@@ -181,7 +187,7 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   _onRecipientAddressChange = (input) => {
-    //this.setState({ recipientAddressInput: input })
+    this.setState({ recipientAddressInput: input })
     this.props.dispatch(updateRecipientAddress(input))    
   }
 
@@ -191,14 +197,16 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   render() {
-    let innerText = 'Paste "' + this.state.copiedString + '"'
-    console.log('innerText is: ', innerText)
+    let innerText = ''
+    console.log('rendering Rename Address, this.state is: ', this.state)
+    if( this.state.copiedString.length !== 0) innerText = sprintf('%s', t('fragment_copy_button_syntax')) + ' "' + this.state.copiedString + '"'
+
     return(
       <View>
-        <View style={[styles.addressInputWrap, border('orange')]}>
-            <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} value={this.props.recipientAddress} />
+        <View style={[styles.addressInputWrap]}>
+            <TextInput style={[styles.addressInput]} onChangeText={(input) => this._onRecipientAddressChange(input)} value={this.props.recipientAddress} />
         </View>
-        {!!this.state.copiedString &&
+        {this.state.copiedString.length !== 0 &&
           <View style={styles.pasteButtonRow}>
             <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} />
           </View>
