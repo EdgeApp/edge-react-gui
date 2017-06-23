@@ -15,7 +15,7 @@ const initialState = {
   }
 }
 
-export default request = (state = initialState, action) => {
+export const request = (state = initialState, action) => {
   const { type, data = {} } = action
   const { receiveAddress } = data
   switch (type) {

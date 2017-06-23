@@ -1,6 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { TouchableWithoutFeedback, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
+import {
+  TouchableWithoutFeedback,
+  Image,
+  ScrollView,
+  ListView,
+  Text,
+  TextInput,
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  Animated } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -15,19 +25,14 @@ import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
 import {
-  updateWalletOrder,
-  updateWalletListOrder,
-  updateArchiveListOrder,
-  toggleWalletsVisibility,
   toggleArchiveVisibility,
-  completeRenameWallet,
   updateRenameWalletInput,
-  toggleWalletRenameModal,
   closeWalletDeleteModal,
-  updateCurrentWalletBeingRenamed,
   closeRenameWalletModal,
   renameWallet,
-  deleteWallet
+  deleteWallet,
+  updateActiveWalletsOrder,
+  updateArchivedWalletsOrder
 } from './action'
 import {border} from '../../../../util/border'
 
@@ -40,34 +45,12 @@ import { addWallet, completeDeleteWallet } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
 
 class WalletList extends Component {
-  forceArchiveListUpdate (archiveOrder) {
-    this.props.dispatch(updateArchiveListOrder(archiveOrder))
-  }
-
-  toggleArchiveDropdown () {
+  toggleArchiveDropdown = () => {
     this.props.dispatch(toggleArchiveVisibility())
   }
 
   render () {
-    const walletOrder = []
-    const walletListArray = []
-    const archiveOrder = []
-    const archiveListArray = []
-    let walletIterator = 0
-    let archiveIterator = 0
-    for (var idx in this.props.walletList) {
-      console.log('iterating over wallets, current wallet is: ', this.props.walletList[idx])
-      if (this.props.walletList[idx].archived === true) {
-        archiveOrder.push(archiveIterator)
-        archiveListArray.push(this.props.walletList[idx])
-        archiveIterator++
-      } else {
-        walletOrder.push(walletIterator)
-        walletListArray.push(this.props.walletList[idx])
-        walletIterator++
-      }
-    }
-
+    const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
     return (
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
@@ -87,6 +70,7 @@ class WalletList extends Component {
             </View>
           </View>
         </View>
+
         <View style={styles.walletsBox}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.walletsBoxHeaderTextWrap, border('yellow')]}>
@@ -97,23 +81,20 @@ class WalletList extends Component {
                 </FormattedText>
               </View>
             </View>
+
             <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, border('red')]}>
               <Ionicon name='md-add'style={[styles.dropdownIcon, border('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
 
-          {console.log('walletListArray', walletListArray)}
-          {(walletListArray.length > 0) &&
-            <SortableListView
-              style={styles.sortableWalletList}
-              data={walletListArray}
-              order={walletOrder}
-              onRowMoved={e => {
-                walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
-                this.props.dispatch(updateWalletListOrder(walletOrder, this.props.walletList, walletListArray))
-              }}
-              renderRow={row => <WalletListRow data={row} archiveLabel='Archive' />}
-            />
+          {
+            this.renderActiveSortableList(
+              wallets,
+              activeWalletIds,
+              'Archive',
+              this.renderActiveRow,
+              this.onActiveRowMoved
+            )
           }
 
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
@@ -125,29 +106,101 @@ class WalletList extends Component {
                 </FormattedText>
               </View>
             </View>
-            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown.bind(this)} style={[styles.archiveBoxHeaderDropdown, border('red')]}>
+
+            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, border('red')]}>
               <FAIcon name='angle-down' style={[styles.dropdownIcon, border('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
-          {this.props.archiveVisible &&
-            <SortableListView
-              style={styles.sortableWalletList}
-              data={archiveListArray}
-              order={archiveOrder}
-              render='archive'
-              onRowMoved={e => {
-                archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0])
-                this.forceArchiveListUpdate(archiveOrder)
-              }}
-              renderRow={row => <WalletListRow archiveLabel='Restore' data={row} />}
-            />
+
+          {
+            this.renderArchivedSortableList(
+              wallets,
+              archivedWalletIds,
+              'Restore',
+              this.renderArchivedRow,
+              this.onArchivedRowMoved
+            )
           }
         </View>
       </View>
     )
   }
 
-  renderDeleteWalletModal () {
+  renderActiveSortableList = (data, order, label, renderRow, onRowMoved) => {
+    if (order) {
+      console.log('active order', order)
+      return (
+        <SortableListView
+          style={styles.sortableWalletList}
+          data={data}
+          order={order}
+          render={label}
+          onRowMoved={this.onActiveRowMoved}
+          renderRow={renderRow}
+        />
+      )
+    }
+  }
+
+  renderArchivedSortableList = (data, order, label, renderRow, onRowMoved) => {
+    if (order) {
+      console.log('archive order', order)
+      return (
+        <SortableListView
+          style={styles.sortableWalletList}
+          data={data}
+          order={order}
+          render={label}
+          onRowMoved={this.onArchivedRowMoved}
+          renderRow={renderRow}
+        />
+      )
+    }
+  }
+
+  renderActiveRow = row => {
+    return <WalletListRow data={row} archiveLabel='Archive' />
+  }
+
+  renderArchivedRow = row => {
+    return <WalletListRow data={row} archiveLabel='Restore' />
+  }
+
+  onActiveRowMoved = action => {
+    const wallets = this.props.wallets
+    const activeOrderedWallets = Object.keys(wallets)
+      .filter(key => { return wallets[key].archived })
+      .sort((a, b) => { return wallets[a].sortIndex - wallets[b].sortIndex })
+    const order = activeOrderedWallets
+    const newOrder = this.getNewOrder(order, action)
+
+    this.props.dispatch(updateActiveWalletsOrder(newOrder))
+    this.forceUpdate()
+  }
+
+  onArchivedRowMoved = action => {
+    const wallets = this.props.wallets
+    const activeOrderedWallets = Object.keys(wallets)
+      .filter(key => { return wallets[key].archived })
+      .sort((a, b) => { return wallets[a].sortIndex - wallets[b].sortIndex })
+    const order = activeOrderedWallets
+    const newOrder = this.getNewOrder(order, action)
+
+    this.props.dispatch(updateArchivedWalletsOrder(newOrder))
+    this.forceUpdate()
+  }
+
+  getNewOrder = (order, action) => {
+    const { to, from, row: { index } } = action
+    const newOrder = [].concat(order)
+    newOrder.splice(action.to, 0, newOrder.splice(action.from, 1)[0])
+
+    console.log('order', order)
+    console.log('newOrder', newOrder)
+    return newOrder
+  }
+
+  renderDeleteWalletModal = () => {
     return (
       <StylizedModal
         featuredIcon={<DeleteIcon />}
@@ -174,18 +227,19 @@ class WalletList extends Component {
     )
   }
 
-  checkIndexIsEven (n) {
+  checkIndexIsEven = (n) => {
     console.info('n is: ' , n)
       return n % 2 == 0;
   }
 }
 
-WalletList.propTypes = {
-  archiveList: PropTypes.array
-}
+WalletList.propTypes = {}
 
 const mapStateToProps = state => ({
-  walletList:               state.ui.wallets.byId,
+  coreWallets:              state.core.wallets.byId,
+  wallets:                  state.ui.wallets.byId,
+  activeWalletIds:          state.ui.wallets.activeWalletIds,
+  archivedWalletIds:        state.ui.wallets.archivedWalletIds,
   walletArchivesVisible:    state.ui.scenes.walletList.walletArchivesVisible,
   renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
   deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
@@ -195,7 +249,16 @@ const mapStateToProps = state => ({
   walletOrder:              state.ui.wallets.walletListOrder
 })
 
-export default connect(state => (mapStateToProps))(WalletList)
+const mapDispatchToProps = dispatch => ({
+  updateActiveWalletsOrder: activeWalletIds => {
+    dispatch(updateActiveWalletsOrder(activeWalletIds))
+  },
+  updateArchivedWalletsOrder: archivedWalletIds => {
+    dispatch(updateArchivedWalletsOrder(archivedWalletIds))
+  },
+})
+
+export default connect((mapStateToProps), (mapDispatchToProps))(WalletList)
 
 ////// Beginning of Delete Area ////////
 
@@ -220,10 +283,10 @@ class DeleteSubtext extends Component {
         Are you sure you want to delete
         {
           (this.props.currentWalletBeingDeleted) ?
-          (
-            <FormattedText
-              style={{fontWeight: 'bold'}}>
-              {this.props.currentWalletBeingDeleted}?
+            (
+              <FormattedText
+                style={{fontWeight: 'bold'}}>
+                {this.props.currentWalletBeingDeleted}?
             </FormattedText>
           ):
           (

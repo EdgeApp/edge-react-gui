@@ -1,6 +1,6 @@
 import * as ACTION from './action.js'
 
-export default settings = (state = {}, action) => {
+export const settings = (state = {}, action) => {
   const { type, data = {} } = action
   const { settings } = data
 

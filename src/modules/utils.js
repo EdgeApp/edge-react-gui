@@ -36,10 +36,10 @@ const logError = (msg) => {
 }
 
 const border = (color) => {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
+  return {
+    borderColor: color,
+    borderWidth: 0
+  }
 }
 
 export {

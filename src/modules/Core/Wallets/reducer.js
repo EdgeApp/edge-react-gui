@@ -5,13 +5,14 @@ const byId = (state = {}, action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.ADD_WALLET:
+      console.log('type', type)
       const { wallet } = data
       return {
         ...state,
         [wallet.id]: wallet
       }
 
-    case ACTION.REMOVE_WALLET:
+    case ACTION.DELETE_WALLET:
       const { walletId } = data
       const newState = Object.assign({}, state)
       delete newState[walletId]
@@ -26,9 +27,10 @@ const pendingWalletIds = (state = [], action) => {
   const { type, data = {} } = action
   const { walletId } = data
   switch (type) {
-    case ACTION.WALLET_UPDATE_START:
+    case ACTION.UPDATE_WALLET_START:
       return getNewArrayWithItem(state, walletId)
-    case ACTION.WALLET_UPDATE_COMPLETE:
+    case ACTION.REMOVE_PENDING_STATUS:
+    case ACTION.UPDATE_WALLET_COMPLETE:
       return getNewArrayWithoutItem(state, walletId)
     default:
       return state

@@ -1,42 +1,46 @@
-// import { activateWalletSuccess, archiveWalletSuccess } from ''
-
-import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
-
-export const createWalletRequest = (walletName, walletType) => {
-  return (dispatch, getState) => {
-    // dispatch(activateWalletStart(walletId))
-    const { account, context } = getState().core
-    const { io } = context
-
-    const keys = makeShitcoinPlugin({ io }).createMasterKeys('shitcoin')
-
-    const formattedWalletType = 'wallet:' + walletType.toLowerCase()
-    return createWallet(account, formattedWalletType, keys)
-  }
+export const createWalletRequest = (account, keys, walletType) => {
+  const formattedWalletType = 'wallet:' + walletType.toLowerCase()
+  return account.createWallet(formattedWalletType, keys)
 }
 
-export const activateWalletRequest = walletId => {
-  return (dispatch, getState) => {
-    // dispatch(activateWalletStart(walletId))
-    const { account } = getState().core
-    return activateWallet(account, walletId)
-  }
+export const activateWalletRequest = (account, walletId) => {
+  return account.changeKeyStates({
+    [walletId]: { archived: false }
+  })
 }
 
-export const archiveWalletRequest = walletId => {
-  return (dispatch, getState) => {
-    // dispatch(archiveWalletStart(walletId))
-    const { account } = getState().core
-    return archiveWallet(account, walletId)
-  }
+export const archiveWalletRequest = (account, walletId) => {
+  return account.changeKeyStates({
+    [walletId]: { archived: true }
+  })
 }
 
-export const deleteWalletRequest = walletId => {
-  return (dispatch, getState) => {
-    // dispatch(archiveWalletStart(walletId))
-    const { account } = getState().core
-    return deleteWallet(account, walletId)
-  }
+export const deleteWalletRequest = (account, walletId) => {
+  return account.changeKeyStates({
+    [walletId]: { deleted: true }
+  })
+}
+
+export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
+  const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
+    keyStates[id] = { sortIndex: index }
+    return keyStates
+  }, {})
+
+  console.log('newKeyStates', newKeyStates)
+
+  return account.changeKeyStates(newKeyStates)
+}
+
+export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) => {
+  const newKeyStates = archivedWalletIds.reduce((keyStates, id, index) => {
+    keyStates[id] = { sortIndex: index }
+    return keyStates
+  }, {})
+
+  console.log('newKeyStates', newKeyStates)
+
+  return account.changeKeyStates(newKeyStates)
 }
 
 export const enablePinLoginRequest = () => {
@@ -110,30 +114,6 @@ export const disableTouchIdLoginRequest = () => {
 }
 
 //  Helper functions
-const createWallet = (account, walletType, keys) => {
-  return account.createWallet(walletType, keys)
-}
-
-const activateWallet = (account, walletId) => {
-  console.log('activating wallet', walletId)
-  return account.changeKeyStates({
-    [walletId]: { archived: false }
-  })
-}
-
-const archiveWallet = (account, walletId) => {
-  console.log('archiving wallet', walletId)
-  return account.changeKeyStates({
-    [walletId]: { archived: true }
-  })
-}
-
-const deleteWallet = (account, walletId) => {
-  console.log('deleting wallet', walletId)
-  return account.changeKeyStates({
-    [walletId]: { deleted: true }
-  })
-}
 
 // Account: [username]
 // --------------------
