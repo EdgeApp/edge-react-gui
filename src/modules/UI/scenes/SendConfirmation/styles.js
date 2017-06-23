@@ -3,13 +3,10 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    paddingVertical: 10,
-    paddingHorizontal: 25,
-    bottom: 0,
     backgroundColor: 'transparent',
   },
   exchangeRateAndMax: {
-    flex: 1,
+    marginVertical: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

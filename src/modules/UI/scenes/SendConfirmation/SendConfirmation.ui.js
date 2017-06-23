@@ -59,16 +59,15 @@ class SendConfirmation extends Component {
         colors={["#3b7adb","#2b569a"]}>
 
         <View style={styles.exchangeRateAndMax} >
-          <View style={{flex: 1}}></View>
 
-          <View style={{flex: 3}}>
+          <View style={{ flex: 1}}>
             <ExchangeRate
               mode={draftStatus}
               style={{flex: 1}}
               fiatPerCrypto={this.props.fiatPerCrypto} />
           </View>
 
-          <View style={{flex: 1}}>
+          <View>
             <MaxButton style={{flex: 1}}
               mode={draftStatus}
               onMaxPress={this.onMaxPress}/>
