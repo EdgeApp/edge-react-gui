@@ -1769,7 +1769,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.co;
+				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
 				PRODUCT_NAME = airbitz;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1806,7 +1806,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.co;
+				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
 				PRODUCT_NAME = airbitz;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
