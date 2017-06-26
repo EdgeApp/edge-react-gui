@@ -1,4 +1,4 @@
-package com.airbitz;
+package com.airbitz.edge;
 
 import android.app.Application;
 

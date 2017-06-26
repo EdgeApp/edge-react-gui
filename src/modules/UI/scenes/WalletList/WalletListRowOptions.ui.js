@@ -44,7 +44,7 @@ class WalletListRowOptions extends Component {
             </MenuOption>
             <MenuOption value={options[2]} style={styles.menuOption}>
               <View style={[styles.menuOptionItem, this.border('green')]}>
-                <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />
+                {/* <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} /> */}
                 <FormattedText style={[styles.optionText]}>{options[2]}</FormattedText>
               </View>
             </MenuOption>

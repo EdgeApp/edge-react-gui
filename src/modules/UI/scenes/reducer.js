@@ -15,7 +15,7 @@ import walletListModal from '../components/WalletListModal/reducer'
 import exchangeRate from '../components/ExchangeRate/reducer.js'
 import dimensions from '../dimensions/reducer'
 
-export default scenes = combineReducers({
+export const scenes = combineReducers({
   scan,
   sendConfirmation,
   transactionList,

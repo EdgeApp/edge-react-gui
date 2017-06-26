@@ -22,7 +22,7 @@ class StylizedModal extends Component {
           <View style={[styles.modalBody, border('purple')]}>
             <View style={[styles.modalTopTextWrap,  border('blue')]}>
               <FormattedText style={[styles.modalTopText, border('yellow')]}>{this.props.headerText}</FormattedText>
-              {this.props.headerSubtext && 
+              {this.props.headerSubtext &&
                 <FormattedText style={[styles.modalTopSubtext, border('green')]}
                   numberOfLines={2}>
                   {this.props.headerSubtext || ''}
@@ -34,7 +34,7 @@ class StylizedModal extends Component {
                 {this.props.modalMiddle}
               </View>
             }
-            {this.props.modalBottom && 
+            {this.props.modalBottom &&
             <View style={[styles.modalBottom, border('green')]}>
               {this.props.modalBottom}
             </View>

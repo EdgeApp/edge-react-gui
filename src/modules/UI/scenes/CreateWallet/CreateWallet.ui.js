@@ -4,6 +4,7 @@ import {
   Text,
   View,
   StyleSheet,
+  Keyboard,
   ListView,
   Button,
   TouchableOpacity,
@@ -93,6 +94,7 @@ class CreateWallet extends Component {
     if (!this.isValidData()) {
       alert(INVALID_DATA_TEXT)
     } else {
+      Keyboard.dismiss()
       const { walletName, selectedBlockchain } = this.props
       console.log('walletName', walletName)
       console.log('selectedBlockchain', selectedBlockchain)
@@ -101,6 +103,7 @@ class CreateWallet extends Component {
   }
 
   handleOnCancel = () => {
+    Keyboard.dismiss()
     Actions.walletList() //redirect to the list of wallets
   }
 

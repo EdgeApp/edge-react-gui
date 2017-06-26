@@ -341,7 +341,7 @@ class SearchBar extends Component {
     return(
       <View style={[styles.searchContainer, border('green')]}>
         <View style={[ styles.innerSearch, border('orange')]}>
-          <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
+          {/* <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} /> */}
           <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder='Search' />
         </View>
         <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
