@@ -27,6 +27,7 @@ const strings = {
   string_paste_address: 'Paste {0}',
   string_search: 'Search',
   string_done: 'DONE',
+  string_done_cap: 'Done',
   string_rename: 'Rename',
   string_no_name: 'No name',
   string_delete: 'Delete',

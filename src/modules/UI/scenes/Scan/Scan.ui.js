@@ -238,12 +238,12 @@ class SendAddressButtons extends Component { // this component is for the button
       <View style={[ModalStyle.buttonsWrap, border('gray')]}>
         <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
-            <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>Cancel</FormattedText>
+            <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf('%s', t('string_cancel_cap'))}</FormattedText>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
             <View style={ModalStyle.stylizedButtonTextWrap}>
-              <FormattedText style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>Done</FormattedText>
+              <FormattedText style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf('%s', t('string_done_cap'))}</FormattedText>
             </View>
           </TouchableHighlight>
       </View>
