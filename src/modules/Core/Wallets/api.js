@@ -44,3 +44,7 @@ export const archiveWalletRequest = wallet => {
     return Promise.resolve(wallet)
   })
 }
+
+export const getTransactions = wallet => {
+  return wallet.getTransactions()
+}

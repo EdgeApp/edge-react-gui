@@ -1,5 +1,5 @@
-import React, { Dimensions, Component } from 'react'
-import { Modal, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
+import React, { Component } from 'react'
+import { Modal, Dimensions, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
 import { connect } from 'react-redux'
@@ -14,6 +14,8 @@ import {
   toggleSelectedWalletListModal,
   toggleScanToWalletListModal
 } from './action'
+import * as UI_ACTIONS from '../../Wallets/action.js'
+import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
 import {border} from '../../../utils'
 
@@ -74,46 +76,68 @@ class WalletListModalBody extends Component {
     this.props.dispatch(toggleScanToWalletListModal())
   }
 
-  render () {
-    for (var idx in this.props.walletList) {
-      console.log('idx is: ', idx)
-      return (
-        <ScrollView>
-          <TouchableOpacity style={[styles.rowContainer]}
-            onPress={this[this.props.selectionFunction]}>
-            <View style={[styles.rowContent]}>
-              <View style={[styles.rowNameTextWrap]}>
-                <T style={[styles.rowNameText]}>
-                  {idx.slice(0,5)}
+  renderWalletRow = wallet => {
+    return (
+      <View>
+        <TouchableOpacity style={[styles.rowContainer]}
+          // onPress={this[this.props.selectionFunction]}
+          onPress={() => {
+            this.props.getTransactions()
+            this.props.toggleWalletListModalVisibility()
+            this.props.selectWallet(wallet.id)
+          }}>
+          <View style={[styles.rowContent]}>
+            <View style={[styles.rowNameTextWrap]}>
+              <T style={[styles.rowNameText]}>
+                {wallet.name}
+              </T>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        {wallet.metaTokens.map((x, i) => (
+          <TouchableOpacity style={[styles.tokenRowContainer]}
+            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode)}>
+            <View style={[styles.tokenRowContent]}>
+              <View style={[styles.tokenRowNameTextWrap]}>
+                <T style={[styles.tokenRowNameText]}>
+                  {x.currencyCode}
                 </T>
               </View>
             </View>
           </TouchableOpacity>
-
-          {this.props.walletList[idx].metaTokens.map((x, i) => (
-            <TouchableOpacity style={[styles.tokenRowContainer]}
-              key={x.currencyCode} onPress={() => this[this.props.selectionFunction](idx, x.currencyCode)}>
-              <View style={[styles.tokenRowContent]}>
-                <View style={[styles.tokenRowNameTextWrap]}>
-                  <T style={[styles.tokenRowNameText]}>
-                    {x.currencyCode}
-                  </T>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      )
-    }
+        ))}
+      </View>
+    )
+  }
+  render () {
+    console.log('rendering dropdown', this.props.selectedWalletId)
+    return (
+      <ScrollView>
+        {
+          Object.values(this.props.walletList).map(wallet => {
+            return this.renderWalletRow(wallet)
+          })
+        }
+      </ScrollView>
+    )
   }
 }
 
 WalletListModalBody.propTypes = {
     selectionFunction: PropTypes.string,
 }
-export const WalletListModalBodyConnect  = connect( state => ({
-    walletList: state.ui.wallets.byId
-}))(WalletListModalBody)
+export const WalletListModalBodyConnect = connect(
+  state => ({
+    walletList: state.ui.wallets.byId,
+    selectedWalletId: state.ui.wallets.selectedWalletId
+  }),
+  dispatch => ({
+    selectWallet: walletId => dispatch(UI_ACTIONS.selectWalletId(walletId)),
+    getTransactions: () => dispatch(getTransactionsRequest()),
+    toggleWalletListModalVisibility: () => dispatch(toggleSelectedWalletListModal())
+  }))
+(WalletListModalBody)
 
 
 class WalletListModalHeader extends Component {

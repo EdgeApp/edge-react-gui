@@ -11,21 +11,23 @@ import {
 } from '../../WalletListModal/action'
 import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
-import ExampleToWallet from './ExampleToWallet.ui'
 
 class Body extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   render () {
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
-            return <ExampleFromWalletConnect  walletList={this.props.walletList} toggleFunction='_onPressToggleSelectedWalletModal' visibleFlag='selectedWalletListModalVisibility' />
+        return <ExampleFromWalletConnect walletList={this.props.walletList}
+          toggleFunction='_onPressToggleSelectedWalletModal'
+               visibleFlag='selectedWalletListModalVisibility' />
+
       case 'request':
-        return <ExampleFromWalletConnect  walletList={this.props.walletList} />
-      case 'transactions':
-        return <ExampleFromWalletConnect walletList={this.props.walletList} toggleFunction='_onPressToggleSelectedWalletModal' visibleFlag='selectedWalletListModalVisibility' />
+        return <ExampleFromWalletConnect wallets={this.props.walletList} />
+
+      case 'transactionList':
+        return <ExampleFromWalletConnect wallets={this.props.walletList}
+          toggleFunction='_onPressToggleSelectedWalletModal'
+               visibleFlag='selectedWalletListModalVisibility' />
+
       default:
         return <DefaultHeader routes={this.props.routes} />
     }
@@ -33,7 +35,7 @@ class Body extends Component {
 }
 
 const mapStateToProps = state => ({
-  walletList:                        state.ui.wallets.byId,
+  wallets:                           state.ui.wallets.byId,
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility
 })
@@ -41,7 +43,6 @@ const mapStateToProps = state => ({
 export default connect((state) => (mapStateToProps))(Body)
 
 class DefaultHeader extends Component {
-
   _renderTitle = () => {
     return this.props.routes.scene.title || 'Header'
   }
@@ -49,7 +50,6 @@ class DefaultHeader extends Component {
   render () {
     return <Title>{ this._renderTitle() }</Title>
   }
-
 }
 
 class ExampleFromWallet extends Component {
@@ -69,24 +69,29 @@ class ExampleFromWallet extends Component {
     let selectionFunction = 'selectFromWallet'
 
     return (
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-            <Text style={{ color: "#FFF", fontSize: 20 }}>My Wallet  </Text>
-            <TouchableOpacity onPress={this[this.props.toggleFunction]}>
-                <View>
-                  {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
-                  <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25 }} />
-                  }
+      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ color: "#FFF", fontSize: 20 }}>{this.props.selectedWallet.name}  </Text>
 
-                </View>
-            </TouchableOpacity>
-            {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
-            {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} /> }
+        <TouchableOpacity onPress={this[this.props.toggleFunction]}>
+          <View>
+            {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
+              <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25 }} />
+            }
           </View>
+        </TouchableOpacity>
+        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
+        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} /> }
+      </View>
     )
   }
 }
-export const ExampleFromWalletConnect  = connect( state => ({
-    walletList:                        state.ui.wallets.byId,
-    selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
-    scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility,
+
+export const ExampleFromWalletConnect = connect(state => ({
+  walletList:        state.ui.wallets.byId,
+  selectedWalletId:  state.ui.wallets.selectedWalletId,
+  selectedWallet:    state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
+  activeWalletIds:   state.ui.wallets.activeWalletIds,
+  archivedWalletIds: state.ui.wallets.archivedWalletIds,
+  selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
+  scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility,
 }))(ExampleFromWallet)

@@ -14,7 +14,8 @@ import {
   deleteTransactionsList,
   updateTransactionsList,
   updateContactsList,
-  updateSearchResults } from './action'
+  updateSearchResults,
+  getTransactionsRequest } from './action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
@@ -34,14 +35,15 @@ class TransactionList extends Component {
       op: new Animated.Value(0),
       balanceBoxHeight: new Animated.Value(200),
       balanceBoxOpacity: new Animated.Value(1),
-      balanceBoxVisible: true
+      balanceBoxVisible: true,
      }
    }
 
-  componentDidMount() {
+  componentDidMount () {
     this.props.dispatch(updateExchangeRates())
+    this.props.getTransactions()
     this.setState({
-      balance: this.props.wallet.getBalance()
+      balance: this.props.wallet.getBalance(),
     })
   }
 
@@ -181,6 +183,7 @@ class TransactionList extends Component {
 
   render () {
     console.log('the balance is: ', this.state.balance)
+    console.log('rendering transactinlist', this.props.selectWalletId)
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -322,14 +325,19 @@ class TransactionList extends Component {
 const mapStateToProps = state => ({
   // updatingBalance: state.ui.transactionList.updatingBalance,
   updatingBalance: false,
-  transactions:  state.ui.scenes.transactionList.transactions,
-  searchVisible: state.ui.scenes.transactionList.searchVisible,
-  contactsList:  state.ui.scenes.transactionList.contactsList,
-  exchangeRates: state.ui.scenes.exchangeRate.exchangeRates,
-  wallet:        state.core.wallets.byId[state.ui.wallets.selectedWalletId]
+  transactions:     state.ui.scenes.transactionList.transactions,
+  searchVisible:    state.ui.scenes.transactionList.searchVisible,
+  contactsList:     state.ui.scenes.transactionList.contactsList,
+  exchangeRates:    state.ui.scenes.exchangeRate.exchangeRates,
+  wallet:           state.core.wallets.byId[state.ui.wallets.selectedWalletId],
+  selectedWalletId: state.ui.wallets.selectedWalletId
 })
 
-export default TransactionListConnect = connect (mapStateToProps)(TransactionList)
+const mapDispatchToProps = dispatch => ({
+  getTransactions: walletId => { dispatch(getTransactionsRequest(walletId)) }
+})
+
+export default TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
 
 class SearchBar extends Component {
   constructor(props) {

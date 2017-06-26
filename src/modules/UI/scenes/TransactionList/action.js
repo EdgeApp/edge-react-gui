@@ -1,46 +1,31 @@
-export const UPDATE_TRANSACTIONS_LIST = 'UPDATE_TRANSACTIONS_LIST'
-export const DELETE_TRANSACTIONS_LIST = 'DELETE_TRANSACTIONS_LIST'
-export const TRANSACTIONS_SEARCH_VISIBLE = 'TRANSACTIONS_SEARCH_VISIBLE'
-export const TRANSACTIONS_SEARCH_HIDDEN = 'TRANSACTIONS_SEARCH_HIDDEN'
-export const UPDATE_CONTACTS_LIST = 'UPDATE_CONTACTS_LIST'
-export const UPDATE_SEARCH_RESULTS = 'UPDATE_SEARCH_RESULTS'
-export const ENABLE_UPDATING_BALANCE = 'ENABLE_UPDATING_BALANCE'
-export const DISABLE_UPDATING_BALANCE = 'DISABLE_UPDATING_BALANCE'
-export const TOGGLE_UPDATING_BALANCE = 'TOGGLE_UPDATING_BALANCE'
-export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
-export const UPDATE_TRANSACTIONS = 'UPDATE_TRANSACTIONS'
+const PREFIX = 'UI/Scenes/TransactionList/'
+export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
+export const DELETE_TRANSACTIONS_LIST = PREFIX + 'DELETE_TRANSACTIONS_LIST'
+export const TRANSACTIONS_SEARCH_VISIBLE = PREFIX + 'TRANSACTIONS_SEARCH_VISIBLE'
+export const TRANSACTIONS_SEARCH_HIDDEN = PREFIX + 'TRANSACTIONS_SEARCH_HIDDEN'
+export const UPDATE_CONTACTS_LIST = PREFIX + 'UPDATE_CONTACTS_LIST'
+export const UPDATE_SEARCH_RESULTS = PREFIX + 'UPDATE_SEARCH_RESULTS'
+export const ENABLE_UPDATING_BALANCE = PREFIX + 'ENABLE_UPDATING_BALANCE'
+export const DISABLE_UPDATING_BALANCE = PREFIX + 'DISABLE_UPDATING_BALANCE'
+export const TOGGLE_UPDATING_BALANCE = PREFIX + 'TOGGLE_UPDATING_BALANCE'
+export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = PREFIX + 'TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL'
+export const UPDATE_TRANSACTIONS = PREFIX + 'UPDATE_TRANSACTIONS'
+export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 
-import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
+// import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
 
-export const updateBalance = () => {
-  return {
-    type: 'noop'
-  }
-}
+import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-export const updateTransactionsRequest = (walletId, transactions) => {
+export const getTransactionsRequest = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const { selectedWalletId } = state.ui.wallets
     const wallet = getSelectedWallet(state)
 
-    if (selectedWalletId === walletId) {
-      console.log('adding transactions for selectedWallet')
-      return wallet.getTransactions({}).then(transactions => {
-        dispatch(updateTransactions(transactions))
-      })
-    } else {
-      const message = 'New transactions received'
-      dispatch(openTransactionAlert(message))
-    }
+    WALLET_API.getTransactions(wallet)
+    .then(transactions => {
+      dispatch(updateTransactions(transactions))
+    })
   }
-}
-
-const getSelectedWallet = state => {
-  const { core: { wallets: { byId } }, ui: { wallets: { selectedWalletId } } } = state
-  const selectedWallet = byId[selectedWalletId]
-
-  return selectedWallet
 }
 
 export const updateTransactions = transactions => {
@@ -48,6 +33,26 @@ export const updateTransactions = transactions => {
     type: UPDATE_TRANSACTIONS,
     data: { transactions }
   }
+}
+
+export const updateBalance = () => {
+  return {
+    type: 'noop'
+  }
+}
+
+const getWallet = (walletId, getState) => {
+  const state = getState()
+  const wallet = state.core.wallets.byId[walletId]
+
+  return wallet
+}
+
+const getSelectedWallet = state => {
+  const { core: { wallets: { byId } }, ui: { wallets: { selectedWalletId } } } = state
+  const selectedWallet = byId[selectedWalletId]
+
+  return selectedWallet
 }
 
 export function deleteTransactionsList () {
