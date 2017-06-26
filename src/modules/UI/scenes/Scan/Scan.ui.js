@@ -199,7 +199,7 @@ class AddressInputRecipient extends Component { // this component is for the inp
   render() {
     let innerText = ''
     console.log('rendering Rename Address, this.state is: ', this.state)
-    if( this.state.copiedString.length !== 0) innerText = sprintf('%s', t('fragment_copy_button_syntax')) + ' "' + this.state.copiedString + '"'
+    if( this.state.copiedString.length !== 0) innerText = sprintf('%s', t('fragment_copy_button_syntax')) + ' "' + this.state.copiedString.slice(0, 10) + ' ... ' + this.state.copiedString.slice(-10) + '"'
 
     return(
       <View>

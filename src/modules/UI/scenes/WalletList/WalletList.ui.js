@@ -114,7 +114,7 @@ class WalletList extends Component {
                 walletOrder.splice(e.to, 0, walletOrder.splice(e.from, 1)[0])
                 this.props.dispatch(updateWalletListOrder(walletOrder, this.props.walletList, walletListArray))
               }}
-              renderRow={row => <WalletListRow data={row} archiveLabel='Archive' />}
+              renderRow={row => <WalletListRow data={row} archiveLabel={sprintf('%s', t('fragmet_wallets_list_archive_title_capitalized'))} />}
             />
           }
 
@@ -123,7 +123,7 @@ class WalletList extends Component {
               <View style={styles.leftArea}>
                 <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' />
                 <FormattedText style={styles.archiveBoxHeaderText}>
-                  {sprintf('%s', t('fragmet_wallets_list_archive_title_lowercase'))}
+                  {sprintf('%s', t('fragmet_wallets_list_archive_title_capitalized'))}
                 </FormattedText>
               </View>
             </View>
@@ -141,7 +141,7 @@ class WalletList extends Component {
                 archiveOrder.splice(e.to, 0, archiveOrder.splice(e.from, 1)[0])
                 this.forceArchiveListUpdate(archiveOrder)
               }}
-              renderRow={row => <WalletListRow archiveLabel='Restore' data={row} />}
+              renderRow={row => <WalletListRow archiveLabel={sprintf('%s', t('fragmet_wallets_list_restore_title_capitalized'))} data={row} />}
             />
           }
         </View>
@@ -215,8 +215,6 @@ class DeleteSubtext extends Component {
   }
 
   render() {
-    console.log('deleteSubtext being rendered, this is: ', this)
-
     return(
       <FormattedText style={styles.subHeaderSyntax}>
         {sprintf('%s', t('fragmet_wallets_delete_wallet_first_confirm_message_mobile'))}

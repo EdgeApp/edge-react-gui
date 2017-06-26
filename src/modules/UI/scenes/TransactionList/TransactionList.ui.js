@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import t from '../../../../lib/LocaleStrings'
+import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
 import FormattedText from '../../components/FormattedText'
@@ -21,7 +23,20 @@ import Contacts from 'react-native-contacts'
 import styles from './style'
 import { border } from '../../../../util/border'
 
-const monthNames = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dev']
+const monthNames = [
+    sprintf('%s', t('transactions_list_date_jan')),
+    sprintf('%s', t('transactions_list_date_feb')),
+    sprintf('%s', t('transactions_list_date_mar')),
+    sprintf('%s', t('transactions_list_date_apr')),
+    sprintf('%s', t('transactions_list_date_may')),
+    sprintf('%s', t('transactions_list_date_jun')),
+    sprintf('%s', t('transactions_list_date_jul')),
+    sprintf('%s', t('transactions_list_date_aug')),
+    sprintf('%s', t('transactions_list_date_sep')),
+    sprintf('%s', t('transactions_list_date_oct')),
+    sprintf('%s', t('transactions_list_date_nov')),
+    sprintf('%s', t('transactions_list_date_dec'))
+  ]
 var dateStrings = []
 
 class TransactionList extends Component {
@@ -227,13 +242,13 @@ class TransactionList extends Component {
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
                               <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                              <FormattedText style={[styles.request]}>Request</FormattedText>
+                              <FormattedText style={[styles.request]}>{sprintf('%s', t('fragment_request_subtitle'))}</FormattedText>
                             </View>
                           </TouchableHighlight>
                           <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                             <View style={[styles.sendWrap]}>
                               <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                              <FormattedText style={styles.send}>Send</FormattedText>
+                              <FormattedText style={styles.send}>{sprintf('%s', t('fragment_send_subtitle'))}</FormattedText>
                             </View>
                           </TouchableHighlight>
                         </View>
@@ -261,16 +276,16 @@ class TransactionList extends Component {
     let month = txDate.getMonth()
     let day = txDate.getDate()
     let year = txDate.getFullYear()
-    let dateString = monthNames[month] + ' ' + day + ', ' + year
+    let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     dateStrings.push(dateString)
     if (tx.amountSatoshi <= 0) {
-      sendReceiveSyntax = 'Send'
-      expenseIncomeSyntax = 'Expense'
+      sendReceiveSyntax = sprintf('%s', t('fragment_send_subtitle'))
+      expenseIncomeSyntax = sprintf('%s', t('fragment_transaction_expense'))
       txColor = '#F03A47'
     } else {
-      sendReceiveSyntax = 'Receive'
-      expenseIncomeSyntax = 'Income'
+      sendReceiveSyntax = sprintf('%s', t('fragment_transaction_receive'))
+      expenseIncomeSyntax = sprintf('%s', t('fragment_transaction_income'))
       txColor = '#7FC343'
     }
 
@@ -342,11 +357,11 @@ class SearchBar extends Component {
       <View style={[styles.searchContainer, border('green')]}>
         <View style={[ styles.innerSearch, border('orange')]}>
           <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder='Search' />
+          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf('%s', t('string_search'))} />
         </View>
         <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
           <TouchableHighlight onPress={this.props.onPress} style={[border('red'), styles.cancelButton]}>
-            <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
+            <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf('%s', t('string_cancel_cap'))}</Text>
           </TouchableHighlight>
         </Animated.View>
       </View>
