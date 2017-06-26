@@ -41,9 +41,9 @@ class ControlPanel extends Component {
   }
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  account:      state.account,
+  usersView:    state.ui.scenes.controlPanel.usersView
+})
 
-  account: state.account,
-  usersView: state.ui.controlPanel.usersView
-
-}) )(ControlPanel)
+export default connect(mapStateToProps)(ControlPanel)

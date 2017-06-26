@@ -30,6 +30,7 @@ class HelpModal extends Component {
   }
 
   render () {
+    console.log('this.props', this.props)
     return (
       <TouchableWithoutFeedback onPress={ e => this.props.dispatch(closeHelpModal())}>
         <Modal isVisible={this.props.modal} animationIn='bounceIn' animationOut='bounceOut' style={{margin: 0, paddingVertical: 60, paddingHorizontal: 20}}>
@@ -53,12 +54,11 @@ class HelpModal extends Component {
       </TouchableWithoutFeedback>
     )
   }
-
 }
 
-export default connect( state => ({
-
-  modal: state.helpModal,
+const mapStateToProps = state => ({
+  modal: state.ui.scenes.helpModal,
   routes: state.routes
+})
 
-}) )(HelpModal)
+export default connect(mapStateToProps)(HelpModal)

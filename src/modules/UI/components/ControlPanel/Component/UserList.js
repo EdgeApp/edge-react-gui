@@ -76,11 +76,11 @@ class UserListComponent extends Component {
   }
 }
 
-export default connect( state => ({
-
+const mapStateToProps = state => ({
   context: state.airbitz,
   usersList : state.account.username !== null ?
-    _.filter(state.ui.controlPanel.usersList, item => item !== state.account.username) :
-    state.ui.controlPanel.usersList,
+  _.filter(state.ui.controlPanel.usersList, item => item !== state.account.username) :
+  state.ui.controlPanel.usersList,
+})
 
-}) )(UserListComponent)
+export default connect(mapStateToProps)(UserListComponent)

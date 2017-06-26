@@ -154,6 +154,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center'
   },
   addressInputWrap: {
+    marginTop: 8,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     borderBottomColor: '#dddddd',
@@ -161,9 +162,12 @@ module.exports = StyleSheet.create({
 
   },
   addressInput: {
-    height: (Platform.OS === 'ios') ? 26 : '100%',
+    height: 26,
     textAlign: 'center', 
     fontSize: 20
+  },
+  pasteButtonRow: {
+    paddingTop: 12
   },
   modalBottom: {
     flex: 1,
@@ -193,5 +197,6 @@ module.exports = StyleSheet.create({
   doneButton: {
     fontSize: 28,
     color: '#3c76cd'
-  }
+  },
+
 })

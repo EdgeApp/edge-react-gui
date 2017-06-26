@@ -12,34 +12,38 @@ import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
 
 class ExampleToWallet extends Component {
+  constructor(props) {
+    super(props)
+    //this.state = { walletListModalVisibility: true }
+  }
 
   _onPressDropdownToggle = () => {
+    //this.setState({walletListModalVisibility: !this.state.walletListModalVisibility})
     this.props.dispatch(toggleWalletListModalVisibility())
   }
 
   render () {
-    let topDisplacement =  this.props.headerHeight + 2
+    let topDisplacement =  66
     let selectionFunction = 'selectToWallet'
     return (
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
             <Text style={{ color: "#FFF", fontSize: 20 }}>My Wallet  </Text>
-            <TouchableHighlight onPress={this._onPressDropdownToggle}>
+            <TouchableOpacity onPress={this._onPressDropdownToggle}>
                 <View>
                   {!this.props.walletListModalVisible && !this.props.addressModalVisible && 
                   <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25 }} />
                   }
                     
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
             {this.props.walletListModalVisible && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
           </View>
     )
   }
 }
 
-export default connect(state => ({
-  headerHeight: state.ui.dimensions.headerHeight,  
-  addressModalVisible: state.ui.scan.addressModalVisible,
-  walletListModalVisible: state.ui.walletTransferList.walletListModalVisible
+export default connect(state => ({ 
+  addressModalVisible: state.ui.scenes.scan.addressModalVisible,
+  walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible
 })
 )(ExampleToWallet)

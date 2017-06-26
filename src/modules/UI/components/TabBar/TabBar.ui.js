@@ -25,11 +25,11 @@ class TabBar extends Component {
           <FooterTab>
 
             <Button
-              onPress={ () => Actions.directory() }
+              onPress={ () => Actions.walletList() }
               active={ this.props.routes.scene.title  === 'Directory' ? true : false }
             >
-              <Icon name='home' />
-              <Text>Directory</Text>
+              <Icon name='ios-cash-outline' />
+              <Text>Wallets</Text>
             </Button>
 
             <Button
@@ -69,12 +69,11 @@ class TabBar extends Component {
       </LinearGradient>
     )
   }
-
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  sidemenu: state.ui.scenes.sideMenu.view,
+  routes:   state.routes
+})
 
-  sidemenu : state.ui.sideMenu.view,
-  routes: state.routes
-
-}) )(TabBar)
+export default connect(mapStateToProps)(TabBar)

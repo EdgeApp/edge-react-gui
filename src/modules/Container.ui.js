@@ -15,7 +15,8 @@ import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
-import AddWallet from './UI/scenes/AddWallet/index.js'
+import CreateWallet from './UI/scenes/CreateWallet/index.js'
+import {SettingsOverview, BTCSettings, ETHSettings} from './UI/scenes/Settings'
 
 import Login from './UI/scenes/Login/index.js'
 
@@ -25,10 +26,13 @@ import TabBar from './UI/components/TabBar/TabBar.ui'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert'
 
-import { initializeAccount, addAirbitzToRedux, addWalletByKey } from './Login/action.js'
 import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 import { selectWalletById } from './UI/Wallets/action.js'
 import { setDeviceDimensions } from './UI/dimensions/action'
+import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
+import { initializeAccount } from './Login/action.js'
+import { addContext } from './Core/Context/action.js'
+import { deleteWalletRequest } from './Core/Wallets/action.js'
 
 import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { makeContext } from 'airbitz-core-js'
@@ -58,19 +62,19 @@ class Main extends Component {
         io
       })
 
-      this.props.dispatch(addAirbitzToRedux(context))
+      this.props.dispatch(addContext(context))
       this.setState({
         context,
         loading: false
       })
     })
-    this.props.dispatch(updateExchangeRates()) // this is dummy data and this function will need to be moved         
+    this.props.dispatch(updateExchangeRates()) // this is dummy data and this function will need to be moved
   }
   _onLayout = (event) => {
     var {x, y, width, height} = event.nativeEvent.layout
     let xScale = (width / 375).toFixed(2)
     let yScale = (height / 647).toFixed(2)
-    this.props.dispatch(setDeviceDimensions({width, height, xScale, yScale}))  
+    this.props.dispatch(setDeviceDimensions({width, height, xScale, yScale}))
   }
 
   render () {
@@ -131,7 +135,13 @@ class Main extends Component {
 
                     <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
 
-                    <Scene key='addWallet' component={AddWallet} title='Add Wallet' duration={0} />
+                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' duration={0} />
+
+                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' duration={0} />
+
+                    <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' duration={0} />
+
+                    <Scene key='ethSettings' component={ETHSettings} title='ETH Settings' duration={0} />
 
                   </Scene>
                 </RouterWithRedux>
@@ -152,33 +162,3 @@ const mapStateToProps = state => ({})
 const mapDispatchToProps = dispatch => ({})
 
 export default connect()(Main)
-
-const makeAccountCallbacks = dispatch => {
-  const callbacks = {
-    onDataChanged: () => {
-      console.log('onDataChanged')
-    },
-
-    onKeyListChanged: () => {
-      console.log('onKeyListChanged')
-    },
-
-    onLoggedOut: () => {
-      console.log('onLoggedOut')
-    },
-
-    onOTPRequired: () => {
-      console.log('onOTPRequired')
-    },
-
-    onOTPSkew: () => {
-      console.log('onOTPSkew')
-    },
-
-    onRemotePasswordChanged: () => {
-      console.log('onRemotePasswordChanged')
-    }
-  }
-
-  return callbacks
-}

@@ -8,20 +8,14 @@ import FormattedText from '../../components/FormattedText'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
-import EvilIcon from 'react-native-vector-icons/EvilIcons'
-import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateWalletRenameInput } from './action'
+import EvilIcons from 'react-native-vector-icons/EvilIcons'
+import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
 
 class WalletListRowOptions extends Component {
-
-  constructor (props) {
-    super(props)
-  }
-
   optionAction (optionKey) {
     this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
     if (optionKey === 'Rename') {
-      this.props.dispatch(updateCurrentWalletBeingRenamed(this.props.walletKey))
-      this.props.dispatch(updateWalletRenameInput(this.props.wallets[this.props.walletKey].id.slice(0,5)))
+      this.props.dispatch(updateRenameWalletInput(this.props.wallets[this.props.walletKey].id.slice(0, 5)))
     }
   }
 
@@ -30,35 +24,35 @@ class WalletListRowOptions extends Component {
 
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (
-      <View style={{ padding: 10, flexDirection: 'row' }} style={styles.rowDotsWrap}>
-        <Menu onSelect={(value) => this.optionAction(value)}>
-          <MenuTrigger>
+      <View style={styles.rowDotsWrap}>
+        <Menu style={styles.menuButton} onSelect={(value) => this.optionAction(value)}>
+          <MenuTrigger style={styles.menuTrigger}>
             <Text style={{fontSize: 20 }}>&#8942;</Text>
           </MenuTrigger>
           <MenuOptions>
             <MenuOption value={options[0]} style={styles.menuOption}>
               <View style={[styles.menuOptionItem, this.border('green')]}>
-                <MAIcon name="edit" size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />
+                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[0]}</FormattedText>
               </View>
             </MenuOption>
             <MenuOption value={options[1]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, this.border('green')]}>  
-                <MAIcon name="edit" size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />                            
+              <View style={[styles.menuOptionItem, this.border('green')]}>
+                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[1]}</FormattedText>
               </View>
             </MenuOption>
             <MenuOption value={options[2]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, this.border('green')]}>                   
-                <EvilIcon name="archive" size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />                          
+              <View style={[styles.menuOptionItem, this.border('green')]}>
+                <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[2]}</FormattedText>
-              </View>                
+              </View>
             </MenuOption>
             <MenuOption value={options[3]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, this.border('green')]}>    
-                <FAIcon name="trash-o" size={24} style={[styles.optionIcon, styles.trashIcon, this.border('red')]} />                          
+              <View style={[styles.menuOptionItem, this.border('green')]}>
+                <FAIcon name='trash-o' size={24} style={[styles.optionIcon, styles.trashIcon, this.border('red')]} />
                 <FormattedText style={[styles.optionText]}>{options[3]}</FormattedText>
-                </View>
+              </View>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -66,7 +60,7 @@ class WalletListRowOptions extends Component {
     )
   }
 
-  border(color) {
+  border (color) {
     return {
       borderColor: color,
       borderWidth: 0

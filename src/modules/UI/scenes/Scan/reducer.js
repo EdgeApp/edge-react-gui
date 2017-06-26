@@ -35,6 +35,12 @@ const selectedWalletListModalVisibility = (state = false, action) => {
       return !state
     case WALLET_LIST_MODAL_ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL :
       return false
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_TO_WALLET_LIST_MODAL :
+      return false
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL : 
+      return false
+    case ACTION.TOGGLE_ADDRESS_MODAL_VISIBILITY : 
+      return false      
     default: 
       return state
   }
@@ -46,6 +52,12 @@ const scanToWalletListModalVisibility = (state = false, action) => {
       return !state
     case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
       return false      
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL : 
+      return false
+    case WALLET_LIST_MODAL_ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL : 
+      return false
+    case ACTION.TOGGLE_ADDRESS_MODAL_VISIBILITY : 
+      return false
     default: 
       return state
   }

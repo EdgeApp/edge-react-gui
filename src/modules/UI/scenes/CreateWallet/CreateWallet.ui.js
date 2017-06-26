@@ -8,15 +8,14 @@ import {
   Button,
   TouchableOpacity,
   TextInput } from 'react-native'
-  import FormattedText from '../../components/FormattedText'
+import FormattedText from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { dev } from '../../../utils.js'
-import {updateNewWalletName} from './action'
+import { updateWalletName, selectBlockchain, selectFiat, createWallet } from './action'
 import LinearGradient from 'react-native-linear-gradient'
 
 import { addWallet } from '../../Wallets/action.js'
-import FakeAccount from '../../../../Fakes/FakeAccount.js'
 import { Actions } from 'react-native-router-flux'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
@@ -31,39 +30,11 @@ const INVALID_DATA_TEXT = 'Please select valid data'
 
 ////////////////////////////// ROOT ///////////////////////////////////////////
 
-class AddWallet extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      supportedBlockchains: [],
-      supportedFiats: [],
-      selectedWalletName: '',
-      selectedBlockchain: '',
-      selectedFiat: '',
-      displaySpinner: false,
-    }
-  }
-
-  componentDidMount () {
-    const supportedBlockchains = this.getSupportedBlockchains()
-    const supportedFiats = this.getSupportedFiats()
-
-    this.setState({
-      supportedBlockchains,
-      supportedFiats
-    })
-  }
-
+class CreateWallet extends Component {
   getSupportedBlockchains = () => {
     const supportedBlockchains = [
       'Bitcoin',
-      'Dash',
-      'Dogecoin',
-      'Ethereum',
-      'Litecoin',
-      'Shitcoin',
-      'Bitcoin',
+      'Ethereum'
     ]
 
     return supportedBlockchains
@@ -87,23 +58,18 @@ class AddWallet extends Component {
     const isValidBlockchain = !!this.isValidBlockchain()
     const isValidFiat = !!this.isValidFiat()
 
-    if (isValidWalletName && isValidBlockchain && isValidFiat) {
-      return true
-    }
-
-    return false
+    return (isValidWalletName && isValidBlockchain && isValidFiat)
   }
 
   isValidWalletName = () => {
-    const isValid = this.props.nameInput
+    const isValid = this.props.walletName
 
     return isValid
   }
 
   isValidBlockchain = () => {
-    const {
-      supportedBlockchains,
-      selectedBlockchain } = this.state
+    const supportedBlockchains = this.getSupportedBlockchains()
+    const { selectedBlockchain } = this.props
 
     const isValid = supportedBlockchains.find((blockchain) => {
       return blockchain === selectedBlockchain
@@ -113,13 +79,12 @@ class AddWallet extends Component {
   }
 
   isValidFiat = () => {
-    const {
-      supportedFiats,
-      selectedFiat } = this.state
+    const supportedFiats = this.getSupportedFiats()
+    const { selectedFiat } = this.props
 
-      const isValid = supportedFiats.find((fiat) => {
-        return fiat === selectedFiat
-      })
+    const isValid = supportedFiats.find((fiat) => {
+      return fiat === selectedFiat
+    })
 
     return isValid
   }
@@ -128,37 +93,10 @@ class AddWallet extends Component {
     if (!this.isValidData()) {
       alert(INVALID_DATA_TEXT)
     } else {
-      const wallet = {
-        name: this.props.nameInput,
-        type: this.state.selectedBlockchain,
-        keys: ['private', 'public'],
-        id: '123',
-      }
-      this.props.dispatch(addWallet(wallet))
-      Actions.walletList()
-      // determine wallet type
-      // const walletType = 'wallet.repo.myFakeWalletType'
-      // // get new keys from txLib
-      // const walletKeys = ['MASTER_PRIVATE_KEY', 'MASTER_PUBLIC_KEY']
-      //
-      // // create new wallet
-      // this.props.account.createWallet(walletType, walletKeys)
-      // .then(walletId => {
-      //   // get wallet by ID from the account
-      //   const wallet = this.props.account.getWallet(walletId)
-      //
-      //   // manually add wallet name
-      //   wallet.name = this.props.nameInput
-      //
-      //   // manually add wallet id
-      //   wallet.walletId = walletId
-      //
-      //   // save new wallet in redux
-      //   this.props.dispatch(addWallet(wallet))
-      //
-      //   //redirect to the list of wallets
-      //   Actions.walletList()
-      // })
+      const { walletName, selectedBlockchain } = this.props
+      console.log('walletName', walletName)
+      console.log('selectedBlockchain', selectedBlockchain)
+      this.props.createWallet(walletName, selectedBlockchain)
     }
   }
 
@@ -166,36 +104,24 @@ class AddWallet extends Component {
     Actions.walletList() //redirect to the list of wallets
   }
 
-  handleChangeWalletName = (input) => {
-    this.props.dispatch(updateNewWalletName(input))
+  handleChangeWalletName = input => {
+    this.props.updateWalletName(input)
   }
 
-  handleSelectWalletName = (selectedWalletName) => {
-    this.setState({
-      selectedWalletName
-    })
+  handleSelectBlockchain = blockchain => {
+    this.props.selectBlockchain(blockchain)
   }
 
-  handleSelectBlockchain = (selectedBlockchain) => {
-    this.setState({
-      selectedBlockchain
-    })
-  }
-
-  handleSelectFiat = (selectedFiat) => {
-    this.setState({
-      selectedFiat
-    })
+  handleSelectFiat = fiat => {
+    this.props.selectFiat(fiat)
   }
 
   render () {
-
     return (
-      <View
-        style={styles.view}>
+      <View style={styles.view}>
+
         <WalletNameInput
           placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
-          onSelect={ this.handleSelectWalletName }
           onChangeText={this.handleChangeWalletName} />
 
         <DropdownPicker
@@ -220,12 +146,20 @@ class AddWallet extends Component {
   }
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  walletName: state.ui.scenes.createWallet.walletName,
+  selectedBlockchain: state.ui.scenes.createWallet.selectedBlockchain,
+  selectedFiat: state.ui.scenes.createWallet.selectedFiat
+})
 
-  wallets: state.ui.wallets.wallets,
-  nameInput: state.ui.addWallet.newWalletName
+const mapDispatchToProps = dispatch => ({
+  updateWalletName: walletName => dispatch(updateWalletName(walletName)),
+  selectBlockchain: blockchain => dispatch(selectBlockchain(blockchain)),
+  selectFiat:       fiat       => dispatch(selectFiat(fiat)),
+  createWallet:     (walletName, blockchain) => dispatch(createWallet(walletName, blockchain))
+})
 
-}))(AddWallet)
+export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)
 
 ////////////////////////////// Buttons ////////////////////////////////////////
 
@@ -253,18 +187,11 @@ const Buttons = (props) => {
 ////////////////////////////// WalletNameInput /////////////////////////////////
 
 class WalletNameInput extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {}
-  }
-
   render () {
     return (
       <View style={styles.pickerView}>
         <TextInput style={styles.picker}
           clearButtonMode={'while-editing'}
-          onChangeText={this.props.onSelect}
           autoCorrect={false}
           autoFocus={true}
           placeholder={this.props.placeholder}
@@ -365,11 +292,11 @@ class DropdownPicker extends Component {
 
 ////////////////////////////// DropdownList ///////////////////////////////////
 
-const DropdownList = (props) => {
+const DropdownList = props => {
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
   const dataSource = ds.cloneWithRows(props.dataSource)
 
-  renderRow = (data) => {
+  renderRow = data => {
     return (
       <TouchableOpacity
         style={{backgroundColor: 'white', padding: 10,}}

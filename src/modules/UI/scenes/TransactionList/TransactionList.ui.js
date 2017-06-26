@@ -32,44 +32,17 @@ class TransactionList extends Component {
       focused: false,
       animation: new Animated.Value(0),
       op: new Animated.Value(0),
-      balanceBoxHeight: new Animated.Value(200),    
+      balanceBoxHeight: new Animated.Value(200),
       balanceBoxOpacity: new Animated.Value(1),
-      balanceBoxVisible: true   
+      balanceBoxVisible: true
      }
    }
-  
-  componentWillMount() {
-    this.props.dispatch(updateExchangeRates())         
+
+  componentDidMount() {
+    this.props.dispatch(updateExchangeRates())
     this.setState({
       balance: this.props.wallet.getBalance()
     })
-  }
-  
-  componentDidMount() {
-    /*Contacts.getAll((err, contacts) => {
-      if(err && err.type === 'permissionDenied'){
-      } else {
-        this.props.dispatch(updateContactsList(contacts))
-        var sampleTransactionsWithImages = []
-        for(let v of this.props.transactionsList) {
-          if(v.metaData.name){
-            let presence = this.contactSearch(v.metaData.name, this.props.contactsList)
-            if(presence && presence.hasThumbnail){
-              var temporaryContact = {}
-              Object.assign(temporaryContact, v)
-              v.hasThumbnail = presence.hasThumbnail
-              v.thumbnailPath = presence.thumbnailPath
-              sampleTransactionsWithImages.push(v)
-            } else {
-              sampleTransactionsWithImages.push(v)
-            }
-          } else {
-            sampleTransactionsWithImages.push(v)
-          }
-        }
-        this.props.dispatch(updateTransactionsList(sampleTransactionsWithImages))
-      }
-    })*/
   }
 
   contactSearch (nameKey, myArray) {
@@ -99,7 +72,7 @@ class TransactionList extends Component {
 
   _onFocus = () => {
     this.setState({
-      focused: true, 
+      focused: true,
     })
     this._toggleCancelVisibility()
   }
@@ -108,18 +81,18 @@ class TransactionList extends Component {
     this.setState({
       focused: false,
     })
-    this._toggleCancelVisibility()    
+    this._toggleCancelVisibility()
   }
 
   _toggleCancelVisibility = () => {
 
     let toOpacity, toWidth, toBalanceBoxHeight
-    if(this.state.focused){        
+    if(this.state.focused){
       toOpacity = 0
       toWidth = 0
       toBalanceBoxHeight = 200
       toBalanceBoxOpacity = 1.0
-      this.setState({balanceBoxVisible: true}  )    
+      this.setState({balanceBoxVisible: true}  )
 
       Animated.parallel([
         Animated.sequence([
@@ -136,7 +109,7 @@ class TransactionList extends Component {
               toValue: toWidth,
               duration: 200
             }
-          )        
+          )
         ]),
         Animated.sequence([
           Animated.timing(
@@ -155,7 +128,7 @@ class TransactionList extends Component {
           )
         ])
       ]).start()
-    } else {       
+    } else {
       toOpacity = 1
       toWidth = 60
       toBalanceBoxHeight = 0
@@ -186,8 +159,8 @@ class TransactionList extends Component {
                 toValue: toBalanceBoxOpacity,
                 duration: 400
               }
-            ) 
-        ]),        
+            )
+        ]),
           Animated.timing(
             this.state.balanceBoxHeight,
             {
@@ -196,7 +169,7 @@ class TransactionList extends Component {
             }
           )
         ])
-      ]).start(() => this.setState({balanceBoxVisible: false}))        
+      ]).start(() => this.setState({balanceBoxVisible: false}))
     }
   }
 
@@ -219,35 +192,35 @@ class TransactionList extends Component {
     console.log('about to render transactionsList , this.state.balanceBoxVisible is: ' , this.state.balanceBoxVisible)
     console.log('about to render again, this.state.balanceBoxOpacity is: ', this.state.balanceBoxOpacity)
     return (
-        <ScrollView style={[border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>     
+        <ScrollView style={[border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
           <View style={[styles.container, border('green')]}>
             <Animated.View style={[{height: this.state.balanceBoxHeight}, border('red')]}>
-                <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
-                  {this.state.balanceBoxVisible && 
-                      <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
-                          {this.props.updatingBalance ? (
-                            <View style={[styles.currentBalanceWrap]}>     
-                              <View style={[ styles.updatingBalanceWrap]}>           
-                                <ActivityIndicator
-                                  animating={this.props.updatingBalance}
-                                  style={[styles.updatingBalance, {height: 40}]}
-                                  size="small"
-                                />     
-                              </View>
-                            </View>           
-                          ) : (
-                            <View style={[styles.currentBalanceWrap, border('green')]}>
-                              <View style={[styles.bitcoinIconWrap, border('yellow')]}>
-                                <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
-                              </View>
-                              <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
-                                <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
+                {this.state.balanceBoxVisible &&
+                  <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+                    {this.props.updatingBalance ? (
+                      <View style={[styles.currentBalanceWrap]}>
+                        <View style={[ styles.updatingBalanceWrap]}>
+                          <ActivityIndicator
+                            animating={this.props.updatingBalance}
+                            style={[styles.updatingBalance, {height: 40}]}
+                            size="small"
+                          />
+                        </View>
+                      </View>
+                    ) : (
+                      <View style={[styles.currentBalanceWrap, border('green')]}>
+                        <View style={[styles.bitcoinIconWrap, border('yellow')]}>
+                          <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
+                        </View>
+                        <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
+                          <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
                               </View>
                               <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
                                 <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
                               </View>
-                          </View>  
+                          </View>
                           )}
 
                         <View style={[styles.requestSendRow, border('yellow')]}>
@@ -279,7 +252,7 @@ class TransactionList extends Component {
               />
           </View>
         </View>
-      </ScrollView>   
+      </ScrollView>
     )
   }
 
@@ -338,24 +311,25 @@ class TransactionList extends Component {
       </View>
     )
   }
-}
+  }
 
-TransactionList.propTypes = {
-  transactionsList: PropTypes.array,
-  searchVisible: PropTypes.bool,
-  contactsList: PropTypes.array
-}
+  TransactionList.propTypes = {
+    transactionsList: PropTypes.array,
+    searchVisible: PropTypes.bool,
+    contactsList: PropTypes.array
+  }
 
-export default TransactionListConnect = connect ( state => ({
+const mapStateToProps = state => ({
   // updatingBalance: state.ui.transactionList.updatingBalance,
   updatingBalance: false,
-  transactions: state.ui.transactionList.transactions,
-  searchVisible: state.ui.transactionList.searchVisible,
-  contactsList: state.ui.transactionList.contactsList,
-  exchangeRates: state.exchangeRate.exchangeRates,
-  wallet: state.wallets.byId[state.ui.wallets.selectedWalletId]
-}))(TransactionList)
+  transactions:  state.ui.scenes.transactionList.transactions,
+  searchVisible: state.ui.scenes.transactionList.searchVisible,
+  contactsList:  state.ui.scenes.transactionList.contactsList,
+  exchangeRates: state.ui.scenes.exchangeRate.exchangeRates,
+  wallet:        state.core.wallets.byId[state.ui.wallets.selectedWalletId]
+})
 
+export default TransactionListConnect = connect (mapStateToProps)(TransactionList)
 
 class SearchBar extends Component {
   constructor(props) {
@@ -370,12 +344,12 @@ class SearchBar extends Component {
           <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
           <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder='Search' />
         </View>
-          <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-            <TouchableHighlight onPress={this.props.onPress} style={[border('red'), styles.cancelButton]}>
-              <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
-            </TouchableHighlight>
-          </Animated.View>
-      </View>     
+        <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
+          <TouchableHighlight onPress={this.props.onPress} style={[border('red'), styles.cancelButton]}>
+            <Text style={{color: 'white', backgroundColor: 'transparent'}}>Cancel</Text>
+          </TouchableHighlight>
+        </Animated.View>
+      </View>
     )
   }
 }

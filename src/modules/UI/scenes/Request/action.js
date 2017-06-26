@@ -80,7 +80,7 @@ export const updateAmountRequestedInFiat = (amountRequestedInFiat) => {
 }
 
 const getSelectedWallet = state => {
-  const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = state
+  const { core: { wallets: { byId } }, ui: { wallets: { selectedWalletId } } } = state
   const selectedWallet = byId[selectedWalletId]
 
   return selectedWallet

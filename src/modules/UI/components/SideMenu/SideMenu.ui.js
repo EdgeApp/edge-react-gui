@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Drawer from 'react-native-drawer'
 
@@ -11,25 +10,25 @@ class SideMenuComponent extends Component {
   render () {
     return (
       <Drawer
-        type="overlay"
+        type='overlay'
         style={drawerStyles}
         content={<ControlPanel />}
         open={this.props.view}
         openDrawerOffset={0.30}
-        tapToClose={true}
+        tapToClose
         panOpenMask={0.1}
-        side="right"
+        side='right'
         onOpen={() => this.props.dispatch(openSidebar())}
         onClose={() => this.props.dispatch(closeSidebar())}
         elevation={2}
         tweenHandler={ratio => ({
           main: {
-            opacity: 1,
+            opacity: 1
           },
           mainOverlay: {
             opacity: ratio / 2,
-            backgroundColor: '#FFF',
-          },
+            backgroundColor: '#FFF'
+          }
         })}
       >
         { this.props.children }
@@ -44,11 +43,11 @@ const drawerStyles = {
     shadowOpacity: 0.8,
     shadowRadius: 3
   },
-  main: { paddingLeft: 3 },
+  main: { paddingLeft: 3 }
 }
 
-export default connect( state => ({
+const mapStateToProps = state => ({
+  view: state.ui.scenes.sideMenu.view
+})
 
-  view: state.ui.sideMenu.view
-
-}) )(SideMenuComponent)
+export default connect(mapStateToProps)(SideMenuComponent)

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableHighlight, TextInput} from 'react-native'
+import { Text, View, TouchableHighlight, TextInput, Clipboard} from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
@@ -25,6 +25,7 @@ import {
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
+import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
 import {border} from '../../../../util/border'
 
@@ -125,10 +126,10 @@ class Scan extends Component {
 
 const mapStateToProps = state => {
   return {
-    torchEnabled: state.ui.scan.torchEnabled,
-    walletListModalVisible: state.ui.walletTransferList.walletListModalVisible,
-    scanFromWalletListModalVisibility: state.ui.scan.scanFromWalletListModalVisibility,
-    scanToWalletListModalVisibility: state.ui.scan.scanToWalletListModalVisibility
+    torchEnabled:                      state.ui.scenes.scan.torchEnabled,
+    walletListModalVisible:            state.ui.scenes.walletTransferList.walletListModalVisible,
+    scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
+    scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 
@@ -148,6 +149,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
+
   render() {
     return(
       <StylizedModal
@@ -162,42 +164,63 @@ class WalletAddressModal extends Component {
 }
 
 export const WalletAddressModalConnect = connect( state => ({
-  addressModalVisible: state.ui.scan.addressModalVisible,
+  addressModalVisible: state.ui.scenes.scan.addressModalVisible,
 }))(WalletAddressModal)
 
 class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
+  constructor(props) {
+    super(props)
+    this.state = {
+      copiedString: '',
+      recipientAddressInput: ''
+    }
+  }
 
-  /*_onModalDone = () => {
-    this._onToggleAddressModal()
-    Actions.sendConfirmation(this.props.recipientAddress)
-  }*/
+  componentWillMount() {
+    Clipboard.getString().then(string => this.setState({copiedString: string}))    
+  }
 
   _onRecipientAddressChange = (input) => {
-    this.props.dispatch(updateRecipientAddress(input))
+    //this.setState({ recipientAddressInput: input })
+    this.props.dispatch(updateRecipientAddress(input))    
+  }
+
+  _copyOverAddress = () => {
+    this.setState({ recipientAddressInput: this.state.copiedString })
+    this.props.dispatch(updateRecipientAddress(this.state.copiedString))
   }
 
   render() {
-
+    console.log('rendering addressinputrecipient, this is: ', this)
+    let innerText = 'Paste "' + this.state.copiedString + '"'
+    console.log('innerText is: ', innerText)
     return(
-      <View style={[styles.addressInputWrap, border('orange')]}>
-          <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} />
+      <View>
+        <View style={[styles.addressInputWrap, border('orange')]}>
+            <TextInput style={[styles.addressInput, border('red')]} onChangeText={(input) => this._onRecipientAddressChange(input)} value={this.props.recipientAddress} />
+        </View>
+        {!!this.state.copiedString &&
+          <View style={styles.pasteButtonRow}>
+            <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} />
+          </View>
+        }
       </View>
     )
   }
 }
 
 export const AddressInputRecipientConnect = connect( state => ({
-  recipientAddress: state.ui.scan.recipientAddress
+  recipientAddress: state.ui.scenes.scan.recipientAddress
 }))(AddressInputRecipient)
 
 
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
-    updateUri(this.props.recipientAddress)   
-    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))  
-    this._onToggleAddressModal()   
-    Actions.sendConfirmation({ type: 'reset' }) 
+    updateUri(this.props.recipientAddress)
+    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))
+    this._onToggleAddressModal()
+    Actions.sendConfirmation({ type: 'reset' })
   }
   _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())
@@ -222,5 +245,5 @@ class SendAddressButtons extends Component { // this component is for the button
 }
 
 const SendAddressButtonsConnect = connect(state => ({
-  recipientAddress: state.ui.scan.recipientAddress,
+  recipientAddress: state.ui.scenes.scan.recipientAddress,
 }))(SendAddressButtons)
