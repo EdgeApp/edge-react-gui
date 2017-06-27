@@ -21,12 +21,15 @@ const strings = {
   string_no: 'No',
   string_continue: 'Continue',
   string_change: 'Change',
-  string_cancel: 'CANCEL',
+  string_cancel_uc: 'CANCEL',
+  string_cancel_cap: 'Cancel',
   string_paste: 'Paste',
   string_paste_address: 'Paste {0}',
   string_search: 'Search',
   string_done: 'DONE',
+  string_done_cap: 'Done',
   string_rename: 'Rename',
+  string_no_name: 'No name',
   string_delete: 'Delete',
   string_save: 'Save',
   string_back: 'BACK',
@@ -267,18 +270,29 @@ const strings = {
   activity_forgot_title: 'Forgot Password',
 
     //  Strings for Settings fragment
+  title_Settings : 'Settings',
+  title_BTC_Settings: 'BTC Settings',
+  title_ETH_Settings: 'ETH Settings',
   settings_title: 'Settings',
-  settings_denomination_title: 'BITCOIN DENOMINATION',
+  settings_denomination_title_btc: 'BITCOIN DENOMINATION',
+  settings_denomination_title_btc_cap: 'Bitcoin Denomination',
   settings_denomination_buttons_bitcoin: 'Bitcoin',
   settings_denomination_buttons_mbitcoin: 'mBitcoin = (0.001 Bitcoin)',
   settings_denomination_buttons_ubitcoin: 'bits = (0.000001 Bitcoin)',
+  settings_denomination_title_eth: 'Ethereum Denomination',
+  settings_denomination_buttons_ethereum: 'Ethereum = (1 Ethereum)',
   settings_account_title: 'ACCOUNT',
+  settings_account_title_cap: 'Account',
   settings_options_title: 'OPTIONS',
+  settings_options_title_cap: 'Options',
   settings_button_change_categories: 'Change Categories',
   settings_button_change_spending_limits: 'Spending Limits',
   settings_button_two_factor_authentication: '2 Factor (Enhanced Security)',
+  settings_button_setup_two_factor: 'Setup 2 Factor',
   settings_button_change_password: 'Change password',
   settings_button_pin: 'Change PIN',
+  settings_button_change_pass_recovery: 'Setup / Change Password Recovery',
+  settings_button_use_touchID: 'Use TouchID', 
   settings_button_recovery: 'Change Recovery Questions',
   settings_user_title: 'NAME',
   settings_button_send_user_info: 'Send name on payment request',
@@ -338,6 +352,7 @@ const strings = {
   send_from_title: 'From:',
   send_to_title: 'To:',
   send_scan_text: 'Scan QR Code or use photo',
+  send_scan_header_text: 'Scan, to Send, import, or Edge Login',
   send_scan_text_nfc: 'Scan QR Code or tap NFC device',
   fragment_send_connecting_to_device: 'Connecting to {0}',
   fragment_send_incorrect_pin_message: 'You must enter the correct PIN in order to proceed',
@@ -358,8 +373,10 @@ const strings = {
   fragment_send_address: 'Address',
   fragment_send_photos: 'Photos',
   fragment_send_flash: 'Flash',
-  fragment_send_address_dialog_title: 'Send to Bitcoin Address or Import Private Key',
+  fragment_send_address_dialog_title: 'Send to Bitcoin Address or Import Private Key:',
   fragment_import_address_dialog_title: 'Sweep Funds From Private Key',
+  fragment_copy_button_syntax: 'Paste',
+  title_Header: 'Header', 
   fragment_send_other_wallet_header_title: 'Choose a wallet to transfer funds to:',
   fragment_send_create_wallet_to_transfer: 'Create a new wallet to transfer funds to',
 
@@ -389,27 +406,51 @@ const strings = {
   fragment_send_confirmation_error_payment_processor: 'Error connecting to payment processor. Send directly to bitcoin address\n\n%s',
 
     //  Strings for Wallets fragment
+  title_Wallets: 'Wallets',
   fragment_wallets_title: 'Wallets',
+  fragment_wallets_header: 'My Wallets',
   fragment_wallets_add_wallet: 'Add Wallet',
   fragment_wallets_deleting_wallet: 'Deleting wallet...',
+  fragment_wallets_delete_wallet: 'Delete Wallet',
   fragment_wallets_unable_to_delete_wallet: 'Unable to delete wallet',
   fragment_wallets_delete_has_funds: 'Cannot delete wallet as it contains funds. Please transfer out funds first.',
   fragment_wallets_delete_wallet_confirm_title: 'Delete Wallet?',
   fragment_wallets_delete_wallet_confirm_message: 'Are you sure you want to delete {0}?',
   fragment_wallets_delete_wallet_second_confirm_title: 'Delete Wallet: {0}?',
   fragment_wallets_delete_wallet_second_confirm_message: 'Are you sure? You will be unable to access any funds in this wallet and any future funds that it may receive.',
+  fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
+  fragmet_wallets_delete_wallet_second_confirm_message_mobile: ' this wallet?',
   fragment_wallets_wallet_delete: 'Wallet deleted',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_list_wallets_title: 'WALLETS',
   fragment_wallets_list_archive_title: 'ARCHIVE',
   fragment_wallets_balance_text: 'Total Balance',
+  fragmet_wallets_list_archive_title_capitalized: 'Archive',
+  fragmet_wallets_list_restore_title_capitalized: 'Restore',  
   fragment_wallets_addwallet_name_hint: 'Name your new wallet',
+  fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
+  fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
   fragment_wallets_addwallet_currency_textview: 'Currency:',
+  fragmet_wallets_addtoken_option: 'Add Token',
   fragment_wallets_addwallet_online_textview: 'ONLINE',
   fragment_wallets_addwallet_offline_textview: 'OFFLINE',
   fragment_wallets_created_wallet: '{0} created',
   fragment_wallets_created_wallet_failed: 'Failed to create wallet',
   fragment_wallets_archive_help: 'To archive a wallet, tap and hold the 3 dots to the right of a wallet and drag it below the [ARCHIVE] header',
+  fragment_wallets_this_wallet: 'this wallet?',
+
+  // Wallet creation Scene
+  title_Create_Wallet: 'Create Wallet',
+  fragment_create_wallet_create_wallet: 'Create Wallet',
+  fragment_create_wallet_select_valid: 'Please select valid data',
+  fragment_blockchain_btc: 'Bitcoin',
+  fragment_blockchain_eth: 'Ethereum',
+  fragment_fiat_usd: 'US Dollar',
+  fragment_fiat_eur: 'European Euro',
+  fragment_fiat_gbp: 'British Pound',
+  fragment_fiat_jpy: 'Japanese Yen',
+  fragment_fiat_cnh: 'Chinese Yuan',
+  fragment_fiat_mxp: 'Mexican Peso',
 
     //  Strings for Wallet fragment
   fragment_wallet_title: 'Transactions',
@@ -492,6 +533,24 @@ const strings = {
   transaction_details_advanced_miner_fee: 'Miner Fee',
   transaction_details_advanced_fee: ' fee',
   transaction_details_transaction_save_failed: 'Unable to save all transaction data',
+
+    // Transaction List strings
+  title_Transactions: 'Transactions',
+  fragment_transaction_expense: 'Expense',
+  fragment_transaction_receive: 'Receive',
+  fragment_transaction_income: 'Income',
+  transactions_list_date_jan: 'Jan',
+  transactions_list_date_feb: 'Feb',
+  transactions_list_date_mar: 'Mar',
+  transactions_list_date_apr: 'Apr',
+  transactions_list_date_may: 'May',
+  transactions_list_date_jun: 'Jun',
+  transactions_list_date_jul: 'Jul',
+  transactions_list_date_aug: 'Aug',
+  transactions_list_date_sep: 'Sep',
+  transactions_list_date_oct: 'Oct',
+  transactions_list_date_nov: 'Nov',
+  transactions_list_date_dec: 'Dec',
 
     //  Strings for Export fragment
   export_title: 'Export',
@@ -805,6 +864,18 @@ const strings = {
 
   bitid_login_success: 'Successfully Logged In',
   bitid_login_failure: 'Error Logging In'
+
+
+
+
+
+  ///////////// start of mobile app ////////////////////
+
+  //////// Wallet List Scene ////////////////
+
+
+
+  //////// End Wallet List Scene //////////
 }
 
 export default strings

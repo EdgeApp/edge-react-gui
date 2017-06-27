@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import t from '../../../../lib/LocaleStrings'
+import {sprintf} from 'sprintf-js'
 import { View, Text, Platform} from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
@@ -14,20 +16,22 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {border} from '../../../../util/border'
 
 class StylizedModal extends Component {
-  render = () => {
+  render () {
     return (
       <Modal style={[styles.topLevelModal, {marginLeft: 20, marginRight: 20, marginTop: 20}, border('yellow')]}
         isVisible={this.props.visibilityBoolean}>
         <View style={[styles.modalBox, border('red')]}>
           <View style={[styles.modalBody, border('purple')]}>
             <View style={[styles.modalTopTextWrap,  border('blue')]}>
-              <FormattedText style={[styles.modalTopText, border('yellow')]}>{this.props.headerText}</FormattedText>
+              <FormattedText style={[styles.modalTopText, border('yellow')]}>{sprintf('%s', t(this.props.headerText))}</FormattedText>
               {this.props.headerSubtext &&
                 <FormattedText style={[styles.modalTopSubtext, border('green')]}
                   numberOfLines={2}>
                   {this.props.headerSubtext || ''}
                 </FormattedText>
               }
+              
+
             </View>
             {this.props.modalMiddle &&
               <View style={[styles.modalMiddle, border('brown')]}>

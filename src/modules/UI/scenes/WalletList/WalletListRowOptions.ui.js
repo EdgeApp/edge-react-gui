@@ -10,17 +10,19 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
+import {border} from '../../../utils'
+import t from '../../../../lib/LocaleStrings'
 
 class WalletListRowOptions extends Component {
   optionAction (optionKey) {
     this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
     if (optionKey === 'Rename') {
-      this.props.dispatch(updateRenameWalletInput(this.props.wallets[this.props.walletKey].id.slice(0, 5)))
+      this.props.dispatch(updateRenameWalletInput(this.props.wallets[this.props.walletKey].id))
     }
   }
 
   render () {
-    const options = ['Rename', 'Add Token', this.props.archiveLabel, 'Delete']
+    const options = [t('string_rename'), t('fragmet_wallets_addtoken_option'), this.props.archiveLabel, t('string_delete')]
 
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (
