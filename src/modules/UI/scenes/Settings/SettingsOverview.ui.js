@@ -16,6 +16,12 @@ import { Actions } from 'react-native-router-flux'
 import s from './style'
 import { border } from '../../../../util/border'
 
+import {
+  setAutoLogoutTimeRequest,
+  setDefaultFiatCurrencyRequest,
+  setMerchantModeRequest
+} from './action.js'
+
 class SettingsOverview extends Component {
   constructor(props) {
     super(props)
@@ -44,7 +50,6 @@ class SettingsOverview extends Component {
       { key: 'ethSettings', text: 'Ethereum', routeFunction: Actions.ethSettings }
     ]
   }
-
 
   _handleOnPressRouting = (route) => {
     console.log('in SettingsOverview.ui.js, route is: ', route)
@@ -137,10 +142,12 @@ class SettingsOverview extends Component {
 }
 
 const mapStateToProps = state => ({
-
+  settingsFile: state.core.account.folder.file('settings.json')
 })
 const mapDispatchToProps = dispatch => ({
-
+  setAutoLogoutTime: autoLogoffTimeInSeconds => { dispatch(setAutoLogoutTimeRequest(autoLogoffTimeInSeconds)) },
+  setDefaultFiatCurrency: defaultFiatCurrency => { dispatch(setDefaultFiatCurrencyRequest(defaultFiatCurrency)) },
+  setMerchantMode: merchantMode => { dispatch(setMerchantModeRequest(merchantMode)) }
 })
 
 export default SettingsOverviewConnect = connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

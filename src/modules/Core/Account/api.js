@@ -27,8 +27,6 @@ export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
     return keyStates
   }, {})
 
-  console.log('newKeyStates', newKeyStates)
-
   return account.changeKeyStates(newKeyStates)
 }
 
@@ -38,79 +36,45 @@ export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) =>
     return keyStates
   }, {})
 
-  console.log('newKeyStates', newKeyStates)
-
   return account.changeKeyStates(newKeyStates)
 }
 
-export const enablePinLoginRequest = () => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-
-    account.pinLogin = true
-
-    account.folder.file('settings.json').getText()
-    .then(currentSettings => {
-      const settings = JSON.parse(currentSettings)
-      settings.pinLogin = true
-      const newSettings = JSON.stringify(settings)
-
-      return account.folder.file('settings').setText(newSettings)
-    })
-  }
+// /////// SETTINGS ///////////
+export const setAutoLogoutTimeRequest = (account, autoLogoffTimeInSeconds) => {
+  return updateSettingsFile(account, { autoLogoffTimeInSeconds })
 }
 
-export const disablePinLoginRequest = () => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-
-    account.pinLogin = false
-
-    account.folder.file('settings.json').getText()
-    .then(text => {
-      const settings = JSON.parse(text)
-      settings.pinLogin = false
-
-      return account.folder.file('settings').setText(settings)
-    })
-  }
+export const setDefaultFiatCurrencyRequest = (account, defaultFiatCurrency) => {
+  return updateSettingsFile(account, { defaultFiatCurrency })
 }
 
-export const enableTouchIdRequest = () => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
-
-    account.touchId = true
-
-    account.folder.file('settings').getText()
-    .then(currentSettings => {
-      const settings = JSON.parse(currentSettings)
-      settings.touchId = true
-      const newSettings = JSON.stringify(settings)
-
-      return account.folder.file('settings').setText(newSettings)
-    })
-  }
+export const setMerchantModeRequest = (account, merchantMode) => {
+  return updateSettingsFile(account, { merchantMode })
 }
 
-export const disableTouchIdLoginRequest = () => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const { account } = state.core
+export const getSettingsFile = account => {
+  return account.folder.file('Settings.json')
+}
 
-    account.touchId = false
+export const updateSettingsFile = (account, newSettings) => {
+  // get settings file from the account
+  const settingsFile = getSettingsFile(account)
+  return settingsFile.getText()
+  .then(text => {
+    const currentSettings = JSON.parse(text)
+    // update with new settings
+    const updatedSettings = {
+      ...currentSettings,
+      ...newSettings
+    }
+    // convert to string
+    const updatedSettingsText = JSON.stringify(updatedSettings)
 
-    account.folder.file('settings').getText()
-    .then(text => {
-      const settings = JSON.parse(text)
-      settings.touchId = false
+    // Save to settings file
+    settingsFile.setText(updatedSettingsText)
 
-      return account.folder.file('settings').setText(settings)
-    })
-  }
+    return updatedSettingsText
+  })
 }
 
 //  Helper functions
