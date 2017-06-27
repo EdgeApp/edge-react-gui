@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import t from '../../../../lib/LocaleStrings'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
+import Locale from 'react-native-locale'
 import { TouchableWithoutFeedback, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
 import FormattedText from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
@@ -42,6 +43,11 @@ import { addWallet, completeDeleteWallet } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
 
 class WalletList extends Component {
+  constructor(props){
+    super(props)
+    const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
+    console.log('localeInfo is: ', localeInfo) 
+  }
   forceArchiveListUpdate (archiveOrder) {
     this.props.dispatch(updateArchiveListOrder(archiveOrder))
   }
@@ -153,7 +159,7 @@ class WalletList extends Component {
     return (
       <StylizedModal
         featuredIcon={<DeleteIcon />}
-        headerText={sprintf('%s', t('fragment_wallets_delete_wallet'))} // t(')
+        headerText='fragment_wallets_delete_wallet' // t(')
         modalMiddle={<DeleteSubtext />}
         modalBottom={<DeleteWalletButtonsConnect />}
         visibilityBoolean={this.props.deleteWalletModalVisible}
@@ -165,7 +171,7 @@ class WalletList extends Component {
     return (
       <StylizedModal
         featuredIcon={<AddressIcon />}
-        headerText={sprintf('%s', t('fragment_wallets_rename_wallet'))} // t(')
+        headerText='fragment_wallets_rename_wallet'
         headerSubtext={this.props.walletName}
         modalMiddle={<WalletNameInputConnect />}
         modalBottom={<RenameWalletButtonsConnect
@@ -227,7 +233,7 @@ class DeleteSubtext extends Component {
             </FormattedText>
           ):
           (
-            <FormattedText>{sprintf('%s', t(' this wallet?'))}</FormattedText>
+            <FormattedText>{sprintf('%s', t('fragment_wallets_this_wallet'))}</FormattedText>
           )
         }
       </FormattedText>
@@ -310,6 +316,7 @@ export const WalletNameInputConnect = connect( state => ({
   currentWalletBeingRenamed: state.ui.scenes.walletList.currentWalletBeingRenamed,
   currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
   renameWalletVisible:       state.ui.scenes.walletList.renameWalletVisible,
+  renameWalletInput:         state.ui.scenes.walletList.walletName
 }))(WalletNameInput)
 
 class RenameWalletButtons extends Component {
@@ -363,7 +370,7 @@ class RenameWalletButtons extends Component {
 
 }
 export const RenameWalletButtonsConnect = connect(state => ({
-  currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.scenes.wallets.selectedWallet]
+  currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
 }))(RenameWalletButtons)
 
 /////// End of Rename Area ////////

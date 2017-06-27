@@ -437,6 +437,7 @@ const strings = {
   fragment_wallets_created_wallet: '{0} created',
   fragment_wallets_created_wallet_failed: 'Failed to create wallet',
   fragment_wallets_archive_help: 'To archive a wallet, tap and hold the 3 dots to the right of a wallet and drag it below the [ARCHIVE] header',
+  fragment_wallets_this_wallet: 'this wallet?',
 
   // Wallet creation Scene
   title_Create_Wallet: 'Create Wallet',

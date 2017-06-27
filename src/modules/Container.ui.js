@@ -5,7 +5,6 @@ import { Scene, Router } from 'react-native-router-flux'
 import { Container, StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
 import LinearGradient from 'react-native-linear-gradient'
-
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 
