@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import {
@@ -56,6 +57,7 @@ class WalletList extends Component {
     super(props)
     const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
     console.log('localeInfo is: ', localeInfo) 
+    console.log('strings is: ' , strings)
   }
 
   /*forceArchiveListUpdate (archiveOrder) {
@@ -74,7 +76,7 @@ class WalletList extends Component {
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader, border('red')]}>
               <FormattedText style={[styles.totalBalanceText]}>
-                {sprintf('%s', t('fragment_wallets_balance_text'))}
+                {sprintf('%s', strings.enUS['fragment_wallets_balance_text'])}
               </FormattedText>
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap, border('green')]}>
