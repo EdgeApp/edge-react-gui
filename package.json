@@ -70,7 +70,7 @@
     "react-native-permissions": "^0.2.5",
     "react-native-qrcode": "^0.2.3",
     "react-native-randombytes": "^2.2.0",
-    "react-native-router-flux": "3.38.0",
+    "react-native-router-flux": "3.40.1",
     "react-native-share": "^1.0.20",
     "react-native-slider": "^0.9.1",
     "react-native-sortable-listview": "^0.2.2",
