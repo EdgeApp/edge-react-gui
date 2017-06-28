@@ -38,7 +38,7 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
-import {border} from '../../../../util/border'
+import {border as b} from '../../../../util/border'
 
 import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
@@ -74,12 +74,12 @@ class WalletList extends Component {
 
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader, border('red')]}>
+            <View style={[styles.totalBalanceHeader, b('red')]}>
               <FormattedText style={[styles.totalBalanceText]}>
                 {sprintf(strings.enUS['fragment_wallets_balance_text'])}
               </FormattedText>
             </View>
-            <View style={[styles.currentBalanceBoxDollarsWrap, border('green')]}>
+            <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
               <FormattedText style={[styles.currentBalanceBoxDollars]}>
                 $ 8,200.00
               </FormattedText>
@@ -89,17 +89,17 @@ class WalletList extends Component {
 
         <View style={styles.walletsBox}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
-            <View style={[styles.walletsBoxHeaderTextWrap, border('yellow')]}>
+            <View style={[styles.walletsBoxHeaderTextWrap, b('yellow')]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon, border('green')]} color='white' />
+                <SimpleLineIcons name='wallet' style={[styles.walletIcon, b('green')]} color='white' />
                 <FormattedText style={styles.walletsBoxHeaderText}>
                   {sprintf(strings.enUS['fragment_wallets_header'])}
                 </FormattedText>
               </View>
             </View>
 
-            <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, border('red')]}>
-              <Ionicon name='md-add'style={[styles.dropdownIcon, border('green')]} color='white' />
+            <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, b('red')]}>
+              <Ionicon name='md-add'style={[styles.dropdownIcon, b('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
           {
@@ -115,15 +115,15 @@ class WalletList extends Component {
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.archiveBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' />
+                <EvilIcons name='archive' style={[styles.archiveIcon, b('green')]} color='white' />
                 <FormattedText style={styles.archiveBoxHeaderText}>
                   {sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
                 </FormattedText>
               </View>
             </View>
 
-            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, border('red')]}>
-              <FAIcon name='angle-down' style={[styles.dropdownIcon, border('green')]} color='white' />
+            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, b('red')]}>
+              <FAIcon name='angle-down' style={[styles.dropdownIcon, b('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
           {
@@ -324,7 +324,7 @@ class DeleteWalletButtons extends Component {
 
   render() {
     return(
-      <View style={[styles.buttonsWrap, border('gray')]}>
+      <View style={[styles.buttonsWrap, b('gray')]}>
 
         <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
@@ -372,8 +372,8 @@ class WalletNameInput extends Component {
   render() {
     let walletName = this.props.currentWalletRename
     return(
-      <View style={[styles.nameInputWrap, border('orange')]}>
-        <TextInput style={[styles.nameInput, border('red')]}
+      <View style={[styles.nameInputWrap, b('orange')]}>
+        <TextInput style={[styles.nameInput, b('red')]}
           onChangeText={(input) => this._onNameInputChange(input)}
           value={this.props.renameWalletInput}
           autoFocus />
@@ -408,7 +408,7 @@ class RenameWalletButtons extends Component {
 
   render() {
     return(
-      <View style={[styles.buttonsWrap, border('gray')]}>
+      <View style={[styles.buttonsWrap, b('gray')]}>
 
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 

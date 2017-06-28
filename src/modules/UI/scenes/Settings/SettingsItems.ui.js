@@ -19,7 +19,7 @@ import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { Actions } from 'react-native-router-flux'
 import s from './style'
-import {border} from '../../../../util/border'
+import {border as b} from '../../../../util/border'
 
 class SettingsItemWithRoute extends Component {
   _handleOnPressRouting (route) {
@@ -32,11 +32,11 @@ class SettingsItemWithRoute extends Component {
       <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
         onPress={() => this.props.routeFunction()}>
 
-        <View style={[s.settingsRowTextRow, border('red')]}>
-          <View style={[s.settingsRowLeftContainer, border('blue')]}>
-            <T style={[s.settingsRowLeftText, border('green')]}>{this.props.leftText}</T>
+        <View style={[s.settingsRowTextRow, b('red')]}>
+          <View style={[s.settingsRowLeftContainer, b('blue')]}>
+            <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
           </View>
-          <MAIcon name='chevron-right' size={24} style={[s.settingsRowRightArrow, border('blue')]} color='#58595C' />
+          <MAIcon name='chevron-right' size={24} style={[s.settingsRowRightArrow, b('blue')]} color='#58595C' />
         </View>
 
       </TouchableOpacity>
@@ -58,9 +58,9 @@ class SettingsItemWithModal extends Component {
       <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
         onPress={this._toggleModal(this.props.modal)}>
 
-        <View style={[s.settingsRowTextRow, border('red')]}>
-          <View style={[s.settingsRowLeftContainer, border('blue')]}>
-            <T style={[s.settingsRowLeftText, border('green')]}>{this.props.leftText}</T>
+        <View style={[s.settingsRowTextRow, b('red')]}>
+          <View style={[s.settingsRowLeftContainer, b('blue')]}>
+            <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
           </View>
           <T style={s.modalRightText}>{this.props.modal}</T>
         </View>
@@ -84,9 +84,9 @@ class SettingsItemWithSwitch extends Component {
       <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
         onPress={() => this._handleOnPressToggleSetting(this.props.property)}>
 
-        <View style={[s.settingsRowTextRow, border('red')]}>
-          <View style={[s.settingsRowLeftContainer, border('blue')]}>
-            <T style={[s.settingsRowLeftText, border('green')]}>{this.props.leftText}</T>
+        <View style={[s.settingsRowTextRow, b('red')]}>
+          <View style={[s.settingsRowLeftContainer, b('blue')]}>
+            <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
           </View>
           <Switch
             onValueChange={ () => { this._onToggleOption(this.props.property) } } value={false} />

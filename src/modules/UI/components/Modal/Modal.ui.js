@@ -13,19 +13,19 @@ import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import {border} from '../../../../util/border'
+import {border as b} from '../../../../util/border'
 
 class StylizedModal extends Component {
   render () {
     return (
-      <Modal style={[styles.topLevelModal, {marginLeft: 20, marginRight: 20, marginTop: 20}, border('yellow')]}
+      <Modal style={[styles.topLevelModal, {marginLeft: 20, marginRight: 20, marginTop: 20}, b('yellow')]}
         isVisible={this.props.visibilityBoolean}>
-        <View style={[styles.modalBox, border('red')]}>
-          <View style={[styles.modalBody, border('purple')]}>
-            <View style={[styles.modalTopTextWrap,  border('blue')]}>
-              <FormattedText style={[styles.modalTopText, border('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</FormattedText>
+        <View style={[styles.modalBox, b('red')]}>
+          <View style={[styles.modalBody, b('purple')]}>
+            <View style={[styles.modalTopTextWrap,  b('blue')]}>
+              <FormattedText style={[styles.modalTopText, b('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</FormattedText>
               {this.props.headerSubtext &&
-                <FormattedText style={[styles.modalTopSubtext, border('green')]}
+                <FormattedText style={[styles.modalTopSubtext, b('green')]}
                   numberOfLines={2}>
                   {this.props.headerSubtext || ''}
                 </FormattedText>
@@ -34,12 +34,12 @@ class StylizedModal extends Component {
 
             </View>
             {this.props.modalMiddle &&
-              <View style={[styles.modalMiddle, border('brown')]}>
+              <View style={[styles.modalMiddle, b('brown')]}>
                 {this.props.modalMiddle}
               </View>
             }
             {this.props.modalBottom &&
-            <View style={[styles.modalBottom, border('green')]}>
+            <View style={[styles.modalBottom, b('green')]}>
               {this.props.modalBottom}
             </View>
             }

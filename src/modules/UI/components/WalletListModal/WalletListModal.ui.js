@@ -19,7 +19,7 @@ import {
 import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
-import {border} from '../../../utils'
+import {border as b} from '../../../utils'
 
 
 class WalletListModal extends Component {
@@ -32,7 +32,7 @@ class WalletListModal extends Component {
 
   render () {
     return (
-      <Animatable.View style={[this.border('green'), styles.topLevel,{position:'absolute', top: 38}]}
+      <Animatable.View style={[b('green'), styles.topLevel,{position:'absolute', top: 38}]}
         animation='fadeInDown'
         duration={100} >
         {this.props.scanToWalletListModalVisibility &&
@@ -149,28 +149,21 @@ class WalletListModalHeader extends Component {
   render () {
     return (
       <View style={[styles.rowContainer, styles.headerContainer ]}>
-        <View style={[styles.headerContent, this.border('yellow')]}>
-          <View style={[styles.headerTextWrap, this.border('green')]}>
-            <T style={[styles.headerText, {color:'white'}, this.border('purple')]}>
+        <View style={[styles.headerContent, b('yellow')]}>
+          <View style={[styles.headerTextWrap, b('green')]}>
+            <T style={[styles.headerText, {color:'white'}, b('purple')]}>
               {sprintf(strings.enUS['fragment_send_other_wallet_header_title'])}
             </T>
           </View>
-          <TouchableHighlight style={[styles.modalCloseWrap, this.border('orange')]}
+          <TouchableHighlight style={[styles.modalCloseWrap, b('orange')]}
             onPress={this._onSearchExit}>
-            <Ionicon style={[styles.donebutton, this.border('purple')]}
+            <Ionicon style={[styles.donebutton, b('purple')]}
               name="ios-close" size={24}
               color='white' />
           </TouchableHighlight>
         </View>
       </View>
     )
-  }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 

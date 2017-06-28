@@ -13,7 +13,7 @@ import T from '../../components/FormattedText'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
-import {border} from '../../../utils'
+import {border as b} from '../../../utils'
 
 class WalletListRow extends Component {
   render () {

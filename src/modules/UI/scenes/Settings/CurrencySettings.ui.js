@@ -11,7 +11,7 @@ import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { Actions } from 'react-native-router-flux'
 import s from './style'
-import {border} from '../../../../util/border'
+import {border as b} from '../../../../util/border'
 import RadioRows from '../../components/RadioRows'
 
 
@@ -56,7 +56,7 @@ class BTCSettings extends Component {
 
     render() {
         return(
-            <View style={[s.bitcoinSettings, border('brown')]}>
+            <View style={[s.bitcoinSettings, b('brown')]}>
                 <LinearGradient style={[s.headerRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']}>
                     <View style={[s.headerTextWrap]}>
                         <View style={s.leftArea}>
@@ -65,7 +65,7 @@ class BTCSettings extends Component {
                         </View>
                     </View>
                 </LinearGradient>  
-                <RadioRows options={this.denominations} onPressFunction={this._onPressToggleDenomination} style={border('green')} option='btc' />              
+                <RadioRows options={this.denominations} onPressFunction={this._onPressToggleDenomination} style={b('green')} option='btc' />              
             </View>
         )
     }
@@ -97,16 +97,16 @@ class ETHSettings extends Component {
 
     render() {
         return(
-            <View style={[s.ethereumSettings, border('brown')]}>
-                <LinearGradient style={[s.headerRow, border('purple')]} start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']}>
-                    <View style={[s.headerTextWrap, border('yellow')]}>
+            <View style={[s.ethereumSettings, b('brown')]}>
+                <LinearGradient style={[s.headerRow, b('purple')]} start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']}>
+                    <View style={[s.headerTextWrap, b('yellow')]}>
                         <View style={s.leftArea}>
-                            <IonIcon name='logo-bitcoin' style={[s.headerIcon, border('green')]} color='white' size={24} />
+                            <IonIcon name='logo-bitcoin' style={[s.headerIcon, b('green')]} color='white' size={24} />
                             <T style={s.headerText}>{sprintf(strings.enUS['settings_denomination_title_eth'])}</T>
                         </View>
                     </View>
                 </LinearGradient>     
-                <RadioRows options={this.denominations} onPressFunction={this._onPressToggleDenomination} style={border('green')} option='eth' />                                         
+                <RadioRows options={this.denominations} onPressFunction={this._onPressToggleDenomination} style={b('green')} option='eth' />                                         
             </View>
         )
     }

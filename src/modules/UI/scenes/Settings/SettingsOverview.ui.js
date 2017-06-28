@@ -89,9 +89,9 @@ class SettingsOverview extends Component {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={['#3B7ADA', '#2B5698']}>
-          <View style={[s.accountBoxHeaderTextWrap, border('yellow')]}>
+          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
-              <FAIcon style={[s.userIcon, border('green')]}
+              <FAIcon style={[s.userIcon, b('green')]}
               name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
                 {sprintf(strings.enUS['settings_account_title_cap'])}: Airbitz Super Dooper Wallet
@@ -108,9 +108,9 @@ class SettingsOverview extends Component {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={['#3B7ADA', '#2B5698']}>
-          <View style={[s.accountBoxHeaderTextWrap, border('yellow')]}>
+          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
-              <IonIcon name='ios-options' style={[s.userIcon, border('green')]} color='white' />
+              <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
               <T style={s.accountBoxHeaderText}>{sprintf(strings.enUS['settings_options_title_cap'])}</T>
             </View>
           </View>
@@ -121,7 +121,7 @@ class SettingsOverview extends Component {
           {this.securityRoute.map(this.renderSettingsItemWithRoute)}
           {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
           {this.currencies.map(this.renderSettingsItemWithRoute)}
-          <View style={[s.debugArea, border('green')]}>
+          <View style={[s.debugArea, b('green')]}>
             <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
           </View>
           <View style={s.emptyBottom}></View>
