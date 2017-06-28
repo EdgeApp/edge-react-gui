@@ -2,6 +2,11 @@
 
 const PREFIX = 'UI/Scenes/Settings/'
 
+const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
+const SET_PIN_START = PREFIX + 'SET_PIN_START'
+const SET_OTP_MODE_START = PREFIX + 'SET_OTP_MODE_START'
+const SET_OTP_START = PREFIX + 'SET_OTP_START'
+
 const SET_AUTO_LOGOUT_TIME_START = PREFIX + 'SET_AUTO_LOGOUT_TIME_START'
 const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
 const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
@@ -14,6 +19,58 @@ const SET_ETHEREUM_DENOMINATION_START = PREFIX + 'SET_ETHEREUM_DENOMINATION_STAR
 
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
+
+export const setOTPModeRequest = otpMode => {
+  return (dispatch, getState) => {
+    dispatch(setOTPModeStart(otpMode))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setOTPModeRequest(account, otpMode)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setOTPRequest = otp => {
+  return (dispatch, getState) => {
+    dispatch(setOTPStart(otp))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setOTPRequest(account, otp)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setOTP(otp))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setPINModeRequest = pinMode => {
+  return (dispatch, getState) => {
+    dispatch(setPINModeStart(pinMode))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setPINMode(pinMode))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setPINRequest = pin => {
+  return (dispatch, getState) => {
+    dispatch(setPINStart(pin))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setPINRequest(account, pin)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setPIN(pin))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
 
 export const setAutoLogoutTimeRequest = autoLogoutTimeInSeconds => {
   return (dispatch, getState) => {
@@ -107,6 +164,34 @@ export const setEthereumDenominationRequest = denomination => {
 }
 
 // Simple Actions
+const setOTPModeStart = otpMode => {
+  return {
+    type: SET_OTP_MODE_START,
+    data: { otpMode }
+  }
+}
+
+const setOTPStart = otp => {
+  return {
+    type: SET_OTP_START,
+    data: { otp }
+  }
+}
+
+const setPINModeStart = pinMode => {
+  return {
+    type: SET_PIN_MODE_START,
+    data: { pinMode }
+  }
+}
+
+const setPINStart = pin => {
+  return {
+    type: SET_PIN_START,
+    data: { pin }
+  }
+}
+
 const setAutoLogoutTimeStart = autoLogoutTimeInSeconds => {
   return {
     type: SET_AUTO_LOGOUT_TIME_START,

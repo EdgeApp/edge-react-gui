@@ -1,5 +1,11 @@
+// Default Core Settings
+export const CORE_DEFAULTS = {
+  otpMode: false,
+  pinMode: false
+}
+
 // Default Account Settings
-export const SYNCED_DEFAULTS = {
+export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   merchantMode: false,
@@ -11,11 +17,41 @@ export const SYNCED_DEFAULTS = {
   }
 }
 
-export const LOCAL_DEFAULTS = {
+export const LOCAL_ACCOUNT_DEFAULTS = {
   bluetoothMode: false
 }
 
 //  Settings
+// Core Settings
+export const setOtpModeRequest = (account, otpMode) => {
+  if (otpMode === true) {
+    return account.enableOTP()
+  } else if (otpMode === false) {
+    return account.disableOTP()
+  } else {
+    throw Error('Invalid OTP Mode')
+  }
+}
+
+export const setOTPRequest = (account, key) => {
+  return account.setupOTPKey(key)
+}
+
+export const setPinModeRequest = (account, pinMode) => {
+  if (pinMode === true) {
+    return account.enablePIN()
+  } else if (pinMode === false) {
+    return account.disablePIN()
+  } else {
+    throw Error('Invalid PIN Mode')
+  }
+}
+
+export const setPinRequest = (account, pin) => {
+  return account.changePIN(pin)
+}
+
+// Account Settings
 export const setAutoLogoutTimeRequest = (account, autoLogoutTimeInSeconds) => {
   return getSyncedSettings(account)
   .then(settings => {
@@ -78,9 +114,9 @@ export const getSyncedSettings = account => {
   .catch(e => {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_DEFAULTS)
+    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
     .then(() => {
-      return SYNCED_DEFAULTS
+      return SYNCED_ACCOUNT_DEFAULTS
     })
   })
 }
@@ -100,9 +136,9 @@ export const getLocalSettings = account => {
   .catch(e => {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setLocalSettings(account, LOCAL_DEFAULTS)
+    return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
     .then(() => {
-      return LOCAL_DEFAULTS
+      return LOCAL_ACCOUNT_DEFAULTS
     })
   })
 }
@@ -112,6 +148,14 @@ export const setLocalSettings = (account, settings) => {
   const localSettingsFile = getLocalSettingsFile(account)
 
   return localSettingsFile.setText(text)
+}
+
+export const getCoreSettings = account => {
+  const coreSettings = CORE_DEFAULTS
+  // TODO: Get each setting separately,
+  // build up settings object,
+  // return settings object
+  return Promise.resolve(coreSettings)
 }
 
 export const getSyncedSettingsFile = account => {

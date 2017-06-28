@@ -1,6 +1,8 @@
 import * as ACTION from './action.js'
 
 const initialState = {
+  pinMode: false,
+  otpMode: false,
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   merchantMode: false,
@@ -24,6 +26,22 @@ export const settings = (state = initialState, action) => {
     case ACTION.LOAD_SETTINGS: {
       const { settings } = data
       return settings
+    }
+
+    case ACTION.SET_PIN_MODE: {
+      const { pinMode } = data
+      return {
+        ...state,
+        pinMode
+      }
+    }
+
+    case ACTION.SET_OTP_MODE: {
+      const { otpMode } = data
+      return {
+        ...state,
+        otpMode
+      }
     }
 
     case ACTION.SET_AUTO_LOGOUT_TIME: {

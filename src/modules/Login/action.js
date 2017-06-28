@@ -206,5 +206,15 @@ const loadSettings = () => {
       // Add all the local settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode))
     })
+
+    SETTINGS_API.getCoreSettings(account)
+    .then(settings => {
+      const {
+        pinMode,
+        otpMode
+      } = settings
+      dispatch(SETTINGS_ACTIONS.setPINMode(pinMode))
+      dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode))
+    })
   }
 }

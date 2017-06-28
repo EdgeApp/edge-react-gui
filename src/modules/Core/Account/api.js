@@ -1,3 +1,9 @@
+// Core/Account/api.js
+
+export const logout = account => {
+  return account.logout()
+}
+
 export const createWalletRequest = (account, keys, walletType) => {
   const formattedWalletType = 'wallet:' + walletType.toLowerCase()
   return account.createWallet(formattedWalletType, keys)
