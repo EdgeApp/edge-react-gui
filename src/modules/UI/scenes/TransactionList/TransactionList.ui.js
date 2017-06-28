@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
@@ -25,18 +26,18 @@ import styles from './style'
 import { border } from '../../../../util/border'
 
 const monthNames = [
-    sprintf('%s', t('transactions_list_date_jan')),
-    sprintf('%s', t('transactions_list_date_feb')),
-    sprintf('%s', t('transactions_list_date_mar')),
-    sprintf('%s', t('transactions_list_date_apr')),
-    sprintf('%s', t('transactions_list_date_may')),
-    sprintf('%s', t('transactions_list_date_jun')),
-    sprintf('%s', t('transactions_list_date_jul')),
-    sprintf('%s', t('transactions_list_date_aug')),
-    sprintf('%s', t('transactions_list_date_sep')),
-    sprintf('%s', t('transactions_list_date_oct')),
-    sprintf('%s', t('transactions_list_date_nov')),
-    sprintf('%s', t('transactions_list_date_dec'))
+    sprintf(strings.enUS['transactions_list_date_jan']),
+    sprintf(strings.enUS['transactions_list_date_feb']),
+    sprintf(strings.enUS['transactions_list_date_mar']),
+    sprintf(strings.enUS['transactions_list_date_apr']),
+    sprintf(strings.enUS['transactions_list_date_may']),
+    sprintf(strings.enUS['transactions_list_date_jun']),
+    sprintf(strings.enUS['transactions_list_date_jul']),
+    sprintf(strings.enUS['transactions_list_date_aug']),
+    sprintf(strings.enUS['transactions_list_date_sep']),
+    sprintf(strings.enUS['transactions_list_date_oct']),
+    sprintf(strings.enUS['transactions_list_date_nov']),
+    sprintf(strings.enUS['transactions_list_date_dec'])
   ]
 var dateStrings = []
 
@@ -245,13 +246,13 @@ class TransactionList extends Component {
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
                               <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                              <FormattedText style={[styles.request]}>{sprintf('%s', t('fragment_request_subtitle'))}</FormattedText>
+                              <FormattedText style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</FormattedText>
                             </View>
                           </TouchableHighlight>
                           <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                             <View style={[styles.sendWrap]}>
                               <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                              <FormattedText style={styles.send}>{sprintf('%s', t('fragment_send_subtitle'))}</FormattedText>
+                              <FormattedText style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</FormattedText>
                             </View>
                           </TouchableHighlight>
                         </View>
@@ -283,12 +284,12 @@ class TransactionList extends Component {
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     dateStrings.push(dateString)
     if (tx.amountSatoshi <= 0) {
-      sendReceiveSyntax = sprintf('%s', t('fragment_send_subtitle'))
-      expenseIncomeSyntax = sprintf('%s', t('fragment_transaction_expense'))
+      sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
+      expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_expense'])
       txColor = '#F03A47'
     } else {
-      sendReceiveSyntax = sprintf('%s', t('fragment_transaction_receive'))
-      expenseIncomeSyntax = sprintf('%s', t('fragment_transaction_income'))
+      sendReceiveSyntax = sprintf(strings.enUS['fragment_transaction_receive'])
+      expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
     }
 
@@ -365,11 +366,11 @@ class SearchBar extends Component {
       <View style={[styles.searchContainer, border('green')]}>
         <View style={[ styles.innerSearch, border('orange')]}>
           <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf('%s', t('string_search'))} />
+          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
         </View>
         <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
           <TouchableHighlight onPress={this.props.onPress} style={[border('red'), styles.cancelButton]}>
-            <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf('%s', t('string_cancel_cap'))}</Text>
+            <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf(strings.enUS['string_cancel_cap'])}</Text>
           </TouchableHighlight>
         </Animated.View>
       </View>

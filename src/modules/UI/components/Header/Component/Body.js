@@ -13,6 +13,7 @@ import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
 //import ExampleToWallet from './ExampleToWallet.ui'
 import t from '../../../../../lib/LocaleStrings'
+import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 
 class Body extends Component {
@@ -52,7 +53,7 @@ class DefaultHeader extends Component {
 
   render () {
     console.log('title is: ', t('title_' + this._renderTitle().replace(/ /g,"_")))
-    return <Title>{ sprintf('%s', t('title_' + this._renderTitle().replace(/ /g,"_"))) }</Title>
+    return <Title>{ sprintf('%s', strings.enUS['title_'+ this._renderTitle().replace(/ /g,"_")]) }</Title>
   }
 }
 

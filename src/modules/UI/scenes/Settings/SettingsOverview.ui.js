@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Switch, TouchableOpacity, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
@@ -32,22 +33,22 @@ class SettingsOverview extends Component {
     super(props)
 
     this.settings = [
-      { key: 'changePassword', text: sprintf('%s', t('settings_button_change_password')) },
-      { key: 'changePin', text: sprintf('%s', t('settings_button_pin')) },
-      { key: 'passwordRecovery', text: sprintf('%s', t('settings_button_change_pass_recovery')) }
+      { key: 'changePassword', text: sprintf(strings.enUS['settings_button_change_password']) },
+      { key: 'changePin', text: sprintf(strings.enUS['settings_button_pin']) },
+      { key: 'passwordRecovery', text: sprintf(strings.enUS['settings_button_change_pass_recovery']) }
     ]
 
     this.securityRoute = [
-      { key: 'setup2Factor', text: sprintf('%s', t('settings_button_setup_two_factor')) }
+      { key: 'setup2Factor', text: sprintf(strings.enUS['settings_button_setup_two_factor']) }
     ]
 
     this.options = {
-      pinRelogin: { text: sprintf('%s', t('settings_title_pin_login')), key: 'pinRelogin' },
-      useTouchID: { text: sprintf('%s', t('settings_button_use_touchID')),  key: 'useTouchID' }
+      pinRelogin: { text: sprintf(strings.enUS['settings_title_pin_login']), key: 'pinRelogin' },
+      useTouchID: { text: sprintf(strings.enUS['settings_button_use_touchID']),  key: 'useTouchID' }
     }
 
     this.optionModals = [
-      { key: 'autoLogoff', text: sprintf('%s', t('settings_title_auto_logoff')) }
+      { key: 'autoLogoff', text: sprintf(strings.enUS['settings_title_auto_logoff']) }
     ]
 
     this.currencies = [
@@ -94,7 +95,7 @@ class SettingsOverview extends Component {
               <FAIcon style={[s.userIcon, border('green')]}
               name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
-                {sprintf('%s', t('settings_account_title_cap'))}: Airbitz Super Dooper Wallet
+                {sprintf(strings.enUS['settings_account_title_cap'])}: Airbitz Super Dooper Wallet
               </T>
             </View>
           </View>
@@ -111,7 +112,7 @@ class SettingsOverview extends Component {
           <View style={[s.accountBoxHeaderTextWrap, border('yellow')]}>
             <View style={s.leftArea}>
               <IonIcon name='ios-options' style={[s.userIcon, border('green')]} color='white' />
-              <T style={s.accountBoxHeaderText}>{sprintf('%s', t('settings_options_title_cap'))}</T>
+              <T style={s.accountBoxHeaderText}>{sprintf(strings.enUS['settings_options_title_cap'])}</T>
             </View>
           </View>
         </LinearGradient>
@@ -122,7 +123,7 @@ class SettingsOverview extends Component {
           {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
           {this.currencies.map(this.renderSettingsItemWithRoute)}
           <View style={[s.debugArea, border('green')]}>
-            <PrimaryButton text={sprintf('%s', t('settings_button_debug'))} onPressFunction={this._onPressDebug} />
+            <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
           </View>
           <View style={s.emptyBottom}></View>
         </View>

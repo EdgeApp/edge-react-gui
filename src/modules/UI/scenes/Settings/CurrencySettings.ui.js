@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Switch, TouchableOpacity, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
@@ -36,15 +37,15 @@ class BTCSettings extends Component {
         this.denominations = [
             {
                 value: 'bitcoin',
-                text: sprintf('%s', t('settings_denomination_buttons_bitcoin')) + ' = (1 ' + sprintf('%s', t('settings_denomination_buttons_bitcoin')) + ')',
+                text: sprintf(strings.enUS['settings_denomination_buttons_bitcoin']) + ' = (1 ' + sprintf(strings.enUS['settings_denomination_buttons_bitcoin']) + ')',
                 boolean: this.state.denominations.bitcoin.boolean
             },{
                 value: 'mBitcoin',
-                text: sprintf('%s', t('settings_denomination_buttons_mbitcoin')),
+                text: sprintf(strings.enUS['settings_denomination_buttons_mbitcoin']),
                 boolean: this.state.denominations.mBitcoin.boolean
             },{
                 value: 'bit',
-                text: sprintf('%s', t('settings_denomination_buttons_ubitcoin')),
+                text: sprintf(strings.enUS['settings_denomination_buttons_ubitcoin']),
                 boolean: this.state.denominations.bit.boolean
             }
         ]
@@ -61,7 +62,7 @@ class BTCSettings extends Component {
                     <View style={[s.headerTextWrap]}>
                         <View style={s.leftArea}>
                             <IonIcon name='logo-bitcoin' style={[s.headerIcon]} color='white' size={24} />
-                            <T style={s.headerText}>{sprintf('%s', t('settings_denomination_title_btc_cap'))}</T>
+                            <T style={s.headerText}>{sprintf(strings.enUS['settings_denomination_title_btc_cap'])}</T>
                         </View>
                     </View>
                 </LinearGradient>  
@@ -85,7 +86,7 @@ class ETHSettings extends Component {
         this.denominations = [
             {
                 value: 'ethereum',
-                text: sprintf('%s', t('settings_denomination_buttons_ethereum')),
+                text: sprintf(strings.enUS['settings_denomination_buttons_ethereum']),
                 boolean: this.state.denominations.ethereum.boolean
             }
         ]
@@ -102,7 +103,7 @@ class ETHSettings extends Component {
                     <View style={[s.headerTextWrap, border('yellow')]}>
                         <View style={s.leftArea}>
                             <IonIcon name='logo-bitcoin' style={[s.headerIcon, border('green')]} color='white' size={24} />
-                            <T style={s.headerText}>{sprintf('%s', t('settings_denomination_title_eth'))}</T>
+                            <T style={s.headerText}>{sprintf(strings.enUS['settings_denomination_title_eth'])}</T>
                         </View>
                     </View>
                 </LinearGradient>     

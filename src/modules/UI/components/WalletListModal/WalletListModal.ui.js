@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Modal, Dimensions, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
@@ -152,7 +153,7 @@ class WalletListModalHeader extends Component {
         <View style={[styles.headerContent, this.border('yellow')]}>
           <View style={[styles.headerTextWrap, this.border('green')]}>
             <T style={[styles.headerText, {color:'white'}, this.border('purple')]}>
-              {sprintf('%s', t('fragment_send_other_wallet_header_title'))}
+              {sprintf(strings.enUS['fragment_send_other_wallet_header_title'])}
             </T>
           </View>
           <TouchableHighlight style={[styles.modalCloseWrap, this.border('orange')]}

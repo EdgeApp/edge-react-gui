@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, Picker } from 'react-native'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
@@ -13,12 +15,11 @@ import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-n
 import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
 import {border} from '../../../utils'
-import t from '../../../../lib/LocaleStrings'
 
 class WalletListRow extends Component {
   render () {
     let id = this.props.data.id
-    let name = this.props.data.name || sprintf('%s', t('string_no_name'))
+    let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
 
     return (
       <View>
