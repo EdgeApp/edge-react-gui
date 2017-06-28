@@ -25,7 +25,6 @@ import { Actions } from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
-import t from '../../../../lib/LocaleStrings'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 

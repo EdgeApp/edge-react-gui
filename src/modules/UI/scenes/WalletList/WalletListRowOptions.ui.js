@@ -11,7 +11,8 @@ import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
 import {border} from '../../../utils'
-import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 
 class WalletListRowOptions extends Component {
   optionAction (optionKey) {
@@ -22,7 +23,7 @@ class WalletListRowOptions extends Component {
   }
 
   render () {
-    const options = [t('string_rename'), t('fragmet_wallets_addtoken_option'), this.props.archiveLabel, t('string_delete')]
+    const options = [sprintf(strings.enUS['string_rename']), sprintf(strings.enUS['fragmet_wallets_addtoken_option']), this.props.archiveLabel, sprintf(strings.enUS['string_delete'])]
 
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (

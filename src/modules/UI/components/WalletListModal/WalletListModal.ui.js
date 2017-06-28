@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Modal, Dimensions, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
-import t from '../../../../lib/LocaleStrings'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'

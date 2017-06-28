@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import t from '../../../../lib/LocaleStrings'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { View, Text, Platform} from 'react-native'
@@ -24,7 +23,7 @@ class StylizedModal extends Component {
         <View style={[styles.modalBox, border('red')]}>
           <View style={[styles.modalBody, border('purple')]}>
             <View style={[styles.modalTopTextWrap,  border('blue')]}>
-              <FormattedText style={[styles.modalTopText, border('yellow')]}>{sprintf('%s', t(this.props.headerText))}</FormattedText>
+              <FormattedText style={[styles.modalTopText, border('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</FormattedText>
               {this.props.headerSubtext &&
                 <FormattedText style={[styles.modalTopSubtext, border('green')]}
                   numberOfLines={2}>

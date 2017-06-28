@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import t from '../../../../lib/LocaleStrings'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {

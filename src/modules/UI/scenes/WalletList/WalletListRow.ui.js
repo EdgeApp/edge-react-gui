@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import t from '../../../../lib/LocaleStrings'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, Picker } from 'react-native'
