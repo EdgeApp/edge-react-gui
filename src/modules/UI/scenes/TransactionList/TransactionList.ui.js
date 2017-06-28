@@ -22,7 +22,7 @@ import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border } from '../../../../util/border'
+import { border as b } from '../../../../util/border'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
