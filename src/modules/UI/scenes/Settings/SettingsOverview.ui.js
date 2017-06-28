@@ -20,8 +20,11 @@ import { border } from '../../../../util/border'
 
 import {
   setAutoLogoutTimeRequest,
-  setDefaultFiatCurrencyRequest,
-  setMerchantModeRequest
+  setDefaultFiatRequest,
+  setMerchantModeRequest,
+  setBitcoinDenominationRequest,
+  setBitcoinOverrideServerRequest,
+  setEthereumDenominationRequest
 } from './action.js'
 
 class SettingsOverview extends Component {
@@ -75,7 +78,7 @@ class SettingsOverview extends Component {
     console.log('toggling option: ', option)
   }
 
-  _onToggleDebug = () => {
+  _onPressDebug = () => {
     console.log('debug button pressed')
   }
 
@@ -89,7 +92,7 @@ class SettingsOverview extends Component {
           <View style={[s.accountBoxHeaderTextWrap, border('yellow')]}>
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, border('green')]}
-                name='user-o' color='white' />
+              name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
                 {sprintf('%s', t('settings_account_title_cap'))}: Airbitz Super Dooper Wallet
               </T>
@@ -119,7 +122,7 @@ class SettingsOverview extends Component {
           {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
           {this.currencies.map(this.renderSettingsItemWithRoute)}
           <View style={[s.debugArea, border('green')]}>
-            <PrimaryButton text={sprintf('%s', t('settings_button_debug'))} onPressFunction={this._onToggleDebug} />
+            <PrimaryButton text={sprintf('%s', t('settings_button_debug'))} onPressFunction={this._onPressDebug} />
           </View>
           <View style={s.emptyBottom}></View>
         </View>
@@ -148,8 +151,11 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => ({
   setAutoLogoutTime: autoLogoffTimeInSeconds => { dispatch(setAutoLogoutTimeRequest(autoLogoffTimeInSeconds)) },
-  setDefaultFiatCurrency: defaultFiatCurrency => { dispatch(setDefaultFiatCurrencyRequest(defaultFiatCurrency)) },
-  setMerchantMode: merchantMode => { dispatch(setMerchantModeRequest(merchantMode)) }
+  setDefaultFiat: defaultFiat => { dispatch(setDefaultFiatRequest(defaultFiat)) },
+  setMerchantMode: merchantMode => { dispatch(setMerchantModeRequest(merchantMode)) },
+  setBitcoinDenomination: denomination => { dispatch(setBitcoinDenominationRequest(denomination)) },
+  setBitcoinOverrideServer: overrideServer => { dispatch(setBitcoinOverrideServerRequest(overrideServer)) },
+  setEthereumDenomination: denomination => { dispatch(setEthereumDenominationRequest(denomination)) }
 })
 
 export default SettingsOverviewConnect = connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

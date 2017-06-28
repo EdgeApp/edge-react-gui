@@ -1,12 +1,17 @@
+// Login/action.js
+
 import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as WALLET_API from '../Core/Wallets/api.js'
 import * as WALLET_ACTIONS from '../Core/Wallets/action.js'
 import * as UI_ACTIONS from '../UI/Wallets/action.js'
+import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
+import * as SETTINGS_API from '../Core/Account/settings.js'
 
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
     dispatch(updateWallets())
+    dispatch(loadSettings())
   }
 }
 
@@ -169,4 +174,37 @@ const isInSync = (wallet, keyInfo) => {
   )
 
   return isInSync
+}
+
+const loadSettings = () => {
+  return (dispatch, getState) => {
+    const { account } = getState().core
+    SETTINGS_API.getSyncedSettings(account)
+    .then(settings => {
+      const {
+        autoLogoutTimeInSeconds,
+        defaultFiat,
+        merchantMode,
+        BTC,
+        ETH
+      } = settings
+
+      // Add all the  settings to UI/Settings
+      dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds))
+      dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
+      dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode))
+      dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(BTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setEthereumDenomination(ETH.denomination))
+    })
+
+    SETTINGS_API.getLocalSettings(account)
+    .then(settings => {
+      const {
+        bluetoothMode
+      } = settings
+
+      // Add all the local settings to UI/Settings
+      dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode))
+    })
+  }
 }
