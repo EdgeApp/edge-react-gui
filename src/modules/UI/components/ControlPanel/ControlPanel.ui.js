@@ -24,6 +24,7 @@ class ControlPanel extends Component {
   }
 
   render () {
+    console.log(this.props)
     return  (
       <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#2B5698","#3B7ADA"]} style={styles.container}>
           <View style={styles.bitcoin.container}>
@@ -42,7 +43,7 @@ class ControlPanel extends Component {
 }
 
 const mapStateToProps = state => ({
-  account:      state.account,
+  account:      state.core.account,
   usersView:    state.ui.scenes.controlPanel.usersView
 })
 
