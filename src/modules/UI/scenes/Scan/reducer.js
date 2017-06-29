@@ -62,6 +62,8 @@ const scanToWalletListModalVisibility = (state = false, action) => {
       return false
     case ACTION.WALLET_LIST_MODAL_VISIBILITY:
       return false
+    case WALLET_LIST_MODAL_ACTION.DISABLE_WALLET_LIST_MODAL_VISIBILITY :
+      return false
     default: 
       return state
   }
