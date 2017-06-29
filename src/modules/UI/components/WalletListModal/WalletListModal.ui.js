@@ -14,7 +14,8 @@ import styles from './style'
 import {
   toggleWalletListModalVisibility,
   toggleSelectedWalletListModal,
-  toggleScanToWalletListModal
+  toggleScanToWalletListModal,
+  disableWalletListModalVisibility
 } from './action'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
@@ -35,20 +36,11 @@ class WalletListModal extends Component {
       <Animatable.View style={[b('green'), styles.topLevel,{position:'absolute', top: 38}]}
         animation='fadeInDown'
         duration={100} >
-        {this.props.scanToWalletListModalVisibility &&
-          <WalletListModalHeaderConnect />
-        }
+        <WalletListModalHeaderConnect type={this.props.type} />
         <WalletListModalBodyConnect onPress={this.props.onPress}
           selectionFunction={this.props.selectionFunction} />
       </Animatable.View>
     )
-  }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 
@@ -87,24 +79,26 @@ class WalletListModalBody extends Component {
             this.props.toggleWalletListModalVisibility()
             this.props.selectWallet(wallet.id)
           }}>
-          <View style={[styles.rowContent]}>
-            <View style={[styles.rowNameTextWrap]}>
-              <T style={[styles.rowNameText]}>
-                {wallet.name}
-              </T>
+          <View style={[styles.currencyRowContent]}>
+            <View style={[styles.currencyRowNameTextWrap]}>
+              <T style={[styles.currencyRowText]}>{wallet.name}</T>
             </View>
+            <View style={[styles.rowBalanceTextWrap]}>
+              <T style={[styles.currencyRowText]}>{wallet.balance}</T>
+            </View>            
           </View>
         </TouchableOpacity>
 
         {wallet.metaTokens.map((x, i) => (
           <TouchableOpacity style={[styles.tokenRowContainer]}
-            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode)}>
-            <View style={[styles.tokenRowContent]}>
-              <View style={[styles.tokenRowNameTextWrap]}>
-                <T style={[styles.tokenRowNameText]}>
-                  {x.currencyCode}
-                </T>
+            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode )}>
+            <View style={[styles.currencyRowContent]}>
+              <View style={[styles.currencyRowNameTextWrap]}>
+                <T style={[styles.currencyRowText]}>{x.currencyCode}</T>
               </View>
+              <View style={[styles.currencyRowBalanceTextWrap]}>
+                <T style={[styles.currencyRowText]}>{x.balance}</T>
+              </View>  
             </View>
           </TouchableOpacity>
         ))}
@@ -142,17 +136,23 @@ export const WalletListModalBodyConnect = connect(
 
 
 class WalletListModalHeader extends Component {
+  constructor(props){
+    super(props)
+    this.props.type = 'from'
+  }
+
   _onSearchExit = () => {
-    this.props.dispatch(toggleScanToWalletListModal())
+    this.props.dispatch(disableWalletListModalVisibility())
   }
 
   render () {
+    let headerSyntax = (this.props.type === 'from') ? 'fragment_select_wallet_header_title' : 'fragment_send_other_wallet_header_title'
     return (
       <View style={[styles.rowContainer, styles.headerContainer ]}>
         <View style={[styles.headerContent, b('yellow')]}>
           <View style={[styles.headerTextWrap, b('green')]}>
             <T style={[styles.headerText, {color:'white'}, b('purple')]}>
-              {sprintf(strings.enUS['fragment_send_other_wallet_header_title'])}
+              {sprintf(strings.enUS[headerSyntax])}
             </T>
           </View>
           <TouchableHighlight style={[styles.modalCloseWrap, b('orange')]}
@@ -165,6 +165,10 @@ class WalletListModalHeader extends Component {
       </View>
     )
   }
+}
+
+WalletListModalHeader.propTypes = {
+  type: PropTypes.string
 }
 
 export const WalletListModalHeaderConnect = connect()(WalletListModalHeader)

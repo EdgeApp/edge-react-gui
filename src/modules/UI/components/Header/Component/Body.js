@@ -24,7 +24,9 @@ class Body extends Component {
                visibleFlag='selectedWalletListModalVisibility' />
 
       case 'request':
-        return <ExampleFromWalletConnect wallets={this.props.walletList} />
+        return <ExampleFromWalletConnect wallets={this.props.walletList} 
+          toggleFunction='_onPressToggleSelectedWalletModal'
+               visibleFlag='selectedWalletListModalVisibility' />
 
       case 'transactionList':
         return <ExampleFromWalletConnect wallets={this.props.walletList}
@@ -82,8 +84,8 @@ class ExampleFromWallet extends Component {
             }
           </View>
         </TouchableOpacity>
-        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
-        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} /> }
+        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} type='from' /> }
+        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} type='to' /> }
       </View>
     )
   }
