@@ -21,6 +21,8 @@ module.exports = StyleSheet.create({
   rowContainer: {
     backgroundColor: 'white',    
     padding: 16,
+    paddingLeft: 20,
+    paddingRight: 20, 
     justifyContent: 'space-between',      
   },
   rowNameText: {
@@ -48,22 +50,25 @@ module.exports = StyleSheet.create({
   },
   
   // beginning of token rows //
+
   tokenRowContainer: {
     padding: 16,
     paddingLeft: 30,
-    backgroundColor: "#F6F6F6",
+    paddingRight: 20,
+    backgroundColor: '#F6F6F6',
     borderBottomWidth: 1,
     borderColor: '#EEE'
   },
-  tokenRowContent: {
+  currencyRowContent: {
     justifyContent: 'space-between',
-    flexDirection: 'row' 
+    flexDirection: 'row'
   },
-  tokenRowNameTextWrap: {
+  currencyRowNameTextWrap: {
     justifyContent: 'center'
   },
-  tokenRowNameText: {
-    color: '#58595C'
-  },
+  currencyRowText: {
+    color: '#58595C',
+    fontSize: 14
+  }
     // end of token rows //    
 })

@@ -1,54 +1,100 @@
+// UI/Scenes/Settings
+
 const PREFIX = 'UI/Scenes/Settings/'
 
-export const SET_AUTO_LOGOUT_TIME_START = PREFIX + 'SET_AUTO_LOGOUT_TIME_START'
-export const SET_AUTO_LOGOUT_TIME_REQUEST = PREFIX + 'SET_AUTO_LOGOUT_TIME_REQUEST'
+const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
+const SET_PIN_START = PREFIX + 'SET_PIN_START'
+const SET_OTP_MODE_START = PREFIX + 'SET_OTP_MODE_START'
+const SET_OTP_START = PREFIX + 'SET_OTP_START'
 
-export const SET_DEFAULT_FIAT_CURRENCY_START = PREFIX + 'SET_DEFAULT_FIAT_CURRENCY_START'
-export const SET_DEFAULT_FIAT_CURRENCY_REQUEST = PREFIX + 'SET_DEFAULT_FIAT_CURRENCY_REQUEST'
+const SET_AUTO_LOGOUT_TIME_START = PREFIX + 'SET_AUTO_LOGOUT_TIME_START'
+const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
+const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
 
-export const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
-export const SET_MERCHANT_MODE_REQUEST = PREFIX + 'SET_MERCHANT_MODE_REQUEST'
+const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
 
-import * as ACCOUNT_API from '../../../Core/Account/api.js'
+const SET_BITCOIN_DENOMINATION_START = PREFIX + 'SET_BITCOIN_DENOMINATION_START'
+const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
+const SET_ETHEREUM_DENOMINATION_START = PREFIX + 'SET_ETHEREUM_DENOMINATION_START'
+
+import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
+
+export const setOTPModeRequest = otpMode => {
+  return (dispatch, getState) => {
+    dispatch(setOTPModeStart(otpMode))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setOTPModeRequest(account, otpMode)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setOTPRequest = otp => {
+  return (dispatch, getState) => {
+    dispatch(setOTPStart(otp))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setOTPRequest(account, otp)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setOTP(otp))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setPINModeRequest = pinMode => {
+  return (dispatch, getState) => {
+    dispatch(setPINModeStart(pinMode))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setPINMode(pinMode))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setPINRequest = pin => {
+  return (dispatch, getState) => {
+    dispatch(setPINStart(pin))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setPINRequest(account, pin)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setPIN(pin))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
 
 export const setAutoLogoutTimeRequest = autoLogoutTimeInSeconds => {
   return (dispatch, getState) => {
     dispatch(setAutoLogoutTimeStart(autoLogoutTimeInSeconds))
 
     const { account } = getState().core
-    ACCOUNT_API.setAutoLogoutTimeRequest(account, autoLogoutTimeInSeconds)
-    .then(updatedSettingsText => {
-      return SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds)
+    ACCOUNT_SETTINGS.setAutoLogoutTimeRequest(account, autoLogoutTimeInSeconds)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds))
     })
     .catch(e => { console.error(e) })
   }
 }
 
-export const setAutoLogoutTimeStart = autoLogoutTimeInSeconds => {
-  return {
-    type: SET_AUTO_LOGOUT_TIME_START,
-    data: { autoLogoutTimeInSeconds }
-  }
-}
-
-export const setDefaultFiatCurrencyRequest = defaultFiatCurrency => {
+export const setDefaultFiatRequest = defaultFiat => {
   return (dispatch, getState) => {
-    dispatch(setDefaultFiatCurrencyStart(defaultFiatCurrency))
+    dispatch(setDefaultFiatStart(defaultFiat))
 
     const { account } = getState().core
-    ACCOUNT_API.setDefaultFiatCurrencyRequest(account, defaultFiatCurrency)
-    .then(updatedSettingsText => {
-      return SETTINGS_ACTIONS.setDefaultFiatCurrency(defaultFiatCurrency)
+    ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
     })
     .catch(e => { console.error(e) })
-  }
-}
-
-export const setDefaultFiatCurrencyStart = defaultFiatCurrency => {
-  return {
-    type: SET_DEFAULT_FIAT_CURRENCY_START,
-    data: { defaultFiatCurrency }
   }
 }
 
@@ -57,45 +103,143 @@ export const setMerchantModeRequest = merchantMode => {
     dispatch(setMerchantModeStart(merchantMode))
 
     const { account } = getState().core
-    ACCOUNT_API.setMerchantModeRequest(account, merchantMode)
-    .then(updatedSettingsText => {
-      return SETTINGS_ACTIONS.setMerchantMode(merchantMode)
+    ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode))
     })
     .catch(e => { console.error(e) })
   }
 }
 
-export const setMerchantModeStart = merchantMode => {
+export const setBluetoothModeRequest = bluetoothMode => {
+  return (dispatch, getState) => {
+    dispatch(setBluetoothModeStart(bluetoothMode))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setBitcoinDenominationRequest = denomination => {
+  return (dispatch, getState) => {
+    dispatch(setBitcoinDenominationStart(denomination))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setBitcoinDenominationRequest(account, denomination)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(denomination))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setBitcoinOverrideServerRequest = overrideServer => {
+  return (dispatch, getState) => {
+    dispatch(setBitcoinOverrideServerStart(overrideServer))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setBitcoinOverrideServerRequest(account, overrideServer)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+export const setEthereumDenominationRequest = denomination => {
+  return (dispatch, getState) => {
+    dispatch(setEthereumDenominationStart(denomination))
+
+    const { account } = getState().core
+    ACCOUNT_SETTINGS.setEthereumDenominationRequest(account, denomination)
+    .then(() => {
+      return dispatch(SETTINGS_ACTIONS.setEthereumDenomination(denomination))
+    })
+    .catch(e => { console.error(e) })
+  }
+}
+
+// Simple Actions
+const setOTPModeStart = otpMode => {
+  return {
+    type: SET_OTP_MODE_START,
+    data: { otpMode }
+  }
+}
+
+const setOTPStart = otp => {
+  return {
+    type: SET_OTP_START,
+    data: { otp }
+  }
+}
+
+const setPINModeStart = pinMode => {
+  return {
+    type: SET_PIN_MODE_START,
+    data: { pinMode }
+  }
+}
+
+const setPINStart = pin => {
+  return {
+    type: SET_PIN_START,
+    data: { pin }
+  }
+}
+
+const setAutoLogoutTimeStart = autoLogoutTimeInSeconds => {
+  return {
+    type: SET_AUTO_LOGOUT_TIME_START,
+    data: { autoLogoutTimeInSeconds }
+  }
+}
+
+const setDefaultFiatStart = defaultFiat => {
+  return {
+    type: SET_DEFAULT_FIAT_START,
+    data: { defaultFiat }
+  }
+}
+
+const setMerchantModeStart = merchantMode => {
   return {
     type: SET_MERCHANT_MODE_START,
     data: { merchantMode }
   }
 }
 
-export const enablePinLogin = () => {
+const setBluetoothModeStart = bluetoothMode => {
   return {
-    type: ENABLE_PIN_LOGIN
+    type: SET_BLUETOOTH_MODE_START,
+    data: { bluetoothMode }
   }
 }
 
-export const disablePinLogin = () => {
+const setBitcoinDenominationStart = denomination => {
   return {
-    type: DISABLE_PIN_LOGIN
+    type: SET_BITCOIN_DENOMINATION_START,
+    data: { denomination }
   }
 }
 
-export const enableTouchId = () => {
+const setBitcoinOverrideServerStart = overrideServer => {
   return {
-    type: ENABLE_TOUCH_ID
+    type: SET_BITCOIN_OVERRIDE_SERVER_START,
+    data: { overrideServer }
   }
 }
 
-export const disableTouchId = () => {
+const setEthereumDenominationStart = denomination => {
   return {
-    type: DISABLE_TOUCH_ID
+    type: SET_ETHEREUM_DENOMINATION_START,
+    data: { denomination }
   }
 }
-
 // Settings
 
 // Account Settings

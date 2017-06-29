@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Modal, Dimensions, Text, View, TouchableHighlight,  LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
-import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
@@ -14,12 +14,13 @@ import styles from './style'
 import {
   toggleWalletListModalVisibility,
   toggleSelectedWalletListModal,
-  toggleScanToWalletListModal
+  toggleScanToWalletListModal,
+  disableWalletListModalVisibility
 } from './action'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
-import {border} from '../../../utils'
+import {border as b} from '../../../utils'
 
 
 class WalletListModal extends Component {
@@ -32,23 +33,14 @@ class WalletListModal extends Component {
 
   render () {
     return (
-      <Animatable.View style={[this.border('green'), styles.topLevel,{position:'absolute', top: 38}]}
+      <Animatable.View style={[b('green'), styles.topLevel,{position:'absolute', top: 38}]}
         animation='fadeInDown'
         duration={100} >
-        {this.props.scanToWalletListModalVisibility &&
-          <WalletListModalHeaderConnect />
-        }
+        <WalletListModalHeaderConnect type={this.props.type} />
         <WalletListModalBodyConnect onPress={this.props.onPress}
           selectionFunction={this.props.selectionFunction} />
       </Animatable.View>
     )
-  }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
   }
 }
 
@@ -87,24 +79,26 @@ class WalletListModalBody extends Component {
             this.props.toggleWalletListModalVisibility()
             this.props.selectWallet(wallet.id)
           }}>
-          <View style={[styles.rowContent]}>
-            <View style={[styles.rowNameTextWrap]}>
-              <T style={[styles.rowNameText]}>
-                {wallet.name}
-              </T>
+          <View style={[styles.currencyRowContent]}>
+            <View style={[styles.currencyRowNameTextWrap]}>
+              <T style={[styles.currencyRowText]}>{wallet.name}</T>
             </View>
+            <View style={[styles.rowBalanceTextWrap]}>
+              <T style={[styles.currencyRowText]}>{wallet.balance}</T>
+            </View>            
           </View>
         </TouchableOpacity>
 
         {wallet.metaTokens.map((x, i) => (
           <TouchableOpacity style={[styles.tokenRowContainer]}
-            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode)}>
-            <View style={[styles.tokenRowContent]}>
-              <View style={[styles.tokenRowNameTextWrap]}>
-                <T style={[styles.tokenRowNameText]}>
-                  {x.currencyCode}
-                </T>
+            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode )}>
+            <View style={[styles.currencyRowContent]}>
+              <View style={[styles.currencyRowNameTextWrap]}>
+                <T style={[styles.currencyRowText]}>{x.currencyCode}</T>
               </View>
+              <View style={[styles.currencyRowBalanceTextWrap]}>
+                <T style={[styles.currencyRowText]}>{x.balance}</T>
+              </View>  
             </View>
           </TouchableOpacity>
         ))}
@@ -142,22 +136,28 @@ export const WalletListModalBodyConnect = connect(
 
 
 class WalletListModalHeader extends Component {
+  constructor(props){
+    super(props)
+    this.props.type = 'from'
+  }
+
   _onSearchExit = () => {
-    this.props.dispatch(toggleScanToWalletListModal())
+    this.props.dispatch(disableWalletListModalVisibility())
   }
 
   render () {
+    let headerSyntax = (this.props.type === 'from') ? 'fragment_select_wallet_header_title' : 'fragment_send_other_wallet_header_title'
     return (
       <View style={[styles.rowContainer, styles.headerContainer ]}>
-        <View style={[styles.headerContent, this.border('yellow')]}>
-          <View style={[styles.headerTextWrap, this.border('green')]}>
-            <T style={[styles.headerText, {color:'white'}, this.border('purple')]}>
-              {sprintf('%s', t('fragment_send_other_wallet_header_title'))}
+        <View style={[styles.headerContent, b('yellow')]}>
+          <View style={[styles.headerTextWrap, b('green')]}>
+            <T style={[styles.headerText, {color:'white'}, b('purple')]}>
+              {sprintf(strings.enUS[headerSyntax])}
             </T>
           </View>
-          <TouchableHighlight style={[styles.modalCloseWrap, this.border('orange')]}
+          <TouchableHighlight style={[styles.modalCloseWrap, b('orange')]}
             onPress={this._onSearchExit}>
-            <Ionicon style={[styles.donebutton, this.border('purple')]}
+            <Ionicon style={[styles.donebutton, b('purple')]}
               name="ios-close" size={24}
               color='white' />
           </TouchableHighlight>
@@ -165,13 +165,10 @@ class WalletListModalHeader extends Component {
       </View>
     )
   }
+}
 
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
-  }
+WalletListModalHeader.propTypes = {
+  type: PropTypes.string
 }
 
 export const WalletListModalHeaderConnect = connect()(WalletListModalHeader)

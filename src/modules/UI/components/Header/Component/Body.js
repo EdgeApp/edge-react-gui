@@ -12,7 +12,7 @@ import {
 import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
 //import ExampleToWallet from './ExampleToWallet.ui'
-import t from '../../../../../lib/LocaleStrings'
+import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 
 class Body extends Component {
@@ -24,7 +24,9 @@ class Body extends Component {
                visibleFlag='selectedWalletListModalVisibility' />
 
       case 'request':
-        return <ExampleFromWalletConnect wallets={this.props.walletList} />
+        return <ExampleFromWalletConnect wallets={this.props.walletList} 
+          toggleFunction='_onPressToggleSelectedWalletModal'
+               visibleFlag='selectedWalletListModalVisibility' />
 
       case 'transactionList':
         return <ExampleFromWalletConnect wallets={this.props.walletList}
@@ -47,12 +49,11 @@ export default connect((state) => (mapStateToProps))(Body)
 
 class DefaultHeader extends Component {
   _renderTitle = () => {
-    return this.props.routes.scene.title || t('title_Header')
+    return this.props.routes.scene.title || sprintf(strings.enUS['title_Header'])
   }
 
   render () {
-    console.log('title is: ', t('title_' + this._renderTitle().replace(/ /g,"_")))
-    return <Title>{ sprintf('%s', t('title_' + this._renderTitle().replace(/ /g,"_"))) }</Title>
+    return <Title>{ sprintf('%s', strings.enUS['title_'+ this._renderTitle().replace(/ /g,"_")]) }</Title>
   }
 }
 
@@ -83,8 +84,8 @@ class ExampleFromWallet extends Component {
             }
           </View>
         </TouchableOpacity>
-        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} /> }
-        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} /> }
+        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} type='from' /> }
+        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} type='to' /> }
       </View>
     )
   }

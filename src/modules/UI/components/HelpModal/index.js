@@ -8,24 +8,24 @@ import Modal from 'react-native-modal'
 import { closeHelpModal } from './actions.js'
 
 const logo = require("../../../../img/logo2x.png")
-const webView = require("../../../../html/disclaimer.ios.html")
+const webView = require("../../../../html/enUS/disclaimer.ios.html")
 
 class HelpModal extends Component {
 
   _renderWebView = () => {
     switch(this.props.routes.scene.sceneKey) {
       case 'scan':
-        return require("../../../../html/info_send.html")
+        return require("../../../../html/enUS/info_send.html")
       case 'walletList':
-        return require("../../../../html/info_wallets.html")
+        return require("../../../../html/enUS/info_wallets.html")
       case 'transactions':
-        return require("../../../../html/info_transactions.html")
+        return require("../../../../html/enUS/info_transactions.html")
       case 'request':
-        return require("../../../../html/info_request.html")
+        return require("../../../../html/enUS/info_request.html")
       case 'sendConfirmation':
-        return require("../../../../html/info_send_confirmation.html")
+        return require("../../../../html/enUS/info_send_confirmation.html")
       default:
-        return require("../../../../html/info_disclaimer.html")
+        return require("../../../../html/enUS/info_disclaimer.html")
     }
   }
 

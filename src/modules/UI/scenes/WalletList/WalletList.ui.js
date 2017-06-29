@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import t from '../../../../lib/LocaleStrings'
-import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import {
   TouchableWithoutFeedback,
@@ -27,6 +25,9 @@ import { Actions } from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
+
 import {
   toggleArchiveVisibility,
   updateRenameWalletInput,
@@ -37,7 +38,7 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
-import {border} from '../../../../util/border'
+import {border as b} from '../../../../util/border'
 
 import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
@@ -56,6 +57,7 @@ class WalletList extends Component {
     super(props)
     const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
     console.log('localeInfo is: ', localeInfo) 
+    console.log('strings is: ' , strings)
   }
 
   /*forceArchiveListUpdate (archiveOrder) {
@@ -72,12 +74,12 @@ class WalletList extends Component {
 
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader, border('red')]}>
+            <View style={[styles.totalBalanceHeader, b('red')]}>
               <FormattedText style={[styles.totalBalanceText]}>
-                {sprintf('%s', t('fragment_wallets_balance_text'))}
+                {sprintf(strings.enUS['fragment_wallets_balance_text'])}
               </FormattedText>
             </View>
-            <View style={[styles.currentBalanceBoxDollarsWrap, border('green')]}>
+            <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
               <FormattedText style={[styles.currentBalanceBoxDollars]}>
                 $ 8,200.00
               </FormattedText>
@@ -87,25 +89,24 @@ class WalletList extends Component {
 
         <View style={styles.walletsBox}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
-            <View style={[styles.walletsBoxHeaderTextWrap, border('yellow')]}>
+            <View style={[styles.walletsBoxHeaderTextWrap, b('yellow')]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon, border('green')]} color='white' />
+                <SimpleLineIcons name='wallet' style={[styles.walletIcon, b('green')]} color='white' />
                 <FormattedText style={styles.walletsBoxHeaderText}>
-                  {sprintf('%s', t('fragment_wallets_header'))}
+                  {sprintf(strings.enUS['fragment_wallets_header'])}
                 </FormattedText>
               </View>
             </View>
 
-            <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, border('red')]}>
-              <Ionicon name='md-add'style={[styles.dropdownIcon, border('green')]} color='white' />
+            <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, b('red')]}>
+              <Ionicon name='md-add'style={[styles.dropdownIcon, b('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
-
           {
             this.renderActiveSortableList(
               wallets,
               activeWalletIds,
-              'Archive',
+              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
               this.renderActiveRow,
               this.onActiveRowMoved
             )
@@ -114,22 +115,22 @@ class WalletList extends Component {
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.archiveBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                <EvilIcons name='archive' style={[styles.archiveIcon, border('green')]} color='white' />
+                <EvilIcons name='archive' style={[styles.archiveIcon, b('green')]} color='white' />
                 <FormattedText style={styles.archiveBoxHeaderText}>
-                  {sprintf('%s', t('fragmet_wallets_list_archive_title_capitalized'))}
+                  {sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
                 </FormattedText>
               </View>
             </View>
 
-            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, border('red')]}>
-              <FAIcon name='angle-down' style={[styles.dropdownIcon, border('green')]} color='white' />
+            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, b('red')]}>
+              <FAIcon name='angle-down' style={[styles.dropdownIcon, b('green')]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
           {
             this.renderArchivedSortableList(
               wallets,
               archivedWalletIds,
-              'Restore',
+              sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized']),
               this.renderArchivedRow,
               this.onArchivedRowMoved
             )
@@ -291,7 +292,7 @@ class DeleteSubtext extends Component {
   render() {
     return(
       <FormattedText style={styles.subHeaderSyntax}>
-        {sprintf('%s', t('fragmet_wallets_delete_wallet_first_confirm_message_mobile'))}
+        {sprintf(strings.enUS['fragmet_wallets_delete_wallet_first_confirm_message_mobile'])}
         {
           (this.props.currentWalletBeingDeleted) ?
             (
@@ -301,7 +302,7 @@ class DeleteSubtext extends Component {
             </FormattedText>
           ):
           (
-            <FormattedText>{sprintf('%s', t('fragment_wallets_this_wallet'))}</FormattedText>
+            <FormattedText>{sprintf(strings.enUS['fragment_wallets_this_wallet'])}</FormattedText>
           )
         }
       </FormattedText>
@@ -323,12 +324,12 @@ class DeleteWalletButtons extends Component {
 
   render() {
     return(
-      <View style={[styles.buttonsWrap, border('gray')]}>
+      <View style={[styles.buttonsWrap, b('gray')]}>
 
         <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf('%s', t('string_cancel_cap'))}</FormattedText>
+            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</FormattedText>
           </View>
 
         </TouchableHighlight>
@@ -336,7 +337,7 @@ class DeleteWalletButtons extends Component {
         <TouchableHighlight onPress={this._onDeleteModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf('%s', t('string_delete'))}</FormattedText>
+            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_delete'])}</FormattedText>
           </View>
 
         </TouchableHighlight>
@@ -371,8 +372,8 @@ class WalletNameInput extends Component {
   render() {
     let walletName = this.props.currentWalletRename
     return(
-      <View style={[styles.nameInputWrap, border('orange')]}>
-        <TextInput style={[styles.nameInput, border('red')]}
+      <View style={[styles.nameInputWrap, b('orange')]}>
+        <TextInput style={[styles.nameInput, b('red')]}
           onChangeText={(input) => this._onNameInputChange(input)}
           value={this.props.renameWalletInput}
           autoFocus />
@@ -407,12 +408,12 @@ class RenameWalletButtons extends Component {
 
   render() {
     return(
-      <View style={[styles.buttonsWrap, border('gray')]}>
+      <View style={[styles.buttonsWrap, b('gray')]}>
 
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf('%s', t('string_cancel_cap'))}</FormattedText>
+            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</FormattedText>
           </View>
 
         </TouchableHighlight>
@@ -421,21 +422,13 @@ class RenameWalletButtons extends Component {
           style={[styles.doneButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf('%s', t('calculator_done'))}</FormattedText>
+            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['calculator_done'])}</FormattedText>
           </View>
 
         </TouchableHighlight>
       </View>
     )
   }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
-  }
-
 }
 export const RenameWalletButtonsConnect = connect(state => ({
   currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId]

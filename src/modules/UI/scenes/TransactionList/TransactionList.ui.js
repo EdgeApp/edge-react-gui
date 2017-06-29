@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import t from '../../../../lib/LocaleStrings'
+import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
@@ -22,21 +22,21 @@ import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border } from '../../../../util/border'
+import { border as b } from '../../../../util/border'
 
 const monthNames = [
-    sprintf('%s', t('transactions_list_date_jan')),
-    sprintf('%s', t('transactions_list_date_feb')),
-    sprintf('%s', t('transactions_list_date_mar')),
-    sprintf('%s', t('transactions_list_date_apr')),
-    sprintf('%s', t('transactions_list_date_may')),
-    sprintf('%s', t('transactions_list_date_jun')),
-    sprintf('%s', t('transactions_list_date_jul')),
-    sprintf('%s', t('transactions_list_date_aug')),
-    sprintf('%s', t('transactions_list_date_sep')),
-    sprintf('%s', t('transactions_list_date_oct')),
-    sprintf('%s', t('transactions_list_date_nov')),
-    sprintf('%s', t('transactions_list_date_dec'))
+    sprintf(strings.enUS['transactions_list_date_jan']),
+    sprintf(strings.enUS['transactions_list_date_feb']),
+    sprintf(strings.enUS['transactions_list_date_mar']),
+    sprintf(strings.enUS['transactions_list_date_apr']),
+    sprintf(strings.enUS['transactions_list_date_may']),
+    sprintf(strings.enUS['transactions_list_date_jun']),
+    sprintf(strings.enUS['transactions_list_date_jul']),
+    sprintf(strings.enUS['transactions_list_date_aug']),
+    sprintf(strings.enUS['transactions_list_date_sep']),
+    sprintf(strings.enUS['transactions_list_date_oct']),
+    sprintf(strings.enUS['transactions_list_date_nov']),
+    sprintf(strings.enUS['transactions_list_date_dec'])
   ]
 var dateStrings = []
 
@@ -210,11 +210,11 @@ class TransactionList extends Component {
     console.log('about to render transactionsList , this.state.balanceBoxVisible is: ' , this.state.balanceBoxVisible)
     console.log('about to render again, this.state.balanceBoxOpacity is: ', this.state.balanceBoxOpacity)
     return (
-        <ScrollView style={[border('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
+        <ScrollView style={[b('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
-          <View style={[styles.container, border('green')]}>
-            <Animated.View style={[{height: this.state.balanceBoxHeight}, border('red')]}>
-              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, border('purple')]} colors={["#3b7adb","#2b569a"]}>
+          <View style={[styles.container, b('green')]}>
+            <Animated.View style={[{height: this.state.balanceBoxHeight}, b('red')]}>
+              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, b('purple')]} colors={["#3b7adb","#2b569a"]}>
                 {this.state.balanceBoxVisible &&
                   <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                     {this.props.updatingBalance ? (
@@ -228,30 +228,30 @@ class TransactionList extends Component {
                         </View>
                       </View>
                     ) : (
-                      <View style={[styles.currentBalanceWrap, border('green')]}>
-                        <View style={[styles.bitcoinIconWrap, border('yellow')]}>
+                      <View style={[styles.currentBalanceWrap, b('green')]}>
+                        <View style={[styles.bitcoinIconWrap, b('yellow')]}>
                           <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                         </View>
-                        <View style={[styles.currentBalanceBoxDollarsWrap, border('yellow')]}>
-                          <FormattedText style={[styles.currentBalanceBoxDollars, border('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+                        <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
+                          <FormattedText style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
                               </View>
-                              <View style={[styles.currentBalanceBoxBitsWrap, border('red')]}>
-                                <FormattedText style={[styles.currentBalanceBoxBits, border('yellow')]}>b 600000</FormattedText>
+                              <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
+                                <FormattedText style={[styles.currentBalanceBoxBits, b('yellow')]}>b 600000</FormattedText>
                               </View>
                           </View>
                           )}
 
-                        <View style={[styles.requestSendRow, border('yellow')]}>
+                        <View style={[styles.requestSendRow, b('yellow')]}>
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
                               <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                              <FormattedText style={[styles.request]}>{sprintf('%s', t('fragment_request_subtitle'))}</FormattedText>
+                              <FormattedText style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</FormattedText>
                             </View>
                           </TouchableHighlight>
                           <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                             <View style={[styles.sendWrap]}>
                               <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                              <FormattedText style={styles.send}>{sprintf('%s', t('fragment_send_subtitle'))}</FormattedText>
+                              <FormattedText style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</FormattedText>
                             </View>
                           </TouchableHighlight>
                         </View>
@@ -283,12 +283,12 @@ class TransactionList extends Component {
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     dateStrings.push(dateString)
     if (tx.amountSatoshi <= 0) {
-      sendReceiveSyntax = sprintf('%s', t('fragment_send_subtitle'))
-      expenseIncomeSyntax = sprintf('%s', t('fragment_transaction_expense'))
+      sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
+      expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_expense'])
       txColor = '#F03A47'
     } else {
-      sendReceiveSyntax = sprintf('%s', t('fragment_transaction_receive'))
-      expenseIncomeSyntax = sprintf('%s', t('fragment_transaction_income'))
+      sendReceiveSyntax = sprintf(strings.enUS['fragment_transaction_receive'])
+      expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
     }
 
@@ -309,20 +309,20 @@ class TransactionList extends Component {
               </View>)}
           </View>)
         }
-        <View style={[styles.singleTransaction, border('red')]}>
-          <View style={[styles.transactionInfoWrap, border('yellow')]}>
+        <View style={[styles.singleTransaction, b('red')]}>
+          <View style={[styles.transactionInfoWrap, b('yellow')]}>
             {tx.hasThumbnail ? (
-              <Image style={[styles.transactionLogo, border('orange')]} source={{ uri: tx.thumbnailPath }} />
+              <Image style={[styles.transactionLogo, b('orange')]} source={{ uri: tx.thumbnailPath }} />
             ) : (
-              <FAIcon name='user' style={[styles.transactionLogo, border('orange')]} size={54} />
+              <FAIcon name='user' style={[styles.transactionLogo, b('orange')]} size={54} />
             )}
-            <View style={[styles.transactionDollars, border('blue')]}>
-              <FormattedText style={[styles.transactionPartner, border('black')]}>Contact Name</FormattedText>
-              <FormattedText style={[styles.transactionTime, border('brown')]}>12:12 PM</FormattedText>
+            <View style={[styles.transactionDollars, b('blue')]}>
+              <FormattedText style={[styles.transactionPartner, b('black')]}>Contact Name</FormattedText>
+              <FormattedText style={[styles.transactionTime, b('brown')]}>12:12 PM</FormattedText>
             </View>
-            <View style={[styles.transactionBits, border('purple')]}>
-              <FormattedText style={[styles.transactionDollarAmount, border('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</FormattedText>
-              <FormattedText style={[styles.transactionBitAmount, border('brown'), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+            <View style={[styles.transactionBits, b('purple')]}>
+              <FormattedText style={[styles.transactionDollarAmount, b('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</FormattedText>
+              <FormattedText style={[styles.transactionBitAmount, b('brown'), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
             </View>
           </View>
         </View>
@@ -362,14 +362,14 @@ class SearchBar extends Component {
 
   render() {
     return(
-      <View style={[styles.searchContainer, border('green')]}>
-        <View style={[ styles.innerSearch, border('orange')]}>
-          <EvilIcons name='search' style={[styles.searchIcon, border('purple')]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, border('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf('%s', t('string_search'))} />
+      <View style={[styles.searchContainer, b('green')]}>
+        <View style={[ styles.innerSearch, b('orange')]}>
+          <EvilIcons name='search' style={[styles.searchIcon, b('purple')]} color='#9C9C9D' size={20} />
+          <TextInput style={[styles.searchInput, b('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
         </View>
         <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-          <TouchableHighlight onPress={this.props.onPress} style={[border('red'), styles.cancelButton]}>
-            <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf('%s', t('string_cancel_cap'))}</Text>
+          <TouchableHighlight onPress={this.props.onPress} style={[b('red'), styles.cancelButton]}>
+            <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf(strings.enUS['string_cancel_cap'])}</Text>
           </TouchableHighlight>
         </Animated.View>
       </View>
