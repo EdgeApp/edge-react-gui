@@ -1,12 +1,17 @@
+// Login/action.js
+
 import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as WALLET_API from '../Core/Wallets/api.js'
 import * as WALLET_ACTIONS from '../Core/Wallets/action.js'
 import * as UI_ACTIONS from '../UI/Wallets/action.js'
+import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
+import * as SETTINGS_API from '../Core/Account/settings.js'
 
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
     dispatch(updateWallets())
+    dispatch(loadSettings())
   }
 }
 
@@ -85,7 +90,7 @@ const activateWallet = (keyInfo, dispatch, getState) => {
     dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
     const wallets = getState().core.wallets.byId
     Object.keys(wallets).forEach(id => {
-      dispatch(UI_ACTIONS.upsertWallet(wallets[id]))
+      dispatch(UI_ACTIONS.upsertWalletRequest(wallets[id]))
     })
   })
 }
@@ -114,7 +119,7 @@ const archiveWallet = (keyInfo, dispatch, getState) => {
     dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
     const wallets = getState().core.wallets.byId
     Object.keys(wallets).forEach(id => {
-      dispatch(UI_ACTIONS.upsertWallet(wallets[id]))
+      dispatch(UI_ACTIONS.upsertWalletRequest(wallets[id]))
     })
   })
 }
@@ -126,7 +131,7 @@ const deleteWallet = (keyInfo, dispatch, getState) => {
   const state = getState()
   const wallets = state.core.wallets.byId
   Object.keys(wallets).forEach(id => {
-    dispatch(UI_ACTIONS.upsertWallet(wallets[id]))
+    dispatch(UI_ACTIONS.upsertWalletRequest(wallets[id]))
   })
 }
 
@@ -169,4 +174,47 @@ const isInSync = (wallet, keyInfo) => {
   )
 
   return isInSync
+}
+
+const loadSettings = () => {
+  return (dispatch, getState) => {
+    const { account } = getState().core
+    SETTINGS_API.getSyncedSettings(account)
+    .then(settings => {
+      const {
+        autoLogoutTimeInSeconds,
+        defaultFiat,
+        merchantMode,
+        BTC,
+        ETH
+      } = settings
+
+      // Add all the  settings to UI/Settings
+      dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds))
+      dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
+      dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode))
+      dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(BTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setEthereumDenomination(ETH.denomination))
+    })
+
+    SETTINGS_API.getLocalSettings(account)
+    .then(settings => {
+      const {
+        bluetoothMode
+      } = settings
+
+      // Add all the local settings to UI/Settings
+      dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode))
+    })
+
+    SETTINGS_API.getCoreSettings(account)
+    .then(settings => {
+      const {
+        pinMode,
+        otpMode
+      } = settings
+      dispatch(SETTINGS_ACTIONS.setPINMode(pinMode))
+      dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode))
+    })
+  }
 }

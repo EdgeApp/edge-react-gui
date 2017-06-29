@@ -87,11 +87,11 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.airbitz.edge"
-        minSdkVersion 16
-        targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        applicationId "co.airbitz.edge"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 21000000
+        versionName "99.99.99"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -135,6 +135,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-locale')
     compile project(':react-native-vector-icons')
     compile project(':react-native-udp')
     compile project(':react-native-tcp')

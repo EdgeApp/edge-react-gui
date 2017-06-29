@@ -1,5 +1,5 @@
 {
-  "name": "airbitz",
+  "name": "edge",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "airbitz-core-js": "^0.3.0",
-    "airbitz-currency-shitcoin": "file:../airbitz-currency-shitcoin",
     "assert": "^1.4.1",
     "async": "^2.3.0",
     "base64-js": "^1.2.0",
@@ -44,6 +43,7 @@
     "process": "^0.11.10",
     "querystring-es3": "^0.2.1",
     "react": "16.0.0-alpha.6",
+    "react-intl": "^2.3.0",
     "react-native": "^0.44.0",
     "react-native-airbitz-io": "^0.3.0",
     "react-native-animatable": "^1.1.0",
@@ -61,6 +61,7 @@
     "react-native-image-picker": "^0.24.1",
     "react-native-level-fs": "^3.0.0",
     "react-native-linear-gradient": "^2.0.0",
+    "react-native-locale": "^0.0.17",
     "react-native-material-kit": "^0.4.1",
     "react-native-menu": "^0.20.2",
     "react-native-modal": "^2.2.0",
@@ -84,6 +85,7 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-immutable-state-invariant": "^1.2.4",
     "redux-thunk": "^2.1.0",
+    "sprintf-js": "^1.1.1",
     "stream-browserify": "^1.0.0",
     "string_decoder": "^0.10.31",
     "timers-browserify": "^1.4.2",

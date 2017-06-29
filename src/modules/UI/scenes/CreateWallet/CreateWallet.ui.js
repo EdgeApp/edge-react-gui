@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 import {
   ScrollView,
   Text,
@@ -21,21 +23,21 @@ import { Actions } from 'react-native-router-flux'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
-const WALLET_NAME_INPUT_PLACEHOLDER = 'Name your new wallet'
-const BLOCKCHAIN_PICKER_PLACEHOLDER = 'Choose a blockchain'
-const FIAT_PICKER_PLACEHOLDER       = 'Choose a fiat currency'
+const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
+const BLOCKCHAIN_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
+const FIAT_PICKER_PLACEHOLDER       = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
 
-const DONE_TEXT         = 'Create Wallet'
-const CANCEL_TEXT       = 'Cancel'
-const INVALID_DATA_TEXT = 'Please select valid data'
+const DONE_TEXT         = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
+const CANCEL_TEXT       = sprintf(strings.enUS['string_cancel_cap'])
+const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_valid'])
 
 ////////////////////////////// ROOT ///////////////////////////////////////////
 
 class CreateWallet extends Component {
   getSupportedBlockchains = () => {
     const supportedBlockchains = [
-      'Bitcoin',
-      'Ethereum'
+      sprintf(strings.enUS['fragment_blockchain_btc']),
+      sprintf(strings.enUS['fragment_blockchain_eth'])
     ]
 
     return supportedBlockchains
@@ -43,12 +45,12 @@ class CreateWallet extends Component {
 
   getSupportedFiats = () => {
     const supportedFiats = [
-      'US Dollar',
-      'European Euro',
-      'British Pound',
-      'Japanese Yen',
-      'Chinese Yuan',
-      'Mexican Peso',
+      sprintf(strings.enUS['fragment_fiat_usd']),
+      sprintf(strings.enUS['fragment_fiat_eur']),
+      sprintf(strings.enUS['fragment_fiat_gbp']),
+      sprintf(strings.enUS['fragment_fiat_jpy']),
+      sprintf(strings.enUS['fragment_fiat_cnh']),
+      sprintf(strings.enUS['fragment_fiat_mxp'])
     ]
 
     return supportedFiats

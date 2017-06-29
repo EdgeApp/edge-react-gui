@@ -2,7 +2,6 @@
 /* eslint-disable no-undef */
 import { createStore, applyMiddleware, compose } from 'redux'
 
-
 import rootReducer from './rootReducer'
 import thunk from 'redux-thunk'
 import createLogger from 'redux-logger'

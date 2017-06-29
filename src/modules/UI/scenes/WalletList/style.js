@@ -225,6 +225,7 @@ module.exports = StyleSheet.create({
   tokenRowContainer: {
     padding: 16,
     paddingLeft: 30,
+    paddingRight: 44,
     backgroundColor: '#F6F6F6',
     borderBottomWidth: 1,
     borderColor: '#EEE'
@@ -236,7 +237,7 @@ module.exports = StyleSheet.create({
   tokenRowNameTextWrap: {
     justifyContent: 'center'
   },
-  tokenRowNameText: {
+  tokenRowText: {
     color: '#58595C'
   }
     // end of token rows //

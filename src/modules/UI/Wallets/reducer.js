@@ -84,6 +84,11 @@ const schema = wallet => {
     symbolImage,
     metaTokens } = info
 
+  metaTokens.forEach(metaToken => {
+    metaToken.balance = 0
+    metaToken.balance = wallet.getBalance(currencyCode)
+  })
+
   const newWallet = {
     id,
     type,

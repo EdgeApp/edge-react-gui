@@ -7,7 +7,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import s from './style'
-import {border} from '../../../../util/border'
+import {border as b} from '../../../../util/border'
 
 class PrimaryButton extends Component {
     constructor(props) {
@@ -17,7 +17,7 @@ class PrimaryButton extends Component {
 
     render() {
         return(
-            <TouchableHighlight onPress={this.props.onPressFunction} style={[s.primaryButtonWrap, s.stylizedButton, border('orange')]}>
+            <TouchableHighlight onPress={this.props.onPressFunction} style={[s.primaryButtonWrap, s.stylizedButton, b('orange')]}>
                 <View style={s.stylizedButtonTextWrap}>
                     <T style={[s.primaryButton, s.stylizedButtonText]}>{this.props.text}</T>
                 </View>

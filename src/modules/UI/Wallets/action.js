@@ -15,34 +15,33 @@ export const activateWalletRequest = wallet => {
       dispatch(selectWalletId(wallet.id))
     }
     dispatch(upsertWallet(wallet))
-    dispatch(activateWalletId(wallet.id))
   }
 }
 
 export const archiveWalletRequest = wallet => {
   return (dispatch, getState) => {
     const state = getState()
-    // const { selectedWalletId } = state.ui.wallets
-    // automatically select the next active wallet
-    // if (selectedWalletId === wallet.id) {
-    //   const { activeWalletIds } = state.ui.wallets
-    //   dispatch(selectWalletId(activeWalletIds[1]))
-    // }
     dispatch(upsertWallet(wallet))
-    dispatch(archiveWalletId(wallet.id))
+
+    // automatically select the next active wallet
+    const { selectedWalletId } = state.ui.wallets
+    if (selectedWalletId === wallet.id) {
+      const { activeWalletIds } = state.ui.wallets
+      dispatch(selectWalletId(activeWalletIds[0]))
+    }
   }
 }
 
 export const deleteWalletRequest = walletId => {
   return (dispatch, getState) => {
     const state = getState()
-    const { selectedWalletId } = state.ui.wallets
-    // automatically select the next active wallet
-    // if (selectedWalletId === walletId) {
-    //   const { activeWalletIds } = state.ui.wallets
-    //   dispatch(selectWalletId(activeWalletIds[1]))
-    // }
     dispatch(deleteWallet(walletId))
+    // automatically select the next active wallet
+    const { selectedWalletId } = state.ui.wallets
+    if (selectedWalletId === walletId) {
+      const { activeWalletIds } = state.ui.wallets
+      dispatch(selectWalletId(activeWalletIds[0]))
+    }
   }
 }
 
@@ -84,15 +83,6 @@ export const renameWalletSuccess = walletId => {
   }
 }
 
-export const refreshWallet = walletId => {
-  return (dispatch, getState) => {
-    const wallet = getState().core.wallets.byId[walletId]
-    if (wallet) {
-      dispatch(upsertWallet(wallet))
-    }
-  }
-}
-
 export const refreshWallets = () => {
   return (dispatch, getState) => {
     const state = getState()
@@ -101,6 +91,19 @@ export const refreshWallets = () => {
     wallets.forEach(wallet => {
       dispatch(upsertWallet(wallet))
     })
+  }
+}
+
+export const upsertWalletRequest = wallet => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    if (!selectedWalletId && !wallet.archived && !wallet.deleted) {
+      dispatch(selectWalletId(wallet.id))
+    }
+
+    return dispatch(upsertWallet(wallet))
   }
 }
 

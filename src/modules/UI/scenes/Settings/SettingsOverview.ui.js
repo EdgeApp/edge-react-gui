@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Switch, TouchableOpacity, Image, ScrollView, ListView, Text, TextInput, View, StyleSheet, TouchableHighlight, Animated } from 'react-native'
 import T from '../../components/FormattedText'
@@ -14,29 +16,38 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import s from './style'
-import { border } from '../../../../util/border'
+import { border as b } from '../../../../util/border'
+
+import {
+  setAutoLogoutTimeRequest,
+  setDefaultFiatRequest,
+  setMerchantModeRequest,
+  setBitcoinDenominationRequest,
+  setBitcoinOverrideServerRequest,
+  setEthereumDenominationRequest
+} from './action.js'
 
 class SettingsOverview extends Component {
   constructor(props) {
     super(props)
 
     this.settings = [
-      { key: 'changePassword', text: 'Change Password' },
-      { key: 'changePin', text: 'Change PIN' },
-      { key: 'passwordRecovery', text: 'Setup / Change Password Recovery' }
+      { key: 'changePassword', text: sprintf(strings.enUS['settings_button_change_password']) },
+      { key: 'changePin', text: sprintf(strings.enUS['settings_button_pin']) },
+      { key: 'passwordRecovery', text: sprintf(strings.enUS['settings_button_change_pass_recovery']) }
     ]
 
     this.securityRoute = [
-      { key: 'setup2Factor', text: 'Setup 2 Factor' }
+      { key: 'setup2Factor', text: sprintf(strings.enUS['settings_button_setup_two_factor']) }
     ]
 
     this.options = {
-      pinRelogin: { text: 'PIN Re-Login', key: 'pinRelogin' },
-      useTouchID: { text: 'Use TouchID',  key: 'useTouchID' }
+      pinRelogin: { text: sprintf(strings.enUS['settings_title_pin_login']), key: 'pinRelogin' },
+      useTouchID: { text: sprintf(strings.enUS['settings_button_use_touchID']),  key: 'useTouchID' }
     }
 
     this.optionModals = [
-      { key: 'autoLogoff', text: 'Auto log off after' }
+      { key: 'autoLogoff', text: sprintf(strings.enUS['settings_title_auto_logoff']) }
     ]
 
     this.currencies = [
@@ -44,7 +55,6 @@ class SettingsOverview extends Component {
       { key: 'ethSettings', text: 'Ethereum', routeFunction: Actions.ethSettings }
     ]
   }
-
 
   _handleOnPressRouting = (route) => {
     console.log('in SettingsOverview.ui.js, route is: ', route)
@@ -68,7 +78,7 @@ class SettingsOverview extends Component {
     console.log('toggling option: ', option)
   }
 
-  _onToggleDebug = () => {
+  _onPressDebug = () => {
     console.log('debug button pressed')
   }
 
@@ -79,12 +89,12 @@ class SettingsOverview extends Component {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={['#3B7ADA', '#2B5698']}>
-          <View style={[s.accountBoxHeaderTextWrap, border('yellow')]}>
+          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
-              <FAIcon style={[s.userIcon, border('green')]}
-                name='user-o' color='white' />
+              <FAIcon style={[s.userIcon, b('green')]}
+              name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
-                Account: Airbitz Super Dooper Wallet
+                {sprintf(strings.enUS['settings_account_title_cap'])}: Airbitz Super Dooper Wallet
               </T>
             </View>
           </View>
@@ -98,10 +108,10 @@ class SettingsOverview extends Component {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={['#3B7ADA', '#2B5698']}>
-          <View style={[s.accountBoxHeaderTextWrap, border('yellow')]}>
+          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
-              <IonIcon name='ios-options' style={[s.userIcon, border('green')]} color='white' />
-              <T style={s.accountBoxHeaderText}>Options</T>
+              <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
+              <T style={s.accountBoxHeaderText}>{sprintf(strings.enUS['settings_options_title_cap'])}</T>
             </View>
           </View>
         </LinearGradient>
@@ -111,8 +121,8 @@ class SettingsOverview extends Component {
           {this.securityRoute.map(this.renderSettingsItemWithRoute)}
           {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
           {this.currencies.map(this.renderSettingsItemWithRoute)}
-          <View style={[s.debugArea, border('green')]}>
-            <PrimaryButton text='Debug' onPressFunction={this._onToggleDebug} />
+          <View style={[s.debugArea, b('green')]}>
+            <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
           </View>
           <View style={s.emptyBottom}></View>
         </View>
@@ -137,10 +147,15 @@ class SettingsOverview extends Component {
 }
 
 const mapStateToProps = state => ({
-
+  settingsFile: state.core.account.folder.file('settings.json')
 })
 const mapDispatchToProps = dispatch => ({
-
+  setAutoLogoutTime: autoLogoffTimeInSeconds => { dispatch(setAutoLogoutTimeRequest(autoLogoffTimeInSeconds)) },
+  setDefaultFiat: defaultFiat => { dispatch(setDefaultFiatRequest(defaultFiat)) },
+  setMerchantMode: merchantMode => { dispatch(setMerchantModeRequest(merchantMode)) },
+  setBitcoinDenomination: denomination => { dispatch(setBitcoinDenominationRequest(denomination)) },
+  setBitcoinOverrideServer: overrideServer => { dispatch(setBitcoinOverrideServerRequest(overrideServer)) },
+  setEthereumDenomination: denomination => { dispatch(setEthereumDenominationRequest(denomination)) }
 })
 
 export default SettingsOverviewConnect = connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
