@@ -56,7 +56,7 @@ class WalletList extends Component {
   constructor(props){
     super(props)
     const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-    console.log('localeInfo is: ', localeInfo) 
+    console.log('localeInfo is: ', localeInfo)
     console.log('strings is: ' , strings)
   }
 
@@ -365,7 +365,7 @@ class AddressIcon extends Component {
 class WalletNameInput extends Component {
 
 
-  _onNameInputChange = (input) => {   
+  _onNameInputChange = (input) => {
     // be aware that walletListRowOptions.ui.js also initially dispatches this action
     this.props.dispatch(updateRenameWalletInput(input))
   }
@@ -403,8 +403,8 @@ class RenameWalletButtons extends Component {
   }
 
   _onCancelRenameModal = () => {
-    this.props.dispatch(closeRenameWalletModal())    
-    this.props.dispatch(updateRenameWalletInput(''))    
+    this.props.dispatch(closeRenameWalletModal())
+    this.props.dispatch(updateRenameWalletInput(''))
   }
 
   render() {
@@ -432,7 +432,9 @@ class RenameWalletButtons extends Component {
   }
 }
 export const RenameWalletButtonsConnect = connect(state => ({
-  currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
+  currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
+  walletId:                  state.ui.scenes.walletList.walletId,
+  renameWalletInput:         state.ui.scenes.walletList.renameWalletInput
 }))(RenameWalletButtons)
 
 /////// End of Rename Area ////////
