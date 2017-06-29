@@ -34,29 +34,42 @@ class WalletListRow extends Component {
           </View>
         </TouchableHighlight>
         {this.props.wallets[id].metaTokens.map((x, i) => (
-          <WalletListTokenRow metaToken={x} key={x.currencyCode} />
+          <WalletListTokenRow metaToken={x} key={x.currencyCode} balance={x.balance} currencyCode={x.currencyCode} />
         ))}
       </View>
     )
   }
 }
 
-WalletListRow.propTypes = {}
+WalletListRow.propTypes = {
+
+}
 
 export default connect(state => ({
   wallets: state.ui.wallets.byId
 }))(WalletListRow)
 
 class WalletListTokenRow extends Component {
+  constructor(props) {
+    super(props)
+  }
+
   render () {
     return (
       <View style={[styles.tokenRowContainer]}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
-            <T style={[styles.tokenRowNameText]}>{this.props.metaToken.currencyCode}</T>
+            <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
+          <View style={[styles.tokenRowBalanceTextWrap]}>
+            <T style={[styles.tokenRowText]}>{this.props.balance}</T>
+          </View>          
         </View>
       </View>
     )
   }
+}
+WalletListTokenRow.propTypes = {
+  currencyCode: PropTypes.string,
+  balance: PropTypes.number
 }

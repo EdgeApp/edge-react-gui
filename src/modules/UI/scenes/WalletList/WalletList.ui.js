@@ -106,7 +106,7 @@ class WalletList extends Component {
             this.renderActiveSortableList(
               wallets,
               activeWalletIds,
-              'Archive',
+              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
               this.renderActiveRow,
               this.onActiveRowMoved
             )
@@ -130,7 +130,7 @@ class WalletList extends Component {
             this.renderArchivedSortableList(
               wallets,
               archivedWalletIds,
-              'Restore',
+              sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized']),
               this.renderArchivedRow,
               this.onArchivedRowMoved
             )
@@ -429,14 +429,6 @@ class RenameWalletButtons extends Component {
       </View>
     )
   }
-
-  border (color) {
-    return {
-      borderColor: color,
-      borderWidth: 0
-    }
-  }
-
 }
 export const RenameWalletButtonsConnect = connect(state => ({
   currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId]

@@ -316,6 +316,7 @@ const strings = {
     fragment_import_address_dialog_title:	"Sweep Funds From Private Key",
     fragment_send_other_wallet_header_title:	"Choose a wallet to transfer funds to:",
     fragment_send_create_wallet_to_transfer:	"Create a new wallet to transfer funds to",
+    
     fragment_send_import_or_send_title:	"Bitcoin Private Key with Public Address",
     fragment_send_import_or_send_import_funds:	"Import Funds",
     fragment_send_import_or_send_send_funds:	"Send Funds",
@@ -756,7 +757,8 @@ const strings = {
     fragment_wallets_addwallet_blockchain_hint:	"Choose a blockchain",
     fragment_wallets_addwallet_fiat_hint:	"Choose a fiat currency",
     fragmet_wallets_addtoken_option:	"Add Token",
-    fragment_wallets_this_wallet:	"this wallet?",
+    fragment_wallets_this_wallet:	"this wallet?", // needs work
+    fragment_select_wallet_header_title: "Choose one of the following as selected wallet:",
     title_Create_Wallet:	"Create Wallet",
     fragment_create_wallet_create_wallet:	"Create Wallet",
     fragment_create_wallet_select_valid:	"Please select valid data",
