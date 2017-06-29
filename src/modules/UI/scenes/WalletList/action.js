@@ -254,7 +254,7 @@ export const openRenameWalletModal = walletId => {
   return (dispatch, getState) => {
     const state = getState()
     const walletName = state.core.wallets.byId[walletId].name
-
+  
     dispatch({
       type: OPEN_RENAME_WALLET_MODAL,
       data: { walletId, walletName }

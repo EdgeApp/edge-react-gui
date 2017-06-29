@@ -233,9 +233,8 @@ class WalletList extends Component {
         headerText='fragment_wallets_rename_wallet'
         headerSubtext={this.props.walletName}
         modalMiddle={<WalletNameInputConnect />}
-        modalBottom={<RenameWalletButtonsConnect
+        modalBottom={<RenameWalletButtonsConnect />}
         walletId={this.props.walletId}
-        renameWalletInput={this.props.renameWalletInput} />}
         visibilityBoolean={this.props.renameWalletModalVisible}
       />
     )
@@ -259,7 +258,6 @@ const mapStateToProps = state => ({
   deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
   walletName:               state.ui.scenes.walletList.walletName,
   walletId:                 state.ui.scenes.walletList.walletId,
-  renameWalletInput:        state.ui.scenes.walletList.renameWalletInput,
   walletOrder:              state.ui.wallets.walletListOrder
 })
 
@@ -365,27 +363,30 @@ class AddressIcon extends Component {
 }
 
 class WalletNameInput extends Component {
-  _onNameInputChange = (input) => {
+
+
+  _onNameInputChange = (input) => {   
+    // be aware that walletListRowOptions.ui.js also initially dispatches this action
     this.props.dispatch(updateRenameWalletInput(input))
   }
 
   render() {
-    let walletName = this.props.currentWalletRename
     return(
       <View style={[styles.nameInputWrap, b('orange')]}>
         <TextInput style={[styles.nameInput, b('red')]}
           onChangeText={(input) => this._onNameInputChange(input)}
-          value={this.props.renameWalletInput}
+          value={this.props.renameWalletInput || this.props.currentWalletBeingRenamed}
           autoFocus />
       </View>
     )
   }
 }
 export const WalletNameInputConnect = connect( state => ({
-  currentWalletBeingRenamed: state.ui.scenes.walletList.currentWalletBeingRenamed,
-  currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
+  currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,
+  ///currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
   renameWalletVisible:       state.ui.scenes.walletList.renameWalletVisible,
-  renameWalletInput:         state.ui.scenes.walletList.walletName
+  renameWalletInput:         state.ui.scenes.walletList.renameWalletInput
+
 }))(WalletNameInput)
 
 class RenameWalletButtons extends Component {
