@@ -9,6 +9,7 @@ import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 
 import TransactionListConnect from './UI/scenes/TransactionList'
+import TransactionDetails from './UI/scenes/TransactionDetails'
 import Directory from './UI/scenes/Directory/Directory.ui'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
@@ -129,6 +130,8 @@ class Main extends Component {
                     <Scene key='directory' component={Directory} title='Directory' duration={0} />
 
                     <Scene key='transactionList' component={TransactionListConnect} title='Transactions' duration={0} />
+
+                    <Scene key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />                    
 
                     <Scene key='request' component={Request} title='Request' duration={0} />
 

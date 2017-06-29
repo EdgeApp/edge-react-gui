@@ -71,6 +71,13 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
+              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('transactionDetails')} background={TouchableNativeFeedback.SelectableBackground()} >
+                <View style={styles.others.link}>
+                  <View style={styles.others.textContainer}>
+                    <Text style={styles.others.text}>Transaction Details</Text>
+                  </View>
+                </View>
+              </TouchableNativeFeedback>               
             </View>
             <View style={styles.others.container}>
               <TouchableNativeFeedback onPress={ e => console.log('pressed5') }>
@@ -88,7 +95,7 @@ class MainComponent extends Component {
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>
+              </TouchableNativeFeedback>             
             </View>
           </View>
         )
@@ -139,6 +146,13 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('transactionDetails')} >
+                <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
+                  <View style={styles.others.textContainer}>
+                    <Text style={styles.others.text}>Transaction Details</Text>
+                  </View>
+                </View>
+              </TouchableHighlight>                  
             </View>
             <View style={styles.others.container}>
               <TouchableHighlight style={styles.others.iosTouchableHighlight}
@@ -158,7 +172,7 @@ class MainComponent extends Component {
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
                 </View>
-              </TouchableHighlight>
+              </TouchableHighlight>          
             </View>
           </View>
         )
