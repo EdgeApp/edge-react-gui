@@ -366,13 +366,13 @@ class SearchBar extends Component {
 
   render() {
     return(
-      <View style={[styles.searchContainer, b('green')]}>
-        <View style={[ styles.innerSearch, b('orange')]}>
-          <EvilIcons name='search' style={[styles.searchIcon, b('purple')]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, b('yellow')]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
+      <View style={[styles.searchContainer, b()]}>
+        <View style={[ styles.innerSearch, b()]}>
+          <EvilIcons name='search' style={[styles.searchIcon, b()]} color='#9C9C9D' size={20} />
+          <TextInput style={[styles.searchInput, b()]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
         </View>
         <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-          <TouchableHighlight onPress={this.props.onPress} style={[b('red'), styles.cancelButton]}>
+          <TouchableHighlight onPress={this.props.onPress} style={[b(), styles.cancelButton]}>
             <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf(strings.enUS['string_cancel_cap'])}</Text>
           </TouchableHighlight>
         </Animated.View>
