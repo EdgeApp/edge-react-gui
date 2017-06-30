@@ -11,7 +11,7 @@ import {
   Button,
   TouchableOpacity,
   TextInput } from 'react-native'
-import FormattedText from '../../components/FormattedText'
+import T from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { dev } from '../../../utils.js'
@@ -176,13 +176,13 @@ const Buttons = (props) => {
       <TouchableOpacity
         style={[styles.cancel]}
         onPress={props.onCancel}>
-        <FormattedText style={styles.buttonText}>{CANCEL_TEXT}</FormattedText>
+        <T style={styles.buttonText}>{CANCEL_TEXT}</T>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.submit]}
         onPress={props.onDone}>
-        <FormattedText style={styles.buttonText}>{DONE_TEXT}</FormattedText>
+        <T style={styles.buttonText}>{DONE_TEXT}</T>
       </TouchableOpacity>
 
     </View>
@@ -306,7 +306,7 @@ const DropdownList = props => {
       <TouchableOpacity
         style={{backgroundColor: 'white', padding: 10,}}
         onPress={() => props.onPress(data)}>
-        <FormattedText>{data}</FormattedText>
+        <T>{data}</T>
       </TouchableOpacity>
     )
   }

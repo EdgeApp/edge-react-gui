@@ -12,7 +12,7 @@ import {
   TouchableHighlight,
   Animated } from 'react-native'
 import Locale from 'react-native-locale'
-import FormattedText from '../../components/FormattedText'
+import T from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -75,14 +75,14 @@ class WalletList extends Component {
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader, b('red')]}>
-              <FormattedText style={[styles.totalBalanceText]}>
+              <T style={[styles.totalBalanceText]}>
                 {sprintf(strings.enUS['fragment_wallets_balance_text'])}
-              </FormattedText>
+              </T>
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
-              <FormattedText style={[styles.currentBalanceBoxDollars]}>
+              <T style={[styles.currentBalanceBoxDollars]}>
                 $ 8,200.00
-              </FormattedText>
+              </T>
             </View>
           </View>
         </View>
@@ -92,9 +92,9 @@ class WalletList extends Component {
             <View style={[styles.walletsBoxHeaderTextWrap, b('yellow')]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon, b('green')]} color='white' />
-                <FormattedText style={styles.walletsBoxHeaderText}>
+                <T style={styles.walletsBoxHeaderText}>
                   {sprintf(strings.enUS['fragment_wallets_header'])}
-                </FormattedText>
+                </T>
               </View>
             </View>
 
@@ -116,9 +116,9 @@ class WalletList extends Component {
             <View style={[styles.archiveBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
                 <EvilIcons name='archive' style={[styles.archiveIcon, b('green')]} color='white' />
-                <FormattedText style={styles.archiveBoxHeaderText}>
+                <T style={styles.archiveBoxHeaderText}>
                   {sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
-                </FormattedText>
+                </T>
               </View>
             </View>
 
@@ -289,7 +289,7 @@ class DeleteSubtext extends Component {
 
   render() {
     return(
-      <FormattedText style={styles.subHeaderSyntax}>
+      <T style={styles.subHeaderSyntax}>
         {sprintf(strings.enUS['fragmet_wallets_delete_wallet_first_confirm_message_mobile'])}
         {
           (this.props.currentWalletBeingDeleted) ?
@@ -297,13 +297,13 @@ class DeleteSubtext extends Component {
               <FormattedText
                 style={{fontWeight: 'bold'}}>
                 {this.props.currentWalletBeingDeleted}?
-            </FormattedText>
+            </T>
           ):
           (
-            <FormattedText>{sprintf(strings.enUS['fragment_wallets_this_wallet'])}</FormattedText>
+            <T>{sprintf(strings.enUS['fragment_wallets_this_wallet'])}</T>
           )
         }
-      </FormattedText>
+      </T>
     )
   }
 }
@@ -327,7 +327,7 @@ class DeleteWalletButtons extends Component {
         <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</FormattedText>
+            <T style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
           </View>
 
         </TouchableHighlight>
@@ -335,7 +335,7 @@ class DeleteWalletButtons extends Component {
         <TouchableHighlight onPress={this._onDeleteModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_delete'])}</FormattedText>
+            <T style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_delete'])}</T>
           </View>
 
         </TouchableHighlight>
@@ -414,7 +414,7 @@ class RenameWalletButtons extends Component {
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</FormattedText>
+            <T style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
           </View>
 
         </TouchableHighlight>
@@ -423,7 +423,7 @@ class RenameWalletButtons extends Component {
           style={[styles.doneButtonWrap, styles.stylizedButton]}>
 
           <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['calculator_done'])}</FormattedText>
+            <T style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['calculator_done'])}</T>
           </View>
 
         </TouchableHighlight>

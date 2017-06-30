@@ -3,7 +3,7 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
-import FormattedText from '../../components/FormattedText'
+import T from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -233,10 +233,10 @@ class TransactionList extends Component {
                           <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                         </View>
                         <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                          <FormattedText style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+                          <T style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
                               </View>
                               <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
-                                <FormattedText style={[styles.currentBalanceBoxBits, b('yellow')]}>b 600000</FormattedText>
+                                <T style={[styles.currentBalanceBoxBits, b('yellow')]}>b 600000</T>
                               </View>
                           </View>
                           )}
@@ -245,13 +245,13 @@ class TransactionList extends Component {
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
                               <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                              <FormattedText style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</FormattedText>
+                              <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                             </View>
                           </TouchableHighlight>
                           <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                             <View style={[styles.sendWrap]}>
                               <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                              <FormattedText style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</FormattedText>
+                              <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
                             </View>
                           </TouchableHighlight>
                         </View>
@@ -297,7 +297,7 @@ class TransactionList extends Component {
         {(dateStrings[tx.key + 1] !== dateStrings[tx.key]) &&
           (<View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
-              <FormattedText style={styles.formattedDate}>{dateString}</FormattedText>
+              <T style={styles.formattedDate}>{dateString}</T>
             </View>
             {tx.key === 1 && (
               <View style={styles.rightDateSearch}>
@@ -317,12 +317,12 @@ class TransactionList extends Component {
               <FAIcon name='user' style={[styles.transactionLogo, b('orange')]} size={54} />
             )}
             <View style={[styles.transactionDollars, b('blue')]}>
-              <FormattedText style={[styles.transactionPartner, b('black')]}>Contact Name</FormattedText>
-              <FormattedText style={[styles.transactionTime, b('brown')]}>12:12 PM</FormattedText>
+              <T style={[styles.transactionPartner, b('black')]}>Contact Name</T>
+              <T style={[styles.transactionTime, b('brown')]}>12:12 PM</T>
             </View>
             <View style={[styles.transactionBits, b('purple')]}>
-              <FormattedText style={[styles.transactionDollarAmount, b('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</FormattedText>
-              <FormattedText style={[styles.transactionBitAmount, b('brown'), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</FormattedText>
+              <T style={[styles.transactionDollarAmount, b('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</T>
+              <T style={[styles.transactionBitAmount, b('brown'), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
             </View>
           </View>
         </View>
