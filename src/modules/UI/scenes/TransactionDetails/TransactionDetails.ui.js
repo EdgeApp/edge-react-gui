@@ -53,10 +53,12 @@ class TransactionDetails extends Component {
   }
 
   render () {
-    console.log('rendering Transaction Details scene')
+    console.log('rendering Transaction Details scene, this.props is: ', this.props)
     return (
         <View>
             <T>Hello</T>
+            <T>Selected Wallet ID is: {this.props.walletId}</T>
+            <T>Selected Transaction ID is: {this.props.txId}</T>
         </View>
 
     )

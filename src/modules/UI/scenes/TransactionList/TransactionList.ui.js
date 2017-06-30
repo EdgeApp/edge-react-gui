@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
-import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator } from 'react-native'
+import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator, TouchableOpacity } from 'react-native'
 import T from '../../components/FormattedText'
 import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
@@ -210,7 +210,7 @@ class TransactionList extends Component {
     console.log('about to render transactionsList , this.state.balanceBoxVisible is: ' , this.state.balanceBoxVisible)
     console.log('about to render again, this.state.balanceBoxOpacity is: ', this.state.balanceBoxOpacity)
     return (
-        <ScrollView style={[b('red'), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
+        <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
           <View style={[styles.container, b('green')]}>
             <Animated.View style={[{height: this.state.balanceBoxHeight}, b('red')]}>
@@ -274,6 +274,10 @@ class TransactionList extends Component {
     )
   }
 
+  _goToTxDetail = ( txId, currencyCode, tx) => {
+    Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
+  }
+
   renderTx = (tx) => {
     let txDate = new Date(tx.date * 1000)
     let month = txDate.getMonth()
@@ -309,27 +313,27 @@ class TransactionList extends Component {
               </View>)}
           </View>)
         }
-        <View style={[styles.singleTransaction, b('red')]}>
-          <View style={[styles.transactionInfoWrap, b('yellow')]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail( tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
+          <View style={[styles.transactionInfoWrap, b()]}>
             {tx.hasThumbnail ? (
-              <Image style={[styles.transactionLogo, b('orange')]} source={{ uri: tx.thumbnailPath }} />
+              <Image style={[styles.transactionLogo, b()]} source={{ uri: tx.thumbnailPath }} />
             ) : (
-              <FAIcon name='user' style={[styles.transactionLogo, b('orange')]} size={54} />
+              <FAIcon name='user' style={[styles.transactionLogo, b()]} size={54} />
             )}
-            <View style={[styles.transactionDollars, b('blue')]}>
-              <T style={[styles.transactionPartner, b('black')]}>Contact Name</T>
-              <T style={[styles.transactionTime, b('brown')]}>12:12 PM</T>
+            <View style={[styles.transactionDollars, b()]}>
+              <T style={[styles.transactionPartner, b()]}>Contact Name</T>
+              <T style={[styles.transactionTime, b()]}>12:12 PM</T>
             </View>
-            <View style={[styles.transactionBits, b('purple')]}>
-              <T style={[styles.transactionDollarAmount, b('black'), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</T>
-              <T style={[styles.transactionBitAmount, b('brown'), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
+            <View style={[styles.transactionBits, b()]}>
+              <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {(tx.amountSatoshi / 1000).toFixed(2)}</T>
+              <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     )
   }
-  }
+}
 
   TransactionList.propTypes = {
     transactionsList: PropTypes.array,
