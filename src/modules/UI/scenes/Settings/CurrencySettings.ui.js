@@ -11,7 +11,7 @@ import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import { Actions } from 'react-native-router-flux'
 import s from './style'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 import RadioRows from '../../components/RadioRows'
 
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { Text, View, TouchableHighlight, TextInput, Clipboard} from 'react-native'
-import FormattedText from '../../components/FormattedText'
+import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -29,7 +29,7 @@ import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 
 class Scan extends Component {
@@ -88,32 +88,32 @@ class Scan extends Component {
           <WalletAddressModalConnect />
 
           <View style={[styles.overlayTop, b('yellow')]}>
-            <FormattedText style={[styles.overlayTopText, b('green')]}>{sprintf(strings.enUS['send_scan_header_text'])}</FormattedText>
+            <T style={[styles.overlayTopText, b('green')]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
           </View>
           <View style={[styles.overlayBlank]} />
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, b('red')]}>
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, b('green')]} />
-                <FormattedText style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</FormattedText>
+                <T style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, b('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, b('green')]} />
-                <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, b('purple')]}>{sprintf(strings.enUS['fragment_send_address'])}</FormattedText>
+                <T style={[styles.addressButtonText, styles.bottomButtonText, b('purple')]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, b('green')]} />
-                <FormattedText style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</FormattedText>
+                <T style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, b('green')]} />
-                <FormattedText style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</FormattedText>
+                <T style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</T>
               </View>
             </TouchableHighlight>
           </LinearGradient>
@@ -238,12 +238,12 @@ class SendAddressButtons extends Component { // this component is for the button
       <View style={[ModalStyle.buttonsWrap, b('gray')]}>
         <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
-            <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</FormattedText>
+            <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
             <View style={ModalStyle.stylizedButtonTextWrap}>
-              <FormattedText style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</FormattedText>
+              <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
             </View>
           </TouchableHighlight>
       </View>
