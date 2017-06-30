@@ -48,3 +48,7 @@ export const archiveWalletRequest = wallet => {
 export const getTransactions = wallet => {
   return wallet.getTransactions()
 }
+
+export const setTransactionDetailsRequest = (wallet, transactionDetails) => {
+  return wallet.saveTx(transactionDetails)
+}
