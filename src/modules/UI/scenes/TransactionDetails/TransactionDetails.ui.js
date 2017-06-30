@@ -12,7 +12,7 @@ import { Actions } from 'react-native-router-flux'
 import {  } from './action'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b } from '../../../../util/border'
+import { border as b } from '../../../utils'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
