@@ -38,7 +38,7 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 import { forceWalletListUpdate } from './middleware'
 import Modal from 'react-native-modal'
@@ -74,7 +74,7 @@ class WalletList extends Component {
 
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader, b('red')]}>
+            <View style={[styles.totalBalanceHeader, b()]}>
               <T style={[styles.totalBalanceText]}>
                 {sprintf(strings.enUS['fragment_wallets_balance_text'])}
               </T>
@@ -89,7 +89,7 @@ class WalletList extends Component {
 
         <View style={styles.walletsBox}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
-            <View style={[styles.walletsBoxHeaderTextWrap, b('yellow')]}>
+            <View style={[styles.walletsBoxHeaderTextWrap, b()]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon, b('green')]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
@@ -99,7 +99,7 @@ class WalletList extends Component {
             </View>
 
             <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, b('red')]}>
-              <Ionicon name='md-add'style={[styles.dropdownIcon, b('green')]} color='white' />
+              <Ionicon name='md-add'style={[styles.dropdownIcon, b()]} color='white' />
             </TouchableWithoutFeedback>
           </LinearGradient>
           {
@@ -294,7 +294,7 @@ class DeleteSubtext extends Component {
         {
           (this.props.currentWalletBeingDeleted) ?
             (
-              <FormattedText
+              <T
                 style={{fontWeight: 'bold'}}>
                 {this.props.currentWalletBeingDeleted}?
             </T>

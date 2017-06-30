@@ -13,7 +13,7 @@ import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 class StylizedModal extends Component {
   render () {

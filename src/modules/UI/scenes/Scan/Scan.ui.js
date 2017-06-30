@@ -29,7 +29,7 @@ import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 
 class Scan extends Component {

@@ -1,3 +1,5 @@
+import borderColors from '../theme/variables/css3Colors'
+
 const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
   const fiatFromCrypto = (crypto * fiatPerCrypto)
 
@@ -36,8 +38,10 @@ const logError = (msg) => {
 }
 
 const border = (color) => {
+  var randColor = borderColors[Math.floor(Math.random() * borderColors.length)]
+  let borderColor = color ? color : randColor
   return {
-    borderColor: color,
+    borderColor: borderColor,
     borderWidth: 0
   }
 }

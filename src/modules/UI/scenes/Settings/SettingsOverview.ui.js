@@ -16,7 +16,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import s from './style'
-import { border as b } from '../../../../util/border'
+import { border as b } from '../../../utils'
 
 import {
   setAutoLogoutTimeRequest,
