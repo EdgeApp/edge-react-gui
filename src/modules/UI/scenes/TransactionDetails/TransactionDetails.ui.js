@@ -29,6 +29,12 @@ const monthNames = [
     sprintf(strings.enUS['transactions_list_date_dec'])
   ]
 var dateStrings = []
+const tx = {
+    payee: 'Glidera',
+    date: new Date(),
+    amount: 100,
+    currency: 'TRD',
+}
 
 class TransactionDetails extends Component {
    constructor(props) {
