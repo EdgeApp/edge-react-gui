@@ -75,19 +75,23 @@ class TransactionDetails extends Component {
     console.log('rendering Transaction Details scene, this.props is: ', this.props)
     return (
         <View style={styles.container}>
-          <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.expandedHeader]} colors={["#3b7adb","#2b569a"]}>
-              <PayeeIcon direction={this.state.direction} />
-          </LinearGradient>
-          <View style={styles.payeeNameArea}>
-            <View style={styles.payeeNameWrap}>
-              <T style={styles.payeeNameText}>Glidera</T>
-            </View>
-            <View style={[styles.dateWrap]}>
-              <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
-            </View>
-            <AmountArea info={this.state} />
+          <View>
+            <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
+                <PayeeIcon direction={this.state.direction} />
+            </LinearGradient>
           </View>
-        </View>        
+          <View style={styles.dataArea}>
+            <View style={styles.payeeNameArea}>
+              <View style={styles.payeeNameWrap}>
+                <T style={styles.payeeNameText}>Glidera</T>
+              </View>
+              <View style={[b(), styles.dateWrap]}>
+                <T style={[b(), styles.date]}>May 01, 2017 2:32:59 AM</T>
+              </View>
+              <AmountArea info={this.state} />
+            </View>  
+          </View>        
+        </View>
 
     )
   }
@@ -112,12 +116,15 @@ class AmountArea extends Component {
   render() {
     return(
       <View style={styles.amountAreaContainer}>
-        <View style={[styles.amountAreafiatRow]}>
-          <View style={[styles.amountAreaLeft]}>
+        <View style={[b(), styles.amountAreaFiatRow]}>
+          <View style={[b(), styles.amountAreaLeft]}>
             <T></T>
           </View>
-          <View style={[styles.amountAreaMiddle]}>
-            <View style={[styles.amountAreaMiddleTop]}>
+          <View style={[b(), styles.amountAreaMiddle]}>
+            <View style={[b(), styles.amountAreaMiddleTop]}>
+              <T></T>
+            </View>
+            <View style={[b(), styles.amountAreaMiddleBottom]}>
               <T></T>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
@@ -145,6 +152,29 @@ class AmountArea extends Component {
 
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>
+            <PrimaryButton />
+          </View>
+          <View style={[b(), styles.amountAreaRight]}>
+            <T>bits</T>
+          </View>
+        </View>
+        <View style={[b(), styles.editableFiatRow]}>
+          <View style={[b(), styles.editableFiatArea]}>
+            <TextInput style={[b(), styles.editableFiat]} />
+          </View>
+          <View style={[b(), styles.editableFiatRight]}>
+            <T>USD</T>
+          </View>
+        </View>
+        <View style={[b(), styles.categoryRow]}>
+          <View style={[b(), styles.categoryLeft]}></View>
+          <View style={[b(), styles.categoryInputArea]}>
+            <TextInput placeholder='Monthly exchange' />
+          </View>              
+        </View>
+
+        <View style={[b(), styles.footerArea]}>
+          <View style={[b(), styles.buttonArea]}>
             <PrimaryButton />
           </View>
           <View>
@@ -199,7 +229,7 @@ class ContactIcon extends Component {
   render() {
     let iconBgColor = (this.props.direction === 'receive') ? 'green' : 'red'
     return(
-        <View style={[styles.modalHeaderIconWrapBottom]}>
+        <View style={[b(), styles.modalHeaderIconWrapBottom]}>
           <View style={styles.modalHeaderIconWrapTop}>
             {this.props.featuredIcon}
           </View>

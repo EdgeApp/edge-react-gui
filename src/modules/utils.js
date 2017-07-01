@@ -42,7 +42,7 @@ const border = (color) => {
   let borderColor = color ? color : randColor
   return {
     borderColor: borderColor,
-    borderWidth: 1
+    borderWidth: 0
   }
 }
 

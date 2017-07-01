@@ -1,6 +1,8 @@
 import React, {StyleSheet} from 'react-native'
 
-const styles = StyleSheet.create({
+
+module.exports = StyleSheet.create({
+
   container: {
       flex: 1,
       alignItems: 'stretch',
@@ -8,8 +10,9 @@ const styles = StyleSheet.create({
   },
   expandedHeader: {
     height: 32,
-    //flexDirection: 'row',
-    //justifyContent: 'center'
+    flexDirection: 'row',
+    justifyContent: 'center'
+
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 25,
@@ -35,5 +38,74 @@ const styles = StyleSheet.create({
     top: 2, 
     left: 16, 
     backgroundColor: 'transparent'    
-  }
-})
+  },
+  dataArea: {
+    position: 'relative',
+    top: 31,
+    flexDirection: 'column'
+  },
+  payeeNameArea: {
+
+  },
+  payeeNameWrap: {
+
+  },
+  payeeNameText: {
+
+  },
+  dateWrap: {
+    
+  },
+  date: {
+
+  },
+  amountAreaContainer: {
+
+  },
+  amountAreaFiatRow: {
+
+  },
+  amountAreaLeft: {
+
+  },
+  amountAreaMidde: {
+
+  },
+  amountAreaMiddleTop: {
+
+  },
+  amountAreaMiddleBottom: {
+
+  },
+  amountAreaRight: {
+
+  },
+  editableFiatRow: {
+
+  },
+  editableFiatArea: {
+
+  },
+  editableFiat: {
+
+  },
+  categoryRow: {
+
+  },
+  categoryLeft: {
+
+  },
+  categoryInputArea: {
+
+  },
+  footerArea: {
+
+  },
+  buttonArea: {
+
+  },
+
+
+
+});
+
