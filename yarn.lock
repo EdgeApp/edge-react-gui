@@ -3679,7 +3679,7 @@ lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
 
-lodash.isequal@^4.4.0, lodash.isequal@^4.5.0:
+lodash.isequal@^4.4.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
 
@@ -4658,6 +4658,13 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-addons-pure-render-mixin@^15.0.2:
+  version "15.6.0"
+  resolved "https://registry.yarnpkg.com/react-addons-pure-render-mixin/-/react-addons-pure-render-mixin-15.6.0.tgz#84ba028630cdf89239d16f1bb4d98fe865651813"
+  dependencies:
+    fbjs "^0.8.4"
+    object-assign "^4.1.0"
+
 react-addons-shallow-compare@^15.0.2:
   version "15.5.2"
   resolved "https://registry.yarnpkg.com/react-addons-shallow-compare/-/react-addons-shallow-compare-15.5.2.tgz#7cb0ee7acc8d7c93fcc202df0bf47ba916a7bdad"
@@ -4754,16 +4761,16 @@ react-native-elements@^0.10.0:
     react-native-side-menu "^0.20.1"
     react-native-tab-navigator "^0.3.3"
 
-react-native-experimental-navigation@0.28.x:
-  version "0.28.0"
-  resolved "https://registry.yarnpkg.com/react-native-experimental-navigation/-/react-native-experimental-navigation-0.28.0.tgz#561298190320cd336dc5b00c2e8bc2435cfb4909"
+react-native-experimental-navigation@0.26.x:
+  version "0.26.12"
+  resolved "https://registry.yarnpkg.com/react-native-experimental-navigation/-/react-native-experimental-navigation-0.26.12.tgz#8b458757178b06908b3e8fe7042458332e8e4825"
   dependencies:
     babel-plugin-syntax-flow "^6.8.0"
     babel-plugin-transform-flow-strip-types "^6.8.0"
     babel-preset-react-native "^1.9.0"
     clamp "^1.0.1"
     fbjs "^0.8.1"
-    prop-types "^15.5.10"
+    react-addons-pure-render-mixin "^15.0.2"
 
 "react-native-flip-view@https://github.com/Airbitz/react-native-flip-view.git":
   version "1.0.5"
@@ -4787,7 +4794,7 @@ react-native-image-picker@^0.24.1:
   version "0.24.1"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-0.24.1.tgz#0a73fc66ec9e0d28bf3a75df996ad29f695d016c"
 
-react-native-keyboard-aware-scroll-view@0.2.9, react-native-keyboard-aware-scroll-view@^0.2.9:
+react-native-keyboard-aware-scroll-view@0.2.9:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/react-native-keyboard-aware-scroll-view/-/react-native-keyboard-aware-scroll-view-0.2.9.tgz#2a1ae49cfae90a9665b21763c1f8bd03ed5fb92c"
   dependencies:
@@ -4848,13 +4855,11 @@ react-native-randombytes@^2.2.0:
     buffer "^4.9.1"
     sjcl "^1.0.3"
 
-react-native-router-flux@3.40.1:
-  version "3.40.1"
-  resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-3.40.1.tgz#ed7dc91745884ea8c78e04400e7e04ad918f99e4"
+react-native-router-flux@3.38.0:
+  version "3.38.0"
+  resolved "https://registry.yarnpkg.com/react-native-router-flux/-/react-native-router-flux-3.38.0.tgz#f5f8ec2875b46f96f61006ff502d0d80268e6ce2"
   dependencies:
-    lodash.isequal "^4.5.0"
-    react-native-experimental-navigation "0.28.x"
-    react-native-keyboard-aware-scroll-view "^0.2.9"
+    react-native-experimental-navigation "0.26.x"
     react-native-tabs "^1.0.9"
     react-static-container "1.0.1"
 

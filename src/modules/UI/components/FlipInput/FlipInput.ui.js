@@ -139,7 +139,7 @@ class FlipInputInside extends Component {
       }else {
         return (
           <View style={styles.primaryFee}>
-            <Text style={styles.primaryFeeText}>{primaryFee}</Text>
+            <Text style={[ styles.primaryFeeText, { backgroundColor: 'transparent' } ]}>pota</Text>
           </View>
         )
       }
@@ -160,7 +160,7 @@ class FlipInputInside extends Component {
 
     const getInputAndFeesElement = () => {
       return (
-        <View style={{flex: 1, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.6)'}} name='InputAndFeesElement'>
+        <View style={{flex: 1, paddingBottom: 23, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.6)'}} name='InputAndFeesElement'>
             <TextInput
               style={[styles.primaryTextInput, styles[mode]]}
               value={getPrimaryAmount()}
@@ -169,7 +169,7 @@ class FlipInputInside extends Component {
               onChangeText={onInputChange}
               placeholderTextColor='#FFF'
             />
-            {displayPrimaryFees(primaryFee)}
+            {/* {displayPrimaryFees(primaryFee)} */}
         </View>
       )
     }
@@ -185,7 +185,7 @@ class FlipInputInside extends Component {
           <Text style={styles.secondaryText}>
             {getSecondaryAmount() || secondaryPlaceholder}
           </Text>
-          {displaySecondaryFees(secondaryFee)}
+          {/* {displaySecondaryFees(secondaryFee)} */}
         </View>
       </View>
     )

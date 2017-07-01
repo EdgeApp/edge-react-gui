@@ -3,20 +3,19 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    backgroundColor: 'transparent',
-  },
-  exchangeRateAndMax: {
-    marginVertical: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    alignItems: 'stretch'
   },
-  flipInput: {
-    flex: 4,
+  main: {
+    flex: 1,
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
+    paddingTop: 30
+  },
+  exchangeRateContainer: {
+    alignItems: 'center',
+    marginVertical: 10
   },
   spacer: {
     flex: 6,

@@ -6,11 +6,12 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   row: {
-    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center'
+  },
+  secondaryRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-end',
-    marginBottom: 13
   },
   primaryTextInput: {
     flex: 1,
@@ -39,13 +40,9 @@ const styles = StyleSheet.create({
   under: {
     color: 'white'
   },
-  secondaryRow: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
   secondaryText: {
     fontSize: 20,
+    paddingTop: 9,
     color: "#FFF",
     textAlign: 'center',
     backgroundColor: 'transparent',
