@@ -41,44 +41,73 @@ module.exports = StyleSheet.create({
   },
   dataArea: {
     position: 'relative',
-    top: 31,
+    top: 34,
     flexDirection: 'column'
   },
   payeeNameArea: {
+    alignItems: 'center',
+    flexDirection: 'column'
 
   },
   payeeNameWrap: {
-
+    width: '38%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    padding: 6,
+    alignItems: 'center'
   },
   payeeNameText: {
-
+    color: '#58595C',
+    fontSize: 17
   },
   dateWrap: {
-    
+    padding: 4
   },
   date: {
-
+    color: '#909091',
+    fontSize: 14
   },
   amountAreaContainer: {
-
+    flexDirection: 'column'
   },
-  amountAreaFiatRow: {
-
+  amountAreaCryptoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   amountAreaLeft: {
 
+    justifyContent: 'center',
+    alignItems: 'flex-start'
   },
-  amountAreaMidde: {
+  amountAreaLeftText: {
+    fontSize: 14
+  },
+  amountAreaMiddle: {
 
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   amountAreaMiddleTop: {
 
   },
+  amountAreaMiddleTopText: {
+    fontSize: 26,
+    color: '#58595C'
+  },
   amountAreaMiddleBottom: {
 
   },
+  amountAreaMiddleBottomText: {
+    fontSize: 14,
+    color: '#909091'
+  },
   amountAreaRight: {
-
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+  amountAreaRightText: {
+    color: '#909091',
+    fontSize: 14
   },
   editableFiatRow: {
 

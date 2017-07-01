@@ -74,22 +74,22 @@ class TransactionDetails extends Component {
   render () {
     console.log('rendering Transaction Details scene, this.props is: ', this.props)
     return (
-        <View style={styles.container}>
+        <View style={[b(), styles.container]}>
           <View>
             <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
                 <PayeeIcon direction={this.state.direction} />
             </LinearGradient>
           </View>
-          <View style={styles.dataArea}>
-            <View style={styles.payeeNameArea}>
-              <View style={styles.payeeNameWrap}>
-                <T style={styles.payeeNameText}>Glidera</T>
+          <View style={[styles.dataArea]}>
+            <View style={[styles.payeeNameArea]}>
+              <View style={[styles.payeeNameWrap]}>
+                <T style={[styles.payeeNameText]}>Glidera</T>
               </View>
-              <View style={[b(), styles.dateWrap]}>
-                <T style={[b(), styles.date]}>May 01, 2017 2:32:59 AM</T>
+              <View style={[styles.dateWrap]}>
+                <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
               </View>
-              <AmountArea info={this.state} />
             </View>  
+            <AmountArea info={this.state} />            
           </View>        
         </View>
 
@@ -115,44 +115,45 @@ class AmountArea extends Component {
 
   render() {
     return(
-      <View style={styles.amountAreaContainer}>
-        <View style={[styles.amountAreafiatRow]}>
-          <View style={[styles.amountAreaLeft]}>
-            <T></T>
+      <View style={[b(), styles.amountAreaContainer]}>
+        <View style={[b(), styles.amountAreaCryptoRow]}>
+          <View style={[b(), styles.amountAreaLeft]}>
+            <T style={[b(), styles.amountAreaLeftText, {color: (this.props.info.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
           </View>
-          <View style={[styles.amountAreaMiddle]}>
-            <View style={[styles.amountAreaMiddleTop]}>
-              <T></T>
+          <View style={[b(), styles.amountAreaMiddle]}>
+            <View style={[b(), styles.amountAreaMiddleTop]}>
+              <T style={[styles.amountAreaMiddleTopText]}>b 23489723</T>
             </View>
-            <View style={[styles.amountAreaMiddleBottom]}>
-              <T></T>
+            <View style={[b(), styles.amountAreaMiddleBottom]}>
+              <T style={[styles.amountAreaMiddleBottomText]}>(+ 0.19 Fee)</T>
             </View>
           </View>
-          <View style={[styles.amountAreaRight]}>
-            <T>bits</T>
+          <View style={[b(), styles.amountAreaRight]}>
+            <T style={[styles.amountAreaRightText]}>bits</T>
           </View>
         </View>
-        <View style={[styles.editableFiatRow]}>
-          <View style={[styles.editableFiatArea]}>
-            <TextInput style={[styles.editableFiat]} />
+        <View style={[b(), styles.editableFiatRow]}>
+          <View style={[b(), styles.editableFiatArea]}>
+            <TextInput style={[b(), styles.editableFiat]} />
           </View>
-          <View style={[styles.editableFiatRight]}>
-            <T>USD</T>
+          <View style={[b(), styles.editableFiatRight]}>
+            <T style={[styles.editableFiatRightText]}>USD</T>
           </View>
         </View>
-        <View style={[styles.categoryRow]}>
-          <View style={[styles.categoryLeft]}></View>
-          <View style={[styles.categoryInputArea]}>
+
+        <View style={[b(), styles.categoryRow]}>
+          <View style={[b(), styles.categoryLeft]}></View>
+          <View style={[b(), styles.categoryInputArea]}>
             <TextInput placeholder='Monthly exchange' />
           </View>              
         </View>
 
-        <View style={[styles.footerArea]}>
-          <View style={[styles.buttonArea]}>
+        <View style={[b(), styles.footerArea]}>
+          <View style={[b(), styles.buttonArea]}>
             <PrimaryButton />
           </View>
-          <View>
-            <T>View advanced transaction data</T>
+          <View style={[b(), styles.advancedTxArea]}>
+            <T style={[b(), styles.advancedTxText]}>View advanced transaction data</T>
           </View>
         </View>
       </View>
