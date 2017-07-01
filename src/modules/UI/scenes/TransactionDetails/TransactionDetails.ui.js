@@ -116,15 +116,12 @@ class AmountArea extends Component {
   render() {
     return(
       <View style={styles.amountAreaContainer}>
-        <View style={[b(), styles.amountAreaFiatRow]}>
-          <View style={[b(), styles.amountAreaLeft]}>
+        <View style={[styles.amountAreafiatRow]}>
+          <View style={[styles.amountAreaLeft]}>
             <T></T>
           </View>
-          <View style={[b(), styles.amountAreaMiddle]}>
-            <View style={[b(), styles.amountAreaMiddleTop]}>
-              <T></T>
-            </View>
-            <View style={[b(), styles.amountAreaMiddleBottom]}>
+          <View style={[styles.amountAreaMiddle]}>
+            <View style={[styles.amountAreaMiddleTop]}>
               <T></T>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
@@ -152,29 +149,6 @@ class AmountArea extends Component {
 
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>
-            <PrimaryButton />
-          </View>
-          <View style={[b(), styles.amountAreaRight]}>
-            <T>bits</T>
-          </View>
-        </View>
-        <View style={[b(), styles.editableFiatRow]}>
-          <View style={[b(), styles.editableFiatArea]}>
-            <TextInput style={[b(), styles.editableFiat]} />
-          </View>
-          <View style={[b(), styles.editableFiatRight]}>
-            <T>USD</T>
-          </View>
-        </View>
-        <View style={[b(), styles.categoryRow]}>
-          <View style={[b(), styles.categoryLeft]}></View>
-          <View style={[b(), styles.categoryInputArea]}>
-            <TextInput placeholder='Monthly exchange' />
-          </View>              
-        </View>
-
-        <View style={[b(), styles.footerArea]}>
-          <View style={[b(), styles.buttonArea]}>
             <PrimaryButton />
           </View>
           <View>
