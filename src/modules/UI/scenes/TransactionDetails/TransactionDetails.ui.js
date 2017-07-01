@@ -16,6 +16,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 import T from '../../components/FormattedText'
+import {PrimaryButton} from '../../components/Buttons'
 import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -47,14 +48,13 @@ var dateStrings = []
 class TransactionDetails extends Component {
    constructor(props) {
      super(props)
-     const direction = (this.props.tx.amount >= 0) ? 'receive' : 'send'     
+     console.log('Constructor of TransactionDetails, this.props is: ', this.props)
+     const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'     
      this.state = {
         tx: this.props.tx,
         //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '', 
-        direction: direction
+        direction: direction,
      }
-     
-
    }
 
   contactSearch (nameKey, myArray) {
@@ -75,17 +75,25 @@ class TransactionDetails extends Component {
     console.log('rendering Transaction Details scene, this.props is: ', this.props)
     return (
         <View style={styles.container}>
-          <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
+          <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.expandedHeader]} colors={["#3b7adb","#2b569a"]}>
               <PayeeIcon direction={this.state.direction} />
           </LinearGradient>
-        </View>
+          <View style={styles.payeeNameArea}>
+            <View style={styles.payeeNameWrap}>
+              <T style={styles.payeeNameText}>Glidera</T>
+            </View>
+            <View style={[styles.dateWrap]}>
+              <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
+            </View>
+            <AmountArea info={this.state} />
+          </View>
+        </View>        
 
     )
   }
 }
 
 TransactionDetails.propTypes = {
-
 }
 
 const mapStateToProps = state => ({})
@@ -95,32 +103,89 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
 
+class AmountArea extends Component {
+  constructor(props){
+    super(props)
+  }
+  // fiat amount is editable
+
+  render() {
+    return(
+      <View style={styles.amountAreaContainer}>
+        <View style={[styles.amountAreafiatRow]}>
+          <View style={[styles.amountAreaLeft]}>
+            <T></T>
+          </View>
+          <View style={[styles.amountAreaMiddle]}>
+            <View style={[styles.amountAreaMiddleTop]}>
+              <T></T>
+            </View>
+            <View style={[styles.amountAreaMiddleBottom]}>
+              <T></T>
+            </View>
+          </View>
+          <View style={[styles.amountAreaRight]}>
+            <T>bits</T>
+          </View>
+        </View>
+        <View style={[styles.editableFiatRow]}>
+          <View style={[styles.editableFiatArea]}>
+            <TextInput style={[styles.editableFiat]} />
+          </View>
+          <View style={[styles.editableFiatRight]}>
+            <T>USD</T>
+          </View>
+        </View>
+        <View style={[styles.categoryRow]}>
+          <View style={[styles.categoryLeft]}></View>
+          <View style={[styles.categoryInputArea]}>
+            <TextInput placeholder='Monthly exchange' />
+          </View>              
+        </View>
+
+        <View style={[styles.footerArea]}>
+          <View style={[styles.buttonArea]}>
+            <PrimaryButton />
+          </View>
+          <View>
+            <T>View advanced transaction data</T>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
+
 class PayeeIcon extends Component {
   constructor(props) {
     super(props)
-    if (this.props.direction === 'receive'){
-      this.props.iconBgColor = 'green'
-      this.props.payeeIcon = <Ionicon name="ios-arrow-round-down" color={this.props.iconBgColor} size={24} />
-    } else {
-      this.props.iconBgColor = 'red'
-      this.props.payeeIcon = <Ionicon name="ios-arrow-round-up" color={this.props.iconBgColor} size={24} />
-    }
+
   }
 
   render() {
-    let iconBgColor = (this.props.direction === 'receive') ? 'green' : 'red'
+    console.log('rendering PayeeIcon, this.props is: ', this.props)
+    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'    
     return(
-        <View style={[styles.modalHeaderIconWrapBottom, {backgroundColor: this.props.iconBgColor}]}>
-          <View>
-            <View style={styles.modalHeaderIconWrapTop}>
-              {this.props.payeeIcon}
+        <View style={[styles.modalHeaderIconWrapBottom, {backgroundColor: iconBgColor}]}>
+            <View style={[styles.modalHeaderIconWrapTop, b('purple')]}>
+              {this.renderIcon()}
             </View>
-          </View>
-          <View>
-            <TextInput multiline={true} editable={true} numberOfLines={4} />
-          </View>
         </View>
     )
+  }
+
+  renderIcon() {
+    console.log('rendering txDetails icon, this.props is: ', this.props)
+    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'    
+    if (this.props.direction === 'receive'){
+      return(
+        <Ionicon name="ios-arrow-round-down" color={iconBgColor} size={44} style={[styles.payeeIcon]} />
+      )
+    } else {
+      return(
+        <Ionicon name="ios-arrow-round-up" color={iconBgColor} size={44} style={[ styles.payeeIcon]} />
+      )
+    }
   }
 }
 

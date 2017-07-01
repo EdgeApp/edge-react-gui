@@ -1,7 +1,6 @@
 import React, {StyleSheet} from 'react-native'
 
-module.exports = StyleSheet.create({
-
+const styles = StyleSheet.create({
   container: {
       flex: 1,
       alignItems: 'stretch',
@@ -9,24 +8,32 @@ module.exports = StyleSheet.create({
   },
   expandedHeader: {
     height: 32,
-
+    //flexDirection: 'row',
+    //justifyContent: 'center'
   },
   modalHeaderIconWrapBottom: {
-    borderRadius: 27,
+    borderRadius: 25,
     backgroundColor: 'white', 
-    height: 54, 
-    width: 54    
+    height: 50, 
+    width: 50,
+    position: 'relative',
+    top: 10    
   },
   modalHeaderIconWrapTop: {
     position: 'relative', 
-    top: 3, 
-    left: 3, 
-    borderRadius: 27, 
+    top: 1, 
+    left: 1, 
+    borderRadius: 25, 
     backgroundColor: 'white', 
     zIndex: 100, 
     elevation: 100,
     height: 48, 
     width: 48
-  }  
-
-});
+  },
+  payeeIcon: {
+    position: 'relative', 
+    top: 2, 
+    left: 16, 
+    backgroundColor: 'transparent'    
+  }
+})
