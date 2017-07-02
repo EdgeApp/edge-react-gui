@@ -45,7 +45,7 @@ class ABSlider extends Component {
           minimumTrackTintColor='transparent'
           maximumTrackTintColor='transparent'
         />
-        <Text style={{ backgroundColor: 'transparent', fontSize: 21, position: 'absolute', color: '#FFF', alignSelf: 'center', top: 14 }}>Slide To Confirm</Text>
+        <Text style={styles.textOverlay}>Slide To Confirm</Text>
       </View>
     )
   }

@@ -21,6 +21,14 @@ const styles = StyleSheet.create({
     bottom: -26,
     backgroundColor: 'white',
     borderRadius: 100,
+  },
+  textOverlay: {
+    backgroundColor: 'transparent',
+    fontSize: 18,
+    position: 'absolute',
+    color: '#FFF',
+    alignSelf: 'center',
+    top: 17
   }
 })
 
