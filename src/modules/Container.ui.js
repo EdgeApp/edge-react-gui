@@ -122,25 +122,25 @@ class Main extends Component {
 
                   <Scene key='root' hideNavBar>
 
-                    <Scene key='scan' component={Scan} title='Scan' duration={0} test={console.log('this.props', this.props)}/>
+                    <Scene key='scan' component={Scan} title='Scan' animation={'fade'} duration={300} />
 
-                    <Scene key='walletList' component={WalletList} title='Wallets' duration={0} initial />
+                    <Scene key='walletList' component={WalletList} title='Wallets' animation={'fade'} duration={300} initial />
 
-                    <Scene key='directory' component={Directory} title='Directory' duration={0} />
+                    <Scene key='directory' component={Directory} title='Directory' animation={'fade'} duration={300} />
 
-                    <Scene key='transactionList' component={TransactionListConnect} title='Transactions' duration={0} />
+                    <Scene key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={300} />
 
-                    <Scene key='request' component={Request} title='Request' duration={0} />
+                    <Scene key='request' component={Request} title='Request' animation={'fade'} duration={300} />
 
-                    <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' duration={0} />
+                    <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={300} />
 
-                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' duration={0} />
+                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={300} />
 
-                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' duration={0} />
+                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={300} />
 
-                    <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' duration={0} />
+                    <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={300} />
 
-                    <Scene key='ethSettings' component={ETHSettings} title='ETH Settings' duration={0} />
+                    <Scene key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={300} />
 
                   </Scene>
                 </RouterWithRedux>

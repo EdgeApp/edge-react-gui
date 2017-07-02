@@ -59,8 +59,7 @@ class Scan extends Component {
   }
 
   _onToggleTorch = () => {
-    requestCameraPermission()
-    // this.props.toggleEnableTorch()
+    this.props.toggleEnableTorch()
   }
 
   _onToggleAddressModal = () => {
