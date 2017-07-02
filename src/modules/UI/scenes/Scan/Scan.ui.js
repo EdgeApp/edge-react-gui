@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import { Text, View, TouchableHighlight, TextInput, Clipboard} from 'react-native'
+import {
+  ActivityIndicator,
+  Text,
+  View,
+  TouchableHighlight,
+  TextInput,
+  Clipboard } from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
@@ -12,6 +18,7 @@ import ImagePicker from 'react-native-image-picker'
 import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+import * as PERMISSIONS from '../../permissions.js'
 import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
 import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
@@ -33,8 +40,27 @@ import {border as b} from '../../../utils'
 
 
 class Scan extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      cameraPermission: undefined
+    }
+  }
+  //check the status of a single permission
+  componentDidMount() {
+    PERMISSIONS.request('camera')
+    .then(this.setCameraPermission)
+  }
+
+  setCameraPermission = (cameraPermission) => {
+    this.setState({
+      cameraPermission
+    })
+  }
+
   _onToggleTorch = () => {
-    this.props.toggleEnableTorch()
+    requestCameraPermission()
+    // this.props.toggleEnableTorch()
   }
 
   _onToggleAddressModal = () => {
@@ -74,15 +100,35 @@ class Scan extends Component {
     })
   }
 
-  render () {
-    return (
-      <View style={styles.container}>
+  renderCamera = () => {
+    if (this.state.cameraPermission === true && this.props.scene === 'scan') {
+      return (
         <Camera
           style={styles.preview}
-          barCodeTypes={['qr']}
+          barCodeTypes={['org.iso.QRCode']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
         />
+      )
+    } else if (this.state.cameraPermission === false) {
+      return (
+        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
+          <Text>To scan QR codes, enable camera permission in your system settings</Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size='large' style={{flex: 1, alignSelf: 'center'}} />
+        </View>
+      )
+    }
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        {this.renderCamera()}
         <View style={[styles.overlay, b('red')]}>
 
           <WalletAddressModalConnect />
@@ -125,6 +171,7 @@ class Scan extends Component {
 
 const mapStateToProps = state => {
   return {
+    scene:                             state.routes.scene.name,
     torchEnabled:                      state.ui.scenes.scan.torchEnabled,
     walletListModalVisible:            state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
@@ -183,12 +230,12 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   componentWillMount() {
-    Clipboard.getString().then(string => this.setState({copiedString: string}))    
+    Clipboard.getString().then(string => this.setState({copiedString: string}))
   }
 
   _onRecipientAddressChange = (input) => {
     this.setState({ recipientAddressInput: input })
-    this.props.dispatch(updateRecipientAddress(input))    
+    this.props.dispatch(updateRecipientAddress(input))
   }
 
   _copyOverAddress = () => {
