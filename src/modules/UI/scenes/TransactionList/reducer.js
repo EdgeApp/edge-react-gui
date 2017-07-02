@@ -10,7 +10,7 @@
       case ACTION.NEW_TRANSACTIONS:
         return [
           ...state,
-          transactions
+          ...transactions
         ]
       case ACTION.CHANGED_TRANSACTIONS:
         return [
