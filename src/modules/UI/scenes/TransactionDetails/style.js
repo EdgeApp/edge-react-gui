@@ -4,9 +4,11 @@ import React, {StyleSheet} from 'react-native'
 module.exports = StyleSheet.create({
 
   container: {
-      flex: 1,
-      alignItems: 'stretch',
-      flexDirection: 'column'
+    flex: 1,
+    alignItems: 'stretch',
+    flexDirection: 'column',
+    paddingLeft: 15,
+    paddingRight: 15
   },
   expandedHeader: {
     height: 32,
@@ -72,10 +74,12 @@ module.exports = StyleSheet.create({
   },
   amountAreaCryptoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingTop: 20,
+    paddingBottom: 20
   },
   amountAreaLeft: {
-
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start'
   },
@@ -83,12 +87,13 @@ module.exports = StyleSheet.create({
     fontSize: 14
   },
   amountAreaMiddle: {
-
+    flex: 3, 
+    alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center'
   },
   amountAreaMiddleTop: {
-
+    paddingBottom: 4
   },
   amountAreaMiddleTopText: {
     fontSize: 26,
@@ -102,30 +107,63 @@ module.exports = StyleSheet.create({
     color: '#909091'
   },
   amountAreaRight: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
   amountAreaRightText: {
     color: '#909091',
-    fontSize: 14
+    fontSize: 14,   
   },
   editableFiatRow: {
-
+    flexDirection: 'row', 
+  },
+  editableFiatLeft: {
+    flex: 1
   },
   editableFiatArea: {
-
+    width: '38%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   editableFiat: {
-
+    color: '#58595C',
+    fontSize: 17,
+    textAlign: 'center',
+    height: 36
+  },
+  editableFiatRight: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end'
+  },
+  editableFiatRightText: {
+    color: '#909091',
+    fontSize: 14    
   },
   categoryRow: {
-
+    marginTop: 10,
+    flexDirection: 'row', 
   },
   categoryLeft: {
-
+    borderRadius: 3,
+    borderWidth: 1,
+    padding: 6
   },
   categoryInputArea: {
-
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    marginLeft: 11,
+    height: 27,
+    justifyContent: 'center',
+    alignItems: 'flex-start'
+  },
+  categoryInput: {
+    height: 16,
+    fontSize: 13
   },
   footerArea: {
 

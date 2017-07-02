@@ -110,50 +110,76 @@ export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
 class AmountArea extends Component {
   constructor(props){
     super(props)
+
   }
   // fiat amount is editable
 
+  types = {
+    exchange: {
+      color: '#F6A623',
+      syntax: 'Exchange'
+    },
+    expense: {
+      color: '#4977BB',
+      syntax: 'Expense'
+    },
+    transfer: {
+      color: 'blue',
+      syntax: 'Transfer'
+    },
+    receive: {
+      color: '#7FC343',
+      syntax: 'Income'
+    }
+  }
+
   render() {
+    console.log('rendering AmountArea, this.props is: ', this.props)
     return(
-      <View style={[b(), styles.amountAreaContainer]}>
-        <View style={[b(), styles.amountAreaCryptoRow]}>
-          <View style={[b(), styles.amountAreaLeft]}>
-            <T style={[b(), styles.amountAreaLeftText, {color: (this.props.info.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
+      <View style={[styles.amountAreaContainer]}>
+        <View style={[styles.amountAreaCryptoRow]}>
+          <View style={[styles.amountAreaLeft]}>
+            <T style={[styles.amountAreaLeftText, {color: (this.props.info.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
           </View>
-          <View style={[b(), styles.amountAreaMiddle]}>
-            <View style={[b(), styles.amountAreaMiddleTop]}>
+          <View style={[styles.amountAreaMiddle]}>
+            <View style={[styles.amountAreaMiddleTop]}>
               <T style={[styles.amountAreaMiddleTopText]}>b 23489723</T>
             </View>
-            <View style={[b(), styles.amountAreaMiddleBottom]}>
-              <T style={[styles.amountAreaMiddleBottomText]}>(+ 0.19 Fee)</T>
+            <View style={[styles.amountAreaMiddleBottom]}>
+              <T style={[styles.amountAreaMiddleBottomText]}>+ 0.19 (Fee)</T>
             </View>
           </View>
-          <View style={[b(), styles.amountAreaRight]}>
+          <View style={[styles.amountAreaRight]}>
             <T style={[styles.amountAreaRightText]}>bits</T>
           </View>
         </View>
-        <View style={[b(), styles.editableFiatRow]}>
-          <View style={[b(), styles.editableFiatArea]}>
-            <TextInput style={[b(), styles.editableFiat]} />
+        <View style={[styles.editableFiatRow]}>
+          <View style={[styles.editableFiatLeft]}>
+            <T style={[styles.editableFiatLeftText]}></T>
+          </View>          
+          <View style={[styles.editableFiatArea]}>
+            <TextInput style={[styles.editableFiat]} value='$ 3.56' />
           </View>
-          <View style={[b(), styles.editableFiatRight]}>
+          <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>USD</T>
           </View>
         </View>
 
-        <View style={[b(), styles.categoryRow]}>
-          <View style={[b(), styles.categoryLeft]}></View>
+        <View style={[styles.categoryRow]}>
+          <View style={[b(), styles.categoryLeft, {borderColor: this.types[this.props.info.direction].color}]}>
+            <T style={[styles.categoryLeftText, {color: this.types[this.props.info.direction].color}]}>{this.props.info.direction}</T>
+          </View>
           <View style={[b(), styles.categoryInputArea]}>
-            <TextInput placeholder='Monthly exchange' />
+            <TextInput style={[b(), styles.categoryInput]} placeholder='Monthly exchange' />
           </View>              
         </View>
 
-        <View style={[b(), styles.footerArea]}>
-          <View style={[b(), styles.buttonArea]}>
+        <View style={[styles.footerArea]}>
+          <View style={[styles.buttonArea]}>
             <PrimaryButton />
           </View>
-          <View style={[b(), styles.advancedTxArea]}>
-            <T style={[b(), styles.advancedTxText]}>View advanced transaction data</T>
+          <View style={[styles.advancedTxArea]}>
+            <T style={[styles.advancedTxText]}>View advanced transaction data</T>
           </View>
         </View>
       </View>
