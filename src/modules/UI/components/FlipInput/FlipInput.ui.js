@@ -12,17 +12,32 @@ const FIAT_PLACEHOLDER   = 'F 0.00'
 class FlipInput extends Component {
 
   render () {
+
+    const {
+      mode,
+      onCryptoInputChange,
+      onFiatInputChange,
+      amountSatoshi,
+      amountFiat,
+      onInputCurrencyToggle,
+      feeInFiat,
+      feeInCrypto,
+      displayFees,
+    } = this.props
+
     return (
-      <FlipView
-        style={styles.view}
-        front={this._renderFront()}
-        back={this._renderBack()}
-        isFlipped={this.props.inputCurrencySelected === 'fiat'}
-        flipAxis='x'
-        flipEasing={Easing.out(Easing.ease)}
-        flipDuration={250}
-        perspective={1000}
-      />
+      <FlipInputInside
+        currencySelected={'crypto'}
+        mode={mode}
+        primaryPlaceholder={'c 0.00'}
+        secondaryPlaceholder={'f 0.00'}
+        onInputChange={onCryptoInputChange}
+        amountRequestedPrimary={amountSatoshi}
+        amountRequestedSecondary={amountFiat}
+        onInputCurrencyToggle={onInputCurrencyToggle}
+        primaryFee={feeInCrypto}
+        secondaryFee={feeInFiat}
+        displayFees={displayFees} />
     )
   }
 

@@ -10,12 +10,11 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 40
+    alignItems: 'center'
   },
   exchangeRateContainer: {
     alignItems: 'center',
-    marginVertical: 10
+    marginVertical: 30
   },
   flipInputContainer: {
     alignItems: 'center',

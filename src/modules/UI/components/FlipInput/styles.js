@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
 
   // Main Flip Input Styles
   view: {
-    flex: 1,
+    // flex: 1,
+    marginVertical: 20,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',

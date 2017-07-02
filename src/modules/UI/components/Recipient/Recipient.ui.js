@@ -15,28 +15,35 @@ import { connect } from 'react-redux'
 // import styles from './styles.js'
 
 const styles = StyleSheet.create({
-  view: {
-  },
-  row: {
+  container: {
     backgroundColor: 'transparent',
     flexDirection: 'row',
-    paddingHorizontal: 10
+    alignItems: 'flex-end',
+    marginVertical: 30,
+    marginHorizontal: 35
   },
   text: {
-    color: 'white',
+    color: 'rgba(255,255,255,0.85)',
+    lineHeight: 0,
+    fontSize: 17
+  },
+  ellipsis: {
+    flex: 1,
+    overflow: 'hidden'
   }
 })
 
 const Recipient = ({label, address}) => {
 
   return (
-      <View style={styles.row}>
-        <Text style={styles.text}>To: {label} </Text>
-        <Text style={styles.text}
-          adjustFontToFit
-          ellipsizeMode="middle"
-          numberOfLines={1}>
-          {address}
+      <View style={styles.container}>
+        <Text style={[ styles.text, {fontSize: 14} ]}>To:  </Text>
+        <Text style={styles.text}> {label}  |  </Text>
+        <Text
+          style={[ styles.text, styles.ellipsis ]}
+          ellipsizeMode='middle' numberOfLines={1}
+        >
+           {address}
         </Text>
       </View>
   )
