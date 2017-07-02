@@ -74,25 +74,26 @@ class TransactionDetails extends Component {
   render () {
     console.log('rendering Transaction Details scene, this.props is: ', this.props)
     return (
-        <View style={[b(), styles.container]}>
-          <View>
-            <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
-                <PayeeIcon direction={this.state.direction} />
-            </LinearGradient>
+        <ScrollView overScrollMode='never' alwaysBounceVertical={false} >
+          <View style={[b(), styles.container]}>
+            <View>
+              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
+                  <PayeeIcon direction={this.state.direction} />
+              </LinearGradient>
+            </View>
+            <View style={[styles.dataArea]}>
+              <View style={[styles.payeeNameArea]}>
+                <View style={[styles.payeeNameWrap]}>
+                  <T style={[styles.payeeNameText]}>Glidera</T>
+                </View>
+                <View style={[styles.dateWrap]}>
+                  <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
+                </View>
+              </View>  
+              <AmountArea info={this.state} />            
+            </View>        
           </View>
-          <View style={[styles.dataArea]}>
-            <View style={[styles.payeeNameArea]}>
-              <View style={[styles.payeeNameWrap]}>
-                <T style={[styles.payeeNameText]}>Glidera</T>
-              </View>
-              <View style={[styles.dateWrap]}>
-                <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
-              </View>
-            </View>  
-            <AmountArea info={this.state} />            
-          </View>        
-        </View>
-
+        </ScrollView>
     )
   }
 }
@@ -173,13 +174,17 @@ class AmountArea extends Component {
             <TextInput style={[b(), styles.categoryInput]} placeholder='Monthly exchange' />
           </View>              
         </View>
-
-        <View style={[styles.footerArea]}>
-          <View style={[styles.buttonArea]}>
-            <PrimaryButton />
+        <View style={[styles.notesRow]}>
+          <View style={[styles.notesInputWrap]} >
+            <TextInput numberOfLines={3} multiline={true} style={[styles.notesInput]} selectionColor={'#CCCCCC'} placeholder='Notes' />
           </View>
-          <View style={[styles.advancedTxArea]}>
-            <T style={[styles.advancedTxText]}>View advanced transaction data</T>
+        </View>
+        <View style={[b(), styles.footerArea]}>
+          <View style={[b(), styles.buttonArea]}>
+            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} />
+          </View>
+          <View style={[b(), styles.advancedTxArea]}>
+            <T onPress={() => console.log('going to advanced Tx data')} style={[b(), styles.advancedTxText]}>View advanced transaction data</T>
           </View>
         </View>
       </View>

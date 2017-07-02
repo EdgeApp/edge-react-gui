@@ -6,9 +6,7 @@ module.exports = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'stretch',
-    flexDirection: 'column',
-    paddingLeft: 15,
-    paddingRight: 15
+    flexDirection: 'column'
   },
   expandedHeader: {
     height: 32,
@@ -76,7 +74,9 @@ module.exports = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: 20,
-    paddingBottom: 20
+    paddingBottom: 20,
+    paddingLeft: 15,
+    paddingRight: 15    
   },
   amountAreaLeft: {
     flex: 1,
@@ -117,6 +117,8 @@ module.exports = StyleSheet.create({
   },
   editableFiatRow: {
     flexDirection: 'row', 
+    paddingLeft: 15,
+    paddingRight: 15    
   },
   editableFiatLeft: {
     flex: 1
@@ -146,6 +148,8 @@ module.exports = StyleSheet.create({
   categoryRow: {
     marginTop: 10,
     flexDirection: 'row', 
+    paddingLeft: 15,
+    paddingRight: 15    
   },
   categoryLeft: {
     borderRadius: 3,
@@ -159,20 +163,53 @@ module.exports = StyleSheet.create({
     marginLeft: 11,
     height: 27,
     justifyContent: 'center',
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+
   },
   categoryInput: {
     height: 16,
-    fontSize: 13
+    fontSize: 13,
+
+  },
+  notesRow: {
+    paddingBottom: 20, 
+    paddingTop: 14,
+    paddingLeft: 15,
+    paddingRight: 15
+  },
+  notesInputWrap: {
+    borderWidth: 1,
+    borderColor: '#CCCCCC',
+    borderRadius: 3,
+    height: 50,
+    padding: 3    
+  },
+  notesInput: {
+    color: '#CCCCCC',
+    fontSize: 12
   },
   footerArea: {
-
+    backgroundColor: '#F6F6F6',
+    height: 123,
+    paddingTop: 20,
+    paddingLeft: 15,
+    paddingRight: 15
   },
   buttonArea: {
-
+    height: 50
   },
-
-
-
+  saveButton: {
+    height: 50
+  },
+  advancedTxArea: {
+    padding: 15,
+    paddingBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  advancedTxText: {
+    color: '#4977BB',
+    fontSize: 14
+  }
 });
 

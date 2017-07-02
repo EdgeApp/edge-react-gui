@@ -795,6 +795,8 @@ const strings = {
     plugin_walmart_discount:	"(Up to 10% Off)",
     plugin_homedepot_discount:	"(Up to 15% Off)",
     in:	"in"
+
+
 }
 
 export default strings
