@@ -56,7 +56,8 @@ class SendConfirmation extends Component {
       <LinearGradient
         style={styles.view}
         start={{x:0,y:0}} end={{x:1, y:0}}
-        colors={["#3b7adb","#2b569a"]}>
+        colors={["#3b7adb","#2b569a"]}
+      >
 
         <View style={styles.exchangeRateContainer} >
           <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} />
@@ -80,23 +81,7 @@ class SendConfirmation extends Component {
           <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
         </View>
 
-        {/* <View style={styles.recipient}> */}
-        {/*   <View style={{flex: 3}}> */}
-        {/*   </View> */}
-        {/* </View> */}
-        {/*  */}
-        {/* {this.getTopSpacer()} */}
-        {/*  */}
-        {/* <View style={styles.slider}> */}
-        {/*   <ABSlider */}
-        {/*     style={{ */}
-        {/*       flex: 1, */}
-        {/*     }} */}
-        {/*     onSlidingComplete={this.signBroadcastAndSave} */}
-        {/*     sliderDisabled={!isSliderLocked} /> */}
-        {/* </View> */}
-        {/*  */}
-        {/* {this.getBottomSpacer()} */}
+        <ABSlider onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
 
       </LinearGradient>
     )

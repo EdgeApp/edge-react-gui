@@ -16,13 +16,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 25
   },
-  spacer: {
-    flex: 6,
-    padding: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
   recipient: {
     flex: 2,
     flexDirection: 'row',
@@ -31,7 +24,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   slider: {
-    flex: 2,
     backgroundColor: 'transparent',
   }
 })
