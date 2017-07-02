@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: 30
+    marginTop: 40
   },
   exchangeRateContainer: {
     alignItems: 'center',

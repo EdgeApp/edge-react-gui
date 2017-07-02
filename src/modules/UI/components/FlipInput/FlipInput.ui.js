@@ -13,16 +13,18 @@ class FlipInput extends Component {
 
   render () {
     return (
-      <FlipView style={styles.view}
+      <FlipView
+        style={styles.view}
         front={this._renderFront()}
         back={this._renderBack()}
         isFlipped={this.props.inputCurrencySelected === 'fiat'}
         flipAxis='x'
         flipEasing={Easing.out(Easing.ease)}
         flipDuration={250}
-        perspective={1000} />
-    );
-  };
+        perspective={1000}
+      />
+    )
+  }
 
   _renderFront = () => {
     const {
@@ -39,7 +41,6 @@ class FlipInput extends Component {
 
     return (
       <FlipInputInside
-        style={styles.view}
         currencySelected={'crypto'}
         mode={mode}
         primaryPlaceholder={'c 0.00'}
@@ -68,7 +69,6 @@ class FlipInput extends Component {
 
     return (
       <FlipInputInside
-        style={styles.view}
         currencySelected={'fiat'}
         mode={mode}
         primaryPlaceholder={'f 0.00'}
@@ -144,7 +144,7 @@ class FlipInputInside extends Component {
             />
           </View>
           { displayFees ? <Text style={styles.fees}> + b0.026</Text> : null }
-          {/* { displayFees ? <Text style={{ backgroundColor: 'transparent', color: '#FFF', width: 65 }}>{primaryFee}</Text> : null } */}
+          {/* { displayFees ? <Text style={styles.fees}> + b{primaryFee}</Text> : null } */}
         </View>
       )
     }
@@ -158,7 +158,7 @@ class FlipInputInside extends Component {
             </Text>
           </View>
           { displayFees ? <Text style={styles.fees}> + $0.95</Text> : null }
-          {/* { displayFees ? <Text style={{ backgroundColor: 'transparent', color: '#FFF', width: 65 }}>{secondaryFee}</Text> : null } */}
+          {/* { displayFees ? <Text style={styles.fees}> + ${secondaryFee}</Text> : null } */}
         </View>
       )
     }

@@ -76,6 +76,7 @@ class SendConfirmation extends Component {
             feeInCrypto={this.props.feeSatoshi}
             feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
           />
+          <Text>Testing</Text>
           {/* <Recipient label={label} address={publicAddress} /> */}
         </View>
 

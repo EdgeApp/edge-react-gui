@@ -16,28 +16,20 @@ import { connect } from 'react-redux'
 
 const styles = StyleSheet.create({
   view: {
-    flex: 1,
   },
   row: {
-    flex: 1,
+    backgroundColor: 'transparent',
     flexDirection: 'row',
     paddingHorizontal: 10
   },
   text: {
-    flex: 1,
     color: 'white',
-  },
-  spacer: {
-    flex: 1
   }
 })
 
 const Recipient = ({label, address}) => {
 
   return (
-    <View style={styles.view}>
-      <View style={styles.spacer}></View>
-
       <View style={styles.row}>
         <Text style={styles.text}>To: {label} </Text>
         <Text style={styles.text}
@@ -47,22 +39,7 @@ const Recipient = ({label, address}) => {
           {address}
         </Text>
       </View>
-
-      <View style={styles.spacer}></View>
-    </View>
   )
 }
 
 export default connect()(Recipient)
-
-
-{/* <View style={styles.view}>
-  <Text
-    adjustFontToFit
-    ellipsizeMode="middle"
-    numberOfLines={1}
-    style={{
-      flex: 1
-    }}
-    >To: {to}</Text>
-</View> */}
