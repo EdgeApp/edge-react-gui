@@ -120,56 +120,45 @@ class FlipInputInside extends Component {
     }
 
     getTextColor = () => {
-      let textColor
-
-      if (mode === 'over') {
-        textColor = 'red'
-      } else if (mode === 'max') {
-        textColor = 'orange'
-      } else {
-        textColor = 'white'
-      }
-
-      return textColor
-    }
-
-    const displayPrimaryFees = (primaryFee) => {
-      if (!displayFees) {
-        return null
-      }else {
-        return (
-          <View style={styles.primaryFee}>
-            <Text style={[ styles.primaryFeeText, { backgroundColor: 'transparent' } ]}>pota</Text>
-          </View>
-        )
-      }
-
-    }
-
-    const displaySecondaryFees = (secondaryFee) => {
-      if (!displayFees) {
-        return null
-      }else {
-        return (
-          <View style={styles.secondaryFee}>
-            <Text style={styles.primaryFeeText}>{secondaryFee}</Text>
-          </View>
-        )
+      switch(mode) {
+        case 'over':
+          return 'red'
+        case 'max':
+          return 'orange'
+        default:
+          return 'white'
       }
     }
 
-    const getInputAndFeesElement = () => {
+    const renderMainInput = () => {
       return (
-        <View style={{flex: 1, paddingBottom: 23, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.6)'}} name='InputAndFeesElement'>
+        <View style={styles.mainInputRow}>
+          <View style={styles.primaryInputContainer} name='InputAndFeesElement'>
             <TextInput
-              style={[styles.primaryTextInput, styles[mode]]}
+              style={[styles.primaryInput, {color: getTextColor()}]}
               value={getPrimaryAmount()}
               placeholder={primaryPlaceholder}
               keyboardType='numeric'
               onChangeText={onInputChange}
               placeholderTextColor='#FFF'
             />
-            {/* {displayPrimaryFees(primaryFee)} */}
+          </View>
+          { displayFees ? <Text style={styles.fees}> + b0.026</Text> : null }
+          {/* { displayFees ? <Text style={{ backgroundColor: 'transparent', color: '#FFF', width: 65 }}>{primaryFee}</Text> : null } */}
+        </View>
+      )
+    }
+
+    const renderConvertedInput = () => {
+      return (
+        <View style={styles.convertedInputRow}>
+          <View style={styles.secondaryTextContainer}>
+            <Text style={styles.secondaryText}>
+              {getSecondaryAmount() || secondaryPlaceholder}
+            </Text>
+          </View>
+          { displayFees ? <Text style={styles.fees}> + $0.95</Text> : null }
+          {/* { displayFees ? <Text style={{ backgroundColor: 'transparent', color: '#FFF', width: 65 }}>{secondaryFee}</Text> : null } */}
         </View>
       )
     }
@@ -178,14 +167,12 @@ class FlipInputInside extends Component {
       <View style={styles.view}>
         <View style={styles.row}>
           <FAIcon style={styles.icon} onPress={onInputCurrencyToggle} name='swap-vert' size={36} />
-          {getInputAndFeesElement()}
-          <Text style={styles.currency}>BTC</Text>
-        </View>
-        <View style={styles.secondaryRow} name='SecondaryRow'>
-          <Text style={styles.secondaryText}>
-            {getSecondaryAmount() || secondaryPlaceholder}
-          </Text>
-          {/* {displaySecondaryFees(secondaryFee)} */}
+          <View style={{flex:1}}>
+            {renderMainInput()}
+            {renderConvertedInput()}
+          </View>
+          { !displayFees ? <Text style={styles.currency}>BTC</Text> : null }
+          {/* { !displayFees ? <Text style={styles.currency}>{currency}</Text> : null } */}
         </View>
       </View>
     )

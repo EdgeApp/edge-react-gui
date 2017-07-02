@@ -1,82 +1,78 @@
 import { StyleSheet } from 'react-native'
 
+const sideWidth = 80;
+
 const styles = StyleSheet.create({
+
+  // Main Flip Input Styles
   view: {
     flex: 1,
     alignSelf: 'stretch'
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center'
-  },
-  secondaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  primaryTextInput: {
-    flex: 1,
-    fontSize: 42,
-    textAlign: 'center',
-    color: '#FFF'
   },
   icon: {
     backgroundColor: 'transparent',
     color: 'rgba(255,255,255,0.6)',
-    paddingHorizontal: 20
+    width: sideWidth,
+    textAlign: 'center'
   },
   currency: {
     backgroundColor: 'transparent',
     color: '#FFF',
-    paddingBottom: 8,
     fontSize: 16,
-    paddingHorizontal: 20
+    width: sideWidth,
+    textAlign: 'center'
   },
-  over: {
-    color: 'red'
+  fees: {
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    fontSize: 14,
+    width: sideWidth
   },
-  max: {
-    color: 'orange'
+
+  // Main Input Styles
+  mainInputRow: {
+    flexDirection: 'row'
   },
-  under: {
-    color: 'white'
+  primaryInputContainer: {
+    flex: 1,
+    paddingBottom: 25,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.6)'
+  },
+  primaryInput: {
+    fontSize: 42,
+    textAlign: 'center'
+  },
+
+  // Converted Input Styles
+  convertedInputRow: {
+    flexDirection: 'row',
+    paddingTop: 5
+  },
+  secondaryTextContainer: {
+    flex: 1
   },
   secondaryText: {
     fontSize: 20,
-    paddingTop: 9,
     color: "#FFF",
     textAlign: 'center',
     backgroundColor: 'transparent',
-  },
-  primaryRow: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  leftSpacer: {
-    flex: 0.5
-  },
-  verticalSpacer: {
-    flex: 1
-  },
-  right: {
-    flex: 1
-  },
-  primaryFee: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-  primaryFeeText: {
-    color: 'white',
-    fontSize: 15
-  },
-  secondaryFee: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end'
-  },
-  secondaryFeeText: {
-    color: 'white'
-  },
+  }
+
+  // primaryFee: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'flex-end'
+  // },
+  // primaryFeeText: {
+  //   color: 'white',
+  //   fontSize: 15
+  // }
 })
 
 export default styles
