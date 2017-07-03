@@ -185,7 +185,7 @@ module.exports = StyleSheet.create({
     padding: 3    
   },
   notesInput: {
-    color: '#CCCCCC',
+    color: '#58595C',
     fontSize: 12
   },
   footerArea: {

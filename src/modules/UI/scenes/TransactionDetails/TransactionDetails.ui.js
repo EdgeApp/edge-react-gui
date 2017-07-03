@@ -53,7 +53,14 @@ class TransactionDetails extends Component {
      this.state = {
         tx: this.props.tx,
         //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '', 
-        direction: direction,
+        direction,
+        txid : this.props.tx.txid,
+        /*payeeName: this.props.tx.metaData.payeeName || null, // remove commenting once metaData in Redux
+        category: this.props.tx.metaData || null,
+        notes: this.props.tx.metaData || '',
+        amountFiat: this.props.tx.metaData || null,
+        bizId: this.props.tx.metaData || null,
+        miscJson: this.props.tx.metaData || null*/ 
      }
    }
 
@@ -74,7 +81,7 @@ class TransactionDetails extends Component {
   render () {
     console.log('rendering Transaction Details scene, this.props is: ', this.props)
     return (
-        <ScrollView overScrollMode='never' alwaysBounceVertical={false} >
+        <ScrollView overScrollMode='never' /* alwaysBounceVertical={false}*/ >
           <View style={[b(), styles.container]}>
             <View>
               <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
@@ -87,7 +94,7 @@ class TransactionDetails extends Component {
                   <T style={[styles.payeeNameText]}>Glidera</T>
                 </View>
                 <View style={[styles.dateWrap]}>
-                  <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
+                  <T style={[styles.date]}>{this.props.tx.date}</T>
                 </View>
               </View>  
               <AmountArea info={this.state} />            
@@ -140,14 +147,14 @@ class AmountArea extends Component {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: (this.props.info.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
+            <T style={[styles.amountAreaLeftText, {color: (this.props.info.tx.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <T style={[styles.amountAreaMiddleTopText]}>b 23489723</T>
+              <T style={[styles.amountAreaMiddleTopText]}>{this.props.info.tx.amountSatoshi}</T>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
-              <T style={[styles.amountAreaMiddleBottomText]}>+ 0.19 (Fee)</T>
+              <T style={[styles.amountAreaMiddleBottomText]}>{sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)}</T>
             </View>
           </View>
           <View style={[styles.amountAreaRight]}>
@@ -176,12 +183,12 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput numberOfLines={3} multiline={true} style={[styles.notesInput]} selectionColor={'#CCCCCC'} placeholder='Notes' />
+            <TextInput numberOfLines={3} multiline={true} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
           <View style={[b(), styles.buttonArea]}>
-            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} />
+            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} onPress={this.onPressSave}/>
           </View>
           <View style={[b(), styles.advancedTxArea]}>
             <T onPress={() => console.log('going to advanced Tx data')} style={[b(), styles.advancedTxText]}>View advanced transaction data</T>
