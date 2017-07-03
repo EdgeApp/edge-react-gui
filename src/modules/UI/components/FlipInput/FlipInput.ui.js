@@ -90,7 +90,7 @@ class FlipInput extends Component {
 }
 
 export default connect(state => ({
-  sendConfirmation: state.ui.sendConfirmation
+  sendConfirmation: state.ui.scenes.sendConfirmation
 })
 )(FlipInput)
 

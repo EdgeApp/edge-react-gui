@@ -21,7 +21,7 @@ import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
 import {border as b} from '../../../utils'
-
+import * as UI_SELECTORS from '../../selectors.js'
 
 class WalletListModal extends Component {
   constructor(props){
@@ -85,7 +85,7 @@ class WalletListModalBody extends Component {
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
               <T style={[styles.currencyRowText]}>{wallet.balance}</T>
-            </View>            
+            </View>
           </View>
         </TouchableOpacity>
 
@@ -98,7 +98,7 @@ class WalletListModalBody extends Component {
               </View>
               <View style={[styles.currencyRowBalanceTextWrap]}>
                 <T style={[styles.currencyRowText]}>{x.balance}</T>
-              </View>  
+              </View>
             </View>
           </TouchableOpacity>
         ))}
@@ -125,7 +125,7 @@ WalletListModalBody.propTypes = {
 export const WalletListModalBodyConnect = connect(
   state => ({
     walletList: state.ui.wallets.byId,
-    selectedWalletId: state.ui.wallets.selectedWalletId
+    selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
   }),
   dispatch => ({
     selectWallet: walletId => dispatch(UI_ACTIONS.selectWalletId(walletId)),
