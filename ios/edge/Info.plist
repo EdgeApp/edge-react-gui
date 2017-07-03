@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Edge Wallet</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -41,9 +41,9 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Airbitz uses your camera to scan QR Codes</string>
+	<string>$(PRODUCT_NAME) uses your camera to scan QR Codes</string>
 	<key>NSContactsUsageDescription</key>
-	<string>Airbitz uses your contacts to add useful information to your transactions.</string>
+	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
 	<key>UIAppFonts</key>
