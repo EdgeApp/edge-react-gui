@@ -4,10 +4,14 @@ export const UPDATE_RECEIVE_ADDRESS_SUCCESS = 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
 export const UPDATE_RECEIVE_ADDRESS_ERROR = 'UPDATE_RECEIVE_ADDRESS_ERROR'
 export const SAVE_RECEIVE_ADDRESS = 'SAVE_RECEIVE_ADDRESS'
 
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
+
 export const updateReceiveAddress = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const wallet = getSelectedWallet(state)
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
     const onSuccess = (receiveAddress) => {
       dispatch(updateReceiveAddressSuccess(receiveAddress))
@@ -25,8 +29,9 @@ export const updateReceiveAddress = () => {
 
 export const saveReceiveAddress = receiveAddress => {
   return (dispatch, getState) => {
-    const { wallets: { byId }, ui: { wallets: { selectedWalletId } } } = getState()
-    const wallet = byId[selectedWalletId]
+    const state = getState()
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
     const onSuccess = () => {
       dispatch(updateReceiveAddress())
@@ -77,13 +82,6 @@ export const updateAmountRequestedInFiat = (amountRequestedInFiat) => {
     type: UPDATE_AMOUNT_REQUESTED_IN_FIAT,
     data: { amountRequestedInFiat }
   }
-}
-
-const getSelectedWallet = state => {
-  const { core: { wallets: { byId } }, ui: { wallets: { selectedWalletId } } } = state
-  const selectedWallet = byId[selectedWalletId]
-
-  return selectedWallet
 }
 
 export const UPDATE_METADATA = 'UPDATE_METADATA'

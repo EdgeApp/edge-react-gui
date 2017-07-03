@@ -18,6 +18,8 @@ export const UPDATE_SPEND_INFO = 'UPDATE_SPEND_INFO'
 export const RESET = 'RESET'
 
 import { Actions } from 'react-native-router-flux'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 export const updateAmountSatoshiRequest = amountSatoshi => {
   return (dispatch, getState) => {
@@ -25,7 +27,8 @@ export const updateAmountSatoshiRequest = amountSatoshi => {
     if (amountSatoshi == 0) return
 
     const state = getState()
-    const wallet = getSelectedWallet(state)
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
     const { publicAddress } = state.ui.scenes.sendConfirmation
     const spendInfo = makeSpendInfo({ amountSatoshi, publicAddress })
@@ -93,8 +96,10 @@ export const updateTransaction = transaction => {
 export const signBroadcastAndSave = unsignedTransaction => {
   return (dispatch, getState) => {
     const state = getState()
-    const wallet = getSelectedWallet(state)
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
+    // TODO: refactor this to use WALLET_API
     wallet.signTx(unsignedTransaction)
     .then(transaction => {
       console.log('broadcast transaction', transaction)
@@ -117,7 +122,8 @@ export const signBroadcastAndSave = unsignedTransaction => {
 export const updateMaxSatoshiRequest = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const wallet = getSelectedWallet(state)
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
     wallet.getMaxSpendable()
     .then(amountSatoshi => {
@@ -139,13 +145,6 @@ export const useMaxSatoshi = () => {
     const { maxSatoshi } = state.ui.scenes.sendConfirmation
     dispatch(updateAmountSatoshi(maxSatoshi))
   }
-}
-
-const getSelectedWallet = state => {
-  const { core: { wallets: { byId } }, ui: { wallets: { selectedWalletId } } } = state
-  const selectedWallet = byId[selectedWalletId]
-
-  return selectedWallet
 }
 
 export const updateSpendInfo = spendInfo => {
