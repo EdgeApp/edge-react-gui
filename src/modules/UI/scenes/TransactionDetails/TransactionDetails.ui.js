@@ -55,12 +55,12 @@ class TransactionDetails extends Component {
         //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '', 
         direction,
         txid : this.props.tx.txid,
-        /*payeeName: this.props.tx.metaData.payeeName || null, // remove commenting once metaData in Redux
-        category: this.props.tx.metaData || null,
-        notes: this.props.tx.metaData || '',
-        amountFiat: this.props.tx.metaData || null,
-        bizId: this.props.tx.metaData || null,
-        miscJson: this.props.tx.metaData || null*/ 
+        payeeName: this.props.tx.payeeName || 'payeeName', // remove commenting once metaData in Redux
+        category: this.props.tx.category || 'fakeCategory',
+        notes: this.props.tx.notes || 'fake notes',
+        amountFiat: this.props.tx.amountFiat || '3.56',
+        bizId: this.props.tx.bizId || 12345,
+        miscJson: this.props.tx.miscJson || null 
      }
    }
 
@@ -72,14 +72,37 @@ class TransactionDetails extends Component {
     }
   }
 
+  onChangePayee = (input) => {
+    console.log('payeeName changed to: ', input)
+    this.setState({ payeeName: input })
+  }
+
+  onChangeFiat = (input) => {
+    console.log('amountFiat changed to: ', input)    
+    this.setState({ amountFiat: input })
+  }
+
+  onChangeCategory = (input) => {
+    console.log('category changed to: ', input)    
+    this.setState({ category: input})
+  }
+
+  onChangeNotes = (input) => {
+    console.log('notes changed to: ', input)    
+    this.setState({ notes: input })
+  }    
+
   onPressSave = () => {
+    console.log('onPressSave executing, this.state is: ', this.state)
     const { txid, payeeName, category, notes, amountFiat, bizId, miscJson } = this.state
     const transactionDetails = { txid, payeeName, category, notes, amountFiat, bizId, miscJson }
-    dispatch(this.props.setTransactionDetails(transactionDetails))
+    console.log('transactionDetails are: ', transactionDetails)
+    this.props.dispatch(this.props.setTransactionDetails(transactionDetails))
   }
 
   render () {
-    console.log('rendering Transaction Details scene, this.props is: ', this.props)
+    console.log('rendering Transaction Details scene, this.props is: ', this.props, ' and this.state is: ', this.state)
+    let initialValues = this.state
     return (
         <ScrollView overScrollMode='never' /* alwaysBounceVertical={false}*/ >
           <View style={[b(), styles.container]}>
@@ -91,13 +114,18 @@ class TransactionDetails extends Component {
             <View style={[styles.dataArea]}>
               <View style={[styles.payeeNameArea]}>
                 <View style={[styles.payeeNameWrap]}>
-                  <T style={[styles.payeeNameText]}>Glidera</T>
+                  <TextInput onChangeText={(input) => this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
                 </View>
                 <View style={[styles.dateWrap]}>
                   <T style={[styles.date]}>{this.props.tx.date}</T>
                 </View>
               </View>  
-              <AmountArea info={this.state} />            
+              <AmountArea 
+                onChangeNotesFxn={this.onChangeNotes}
+                onChangeCategoryFxn={this.onChangeCategory}
+                onChangePayeeFxn={this.onChangePayee}
+                onChangeFiatFxn={this.onChangeFiat}
+                info={this.state} onPressFxn={this.onPressSave} />            
             </View>        
           </View>
         </ScrollView>
@@ -166,7 +194,7 @@ class AmountArea extends Component {
             <T style={[styles.editableFiatLeftText]}></T>
           </View>          
           <View style={[styles.editableFiatArea]}>
-            <TextInput style={[styles.editableFiat]} value='$ 3.56' />
+            <TextInput style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
           </View>
           <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>USD</T>
@@ -178,17 +206,17 @@ class AmountArea extends Component {
             <T style={[styles.categoryLeftText, {color: this.types[this.props.info.direction].color}]}>{this.props.info.direction}</T>
           </View>
           <View style={[b(), styles.categoryInputArea]}>
-            <TextInput style={[b(), styles.categoryInput]} placeholder='Monthly exchange' />
+            <TextInput style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
           </View>              
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput numberOfLines={3} multiline={true} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
+            <TextInput numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
           <View style={[b(), styles.buttonArea]}>
-            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} onPress={this.onPressSave}/>
+            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
           <View style={[b(), styles.advancedTxArea]}>
             <T onPress={() => console.log('going to advanced Tx data')} style={[b(), styles.advancedTxText]}>View advanced transaction data</T>
