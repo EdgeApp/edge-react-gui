@@ -12,6 +12,9 @@ export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = PREFIX + 'TOGGLE_TRANSACTIO
 export const UPDATE_TRANSACTIONS = PREFIX + 'UPDATE_TRANSACTIONS'
 export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 
+export const NEW_TRANSACTIONS = PREFIX + 'NEW_TRANSACTIONS'
+export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
+
 // import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -28,6 +31,42 @@ export const getTransactionsRequest = () => {
   }
 }
 
+export const newTransactionsRequest = (transactions, walletId) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    if (walletId === selectedWalletId) {
+      return dispatch(newTransactions(transactions))
+    }
+  }
+}
+
+export const newTransactions = (transactions) => {
+  return {
+    type: NEW_TRANSACTIONS,
+    data: { transactions }
+  }
+}
+
+export const changedTransactionsRequest = (transactions, walletId) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const { selectedWalletId } = state.ui.wallets
+
+    if (walletId === selectedWalletId) {
+      return dispatch(changedTransactions(transactions))
+    }
+  }
+}
+
+export const changedTransactions = (transactions) => {
+  return {
+    type: CHANGED_TRANSACTIONS,
+    data: { transactions }
+  }
+}
+
 export const updateTransactions = transactions => {
   return {
     type: UPDATE_TRANSACTIONS,
@@ -39,13 +78,6 @@ export const updateBalance = () => {
   return {
     type: 'noop'
   }
-}
-
-const getWallet = (walletId, getState) => {
-  const state = getState()
-  const wallet = state.core.wallets.byId[walletId]
-
-  return wallet
 }
 
 const getSelectedWallet = state => {

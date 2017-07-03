@@ -316,7 +316,7 @@ const strings = {
     fragment_import_address_dialog_title:	"Sweep Funds From Private Key",
     fragment_send_other_wallet_header_title:	"Choose a wallet to transfer funds to:",
     fragment_send_create_wallet_to_transfer:	"Create a new wallet to transfer funds to",
-    
+
     fragment_send_import_or_send_title:	"Bitcoin Private Key with Public Address",
     fragment_send_import_or_send_import_funds:	"Import Funds",
     fragment_send_import_or_send_send_funds:	"Send Funds",
@@ -614,7 +614,7 @@ const strings = {
     app_support_slack:	"https://slack.airbitz.co",
     app_support_whatsapp:	"https://whatsapp.airbitz.co",
     appstore_link:	"https://itunes.apple.com/us/app/airbitz/id843536046",
-    playstore_link:	"https://play.google.com/store/apps/details?id=com.airbitz",
+    playstore_link:	"https://play.google.com/store/apps/details?id=co.airbitz.edge",
     logo_white_link:	"https://airbitz.co/static/img/logo-nav.png",
     designed_by:	"Designed and Built by Airbitz in",
     company_location:	"San Diego, California, USA",
@@ -712,8 +712,8 @@ const strings = {
     activity_signup_contact_text_2:	"Airbitz uses contacts to help tag information regarding your transactions.",
     activity_signup_contact_text_3:	"All tagged information is kept 100% private and encrypted by your password.",
     activity_signup_contact_text_4:	"No one, including Airbitz, has any access to this information.",
-    
-    
+
+
     // start of strings exclusive / new to react-gui app
     string_cancel_uc:	"CANCEL",
     string_cancel_cap:	"Cancel",

@@ -27,7 +27,7 @@ export const updateAmountSatoshiRequest = amountSatoshi => {
     const state = getState()
     const wallet = getSelectedWallet(state)
 
-    const { publicAddress } = state.ui.sendConfirmation
+    const { publicAddress } = state.ui.scenes.sendConfirmation
     const spendInfo = makeSpendInfo({ amountSatoshi, publicAddress })
 
     wallet.makeSpend(spendInfo)
@@ -135,7 +135,8 @@ export const updateMaxSatoshi = maxSatoshi => {
 
 export const useMaxSatoshi = () => {
   return (dispatch, getState) => {
-    const { maxSatoshi } = getState().ui.sendConfirmation
+    const state = getState()
+    const { maxSatoshi } = state.ui.scenes.sendConfirmation
     dispatch(updateAmountSatoshi(maxSatoshi))
   }
 }
@@ -178,7 +179,8 @@ export const updatePublicAddress = (publicAddress) => {
 
 export const updateUri = ({ data: uri }) => {
   return (dispatch, getState) => {
-    const { account } = getState()
+    const state = getState()
+    const { account } = state.core
     account.parseUri = uri => {
       return Promise.resolve(
         {

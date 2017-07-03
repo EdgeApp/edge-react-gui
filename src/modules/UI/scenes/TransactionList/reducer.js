@@ -7,19 +7,16 @@
     switch (type) {
       case ACTION.UPDATE_TRANSACTIONS:
         return transactions
-      default:
-        return state
-    }
-  }
-
-  const transactionsList = (state = [], action) => {
-    switch (action.type) {
-      case ACTION.UPDATE_TRANSACTIONS_LIST :
-        return action.data
-      case ACTION.DELETE_TRANSACTIONS_LIST :
-        return []
-      case ACTION.UPDATE_SEARCH_RESULTS :
-        return action.data
+      case ACTION.NEW_TRANSACTIONS:
+        return [
+          ...state,
+          ...transactions
+        ]
+      case ACTION.CHANGED_TRANSACTIONS:
+        return [
+          ...state,
+          ...transactions
+        ]
       default:
         return state
     }
