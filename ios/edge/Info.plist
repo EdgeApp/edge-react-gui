@@ -40,12 +40,22 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses bluetooth to detect nearby transaction requests.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your camera to scan QR Codes</string>
 	<key>NSContactsUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string>Some description</string>
+
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not access your calendar.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not access speech recognition.</string>
+
 	<key>UIAppFonts</key>
 	<array>
 		<string>Andale Mono.ttf</string>
