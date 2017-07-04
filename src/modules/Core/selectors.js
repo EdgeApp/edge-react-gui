@@ -13,6 +13,11 @@ export const getAccount = (state) => {
   return account
 }
 
+export const getUsername = (state) => {
+  const username = state.core.account.username
+  return username
+}
+
 export const getWallets = (state) => {
   const wallets = Object.values(state.core.wallets.byId)
   return wallets

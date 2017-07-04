@@ -4,6 +4,20 @@ export const LIST_USERS_SIDEBAR = 'LIST_USER_USER_SIDEBAR'
 export const SELECT_USERS_SIDEBAR = 'SELECT_USERS_SIDEBAR'
 export const REMOVE_USERS_SIDEBAR = 'REMOVE_USERS_SIDEBAR'
 
+export const LOGOUT = 'LOGOUT'
+
+export const logoutRequest = () => {
+  return (dispatch, getState) => {
+    dispatch(logout())
+  }
+}
+
+export const logout = () => {
+  return {
+    type: LOGOUT
+  }
+}
+
 export const openSelectUser = () => {
   return {
     type: OPEN_SELECT_USER
