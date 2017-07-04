@@ -137,9 +137,9 @@ class FlipInputInside extends Component {
     getTextColor = () => {
       switch(mode) {
         case 'over':
-          return 'red'
+          return '#F03A47'
         case 'max':
-          return 'orange'
+          return '#F6A623'
         default:
           return 'white'
       }
@@ -158,7 +158,7 @@ class FlipInputInside extends Component {
               placeholderTextColor={getTextColor()}
             />
           </View>
-          { displayFees ? <Text style={styles.fees}> + b0.026</Text> : null }
+          { displayFees ? <Text style={[ styles.fees, { alignSelf: 'center' } ]}> + b0.026</Text> : null }
           {/* { displayFees ? <Text style={styles.fees}> + b{primaryFee}</Text> : null } */}
         </View>
       )

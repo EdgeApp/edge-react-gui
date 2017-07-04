@@ -5,6 +5,8 @@ import { Actions } from 'react-native-router-flux'
 import { openHelpModal } from '../../HelpModal/actions.js'
 import { connect } from 'react-redux'
 
+import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
+
 class HelpButton extends Component {
   render () {
     return (
@@ -32,7 +34,7 @@ export default class Right extends Component {
       case 'request':
         return <HelpButton />
       case 'sendConfirmation':
-        return <HelpButton />
+        return <SendConfirmationOptions />
       case 'createWallet':
         return <HelpButton />
       default:
