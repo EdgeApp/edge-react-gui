@@ -155,7 +155,7 @@ class FlipInputInside extends Component {
               placeholder={primaryPlaceholder}
               keyboardType='numeric'
               onChangeText={onInputChange}
-              placeholderTextColor='#FFF'
+              placeholderTextColor={getTextColor()}
             />
           </View>
           { displayFees ? <Text style={styles.fees}> + b0.026</Text> : null }

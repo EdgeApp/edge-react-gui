@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   exchangeRateContainer: {
     alignItems: 'center',
-    marginVertical: 30
+    marginVertical: 20
   },
   flipInputContainer: {
     alignItems: 'center',

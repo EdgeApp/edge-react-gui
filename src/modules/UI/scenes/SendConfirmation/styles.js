@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   exchangeRateContainer: {
     alignItems: 'center',
-    marginVertical: 25
+    marginVertical: 15
   },
   recipient: {
     flex: 2,

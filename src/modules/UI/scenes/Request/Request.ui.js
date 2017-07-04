@@ -205,13 +205,3 @@ export default connect(state => ({
   wallets: state.ui.scenes.wallets
 
 }))(Request)
-
-class FlipInputs extends Component {
-
-  render () {
-    return {
-
-    }
-  }
-
-}

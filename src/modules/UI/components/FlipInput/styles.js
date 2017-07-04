@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   // Main Flip Input Styles
   view: {
     // flex: 1,
-    marginVertical: 20,
+    marginBottom: 20,
     flexDirection: 'column',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
@@ -44,12 +44,13 @@ const styles = StyleSheet.create({
   },
   primaryInputContainer: {
     flex: 1,
-    paddingBottom: 25,
+    paddingBottom: 5,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255,255,255,0.6)'
   },
   primaryInput: {
     fontSize: 42,
+    height: 42,
     textAlign: 'center'
   },
 
