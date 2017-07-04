@@ -1,19 +1,26 @@
 export const SET_TRANSACTION_DETAILS = 'SET_TRANSACTION_DETAILS'
 
-import * as WALLET_API from '../../../Core/Wallets/action.js'
-import {ACTIONS} from 'react-native-router-flux'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import {Actions} from 'react-native-router-flux'
 
 export const setTransactionDetails = (transactionDetails) => {
   return (dispatch, getState) => {
     const state = getState()
     const wallet = getSelectedWallet(state)
 
+    const onSuccess = () => {
+      console.log('Save Transaction Details Success.')
+      Actions.transactionList()
+      console.log('Actions', Actions)
+    }
+
+    const onError = () => {
+      console.log('Error: Save Transaction Details Failed.')
+    }
+
     WALLET_API.setTransactionDetailsRequest(wallet, transactionDetails)
-    .then(() => {
-      // Navigate to the transactionsList only after the transaction has been
-      // updated, so the transactionList will grab the updated transaction
-      ACTIONS.transactionsList()
-    })
+    .then(onSuccess)
+    .catch(onError)
   }
 }
 
