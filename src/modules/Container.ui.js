@@ -30,7 +30,7 @@ import { selectWalletById } from './UI/Wallets/action.js'
 import { setDeviceDimensions } from './UI/dimensions/action'
 import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
-import { addContext } from './Core/Context/action.js'
+import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 import { deleteWalletRequest } from './Core/Wallets/action.js'
 
 import { makeReactNativeIo } from 'react-native-airbitz-io'
@@ -62,6 +62,7 @@ class Main extends Component {
       })
 
       this.props.dispatch(addContext(context))
+      this.props.dispatch(addUsernamesRequest(context))
       this.setState({
         context,
         loading: false

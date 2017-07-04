@@ -1,13 +1,28 @@
 import * as ACTION from './action.js'
 
-export const context = (state = {}, action) => {
+const initialState = {
+  context: {},
+  usernames: []
+}
+export const context = (state = initialState, action) => {
   const { type, data = {} } = action
-  const { context } = data
 
   switch (type) {
-    case ACTION.ADD_CONTEXT:
-      console.log('context', context)
-      return context
+    case ACTION.ADD_CONTEXT: {
+      const context = data.context
+      return {
+        ...state,
+        context
+      }
+    }
+
+    case ACTION.ADD_USERNAMES: {
+      const usernames = data.usernames
+      return {
+        ...state,
+        usernames
+      }
+    }
     default:
       return state
   }

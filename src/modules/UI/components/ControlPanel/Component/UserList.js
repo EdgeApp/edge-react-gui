@@ -11,6 +11,9 @@ import { closeSelectUser, selectUsersList, removeUsersList } from '../action'
 import styles from '../style'
 const platform = Platform.OS;
 
+import * as CORE_SELECTORS from '../../../../Core/selectors.js'
+import * as CONTEXT_API from '../../../../Core/Context/api.js'
+
 class UserListComponent extends Component {
 
   _handlePressUserSelect = (id) => {
@@ -18,58 +21,54 @@ class UserListComponent extends Component {
     // return this.props.dispatch(closeSelectUser(id))
   }
 
-  _handleUserRemove = (name) => {
-    this.props.context.removeUsername(name, (error) => {
-      if(!error) {
-        return this.props.dispatch(removeUsersList(name))
-      }
-    })
+  _handleDeleteLocalAccount = (username) => {
+    this.props.deleteLocalAccount(username)
   }
 
-  _handlePressUserRemove = (name) => {
+  _handlePressDeleteLocalAccount = (username) => {
     return Alert.alert(
       'Delete Account',
-      "Delete '" + name + "' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days",
+      "Delete '" + username + "' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days",
       [
         {text: 'No', style: 'cancel'},
-        {text: 'Yes', onPress: () => this._handleUserRemove(name)},
+        {text: 'Yes', onPress: () => this._handleDeleteLocalAccount(username)},
       ]
     )
   }
 
-  render () {
-    const rows = () => {
-      return _.map(this.props.usersList, (user, index) => {
-        if(platform === 'android') {
-          return (
-            <View key={index} style={styles.userList.row}>
-              <TouchableNativeFeedback onPress={ e => this._handlePressUserSelect(user) } background={TouchableNativeFeedback.SelectableBackground()} >
-                <Text style={styles.userList.text}>{user}</Text>
-              </TouchableNativeFeedback>
-              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user) }>
-                <Icon name='close'/>
-              </TouchableOpacity>
-            </View>
-          )
-        }
-        if(platform !== 'android') {
-          return (
-            <View key={index} style={styles.userList.row}>
-              <TouchableOpacity  style={styles.userList.text} onPress={ e => this._handlePressUserSelect(user) }>
-                <Text>{user}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressUserRemove(user) }>
-                <Icon name='close'/>
-              </TouchableOpacity>
-            </View>
-          )
-        }
-      })
-    }
+  rows = () => {
+    return _.map(this.props.usernames, (username, index) => {
+      if(platform === 'android') {
+        return (
+          <View key={index} style={styles.userList.row}>
+            <TouchableNativeFeedback onPress={ e => this._handlePressUserSelect(username) } background={TouchableNativeFeedback.SelectableBackground()} >
+              <Text style={styles.userList.text}>{username}</Text>
+            </TouchableNativeFeedback>
+            <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressDeleteLocalAccount(username) }>
+              <Icon name='close'/>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+      if(platform !== 'android') {
+        return (
+          <View key={index} style={styles.userList.row}>
+            <TouchableOpacity  style={styles.userList.text} onPress={ e => this._handlePressUserSelect(username) }>
+              <Text>{username}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.userList.icon} onPress={ e => this._handlePressDeleteLocalAccount(username) }>
+              <Icon name='close'/>
+            </TouchableOpacity>
+          </View>
+        )
+      }
+    })
+  }
 
+  render () {
     return(
       <ScrollView style={styles.userList.container}>
-        {rows()}
+        {this.rows()}
       </ScrollView>
     )
 
@@ -77,10 +76,10 @@ class UserListComponent extends Component {
 }
 
 const mapStateToProps = state => ({
-  context: state.airbitz,
-  usersList : state.account.username !== null ?
-  _.filter(state.ui.controlPanel.usersList, item => item !== state.account.username) :
-  state.ui.controlPanel.usersList,
+  usernames: CORE_SELECTORS.getUsernames(state)
+})
+const mapDispatchToProps = dispatch => ({
+  deleteLocalAccount: (username) => { dispatch(CONTEXT_API.deleteLocalAccount(username)) },
 })
 
-export default connect(mapStateToProps)(UserListComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(UserListComponent)
