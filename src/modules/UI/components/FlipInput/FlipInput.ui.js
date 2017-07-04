@@ -168,7 +168,7 @@ class FlipInputInside extends Component {
       return (
         <View style={styles.convertedInputRow}>
           <View style={styles.secondaryTextContainer}>
-            <Text style={styles.secondaryText}>
+            <Text style={[ styles.secondaryText,  {color: getTextColor()}]}>
               {getSecondaryAmount() || secondaryPlaceholder}
             </Text>
           </View>
