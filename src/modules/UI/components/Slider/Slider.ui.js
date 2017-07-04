@@ -31,19 +31,22 @@ class ABSlider extends Component {
 
   render() {
     return (
-      <Slider
-        disabled={this.props.sliderDisabled}
-        onValueChange={this.onValueChange}
-        onSlidingComplete={this.onSlidingComplete}
-        minimumValue={0}
-        maximumValue={10}
-        value={this.state.value}
-        style={styles.slider}
-        trackStyle={styles.track}
-        thumbStyle={styles.thumb}
-        minimumTrackTintColor='transparent'
-        maximumTrackTintColor='transparent'
-      />
+      <View style={styles.container}>
+        <Slider
+          disabled={this.props.sliderDisabled}
+          onValueChange={this.onValueChange}
+          onSlidingComplete={this.onSlidingComplete}
+          minimumValue={0}
+          maximumValue={10}
+          value={this.state.value}
+          style={styles.slider}
+          trackStyle={styles.track}
+          thumbStyle={styles.thumb}
+          minimumTrackTintColor='transparent'
+          maximumTrackTintColor='transparent'
+        />
+        <Text style={styles.textOverlay}>Slide To Confirm</Text>
+      </View>
     )
   }
 }

@@ -12,34 +12,17 @@ const FIAT_PLACEHOLDER   = 'F 0.00'
 class FlipInput extends Component {
 
   render () {
-
-    const {
-      mode,
-      onCryptoInputChange,
-      onFiatInputChange,
-      amountSatoshi,
-      amountFiat,
-      onInputCurrencyToggle,
-      feeInFiat,
-      feeInCrypto,
-      displayFees,
-    } = this.props
-
     return (
-      <FlipInputInside
-        currencySelected={'crypto'}
-        mode={mode}
-        primaryPlaceholder={'c 0.00'}
-        secondaryPlaceholder={'f 0.00'}
-        onInputChange={onCryptoInputChange}
-        amountRequestedPrimary={amountSatoshi}
-        amountRequestedSecondary={amountFiat}
-        onInputCurrencyToggle={onInputCurrencyToggle}
-        primaryFee={feeInCrypto}
-        secondaryFee={feeInFiat}
-        displayFees={displayFees} />
-    )
-  }
+      <FlipView style={styles.view}
+        front={this._renderFront()}
+        back={this._renderBack()}
+        isFlipped={this.props.inputCurrencySelected === 'fiat'}
+        flipAxis='x'
+        flipEasing={Easing.out(Easing.ease)}
+        flipDuration={250}
+        perspective={1000} />
+    );
+  };
 
   _renderFront = () => {
     const {
@@ -56,6 +39,7 @@ class FlipInput extends Component {
 
     return (
       <FlipInputInside
+        style={styles.view}
         currencySelected={'crypto'}
         mode={mode}
         primaryPlaceholder={'c 0.00'}
@@ -84,6 +68,7 @@ class FlipInput extends Component {
 
     return (
       <FlipInputInside
+        style={styles.view}
         currencySelected={'fiat'}
         mode={mode}
         primaryPlaceholder={'f 0.00'}
@@ -100,9 +85,10 @@ class FlipInput extends Component {
 }
 
 export default connect(state => ({
-  sendConfirmation: state.ui.scenes.sendConfirmation
+  sendConfirmation: state.ui.sendConfirmation
 })
 )(FlipInput)
+
 
 class FlipInputInside extends Component {
 
@@ -135,59 +121,74 @@ class FlipInputInside extends Component {
     }
 
     getTextColor = () => {
-      switch(mode) {
-        case 'over':
-          return '#F03A47'
-        case 'max':
-          return '#F6A623'
-        default:
-          return 'white'
+      let textColor
+
+      if (mode === 'over') {
+        textColor = 'red'
+      } else if (mode === 'max') {
+        textColor = 'orange'
+      } else {
+        textColor = 'white'
       }
+
+      return textColor
     }
 
-    const renderMainInput = () => {
+    const displayPrimaryFees = (primaryFee) => {
+      if (!displayFees) { topFee = '' }
+
       return (
-        <View style={styles.mainInputRow}>
-          <View style={styles.primaryInputContainer} name='InputAndFeesElement'>
+        <View style={styles.primaryFee}>
+          <Text style={styles.primaryFeeText}>{primaryFee}</Text>
+        </View>
+      )
+    }
+
+    const displaySecondaryFees = (secondaryFee) => {
+      if (!displayFees) { secondaryFee = '' }
+
+      return (
+        <View style={styles.secondaryFee}>
+          <Text style={styles.primaryFeeText}>{secondaryFee}</Text>
+        </View>
+      )
+    }
+
+    const getInputAndFeesElement = () => {
+      const inputAndFeesElement =
+        <View style={{flex: 10}} name='InputAndFeesElement'>
+          <View style={styles.primaryRow} name='PrimaryRow'>
             <TextInput
-              style={[styles.primaryInput, {color: getTextColor()}]}
+              style={[styles.primaryTextInput, styles[mode]]}
               value={getPrimaryAmount()}
               placeholder={primaryPlaceholder}
               keyboardType='numeric'
-              onChangeText={onInputChange}
-              placeholderTextColor={getTextColor()}
-            />
+              onChangeText={onInputChange} />
+            {displayPrimaryFees(primaryFee)}
           </View>
-          { displayFees ? <Text style={[ styles.fees, { alignSelf: 'center' } ]}> + b0.026</Text> : null }
-          {/* { displayFees ? <Text style={styles.fees}> + b{primaryFee}</Text> : null } */}
-        </View>
-      )
-    }
 
-    const renderConvertedInput = () => {
-      return (
-        <View style={styles.convertedInputRow}>
-          <View style={styles.secondaryTextContainer}>
-            <Text style={[ styles.secondaryText,  {color: getTextColor()}]}>
+          <View style={styles.secondaryRow} name='SecondaryRow'>
+            <Text style={[styles.secondaryText, styles[mode]]}>
               {getSecondaryAmount() || secondaryPlaceholder}
             </Text>
+            {displaySecondaryFees(secondaryFee)}
           </View>
-          { displayFees ? <Text style={styles.fees}> + $0.95</Text> : null }
-          {/* { displayFees ? <Text style={styles.fees}> + ${secondaryFee}</Text> : null } */}
+
         </View>
-      )
+
+        return inputAndFeesElement
     }
 
     return (
       <View style={styles.view}>
+        <View style={styles.leftSpacer} />
         <View style={styles.row}>
-          <FAIcon style={styles.icon} onPress={onInputCurrencyToggle} name='swap-vert' size={36} />
-          <View style={{flex:1}}>
-            {renderMainInput()}
-            {renderConvertedInput()}
+          <View style={styles.iconContainer}>
+            <View style={styles.verticalSpacer} />
+            <FAIcon style={styles.icon} onPress={onInputCurrencyToggle} name='swap-vert' size={36} />
+            <View style={styles.verticalSpacer} />
           </View>
-          { !displayFees ? <Text style={styles.currency}>BTC</Text> : null }
-          {/* { !displayFees ? <Text style={styles.currency}>{currency}</Text> : null } */}
+          {getInputAndFeesElement()}
         </View>
       </View>
     )

@@ -6,13 +6,14 @@ import {
   TouchableHighlight,
   Keyboard,
   Button,
-  Platform,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import MaxButton from '../../components/MaxButton/index.js'
 import FlipInput from '../../components/FlipInput/index.js'
+import Password from './SendConfirmationPasswordSample.js'
 
 import ABQRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
@@ -56,27 +57,14 @@ class SendConfirmation extends Component {
       <LinearGradient
         style={styles.view}
         start={{x:0,y:0}} end={{x:1, y:0}}
-        colors={["#3b7adb","#2b569a"]}>
+        colors={["#3b7adb","#2b569a"]}
+      >
 
-        <View style={styles.exchangeRateAndMax} >
-          <View style={{flex: 1}}></View>
-
-          <View style={{flex: 3}}>
-            <ExchangeRate
-              mode={draftStatus}
-              style={{flex: 1}}
-              fiatPerCrypto={this.props.fiatPerCrypto} />
-          </View>
-
-          <View style={{flex: 1}}>
-            <MaxButton style={{flex: 1}}
-              mode={draftStatus}
-              onMaxPress={this.onMaxPress}/>
-          </View>
-
+        <View style={styles.exchangeRateContainer} >
+          <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} />
         </View>
 
-        <View style={styles.flipInput}>
+        <View style={styles.main}>
           <FlipInput
             mode={draftStatus}
             onInputCurrencyToggle={this.onInputCurrencyToggle}
@@ -88,27 +76,14 @@ class SendConfirmation extends Component {
             maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
             displayFees
             feeInCrypto={this.props.feeSatoshi}
-            feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)} />
+            feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
+          />
+          {/* <Recipient label={label} address={publicAddress} /> */}
+          <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
+          <Password />
         </View>
 
-        <View style={styles.recipient}>
-          <View style={{flex: 3}}>
-            <Recipient label={label} address={publicAddress} />
-          </View>
-        </View>
-
-        {this.getTopSpacer()}
-
-        <View style={styles.slider}>
-          <ABSlider
-            style={{
-              flex: 1,
-            }}
-            onSlidingComplete={this.signBroadcastAndSave}
-            sliderDisabled={!isSliderLocked} />
-        </View>
-
-        {this.getBottomSpacer()}
+        <ABSlider onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
 
       </LinearGradient>
     )

@@ -3,21 +3,24 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    padding: 5,
-    bottom: 0
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'stretch'
+  },
+  main: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'center'
   },
   exchangeRateContainer: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    marginVertical: 20
   },
   flipInputContainer: {
-    flex: 4,
     alignItems: 'center',
     justifyContent: 'center'
   },
   abQRCodeContainer: {
-    flex: 6,
     padding: 5,
     alignItems: 'center',
     justifyContent: 'center'
@@ -28,12 +31,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   shareButtonsContainer: {
-    flex: 2,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center'
-  },
-  shareButtons: {
-    flex: 1
   }
 })
 

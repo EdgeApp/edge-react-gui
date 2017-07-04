@@ -15,54 +15,39 @@ import { connect } from 'react-redux'
 // import styles from './styles.js'
 
 const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-  },
-  row: {
-    flex: 1,
+  container: {
+    backgroundColor: 'transparent',
     flexDirection: 'row',
-    paddingHorizontal: 10
+    alignItems: 'flex-end',
+    marginTop: 30,
+    marginBottom: 15,
+    marginHorizontal: 35
   },
   text: {
-    flex: 1,
-    color: 'white',
+    color: 'rgba(255,255,255,0.85)',
+    lineHeight: 0,
+    fontSize: 17
   },
-  spacer: {
-    flex: 1
+  ellipsis: {
+    flex: 1,
+    overflow: 'hidden'
   }
 })
 
 const Recipient = ({label, address}) => {
 
   return (
-    <View style={styles.view}>
-      <View style={styles.spacer}></View>
-
-      <View style={styles.row}>
-        <Text style={styles.text}>To: {label} </Text>
-        <Text style={styles.text}
-          adjustFontToFit
-          ellipsizeMode="middle"
-          numberOfLines={1}>
-          {address}
+      <View style={styles.container}>
+        <Text style={[ styles.text, {fontSize: 14} ]}>To:  </Text>
+        <Text style={styles.text}> {label}  |  </Text>
+        <Text
+          style={[ styles.text, styles.ellipsis ]}
+          ellipsizeMode='middle' numberOfLines={1}
+        >
+           {address}
         </Text>
       </View>
-
-      <View style={styles.spacer}></View>
-    </View>
   )
 }
 
 export default connect()(Recipient)
-
-
-{/* <View style={styles.view}>
-  <Text
-    adjustFontToFit
-    ellipsizeMode="middle"
-    numberOfLines={1}
-    style={{
-      flex: 1
-    }}
-    >To: {to}</Text>
-</View> */}

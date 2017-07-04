@@ -1,82 +1,83 @@
 import { StyleSheet } from 'react-native'
 
+const sideWidth = 80;
+
 const styles = StyleSheet.create({
+
+  // Main Flip Input Styles
   view: {
-    flex: 1,
-    alignSelf: 'stretch',
-    flexDirection: 'row'
-  },
-  over: {
-    color: 'red'
-  },
-  max: {
-    color: 'orange'
-  },
-  under: {
-    color: 'white'
-  },
-  primaryTextInput: {
-    flex: 3,
-    textAlign: 'center',
-    fontSize: 30,
-    color: 'white'
-  },
-  secondaryText: {
-    flex: 3,
-    textAlign: 'center',
-    justifyContent: 'center',
-    padding: 0,
-    color: 'white',
-    backgroundColor: 'transparent',
-    paddingTop: 15
-  },
-  primaryRow: {
-    flex: 2,
-    flexDirection: 'row'
-  },
-  secondaryRow: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  leftSpacer: {
-    flex: 0.5
-  },
-  iconContainer: {
-    flex: 2,
+    // flex: 1,
+    marginBottom: 20,
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
-  icon: {
-    color: 'white'
-  },
-  verticalSpacer: {
-    flex: 1
-  },
-  right: {
-    flex: 1
-  },
-  primaryFee: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-  primaryFeeText: {
-    color: 'white'
-  },
-  secondaryFee: {
-    flex: 1,
     justifyContent: 'flex-start',
-    alignItems: 'flex-end'
-  },
-  secondaryFeeText: {
-    color: 'white'
+    alignItems: 'flex-start',
+    alignSelf: 'stretch'
   },
   row: {
-    flex: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  icon: {
+    backgroundColor: 'transparent',
+    color: 'rgba(255,255,255,0.6)',
+    width: sideWidth,
+    textAlign: 'center'
+  },
+  currency: {
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    fontSize: 16,
+    width: sideWidth,
+    textAlign: 'center'
+  },
+  fees: {
+    backgroundColor: 'transparent',
+    color: '#FFF',
+    fontSize: 14,
+    width: sideWidth
+  },
+
+  // Main Input Styles
+  mainInputRow: {
     flexDirection: 'row'
+  },
+  primaryInputContainer: {
+    flex: 1,
+    paddingBottom: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.6)'
+  },
+  primaryInput: {
+    fontSize: 42,
+    height: 42,
+    textAlign: 'center'
+  },
+
+  // Converted Input Styles
+  convertedInputRow: {
+    flexDirection: 'row',
+    paddingTop: 5
+  },
+  secondaryTextContainer: {
+    flex: 1
+  },
+  secondaryText: {
+    fontSize: 20,
+    color: "#FFF",
+    textAlign: 'center',
+    backgroundColor: 'transparent',
   }
+
+  // primaryFee: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  //   alignItems: 'flex-end'
+  // },
+  // primaryFeeText: {
+  //   color: 'white',
+  //   fontSize: 15
+  // }
 })
 
 export default styles
