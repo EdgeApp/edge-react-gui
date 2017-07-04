@@ -7,7 +7,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import s from './style'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 class PrimaryButton extends Component {
     constructor(props) {

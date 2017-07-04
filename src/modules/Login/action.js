@@ -7,6 +7,8 @@ import * as UI_ACTIONS from '../UI/Wallets/action.js'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 
+import * as CORE_SELECTORS from '../Core/selectors.js'
+
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
@@ -57,7 +59,7 @@ const activateWallet = (keyInfo, dispatch, getState) => {
   const state = getState()
   // Retreive or instantiate a wallet object
   const getOrMakeWallet = () => {
-    const wallet = state.core.wallets.byId[keyInfo.id]
+    const wallet = CORE_SELECTORS.getWallet(state, keyInfo.id)
     if (wallet) {
       return Promise.resolve(wallet)
     }
@@ -99,7 +101,7 @@ const archiveWallet = (keyInfo, dispatch, getState) => {
   dispatch(WALLET_ACTIONS.updateWalletStart(keyInfo.id))
 
   const state = getState()
-  const wallet = state.core.wallets.byId[keyInfo.id]
+  const wallet = CORE_SELECTORS.getWallet(state, keyInfo.id)
   wallet.sortIndex = keyInfo.sortIndex
   // Turn the wallet off
   WALLET_API.archiveWalletRequest(wallet)
@@ -144,7 +146,7 @@ const isPending = (keyInfo, getState) => {
 }
 const shouldActivate = (keyInfo, getState) => {
   const state = getState()
-  const wallet = state.core.wallets.byId[keyInfo.id]
+  const wallet = CORE_SELECTORS.getWallet(state, keyInfo.id)
   const isNew = (!wallet)
   const outOfSync = !isNew && (!keyInfo.archived && wallet.archived)
   const shouldActivate = (isNew || outOfSync)
@@ -153,7 +155,7 @@ const shouldActivate = (keyInfo, getState) => {
 }
 const shouldArchive = (keyInfo, getState) => {
   const state = getState()
-  const wallet = state.core.wallets.byId[keyInfo.id]
+  const wallet = CORE_SELECTORS.getWallet(state, keyInfo.id)
   const outOfSync = ((keyInfo.archived || keyInfo.deleted) && !wallet.archived)
   const shouldArchive = outOfSync
 
@@ -161,7 +163,7 @@ const shouldArchive = (keyInfo, getState) => {
 }
 const shouldDelete = (keyInfo, getState) => {
   const state = getState()
-  const wallet = state.core.wallets.byId[keyInfo.id]
+  const wallet = CORE_SELECTORS.getWallet(state, keyInfo.id)
   const shouldDelete = (keyInfo.deleted && wallet)
 
   return shouldDelete

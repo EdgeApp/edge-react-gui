@@ -14,6 +14,7 @@ import { connect } from 'react-redux'
 //import ExampleToWallet from './ExampleToWallet.ui'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
+import * as UI_SELECTORS from '../../../selectors.js'
 
 class Body extends Component {
   render () {
@@ -24,7 +25,7 @@ class Body extends Component {
                visibleFlag='selectedWalletListModalVisibility' />
 
       case 'request':
-        return <ExampleFromWalletConnect wallets={this.props.walletList} 
+        return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
                visibleFlag='selectedWalletListModalVisibility' />
 
@@ -93,10 +94,10 @@ class ExampleFromWallet extends Component {
 
 export const ExampleFromWalletConnect = connect(state => ({
   walletList:        state.ui.wallets.byId,
-  selectedWalletId:  state.ui.wallets.selectedWalletId,
-  selectedWallet:    state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-  activeWalletIds:   state.ui.wallets.activeWalletIds,
-  archivedWalletIds: state.ui.wallets.archivedWalletIds,
+  selectedWalletId:  UI_SELECTORS.getSelectedWalletId(state),
+  selectedWallet:    UI_SELECTORS.getSelectedWallet(state),
+  activeWalletIds:   UI_SELECTORS.getActiveWalletIds(state),
+  archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility,
 }))(ExampleFromWallet)

@@ -32,13 +32,15 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as LOGIN from '../../../Login/action.js'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+
 export const executeWalletRowOption = (walletId, option) => {
   switch (option) {
     case 'Restore':
     case 'Activate':
       return (dispatch, getState) => {
         const state = getState()
-        const account = state.core.account
+        const account = CORE_SELECTORS.getAccount(state)
 
         dispatch(activateWalletStart(walletId))
 
@@ -53,7 +55,7 @@ export const executeWalletRowOption = (walletId, option) => {
     case 'Archive':
       return (dispatch, getState) => {
         const state = getState()
-        const account = state.core.account
+        const account = CORE_SELECTORS.getAccount(state)
 
         dispatch(archiveWalletStart(walletId))
 
@@ -85,7 +87,7 @@ export const executeWalletRowOption = (walletId, option) => {
 export const renameWallet = (walletId, walletName) => {
   return (dispatch, getState) => {
     const state = getState()
-    const wallet = state.core.wallets.byId[walletId]
+    const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
     dispatch(renameWalletStart(walletId))
 
@@ -101,7 +103,7 @@ export const renameWallet = (walletId, walletName) => {
 export const deleteWallet = walletId => {
   return (dispatch, getState) => {
     const state = getState()
-    const account = state.core.account
+    const account = CORE_SELECTORS.getAccount(state)
 
     dispatch(deleteWalletStart(walletId))
 
@@ -253,7 +255,7 @@ export const closeDeleteWalletModal = () => {
 export const openRenameWalletModal = walletId => {
   return (dispatch, getState) => {
     const state = getState()
-    const walletName = state.core.wallets.byId[walletId].name
+    const walletName = CORE_SELECTORS.getWallet(state, walletId).name
 
     dispatch({
       type: OPEN_RENAME_WALLET_MODAL,

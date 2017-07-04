@@ -12,19 +12,60 @@ export const TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL = PREFIX + 'TOGGLE_TRANSACTIO
 export const UPDATE_TRANSACTIONS = PREFIX + 'UPDATE_TRANSACTIONS'
 export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 
-// import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
+export const NEW_TRANSACTIONS = PREFIX + 'NEW_TRANSACTIONS'
+export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 
+// import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
 export const getTransactionsRequest = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const wallet = getSelectedWallet(state)
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
     WALLET_API.getTransactions(wallet)
     .then(transactions => {
       dispatch(updateTransactions(transactions))
     })
+  }
+}
+
+export const newTransactionsRequest = (transactions, walletId) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+
+    if (walletId === selectedWalletId) {
+      return dispatch(newTransactions(transactions))
+    }
+  }
+}
+
+export const newTransactions = (transactions) => {
+  return {
+    type: NEW_TRANSACTIONS,
+    data: { transactions }
+  }
+}
+
+export const changedTransactionsRequest = (transactions, walletId) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+
+    if (walletId === selectedWalletId) {
+      return dispatch(changedTransactions(transactions))
+    }
+  }
+}
+
+export const changedTransactions = (transactions) => {
+  return {
+    type: CHANGED_TRANSACTIONS,
+    data: { transactions }
   }
 }
 
@@ -39,20 +80,6 @@ export const updateBalance = () => {
   return {
     type: 'noop'
   }
-}
-
-const getWallet = (walletId, getState) => {
-  const state = getState()
-  const wallet = state.core.wallets.byId[walletId]
-
-  return wallet
-}
-
-const getSelectedWallet = state => {
-  const { core: { wallets: { byId } }, ui: { wallets: { selectedWalletId } } } = state
-  const selectedWallet = byId[selectedWalletId]
-
-  return selectedWallet
 }
 
 export function deleteTransactionsList () {

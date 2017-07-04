@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import { Text, View, TouchableHighlight, TextInput, Clipboard} from 'react-native'
-import FormattedText from '../../components/FormattedText'
+import {
+  ActivityIndicator,
+  Text,
+  View,
+  TouchableHighlight,
+  TextInput,
+  Clipboard } from 'react-native'
+import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -12,6 +18,7 @@ import ImagePicker from 'react-native-image-picker'
 import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+import * as PERMISSIONS from '../../permissions.js'
 import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
 import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
@@ -29,12 +36,32 @@ import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 
 class Scan extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      cameraPermission: undefined
+    }
+  }
+  //check the status of a single permission
+  componentDidMount() {
+    PERMISSIONS.request('camera')
+    .then(this.setCameraPermission)
+  }
+
+  setCameraPermission = (cameraPermission) => {
+    this.setState({
+      cameraPermission
+    })
+  }
+
   _onToggleTorch = () => {
     this.props.toggleEnableTorch()
+    PERMISSIONS.request('camera')
+    .then(this.setCameraPermission)
   }
 
   _onToggleAddressModal = () => {
@@ -74,46 +101,66 @@ class Scan extends Component {
     })
   }
 
-  render () {
-    return (
-      <View style={styles.container}>
+  renderCamera = () => {
+    if (this.state.cameraPermission === true && this.props.scene === 'scan') {
+      return (
         <Camera
           style={styles.preview}
-          barCodeTypes={['qr']}
+          barCodeTypes={['org.iso.QRCode']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
         />
+      )
+    } else if (this.state.cameraPermission === false) {
+      return (
+        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
+          <Text>To scan QR codes, enable camera permission in your system settings</Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size='large' style={{flex: 1, alignSelf: 'center'}} />
+        </View>
+      )
+    }
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        {this.renderCamera()}
         <View style={[styles.overlay, b('red')]}>
 
           <WalletAddressModalConnect />
 
           <View style={[styles.overlayTop, b('yellow')]}>
-            <FormattedText style={[styles.overlayTopText, b('green')]}>{sprintf(strings.enUS['send_scan_header_text'])}</FormattedText>
+            <T style={[styles.overlayTopText, b('green')]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
           </View>
           <View style={[styles.overlayBlank]} />
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, b('red')]}>
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, b('green')]} />
-                <FormattedText style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</FormattedText>
+                <T style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, b('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, b('green')]} />
-                <FormattedText style={[styles.addressButtonText, styles.bottomButtonText, b('purple')]}>{sprintf(strings.enUS['fragment_send_address'])}</FormattedText>
+                <T style={[styles.addressButtonText, styles.bottomButtonText, b('purple')]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, b('green')]} />
-                <FormattedText style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</FormattedText>
+                <T style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, b('green')]} />
-                <FormattedText style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</FormattedText>
+                <T style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</T>
               </View>
             </TouchableHighlight>
           </LinearGradient>
@@ -125,6 +172,7 @@ class Scan extends Component {
 
 const mapStateToProps = state => {
   return {
+    scene:                             state.routes.scene.name,
     torchEnabled:                      state.ui.scenes.scan.torchEnabled,
     walletListModalVisible:            state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
@@ -183,12 +231,12 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   componentWillMount() {
-    Clipboard.getString().then(string => this.setState({copiedString: string}))    
+    Clipboard.getString().then(string => this.setState({copiedString: string}))
   }
 
   _onRecipientAddressChange = (input) => {
     this.setState({ recipientAddressInput: input })
-    this.props.dispatch(updateRecipientAddress(input))    
+    this.props.dispatch(updateRecipientAddress(input))
   }
 
   _copyOverAddress = () => {
@@ -238,12 +286,12 @@ class SendAddressButtons extends Component { // this component is for the button
       <View style={[ModalStyle.buttonsWrap, b('gray')]}>
         <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
-            <FormattedText style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</FormattedText>
+            <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
             <View style={ModalStyle.stylizedButtonTextWrap}>
-              <FormattedText style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</FormattedText>
+              <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
             </View>
           </TouchableHighlight>
       </View>

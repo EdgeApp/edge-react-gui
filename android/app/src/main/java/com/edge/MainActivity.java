@@ -1,4 +1,4 @@
-package com.airbitz.edge;
+package co.airbitz.edge;
 
 import com.facebook.react.ReactActivity;
 

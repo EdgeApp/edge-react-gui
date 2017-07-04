@@ -6,10 +6,13 @@ export const ACTIVATE_WALLET_ID = PREFIX + 'ACTIVATE_WALLET_ID'
 export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
 export const SELECT_WALLET_ID = PREFIX + 'SELECT_WALLET_ID'
 
+import * as UI_SELECTORS from '../selectors.js'
+import * as CORE_SELECTORS from '../../Core/selectors.js'
+
 export const activateWalletRequest = wallet => {
   return (dispatch, getState) => {
     const state = getState()
-    const { selectedWalletId } = state.ui.wallets
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     // automatically select the first active wallet
     if (!selectedWalletId) {
       dispatch(selectWalletId(wallet.id))
@@ -24,9 +27,9 @@ export const archiveWalletRequest = wallet => {
     dispatch(upsertWallet(wallet))
 
     // automatically select the next active wallet
-    const { selectedWalletId } = state.ui.wallets
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     if (selectedWalletId === wallet.id) {
-      const { activeWalletIds } = state.ui.wallets
+      const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
       dispatch(selectWalletId(activeWalletIds[0]))
     }
   }
@@ -37,9 +40,9 @@ export const deleteWalletRequest = walletId => {
     const state = getState()
     dispatch(deleteWallet(walletId))
     // automatically select the next active wallet
-    const { selectedWalletId } = state.ui.wallets
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     if (selectedWalletId === walletId) {
-      const { activeWalletIds } = state.ui.wallets
+      const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
       dispatch(selectWalletId(activeWalletIds[0]))
     }
   }
@@ -48,7 +51,7 @@ export const deleteWalletRequest = walletId => {
 export const selectWalletIdRequest = walletId => {
   return (dispatch, getState) => {
     const state = getState()
-    const { selectedWalletId } = state.ui.wallets
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
 
     if (!selectedWalletId) {
       dispatch(selectWalletId(walletId))
@@ -86,7 +89,7 @@ export const renameWalletSuccess = walletId => {
 export const refreshWallets = () => {
   return (dispatch, getState) => {
     const state = getState()
-    const wallets = Object.values(state.core.wallets.byId)
+    const wallets = CORE_SELECTORS.getWallets(state)
 
     wallets.forEach(wallet => {
       dispatch(upsertWallet(wallet))
@@ -97,7 +100,7 @@ export const refreshWallets = () => {
 export const upsertWalletRequest = wallet => {
   return (dispatch, getState) => {
     const state = getState()
-    const { selectedWalletId } = state.ui.wallets
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
 
     if (!selectedWalletId && !wallet.archived && !wallet.deleted) {
       dispatch(selectWalletId(wallet.id))

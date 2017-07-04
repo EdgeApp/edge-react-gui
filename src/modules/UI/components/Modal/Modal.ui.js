@@ -7,13 +7,13 @@ import { connect } from 'react-redux'
 import styles from './style'
 import Modal from 'react-native-modal'
 import LinearGradient from 'react-native-linear-gradient'
-import FormattedText from '../FormattedText'
+import T from '../FormattedText'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import {border as b} from '../../../../util/border'
+import {border as b} from '../../../utils'
 
 class StylizedModal extends Component {
   render () {
@@ -23,12 +23,12 @@ class StylizedModal extends Component {
         <View style={[styles.modalBox, b('red')]}>
           <View style={[styles.modalBody, b('purple')]}>
             <View style={[styles.modalTopTextWrap,  b('blue')]}>
-              <FormattedText style={[styles.modalTopText, b('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</FormattedText>
+              <T style={[styles.modalTopText, b('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</T>
               {this.props.headerSubtext &&
-                <FormattedText style={[styles.modalTopSubtext, b('green')]}
+                <T style={[styles.modalTopSubtext, b('green')]}
                   numberOfLines={2}>
                   {this.props.headerSubtext || ''}
-                </FormattedText>
+                </T>
               }
               
 

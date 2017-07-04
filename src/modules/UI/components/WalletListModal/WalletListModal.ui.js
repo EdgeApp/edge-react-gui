@@ -17,11 +17,12 @@ import {
   toggleScanToWalletListModal,
   disableWalletListModalVisibility
 } from './action'
+import {  findDenominationSymbol } from '../../scenes/WalletList/WalletListRow.ui'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
 import {border as b} from '../../../utils'
-
+import * as UI_SELECTORS from '../../selectors.js'
 
 class WalletListModal extends Component {
   constructor(props){
@@ -70,6 +71,7 @@ class WalletListModalBody extends Component {
   }
 
   renderWalletRow = wallet => {
+    let symbol = findDenominationSymbol(wallet.denominations, wallet.currencyCode)
     return (
       <View>
         <TouchableOpacity style={[styles.rowContainer]}
@@ -84,8 +86,8 @@ class WalletListModalBody extends Component {
               <T style={[styles.currencyRowText]}>{wallet.name}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>{wallet.balance}</T>
-            </View>            
+              <T style={[styles.currencyRowText]}>{symbol || ''}{wallet.balance}</T>
+            </View>
           </View>
         </TouchableOpacity>
 
@@ -98,7 +100,7 @@ class WalletListModalBody extends Component {
               </View>
               <View style={[styles.currencyRowBalanceTextWrap]}>
                 <T style={[styles.currencyRowText]}>{x.balance}</T>
-              </View>  
+              </View>
             </View>
           </TouchableOpacity>
         ))}
@@ -125,7 +127,7 @@ WalletListModalBody.propTypes = {
 export const WalletListModalBodyConnect = connect(
   state => ({
     walletList: state.ui.wallets.byId,
-    selectedWalletId: state.ui.wallets.selectedWalletId
+    selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
   }),
   dispatch => ({
     selectWallet: walletId => dispatch(UI_ACTIONS.selectWalletId(walletId)),
