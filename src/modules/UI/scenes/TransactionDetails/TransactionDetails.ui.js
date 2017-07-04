@@ -114,7 +114,7 @@ class TransactionDetails extends Component {
             <View style={[styles.dataArea]}>
               <View style={[styles.payeeNameArea]}>
                 <View style={[styles.payeeNameWrap]}>
-                  <TextInput onChangeText={(input) => this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
+                  <TextInput onChangeText={this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
                 </View>
                 <View style={[styles.dateWrap]}>
                   <T style={[styles.date]}>{this.props.tx.date}</T>
@@ -123,7 +123,6 @@ class TransactionDetails extends Component {
               <AmountArea 
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
-                onChangePayeeFxn={this.onChangePayee}
                 onChangeFiatFxn={this.onChangeFiat}
                 info={this.state} onPressFxn={this.onPressSave} />            
             </View>        
@@ -194,7 +193,7 @@ class AmountArea extends Component {
             <T style={[styles.editableFiatLeftText]}></T>
           </View>          
           <View style={[styles.editableFiatArea]}>
-            <TextInput style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
+            <TextInput onChangeText={this.props.onChangeFiatFxn} style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
           </View>
           <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>USD</T>
@@ -206,12 +205,12 @@ class AmountArea extends Component {
             <T style={[styles.categoryLeftText, {color: this.types[this.props.info.direction].color}]}>{this.props.info.direction}</T>
           </View>
           <View style={[b(), styles.categoryInputArea]}>
-            <TextInput style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
+            <TextInput onChangeText={this.props.onChangeCategoryFxn} style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
           </View>              
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
+            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
