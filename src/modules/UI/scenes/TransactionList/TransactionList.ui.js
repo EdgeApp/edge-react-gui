@@ -23,6 +23,8 @@ import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
 import { border as b } from '../../../utils'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../selectors.js'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
@@ -342,14 +344,14 @@ class TransactionList extends Component {
   }
 
 const mapStateToProps = state => ({
-  // updatingBalance: state.ui.transactionList.updatingBalance,
+  // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
   updatingBalance: false,
   transactions:     state.ui.scenes.transactionList.transactions,
   searchVisible:    state.ui.scenes.transactionList.searchVisible,
   contactsList:     state.ui.scenes.transactionList.contactsList,
   exchangeRates:    state.ui.scenes.exchangeRate.exchangeRates,
-  wallet:           state.core.wallets.byId[state.ui.wallets.selectedWalletId],
-  selectedWalletId: state.ui.wallets.selectedWalletId
+  wallet:           CORE_SELECTORS.getWallet(state, UI_SELECTORS.getSelectedWalletId(state)),
+  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
 })
 
 const mapDispatchToProps = dispatch => ({

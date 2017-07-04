@@ -9,10 +9,9 @@ import UserList from './UserList'
 
 import styles from '../style'
 const platform = Platform.OS;
+import { logout } from  '../action.js'
 
 class MainComponent extends Component {
-
-
   _handleOnPressRouting = (route) => {
     let goRoute = Actions[route]
     goRoute()
@@ -80,7 +79,7 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>               
             </View>
             <View style={styles.others.container}>
-              <TouchableNativeFeedback onPress={ e => console.log('pressed5') }>
+              <TouchableNativeFeedback onPress={ this.props.logout }>
                 <View style={[styles.others.link, styles.others.borderVertical]}>
                   <Icon style={styles.others.icon} name='log-out' />
                   <View style={styles.others.textContainer}>
@@ -157,7 +156,7 @@ class MainComponent extends Component {
             <View style={styles.others.container}>
               <TouchableHighlight style={styles.others.iosTouchableHighlight}
                 underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-                onPress={ e => console.log('pressed5') } >
+                onPress={ this.props.logout } >
                 <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1 }]}>
                   <Icon style={styles.others.icon} name='log-out' />
                   <View style={styles.others.textContainer}>
@@ -184,5 +183,8 @@ class MainComponent extends Component {
 const mapStateToProps = state => ({
   usersView : state.ui.scenes.controlPanel.usersView
 })
+const mapDispatchToProps = dispatch => ({
+  logout: () => { dispatch(logout()) },
+})
 
-export default connect(mapStateToProps)(MainComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(MainComponent)

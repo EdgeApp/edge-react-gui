@@ -124,6 +124,15 @@ module.exports = StyleSheet.create({
   rowNameText: {
     color: '#58595C'
   },
+  rowBalanceTextWrap: {
+    justifyContent: 'center'
+  },
+  rowBalanceAmountText: {
+    color: '#58595C'
+  },
+  rowBalanceDenominationText: {
+    color: '#58595C'
+  },  
   rowDotsWrap: {
     flexDirection: 'row'
   },

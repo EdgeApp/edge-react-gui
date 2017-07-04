@@ -47,6 +47,7 @@ import StylizedModal from '../../components/Modal/Modal.ui'
 // Fake stuff to be removed
 import { addWallet, completeDeleteWallet } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
+import * as UI_SELECTORS from '../../selectors.js'
 
 class WalletList extends Component {
   toggleArchiveDropdown = () => {
@@ -251,8 +252,8 @@ WalletList.propTypes = {}
 const mapStateToProps = state => ({
   coreWallets:              state.core.wallets.byId,
   wallets:                  state.ui.wallets.byId,
-  activeWalletIds:          state.ui.wallets.activeWalletIds,
-  archivedWalletIds:        state.ui.wallets.archivedWalletIds,
+  activeWalletIds:          UI_SELECTORS.getActiveWalletIds(state),
+  archivedWalletIds:        UI_SELECTORS.getArchivedWalletIds(state),
   walletArchivesVisible:    state.ui.scenes.walletList.walletArchivesVisible,
   renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
   deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,

@@ -7,17 +7,22 @@ import LinearGradient from 'react-native-linear-gradient'
 import _ from 'lodash'
 
 import { openSelectUser, closeSelectUser, getUsersList } from './action'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 import Main from './Component/Main'
 import usersListObject from './userList'
 import styles from './style'
 
 class ControlPanel extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      exchangeRate: this.props.exchangeRate
+    }
+  }
 
-  componentWillMount = () => {
-    return this.props.dispatch(
-      getUsersList(usersListObject)
-    )
+  componentDidMount () {
+    this.props.dispatch(getUsersList(usersListObject))
   }
 
   _handlePressUserList = () => {
@@ -42,7 +47,7 @@ class ControlPanel extends Component {
         <TouchableOpacity style={styles.user.container}
           onPress={this._handlePressUserList}>
           <Icon style={styles.user.icon} name='person' />
-          <Text style={styles.user.name}>{ this.props.selectedUser ? this.props.selectedUser.name : 'Account' }</Text>
+          <Text style={styles.user.name}>{ this.props.username }</Text>
           <Icon style={styles.user.icon} name='arrow-dropdown' />
         </TouchableOpacity>
         <Main/>
@@ -52,10 +57,8 @@ class ControlPanel extends Component {
 }
 
 const mapStateToProps = state => ({
-  usersView:    state.ui.scenes.controlPanel.usersView,
-  selectedUser: state.ui.scenes.controlPanel.selectedUser !== null ?
-    _.find(state.ui.scenes.controlPanel.usersList, item => item.id === state.ui.scenes.controlPanel.selectedUser) :
-    null
+  usersView: state.ui.scenes.controlPanel.usersView,
+  username:  CORE_SELECTORS.getUsername(state)
 })
 
 export default connect(mapStateToProps)(ControlPanel)
