@@ -5,6 +5,7 @@ import { Actions } from 'react-native-router-flux'
 import { Footer, FooterTab, Button, Icon, Text } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 
+import { setTabBarHeight } from '../../dimensions/action'
 import { openSidebar, closeSidebar } from '../SideMenu/action'
 
 class TabBar extends Component {
@@ -18,9 +19,16 @@ class TabBar extends Component {
     }
   }
 
+  _onLayout = (event) => {
+    var {x, y, width, height} = event.nativeEvent.layout
+    console.log('TabBar event.nativeEvent is : ', event.nativeEvent)
+    console.log('TabBar onLayout occurred', x , y , width , height)
+    this.props.dispatch(setTabBarHeight(height))
+  }  
+
   render () {
     return (
-      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={{ borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid' }}>
+      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={{ borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid' }} onLayout={this._onLayout} >
         <Footer>
           <FooterTab>
 

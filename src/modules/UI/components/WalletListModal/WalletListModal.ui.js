@@ -27,19 +27,21 @@ import * as UI_SELECTORS from '../../selectors.js'
 class WalletListModal extends Component {
   constructor(props){
     super(props)
-    if(!this.props.topDisplacement){
+      if(!this.props.topDisplacement){
       this.props.topDisplacement = 68
     }
   }
 
   render () {
     return (
-      <Animatable.View style={[b('green'), styles.topLevel,{position:'absolute', top: 38}]}
+      <Animatable.View style={[b('green'), styles.topLevel, {position:'absolute', top: 38}]}
         animation='fadeInDown'
         duration={100} >
-        <WalletListModalHeaderConnect type={this.props.type} />
-        <WalletListModalBodyConnect onPress={this.props.onPress}
-          selectionFunction={this.props.selectionFunction} />
+        <ScrollView>
+          <WalletListModalHeaderConnect type={this.props.type} />          
+          <WalletListModalBodyConnect onPress={this.props.onPress}
+              selectionFunction={this.props.selectionFunction} />      
+        </ScrollView>
       </Animatable.View>
     )
   }
@@ -47,13 +49,15 @@ class WalletListModal extends Component {
 
 WalletListModal.propTypes = {
     dropdownWalletListVisible: PropTypes.bool,
-    currentScene: PropTypes.string
+    currentScene: PropTypes.string,
+    dimensions: PropTypes.object
 }
 export const WalletListModalConnect = connect( state => ({
     walletList: state.ui.wallets.byId,
     dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,
     walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
+    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    dimensions: state.ui.scenes.dimensions
 }))(WalletListModal)
 
 
@@ -73,7 +77,7 @@ class WalletListModalBody extends Component {
   renderWalletRow = wallet => {
     let symbol = findDenominationSymbol(wallet.denominations, wallet.currencyCode)
     return (
-      <View>
+      <View key={wallet.id}>
         <TouchableOpacity style={[styles.rowContainer]}
           // onPress={this[this.props.selectionFunction]}
           onPress={() => {
@@ -110,13 +114,13 @@ class WalletListModalBody extends Component {
   render () {
     console.log('rendering dropdown', this.props.selectedWalletId)
     return (
-      <ScrollView>
+      <View>
         {
           Object.values(this.props.walletList).map(wallet => {
             return this.renderWalletRow(wallet)
           })
         }
-      </ScrollView>
+      </View>
     )
   }
 }
