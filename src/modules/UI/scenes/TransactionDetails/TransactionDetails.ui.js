@@ -49,10 +49,10 @@ class TransactionDetails extends Component {
    constructor(props) {
      super(props)
      console.log('Constructor of TransactionDetails, this.props is: ', this.props)
-     const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'     
+     const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
      this.state = {
         tx: this.props.tx,
-        //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '', 
+        //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '',
         direction,
         txid : this.props.tx.txid,
         payeeName: this.props.tx.payeeName || 'payeeName', // remove commenting once metaData in Redux
@@ -60,7 +60,7 @@ class TransactionDetails extends Component {
         notes: this.props.tx.notes || 'fake notes',
         amountFiat: this.props.tx.amountFiat || '3.56',
         bizId: this.props.tx.bizId || 12345,
-        miscJson: this.props.tx.miscJson || null 
+        miscJson: this.props.tx.miscJson || null
      }
    }
 
@@ -78,26 +78,26 @@ class TransactionDetails extends Component {
   }
 
   onChangeFiat = (input) => {
-    console.log('amountFiat changed to: ', input)    
+    console.log('amountFiat changed to: ', input)
     this.setState({ amountFiat: input })
   }
 
   onChangeCategory = (input) => {
-    console.log('category changed to: ', input)    
+    console.log('category changed to: ', input)
     this.setState({ category: input})
   }
 
   onChangeNotes = (input) => {
     console.log('notes changed to: ', input)    
     this.setState({ notes: input })
-  }    
+  }
 
   onPressSave = () => {
     console.log('onPressSave executing, this.state is: ', this.state)
     const { txid, payeeName, category, notes, amountFiat, bizId, miscJson } = this.state
     const transactionDetails = { txid, payeeName, category, notes, amountFiat, bizId, miscJson }
     console.log('transactionDetails are: ', transactionDetails)
-    this.props.dispatch(this.props.setTransactionDetails(transactionDetails))
+    this.props.setTransactionDetails(transactionDetails)
   }
 
   render () {
@@ -119,14 +119,14 @@ class TransactionDetails extends Component {
                 <View style={[styles.dateWrap]}>
                   <T style={[styles.date]}>{this.props.tx.date}</T>
                 </View>
-              </View>  
-              <AmountArea 
+              </View>
+              <AmountArea
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
                 onChangePayeeFxn={this.onChangePayee}
                 onChangeFiatFxn={this.onChangeFiat}
-                info={this.state} onPressFxn={this.onPressSave} />            
-            </View>        
+                info={this.state} onPressFxn={this.onPressSave} />
+            </View>
           </View>
         </ScrollView>
     )
@@ -192,7 +192,7 @@ class AmountArea extends Component {
         <View style={[styles.editableFiatRow]}>
           <View style={[styles.editableFiatLeft]}>
             <T style={[styles.editableFiatLeftText]}></T>
-          </View>          
+          </View>
           <View style={[styles.editableFiatArea]}>
             <TextInput style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
           </View>
@@ -207,7 +207,7 @@ class AmountArea extends Component {
           </View>
           <View style={[b(), styles.categoryInputArea]}>
             <TextInput style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
-          </View>              
+          </View>
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
@@ -235,7 +235,7 @@ class PayeeIcon extends Component {
 
   render() {
     console.log('rendering PayeeIcon, this.props is: ', this.props)
-    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'    
+    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
     return(
         <View style={[styles.modalHeaderIconWrapBottom, {backgroundColor: iconBgColor}]}>
             <View style={[styles.modalHeaderIconWrapTop, b('purple')]}>
@@ -247,7 +247,7 @@ class PayeeIcon extends Component {
 
   renderIcon() {
     console.log('rendering txDetails icon, this.props is: ', this.props)
-    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'    
+    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
     if (this.props.direction === 'receive'){
       return(
         <Ionicon name="ios-arrow-round-down" color={iconBgColor} size={44} style={[styles.payeeIcon]} />
