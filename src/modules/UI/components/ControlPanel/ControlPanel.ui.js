@@ -35,7 +35,6 @@ class ControlPanel extends Component {
   }
 
   render () {
-    console.log(this.props)
     return  (
       <LinearGradient style={styles.container}
         start={{x:0,y:0}}
