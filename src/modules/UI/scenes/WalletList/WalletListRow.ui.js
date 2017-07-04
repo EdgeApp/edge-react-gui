@@ -15,10 +15,23 @@ import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
 import {border as b} from '../../../utils'
 
+export const findDenominationSymbol = (denoms, value) => {
+  console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
+  for(v of denoms) {
+    if(v.name === value) {
+      return v.symbol
+    }
+  }
+}
+
 class WalletListRow extends Component {
+
   render () {
+    console.log('rendering WalletListRow, this.props.data is: ', this.props.data)
     let id = this.props.data.id
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
+    let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
+
 
     return (
       <View>
@@ -28,7 +41,11 @@ class WalletListRow extends Component {
           {...this.props.sortHandlers}>
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
-              <Text style={[styles.rowNameText]}>{name}</Text>
+              <T style={[styles.rowNameText]}>{name}</T>
+            </View>
+            <View style={[styles.rowBalanceTextWrap]}>
+              <T style={[styles.rowBalanceAmountText]}>{this.props.data.balance}</T>
+              <T style={[styles.rowBalanceDenominationText]}>{this.props.data.currencyCode} ({symbol || ''})</T>
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>

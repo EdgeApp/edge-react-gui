@@ -17,6 +17,7 @@ import {
   toggleScanToWalletListModal,
   disableWalletListModalVisibility
 } from './action'
+import {  findDenominationSymbol } from '../../scenes/WalletList/WalletListRow.ui'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
@@ -70,6 +71,7 @@ class WalletListModalBody extends Component {
   }
 
   renderWalletRow = wallet => {
+    let symbol = findDenominationSymbol(wallet.denominations, wallet.currencyCode)
     return (
       <View>
         <TouchableOpacity style={[styles.rowContainer]}
@@ -84,7 +86,7 @@ class WalletListModalBody extends Component {
               <T style={[styles.currencyRowText]}>{wallet.name}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>{wallet.balance}</T>
+              <T style={[styles.currencyRowText]}>{symbol || ''}{wallet.balance}</T>
             </View>
           </View>
         </TouchableOpacity>
