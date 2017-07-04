@@ -19,7 +19,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    marginVertical: 30,
+    marginTop: 30,
+    marginBottom: 15,
     marginHorizontal: 35
   },
   text: {

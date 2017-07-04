@@ -6,13 +6,14 @@ import {
   TouchableHighlight,
   Keyboard,
   Button,
-  Platform,
+  Platform
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import MaxButton from '../../components/MaxButton/index.js'
 import FlipInput from '../../components/FlipInput/index.js'
+import Password from './SendConfirmationPasswordSample.js'
 
 import ABQRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
@@ -79,6 +80,7 @@ class SendConfirmation extends Component {
           />
           {/* <Recipient label={label} address={publicAddress} /> */}
           <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
+          <Password />
         </View>
 
         <ABSlider onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
