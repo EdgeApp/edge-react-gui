@@ -53,7 +53,14 @@ class TransactionDetails extends Component {
      this.state = {
         tx: this.props.tx,
         //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '', 
-        direction: direction,
+        direction,
+        txid : this.props.tx.txid,
+        payeeName: this.props.tx.payeeName || 'payeeName', // remove commenting once metaData in Redux
+        category: this.props.tx.category || 'fakeCategory',
+        notes: this.props.tx.notes || 'fake notes',
+        amountFiat: this.props.tx.amountFiat || '3.56',
+        bizId: this.props.tx.bizId || 12345,
+        miscJson: this.props.tx.miscJson || null 
      }
    }
 
@@ -65,16 +72,39 @@ class TransactionDetails extends Component {
     }
   }
 
+  onChangePayee = (input) => {
+    console.log('payeeName changed to: ', input)
+    this.setState({ payeeName: input })
+  }
+
+  onChangeFiat = (input) => {
+    console.log('amountFiat changed to: ', input)    
+    this.setState({ amountFiat: input })
+  }
+
+  onChangeCategory = (input) => {
+    console.log('category changed to: ', input)    
+    this.setState({ category: input})
+  }
+
+  onChangeNotes = (input) => {
+    console.log('notes changed to: ', input)    
+    this.setState({ notes: input })
+  }    
+
   onPressSave = () => {
+    console.log('onPressSave executing, this.state is: ', this.state)
     const { txid, payeeName, category, notes, amountFiat, bizId, miscJson } = this.state
     const transactionDetails = { txid, payeeName, category, notes, amountFiat, bizId, miscJson }
-    dispatch(this.props.setTransactionDetails(transactionDetails))
+    console.log('transactionDetails are: ', transactionDetails)
+    this.props.dispatch(this.props.setTransactionDetails(transactionDetails))
   }
 
   render () {
-    console.log('rendering Transaction Details scene, this.props is: ', this.props)
+    console.log('rendering Transaction Details scene, this.props is: ', this.props, ' and this.state is: ', this.state)
+    let initialValues = this.state
     return (
-        <ScrollView overScrollMode='never' alwaysBounceVertical={false} >
+        <ScrollView overScrollMode='never' /* alwaysBounceVertical={false}*/ >
           <View style={[b(), styles.container]}>
             <View>
               <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
@@ -84,13 +114,18 @@ class TransactionDetails extends Component {
             <View style={[styles.dataArea]}>
               <View style={[styles.payeeNameArea]}>
                 <View style={[styles.payeeNameWrap]}>
-                  <T style={[styles.payeeNameText]}>Glidera</T>
+                  <TextInput onChangeText={(input) => this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
                 </View>
                 <View style={[styles.dateWrap]}>
-                  <T style={[styles.date]}>May 01, 2017 2:32:59 AM</T>
+                  <T style={[styles.date]}>{this.props.tx.date}</T>
                 </View>
               </View>  
-              <AmountArea info={this.state} />            
+              <AmountArea 
+                onChangeNotesFxn={this.onChangeNotes}
+                onChangeCategoryFxn={this.onChangeCategory}
+                onChangePayeeFxn={this.onChangePayee}
+                onChangeFiatFxn={this.onChangeFiat}
+                info={this.state} onPressFxn={this.onPressSave} />            
             </View>        
           </View>
         </ScrollView>
@@ -140,14 +175,14 @@ class AmountArea extends Component {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: (this.props.info.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
+            <T style={[styles.amountAreaLeftText, {color: (this.props.info.tx.direction === 'receive') ? '#7FC343' : '#4977BB'}]}>Received</T>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <T style={[styles.amountAreaMiddleTopText]}>b 23489723</T>
+              <T style={[styles.amountAreaMiddleTopText]}>{this.props.info.tx.amountSatoshi}</T>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
-              <T style={[styles.amountAreaMiddleBottomText]}>+ 0.19 (Fee)</T>
+              <T style={[styles.amountAreaMiddleBottomText]}>{sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)}</T>
             </View>
           </View>
           <View style={[styles.amountAreaRight]}>
@@ -159,7 +194,7 @@ class AmountArea extends Component {
             <T style={[styles.editableFiatLeftText]}></T>
           </View>          
           <View style={[styles.editableFiatArea]}>
-            <TextInput style={[styles.editableFiat]} value='$ 3.56' />
+            <TextInput style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
           </View>
           <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>USD</T>
@@ -171,17 +206,17 @@ class AmountArea extends Component {
             <T style={[styles.categoryLeftText, {color: this.types[this.props.info.direction].color}]}>{this.props.info.direction}</T>
           </View>
           <View style={[b(), styles.categoryInputArea]}>
-            <TextInput style={[b(), styles.categoryInput]} placeholder='Monthly exchange' />
+            <TextInput style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
           </View>              
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput numberOfLines={3} multiline={true} style={[styles.notesInput]} selectionColor={'#CCCCCC'} placeholder='Notes' />
+            <TextInput numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
           <View style={[b(), styles.buttonArea]}>
-            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} />
+            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
           <View style={[b(), styles.advancedTxArea]}>
             <T onPress={() => console.log('going to advanced Tx data')} style={[b(), styles.advancedTxText]}>View advanced transaction data</T>

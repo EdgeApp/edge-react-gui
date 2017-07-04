@@ -56,9 +56,11 @@ module.exports = StyleSheet.create({
     padding: 6,
     alignItems: 'center'
   },
-  payeeNameText: {
+  payeeNameInput: {
     color: '#58595C',
-    fontSize: 17
+    fontSize: 17,
+    height: 20,
+    textAlign: 'center'
   },
   dateWrap: {
     padding: 4
@@ -185,7 +187,7 @@ module.exports = StyleSheet.create({
     padding: 3    
   },
   notesInput: {
-    color: '#CCCCCC',
+    color: '#58595C',
     fontSize: 12
   },
   footerArea: {
