@@ -71,8 +71,12 @@ module.exports = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
+  balanceShownContainer: {
+    justifyContent: 'center', 
+    alignItems: 'center'    
+  },
   bitcoinIconWrap: { //two
-    flex: 4,
+    flex: 3,
     justifyContent: 'flex-start',
     backgroundColor: 'transparent'
   },
@@ -94,6 +98,16 @@ module.exports = StyleSheet.create({
   currentBalanceBoxBits: { //two
     color: "#FFFFFF",
     fontSize: 20
+  },
+  balanceHiddenContainer: {
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    flex: 1    
+  },
+  balanceHiddenText: {
+    alignSelf: 'center', 
+    color: 'white',
+    fontSize: 36
   },
   requestSendRow: { //two
     flex: 1,

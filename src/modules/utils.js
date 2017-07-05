@@ -1,5 +1,14 @@
 import borderColors from '../theme/variables/css3Colors'
 
+export const findDenominationSymbol = (denoms, value) => {
+  console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
+  for(v of denoms) {
+    if(v.name === value) {
+      return v.symbol
+    }
+  }
+}
+
 const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
   const fiatFromCrypto = (crypto * fiatPerCrypto)
 

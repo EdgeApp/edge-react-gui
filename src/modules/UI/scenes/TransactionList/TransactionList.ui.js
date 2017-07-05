@@ -22,7 +22,7 @@ import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b } from '../../../utils'
+import { border as b , findDenominationSymbol as symbolize} from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 
@@ -53,6 +53,7 @@ class TransactionList extends Component {
       balanceBoxHeight: new Animated.Value(200),
       balanceBoxOpacity: new Animated.Value(1),
       balanceBoxVisible: true,
+      showBalance: true
      }
    }
 
@@ -198,6 +199,10 @@ class TransactionList extends Component {
     })
   }
 
+  toggleShowBalance = () => {
+    this.setState({showBalance: !this.state.showBalance})
+  }
+
   render () {
     console.log('the balance is: ', this.state.balance)
     console.log('rendering transactinlist', this.props.selectWalletId)
@@ -211,6 +216,7 @@ class TransactionList extends Component {
     // can also put dateIterator in here
     console.log('about to render transactionsList , this.state.balanceBoxVisible is: ' , this.state.balanceBoxVisible)
     console.log('about to render again, this.state.balanceBoxOpacity is: ', this.state.balanceBoxOpacity)
+    console.log('rendering txList... this.props.wallet is: ', this.props.wallet)
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -230,18 +236,27 @@ class TransactionList extends Component {
                         </View>
                       </View>
                     ) : (
-                      <View style={[styles.currentBalanceWrap, b('green')]}>
-                        <View style={[styles.bitcoinIconWrap, b('yellow')]}>
-                          <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
-                        </View>
-                        <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                          <T style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates.USD ? (6000 * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
-                              </View>
-                              <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
-                                <T style={[styles.currentBalanceBoxBits, b('yellow')]}>b 600000</T>
-                              </View>
+                      <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b('green')]}>
+                        {this.state.showBalance ? (
+                          <View style={styles.balanceShownContainer}>
+                            <View style={[styles.bitcoinIconWrap, b('yellow')]}>
+                              <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
+                            </View>
+                            <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
+                                <T style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates.USD ? (this.state.balance * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
+                            </View>
+                            <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
+                                <T style={[styles.currentBalanceBoxBits, b('yellow')]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.state.balance || '------'}</T>
+                            </View>
                           </View>
-                          )}
+                        ) : (
+                          <View style={[b(), styles.balanceHiddenContainer]}>
+                            <T style={[styles.balanceHiddenText]}>Show Balance</T>
+                          </View>
+                        ) 
+                      }
+                      </TouchableOpacity>
+                    )}
 
                         <View style={[styles.requestSendRow, b('yellow')]}>
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
@@ -351,7 +366,8 @@ const mapStateToProps = state => ({
   contactsList:     state.ui.scenes.transactionList.contactsList,
   exchangeRates:    state.ui.scenes.exchangeRate.exchangeRates,
   wallet:           CORE_SELECTORS.getWallet(state, UI_SELECTORS.getSelectedWalletId(state)),
-  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
+  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
+  uiWallet:         state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
 })
 
 const mapDispatchToProps = dispatch => ({
