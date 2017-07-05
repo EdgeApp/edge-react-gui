@@ -788,6 +788,7 @@ const strings = {
     transactions_list_date_dec:	"Dec",
 
     // Transaction Details Page
+    title_Transaction_Details: "Transaction Details",
     fragmet_tx_detail_mining_fee: "+ %u (Fee)",
 
 
