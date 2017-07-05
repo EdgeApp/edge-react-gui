@@ -246,7 +246,7 @@ module.exports = StyleSheet.create({
     color: "#58595C",
     textAlignVertical: 'center'    
   },
-  transactionDollarAmount: {
+  transactionBitAmount: {
     fontSize: 14,
     color: "#000000",
     textAlignVertical: 'center'    
@@ -263,7 +263,7 @@ module.exports = StyleSheet.create({
     position: 'relative',
     top: 4
   },
-  transactionBitAmount: {
+  transactionDollarAmount: {
     fontSize: 10,
     color: "#909091",
     textAlignVertical: 'center',
