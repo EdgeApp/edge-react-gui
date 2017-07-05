@@ -15,6 +15,7 @@ import { connect } from 'react-redux'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import * as UI_SELECTORS from '../../../selectors.js'
+import {border as b} from '../../../../utils'
 
 class Body extends Component {
   render () {
@@ -78,10 +79,10 @@ class ExampleFromWallet extends Component {
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ color: "#FFF", fontSize: 20 }}>{this.props.selectedWallet.name}  </Text>
 
-        <TouchableOpacity onPress={this[this.props.toggleFunction]}>
-          <View>
+        <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
+          <View style={[b(), { position: 'relative', top: 2}]}>
             {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
-              <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25 }} />
+              <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25}} />
             }
           </View>
         </TouchableOpacity>

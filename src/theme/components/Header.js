@@ -321,7 +321,7 @@ export default (variables = variable) => {
     justifyContent: 'center',
     // paddingTop: (platform === 'ios') ? 15 : 0,
     paddingTop: 0, //custom
-    borderBottomWidth: (platform === 'ios') ? (1/PixelRatio.getPixelSizeForLayoutSize(1)) : 0,
+    //borderBottomWidth: (platform === 'ios') ? (1/PixelRatio.getPixelSizeForLayoutSize(1)) : 0,
     borderBottomColor: variables.toolbarDefaultBorder,
     height: variables.toolbarHeight,
     elevation: 3,

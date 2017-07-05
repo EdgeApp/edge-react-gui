@@ -8,6 +8,7 @@ import LeftComponent from './Component/Left.js'
 import RightComponent from './Component/Right.js'
 import BodyComponent from './Component/Body.js'
 import {setHeaderHeight} from '../../dimensions/action'
+import {border as b} from '../../../utils'
 
 import styles from './style'
 
@@ -37,13 +38,13 @@ class HeaderUI extends Component {
     return (
         <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={[styles.headerRoot]} onLayout={this._onLayout}>
           <Header>
-            <Left>
+            <Left style={{flex: 1}}>
               <LeftComponent routes={this.props.routes} />
             </Left>
-            <Body>
+            <Body style={{flex: 2}}>
               <BodyComponent routes={this.props.routes} />
             </Body>
-            <Right>
+            <Right style={{flex: 1}}>
               <RightComponent routes={this.props.routes} />
             </Right>
           </Header>
