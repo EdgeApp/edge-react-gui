@@ -71,7 +71,9 @@ module.exports = StyleSheet.create({
     marginLeft: 16
   },
   walletsBoxHeaderAddWallet: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   dropdownIcon: {
     textAlignVertical: 'center',
@@ -101,7 +103,9 @@ module.exports = StyleSheet.create({
     marginLeft: 14
   },
   archiveBoxHeaderDropdown: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   rowContainer: {
     flex: 1,

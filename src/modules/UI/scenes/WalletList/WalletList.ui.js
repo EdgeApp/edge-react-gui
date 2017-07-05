@@ -10,6 +10,7 @@ import {
   View,
   StyleSheet,
   TouchableHighlight,
+  TouchableOpacity,
   Animated } from 'react-native'
 import Locale from 'react-native-locale'
 import T from '../../components/FormattedText'
@@ -92,16 +93,16 @@ class WalletList extends Component {
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
             <View style={[styles.walletsBoxHeaderTextWrap, b()]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon, b('green')]} color='white' />
+                <SimpleLineIcons name='wallet' style={[styles.walletIcon, b()]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
                   {sprintf(strings.enUS['fragment_wallets_header'])}
                 </T>
               </View>
             </View>
 
-            <TouchableWithoutFeedback onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, b('red')]}>
+            <TouchableOpacity onPress={() => Actions.createWallet()} style={[styles.walletsBoxHeaderAddWallet, b('red'), {width: 35}]}>
               <Ionicon name='md-add'style={[styles.dropdownIcon, b()]} color='white' />
-            </TouchableWithoutFeedback>
+            </TouchableOpacity>
           </LinearGradient>
           {
             this.renderActiveSortableList(
@@ -123,9 +124,9 @@ class WalletList extends Component {
               </View>
             </View>
 
-            <TouchableWithoutFeedback onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, b('red')]}>
-              <FAIcon name='angle-down' style={[styles.dropdownIcon, b('green')]} color='white' />
-            </TouchableWithoutFeedback>
+            <TouchableOpacity onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, b('red'), {width: 35}]}>
+              <FAIcon name='angle-down' style={[styles.dropdownIcon, b()]} color='white' />
+            </TouchableOpacity>
           </LinearGradient>
           {
             this.renderArchivedSortableList(

@@ -43,10 +43,14 @@ module.exports = StyleSheet.create({
     alignSelf: 'flex-end'
   },
   modalCloseWrap: {
-
+    height: 34,
+    width: 34,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
-  modalClose: {
-    width: 20
+  doneButton: {
+    position: 'relative',
+    top: 6
   },
   
   // beginning of token rows //

@@ -151,16 +151,16 @@ class WalletListModalHeader extends Component {
     let headerSyntax = (this.props.type === 'from') ? 'fragment_select_wallet_header_title' : 'fragment_send_other_wallet_header_title'
     return (
       <View style={[styles.rowContainer, styles.headerContainer ]}>
-        <View style={[styles.headerContent, b('yellow')]}>
-          <View style={[styles.headerTextWrap, b('green')]}>
-            <T style={[styles.headerText, {color:'white'}, b('purple')]}>
+        <View style={[styles.headerContent, b()]}>
+          <View style={[styles.headerTextWrap, b()]}>
+            <T style={[styles.headerText, {color:'white'}, b()]}>
               {sprintf(strings.enUS[headerSyntax])}
             </T>
           </View>
-          <TouchableHighlight style={[styles.modalCloseWrap, b('orange')]}
+          <TouchableHighlight style={[styles.modalCloseWrap, b()]}
             onPress={this._onSearchExit}>
             <Ionicon style={[styles.donebutton, b('purple')]}
-              name="ios-close" size={24}
+              name="ios-close" size={26}
               color='white' />
           </TouchableHighlight>
         </View>
