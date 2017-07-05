@@ -132,7 +132,8 @@ module.exports = StyleSheet.create({
     justifyContent: 'center'
   },
   rowBalanceAmountText: {
-    color: '#58595C'
+    color: '#58595C',
+    textAlign: 'right'
   },
   rowBalanceDenominationText: {
     color: '#58595C'
