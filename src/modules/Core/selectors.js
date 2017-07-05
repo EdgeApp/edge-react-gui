@@ -1,10 +1,11 @@
 export const getContext = (state) => {
-  const context = state.core.context
+  const context = state.core.context.context
   return context
 }
 
-export const getIo = (state) => {
-  const io = state.core.context.io
+export const getIO = (state) => {
+  const context = getContext(state)
+  const io = context.io
   return io
 }
 
@@ -14,8 +15,14 @@ export const getAccount = (state) => {
 }
 
 export const getUsername = (state) => {
-  const username = state.core.account.username
+  const account = getAccount(state)
+  const username = account.username
   return username
+}
+
+export const getUsernames = (state) => {
+  const usernames = state.core.context.usernames
+  return usernames
 }
 
 export const getWallets = (state) => {
