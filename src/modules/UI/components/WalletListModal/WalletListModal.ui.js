@@ -113,7 +113,9 @@ class WalletListModalBody extends Component {
       <ScrollView>
         {
           Object.values(this.props.walletList).map(wallet => {
-            return this.renderWalletRow(wallet)
+            if(this.props.activeWalletIds.includes(wallet.id)){
+              return this.renderWalletRow(wallet)
+            }
           })
         }
       </ScrollView>
@@ -127,6 +129,7 @@ WalletListModalBody.propTypes = {
 export const WalletListModalBodyConnect = connect(
   state => ({
     walletList: state.ui.wallets.byId,
+    activeWalletIds: state.ui.wallets.activeWalletIds,
     selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
   }),
   dispatch => ({
