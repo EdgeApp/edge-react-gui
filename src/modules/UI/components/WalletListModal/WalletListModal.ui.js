@@ -34,13 +34,13 @@ class WalletListModal extends Component {
 
   render () {
     return (
-      <Animatable.View style={[b('green'), styles.topLevel, {position:'absolute', top: 38}]}
+      <Animatable.View style={[b('green'), styles.topLevel, {position:'absolute', top: 38, height: (this.props.dimensions.deviceDimensions.height - this.props.dimensions.headerHeight - this.props.dimensions.tabBarHeight)}]}
         animation='fadeInDown'
         duration={100} >
         <ScrollView>
           <WalletListModalHeaderConnect type={this.props.type} />          
           <WalletListModalBodyConnect onPress={this.props.onPress}
-              selectionFunction={this.props.selectionFunction} />      
+              selectionFunction={this.props.selectionFunction}  style={{flex: 1}} />      
         </ScrollView>
       </Animatable.View>
     )
