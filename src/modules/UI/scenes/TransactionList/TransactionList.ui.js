@@ -41,6 +41,7 @@ const monthNames = [
     sprintf(strings.enUS['transactions_list_date_dec'])
   ]
 var dateStrings = []
+var iterator = -1
 
 class TransactionList extends Component {
    constructor(props) {
@@ -53,7 +54,10 @@ class TransactionList extends Component {
       balanceBoxHeight: new Animated.Value(200),
       balanceBoxOpacity: new Animated.Value(1),
       balanceBoxVisible: true,
-      showBalance: true
+      showBalance: true,
+      renderedTxCount: 0,
+      completedTx: [],
+      dataSrc: []
      }
    }
 
@@ -203,20 +207,33 @@ class TransactionList extends Component {
     this.setState({showBalance: !this.state.showBalance})
   }
 
-  render () {
-    console.log('the balance is: ', this.state.balance)
-    console.log('rendering transactinlist', this.props.selectWalletId)
+  componentWillMount() { 
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
+    
+    var renderableCompleteTxList = renderableTransactionList.map((x, i) => {
+      let newValue = x
+      newValue.key = i
+      let txDate = new Date(x.date)
+      let month = txDate.getMonth()
+      let day = txDate.getDate()
+      let year = txDate.getFullYear()
+      let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
+      newValue.dateString = dateString
+      return newValue
+    })
+
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    var dataSource = ds.cloneWithRows(renderableTransactionList)
-    // can also put dateIterator in here
-    console.log('about to render transactionsList , this.state.balanceBoxVisible is: ' , this.state.balanceBoxVisible)
-    console.log('about to render again, this.state.balanceBoxOpacity is: ', this.state.balanceBoxOpacity)
-    console.log('rendering txList... this.props.wallet is: ', this.props.wallet)
+    this.setState({
+      completedTx: renderableCompleteTxList,
+      dataSrc: ds.cloneWithRows(renderableCompleteTxList)
+    })    
+  }
+
+  render () {
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -257,7 +274,6 @@ class TransactionList extends Component {
                       }
                       </TouchableOpacity>
                     )}
-
                         <View style={[styles.requestSendRow, b('yellow')]}>
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
@@ -279,11 +295,12 @@ class TransactionList extends Component {
           <View style={[styles.transactionsWrap]}>
               <ListView
                 style={[styles.transactionsScrollWrap]}
-                dataSource={dataSource}
+                dataSource={this.state.dataSrc}
                 renderRow={this.renderTx}
                 onEndReached={this.loadMoreTransactions}
                 onEndReachedThreshold={60}
                 enableEmptySections
+                initialIterator={-1}
               />
           </View>
         </View>
@@ -296,13 +313,7 @@ class TransactionList extends Component {
   }
 
   renderTx = (tx) => {
-    let txDate = new Date(tx.date * 1000)
-    let month = txDate.getMonth()
-    let day = txDate.getDate()
-    let year = txDate.getFullYear()
-    let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
-    dateStrings.push(dateString)
     if (tx.amountSatoshi <= 0) {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_expense'])
@@ -315,20 +326,12 @@ class TransactionList extends Component {
 
     return (
       <View style={styles.singleTransactionWrap}>
-        {(dateStrings[tx.key + 1] !== dateStrings[tx.key]) &&
-          (<View style={styles.singleDateArea}>
+        {((tx.key === 0) || (tx.dateString !== this.state.completedTx[tx.key - 1].dateString)) &&
+          <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{dateString}</T>
+              <T style={styles.formattedDate}>{tx.dateString}</T>
             </View>
-            {tx.key === 1 && (
-              <View style={styles.rightDateSearch}>
-                {(this.props.searchVisible === false) && (
-                  <TouchableHighlight style={styles.firstDateSearchWrap} onPress={this._onPressSearch}>
-                    <FAIcon name='search' size={16} style={styles.firstDateSearchIcon} color='#cccccc' />
-                  </TouchableHighlight>
-                )}
-              </View>)}
-          </View>)
+          </View>
         }
         <TouchableOpacity onPress={() => this._goToTxDetail( tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
           <View style={[styles.transactionInfoWrap, b()]}>
@@ -375,6 +378,7 @@ const mapDispatchToProps = dispatch => ({
 })
 
 export default TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
+
 
 class SearchBar extends Component {
   constructor(props) {

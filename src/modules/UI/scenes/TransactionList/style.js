@@ -208,6 +208,7 @@ module.exports = StyleSheet.create({
     backgroundColor: '#f6f6f6',
     flex: 3,
     padding: 8,
+    paddingLeft: 15,
     flexDirection: 'row',
     paddingRight: 24
   },
@@ -215,8 +216,8 @@ module.exports = StyleSheet.create({
     flex: 1
   },
   formattedDate: {
-    color: "#cccccc",
-    fontSize: 12
+    color: "#909091",
+    fontSize: 14
   },
   rightDateSearch: {
     flex: 1,
