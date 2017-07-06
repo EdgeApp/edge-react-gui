@@ -22,7 +22,7 @@ import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b , findDenominationSymbol as symbolize} from '../../../utils'
+import { border as b , findDenominationSymbol as symbolize, formatAMPM } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 
@@ -221,8 +221,10 @@ class TransactionList extends Component {
       let month = txDate.getMonth()
       let day = txDate.getDate()
       let year = txDate.getFullYear()
+      let time = formatAMPM(txDate)
       let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
       newValue.dateString = dateString
+      newValue.time = time
       return newValue
     })
 
@@ -268,13 +270,13 @@ class TransactionList extends Component {
                           </View>
                         ) : (
                           <View style={[b(), styles.balanceHiddenContainer]}>
-                            <T style={[styles.balanceHiddenText]}>Show Balance</T>
+                            <T style={[styles.balanceHiddenText]}>{sprintf('string_show_balance')}</T>
                           </View>
                         ) 
                       }
                       </TouchableOpacity>
                     )}
-                        <View style={[styles.requestSendRow, b('yellow')]}>
+                        <View style={[styles.requestSendRow, b()]}>
                           <TouchableHighlight style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
                               <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
@@ -313,6 +315,7 @@ class TransactionList extends Component {
   }
 
   renderTx = (tx) => {
+    console.log('rendering row, tx is: ', tx)
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     if (tx.amountSatoshi <= 0) {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
@@ -342,7 +345,7 @@ class TransactionList extends Component {
             )}
             <View style={[styles.transactionDollars, b()]}>
               <T style={[styles.transactionPartner, b()]}>Contact Name</T>
-              <T style={[styles.transactionTime, b()]}>12:12 PM</T>
+              <T style={[styles.transactionTime, b()]}>{tx.time}</T>
             </View>
             <View style={[styles.transactionBits, b()]}>
               <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi).toFixed(2)}</T>
