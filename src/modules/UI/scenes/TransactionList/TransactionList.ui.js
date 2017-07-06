@@ -270,7 +270,7 @@ class TransactionList extends Component {
                           </View>
                         ) : (
                           <View style={[b(), styles.balanceHiddenContainer]}>
-                            <T style={[styles.balanceHiddenText]}>{sprintf('string_show_balance')}</T>
+                            <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
                         ) 
                       }
