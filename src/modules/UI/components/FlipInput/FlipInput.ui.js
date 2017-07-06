@@ -10,9 +10,12 @@ const CRYPTO_PLACEHOLDER = 'C 0.00'
 const FIAT_PLACEHOLDER   = 'F 0.00'
 
 class FlipInput extends Component {
+  constructor(props) {
+    super(props)
+  }
 
   render () {
-
+    console.log('rendering FlipInput, this.props is: ', this.props)
     const {
       mode,
       onCryptoInputChange,
@@ -23,13 +26,14 @@ class FlipInput extends Component {
       feeInFiat,
       feeInCrypto,
       displayFees,
+      inputCurrencySelected
     } = this.props
 
     return (
       <FlipInputInside
         currencySelected={'crypto'}
         mode={mode}
-        primaryPlaceholder={'c 0.00'}
+        primaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         secondaryPlaceholder={'f 0.00'}
         onInputChange={onCryptoInputChange}
         amountRequestedPrimary={amountSatoshi}
@@ -37,7 +41,9 @@ class FlipInput extends Component {
         onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInCrypto}
         secondaryFee={feeInFiat}
-        displayFees={displayFees} />
+        displayFees={displayFees} 
+        inputCurrencySelected={inputCurrencySelected}  
+        />
     )
   }
 
@@ -58,7 +64,7 @@ class FlipInput extends Component {
       <FlipInputInside
         currencySelected={'crypto'}
         mode={mode}
-        primaryPlaceholder={'c 0.00'}
+        primaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         secondaryPlaceholder={'f 0.00'}
         onInputChange={onCryptoInputChange}
         amountRequestedPrimary={amountSatoshi}
@@ -66,7 +72,9 @@ class FlipInput extends Component {
         onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInCrypto}
         secondaryFee={feeInFiat}
-        displayFees={displayFees} />
+        displayFees={displayFees} 
+        inputCurrencySelected={inputCurrencySelected}        
+        />
     )}
 
   _renderBack = () => {
@@ -87,14 +95,15 @@ class FlipInput extends Component {
         currencySelected={'fiat'}
         mode={mode}
         primaryPlaceholder={'f 0.00'}
-        secondaryPlaceholder={'c 0.00'}
+        secondaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         onInputChange={onFiatInputChange}
         amountRequestedPrimary={amountFiat}
         amountRequestedSecondary={amountSatoshi}
         onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInFiat}
         secondaryFee={feeInCrypto}
-        displayFees={displayFees} />
+        displayFees={displayFees}
+        inputCurrencySelected={inputCurrencySelected} />
     )
   }
 }
@@ -107,6 +116,7 @@ export default connect(state => ({
 class FlipInputInside extends Component {
 
   render () {
+    console.log('rendering FlipInputInside, this.props is: ', this.props)    
     const {
       mode,
       onInputChange,
@@ -158,7 +168,7 @@ class FlipInputInside extends Component {
               placeholderTextColor={getTextColor()}
             />
           </View>
-          { displayFees ? <Text style={[ styles.fees, { alignSelf: 'center' } ]}> + b0.026</Text> : null }
+          { displayFees ? <Text style={[ styles.fees, { alignSelf: 'center' } ]}> + { this.props.cryptoDenom.symbol } 0.026</Text> : null }
           {/* { displayFees ? <Text style={styles.fees}> + b{primaryFee}</Text> : null } */}
         </View>
       )
@@ -186,7 +196,7 @@ class FlipInputInside extends Component {
             {renderMainInput()}
             {renderConvertedInput()}
           </View>
-          { !displayFees ? <Text style={styles.currency}>BTC</Text> : null }
+          { !displayFees ? <Text style={styles.currency}>{this.props.inputCurrencySelected}</Text> : null }
           {/* { !displayFees ? <Text style={styles.currency}>{currency}</Text> : null } */}
         </View>
       </View>
