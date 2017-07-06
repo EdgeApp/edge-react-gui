@@ -1,5 +1,13 @@
 import borderColors from '../theme/variables/css3Colors'
 
+export const cutOffText = (str, lng) => {
+  if(str.length >= lng ) {
+    return str.slice(0, lng) + '...'
+  } else {
+    return str
+  }
+}
+
 export const findDenominationSymbol = (denoms, value) => {
   console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
   for(v of denoms) {

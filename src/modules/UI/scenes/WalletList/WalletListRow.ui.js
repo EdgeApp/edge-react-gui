@@ -13,7 +13,7 @@ import T from '../../components/FormattedText'
 import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
-import {border as b} from '../../../utils'
+import {border as b, cutOffText} from '../../../utils'
 
 export const findDenominationSymbol = (denoms, value) => {
   console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
@@ -41,7 +41,7 @@ class WalletListRow extends Component {
           {...this.props.sortHandlers}>
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
-              <T style={[styles.rowNameText]}>{name}</T>
+              <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
               <T style={[styles.rowBalanceAmountText]}>{this.props.data.balance}</T>

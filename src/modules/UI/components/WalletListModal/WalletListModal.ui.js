@@ -70,10 +70,10 @@ class WalletListModalBody extends Component {
     this.props.dispatch(toggleScanToWalletListModal())
   }
 
-  renderWalletRow = wallet => {
+  renderWalletRow = (wallet, i) => {
     let symbol = findDenominationSymbol(wallet.denominations, wallet.currencyCode)
     return (
-      <View>
+      <View key={i}>
         <TouchableOpacity style={[styles.rowContainer]}
           // onPress={this[this.props.selectionFunction]}
           onPress={() => {
@@ -112,9 +112,9 @@ class WalletListModalBody extends Component {
     return (
       <ScrollView>
         {
-          Object.values(this.props.walletList).map(wallet => {
+          Object.values(this.props.walletList).map((wallet, i) => {
             if(this.props.activeWalletIds.includes(wallet.id)){
-              return this.renderWalletRow(wallet)
+              return this.renderWalletRow(wallet, i)
             }
           })
         }
