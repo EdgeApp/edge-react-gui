@@ -124,9 +124,9 @@ class Main extends Component {
 
                   <Scene key='root' hideNavBar>
 
-                    <Scene key='scan' component={Scan} title='Scan' animation={'fade'} duration={300} />
+                    <Scene key='scan'  component={Scan} title='Scan' animation={'fade'} duration={300} />
 
-                    <Scene key='walletList' component={WalletList} title='Wallets' animation={'fade'} duration={300} initial />
+                    <Scene key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={300} />
 
                     <Scene key='directory' component={Directory} title='Directory' animation={'fade'} duration={300} />
 

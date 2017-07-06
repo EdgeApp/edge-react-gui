@@ -10,6 +10,15 @@ const headerHeight = ( state = 0, action) => {
   }
 }
 
+const tabBarHeight = ( state = 0, action) => {
+  switch(action.type){
+    case ACTION.SET_TAB_BAR_HEIGHT:
+      return action.data
+    default:
+      return state
+  }
+}
+
 const deviceDimensions = (state = {}, action) => {
   switch(action.type) {
     case ACTION.SET_DEVICE_DIMENSIONS:
@@ -21,6 +30,7 @@ const deviceDimensions = (state = {}, action) => {
 
 const dimensions = combineReducers({
   headerHeight,
+  tabBarHeight,
   deviceDimensions
 })
 

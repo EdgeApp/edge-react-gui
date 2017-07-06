@@ -4,9 +4,9 @@ import {Dimensions, StyleSheet} from 'react-native';
 module.exports = StyleSheet.create({
   topLevel: { 
     zIndex: 10,
-      width: Dimensions.get('window').width,
-      backgroundColor: 'white',
-      alignSelf: 'stretch'
+    width: Dimensions.get('window').width,
+    backgroundColor: 'white',
+    alignSelf: 'stretch'
   },
   modalRoot: {
     paddingTop: 50,
