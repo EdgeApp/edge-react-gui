@@ -26,7 +26,8 @@ class FlipInput extends Component {
       feeInFiat,
       feeInCrypto,
       displayFees,
-      inputCurrencySelected
+      inputCurrencySelected,
+      fiatCurrencyCode
     } = this.props
 
     return (
@@ -34,7 +35,7 @@ class FlipInput extends Component {
         currencySelected={'crypto'}
         mode={mode}
         primaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
-        secondaryPlaceholder={'f 0.00'}
+        secondaryPlaceholder={this.props.fiatCurrencyCode + ' 0.00'}
         onInputChange={onCryptoInputChange}
         amountRequestedPrimary={amountSatoshi}
         amountRequestedSecondary={amountFiat}
@@ -65,7 +66,7 @@ class FlipInput extends Component {
         currencySelected={'crypto'}
         mode={mode}
         primaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
-        secondaryPlaceholder={'f 0.00'}
+        secondaryPlaceholder={this.props.fiatCurrencyCode + ' 0.00'}
         onInputChange={onCryptoInputChange}
         amountRequestedPrimary={amountSatoshi}
         amountRequestedSecondary={amountFiat}
@@ -94,7 +95,7 @@ class FlipInput extends Component {
       <FlipInputInside
         currencySelected={'fiat'}
         mode={mode}
-        primaryPlaceholder={'f 0.00'}
+        primaryPlaceholder={this.props.fiatCurrencyCode + ' 0.00'}
         secondaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         onInputChange={onFiatInputChange}
         amountRequestedPrimary={amountFiat}
@@ -182,7 +183,7 @@ class FlipInputInside extends Component {
               {getSecondaryAmount() || secondaryPlaceholder}
             </Text>
           </View>
-          { displayFees ? <Text style={styles.fees}> + $0.95</Text> : null }
+          { displayFees ? <Text style={styles.fees}> + {this.props.fiatCurrencyCode} 0.95</Text> : null }
           {/* { displayFees ? <Text style={styles.fees}> + ${secondaryFee}</Text> : null } */}
         </View>
       )

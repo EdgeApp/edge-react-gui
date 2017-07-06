@@ -68,6 +68,7 @@ class Request extends Component {
             amountRequestedInFiat={amountFiat}
             inputCurrencySelected={this.props.inputCurrencySelected}
             cryptoDenom={this.props.inputCurrencyDenom}
+            fiatCurrencyCode={this.props.fiatCurrencyCode} 
           />
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus
