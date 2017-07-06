@@ -74,10 +74,11 @@ class ExampleFromWallet extends Component {
   render () {
     let topDisplacement =  66
     let selectionFunction = 'selectFromWallet'
+    let walletNameString = (this.props.selectedWallet.name.length >= 12) ? (this.props.selectedWallet.name.slice(0,12) + '...') : this.props.selectedWallet.name
 
     return (
       <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: "#FFF", fontSize: 20 }}>{this.props.selectedWallet.name}  </Text>
+        <Text style={{ color: "#FFF", fontSize: 20 }}>{walletNameString}</Text>
 
         <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), { position: 'relative', top: 2}]}>
