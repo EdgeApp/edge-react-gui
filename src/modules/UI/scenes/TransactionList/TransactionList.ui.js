@@ -277,7 +277,7 @@ class TransactionList extends Component {
                       </TouchableOpacity>
                     )}
                         <View style={[styles.requestSendRow, b()]}>
-                          <TouchableHighlight style={[styles.requestBox, styles.button]}>
+                          <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
                             <View  style={[styles.requestWrap]}>
                               <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
                               <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
