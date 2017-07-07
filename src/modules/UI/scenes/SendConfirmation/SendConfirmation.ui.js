@@ -6,7 +6,8 @@ import {
   TouchableHighlight,
   Keyboard,
   Button,
-  Platform
+  Platform,
+  ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
@@ -76,36 +77,36 @@ class SendConfirmation extends Component {
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}
       >
+        <ScrollView style={[styles.mainScrollView]}>
+          <View style={[styles.exchangeRateContainer, b()]} >
+            <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
+          </View>
 
-        <View style={[styles.exchangeRateContainer, b()]} >
-          <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
-        </View>
+          <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <FlipInput
+              mode={draftStatus}
+              onInputCurrencyToggle={this.onInputCurrencyToggle}
+              onCryptoInputChange={this.onCryptoInputChange}
+              onFiatInputChange={this.onFiatInputChange}
+              amountSatoshi={this.props.amountSatoshi}
+              amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
+              inputCurrencySelected={this.props.inputCurrencySelected}
+              maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
+              displayFees
+              feeInCrypto={this.props.feeSatoshi}
+              feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
+              cryptoDenom={this.props.inputCurrencyDenom}
+              fiatCurrencyCode={this.props.fiatCurrencyCode}   
+              inputOnFocus={this._onFocus}
+              inputOnBlur={this._onBlur}          
+            />
+            {/* <Recipient label={label} address={publicAddress} /> */}
+            <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
+            <Password />
+          </View>
 
-        <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
-          <FlipInput
-            mode={draftStatus}
-            onInputCurrencyToggle={this.onInputCurrencyToggle}
-            onCryptoInputChange={this.onCryptoInputChange}
-            onFiatInputChange={this.onFiatInputChange}
-            amountSatoshi={this.props.amountSatoshi}
-            amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
-            inputCurrencySelected={this.props.inputCurrencySelected}
-            maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
-            displayFees
-            feeInCrypto={this.props.feeSatoshi}
-            feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
-            cryptoDenom={this.props.inputCurrencyDenom}
-            fiatCurrencyCode={this.props.fiatCurrencyCode}   
-            inputOnFocus={this._onFocus}
-            inputOnBlur={this._onBlur}          
-          />
-          {/* <Recipient label={label} address={publicAddress} /> */}
-          <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
-          <Password />
-        </View>
-
-        <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
-
+          <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
+        </ScrollView>
       </LinearGradient>
     )
   }
