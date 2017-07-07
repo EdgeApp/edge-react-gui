@@ -4,11 +4,10 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
   main: {
-    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
   },

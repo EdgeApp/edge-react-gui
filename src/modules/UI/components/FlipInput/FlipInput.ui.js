@@ -44,6 +44,7 @@ class FlipInput extends Component {
         secondaryFee={feeInFiat}
         displayFees={displayFees} 
         inputCurrencySelected={inputCurrencySelected}  
+        parentProps={this.props}
         />
     )
   }
@@ -74,7 +75,8 @@ class FlipInput extends Component {
         primaryFee={feeInCrypto}
         secondaryFee={feeInFiat}
         displayFees={displayFees} 
-        inputCurrencySelected={inputCurrencySelected}        
+        inputCurrencySelected={inputCurrencySelected}   
+        parentProps={this.props}     
         />
     )}
 
@@ -104,7 +106,8 @@ class FlipInput extends Component {
         primaryFee={feeInFiat}
         secondaryFee={feeInCrypto}
         displayFees={displayFees}
-        inputCurrencySelected={inputCurrencySelected} />
+        inputCurrencySelected={inputCurrencySelected} 
+        parentProps={this.props} />
     )
   }
 }
@@ -115,6 +118,9 @@ export default connect(state => ({
 )(FlipInput)
 
 class FlipInputInside extends Component {
+  constructor(props){
+    super(props)
+  }
 
   render () {
     console.log('rendering FlipInputInside, this.props is: ', this.props)    
@@ -164,12 +170,15 @@ class FlipInputInside extends Component {
               style={[styles.primaryInput, {color: getTextColor()}]}
               value={getPrimaryAmount()}
               placeholder={primaryPlaceholder}
-              keyboardType='numeric'
+              keyboardType='decimal-pad'
               onChangeText={onInputChange}
               placeholderTextColor={getTextColor()}
+              returnKeyType='done'
+              onBlur={this.props.parentProps.inputOnBlur}
+              onFocus={this.props.parentProps.inputOnFocus}
             />
           </View>
-          { displayFees ? <Text style={[ styles.fees, { alignSelf: 'center' } ]}> + { this.props.cryptoDenom.symbol } 0.026</Text> : null }
+          { displayFees ? <Text style={[ styles.fees, { alignSelf: 'center' } ]}> + { this.props.parentProps.cryptoDenom.symbol } 0.026</Text> : null }
           {/* { displayFees ? <Text style={styles.fees}> + b{primaryFee}</Text> : null } */}
         </View>
       )
@@ -183,7 +192,7 @@ class FlipInputInside extends Component {
               {getSecondaryAmount() || secondaryPlaceholder}
             </Text>
           </View>
-          { displayFees ? <Text style={styles.fees}> + {this.props.fiatCurrencyCode} 0.95</Text> : null }
+          { displayFees ? <Text style={styles.fees}> + {this.props.parentProps.fiatCurrencyCode} 0.95</Text> : null }
           {/* { displayFees ? <Text style={styles.fees}> + ${secondaryFee}</Text> : null } */}
         </View>
       )

@@ -8,6 +8,10 @@ export const cutOffText = (str, lng) => {
   }
 }
 
+/*export const cuttMiddleText = (str, lng1, lng2)=> {
+  // for later insertion
+}*/
+
 export const findDenominationSymbol = (denoms, value) => {
   console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
   for(v of denoms) {

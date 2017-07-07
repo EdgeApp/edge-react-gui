@@ -23,7 +23,7 @@ import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 import Fees from '../../components/Fees/index.js'
 
-import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput } from '../../../utils.js'
+import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput, border as b } from '../../../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
 import {
@@ -40,6 +40,23 @@ import {
 } from './action.js'
 
 class SendConfirmation extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      keyboardVisible: false
+    }
+  }
+
+  _onFocus = () => {
+    console.log('_onFocus called')
+    this.setState({keyboardVisible: true})
+  }
+
+  _onBlur = () => {
+    console.log('_onBlur called')
+    this.setState({keyboardVisible: false})    
+  }
+
   render () {
     const {
       amountSatoshi,
@@ -55,16 +72,16 @@ class SendConfirmation extends Component {
 
     return (
       <LinearGradient
-        style={styles.view}
+        style={[styles.view, b()]}
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}
       >
 
-        <View style={styles.exchangeRateContainer} >
-          <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} />
+        <View style={[styles.exchangeRateContainer, b()]} >
+          <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
         </View>
 
-        <View style={styles.main}>
+        <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
           <FlipInput
             mode={draftStatus}
             onInputCurrencyToggle={this.onInputCurrencyToggle}
@@ -77,13 +94,17 @@ class SendConfirmation extends Component {
             displayFees
             feeInCrypto={this.props.feeSatoshi}
             feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
+            cryptoDenom={this.props.inputCurrencyDenom}
+            fiatCurrencyCode={this.props.fiatCurrencyCode}   
+            inputOnFocus={this._onFocus}
+            inputOnBlur={this._onBlur}          
           />
           {/* <Recipient label={label} address={publicAddress} /> */}
           <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
           <Password />
         </View>
 
-        <ABSlider onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
+        <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
 
       </LinearGradient>
     )
@@ -172,6 +193,8 @@ const mapStateToProps = state => {
     publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
     transaction:           state.ui.scenes.sendConfirmation.transaction,
+    inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
+    fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode    
   }
 }
 
