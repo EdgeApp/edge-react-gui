@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
+import T from '../FormattedText/'
 import { connect } from 'react-redux'
 // import styles from './styles.js'
 import { Container, Content } from 'native-base'
-import { dev } from '../../../utils.js'
+import { dev, border as b } from '../../../utils.js'
 
 const styles = {
   view: {
@@ -21,10 +22,13 @@ const styles = {
 }
 
 const RequestStatus = (props) => {
+  console.log('inside RequestStatus, props is: ', props)
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
   const amountRequestedInFiat = props.amountFiat
   const { publicAddress } = props
+  const requestAddress = props.requestAddress
+  console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
 
   hasReceivedPartialPayment = () => {
     const hasReceivedPartialPayment =
@@ -60,9 +64,9 @@ const RequestStatus = (props) => {
           Waiting for payment...
         </Text>
 
-        <Text style={styles.text}>
-          {publicAddress}
-        </Text>
+        <T style={[b(), styles.text]}>
+          {requestAddress}
+        </T>
       </View>
 
     const partialPaymentReceived =
@@ -76,7 +80,7 @@ const RequestStatus = (props) => {
         </Text>
 
         <Text style={styles.text}>
-          {publicAddress}
+          {requestAddress}
         </Text>
       </View>
 
@@ -88,7 +92,9 @@ const RequestStatus = (props) => {
     return displayStatus
   }
 
+  console.log('in RequestStatus.ui, this.props is: ' , this)
   return (
+    
     <View style={styles.view}>
       {getDisplayRequestStatus()}
     </View>

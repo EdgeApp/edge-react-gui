@@ -92,6 +92,7 @@ class Request extends Component {
     )
   }
 
+  ///////////////// Start Critical Input and Conversion Area //////////////////////
   onCryptoInputChange = (amountRequestedInCrypto) => {
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
@@ -109,7 +110,7 @@ class Request extends Component {
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
     this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
-
+///////////////// End Critical Input and Conversion Area //////////////////////
   copyToClipboard = (publicAddress, amountSatoshi) => {
     Clipboard.setString(
       this.getRequestInfoForClipboard(publicAddress, amountSatoshi)
