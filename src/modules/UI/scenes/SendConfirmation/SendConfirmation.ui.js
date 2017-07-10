@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import {
   View,
   Share,
@@ -166,18 +167,25 @@ class SendConfirmation extends Component {
   }
 
   getFeeInFiat = feeSatoshi => {
-    const { fiatPerCrypto = 1077.75 } = this.props
+    const fiatPerCrypto = this.props.fiatPerCrypto
     const feeFiat = getFiatFromCrypto(feeSatoshi, fiatPerCrypto)
 
     return feeFiat
   }
 
   getAmountFiat = amountSatoshi => {
-    const { fiatPerCrypto = 1077.75 } = this.props
+    const fiatPerCrypto = this.props.fiatPerCrypto
     const amountFiat = getFiatFromCrypto(amountSatoshi, fiatPerCrypto)
 
     return amountFiat
   }
+}
+
+SendConfirmation.propTypes = {
+  sendConfirmation: PropTypes.object,
+  fiatPerCrypto: PropTypes.number,
+  inpurCurrencyDenom: PropTypes.string,
+  fiatCurrencyCode: PropTypes.string
 }
 
 const mapStateToProps = state => {
@@ -185,7 +193,7 @@ const mapStateToProps = state => {
     sendConfirmation:      state.ui.scenes.sendConfirmation,
     amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
     feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
-    fiatPerCrypto:         state.ui.scenes.sendConfirmation.fiatPerCrypto,
+    fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
     //publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
