@@ -33,10 +33,8 @@ import {
 class Request extends Component {
   constructor (props) {
     super(props)
-
     this.state = {
-      fiatPerCrypto: '1077.75',
-      inputCurrencySelected: 'crypto'
+      fiatPerCrypto: '1.77345' // assume dollars per satoshi
     }
   }
 
@@ -45,6 +43,7 @@ class Request extends Component {
   }
 
   render () {
+    console.log('rendering Request.ui, this.state is: ', this.state, ' this.props is: ', this.props)
     const { request = {} } = this.props
     const { receiveAddress = {} } = request
     const { publicAddress = '', amountSatoshi = null, metadata = {} } = receiveAddress
@@ -58,7 +57,7 @@ class Request extends Component {
       >
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} />
+          <ExchangeRate fiatPerCrypto={this.state.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom} />
         </View>
 
         <View style={styles.main}>
@@ -67,7 +66,9 @@ class Request extends Component {
             onFiatInputChange={this.onFiatInputChange}
             amountRequestedInCrypto={amountSatoshi}
             amountRequestedInFiat={amountFiat}
-            inputCurrencySelected={this.state.inputCurrencySelected}
+            inputCurrencySelected={this.props.inputCurrencySelected}
+            cryptoDenom={this.props.inputCurrencyDenom}
+            fiatCurrencyCode={this.props.fiatCurrencyCode} 
           />
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus
@@ -91,6 +92,7 @@ class Request extends Component {
     )
   }
 
+  ///////////////// Start Critical Input and Conversion Area //////////////////////
   onCryptoInputChange = (amountRequestedInCrypto) => {
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
@@ -108,13 +110,13 @@ class Request extends Component {
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
     this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
-
+///////////////// End Critical Input and Conversion Area //////////////////////
   copyToClipboard = (publicAddress, amountSatoshi) => {
     Clipboard.setString(
       this.getRequestInfoForClipboard(publicAddress, amountSatoshi)
     )
 
-    if (Platform.OS === 'android') {
+    if (Platform.OS === 'android') { // needs internationalization and string replacement still
       ToastAndroid.show('Request copied to clipboard', ToastAndroid.SHORT)
     } else if (Platform.OS === 'ios') {
       AlertIOS.alert('Request copied to clipboard')
@@ -160,7 +162,7 @@ class Request extends Component {
   shareMessage = () => {
     Share.share({
       message: this.getRequestInfoForShare(),
-      url: 'https://airbitz.co',
+      url: 'https://airbitz.co', // will need to refactor for white labeling
       title: 'Share Airbitz Request'
     }, {
       dialogTitle: 'Share Airbitz Request'
@@ -202,6 +204,10 @@ class Request extends Component {
 export default connect(state => ({
 
   request: state.ui.scenes.request,
-  wallets: state.ui.scenes.wallets
-
+  wallets: state.ui.wallets,
+  settings: state.ui.settings,
+  inputCurrencySelected: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode,
+  inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
+  fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
+  // ^ Don't laugh...  =P
 }))(Request)

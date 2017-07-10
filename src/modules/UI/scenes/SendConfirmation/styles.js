@@ -4,11 +4,13 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
+  mainScrollView: {
+    flex: 1
+  },
   main: {
-    flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start'
   },

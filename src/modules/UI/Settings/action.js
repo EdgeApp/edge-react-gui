@@ -24,6 +24,7 @@ export const SET_BLUETOOTH_MODE = PREFIX + 'SET_BLUETOOTH_MODE'
 export const SET_BITCOIN_DENOMINATION = PREFIX + 'SET_BITCOIN_DENOMINATION'
 export const SET_BITCOIN_OVERRIDE_SERVER = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER'
 export const SET_ETHEREUM_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
+export const SET_SHITCOIN_DENOMINATION = PREFIX + 'SET_SHITCOIN_DENOMINATION'
 
 export const updateSettings = settings => {
   return {
@@ -112,6 +113,13 @@ export const setBitcoinOverrideServer = overrideServer => {
 export const setEthereumDenomination = denomination => {
   return {
     type: SET_ETHEREUM_DENOMINATION,
+    data: { denomination }
+  }
+}
+
+export const setShitcoinDenomination = denomination => {
+  return {
+    type: SET_SHITCOIN_DENOMINATION,
     data: { denomination }
   }
 }

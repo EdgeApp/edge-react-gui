@@ -46,7 +46,7 @@ import Modal from 'react-native-modal'
 import StylizedModal from '../../components/Modal/Modal.ui'
 
 // Fake stuff to be removed
-import { addWallet, completeDeleteWallet } from '../../Wallets/action.js'
+import { addWallet, completeDeleteWallet, selectWalletId } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
 import * as UI_SELECTORS from '../../selectors.js'
 
@@ -66,7 +66,6 @@ class WalletList extends Component {
     this.props.dispatch(updateArchiveListOrder(archiveOrder))
   }*/ // delete this function?
 
-
   render () {
     const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
     return (
@@ -83,7 +82,7 @@ class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                $ 8,200.00
+                {this.props.settings.defaultFiat} 8,200.00
               </T>
             </View>
           </View>
@@ -110,7 +109,8 @@ class WalletList extends Component {
               activeWalletIds,
               sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
               this.renderActiveRow,
-              this.onActiveRowMoved
+              this.onActiveRowMoved,
+
             )
           }
 
@@ -260,7 +260,8 @@ const mapStateToProps = state => ({
   deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
   walletName:               state.ui.scenes.walletList.walletName,
   walletId:                 state.ui.scenes.walletList.walletId,
-  walletOrder:              state.ui.wallets.walletListOrder
+  walletOrder:              state.ui.wallets.walletListOrder,
+  settings:                 state.ui.settings
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -269,7 +270,7 @@ const mapDispatchToProps = dispatch => ({
   },
   updateArchivedWalletsOrder: archivedWalletIds => {
     dispatch(updateArchivedWalletsOrder(archivedWalletIds))
-  },
+  }
 })
 
 export default connect((mapStateToProps), (mapDispatchToProps))(WalletList)
