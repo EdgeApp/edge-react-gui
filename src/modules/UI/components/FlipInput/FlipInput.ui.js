@@ -37,7 +37,7 @@ class FlipInput extends Component {
         primaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         secondaryPlaceholder={this.props.fiatCurrencyCode + ' 0.00'}
         onInputChange={onCryptoInputChange}
-        amountRequestedPrimary={amountSatoshi}
+        amountRequestedPrimary={amountSatoshi || 0}
         amountRequestedSecondary={amountFiat}
         onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInCrypto}
@@ -69,7 +69,7 @@ class FlipInput extends Component {
         primaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         secondaryPlaceholder={this.props.fiatCurrencyCode + ' 0.00'}
         onInputChange={onCryptoInputChange}
-        amountRequestedPrimary={amountSatoshi}
+        amountRequestedPrimary={amountSatoshi || 0}
         amountRequestedSecondary={amountFiat}
         onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInCrypto}
@@ -100,7 +100,7 @@ class FlipInput extends Component {
         primaryPlaceholder={this.props.fiatCurrencyCode + ' 0.00'}
         secondaryPlaceholder={this.props.cryptoDenom.symbol + ' 0.00'}
         onInputChange={onFiatInputChange}
-        amountRequestedPrimary={amountFiat}
+        amountRequestedPrimary={amountFiat || 0}
         amountRequestedSecondary={amountSatoshi}
         onInputCurrencyToggle={onInputCurrencyToggle}
         primaryFee={feeInFiat}
@@ -138,16 +138,22 @@ class FlipInputInside extends Component {
     } = this.props
 
     const getPrimaryAmount = () => {
+      console.log('inside getPrimaryAmount')
       if ([0, '', undefined, null].includes(amountRequestedPrimary)) {
+        console.log('inside getPrimaryAmount, handling blank input')
         return ''
       }
+      console.log('inside getPrimaryAmount, handling numerical input')
       return amountRequestedPrimary.toString()
     }
 
     const getSecondaryAmount = () => {
-      if ([0, '', undefined, null].includes(amountRequestedSecondary)) {
+      console.log('calling getSecondaryAmount')
+      if ([0, '', undefined, null].includes(amountRequestedSecondary) || (isNaN(amountRequestedSecondary.toString()) === true)) {
+        console.log('value is falsy')
         return ''
       }
+      console.log('value is truthy: ', amountRequestedSecondary.toString())
       return amountRequestedSecondary.toString()
     }
 
@@ -168,7 +174,7 @@ class FlipInputInside extends Component {
           <View style={styles.primaryInputContainer} name='InputAndFeesElement'>
             <TextInput
               style={[styles.primaryInput, {color: getTextColor()}]}
-              value={getPrimaryAmount()}
+              
               placeholder={primaryPlaceholder}
               keyboardType='decimal-pad'
               onChangeText={onInputChange}

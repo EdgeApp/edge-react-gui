@@ -88,7 +88,7 @@ class SendConfirmation extends Component {
               onInputCurrencyToggle={this.onInputCurrencyToggle}
               onCryptoInputChange={this.onCryptoInputChange}
               onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={this.props.amountSatoshi}
+              amountSatoshi={this.props.amountSatoshi || 0}
               amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
               inputCurrencySelected={this.props.inputCurrencySelected}
               maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
@@ -102,7 +102,7 @@ class SendConfirmation extends Component {
             />
             {/* <Recipient label={label} address={publicAddress} /> */}
             <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
-            <Password />
+            {/* <Password /> */}
           </View>
 
           <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
@@ -151,6 +151,7 @@ class SendConfirmation extends Component {
   }
 
   onInputCurrencyToggle = () => {
+    console.log('SendConfirmation->onInputCurrencyToggle called')
     const { inputCurrencySelected } = this.props
     const nextInputCurrencySelected =
       inputCurrencySelected === 'crypto'
