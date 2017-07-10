@@ -262,7 +262,7 @@ class TransactionList extends Component {
                               <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                                <T style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates[this.props.settings.defaultFiat] ? (this.props.uiWallet.balance * this.props.exchangeRates[this.props.uiWallet.currencyCode].value).toFixed(2) : ''}</T>
+                                <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.exchangeRates[this.props.settings.defaultFiat] ? (this.props.uiWallet.balance * this.props.exchangeRates[this.props.uiWallet.currencyCode].value).toFixed(2) : ''}</T>
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                                 <T style={[styles.currentBalanceBoxBits, b('yellow')]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.uiWallet.balance || '------'}</T>
