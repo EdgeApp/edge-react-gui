@@ -62,15 +62,15 @@ export const WalletListModalConnect = connect( state => ({
 
 
 class WalletListModalBody extends Component {
-  selectFromWallet = (id, currencyCode) => {
+  selectFromWallet = (id, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
-    console.log('selectingFromWallet, id is: ', id, ' and currencyCode is: ', currencyCode)
+    console.log('selectingFromWallet, id is: ', id, ' and currencyCode is: ', currencyCode )
     this.props.dispatch(toggleSelectedWalletListModal())
   }
 
-  selectToWallet = (idx, currencyCode) => {
+  selectToWallet = (idx, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
-    console.log('selectingToWallet, id is: ', id, ' and currencyCode is: ', currencyCode)
+    console.log('selectingToWallet, id is: ', id, ' and currencyCode is: ', currencyCode )
     this.props.dispatch(toggleScanToWalletListModal())
   }
 

@@ -30,8 +30,9 @@ class WalletListRow extends Component {
     super(props)
   }
 
-  _onPressSelectWallet = (walletId, subwalletId = null) => {
-    this.props.dispatch(selectWalletId(walletId, subwalletId))
+  _onPressSelectWallet = (walletId, currencyCode = null) => {
+    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)    
+    this.props.dispatch(selectWalletId(walletId, currencyCode))
     Actions.transactionList()
   }
 
@@ -82,6 +83,7 @@ class WalletListTokenRow extends Component {
   }
 
   _onPressSelectWallet = (walletId, currencyCode = null) => {
+    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode )
     this.props.dispatch(selectWalletId(walletId, currencyCode))
     Actions.transactionList()
   }
