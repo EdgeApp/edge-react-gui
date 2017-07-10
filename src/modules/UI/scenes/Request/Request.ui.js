@@ -34,12 +34,20 @@ class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      fiatPerCrypto: '1.77345' // assume dollars per satoshi
-    }
+      keyboardVisible: false
+    }    
   }
 
   componentDidMount () {
     this.props.dispatch(updateReceiveAddress())
+  }
+
+  _onFocus = () => {
+    this.setState({keyboardVisible: true})
+  }
+
+  _onBlur = () => {
+    this.setState({keyboardVisible: false})    
   }
 
   render () {
@@ -57,18 +65,20 @@ class Request extends Component {
       >
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate fiatPerCrypto={this.state.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom} />
+          <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom} />
         </View>
 
         <View style={styles.main}>
           <FlipInput
             onCryptoInputChange={this.onCryptoInputChange}
             onFiatInputChange={this.onFiatInputChange}
-            amountRequestedInCrypto={amountSatoshi}
-            amountRequestedInFiat={amountFiat}
+            amountSatoshi={amountSatoshi || 0}
+            amountFiat={amountFiat}
             inputCurrencySelected={this.props.inputCurrencySelected}
             cryptoDenom={this.props.inputCurrencyDenom}
             fiatCurrencyCode={this.props.fiatCurrencyCode} 
+            inputOnFocus={this._onFocus}
+            inputOnBlur={this._onBlur}              
           />
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus
@@ -94,19 +104,21 @@ class Request extends Component {
 
   ///////////////// Start Critical Input and Conversion Area //////////////////////
   onCryptoInputChange = (amountRequestedInCrypto) => {
+    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ' , amountRequestedInCrypto)
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
-    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.state.fiatPerCrypto)
+    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.props.fiatPerCrypto)
 
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
     this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
 
   onFiatInputChange = (amountRequestedInFiat) => {
+    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ' , amountRequestedInCrypto)    
     amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
     if (this.invalidInput(amountRequestedInFiat)) { return }
 
-    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.state.fiatPerCrypto)
+    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.props.fiatPerCrypto)
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
     this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
@@ -208,6 +220,7 @@ export default connect(state => ({
   settings: state.ui.settings,
   inputCurrencySelected: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode,
   inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-  fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
-  // ^ Don't laugh...  =P
+  // ^ Don't laugh...  =P  
+  fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
+  fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
 }))(Request)

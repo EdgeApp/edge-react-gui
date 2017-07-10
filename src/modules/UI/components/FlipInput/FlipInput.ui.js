@@ -154,7 +154,7 @@ class FlipInputInside extends Component {
         return ''
       }
       console.log('value is truthy: ', amountRequestedSecondary.toString())
-      return amountRequestedSecondary.toString()
+      return amountRequestedSecondary.toPrecision(12).toString()
     }
 
     getTextColor = () => {
