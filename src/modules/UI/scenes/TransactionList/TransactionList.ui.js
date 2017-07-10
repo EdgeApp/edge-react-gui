@@ -47,7 +47,7 @@ class TransactionList extends Component {
    constructor(props) {
      super(props)
      this.state = {
-      balance: 0,
+      //balance: 0,
       focused: false,
       animation: new Animated.Value(0),
       op: new Animated.Value(0),
@@ -262,10 +262,10 @@ class TransactionList extends Component {
                               <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                                <T style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates.USD ? (this.state.balance * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
+                                <T style={[styles.currentBalanceBoxDollars, b('purple')]}>$ {this.props.exchangeRates[this.props.settings.defaultFiat] ? (this.props.uiWallet.balance * this.props.exchangeRates[this.props.uiWallet.currencyCode].value).toFixed(2) : ''}</T>
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
-                                <T style={[styles.currentBalanceBoxBits, b('yellow')]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.state.balance || '------'}</T>
+                                <T style={[styles.currentBalanceBoxBits, b('yellow')]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.uiWallet.balance || '------'}</T>
                             </View>
                           </View>
                         ) : (
@@ -373,7 +373,8 @@ const mapStateToProps = state => ({
   exchangeRates:    state.ui.scenes.exchangeRate.exchangeRates,
   wallet:           CORE_SELECTORS.getWallet(state, UI_SELECTORS.getSelectedWalletId(state)),
   selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
-  uiWallet:         state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
+  uiWallet:         state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
+  settings:         state.ui.settings
 })
 
 const mapDispatchToProps = dispatch => ({
