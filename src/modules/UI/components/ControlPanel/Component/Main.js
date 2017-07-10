@@ -12,43 +12,6 @@ const platform = Platform.OS;
 import { logout } from  '../action.js'
 
 class MainComponent extends Component {
-  _handleOnPressRouting = (route) => {
-    let goRoute = Actions[route]
-    goRoute()
-
-    return this.props.dispatch(closeSidebar())
-  }
-
-  _render2FAenabling = () => {
-    if(platform === 'android') {
-      return (
-        <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
-          <View style={[ styles.main.link, styles.main.borderVertical ]}>
-            <Icon style={styles.main.icon} name='lock' />
-            <View style={styles.main.textContainer}>
-              <Text style={styles.main.text}>Secure Your Account</Text>
-              <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
-            </View>
-          </View>
-        </TouchableNativeFeedback>
-      )
-    }
-
-    if(platform !== 'android') {
-      return (
-        <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
-          <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
-            <Icon style={styles.main.icon} name='lock' />
-            <View style={styles.main.textContainer}>
-              <Text style={styles.main.text}>Secure Your Account</Text>
-              <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
-            </View>
-          </View>
-        </TouchableHighlight>
-      )
-    }
-  }
-
   render () {
 
     if(this.props.usersView) {
@@ -101,7 +64,7 @@ class MainComponent extends Component {
                     <Text style={styles.main.textItalic}>Find Local Business</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>             
+              </TouchableNativeFeedback>
             </View>
             <View style={styles.others.container}>
               <TouchableNativeFeedback onPress={ this.props.logout }>
@@ -119,7 +82,7 @@ class MainComponent extends Component {
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
                 </View>
-              </TouchableNativeFeedback>             
+              </TouchableNativeFeedback>
             </View>
           </View>
         )
@@ -171,7 +134,7 @@ class MainComponent extends Component {
                     <Text style={styles.main.textItalic}>Find Local Business</Text>
                   </View>
                 </View>
-              </TouchableHighlight>            
+              </TouchableHighlight>
             </View>
             <View style={styles.others.container}>
               <TouchableHighlight style={styles.others.iosTouchableHighlight}
@@ -191,11 +154,48 @@ class MainComponent extends Component {
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
                 </View>
-              </TouchableHighlight>          
+              </TouchableHighlight>
             </View>
           </View>
         )
       }
+    }
+  }
+
+  _handleOnPressRouting = (route) => {
+    let goRoute = Actions[route]
+    goRoute()
+
+    return this.props.dispatch(closeSidebar())
+  }
+
+  _render2FAenabling = () => {
+    if(platform === 'android') {
+      return (
+        <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
+          <View style={[ styles.main.link, styles.main.borderVertical ]}>
+            <Icon style={styles.main.icon} name='lock' />
+            <View style={styles.main.textContainer}>
+              <Text style={styles.main.text}>Secure Your Account</Text>
+              <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+      )
+    }
+
+    if(platform !== 'android') {
+      return (
+        <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
+          <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
+            <Icon style={styles.main.icon} name='lock' />
+            <View style={styles.main.textContainer}>
+              <Text style={styles.main.text}>Secure Your Account</Text>
+              <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
+            </View>
+          </View>
+        </TouchableHighlight>
+      )
     }
   }
 }
@@ -205,6 +205,7 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = dispatch => ({
   logout: () => { dispatch(logout()) },
+  dispatch: (props) => { dispatch(props) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainComponent)
