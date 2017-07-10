@@ -49,12 +49,10 @@ class SendConfirmation extends Component {
   }
 
   _onFocus = () => {
-    console.log('_onFocus called')
     this.setState({keyboardVisible: true})
   }
 
   _onBlur = () => {
-    console.log('_onBlur called')
     this.setState({keyboardVisible: false})    
   }
 
@@ -67,9 +65,6 @@ class SendConfirmation extends Component {
       isSliderLocked,
      } = this.props.sendConfirmation
 
-    const {
-      publicAddress
-    } = this.props
 
     return (
       <LinearGradient
@@ -101,7 +96,7 @@ class SendConfirmation extends Component {
               inputOnBlur={this._onBlur}          
             />
             {/* <Recipient label={label} address={publicAddress} /> */}
-            <Recipient label={'Ashley Rind'} address={'1ExAmpLe0FaBiTco1NADr3sSV5tsGaMF6hd'} />
+            <Recipient label={'Ashley Rind'} address={this.props.recipientPublicAddress} />
             {/* <Password /> */}
           </View>
 
@@ -192,7 +187,7 @@ const mapStateToProps = state => {
     feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
     fiatPerCrypto:         state.ui.scenes.sendConfirmation.fiatPerCrypto,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-    publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
+    //publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
     transaction:           state.ui.scenes.sendConfirmation.transaction,
     inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,

@@ -272,10 +272,11 @@ export const AddressInputRecipientConnect = connect( state => ({
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
+    console.log('recipient address done, this.props.recipientAddress is: ', this.props.recipientAddress)
     updateUri(this.props.recipientAddress)
     this.props.dispatch(updatePublicAddress(this.props.recipientAddress))
     this._onToggleAddressModal()
-    Actions.sendConfirmation({ type: 'reset' })
+    Actions.sendConfirmation({ type: 'reset' , recipientPublicAddress: this.props.recipientAddress, testing: 'kylan'})
   }
   _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())
