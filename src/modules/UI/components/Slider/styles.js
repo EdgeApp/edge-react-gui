@@ -3,13 +3,13 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
   container: {
     marginVertical: 30,
-    marginHorizontal: 20
+    marginHorizontal: 30
   },
   slider: {
     backgroundColor: 'rgba(0,0,0, 0.1)',
     overflow: 'hidden',
     borderRadius: 27,
-    height: 55,
+    height: 55
   },
   track: {
     // backgroundColor: '#355ea0',
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -26,
     backgroundColor: 'white',
-    borderRadius: 100,
+    borderRadius: 100
   },
   textOverlay: {
     backgroundColor: 'transparent',
