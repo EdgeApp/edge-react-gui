@@ -105,7 +105,7 @@
     "husky": "^0.12.0",
     "maya-kai": "^0.0.10",
     "nyc": "^10.0.0",
-    "dotdotdep": "git+ssh://git@github.com:Airbitz/dotdotdep.git#e4714aea53a1f9c9a81b68b956c29e24a8fc26a1",
+    "dotdotdep": "git+ssh://git@github.com:Airbitz/dotdotdep.git#9036675bf04b18b2b262172ff182b199fadbc3b3",
     "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",
