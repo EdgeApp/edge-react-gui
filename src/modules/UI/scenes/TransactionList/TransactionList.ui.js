@@ -207,14 +207,14 @@ class TransactionList extends Component {
     this.setState({showBalance: !this.state.showBalance})
   }
 
-  componentWillMount() { 
+  render () {
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
     
-    var renderableCompleteTxList = renderableTransactionList.map((x, i) => {
+    var completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
       let txDate = new Date(x.date)
@@ -229,13 +229,7 @@ class TransactionList extends Component {
     })
 
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    this.setState({
-      completedTx: renderableCompleteTxList,
-      dataSrc: ds.cloneWithRows(renderableCompleteTxList)
-    })    
-  }
-
-  render () {
+    let dataSrc = ds.cloneWithRows(completedTxList)    
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -297,7 +291,7 @@ class TransactionList extends Component {
           <View style={[styles.transactionsWrap]}>
               <ListView
                 style={[styles.transactionsScrollWrap]}
-                dataSource={this.state.dataSrc}
+                dataSource={dataSrc}
                 renderRow={this.renderTx}
                 onEndReached={this.loadMoreTransactions}
                 onEndReachedThreshold={60}
