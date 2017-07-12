@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "updot": "dotdotdep",
     "android:run": "yarn run android:clean; react-native run-android",
     "lint": "standard --verbose | snazzy",
     "lint:fix": "standard --fix --verbose | snazzy",
@@ -104,6 +105,7 @@
     "husky": "^0.12.0",
     "maya-kai": "^0.0.10",
     "nyc": "^10.0.0",
+    "dotdotdep": "git+ssh://git@github.com:Airbitz/dotdotdep.git#9036675bf04b18b2b262172ff182b199fadbc3b3",
     "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",

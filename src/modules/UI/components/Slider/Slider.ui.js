@@ -44,6 +44,7 @@ class ABSlider extends Component {
           thumbStyle={styles.thumb}
           minimumTrackTintColor='transparent'
           maximumTrackTintColor='transparent'
+          thumbTouchSize={{width: 160, height: 160}}
         />
         <Text style={styles.textOverlay}>Slide To Confirm</Text>
       </View>

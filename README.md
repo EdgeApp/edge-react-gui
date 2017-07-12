@@ -14,15 +14,17 @@ Edge is:
 
 ## Getting Started
 
+_____
+#### Until a **yarn** bug gets resolved, use **npm** instead of yarn
+_____
+
 1. Make sure you have yarn installed
-  ```
-  npm install -g yarn
-  ```
+
+  https://nodejs.org/en/download/
 
 2. Make sure you have React Native CLI installed
-  ```
-  yarn global add react-native-cli
-  ```
+
+  `yarn global add react-native-cli`
 
 3. Clone this repo, airbitz-core-js, and the demo currency library
 
@@ -65,8 +67,8 @@ Edge is:
   git checkout develop
   yarn
   # copy the latest changes from the airbitz-core-js and
-  # airbitz-currency-shitcoin repos
-  ./copy-core.sh
+  # any other airbitz repos
+  yarn run updot
   # Run scripts to update native code
   react-native link
   ```
