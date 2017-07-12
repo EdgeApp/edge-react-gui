@@ -5,7 +5,7 @@ const initialState = {
   fiatPerCrypto: 1000,
   publicAddress: '',
   label: '',
-  inputCurrencySelected: 'crypto',
+  inputCurrencySelected: 'fiat',
   maxSatoshi: 10,
   isPinEnabled: true,
   isSliderLocked: true,
