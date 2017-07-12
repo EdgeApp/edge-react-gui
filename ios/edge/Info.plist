@@ -50,12 +50,10 @@
 	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Some description</string>
-
 	<key>NSCalendarsUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not access your calendar.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>$(PRODUCT_NAME) does not access speech recognition.</string>
-
 	<key>UIAppFonts</key>
 	<array>
 		<string>Andale Mono.ttf</string>

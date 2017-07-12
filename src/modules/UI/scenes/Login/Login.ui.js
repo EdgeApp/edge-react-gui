@@ -4,7 +4,6 @@ import { ActivityIndicator, Alert, Button, Image, InteractionManager, StyleSheet
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
-import { makeReactNativeIo } from 'react-native-airbitz-io'
 import { makeContext } from 'airbitz-core-js'
 import { getUsersList } from '../../components/ControlPanel/action.js'
 

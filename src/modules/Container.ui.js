@@ -34,7 +34,7 @@ import { initializeAccount } from './Login/action.js'
 import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 import { deleteWalletRequest } from './Core/Wallets/action.js'
 
-import { makeReactNativeIo } from 'react-native-airbitz-io'
+import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
 
 import styles from './style.js'
@@ -132,7 +132,7 @@ class Main extends Component {
 
                     <Scene key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={300} />
 
-                    <Scene key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />                    
+                    <Scene key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
 
                     <Scene key='request' component={Request} title='Request' animation={'fade'} duration={300} />
 
