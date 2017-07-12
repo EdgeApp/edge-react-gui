@@ -15,7 +15,7 @@ Edge is:
 ## Getting Started
 
 _____
-#### Until a **yarn** bug gets resolved, use **npm** instead of yarn
+#### NOTICE: Until a **yarn** bug gets resolved, use **npm** instead of yarn
 _____
 
 1. Make sure you have yarn installed

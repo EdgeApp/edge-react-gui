@@ -94,6 +94,7 @@ const activateWallet = (keyInfo, dispatch, getState) => {
     Object.keys(wallets).forEach(id => {
       dispatch(UI_ACTIONS.upsertWalletRequest(wallets[id]))
     })
+    // dispatch(UI_ACTIONS.upsertWalletRequest(wallet))
   })
 }
 

@@ -70,23 +70,17 @@ const schema = wallet => {
   const archived = wallet.archived
   const deleted = wallet.deleted
 
-  let balance = 0
-  try {
-    balance = wallet.getBalance()
-  } catch (error) {
-    console.log('error', error)
-  }
+  const currencyCode = wallet.currencyInfo.currencyCode
+  const denominations = wallet.currencyInfo.denominations
+  const symbolImage = wallet.currencyInfo.symbolImage
+  const metaTokens = wallet.currencyInfo.metaTokens
 
-  const info = wallet.currencyInfo
-  const {
-    currencyCode,
-    denominations,
-    symbolImage,
-    metaTokens } = info
+  const balance = wallet.getBalance()
 
   metaTokens.forEach(metaToken => {
-    metaToken.balance = 0
-    metaToken.balance = wallet.getBalance(currencyCode)
+    const currencyCode = metaToken.currencyCode
+    const tokenBalance = wallet.getBalance(currencyCode)
+    metaToken.balance = tokenBalance
   })
 
   const newWallet = {

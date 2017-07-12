@@ -1,10 +1,6 @@
 // import { renameWalletSuccess } from '../../UI/Wallets/action.js'
-import {
-  // balanceChanged,
-  newTransactionsRequest,
-  changedTransactionsRequest
-  // walletNameChanged
-} from '../../UI/scenes/TransactionList/action.js'
+import { refreshWallet } from '../../UI/Wallets/action.js'
+import { refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
 
 export const makeWalletCallbacks = (dispatch, walletId) => {
   const callbacks = {
@@ -14,19 +10,23 @@ export const makeWalletCallbacks = (dispatch, walletId) => {
       }
     },
 
-    onBalanceChanged (balance) {
-      console.log('onBalanceChanged', balance)
-      // dispatch(balanceChanged(balance, walletId))
+    onBalanceChanged (currencyCode) {
+      console.log('onBalanceChanged')
+      console.log('walletId: ' + walletId)
+      console.log('currencyCode: ' + currencyCode)
+      dispatch(refreshWallet(walletId))
     },
 
     onTransactionsChanged (transactions) {
       console.log('onTransactionsChanged', transactions)
-      dispatch(changedTransactionsRequest(transactions, walletId))
+      // dispatch(changedTransactionsRequest(transactions, walletId))
+      dispatch(refreshTransactionsRequest(walletId))
     },
 
     onNewTransactions (transactions) {
-      console.log('onNewTransaction', transactions)
-      dispatch(newTransactionsRequest(transactions, walletId))
+      console.log('onNewTransactions', transactions)
+      // dispatch(newTransactionsRequest(transactions, walletId))
+      dispatch(refreshTransactionsRequest(walletId))
     },
 
     onBlockHeightChanged (blockHeight) {
@@ -35,7 +35,7 @@ export const makeWalletCallbacks = (dispatch, walletId) => {
 
     onWalletNameChanged (walletName) {
       console.log('onWalletNameChanged', walletName)
-      // dispatch(walletNameChanged(walletName, walletId))
+      // dispatch(refreshWallet(walletId))
     }
   }
 

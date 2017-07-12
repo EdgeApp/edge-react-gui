@@ -86,6 +86,19 @@ export const renameWalletSuccess = walletId => {
   }
 }
 
+export const refreshWallet = (walletId) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const wallet = CORE_SELECTORS.getWallet(state, walletId)
+
+    if (wallet) {
+      console.log('updating wallet balance', walletId)
+      return dispatch(upsertWallet(wallet))
+    }
+    console.log('wallet doesn\'t exist yet', walletId)
+  }
+}
+
 export const refreshWallets = () => {
   return (dispatch, getState) => {
     const state = getState()

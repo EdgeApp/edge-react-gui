@@ -62,6 +62,7 @@ class TransactionList extends Component {
    }
 
   componentDidMount () {
+
     this.props.dispatch(updateExchangeRates())
     this.props.getTransactions()
     this.setState({
@@ -213,7 +214,7 @@ class TransactionList extends Component {
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
-    
+
     var completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
@@ -266,7 +267,7 @@ class TransactionList extends Component {
                           <View style={[b(), styles.balanceHiddenContainer]}>
                             <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
-                        ) 
+                        )
                       }
                       </TouchableOpacity>
                     )}

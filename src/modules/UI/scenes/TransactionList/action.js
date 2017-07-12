@@ -44,6 +44,17 @@ export const newTransactionsRequest = (transactions, walletId) => {
   }
 }
 
+export const refreshTransactionsRequest = (walletId, currencyCode) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+
+    if (walletId === selectedWalletId) {
+      return dispatch(getTransactionsRequest(walletId))
+    }
+  }
+}
+
 export const newTransactions = (transactions) => {
   return {
     type: NEW_TRANSACTIONS,
