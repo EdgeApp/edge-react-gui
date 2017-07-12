@@ -2,11 +2,22 @@ import React, { Component } from 'react'
 import { Text, TextInput, View, StyleSheet, Easing, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { devStyle, border as b } from '../../../utils.js'
+import { devStyle, border as b , getCryptoFromFiat, getFiatFromCrypto} from '../../../utils.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import FlipView from 'react-native-flip-view'
 import * as Animatable from 'react-native-animatable'
-import {  updateInputCurrencySelected, updateAmountSatoshiRequest} from '../../scenes/SendConfirmation/action'
+import {  
+  updateAmountSatoshiRequest,
+  updateAmountFiat,
+  updateFiatPerCrypto,
+  updateInputCurrencySelected,
+  updateLabel,
+  updateMaxSatoshiRequest,
+  updateDraftStatus,
+  updateIsKeyboardVisible,
+  signBroadcastAndSave,
+  useMaxSatoshi
+} from '../../scenes/SendConfirmation/action'
 
 class FlipInput extends Component {
   constructor(props) {
@@ -198,6 +209,10 @@ class FlipInputInside extends Component {
           : 'crypto'
         //this.props.dispatch(updateAmountSatoshiRequest(''))
         clearText('primaryInput')
+        this.setState({
+          primaryInputValue: null,
+          secondaryInputValue: null          
+        })
         this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
     }
 
@@ -219,11 +234,37 @@ class FlipInputInside extends Component {
       }
       console.log('value is truthy: ', input, ' , this.props.inputCurrencySelected is: ' , this.props.inputCurrencySelected )
       if(this.props.inputCurrencySelected === 'crypto'){
-        return Number(input).toFixed(2).toString()
+        return getFiatFromCrypto(Number(input), this.props.fiatPerCrypto).toFixed(2).toString()
       } else {
         console.log('about to use input.toPrecsion(12), input is: ', input)
-        return Number(input).toPrecision(12).toString()
+        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()
       }
+    }
+
+    onCryptoInputChange = amountSatoshi => {
+      console.log('in onCryptoInputChange')
+      this.props.updateAmountSatoshi(parseInt(amountSatoshi))
+    }
+
+    onFiatInputChange = (amountFiat) => {
+      console.log('in onFiatInputChange')
+      const amountSatoshi = getCryptoFromFiat(amountFiat, this.props.fiatPerCrypto)
+      this.props.updateAmountSatoshi(amountSatoshi)
+    }
+
+    getFeeInFiat = feeSatoshi => {
+      const fiatPerCrypto = this.props.fiatPerCrypto
+      const feeFiat = getFiatFromCrypto(feeSatoshi, fiatPerCrypto)
+
+      return feeFiat
+    }
+
+    getAmountFiat = amountSatoshi => {
+      console.log('in getAmountFiat')
+      const fiatPerCrypto = this.props.fiatPerCrypto
+      const amountFiat = getFiatFromCrypto(amountSatoshi, fiatPerCrypto).toFixed(2) // also need opposite
+
+      return amountFiat
     }
 
     getTextColor = () => {
@@ -290,6 +331,6 @@ class FlipInputInside extends Component {
   }
 }
 export const FlipInputInsideConnect = connect(state => ({
-
+  fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
 })
 )(FlipInputInside)
