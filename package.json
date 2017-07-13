@@ -99,7 +99,7 @@
     "flow-bin": "^0.37.4",
     "husky": "^0.12.0",
     "nyc": "^10.0.0",
-    "dotdotdep": "git+ssh://git@github.com:Airbitz/dotdotdep.git#7cc65dd70affbd025d7f8054b36e3bd91d03ece7",
+    "dotdotdep": "git+ssh://git@github.com:Airbitz/dotdotdep.git",
     "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",
