@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, TextInput, View, StyleSheet, Easing, TouchableOpacity } from 'react-native'
+import { Animated, Text, TextInput, View, StyleSheet, Easing, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import { devStyle, border as b , getCryptoFromFiat, getFiatFromCrypto} from '../../../utils.js'
@@ -168,10 +168,12 @@ export default connect(state => ({
 
 class FlipInputInside extends Component {
   constructor(props){
+    console.log('in FlipInput constructor')
     super(props)
     this.state = {
       primaryInputValue: null,
-      secondaryInputValue: null
+      secondaryInputValue: null,
+      flipInputOpacity: new Animated.Value(1)
     }
   }
 
@@ -211,9 +213,21 @@ class FlipInputInside extends Component {
         clearText('primaryInput')
         this.setState({
           primaryInputValue: null,
-          secondaryInputValue: null          
-        })
+          secondaryInputValue: null,
+          flipInputOpacity: new Animated.Value(0)
+        }, animateFlipInput)
         this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
+    }
+
+    const animateFlipInput = () => {
+      console.log('wihtin animateFlipInput')
+      Animated.timing(
+        this.state.flipInputOpacity,
+        {
+          toValue: 1,
+          duration: 300
+        }
+      ).start()  
     }
 
     const inputChange = ( input ) => {
@@ -285,47 +299,51 @@ class FlipInputInside extends Component {
     const renderMainInput = () => {
       return (
         <View style={[styles.mainInputRow, b()]}>
-          <Animatable.View animation='fadeIn' style={styles.primaryInputContainer} name='InputAndFeesElement'>
-            <TextInput
-              ref={'primaryInput'} 
-              style={[styles.primaryInput, {color: getTextColor()}]}
-              placeholder={primaryPlaceholder}
-              keyboardType='decimal-pad'
-              onChangeText={inputChange}
-              placeholderTextColor={getTextColor()}
-              returnKeyType='done'
-              onBlur={this.props.parentProps.inputOnBlur}
-              onFocus={this.props.parentProps.inputOnFocus}
-            />
-          </Animatable.View>
-          <Text style={[ styles.fees, { alignSelf: 'center' } ]}>{primaryDenomSymbol}</Text>
+          <View style={[styles.primaryInputContainer,b()]} name='InputAndFeesElement'>
+            <Animated.View style={ { opacity: this.state.flipInputOpacity } }>
+                <TextInput
+                  ref={'primaryInput'} 
+                  style={[styles.primaryInput, {color: getTextColor()}]}
+                  placeholder={primaryPlaceholder}
+                  keyboardType='decimal-pad'
+                  onChangeText={inputChange}
+                  placeholderTextColor={getTextColor()}
+                  returnKeyType='done'
+                  onBlur={this.props.parentProps.inputOnBlur}
+                  onFocus={this.props.parentProps.inputOnFocus}
+                />
+            </Animated.View>
+          </View>
+            <Animated.View style={ {opacity: this.state.flipInputOpacity, alignSelf: 'center' } }>
+              <Text style={[ styles.fees]}>{primaryDenomSymbol}</Text>
+            </Animated.View>
         </View>
       )
     }
 
     const renderConvertedInput = () => {
       return (
-        <View style={[styles.convertedInputRow, b()]}>
-          <Animatable.View animation='fadeIn' style={styles.secondaryTextContainer}>
+        <Animated.View style={[styles.convertedInputRow, b(), {opacity: this.state.flipInputOpacity}]}>
+          <View style={styles.secondaryTextContainer}>
             <Text style={[ styles.secondaryText,  {color: getTextColor()}]}>
               {this.state.secondaryInputValue || secondaryPlaceholder}
             </Text>
-          </Animatable.View>
+          </View>
           <Text style={styles.fees}>{secondaryDenomSymbol}</Text>
-        </View>
+        </Animated.View>
       )
     }
 
     return (
-      <View style={[styles.view, b()]}>
-        <View style={[styles.row, b()]}>
+      <View style={[styles.view]}>
+        <Animated.View style={[styles.row]}>
           <FAIcon style={styles.icon} onPress={_onInputCurrencyToggle} name='swap-vert' size={36} />
-          <View style={[{flex:1}, b('red')]}>
+          <View style={[{flex:1}]}>
             {renderMainInput()}
             {renderConvertedInput()}
           </View>
           { !displayFees ? <Text style={styles.currency}>{this.props.inputCurrencySelected}</Text> : null }
-        </View>
+        </Animated.View>
       </View>
     )
   }
