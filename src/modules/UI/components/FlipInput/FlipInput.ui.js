@@ -8,6 +8,7 @@ import FlipView from 'react-native-flip-view'
 import * as Animatable from 'react-native-animatable'
 import {  
   updateAmountSatoshiRequest,
+  updateAmountSatoshi,
   updateAmountFiat,
   updateFiatPerCrypto,
   updateInputCurrencySelected,
@@ -60,6 +61,7 @@ class FlipInput extends Component {
       secondaryAmountRequested = amountFiat
       primaryFeeAmount = feeInCrypto
       secondaryFeeAmount = feeInFiat
+      checkAgainstMax=this.props.checkMax
     } else {
       primaryDenomSymbol = this.props.fiatCurrencyCode
       secondaryDenomSymbol = this.props.cryptoDenom.symbol
@@ -69,12 +71,13 @@ class FlipInput extends Component {
       secondaryAmountRequested = amountSatoshi || 0
       primaryFeeAmount = feeInFiat
       secondaryFeeAmount = feeInCrypto
+      checkAgainstMax=this.props.checkMax
     }
 
     return (
       <FlipInputInsideConnect style={[b()]}
         currencySelected={inputCurrencySelected}
-        mode={mode}
+        mode={this.props.mode}
         primaryPlaceholder={primaryPlaceholderSyntax}
         secondaryPlaceholder={secondaryPlaceholderSyntax}
         onInputChange={onInputChange}
@@ -88,6 +91,7 @@ class FlipInput extends Component {
         displayFees={displayFees} 
         inputCurrencySelected={inputCurrencySelected}  
         parentProps={this.props}
+        checkMax={checkAgainstMax}        
         />
     )
   }
@@ -173,14 +177,14 @@ class FlipInputInside extends Component {
     this.state = {
       primaryInputValue: null,
       secondaryInputValue: null,
-      flipInputOpacity: new Animated.Value(1)
+      flipInputOpacity: new Animated.Value(1),
+      mode: this.props.mode
     }
   }
 
   render () {
     console.log('rendering FlipInputInside, this.props is: ', this.props)    
     const {
-      mode,
       onInputChange,
       amountRequestedPrimary,
       amountRequestedSecondary,
@@ -192,7 +196,7 @@ class FlipInputInside extends Component {
       displayFees,
     } = this.props
 
-    const getPrimaryAmount = () => {
+    const getPrimaryAmount = () => { // this function may need to be integrated with inputChange
       console.log('inside getPrimaryAmount')
       if ([0, '', undefined, null].includes(amountRequestedPrimary)) {
         console.log('inside getPrimaryAmount, handling blank input')
@@ -236,6 +240,15 @@ class FlipInputInside extends Component {
       this.setState({
         primaryInputValue: getPrimaryAmount(input),
         secondaryInputValue: getSecondaryAmount(input)
+      }, () => {
+        console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input)
+        if(this.props.inputCurrencySelected === 'crypto') {
+          this.setState({mode: this.props.checkMax(this.state.primaryInputValue)})
+          this.props.dispatch(updateAmountSatoshi(this.state.primaryInputValue))
+        } else {
+          this.setState({mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))})
+          this.props.dispatch( updateAmountSatoshi(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()))
+        }        
       })
     }
 
@@ -282,7 +295,7 @@ class FlipInputInside extends Component {
     }
 
     getTextColor = () => {
-      switch(mode) {
+      switch(this.state.mode) {
         case 'over':
           return '#F03A47'
         case 'max':
@@ -350,5 +363,6 @@ class FlipInputInside extends Component {
 }
 export const FlipInputInsideConnect = connect(state => ({
   fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
+  maxSatoshi:     state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,  
 })
 )(FlipInputInside)

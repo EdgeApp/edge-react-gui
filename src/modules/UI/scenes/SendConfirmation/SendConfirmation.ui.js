@@ -61,7 +61,6 @@ class SendConfirmation extends Component {
     const {
       amountSatoshi,
       amountFiat,
-      draftStatus,
       label,
       isSliderLocked,
      } = this.props.sendConfirmation
@@ -75,20 +74,20 @@ class SendConfirmation extends Component {
       >
         <ScrollView style={[styles.mainScrollView]}>
           <View style={[styles.exchangeRateContainer, b()]} >
-            <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
+            <ExchangeRate mode={this.getDraftStatus(this.props.amountSatoshi)} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
           </View>
 
           <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
             {this.props.inputCurrencySelected === 'crypto' ? (
               <FlipInput
-                mode={draftStatus}
+                mode={this.getDraftStatus(this.props.amountSatoshi)}
                 onCryptoInputChange={this.onCryptoInputChange}
                 onFiatInputChange={this.onFiatInputChange}
                 onInputChange={this.onCryptoInputChange}
                 amountSatoshi={this.props.amountSatoshi || 0}
                 amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
                 inputCurrencySelected={this.props.inputCurrencySelected} // crypto
-                maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
+                maxAvailableToSpendInCrypto={this.props.maxSatoshi}
                 displayFees
                 feeInCrypto={this.props.feeSatoshi}
                 feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
@@ -96,18 +95,19 @@ class SendConfirmation extends Component {
                 fiatCurrencyCode={this.props.fiatCurrencyCode}   
                 inputOnFocus={this._onFocus}
                 inputOnBlur={this._onBlur}
-                clearInput={this.clearInput}          
+                clearInput={this.clearInput}      
+                checkMax={this.getDraftStatus}    
               />
             ) : ( // inputCurrencySelected === 'fiat'
                <FlipInput
-                mode={draftStatus}
+                mode={this.getDraftStatus(this.props.amountSatoshi)}
                 onCryptoInputChange={this.onCryptoInputChange}
                 onFiatInputChange={this.onFiatInputChange}
                 onInputChange={this.onFiatInputChange}
                 amountSatoshi={this.props.amountSatoshi || 0}
                 amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
                 inputCurrencySelected={this.props.inputCurrencySelected} // fiat
-                maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
+                maxAvailableToSpendInCrypto={this.props.maxSatoshi}
                 displayFees
                 feeInCrypto={this.props.feeSatoshi}
                 feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
@@ -115,7 +115,8 @@ class SendConfirmation extends Component {
                 fiatCurrencyCode={this.props.fiatCurrencyCode}   
                 inputOnFocus={this._onFocus}
                 inputOnBlur={this._onBlur} 
-                clearInput={this.clearInput}                   
+                clearInput={this.clearInput}   
+                checkMax={this.getDraftStatus}                    
               />
               )
             }
@@ -155,12 +156,13 @@ class SendConfirmation extends Component {
     this.props.useMaxSatoshi()
   }
 
-  getDraftStatus = (amountSatoshi, maxSatoshi) => {
+  getDraftStatus = (amountSatoshi) => {
+    console.log('inGetDraftStatus, amountSatoshi is: ', amountSatoshi , ' , and this.props.maxSatoshi is: ', this.props.maxSatoshi)
     let draftStatus
 
-    if ( amountSatoshi > maxSatoshi ) {
+    if ( amountSatoshi > this.props.maxSatoshi ) {
       draftStatus = 'over'
-    } else if ( amountSatoshi == maxSatoshi ) {
+    } else if ( amountSatoshi == this.props.maxSatoshi ) {
       draftStatus = 'max'
     } else {
       draftStatus = 'under'
@@ -207,6 +209,7 @@ const mapStateToProps = state => {
   return {
     sendConfirmation:      state.ui.scenes.sendConfirmation,
     amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
+    maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,
     feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
     fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
