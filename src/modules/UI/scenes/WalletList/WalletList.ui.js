@@ -46,7 +46,7 @@ import Modal from 'react-native-modal'
 import StylizedModal from '../../components/Modal/Modal.ui'
 
 // Fake stuff to be removed
-import { addWallet, completeDeleteWallet, selectWalletId } from '../../Wallets/action.js'
+import { addWallet, completeDeleteWallet, selectWallet } from '../../Wallets/action.js'
 // End of fake stuff to be removed later
 import * as UI_SELECTORS from '../../selectors.js'
 

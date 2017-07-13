@@ -14,7 +14,7 @@ import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-n
 import {executeWalletRowOption} from './action'
 import RowOptions from './WalletListRowOptions.ui'
 import {border as b, cutOffText} from '../../../utils'
-import { selectWalletId } from '../../Wallets/action.js'
+import { selectWallet } from '../../Wallets/action.js'
 
 export const findDenominationSymbol = (denoms, value) => {
   console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
@@ -30,9 +30,9 @@ class WalletListRow extends Component {
     super(props)
   }
 
-  _onPressSelectWallet = (walletId, currencyCode = null) => {
-    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)    
-    this.props.dispatch(selectWalletId(walletId, currencyCode))
+  _onPressSelectWallet = (walletId, currencyCode) => {
+    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
+    this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList()
   }
 
@@ -40,7 +40,7 @@ class WalletListRow extends Component {
     let id = this.props.data.id
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
-
+    const currencyCode = this.props.data.currencyCode
 
     return (
       <View>
@@ -48,7 +48,7 @@ class WalletListRow extends Component {
           underlayColor={'#eee'}
           delayLongPress={500}
           {...this.props.sortHandlers}
-          onPress={() => this._onPressSelectWallet(this.props.data.id)}
+          onPress={() => this._onPressSelectWallet(this.props.data.id, currencyCode)}
           >
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
@@ -82,9 +82,9 @@ class WalletListTokenRow extends Component {
     super(props)
   }
 
-  _onPressSelectWallet = (walletId, currencyCode = null) => {
+  _onPressSelectWallet = (walletId, currencyCode) => {
     console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode )
-    this.props.dispatch(selectWalletId(walletId, currencyCode))
+    this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList()
   }
 
@@ -94,20 +94,20 @@ class WalletListTokenRow extends Component {
         underlayColor={'#eee'}
         delayLongPress={500}
         {...this.props.sortHandlers}
-        onPress={() => this._onPressSelectWallet(this.props.parentWallet, this.props.currencyCode)}
-        >      
-          <View style={[styles.tokenRowContent]}>
-            <View style={[styles.tokenRowNameTextWrap]}>
-              <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
-            </View>
-            <View style={[styles.tokenRowBalanceTextWrap]}>
-              <T style={[styles.tokenRowText]}>{this.props.balance}</T>
-            </View>          
+        onPress={() => this._onPressSelectWallet(this.props.parentWallet, this.props.currencyCode)}>
+        <View style={[styles.tokenRowContent]}>
+          <View style={[styles.tokenRowNameTextWrap]}>
+            <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
-      </TouchableHighlight> 
+          <View style={[styles.tokenRowBalanceTextWrap]}>
+            <T style={[styles.tokenRowText]}>{this.props.balance}</T>
+          </View>
+        </View>
+      </TouchableHighlight>
     )
   }
 }
+
 WalletListTokenRow.propTypes = {
   currencyCode: PropTypes.string,
   balance: PropTypes.number

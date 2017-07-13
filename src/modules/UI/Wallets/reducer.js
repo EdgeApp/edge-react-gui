@@ -62,6 +62,18 @@ export const selectedWalletId = (state = '', action) => {
   }
 }
 
+export const selectedCurrencyCode = (state = '', action) => {
+  const { type, data = {} } = action
+  const { currencyCode } = data
+
+  switch (type) {
+    case ACTION.SELECT_CURRENCY_CODE:
+      return currencyCode
+    default:
+      return state
+  }
+}
+
 const schema = wallet => {
   const id = wallet.id
   const type = wallet.type
@@ -117,5 +129,6 @@ export const wallets = combineReducers({
   byId,
   activeWalletIds,
   archivedWalletIds,
-  selectedWalletId
+  selectedWalletId,
+  selectedCurrencyCode
 })

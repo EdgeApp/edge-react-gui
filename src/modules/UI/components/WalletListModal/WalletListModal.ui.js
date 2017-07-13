@@ -38,9 +38,9 @@ class WalletListModal extends Component {
         animation='fadeInDown'
         duration={100} >
         <ScrollView>
-          <WalletListModalHeaderConnect type={this.props.type} />          
+          <WalletListModalHeaderConnect type={this.props.type} />
           <WalletListModalBodyConnect onPress={this.props.onPress}
-              selectionFunction={this.props.selectionFunction}  style={{flex: 1}} />      
+            selectionFunction={this.props.selectionFunction} style={{flex: 1}} />
         </ScrollView>
       </Animatable.View>
     )
@@ -48,16 +48,16 @@ class WalletListModal extends Component {
 }
 
 WalletListModal.propTypes = {
-    dropdownWalletListVisible: PropTypes.bool,
-    currentScene: PropTypes.string,
-    dimensions: PropTypes.object
+  dropdownWalletListVisible: PropTypes.bool,
+  currentScene: PropTypes.string,
+  dimensions: PropTypes.object
 }
 export const WalletListModalConnect = connect( state => ({
-    walletList: state.ui.wallets.byId,
-    dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,
-    walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    dimensions: state.ui.scenes.dimensions
+  walletList: state.ui.wallets.byId,
+  dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,
+  walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
+  scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
+  dimensions: state.ui.scenes.dimensions
 }))(WalletListModal)
 
 
@@ -65,13 +65,13 @@ class WalletListModalBody extends Component {
   selectFromWallet = (id, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
     console.log('selectingFromWallet, id is: ', id, ' and currencyCode is: ', currencyCode )
-    this.props.dispatch(toggleSelectedWalletListModal())
+    this.props.toggleWalletListModalVisibility()
   }
 
   selectToWallet = (idx, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
     console.log('selectingToWallet, id is: ', id, ' and currencyCode is: ', currencyCode )
-    this.props.dispatch(toggleScanToWalletListModal())
+    this.props.toggleWalletListModalVisibility()
   }
 
   renderWalletRow = (wallet, i) => {
@@ -83,7 +83,7 @@ class WalletListModalBody extends Component {
           onPress={() => {
             this.props.getTransactions()
             this.props.toggleWalletListModalVisibility()
-            this.props.selectWallet(wallet.id)
+            this.props.selectWallet(wallet.id, wallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>
             <View style={[styles.currencyRowNameTextWrap]}>
@@ -97,7 +97,7 @@ class WalletListModalBody extends Component {
 
         {wallet.metaTokens.map((x, i) => (
           <TouchableOpacity style={[styles.tokenRowContainer]}
-            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode )}>
+            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode)}>
             <View style={[styles.currencyRowContent]}>
               <View style={[styles.currencyRowNameTextWrap]}>
                 <T style={[styles.currencyRowText]}>{x.currencyCode}</T>
@@ -111,6 +111,7 @@ class WalletListModalBody extends Component {
       </View>
     )
   }
+
   render () {
     console.log('rendering dropdown', this.props.selectedWalletId)
     return (
@@ -130,6 +131,7 @@ class WalletListModalBody extends Component {
 WalletListModalBody.propTypes = {
     selectionFunction: PropTypes.string,
 }
+
 export const WalletListModalBodyConnect = connect(
   state => ({
     walletList: state.ui.wallets.byId,
@@ -137,12 +139,13 @@ export const WalletListModalBodyConnect = connect(
     selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
   }),
   dispatch => ({
-    selectWallet: walletId => dispatch(UI_ACTIONS.selectWalletId(walletId)),
+    selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
     getTransactions: () => dispatch(getTransactionsRequest()),
-    toggleWalletListModalVisibility: () => dispatch(toggleSelectedWalletListModal())
+    toggleWalletListModalVisibility: () => dispatch(toggleSelectedWalletListModal()),
+    toggleSelectedWalletListModal: () => dispatch(toggleScanToWalletListModal()),
+    toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal())
   }))
 (WalletListModalBody)
-
 
 class WalletListModalHeader extends Component {
   constructor(props){
@@ -167,8 +170,10 @@ class WalletListModalHeader extends Component {
           <TouchableHighlight style={[styles.modalCloseWrap, b()]}
             onPress={this._onSearchExit}>
             <Ionicon style={[styles.donebutton, b('purple')]}
-              name="ios-close" size={26}
-              color='white' />
+              name="ios-close"
+              size={26}
+              color='white'
+            />
           </TouchableHighlight>
         </View>
       </View>
