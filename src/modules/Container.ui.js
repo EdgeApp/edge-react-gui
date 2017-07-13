@@ -39,6 +39,9 @@ import { makeContext } from 'airbitz-core-js'
 
 import styles from './style.js'
 
+import Config from 'react-native-config'
+const apiKey = Config.AIRBITZ_API_KEY
+
 const RouterWithRedux = connect()(Router)
 
 class Main extends Component {
@@ -58,7 +61,7 @@ class Main extends Component {
     makeReactNativeIo()
     .then(io => {
       const context = makeContext({
-        apiKey: '0b5776a91bf409ac10a3fe5f3944bf50417209a0',
+        apiKey,
         io
       })
 
@@ -123,7 +126,7 @@ class Main extends Component {
                 <RouterWithRedux>
 
                   <Scene key='root' hideNavBar>
-                    
+
                     <Scene key='scan'  component={Scan} title='Scan' animation={'fade'} duration={300} />
 
                     <Scene key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={300} />
