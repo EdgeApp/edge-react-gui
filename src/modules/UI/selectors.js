@@ -3,6 +3,11 @@ export const getSelectedWalletId = (state) => {
   return selectedWalletId
 }
 
+export const getSelectedCurrencyCode = (state) => {
+  const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  return selectedCurrencyCode
+}
+
 export const getSelectedWallet = (state) => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   const wallets = state.ui.wallets.byId

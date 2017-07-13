@@ -25,8 +25,11 @@ export const getTransactionsRequest = () => {
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+    const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
 
-    WALLET_API.getTransactions(wallet)
+    console.log('selectedWalletId', selectedWalletId)
+    console.log('selectedCurrencyCode', selectedCurrencyCode)
+    WALLET_API.getTransactions(wallet, selectedCurrencyCode)
     .then(transactions => {
       dispatch(updateTransactions(transactions))
     })
@@ -44,13 +47,13 @@ export const newTransactionsRequest = (transactions, walletId) => {
   }
 }
 
-export const refreshTransactionsRequest = (walletId, currencyCode) => {
+export const refreshTransactionsRequest = (walletId) => {
   return (dispatch, getState) => {
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
 
     if (walletId === selectedWalletId) {
-      return dispatch(getTransactionsRequest(walletId))
+      return dispatch(getTransactionsRequest())
     }
   }
 }

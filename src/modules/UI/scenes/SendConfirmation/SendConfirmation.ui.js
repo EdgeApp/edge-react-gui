@@ -54,7 +54,7 @@ class SendConfirmation extends Component {
   }
 
   _onBlur = () => {
-    this.setState({keyboardVisible: false})    
+    this.setState({keyboardVisible: false})
   }
 
   render () {
@@ -73,7 +73,7 @@ class SendConfirmation extends Component {
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}
       >
-        <ScrollView style={[styles.mainScrollView]}>
+        <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
           <View style={[styles.exchangeRateContainer, b()]} >
             <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
           </View>
@@ -92,9 +92,9 @@ class SendConfirmation extends Component {
               feeInCrypto={this.props.feeSatoshi}
               feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
               cryptoDenom={this.props.inputCurrencyDenom}
-              fiatCurrencyCode={this.props.fiatCurrencyCode}   
+              fiatCurrencyCode={this.props.fiatCurrencyCode}
               inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur}          
+              inputOnBlur={this._onBlur}
             />
             {/* <Recipient label={label} address={publicAddress} /> */}
             <Recipient label={'Ashley Rind'} address={this.props.recipientPublicAddress} />
@@ -199,7 +199,7 @@ const mapStateToProps = state => {
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
     transaction:           state.ui.scenes.sendConfirmation.transaction,
     inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-    fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode    
+    fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
   }
 }
 

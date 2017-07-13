@@ -339,7 +339,7 @@ class TransactionList extends Component {
               <FAIcon name='user' style={[styles.transactionLogo, b()]} size={54} />
             )}
             <View style={[styles.transactionDollars, b()]}>
-              <T style={[styles.transactionPartner, b()]}>Contact Name</T>
+              <T style={[styles.transactionPartner, b()]}>{tx.metadata.payee || 'No Name'}</T>
               <T style={[styles.transactionTime, b()]}>{tx.time}</T>
             </View>
             <View style={[styles.transactionBits, b()]}>

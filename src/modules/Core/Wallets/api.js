@@ -47,8 +47,8 @@ export const archiveWalletRequest = wallet => {
   })
 }
 
-export const getTransactions = wallet => {
-  return wallet.getTransactions()
+export const getTransactions = (wallet, currencyCode) => {
+  return wallet.getTransactions({currencyCode})
 }
 
 export const setTransactionDetailsRequest = (wallet, transactionDetails) => {
