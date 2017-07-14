@@ -55,16 +55,8 @@ export const createWallet = (walletName, walletType) => {
     } else {
       throw (new Error('CreateWallet/action.js Invalid wallet type:' + type))
     }
-    const array = io.random(32)
-    const id = base64.stringify(array)
 
-    const keyInfo = {
-      id,
-      type,
-      keys
-    }
-
-    ACCOUNT_API.createWalletRequest(account, keyInfo, walletType)
+    ACCOUNT_API.createWalletRequest(account, keys, walletType)
     .then((walletId) => {
       Actions.walletList()
       dispatch(LOGIN_ACTIONS.updateWallets())
