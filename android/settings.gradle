@@ -1,4 +1,6 @@
 rootProject.name = 'airbitz.edge'
+include ':react-native-secp256k1'
+project(':react-native-secp256k1').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-secp256k1/android')
 include ':react-native-hockeyapp'
 project(':react-native-hockeyapp').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-hockeyapp/android')
 include ':react-native-fast-crypto'

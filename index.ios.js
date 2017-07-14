@@ -1,3 +1,4 @@
+import "./shim.js";
 import App from './src/app.js'
 
 // uncomment to enable device mirroring
