@@ -34,7 +34,12 @@ class Body extends Component {
         return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
                visibleFlag='selectedWalletListModalVisibility' />
-
+      
+      case 'sendConfirmation':
+        return <ExampleFromWalletConnect wallets={this.props.walletList}
+          toggleFunction='_onPressToggleSelectedWalletModal'
+               visibleFlag='selectedWalletListModalVisibility' />
+                     
       default:
         return <DefaultHeader routes={this.props.routes} />
     }

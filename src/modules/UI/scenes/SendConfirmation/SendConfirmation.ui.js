@@ -211,6 +211,7 @@ const mapStateToProps = state => {
     sendConfirmation:      state.ui.scenes.sendConfirmation,
     amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
     maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,
+    wallet: state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
     feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
     fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
