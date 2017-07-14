@@ -67,7 +67,7 @@ class TertiaryButton extends Component {
         console.log('tertiaryButon props are: ', this.props)
         return(
             <TouchableHighlight onPress={this._onPress} underlayColor={'rgba(73,119,187,0.1)'} style={[s.stylizedButton, s.tertiaryButtonWrap,{backgroundColor: 'white'}]} >
-                <Text style={s.tertiaryButton} >{this.props.text}</Text>
+                <Text style={s.tertiaryButton} {...this.props} >{this.props.text}</Text>
             </TouchableHighlight>
         )
     }

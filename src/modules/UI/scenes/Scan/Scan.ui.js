@@ -256,7 +256,7 @@ class AddressInputRecipient extends Component { // this component is for the inp
         </View>
         {this.state.copiedString.length !== 0 &&
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} />
+            <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} numberOfLines={1} />
           </View>
         }
       </View>
