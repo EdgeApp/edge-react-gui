@@ -234,19 +234,46 @@ class FlipInputInside extends Component {
       ).start()  
     }
 
+    const limitFiatDecimals = (num) => {
+      console.log('num: ', num)
+      let inputString = num
+      let periodPosition = inputString.indexOf('.')
+      console.log('periodPosition: ' , periodPosition)
+      let first
+      let second
+      if(periodPosition > -1) {
+        first = inputString.split('.')[0]
+        console.log('first: ', first)
+        second = inputString.split('.')[1]
+        console.log('second: ', second)
+        if(second.length > 2) {
+          return first + '.' + second.slice(0,2)
+        } else {
+          return first + '.' + second
+        }
+
+      } else {
+        return num
+      }
+    }
+
     const inputChange = ( input ) => {
       console.log('inputChange executing, input is: ', input)
       //onInputChange(input)
       this.setState({
-        primaryInputValue: getPrimaryAmount(input),
+        primaryInputValue: (this.props.inputCurrencySelected === 'crypto') ? input : limitFiatDecimals(input.toString()),
         secondaryInputValue: getSecondaryAmount(input)
       }, () => {
-        console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input)
+        console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
         if(this.props.inputCurrencySelected === 'crypto') {
-          this.setState({mode: this.props.checkMax(this.state.primaryInputValue)})
+          if(this.props.scene.sceneKey === sendConfirmation) { // only check on sendConfirmation (and Exchange) scene
+            this.setState({mode: this.props.checkMax(this.state.primaryInputValue)})
+          }
           this.props.dispatch(updateAmountSatoshi(this.state.primaryInputValue))
         } else {
-          this.setState({mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))})
+          if(this.props.scene.sceneKey === sendConfirmation) { // only check on sendConfirmation (and Exchange) scene
+            this.setState({mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))})
+          }
           this.props.dispatch( updateAmountSatoshi(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()))
         }        
       })
@@ -295,7 +322,8 @@ class FlipInputInside extends Component {
     }
 
     getTextColor = () => {
-      switch(this.state.mode) {
+      console.log('inside getTextColor:, this.state.mode is: ', this.state.mode)
+      switch(this.props.mode) {
         case 'over':
           return '#F03A47'
         case 'max':
@@ -315,9 +343,11 @@ class FlipInputInside extends Component {
           <View style={[styles.primaryInputContainer,b()]} name='InputAndFeesElement'>
             <Animated.View style={ { opacity: this.state.flipInputOpacity } }>
                 <TextInput
+                  autoCorrect={false}
                   ref={'primaryInput'} 
                   style={[styles.primaryInput, {color: getTextColor()}]}
                   placeholder={primaryPlaceholder}
+                  value={this.state.primaryInputValue}
                   keyboardType='decimal-pad'
                   onChangeText={inputChange}
                   placeholderTextColor={getTextColor()}
@@ -328,7 +358,7 @@ class FlipInputInside extends Component {
             </Animated.View>
           </View>
           <Animated.View style={[ {opacity: this.state.flipInputOpacity, alignSelf: 'center' }, b() ]}>
-            <Text style={[ styles.fees, b()]}>{primaryDenomSymbol}</Text>
+            <Text style={[ styles.fees, b(), {color: getTextColor()}]}>{primaryDenomSymbol}</Text>
           </Animated.View>
         </View>
       )
@@ -343,7 +373,7 @@ class FlipInputInside extends Component {
             </Text>
           </View>
           <View style={[{alignItems: 'center'}, b()]}>
-              <Text style={[styles.fees, b()]}>{secondaryDenomSymbol}</Text>
+              <Text style={[styles.fees, b(), {color: getTextColor()}]}>{secondaryDenomSymbol}</Text>
           </View>
         </Animated.View>
       )
@@ -364,6 +394,7 @@ class FlipInputInside extends Component {
 }
 export const FlipInputInsideConnect = connect(state => ({
   fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
-  maxSatoshi:     state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,  
+  maxSatoshi:     state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
+  scene:          state.routes.scene  
 })
 )(FlipInputInside)
