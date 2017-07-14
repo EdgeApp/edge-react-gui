@@ -25,7 +25,7 @@ export const updateWallets = () => {
     const { account } = state.core
     const supportedTypes = [
       'wallet:shitcoin',
-      'wallet:bitcoin',
+      // 'wallet:bitcoin',
       'wallet:ethereum'
     ]
 
@@ -184,40 +184,54 @@ const loadSettings = () => {
     const { account } = getState().core
     SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
-      const {
-        autoLogoutTimeInSeconds,
-        defaultFiat,
-        merchantMode,
-        BTC,
-        ETH
-      } = settings
+
+      console.warn('Duplicated in Settings/reducer.js')
+      const syncDefaults = {
+        autoLogoutTimeInSeconds: 3600,
+        defaultFiat: 'USD',
+        merchantMode: false,
+        'BTC': {
+          denomination: 1
+        },
+        'ETH': {
+          denomination: 1
+        },
+        'TRD': {
+          denomination: 1
+        }
+      }
+
+      const syncFinal = Object.assign({}, syncDefaults, settings)
 
       // Add all the  settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds))
-      dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
-      dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode))
-      dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(BTC.denomination))
-      dispatch(SETTINGS_ACTIONS.setEthereumDenomination(ETH.denomination))
+      dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(syncFinal.autoLogoutTimeInSeconds))
+      dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
+      dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
+      dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(syncFinal.BTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setEthereumDenomination(syncFinal.ETH.denomination))
     })
 
     SETTINGS_API.getLocalSettings(account)
     .then(settings => {
-      const {
-        bluetoothMode
-      } = settings
+      const localDefaults = {
+        bluetoothMode: true
+      }
 
+      const localFinal = Object.assign({}, localDefaults, settings)
       // Add all the local settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode))
+      dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
     })
 
     SETTINGS_API.getCoreSettings(account)
     .then(settings => {
-      const {
-        pinMode,
-        otpMode
-      } = settings
-      dispatch(SETTINGS_ACTIONS.setPINMode(pinMode))
-      dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode))
+      const coreDefaults = {
+        pinMode: false,
+        otpMode: false
+      }
+
+      const coreFinal = Object.assign({}, coreDefaults, settings)
+      dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
+      dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
     })
   }
 }

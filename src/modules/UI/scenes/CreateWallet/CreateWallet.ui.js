@@ -36,8 +36,9 @@ const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_va
 class CreateWallet extends Component {
   getSupportedBlockchains = () => {
     const supportedBlockchains = [
-      sprintf(strings.enUS['fragment_blockchain_btc']),
-      sprintf(strings.enUS['fragment_blockchain_eth'])
+      // sprintf(strings.enUS['fragment_blockchain_btc']),
+      sprintf(strings.enUS['fragment_blockchain_eth']),
+      'Shitcoin'
     ]
 
     return supportedBlockchains

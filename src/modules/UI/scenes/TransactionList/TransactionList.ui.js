@@ -344,7 +344,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionBits, b()]}>
               <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi).toFixed(2)}</T>
-              <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates.TRD.value).toFixed(2) : ''}</T>
+              <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates[this.props.uiWallet.currencyCode].value).toFixed(2) : ''}</T>
             </View>
           </View>
         </TouchableOpacity>
