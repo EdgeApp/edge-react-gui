@@ -229,7 +229,7 @@ class FlipInputInside extends Component {
         this.state.flipInputOpacity,
         {
           toValue: 1,
-          duration: 300
+          duration: 500
         }
       ).start()  
     }
