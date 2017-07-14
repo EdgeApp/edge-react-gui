@@ -2,11 +2,11 @@ import * as ACTION from './action'
 
 const initialState = {
   amountSatoshi: 0,
-  fiatPerCrypto: 1000,
+  fiatPerCrypto: null,
   publicAddress: '',
   label: '',
-  inputCurrencySelected: 'crypto',
-  maxSatoshi: 10,
+  inputCurrencySelected: 'fiat',
+  maxSatoshi: null,
   isPinEnabled: true,
   isSliderLocked: true,
   draftStatus: 'over',

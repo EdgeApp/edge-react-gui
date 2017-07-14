@@ -50,6 +50,17 @@ class Request extends Component {
     this.setState({keyboardVisible: false})    
   }
 
+  onInputCurrencyToggle = () => {
+    console.log('SendConfirmation->onInputCurrencyToggle called')
+    const { inputCurrencySelected } = this.props
+    const nextInputCurrencySelected =
+      inputCurrencySelected === 'crypto'
+        ? 'fiat'
+        : 'crypto'
+
+      this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
+  }
+
   render () {
     console.log('rendering Request.ui, this.state is: ', this.state, ' this.props is: ', this.props)
     const { request = {} } = this.props
@@ -65,7 +76,11 @@ class Request extends Component {
       >
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom} />
+          <ExchangeRate 
+          fiatPerCrypto={this.props.fiatPerCrypto} 
+          fiatCurrencyCode={this.props.fiatCurrencyCode} 
+          cryptoDenom={this.props.inputCurrencyDenom} 
+          />
         </View>
 
         <View style={styles.main}>

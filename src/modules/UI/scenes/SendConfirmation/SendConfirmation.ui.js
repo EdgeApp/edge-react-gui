@@ -61,41 +61,66 @@ class SendConfirmation extends Component {
     const {
       amountSatoshi,
       amountFiat,
-      draftStatus,
       label,
       isSliderLocked,
      } = this.props.sendConfirmation
 
-
+    console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
     return (
       <LinearGradient
-        style={[styles.view, b()]}
+        style={[styles.view]}
         start={{x:0,y:0}} end={{x:1, y:0}}
         colors={["#3b7adb","#2b569a"]}
       >
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
           <View style={[styles.exchangeRateContainer, b()]} >
-            <ExchangeRate mode={draftStatus} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
+            <ExchangeRate mode={this.getDraftStatus(this.props.amountSatoshi)} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
           </View>
 
           <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
-            <FlipInput
-              mode={draftStatus}
-              onInputCurrencyToggle={this.onInputCurrencyToggle}
-              onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={this.props.amountSatoshi || 0}
-              amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
-              inputCurrencySelected={this.props.inputCurrencySelected}
-              maxAvailableToSpendInCrypto={this.props.getMaxSatoshi}
-              displayFees
-              feeInCrypto={this.props.feeSatoshi}
-              feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
-              cryptoDenom={this.props.inputCurrencyDenom}
-              fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur}
-            />
+
+            {this.props.inputCurrencySelected === 'crypto' ? (
+              <FlipInput
+                mode={this.getDraftStatus(this.props.amountSatoshi)}
+                onCryptoInputChange={this.onCryptoInputChange}
+                onFiatInputChange={this.onFiatInputChange}
+                onInputChange={this.onCryptoInputChange}
+                amountSatoshi={this.props.amountSatoshi || 0}
+                amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
+                inputCurrencySelected={this.props.inputCurrencySelected} // crypto
+                maxAvailableToSpendInCrypto={this.props.maxSatoshi}
+                displayFees
+                feeInCrypto={this.props.feeSatoshi}
+                feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
+                cryptoDenom={this.props.inputCurrencyDenom}
+                fiatCurrencyCode={this.props.fiatCurrencyCode}   
+                inputOnFocus={this._onFocus}
+                inputOnBlur={this._onBlur}
+                clearInput={this.clearInput}      
+                checkMax={this.getDraftStatus}    
+              />
+            ) : ( // inputCurrencySelected === 'fiat'
+               <FlipInput
+                mode={this.getDraftStatus(this.props.amountSatoshi)}
+                onCryptoInputChange={this.onCryptoInputChange}
+                onFiatInputChange={this.onFiatInputChange}
+                onInputChange={this.onFiatInputChange}
+                amountSatoshi={this.props.amountSatoshi || 0}
+                amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
+                inputCurrencySelected={this.props.inputCurrencySelected} // fiat
+                maxAvailableToSpendInCrypto={this.props.maxSatoshi}
+                displayFees
+                feeInCrypto={this.props.feeSatoshi}
+                feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
+                cryptoDenom={this.props.inputCurrencyDenom}
+                fiatCurrencyCode={this.props.fiatCurrencyCode}   
+                inputOnFocus={this._onFocus}
+                inputOnBlur={this._onBlur} 
+                clearInput={this.clearInput}   
+                checkMax={this.getDraftStatus}                    
+              />
+              )
+            }
             {/* <Recipient label={label} address={publicAddress} /> */}
             <Recipient label={'Ashley Rind'} address={this.props.recipientPublicAddress} />
             {/* <Password /> */}
@@ -132,12 +157,13 @@ class SendConfirmation extends Component {
     this.props.useMaxSatoshi()
   }
 
-  getDraftStatus = (amountSatoshi, maxSatoshi) => {
+  getDraftStatus = (amountSatoshi) => {
+    console.log('inGetDraftStatus, amountSatoshi is: ', amountSatoshi , ' , and this.props.maxSatoshi is: ', this.props.maxSatoshi)
     let draftStatus
 
-    if ( amountSatoshi > maxSatoshi ) {
+    if ( amountSatoshi > this.props.maxSatoshi ) {
       draftStatus = 'over'
-    } else if ( amountSatoshi == maxSatoshi ) {
+    } else if ( amountSatoshi == this.props.maxSatoshi ) {
       draftStatus = 'max'
     } else {
       draftStatus = 'under'
@@ -146,22 +172,13 @@ class SendConfirmation extends Component {
     return draftStatus
   }
 
-  onInputCurrencyToggle = () => {
-    console.log('SendConfirmation->onInputCurrencyToggle called')
-    const { inputCurrencySelected } = this.props
-    const nextInputCurrencySelected =
-      inputCurrencySelected === 'crypto'
-        ? 'fiat'
-        : 'crypto'
-
-      this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
-  }
-
   onCryptoInputChange = amountSatoshi => {
+    console.log('in onCryptoInputChange')
     this.props.updateAmountSatoshi(parseInt(amountSatoshi))
   }
 
   onFiatInputChange = (amountFiat) => {
+    console.log('in onFiatInputChange')
     const amountSatoshi = getCryptoFromFiat(amountFiat, this.props.fiatPerCrypto)
     this.props.updateAmountSatoshi(amountSatoshi)
   }
@@ -174,8 +191,9 @@ class SendConfirmation extends Component {
   }
 
   getAmountFiat = amountSatoshi => {
+    console.log('in getAmountFiat')
     const fiatPerCrypto = this.props.fiatPerCrypto
-    const amountFiat = getFiatFromCrypto(amountSatoshi, fiatPerCrypto)
+    const amountFiat = getFiatFromCrypto(amountSatoshi, fiatPerCrypto).toFixed(2) // also need opposite
 
     return amountFiat
   }
@@ -192,10 +210,11 @@ const mapStateToProps = state => {
   return {
     sendConfirmation:      state.ui.scenes.sendConfirmation,
     amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
+    maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,
     feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
     fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-    //publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
+    // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
     transaction:           state.ui.scenes.sendConfirmation.transaction,
     inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
