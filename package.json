@@ -25,6 +25,7 @@
     "airbitz-core-js": "git+ssh://git@github.com/Airbitz/airbitz-core-js.git",
     "airbitz-core-react-native": "git+ssh://git@github.com/airbitz/airbitz-core-react-native.git",
     "airbitz-currency-shitcoin": "git+ssh://git@github.com/Airbitz/airbitz-currency-shitcoin.git",
+    "airbitz-currency-ethereum": "git+ssh://git@github.com/Airbitz/airbitz-currency-ethereum.git",
     "assert": "^1.4.1",
     "async": "^2.3.0",
     "base64-js": "^1.2.0",

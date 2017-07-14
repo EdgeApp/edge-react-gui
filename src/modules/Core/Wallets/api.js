@@ -2,6 +2,7 @@
 
 import { makeCurrencyWallet } from 'airbitz-core-js'
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
+import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
 import { makeWalletCallbacks } from './callbacks.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 
@@ -9,7 +10,21 @@ export const makeCurrencyWalletRequest = (keyInfo, dispatch, getState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const io = CORE_SELECTORS.getIO(state)
-  const plugin = makeShitcoinPlugin({ io })
+  const walletType = keyInfo.type.replace('wallet:', '').toLowerCase()
+
+  const shitcoinPlugin = makeShitcoinPlugin({ io })
+  const ethereumPlugin = makeEthereumPlugin({ io })
+  let plugin
+
+  if (walletType === shitcoinPlugin.getInfo().walletTypes[0]) {
+    plugin = shitcoinPlugin
+  } else if (walletType === ethereumPlugin.getInfo().walletTypes[0]) {
+    plugin = ethereumPlugin
+  } else if (walletType === 'bitcoin') {
+    plugin = shitcoinPlugin
+  } else {
+    throw (new Error('Wallets/api.js Invalid wallet type:' + walletType))
+  }
   const walletId = keyInfo.id
   const callbacks = makeWalletCallbacks(dispatch, walletId)
   const opts = {
