@@ -327,9 +327,9 @@ class FlipInputInside extends Component {
                 />
             </Animated.View>
           </View>
-            <Animated.View style={ {opacity: this.state.flipInputOpacity, alignSelf: 'center' } }>
-              <Text style={[ styles.fees]}>{primaryDenomSymbol}</Text>
-            </Animated.View>
+          <Animated.View style={[ {opacity: this.state.flipInputOpacity, alignSelf: 'center' }, b() ]}>
+            <Text style={[ styles.fees, b()]}>{primaryDenomSymbol}</Text>
+          </Animated.View>
         </View>
       )
     }
@@ -342,7 +342,9 @@ class FlipInputInside extends Component {
               {this.state.secondaryInputValue || secondaryPlaceholder}
             </Text>
           </View>
-          <Text style={styles.fees}>{secondaryDenomSymbol}</Text>
+          <View style={[{alignItems: 'center'}, b()]}>
+              <Text style={[styles.fees, b()]}>{secondaryDenomSymbol}</Text>
+          </View>
         </Animated.View>
       )
     }
@@ -355,7 +357,6 @@ class FlipInputInside extends Component {
             {renderMainInput()}
             {renderConvertedInput()}
           </View>
-          { !displayFees ? <Text style={styles.currency}>{this.props.inputCurrencySelected}</Text> : null }
         </Animated.View>
       </View>
     )

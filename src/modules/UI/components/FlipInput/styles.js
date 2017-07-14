@@ -35,7 +35,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: '#FFF',
     fontSize: 14,
-    width: sideWidth
+    width: sideWidth,
+    textAlign: 'center'
   },
 
   // Main Input Styles
