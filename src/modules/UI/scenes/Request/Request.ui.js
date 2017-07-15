@@ -27,7 +27,8 @@ import {
   updateAmountRequestedInCrypto,
   updateAmountRequestedInFiat,
   updateAmountReceivedInCrypto,
-  saveReceiveAddress
+  saveReceiveAddress,
+  updateInputCurrencySelected  
 } from './action.js'
 
 class Request extends Component {
@@ -50,7 +51,7 @@ class Request extends Component {
     this.setState({keyboardVisible: false})    
   }
 
-  onInputCurrencyToggle = () => {
+  /*onInputCurrencyToggle = () => {
     console.log('SendConfirmation->onInputCurrencyToggle called')
     const { inputCurrencySelected } = this.props
     const nextInputCurrencySelected =
@@ -59,7 +60,7 @@ class Request extends Component {
         : 'crypto'
 
       this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
-  }
+  }*/
 
   render () {
     console.log('rendering Request.ui, this.state is: ', this.state, ' this.props is: ', this.props)
@@ -84,17 +85,32 @@ class Request extends Component {
         </View>
 
         <View style={styles.main}>
-          <FlipInput
-            onCryptoInputChange={this.onCryptoInputChange}
-            onFiatInputChange={this.onFiatInputChange}
-            amountSatoshi={amountSatoshi || 0}
-            amountFiat={amountFiat}
-            inputCurrencySelected={this.props.inputCurrencySelected}
-            cryptoDenom={this.props.inputCurrencyDenom}
-            fiatCurrencyCode={this.props.fiatCurrencyCode} 
-            inputOnFocus={this._onFocus}
-            inputOnBlur={this._onBlur}              
-          />
+          {this.props.inputCurrencySelected === 'crypto' ? (
+            <FlipInput
+              onCryptoInputChange={this.onCryptoInputChange}
+              onFiatInputChange={this.onFiatInputChange}
+              amountSatoshi={amountSatoshi || 0}
+              amountFiat={amountFiat}
+              inputCurrencySelected={this.props.inputCurrencySelected} // crypto
+              cryptoDenom={this.props.inputCurrencyDenom}
+              fiatCurrencyCode={this.props.fiatCurrencyCode} 
+              inputOnFocus={this._onFocus}
+              inputOnBlur={this._onBlur}              
+            />            
+          ) :  (
+            <FlipInput
+              onCryptoInputChange={this.onCryptoInputChange}
+              onFiatInputChange={this.onFiatInputChange}
+              amountSatoshi={amountSatoshi || 0}
+              amountFiat={amountFiat}
+              inputCurrencySelected={this.props.inputCurrencySelected} // fiat
+              cryptoDenom={this.props.inputCurrencyDenom}
+              fiatCurrencyCode={this.props.fiatCurrencyCode} 
+              inputOnFocus={this._onFocus}
+              inputOnBlur={this._onBlur}              
+            />
+          ) }         
+
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus
             requestAddress={publicAddress}
@@ -233,7 +249,7 @@ export default connect(state => ({
   request: state.ui.scenes.request,
   wallets: state.ui.wallets,
   settings: state.ui.settings,
-  inputCurrencySelected: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode,
+  inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
   inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
   // ^ Don't laugh...  =P  
   fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,

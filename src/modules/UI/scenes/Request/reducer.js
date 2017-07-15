@@ -4,6 +4,7 @@ const initialState = {
   receiveAddress: {
     publicAddress: '',
     amountSatoshi: 0,
+    inputCurrencySelected: 'fiat',    
     metadata: {
       payeeName: '',
       category: '',
@@ -25,6 +26,13 @@ export default request = (state = initialState, action) => {
         receiveAddress
       }
     }
+
+    case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: 
+      const {inputCurrencySelected} = data
+      return {
+        ...state,
+        inputCurrencySelected
+      }
 
     case ACTION.UPDATE_PUBLIC_ADDRESS: {
       const { receiveAddress } = state

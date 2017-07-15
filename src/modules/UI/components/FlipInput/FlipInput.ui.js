@@ -19,6 +19,9 @@ import {
   signBroadcastAndSave,
   useMaxSatoshi
 } from '../../scenes/SendConfirmation/action'
+import {
+  updateInputCurrencySelected as updateRequestInputCurrency
+} from '../../scenes/Request/action'
 
 class FlipInput extends Component {
   constructor(props) {
@@ -220,7 +223,11 @@ class FlipInputInside extends Component {
           secondaryInputValue: null,
           flipInputOpacity: new Animated.Value(0)
         }, animateFlipInput)
-        this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
+        if(this.props.scene.sceneKey === 'sendConfirmation'){
+          this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
+        } else if(this.props.scene.sceneKey === 'request') {
+          this.props.dispatch(updateRequestInputCurrency(nextInputCurrencySelected))
+        }
     }
 
     const animateFlipInput = () => {
