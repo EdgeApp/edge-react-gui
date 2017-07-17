@@ -185,25 +185,25 @@ const loadSettings = () => {
     SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
 
-      console.warn('Duplicated in Settings/reducer.js')
+      console.log('*** Duplicated in Settings/reducer.js ***')
       const syncDefaults = {
         autoLogoutTimeInSeconds: 3600,
         defaultFiat: 'USD',
         merchantMode: false,
         'BTC': {
-          denomination: 100000000
+          denomination: 1
         },
         'ETH': {
-          denomination: 100000000
+          denomination: 1
         },
         'REP': {
-          denomination: 100000000
+          denomination: 1
         },
         'WINGS': {
-          denomination: 100000000
+          denomination: 1
         },
         'LUN': {
-          denomination: 100000000
+          denomination: 1
         },
         'TRD': {
           denomination: 1
