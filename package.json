@@ -58,6 +58,7 @@
     "react-native-elements": "^0.10.0",
     "react-native-flip-view": "https://github.com/Airbitz/react-native-flip-view.git",
     "react-native-fs": "^2.1.0-rc.1",
+    "react-native-hockeyapp": "^0.5.1",
     "react-native-http": "github:tradle/react-native-http#834492d",
     "react-native-image-picker": "^0.24.1",
     "react-native-level-fs": "^3.0.0",

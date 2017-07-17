@@ -114,29 +114,29 @@ class WalletList extends Component {
             )
           }
 
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
-            <View style={[styles.archiveBoxHeaderTextWrap]}>
-              <View style={styles.leftArea}>
-                <EvilIcons name='archive' style={[styles.archiveIcon, b('green')]} color='white' />
-                <T style={styles.archiveBoxHeaderText}>
-                  {sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
-                </T>
-              </View>
-            </View>
-
-            <TouchableOpacity onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, b('red'), {width: 35}]}>
-              <FAIcon name='angle-down' style={[styles.dropdownIcon, b()]} color='white' />
-            </TouchableOpacity>
-          </LinearGradient>
-          {
-            this.renderArchivedSortableList(
-              wallets,
-              archivedWalletIds,
-              sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized']),
-              this.renderArchivedRow,
-              this.onArchivedRowMoved
-            )
-          }
+          {/* <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}> */}
+          {/*   <View style={[styles.archiveBoxHeaderTextWrap]}> */}
+          {/*     <View style={styles.leftArea}> */}
+          {/*       <EvilIcons name='archive' style={[styles.archiveIcon, b('green')]} color='white' /> */}
+          {/*       <T style={styles.archiveBoxHeaderText}> */}
+          {/*         {sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} */}
+          {/*       </T> */}
+          {/*     </View> */}
+          {/*   </View> */}
+          {/*  */}
+          {/*   <TouchableOpacity onPress={this.toggleArchiveDropdown} style={[styles.archiveBoxHeaderDropdown, b('red'), {width: 35}]}> */}
+          {/*     <FAIcon name='angle-down' style={[styles.dropdownIcon, b()]} color='white' /> */}
+          {/*   </TouchableOpacity> */}
+          {/* </LinearGradient> */}
+          {/* { */}
+          {/*   this.renderArchivedSortableList( */}
+          {/*     wallets, */}
+          {/*     archivedWalletIds, */}
+          {/*     sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized']), */}
+          {/*     this.renderArchivedRow, */}
+          {/*     this.onArchivedRowMoved */}
+          {/*   ) */}
+          {/* } */}
         </View>
       </View>
     )
