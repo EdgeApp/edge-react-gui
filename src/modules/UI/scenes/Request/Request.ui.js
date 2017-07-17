@@ -254,7 +254,7 @@ const mapStateToProps = (state) => ({
   inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
   // ^ Don't laugh...  =P
   fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
-  fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
+  // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
 })
 const mapDispatchToProps = (dispatch) => ({
   updateReceiveAddress: (walletId, currencyCode) => { dispatch(updateReceiveAddress(walletId, currencyCode)) },

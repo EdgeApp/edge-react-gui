@@ -406,7 +406,7 @@ class FlipInputInside extends Component {
   }
 }
 export const FlipInputInsideConnect = connect(state => ({
-  fiatPerCrypto: state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
+  // fiatPerCrypto: state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
   maxSatoshi: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
   scene: state.routes.scene
 })
