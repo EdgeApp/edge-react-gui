@@ -28,7 +28,7 @@ import {
   updateAmountRequestedInFiat,
   updateAmountReceivedInCrypto,
   saveReceiveAddress,
-  updateInputCurrencySelected  
+  updateInputCurrencySelected
 } from './action.js'
 
 class Request extends Component {
@@ -36,11 +36,11 @@ class Request extends Component {
     super(props)
     this.state = {
       keyboardVisible: false
-    }    
+    }
   }
 
   componentDidMount () {
-    this.props.dispatch(updateReceiveAddress())
+    this.props.updateReceiveAddress(this.props.walletId, this.props.currencyCode)
   }
 
   _onFocus = () => {
@@ -48,7 +48,7 @@ class Request extends Component {
   }
 
   _onBlur = () => {
-    this.setState({keyboardVisible: false})    
+    this.setState({keyboardVisible: false})
   }
 
   /*onInputCurrencyToggle = () => {
@@ -77,10 +77,10 @@ class Request extends Component {
       >
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate 
-          fiatPerCrypto={this.props.fiatPerCrypto} 
-          fiatCurrencyCode={this.props.fiatCurrencyCode} 
-          cryptoDenom={this.props.inputCurrencyDenom} 
+          <ExchangeRate
+          fiatPerCrypto={this.props.fiatPerCrypto}
+          fiatCurrencyCode={this.props.fiatCurrencyCode}
+          cryptoDenom={this.props.inputCurrencyDenom}
           />
         </View>
 
@@ -93,10 +93,10 @@ class Request extends Component {
               amountFiat={amountFiat}
               inputCurrencySelected={this.props.inputCurrencySelected} // crypto
               cryptoDenom={this.props.inputCurrencyDenom}
-              fiatCurrencyCode={this.props.fiatCurrencyCode} 
+              fiatCurrencyCode={this.props.fiatCurrencyCode}
               inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur}              
-            />            
+              inputOnBlur={this._onBlur}
+            />
           ) :  (
             <FlipInput
               onCryptoInputChange={this.onCryptoInputChange}
@@ -105,11 +105,11 @@ class Request extends Component {
               amountFiat={amountFiat}
               inputCurrencySelected={this.props.inputCurrencySelected} // fiat
               cryptoDenom={this.props.inputCurrencyDenom}
-              fiatCurrencyCode={this.props.fiatCurrencyCode} 
+              fiatCurrencyCode={this.props.fiatCurrencyCode}
               inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur}              
+              inputOnBlur={this._onBlur}
             />
-          ) }         
+          ) }
 
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus
@@ -145,7 +145,7 @@ class Request extends Component {
   }
 
   onFiatInputChange = (amountRequestedInFiat) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ' , amountRequestedInCrypto)    
+    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ' , amountRequestedInCrypto)
     amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
     if (this.invalidInput(amountRequestedInFiat)) { return }
 
@@ -244,14 +244,19 @@ class Request extends Component {
   }
 }
 
-export default connect(state => ({
-
+const mapStateToProps = (state) => ({
   request: state.ui.scenes.request,
   wallets: state.ui.wallets,
+  walletId: state.ui.wallets.selectedWalletId,
+  currencyCode: state.ui.wallets.selectedCurrencyCode,
   settings: state.ui.settings,
   inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
   inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-  // ^ Don't laugh...  =P  
+  // ^ Don't laugh...  =P
   fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
   fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
-}))(Request)
+})
+const mapDispatchToProps = (dispatch) => ({
+  updateReceiveAddress: (walletId, currencyCode) => { dispatch(updateReceiveAddress(walletId, currencyCode)) },
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Request)

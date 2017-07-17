@@ -1,10 +1,10 @@
 import * as ACTION from './action'
 
 const initialState = {
+  inputCurrencySelected: 'fiat',
   receiveAddress: {
     publicAddress: '',
     amountSatoshi: 0,
-    inputCurrencySelected: 'fiat',    
     metadata: {
       payeeName: '',
       category: '',
@@ -27,7 +27,7 @@ export default request = (state = initialState, action) => {
       }
     }
 
-    case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: 
+    case ACTION.UPDATE_INPUT_CURRENCY_SELECTED:
       const {inputCurrencySelected} = data
       return {
         ...state,
