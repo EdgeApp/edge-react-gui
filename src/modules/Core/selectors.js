@@ -34,3 +34,15 @@ export const getWallet = (state, walletId) => {
   const wallet = state.core.wallets.byId[walletId]
   return wallet
 }
+
+export const getCurrencyConverter = (state) => {
+  const account = getAccount(state)
+  const currencyConverter = account.exchangeCache
+  return currencyConverter
+}
+
+export const getBalanceInCrypto = (state, walletId, currencyCode) => {
+  const balanceInCrypto = getWallet(state, walletId).getBalance(currencyCode)
+  console.log('balanceInCrypto', balanceInCrypto)
+  return balanceInCrypto
+}

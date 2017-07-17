@@ -220,16 +220,16 @@ class FlipInputInside extends Component {
           toValue: 0,
           duration: 100
         }
-      ).start(()=> {
+      ).start(() => {
         this.setState({
           primaryInputValue: null,
           secondaryInputValue: null
         })
         inputChange(0)
 
-        if(this.props.scene.sceneKey === 'sendConfirmation'){
+        if (this.props.scene.sceneKey === 'sendConfirmation') {
           this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
-        } else if(this.props.scene.sceneKey === 'request') {
+        } else if (this.props.scene.sceneKey === 'request') {
           this.props.dispatch(updateRequestInputCurrency(nextInputCurrencySelected))
         }
         clearText('primaryInput')
@@ -245,7 +245,6 @@ class FlipInputInside extends Component {
 
     const animateFlipInput = () => {
       console.log('wihtin animateFlipInput')
-
     }
 
     const limitFiatDecimals = (num) => {
@@ -353,21 +352,21 @@ class FlipInputInside extends Component {
     const renderMainInput = () => {
       return (
         <View style={[styles.mainInputRow, b()]}>
-          <View style={[styles.primaryInputContainer,b()]} name='InputAndFeesElement'>
-            <Animated.View style={ { opacity: this.state.flipInputOpacity } }>
-                <TextInput
-                  autoFocus={true}
-                  autoCorrect={false}
-                  ref={'primaryInput'}
-                  style={[styles.primaryInput, {color: getTextColor()}]}
-                  placeholder={primaryPlaceholder}
-                  value={this.state.primaryInputValue}
-                  keyboardType='decimal-pad'
-                  onChangeText={inputChange}
-                  placeholderTextColor={getTextColor()}
-                  returnKeyType='done'
-                  onBlur={this.props.parentProps.inputOnBlur}
-                  onFocus={this.props.parentProps.inputOnFocus}
+          <View style={[styles.primaryInputContainer, b()]} name='InputAndFeesElement'>
+            <Animated.View style={{ opacity: this.state.flipInputOpacity }}>
+              <TextInput
+                autoFocus
+                autoCorrect={false}
+                ref={'primaryInput'}
+                style={[styles.primaryInput, {color: getTextColor()}]}
+                placeholder={primaryPlaceholder}
+                value={this.state.primaryInputValue}
+                keyboardType='decimal-pad'
+                onChangeText={inputChange}
+                placeholderTextColor={getTextColor()}
+                returnKeyType='done'
+                onBlur={this.props.parentProps.inputOnBlur}
+                onFocus={this.props.parentProps.inputOnFocus}
                 />
             </Animated.View>
           </View>

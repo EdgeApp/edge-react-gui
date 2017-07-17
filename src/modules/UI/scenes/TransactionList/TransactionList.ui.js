@@ -64,9 +64,6 @@ class TransactionList extends Component {
   componentDidMount () {
     this.props.dispatch(updateExchangeRates())
     this.props.getTransactions()
-    this.setState({
-      balance: this.props.wallet.getBalance(),
-    })
   }
 
   contactSearch (nameKey, myArray) {
@@ -209,6 +206,13 @@ class TransactionList extends Component {
   }
 
   render () {
+    const balanceInFiat = this.props.currencyConverter.convertCurrency(
+      this.props.selectedCurrencyCode,
+      this.props.wallet.fiatCurrencyCode,
+      this.props.balanceInCrypto
+    )
+    console.log('balanceInFiat', balanceInFiat)
+
     var renderableTransactionList = this.props.transactions.filter((trans) => {
       return trans.currencyCode === this.props.uiWallet.currencyCode
     }).sort(function (a, b) {
@@ -216,7 +220,7 @@ class TransactionList extends Component {
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
-    
+
     var completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
@@ -233,7 +237,7 @@ class TransactionList extends Component {
     console.log('completedTxList is: ', completedTxList)
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
     console.log('ds is: ', ds)
-    let dataSrc = ds.cloneWithRows(completedTxList)    
+    let dataSrc = ds.cloneWithRows(completedTxList)
     console.log('rendering txList, datSrc is: ', dataSrc)
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
@@ -261,7 +265,11 @@ class TransactionList extends Component {
                               <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
+<<<<<<< HEAD
                                 <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.exchangeRates[this.props.settings.defaultFiat] ? (this.props.uiWallet.balance * this.props.exchangeRates[this.props.uiWallet.currencyCode].value).toFixed(2) : '0.00'}</T>
+=======
+                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {balanceInFiat}</T>
+>>>>>>> WIP
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                                 <T style={[styles.currentBalanceBoxBits, b('yellow')]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.uiWallet.balance || '------'}</T>
@@ -271,7 +279,7 @@ class TransactionList extends Component {
                           <View style={[b(), styles.balanceHiddenContainer]}>
                             <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
-                        ) 
+                        )
                       }
                       </TouchableOpacity>
                     )}
@@ -348,7 +356,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionBits, b()]}>
               <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi).toFixed(2)}</T>
-              <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {this.props.exchangeRates ? (tx.amountSatoshi * this.props.exchangeRates[this.props.uiWallet.currencyCode].value).toFixed(2) : ''}</T>
+              <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {tx.amountSatoshi}</T>
             </View>
           </View>
         </TouchableOpacity>
@@ -366,14 +374,17 @@ TransactionList.propTypes = {
 const mapStateToProps = state => ({
   // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
   updatingBalance: false,
-  transactions:     state.ui.scenes.transactionList.transactions,
-  searchVisible:    state.ui.scenes.transactionList.searchVisible,
-  contactsList:     state.ui.scenes.transactionList.contactsList,
-  exchangeRates:    state.ui.scenes.exchangeRate.exchangeRates,
-  wallet:           CORE_SELECTORS.getWallet(state, UI_SELECTORS.getSelectedWalletId(state)),
-  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
-  uiWallet:         state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-  settings:         state.ui.settings
+  transactions:      state.ui.scenes.transactionList.transactions,
+  searchVisible:     state.ui.scenes.transactionList.searchVisible,
+  contactsList:      state.ui.scenes.transactionList.contactsList,
+  exchangeRates:     state.ui.scenes.exchangeRate.exchangeRates,
+  wallet:            CORE_SELECTORS.getWallet(state, UI_SELECTORS.getSelectedWalletId(state)),
+  selectedWalletId:  UI_SELECTORS.getSelectedWalletId(state),
+  selectedCurrencyCode:  UI_SELECTORS.getSelectedCurrencyCode(state),
+  uiWallet:          state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
+  settings:          state.ui.settings,
+  currencyConverter: CORE_SELECTORS.getCurrencyConverter(state),
+  balanceInCrypto:   CORE_SELECTORS.getBalanceInCrypto(state, UI_SELECTORS.getSelectedWalletId(state), UI_SELECTORS.getSelectedCurrencyCode(state))
 })
 
 const mapDispatchToProps = dispatch => ({

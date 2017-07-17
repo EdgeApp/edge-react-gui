@@ -28,7 +28,7 @@ import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert'
 
 // import { updateExchangeRates } from './UI/components/ExchangeRate/action'
-import { updateExchangeRates } from './action.js'
+import { updateExchangeRates } from './ExchangeRates/action.js'
 
 import { setDeviceDimensions } from './UI/dimensions/action'
 import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
