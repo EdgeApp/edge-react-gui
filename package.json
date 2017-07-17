@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "updot": "dotdotdep",
+    "updot": "updot",
     "android:run": "npm run android:clean; react-native run-android",
     "lint": "standard --verbose | snazzy",
     "lint:fix": "standard --fix --verbose | snazzy",
@@ -24,8 +24,8 @@
   "dependencies": {
     "airbitz-core-js": "git+ssh://git@github.com/Airbitz/airbitz-core-js.git",
     "airbitz-core-react-native": "git+ssh://git@github.com/airbitz/airbitz-core-react-native.git",
-    "airbitz-currency-shitcoin": "git+ssh://git@github.com/Airbitz/airbitz-currency-shitcoin.git",
     "airbitz-currency-ethereum": "git+ssh://git@github.com/Airbitz/airbitz-currency-ethereum.git",
+    "airbitz-currency-shitcoin": "git+ssh://git@github.com/Airbitz/airbitz-currency-shitcoin.git",
     "assert": "^1.4.1",
     "async": "^2.3.0",
     "base64-js": "^1.2.0",
@@ -101,11 +101,11 @@
     "flow-bin": "^0.37.4",
     "husky": "^0.12.0",
     "nyc": "^10.0.0",
-    "dotdotdep": "git+ssh://git@github.com:Airbitz/dotdotdep.git",
     "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",
-    "standard": "^8.6.0"
+    "standard": "^8.6.0",
+    "updot": "^1.0.2"
   },
   "standard": {
     "ignore": [
