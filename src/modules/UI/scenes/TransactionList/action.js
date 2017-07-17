@@ -20,16 +20,12 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-export const getTransactionsRequest = () => {
+export const getTransactionsRequest = (walletId, currencyCode) => {
   return (dispatch, getState) => {
     const state = getState()
-    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-    const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-    console.log('selectedWalletId', selectedWalletId)
-    console.log('selectedCurrencyCode', selectedCurrencyCode)
-    WALLET_API.getTransactions(wallet, selectedCurrencyCode)
+    WALLET_API.getTransactions(wallet, currencyCode)
     .then(transactions => {
       dispatch(updateTransactions(transactions))
     })

@@ -62,8 +62,10 @@ class TransactionList extends Component {
    }
 
   componentDidMount () {
+    const walletId = this.props.selectedWalletId
+    const currencyCode = this.props.selectedCurrencyCode
     this.props.dispatch(updateExchangeRates())
-    this.props.getTransactions()
+    this.props.getTransactions(walletId, currencyCode)
   }
 
   contactSearch (nameKey, myArray) {
@@ -386,7 +388,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  getTransactions: walletId => { dispatch(getTransactionsRequest(walletId)) }
+  getTransactions: (walletId, currencyCode) => { dispatch(getTransactionsRequest(walletId, currencyCode)) }
 })
 
 export default TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
