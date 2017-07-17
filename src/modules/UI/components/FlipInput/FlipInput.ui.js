@@ -212,33 +212,40 @@ class FlipInputInside extends Component {
     _onInputCurrencyToggle = () => {
       console.log('SendConfirmation->onInputCurrencyToggle called')
       const { inputCurrencySelected } = this.props
-      const nextInputCurrencySelected =
-        inputCurrencySelected === 'crypto'
-          ? 'fiat'
-          : 'crypto'
-        //this.props.dispatch(updateAmountSatoshiRequest(''))
-        clearText('primaryInput')
+      const nextInputCurrencySelected = inputCurrencySelected === 'crypto' ? 'fiat' : 'crypto'
+
+      Animated.timing(
+        this.state.flipInputOpacity,
+        {
+          toValue: 0,
+          duration: 100
+        }
+      ).start(()=> { 
         this.setState({
           primaryInputValue: null,
-          secondaryInputValue: null,
-          flipInputOpacity: new Animated.Value(0)
-        }, animateFlipInput)
+          secondaryInputValue: null
+        })
+        inputChange(0)
+
         if(this.props.scene.sceneKey === 'sendConfirmation'){
           this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
         } else if(this.props.scene.sceneKey === 'request') {
           this.props.dispatch(updateRequestInputCurrency(nextInputCurrencySelected))
         }
+        clearText('primaryInput')
+        Animated.timing(
+          this.state.flipInputOpacity,
+          {
+            toValue: 1,
+            duration: 100
+          }
+        ).start()                                    
+      })
     }
 
     const animateFlipInput = () => {
       console.log('wihtin animateFlipInput')
-      Animated.timing(
-        this.state.flipInputOpacity,
-        {
-          toValue: 1,
-          duration: 500
-        }
-      ).start()  
+
     }
 
     const limitFiatDecimals = (num) => {
