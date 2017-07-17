@@ -27,7 +27,7 @@ import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress  } from '
 
 import {
   updateUri,
-  updatePublicAddress,
+  updatePublicAddressRequest,
   updateWalletTransfer
 } from '../SendConfirmation/action.js'
 
@@ -188,7 +188,7 @@ const mapDispatchToProps = dispatch => {
     getWalletTransferList: () => dispatch(getWalletTransferList()),
 
     updateUri: uri => dispatch(updateUri(uri)),
-    updatePublicAddress: publicAddress => dispatch(updatePublicAddress(publicAddress)),
+    updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
     updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
   }
 }
@@ -274,9 +274,9 @@ class SendAddressButtons extends Component { // this component is for the button
   _onModalDone = () => {
     console.log('recipient address done, this.props.recipientAddress is: ', this.props.recipientAddress)
     updateUri(this.props.recipientAddress)
-    this.props.dispatch(updatePublicAddress(this.props.recipientAddress))
+    this.props.dispatch(updatePublicAddressRequest(this.props.recipientAddress))
     this._onToggleAddressModal()
-    Actions.sendConfirmation({ type: 'reset' , recipientPublicAddress: this.props.recipientAddress, testing: 'kylan'})
+    Actions.sendConfirmation({ type: 'reset', recipientPublicAddress: this.props.recipientAddress, testing: 'kylan'})
   }
   _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())

@@ -93,14 +93,14 @@ class SendConfirmation extends Component {
                 feeInCrypto={this.props.feeSatoshi}
                 feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
                 cryptoDenom={this.props.inputCurrencyDenom}
-                fiatCurrencyCode={this.props.fiatCurrencyCode}   
+                fiatCurrencyCode={this.props.fiatCurrencyCode}
                 inputOnFocus={this._onFocus}
                 inputOnBlur={this._onBlur}
-                clearInput={this.clearInput}      
-                checkMax={this.getDraftStatus}    
+                clearInput={this.clearInput}
+                checkMax={this.getDraftStatus}
               />
             ) : ( // inputCurrencySelected === 'fiat'
-               <FlipInput
+              <FlipInput
                 mode={this.getDraftStatus(this.props.amountSatoshi)}
                 onCryptoInputChange={this.onCryptoInputChange}
                 onFiatInputChange={this.onFiatInputChange}
@@ -113,13 +113,13 @@ class SendConfirmation extends Component {
                 feeInCrypto={this.props.feeSatoshi}
                 feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
                 cryptoDenom={this.props.inputCurrencyDenom}
-                fiatCurrencyCode={this.props.fiatCurrencyCode}   
+                fiatCurrencyCode={this.props.fiatCurrencyCode}
                 inputOnFocus={this._onFocus}
-                inputOnBlur={this._onBlur} 
-                clearInput={this.clearInput}   
-                checkMax={this.getDraftStatus}                    
+                inputOnBlur={this._onBlur}
+                clearInput={this.clearInput}
+                checkMax={this.getDraftStatus}
               />
-              )
+            )
             }
             {/* <Recipient label={label} address={publicAddress} /> */}
             <Recipient label={'Ashley Rind'} address={this.props.recipientPublicAddress} />
@@ -206,32 +206,26 @@ SendConfirmation.propTypes = {
   fiatCurrencyCode: PropTypes.string
 }
 
-const mapStateToProps = state => {
-  return {
-    sendConfirmation:      state.ui.scenes.sendConfirmation,
-    amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
-    maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,
-    wallet:                state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-    feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
-    fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
-    inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-    // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
-    spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
-    transaction:           state.ui.scenes.sendConfirmation.transaction,
-    inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-    fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    updateAmountSatoshi: amountSatoshi => dispatch(updateAmountSatoshiRequest(amountSatoshi)),
-    updateAmountFiat:       amountFiat => dispatch(updateAmountFiatRequest(amountFiat)),
-    toggleCurrencyInput:            () => dispatch(toggleCurrencyInput()),
-    signBroadcastAndSave:  transaction => dispatch(signBroadcastAndSave(transaction)),
-    updateMaxSatoshi:               () => dispatch(updateMaxSatoshiRequest()),
-    useMaxSatoshi:                  () => dispatch(useMaxSatoshi()),
-  }
-}
-
+const mapStateToProps = state => ({
+  sendConfirmation:      state.ui.scenes.sendConfirmation,
+  amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
+  maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,
+  wallet:                state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
+  feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
+  fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
+  inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
+  // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
+  spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
+  transaction:           state.ui.scenes.sendConfirmation.transaction,
+  inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
+  fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
+})
+const mapDispatchToProps = (dispatch) => ({
+  updateAmountSatoshi: amountSatoshi => dispatch(updateAmountSatoshiRequest(amountSatoshi)),
+  updateAmountFiat:       amountFiat => dispatch(updateAmountFiatRequest(amountFiat)),
+  toggleCurrencyInput:            () => dispatch(toggleCurrencyInput()),
+  signBroadcastAndSave:  transaction => dispatch(signBroadcastAndSave(transaction)),
+  updateMaxSatoshi:               () => dispatch(updateMaxSatoshiRequest()),
+  useMaxSatoshi:                  () => dispatch(useMaxSatoshi()),
+})
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)

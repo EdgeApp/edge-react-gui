@@ -73,3 +73,8 @@ export const setTransactionDetailsRequest = (wallet, transactionDetails) => {
 export const getReceiveAddress = (wallet, currencyCode) => {
   return wallet.getReceiveAddress()
 }
+
+export const makeSpend = (wallet, spendInfo) => {
+  const transaction = wallet.makeSpend(spendInfo)
+  return transaction
+}

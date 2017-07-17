@@ -20,20 +20,23 @@ export const RESET = 'RESET'
 import { Actions } from 'react-native-router-flux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-export const updateAmountSatoshiRequest = amountSatoshi => {
+export const updateAmountSatoshiRequest = (amountSatoshiString) => {
   return (dispatch, getState) => {
+    const amountSatoshi = parseFloat(amountSatoshiString)
     dispatch(updateAmountSatoshi(amountSatoshi))
     if (amountSatoshi == 0) return
 
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
 
     const { publicAddress } = state.ui.scenes.sendConfirmation
-    const spendInfo = makeSpendInfo({ amountSatoshi, publicAddress })
+    const spendInfo = makeSpendInfo({ amountSatoshi, publicAddress, currencyCode })
 
-    wallet.makeSpend(spendInfo)
+    WALLET_API.makeSpend(wallet, spendInfo)
     .then(transaction => {
       const { providerFee = 0, networkFee = 0 } = transaction
       const feeTotal = providerFee + networkFee
@@ -165,14 +168,22 @@ export const updateWalletTransfer = (wallet) => {
   }
 }
 
-export const updatePublicAddress = (publicAddress) => {
+export const updatePublicAddressRequest = (publicAddress) => {
   return (dispatch) => {
     const spendInfo = makeSpendInfo({
       publicAddress
     })
 
+    dispatch(updatePublicAddress(publicAddress))
     dispatch(updateLabel(publicAddress))
     dispatch(updateSpendInfo(spendInfo))
+  }
+}
+
+export const updatePublicAddress = publicAddress => {
+  return {
+    type: UPDATE_PUBLIC_ADDRESS,
+    data: { publicAddress }
   }
 }
 
@@ -223,17 +234,12 @@ export const reset = () => {
   }
 }
 
-const makeSpendInfo = ({metadata = {}, wallet, publicAddress = '', amountSatoshi = 0}) => {
+const makeSpendInfo = ({ amountSatoshi = 0, publicAddress = '', currencyCode = '', wallet, metadata = {} }) => {
+  const spendTargets = [{ wallet, publicAddress, amountSatoshi, currencyCode }]
   const spendInfo = {
+    currencyCode,
     metadata,
-    spendTargets: [
-      {
-        wallet,
-        publicAddress,
-        amountSatoshi
-      }
-    ]
+    spendTargets
   }
-
   return spendInfo
 }
