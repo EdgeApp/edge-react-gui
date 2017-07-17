@@ -7,14 +7,32 @@ const initialState = {
   defaultFiat: 'USD',
   merchantMode: false,
   'BTC': {
-    denomination: 1
+    denomination: 100000000
   },
   'ETH': {
-    denomination: 1
+    denomination: 100000000
+  },
+  'REP': {
+    denomination: 100000000
+  },
+  'WINGS': {
+    denomination: 100000000
+  },
+  'LUN': {
+    denomination: 100000000
   },
   'TRD': {
     denomination: 1
-  }  
+  },
+  'DOGESHIT': {
+    denomination: 1
+  },
+  'HOLYSHIT': {
+    denomination: 1
+  },
+  'ANA': {
+    denomination: 1
+  }
 }
 
 export const settings = (state = initialState, action) => {
@@ -125,7 +143,7 @@ export const settings = (state = initialState, action) => {
           denomination
         }
       }
-    }    
+    }
 
     default:
       return state
