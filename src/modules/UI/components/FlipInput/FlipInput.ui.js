@@ -357,6 +357,7 @@ class FlipInputInside extends Component {
           <View style={[styles.primaryInputContainer,b()]} name='InputAndFeesElement'>
             <Animated.View style={ { opacity: this.state.flipInputOpacity } }>
                 <TextInput
+                  autoFocus={true}
                   autoCorrect={false}
                   ref={'primaryInput'} 
                   style={[styles.primaryInput, {color: getTextColor()}]}
