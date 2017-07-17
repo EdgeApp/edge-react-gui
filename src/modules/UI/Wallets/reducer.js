@@ -77,7 +77,7 @@ export const selectedCurrencyCode = (state = '', action) => {
 const schema = wallet => {
   const id = wallet.id
   const type = wallet.type
-  const name = wallet.name
+  const name = wallet.name || 'no wallet name'
   const sortIndex = wallet.sortIndex
   const archived = wallet.archived
   const deleted = wallet.deleted
