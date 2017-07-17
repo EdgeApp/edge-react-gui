@@ -209,7 +209,9 @@ class TransactionList extends Component {
   }
 
   render () {
-    var renderableTransactionList = this.props.transactions.sort(function (a, b) {
+    var renderableTransactionList = this.props.transactions.filter((trans) => {
+      return trans.currencyCode === this.props.uiWallet.currencyCode
+    }).sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
@@ -228,9 +230,11 @@ class TransactionList extends Component {
       newValue.time = time
       return newValue
     })
-
+    console.log('completedTxList is: ', completedTxList)
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+    console.log('ds is: ', ds)
     let dataSrc = ds.cloneWithRows(completedTxList)    
+    console.log('rendering txList, datSrc is: ', dataSrc)
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -310,7 +314,7 @@ class TransactionList extends Component {
   }
 
   renderTx = (tx) => {
-    console.log('rendering row, tx is: ', tx)
+    console.log('rendering row, tx is: ', ' , this.state is: ', this.state)
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     if (tx.amountSatoshi <= 0) {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
