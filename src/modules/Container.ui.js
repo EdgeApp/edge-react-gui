@@ -1,6 +1,6 @@
 import HockeyApp from 'react-native-hockeyapp'
 import React, { Component } from 'react'
-import { View, ActivityIndicator, StatusBar, Platform } from 'react-native'
+import { View, StatusBar, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, StyleProvider } from 'native-base'
@@ -27,13 +27,13 @@ import TabBar from './UI/components/TabBar/TabBar.ui'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert'
 
-import { updateExchangeRates } from './UI/components/ExchangeRate/action'
-import { selectWalletById } from './UI/Wallets/action.js'
+// import { updateExchangeRates } from './UI/components/ExchangeRate/action'
+import { updateExchangeRates } from './action.js'
+
 import { setDeviceDimensions } from './UI/dimensions/action'
 import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
 import { addContext, addUsernamesRequest } from './Core/Context/action.js'
-import { deleteWalletRequest } from './Core/Wallets/action.js'
 
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
@@ -81,14 +81,15 @@ class Main extends Component {
         loading: false
       })
     })
-    this.props.dispatch(updateExchangeRates()) // this is dummy data and this function will need to be moved
+    // Dummy dispatch to allow scenes to update mapStateToProps
+    setInterval(() => { this.props.dispatch(updateExchangeRates()) }, 30000)
   }
 
   _onLayout = (event) => {
-    var {x, y, width, height} = event.nativeEvent.layout
-    let xScale = (width / 375).toFixed(2)
-    let yScale = (height / 647).toFixed(2)
-    this.props.dispatch(setDeviceDimensions({width, height, xScale, yScale}))
+    const { width, height } = event.nativeEvent.layout
+    const xScale = (width / 375).toFixed(2)
+    const yScale = (height / 647).toFixed(2)
+    this.props.dispatch(setDeviceDimensions({ width, height, xScale, yScale }))
   }
 
   render () {
@@ -97,8 +98,7 @@ class Main extends Component {
         <LinearGradient
           style={styles.background}
           start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3b7adb', '#2b569a']}>
-        </LinearGradient>
+          colors={['#3b7adb', '#2b569a']} />
       )
     }
 
@@ -137,7 +137,7 @@ class Main extends Component {
 
                   <Scene key='root' hideNavBar>
 
-                    <Scene key='scan'  component={Scan} title='Scan' animation={'fade'} duration={300} />
+                    <Scene key='scan' component={Scan} title='Scan' animation={'fade'} duration={300} />
 
                     <Scene key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={300} />
 
@@ -173,8 +173,5 @@ class Main extends Component {
   }
 
 }
-
-const mapStateToProps = state => ({})
-const mapDispatchToProps = dispatch => ({})
 
 export default connect()(Main)
