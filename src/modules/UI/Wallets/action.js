@@ -135,6 +135,7 @@ export const upsertWalletRequest = wallet => {
 
     if (!selectedWalletId && !wallet.archived && !wallet.deleted) {
       dispatch(selectWalletId(wallet.id))
+      dispatch(selectCurrencyCode(wallet.currencyInfo.currencyCode))
     }
 
     return dispatch(upsertWallet(wallet))

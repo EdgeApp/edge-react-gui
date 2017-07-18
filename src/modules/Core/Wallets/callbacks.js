@@ -10,10 +10,11 @@ export const makeWalletCallbacks = (dispatch, walletId) => {
       }
     },
 
-    onBalanceChanged (currencyCode) {
+    onBalanceChanged (currencyCode, balance) {
       console.log('onBalanceChanged')
       console.log('walletId: ' + walletId)
       console.log('currencyCode: ' + currencyCode)
+      console.log('balance', balance)
       dispatch(refreshWallet(walletId))
     },
 

@@ -7,12 +7,12 @@ export const UPDATE_INPUT_CURRENCY_SELECTED = 'UPDATE_INPUT_CURRENCY_SELECTED'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-export const updateReceiveAddress = () => {
+export const updateReceiveAddress = (walletId, currencyCode) => {
   return (dispatch, getState) => {
     const state = getState()
-    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+    const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
     const onSuccess = (receiveAddress) => {
       dispatch(updateReceiveAddressSuccess(receiveAddress))
@@ -22,7 +22,7 @@ export const updateReceiveAddress = () => {
       dispatch(updateReceiveAddressError(error))
     }
 
-    wallet.getReceiveAddress()
+    WALLET_API.getReceiveAddress(wallet, currencyCode)
     .then(onSuccess)
     .catch(onError)
   }

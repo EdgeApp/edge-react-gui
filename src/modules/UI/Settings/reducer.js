@@ -12,9 +12,27 @@ const initialState = {
   'ETH': {
     denomination: 1
   },
+  'REP': {
+    denomination: 1
+  },
+  'WINGS': {
+    denomination: 1
+  },
+  'LUN': {
+    denomination: 1
+  },
   'TRD': {
     denomination: 1
-  }  
+  },
+  'DOGESHIT': {
+    denomination: 1
+  },
+  'HOLYSHIT': {
+    denomination: 1
+  },
+  'ANA': {
+    denomination: 1
+  }
 }
 
 export const settings = (state = initialState, action) => {
@@ -125,7 +143,7 @@ export const settings = (state = initialState, action) => {
           denomination
         }
       }
-    }    
+    }
 
     default:
       return state

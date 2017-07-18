@@ -83,24 +83,31 @@ const schema = wallet => {
   const deleted = wallet.deleted
 
   const currencyCode = wallet.currencyInfo.currencyCode
+  const fiatCurrencyCode = wallet.fiatCurrencyCode
   const denominations = wallet.currencyInfo.denominations
   const symbolImage = wallet.currencyInfo.symbolImage
   const metaTokens = wallet.currencyInfo.metaTokens
 
-  const balance = wallet.getBalance()
+  const balances = {}
+  balances[currencyCode] = wallet.getBalance({ currencyCode })
 
   metaTokens.forEach(metaToken => {
     const currencyCode = metaToken.currencyCode
-    const tokenBalance = wallet.getBalance(currencyCode)
+    const tokenBalance = wallet.getBalance({ currencyCode })
     metaToken.balance = tokenBalance
+    balances[currencyCode] = tokenBalance
   })
+
+  const balance = balances[currencyCode]
 
   const newWallet = {
     id,
     type,
     name,
     balance,
+    balances,
     currencyCode,
+    fiatCurrencyCode,
     denominations,
     symbolImage,
     metaTokens,

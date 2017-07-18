@@ -74,6 +74,9 @@ const activateWallet = (keyInfo, dispatch, getState) => {
     return WALLET_API.activateWalletRequest(wallet)
   })
   .then(wallet => {
+    return WALLET_API.enableTokens(wallet, ['REP', 'WINGS', 'LUN'])
+  })
+  .then(wallet => {
     wallet.archived = false
     wallet.deleted = false
     // Add the wallet to Redux Core
@@ -184,8 +187,7 @@ const loadSettings = () => {
     const { account } = getState().core
     SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
-
-      console.warn('Duplicated in Settings/reducer.js')
+      console.log('*** Duplicated in Settings/reducer.js ***')
       const syncDefaults = {
         autoLogoutTimeInSeconds: 3600,
         defaultFiat: 'USD',
@@ -196,7 +198,25 @@ const loadSettings = () => {
         'ETH': {
           denomination: 1
         },
+        'REP': {
+          denomination: 1
+        },
+        'WINGS': {
+          denomination: 1
+        },
+        'LUN': {
+          denomination: 1
+        },
         'TRD': {
+          denomination: 1
+        },
+        'DOGESHIT': {
+          denomination: 1
+        },
+        'HOLYSHIT': {
+          denomination: 1
+        },
+        'ANA': {
           denomination: 1
         }
       }
