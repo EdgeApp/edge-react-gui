@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, TouchableOpacity, View, TouchableHighlight } from 'react-native'
 import { Icon, Title } from 'native-base'
 import { Actions } from 'react-native-router-flux'
+import MDIcon from 'react-native-vector-icons/MaterialIcons';
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import { toggleSelectedWalletListModal, toggleScanToWalletListModal, toggleTransactionsWalletListModal} from '../../WalletListModal/action'
 
@@ -34,12 +35,12 @@ class Body extends Component {
         return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
                visibleFlag='selectedWalletListModalVisibility' />
-      
+
       case 'sendConfirmation':
         return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
                visibleFlag='selectedWalletListModalVisibility' />
-                     
+
       default:
         return <DefaultHeader routes={this.props.routes} />
     }
@@ -88,7 +89,7 @@ class ExampleFromWallet extends Component {
         <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), { position: 'relative', top: 2}]}>
             {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
-              <Icon name="arrow-dropdown"  style={{ color: "#FFF", fontSize: 25}} />
+              <MDIcon name="keyboard-arrow-down"  style={{ color: "#FFF", fontSize: 25}} />
             }
           </View>
         </TouchableOpacity>

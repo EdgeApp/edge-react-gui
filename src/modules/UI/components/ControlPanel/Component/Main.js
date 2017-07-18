@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform, View, TouchableNativeFeedback, TouchableOpacity, TouchableHighlight } from 'react-native'
+import { Platform, View, ScrollView, TouchableNativeFeedback, TouchableOpacity, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import { Actions } from 'react-native-router-flux'
@@ -22,7 +22,7 @@ class MainComponent extends Component {
       if(platform === 'android') {
         return(
           <View style={{flex:1}}>
-            <View style={styles.main.container}>
+            <ScrollView contentContainerStyle={styles.main.container}>
               { this._render2FAenabling() }
               <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('directory')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderVertical ]}>
@@ -65,7 +65,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-            </View>
+            </ScrollView>
             <View style={styles.others.container}>
               <TouchableNativeFeedback onPress={ this.props.logout }>
                 <View style={[styles.others.link, styles.others.borderVertical]}>
@@ -91,7 +91,7 @@ class MainComponent extends Component {
       if(platform !== 'android') {
         return(
           <View style={{flex:1}}>
-            <View style={styles.main.container}>
+            <ScrollView contentContainerStyle={styles.main.container}>
               { this._render2FAenabling() }
               <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('directory')} >
                 <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
@@ -135,7 +135,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-            </View>
+            </ScrollView>
             <View style={styles.others.container}>
               <TouchableHighlight style={styles.others.iosTouchableHighlight}
                 underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
