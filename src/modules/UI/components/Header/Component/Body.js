@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Text, TouchableOpacity, View, TouchableHighlight } from 'react-native'
 import { Icon, Title } from 'native-base'
 import { Actions } from 'react-native-router-flux'
-import MDIcon from 'react-native-vector-icons/MaterialIcons';
+import MDIcon from 'react-native-vector-icons/MaterialIcons'
+import T from '../../FormattedText'
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import { toggleSelectedWalletListModal, toggleScanToWalletListModal, toggleTransactionsWalletListModal} from '../../WalletListModal/action'
 
@@ -24,7 +25,7 @@ class Body extends Component {
       case 'scan':
         return <ExampleFromWalletConnect walletList={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
-               visibleFlag='selectedWalletListModalVisibility' />
+               visibleFlag='selectedWalletListModalVisibility' style={b()}/>
 
       case 'request':
         return <ExampleFromWalletConnect wallets={this.props.walletList}
@@ -80,11 +81,11 @@ class ExampleFromWallet extends Component {
   render () {
     let topDisplacement =  66
     let selectionFunction = 'selectFromWallet'
-    let walletNameString = (this.props.selectedWallet.name.length >= 12) ? (this.props.selectedWallet.name.slice(0,12) + '...') : this.props.selectedWallet.name
+    let walletNameString = this.props.selectedWallet.name
 
     return (
-      <TouchableOpacity onPress={this[this.props.toggleFunction]} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ color: "#FFF", fontSize: 20 }}>{walletNameString}</Text>
+      <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }]}>
+        <T style={{ color: "#FFF", fontSize: 20 }}>{walletNameString}</T>
 
         <View style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), { position: 'relative', top: 2}]}>
