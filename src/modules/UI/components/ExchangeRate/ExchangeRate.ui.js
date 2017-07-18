@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 const ExchangeRate = ({fiatPerCrypto, fiatCurrencyCode, cryptoDenom}) => {
   return (
     <View style={styles.view}>
-      <Text style={styles.text}>{fiatCurrencyCode} {(fiatPerCrypto *  cryptoDenom.multiplier).toFixed(2)} = 1 {cryptoDenom.name}</Text>
+      <Text style={styles.text}>1 {cryptoDenom.name} = {fiatCurrencyCode} {(fiatPerCrypto *  cryptoDenom.multiplier).toFixed(2)} </Text>
     </View>
   )
 }
