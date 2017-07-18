@@ -76,6 +76,7 @@ class WalletListModalBody extends Component {
 
   renderWalletRow = (wallet, i) => {
     let symbol = findDenominationSymbol(wallet.denominations, wallet.currencyCode)
+    const multiplier = wallet.denominations[this.props.settings[wallet.currencyCode].denomination - 1].multiplier
     return (
       <View key={i}>
         <TouchableOpacity style={[styles.rowContainer]}
@@ -90,7 +91,7 @@ class WalletListModalBody extends Component {
               <T style={[styles.currencyRowText]}>{cutOffText(wallet.name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>{symbol || ''}{wallet.balance}</T>
+              <T style={[styles.currencyRowText]}>{symbol || ''} {wallet.balance / multiplier}</T>
             </View>
           </View>
         </TouchableOpacity>
@@ -136,7 +137,8 @@ export const WalletListModalBodyConnect = connect(
   state => ({
     walletList: state.ui.wallets.byId,
     activeWalletIds: state.ui.wallets.activeWalletIds,
-    selectedWalletId: UI_SELECTORS.getSelectedWalletId(state)
+    selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
+    settings: state.ui.settings
   }),
   dispatch => ({
     selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
