@@ -370,7 +370,7 @@ const mapStateToProps = (state) => {
   const settings = state.ui.settings
   const fiatCurrencyCode = uiWallet.fiatCurrencyCode
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto = uiWallet.balance
+  const balanceInCrypto = uiWallet.balances[currencyCode]
   const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, fiatCurrencyCode, balanceInCrypto)
   const transactions = UI_SELECTORS.getTransactions(state)
 
