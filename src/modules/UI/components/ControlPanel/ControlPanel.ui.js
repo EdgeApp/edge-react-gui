@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import { Text, Icon } from 'native-base'
+import FAIcon from 'react-native-vector-icons/FontAwesome';
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import LinearGradient from 'react-native-linear-gradient'
@@ -48,7 +49,7 @@ class ControlPanel extends Component {
           onPress={this._handlePressUserList}>
           <Icon style={styles.user.icon} name='person' />
           <Text style={styles.user.name}>{ this.props.username }</Text>
-          <Icon style={styles.user.icon} name='arrow-dropdown' />
+          <FAIcon style={styles.user.icon} name='caret-down' />
         </TouchableOpacity>
         <Main/>
       </LinearGradient>
