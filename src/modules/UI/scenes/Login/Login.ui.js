@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { ActivityIndicator, Alert, Button, Image, InteractionManager, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { KeyboardAvoidingView, ActivityIndicator, Alert, Button, Image, InteractionManager, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
@@ -93,7 +93,7 @@ class Login extends Component {
         start={{x: 0, y: 0}} end={{x: 1, y: 0}}
         colors={['#3b7adb', '#2b569a']}>
 
-        <View style={styles.view}>
+        <KeyboardAvoidingView style={styles.view} behavior={'padding'}>
           <Modal
             style={styles.modal}
             animationType={'fade'}
@@ -112,11 +112,15 @@ class Login extends Component {
 
           <Image source={Logo} style={styles.logo} resizeMode={'contain'}/>
           <TextInput
+            keyboardShouldPersistTaps={'always'}
+            autoCorrect={'false'}
+            autoFocus
             style={styles.textInput}
             onChangeText={this.updateUsername}
             value={this.state.username}
           />
           <TextInput
+            keyboardShouldPersistTaps={'always'}
             secureTextEntry
             style={styles.textInput}
             onChangeText={this.updatePassword}
@@ -125,7 +129,7 @@ class Login extends Component {
           <TouchableOpacity style={styles.button} onPress={this.onPress}>
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
 
       </LinearGradient>
     )
