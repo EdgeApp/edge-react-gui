@@ -20,7 +20,7 @@ const styles = StyleSheet.flatten({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 2,
-    marginVertical: 10,
+    marginVertical: 14,
   },
   view: {
     flexDirection: 'row',
