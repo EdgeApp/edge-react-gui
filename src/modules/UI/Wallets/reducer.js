@@ -83,7 +83,8 @@ const schema = wallet => {
   const deleted = wallet.deleted
 
   const currencyCode = wallet.currencyInfo.currencyCode
-  const fiatCurrencyCode = wallet.fiatCurrencyCode
+  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
+  const isoFiatCurrencyCode = wallet.fiatCurrencyCode
   const denominations = wallet.currencyInfo.denominations
   const symbolImage = wallet.currencyInfo.symbolImage
   const metaTokens = wallet.currencyInfo.metaTokens
@@ -107,6 +108,7 @@ const schema = wallet => {
     balance,
     balances,
     currencyCode,
+    isoFiatCurrencyCode,
     fiatCurrencyCode,
     denominations,
     symbolImage,

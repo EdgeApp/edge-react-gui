@@ -235,7 +235,7 @@ class TransactionList extends Component {
     let dataSrc = ds.cloneWithRows(completedTxList)
     console.log('rendering txList, datSrc is: ', dataSrc)
     console.log('rendering txList, this.props is: ', this.props)
-  
+
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -275,28 +275,28 @@ class TransactionList extends Component {
                             <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
                         )
-                      }
+                        }
                       </TouchableOpacity>
                     )}
-                        <View style={[styles.requestSendRow, b()]}>
-                          <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
-                            <View  style={[styles.requestWrap]}>
-                              <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                              <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
-                            </View>
-                          </TouchableHighlight>
-                          <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
-                            <View style={[styles.sendWrap]}>
-                              <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                              <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
-                            </View>
-                          </TouchableHighlight>
+                    <View style={[styles.requestSendRow, b()]}>
+                      <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
+                        <View  style={[styles.requestWrap]}>
+                          <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
+                          <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                         </View>
-                      </Animated.View>
-                    }
-                </LinearGradient>
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                        <View style={[styles.sendWrap]}>
+                          <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
+                          <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
+                        </View>
+                      </TouchableHighlight>
+                    </View>
+                  </Animated.View>
+                }
+              </LinearGradient>
             </Animated.View>
-          <View style={[styles.transactionsWrap]}>
+            <View style={[styles.transactionsWrap]}>
               <ListView
                 style={[styles.transactionsScrollWrap]}
                 dataSource={dataSrc}
@@ -371,10 +371,10 @@ const mapStateToProps = (state) => {
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const uiWallet = state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
   const settings = state.ui.settings
-  const fiatCurrencyCode = uiWallet.fiatCurrencyCode
+  const isoFiatCurrencyCode = uiWallet.isoFiatCurrencyCode
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = uiWallet.balances[selectedCurrencyCode]
-  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, fiatCurrencyCode, balanceInCrypto)
+  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, isoFiatCurrencyCode, balanceInCrypto)
   const transactions = UI_SELECTORS.getTransactions(state)
 
   return {
@@ -386,10 +386,12 @@ const mapStateToProps = (state) => {
     exchangeRates:   state.ui.scenes.exchangeRate.exchangeRates,
     selectedWalletId,
     selectedCurrencyCode,
+    isoFiatCurrencyCode,
     uiWallet,
     settings,
     balanceInCrypto,
-    balanceInFiat
+    balanceInFiat,
+    currencyConverter
   }
 }
 

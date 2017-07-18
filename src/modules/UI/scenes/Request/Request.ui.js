@@ -21,6 +21,9 @@ import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput, dev } from '../../
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../selectors.js'
+
 import {
   addReceiveAddress,
   updateReceiveAddress,
@@ -31,6 +34,8 @@ import {
   updateInputCurrencySelected
 } from './action.js'
 
+console.log('UI_SELECTORS', UI_SELECTORS)
+console.log('CORE_SELECTORS', CORE_SELECTORS)
 class Request extends Component {
   constructor (props) {
     super(props)
@@ -78,9 +83,9 @@ class Request extends Component {
 
         <View style={styles.exchangeRateContainer}>
           <ExchangeRate
-          fiatPerCrypto={this.props.fiatPerCrypto}
-          fiatCurrencyCode={this.props.fiatCurrencyCode}
-          cryptoDenom={this.props.inputCurrencyDenom}
+            fiatPerCrypto={this.props.fiatPerCrypto}
+            fiatCurrencyCode={this.props.fiatCurrencyCode}
+            cryptoDenom={this.props.inputCurrencyDenom}
           />
         </View>
 
@@ -244,18 +249,30 @@ class Request extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  request: state.ui.scenes.request,
-  wallets: state.ui.wallets,
-  walletId: state.ui.wallets.selectedWalletId,
-  currencyCode: state.ui.wallets.selectedCurrencyCode,
-  settings: state.ui.settings,
-  inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
-  inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-  // ^ Don't laugh...  =P
-  fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
-  // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
-})
+const mapStateToProps = (state) => {
+  let exchangeRate = 0
+  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  if (wallet) {
+    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+    const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+    exchangeRate = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+  }
+
+  return {
+    fiatPerCrypto: exchangeRate,
+    request: state.ui.scenes.request,
+    wallets: state.ui.wallets,
+    walletId: state.ui.wallets.selectedWalletId,
+    currencyCode,
+    settings: state.ui.settings,
+    inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
+    inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
+    // ^ Don't laugh...  =P
+    fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
+    // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
+  }
+}
 const mapDispatchToProps = (dispatch) => ({
   updateReceiveAddress: (walletId, currencyCode) => { dispatch(updateReceiveAddress(walletId, currencyCode)) },
 })
