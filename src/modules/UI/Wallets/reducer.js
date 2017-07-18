@@ -91,7 +91,7 @@ const schema = wallet => {
 
   metaTokens.forEach(metaToken => {
     const currencyCode = metaToken.currencyCode
-    const tokenBalance = wallet.getBalance(currencyCode)
+    const tokenBalance = wallet.getBalance({ currencyCode })
     metaToken.balance = tokenBalance
   })
 
