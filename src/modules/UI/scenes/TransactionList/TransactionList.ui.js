@@ -262,7 +262,7 @@ class TransactionList extends Component {
                               {this.props.uiWallet.symbolImage && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: this.props.uiWallet.symbolImage}} />}
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat}</T>
+                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}</T>
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                               <T style={[styles.currentBalanceBoxBits, b('yellow')]}>

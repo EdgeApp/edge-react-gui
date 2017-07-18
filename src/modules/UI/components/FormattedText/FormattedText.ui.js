@@ -24,7 +24,7 @@ export default class FormattedText extends Component {
 
     render() {
         return (
-            <Text {...this.props} style={this.style} ref={'nativeForward'}>{this.props.children}</Text>
+            <Text {...this.props} numberOfLines={1} allowFontScaling={true} style={this.style} ref={'nativeForward'}>{this.props.children}</Text>
         )
     }
 
