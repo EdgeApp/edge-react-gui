@@ -113,7 +113,7 @@ class Login extends Component {
           <Image source={Logo} style={styles.logo} resizeMode={'contain'}/>
           <TextInput
             keyboardShouldPersistTaps={'always'}
-            autoCorrect={'false'}
+            autoCorrect={false}
             autoFocus
             style={styles.textInput}
             onChangeText={this.updateUsername}
