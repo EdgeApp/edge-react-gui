@@ -1,3 +1,5 @@
+import HockeyApp from 'react-native-hockeyapp'
+
 import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -79,7 +81,7 @@ class SettingsOverview extends Component {
   }
 
   _onPressDebug = () => {
-    console.log('debug button pressed')
+    HockeyApp.generateTestCrash()
   }
 
   render() {

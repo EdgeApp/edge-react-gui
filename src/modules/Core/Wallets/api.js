@@ -63,9 +63,18 @@ export const archiveWalletRequest = wallet => {
 }
 
 export const getTransactions = (wallet, currencyCode) => {
-  return wallet.getTransactions({currencyCode})
+  return wallet.getTransactions({ currencyCode })
 }
 
 export const setTransactionDetailsRequest = (wallet, transactionDetails) => {
   return wallet.saveTx(transactionDetails)
+}
+
+export const getReceiveAddress = (wallet, currencyCode) => {
+  return wallet.getReceiveAddress()
+}
+
+export const makeSpend = (wallet, spendInfo) => {
+  const transaction = wallet.makeSpend(spendInfo)
+  return transaction
 }

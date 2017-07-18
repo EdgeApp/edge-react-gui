@@ -1,0 +1,1 @@
+../../../../HockeySDK/HockeySDK-iOS/HockeySDKAllFeatures/HockeySDK.embeddedframework/HockeySDK.framework/Headers/BITFeedbackManagerDelegate.h
