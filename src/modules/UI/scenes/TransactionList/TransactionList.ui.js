@@ -263,7 +263,7 @@ class TransactionList extends Component {
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                               <T style={[styles.currentBalanceBoxBits, b('yellow')]}>
-                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.uiWallet.balance || '0'}
+                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.balanceInCrypto || '0'}
                               </T>
                             </View>
                           </View>
@@ -370,7 +370,7 @@ const mapStateToProps = (state) => {
   const settings = state.ui.settings
   const fiatCurrencyCode = uiWallet.fiatCurrencyCode
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto = uiWallet.balances[currencyCode]
+  const balanceInCrypto = uiWallet.balances[selectedCurrencyCode]
   const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, fiatCurrencyCode, balanceInCrypto)
   const transactions = UI_SELECTORS.getTransactions(state)
 

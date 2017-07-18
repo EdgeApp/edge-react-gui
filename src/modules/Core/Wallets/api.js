@@ -83,3 +83,7 @@ export const getBalance = (wallet, currencyCode) => {
   const balance = wallet.getBalance({ currencyCode })
   return balance
 }
+
+export const enableTokens = (wallet, tokens) => {
+  return wallet
+}

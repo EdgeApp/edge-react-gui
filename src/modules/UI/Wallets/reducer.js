@@ -98,6 +98,8 @@ const schema = wallet => {
     balances[currencyCode] = tokenBalance
   })
 
+  const balance = balances[currencyCode]
+
   const newWallet = {
     id,
     type,

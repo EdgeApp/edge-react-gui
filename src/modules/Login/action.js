@@ -74,6 +74,9 @@ const activateWallet = (keyInfo, dispatch, getState) => {
     return WALLET_API.activateWalletRequest(wallet)
   })
   .then(wallet => {
+    return WALLET_API.enableTokens(wallet, ['REP', 'WINGS', 'LUN'])
+  })
+  .then(wallet => {
     wallet.archived = false
     wallet.deleted = false
     // Add the wallet to Redux Core
@@ -184,7 +187,6 @@ const loadSettings = () => {
     const { account } = getState().core
     SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
-
       console.log('*** Duplicated in Settings/reducer.js ***')
       const syncDefaults = {
         autoLogoutTimeInSeconds: 3600,
