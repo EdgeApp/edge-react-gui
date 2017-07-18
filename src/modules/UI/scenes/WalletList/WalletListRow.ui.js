@@ -37,10 +37,12 @@ class WalletListRow extends Component {
   }
 
   render () {
+    console.log('rendering WalletListRow, this.props is: ', this.props)
     let id = this.props.data.id
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
     const currencyCode = this.props.data.currencyCode
+    const multiplier = this.props.data.denominations[this.props.settings[this.props.data.currencyCode].denomination - 1].multiplier
 
     return (
       <View>
@@ -55,7 +57,7 @@ class WalletListRow extends Component {
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>{this.props.data.balance}</T>
+              <T style={[styles.rowBalanceAmountText]}>{this.props.data.balance / multiplier}</T>
               <T style={[styles.rowBalanceDenominationText]}>{this.props.data.currencyCode} ({symbol || ''})</T>
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
@@ -74,7 +76,9 @@ WalletListRow.propTypes = {
 }
 
 export default connect(state => ({
-  wallets: state.ui.wallets.byId
+  wallets: state.ui.wallets.byId,
+  settings: state.ui.settings
+
 }))(WalletListRow)
 
 class WalletListTokenRow extends Component {
