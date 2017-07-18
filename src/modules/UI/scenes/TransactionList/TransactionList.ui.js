@@ -215,9 +215,7 @@ class TransactionList extends Component {
     )
     console.log('balanceInFiat', balanceInFiat)
 
-    var renderableTransactionList = this.props.transactions.filter((trans) => {
-      return trans.currencyCode === this.props.uiWallet.currencyCode
-    }).sort(function (a, b) {
+    var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
