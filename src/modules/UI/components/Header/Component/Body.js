@@ -83,19 +83,19 @@ class ExampleFromWallet extends Component {
     let walletNameString = (this.props.selectedWallet.name.length >= 12) ? (this.props.selectedWallet.name.slice(0,12) + '...') : this.props.selectedWallet.name
 
     return (
-      <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+      <TouchableOpacity onPress={this[this.props.toggleFunction]} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ color: "#FFF", fontSize: 20 }}>{walletNameString}</Text>
 
-        <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
+        <View style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), { position: 'relative', top: 2}]}>
             {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
               <MDIcon name="keyboard-arrow-down"  style={{ color: "#FFF", fontSize: 25}} />
             }
           </View>
-        </TouchableOpacity>
+        </View>
         {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} type='from' /> }
         {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} type='to' /> }
-      </View>
+      </TouchableOpacity>
     )
   }
 }
