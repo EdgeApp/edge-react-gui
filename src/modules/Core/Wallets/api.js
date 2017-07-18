@@ -78,3 +78,8 @@ export const makeSpend = (wallet, spendInfo) => {
   const transaction = wallet.makeSpend(spendInfo)
   return transaction
 }
+
+export const getBalance = (wallet, currencyCode) => {
+  const balance = wallet.getBalance({ currencyCode })
+  return balance
+}

@@ -24,3 +24,8 @@ export const getArchivedWalletIds = (state) => {
   const archivedWalletIds = state.ui.wallets.archivedWalletIds
   return archivedWalletIds
 }
+
+export const getTransactions = (state) => {
+  const transactions = state.ui.scenes.transactionList.transactions
+  return transactions
+}

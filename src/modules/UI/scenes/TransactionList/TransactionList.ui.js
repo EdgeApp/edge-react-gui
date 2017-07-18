@@ -25,6 +25,7 @@ import styles from './style'
 import { border as b , findDenominationSymbol as symbolize, formatAMPM } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
@@ -208,13 +209,6 @@ class TransactionList extends Component {
   }
 
   render () {
-    const balanceInFiat = this.props.currencyConverter.convertCurrency(
-      this.props.selectedCurrencyCode,
-      this.props.wallet.fiatCurrencyCode,
-      this.props.balanceInCrypto
-    )
-    console.log('balanceInFiat', balanceInFiat)
-
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -265,11 +259,11 @@ class TransactionList extends Component {
                               <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {balanceInFiat}</T>
+                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat}</T>
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                               <T style={[styles.currentBalanceBoxBits, b('yellow')]}>
-                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.balanceInCrypto || '0'}
+                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.uiWallet.balance || '0'}
                               </T>
                             </View>
                           </View>
@@ -369,21 +363,32 @@ TransactionList.propTypes = {
   contactsList: PropTypes.array
 }
 
-const mapStateToProps = state => ({
-  // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
-  updatingBalance: false,
-  transactions:      state.ui.scenes.transactionList.transactions,
-  searchVisible:     state.ui.scenes.transactionList.searchVisible,
-  contactsList:      state.ui.scenes.transactionList.contactsList,
-  exchangeRates:     state.ui.scenes.exchangeRate.exchangeRates,
-  wallet:            CORE_SELECTORS.getWallet(state, UI_SELECTORS.getSelectedWalletId(state)),
-  selectedWalletId:  UI_SELECTORS.getSelectedWalletId(state),
-  selectedCurrencyCode:  UI_SELECTORS.getSelectedCurrencyCode(state),
-  uiWallet:          state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-  settings:          state.ui.settings,
-  currencyConverter: CORE_SELECTORS.getCurrencyConverter(state),
-  balanceInCrypto:   CORE_SELECTORS.getBalanceInCrypto(state, UI_SELECTORS.getSelectedWalletId(state), UI_SELECTORS.getSelectedCurrencyCode(state))
-})
+const mapStateToProps = (state) => {
+  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const uiWallet = state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
+  const settings = state.ui.settings
+  const fiatCurrencyCode = uiWallet.fiatCurrencyCode
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const balanceInCrypto = uiWallet.balance
+  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, fiatCurrencyCode, balanceInCrypto)
+  const transactions = UI_SELECTORS.getTransactions(state)
+
+  return {
+    // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
+    updatingBalance: false,
+    transactions,
+    searchVisible:   state.ui.scenes.transactionList.searchVisible,
+    contactsList:    state.ui.scenes.transactionList.contactsList,
+    exchangeRates:   state.ui.scenes.exchangeRate.exchangeRates,
+    selectedWalletId,
+    selectedCurrencyCode,
+    uiWallet,
+    settings,
+    balanceInCrypto,
+    balanceInFiat
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   getTransactions: (walletId, currencyCode) => { dispatch(getTransactionsRequest(walletId, currencyCode)) }
