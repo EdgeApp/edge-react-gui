@@ -14,7 +14,7 @@ class SideMenuComponent extends Component {
         style={drawerStyles}
         content={<ControlPanel />}
         open={this.props.view}
-        openDrawerOffset={0.30}
+        openDrawerOffset={0.20}
         tapToClose
         panOpenMask={0.1}
         side='right'
