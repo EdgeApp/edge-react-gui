@@ -22,7 +22,7 @@ export default class FormattedText extends Component {
 
   render () {
     return (
-      <Text {...this.props} style={this.style} ref={'nativeForward'}>
+      <Text allowFontScaling={true} style={this.style} ref={'nativeForward'} {...this.props} >
         {this.props.children}
       </Text>
     )

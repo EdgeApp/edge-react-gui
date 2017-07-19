@@ -64,7 +64,7 @@ const RequestStatus = (props) => {
           Waiting for payment...
         </Text>
 
-        <T style={[b(), styles.text]}>
+        <T numberOfLines={1} ellipsizeMode='middle' style={[b(), styles.text]}>
           {requestAddress}
         </T>
       </View>

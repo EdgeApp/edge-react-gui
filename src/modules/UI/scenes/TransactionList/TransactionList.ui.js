@@ -209,16 +209,17 @@ class TransactionList extends Component {
   }
 
   render () {
+    console.log('inside transactionList->render and this.props is : ', this.props)
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
-    const multiplier = this.props.uiWallet.denominations[this.props.settings[this.props.uiWallet.currencyCode].denomination - 1].multiplier
+
     var completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
-      newValue.multiplier = multiplier
+      newValue.multiplier = this.props.multiplier
       let txDate = new Date(x.date)
       let month = txDate.getMonth()
       let day = txDate.getDate()
@@ -262,11 +263,11 @@ class TransactionList extends Component {
                               {this.props.uiWallet.symbolImage && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: this.props.uiWallet.symbolImage}} />}
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}</T>
+                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                               <T style={[styles.currentBalanceBoxBits, b('yellow')]}>
-                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(this.props.balanceInCrypto / multiplier) || '0'}
+                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
                               </T>
                             </View>
                           </View>
@@ -363,7 +364,8 @@ TransactionList.propTypes = {
   transactionsList: PropTypes.array,
   searchVisible: PropTypes.bool,
   contactsList: PropTypes.array,
-  balanceInCrypto: PropTypes.number
+  balanceInCrypto: PropTypes.number,
+  multiplier: PropTypes.number
 }
 
 const mapStateToProps = (state) => {
@@ -374,8 +376,9 @@ const mapStateToProps = (state) => {
   const isoFiatCurrencyCode = uiWallet.isoFiatCurrencyCode
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = uiWallet.balances[selectedCurrencyCode]
-  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, isoFiatCurrencyCode, balanceInCrypto)
+  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, isoFiatCurrencyCode, balanceInCrypto )
   const transactions = UI_SELECTORS.getTransactions(state)
+  const multiplier = uiWallet.denominations[settings[uiWallet.currencyCode].denomination - 1].multiplier
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
@@ -391,7 +394,8 @@ const mapStateToProps = (state) => {
     settings,
     balanceInCrypto,
     balanceInFiat,
-    currencyConverter
+    currencyConverter,
+    multiplier
   }
 }
 
