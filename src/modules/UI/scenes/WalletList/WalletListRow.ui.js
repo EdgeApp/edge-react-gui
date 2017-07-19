@@ -52,7 +52,8 @@ class WalletListRow extends Component {
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
     const currencyCode = this.props.data.currencyCode
-    const multiplier = this.props.data.denominations[this.props.settings[this.props.data.currencyCode].denomination - 1].multiplier
+    const multiplier = 1000
+    // const multiplier = this.props.data.denominations[this.props.settings[this.props.data.currencyCode].denomination - 1].multiplier
 
     return (
       <View>
