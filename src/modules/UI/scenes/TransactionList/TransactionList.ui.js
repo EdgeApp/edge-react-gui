@@ -221,7 +221,7 @@ class TransactionList extends Component {
       let newValue = x
       newValue.key = i
       newValue.multiplier = this.props.multiplier
-      let txDate = new Date(x.date)
+      let txDate = new Date(x.date * 1000)
       let month = txDate.getMonth()
       let day = txDate.getDate()
       let year = txDate.getFullYear()
