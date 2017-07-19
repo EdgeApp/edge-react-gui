@@ -34,8 +34,6 @@ import {
   updateInputCurrencySelected
 } from './action.js'
 
-console.log('UI_SELECTORS', UI_SELECTORS)
-console.log('CORE_SELECTORS', CORE_SELECTORS)
 class Request extends Component {
   constructor (props) {
     super(props)
