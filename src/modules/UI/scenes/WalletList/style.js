@@ -123,7 +123,8 @@ module.exports = StyleSheet.create({
   },
   rowNameTextWrap: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    marginRight: 5
   },
   rowNameText: {
     color: '#58595C'
