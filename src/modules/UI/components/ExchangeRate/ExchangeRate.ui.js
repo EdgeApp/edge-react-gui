@@ -1,7 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-import { dev } from '../../../utils.js'
 
 const styles = StyleSheet.create({
   view: {
@@ -13,10 +12,14 @@ const styles = StyleSheet.create({
 })
 
 const ExchangeRate = ({fiatPerCrypto, fiatCurrencyCode, cryptoDenom}) => {
+  const text = fiatPerCrypto === 0
+    ? <Text style={styles.text}>Exchange Rate loading...</Text>
+    : <Text style={styles.text}>
+      1 {cryptoDenom.name} = {fiatCurrencyCode} {(fiatPerCrypto * cryptoDenom.multiplier).toFixed(2)}
+    </Text>
+
   return (
-    <View style={styles.view}>
-      <Text style={styles.text}>{fiatCurrencyCode} {(fiatPerCrypto *  cryptoDenom.multiplier).toFixed(2)} = 1 {cryptoDenom.name}</Text>
-    </View>
+    <View style={styles.view}>{text}</View>
   )
 }
 

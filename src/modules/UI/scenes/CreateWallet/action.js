@@ -12,6 +12,7 @@ import { Actions } from 'react-native-router-flux'
 import { base64 }from 'rfc4648'
 
 import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
+import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
 import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
 import { createWalletRequest } from '../../../Core/Account/api.js'
 
@@ -43,6 +44,7 @@ export const createWallet = (walletName, walletType) => {
     const account = CORE_SELECTORS.getAccount(state)
     const io = CORE_SELECTORS.getIO(state)
     const shitcoinPlugin = makeShitcoinPlugin({ io })
+    const bitcoinPlugin = makeBitcoinPlugin({ io })
     const ethereumPlugin = makeEthereumPlugin({ io })
     const type = walletType.replace('wallet:', '').toLowerCase()
 
@@ -50,8 +52,8 @@ export const createWallet = (walletName, walletType) => {
       keys = shitcoinPlugin.createMasterKeys(type)
     } else if (type === ethereumPlugin.getInfo().walletTypes[0]) {
       keys = ethereumPlugin.createMasterKeys(type)
-    } else if (walletType === 'bitcoin') {
-      keys = shitcoinPlugin.createMasterKeys(type)
+    } else if (type === 'bitcoin') {
+      keys = bitcoinPlugin.createMasterKeys(type)
     } else {
       throw (new Error('CreateWallet/action.js Invalid wallet type:' + type))
     }

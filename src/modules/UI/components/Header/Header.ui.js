@@ -41,7 +41,7 @@ class HeaderUI extends Component {
             <Left style={{flex: 1}}>
               <LeftComponent routes={this.props.routes} />
             </Left>
-            <Body style={{flex: 2}}>
+            <Body style={{flex: 3}}>
               <BodyComponent routes={this.props.routes} />
             </Body>
             <Right style={{flex: 1}}>

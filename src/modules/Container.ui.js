@@ -37,7 +37,8 @@ import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
-import { coinbasePlugin } from 'airbitz-exchange-plugins'
+import * as PLUGINS from 'airbitz-exchange-plugins'
+// import { coinbasePlugin } from 'airbitz-exchange-plugins'
 
 import styles from './style.js'
 
@@ -71,7 +72,7 @@ class Main extends Component {
     makeReactNativeIo()
     .then(io => {
       const context = makeContext({
-        plugins: [coinbasePlugin],
+        plugins: Object.values(PLUGINS),
         apiKey: AIRBITZ_API_KEY,
         io
       })

@@ -214,10 +214,11 @@ class TransactionList extends Component {
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
-
+    const multiplier = this.props.uiWallet.denominations[this.props.settings[this.props.uiWallet.currencyCode].denomination - 1].multiplier
     var completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
+      newValue.multiplier = multiplier
       let txDate = new Date(x.date)
       let month = txDate.getMonth()
       let day = txDate.getDate()
@@ -233,6 +234,8 @@ class TransactionList extends Component {
     console.log('ds is: ', ds)
     let dataSrc = ds.cloneWithRows(completedTxList)
     console.log('rendering txList, datSrc is: ', dataSrc)
+    console.log('rendering txList, this.props is: ', this.props)
+
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -255,15 +258,15 @@ class TransactionList extends Component {
                       <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b('green')]}>
                         {this.state.showBalance ? (
                           <View style={styles.balanceShownContainer}>
-                            <View style={[styles.bitcoinIconWrap, b('yellow')]}>
-                              <FAIcon style={[styles.bitcoinIcon]} name="bitcoin" color="white" size={24} />
+                            <View style={[styles.iconWrap, b('yellow')]}>
+                              {this.props.uiWallet.symbolImage && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: this.props.uiWallet.symbolImage}} />}
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat}</T>
+                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}</T>
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
                               <T style={[styles.currentBalanceBoxBits, b('yellow')]}>
-                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {this.props.balanceInCrypto || '0'}
+                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(this.props.balanceInCrypto / multiplier) || '0'}
                               </T>
                             </View>
                           </View>
@@ -272,28 +275,28 @@ class TransactionList extends Component {
                             <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
                         )
-                      }
+                        }
                       </TouchableOpacity>
                     )}
-                        <View style={[styles.requestSendRow, b()]}>
-                          <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
-                            <View  style={[styles.requestWrap]}>
-                              <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
-                              <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
-                            </View>
-                          </TouchableHighlight>
-                          <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
-                            <View style={[styles.sendWrap]}>
-                              <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
-                              <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
-                            </View>
-                          </TouchableHighlight>
+                    <View style={[styles.requestSendRow, b()]}>
+                      <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
+                        <View  style={[styles.requestWrap]}>
+                          <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
+                          <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                         </View>
-                      </Animated.View>
-                    }
-                </LinearGradient>
+                      </TouchableHighlight>
+                      <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                        <View style={[styles.sendWrap]}>
+                          <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
+                          <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
+                        </View>
+                      </TouchableHighlight>
+                    </View>
+                  </Animated.View>
+                }
+              </LinearGradient>
             </Animated.View>
-          <View style={[styles.transactionsWrap]}>
+            <View style={[styles.transactionsWrap]}>
               <ListView
                 style={[styles.transactionsScrollWrap]}
                 dataSource={dataSrc}
@@ -325,7 +328,6 @@ class TransactionList extends Component {
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
     }
-
     return (
       <View style={styles.singleTransactionWrap}>
         {((tx.key === 0) || (tx.dateString !== this.state.completedTx[tx.key - 1].dateString)) &&
@@ -347,7 +349,7 @@ class TransactionList extends Component {
               <T style={[styles.transactionTime, b()]}>{tx.time}</T>
             </View>
             <View style={[styles.transactionBits, b()]}>
-              <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi).toFixed(2)}</T>
+              <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
               <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {tx.amountSatoshi}</T>
             </View>
           </View>
@@ -360,7 +362,8 @@ class TransactionList extends Component {
 TransactionList.propTypes = {
   transactionsList: PropTypes.array,
   searchVisible: PropTypes.bool,
-  contactsList: PropTypes.array
+  contactsList: PropTypes.array,
+  balanceInCrypto: PropTypes.number
 }
 
 const mapStateToProps = (state) => {
@@ -368,10 +371,10 @@ const mapStateToProps = (state) => {
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const uiWallet = state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
   const settings = state.ui.settings
-  const fiatCurrencyCode = uiWallet.fiatCurrencyCode
+  const isoFiatCurrencyCode = uiWallet.isoFiatCurrencyCode
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = uiWallet.balances[selectedCurrencyCode]
-  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, fiatCurrencyCode, balanceInCrypto)
+  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, isoFiatCurrencyCode, balanceInCrypto)
   const transactions = UI_SELECTORS.getTransactions(state)
 
   return {
@@ -383,10 +386,12 @@ const mapStateToProps = (state) => {
     exchangeRates:   state.ui.scenes.exchangeRate.exchangeRates,
     selectedWalletId,
     selectedCurrencyCode,
+    isoFiatCurrencyCode,
     uiWallet,
     settings,
     balanceInCrypto,
-    balanceInFiat
+    balanceInFiat,
+    currencyConverter
   }
 }
 

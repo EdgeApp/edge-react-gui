@@ -75,7 +75,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center'    
   },
-  bitcoinIconWrap: { //two
+  iconWrap: { //two
     flex: 3,
     justifyContent: 'flex-start',
     backgroundColor: 'transparent'
