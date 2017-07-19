@@ -82,7 +82,7 @@ class WalletListModalBody extends Component {
         <TouchableOpacity style={[styles.rowContainer]}
           // onPress={this[this.props.selectionFunction]}
           onPress={() => {
-            this.props.getTransactions()
+            this.props.getTransactions(wallet.id, wallet.currencyCode)
             this.props.toggleWalletListModalVisibility()
             this.props.selectWallet(wallet.id, wallet.currencyCode)
           }}>
@@ -142,7 +142,7 @@ export const WalletListModalBodyConnect = connect(
   }),
   dispatch => ({
     selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
-    getTransactions: () => dispatch(getTransactionsRequest()),
+    getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
     toggleWalletListModalVisibility: () => dispatch(toggleSelectedWalletListModal()),
     toggleSelectedWalletListModal: () => dispatch(toggleScanToWalletListModal()),
     toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal())
