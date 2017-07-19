@@ -176,7 +176,6 @@ export const updatePublicAddressRequest = (publicAddress) => {
 
     dispatch(updatePublicAddress(publicAddress))
     dispatch(updateLabel(publicAddress))
-    dispatch(updateSpendInfo(spendInfo))
   }
 }
 

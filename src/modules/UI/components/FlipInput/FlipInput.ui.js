@@ -86,7 +86,26 @@ class FlipInput extends Component {
       checkAgainstMax = this.props.checkMax
     }
 
-    return (<FlipInputInsideConnect style={[b()]} currencySelected={inputCurrencySelected} mode={this.props.mode} primaryPlaceholder={primaryPlaceholderSyntax} secondaryPlaceholder={secondaryPlaceholderSyntax} onInputChange={onInputChange} amountRequestedPrimary={primaryAmountRequested} amountRequestedSecondary={secondaryAmountRequested} onInputCurrencyToggle={onInputCurrencyToggle} primaryFee={primaryFeeAmount} secondaryFee={secondaryFeeAmount} primaryDenomSymbol={primaryDenomSymbol} secondaryDenomSymbol={secondaryDenomSymbol} displayFees={displayFees} inputCurrencySelected={inputCurrencySelected} parentProps={this.props} checkMax={checkAgainstMax} />)
+    return (
+      <FlipInputInsideConnect style={[b()]}
+        currencySelected={inputCurrencySelected}
+        mode={this.props.mode}
+        primaryPlaceholder={secondaryPlaceholderSyntax}
+        secondaryPlaceholder={secondaryPlaceholderSyntax}
+        onInputChange={onInputChange}
+        amountRequestedPrimary={primaryAmountRequested}
+        amountRequestedSecondary={secondaryAmountRequested}
+        onInputCurrencyToggle={onInputCurrencyToggle}
+        primaryFee={primaryFeeAmount}
+        secondaryFee={secondaryFeeAmount}
+        primaryDenomSymbol={primaryDenomSymbol}
+        secondaryDenomSymbol={secondaryDenomSymbol}
+        displayFees={displayFees}
+        inputCurrencySelected={inputCurrencySelected}
+        parentProps={this.props}
+        checkMax={checkAgainstMax}
+      />
+    )
   }
 
   /* _renderFront = () => {
@@ -165,8 +184,8 @@ class FlipInputInside extends Component {
     console.log('in FlipInput constructor')
     super(props)
     this.state = {
-      primaryInputValue: null,
-      secondaryInputValue: null,
+      primaryInputValue: '',
+      secondaryInputValue: '',
       flipInputOpacity: new Animated.Value(1),
       mode: this.props.mode
     }
@@ -207,7 +226,7 @@ class FlipInputInside extends Component {
         toValue: 0,
         duration: 100
       }).start(() => {
-        this.setState({primaryInputValue: null, secondaryInputValue: null })
+        this.setState({primaryInputValue: '', secondaryInputValue: '' })
         inputChange(0)
 
         if (this.props.scene.sceneKey === 'sendConfirmation') {
@@ -261,25 +280,26 @@ class FlipInputInside extends Component {
         console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
 
         if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////
-          if (this.props.scene.sceneKey === sendConfirmation) { // Send //////////////////////////
+          if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
             this.setState({
               mode: this.props.checkMax(this.state.primaryInputValue)
             })
             this.props.dispatch(updateAmountSatoshiRequest(this.state.primaryInputValue))
+
+            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(this.state.primaryInputValue))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
-
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
           }
         } else { // Change Fiat Input ////////////////////////////////////////////////////////////
-          if (this.props.scene.sceneKey === sendConfirmation) { // Send //////////////////////////
+          if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
             this.setState({
               mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))
             })
             this.props.dispatch(updateAmountSatoshiRequest(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()))
+            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
-
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString())))
           }
         }
@@ -351,11 +371,21 @@ class FlipInputInside extends Component {
             <Animated.View style={{
               opacity: this.state.flipInputOpacity
             }}>
-              <TextInput autoCorrect={false} ref={'primaryInput'} style={[
+              <TextInput style={[
                 styles.primaryInput, {
                   color: getTextColor()
                 }
-              ]} placeholder={primaryPlaceholder} value={this.state.primaryInputValue} keyboardType='decimal-pad' onChangeText={inputChange} placeholderTextColor={getTextColor()} returnKeyType='done' onBlur={this.props.parentProps.inputOnBlur} onFocus={this.props.parentProps.inputOnFocus} />
+              ]}
+                ref={'primaryInput'}
+                autoCorrect={false}
+                placeholder={primaryPlaceholder}
+                value={this.state.primaryInputValue.toString()}
+                keyboardType='decimal-pad'
+                onChangeText={inputChange}
+                placeholderTextColor={getTextColor()}
+                returnKeyType='done'
+                onBlur={this.props.parentProps.inputOnBlur}
+                onFocus={this.props.parentProps.inputOnFocus} />
             </Animated.View>
           </View>
           <Animated.View style={[
@@ -433,6 +463,7 @@ export const FlipInputInsideConnect = connect(state => {
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const cryptoPerFiat = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
   const fiatPerCrypto = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+  const multiplier = wallet.denominations[currencyCode]
 
   return {
     cryptoPerFiat,
