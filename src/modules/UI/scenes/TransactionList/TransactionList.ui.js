@@ -60,6 +60,7 @@ class TransactionList extends Component {
       completedTx: [],
       dataSrc: []
      }
+     var completedTxList = []
    }
 
   componentDidMount () {
@@ -216,7 +217,7 @@ class TransactionList extends Component {
       return a > b ? -1 : a < b ? 1 : 0
     })
 
-    var completedTxList = renderableTransactionList.map((x, i) => {
+      completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
       newValue.multiplier = this.props.multiplier
@@ -318,7 +319,6 @@ class TransactionList extends Component {
   }
 
   renderTx = (tx) => {
-    console.log('rendering row, tx is: ', ' , this.state is: ', this.state)
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
     if (tx.amountSatoshi <= 0) {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
@@ -329,9 +329,11 @@ class TransactionList extends Component {
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
     }
+
+    console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)    
     return (
       <View style={styles.singleTransactionWrap}>
-        {((tx.key === 0) || (tx.dateString !== this.state.completedTx[tx.key - 1].dateString)) &&
+        {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
               <T style={styles.formattedDate}>{tx.dateString}</T>
