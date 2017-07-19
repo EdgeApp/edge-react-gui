@@ -71,6 +71,14 @@ class Main extends Component {
 
     makeReactNativeIo()
     .then(io => {
+      const abcInfo = io.console.info
+      const abcWarn = io.console.warn
+      const abcError = io.console.error
+
+      io.console.info = (...rest) => { abcInfo('ABC_CORE', ...rest) }
+      io.console.warn = (...rest) => { abcWarn('ABC_CORE', ...rest) }
+      io.console.error = (...rest) => { abcError('ABC_CORE', ...rest) }
+
       const context = makeContext({
         plugins: Object.values(PLUGINS),
         apiKey: AIRBITZ_API_KEY,
