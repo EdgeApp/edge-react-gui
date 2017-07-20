@@ -399,7 +399,6 @@ export const FlipInputInsideConnect = connect(state => {
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const cryptoPerFiat = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
   const fiatPerCrypto = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
-  const multiplier = wallet.denominations[currencyCode]
 
   return {
     cryptoPerFiat,
