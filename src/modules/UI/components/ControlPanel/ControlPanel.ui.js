@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Image } from 'react-native'
 import { Text, Icon } from 'native-base'
 import MDIcon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux'
@@ -14,6 +14,8 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 import Main from './Component/Main'
 import usersListObject from './userList'
 import styles from './style'
+
+import person from '../../../../assets/images/sidenav/accounts@3x.png.png'
 
 class ControlPanel extends Component {
   componentDidMount () {
@@ -34,7 +36,7 @@ class ControlPanel extends Component {
       ? <Text style={styles.bitcoin.value}>
         Exchange Rate loading
       </Text>
-    : <Text style={styles.bitcoin.value}>1 ฿ = $ {this.props.exchangeRate} USD</Text>
+    : <Text style={styles.bitcoin.value}>1 {this.props.currencyCode} = $ {this.props.exchangeRate.toFixed(2)} USD</Text>
   }
 
   render () {
@@ -44,14 +46,16 @@ class ControlPanel extends Component {
         end={{x:1, y:0}}
         colors={["#2B5698","#3B7ADA"]}>
         <View style={styles.bitcoin.container}>
-          <Icon name='logo-bitcoin' style={styles.bitcoin.icon}/>
+          <Text style={styles.bitcoin.icon}></Text>
           {this._getExchangeRate()}
         </View>
         <TouchableOpacity style={styles.user.container}
           onPress={this._handlePressUserList}>
-          <Icon style={styles.user.icon} name='person' />
+          <View style={styles.iconImageContainer}>
+            <Image style={styles.iconImage} source={person} />
+          </View>
           <Text style={styles.user.name}>{ this.props.username }</Text>
-          <MDIcon style={styles.user.icon} name='keyboard-arrow-down' />
+          <MDIcon style={styles.icon} name={ this.props.usersView ? 'keyboard-arrow-up'  : 'keyboard-arrow-down'} />
         </TouchableOpacity>
         <Main/>
       </LinearGradient>
@@ -62,14 +66,18 @@ class ControlPanel extends Component {
 const mapStateToProps = (state) => {
   let exchangeRate = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
+  let currencyCode = ''
+  let fiatCurrencyCode = ''
   if (wallet) {
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
     const fiatCurrencyCode = wallet.isoFiatCurrencyCode
     const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
     exchangeRate = currencyConverter.convertCurrency(currencyCode, fiatCurrencyCode, 1)
   }
 
   return {
+    currencyCode,
+    fiatCurrencyCode,
     exchangeRate: exchangeRate,
     usersView: state.ui.scenes.controlPanel.usersView,
     username:  CORE_SELECTORS.getUsername(state)

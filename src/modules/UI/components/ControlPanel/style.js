@@ -4,6 +4,19 @@ const platform = Platform.OS;
 
 export default {
 
+  iconImageContainer: {
+    paddingHorizontal: 23
+  },
+  iconImage: {
+    width: 25,
+    height: 25
+  },
+  icon: {
+    fontSize: 25,
+    color: '#FFF',
+    paddingHorizontal: 23
+  },
+
   container: {
     flex: 1,
     alignItems: 'stretch'
@@ -28,6 +41,8 @@ export default {
       flex: 1,
       fontSize: 16,
       color: '#FFF',
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   },
 
@@ -38,12 +53,6 @@ export default {
       justifyContent: 'center',
       alignItems: 'center',
       height: 58,
-    },
-
-    icon: {
-      fontSize: 25,
-      color: '#FFF',
-      paddingHorizontal: 23
     },
 
     name:{

@@ -28,6 +28,9 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
+import request_image from '../../../../assets/images/transactions/transactions-request@3x.png.png'
+import send_image from '../../../../assets/images/transactions/transactions-send@3x.png.png'
+
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
     sprintf(strings.enUS['transactions_list_date_feb']),
@@ -238,7 +241,7 @@ class TransactionList extends Component {
     let dataSrc = ds.cloneWithRows(completedTxList)
     console.log('rendering txList, datSrc is: ', dataSrc)
     console.log('rendering txList, this.props is: ', this.props)
-    let logo 
+    let logo
     console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
     if(this.props.uiWallet.currencyCode != this.props.selectedCurrencyCode) {
       for(mt of this.props.uiWallet.metaTokens) {
@@ -296,13 +299,19 @@ class TransactionList extends Component {
                     <View style={[styles.requestSendRow, b()]}>
                       <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
                         <View  style={[styles.requestWrap]}>
-                          <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
+                          <Image
+                            style={{width: 25, height: 25}}
+                            source={request_image}
+                          />
                           <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                         </View>
                       </TouchableHighlight>
                       <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                         <View style={[styles.sendWrap]}>
-                          <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
+                          <Image
+                            style={{width: 25, height: 25}}
+                            source={send_image}
+                          />
                           <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
                         </View>
                       </TouchableHighlight>
@@ -328,7 +337,8 @@ class TransactionList extends Component {
   }
 
   _goToTxDetail = ( txId, currencyCode, tx) => {
-    Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
+    return null
+    // Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
   }
 
   renderTx = (tx) => {
@@ -343,7 +353,7 @@ class TransactionList extends Component {
       txColor = '#7FC343'
     }
 
-    console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)    
+    console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)
     return (
       <View style={styles.singleTransactionWrap}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
@@ -368,7 +378,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>$ {tx.amountSatoshi}</T>
+              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat}</T>
             </View>
           </View>
         </TouchableOpacity>

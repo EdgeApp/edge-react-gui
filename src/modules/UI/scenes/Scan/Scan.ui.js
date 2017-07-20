@@ -74,9 +74,9 @@ class Scan extends Component {
 
   onBarCodeRead = (data) => {
     this.props.updateUri(data)
-    Actions.sendConfirmation({ type: 'reset' })
-    // React Native Router Flux does not fully unmount scenes when transitioning
-    // {type: 'reset'} is needed to fully unmount the Scan scene, or else the camera will keep scanning
+    // Actions.sendConfirmation({ type: 'reset' })
+    // // React Native Router Flux does not fully unmount scenes when transitioning
+    // // {type: 'reset'} is needed to fully unmount the Scan scene, or else the camera will keep scanning
   }
 
   selectPhotoTapped = () => {
@@ -102,11 +102,11 @@ class Scan extends Component {
   }
 
   renderCamera = () => {
-    if (this.state.cameraPermission === true && this.props.scene === 'scan') {
+    // if (this.state.cameraPermission === true && this.props.scene === 'scan') {
+    if (this.state.cameraPermission === true) {
       return (
         <Camera
           style={styles.preview}
-          barCodeTypes={['org.iso.QRCode']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
         />
