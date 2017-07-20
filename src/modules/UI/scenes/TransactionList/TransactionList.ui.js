@@ -415,7 +415,6 @@ const mapStateToProps = (state) => {
     transactions,
     searchVisible:   state.ui.scenes.transactionList.searchVisible,
     contactsList:    state.ui.scenes.transactionList.contactsList,
-    exchangeRates:   state.ui.scenes.exchangeRate.exchangeRates,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,

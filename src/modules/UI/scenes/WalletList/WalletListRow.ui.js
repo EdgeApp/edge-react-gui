@@ -116,7 +116,7 @@ class WalletListTokenRow extends Component {
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
           <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.balance / this.props.multiplier}</T>
+            <T style={[styles.tokenRowText]}>{(this.props.balance / this.props.multiplier) || 0}</T>
           </View>
         </View>
       </TouchableHighlight>

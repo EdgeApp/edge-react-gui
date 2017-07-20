@@ -257,19 +257,19 @@ class WalletList extends Component {
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
     for (var parentProp in this.props.wallets) {
-      console.log('outer loop, parentProp is: ', parentProp)
+      //console.log('outer loop, parentProp is: ', parentProp)
       for (var balanceProp in this.props.wallets[parentProp].balances){
         if(!temporaryTotalCrypto[balanceProp]) {
           temporaryTotalCrypto[balanceProp] = 0
         }
         if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
-          console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])          
+          //console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])          
           temporaryTotalCrypto[balanceProp]  += this.props.wallets[parentProp].balances[balanceProp]
         }
-        console.log('at end of inner loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
+        ///console.log('at end of inner loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
       }
     }
-    console.log('outside of the loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
+     //console.log('outside of the loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
      this.props.dispatch(updateTotalBalance(temporaryTotalCrypto))
   }
 
