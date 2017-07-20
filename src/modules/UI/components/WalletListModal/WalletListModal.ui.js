@@ -64,14 +64,42 @@ export const WalletListModalConnect = connect( state => ({
 class WalletListModalBody extends Component {
   selectFromWallet = (id, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
-    console.log('selectingFromWallet, id is: ', id, ' and currencyCode is: ', currencyCode )
     this.props.toggleWalletListModalVisibility()
   }
 
   selectToWallet = (idx, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
-    console.log('selectingToWallet, id is: ', id, ' and currencyCode is: ', currencyCode )
     this.props.toggleWalletListModalVisibility()
+  }
+
+  renderTokens = (walletId, metaTokenBalances, code) => {
+    var tokens = []
+    for (var property in metaTokenBalances) {
+      if(property != code){
+        tokens.push( this.renderTokenRowContent(walletId, property, metaTokenBalances[property]) )
+      }
+    }
+    return tokens
+  }
+
+  renderTokenRowContent = (parentId, currencyCode, balance) => {
+    return(
+      <TouchableOpacity style={[styles.tokenRowContainer]}
+        key={currencyCode} onPress={() => {
+          this.props.getTransactions(parentId, currencyCode)
+          this.props.toggleWalletListModalVisibility()
+          this.props.selectWallet(parentId, currencyCode)
+        }}>
+        <View style={[styles.currencyRowContent]}>
+          <View style={[styles.currencyRowNameTextWrap]}>
+            <T style={[styles.currencyRowText]}>{currencyCode}</T>
+          </View>
+          <View style={[styles.currencyRowBalanceTextWrap]}>
+            <T style={[styles.currencyRowText]}>{balance}</T>
+          </View>
+        </View>
+      </TouchableOpacity>      
+    )
   }
 
   renderWalletRow = (wallet, i) => {
@@ -96,19 +124,7 @@ class WalletListModalBody extends Component {
           </View>
         </TouchableOpacity>
 
-        {wallet.metaTokens.map((x, i) => (
-          <TouchableOpacity style={[styles.tokenRowContainer]}
-            key={x.currencyCode} onPress={() => this[this.props.selectionFunction](wallet.id, x.currencyCode)}>
-            <View style={[styles.currencyRowContent]}>
-              <View style={[styles.currencyRowNameTextWrap]}>
-                <T style={[styles.currencyRowText]}>{x.currencyCode}</T>
-              </View>
-              <View style={[styles.currencyRowBalanceTextWrap]}>
-                <T style={[styles.currencyRowText]}>{x.balance}</T>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+        {this.renderTokens(wallet.id, wallet.balances, wallet.currencyCode)}
       </View>
     )
   }
@@ -171,7 +187,7 @@ class WalletListModalHeader extends Component {
           </View>
           <TouchableHighlight style={[styles.modalCloseWrap, b()]}
             onPress={this._onSearchExit}>
-            <Ionicon style={[styles.donebutton, b('purple')]}
+            <Ionicon style={[styles.donebutton, b()]}
               name="ios-close"
               size={26}
               color='white'

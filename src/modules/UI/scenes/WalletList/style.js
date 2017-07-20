@@ -137,10 +137,12 @@ module.exports = StyleSheet.create({
     textAlign: 'right'
   },
   rowBalanceDenominationText: {
-    color: '#58595C'
+    color: '#58595C',
+    textAlign: 'right'
   },  
   rowDotsWrap: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    width: 44
   },
   menuTrigger: {
     flex: 1,
