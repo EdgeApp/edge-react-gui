@@ -99,15 +99,19 @@ const schema = wallet => {
   const balances = {}
   // Add parent wallet balance to balances
   balances[currencyCode] = wallet.getBalance({ currencyCode })
+  const currencyNames = {}
+  currencyNames[currencyCode] = wallet.currencyInfo.currencyName
 
   metaTokens.forEach(metaToken => {
     const currencyCode = metaToken.currencyCode
+    const currencyName = metaToken.currencyName
     const tokenBalance = wallet.getBalance({ currencyCode })
     const tokenDenominations = metaToken.denominations
 
     // Add token balance to allBalances
     metaToken.balance = tokenBalance
     balances[currencyCode] = tokenBalance
+    currencyNames[currencyCode] = currencyName
 
     // Add all token denominations to allDenominations
     allDenominations[currencyCode] = {}
@@ -124,6 +128,7 @@ const schema = wallet => {
     name,
     balance,
     balances,
+    currencyNames,
     currencyCode,
     isoFiatCurrencyCode,
     fiatCurrencyCode,

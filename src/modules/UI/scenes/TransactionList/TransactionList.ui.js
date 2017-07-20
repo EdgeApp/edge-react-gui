@@ -50,15 +50,6 @@ const monthNames = [
 var dateStrings = []
 var iterator = -1
 
-const checkTypeImage = (amount) => {
-  if(amount > 0) {
-    return received_type_image
-  }
-  if(amount <= 0) {
-    return sent_type_image
-  }
-}
-
 class TransactionList extends Component {
    constructor(props) {
      super(props)
@@ -354,14 +345,21 @@ class TransactionList extends Component {
 
   renderTx = (tx) => {
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
-    if (tx.amountSatoshi <= 0) {
+    let txName = ''
+    let txImage
+    if (tx.amountSatoshi < 0) {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_expense'])
+      // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColor = '#F03A47'
+      txName = strings.enUS['fragment_transaction_list_sent_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txImage = sent_type_image
     } else {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_transaction_receive'])
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
+      txName = strings.enUS['fragment_transaction_list_receive_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txImage = received_type_image
     }
 
     console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)
@@ -382,11 +380,11 @@ class TransactionList extends Component {
               ) : (
                 <Image
                   style={styles.transactionLogo}
-                  source={checkTypeImage(tx.amountSatoshi)}
+                  source={txImage}
                 />
               )}
               <View style={[styles.transactionLeftTextWrap, b()]}>
-                <T style={[styles.transactionPartner]}>{tx.metadata.payee || 'No Name'}</T>
+                <T style={[styles.transactionPartner]}>{tx.metadata.payee || txName}</T>
                 <T style={[styles.transactionTime]}>{tx.time}</T>
               </View>
             </View>
