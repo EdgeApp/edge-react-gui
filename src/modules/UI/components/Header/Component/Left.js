@@ -13,6 +13,8 @@ export default class Left extends Component {
         return <SendConfirmationBackButton />
       case 'createWallet':
         return <BackButton />
+      case 'transactionList':
+        return this.props.routes.scene.params === 'walletList' ? <BackButton /> : null
       default:
         return null
     }
