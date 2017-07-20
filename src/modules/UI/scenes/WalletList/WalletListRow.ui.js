@@ -136,9 +136,13 @@ export const WalletListTokenRowConnect = connect((state, ownProps) => {
   const walletId = ownProps.parentWallet
   const currencyCode = ownProps.currencyCode
   const wallet = UI_SELECTORS.getWallet(state, walletId)
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const denomination = wallet.allDenominations[currencyCode][index]
-  const multiplier = denomination.multiplier
+  let denomination = {}
+  let multiplier = 0
+  if (wallet) {
+    const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+    denomination = wallet.allDenominations[currencyCode][index]
+    multiplier = denomination.multiplier
+  }
 
   return {
     denomination,

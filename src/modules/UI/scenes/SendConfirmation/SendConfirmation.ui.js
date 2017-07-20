@@ -130,7 +130,7 @@ class SendConfirmation extends Component {
             {/* <Password /> */}
           </View>
 
-          <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
+          <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
         </ScrollView>
       </LinearGradient>
     )

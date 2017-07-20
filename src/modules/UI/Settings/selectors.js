@@ -5,6 +5,10 @@ export const getSettings = (state) => {
 
 export const getDenominationIndex = (state, currencyCode) => {
   const settings = getSettings(state)
-  const denominationIndex = settings[currencyCode].denomination
+  const currencySettings = settings[currencyCode]
+  let denominationIndex
+  if (currencySettings) {
+    denominationIndex = currencySettings.denomination
+  }
   return denominationIndex
 }
