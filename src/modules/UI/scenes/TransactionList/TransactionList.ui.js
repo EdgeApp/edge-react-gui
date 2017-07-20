@@ -237,13 +237,25 @@ class TransactionList extends Component {
     let dataSrc = ds.cloneWithRows(completedTxList)
     console.log('rendering txList, datSrc is: ', dataSrc)
     console.log('rendering txList, this.props is: ', this.props)
-
+    let logo 
+    console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
+    if(this.props.uiWallet.currencyCode != this.props.selectedCurrencyCode) {
+      for(mt of this.props.uiWallet.metaTokens) {
+        console.log('mt is: ', mt)
+        if(mt.currencyCode === this.props.selectedCurrencyCode) {
+          logo = mt.symbolImage
+        }
+      }
+    } else {
+      logo = this.props.uiWallet.symbolImage
+    }
+    console.log('logo is: ', logo)
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
           <View style={[styles.container, b('green')]}>
-            <Animated.View style={[{height: this.state.balanceBoxHeight}, b('red')]}>
-              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, b('purple')]} colors={["#3b7adb","#2b569a"]}>
+            <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
+              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, b()]} colors={["#3b7adb","#2b569a"]}>
                 {this.state.balanceBoxVisible &&
                   <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                     {this.props.updatingBalance ? (
@@ -257,17 +269,17 @@ class TransactionList extends Component {
                         </View>
                       </View>
                     ) : (
-                      <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b('green')]}>
+                      <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b()]}>
                         {this.state.showBalance ? (
                           <View style={styles.balanceShownContainer}>
-                            <View style={[styles.iconWrap, b('yellow')]}>
-                              {this.props.uiWallet.symbolImage && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: this.props.uiWallet.symbolImage}} />}
+                            <View style={[styles.iconWrap, b()]}>
+                              {logo && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />}
                             </View>
-                            <View style={[styles.currentBalanceBoxDollarsWrap, b('yellow')]}>
-                              <T style={[styles.currentBalanceBoxDollars, b('purple')]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
+                            <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
+                              <T style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
                             </View>
-                            <View style={[styles.currentBalanceBoxBitsWrap, b('red')]}>
-                              <T style={[styles.currentBalanceBoxBits, b('yellow')]}>
+                            <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
+                              <T style={[styles.currentBalanceBoxBits, b()]}>
                                 {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
                               </T>
                             </View>
