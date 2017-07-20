@@ -64,12 +64,12 @@ export const WalletListModalConnect = connect( state => ({
 class WalletListModalBody extends Component {
   selectFromWallet = (id, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
-    this.props.toggleWalletListModalVisibility()
+    this.props.disableWalletListModalVisibility()
   }
 
   selectToWallet = (idx, currencyCode = null) => {
     LayoutAnimation.easeInEaseOut()
-    this.props.toggleWalletListModalVisibility()
+    this.props.disableWalletListModalVisibility()
   }
 
   renderTokens = (walletId, metaTokenBalances, code) => {
@@ -87,7 +87,7 @@ class WalletListModalBody extends Component {
       <TouchableOpacity style={[styles.tokenRowContainer]}
         key={currencyCode} onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
-          this.props.toggleWalletListModalVisibility()
+          this.props.disableWalletListModalVisibility()
           this.props.selectWallet(parentId, currencyCode)
         }}>
         <View style={[styles.currencyRowContent]}>
@@ -111,7 +111,7 @@ class WalletListModalBody extends Component {
           // onPress={this[this.props.selectionFunction]}
           onPress={() => {
             this.props.getTransactions(wallet.id, wallet.currencyCode)
-            this.props.toggleWalletListModalVisibility()
+            this.props.disableWalletListModalVisibility()
             this.props.selectWallet(wallet.id, wallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>
@@ -159,7 +159,7 @@ export const WalletListModalBodyConnect = connect(
   dispatch => ({
     selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
     getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
-    toggleWalletListModalVisibility: () => dispatch(toggleSelectedWalletListModal()),
+    disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility()),
     toggleSelectedWalletListModal: () => dispatch(toggleScanToWalletListModal()),
     toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal())
   }))
