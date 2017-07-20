@@ -37,7 +37,8 @@ import {
   renameWallet,
   deleteWallet,
   updateActiveWalletsOrder,
-  updateArchivedWalletsOrder
+  updateArchivedWalletsOrder,
+  updateTotalBalance
 } from './action'
 import {border as b} from '../../../utils'
 
@@ -71,7 +72,6 @@ class WalletList extends Component {
   }*/ // delete this function?
 
   render () {
-    this.tallyUpTotalCrypto()
     const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
     return (
       <View style={styles.container}>
@@ -249,25 +249,30 @@ class WalletList extends Component {
 
   checkIndexIsEven = (n) => {
     console.info('n is: ' , n)
-      return n % 2 == 0;
+      return n % 2 == 0
   }
 
   tallyUpTotalCrypto = () => {
-    let temporaryTotalCrypto = {}
+    const temporaryTotalCrypto = {}
     for (var parentProp in this.props.wallets) {
       console.log('outer loop, parentProp is: ', parentProp)
       for (var balanceProp in this.props.wallets[parentProp].balances){
-        console.log('inside loop, balanceProp is: ', balanceProp, ' and balance is: ', this.props.wallets[parentProp].balances[balanceProp])
-        if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
-          temporaryTotalCrypto[balanceProp] =+ this.props.wallets[parentProp].balances[balanceProp]
+        if(!temporaryTotalCrypto[balanceProp]) {
+          temporaryTotalCrypto[balanceProp] = 0
         }
+        if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
+          console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])          
+          temporaryTotalCrypto[balanceProp]  += this.props.wallets[parentProp].balances[balanceProp]
+        }
+        console.log('at end of inner loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
       }
     }
     console.log('outside of the loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
-    //this.setState({totalCryptoAmounts: temporaryTotalCrypto})
+     this.props.dispatch(updateTotalBalance(temporaryTotalCrypto))
   }
 
-  componentDidMount = () => {
+  componentDidUpdate = () => {
+    this.tallyUpTotalCrypto()
   }
 
   calculateTotalBalance = () => {

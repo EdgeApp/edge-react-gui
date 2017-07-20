@@ -1,5 +1,7 @@
 export const TOGGLE_ARCHIVE_VISIBILITY = 'TOGGLE_ARCHIVE_VISIBILITY'
 
+export const UPDATE_TOTAL_BALANCE = 'UPDATE_TOTAL_BALANCE'
+
 export const OPEN_DELETE_WALLET_MODAL = 'OPEN_DELETE_WALLET_MODAL'
 export const CLOSE_DELETE_WALLET_MODAL = 'CLOSE_DELETE_WALLET_MODAL'
 
@@ -33,6 +35,13 @@ import * as LOGIN from '../../../Login/action.js'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+
+export const updateTotalBalance = (balance) => {
+  return {
+    type: UPDATE_TOTAL_BALANCE,
+    data: { balance }
+  }
+}
 
 export const executeWalletRowOption = (walletId, option) => {
   switch (option) {

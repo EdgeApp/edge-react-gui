@@ -1,6 +1,17 @@
 import * as ACTION from './action'
 import { combineReducers } from 'redux'
 
+const totalAccountBalance = (state = {}, action) => {
+  const { type, data = {} } = action
+  const { balance } = data
+  switch (type) {
+    case ACTION.UPDATE_TOTAL_BALANCE :
+      return balance
+    default:
+      return state
+  }
+}
+
 const renameWalletModalVisible = (state = false, action) => {
   const { type } = action
   switch (type) {
@@ -82,7 +93,8 @@ const walletList = combineReducers({
   walletArchivesVisible,
   renameWalletInput,
   walletId,
-  walletName
+  walletName,
+  totalAccountBalance
 })
 
 export default walletList
