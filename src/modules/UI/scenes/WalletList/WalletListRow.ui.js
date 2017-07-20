@@ -39,7 +39,7 @@ class WalletListRow extends Component {
     var tokens = []
     for (var property in metaTokenBalances) {
       if(property != this.props.data.currencyCode){
-        tokens.push( <WalletListTokenRowConnect parentId={this.props.data.id} code={property} key={property} balance={metaTokenBalances[property]} /> )
+        tokens.push( <WalletListTokenRowConnect parentId={this.props.data.id} currencyCode={property} key={property} balance={metaTokenBalances[property]} /> )
       }
     }
     return tokens
@@ -51,8 +51,7 @@ class WalletListRow extends Component {
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
     const currencyCode = this.props.data.currencyCode
-    const multiplier = 1000
-    // const multiplier = this.props.data.denominations[this.props.settings[this.props.data.currencyCode].denomination - 1].multiplier
+    const multiplier = this.props.multiplier
 
     return (
       <View>
@@ -61,7 +60,7 @@ class WalletListRow extends Component {
           delayLongPress={500}
           {...this.props.sortHandlers}
           onPress={() => this._onPressSelectWallet(this.props.data.id, currencyCode)}
-          >
+        >
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -113,13 +112,13 @@ class WalletListTokenRow extends Component {
         underlayColor={'#eee'}
         delayLongPress={500}
         {...this.props.sortHandlers}
-        onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.code )}>
+        onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode )}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.code}</T>
+            <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
           <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.balance}</T>
+            <T style={[styles.tokenRowText]}>{this.props.balance / this.props.multiplier}</T>
           </View>
         </View>
       </TouchableHighlight>
@@ -133,7 +132,7 @@ WalletListTokenRow.propTypes = {
 }
 
 export const WalletListTokenRowConnect = connect((state, ownProps) => {
-  const walletId = ownProps.parentWallet
+  const walletId = ownProps.parentId
   const currencyCode = ownProps.currencyCode
   const wallet = UI_SELECTORS.getWallet(state, walletId)
   let denomination = {}
