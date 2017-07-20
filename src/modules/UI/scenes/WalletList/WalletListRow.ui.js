@@ -46,7 +46,6 @@ class WalletListRow extends Component {
   }
 
   render () {
-    console.log('rendering WalletListRow, this.props is: ', this.props)
     let id = this.props.data.id
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
@@ -106,7 +105,6 @@ class WalletListTokenRow extends Component {
   }
 
   render () {
-    console.log('rendering walletListTokenRow, this.props is: ', this.props)
     return (
       <TouchableHighlight style={[styles.tokenRowContainer]}
         underlayColor={'#eee'}
@@ -118,7 +116,7 @@ class WalletListTokenRow extends Component {
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
           <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.balance / this.props.multiplier}</T>
+            <T style={[styles.tokenRowText]}>{(this.props.balance / this.props.multiplier) || 0}</T>
           </View>
         </View>
       </TouchableHighlight>

@@ -21,8 +21,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    padding: 5,
-    fontFamily: 'SourceSansPro-Regular'
+    padding: 5
   },
   listView: {
     maxHeight: 200
