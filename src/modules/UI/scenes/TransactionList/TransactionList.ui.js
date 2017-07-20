@@ -26,6 +26,7 @@ import { border as b , findDenominationSymbol as symbolize, formatAMPM } from '.
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
@@ -307,9 +308,9 @@ class TransactionList extends Component {
                 enableEmptySections
                 initialIterator={-1}
               />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
     )
   }
 
@@ -369,16 +370,18 @@ TransactionList.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const uiWallet = state.ui.wallets.byId[state.ui.wallets.selectedWalletId]
-  const settings = state.ui.settings
-  const isoFiatCurrencyCode = uiWallet.isoFiatCurrencyCode
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto = uiWallet.balances[selectedCurrencyCode]
-  const balanceInFiat = currencyConverter.convertCurrency(selectedCurrencyCode, isoFiatCurrencyCode, balanceInCrypto )
-  const transactions = UI_SELECTORS.getTransactions(state)
-  const multiplier = uiWallet.denominations[settings[uiWallet.currencyCode].denomination - 1].multiplier
+  const selectedWalletId     = UI_SELECTORS.getSelectedWalletId(state)
+  const currencyCode         = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const wallet               = UI_SELECTORS.getSelectedWallet(state)
+  const settings             = SETTINGS_SELECTORS.getSettings(state)
+  const isoFiatCurrencyCode  = wallet.isoFiatCurrencyCode
+  const currencyConverter    = CORE_SELECTORS.getCurrencyConverter(state)
+  const balanceInCrypto      = wallet.balances[currencyCode]
+  const balanceInFiat        = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCrypto)
+  const transactions         = UI_SELECTORS.getTransactions(state)
+  const index                = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination         = wallet.allDenominations[currencyCode][index]
+  const multiplier           = denomination.multiplier
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
@@ -388,9 +391,9 @@ const mapStateToProps = (state) => {
     contactsList:    state.ui.scenes.transactionList.contactsList,
     exchangeRates:   state.ui.scenes.exchangeRate.exchangeRates,
     selectedWalletId,
-    selectedCurrencyCode,
+    selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
-    uiWallet,
+    uiWallet: wallet,
     settings,
     balanceInCrypto,
     balanceInFiat,
