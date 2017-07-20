@@ -106,7 +106,6 @@ class Scan extends Component {
       return (
         <Camera
           style={styles.preview}
-          barCodeTypes={['org.iso.QRCode']}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture'
         />
