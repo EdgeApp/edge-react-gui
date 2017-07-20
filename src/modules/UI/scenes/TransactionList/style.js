@@ -40,7 +40,7 @@ module.exports = StyleSheet.create({
     height: 18,
     flex: 1,
     alignSelf: 'center',
-    textAlign: 'center'        
+    textAlign: 'center'
   },
   cancelButton: {
     justifyContent: 'space-around',
@@ -53,8 +53,8 @@ module.exports = StyleSheet.create({
   // end of searchbar stuff
 
   currentBalanceBox: {
-    flex:1,  
-    justifyContent: "center" 
+    flex:1,
+    justifyContent: "center"
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -72,8 +72,8 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   balanceShownContainer: {
-    justifyContent: 'center', 
-    alignItems: 'center'    
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   iconWrap: { //two
     flex: 3,
@@ -92,7 +92,7 @@ module.exports = StyleSheet.create({
   },
   currentBalanceBoxBitsWrap: {
     justifyContent: "flex-start",
-    flex: 4,    
+    flex: 4,
     paddingTop: 4
   },
   currentBalanceBoxBits: { //two
@@ -100,12 +100,12 @@ module.exports = StyleSheet.create({
     fontSize: 20
   },
   balanceHiddenContainer: {
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    flex: 1    
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
   },
   balanceHiddenText: {
-    alignSelf: 'center', 
+    alignSelf: 'center',
     color: 'white',
     fontSize: 36
   },
@@ -127,7 +127,9 @@ module.exports = StyleSheet.create({
     flexDirection: "row"
   },
   requestWrap: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   requestIcon: {
     textAlignVertical: 'center',
@@ -145,20 +147,24 @@ module.exports = StyleSheet.create({
     flexDirection: "row"
   },
   sendWrap: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   sendIcon: {
     textAlignVertical: 'center',
-    alignSelf: 'center',    
+    alignSelf: 'center',
     marginRight: 10
   },
   request: {
     fontSize: 18,
     color: "#ffffff",
+    marginHorizontal: 12
   },
   send: {
     fontSize: 18,
-    color: "#ffffff"
+    color: "#ffffff",
+    marginHorizontal: 12
   },
 
   // beginning of second half
@@ -198,7 +204,7 @@ module.exports = StyleSheet.create({
     padding: 10,
     paddingRight: 30,
     paddingLeft: 3,
-    marginLeft: 15,    
+    marginLeft: 15,
   },
   singleTransactionWrap: {
     flexDirection: 'column',
@@ -233,7 +239,7 @@ module.exports = StyleSheet.create({
     flexDirection: "row",
     height: 40,
     flex: 1,
-    justifyContent: 'space-between'    
+    justifyContent: 'space-between'
   },
   transactionLeft: {
     flexDirection: 'row'
@@ -249,16 +255,16 @@ module.exports = StyleSheet.create({
   transactionPartner: {
     fontSize: 14,
     color: "#58595C",
-    textAlignVertical: 'center'    
+    textAlignVertical: 'center'
   },
   transactionBitAmount: {
     fontSize: 14,
     color: "#000000",
-    textAlignVertical: 'center'    
+    textAlignVertical: 'center'
   },
   transactionRight: {
     alignItems: 'flex-end',
-    justifyContent: 'center'    
+    justifyContent: 'center'
   },
   transactionTime: {
     fontSize: 10,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Platform, View, ScrollView, TouchableNativeFeedback, TouchableOpacity, TouchableHighlight } from 'react-native'
+import { Platform, View, ScrollView, TouchableNativeFeedback, TouchableOpacity, TouchableHighlight, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import { Actions } from 'react-native-router-flux'
@@ -7,9 +7,18 @@ import { Actions } from 'react-native-router-flux'
 import { closeSidebar } from '../../SideMenu/action'
 import UserList from './UserList'
 
+import { logout } from  '../action.js'
+
 import styles from '../style'
 const platform = Platform.OS;
-import { logout } from  '../action.js'
+
+import buyandsell from '../../../../../assets/images/sidenav/buysell@3x.png.png'
+import directory from '../../../../../assets/images/sidenav/directory@3x.png.png'
+import logout_image from '../../../../../assets/images/sidenav/logout@3x.png.png'
+import refer from '../../../../../assets/images/sidenav/refer@3x.png.png'
+import security from '../../../../../assets/images/sidenav/security@3x.png.png'
+import settings from '../../../../../assets/images/sidenav/settings@3x.png.png'
+import spend from '../../../../../assets/images/sidenav/spend@3x.png.png'
 
 class MainComponent extends Component {
   render () {
@@ -26,7 +35,9 @@ class MainComponent extends Component {
               { this._render2FAenabling() }
               <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('directory')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderVertical ]}>
-                  <Icon style={styles.main.icon} name='repeat' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={buyandsell} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>
                       Buy/Sell Digital Currency
@@ -39,7 +50,9 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>
               <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('transactions')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
-                  <Icon style={styles.main.icon} name='basket' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={spend} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Spend Bitcoins</Text>
                     <Text style={styles.main.textItalic}>Plugins</Text>
@@ -49,7 +62,9 @@ class MainComponent extends Component {
               <TouchableNativeFeedback onPress={ e => console.log('pressed3') }
                 background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
-                  <Icon style={styles.main.icon} name='share' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={refer} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Refer Your Friends</Text>
                     <Text style={styles.main.textItalic}>Earn Money</Text>
@@ -58,7 +73,9 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>
               <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('walletList')}>
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
-                  <Icon style={styles.main.icon} name='ios-home-outline' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={directory} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Directory</Text>
                     <Text style={styles.main.textItalic}>Find Local Business</Text>
@@ -69,7 +86,9 @@ class MainComponent extends Component {
             <View style={styles.others.container}>
               <TouchableNativeFeedback onPress={ this.props.logout }>
                 <View style={[styles.others.link, styles.others.borderVertical]}>
-                  <Icon style={styles.others.icon} name='log-out' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={logout_image} />
+                  </View>
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Logout</Text>
                   </View>
@@ -77,7 +96,9 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>
               <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('settingsOverview')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={styles.others.link}>
-                  <Icon style={styles.others.icon} name='settings' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={settings} />
+                  </View>
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
@@ -95,7 +116,9 @@ class MainComponent extends Component {
               { this._render2FAenabling() }
               <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('directory')} >
                 <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
-                  <Icon style={styles.main.icon} name='repeat' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={buyandsell} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>
                       Buy/Sell Digital Currency
@@ -108,7 +131,9 @@ class MainComponent extends Component {
               </TouchableHighlight>
               <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('transactions')} >
                 <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
-                  <Icon style={styles.main.icon} name='basket' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={spend} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Spend Bitcoins</Text>
                     <Text style={styles.main.textItalic}>Plugins</Text>
@@ -119,7 +144,9 @@ class MainComponent extends Component {
                 underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
                 onPress={ e => console.log('pressed3') } >
                 <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
-                  <Icon style={styles.main.icon} name='share' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={refer} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Refer Your Friends</Text>
                     <Text style={styles.main.textItalic}>Earn Money</Text>
@@ -128,7 +155,9 @@ class MainComponent extends Component {
               </TouchableHighlight>
               <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('walletList')} >
                 <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
-                  <Icon style={styles.main.icon} name='home' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={directory} />
+                  </View>
                   <View style={styles.main.textContainer}>
                     <Text style={styles.main.text}>Directory</Text>
                     <Text style={styles.main.textItalic}>Find Local Business</Text>
@@ -139,9 +168,12 @@ class MainComponent extends Component {
             <View style={styles.others.container}>
               <TouchableHighlight style={styles.others.iosTouchableHighlight}
                 underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-                onPress={ this.props.logout } >
+                onPress={ this.props.logout }
+              >
                 <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1 }]}>
-                  <Icon style={styles.others.icon} name='log-out' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={logout_image} />
+                  </View>
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Logout</Text>
                   </View>
@@ -149,7 +181,9 @@ class MainComponent extends Component {
               </TouchableHighlight>
               <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('settingsOverview')} >
                 <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
-                  <Icon style={styles.others.icon} name='settings' />
+                  <View style={styles.iconImageContainer}>
+                    <Image style={styles.iconImage} source={settings} />
+                  </View>
                   <View style={styles.others.textContainer}>
                     <Text style={styles.others.text}>Settings</Text>
                   </View>
@@ -163,9 +197,7 @@ class MainComponent extends Component {
   }
 
   _handleOnPressRouting = (route) => {
-    let goRoute = Actions[route]
-    goRoute()
-
+    Actions[route]()
     return this.props.dispatch(closeSidebar())
   }
 
@@ -174,7 +206,9 @@ class MainComponent extends Component {
       return (
         <TouchableNativeFeedback onPress={this._handleOnPressDirectory} background={TouchableNativeFeedback.SelectableBackground()} >
           <View style={[ styles.main.link, styles.main.borderVertical ]}>
-            <Icon style={styles.main.icon} name='lock' />
+            <View style={styles.iconImageContainer}>
+              <Image style={styles.iconImage} source={security} />
+            </View>
             <View style={styles.main.textContainer}>
               <Text style={styles.main.text}>Secure Your Account</Text>
               <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>
@@ -188,7 +222,9 @@ class MainComponent extends Component {
       return (
         <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this._handleOnPressDirectory} >
           <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
-            <Icon style={styles.main.icon} name='lock' />
+            <View style={styles.iconImageContainer}>
+              <Image style={styles.iconImage} source={security} />
+            </View>
             <View style={styles.main.textContainer}>
               <Text style={styles.main.text}>Secure Your Account</Text>
               <Text style={styles.main.textItalic}>Enable 2FA / Set Password Recovery</Text>

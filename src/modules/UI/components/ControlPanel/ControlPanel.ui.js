@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, TouchableOpacity } from 'react-native'
+import { View, TouchableOpacity, Image } from 'react-native'
 import { Text, Icon } from 'native-base'
 import MDIcon from 'react-native-vector-icons/MaterialIcons';
 import { connect } from 'react-redux'
@@ -14,6 +14,8 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 import Main from './Component/Main'
 import usersListObject from './userList'
 import styles from './style'
+
+import person from '../../../../assets/images/sidenav/accounts@3x.png.png'
 
 class ControlPanel extends Component {
   componentDidMount () {
@@ -49,9 +51,11 @@ class ControlPanel extends Component {
         </View>
         <TouchableOpacity style={styles.user.container}
           onPress={this._handlePressUserList}>
-          <Icon style={styles.user.icon} name='person' />
+          <View style={styles.iconImageContainer}>
+            <Image style={styles.iconImage} source={person} />
+          </View>
           <Text style={styles.user.name}>{ this.props.username }</Text>
-          <MDIcon style={styles.user.icon} name='keyboard-arrow-down' />
+          <MDIcon style={styles.icon} name={ this.props.usersView ? 'keyboard-arrow-up'  : 'keyboard-arrow-down'} />
         </TouchableOpacity>
         <Main/>
       </LinearGradient>
