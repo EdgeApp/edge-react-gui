@@ -16,7 +16,7 @@ export const makeCurrencyWalletRequest = (keyInfo, dispatch, getState) => {
   const shitcoinPlugin = makeShitcoinPlugin({ io })
   const bitcoinPlugin = makeBitcoinPlugin({ io })
   const ethereumPlugin = makeEthereumPlugin({ io })
-  
+
   let plugin
 
   if (walletType === shitcoinPlugin.getInfo().walletTypes[0]) {
@@ -78,8 +78,7 @@ export const getReceiveAddress = (wallet, currencyCode) => {
 }
 
 export const makeSpend = (wallet, spendInfo) => {
-  const transaction = wallet.makeSpend(spendInfo)
-  return transaction
+  return wallet.makeSpend(spendInfo)
 }
 
 export const getBalance = (wallet, currencyCode) => {
