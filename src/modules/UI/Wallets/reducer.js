@@ -85,9 +85,16 @@ const schema = wallet => {
   const currencyCode = wallet.currencyInfo.currencyCode
   const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const denominations = wallet.currencyInfo.denominations
   const symbolImage = wallet.currencyInfo.symbolImage
   const metaTokens = wallet.currencyInfo.metaTokens
+  const denominations = wallet.currencyInfo.denominations
+
+  const allDenominations = {}
+
+  allDenominations[currencyCode] = {}
+  denominations.forEach(denomination => {
+    allDenominations[currencyCode][denomination.multiplier] = denomination
+  })
 
   const balances = {}
   balances[currencyCode] = wallet.getBalance({ currencyCode })
@@ -95,8 +102,15 @@ const schema = wallet => {
   metaTokens.forEach(metaToken => {
     const currencyCode = metaToken.currencyCode
     const tokenBalance = wallet.getBalance({ currencyCode })
+    const tokenDenominations = metaToken.denominations
+
     metaToken.balance = tokenBalance
     balances[currencyCode] = tokenBalance
+
+    allDenominations[currencyCode] = {}
+    tokenDenominations.forEach(denomination => {
+      allDenominations[currencyCode][denomination.multiplier] = denomination
+    })
   })
 
   const balance = balances[currencyCode]
@@ -111,6 +125,7 @@ const schema = wallet => {
     isoFiatCurrencyCode,
     fiatCurrencyCode,
     denominations,
+    allDenominations,
     symbolImage,
     metaTokens,
     sortIndex,

@@ -34,7 +34,7 @@ class ControlPanel extends Component {
       ? <Text style={styles.bitcoin.value}>
         Exchange Rate loading
       </Text>
-    : <Text style={styles.bitcoin.value}>1 ฿ = $ {this.props.exchangeRate} USD</Text>
+    : <Text style={styles.bitcoin.value}>1 {this.props.currencyCode} = $ {this.props.exchangeRate.toFixed(2)} USD</Text>
   }
 
   render () {
@@ -44,7 +44,7 @@ class ControlPanel extends Component {
         end={{x:1, y:0}}
         colors={["#2B5698","#3B7ADA"]}>
         <View style={styles.bitcoin.container}>
-          <Icon name='logo-bitcoin' style={styles.bitcoin.icon}/>
+          <Text style={styles.bitcoin.icon}></Text>
           {this._getExchangeRate()}
         </View>
         <TouchableOpacity style={styles.user.container}
@@ -62,14 +62,18 @@ class ControlPanel extends Component {
 const mapStateToProps = (state) => {
   let exchangeRate = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
+  let currencyCode = ''
+  let fiatCurrencyCode = ''
   if (wallet) {
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
     const fiatCurrencyCode = wallet.isoFiatCurrencyCode
     const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
     exchangeRate = currencyConverter.convertCurrency(currencyCode, fiatCurrencyCode, 1)
   }
 
   return {
+    currencyCode,
+    fiatCurrencyCode,
     exchangeRate: exchangeRate,
     usersView: state.ui.scenes.controlPanel.usersView,
     username:  CORE_SELECTORS.getUsername(state)

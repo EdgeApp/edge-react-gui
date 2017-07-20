@@ -34,18 +34,6 @@ export default request = (state = initialState, action) => {
         inputCurrencySelected
       }
 
-    case ACTION.UPDATE_PUBLIC_ADDRESS: {
-      const { receiveAddress } = state
-      const { publicAddress = '' } = data
-      return {
-        ...state,
-        receiveAddress: {
-          ...receiveAddress,
-          publicAddress
-        }
-      }
-    }
-
     case ACTION.UPDATE_AMOUNT_REQUESTED_IN_CRYPTO: {
       const { receiveAddress } = state
       const amountSatoshi = data.amountRequestedInCrypto

@@ -25,8 +25,7 @@ class StylizedModal extends Component {
             <View style={[styles.modalTopTextWrap,  b('blue')]}>
               <T style={[styles.modalTopText, b('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</T>
               {this.props.headerSubtext &&
-                <T style={[styles.modalTopSubtext, b('green')]}
-                  numberOfLines={2}>
+                <T style={[styles.modalTopSubtext, b('green')]}>
                   {this.props.headerSubtext || ''}
                 </T>
               }

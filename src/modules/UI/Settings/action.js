@@ -23,8 +23,11 @@ export const SET_BLUETOOTH_MODE = PREFIX + 'SET_BLUETOOTH_MODE'
 // Currency Settings
 export const SET_BITCOIN_DENOMINATION = PREFIX + 'SET_BITCOIN_DENOMINATION'
 export const SET_BITCOIN_OVERRIDE_SERVER = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER'
-export const SET_ETHEREUM_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
 export const SET_SHITCOIN_DENOMINATION = PREFIX + 'SET_SHITCOIN_DENOMINATION'
+export const SET_ETHEREUM_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
+export const SET_REP_DENOMINATION = PREFIX + 'SET_REP_DENOMINATION'
+export const SET_WINGS_DENOMINATION = PREFIX + 'SET_WINGS_DENOMINATION'
+export const SET_LUNYR_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
 
 export const updateSettings = settings => {
   return {
@@ -110,6 +113,13 @@ export const setBitcoinOverrideServer = overrideServer => {
   }
 }
 
+export const setShitcoinDenomination = denomination => {
+  return {
+    type: SET_SHITCOIN_DENOMINATION,
+    data: { denomination }
+  }
+}
+
 export const setEthereumDenomination = denomination => {
   return {
     type: SET_ETHEREUM_DENOMINATION,
@@ -117,9 +127,23 @@ export const setEthereumDenomination = denomination => {
   }
 }
 
-export const setShitcoinDenomination = denomination => {
+export const setRepDenomination = denomination => {
   return {
-    type: SET_SHITCOIN_DENOMINATION,
+    type: SET_REP_DENOMINATION,
+    data: { denomination }
+  }
+}
+
+export const setWingsDenomination = denomination => {
+  return {
+    type: SET_WINGS_DENOMINATION,
+    data: { denomination }
+  }
+}
+
+export const setLunyrDenomination = denomination => {
+  return {
+    type: SET_LUNYR_DENOMINATION,
     data: { denomination }
   }
 }

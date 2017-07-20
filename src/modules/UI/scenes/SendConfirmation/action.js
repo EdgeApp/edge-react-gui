@@ -106,10 +106,8 @@ export const signBroadcastAndSave = unsignedTransaction => {
     wallet.signTx(unsignedTransaction)
     .then(transaction => {
       console.log('broadcast transaction', transaction)
+      wallet.saveTx(transaction)
       return wallet.broadcastTx(transaction)
-    })
-    .then(transaction => {
-      return wallet.saveTx(transaction)
     })
     .then(transaction => {
       const message = 'Sent Transaction: ' + JSON.stringify(transaction)
@@ -176,7 +174,6 @@ export const updatePublicAddressRequest = (publicAddress) => {
 
     dispatch(updatePublicAddress(publicAddress))
     dispatch(updateLabel(publicAddress))
-    dispatch(updateSpendInfo(spendInfo))
   }
 }
 

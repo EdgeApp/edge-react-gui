@@ -231,15 +231,19 @@ module.exports = StyleSheet.create({
   },
   transactionInfoWrap: {
     flexDirection: "row",
-    height: 40
+    height: 40,
+    flex: 1,
+    justifyContent: 'space-between'    
+  },
+  transactionLeft: {
+    flexDirection: 'row'
   },
   transactionLogo: {
     width: 40,
     height: 40,
     marginRight: 10
   },
-  transactionDollars: {
-    flex: 3,
+  transactionLeftTextWrap: {
     justifyContent: 'center',
   },
   transactionPartner: {
@@ -252,8 +256,7 @@ module.exports = StyleSheet.create({
     color: "#000000",
     textAlignVertical: 'center'    
   },
-  transactionBits: {
-    flex: 2,
+  transactionRight: {
     alignItems: 'flex-end',
     justifyContent: 'center'    
   },

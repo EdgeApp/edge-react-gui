@@ -7,31 +7,31 @@ const initialState = {
   defaultFiat: 'USD',
   merchantMode: false,
   'BTC': {
-    denomination: 1
+    denomination: 100000000
   },
   'ETH': {
-    denomination: 1
+    denomination: 100000000
   },
   'REP': {
-    denomination: 1
+    denomination: 100000000
   },
   'WINGS': {
-    denomination: 1
+    denomination: 100000000
   },
   'LUN': {
-    denomination: 1
+    denomination: 100000000
   },
   'TRD': {
-    denomination: 1
+    denomination: 1000
   },
   'DOGESHIT': {
-    denomination: 1
+    denomination: 100
   },
   'HOLYSHIT': {
-    denomination: 1
+    denomination: 100
   },
   'ANA': {
-    denomination: 1
+    denomination: 100
   }
 }
 

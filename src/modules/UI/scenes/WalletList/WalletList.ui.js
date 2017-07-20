@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {
   TouchableWithoutFeedback,
   Image,
+  ActivityIndicator,
   ScrollView,
   ListView,
   Text,
@@ -104,14 +105,15 @@ class WalletList extends Component {
             </TouchableOpacity>
           </LinearGradient>
           {
-            this.renderActiveSortableList(
-              wallets,
-              activeWalletIds,
-              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
-              this.renderActiveRow,
-              this.onActiveRowMoved,
-
-            )
+            Object.keys(wallets).length > 0
+              ? this.renderActiveSortableList(
+                wallets,
+                activeWalletIds,
+                sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
+                this.renderActiveRow,
+                this.onActiveRowMoved,
+              )
+              : <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'}/>
           }
 
           {/* <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}> */}

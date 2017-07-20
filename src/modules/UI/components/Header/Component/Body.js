@@ -85,7 +85,7 @@ class ExampleFromWallet extends Component {
 
     return (
       <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }]}>
-        <T style={{ color: "#FFF", fontSize: 20 }}>{walletNameString}</T>
+        <T style={{ color: "#FFF", fontSize: 20 }} numberOfLines={1} >{walletNameString}</T>
 
         <View style={[b(),{height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), { position: 'relative', top: 2}]}>
