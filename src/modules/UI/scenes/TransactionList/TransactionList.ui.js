@@ -28,6 +28,9 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
+import request_image from '../../../../assets/images/transactions/transactions-request@3x.png.png'
+import send_image from '../../../../assets/images/transactions/transactions-send@3x.png.png'
+
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
     sprintf(strings.enUS['transactions_list_date_feb']),
@@ -296,13 +299,19 @@ class TransactionList extends Component {
                     <View style={[styles.requestSendRow, b()]}>
                       <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
                         <View  style={[styles.requestWrap]}>
-                          <FAIcon name="download" style={[styles.requestIcon]} color="#ffffff" size={24} />
+                          <Image
+                            style={{width: 25, height: 25}}
+                            source={request_image}
+                          />
                           <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                         </View>
                       </TouchableHighlight>
                       <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                         <View style={[styles.sendWrap]}>
-                          <FAIcon name="upload" style={[styles.sendIcon]} color="#ffffff" size={24} onPress={() => Actions.scan()} />
+                          <Image
+                            style={{width: 25, height: 25}}
+                            source={send_image}
+                          />
                           <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
                         </View>
                       </TouchableHighlight>
