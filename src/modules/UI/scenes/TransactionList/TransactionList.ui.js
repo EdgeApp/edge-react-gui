@@ -342,18 +342,20 @@ class TransactionList extends Component {
         }
         <TouchableOpacity onPress={() => this._goToTxDetail( tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
           <View style={[styles.transactionInfoWrap, b()]}>
-            {tx.hasThumbnail ? (
-              <Image style={[styles.transactionLogo, b()]} source={{ uri: tx.thumbnailPath }} />
-            ) : (
-              <FAIcon name='user' style={[styles.transactionLogo, b()]} size={54} />
-            )}
-            <View style={[styles.transactionDollars, b()]}>
-              <T style={[styles.transactionPartner, b()]}>{tx.metadata.payee || 'No Name'}</T>
-              <T style={[styles.transactionTime, b()]}>{tx.time}</T>
+            <View style={styles.transactionLeft}>
+              {tx.hasThumbnail ? (
+                <Image style={[styles.transactionLogo, b()]} source={{ uri: tx.thumbnailPath }} />
+              ) : (
+                <FAIcon name='user' style={[styles.transactionLogo, b()]} size={54} />
+              )}
+              <View style={[styles.transactionLeftTextWrap, b()]}>
+                <T style={[styles.transactionPartner]}>{tx.metadata.payee || 'No Name'}</T>
+                <T style={[styles.transactionTime]}>{tx.time}</T>
+              </View>
             </View>
-            <View style={[styles.transactionBits, b()]}>
-              <T style={[styles.transactionBitAmount, b(), {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, b(), {color: txColor} ]}>$ {tx.amountSatoshi}</T>
+            <View style={[styles.transactionRight, b()]}>
+              <T style={[styles.transactionBitAmount, {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
+              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>$ {tx.amountSatoshi}</T>
             </View>
           </View>
         </TouchableOpacity>

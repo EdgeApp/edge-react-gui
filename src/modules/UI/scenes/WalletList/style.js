@@ -141,7 +141,8 @@ module.exports = StyleSheet.create({
     textAlign: 'right'
   },  
   rowDotsWrap: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    width: 44
   },
   menuTrigger: {
     flex: 1,

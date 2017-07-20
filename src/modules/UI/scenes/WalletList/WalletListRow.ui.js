@@ -17,7 +17,7 @@ import {border as b, cutOffText} from '../../../utils'
 import { selectWallet } from '../../Wallets/action.js'
 
 export const findDenominationSymbol = (denoms, value) => {
-  console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
+  //console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
   for(v of denoms) {
     if(v.name === value) {
       return v.symbol
@@ -31,9 +31,19 @@ class WalletListRow extends Component {
   }
 
   _onPressSelectWallet = (walletId, currencyCode) => {
-    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
+    //console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList()
+  }
+
+  renderTokenRow = (metaTokenBalances) => {
+    var tokens = []
+    for (var property in metaTokenBalances) {
+      if(property != this.props.data.currencyCode){
+        tokens.push( <WalletListTokenRowConnect parentId={this.props.data.id} code={property} key={property} balance={metaTokenBalances[property]} /> )
+      }
+    }
+    return tokens
   }
 
   render () {
@@ -56,16 +66,14 @@ class WalletListRow extends Component {
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
-            <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>{this.props.data.balance / multiplier}</T>
-              <T style={[styles.rowBalanceDenominationText]}>{this.props.data.currencyCode} ({symbol || ''})</T>
+            <View style={[styles.rowBalanceTextWrap, b()]}>
+              <T style={[styles.rowBalanceAmountText, b()]}>{this.props.data.balance / multiplier}</T>
+              <T style={[styles.rowBalanceDenominationText, b()]}>{this.props.data.currencyCode} ({symbol || ''})</T>
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
-        {this.props.wallets[id].metaTokens.map((x, i) => (
-          <WalletListTokenRowConnect metaToken={x} key={x.currencyCode} balance={x.balance} currencyCode={x.currencyCode} parentWallet={this.props.data.id} />
-        ))}
+        {this.renderTokenRow(this.props.wallets[id].balances)}
       </View>
     )
   }
@@ -87,21 +95,22 @@ class WalletListTokenRow extends Component {
   }
 
   _onPressSelectWallet = (walletId, currencyCode) => {
-    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode )
+    console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList()
   }
 
   render () {
+    console.log('rendering walletListTokenRow, this.props is: ', this.props)
     return (
       <TouchableHighlight style={[styles.tokenRowContainer]}
         underlayColor={'#eee'}
         delayLongPress={500}
         {...this.props.sortHandlers}
-        onPress={() => this._onPressSelectWallet(this.props.parentWallet, this.props.currencyCode)}>
+        onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.code )}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
+            <T style={[styles.tokenRowText]}>{this.props.code}</T>
           </View>
           <View style={[styles.tokenRowBalanceTextWrap]}>
             <T style={[styles.tokenRowText]}>{this.props.balance}</T>
