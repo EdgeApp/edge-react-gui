@@ -229,7 +229,9 @@ const loadSettings = () => {
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
       dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setEthereumDenomination(syncFinal.ETH.denomination))
-
+      dispatch(SETTINGS_ACTIONS.setRepDenomination(syncFinal.REP.denomination))
+      dispatch(SETTINGS_ACTIONS.setWingsDenomination(syncFinal.WINGS.denomination))
+      dispatch(SETTINGS_ACTIONS.setLunyrDenomination(syncFinal.LUN.denomination))
     })
 
     SETTINGS_API.getLocalSettings(account)
