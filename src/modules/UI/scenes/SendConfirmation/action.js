@@ -214,6 +214,7 @@ export const updateUri = ({ data: uri }) => {
 
       dispatch(updateLabel(publicAddress))
       dispatch(updateSpendInfo(spendInfo))
+      dispatch(updatePublicAddress(publicAddress))
 
       Actions.sendConfirmation()
     })
