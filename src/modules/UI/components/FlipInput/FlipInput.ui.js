@@ -51,7 +51,8 @@ class FlipInput extends Component {
       feeInCrypto,
       displayFees,
       inputCurrencySelected,
-      fiatCurrencyCode
+      fiatCurrencyCode,
+      cryptoDenom
     } = this.props
 
     let primaryPlaceholderSyntax
@@ -104,6 +105,7 @@ class FlipInput extends Component {
         inputCurrencySelected={inputCurrencySelected}
         parentProps={this.props}
         checkMax={checkAgainstMax}
+        cryptoDenom={cryptoDenom}
       />
     )
   }
@@ -134,7 +136,8 @@ class FlipInputInside extends Component {
       secondaryFee,
       primaryPlaceholder,
       secondaryPlaceholder,
-      displayFees
+      displayFees,
+      cryptoDenom
     } = this.props
 
     const getPrimaryAmount = () => { // this function may need to be integrated with inputChange
@@ -216,9 +219,9 @@ class FlipInputInside extends Component {
             this.setState({
               mode: this.props.checkMax(this.state.primaryInputValue)
             })
-            this.props.dispatch(updateAmountSatoshiRequest(this.state.primaryInputValue))
-
-            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(this.state.primaryInputValue))
+            const amountSatoshi = this.state.primaryInputValue
+            const amountInBaseDenomination = amountSatoshi * this.props.cryptoDenom.multiplier
+            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
@@ -228,8 +231,9 @@ class FlipInputInside extends Component {
             this.setState({
               mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))
             })
-            this.props.dispatch(updateAmountSatoshiRequest(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()))
-            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()))
+            const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12))
+            const amountInBaseDenomination = amountSatoshi * this.props.cryptoDenom.multiplier
+            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString())))
