@@ -28,6 +28,10 @@ import Fees from '../../components/Fees/index.js'
 import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput, border as b } from '../../../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+
 import {
   updateAmountSatoshiRequest,
   updateAmountFiat,
@@ -126,7 +130,7 @@ class SendConfirmation extends Component {
             {/* <Password /> */}
           </View>
 
-          <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={!isSliderLocked} />
+          <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
         </ScrollView>
       </LinearGradient>
     )
@@ -206,20 +210,33 @@ SendConfirmation.propTypes = {
   fiatCurrencyCode: PropTypes.string
 }
 
-const mapStateToProps = state => ({
-  sendConfirmation:      state.ui.scenes.sendConfirmation,
-  amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
-  maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance ,
-  wallet:                state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-  feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
-  fiatPerCrypto:         state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
-  inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-  // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
-  spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
-  transaction:           state.ui.scenes.sendConfirmation.transaction,
-  inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-  fiatCurrencyCode: state.core.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
-})
+const mapStateToProps = state => {
+  const currencyConverter   = CORE_SELECTORS.getCurrencyConverter(state)
+  const wallet              = UI_SELECTORS.getSelectedWallet(state)
+  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const fiatCurrencyCode    = wallet.fiatCurrencyCode
+  const currencyCode        = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const cryptoPerFiat       = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
+  const fiatPerCrypto       = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+  const index               = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const inputCurrencyDenom  = wallet.allDenominations[currencyCode][index]
+
+  return {
+    sendConfirmation:      state.ui.scenes.sendConfirmation,
+    amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
+    maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
+    wallet,
+    feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
+    fiatPerCrypto,
+    cryptoPerFiat,
+    inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
+    // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
+    spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
+    transaction:           state.ui.scenes.sendConfirmation.transaction,
+    inputCurrencyDenom,
+    fiatCurrencyCode
+  }
+}
 const mapDispatchToProps = (dispatch) => ({
   updateAmountSatoshi: amountSatoshi => dispatch(updateAmountSatoshiRequest(amountSatoshi)),
   updateAmountFiat:       amountFiat => dispatch(updateAmountFiatRequest(amountFiat)),

@@ -16,6 +16,9 @@ import RowOptions from './WalletListRowOptions.ui'
 import {border as b, cutOffText} from '../../../utils'
 import { selectWallet } from '../../Wallets/action.js'
 
+import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+
 export const findDenominationSymbol = (denoms, value) => {
   //console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
   for(v of denoms) {
@@ -26,10 +29,6 @@ export const findDenominationSymbol = (denoms, value) => {
 }
 
 class WalletListRow extends Component {
-  constructor(props){
-    super(props)
-  }
-
   _onPressSelectWallet = (walletId, currencyCode) => {
     //console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
@@ -40,7 +39,7 @@ class WalletListRow extends Component {
     var tokens = []
     for (var property in metaTokenBalances) {
       if(property != this.props.data.currencyCode){
-        tokens.push( <WalletListTokenRowConnect parentId={this.props.data.id} code={property} key={property} balance={metaTokenBalances[property]} /> )
+        tokens.push( <WalletListTokenRowConnect parentId={this.props.data.id} currencyCode={property} key={property} balance={metaTokenBalances[property]} /> )
       }
     }
     return tokens
@@ -51,7 +50,7 @@ class WalletListRow extends Component {
     let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode )
     const currencyCode = this.props.data.currencyCode
-    const multiplier = this.props.data.denominations[this.props.settings[this.props.data.currencyCode].denomination - 1].multiplier
+    const multiplier = this.props.multiplier
 
     return (
       <View>
@@ -60,7 +59,7 @@ class WalletListRow extends Component {
           delayLongPress={500}
           {...this.props.sortHandlers}
           onPress={() => this._onPressSelectWallet(this.props.data.id, currencyCode)}
-          >
+        >
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -78,15 +77,21 @@ class WalletListRow extends Component {
   }
 }
 
-WalletListRow.propTypes = {
+export default connect((state, ownProps) => {
+  const wallet = ownProps.data
+  const walletId = wallet.id
+  const currencyCode = wallet.currencyCode
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination = wallet.allDenominations[currencyCode][index]
+  const multiplier = denomination.multiplier
 
-}
-
-export default connect(state => ({
-  wallets: state.ui.wallets.byId,
-  settings: state.ui.settings
-
-}))(WalletListRow)
+  return {
+    wallets: state.ui.wallets.byId,
+    settings: state.ui.settings,
+    denomination,
+    multiplier
+  }
+})(WalletListRow)
 
 class WalletListTokenRow extends Component {
   constructor(props) {
@@ -105,13 +110,13 @@ class WalletListTokenRow extends Component {
         underlayColor={'#eee'}
         delayLongPress={500}
         {...this.props.sortHandlers}
-        onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.code )}>
+        onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode )}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.code}</T>
+            <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
           <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.balance}</T>
+            <T style={[styles.tokenRowText]}>{this.props.balance / this.props.multiplier}</T>
           </View>
         </View>
       </TouchableHighlight>
@@ -124,6 +129,20 @@ WalletListTokenRow.propTypes = {
   balance: PropTypes.number
 }
 
-export const WalletListTokenRowConnect = connect(state => ({
+export const WalletListTokenRowConnect = connect((state, ownProps) => {
+  const walletId = ownProps.parentId
+  const currencyCode = ownProps.currencyCode
+  const wallet = UI_SELECTORS.getWallet(state, walletId)
+  let denomination = {}
+  let multiplier = 0
+  if (wallet) {
+    const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+    denomination = wallet.allDenominations[currencyCode][index]
+    multiplier = denomination.multiplier
+  }
 
-}))(WalletListTokenRow)
+  return {
+    denomination,
+    multiplier
+  }
+})(WalletListTokenRow)
