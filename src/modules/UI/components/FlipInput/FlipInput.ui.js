@@ -161,15 +161,18 @@ class FlipInputInside extends Component {
         toValue: 0,
         duration: 100
       }).start(() => {
-        this.setState({primaryInputValue: '', secondaryInputValue: '' })
-        inputChange(0)
+        this.setState({
+          primaryInputValue: this.state.secondaryInputValue,
+          secondaryInputValue: this.state.primaryInputValue
+        })
+        // inputChange(0)
 
         if (this.props.scene.sceneKey === 'sendConfirmation') {
           this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
         } else if (this.props.scene.sceneKey === 'request') {
           this.props.dispatch(updateRequestInputCurrency(nextInputCurrencySelected))
         }
-        clearText('primaryInput')
+        // clearText('primaryInput')
         Animated.timing(this.state.flipInputOpacity, {
           toValue: 1,
           duration: 100

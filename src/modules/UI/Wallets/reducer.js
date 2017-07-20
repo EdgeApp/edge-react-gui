@@ -90,13 +90,14 @@ const schema = wallet => {
   const denominations = wallet.currencyInfo.denominations
 
   const allDenominations = {}
-
   allDenominations[currencyCode] = {}
+  // Add all parent wallet denominations to allDenominations
   denominations.forEach(denomination => {
     allDenominations[currencyCode][denomination.multiplier] = denomination
   })
 
   const balances = {}
+  // Add parent wallet balance to balances
   balances[currencyCode] = wallet.getBalance({ currencyCode })
 
   metaTokens.forEach(metaToken => {
@@ -104,9 +105,11 @@ const schema = wallet => {
     const tokenBalance = wallet.getBalance({ currencyCode })
     const tokenDenominations = metaToken.denominations
 
+    // Add token balance to allBalances
     metaToken.balance = tokenBalance
     balances[currencyCode] = tokenBalance
 
+    // Add all token denominations to allDenominations
     allDenominations[currencyCode] = {}
     tokenDenominations.forEach(denomination => {
       allDenominations[currencyCode][denomination.multiplier] = denomination
