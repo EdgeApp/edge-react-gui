@@ -30,6 +30,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import {
   updateAmountSatoshiRequest,
@@ -217,6 +218,8 @@ const mapStateToProps = state => {
   const currencyCode        = UI_SELECTORS.getSelectedCurrencyCode(state)
   const cryptoPerFiat       = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
   const fiatPerCrypto       = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+  const index               = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const inputCurrencyDenom  = wallet.allDenominations[currencyCode][index]
 
   return {
     sendConfirmation:      state.ui.scenes.sendConfirmation,
@@ -230,7 +233,7 @@ const mapStateToProps = state => {
     // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
     transaction:           state.ui.scenes.sendConfirmation.transaction,
-    inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
+    inputCurrencyDenom,
     fiatCurrencyCode
   }
 }
