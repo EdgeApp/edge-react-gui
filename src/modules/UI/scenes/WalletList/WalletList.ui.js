@@ -53,6 +53,10 @@ import * as UI_SELECTORS from '../../selectors.js'
 class WalletList extends Component {
   toggleArchiveDropdown = () => {
     this.props.dispatch(toggleArchiveVisibility())
+    this.state = {
+      totalFiatBalance: null,
+      totalCryptoAmounts: {}
+    } 
   }
 
   constructor(props){
@@ -67,6 +71,7 @@ class WalletList extends Component {
   }*/ // delete this function?
 
   render () {
+    this.tallyUpTotalCrypto()
     const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
     return (
       <View style={styles.container}>
@@ -245,6 +250,28 @@ class WalletList extends Component {
   checkIndexIsEven = (n) => {
     console.info('n is: ' , n)
       return n % 2 == 0;
+  }
+
+  tallyUpTotalCrypto = () => {
+    let temporaryTotalCrypto = {}
+    for (var parentProp in this.props.wallets) {
+      console.log('outer loop, parentProp is: ', parentProp)
+      for (var balanceProp in this.props.wallets[parentProp].balances){
+        console.log('inside loop, balanceProp is: ', balanceProp, ' and balance is: ', this.props.wallets[parentProp].balances[balanceProp])
+        if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
+          temporaryTotalCrypto[balanceProp] =+ this.props.wallets[parentProp].balances[balanceProp]
+        }
+      }
+    }
+    console.log('outside of the loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
+    //this.setState({totalCryptoAmounts: temporaryTotalCrypto})
+  }
+
+  componentDidMount = () => {
+  }
+
+  calculateTotalBalance = () => {
+    
   }
 }
 
