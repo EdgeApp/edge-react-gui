@@ -187,6 +187,7 @@ export const updatePublicAddress = publicAddress => {
 export const updateUri = ({ data: uri }) => {
   return (dispatch, getState) => {
     const state = getState()
+    if (state.routes.scene.sceneKey !== 'scan') return
     const { account } = state.core
     account.parseUri = uri => {
       return Promise.resolve(
@@ -213,6 +214,9 @@ export const updateUri = ({ data: uri }) => {
 
       dispatch(updateLabel(publicAddress))
       dispatch(updateSpendInfo(spendInfo))
+      dispatch(updatePublicAddress(publicAddress))
+
+      Actions.sendConfirmation()
     })
   }
 }
