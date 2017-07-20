@@ -337,7 +337,8 @@ class TransactionList extends Component {
   }
 
   _goToTxDetail = ( txId, currencyCode, tx) => {
-    Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
+    return null
+    // Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
   }
 
   renderTx = (tx) => {
