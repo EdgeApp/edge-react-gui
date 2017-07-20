@@ -281,7 +281,7 @@ class WalletList extends Component {
   calculateTotalBalance = (values) => {
     var total = 0
     for (var currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
+      let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
       console.log('currency is: ', currency, 'crypto amount is: ', values.currency ,'fiat is: USD , and addValue is: ', addValue, ' , subTotal is: ', total, 'values is: ', values)      
       total += addValue
     }
