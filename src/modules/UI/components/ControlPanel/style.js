@@ -28,6 +28,8 @@ export default {
       flex: 1,
       fontSize: 16,
       color: '#FFF',
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   },
 

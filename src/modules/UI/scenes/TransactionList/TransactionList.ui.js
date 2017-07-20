@@ -238,7 +238,7 @@ class TransactionList extends Component {
     let dataSrc = ds.cloneWithRows(completedTxList)
     console.log('rendering txList, datSrc is: ', dataSrc)
     console.log('rendering txList, this.props is: ', this.props)
-    let logo 
+    let logo
     console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
     if(this.props.uiWallet.currencyCode != this.props.selectedCurrencyCode) {
       for(mt of this.props.uiWallet.metaTokens) {
@@ -343,7 +343,7 @@ class TransactionList extends Component {
       txColor = '#7FC343'
     }
 
-    console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)    
+    console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)
     return (
       <View style={styles.singleTransactionWrap}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
@@ -368,7 +368,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>$ {tx.amountSatoshi}</T>
+              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat}</T>
             </View>
           </View>
         </TouchableOpacity>

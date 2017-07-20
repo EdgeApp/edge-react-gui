@@ -15,7 +15,7 @@ const ExchangeRate = ({fiatPerCrypto, fiatCurrencyCode, cryptoDenom}) => {
   const text = fiatPerCrypto === 0
     ? <Text style={styles.text}>Exchange Rate loading...</Text>
     : <Text style={styles.text}>
-      1 {cryptoDenom.name} = {fiatCurrencyCode} {(fiatPerCrypto * cryptoDenom.multiplier).toFixed(2)}
+      1 {cryptoDenom.name} = {fiatCurrencyCode} {(fiatPerCrypto).toFixed(2)}
     </Text>
 
   return (
