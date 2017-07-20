@@ -16,6 +16,9 @@ import RowOptions from './WalletListRowOptions.ui'
 import {border as b, cutOffText} from '../../../utils'
 import { selectWallet } from '../../Wallets/action.js'
 
+import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+
 export const findDenominationSymbol = (denoms, value) => {
   console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
   for(v of denoms) {
@@ -26,10 +29,6 @@ export const findDenominationSymbol = (denoms, value) => {
 }
 
 class WalletListRow extends Component {
-  constructor(props){
-    super(props)
-  }
-
   _onPressSelectWallet = (walletId, currencyCode) => {
     console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
@@ -72,15 +71,21 @@ class WalletListRow extends Component {
   }
 }
 
-WalletListRow.propTypes = {
+export default connect((state, ownProps) => {
+  const wallet = ownProps.data
+  const walletId = wallet.id
+  const currencyCode = wallet.currencyCode
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination = wallet.allDenominations[currencyCode][index]
+  const multiplier = denomination.multiplier
 
-}
-
-export default connect(state => ({
-  wallets: state.ui.wallets.byId,
-  settings: state.ui.settings
-
-}))(WalletListRow)
+  return {
+    wallets: state.ui.wallets.byId,
+    settings: state.ui.settings,
+    denomination,
+    multiplier
+  }
+})(WalletListRow)
 
 class WalletListTokenRow extends Component {
   constructor(props) {
@@ -118,6 +123,16 @@ WalletListTokenRow.propTypes = {
   balance: PropTypes.number
 }
 
-export const WalletListTokenRowConnect = connect(state => ({
+export const WalletListTokenRowConnect = connect((state, ownProps) => {
+  const walletId = ownProps.parentWallet
+  const currencyCode = ownProps.currencyCode
+  const wallet = UI_SELECTORS.getWallet(state, walletId)
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination = wallet.allDenominations[currencyCode][index]
+  const multiplier = denomination.multiplier
 
-}))(WalletListTokenRow)
+  return {
+    denomination,
+    multiplier
+  }
+})(WalletListTokenRow)

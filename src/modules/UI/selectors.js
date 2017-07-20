@@ -3,6 +3,11 @@ export const getWallets = (state) => {
   return wallets
 }
 
+export const getWallet = (state, walletId) => {
+  const wallets = getWallets(state)
+  const wallet = wallets[walletId]
+  return wallet
+}
 export const getSelectedWalletId = (state) => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId
@@ -15,8 +20,7 @@ export const getSelectedCurrencyCode = (state) => {
 
 export const getSelectedWallet = (state) => {
   const walletId = getSelectedWalletId(state)
-  const wallets = getWallets(state)
-  const selectedWallet = wallets[walletId]
+  const selectedWallet = getWallet(state, walletId)
   return selectedWallet
 }
 
