@@ -30,6 +30,8 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import request_image from '../../../../assets/images/transactions/transactions-request@3x.png.png'
 import send_image from '../../../../assets/images/transactions/transactions-send@3x.png.png'
+import sent_type_image from '../../../../assets/images/transactions/transaction-type-sent@3x.png.png'
+import received_type_image from '../../../../assets/images/transactions/transaction-type-received@3x.png.png'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
@@ -47,6 +49,15 @@ const monthNames = [
   ]
 var dateStrings = []
 var iterator = -1
+
+const checkTypeImage = (amount) => {
+  if(amount > 0) {
+    return received_type_image
+  }
+  if(amount <= 0) {
+    return sent_type_image
+  }
+}
 
 class TransactionList extends Component {
    constructor(props) {
@@ -369,7 +380,10 @@ class TransactionList extends Component {
               {tx.hasThumbnail ? (
                 <Image style={[styles.transactionLogo, b()]} source={{ uri: tx.thumbnailPath }} />
               ) : (
-                <FAIcon name='user' style={[styles.transactionLogo, b()]} size={54} />
+                <Image
+                  style={styles.transactionLogo}
+                  source={checkTypeImage(tx.amountSatoshi)}
+                />
               )}
               <View style={[styles.transactionLeftTextWrap, b()]}>
                 <T style={[styles.transactionPartner]}>{tx.metadata.payee || 'No Name'}</T>
