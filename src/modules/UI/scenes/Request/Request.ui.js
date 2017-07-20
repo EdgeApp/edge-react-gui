@@ -23,6 +23,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import {
   addReceiveAddress,
@@ -249,12 +250,15 @@ class Request extends Component {
 
 const mapStateToProps = (state) => {
   let exchangeRate = 0
+  let inputCurrencyDenom = {}
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
     const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
     exchangeRate = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+    const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+    inputCurrencyDenom = wallet.allDenominations[currencyCode][index]
   }
 
   return {
@@ -265,8 +269,7 @@ const mapStateToProps = (state) => {
     currencyCode,
     settings: state.ui.settings,
     inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
-    inputCurrencyDenom: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].denominations[state.ui.settings[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].denomination -1]  ,
-    // ^ Don't laugh...  =P
+    inputCurrencyDenom,
     fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
     // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
   }
