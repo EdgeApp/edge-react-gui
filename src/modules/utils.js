@@ -41,7 +41,7 @@ const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
 const getCryptoFromFiat = (fiat, fiatPerCrypto) => {
   const cryptoFromFiat = (fiat / fiatPerCrypto)
 
-  return cryptoFromFiat
+  return parseFloat(cryptoFromFiat.toFixed(5))
 }
 
 const sanitizeInput = (input) => {
