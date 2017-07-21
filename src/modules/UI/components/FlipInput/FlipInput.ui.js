@@ -66,7 +66,7 @@ class FlipInput extends Component {
     let fiatPlaceholder = '0.00'
 
     if (inputCurrencySelected === 'crypto') {
-      primaryDenomSymbol = this.props.cryptoDenom.symbol
+      primaryDenomSymbol = this.props.cryptoDenom.name
       secondaryDenomSymbol = this.props.fiatCurrencyCode
       primaryPlaceHolderSyntax = cryptoPlaceholder
       secondaryPlaceholderSyntax = fiatPlaceholder
@@ -77,7 +77,7 @@ class FlipInput extends Component {
       checkAgainstMax = this.props.checkMax
     } else {
       primaryDenomSymbol = this.props.fiatCurrencyCode
-      secondaryDenomSymbol = this.props.cryptoDenom.symbol
+      secondaryDenomSymbol = this.props.cryptoDenom.name
       primaryPlaceholderSyntax = fiatPlaceholder
       secondaryPlaceholderSyntax = cryptoPlaceholder
       primaryAmountRequested = amountFiat
@@ -405,6 +405,7 @@ export const FlipInputInsideConnect = connect(state => {
   return {
     cryptoPerFiat,
     fiatPerCrypto,
+    currencyCode,
     maxSatoshi: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
     scene: state.routes.scene
   }
