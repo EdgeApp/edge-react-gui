@@ -279,13 +279,16 @@ class TransactionList extends Component {
                         {this.state.showBalance ? (
                           <View style={styles.balanceShownContainer}>
                             <View style={[styles.iconWrap, b()]}>
-                              {logo && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />}
+                              { logo ?
+                                <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} /> :
+                                <T style={[styles.request]}>{this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]}</T>
+                              }
                             </View>
                            <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.uiWallet.currencyCode} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
+                                {this.props.selectedCurrencyCode} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
                               </T>
-                            </View>                            
+                            </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
                             </View>
