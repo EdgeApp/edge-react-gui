@@ -5,6 +5,7 @@ const initialState = {
   otpMode: false,
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
+  defaultISOFiat: 'iso:USD',
   merchantMode: false,
   'BTC': {
     denomination: 100000000
@@ -75,9 +76,11 @@ export const settings = (state = initialState, action) => {
 
     case ACTION.SET_DEFAULT_FIAT: {
       const { defaultFiat } = data
+      const defaultISOFiat = 'iso:' + defaultFiat
       return {
         ...state,
-        defaultFiat
+        defaultFiat,
+        defaultISOFiat,
       }
     }
 

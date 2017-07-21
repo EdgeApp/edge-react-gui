@@ -82,7 +82,10 @@ class WalletListModalBody extends Component {
     return tokens
   }
 
-  renderTokenRowContent = (parentId, currencyCode, balance) => {
+  renderTokenRowContent = (parentId, currencyCode, balance ) => {
+
+    let multiplier = this.props.walletList[parentId].allDenominations[currencyCode][this.props.settings[currencyCode].denomination].multiplier
+
     return(
       <TouchableOpacity style={[styles.tokenRowContainer]}
         key={currencyCode} onPress={() => {
@@ -95,7 +98,7 @@ class WalletListModalBody extends Component {
             <T style={[styles.currencyRowText]}>{currencyCode}</T>
           </View>
           <View style={[styles.currencyRowBalanceTextWrap]}>
-            {/* <T style={[styles.currencyRowText]}>{balance}</T> */}
+            <T style={[styles.currencyRowText]}>{balance / multiplier}</T>
           </View>
         </View>
       </TouchableOpacity>
@@ -103,13 +106,13 @@ class WalletListModalBody extends Component {
   }
 
   renderWalletRow = (wallet, i) => {
-    let symbol = findDenominationSymbol(wallet.denominations, wallet.currencyCode)
-    // const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-    // const multiplier = wallet.allDenominations[currencyCode].multiplier
+
+    let multiplier = wallet.allDenominations[wallet.currencyCode][this.props.settings[wallet.currencyCode].denomination].multiplier
+    let symbol = wallet.allDenominations[wallet.currencyCode][multiplier].symbol
+
     return (
       <View key={i}>
         <TouchableOpacity style={[styles.rowContainer]}
-          // onPress={this[this.props.selectionFunction]}
           onPress={() => {
             this.props.getTransactions(wallet.id, wallet.currencyCode)
             this.props.disableWalletListModalVisibility()
@@ -120,7 +123,7 @@ class WalletListModalBody extends Component {
               <T style={[styles.currencyRowText]}>{cutOffText(wallet.name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              {/* <T style={[styles.currencyRowText]}>{symbol || ''} {wallet.balance}</T> */}
+              <T style={[styles.currencyRowText]}>{symbol || ''} { wallet.balance / multiplier }</T>
             </View>
           </View>
         </TouchableOpacity>

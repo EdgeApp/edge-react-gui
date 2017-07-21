@@ -66,7 +66,7 @@ class FlipInput extends Component {
     let fiatPlaceholder = '0.00'
 
     if (inputCurrencySelected === 'crypto') {
-      primaryDenomSymbol = this.props.cryptoDenom.symbol
+      primaryDenomSymbol = this.props.cryptoDenom.name
       secondaryDenomSymbol = this.props.fiatCurrencyCode
       primaryPlaceHolderSyntax = cryptoPlaceholder
       secondaryPlaceholderSyntax = fiatPlaceholder
@@ -77,7 +77,7 @@ class FlipInput extends Component {
       checkAgainstMax = this.props.checkMax
     } else {
       primaryDenomSymbol = this.props.fiatCurrencyCode
-      secondaryDenomSymbol = this.props.cryptoDenom.symbol
+      secondaryDenomSymbol = this.props.cryptoDenom.name
       primaryPlaceholderSyntax = fiatPlaceholder
       secondaryPlaceholderSyntax = cryptoPlaceholder
       primaryAmountRequested = amountFiat
@@ -161,15 +161,18 @@ class FlipInputInside extends Component {
         toValue: 0,
         duration: 100
       }).start(() => {
-        this.setState({primaryInputValue: '', secondaryInputValue: '' })
-        inputChange(0)
+        this.setState({
+          primaryInputValue: this.state.secondaryInputValue,
+          secondaryInputValue: this.state.primaryInputValue
+        })
+        // inputChange(0)
 
         if (this.props.scene.sceneKey === 'sendConfirmation') {
           this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
         } else if (this.props.scene.sceneKey === 'request') {
           this.props.dispatch(updateRequestInputCurrency(nextInputCurrencySelected))
         }
-        clearText('primaryInput')
+        // clearText('primaryInput')
         Animated.timing(this.state.flipInputOpacity, {
           toValue: 1,
           duration: 100
@@ -220,10 +223,9 @@ class FlipInputInside extends Component {
               mode: this.props.checkMax(this.state.primaryInputValue)
             })
             const amountSatoshi = this.state.primaryInputValue
-            const amountInBaseDenomination = amountSatoshi * this.props.cryptoDenom.multiplier
+            const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
           }
         } else { // Change Fiat Input ////////////////////////////////////////////////////////////
@@ -231,12 +233,12 @@ class FlipInputInside extends Component {
             this.setState({
               mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))
             })
-            const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12))
-            const amountInBaseDenomination = amountSatoshi * this.props.cryptoDenom.multiplier
+            const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto))
+            const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString())))
+            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString())))
           }
         }
       })
@@ -254,7 +256,7 @@ class FlipInputInside extends Component {
         return getFiatFromCrypto(Number(input), this.props.fiatPerCrypto).toFixed(2).toString()
       } else {
         console.log('about to use input.toPrecsion(12), input is: ', input)
-        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()
+        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString()
       }
     }
 
@@ -351,7 +353,7 @@ class FlipInputInside extends Component {
           }
         ]}>
           <View style={styles.secondaryTextContainer}>
-            <Text style={[
+            <Text numberOfLines={1} ellipsizeMode='clip' style={[
               styles.secondaryText, {
                 color: getTextColor()
               }
@@ -403,6 +405,7 @@ export const FlipInputInsideConnect = connect(state => {
   return {
     cryptoPerFiat,
     fiatPerCrypto,
+    currencyCode,
     maxSatoshi: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
     scene: state.routes.scene
   }

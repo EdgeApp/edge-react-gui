@@ -38,8 +38,10 @@ import {
   renameWallet,
   deleteWallet,
   updateActiveWalletsOrder,
-  updateArchivedWalletsOrder
+  updateArchivedWalletsOrder,
+  updateTotalBalance
 } from './action'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {border as b} from '../../../utils'
 
 import { forceWalletListUpdate } from './middleware'
@@ -83,7 +85,7 @@ class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultFiat} 8,200.00
+                {this.props.settings.defaultFiat} {this.tallyUpTotalCrypto()}
               </T>
             </View>
           </View>
@@ -246,13 +248,53 @@ class WalletList extends Component {
 
   checkIndexIsEven = (n) => {
     console.info('n is: ' , n)
-      return n % 2 == 0;
+      return n % 2 == 0
   }
+
+  tallyUpTotalCrypto = () => {
+    const temporaryTotalCrypto = {}
+    for (var parentProp in this.props.wallets) {
+      console.log('outer loop, parentProp is: ', parentProp)
+      for (var balanceProp in this.props.wallets[parentProp].balances){
+        if(!temporaryTotalCrypto[balanceProp]) {
+          temporaryTotalCrypto[balanceProp] = 0
+        }
+        if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
+          console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])          
+          // now to divide the amount by its multiplier
+          var denomMultiplier =  this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
+          temporaryTotalCrypto[balanceProp]  += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
+        }
+        console.log('at end of inner loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
+      }
+    }
+    console.log('outside of the loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
+     //this.props.dispatch(updateTotalBalance(temporaryTotalCrypto))
+     let totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
+     console.log('total balance is: ', totalBalance)
+     return totalBalance
+  }
+
+  calculateTotalBalance = (values) => {
+    var total = 0
+    for (var currency in values) {
+      let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
+      console.log('currency is: ', currency, 'crypto amount is: ', values.currency ,'fiat is: USD , and addValue is: ', addValue, ' , subTotal is: ', total, 'values is: ', values)      
+      total += addValue
+    }
+    console.log('total is now: ', total)
+    return total.toFixed(2)
+  }
+
 }
 
 WalletList.propTypes = {}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => {
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+
+  return {
+    // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
   coreWallets:              state.core.wallets.byId,
   wallets:                  state.ui.wallets.byId,
   activeWalletIds:          UI_SELECTORS.getActiveWalletIds(state),
@@ -263,8 +305,10 @@ const mapStateToProps = state => ({
   walletName:               state.ui.scenes.walletList.walletName,
   walletId:                 state.ui.scenes.walletList.walletId,
   walletOrder:              state.ui.wallets.walletListOrder,
-  settings:                 state.ui.settings
-})
+  settings:                 state.ui.settings, 
+  currencyConverter
+  }
+}
 
 const mapDispatchToProps = dispatch => ({
   updateActiveWalletsOrder: activeWalletIds => {

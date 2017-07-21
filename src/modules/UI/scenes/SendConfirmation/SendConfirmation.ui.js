@@ -53,6 +53,10 @@ class SendConfirmation extends Component {
     }
   }
 
+  componentDidMount () {
+
+  }
+
   _onFocus = () => {
     this.setState({keyboardVisible: true})
   }
@@ -67,6 +71,7 @@ class SendConfirmation extends Component {
       amountFiat,
       label,
       isSliderLocked,
+      publicAddress
      } = this.props.sendConfirmation
 
     console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
@@ -125,8 +130,7 @@ class SendConfirmation extends Component {
               />
             )
             }
-            {/* <Recipient label={label} address={publicAddress} /> */}
-            <Recipient label={'Ashley Rind'} address={this.props.recipientPublicAddress} />
+            <Recipient label={label} link={''} publicAddress={publicAddress} />
             {/* <Password /> */}
           </View>
 
@@ -230,7 +234,7 @@ const mapStateToProps = state => {
     fiatPerCrypto,
     cryptoPerFiat,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-    // publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
+    publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
     spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
     transaction:           state.ui.scenes.sendConfirmation.transaction,
     inputCurrencyDenom,

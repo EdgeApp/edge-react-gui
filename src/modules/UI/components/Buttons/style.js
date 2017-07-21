@@ -1,4 +1,4 @@
-import React, {StyleSheet, Platform} from 'react-native'  
+import React, {StyleSheet, Platform} from 'react-native'
 
 
   module.exports = StyleSheet.create({
@@ -18,18 +18,18 @@ import React, {StyleSheet, Platform} from 'react-native'
   },
   stylizedButtonTextWrap: {
 
-  },  
+  },
   stylizedButtonText: {
     color: 'white',
-    fontSize: 16,    
+    fontSize: 16,
   },
 
   primaryButtonWrap: {
-    backgroundColor: '#4977BB', 
+    backgroundColor: '#4977BB',
   },
   primaryButton: {
     color: '#3c76cd'
-  },  
+  },
 
   secondaryButtonWrap: {
     backgroundColor: '#909091',
@@ -40,11 +40,12 @@ import React, {StyleSheet, Platform} from 'react-native'
   },
 
   tertiaryButtonWrap: {
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#4977BB'
   },
   tertiaryButton: {
-    color: '#4977BB'
-  }     
+    color: '#4977BB',
+    paddingHorizontal: 10
+  }
 })

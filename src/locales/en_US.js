@@ -372,6 +372,8 @@ const strings = {
     fragment_wallets_wallet_name_required:	"Name required",
     fragment_wallets_received_bitcoin:	"Received Bitcoin",
     fragment_wallets_sent_bitcoin:	"Sent Bitcoin",
+    fragment_transaction_list_sent_prefix: 'Sent ',
+    fragment_transaction_list_receive_prefix: 'Received ',
     fragment_transaction_list_rbf:	"Warning: Replace by Fee Detected. Double spend likely",
     fragment_transaction_list_double_spend:	"Warning: Double Spend",
     address_request_title:	"Address Request",

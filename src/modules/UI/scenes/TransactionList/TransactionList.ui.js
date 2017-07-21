@@ -50,15 +50,6 @@ const monthNames = [
 var dateStrings = []
 var iterator = -1
 
-const checkTypeImage = (amount) => {
-  if(amount > 0) {
-    return received_type_image
-  }
-  if(amount <= 0) {
-    return sent_type_image
-  }
-}
-
 class TransactionList extends Component {
    constructor(props) {
      super(props)
@@ -268,7 +259,7 @@ class TransactionList extends Component {
     return (
         <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
           <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
-          <View style={[styles.container, b('green')]}>
+          <View style={[styles.container, b()]}>
             <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
               <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, b()]} colors={["#3b7adb","#2b569a"]}>
                 {this.state.balanceBoxVisible &&
@@ -288,15 +279,18 @@ class TransactionList extends Component {
                         {this.state.showBalance ? (
                           <View style={styles.balanceShownContainer}>
                             <View style={[styles.iconWrap, b()]}>
-                              {logo && <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />}
+                              { logo ?
+                                <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} /> :
+                                <T style={[styles.request]}>{this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]}</T>
+                              }
+                            </View>
+                           <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
+                              <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
+                                {this.props.selectedCurrencyCode} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
+                              </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
-                              <T style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
-                            </View>
-                            <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
-                              <T style={[styles.currentBalanceBoxBits, b()]}>
-                                {symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
-                              </T>
+                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
                             </View>
                           </View>
                         ) : (
@@ -354,14 +348,21 @@ class TransactionList extends Component {
 
   renderTx = (tx) => {
     let sendReceiveSyntax, expenseIncomeSyntax, txColor
-    if (tx.amountSatoshi <= 0) {
+    let txName = ''
+    let txImage
+    if (tx.amountSatoshi < 0) {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_expense'])
+      // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColor = '#F03A47'
+      txName = strings.enUS['fragment_transaction_list_sent_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txImage = sent_type_image
     } else {
       sendReceiveSyntax = sprintf(strings.enUS['fragment_transaction_receive'])
       expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
+      txName = strings.enUS['fragment_transaction_list_receive_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txImage = received_type_image
     }
 
     console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)
@@ -382,11 +383,11 @@ class TransactionList extends Component {
               ) : (
                 <Image
                   style={styles.transactionLogo}
-                  source={checkTypeImage(tx.amountSatoshi)}
+                  source={txImage}
                 />
               )}
               <View style={[styles.transactionLeftTextWrap, b()]}>
-                <T style={[styles.transactionPartner]}>{tx.metadata.payee || 'No Name'}</T>
+                <T style={[styles.transactionPartner]}>{tx.metadata.payee || txName}</T>
                 <T style={[styles.transactionTime]}>{tx.time}</T>
               </View>
             </View>
@@ -429,7 +430,6 @@ const mapStateToProps = (state) => {
     transactions,
     searchVisible:   state.ui.scenes.transactionList.searchVisible,
     contactsList:    state.ui.scenes.transactionList.contactsList,
-    exchangeRates:   state.ui.scenes.exchangeRate.exchangeRates,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,

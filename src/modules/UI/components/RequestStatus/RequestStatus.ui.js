@@ -14,7 +14,8 @@ const styles = {
     backgroundColor: 'transparent'
   },
   text: {
-    color: 'white'
+    color: 'white',
+    margin: 10
   },
   alert: {
     color: 'red'
@@ -94,7 +95,7 @@ const RequestStatus = (props) => {
 
   console.log('in RequestStatus.ui, this.props is: ' , this)
   return (
-    
+
     <View style={styles.view}>
       {getDisplayRequestStatus()}
     </View>
