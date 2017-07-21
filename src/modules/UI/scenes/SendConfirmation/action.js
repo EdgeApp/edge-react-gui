@@ -12,6 +12,9 @@ export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION'
 export const UPDATE_FEE = 'UPDATE_FEE'
 export const UPDATE_MAX_SATOSHI = 'UPDATE_MAX_SATOSHI'
 
+export const PROCESS_URI = 'PROCESS_URI'
+export const UPDATE_PARSED_URI = 'UPDATE_PARSED_URI'
+
 export const UPDATE_WALLET_TRANSFER = 'UPDATE_WALLET_TRANSFER'
 export const UPDATE_PUBLIC_ADDRESS = 'UPDATE_PUBLIC_ADDRESS'
 export const UPDATE_SPEND_INFO = 'UPDATE_SPEND_INFO'
@@ -109,11 +112,6 @@ export const signBroadcastAndSave = unsignedTransaction => {
       wallet.saveTx(transaction)
       return wallet.broadcastTx(transaction)
     })
-    .then(transaction => {
-      const message = 'Sent Transaction: ' + JSON.stringify(transaction)
-      console.log('Sent transaction' + message)
-      // dispatch(reset())
-    })
     .then(() => {
       Actions.transactionList()
     })
@@ -173,7 +171,6 @@ export const updatePublicAddressRequest = (publicAddress) => {
     })
 
     dispatch(updatePublicAddress(publicAddress))
-    dispatch(updateLabel(publicAddress))
   }
 }
 
@@ -184,40 +181,33 @@ export const updatePublicAddress = publicAddress => {
   }
 }
 
-export const updateUri = ({ data: uri }) => {
+export const processURI = (uri) => {
   return (dispatch, getState) => {
+    console.log('uri', uri)
     const state = getState()
-    if (state.routes.scene.sceneKey !== 'scan') return
-    const { account } = state.core
-    account.parseUri = uri => {
-      return Promise.resolve(
-        {
-          metadata: {},
-          amountSatoshi: 0,
-          publicAddress: uri
-        }
-      )
+    const account = CORE_SELECTORS.getAccount(state)
+    account.parseURI = (uri) => {
+      return {
+        publicAddress: uri,
+        amountSatoshi: 0,
+        metadata: {}
+      }
     }
-    account.parseUri(uri)
-    .then(parsedUri => {
-      const {
-        metadata,
-        publicAddress,
-        amountSatoshi
-      } = parsedUri
-
-      const spendInfo = makeSpendInfo({
-        metadata,
-        publicAddress,
-        amountSatoshi
-      })
-
-      dispatch(updateLabel(publicAddress))
-      dispatch(updateSpendInfo(spendInfo))
-      dispatch(updatePublicAddress(publicAddress))
-
-      Actions.sendConfirmation()
+    const {
+      publicAddress,
+      amountSatoshi,
+      metadata,
+    } = account.parseURI(uri)
+    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const spendInfo = makeSpendInfo({
+      publicAddress,
+      amountSatoshi,
+      metadata,
+      currencyCode
     })
+
+    dispatch(updateSpendInfo(spendInfo))
+    dispatch(updatePublicAddress(publicAddress))
   }
 }
 
@@ -236,7 +226,7 @@ export const reset = () => {
 }
 
 const makeSpendInfo = ({ amountSatoshi = 0, publicAddress = '', currencyCode = '', wallet, metadata = {} }) => {
-  const spendTargets = [{ wallet, publicAddress, amountSatoshi, currencyCode }]
+  const spendTargets = [{ wallet, publicAddress, amountSatoshi }]
   const spendInfo = {
     currencyCode,
     metadata,
