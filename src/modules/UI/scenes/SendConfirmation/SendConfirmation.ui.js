@@ -87,14 +87,14 @@ class SendConfirmation extends Component {
       >
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
           <View style={[styles.exchangeRateContainer, b()]} >
-            <ExchangeRate mode={this.getDraftStatus(this.props.amountSatoshi)} fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
+            <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
           </View>
 
           <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
 
             {this.props.inputCurrencySelected === 'crypto' ? (
               <FlipInput
-                mode={this.getDraftStatus(this.props.amountSatoshi)}
+                mode={this.props.sendConfirmation.mode}
                 onCryptoInputChange={this.onCryptoInputChange}
                 onFiatInputChange={this.onFiatInputChange}
                 onInputChange={this.onCryptoInputChange}
@@ -110,11 +110,10 @@ class SendConfirmation extends Component {
                 inputOnFocus={this._onFocus}
                 inputOnBlur={this._onBlur}
                 clearInput={this.clearInput}
-                checkMax={this.getDraftStatus}
               />
             ) : ( // inputCurrencySelected === 'fiat'
               <FlipInput
-                mode={this.getDraftStatus(this.props.amountSatoshi)}
+                mode={this.props.sendConfirmation.mode}
                 onCryptoInputChange={this.onCryptoInputChange}
                 onFiatInputChange={this.onFiatInputChange}
                 onInputChange={this.onFiatInputChange}
@@ -130,7 +129,6 @@ class SendConfirmation extends Component {
                 inputOnFocus={this._onFocus}
                 inputOnBlur={this._onBlur}
                 clearInput={this.clearInput}
-                checkMax={this.getDraftStatus}
               />
             )
             }
@@ -172,21 +170,6 @@ class SendConfirmation extends Component {
 
   onMaxPress = () => {
     this.props.useMaxSatoshi()
-  }
-
-  getDraftStatus = (amountSatoshi) => {
-    console.log('inGetDraftStatus, amountSatoshi is: ', amountSatoshi , ' , and this.props.maxSatoshi is: ', this.props.maxSatoshi)
-    let draftStatus
-
-    if ( amountSatoshi > this.props.maxSatoshi ) {
-      draftStatus = 'over'
-    } else if ( amountSatoshi == this.props.maxSatoshi ) {
-      draftStatus = 'max'
-    } else {
-      draftStatus = 'under'
-    }
-
-    return draftStatus
   }
 
   onCryptoInputChange = amountSatoshi => {

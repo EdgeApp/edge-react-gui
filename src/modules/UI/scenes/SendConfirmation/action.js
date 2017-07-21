@@ -12,6 +12,7 @@ export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION'
 export const UPDATE_FEE = 'UPDATE_FEE'
 export const UPDATE_MAX_SATOSHI = 'UPDATE_MAX_SATOSHI'
 export const UPDATE_SPEND_PENDING = 'UPDATE_SPEND_PENDING'
+export const UPDATE_SPEND_SUFFICIENT_FUNDS = 'UPDATE_SPEND_SUFFICIENT_FUNDS'
 
 export const PROCESS_URI = 'PROCESS_URI'
 export const UPDATE_PARSED_URI = 'UPDATE_PARSED_URI'
@@ -45,10 +46,23 @@ export const updateAmountSatoshiRequest = (amountSatoshiString) => {
     .then(transaction => {
       const { providerFee = 0, networkFee = 0 } = transaction
       const feeTotal = providerFee + networkFee
-
       dispatch(updateTransaction(transaction))
       dispatch(updateFee(feeTotal))
+      dispatch(updateSpendSufficientFunds(null))
     })
+    .catch(e => {
+      if(e.name === 'InsufficientFundsError') {
+        console.log('make text red!')
+        dispatch(updateSpendSufficientFunds('over'))
+      }
+    })
+  }
+}
+
+export const updateSpendSufficientFunds = mode => {
+  return {
+    type: UPDATE_SPEND_SUFFICIENT_FUNDS,
+    data: { mode } 
   }
 }
 

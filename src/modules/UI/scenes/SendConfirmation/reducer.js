@@ -14,7 +14,8 @@ const initialState = {
   feeSatoshi: 0,
   transaction: {},
   spendInfo: {},
-  pending: false
+  pending: false,
+  mode: null
 }
 
 export default sendConfirmation = (state = initialState, action) => {
@@ -106,6 +107,12 @@ export default sendConfirmation = (state = initialState, action) => {
         ...state,
         pending
       }      
+    case ACTION.UPDATE_SPEND_SUFFICIENT_FUNDS:
+      const { mode } = data
+      return {
+        ...state,
+        mode
+      }     
     case ACTION.RESET:
       return initialState
       
