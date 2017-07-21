@@ -25,7 +25,8 @@ import {
   updateDraftStatus,
   updateIsKeyboardVisible,
   signBroadcastAndSave,
-  useMaxSatoshi
+  useMaxSatoshi,
+  updateSpendSufficientFunds
 } from '../../scenes/SendConfirmation/action'
 
 import {updateInputCurrencySelected as updateRequestInputCurrency} from '../../scenes/Request/action'
@@ -213,7 +214,9 @@ class FlipInputInside extends Component {
         secondaryInputValue: getSecondaryAmount(input)
       }, () => {
         console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
-
+        if(input === '' || parseInt(input) === 0) {
+          this.props.dispatch(updateSpendSufficientFunds(null))
+        }
         if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////
           if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
             const amountSatoshi = this.state.primaryInputValue
@@ -224,6 +227,7 @@ class FlipInputInside extends Component {
           }
         } else { // Change Fiat Input ////////////////////////////////////////////////////////////
           if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
+            console.log('sendConfirmation fiat changed to: ', input)
             const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto))
             const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
