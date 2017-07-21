@@ -8,7 +8,8 @@ import {
   Dimensions,
   Share,
   Text,
-  TouchableHighlight
+  TouchableHighlight,
+  ScrollView
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
@@ -74,66 +75,68 @@ class Request extends Component {
     const { amountFiat = null } = metadata
 
     return (
-      <LinearGradient
-        style={styles.view}
-        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}
-      >
+      <ScrollView>
+        <LinearGradient
+          style={styles.view}
+          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+          colors={['#3b7adb', '#2b569a']}
+        >
 
-        <View style={styles.exchangeRateContainer}>
-          <ExchangeRate
-            fiatPerCrypto={this.props.fiatPerCrypto}
-            fiatCurrencyCode={this.props.fiatCurrencyCode}
-            cryptoDenom={this.props.inputCurrencyDenom}
-          />
-        </View>
-
-        <View style={styles.main}>
-          {this.props.inputCurrencySelected === 'crypto' ? (
-            <FlipInput
-              onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={amountSatoshi || 0}
-              amountFiat={amountFiat}
-              inputCurrencySelected={this.props.inputCurrencySelected} // crypto
-              cryptoDenom={this.props.inputCurrencyDenom}
+          <View style={styles.exchangeRateContainer}>
+            <ExchangeRate
+              fiatPerCrypto={this.props.fiatPerCrypto}
               fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur}
-            />
-          ) :  (
-            <FlipInput
-              onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={amountSatoshi || 0}
-              amountFiat={amountFiat}
-              inputCurrencySelected={this.props.inputCurrencySelected} // fiat
               cryptoDenom={this.props.inputCurrencyDenom}
-              fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur}
             />
-          ) }
+          </View>
 
-          <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
-          <RequestStatus
-            requestAddress={publicAddress}
-            amountRequestedInCrypto={amountSatoshi}
-            amountReceivedInCrypto={amountFiat}
-          />
-        </View>
+          <View style={styles.main}>
+            {this.props.inputCurrencySelected === 'crypto' ? (
+              <FlipInput
+                onCryptoInputChange={this.onCryptoInputChange}
+                onFiatInputChange={this.onFiatInputChange}
+                amountSatoshi={amountSatoshi || 0}
+                amountFiat={amountFiat}
+                inputCurrencySelected={this.props.inputCurrencySelected} // crypto
+                cryptoDenom={this.props.inputCurrencyDenom}
+                fiatCurrencyCode={this.props.fiatCurrencyCode}
+                inputOnFocus={this._onFocus}
+                inputOnBlur={this._onBlur}
+              />
+            ) :  (
+              <FlipInput
+                onCryptoInputChange={this.onCryptoInputChange}
+                onFiatInputChange={this.onFiatInputChange}
+                amountSatoshi={amountSatoshi || 0}
+                amountFiat={amountFiat}
+                inputCurrencySelected={this.props.inputCurrencySelected} // fiat
+                cryptoDenom={this.props.inputCurrencyDenom}
+                fiatCurrencyCode={this.props.fiatCurrencyCode}
+                inputOnFocus={this._onFocus}
+                inputOnBlur={this._onBlur}
+              />
+            ) }
 
-        <View style={styles.shareButtonsContainer}>
-          <ShareButtons
-            styles={styles.shareButtons}
-            shareViaEmail={this.shareViaEmail}
-            shareViaSMS={this.shareViaSMS}
-            shareViaShare={this.shareViaShare}
-            copyToClipboard={() => this.copyToClipboard(publicAddress, amountSatoshi)}
-          />
-        </View>
+            <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
+            <RequestStatus
+              requestAddress={publicAddress}
+              amountRequestedInCrypto={amountSatoshi}
+              amountReceivedInCrypto={amountFiat}
+            />
+          </View>
 
-      </LinearGradient>
+          <View style={styles.shareButtonsContainer}>
+            <ShareButtons
+              styles={styles.shareButtons}
+              shareViaEmail={this.shareViaEmail}
+              shareViaSMS={this.shareViaSMS}
+              shareViaShare={this.shareViaShare}
+              copyToClipboard={() => this.copyToClipboard(publicAddress, amountSatoshi)}
+            />
+          </View>
+
+        </LinearGradient>
+      </ScrollView>
     )
   }
 

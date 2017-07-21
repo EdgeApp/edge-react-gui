@@ -256,7 +256,7 @@ class FlipInputInside extends Component {
         return getFiatFromCrypto(Number(input), this.props.fiatPerCrypto).toFixed(2).toString()
       } else {
         console.log('about to use input.toPrecsion(12), input is: ', input)
-        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()
+        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString()
       }
     }
 
@@ -353,7 +353,7 @@ class FlipInputInside extends Component {
           }
         ]}>
           <View style={styles.secondaryTextContainer}>
-            <Text style={[
+            <Text numberOfLines={1} ellipsizeMode='clip' style={[
               styles.secondaryText, {
                 color: getTextColor()
               }
