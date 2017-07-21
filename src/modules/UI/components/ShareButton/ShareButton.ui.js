@@ -1,14 +1,14 @@
 import React from 'react'
-import { View, StyleSheet, TouchableHighlight, Text } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { Icon } from 'native-base'
 
 const ShareButton = ({displayName, iconName, onPress, style}) => {
   return (
-    <TouchableHighlight onPress={onPress} style={[ styles.shareButton, style ]}>
+    <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style ]}>
       <View style={styles.view}>
         <Text style={styles.text}>{displayName}</Text>
       </View>
-    </TouchableHighlight>
+    </TouchableOpacity>
   )
 }
 
