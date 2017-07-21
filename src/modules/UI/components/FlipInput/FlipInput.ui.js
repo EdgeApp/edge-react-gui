@@ -233,12 +233,12 @@ class FlipInputInside extends Component {
             this.setState({
               mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))
             })
-            const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12))
+            const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto))
             const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString())))
+            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString())))
           }
         }
       })
@@ -256,7 +256,7 @@ class FlipInputInside extends Component {
         return getFiatFromCrypto(Number(input), this.props.fiatPerCrypto).toFixed(2).toString()
       } else {
         console.log('about to use input.toPrecsion(12), input is: ', input)
-        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12).toString()
+        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString()
       }
     }
 
