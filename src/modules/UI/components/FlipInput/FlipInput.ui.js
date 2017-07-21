@@ -74,7 +74,6 @@ class FlipInput extends Component {
       secondaryAmountRequested = amountFiat
       primaryFeeAmount = feeInCrypto
       secondaryFeeAmount = feeInFiat
-      checkAgainstMax = this.props.checkMax
     } else {
       primaryDenomSymbol = this.props.fiatCurrencyCode
       secondaryDenomSymbol = this.props.cryptoDenom.name
@@ -84,7 +83,6 @@ class FlipInput extends Component {
       secondaryAmountRequested = amountSatoshi || 0
       primaryFeeAmount = feeInFiat
       secondaryFeeAmount = feeInCrypto
-      checkAgainstMax = this.props.checkMax
     }
 
     return (
@@ -104,7 +102,6 @@ class FlipInput extends Component {
         displayFees={displayFees}
         inputCurrencySelected={inputCurrencySelected}
         parentProps={this.props}
-        checkMax={checkAgainstMax}
         cryptoDenom={cryptoDenom}
       />
     )
@@ -219,9 +216,6 @@ class FlipInputInside extends Component {
 
         if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////
           if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
-            this.setState({
-              mode: this.props.checkMax(this.state.primaryInputValue)
-            })
             const amountSatoshi = this.state.primaryInputValue
             const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
@@ -230,9 +224,6 @@ class FlipInputInside extends Component {
           }
         } else { // Change Fiat Input ////////////////////////////////////////////////////////////
           if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
-            this.setState({
-              mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))
-            })
             const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto))
             const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
@@ -258,17 +249,6 @@ class FlipInputInside extends Component {
         console.log('about to use input.toPrecsion(12), input is: ', input)
         return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString()
       }
-    }
-
-    onCryptoInputChange = amountSatoshi => {
-      console.log('in onCryptoInputChange')
-      this.props.updateAmountSatoshiRequest(parseInt(amountSatoshi))
-    }
-
-    onFiatInputChange = (amountFiat) => {
-      console.log('in onFiatInputChange')
-      const amountSatoshi = getCryptoFromFiat(amountFiat, this.props.fiatPerCrypto)
-      this.props.updateAmountSatoshiRequest(amountSatoshi)
     }
 
     getFeeInFiat = feeSatoshi => {
