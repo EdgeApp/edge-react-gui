@@ -262,10 +262,7 @@ class WalletList extends Component {
         if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
           console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])          
           // now to divide the amount by its multiplier
-          var denomMultiplier
-          for (var denomKey in this.props.wallets[parentProp].allDenominations[balanceProp]) {
-            denomMultiplier = denomKey
-          }
+          var denomMultiplier =  this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
           temporaryTotalCrypto[balanceProp]  += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
         }
         console.log('at end of inner loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
