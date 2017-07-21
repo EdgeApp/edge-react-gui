@@ -34,13 +34,13 @@ class SettingsOverview extends Component {
     super(props)
 
     this.settings = [
-      { key: 'changePassword', text: sprintf(strings.enUS['settings_button_change_password']) },
-      { key: 'changePin', text: sprintf(strings.enUS['settings_button_pin']) },
-      { key: 'passwordRecovery', text: sprintf(strings.enUS['settings_button_change_pass_recovery']) }
+      { key: 'changePassword', text: sprintf(strings.enUS['settings_button_change_password']), routeFunction: this._onPressDummyRouting },
+      { key: 'changePin', text: sprintf(strings.enUS['settings_button_pin']), routeFunction: this._onPressDummyRouting },
+      { key: 'passwordRecovery', text: sprintf(strings.enUS['settings_button_change_pass_recovery']), routeFunction: this._onPressDummyRouting }
     ]
 
     this.securityRoute = [
-      { key: 'setup2Factor', text: sprintf(strings.enUS['settings_button_setup_two_factor']) }
+      { key: 'setup2Factor', text: sprintf(strings.enUS['settings_button_setup_two_factor']), routeFunction: this._onPressDummyRouting }
     ]
 
     this.options = {
@@ -62,6 +62,10 @@ class SettingsOverview extends Component {
     console.log('in SettingsOverview.ui.js, route is: ', route)
     let goRoute = Actions[route]
     goRoute()
+  }
+
+  _onPressDummyRouting = () => {
+    console.log('dummy routing')
   }
 
   _onPressOpenLogoffTime = () => {
