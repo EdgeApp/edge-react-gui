@@ -80,22 +80,22 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-start',
     backgroundColor: 'transparent'
   },
-  currentBalanceBoxDollarsWrap: { //two
+  currentBalanceBoxBitssWrap: { //two
     flex: 4,
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'transparent'
   },
-  currentBalanceBoxDollars: {
+  currentBalanceBoxBits: {
     color: "#FFFFFF",
     fontSize: 40
   },
-  currentBalanceBoxBitsWrap: {
+  currentBalanceBoxDollarsWrap: {
     justifyContent: "flex-start",
     flex: 4,
     paddingTop: 4
   },
-  currentBalanceBoxBits: { //two
+  currentBalanceBoxDollars: { //two
     color: "#FFFFFF",
     fontSize: 20
   },
