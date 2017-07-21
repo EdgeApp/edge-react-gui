@@ -77,7 +77,7 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={ () => Actions.transactionList() }
+              onPress={ () => Actions.transactionList({type: 'reset'}) }
               active={ this.props.routes.scene.name  === 'transactionList' ? true : false }
             >
               <Image
