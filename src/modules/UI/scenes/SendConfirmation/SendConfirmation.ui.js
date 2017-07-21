@@ -8,10 +8,13 @@ import {
   Keyboard,
   Button,
   Platform,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
+
+import T from '../../components/FormattedText'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import MaxButton from '../../components/MaxButton/index.js'
 import FlipInput from '../../components/FlipInput/index.js'
@@ -43,6 +46,7 @@ import {
   updateIsKeyboardVisible,
   signBroadcastAndSave,
   useMaxSatoshi,
+  updateSpendPending
 } from './action.js'
 
 class SendConfirmation extends Component {
@@ -133,7 +137,11 @@ class SendConfirmation extends Component {
             <Recipient label={label} link={''} publicAddress={publicAddress} />
             {/* <Password /> */}
           </View>
-
+          <View style={[styles.pendingSymbolArea]}>
+            {this.props.sendConfirmation.pending && 
+              <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, b()]} size={'small'}/>
+            }
+          </View>
           <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
         </ScrollView>
       </LinearGradient>
@@ -142,6 +150,7 @@ class SendConfirmation extends Component {
 
   signBroadcastAndSave = () => {
     const { transaction } = this.props
+    this.props.dispatch(updateSpendPending(true))
     this.props.signBroadcastAndSave(transaction)
   }
 

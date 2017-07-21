@@ -11,6 +11,7 @@ export const UPDATE_URI_SUCCESS = 'UPDATE_URI_SUCCESS'
 export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION'
 export const UPDATE_FEE = 'UPDATE_FEE'
 export const UPDATE_MAX_SATOSHI = 'UPDATE_MAX_SATOSHI'
+export const UPDATE_SPEND_PENDING = 'UPDATE_SPEND_PENDING'
 
 export const PROCESS_URI = 'PROCESS_URI'
 export const UPDATE_PARSED_URI = 'UPDATE_PARSED_URI'
@@ -21,6 +22,7 @@ export const UPDATE_SPEND_INFO = 'UPDATE_SPEND_INFO'
 export const RESET = 'RESET'
 
 import { Actions } from 'react-native-router-flux'
+import { openABAlert, closeABAlert } from '../../components/ABAlert/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -99,21 +101,39 @@ export const updateTransaction = transaction => {
   }
 }
 
+export const updateSpendPending = pending => {
+  return {
+    type: UPDATE_SPEND_PENDING,
+    data: { pending }
+  }
+}
+
 export const signBroadcastAndSave = unsignedTransaction => {
   return (dispatch, getState) => {
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+    let alertSyntax
 
     // TODO: refactor this to use WALLET_API
     wallet.signTx(unsignedTransaction)
     .then(transaction => {
       console.log('broadcast transaction', transaction)
-      wallet.saveTx(transaction)
-      return wallet.broadcastTx(transaction)
+      return wallet.broadcastTx(transaction).then(() => 
+        wallet.saveTx(transaction)
+      )
     })
     .then(() => {
+      dispatch(updateSpendPending(false))
       Actions.transactionList()
+      alertSyntax = { title: 'Transaction Sent', message: 'Your transaction has been successfully sent.' }
+      dispatch(openABAlert(alertSyntax))
+    })
+    .catch(e => {
+      console.log('error is: ' , e)
+      dispatch(updateSpendPending(false))
+      alertSyntax = { title: 'Transaction Failure', message: e.message }      
+      dispatch(openABAlert(alertSyntax))
     })
   }
 }

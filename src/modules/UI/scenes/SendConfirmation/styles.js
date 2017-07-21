@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },
+  pendingSymbolArea: {
+    height: 12
+  },
   slider: {
     backgroundColor: 'transparent',
   }
