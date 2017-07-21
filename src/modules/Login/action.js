@@ -24,7 +24,7 @@ export const updateWallets = () => {
     const state = getState()
     const { account } = state.core
     const supportedTypes = [
-      'wallet:bitcoin',
+      // 'wallet:bitcoin',
       'wallet:ethereum'
     ]
 
