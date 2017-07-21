@@ -13,7 +13,8 @@ const initialState = {
   isKeyboardVisible: false,
   feeSatoshi: 0,
   transaction: {},
-  spendInfo: {}
+  spendInfo: {},
+  pending: false
 }
 
 export default sendConfirmation = (state = initialState, action) => {
@@ -99,8 +100,15 @@ export default sendConfirmation = (state = initialState, action) => {
         ...state,
         spendInfo
       }
+    case ACTION.UPDATE_SPEND_PENDING:
+      const { pending } = data
+      return {
+        ...state,
+        pending
+      }      
     case ACTION.RESET:
       return initialState
+      
     default:
       return state
   }

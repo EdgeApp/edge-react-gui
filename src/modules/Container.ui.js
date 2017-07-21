@@ -25,6 +25,7 @@ import SideMenu from './UI/components/SideMenu/SideMenu.ui'
 import Header from './UI/components/Header/Header.ui'
 import TabBar from './UI/components/TabBar/TabBar.ui'
 import HelpModal from './UI/components/HelpModal'
+import ABAlert from './UI/components/ABAlert'
 import TransactionAlert from './UI/components/TransactionAlert'
 
 // import { updateExchangeRates } from './UI/components/ExchangeRate/action'
@@ -173,6 +174,7 @@ class Main extends Component {
                   </Scene>
                 </RouterWithRedux>
                 <HelpModal />
+                <ABAlert />
                 <TransactionAlert />
               </SideMenu>
               <TabBar />

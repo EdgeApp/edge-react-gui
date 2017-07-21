@@ -75,7 +75,7 @@ class Login extends Component {
     super(props)
 
     this.state = {
-      username: 'edgy2',
+      username: 'edgy3',
       password: 'Test123456',
       loggingInModalVisible: false,
       animating: true,

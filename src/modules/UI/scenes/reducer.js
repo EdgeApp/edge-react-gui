@@ -10,6 +10,7 @@ import createWallet from './CreateWallet/reducer'
 import controlPanel from '../components/ControlPanel/reducer.js'
 import sideMenu from '../components/SideMenu/reducer'
 import { helpModal } from '../components/HelpModal/reducer.js'
+import ABAlert from '../components/ABAlert/reducer'
 import transactionAlert from '../components/TransactionAlert/reducer.js'
 import walletListModal from '../components/WalletListModal/reducer'
 import exchangeRate from '../components/ExchangeRate/reducer.js'
@@ -29,5 +30,6 @@ export const scenes = combineReducers({
   dimensions,
   helpModal,
   transactionAlert,
-  exchangeRate
+  exchangeRate,
+  ABAlert
 })
