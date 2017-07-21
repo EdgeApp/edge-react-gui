@@ -83,10 +83,8 @@ class WalletListModalBody extends Component {
   }
 
   renderTokenRowContent = (parentId, currencyCode, balance ) => {
-    let symbol, multiplier
-    for(var prop in this.props.walletList[parentId].allDenominations[currencyCode]) {
-      multiplier = prop
-    }   
+
+    let multiplier = this.props.walletList[parentId].allDenominations[currencyCode][this.props.settings[currencyCode].denomination].multiplier
 
     return(
       <TouchableOpacity style={[styles.tokenRowContainer]}
@@ -108,12 +106,9 @@ class WalletListModalBody extends Component {
   }
 
   renderWalletRow = (wallet, i) => {
-    let symbol, multiplier
 
-    for(var prop in wallet.allDenominations[wallet.currencyCode]) {
-      multiplier = prop
-      symbol = wallet.allDenominations[wallet.currencyCode][multiplier].symbol
-    }
+    let multiplier = wallet.allDenominations[wallet.currencyCode][this.props.settings[wallet.currencyCode].denomination].multiplier
+    let symbol = wallet.allDenominations[wallet.currencyCode][multiplier].symbol
 
     return (
       <View key={i}>
