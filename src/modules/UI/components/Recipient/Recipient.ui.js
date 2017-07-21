@@ -12,6 +12,8 @@ import {
   TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../locales/default.js'
 // import styles from './styles.js'
 
 const styles = StyleSheet.create({
@@ -26,25 +28,27 @@ const styles = StyleSheet.create({
   text: {
     color: 'rgba(255,255,255,0.85)',
     lineHeight: 0,
-    fontSize: 17
-  },
-  ellipsis: {
-    flex: 1,
-    overflow: 'hidden'
+    fontSize: 17,
+    marginHorizontal: 5
   }
 })
 
-const Recipient = ({label, address}) => {
+const Recipient = ({ label = '1323424', publicAddress = 'asdcasdc' }) => {
 
+  getLabel = () => {
+    if (label) {
+      return <Text style={styles.text} ellipsizeMode='middle' numberOfLines={1}>{label}</Text>
+    }
+  }
   return (
       <View style={styles.container}>
-        <Text style={[ styles.text, {fontSize: 14} ]}>To:  </Text>
-        <Text style={styles.text}> {label}  |  </Text>
-        <Text
-          style={[ styles.text, styles.ellipsis ]}
-          ellipsizeMode='middle' numberOfLines={1}
-        >
-           {address}
+        <Text style={[ styles.text, {fontSize: 14} ]}>
+          {sprintf(strings.enUS['send_to_title'])}
+        </Text>
+        {this.getLabel()}
+        <Text style={[ styles.text ]}
+          ellipsizeMode='middle' numberOfLines={1}>
+          {publicAddress}
         </Text>
       </View>
   )

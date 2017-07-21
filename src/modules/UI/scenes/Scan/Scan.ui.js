@@ -7,7 +7,8 @@ import {
   View,
   TouchableHighlight,
   TextInput,
-  Clipboard } from 'react-native'
+  Clipboard,
+  InteractionManager } from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
@@ -26,7 +27,7 @@ import { toggleScanToWalletListModal } from '../../components/WalletListModal/ac
 import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress  } from './action'
 
 import {
-  updateUri,
+  processURI,
   updatePublicAddressRequest,
   updateWalletTransfer
 } from '../SendConfirmation/action.js'
@@ -72,9 +73,11 @@ class Scan extends Component {
     this.props.dispatch(toggleScanToWalletListModal())
   }
 
-  onBarCodeRead = (data) => {
-    this.props.updateUri(data)
-    // Actions.sendConfirmation({ type: 'reset' })
+  onBarCodeRead = (scan) => {
+    if (this.props.scene !== 'scan') return
+    const uri = scan.data
+    this.props.processURI(uri)
+    Actions.sendConfirmation()
     // // React Native Router Flux does not fully unmount scenes when transitioning
     // // {type: 'reset'} is needed to fully unmount the Scan scene, or else the camera will keep scanning
   }
@@ -187,7 +190,7 @@ const mapDispatchToProps = dispatch => {
     toggleWalletListModal: () => dispatch(toggleWalletListModal()),
     getWalletTransferList: () => dispatch(getWalletTransferList()),
 
-    updateUri: uri => dispatch(updateUri(uri)),
+    processURI: uri => dispatch(processURI(uri)),
     updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
     updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
   }
@@ -196,15 +199,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-
-    }
-  }
-
   render() {
-
     return(
       <StylizedModal
         featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
@@ -225,38 +220,46 @@ class AddressInputRecipient extends Component { // this component is for the inp
   constructor(props) {
     super(props)
     this.state = {
-      copiedString: '',
-      recipientAddressInput: ''
+      uri: ''
     }
   }
 
-  componentWillMount() {
-    Clipboard.getString().then(string => this.setState({copiedString: string}))
+  componentDidMount() {
+    Clipboard.getString().then(uri => {
+      this.setState({
+        uri
+      })
+    })
   }
 
-  _onRecipientAddressChange = (input) => {
-    this.setState({ recipientAddressInput: input })
-    this.props.dispatch(updateRecipientAddress(input))
-  }
-
-  _copyOverAddress = () => {
-    this.setState({ recipientAddressInput: this.state.copiedString })
-    this.props.dispatch(updateRecipientAddress(this.state.copiedString))
+  _processURI = () => {
+    console.log('this.state.uri', this.state.uri)
+    this.props.dispatch(toggleAddressModal())
+    this.props.dispatch(processURI(this.state.uri))
+    Actions.sendConfirmation()
   }
 
   render() {
     let innerText = ''
     console.log('rendering Rename Address, this.state is: ', this.state)
-    if( this.state.copiedString.length !== 0) innerText = sprintf(strings.enUS['fragment_copy_button_syntax']) + ' "' + this.state.copiedString.slice(0, 10) + ' ... ' + this.state.copiedString.slice(-10) + '"'
+    const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.uri)
 
     return(
       <View>
         <View style={[styles.addressInputWrap]}>
-            <TextInput style={[styles.addressInput]} onChangeText={(input) => this._onRecipientAddressChange(input)} value={this.props.recipientAddress} />
+          <TextInput style={[styles.addressInput]}
+            autoFocus
+            placeholder={copyMessage}
+            returnKeyType={'done'}
+            autoCorrect={false}
+            onSubmitEditing={this._processURI} />
         </View>
-        {this.state.copiedString.length !== 0 &&
+        {this.state.uri.length !== 0 &&
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={innerText} onPressFunction={this._copyOverAddress} numberOfLines={1} />
+            <TertiaryButton text={copyMessage}
+              ellipsizeMode={'middle'}
+              onPressFunction={this._processURI}
+              numberOfLines={1} />
           </View>
         }
       </View>
@@ -273,10 +276,10 @@ export const AddressInputRecipientConnect = connect( state => ({
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
     console.log('recipient address done, this.props.recipientAddress is: ', this.props.recipientAddress)
-    updateUri(this.props.recipientAddress)
+    processURI(this.props.recipientAddress)
     this.props.dispatch(updatePublicAddressRequest(this.props.recipientAddress))
     this._onToggleAddressModal()
-    Actions.sendConfirmation({ type: 'reset', recipientPublicAddress: this.props.recipientAddress, testing: 'kylan'})
+    Actions.sendConfirmation({ type: 'reset', recipientPublicAddress: this.props.recipientAddress })
   }
   _onToggleAddressModal = () => {
     this.props.dispatch(toggleAddressModal())

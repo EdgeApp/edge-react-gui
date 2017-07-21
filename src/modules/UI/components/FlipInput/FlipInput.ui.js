@@ -223,10 +223,9 @@ class FlipInputInside extends Component {
               mode: this.props.checkMax(this.state.primaryInputValue)
             })
             const amountSatoshi = this.state.primaryInputValue
-            const amountInBaseDenomination = amountSatoshi * this.props.cryptoDenom.multiplier
+            const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
           }
         } else { // Change Fiat Input ////////////////////////////////////////////////////////////
@@ -235,7 +234,7 @@ class FlipInputInside extends Component {
               mode: this.props.checkMax(getAmountFiat(this.state.primaryInputValue))
             })
             const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toPrecision(12))
-            const amountInBaseDenomination = amountSatoshi * this.props.cryptoDenom.multiplier
+            const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenom.multiplier)
             this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
           } else { // Request ////////////////////////////////////////////////////////////////////
             this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
