@@ -253,12 +253,12 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
   },
   transactionPartner: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#58595C",
     textAlignVertical: 'center'
   },
   transactionBitAmount: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#000000",
     textAlignVertical: 'center'
   },
@@ -267,14 +267,14 @@ module.exports = StyleSheet.create({
     justifyContent: 'center'
   },
   transactionTime: {
-    fontSize: 10,
+    fontSize: 12,
     color: "#58595C",
     textAlignVertical: 'bottom',
     position: 'relative',
     top: 4
   },
   transactionDollarAmount: {
-    fontSize: 10,
+    fontSize: 12,
     color: "#909091",
     textAlignVertical: 'center',
     position: 'relative',
