@@ -393,7 +393,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat}</T>
+              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}</T>
             </View>
           </View>
         </TouchableOpacity>
