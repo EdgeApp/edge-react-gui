@@ -55,6 +55,7 @@ class SendConfirmation extends Component {
     this.state = {
       keyboardVisible: false
     }
+    this.props.dispatch(updateAmountSatoshiRequest(this.props.amountSatoshi || 0))
   }
 
   componentDidMount () {
