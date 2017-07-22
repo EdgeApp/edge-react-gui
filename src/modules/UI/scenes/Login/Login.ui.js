@@ -1,58 +1,77 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { KeyboardAvoidingView, ActivityIndicator, Alert, Button, Image, InteractionManager, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {
+  KeyboardAvoidingView,
+  ActivityIndicator,
+  Alert,
+  Button,
+  Image,
+  InteractionManager,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
-import { makeContext } from 'airbitz-core-js'
-import { getUsersList } from '../../components/ControlPanel/action.js'
+import {makeContext} from 'airbitz-core-js'
+import {getUsersList} from '../../components/ControlPanel/action.js'
 
-const Logo = require('../../../../img/logo2x.png')
+const Logo = require('../../../../img/edge_logo_3x.png')
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
+    flex: 1
   },
   view: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
+    paddingHorizontal: 50,
+    marginBottom: 60
   },
   logo: {
     alignSelf: 'center',
-    width: 200
+    width: 150
   },
   textInput: {
-    height: 40,
-    margin: 15,
-    padding: 3,
-    paddingLeft: 10,
+    height: 45,
+    margin: 10,
+    paddingHorizontal: 10,
     backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
+    borderRadius: 4,
+    color: 'rgba(1, 1, 1, .5)'
   },
   button: {
-    alignSelf: 'flex-end',
-    margin: 15,
+    alignSelf: 'stretch',
+    height: 45,
+    margin: 10,
+    marginTop: 50,
+    marginBottom: 45,
     padding: 15,
     backgroundColor: 'white',
-    borderColor: 'black',
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    borderRadius: 4
   },
   buttonText: {
+    color: 'rgba(1, 100, 255, 1)',
+    fontFamily: 'Gill Sans',
+    fontSize: 18
+
   },
   center: {
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 8,
+    padding: 8
   },
   modal: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   modalInner: {
     backgroundColor: 'white',
@@ -60,18 +79,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 25,
     borderColor: 'black',
-    borderWidth: 1
+    borderWidth: 1,
   },
   modalText: {
     margin: 10
   },
   spinner: {
     margin: 10
-  },
+  }
 })
 
 class Login extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -80,54 +99,37 @@ class Login extends Component {
       loggingInModalVisible: false,
       animating: true,
       incorrectPassword: false,
-      shouldLogin: false
+      shouldLogin: false,
     }
   }
 
-  render () {
+  render() {
     InteractionManager.runAfterInteractions(this.login)
 
     return (
-      <LinearGradient
-        style={styles.background}
-        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}>
+      <LinearGradient style={styles.background} start={{
+        x: 0,
+        y: 0,
+      }} end={{
+        x: 1,
+        y: 0,
+      }} colors={['#3b7adb', '#2b569a',]}>
 
         <KeyboardAvoidingView style={styles.view} behavior={'padding'}>
-          <Modal
-            style={styles.modal}
-            animationType={'fade'}
-            transparent
-            visible={this.state.loggingInModalVisible}>
+          <Modal style={styles.modal} animationType={'fade'} transparent visible={this.state.loggingInModalVisible}>
 
             <View style={styles.modalInner}>
               <Text style={styles.modalText}>Logging in...</Text>
-              <ActivityIndicator
-                animating={this.state.animating}
-                style={styles.spinner}
-              />
+              <ActivityIndicator animating={this.state.animating} style={styles.spinner}/>
             </View>
 
           </Modal>
 
           <Image source={Logo} style={styles.logo} resizeMode={'contain'}/>
-          <TextInput
-            keyboardShouldPersistTaps={'always'}
-            autoCorrect={false}
-            autoFocus
-            style={styles.textInput}
-            onChangeText={this.updateUsername}
-            value={this.state.username}
-          />
-          <TextInput
-            keyboardShouldPersistTaps={'always'}
-            secureTextEntry
-            style={styles.textInput}
-            onChangeText={this.updatePassword}
-            value={this.state.password}
-          />
+          <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} autoFocus style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username}/>
+          <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password}/>
           <TouchableOpacity style={styles.button} onPress={this.onPress}>
-            <Text style={styles.buttonText}>Login</Text>
+            <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
 
@@ -139,31 +141,21 @@ class Login extends Component {
   updatePassword = password => this.setState({password})
 
   onPress = () => {
-    this.setState({
-      loggingInModalVisible: true,
-      shouldLogin: true,
-    })
+    this.setState({loggingInModalVisible: true, shouldLogin: true})
   }
 
   login = () => {
-    if (!this.state.shouldLogin) { return }
+    if (!this.state.shouldLogin) {
+      return
+    }
     console.log('logging in')
 
-    const { username, password } = this.state
-    const { callbacks } = this.props
+    const {username, password,} = this.state
+    const {callbacks} = this.props
 
-    this.props.context.loginWithPassword(
-      username,
-      password,
-      null,
-      callbacks
-    )
-    .then(account => {
+    this.props.context.loginWithPassword(username, password, null, callbacks).then(account => {
       getListUsernames(this.props.context, this.props.dispatch)
-      this.setState({
-        loggingInModalVisible: false,
-        shouldLogin: false,
-      })
+      this.setState({loggingInModalVisible: false, shouldLogin: false})
       this.props.onLoggedIn(account)
     })
     // .catch(error => {
