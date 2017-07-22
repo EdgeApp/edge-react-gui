@@ -1,4 +1,5 @@
 import HockeyApp from 'react-native-hockeyapp'
+import SplashScreen from 'react-native-splash-screen'
 import React, { Component } from 'react'
 import { View, StatusBar, Platform } from 'react-native'
 import { connect } from 'react-redux'
@@ -95,6 +96,7 @@ class Main extends Component {
     })
     // Dummy dispatch to allow scenes to update mapStateToProps
     setInterval(() => { this.props.dispatch(updateExchangeRates()) }, 30000)
+    SplashScreen.hide()
   }
 
   _onLayout = (event) => {
