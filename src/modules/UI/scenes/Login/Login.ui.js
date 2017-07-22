@@ -12,12 +12,14 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  findNodeHandle
 } from 'react-native'
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
 import {makeContext} from 'airbitz-core-js'
 import {getUsersList} from '../../components/ControlPanel/action.js'
+import { BlurView, VibrancyView } from 'react-native-blur';
 
 const Logo = require('../../../../img/edge_logo_3x.png')
 
@@ -29,8 +31,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    paddingHorizontal: 50,
-    marginBottom: 60
+    paddingHorizontal: 50
   },
   logo: {
     alignSelf: 'center',
@@ -60,7 +61,6 @@ const styles = StyleSheet.create({
     color: 'rgba(1, 100, 255, 1)',
     fontFamily: 'Gill Sans',
     fontSize: 18
-
   },
   center: {
     alignItems: 'center',
@@ -68,25 +68,36 @@ const styles = StyleSheet.create({
     padding: 8
   },
   modal: {
-    flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+
   },
   modalInner: {
+    alignSelf: 'stretch',
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 25,
-    borderColor: 'black',
-    borderWidth: 1,
+    borderRadius: 4
   },
   modalText: {
-    margin: 10
+    margin: 10,
+    color: 'rgba(1, 100, 255, 1)',
+    fontFamily: 'Gill Sans',
+    fontSize: 18
   },
   spinner: {
     margin: 10
-  }
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  absolute: {
+    position: "absolute",
+    top: 0, left: 0, bottom: 0, right: 0,
+  },
 })
 
 class Login extends Component {
@@ -100,7 +111,13 @@ class Login extends Component {
       animating: true,
       incorrectPassword: false,
       shouldLogin: false,
+      viewRef: '',
+      blurAmount: 5
     }
+  }
+
+  imageLoaded() {
+    this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
   }
 
   render() {
@@ -116,21 +133,31 @@ class Login extends Component {
       }} colors={['#3b7adb', '#2b569a',]}>
 
         <KeyboardAvoidingView style={styles.view} behavior={'padding'}>
+
           <Modal style={styles.modal} animationType={'fade'} transparent visible={this.state.loggingInModalVisible}>
 
             <View style={styles.modalInner}>
-              <Text style={styles.modalText}>Logging in...</Text>
-              <ActivityIndicator animating={this.state.animating} style={styles.spinner}/>
+              <Text style={styles.modalText}>Signing in...</Text>
+              <ActivityIndicator size={'large'} animating={this.state.animating} style={styles.spinner}/>
             </View>
 
           </Modal>
 
-          <Image source={Logo} style={styles.logo} resizeMode={'contain'}/>
+          <Image source={Logo}
+            style={styles.logo}
+            resizeMode={'contain'}
+            ref={(logo) => { this.logo = logo }}
+            onLoadEnd={this.imageLoaded.bind(this)} />
           <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} autoFocus style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username}/>
           <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password}/>
           <TouchableOpacity style={styles.button} onPress={this.onPress}>
             <Text style={styles.buttonText}>Sign In</Text>
           </TouchableOpacity>
+          { this.state.shouldBlur && <BlurView
+            style={styles.absolute}
+            viewRef={this.state.viewRef}
+            blurType="dark"
+            blurAmount={this.state.blurAmount} />}
         </KeyboardAvoidingView>
 
       </LinearGradient>
@@ -141,7 +168,11 @@ class Login extends Component {
   updatePassword = password => this.setState({password})
 
   onPress = () => {
-    this.setState({loggingInModalVisible: true, shouldLogin: true})
+    this.setState({
+      loggingInModalVisible: true,
+      shouldLogin: true,
+      shouldBlur: true
+    })
   }
 
   login = () => {

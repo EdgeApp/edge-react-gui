@@ -95,6 +95,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
     }
     signingConfigs {
         release {
@@ -135,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-blur')
     compile project(':react-native-secp256k1')
     compile project(':react-native-hockeyapp')
     compile project(':react-native-fast-crypto')

@@ -52,6 +52,7 @@
     "react-intl": "^2.3.0",
     "react-native": "^0.46.2",
     "react-native-animatable": "^1.1.0",
+    "react-native-blur": "^3.1.2",
     "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-contacts": "^0.8.1",
     "react-native-contacts-wrapper": "^0.2.3",
