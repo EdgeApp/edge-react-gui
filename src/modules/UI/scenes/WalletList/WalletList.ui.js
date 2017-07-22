@@ -85,7 +85,8 @@ class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultFiat} {this.tallyUpTotalCrypto()}
+                 $ {this.tallyUpTotalCrypto()}
+                 {/*{this.props.settings.defaultFiat}*/}
               </T>
             </View>
           </View>
@@ -260,7 +261,7 @@ class WalletList extends Component {
           temporaryTotalCrypto[balanceProp] = 0
         }
         if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
-          console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])          
+          console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])
           // now to divide the amount by its multiplier
           var denomMultiplier =  this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
           temporaryTotalCrypto[balanceProp]  += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
@@ -279,7 +280,7 @@ class WalletList extends Component {
     var total = 0
     for (var currency in values) {
       let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
-      console.log('currency is: ', currency, 'crypto amount is: ', values.currency ,'fiat is: USD , and addValue is: ', addValue, ' , subTotal is: ', total, 'values is: ', values)      
+      console.log('currency is: ', currency, 'crypto amount is: ', values.currency ,'fiat is: USD , and addValue is: ', addValue, ' , subTotal is: ', total, 'values is: ', values)
       total += addValue
     }
     console.log('total is now: ', total)
@@ -305,7 +306,7 @@ const mapStateToProps = (state) => {
   walletName:               state.ui.scenes.walletList.walletName,
   walletId:                 state.ui.scenes.walletList.walletId,
   walletOrder:              state.ui.wallets.walletListOrder,
-  settings:                 state.ui.settings, 
+  settings:                 state.ui.settings,
   currencyConverter
   }
 }

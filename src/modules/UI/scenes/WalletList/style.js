@@ -127,19 +127,22 @@ module.exports = StyleSheet.create({
     marginRight: 5
   },
   rowNameText: {
+    fontSize: 18,
     color: '#58595C'
   },
   rowBalanceTextWrap: {
     justifyContent: 'center'
   },
   rowBalanceAmountText: {
+    fontSize: 16,
     color: '#58595C',
     textAlign: 'right'
   },
   rowBalanceDenominationText: {
+    fontSize: 14,
     color: '#58595C',
     textAlign: 'right'
-  },  
+  },
   rowDotsWrap: {
     flexDirection: 'row',
     width: 44
@@ -255,6 +258,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center'
   },
   tokenRowText: {
+    fontSize: 16,
     color: '#58595C'
   }
     // end of token rows //

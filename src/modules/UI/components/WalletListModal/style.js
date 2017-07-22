@@ -2,7 +2,7 @@ import React from 'react-native'
 import {Dimensions, StyleSheet} from 'react-native';
 
 module.exports = StyleSheet.create({
-  topLevel: { 
+  topLevel: {
     zIndex: 10,
     width: Dimensions.get('window').width,
     backgroundColor: 'white',
@@ -12,29 +12,29 @@ module.exports = StyleSheet.create({
     paddingTop: 50,
   },
   headerContainer: {
-    backgroundColor: '#5c5d5f',  
+    backgroundColor: '#5c5d5f',
   },
   modalBody: {
     width: Dimensions.get('window').width,
     zIndex: 4,
   },
   rowContainer: {
-    backgroundColor: 'white',    
+    backgroundColor: 'white',
     padding: 16,
     paddingLeft: 20,
-    paddingRight: 20, 
-    justifyContent: 'space-between',      
+    paddingRight: 20,
+    justifyContent: 'space-between',
   },
   rowNameText: {
-    fontSize: 14
+    fontSize: 18
   },
   headerContent: {
     justifyContent: 'space-between',
-    flexDirection: 'row' 
+    flexDirection: 'row'
   },
   headerTextWrap: {
     justifyContent: 'center'
-  },  
+  },
   headerText: {
     color: 'white',
     fontSize: 14
@@ -52,7 +52,7 @@ module.exports = StyleSheet.create({
     position: 'relative',
     top: 6
   },
-  
+
   // beginning of token rows //
 
   tokenRowContainer: {
@@ -74,5 +74,5 @@ module.exports = StyleSheet.create({
     color: '#58595C',
     fontSize: 14
   }
-    // end of token rows //    
+    // end of token rows //
 })
