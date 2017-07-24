@@ -23,6 +23,7 @@ import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.
 import * as Animatable from 'react-native-animatable'
 import {border as b, cutOffText} from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
+import {updateReceiveAddress} from '../../scenes/Request/action.js'
 
 class WalletListModal extends Component {
   constructor(props){
@@ -92,6 +93,7 @@ class WalletListModalBody extends Component {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(parentId, currencyCode)
+          this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={[styles.currencyRowContent]}>
           <View style={[styles.currencyRowNameTextWrap]}>
@@ -117,6 +119,7 @@ class WalletListModalBody extends Component {
             this.props.getTransactions(wallet.id, wallet.currencyCode)
             this.props.disableWalletListModalVisibility()
             this.props.selectWallet(wallet.id, wallet.currencyCode)
+            this.props.updateReceiveAddress(wallet.id, wallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>
             <View style={[styles.currencyRowNameTextWrap]}>
@@ -167,7 +170,8 @@ export const WalletListModalBodyConnect = connect(
     getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
     disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility()),
     toggleSelectedWalletListModal: () => dispatch(toggleScanToWalletListModal()),
-    toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal())
+    toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
+    updateReceiveAddress: (walletId, currencyCode) => dispatch(updateReceiveAddress(walletId, currencyCode))
   }))
 (WalletListModalBody)
 
