@@ -248,31 +248,24 @@ class WalletList extends Component {
   }
 
   checkIndexIsEven = (n) => {
-    console.info('n is: ' , n)
       return n % 2 == 0
   }
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
     for (var parentProp in this.props.wallets) {
-      console.log('outer loop, parentProp is: ', parentProp)
       for (var balanceProp in this.props.wallets[parentProp].balances){
         if(!temporaryTotalCrypto[balanceProp]) {
           temporaryTotalCrypto[balanceProp] = 0
         }
         if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
-          console.log('inside loop, balanceProp is: ', balanceProp, ' and previous balance is: ', temporaryTotalCrypto[balanceProp] , ' adding the following amount: ',this.props.wallets[parentProp].balances[balanceProp])
           // now to divide the amount by its multiplier
           var denomMultiplier =  this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
           temporaryTotalCrypto[balanceProp]  += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
         }
-        console.log('at end of inner loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
       }
     }
-    console.log('outside of the loop, temporaryTotalCrypto is: ', temporaryTotalCrypto)
-     //this.props.dispatch(updateTotalBalance(temporaryTotalCrypto))
      let totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
-     console.log('total balance is: ', totalBalance)
      return totalBalance
   }
 
@@ -280,10 +273,8 @@ class WalletList extends Component {
     var total = 0
     for (var currency in values) {
       let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
-      console.log('currency is: ', currency, 'crypto amount is: ', values.currency ,'fiat is: USD , and addValue is: ', addValue, ' , subTotal is: ', total, 'values is: ', values)
       total += addValue
     }
-    console.log('total is now: ', total)
     return total.toFixed(2)
   }
 
@@ -372,7 +363,7 @@ class DeleteWalletButtons extends Component {
 
   render() {
     return(
-      <View style={[styles.buttonsWrap, b('gray')]}>
+      <View style={[styles.buttonsWrap, b()]}>
 
         <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
