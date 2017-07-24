@@ -62,7 +62,7 @@ export const updateAmountSatoshiRequest = (amountSatoshiString) => {
 export const updateSpendSufficientFunds = mode => {
   return {
     type: UPDATE_SPEND_SUFFICIENT_FUNDS,
-    data: { mode } 
+    data: { mode }
   }
 }
 
@@ -133,7 +133,7 @@ export const signBroadcastAndSave = unsignedTransaction => {
     wallet.signTx(unsignedTransaction)
     .then(transaction => {
       console.log('broadcast transaction', transaction)
-      return wallet.broadcastTx(transaction).then(() => 
+      return wallet.broadcastTx(transaction).then(() =>
         wallet.saveTx(transaction)
       )
     })
@@ -146,7 +146,7 @@ export const signBroadcastAndSave = unsignedTransaction => {
     .catch(e => {
       console.log('error is: ' , e)
       dispatch(updateSpendPending(false))
-      alertSyntax = { title: 'Transaction Failure', message: e.message }      
+      alertSyntax = { title: 'Transaction Failure', message: e.message }
       dispatch(openABAlert(alertSyntax))
     })
   }
@@ -219,8 +219,9 @@ export const processURI = (uri) => {
   return (dispatch, getState) => {
     console.log('uri', uri)
     const state = getState()
-    const account = CORE_SELECTORS.getAccount(state)
-    account.parseURI = (uri) => {
+    const walletId = UI_SELECTORS.getSelectedWalletId(state)
+    const wallet = CORE_SELECTORS.getWallet(state, walletId)
+    wallet.parseURI = (uri) => {
       return {
         publicAddress: uri,
         amountSatoshi: 0,
