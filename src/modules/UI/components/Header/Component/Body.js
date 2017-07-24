@@ -81,7 +81,7 @@ class ExampleFromWallet extends Component {
   render () {
     let topDisplacement =  66
     let selectionFunction = 'selectFromWallet'
-    let walletNameString = this.props.selectedWallet.name
+    let walletNameString = this.props.selectedWallet.name + ':' + this.props.selectedWalletCurrencyCode
 
     return (
       <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(),{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }]}>
@@ -110,4 +110,5 @@ export const ExampleFromWalletConnect = connect(state => ({
   archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility,
+  selectedWalletCurrencyCode:        UI_SELECTORS.getSelectedCurrencyCode(state)
 }))(ExampleFromWallet)
