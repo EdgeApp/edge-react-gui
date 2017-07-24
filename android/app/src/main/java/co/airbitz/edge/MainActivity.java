@@ -1,5 +1,7 @@
 package co.airbitz.edge;
 
+import android.os.Bundle;
+
 import com.facebook.react.ReactActivity;
 import com.cboy.rn.splashscreen.SplashScreen;
 
