@@ -37,7 +37,6 @@ node_modules/
 npm-debug.log
 yarn-error.log
 buildnum.json
-package-lock.json
 .tmp/
 
 # BUCK
