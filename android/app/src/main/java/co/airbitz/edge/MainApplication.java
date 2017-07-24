@@ -46,7 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
             new SplashScreenReactPackage(),
             new BlurViewPackage(),
             new RNMyFancyLibraryPackage(),
-            new RNHockeyAppPackage(),
+            new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),
             new UdpSocketsModule(),
