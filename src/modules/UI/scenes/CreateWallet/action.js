@@ -9,12 +9,9 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as LOGIN_ACTIONS from '../../../Login/action.js'
 
 import { Actions } from 'react-native-router-flux'
-import { base64 }from 'rfc4648'
 
-import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
 import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
-import { createWalletRequest } from '../../../Core/Account/api.js'
 
 export const updateWalletName = walletName => {
   return {
@@ -43,14 +40,11 @@ export const createWallet = (walletName, walletType) => {
 
     const account = CORE_SELECTORS.getAccount(state)
     const io = CORE_SELECTORS.getIO(state)
-    const shitcoinPlugin = makeShitcoinPlugin({ io })
     const bitcoinPlugin = makeBitcoinPlugin({ io })
     const ethereumPlugin = makeEthereumPlugin({ io })
     const type = walletType.replace('wallet:', '').toLowerCase()
-
-    if (type === shitcoinPlugin.getInfo().walletTypes[0]) {
-      keys = shitcoinPlugin.createMasterKeys(type)
-    } else if (type === ethereumPlugin.getInfo().walletTypes[0]) {
+    let keys
+    if (type === ethereumPlugin.getInfo().walletTypes[0]) {
       keys = ethereumPlugin.createMasterKeys(type)
     } else if (type === 'bitcoin') {
       keys = bitcoinPlugin.createMasterKeys(type)
