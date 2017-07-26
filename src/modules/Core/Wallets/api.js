@@ -1,7 +1,6 @@
 // import { renameWalletStart } from ''
 
 import { makeCurrencyWallet } from 'airbitz-core-js'
-import { makeShitcoinPlugin } from 'airbitz-currency-shitcoin'
 import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
 import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
 import { makeWalletCallbacks } from './callbacks.js'
@@ -13,15 +12,12 @@ export const makeCurrencyWalletRequest = (keyInfo, dispatch, getState) => {
   const io = CORE_SELECTORS.getIO(state)
   const walletType = keyInfo.type.replace('wallet:', '').toLowerCase()
 
-  const shitcoinPlugin = makeShitcoinPlugin({ io })
   const bitcoinPlugin = makeBitcoinPlugin({ io })
   const ethereumPlugin = makeEthereumPlugin({ io })
 
   let plugin
 
-  if (walletType === shitcoinPlugin.getInfo().walletTypes[0]) {
-    plugin = shitcoinPlugin
-  } else if (walletType === ethereumPlugin.getInfo().walletTypes[0]) {
+  if (walletType === ethereumPlugin.getInfo().walletTypes[0]) {
     plugin = ethereumPlugin
   } else if (walletType === 'bitcoin') {
     plugin = bitcoinPlugin

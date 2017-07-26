@@ -9,6 +9,8 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 
 import * as CORE_SELECTORS from '../Core/selectors.js'
 
+import { supportedWalletTypes } from '../Core/Blockchains'
+
 export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
@@ -23,14 +25,10 @@ export const updateWallets = () => {
     // dispatch(updateWalletsStart())
     const state = getState()
     const { account } = state.core
-    const supportedTypes = [
-      'wallet:bitcoin',
-      'wallet:ethereum'
-    ]
 
     const filteredSortedKeyInfos = account.allKeys
       .filter(keyInfo => {
-        return (supportedTypes.includes(keyInfo.type))
+        return (supportedWalletTypes.includes(keyInfo.type))
       })
       .sort((a, b) => a.sortIndex - b.sortIndex)
 

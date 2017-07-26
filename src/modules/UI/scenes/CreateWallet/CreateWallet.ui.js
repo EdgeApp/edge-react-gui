@@ -37,8 +37,7 @@ class CreateWallet extends Component {
   getSupportedBlockchains = () => {
     const supportedBlockchains = [
       sprintf(strings.enUS['fragment_blockchain_btc']),
-      sprintf(strings.enUS['fragment_blockchain_eth']),
-      'Shitcoin'
+      sprintf(strings.enUS['fragment_blockchain_eth'])
     ]
 
     return supportedBlockchains
