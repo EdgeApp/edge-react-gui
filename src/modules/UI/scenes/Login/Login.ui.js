@@ -112,12 +112,14 @@ class Login extends Component {
       incorrectPassword: false,
       shouldLogin: false,
       viewRef: '',
-      blurAmount: 5
+      blurAmount: 10
     }
   }
 
-  imageLoaded() {
-    this.setState({ viewRef: findNodeHandle(this.backgroundImage) });
+  componentDidMount () {
+    this.setState({
+      viewRef: findNodeHandle(this.blurItem)
+    })
   }
 
   render() {
@@ -132,32 +134,32 @@ class Login extends Component {
         y: 0,
       }} colors={['#3b7adb', '#2b569a',]}>
 
+        <Modal style={styles.modal} animationType={'fade'} transparent visible={this.state.loggingInModalVisible}>
+          <View style={styles.modalInner}>
+            <Text style={styles.modalText}>Signing in...</Text>
+            <ActivityIndicator size={'large'} animating={this.state.animating} style={styles.spinner}/>
+          </View>
+        </Modal>
+
         <KeyboardAvoidingView style={styles.view} behavior={'padding'}>
 
-          <Modal style={styles.modal} animationType={'fade'} transparent visible={this.state.loggingInModalVisible}>
+          <View style={styles.blur} ref={(blurItem) => { this.blurItem = blurItem }}>
+            <Image source={Logo}
+              style={styles.logo}
+              resizeMode={'contain'} />
+            <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} autoFocus style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username}/>
+            <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password}/>
+            <TouchableOpacity style={styles.button} onPress={this.onPress}>
+              <Text style={styles.buttonText}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
 
-            <View style={styles.modalInner}>
-              <Text style={styles.modalText}>Signing in...</Text>
-              <ActivityIndicator size={'large'} animating={this.state.animating} style={styles.spinner}/>
-            </View>
+          { this.state.shouldBlur &&
+            <BlurView style={styles.absolute}
+              viewRef={this.state.viewRef}
+              blurType="dark"
+              blurAmount={this.state.blurAmount} />}
 
-          </Modal>
-
-          <Image source={Logo}
-            style={styles.logo}
-            resizeMode={'contain'}
-            ref={(logo) => { this.logo = logo }}
-            onLoadEnd={this.imageLoaded.bind(this)} />
-          <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} autoFocus style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username}/>
-          <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password}/>
-          <TouchableOpacity style={styles.button} onPress={this.onPress}>
-            <Text style={styles.buttonText}>Sign In</Text>
-          </TouchableOpacity>
-          { this.state.shouldBlur && <BlurView
-            style={styles.absolute}
-            viewRef={this.state.viewRef}
-            blurType="dark"
-            blurAmount={this.state.blurAmount} />}
         </KeyboardAvoidingView>
 
       </LinearGradient>

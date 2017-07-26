@@ -2,7 +2,7 @@ package co.airbitz.edge;
 
 import android.app.Application;
 
-import com.facebook.react.BuildConfig;
+// import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
 import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.cmcewen.blurview.BlurViewPackage;
@@ -23,11 +23,11 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 
 import java.util.Arrays;
 import java.util.List;

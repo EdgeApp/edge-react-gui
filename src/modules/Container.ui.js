@@ -92,7 +92,7 @@ class Main extends Component {
       this.setState({
         context,
         loading: false
-      }, () => SplashScreen.hide())
+      }, () => { SplashScreen.hide() })
     })
     // Dummy dispatch to allow scenes to update mapStateToProps
     setInterval(() => { this.props.dispatch(updateExchangeRates()) }, 30000)
