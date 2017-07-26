@@ -32,7 +32,6 @@ export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
     keyStates[id] = { sortIndex: index }
     return keyStates
   }, {})
-
   return account.changeKeyStates(newKeyStates)
 }
 

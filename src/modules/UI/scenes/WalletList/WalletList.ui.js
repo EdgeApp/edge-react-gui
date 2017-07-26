@@ -111,7 +111,7 @@ class WalletList extends Component {
             Object.keys(wallets).length > 0
               ? this.renderActiveSortableList(
                 wallets,
-                activeWalletIds,
+                this.sortActiveWallets(this.props.wallets),
                 sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
                 this.renderActiveRow,
                 this.onActiveRowMoved,
@@ -149,7 +149,6 @@ class WalletList extends Component {
 
   renderActiveSortableList = (data, order, label, renderRow, onRowMoved) => {
     if (order) {
-      console.log('active order', order)
       return (
         <SortableListView
           style={styles.sortableWalletList}
@@ -165,7 +164,6 @@ class WalletList extends Component {
 
   renderArchivedSortableList = (data, order, label, renderRow, onRowMoved) => {
     if (order) {
-      console.log('archive order', order)
       return (
         <SortableListView
           style={styles.sortableWalletList}
@@ -187,13 +185,23 @@ class WalletList extends Component {
     return <WalletListRow data={row} archiveLabel='Restore' />
   }
 
+  sortActiveWallets = (wallets) => {
+    let orderArray = []
+    let activeOrdered = Object.keys(wallets)
+      .filter(key => { return !wallets[key].archived }) // filter out archived wallets
+      .sort((a, b) => {
+         return wallets[a].sortIndex - wallets[b].sortIndex 
+      }) // sort them according to their (previous) sortIndices 
+    return activeOrdered
+  }
+
   onActiveRowMoved = action => {
     const wallets = this.props.wallets
     const activeOrderedWallets = Object.keys(wallets)
-      .filter(key => { return wallets[key].archived })
-      .sort((a, b) => { return wallets[a].sortIndex - wallets[b].sortIndex })
+      .filter(key => { return !wallets[key].archived }) // filter out archived wallets
+      .sort((a, b) => { return wallets[a].sortIndex - wallets[b].sortIndex }) // sort them according to their (previous) sortIndices
     const order = activeOrderedWallets
-    const newOrder = this.getNewOrder(order, action)
+    const newOrder = this.getNewOrder(order, action) // pass the old order to getNewOrder with the action ( from, to, and  )
 
     this.props.dispatch(updateActiveWalletsOrder(newOrder))
     this.forceUpdate()
