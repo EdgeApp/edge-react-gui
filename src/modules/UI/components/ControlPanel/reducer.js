@@ -1,5 +1,4 @@
 import * as ACTION from './action'
-import _ from 'lodash'
 import {combineReducers} from 'redux'
 
 const usersView = (state = false, action) => {
@@ -8,17 +7,6 @@ const usersView = (state = false, action) => {
       return true
     case ACTION.CLOSE_SELECT_USER :
       return false
-    default:
-      return state
-  }
-}
-
-const usersList = (state = [], action) => {
-  switch (action.type) {
-    case ACTION.LIST_USERS_SIDEBAR :
-      return action.data
-    case ACTION.REMOVE_USERS_SIDEBAR :
-      return _.filter(state, item => item !== action.name)
     default:
       return state
   }
@@ -37,7 +25,6 @@ const selectedUser = (state = null, action) => {
 
 const controlPanel = combineReducers({
   usersView,
-  usersList,
   selectedUser
 })
 

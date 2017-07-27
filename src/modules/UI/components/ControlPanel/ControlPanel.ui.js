@@ -5,21 +5,16 @@ import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
 
-import { openSelectUser, closeSelectUser, getUsersList } from './action'
+import { openSelectUser, closeSelectUser } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 import Main from './Component/Main'
-import usersListObject from './userList'
 import styles from './style'
 
 import person from '../../../../assets/images/sidenav/accounts@3x.png.png'
 
 class ControlPanel extends Component {
-  componentDidMount () {
-    this.props.dispatch(getUsersList(usersListObject))
-  }
-
   _handlePressUserList = () => {
     if (!this.props.usersView) {
       return this.props.dispatch(openSelectUser())

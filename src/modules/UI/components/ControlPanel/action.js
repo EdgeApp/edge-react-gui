@@ -30,13 +30,6 @@ export const closeSelectUser = () => {
   }
 }
 
-export const getUsersList = (data) => {
-  return {
-    type: LIST_USERS_SIDEBAR,
-    data
-  }
-}
-
 export const selectUsersList = (name) => {
   return {
     type: SELECT_USERS_SIDEBAR,
