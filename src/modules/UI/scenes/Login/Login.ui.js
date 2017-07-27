@@ -3,8 +3,6 @@ import {connect} from 'react-redux'
 import {
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert,
-  Button,
   Image,
   InteractionManager,
   StyleSheet,
@@ -17,9 +15,7 @@ import {
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
-import {makeContext} from 'airbitz-core-js'
-import {getUsersList} from '../../components/ControlPanel/action.js'
-import { BlurView, VibrancyView } from 'react-native-blur'
+import {BlurView} from 'react-native-blur'
 
 const Logo = require('../../../../img/edge_logo_3x.png')
 
@@ -96,7 +92,10 @@ const styles = StyleSheet.create({
   },
   absolute: {
     position: 'absolute',
-    top: 0, left: 0, bottom: 0, right: 0
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
   }
 })
 
@@ -132,7 +131,7 @@ class Login extends Component {
       }} end={{
         x: 1,
         y: 0
-      }} colors={['#3b7adb', '#2b569a' ]}>
+      }} colors={['#3b7adb', '#2b569a']}>
 
         <Modal style={styles.modal} animationType={'fade'} transparent visible={this.state.loggingInModalVisible}>
           <View style={styles.modalInner}>
@@ -183,12 +182,14 @@ class Login extends Component {
     }
     console.log('logging in')
 
-    const {username, password } = this.state
+    const {username, password} = this.state
     const {callbacks} = this.props
 
     this.props.context.loginWithPassword(username, password, null, callbacks).then(account => {
-      getListUsernames(this.props.context, this.props.dispatch)
-      this.setState({loggingInModalVisible: false, shouldLogin: false})
+      this.setState({
+        loggingInModalVisible: false,
+        shouldLogin: false
+      })
       this.props.onLoggedIn(account)
     })
     // .catch(error => {
@@ -198,13 +199,6 @@ class Login extends Component {
     //   }, console.log(error))
     // })
   }
-
 }
 
 export default connect()(Login)
-
-const getListUsernames = (context, dispatch) => {
-  context.listUsernames((error, usernames) => {
-    return dispatch(getUsersList(usernames))
-  })
-}
