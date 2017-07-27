@@ -6,9 +6,9 @@
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "updot": "updot",
     "android:run": "npm run android:clean; react-native run-android",
-    "lint": "standard --verbose --parser babel-eslint; exit 0",
-    "lints": "standard --verbose --parser babel-eslint | snazzy; exit 0",
-    "lint:fix": "standard --fix --verbose --parser babel-eslint | snazzy; exit 0",
+    "lint": "standard --verbose --parser babel-eslint",
+    "lints": "standard --verbose --parser babel-eslint | snazzy",
+    "lint:fix": "standard --fix --verbose --parser babel-eslint | snazzy",
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
@@ -16,7 +16,9 @@
     "ios:run": "react-native run-ios",
     "postinstall": "rn-nodeify --hack",
     "tron": "node_modules/.bin/reactotron",
-    "flow": "flow --show-all-errors"
+    "flow": "flow --show-all-errors",
+    "precommit": "npm run lint index.android.js index.ios.js",
+    "prepush": "npm run lint index.android.js index.ios.js"
   },
   "rnpm": {
     "assets": [

@@ -1,7 +1,5 @@
-/* eslint-disable no-unused-vars */
-import "./shim.js";
+import './shim.js'
+import { AppRegistry } from 'react-native'
 import App from './src/app'
 
-// uncomment to enable device mirroring
-// import MK from 'maya-kai'
-// MK.start()
+AppRegistry.registerComponent('edge', () => App)
