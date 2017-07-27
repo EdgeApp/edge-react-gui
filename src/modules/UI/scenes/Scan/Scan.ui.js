@@ -7,24 +7,20 @@ import {
   View,
   TouchableHighlight,
   TextInput,
-  Clipboard,
-  InteractionManager } from 'react-native'
+  Clipboard
+} from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
-import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions.js'
-import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
-import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './action'
+import { toggleEnableTorch, toggleAddressModal } from './action'
 
 import {
   processURI,
@@ -92,7 +88,6 @@ class Scan extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
-        let source = { uri: response.uri }
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
@@ -238,7 +233,6 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   render () {
-    let innerText = ''
     console.log('rendering Rename Address, this.state is: ', this.state)
     const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.uri)
 

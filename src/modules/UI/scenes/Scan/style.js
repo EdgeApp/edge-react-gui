@@ -1,5 +1,8 @@
-import React from 'react-native'
-import {Dimensions, StyleSheet, Platform} from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  Platform
+} from 'react-native'
 
 module.exports = StyleSheet.create({
   container: {
@@ -106,21 +109,6 @@ module.exports = StyleSheet.create({
     fontSize: 22,
     height: 18
   },
-  transferButtonText: {
-
-  },
-  addressButtonText: {
-
-  },
-  photosButtonText: {
-
-  },
-  flashButtonText: {
-
-  },
-  modalElement: {
-
-  },
   modalContainer: {
     flex: 1,
     alignItems: 'center'
@@ -159,7 +147,6 @@ module.exports = StyleSheet.create({
     alignItems: 'stretch',
     borderBottomColor: '#dddddd',
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
-
   },
   addressInput: {
     height: 26,
@@ -198,5 +185,4 @@ module.exports = StyleSheet.create({
     fontSize: 28,
     color: '#3c76cd'
   }
-
 })
