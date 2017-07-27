@@ -1,9 +1,7 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Share } from 'react-native'
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import ShareButton from '../ShareButton/index.js'
-import { Container, Content, Button, Text, Icon, Segment } from 'native-base'
-import { dev } from '../../../utils.js'
 
 const ShareButtons = ({
   copyToClipboard,

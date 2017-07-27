@@ -1,11 +1,7 @@
 import React from 'react'
 import { Dimensions, View } from 'react-native'
 import { connect } from 'react-redux'
-import styles from './styles.js'
 import QrCode from 'react-native-qrcode'
-
-import { dev } from '../../../utils.js'
-const devMode = true
 
 const ABQRCode = ({qrCodeText}) => {
   console.log('qrCodeText: ' + qrCodeText)

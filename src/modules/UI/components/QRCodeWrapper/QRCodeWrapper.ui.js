@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { connect } from 'react-redux'
-import styles from './styles.js'
 import QRCode from 'react-native-qrcode'
 
 class QRCodeWrapper extends Component {

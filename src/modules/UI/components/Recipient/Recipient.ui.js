@@ -1,20 +1,12 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
-  Clipboard,
   View,
-  ToastAndroid,
-  Platform,
   StyleSheet,
-  Dimensions,
-  Share,
-  Text,
-  TouchableHighlight,
-  TextInput
+  Text
 } from 'react-native'
 import { connect } from 'react-redux'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default.js'
-// import styles from './styles.js'
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +26,7 @@ const styles = StyleSheet.create({
 })
 
 const Recipient = ({ label = '1323424', publicAddress = 'asdcasdc' }) => {
-  getLabel = () => {
+  const getLabel = () => {
     if (label) {
       return <Text style={styles.text} ellipsizeMode='middle' numberOfLines={1}>{label}</Text>
     }
@@ -44,7 +36,7 @@ const Recipient = ({ label = '1323424', publicAddress = 'asdcasdc' }) => {
       <Text style={[ styles.text, {fontSize: 14} ]}>
         {sprintf(strings.enUS['send_to_title'])}
       </Text>
-      {this.getLabel()}
+      {getLabel()}
       <Text style={[ styles.text ]}
         ellipsizeMode='middle' numberOfLines={1}>
         {publicAddress}
