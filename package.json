@@ -123,8 +123,6 @@
     "parser": "babel-eslint",
     "ignore": [
       "theme",
-      "src/modules/ui/components/ControlPanel",
-      "src/modules/ui/components/Dropdown",
       "src/modules/ui/components/ExchangeRate",
       "src/modules/ui/components/Fees",
       "src/modules/ui/components/FlipInput",

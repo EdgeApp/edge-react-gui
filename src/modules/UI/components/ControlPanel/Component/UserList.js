@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { Alert, Platform, View, ScrollView, TouchableNativeFeedback, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
-import LinearGradient from 'react-native-linear-gradient'
-import { Actions } from 'react-native-router-flux'
 import _ from 'lodash'
-
-import { closeSelectUser, selectUsersList, removeUsersList } from '../action'
 
 import styles from '../style'
 const platform = Platform.OS
@@ -16,10 +12,7 @@ import * as CONTEXT_API from '../../../../Core/Context/api.js'
 
 class UserListComponent extends Component {
 
-  _handlePressUserSelect = (id) => {
-    // this.props.dispatch(selectUsersList(id))
-    // return this.props.dispatch(closeSelectUser(id))
-  }
+  _handlePressUserSelect = (id) => {}
 
   _handleDeleteLocalAccount = (username) => {
     this.props.deleteLocalAccount(username)

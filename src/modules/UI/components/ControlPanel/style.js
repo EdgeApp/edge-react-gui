@@ -1,9 +1,7 @@
-import variables from '../../../../theme/variables/platform'
 import { Platform } from 'react-native'
 const platform = Platform.OS
 
 export default {
-
   iconImageContainer: {
     paddingHorizontal: 23
   },
@@ -16,12 +14,10 @@ export default {
     color: '#FFF',
     paddingHorizontal: 23
   },
-
   container: {
     flex: 1,
     alignItems: 'stretch'
   },
-
   bitcoin: {
     container: {
       backgroundColor: '#7FC343',
@@ -30,13 +26,11 @@ export default {
       justifyContent: 'center',
       alignItems: 'center'
     },
-
     icon: {
       color: '#FFF',
       paddingHorizontal: 23,
       fontSize: 26
     },
-
     value: {
       flex: 1,
       fontSize: 16,
@@ -45,7 +39,6 @@ export default {
       alignItems: 'center'
     }
   },
-
   user: {
     container: {
       backgroundColor: '#2B5698',
@@ -54,22 +47,18 @@ export default {
       alignItems: 'center',
       height: 58
     },
-
     name: {
       flex: 1,
       color: '#FFF',
       fontSize: 16
     }
-
   },
-
   main: {
     container: {
       flex: 1,
       flexDirection: 'column',
       alignItems: 'flex-start'
     },
-
     link: {
       flexDirection: 'row',
       justifyContent: 'center',
@@ -77,60 +66,48 @@ export default {
       paddingVertical: 10,
       height: 56
     },
-
     iosTouchableHighlight: {
       flexDirection: 'row'
     },
-
     iosTouchableHighlightUnderlayColor: 'rgba(255,255,255,0.1)',
-
     borderVertical: {
       borderStyle: 'solid',
       borderColor: 'rgba(255,255,255,0.2)',
       borderTopWidth: 1,
       borderBottomWidth: 1
     },
-
     borderBottom: {
       borderStyle: 'solid',
       borderColor: 'rgba(255,255,255,0.2)',
       borderBottomWidth: 1
     },
-
     icon: {
       flex: 1,
-
       fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
       backgroundColor: 'transparent',
       color: '#FFF'
     },
-
     textContainer: {
       flex: 8,
       backgroundColor: 'transparent'
     },
-
     text: {
       fontSize: 15,
       color: '#FFF'
     },
-
     textItalic: {
       marginTop: 3,
       fontStyle: 'italic',
       fontSize: 13,
       color: '#FFF'
     }
-
   },
-
   others: {
     container: {
       flexDirection: 'column',
       alignItems: 'flex-start'
     },
-
     link: {
       flexDirection: 'row',
       justifyContent: 'center',
@@ -138,26 +115,21 @@ export default {
       paddingVertical: 10,
       height: 56
     },
-
     iosTouchableHighlight: {
       flexDirection: 'row'
     },
-
     iosTouchableHighlightUnderlayColor: 'rgba(255,255,255,0.1)',
-
     borderVertical: {
       borderStyle: 'solid',
       borderColor: 'rgba(255,255,255,0.2)',
       borderTopWidth: 1,
       borderBottomWidth: 1
     },
-
     borderBottom: {
       borderStyle: 'solid',
       borderColor: 'rgba(255,255,255,0.2)',
       borderBottomWidth: 1
     },
-
     icon: {
       flex: 1,
       fontSize: (platform !== 'ios') ? 26 : 32,
@@ -165,32 +137,26 @@ export default {
       backgroundColor: 'transparent',
       color: '#FFF'
     },
-
     textContainer: {
       flex: 8,
       backgroundColor: 'transparent'
     },
-
     text: {
       fontSize: 15,
       color: '#FFF'
     },
-
     textItalic: {
       marginTop: 3,
       fontStyle: 'italic',
       fontSize: 13,
       color: '#FFF'
     }
-
   },
-
   userList: {
     container: {
       backgroundColor: '#FFF',
       flex: 1
     },
-
     row: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -206,5 +172,4 @@ export default {
       padding: 13
     }
   }
-
 }

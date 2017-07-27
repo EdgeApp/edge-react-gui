@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { View, TouchableOpacity, Image } from 'react-native'
-import { Text, Icon } from 'native-base'
+import { Text } from 'native-base'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
 import LinearGradient from 'react-native-linear-gradient'
-import _ from 'lodash'
 
 import { openSelectUser, closeSelectUser, getUsersList } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -34,14 +32,19 @@ class ControlPanel extends Component {
   _getExchangeRate = () => {
     return this.props.exchangeRate === 0
       ? <Text style={styles.bitcoin.value}>
-        Exchange Rate loading
-      </Text>
-    : <Text style={styles.bitcoin.value}>1 {this.props.currencyCode} = $ {this.props.exchangeRate.toFixed(2)} USD</Text>
+          Exchange Rate loading
+        </Text>
+      : <Text style={styles.bitcoin.value}>
+          1
+          {this.props.currencyCode} = $
+          {this.props.exchangeRate.toFixed(2)} USD
+        </Text>
   }
 
   render () {
     return (
-      <LinearGradient style={styles.container}
+      <LinearGradient
+        style={styles.container}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
         colors={['#2B5698', '#3B7ADA']}>
@@ -49,12 +52,13 @@ class ControlPanel extends Component {
           <Text style={styles.bitcoin.icon} />
           {this._getExchangeRate()}
         </View>
-        <TouchableOpacity style={styles.user.container}
-          onPress={this._handlePressUserList}>
+        <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
           <View style={styles.iconImageContainer}>
             <Image style={styles.iconImage} source={person} />
           </View>
-          <Text style={styles.user.name}>{ this.props.username }</Text>
+          <Text style={styles.user.name}>
+            {this.props.username}
+          </Text>
           <MDIcon style={styles.icon} name={this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} />
         </TouchableOpacity>
         <Main />
