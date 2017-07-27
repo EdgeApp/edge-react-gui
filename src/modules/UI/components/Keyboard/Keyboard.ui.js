@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
-import { Text, TextInput, View, StyleSheet, AlertIOS, Slider } from 'react-native'
+import { TextInput, View, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
-// import styles from './styles.js'
-import { Container, Content } from 'native-base'
-import leftArrow from '../../../left-arrow.png'
 import KeyboardButton from '../KeyboardButton/index.js'
 
 const styles = StyleSheet.create({
@@ -40,9 +37,9 @@ class Keyboard extends Component {
     const { displayValue } = this.state
 
     const newDisplayValue =
-        displayValue === '0' ?
-          value :
-          this.state.displayValue + value
+        displayValue === '0'
+        ? value
+        : this.state.displayValue + value
 
     this.setState({
       displayValue: newDisplayValue
@@ -81,10 +78,10 @@ class Keyboard extends Component {
   actions = (action, payload) => {
     const operations = {
       '+': (previousValue) => { return previousValue },
-      '-': () => { return previousValue },
-      '*': () => { return previousValue },
-      '/': () => { return previousValue },
-      '%': () => { return previousValue }
+      '-': (previousValue) => { return previousValue },
+      '*': (previousValue) => { return previousValue },
+      '/': (previousValue) => { return previousValue },
+      '%': (previousValue) => { return previousValue }
     }
 
     return operations[action] || payload

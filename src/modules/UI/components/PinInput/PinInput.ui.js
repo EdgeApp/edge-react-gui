@@ -1,14 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   View,
-  ToastAndroid,
-  Platform,
   StyleSheet,
-  Dimensions,
-  Share,
-  TextInput,
-  TouchableHighlight,
-  Keyboard
+  TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
 // import styles from './styles.js'

@@ -1,10 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View, StyleSheet, TouchableHighlight } from 'react-native'
 import { connect } from 'react-redux'
-// import styles from './styles.js'
-import { Container, Content } from 'native-base'
-import leftArrow from '../../../left-arrow.png'
-import Button from 'react-native-button'
 
 const styles = StyleSheet.create({
   view: {
