@@ -22,7 +22,7 @@ import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b , findDenominationSymbol as symbolize, formatAMPM } from '../../../utils'
+import { border as b , findDenominationSymbol as symbolize} from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -231,8 +231,10 @@ class TransactionList extends Component {
       let month = txDate.getMonth()
       let day = txDate.getDate()
       let year = txDate.getFullYear()
-      let time = formatAMPM(txDate)
-      let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
+      // let time = formatAMPM(txDate)
+      // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
+      let dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
+      let time = txDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric'})
       newValue.dateString = dateString
       newValue.time = time
       return newValue
