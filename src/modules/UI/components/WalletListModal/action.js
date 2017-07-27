@@ -15,19 +15,19 @@ export const ENABLE_TRANSACTIONS_WALLET_LIST_MODAL = 'ENABLE_TRANSACTIONS_WALLET
 export const DISABLE_TRANSACTIONS_WALLET_LIST_MODAL = 'DISABLE_TRANSACTIONS_WALLET_LIST_MODAL'
 
 // //////////// begin selected wallet //////////////
-export function toggleSelectedWalletListModal () {
+export const toggleSelectedWalletListModal = () => {
   return {
     type: TOGGLE_SELECTED_WALLET_LIST_MODAL
   }
 }
 
-export function enableSelectedWalletListModal () {
+export const enableSelectedWalletListModal = () => {
   return {
     type: ENABLE_SELECTED_WALLET_LIST_MODAL
   }
 }
 
-export function disableSelectedWalletListModal () {
+export const disableSelectedWalletListModal = () => {
   return {
     type: DISABLE_SELECTED_WALLET_LIST_MODAL
   }
@@ -35,17 +35,17 @@ export function disableSelectedWalletListModal () {
 // ///////////// end selected wallet //////////////
 
 // ///////////// begin toggleScaneTo wallet ////////////
-export function toggleScanToWalletListModal () {
+export const toggleScanToWalletListModal = () => {
   return {
     type: TOGGLE_SCAN_TO_WALLET_LIST_MODAL
   }
 }
-export function enableScanToWalletListModal () {
+export const enableScanToWalletListModal = () => {
   return {
     type: ENABLE_SCAN_TO_WALLET_LIST_MODAL
   }
 }
-export function disableScanToWalletListModal () {
+export const disableScanToWalletListModal = () => {
   return {
     type: DISABLE_SCAN_TO_WALLET_LIST_MODAL
   }
@@ -53,19 +53,19 @@ export function disableScanToWalletListModal () {
 // ///////////// end toggleScaneTo wallet ////////////
 
 // ///////// begin wallet list modal visibility ///////////
-export function toggleWalletListModalVisibility () {
+export const toggleWalletListModalVisibility = () => {
   return {
     type: TOGGLE_WALLET_LIST_MODAL_VISIBILITY
   }
 }
 
-export function enableWalletListModalVisibility () {
+export const enableWalletListModalVisibility = () => {
   return {
     type: ENABLE_WALLET_LIST_MODAL_VISIBILITY
   }
 }
 
-export function disableWalletListModalVisibility () {
+export const disableWalletListModalVisibility = () => {
   return {
     type: DISABLE_WALLET_LIST_MODAL_VISIBILITY
   }
@@ -74,17 +74,17 @@ export function disableWalletListModalVisibility () {
 
 // //////// start transactionList wallet modal (same as selected wallet?) ///////////////
 
-export function toggleTransactionsWalletListModal () {
+export const toggleTransactionsWalletListModal = () => {
   return {
     type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
   }
 }
-export function enableTransactionsWalletListModal () {
+export const enableTransactionsWalletListModal = () => {
   return {
     type: ENABLE_TRANSACTIONS_WALLET_LIST_MODAL
   }
 }
-export function disableTransactionsWalletListModal () {
+export const disableTransactionsWalletListModal = () => {
   return {
     type: DISABLE_TRANSACTIONS_WALLET_LIST_MODAL
   }
@@ -117,8 +117,6 @@ const wallets = [{
   uc: 'TRANSACTIONS_WALLET_LIST_MODAL',
   lc: 'TransactionsWalletListModal'
 }]
-
-let outputs = {}
 
 types.map((type) => {
   wallets.map((wallet) => {

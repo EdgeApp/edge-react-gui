@@ -17,8 +17,6 @@ const walletListModalVisible = (state = false, action) => {
       return false
     case ACTION.REACT_NATIVE_ROUTER_FLUX_FOCUS :
       return false
-    case ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
-      return false
     default :
       return state
   }

@@ -1,7 +1,6 @@
-import React, {StyleSheet, Platform} from 'react-native'
+import {StyleSheet} from 'react-native'
 
-module.exports = StyleSheet.create({
-
+export default StyleSheet.create({
   rowContainer: {
     height: 44,
     borderBottomWidth: 1,

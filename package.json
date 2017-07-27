@@ -127,9 +127,7 @@
       "src/modules/ui/components/Header",
       "src/modules/ui/components/HelpModal",
       "src/modules/ui/components/Modal",
-      "src/modules/ui/components/RadioRows",
       "src/modules/ui/components/SideMenu",
-      "src/modules/ui/components/WalletListModal",
       "src/modules/UI/scenes/SendConfirmation",
       "src/modules/UI/scenes/TransactionList"
     ],

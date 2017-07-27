@@ -1,23 +1,16 @@
 import React, { Component } from 'react'
-import { Modal, Dimensions, Text, View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
+import { View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
 import { connect } from 'react-redux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import { Actions } from 'react-native-router-flux'
 import styles from './style'
 import {
-  toggleWalletListModalVisibility,
-  toggleSelectedWalletListModal,
   toggleScanToWalletListModal,
   disableWalletListModalVisibility
 } from './action'
-import { findDenominationSymbol } from '../../scenes/WalletList/WalletListRow.ui'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 import {getTransactionsRequest} from '../../../UI/scenes/TransactionList/action.js'
 import * as Animatable from 'react-native-animatable'
@@ -53,13 +46,14 @@ WalletListModal.propTypes = {
   currentScene: PropTypes.string,
   dimensions: PropTypes.object
 }
-export const WalletListModalConnect = connect(state => ({
+const mapStateToProps = state => ({
   walletList: state.ui.wallets.byId,
   dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,
   walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
   scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
   dimensions: state.ui.scenes.dimensions
-}))(WalletListModal)
+})
+export const WalletListModalConnect = connect(mapStateToProps)(WalletListModal)
 
 class WalletListModalBody extends Component {
   selectFromWallet = (id, currencyCode = null) => {
@@ -75,7 +69,7 @@ class WalletListModalBody extends Component {
   renderTokens = (walletId, metaTokenBalances, code) => {
     var tokens = []
     for (var property in metaTokenBalances) {
-      if (property != code) {
+      if (property !== code) {
         tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
       }
     }
@@ -184,7 +178,7 @@ class WalletListModalHeader extends Component {
   render () {
     let headerSyntax = (this.props.type === 'from') ? 'fragment_select_wallet_header_title' : 'fragment_send_other_wallet_header_title'
     return (
-      <View style={[styles.rowContainer, styles.headerContainer ]}>
+      <View style={[styles.rowContainer, styles.headerContainer]}>
         <View style={[styles.headerContent, b()]}>
           <View style={[styles.headerTextWrap, b()]}>
             <T style={[styles.headerText, {color: 'white'}, b()]}>
