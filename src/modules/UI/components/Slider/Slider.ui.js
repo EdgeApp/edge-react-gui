@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Keyboard } from 'react-native'
+import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { Container, Content } from 'native-base'
-var Slider = require('react-native-slider')
+import Slider from 'react-native-slider'
 
 class ABSlider extends Component {
   constructor (props) {

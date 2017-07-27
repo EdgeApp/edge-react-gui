@@ -129,9 +129,6 @@
       "src/modules/ui/components/Modal",
       "src/modules/ui/components/RadioRows",
       "src/modules/ui/components/SideMenu",
-      "src/modules/ui/components/Slider",
-      "src/modules/ui/components/TabBar",
-      "src/modules/ui/components/TransactionAlert",
       "src/modules/ui/components/WalletListModal",
       "src/modules/UI/scenes/SendConfirmation",
       "src/modules/UI/scenes/TransactionList"

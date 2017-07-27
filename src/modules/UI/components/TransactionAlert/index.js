@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
-import { View, StyleSheet, Alert } from 'react-native'
+import { Component } from 'react'
+import { Alert } from 'react-native'
 import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
-import { openTransactionAlert, closeTransactionAlert } from './action.js'
+import { closeTransactionAlert } from './action.js'
 
 class TransactionAlert extends Component {
-
   componentWillReceiveProps (nextProps) {
     if (nextProps.view) {
       return this._openAlert(nextProps)
@@ -40,7 +38,7 @@ class TransactionAlert extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   view: state.ui.scenes.transactionAlert.view,
   message: state.ui.scenes.transactionAlert.message,
   route: state.ui.scenes.transactionAlert.route
