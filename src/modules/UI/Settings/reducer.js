@@ -1,40 +1,16 @@
 import * as ACTION from './action.js'
+import {
+  SYNCED_ACCOUNT_DEFAULTS,
+  LOCAL_ACCOUNT_DEFAULTS,
+  CORE_DEFAULTS
+} from '../../Core/Account/settings.js'
 
-const initialState = {
-  pinMode: false,
-  otpMode: false,
-  autoLogoutTimeInSeconds: 3600,
-  defaultFiat: 'USD',
-  defaultISOFiat: 'iso:USD',
-  merchantMode: false,
-  'BTC': {
-    denomination: 100000000
-  },
-  'ETH': {
-    denomination: 100000000
-  },
-  'REP': {
-    denomination: 100000000
-  },
-  'WINGS': {
-    denomination: 100000000
-  },
-  'LUN': {
-    denomination: 100000000
-  },
-  'TRD': {
-    denomination: 1000
-  },
-  'DOGESHIT': {
-    denomination: 100
-  },
-  'HOLYSHIT': {
-    denomination: 100
-  },
-  'ANA': {
-    denomination: 100
-  }
-}
+const initialState = Object.assign(
+  {},
+  SYNCED_ACCOUNT_DEFAULTS,
+  LOCAL_ACCOUNT_DEFAULTS,
+  CORE_DEFAULTS
+)
 
 export const settings = (state = initialState, action) => {
   const { type, data = {} } = action

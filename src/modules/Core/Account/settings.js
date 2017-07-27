@@ -10,10 +10,31 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   merchantMode: false,
   'BTC': {
-    denomination: 1
+    denomination: 100000000
   },
   'ETH': {
-    denomination: 1
+    denomination: 100000000
+  },
+  'REP': {
+    denomination: 100000000
+  },
+  'WINGS': {
+    denomination: 100000000
+  },
+  'LUN': {
+    denomination: 100000000
+  },
+  'TRD': {
+    denomination: 1000
+  },
+  'DOGESHIT': {
+    denomination: 100
+  },
+  'HOLYSHIT': {
+    denomination: 100
+  },
+  'ANA': {
+    denomination: 100
   }
 }
 
@@ -55,9 +76,7 @@ export const setPinRequest = (account, pin) => {
 export const setAutoLogoutTimeRequest = (account, autoLogoutTimeInSeconds) => {
   return getSyncedSettings(account)
   .then(settings => {
-    console.log('settings', settings)
     const updatedSettings = updateSettings(settings, { autoLogoutTimeInSeconds })
-    console.log('updatedSettings', updatedSettings)
     return setSyncedSettings(account, updatedSettings)
   })
 }
@@ -166,14 +185,14 @@ export const getLocalSettingsFile = account => {
   return account.localFolder.file('Settings.json')
 }
 
-export const updateCurrencySettings = (currentSettings, currencyCode, newSetting) => {
+export const updateCurrencySettings = (currentSettings, currencyCode, newSettings) => {
   const currencySettings = currentSettings[currencyCode]
   // update with new settings
   const updatedSettings = {
     ...currentSettings,
     [currencyCode]: {
       ...currencySettings,
-      newSetting
+      ...newSettings
     }
   }
   return updatedSettings
