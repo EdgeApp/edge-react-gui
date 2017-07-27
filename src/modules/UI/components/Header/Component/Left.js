@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Text, Icon } from 'native-base'
+import { Text } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 
 export default class Left extends Component {
-
   render () {
     switch (this.props.routes.scene.sceneKey) {
       case 'directory':
@@ -23,11 +22,9 @@ export default class Left extends Component {
         return null
     }
   }
-
 }
 
 class BackButton extends Component {
-
   render () {
     return (
       <TouchableOpacity onPress={e => Actions.pop()}>
@@ -35,11 +32,9 @@ class BackButton extends Component {
       </TouchableOpacity>
     )
   }
-
 }
 
 class SendConfirmationBackButton extends Component {
-
   render () {
     return (
       <TouchableOpacity onPress={e => Actions.scan()}>
@@ -47,5 +42,4 @@ class SendConfirmationBackButton extends Component {
       </TouchableOpacity>
     )
   }
-
 }

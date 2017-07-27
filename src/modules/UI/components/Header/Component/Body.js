@@ -1,19 +1,11 @@
 import React, { Component } from 'react'
-import { Text, TouchableOpacity, View, TouchableHighlight } from 'react-native'
-import { Icon, Title } from 'native-base'
-import { Actions } from 'react-native-router-flux'
+import { TouchableOpacity, View } from 'react-native'
+import { Title } from 'native-base'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import T from '../../FormattedText'
-import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
-import { toggleSelectedWalletListModal, toggleScanToWalletListModal, toggleTransactionsWalletListModal} from '../../WalletListModal/action'
-
-import {
-  enableWalletListModalVisibility,
-  disableWalletListModalVisibility
-} from '../../WalletListModal/action'
+import { toggleSelectedWalletListModal, toggleScanToWalletListModal } from '../../WalletListModal/action'
 import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
 import { connect } from 'react-redux'
-// import ExampleToWallet from './ExampleToWallet.ui'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import * as UI_SELECTORS from '../../../selectors.js'
@@ -53,7 +45,6 @@ const mapStateToProps = state => ({
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
 })
-
 export default connect((state) => (mapStateToProps))(Body)
 
 class DefaultHeader extends Component {
@@ -67,7 +58,6 @@ class DefaultHeader extends Component {
 }
 
 class ExampleFromWallet extends Component {
-
   _onPressToggleSelectedWalletModal = () => {
     console.log('inside onPressScanFromDropdownToggle')
     this.props.dispatch(toggleSelectedWalletListModal())
@@ -88,9 +78,9 @@ class ExampleFromWallet extends Component {
         <View style={{height: 34, width: 34}} />
         <T style={{ color: '#FFF', fontSize: 20 }} numberOfLines={1} >{walletNameString}</T>
         <View style={[b(), {height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
-          <View style={[b(), { position: 'relative', top: 2}]}>
+          <View style={[b(), {position: 'relative', top: 2}]}>
             {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
-              <MDIcon name='keyboard-arrow-down' style={{ color: '#FFF', fontSize: 25}} />
+              <MDIcon name='keyboard-arrow-down' style={{color: '#FFF', fontSize: 25}} />
             }
           </View>
         </View>

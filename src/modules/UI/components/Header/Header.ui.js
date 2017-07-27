@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Header, Left, Title, Right, Body, Button, Icon } from 'native-base'
+import {
+Header,
+Left,
+Right,
+Body,
+Icon
+} from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 
@@ -8,12 +14,9 @@ import LeftComponent from './Component/Left.js'
 import RightComponent from './Component/Right.js'
 import BodyComponent from './Component/Body.js'
 import {setHeaderHeight} from '../../dimensions/action'
-import {border as b} from '../../../utils'
-
 import styles from './style'
 
 class HeaderUI extends Component {
-
   _renderTitle = () => {
     return this.props.routes.scene.title || 'Header'
   }
@@ -52,8 +55,7 @@ class HeaderUI extends Component {
   }
 }
 
-export default connect(state => ({
-
+const mapStateToProps = state => ({
   routes: state.routes
-
-}))(HeaderUI)
+})
+export default connect(mapStateToProps)(HeaderUI)
