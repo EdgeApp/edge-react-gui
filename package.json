@@ -17,8 +17,8 @@
     "postinstall": "rn-nodeify --hack",
     "tron": "node_modules/.bin/reactotron",
     "flow": "flow --show-all-errors",
-    "precommit": "npm run lint index.android.js index.ios.js",
-    "prepush": "npm run lint index.android.js index.ios.js"
+    "precommit": "npm run lint",
+    "prepush": "npm run lint"
   },
   "rnpm": {
     "assets": [
@@ -121,9 +121,12 @@
   },
   "standard": {
     "ignore": [
-      "theme"
+      "theme",
+      "src/modules/UI/components",
+      "src/modules/UI/scenes"
     ],
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "globals": [ "__DEV__", "localStorage" ]
   },
   "react-native": {
     "crypto": "react-native-crypto",

@@ -55,7 +55,7 @@ class Request extends Component {
     this.setState({keyboardVisible: false})
   }
 
-  /*onInputCurrencyToggle = () => {
+  /* onInputCurrencyToggle = () => {
     console.log('SendConfirmation->onInputCurrencyToggle called')
     const { inputCurrencySelected } = this.props
     const nextInputCurrencySelected =
@@ -64,7 +64,7 @@ class Request extends Component {
         : 'crypto'
 
       this.props.dispatch(updateInputCurrencySelected(nextInputCurrencySelected))
-  }*/
+  } */
 
   render () {
     console.log('rendering Request.ui, this.state is: ', this.state, ' this.props is: ', this.props)
@@ -101,7 +101,7 @@ class Request extends Component {
               inputOnFocus={this._onFocus}
               inputOnBlur={this._onBlur}
             />
-          ) :  (
+          ) : (
             <FlipInput
               onCryptoInputChange={this.onCryptoInputChange}
               onFiatInputChange={this.onFiatInputChange}
@@ -137,9 +137,9 @@ class Request extends Component {
     )
   }
 
-  ///////////////// Start Critical Input and Conversion Area //////////////////////
+  // /////////////// Start Critical Input and Conversion Area //////////////////////
   onCryptoInputChange = (amountRequestedInCrypto) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ' , amountRequestedInCrypto)
+    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ', amountRequestedInCrypto)
     amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
     if (this.invalidInput(amountRequestedInCrypto)) { return }
     const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.props.fiatPerCrypto)
@@ -149,7 +149,7 @@ class Request extends Component {
   }
 
   onFiatInputChange = (amountRequestedInFiat) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ' , amountRequestedInCrypto)
+    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ', amountRequestedInCrypto)
     amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
     if (this.invalidInput(amountRequestedInFiat)) { return }
 
@@ -157,7 +157,7 @@ class Request extends Component {
     this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
     this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
   }
-///////////////// End Critical Input and Conversion Area //////////////////////
+// /////////////// End Critical Input and Conversion Area //////////////////////
   copyToClipboard = (publicAddress, amountSatoshi) => {
     Clipboard.setString(
       this.getRequestInfoForClipboard(publicAddress, amountSatoshi)
@@ -270,11 +270,11 @@ const mapStateToProps = (state) => {
     settings: state.ui.settings,
     inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
     inputCurrencyDenom,
-    fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode,
+    fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
     // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  updateReceiveAddress: (walletId, currencyCode) => { dispatch(updateReceiveAddress(walletId, currencyCode)) },
+  updateReceiveAddress: (walletId, currencyCode) => { dispatch(updateReceiveAddress(walletId, currencyCode)) }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Request)

@@ -214,7 +214,7 @@ class FlipInputInside extends Component {
         secondaryInputValue: getSecondaryAmount(input)
       }, () => {
         console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
-        if(input === '' || parseInt(input) === 0) {
+        if (input === '' || parseInt(input) === 0) {
           this.props.dispatch(updateSpendSufficientFunds(null))
         }
         if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////

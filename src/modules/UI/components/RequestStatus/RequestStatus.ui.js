@@ -93,7 +93,7 @@ const RequestStatus = (props) => {
     return displayStatus
   }
 
-  console.log('in RequestStatus.ui, this.props is: ' , this)
+  console.log('in RequestStatus.ui, this.props is: ', this)
   return (
 
     <View style={styles.view}>

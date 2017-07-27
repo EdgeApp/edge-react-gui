@@ -4,14 +4,13 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { openTransactionAlert, closeTransactionAlert } from './action.js'
 
-
 class TransactionAlert extends Component {
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.view) {
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.view) {
       return this._openAlert(nextProps)
     }
-    if(!nextProps.view) {
+    if (!nextProps.view) {
       return this._closeAlert()
     }
   }
@@ -22,9 +21,9 @@ class TransactionAlert extends Component {
       props.message,
       [
         {text: 'Later', onPress: () => this._closeAlert(), style: 'cancel'},
-        {text: 'Check Now', onPress: () => this._onPress(props)},
+        {text: 'Check Now', onPress: () => this._onPress(props)}
       ],
-      {  onDismiss: () => { this._closeAlert() } }
+      { onDismiss: () => { this._closeAlert() } }
     )
   }
 
@@ -42,9 +41,9 @@ class TransactionAlert extends Component {
 }
 
 const mapStateToProps = state => ({
-  view:    state.ui.scenes.transactionAlert.view,
+  view: state.ui.scenes.transactionAlert.view,
   message: state.ui.scenes.transactionAlert.message,
-  route:   state.ui.scenes.transactionAlert.route
+  route: state.ui.scenes.transactionAlert.route
 })
 
 export default connect(mapStateToProps)(TransactionAlert)

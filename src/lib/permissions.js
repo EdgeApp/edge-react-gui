@@ -1,4 +1,3 @@
-
 const Permissions = require('react-native-permissions')
 
 export async function checkCameraPermission (callback) {

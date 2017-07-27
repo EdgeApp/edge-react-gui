@@ -51,7 +51,7 @@ export const updateAmountSatoshiRequest = (amountSatoshiString) => {
       dispatch(updateSpendSufficientFunds(null))
     })
     .catch(e => {
-      if(e.name === 'InsufficientFundsError') {
+      if (e.name === 'InsufficientFundsError') {
         console.log('make text red!')
         dispatch(updateSpendSufficientFunds('over'))
       }
@@ -144,7 +144,7 @@ export const signBroadcastAndSave = unsignedTransaction => {
       dispatch(openABAlert(alertSyntax))
     })
     .catch(e => {
-      console.log('error is: ' , e)
+      console.log('error is: ', e)
       dispatch(updateSpendPending(false))
       alertSyntax = { title: 'Transaction Failure', message: e.message }
       dispatch(openABAlert(alertSyntax))
@@ -231,7 +231,7 @@ export const processURI = (uri) => {
     const {
       publicAddress,
       amountSatoshi,
-      metadata,
+      metadata
     } = account.parseURI(uri)
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
     const spendInfo = makeSpendInfo({

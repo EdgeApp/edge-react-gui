@@ -9,13 +9,13 @@ const walletListModalVisible = (state = false, action) => {
       return true
     case ACTION.DISABLE_WALLET_LIST_MODAL_VISIBILITY :
       return false
-    case ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL : 
+    case ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL :
       return false
     case ACTION.TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL :
       return false
-    case ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL : 
+    case ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
       return false
-    case ACTION.REACT_NATIVE_ROUTER_FLUX_FOCUS : 
+    case ACTION.REACT_NATIVE_ROUTER_FLUX_FOCUS :
       return false
     case ACTION.TOGGLE_SCAN_FROM_WALLET_LIST_MODAL :
       return false
@@ -25,7 +25,7 @@ const walletListModalVisible = (state = false, action) => {
 }
 
 const walletListModal = combineReducers({
-    walletListModalVisible
+  walletListModalVisible
 })
 
 export default walletListModal

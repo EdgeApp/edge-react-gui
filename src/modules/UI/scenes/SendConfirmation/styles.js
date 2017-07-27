@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   pendingSymbolArea: {
     height: 12
   },
   slider: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   }
 })
 

@@ -53,7 +53,7 @@ class SettingsItemWithModal extends Component {
     console.log('toggle modal: ', modalKey)
   }
 
-  render() {
+  render () {
     return (
       <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
         onPress={this._toggleModal(this.props.modal)}>
@@ -82,14 +82,14 @@ class SettingsItemWithSwitch extends Component {
   render () {
     return (
       <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
-        onPress={() => this. _onPressToggleSetting(this.props.property)}>
+        onPress={() => this._onPressToggleSetting(this.props.property)}>
 
         <View style={[s.settingsRowTextRow, b('red')]}>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>
             <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
           </View>
           <Switch
-            onValueChange={ () => this._onPressToggleSetting(this.props.property)  } value={false} />
+            onValueChange={() => this._onPressToggleSetting(this.props.property)} value={false} />
         </View>
 
       </TouchableOpacity>

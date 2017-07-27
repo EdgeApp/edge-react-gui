@@ -58,16 +58,16 @@ class WalletList extends Component {
     this.props.dispatch(toggleArchiveVisibility())
   }
 
-  constructor(props){
+  constructor (props) {
     super(props)
     const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
     console.log('localeInfo is: ', localeInfo)
-    console.log('strings is: ' , strings)
+    console.log('strings is: ', strings)
   }
 
-  /*forceArchiveListUpdate (archiveOrder) {
+  /* forceArchiveListUpdate (archiveOrder) {
     this.props.dispatch(updateArchiveListOrder(archiveOrder))
-  }*/ // delete this function?
+  } */ // delete this function?
 
   render () {
     const { wallets, coreWallets, activeWalletIds, archivedWalletIds } = this.props
@@ -86,7 +86,7 @@ class WalletList extends Component {
             <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
               <T style={[styles.currentBalanceBoxDollars]}>
                  $ {this.tallyUpTotalCrypto()}
-                 {/*{this.props.settings.defaultFiat}*/}
+                {/* {this.props.settings.defaultFiat} */}
               </T>
             </View>
           </View>
@@ -116,7 +116,7 @@ class WalletList extends Component {
                 this.renderActiveRow,
                 this.onActiveRowMoved,
               )
-              : <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'}/>
+              : <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
           }
 
           {/* <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.archiveBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}> */}
@@ -190,8 +190,8 @@ class WalletList extends Component {
     let activeOrdered = Object.keys(wallets)
       .filter(key => { return !wallets[key].archived }) // filter out archived wallets
       .sort((a, b) => {
-         return wallets[a].sortIndex - wallets[b].sortIndex 
-      }) // sort them according to their (previous) sortIndices 
+        return wallets[a].sortIndex - wallets[b].sortIndex
+      }) // sort them according to their (previous) sortIndices
     return activeOrdered
   }
 
@@ -256,25 +256,25 @@ class WalletList extends Component {
   }
 
   checkIndexIsEven = (n) => {
-      return n % 2 == 0
+    return n % 2 == 0
   }
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
     for (var parentProp in this.props.wallets) {
-      for (var balanceProp in this.props.wallets[parentProp].balances){
-        if(!temporaryTotalCrypto[balanceProp]) {
+      for (var balanceProp in this.props.wallets[parentProp].balances) {
+        if (!temporaryTotalCrypto[balanceProp]) {
           temporaryTotalCrypto[balanceProp] = 0
         }
-        if(!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
+        if (!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
           // now to divide the amount by its multiplier
-          var denomMultiplier =  this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
-          temporaryTotalCrypto[balanceProp]  += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
+          var denomMultiplier = this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
+          temporaryTotalCrypto[balanceProp] += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
         }
       }
     }
-     let totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
-     return totalBalance
+    let totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
+    return totalBalance
   }
 
   calculateTotalBalance = (values) => {
@@ -295,18 +295,18 @@ const mapStateToProps = (state) => {
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
-  coreWallets:              state.core.wallets.byId,
-  wallets:                  state.ui.wallets.byId,
-  activeWalletIds:          UI_SELECTORS.getActiveWalletIds(state),
-  archivedWalletIds:        UI_SELECTORS.getArchivedWalletIds(state),
-  walletArchivesVisible:    state.ui.scenes.walletList.walletArchivesVisible,
-  renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
-  deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
-  walletName:               state.ui.scenes.walletList.walletName,
-  walletId:                 state.ui.scenes.walletList.walletId,
-  walletOrder:              state.ui.wallets.walletListOrder,
-  settings:                 state.ui.settings,
-  currencyConverter
+    coreWallets: state.core.wallets.byId,
+    wallets: state.ui.wallets.byId,
+    activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
+    archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
+    walletArchivesVisible: state.ui.scenes.walletList.walletArchivesVisible,
+    renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
+    deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
+    walletName: state.ui.scenes.walletList.walletName,
+    walletId: state.ui.scenes.walletList.walletId,
+    walletOrder: state.ui.wallets.walletListOrder,
+    settings: state.ui.settings,
+    currencyConverter
   }
 }
 
@@ -321,23 +321,23 @@ const mapDispatchToProps = dispatch => ({
 
 export default connect((mapStateToProps), (mapDispatchToProps))(WalletList)
 
-////// Beginning of Delete Area ////////
+// //// Beginning of Delete Area ////////
 
 class DeleteIcon extends Component {
-  render() {
-    return(
-      <FAIcon name='trash-o' size={24} color='#2A5799' style={[{position: 'relative', top:12, left:14, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />
+  render () {
+    return (
+      <FAIcon name='trash-o' size={24} color='#2A5799' style={[{position: 'relative', top: 12, left: 14, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />
     )
   }
 }
 
 class DeleteSubtext extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <T style={styles.subHeaderSyntax}>
         {sprintf(strings.enUS['fragmet_wallets_delete_wallet_first_confirm_message_mobile'])}
         {
@@ -347,7 +347,7 @@ class DeleteSubtext extends Component {
                 style={{fontWeight: 'bold'}}>
                 {this.props.currentWalletBeingDeleted}?
             </T>
-          ):
+          ) :
           (
             <T>{sprintf(strings.enUS['fragment_wallets_this_wallet'])}</T>
           )
@@ -356,7 +356,7 @@ class DeleteSubtext extends Component {
     )
   }
 }
-export const DeleteSubtextConnect = connect( state => ({
+export const DeleteSubtextConnect = connect(state => ({
   currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted
 }))(DeleteSubtext)
 
@@ -369,8 +369,8 @@ class DeleteWalletButtons extends Component {
     this.props.dispatch(deleteWallet(this.props.walletId))
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <View style={[styles.buttonsWrap, b()]}>
 
         <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
@@ -396,31 +396,27 @@ export const DeleteWalletButtonsConnect = connect(state => ({
 
 }))(DeleteWalletButtons)
 
-/////////End of Delete Area //////////
+// ///////End of Delete Area //////////
 
-
-/////// Beginning of Rename Area ////////
-
-
+// ///// Beginning of Rename Area ////////
 
 class AddressIcon extends Component {
-  render() {
-    return(
-      <MAIcon name='edit' size={24} color='#2A5799' style={[{position: 'relative', top:12, left:14, height: 24, width: 24, backgroundColor: 'transparent'}] }/>
+  render () {
+    return (
+      <MAIcon name='edit' size={24} color='#2A5799' style={[{position: 'relative', top: 12, left: 14, height: 24, width: 24, backgroundColor: 'transparent'}]} />
     )
   }
 }
 
 class WalletNameInput extends Component {
 
-
   _onNameInputChange = (input) => {
     // be aware that walletListRowOptions.ui.js also initially dispatches this action
     this.props.dispatch(updateRenameWalletInput(input))
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <View style={[styles.nameInputWrap, b('orange')]}>
         <TextInput style={[styles.nameInput, b('red')]}
           onChangeText={(input) => this._onNameInputChange(input)}
@@ -430,16 +426,16 @@ class WalletNameInput extends Component {
     )
   }
 }
-export const WalletNameInputConnect = connect( state => ({
+export const WalletNameInputConnect = connect(state => ({
   currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,
-  ///currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
-  renameWalletVisible:       state.ui.scenes.walletList.renameWalletVisible,
-  renameWalletInput:         state.ui.scenes.walletList.renameWalletInput
+  // /currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
+  renameWalletVisible: state.ui.scenes.walletList.renameWalletVisible,
+  renameWalletInput: state.ui.scenes.walletList.renameWalletInput
 
 }))(WalletNameInput)
 
 class RenameWalletButtons extends Component {
-  constructor(props){
+  constructor (props) {
     super(props)
     this.state = {
 
@@ -456,8 +452,8 @@ class RenameWalletButtons extends Component {
     this.props.dispatch(updateRenameWalletInput(''))
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <View style={[styles.buttonsWrap, b('gray')]}>
 
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
@@ -482,8 +478,8 @@ class RenameWalletButtons extends Component {
 }
 export const RenameWalletButtonsConnect = connect(state => ({
   currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-  walletId:                  state.ui.scenes.walletList.walletId,
-  renameWalletInput:         state.ui.scenes.walletList.renameWalletInput
+  walletId: state.ui.scenes.walletList.walletId,
+  renameWalletInput: state.ui.scenes.walletList.renameWalletInput
 }))(RenameWalletButtons)
 
-/////// End of Rename Area ////////
+// ///// End of Rename Area ////////

@@ -11,11 +11,11 @@ const styles = StyleSheet.create({
     flex: 1,
     borderColor: 'red',
     borderWidth: 1,
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   containerStyle: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'white'
   },
   keyboardButton: {
     flex: 1,
@@ -23,23 +23,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: 'grey',
     fontWeight: '100',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 })
 
 const KeyboardButton = ({character, onPress, onLongPress}) => {
-    return (
-      <View style={styles.view}>
-        <TouchableHighlight
-          style={styles.containerStyle}
-          underlayColor="#193441"
-          onPress={() => { onPress(character) }}
-          onLongPress={onLongPress}>
+  return (
+    <View style={styles.view}>
+      <TouchableHighlight
+        style={styles.containerStyle}
+        underlayColor='#193441'
+        onPress={() => { onPress(character) }}
+        onLongPress={onLongPress}>
 
-          <Text style={styles.keyboardButton}>{character}</Text>
-        </TouchableHighlight>
-      </View>
-    )
+        <Text style={styles.keyboardButton}>{character}</Text>
+      </TouchableHighlight>
+    </View>
+  )
 }
 
-export default connect()(KeyboardButton);
+export default connect()(KeyboardButton)

@@ -1,10 +1,9 @@
-import React, {StyleSheet, Dimensions, Platform} from 'react-native';
+import React, {StyleSheet, Dimensions, Platform} from 'react-native'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
   width: Dimensions.get('window').width
 }
-
 
 module.exports = StyleSheet.create({
 
@@ -13,7 +12,7 @@ module.exports = StyleSheet.create({
 
   },
   modalContainer: {
-    flex: 1 ,
+    flex: 1,
     alignItems: 'center',
     zIndex: 1,
     elevation: 1
@@ -29,7 +28,7 @@ module.exports = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'stretch',
     position: 'absolute',
-    //height: (screenDimensions.height) / 3,
+    // height: (screenDimensions.height) / 3,
     backgroundColor: 'white',
     padding: 15,
     paddingTop: 25,
@@ -40,30 +39,30 @@ module.exports = StyleSheet.create({
 
   },
   modalHeaderIconWrapBottom: {
-    position: 'absolute', 
-    left: (screenDimensions.width / 2) - 47, 
+    position: 'absolute',
+    left: (screenDimensions.width / 2) - 47,
     top: (screenDimensions.height / 8) - 28,
     borderRadius: 27,
-    backgroundColor: 'white', 
-    height: 54, 
-    width: 54    
+    backgroundColor: 'white',
+    height: 54,
+    width: 54
   },
   modalHeaderIconWrapTop: {
-    position: 'relative', 
-    top: 3, 
-    left: 3, 
-    borderRadius: 27, 
-    backgroundColor: 'white', 
-    zIndex: 100, 
+    position: 'relative',
+    top: 3,
+    left: 3,
+    borderRadius: 27,
+    backgroundColor: 'white',
+    zIndex: 100,
     elevation: 100,
-    height: 48, 
+    height: 48,
     width: 48
   },
 
   // beginning of rename wallet modal
   modalBody: {
     position: 'relative',
-   
+
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {
@@ -75,7 +74,7 @@ module.exports = StyleSheet.create({
     color: '#2A5799',
     fontSize: 16
   },
-  modalTopSubtext  : {
+  modalTopSubtext: {
     fontSize: 14,
     color: '#58595C',
     textAlign: 'center',
@@ -100,8 +99,7 @@ module.exports = StyleSheet.create({
     alignItems: 'flex-end'
   },
 
-
-  //buttons
+  // buttons
   buttonsWrap: {
     flex: 1,
     flexDirection: 'row',
@@ -116,10 +114,10 @@ module.exports = StyleSheet.create({
   },
   stylizedButtonTextWrap: {
 
-  },  
+  },
   stylizedButtonText: {
     color: 'white',
-    fontSize: 16,    
+    fontSize: 16
   },
   cancelButtonWrap: {
     backgroundColor: '#909091',
@@ -131,9 +129,9 @@ module.exports = StyleSheet.create({
   doneButtonWrap: {
     backgroundColor: '#4977BB',
     alignSelf: 'flex-end',
-    marginLeft: 4    
+    marginLeft: 4
   },
   doneButton: {
     color: '#3c76cd'
-  }       
+  }
 })

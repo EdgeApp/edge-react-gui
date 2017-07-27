@@ -15,7 +15,6 @@ class SendConfirmationOptions extends Component {
   }
 
   render () {
-
     return (
       <View>
         <Menu onSelect={(value) => this._handleMenuOptions(value)}>
@@ -30,7 +29,7 @@ class SendConfirmationOptions extends Component {
               <Text style={styles.optionText}>Change Currency</Text>
             </MenuOption>
             <MenuOption value={3} style={styles.optionRow}>
-              <Text style={[styles.optionText, {color: "#F6A623"}]}>Send Max Amount</Text>
+              <Text style={[styles.optionText, {color: '#F6A623'}]}>Send Max Amount</Text>
             </MenuOption>
             <MenuOption value='help' style={styles.optionRow}>
               <Text style={styles.optionText}>Help</Text>
@@ -47,7 +46,7 @@ export default connect()(SendConfirmationOptions)
 const styles = StyleSheet.create({
   trigger: {
     fontSize: 25,
-    color: "#FFF",
+    color: '#FFF',
     fontWeight: '700'
   },
   optionContainer: {

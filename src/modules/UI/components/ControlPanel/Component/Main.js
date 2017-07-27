@@ -7,10 +7,10 @@ import { Actions } from 'react-native-router-flux'
 import { closeSidebar } from '../../SideMenu/action'
 import UserList from './UserList'
 
-import { logout } from  '../action.js'
+import { logout } from '../action.js'
 
 import styles from '../style'
-const platform = Platform.OS;
+const platform = Platform.OS
 
 import buyandsell from '../../../../../assets/images/sidenav/buysell@3x.png.png'
 import directory from '../../../../../assets/images/sidenav/directory@3x.png.png'
@@ -22,18 +22,17 @@ import spend from '../../../../../assets/images/sidenav/spend@3x.png.png'
 
 class MainComponent extends Component {
   render () {
-
-    if(this.props.usersView) {
+    if (this.props.usersView) {
       return <UserList />
     }
 
-    if(!this.props.usersView) {
-      if(platform === 'android') {
-        return(
-          <View style={{flex:1}}>
+    if (!this.props.usersView) {
+      if (platform === 'android') {
+        return (
+          <View style={{flex: 1}}>
             <ScrollView contentContainerStyle={styles.main.container}>
               { this._render2FAenabling() }
-              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onpress={ e => console.log('') } >
+              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onpress={e => console.log('')} >
                 <View style={[ styles.main.link, styles.main.borderVertical ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={buyandsell} />
@@ -48,7 +47,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onpress={ e => console.log('') } >
+              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onpress={e => console.log('')} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={spend} />
@@ -59,7 +58,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onpress={ e => console.log('') } >
+              <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} onpress={e => console.log('')} >
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={refer} />
@@ -70,7 +69,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('walletList')}>
+              <TouchableNativeFeedback onPress={() => this._handleOnPressRouting('walletList')}>
                 <View style={[ styles.main.link, styles.main.borderBottom ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={directory} />
@@ -83,7 +82,7 @@ class MainComponent extends Component {
               </TouchableNativeFeedback>
             </ScrollView>
             <View style={styles.others.container}>
-              <TouchableNativeFeedback onpress={ e => console.log('') }>
+              <TouchableNativeFeedback onpress={e => console.log('')}>
                 <View style={[styles.others.link, styles.others.borderVertical]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={logout_image} />
@@ -93,7 +92,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableNativeFeedback>
-              <TouchableNativeFeedback  onPress={() => this._handleOnPressRouting('settingsOverview')} background={TouchableNativeFeedback.SelectableBackground()} >
+              <TouchableNativeFeedback onPress={() => this._handleOnPressRouting('settingsOverview')} background={TouchableNativeFeedback.SelectableBackground()} >
                 <View style={styles.others.link}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={settings} />
@@ -108,12 +107,12 @@ class MainComponent extends Component {
         )
       }
 
-      if(platform !== 'android') {
-        return(
-          <View style={{flex:1}}>
+      if (platform !== 'android') {
+        return (
+          <View style={{flex: 1}}>
             <ScrollView contentContainerStyle={styles.main.container}>
               { this._render2FAenabling() }
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('') } >
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={e => console.log('')} >
                 <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={buyandsell} />
@@ -128,7 +127,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('transactions')} >
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('transactions')} >
                 <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={spend} />
@@ -139,7 +138,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={ e => console.log('') }>
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={e => console.log('')}>
                 <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={refer} />
@@ -150,7 +149,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={ e => console.log('') } >
+              <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={e => console.log('')} >
                 <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={directory} />
@@ -163,7 +162,7 @@ class MainComponent extends Component {
               </TouchableHighlight>
             </ScrollView>
             <View style={styles.others.container}>
-              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}   onPress={ e => console.log('') }>
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={e => console.log('')}>
                 <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1 }]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={logout_image} />
@@ -173,7 +172,7 @@ class MainComponent extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor}  onPress={() => this._handleOnPressRouting('settingsOverview')} >
+              <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('settingsOverview')} >
                 <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
                   <View style={styles.iconImageContainer}>
                     <Image style={styles.iconImage} source={settings} />
@@ -191,7 +190,7 @@ class MainComponent extends Component {
   }
 
   _handleOnPressRouting = (route) => {
-    switch(route){
+    switch (route) {
       case 'settingsOverview':
         Actions.settingsOverview()
         break
@@ -209,9 +208,9 @@ class MainComponent extends Component {
   }
 
   _render2FAenabling = () => {
-    if(platform === 'android') {
+    if (platform === 'android') {
       return (
-        <TouchableNativeFeedback onPress={ e => console.log('') } background={TouchableNativeFeedback.SelectableBackground()} >
+        <TouchableNativeFeedback onPress={e => console.log('')} background={TouchableNativeFeedback.SelectableBackground()} >
           <View style={[ styles.main.link, styles.main.borderVertical ]}>
             <View style={styles.iconImageContainer}>
               <Image style={styles.iconImage} source={security} />
@@ -225,9 +224,9 @@ class MainComponent extends Component {
       )
     }
 
-    if(platform !== 'android') {
+    if (platform !== 'android') {
       return (
-        <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={ e => console.log('') } >
+        <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={e => console.log('')} >
           <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
             <View style={styles.iconImageContainer}>
               <Image style={styles.iconImage} source={security} />
@@ -244,7 +243,7 @@ class MainComponent extends Component {
 }
 
 const mapStateToProps = state => ({
-  usersView : state.ui.scenes.controlPanel.usersView
+  usersView: state.ui.scenes.controlPanel.usersView
 })
 const mapDispatchToProps = dispatch => ({
   logout: () => { dispatch(logout()) },

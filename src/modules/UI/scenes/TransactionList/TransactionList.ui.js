@@ -22,7 +22,7 @@ import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as Animatable from 'react-native-animatable'
 import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b , findDenominationSymbol as symbolize, formatAMPM } from '../../../utils'
+import { border as b, findDenominationSymbol as symbolize, formatAMPM } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -34,27 +34,27 @@ import sent_type_image from '../../../../assets/images/transactions/transaction-
 import received_type_image from '../../../../assets/images/transactions/transaction-type-received@3x.png.png'
 
 const monthNames = [
-    sprintf(strings.enUS['transactions_list_date_jan']),
-    sprintf(strings.enUS['transactions_list_date_feb']),
-    sprintf(strings.enUS['transactions_list_date_mar']),
-    sprintf(strings.enUS['transactions_list_date_apr']),
-    sprintf(strings.enUS['transactions_list_date_may']),
-    sprintf(strings.enUS['transactions_list_date_jun']),
-    sprintf(strings.enUS['transactions_list_date_jul']),
-    sprintf(strings.enUS['transactions_list_date_aug']),
-    sprintf(strings.enUS['transactions_list_date_sep']),
-    sprintf(strings.enUS['transactions_list_date_oct']),
-    sprintf(strings.enUS['transactions_list_date_nov']),
-    sprintf(strings.enUS['transactions_list_date_dec'])
-  ]
+  sprintf(strings.enUS['transactions_list_date_jan']),
+  sprintf(strings.enUS['transactions_list_date_feb']),
+  sprintf(strings.enUS['transactions_list_date_mar']),
+  sprintf(strings.enUS['transactions_list_date_apr']),
+  sprintf(strings.enUS['transactions_list_date_may']),
+  sprintf(strings.enUS['transactions_list_date_jun']),
+  sprintf(strings.enUS['transactions_list_date_jul']),
+  sprintf(strings.enUS['transactions_list_date_aug']),
+  sprintf(strings.enUS['transactions_list_date_sep']),
+  sprintf(strings.enUS['transactions_list_date_oct']),
+  sprintf(strings.enUS['transactions_list_date_nov']),
+  sprintf(strings.enUS['transactions_list_date_dec'])
+]
 var dateStrings = []
 var iterator = -1
 
 class TransactionList extends Component {
-   constructor(props) {
-     super(props)
-     this.state = {
-      //balance: 0,
+  constructor (props) {
+    super(props)
+    this.state = {
+      // balance: 0,
       focused: false,
       animation: new Animated.Value(0),
       op: new Animated.Value(0),
@@ -65,9 +65,9 @@ class TransactionList extends Component {
       renderedTxCount: 0,
       completedTx: [],
       dataSrc: []
-     }
-     var completedTxList = []
-   }
+    }
+    var completedTxList = []
+  }
 
   componentDidMount () {
     const walletId = this.props.selectedWalletId
@@ -85,7 +85,7 @@ class TransactionList extends Component {
   }
 
   _onSearchChange = () => {
-    //this.props.dispatch(updateSearchResults(null))
+    // this.props.dispatch(updateSearchResults(null))
     console.log('this._onSearchChange executing')
   }
 
@@ -103,26 +103,26 @@ class TransactionList extends Component {
 
   _onFocus = () => {
     this.setState({
-      focused: true,
+      focused: true
     })
     this._toggleCancelVisibility()
   }
 
   _onBlur = () => {
     this.setState({
-      focused: false,
+      focused: false
     })
     this._toggleCancelVisibility()
   }
 
   _toggleCancelVisibility = () => {
     let toOpacity, toWidth, toBalanceBoxHeight
-    if(this.state.focused){
+    if (this.state.focused) {
       toOpacity = 0
       toWidth = 0
       toBalanceBoxHeight = 200
       toBalanceBoxOpacity = 1.0
-      this.setState({balanceBoxVisible: true}  )
+      this.setState({balanceBoxVisible: true})
 
       Animated.parallel([
         Animated.sequence([
@@ -162,7 +162,7 @@ class TransactionList extends Component {
       toOpacity = 1
       toWidth = 60
       toBalanceBoxHeight = 0
-      toBalanceBoxOpacity= 0.0
+      toBalanceBoxOpacity = 0.0
 
       Animated.parallel([
         Animated.sequence([
@@ -190,7 +190,7 @@ class TransactionList extends Component {
                 duration: 400
               }
             )
-        ]),
+          ]),
           Animated.timing(
             this.state.balanceBoxHeight,
             {
@@ -223,7 +223,7 @@ class TransactionList extends Component {
       return a > b ? -1 : a < b ? 1 : 0
     })
 
-      completedTxList = renderableTransactionList.map((x, i) => {
+    completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
       newValue.multiplier = this.props.multiplier
@@ -245,10 +245,10 @@ class TransactionList extends Component {
     console.log('rendering txList, this.props is: ', this.props)
     let logo
     console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
-    if(this.props.uiWallet.currencyCode != this.props.selectedCurrencyCode) {
-      for(mt of this.props.uiWallet.metaTokens) {
+    if (this.props.uiWallet.currencyCode != this.props.selectedCurrencyCode) {
+      for (mt of this.props.uiWallet.metaTokens) {
         console.log('mt is: ', mt)
-        if(mt.currencyCode === this.props.selectedCurrencyCode) {
+        if (mt.currencyCode === this.props.selectedCurrencyCode) {
           logo = mt.symbolImage
         }
       }
@@ -257,23 +257,23 @@ class TransactionList extends Component {
     }
     console.log('logo is: ', logo)
     return (
-        <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
-          <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
-          <View style={[styles.container, b()]}>
-            <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
-              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, b()]} colors={["#3b7adb","#2b569a"]}>
-                {this.state.balanceBoxVisible &&
-                  <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
-                    {this.props.updatingBalance ? (
-                      <View style={[styles.currentBalanceWrap]}>
-                        <View style={[ styles.updatingBalanceWrap]}>
-                          <ActivityIndicator
-                            animating={this.props.updatingBalance}
-                            style={[styles.updatingBalance, {height: 40}]}
-                            size="small"
+      <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
+        <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
+        <View style={[styles.container, b()]}>
+          <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
+            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={['#3b7adb', '#2b569a']}>
+              {this.state.balanceBoxVisible &&
+              <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+                {this.props.updatingBalance ? (
+                  <View style={[styles.currentBalanceWrap]}>
+                    <View style={[ styles.updatingBalanceWrap]}>
+                      <ActivityIndicator
+                        animating={this.props.updatingBalance}
+                        style={[styles.updatingBalance, {height: 40}]}
+                        size='small'
                           />
-                        </View>
-                      </View>
+                    </View>
+                  </View>
                     ) : (
                       <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b()]}>
                         {this.state.showBalance ? (
@@ -284,7 +284,7 @@ class TransactionList extends Component {
                                 <T style={[styles.request]}>{this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]}</T>
                               }
                             </View>
-                           <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
+                            <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
                                 {this.props.selectedCurrencyCode} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
                               </T>
@@ -301,47 +301,47 @@ class TransactionList extends Component {
                         }
                       </TouchableOpacity>
                     )}
-                    <View style={[styles.requestSendRow, b()]}>
-                      <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
-                        <View  style={[styles.requestWrap]}>
-                          <Image
-                            style={{width: 25, height: 25}}
-                            source={request_image}
+                <View style={[styles.requestSendRow, b()]}>
+                  <TouchableHighlight onPress={() => Actions.request()}style={[styles.requestBox, styles.button]}>
+                    <View style={[styles.requestWrap]}>
+                      <Image
+                        style={{width: 25, height: 25}}
+                        source={request_image}
                           />
-                          <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
-                        </View>
-                      </TouchableHighlight>
-                      <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
-                        <View style={[styles.sendWrap]}>
-                          <Image
-                            style={{width: 25, height: 25}}
-                            source={send_image}
-                          />
-                          <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
-                        </View>
-                      </TouchableHighlight>
+                      <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                     </View>
-                  </Animated.View>
+                  </TouchableHighlight>
+                  <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                    <View style={[styles.sendWrap]}>
+                      <Image
+                        style={{width: 25, height: 25}}
+                        source={send_image}
+                          />
+                      <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
+                    </View>
+                  </TouchableHighlight>
+                </View>
+              </Animated.View>
                 }
-              </LinearGradient>
-            </Animated.View>
-            <View style={[styles.transactionsWrap]}>
-              <ListView
-                style={[styles.transactionsScrollWrap]}
-                dataSource={dataSrc}
-                renderRow={this.renderTx}
-                onEndReached={this.loadMoreTransactions}
-                onEndReachedThreshold={60}
-                enableEmptySections
-                initialIterator={-1}
+            </LinearGradient>
+          </Animated.View>
+          <View style={[styles.transactionsWrap]}>
+            <ListView
+              style={[styles.transactionsScrollWrap]}
+              dataSource={dataSrc}
+              renderRow={this.renderTx}
+              onEndReached={this.loadMoreTransactions}
+              onEndReachedThreshold={60}
+              enableEmptySections
+              initialIterator={-1}
               />
-            </View>
           </View>
-        </ScrollView>
+        </View>
+      </ScrollView>
     )
   }
 
-  _goToTxDetail = ( txId, currencyCode, tx) => {
+  _goToTxDetail = (txId, currencyCode, tx) => {
     return null
     // Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
   }
@@ -365,7 +365,7 @@ class TransactionList extends Component {
       txImage = received_type_image
     }
 
-    console.log('rendering row, tx is: ', tx,  ' tx.dateString is: ', tx.dateString, ' , and this.state is: ' , this.state, ' , and completedTxList is: ' , completedTxList)
+    console.log('rendering row, tx is: ', tx, ' tx.dateString is: ', tx.dateString, ' , and this.state is: ', this.state, ' , and completedTxList is: ', completedTxList)
     return (
       <View style={styles.singleTransactionWrap}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
@@ -375,7 +375,7 @@ class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail( tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
           <View style={[styles.transactionInfoWrap, b()]}>
             <View style={styles.transactionLeft}>
               {tx.hasThumbnail ? (
@@ -411,25 +411,25 @@ TransactionList.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-  const selectedWalletId     = UI_SELECTORS.getSelectedWalletId(state)
-  const currencyCode         = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const wallet               = UI_SELECTORS.getSelectedWallet(state)
-  const settings             = SETTINGS_SELECTORS.getSettings(state)
-  const isoFiatCurrencyCode  = wallet.isoFiatCurrencyCode
-  const currencyConverter    = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto      = wallet.balances[currencyCode]
-  const balanceInFiat        = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCrypto)
-  const transactions         = UI_SELECTORS.getTransactions(state)
-  const index                = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const denomination         = wallet.allDenominations[currencyCode][index]
-  const multiplier           = denomination.multiplier
+  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const settings = SETTINGS_SELECTORS.getSettings(state)
+  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const balanceInCrypto = wallet.balances[currencyCode]
+  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCrypto)
+  const transactions = UI_SELECTORS.getTransactions(state)
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination = wallet.allDenominations[currencyCode][index]
+  const multiplier = denomination.multiplier
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
     updatingBalance: false,
     transactions,
-    searchVisible:   state.ui.scenes.transactionList.searchVisible,
-    contactsList:    state.ui.scenes.transactionList.contactsList,
+    searchVisible: state.ui.scenes.transactionList.searchVisible,
+    contactsList: state.ui.scenes.transactionList.contactsList,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
@@ -448,15 +448,14 @@ const mapDispatchToProps = dispatch => ({
 
 export default TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
 
-
 class SearchBar extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = this.props.state
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <View style={[styles.searchContainer, b()]}>
         <View style={[ styles.innerSearch, b()]}>
           <EvilIcons name='search' style={[styles.searchIcon, b()]} color='#9C9C9D' size={20} />

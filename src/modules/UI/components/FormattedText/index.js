@@ -3,4 +3,3 @@ import T from './FormattedText.ui.js'
 
 export default T
 
-

@@ -18,7 +18,7 @@ class ABSlider extends Component {
 
   onSlidingComplete = (value) => {
     console.log('onSlidingComplete')
-    if(value <= 1) {
+    if (value <= 1) {
       this.props.onSlidingComplete()
     } else {
       this.setState({ value: 10 })
@@ -29,7 +29,7 @@ class ABSlider extends Component {
     this.setState({value})
   }
 
-  render() {
+  render () {
     return (
       <View style={styles.container}>
         <Slider
@@ -52,4 +52,4 @@ class ABSlider extends Component {
   }
 }
 
-export default connect()(ABSlider);
+export default connect()(ABSlider)

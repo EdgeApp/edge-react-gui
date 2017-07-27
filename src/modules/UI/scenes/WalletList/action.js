@@ -124,7 +124,7 @@ export const updateActiveWalletsOrder = activeWalletIds => {
     ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
     .then(response => {
       dispatch(updateActiveWalletsOrderSuccess(activeWalletIds))
-      for(var k in activeWalletIds) {
+      for (var k in activeWalletIds) {
         dispatch(updateIndividualWalletSortIndex(activeWalletIds[k], k))
       }
       dispatch(LOGIN.updateWallets(account))
@@ -134,9 +134,9 @@ export const updateActiveWalletsOrder = activeWalletIds => {
 }
 
 export const updateIndividualWalletSortIndex = (walletId, sortIndex) => {
-  return (dispatch, getState) => {  
+  return (dispatch, getState) => {
     const state = getState()
-    const wallet = CORE_SELECTORS.getWallet(state, walletId)  
+    const wallet = CORE_SELECTORS.getWallet(state, walletId)
     wallet.sortIndex = sortIndex
     return dispatch(UI_ACTIONS.upsertWallet(wallet))
   }

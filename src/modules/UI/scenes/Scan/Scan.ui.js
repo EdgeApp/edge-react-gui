@@ -24,7 +24,7 @@ import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
 import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress  } from './action'
+import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress } from './action'
 
 import {
   processURI,
@@ -39,7 +39,6 @@ import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
 import {border as b} from '../../../utils'
 
-
 class Scan extends Component {
   constructor (props) {
     super(props)
@@ -47,8 +46,8 @@ class Scan extends Component {
       cameraPermission: undefined
     }
   }
-  //check the status of a single permission
-  componentDidMount() {
+  // check the status of a single permission
+  componentDidMount () {
     PERMISSIONS.request('camera')
     .then(this.setCameraPermission)
   }
@@ -86,7 +85,6 @@ class Scan extends Component {
     const options = { takePhotoButtonTitle: null }
 
     ImagePicker.showImagePicker(options, (response) => {
-
       if (response.didCancel) {
         console.log('User cancelled photo picker')
       } else if (response.error) {
@@ -175,11 +173,11 @@ class Scan extends Component {
 
 const mapStateToProps = state => {
   return {
-    scene:                             state.routes.scene.name,
-    torchEnabled:                      state.ui.scenes.scan.torchEnabled,
-    walletListModalVisible:            state.ui.scenes.walletTransferList.walletListModalVisible,
+    scene: state.routes.scene.name,
+    torchEnabled: state.ui.scenes.scan.torchEnabled,
+    walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
-    scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility
+    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 
@@ -199,10 +197,10 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
-  render() {
-    return(
+  render () {
+    return (
       <StylizedModal
-        featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
+        featuredIcon={<FAIcon name='address-book-o'size={24} color='#2A5799' style={[{position: 'relative', top: 12, left: 13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
         headerText='fragment_send_address_dialog_title'
         modalMiddle={<AddressInputRecipientConnect />}
         modalBottom={<SendAddressButtonsConnect />}
@@ -212,19 +210,19 @@ class WalletAddressModal extends Component {
   }
 }
 
-export const WalletAddressModalConnect = connect( state => ({
-  addressModalVisible: state.ui.scenes.scan.addressModalVisible,
+export const WalletAddressModalConnect = connect(state => ({
+  addressModalVisible: state.ui.scenes.scan.addressModalVisible
 }))(WalletAddressModal)
 
 class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       uri: ''
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     Clipboard.getString().then(uri => {
       this.setState({
         uri
@@ -239,12 +237,12 @@ class AddressInputRecipient extends Component { // this component is for the inp
     Actions.sendConfirmation()
   }
 
-  render() {
+  render () {
     let innerText = ''
     console.log('rendering Rename Address, this.state is: ', this.state)
     const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.uri)
 
-    return(
+    return (
       <View>
         <View style={[styles.addressInputWrap]}>
           <TextInput style={[styles.addressInput]}
@@ -267,11 +265,9 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 }
 
-export const AddressInputRecipientConnect = connect( state => ({
+export const AddressInputRecipientConnect = connect(state => ({
   recipientAddress: state.ui.scenes.scan.recipientAddress
 }))(AddressInputRecipient)
-
-
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
@@ -285,24 +281,24 @@ class SendAddressButtons extends Component { // this component is for the button
     this.props.dispatch(toggleAddressModal())
   }
 
-  render( ) {
-    return(
+  render () {
+    return (
       <View style={[ModalStyle.buttonsWrap, b('gray')]}>
         <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
             <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
-            <View style={ModalStyle.stylizedButtonTextWrap}>
-              <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
-            </View>
-          </TouchableHighlight>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
+          <View style={ModalStyle.stylizedButtonTextWrap}>
+            <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
+          </View>
+        </TouchableHighlight>
       </View>
     )
   }
 }
 
 const SendAddressButtonsConnect = connect(state => ({
-  recipientAddress: state.ui.scenes.scan.recipientAddress,
+  recipientAddress: state.ui.scenes.scan.recipientAddress
 }))(SendAddressButtons)

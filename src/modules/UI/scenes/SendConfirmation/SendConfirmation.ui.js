@@ -50,7 +50,7 @@ import {
 } from './action.js'
 
 class SendConfirmation extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       keyboardVisible: false
@@ -83,12 +83,12 @@ class SendConfirmation extends Component {
     return (
       <LinearGradient
         style={[styles.view]}
-        start={{x:0,y:0}} end={{x:1, y:0}}
-        colors={["#3b7adb","#2b569a"]}
+        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+        colors={['#3b7adb', '#2b569a']}
       >
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
           <View style={[styles.exchangeRateContainer, b()]} >
-            <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom}  />
+            <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom} />
           </View>
 
           <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
@@ -137,8 +137,8 @@ class SendConfirmation extends Component {
             {/* <Password /> */}
           </View>
           <View style={[styles.pendingSymbolArea]}>
-            {this.props.sendConfirmation.pending && 
-              <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, b()]} size={'small'}/>
+            {this.props.sendConfirmation.pending &&
+              <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, b()]} size={'small'} />
             }
           </View>
           <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
@@ -208,38 +208,38 @@ SendConfirmation.propTypes = {
 }
 
 const mapStateToProps = state => {
-  const currencyConverter   = CORE_SELECTORS.getCurrencyConverter(state)
-  const wallet              = UI_SELECTORS.getSelectedWallet(state)
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const wallet = UI_SELECTORS.getSelectedWallet(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const fiatCurrencyCode    = wallet.fiatCurrencyCode
-  const currencyCode        = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const cryptoPerFiat       = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
-  const fiatPerCrypto       = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
-  const index               = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const inputCurrencyDenom  = wallet.allDenominations[currencyCode][index]
+  const fiatCurrencyCode = wallet.fiatCurrencyCode
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const cryptoPerFiat = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
+  const fiatPerCrypto = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const inputCurrencyDenom = wallet.allDenominations[currencyCode][index]
 
   return {
-    sendConfirmation:      state.ui.scenes.sendConfirmation,
-    amountSatoshi:         state.ui.scenes.sendConfirmation.amountSatoshi,
-    maxSatoshi:            state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
+    sendConfirmation: state.ui.scenes.sendConfirmation,
+    amountSatoshi: state.ui.scenes.sendConfirmation.amountSatoshi,
+    maxSatoshi: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
     wallet,
-    feeSatoshi:            state.ui.scenes.sendConfirmation.feeSatoshi,
+    feeSatoshi: state.ui.scenes.sendConfirmation.feeSatoshi,
     fiatPerCrypto,
     cryptoPerFiat,
     inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-    publicAddress:         state.ui.scenes.sendConfirmation.publicAddress,
-    spendInfo:             state.ui.scenes.sendConfirmation.spendInfo,
-    transaction:           state.ui.scenes.sendConfirmation.transaction,
+    publicAddress: state.ui.scenes.sendConfirmation.publicAddress,
+    spendInfo: state.ui.scenes.sendConfirmation.spendInfo,
+    transaction: state.ui.scenes.sendConfirmation.transaction,
     inputCurrencyDenom,
     fiatCurrencyCode
   }
 }
 const mapDispatchToProps = (dispatch) => ({
   updateAmountSatoshi: amountSatoshi => dispatch(updateAmountSatoshiRequest(amountSatoshi)),
-  updateAmountFiat:       amountFiat => dispatch(updateAmountFiatRequest(amountFiat)),
-  toggleCurrencyInput:            () => dispatch(toggleCurrencyInput()),
-  signBroadcastAndSave:  transaction => dispatch(signBroadcastAndSave(transaction)),
-  updateMaxSatoshi:               () => dispatch(updateMaxSatoshiRequest()),
-  useMaxSatoshi:                  () => dispatch(useMaxSatoshi()),
+  updateAmountFiat: amountFiat => dispatch(updateAmountFiatRequest(amountFiat)),
+  toggleCurrencyInput: () => dispatch(toggleCurrencyInput()),
+  signBroadcastAndSave: transaction => dispatch(signBroadcastAndSave(transaction)),
+  updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),
+  useMaxSatoshi: () => dispatch(useMaxSatoshi())
 })
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)

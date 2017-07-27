@@ -15,11 +15,11 @@ class SideMenuComponent extends Component {
         content={<ControlPanel />}
         open={this.props.view}
         openDrawerOffset={0.20}
-        tapToClose={true}
+        tapToClose
         panCloseMask={0.99}
         panOpenMask={0.1}
         captureGestures={false}
-        negotiatePan={true}
+        negotiatePan
         side='right'
         onOpen={() => this.props.dispatch(openSidebar())}
         onClose={() => this.props.dispatch(closeSidebar())}

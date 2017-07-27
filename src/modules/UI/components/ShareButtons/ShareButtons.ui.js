@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderRightWidth: 0.4,
-    borderRightColor: "#FFF"
+    borderRightColor: '#FFF'
   }
 })
 

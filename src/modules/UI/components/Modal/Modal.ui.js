@@ -22,14 +22,13 @@ class StylizedModal extends Component {
         isVisible={this.props.visibilityBoolean}>
         <View style={[styles.modalBox, b('red')]}>
           <View style={[styles.modalBody, b('purple')]}>
-            <View style={[styles.modalTopTextWrap,  b('blue')]}>
+            <View style={[styles.modalTopTextWrap, b('blue')]}>
               <T style={[styles.modalTopText, b('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</T>
               {this.props.headerSubtext &&
                 <T style={[styles.modalTopSubtext, b('green')]}>
                   {this.props.headerSubtext || ''}
                 </T>
               }
-              
 
             </View>
             {this.props.modalMiddle &&

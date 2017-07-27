@@ -1,6 +1,6 @@
 import variables from '../../../../theme/variables/platform'
-import { Platform } from 'react-native';
-const platform = Platform.OS;
+import { Platform } from 'react-native'
+const platform = Platform.OS
 
 export default {
 
@@ -23,12 +23,12 @@ export default {
   },
 
   bitcoin: {
-    container:{
+    container: {
       backgroundColor: '#7FC343',
       height: 48,
       flexDirection: 'row',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     },
 
     icon: {
@@ -42,7 +42,7 @@ export default {
       fontSize: 16,
       color: '#FFF',
       justifyContent: 'center',
-      alignItems: 'center',
+      alignItems: 'center'
     }
   },
 
@@ -52,10 +52,10 @@ export default {
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      height: 58,
+      height: 58
     },
 
-    name:{
+    name: {
       flex: 1,
       color: '#FFF',
       fontSize: 16
@@ -63,11 +63,11 @@ export default {
 
   },
 
-  main:{
+  main: {
     container: {
       flex: 1,
       flexDirection: 'column',
-      alignItems: 'flex-start',
+      alignItems: 'flex-start'
     },
 
     link: {
@@ -86,19 +86,19 @@ export default {
 
     borderVertical: {
       borderStyle: 'solid',
-      borderColor:'rgba(255,255,255,0.2)',
+      borderColor: 'rgba(255,255,255,0.2)',
       borderTopWidth: 1,
       borderBottomWidth: 1
     },
 
     borderBottom: {
       borderStyle: 'solid',
-      borderColor:'rgba(255,255,255,0.2)',
+      borderColor: 'rgba(255,255,255,0.2)',
       borderBottomWidth: 1
     },
 
     icon: {
-      flex:1,
+      flex: 1,
 
       fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
@@ -108,7 +108,7 @@ export default {
 
     textContainer: {
       flex: 8,
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent'
     },
 
     text: {
@@ -147,19 +147,19 @@ export default {
 
     borderVertical: {
       borderStyle: 'solid',
-      borderColor:'rgba(255,255,255,0.2)',
+      borderColor: 'rgba(255,255,255,0.2)',
       borderTopWidth: 1,
       borderBottomWidth: 1
     },
 
     borderBottom: {
       borderStyle: 'solid',
-      borderColor:'rgba(255,255,255,0.2)',
+      borderColor: 'rgba(255,255,255,0.2)',
       borderBottomWidth: 1
     },
 
     icon: {
-      flex:1,
+      flex: 1,
       fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
       backgroundColor: 'transparent',
@@ -168,7 +168,7 @@ export default {
 
     textContainer: {
       flex: 8,
-      backgroundColor: 'transparent',
+      backgroundColor: 'transparent'
     },
 
     text: {
@@ -183,10 +183,9 @@ export default {
       color: '#FFF'
     }
 
-
   },
 
-  userList : {
+  userList: {
     container: {
       backgroundColor: '#FFF',
       flex: 1
@@ -199,11 +198,11 @@ export default {
       borderColor: '#efefef',
       borderBottomWidth: 0.5
     },
-    text:{
+    text: {
       padding: 13,
       flex: 1
     },
-    icon:{
+    icon: {
       padding: 13
     }
   }

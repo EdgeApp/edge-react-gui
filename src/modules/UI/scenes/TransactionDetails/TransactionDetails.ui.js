@@ -46,23 +46,23 @@ const monthNames = [
 var dateStrings = []
 
 class TransactionDetails extends Component {
-   constructor(props) {
-     super(props)
-     console.log('Constructor of TransactionDetails, this.props is: ', this.props)
-     const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
-     this.state = {
-        tx: this.props.tx,
-        //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '',
-        direction,
-        txid : this.props.tx.txid,
-        payeeName: this.props.tx.payeeName || 'payeeName', // remove commenting once metaData in Redux
-        category: this.props.tx.category || 'fakeCategory',
-        notes: this.props.tx.notes || 'fake notes',
-        amountFiat: this.props.tx.amountFiat || '3.56',
-        bizId: this.props.tx.bizId || 12345,
-        miscJson: this.props.tx.miscJson || null
-     }
-   }
+  constructor (props) {
+    super(props)
+    console.log('Constructor of TransactionDetails, this.props is: ', this.props)
+    const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
+    this.state = {
+      tx: this.props.tx,
+        // payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '',
+      direction,
+      txid: this.props.tx.txid,
+      payeeName: this.props.tx.payeeName || 'payeeName', // remove commenting once metaData in Redux
+      category: this.props.tx.category || 'fakeCategory',
+      notes: this.props.tx.notes || 'fake notes',
+      amountFiat: this.props.tx.amountFiat || '3.56',
+      bizId: this.props.tx.bizId || 12345,
+      miscJson: this.props.tx.miscJson || null
+    }
+  }
 
   contactSearch (nameKey, myArray) {
     for (var i = 0; i < myArray.length; i++) {
@@ -88,7 +88,7 @@ class TransactionDetails extends Component {
   }
 
   onChangeNotes = (input) => {
-    console.log('notes changed to: ', input)    
+    console.log('notes changed to: ', input)
     this.setState({ notes: input })
   }
 
@@ -104,30 +104,30 @@ class TransactionDetails extends Component {
     console.log('rendering Transaction Details scene, this.props is: ', this.props, ' and this.state is: ', this.state)
     let initialValues = this.state
     return (
-        <ScrollView overScrollMode='never' /* alwaysBounceVertical={false}*/ >
-          <View style={[b(), styles.container]}>
-            <View>
-              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
-                  <PayeeIcon direction={this.state.direction} />
-              </LinearGradient>
-            </View>
-            <View style={[styles.dataArea]}>
-              <View style={[styles.payeeNameArea]}>
-                <View style={[styles.payeeNameWrap]}>
-                  <TextInput onChangeText={this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
-                </View>
-                <View style={[styles.dateWrap]}>
-                  <T style={[styles.date]}>{this.props.tx.date}</T>
-                </View>
-              </View>
-              <AmountArea
-                onChangeNotesFxn={this.onChangeNotes}
-                onChangeCategoryFxn={this.onChangeCategory}
-                onChangeFiatFxn={this.onChangeFiat}
-                info={this.state} onPressFxn={this.onPressSave} />
-            </View>
+      <ScrollView overScrollMode='never' /* alwaysBounceVertical={false} */ >
+        <View style={[b(), styles.container]}>
+          <View>
+            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[b(), styles.expandedHeader, b()]} colors={['#3b7adb', '#2b569a']}>
+              <PayeeIcon direction={this.state.direction} />
+            </LinearGradient>
           </View>
-        </ScrollView>
+          <View style={[styles.dataArea]}>
+            <View style={[styles.payeeNameArea]}>
+              <View style={[styles.payeeNameWrap]}>
+                <TextInput onChangeText={this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
+              </View>
+              <View style={[styles.dateWrap]}>
+                <T style={[styles.date]}>{this.props.tx.date}</T>
+              </View>
+            </View>
+            <AmountArea
+              onChangeNotesFxn={this.onChangeNotes}
+              onChangeCategoryFxn={this.onChangeCategory}
+              onChangeFiatFxn={this.onChangeFiat}
+              info={this.state} onPressFxn={this.onPressSave} />
+          </View>
+        </View>
+      </ScrollView>
     )
   }
 }
@@ -143,9 +143,8 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
 
 class AmountArea extends Component {
-  constructor(props){
+  constructor (props) {
     super(props)
-
   }
   // fiat amount is editable
 
@@ -168,9 +167,9 @@ class AmountArea extends Component {
     }
   }
 
-  render() {
+  render () {
     console.log('rendering AmountArea, this.props is: ', this.props)
-    return(
+    return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
@@ -190,10 +189,10 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.editableFiatRow]}>
           <View style={[styles.editableFiatLeft]}>
-            <T style={[styles.editableFiatLeftText]}></T>
+            <T style={[styles.editableFiatLeftText]} />
           </View>
           <View style={[styles.editableFiatArea]}>
-            <TextInput onChangeText={this.props.onChangeFiatFxn} style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
+            <TextInput onChangeText={this.props.onChangeFiatFxn} style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || ''} />
           </View>
           <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>USD</T>
@@ -206,11 +205,11 @@ class AmountArea extends Component {
           </View>
           <View style={[b(), styles.categoryInputArea]}>
             <TextInput onChangeText={this.props.onChangeCategoryFxn} style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
-          </View>              
+          </View>
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
+            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} multiline defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
@@ -227,53 +226,50 @@ class AmountArea extends Component {
 }
 
 class PayeeIcon extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-
   }
 
-  render() {
+  render () {
     console.log('rendering PayeeIcon, this.props is: ', this.props)
     let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
-    return(
-        <View style={[styles.modalHeaderIconWrapBottom, {backgroundColor: iconBgColor}]}>
-            <View style={[styles.modalHeaderIconWrapTop, b('purple')]}>
-              {this.renderIcon()}
-            </View>
+    return (
+      <View style={[styles.modalHeaderIconWrapBottom, {backgroundColor: iconBgColor}]}>
+        <View style={[styles.modalHeaderIconWrapTop, b('purple')]}>
+          {this.renderIcon()}
         </View>
+      </View>
     )
   }
 
-  renderIcon() {
+  renderIcon () {
     console.log('rendering txDetails icon, this.props is: ', this.props)
     let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
-    if (this.props.direction === 'receive'){
-      return(
-        <Ionicon name="ios-arrow-round-down" color={iconBgColor} size={44} style={[styles.payeeIcon]} />
+    if (this.props.direction === 'receive') {
+      return (
+        <Ionicon name='ios-arrow-round-down' color={iconBgColor} size={44} style={[styles.payeeIcon]} />
       )
     } else {
-      return(
-        <Ionicon name="ios-arrow-round-up" color={iconBgColor} size={44} style={[ styles.payeeIcon]} />
+      return (
+        <Ionicon name='ios-arrow-round-up' color={iconBgColor} size={44} style={[ styles.payeeIcon]} />
       )
     }
   }
 }
 
-
 class ContactIcon extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-
   }
 
-  render() {
+  render () {
     let iconBgColor = (this.props.direction === 'receive') ? 'green' : 'red'
-    return(
-        <View style={[b(), styles.modalHeaderIconWrapBottom]}>
-          <View style={styles.modalHeaderIconWrapTop}>
-            {this.props.featuredIcon}
-          </View>
+    return (
+      <View style={[b(), styles.modalHeaderIconWrapBottom]}>
+        <View style={styles.modalHeaderIconWrapTop}>
+          {this.props.featuredIcon}
         </View>
+      </View>
     )
   }
 }

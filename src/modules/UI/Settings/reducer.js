@@ -56,7 +56,7 @@ export const settings = (state = initialState, action) => {
       return {
         ...state,
         defaultFiat,
-        defaultISOFiat,
+        defaultISOFiat
       }
     }
 

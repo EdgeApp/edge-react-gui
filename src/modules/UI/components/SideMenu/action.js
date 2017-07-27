@@ -7,7 +7,7 @@ export function openSidebar () {
   }
 }
 
-export function closeSidebar() {
+export function closeSidebar () {
   return {
     type: CLOSE_SIDEBAR
   }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Header, Left, Title, Right, Body, Button, Icon } from 'native-base';
+import { View, Text, Header, Left, Title, Right, Body, Button, Icon } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 
@@ -19,42 +19,41 @@ class HeaderUI extends Component {
   }
 
   _renderLeftButton = () => {
-    if(this.props.routes.stackDepth) {
+    if (this.props.routes.stackDepth) {
       return (
-        <Icon name='arrow-back' onPress={ e => Actions.pop() } />
+        <Icon name='arrow-back' onPress={e => Actions.pop()} />
       )
     }
   }
 
-
   _onLayout = (event) => {
     var {x, y, width, height} = event.nativeEvent.layout
     console.log('header event.nativeEvent is : ', event.nativeEvent)
-    console.log('header onLayout occurred', x , y , width , height)
+    console.log('header onLayout occurred', x, y, width, height)
     this.props.dispatch(setHeaderHeight(height))
   }
 
   render () {
     return (
-        <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={[styles.headerRoot]} onLayout={this._onLayout}>
-          <Header>
-            <Left style={{flex: 1}}>
-              <LeftComponent routes={this.props.routes} />
-            </Left>
-            <Body style={{flex: 3}}>
-              <BodyComponent routes={this.props.routes} />
-            </Body>
-            <Right style={{flex: 1}}>
-              <RightComponent routes={this.props.routes} />
-            </Right>
-          </Header>
-        </LinearGradient>
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3b7adb', '#2b569a']} style={[styles.headerRoot]} onLayout={this._onLayout}>
+        <Header>
+          <Left style={{flex: 1}}>
+            <LeftComponent routes={this.props.routes} />
+          </Left>
+          <Body style={{flex: 3}}>
+            <BodyComponent routes={this.props.routes} />
+          </Body>
+          <Right style={{flex: 1}}>
+            <RightComponent routes={this.props.routes} />
+          </Right>
+        </Header>
+      </LinearGradient>
     )
   }
 }
 
-export default connect( state => ({
+export default connect(state => ({
 
   routes: state.routes
 
-}) )(HeaderUI)
+}))(HeaderUI)

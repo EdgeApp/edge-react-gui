@@ -30,7 +30,7 @@ import {
 } from './action.js'
 
 class SettingsOverview extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.settings = [
@@ -45,7 +45,7 @@ class SettingsOverview extends Component {
 
     this.options = {
       pinRelogin: { text: sprintf(strings.enUS['settings_title_pin_login']), key: 'pinRelogin' },
-      useTouchID: { text: sprintf(strings.enUS['settings_button_use_touchID']),  key: 'useTouchID' }
+      useTouchID: { text: sprintf(strings.enUS['settings_button_use_touchID']), key: 'useTouchID' }
     }
 
     this.optionModals = [
@@ -88,7 +88,7 @@ class SettingsOverview extends Component {
     HockeyApp.generateTestCrash()
   }
 
-  render() {
+  render () {
     return (
       <ScrollView style={s.container}>
         <LinearGradient style={[s.unlockRow]}
@@ -98,7 +98,7 @@ class SettingsOverview extends Component {
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, b('green')]}
-              name='user-o' color='white' />
+                name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
                 {sprintf(strings.enUS['settings_account_title_cap'])}: Airbitz Super Dooper Wallet
               </T>
@@ -130,7 +130,7 @@ class SettingsOverview extends Component {
           <View style={[s.debugArea, b('green')]}>
             <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
           </View>
-          <View style={s.emptyBottom}></View>
+          <View style={s.emptyBottom} />
         </View>
       </ScrollView>
     )
@@ -147,7 +147,7 @@ class SettingsOverview extends Component {
     )
   }
 
-  renderSettingsItemWithModal = (x,i) => {
+  renderSettingsItemWithModal = (x, i) => {
     return <SettingsItemWithModal leftText={x.text} key={x.key} modal={x.key} />
   }
 }

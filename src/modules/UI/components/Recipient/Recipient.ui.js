@@ -34,23 +34,22 @@ const styles = StyleSheet.create({
 })
 
 const Recipient = ({ label = '1323424', publicAddress = 'asdcasdc' }) => {
-
   getLabel = () => {
     if (label) {
       return <Text style={styles.text} ellipsizeMode='middle' numberOfLines={1}>{label}</Text>
     }
   }
   return (
-      <View style={styles.container}>
-        <Text style={[ styles.text, {fontSize: 14} ]}>
-          {sprintf(strings.enUS['send_to_title'])}
-        </Text>
-        {this.getLabel()}
-        <Text style={[ styles.text ]}
-          ellipsizeMode='middle' numberOfLines={1}>
-          {publicAddress}
-        </Text>
-      </View>
+    <View style={styles.container}>
+      <Text style={[ styles.text, {fontSize: 14} ]}>
+        {sprintf(strings.enUS['send_to_title'])}
+      </Text>
+      {this.getLabel()}
+      <Text style={[ styles.text ]}
+        ellipsizeMode='middle' numberOfLines={1}>
+        {publicAddress}
+      </Text>
+    </View>
   )
 }
 

@@ -25,13 +25,13 @@ import { Actions } from 'react-native-router-flux'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
 const BLOCKCHAIN_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
-const FIAT_PICKER_PLACEHOLDER       = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
+const FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
 
-const DONE_TEXT         = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
-const CANCEL_TEXT       = sprintf(strings.enUS['string_cancel_cap'])
+const DONE_TEXT = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
+const CANCEL_TEXT = sprintf(strings.enUS['string_cancel_cap'])
 const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_valid'])
 
-////////////////////////////// ROOT ///////////////////////////////////////////
+// //////////////////////////// ROOT ///////////////////////////////////////////
 
 class CreateWallet extends Component {
   getSupportedBlockchains = () => {
@@ -106,7 +106,7 @@ class CreateWallet extends Component {
 
   handleOnCancel = () => {
     Keyboard.dismiss()
-    Actions.walletList() //redirect to the list of wallets
+    Actions.walletList() // redirect to the list of wallets
   }
 
   handleChangeWalletName = input => {
@@ -160,16 +160,15 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   updateWalletName: walletName => dispatch(updateWalletName(walletName)),
   selectBlockchain: blockchain => dispatch(selectBlockchain(blockchain)),
-  selectFiat:       fiat       => dispatch(selectFiat(fiat)),
-  createWallet:     (walletName, blockchain) => dispatch(createWallet(walletName, blockchain))
+  selectFiat: fiat => dispatch(selectFiat(fiat)),
+  createWallet: (walletName, blockchain) => dispatch(createWallet(walletName, blockchain))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)
 
-////////////////////////////// Buttons ////////////////////////////////////////
+// //////////////////////////// Buttons ////////////////////////////////////////
 
 const Buttons = (props) => {
-
   return (
     <View style={styles.buttons}>
 
@@ -189,7 +188,7 @@ const Buttons = (props) => {
   )
 }
 
-////////////////////////////// WalletNameInput /////////////////////////////////
+// //////////////////////////// WalletNameInput /////////////////////////////////
 
 class WalletNameInput extends Component {
   render () {
@@ -198,7 +197,7 @@ class WalletNameInput extends Component {
         <TextInput style={styles.picker}
           clearButtonMode={'while-editing'}
           autoCorrect={false}
-          autoFocus={true}
+          autoFocus
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText} />
       </View>
@@ -206,7 +205,7 @@ class WalletNameInput extends Component {
   }
 }
 
-////////////////////////////// DropDownPicker /////////////////////////////////
+// //////////////////////////// DropDownPicker /////////////////////////////////
 
 class DropdownPicker extends Component {
   constructor (props) {
@@ -215,7 +214,7 @@ class DropdownPicker extends Component {
     this.state = {
       searchTerm: '',
       isListVisible: false,
-      selectedItem: '',
+      selectedItem: ''
     }
   }
 
@@ -233,20 +232,20 @@ class DropdownPicker extends Component {
 
   handleOnFocus = () => {
     this.setState({
-      isListVisible: true,
+      isListVisible: true
     })
   }
 
   handleOnBlur = () => {
     this.setState({
-      isListVisible: false,
+      isListVisible: false
     })
   }
 
   handleSelectListItem = (listItem) => {
     this.setState({
       searchTerm: listItem,
-      isListVisible: false,
+      isListVisible: false
     })
 
     this.props.onSelect(listItem)
@@ -295,7 +294,7 @@ class DropdownPicker extends Component {
   }
 }
 
-////////////////////////////// DropdownList ///////////////////////////////////
+// //////////////////////////// DropdownList ///////////////////////////////////
 
 const DropdownList = props => {
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
@@ -304,7 +303,7 @@ const DropdownList = props => {
   renderRow = data => {
     return (
       <TouchableOpacity
-        style={{backgroundColor: 'white', padding: 10,}}
+        style={{backgroundColor: 'white', padding: 10 }}
         onPress={() => props.onPress(data)}>
         <T>{data}</T>
       </TouchableOpacity>
@@ -322,4 +321,4 @@ const DropdownList = props => {
   )
 }
 
-////////////////////////////// End ////////////////////////////////////////////
+// //////////////////////////// End ////////////////////////////////////////////

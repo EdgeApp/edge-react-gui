@@ -1,6 +1,5 @@
 import React, {StyleSheet} from 'react-native'
 
-
 module.exports = StyleSheet.create({
 
   container: {
@@ -16,28 +15,28 @@ module.exports = StyleSheet.create({
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 25,
-    backgroundColor: 'white', 
-    height: 50, 
+    backgroundColor: 'white',
+    height: 50,
     width: 50,
     position: 'relative',
-    top: 10    
+    top: 10
   },
   modalHeaderIconWrapTop: {
-    position: 'relative', 
-    top: 1, 
-    left: 1, 
-    borderRadius: 25, 
-    backgroundColor: 'white', 
-    zIndex: 100, 
+    position: 'relative',
+    top: 1,
+    left: 1,
+    borderRadius: 25,
+    backgroundColor: 'white',
+    zIndex: 100,
     elevation: 100,
-    height: 48, 
+    height: 48,
     width: 48
   },
   payeeIcon: {
-    position: 'relative', 
-    top: 2, 
-    left: 16, 
-    backgroundColor: 'transparent'    
+    position: 'relative',
+    top: 2,
+    left: 16,
+    backgroundColor: 'transparent'
   },
   dataArea: {
     position: 'relative',
@@ -78,7 +77,7 @@ module.exports = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     paddingLeft: 15,
-    paddingRight: 15    
+    paddingRight: 15
   },
   amountAreaLeft: {
     flex: 1,
@@ -89,7 +88,7 @@ module.exports = StyleSheet.create({
     fontSize: 14
   },
   amountAreaMiddle: {
-    flex: 3, 
+    flex: 3,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center'
@@ -115,12 +114,12 @@ module.exports = StyleSheet.create({
   },
   amountAreaRightText: {
     color: '#909091',
-    fontSize: 14,   
+    fontSize: 14
   },
   editableFiatRow: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     paddingLeft: 15,
-    paddingRight: 15    
+    paddingRight: 15
   },
   editableFiatLeft: {
     flex: 1
@@ -145,13 +144,13 @@ module.exports = StyleSheet.create({
   },
   editableFiatRightText: {
     color: '#909091',
-    fontSize: 14    
+    fontSize: 14
   },
   categoryRow: {
     marginTop: 10,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     paddingLeft: 15,
-    paddingRight: 15    
+    paddingRight: 15
   },
   categoryLeft: {
     borderRadius: 3,
@@ -165,16 +164,16 @@ module.exports = StyleSheet.create({
     marginLeft: 11,
     height: 27,
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'flex-start'
 
   },
   categoryInput: {
     height: 16,
-    fontSize: 13,
+    fontSize: 13
 
   },
   notesRow: {
-    paddingBottom: 20, 
+    paddingBottom: 20,
     paddingTop: 14,
     paddingLeft: 15,
     paddingRight: 15
@@ -184,7 +183,7 @@ module.exports = StyleSheet.create({
     borderColor: '#CCCCCC',
     borderRadius: 3,
     height: 50,
-    padding: 3    
+    padding: 3
   },
   notesInput: {
     color: '#58595C',
@@ -213,5 +212,5 @@ module.exports = StyleSheet.create({
     color: '#4977BB',
     fontSize: 14
   }
-});
+})
 

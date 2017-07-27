@@ -4,30 +4,29 @@ import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import { openABAlert, closeABAlert } from './action.js'
 
-
 class ABAlert extends Component {
 
-  componentWillReceiveProps(nextProps){
-    if(nextProps.view) {
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.view) {
       return this._openAlert(nextProps)
     }
-    if(!nextProps.view) {
+    if (!nextProps.view) {
       return this._closeAlert()
     }
   }
 
   _openAlert = (props) => {
     console.log('opening alert, props is: ', props)
-    if(!props.buttons) {
+    if (!props.buttons) {
       props.buttons = [
         {text: 'OK', onPress: () => this._closeAlert(), style: 'cancel'}
-      ]      
+      ]
     }
     return Alert.alert(
       props.title,
       props.message,
       props.buttons,
-      {  onDismiss: () => { this._closeAlert() } }
+      { onDismiss: () => { this._closeAlert() } }
     )
   }
 
@@ -45,10 +44,10 @@ class ABAlert extends Component {
 }
 
 const mapStateToProps = state => ({
-  view:    state.ui.scenes.ABAlert.view,
+  view: state.ui.scenes.ABAlert.view,
   message: state.ui.scenes.ABAlert.syntax.message,
   title: state.ui.scenes.ABAlert.syntax.title,
-  route:   state.ui.scenes.ABAlert.route
+  route: state.ui.scenes.ABAlert.route
 })
 
 export default connect(mapStateToProps)(ABAlert)

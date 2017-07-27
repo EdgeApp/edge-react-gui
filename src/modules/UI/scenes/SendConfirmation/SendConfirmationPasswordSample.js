@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 
-
 export default class Password extends Component {
 
   render () {
@@ -16,7 +15,7 @@ export default class Password extends Component {
       <View style={styles.container}>
         <Text style={[ styles.text, { fontSize: 14 } ]}>Password:</Text>
         <View style={styles.textInputContainer}>
-          <TextInput secureTextEntry={true} style={styles.textInput} />
+          <TextInput secureTextEntry style={styles.textInput} />
         </View>
       </View>
     )
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
   textInputContainer: {
     flex: 1,
     marginLeft: 8,
-    borderBottomColor: "#FFF",
+    borderBottomColor: '#FFF',
     borderBottomWidth: 0.5,
     borderStyle: 'solid',
     padding: 3

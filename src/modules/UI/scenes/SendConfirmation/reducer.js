@@ -106,16 +106,16 @@ export default sendConfirmation = (state = initialState, action) => {
       return {
         ...state,
         pending
-      }      
+      }
     case ACTION.UPDATE_SPEND_SUFFICIENT_FUNDS:
       const { mode } = data
       return {
         ...state,
         mode
-      }     
+      }
     case ACTION.RESET:
       return initialState
-      
+
     default:
       return state
   }

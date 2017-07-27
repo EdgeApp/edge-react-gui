@@ -22,10 +22,10 @@ import more_selected from '../../../../assets/images/tabbar/more_selected@3x.png
 class TabBar extends Component {
 
   _handleToggleSideBar = () => {
-    if(!this.props.sidemenu) {
+    if (!this.props.sidemenu) {
       this.props.dispatch(openSidebar())
     }
-    if(this.props.sidemenu) {
+    if (this.props.sidemenu) {
       this.props.dispatch(closeSidebar())
     }
   }
@@ -33,72 +33,72 @@ class TabBar extends Component {
   _onLayout = (event) => {
     var {x, y, width, height} = event.nativeEvent.layout
     console.log('TabBar event.nativeEvent is : ', event.nativeEvent)
-    console.log('TabBar onLayout occurred', x , y , width , height)
+    console.log('TabBar onLayout occurred', x, y, width, height)
     this.props.dispatch(setTabBarHeight(height))
   }
 
   render () {
     return (
-      <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} colors={["#3b7adb","#2b569a"]} style={{ borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid' }} onLayout={this._onLayout} >
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3b7adb', '#2b569a']} style={{ borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid' }} onLayout={this._onLayout} >
         <Footer>
           <FooterTab>
 
             <Button
-              onPress={ () => Actions.walletList() }
-              active={ this.props.routes.scene.name  === 'walletList' ? true : false }
+              onPress={() => Actions.walletList()}
+              active={this.props.routes.scene.name === 'walletList' ? true : false}
             >
               <Image
                 style={{width: 25, height: 25}}
-                source={this.props.routes.scene.name  === 'walletList' ? wallet_selected : wallet}
+                source={this.props.routes.scene.name === 'walletList' ? wallet_selected : wallet}
               />
               <Text style={{ marginTop: 5 }}>Wallets</Text>
             </Button>
 
             <Button
-              onPress={ () => Actions.request() }
-              active={ this.props.routes.scene.name  === 'request' ? true : false }
+              onPress={() => Actions.request()}
+              active={this.props.routes.scene.name === 'request' ? true : false}
             >
               <Image
                 style={{width: 25, height: 25}}
-                source={this.props.routes.scene.name  === 'request' ? receive_selected : receive}
+                source={this.props.routes.scene.name === 'request' ? receive_selected : receive}
               />
               <Text style={{ marginTop: 5 }}>Request</Text>
             </Button>
 
             <Button
-              onPress={ () => Actions.scan() }
-              active={this.props.routes.scene.name  === 'scan' ? true : false}
+              onPress={() => Actions.scan()}
+              active={this.props.routes.scene.name === 'scan' ? true : false}
             >
               <Image
                 style={{width: 25, height: 25}}
-                source={this.props.routes.scene.name  === 'scan' ? scan_selected : scan }
+                source={this.props.routes.scene.name === 'scan' ? scan_selected : scan}
               />
               <Text style={{ marginTop: 5 }}>Scan</Text>
             </Button>
 
             <Button
-              onPress={ () => Actions.transactionList({type: 'reset'}) }
-              active={ this.props.routes.scene.name  === 'transactionList' ? true : false }
+              onPress={() => Actions.transactionList({type: 'reset'})}
+              active={this.props.routes.scene.name === 'transactionList' ? true : false}
             >
               <Image
                 style={{width: 25, height: 25}}
-                source={this.props.routes.scene.name  === 'transactionList' ? exchange_selected : exchange}
+                source={this.props.routes.scene.name === 'transactionList' ? exchange_selected : exchange}
               />
               <Text style={{ marginTop: 5 }}>Transactions</Text>
             </Button>
 
             <Button
-              onPress={ this._handleToggleSideBar }
-              active={ this.props.sidemenu ? true : false }
+              onPress={this._handleToggleSideBar}
+              active={this.props.sidemenu ? true : false}
             >
               <Image
                 style={{width: 25, height: 25}}
                 source={this.props.sidemenu ? more_selected : more}
               />
-                <Text style={{ marginTop: 5 }}>More</Text>
-              </Button>
+              <Text style={{ marginTop: 5 }}>More</Text>
+            </Button>
 
-            </FooterTab>
+          </FooterTab>
         </Footer>
       </LinearGradient>
     )
@@ -107,7 +107,7 @@ class TabBar extends Component {
 
 const mapStateToProps = state => ({
   sidemenu: state.ui.scenes.sideMenu.view,
-  routes:   state.routes
+  routes: state.routes
 })
 
 export default connect(mapStateToProps)(TabBar)

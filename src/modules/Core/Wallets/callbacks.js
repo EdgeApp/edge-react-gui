@@ -1,6 +1,6 @@
 // import { renameWalletSuccess } from '../../UI/Wallets/action.js'
 import { refreshWallet } from '../../UI/Wallets/action.js'
-import { getTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
+import { refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
 
 export const makeWalletCallbacks = (dispatch, walletId) => {
   const callbacks = {
