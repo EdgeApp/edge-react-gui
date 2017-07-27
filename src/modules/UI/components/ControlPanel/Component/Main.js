@@ -12,13 +12,13 @@ import { logout } from  '../action.js'
 import styles from '../style'
 const platform = Platform.OS;
 
-import buyandsell from '../../../../../assets/images/sidenav/buysell@3x.png.png'
-import directory from '../../../../../assets/images/sidenav/directory@3x.png.png'
-import logout_image from '../../../../../assets/images/sidenav/logout@3x.png.png'
-import refer from '../../../../../assets/images/sidenav/refer@3x.png.png'
-import security from '../../../../../assets/images/sidenav/security@3x.png.png'
-import settings from '../../../../../assets/images/sidenav/settings@3x.png.png'
-import spend from '../../../../../assets/images/sidenav/spend@3x.png.png'
+import buyandsell from '../../../../../assets/images/sidenav/buysell.png'
+import directory from '../../../../../assets/images/sidenav/directory.png'
+import logout_image from '../../../../../assets/images/sidenav/logout.png'
+import refer from '../../../../../assets/images/sidenav/refer.png'
+import security from '../../../../../assets/images/sidenav/security.png'
+import settings from '../../../../../assets/images/sidenav/settings.png'
+import spend from '../../../../../assets/images/sidenav/spend.png'
 
 class MainComponent extends Component {
   render () {

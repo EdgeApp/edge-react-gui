@@ -15,7 +15,7 @@ import Main from './Component/Main'
 import usersListObject from './userList'
 import styles from './style'
 
-import person from '../../../../assets/images/sidenav/accounts@3x.png.png'
+import person from '../../../../assets/images/sidenav/accounts.png'
 
 class ControlPanel extends Component {
   componentDidMount () {

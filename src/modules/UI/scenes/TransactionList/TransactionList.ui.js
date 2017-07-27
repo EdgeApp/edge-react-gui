@@ -28,10 +28,10 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import request_image from '../../../../assets/images/transactions/transactions-request@3x.png.png'
-import send_image from '../../../../assets/images/transactions/transactions-send@3x.png.png'
-import sent_type_image from '../../../../assets/images/transactions/transaction-type-sent@3x.png.png'
-import received_type_image from '../../../../assets/images/transactions/transaction-type-received@3x.png.png'
+import request_image from '../../../../assets/images/transactions/transactions-request.png'
+import send_image from '../../../../assets/images/transactions/transactions-send.png'
+import sent_type_image from '../../../../assets/images/transactions/transaction-type-sent.png'
+import received_type_image from '../../../../assets/images/transactions/transaction-type-received.png'
 
 const monthNames = [
     sprintf(strings.enUS['transactions_list_date_jan']),
