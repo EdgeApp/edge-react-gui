@@ -124,7 +124,6 @@
     "ignore": [
       "theme",
       "src/modules/ui/components/FlipInput",
-      "src/modules/ui/components/HelpModal",
       "src/modules/UI/scenes/SendConfirmation",
       "src/modules/UI/scenes/TransactionList"
     ],
