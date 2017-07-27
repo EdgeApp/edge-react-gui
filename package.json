@@ -123,7 +123,6 @@
     "ignore": [
       "theme",
       "src/modules/UI/components",
-      "src/modules/UI/scenes/Request",
       "src/modules/UI/scenes/SendConfirmation",
       "src/modules/UI/scenes/TransactionList"
     ],
