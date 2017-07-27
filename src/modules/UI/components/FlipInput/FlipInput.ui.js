@@ -337,7 +337,7 @@ class FlipInputInside extends Component {
           }
         ]}>
           <View style={styles.secondaryTextContainer}>
-            <Text numberOfLines={1} ellipsizeMode='clip' style={[
+            <Text numberOfLines={1} ellipsizeMode='middle' style={[
               styles.secondaryText, {
                 color: getTextColor()
               }

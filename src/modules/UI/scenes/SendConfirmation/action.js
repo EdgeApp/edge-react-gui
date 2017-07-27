@@ -232,7 +232,7 @@ export const processURI = (uri) => {
       publicAddress,
       amountSatoshi,
       metadata
-    } = account.parseURI(uri)
+    } = wallet.parseURI(uri)
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
     const spendInfo = makeSpendInfo({
       publicAddress,

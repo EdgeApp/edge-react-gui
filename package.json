@@ -127,7 +127,11 @@
       "src/modules/UI/scenes/TransactionList"
     ],
     "parser": "babel-eslint",
-    "globals": [ "__DEV__", "localStorage", "alert" ]
+    "globals": [
+      "__DEV__",
+      "localStorage",
+      "alert"
+    ]
   },
   "react-native": {
     "crypto": "react-native-crypto",
