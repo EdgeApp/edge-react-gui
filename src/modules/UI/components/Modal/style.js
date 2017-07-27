@@ -1,12 +1,11 @@
-import React, {StyleSheet, Dimensions, Platform} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
   width: Dimensions.get('window').width
 }
 
-module.exports = StyleSheet.create({
-
+export default StyleSheet.create({
   // modal styles
   topLevelModal: {
 
