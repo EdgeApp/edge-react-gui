@@ -1,15 +1,12 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './style'
-import Menu, { MenuContext, MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
+import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import T from '../../components/FormattedText'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import Ionicon from 'react-native-vector-icons/Ionicons'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
-import {executeWalletRowOption, updateCurrentWalletBeingRenamed, updateRenameWalletInput } from './action'
+import {executeWalletRowOption, updateRenameWalletInput} from './action'
 import {border as b} from '../../../utils'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -30,7 +27,9 @@ class WalletListRowOptions extends Component {
       <View style={styles.rowDotsWrap}>
         <Menu style={styles.menuButton} onSelect={(value) => this.optionAction(value)}>
           <MenuTrigger style={styles.menuTrigger}>
-            <Text style={{fontSize: 20 }}>&#8942;</Text>
+            <Text style={{fontSize: 20}}>
+              &#8942;
+            </Text>
           </MenuTrigger>
           <MenuOptions>
             <MenuOption value={options[0]} style={styles.menuOption}>

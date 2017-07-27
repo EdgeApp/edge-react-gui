@@ -127,7 +127,6 @@
       "src/modules/UI/scenes/SendConfirmation",
       "src/modules/UI/scenes/TransactionList",
       "src/modules/UI/scenes/TransactionDetails",
-      "src/modules/UI/scenes/WalletList",
       "src/modules/UI/scenes/WalletTransferList"
     ],
     "parser": "babel-eslint",
