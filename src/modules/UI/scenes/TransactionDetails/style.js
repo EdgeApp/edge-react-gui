@@ -1,6 +1,6 @@
-import React, {StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 
-module.exports = StyleSheet.create({
+const styles = StyleSheet.create({
 
   container: {
     flex: 1,
@@ -11,7 +11,6 @@ module.exports = StyleSheet.create({
     height: 32,
     flexDirection: 'row',
     justifyContent: 'center'
-
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 25,
@@ -46,7 +45,6 @@ module.exports = StyleSheet.create({
   payeeNameArea: {
     alignItems: 'center',
     flexDirection: 'column'
-
   },
   payeeNameWrap: {
     width: '38%',
@@ -100,9 +98,7 @@ module.exports = StyleSheet.create({
     fontSize: 26,
     color: '#58595C'
   },
-  amountAreaMiddleBottom: {
-
-  },
+  amountAreaMiddleBottom: {},
   amountAreaMiddleBottomText: {
     fontSize: 14,
     color: '#909091'
@@ -165,12 +161,10 @@ module.exports = StyleSheet.create({
     height: 27,
     justifyContent: 'center',
     alignItems: 'flex-start'
-
   },
   categoryInput: {
     height: 16,
     fontSize: 13
-
   },
   notesRow: {
     paddingBottom: 20,
@@ -214,3 +208,4 @@ module.exports = StyleSheet.create({
   }
 })
 
+export default styles

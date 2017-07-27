@@ -1,49 +1,20 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import PropTypes from 'prop-types'
 import {
-  Easing,
   TextInput,
-  Image,
   ScrollView,
-  ListView,
-  Text,
-  View,
-  StyleSheet,
-  TouchableHighlight,
-  Animated,
-  ActivityIndicator
+  View
 } from 'react-native'
 import T from '../../components/FormattedText'
 import {PrimaryButton} from '../../components/Buttons'
 import {connect} from 'react-redux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
-import {Actions} from 'react-native-router-flux'
 import {} from './action'
-import Contacts from 'react-native-contacts'
 import styles from './style'
 import {border as b} from '../../../utils'
 import { setTransactionDetails } from './action.js'
-
-const monthNames = [
-  sprintf(strings.enUS['transactions_list_date_jan']),
-  sprintf(strings.enUS['transactions_list_date_feb']),
-  sprintf(strings.enUS['transactions_list_date_mar']),
-  sprintf(strings.enUS['transactions_list_date_apr']),
-  sprintf(strings.enUS['transactions_list_date_may']),
-  sprintf(strings.enUS['transactions_list_date_jun']),
-  sprintf(strings.enUS['transactions_list_date_jul']),
-  sprintf(strings.enUS['transactions_list_date_aug']),
-  sprintf(strings.enUS['transactions_list_date_sep']),
-  sprintf(strings.enUS['transactions_list_date_oct']),
-  sprintf(strings.enUS['transactions_list_date_nov']),
-  sprintf(strings.enUS['transactions_list_date_dec'])
-]
-var dateStrings = []
 
 class TransactionDetails extends Component {
   constructor (props) {
@@ -74,22 +45,30 @@ class TransactionDetails extends Component {
 
   onChangePayee = (input) => {
     console.log('payeeName changed to: ', input)
-    this.setState({ payeeName: input })
+    this.setState({
+      payeeName: input
+    })
   }
 
   onChangeFiat = (input) => {
     console.log('amountFiat changed to: ', input)
-    this.setState({ amountFiat: input })
+    this.setState({
+      amountFiat: input
+    })
   }
 
   onChangeCategory = (input) => {
     console.log('category changed to: ', input)
-    this.setState({ category: input})
+    this.setState({
+      category: input
+    })
   }
 
   onChangeNotes = (input) => {
     console.log('notes changed to: ', input)
-    this.setState({ notes: input })
+    this.setState({
+      notes: input
+    })
   }
 
   onPressSave = () => {
@@ -102,7 +81,6 @@ class TransactionDetails extends Component {
 
   render () {
     console.log('rendering Transaction Details scene, this.props is: ', this.props, ' and this.state is: ', this.state)
-    let initialValues = this.state
     return (
       <ScrollView overScrollMode='never' /* alwaysBounceVertical={false} */ >
         <View style={[b(), styles.container]}>
@@ -143,11 +121,7 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
 
 class AmountArea extends Component {
-  constructor (props) {
-    super(props)
-  }
   // fiat amount is editable
-
   types = {
     exchange: {
       color: '#F6A623',
@@ -226,10 +200,6 @@ class AmountArea extends Component {
 }
 
 class PayeeIcon extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
     console.log('rendering PayeeIcon, this.props is: ', this.props)
     let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
@@ -251,25 +221,8 @@ class PayeeIcon extends Component {
       )
     } else {
       return (
-        <Ionicon name='ios-arrow-round-up' color={iconBgColor} size={44} style={[ styles.payeeIcon]} />
+        <Ionicon name='ios-arrow-round-up' color={iconBgColor} size={44} style={[styles.payeeIcon]} />
       )
     }
-  }
-}
-
-class ContactIcon extends Component {
-  constructor (props) {
-    super(props)
-  }
-
-  render () {
-    let iconBgColor = (this.props.direction === 'receive') ? 'green' : 'red'
-    return (
-      <View style={[b(), styles.modalHeaderIconWrapBottom]}>
-        <View style={styles.modalHeaderIconWrapTop}>
-          {this.props.featuredIcon}
-        </View>
-      </View>
-    )
   }
 }
