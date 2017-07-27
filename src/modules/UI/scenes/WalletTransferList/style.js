@@ -1,8 +1,6 @@
-import React from 'react-native'
 import {StyleSheet, Dimensions} from 'react-native'
 
-module.exports = StyleSheet.create({
-
+const styles = StyleSheet.create({
   container: {
     bottom: Dimensions.get('window').height / 10,
     maxHeight: Dimensions.get('window').height * 0.8,
@@ -48,5 +46,6 @@ module.exports = StyleSheet.create({
   individualRowText: {
     fontSize: 16
   }
-
 })
+
+export default styles

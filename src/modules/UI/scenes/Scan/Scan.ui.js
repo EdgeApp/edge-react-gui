@@ -29,7 +29,6 @@ import {
 } from '../SendConfirmation/action.js'
 
 import { toggleWalletListModal } from '../WalletTransferList/action'
-import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
@@ -181,7 +180,6 @@ const mapDispatchToProps = dispatch => {
     toggleEnableTorch: () => dispatch(toggleEnableTorch()),
     toggleAddressModal: () => dispatch(toggleAddressModal()),
     toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-    getWalletTransferList: () => dispatch(getWalletTransferList()),
 
     processURI: uri => dispatch(processURI(uri)),
     updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),

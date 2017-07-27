@@ -125,8 +125,7 @@
       "src/modules/UI/components",
       "src/modules/UI/scenes/Request",
       "src/modules/UI/scenes/SendConfirmation",
-      "src/modules/UI/scenes/TransactionList",
-      "src/modules/UI/scenes/WalletTransferList"
+      "src/modules/UI/scenes/TransactionList"
     ],
     "parser": "babel-eslint",
     "globals": [ "__DEV__", "localStorage", "alert" ]
