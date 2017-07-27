@@ -2,23 +2,16 @@ import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
-  ScrollView,
-  Text,
   View,
-  StyleSheet,
   Keyboard,
   ListView,
-  Button,
   TouchableOpacity,
   TextInput } from 'react-native'
 import T from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-import { dev } from '../../../utils.js'
 import { updateWalletName, selectBlockchain, selectFiat, createWallet } from './action'
-import LinearGradient from 'react-native-linear-gradient'
 
-import { addWallet } from '../../Wallets/action.js'
 import { Actions } from 'react-native-router-flux'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
@@ -264,7 +257,7 @@ class DropdownPicker extends Component {
   }
 
   displayListIfVisible = () => {
-    const {isListVisible, matchingListItems} = this.state
+    const {isListVisible} = this.state
 
     if (isListVisible) {
       return (
@@ -300,10 +293,10 @@ const DropdownList = props => {
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
   const dataSource = ds.cloneWithRows(props.dataSource)
 
-  renderRow = data => {
+  const renderRow = (data) => {
     return (
       <TouchableOpacity
-        style={{backgroundColor: 'white', padding: 10 }}
+        style={{ backgroundColor: 'white', padding: 10 }}
         onPress={() => props.onPress(data)}>
         <T>{data}</T>
       </TouchableOpacity>
@@ -316,7 +309,7 @@ const DropdownList = props => {
         keyboardShouldPersistTaps={'always'}
         style={styles.listView}
         dataSource={dataSource}
-        renderRow={this.renderRow} />
+        renderRow={renderRow} />
     </View>
   )
 }

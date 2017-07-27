@@ -123,10 +123,19 @@
     "ignore": [
       "theme",
       "src/modules/UI/components",
-      "src/modules/UI/scenes"
+      "src/modules/UI/scenes/Directory",
+      "src/modules/UI/scenes/Login",
+      "src/modules/UI/scenes/Request",
+      "src/modules/UI/scenes/Scan",
+      "src/modules/UI/scenes/SendConfirmation",
+      "src/modules/UI/scenes/Settings",
+      "src/modules/UI/scenes/TransactionList",
+      "src/modules/UI/scenes/TransactionDetails",
+      "src/modules/UI/scenes/WalletList",
+      "src/modules/UI/scenes/WalletTransferList"
     ],
     "parser": "babel-eslint",
-    "globals": [ "__DEV__", "localStorage" ]
+    "globals": [ "__DEV__", "localStorage", "alert" ]
   },
   "react-native": {
     "crypto": "react-native-crypto",
