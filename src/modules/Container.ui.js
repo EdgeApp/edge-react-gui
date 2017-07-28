@@ -29,9 +29,7 @@ import HelpModal from './UI/components/HelpModal'
 import ABAlert from './UI/components/ABAlert'
 import TransactionAlert from './UI/components/TransactionAlert'
 
-// import { updateExchangeRates } from './UI/components/ExchangeRate/action'
 import { updateExchangeRates } from './ExchangeRates/action.js'
-
 import { setDeviceDimensions } from './UI/dimensions/action'
 import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
@@ -40,7 +38,6 @@ import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
 import * as PLUGINS from 'airbitz-exchange-plugins'
-// import { coinbasePlugin } from 'airbitz-exchange-plugins'
 
 import styles from './style.js'
 
