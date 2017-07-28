@@ -12,7 +12,7 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 import Main from './Component/Main'
 import styles from './style'
 
-import person from '../../../../assets/images/sidenav/accounts@3x.png.png'
+import person from '../../../../assets/images/sidenav/accounts.png'
 
 class ControlPanel extends Component {
   _handlePressUserList = () => {

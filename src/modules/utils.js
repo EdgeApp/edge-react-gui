@@ -21,10 +21,6 @@ export const findDenominationSymbol = (denoms, value) => {
   }
 }
 
-export const formatAMPM = (date) => {
-  return date.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric'})
-}
-
 const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
   const fiatFromCrypto = (crypto * fiatPerCrypto)
 

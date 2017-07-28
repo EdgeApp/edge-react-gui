@@ -9,15 +9,17 @@ export default class Left extends Component {
       case 'directory':
         return <BackButton />
       case 'sendConfirmation':
-        return <SendConfirmationBackButton />
+        return <BackButton syntax='Back' onPressFxn={e => Actions.scan()} />
       case 'createWallet':
-        return <BackButton />
+        return <BackButton syntax='Cancel' />
       case 'transactionList':
         return this.props.routes.scene.params === 'walletList' ? <BackButton /> : null
       case 'btcSettings':
-        return <BackButton />
+        return <BackButton syntax='Back' />
       case 'ethSettings':
-        return <BackButton />
+        return <BackButton syntax='Back' />
+      case 'transactionDetails':
+        return <BackButton syntax='Cancel' />
       default:
         return null
     }
@@ -25,20 +27,16 @@ export default class Left extends Component {
 }
 
 class BackButton extends Component {
-  render () {
-    return (
-      <TouchableOpacity onPress={e => Actions.pop()}>
-        <Text>Back</Text>
-      </TouchableOpacity>
-    )
+  constructor (props) {
+    super(props)
+    this.props.pressFxn = this.props.onPressFxn ? this.props.onPressFxn : Actions.pop
+    this.props.syntax = this.props.syntax ? this.props.syntax : 'Back'
   }
-}
 
-class SendConfirmationBackButton extends Component {
   render () {
     return (
-      <TouchableOpacity onPress={e => Actions.scan()}>
-        <Text>Back</Text>
+      <TouchableOpacity onPress={this.props.onPressFxn ? this.props.onPressFxn : (e) => Actions.pop()}>
+        <Text>{this.props.syntax}</Text>
       </TouchableOpacity>
     )
   }

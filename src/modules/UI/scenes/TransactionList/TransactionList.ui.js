@@ -21,34 +21,20 @@ import { Actions } from 'react-native-router-flux'
 import {
   transactionsSearchVisible,
   transactionsSearchHidden,
-  getTransactionsRequest } from './action'
+  getTransactionsRequest
+} from './action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
 // import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b, findDenominationSymbol as symbolize, formatAMPM } from '../../../utils'
+import { border as b, findDenominationSymbol as symbolize } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import requestImage from '../../../../assets/images/transactions/transactions-request@3x.png.png'
-import sendImage from '../../../../assets/images/transactions/transactions-send@3x.png.png'
-import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent@3x.png.png'
-import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received@3x.png.png'
-
-const monthNames = [
-  sprintf(strings.enUS['transactions_list_date_jan']),
-  sprintf(strings.enUS['transactions_list_date_feb']),
-  sprintf(strings.enUS['transactions_list_date_mar']),
-  sprintf(strings.enUS['transactions_list_date_apr']),
-  sprintf(strings.enUS['transactions_list_date_may']),
-  sprintf(strings.enUS['transactions_list_date_jun']),
-  sprintf(strings.enUS['transactions_list_date_jul']),
-  sprintf(strings.enUS['transactions_list_date_aug']),
-  sprintf(strings.enUS['transactions_list_date_sep']),
-  sprintf(strings.enUS['transactions_list_date_oct']),
-  sprintf(strings.enUS['transactions_list_date_nov']),
-  sprintf(strings.enUS['transactions_list_date_dec'])
-]
+import requestImage from '../../../../assets/images/transactions/transactions-request.png'
+import sendImage from '../../../../assets/images/transactions/transactions-send.png'
+import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
+import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
 
 class TransactionList extends Component {
   constructor (props) {
@@ -215,7 +201,6 @@ class TransactionList extends Component {
   }
 
   render () {
-    console.log('inside transactionList->render and this.props is : ', this.props)
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -227,22 +212,18 @@ class TransactionList extends Component {
       newValue.key = i
       newValue.multiplier = this.props.multiplier
       let txDate = new Date(x.date * 1000)
-      let month = txDate.getMonth()
-      let day = txDate.getDate()
-      let year = txDate.getFullYear()
-      let time = formatAMPM(txDate)
-      let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
+      // let time = formatAMPM(txDate)
+      // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
+      let dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
+      let time = txDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric'})
       newValue.dateString = dateString
       newValue.time = time
       return newValue
     })
-    console.log('completedTxList is: ', completedTxList)
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    console.log('ds is: ', ds)
     let dataSrc = ds.cloneWithRows(completedTxList)
-    console.log('rendering txList, datSrc is: ', dataSrc)
-    console.log('rendering txList, this.props is: ', this.props)
     let logo
+
     console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
     if (this.props.uiWallet.currencyCode !== this.props.selectedCurrencyCode) {
       for (var metatoken of this.props.uiWallet.metaTokens) {
@@ -254,7 +235,7 @@ class TransactionList extends Component {
     } else {
       logo = this.props.uiWallet.symbolImage
     }
-    console.log('logo is: ', logo)
+
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -340,8 +321,7 @@ class TransactionList extends Component {
   }
 
   _goToTxDetail = (txId, currencyCode, tx) => {
-    return null
-    // Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
+    Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
   }
 
   renderTx = (tx, completedTxList) => {
