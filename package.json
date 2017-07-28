@@ -6,8 +6,10 @@
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "updot": "updot",
     "android:run": "npm run android:clean; react-native run-android",
+    "lint:0": "standard --verbose --parser babel-eslint; exit 0",
     "lint": "standard --verbose --parser babel-eslint",
-    "lints": "standard --verbose --parser babel-eslint | snazzy",
+    "lint:s": "standard --verbose --parser babel-eslint | snazzy",
+    "lint:s0": "standard --verbose --parser babel-eslint | snazzy; exit 0",
     "lint:fix": "standard --fix --verbose --parser babel-eslint | snazzy",
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
@@ -126,9 +128,7 @@
     "parser": "babel-eslint",
     "ignore": [
       "flow-coverage",
-      "theme",
-      "src/modules/ui/components/FlipInput",
-      "src/modules/UI/scenes/TransactionList"
+      "theme"
     ],
     "globals": [
       "__DEV__",
