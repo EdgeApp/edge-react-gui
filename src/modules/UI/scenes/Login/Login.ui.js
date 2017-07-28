@@ -146,7 +146,7 @@ class Login extends Component {
             <Image source={Logo}
               style={styles.logo}
               resizeMode={'contain'} />
-            <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} autoFocus style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username} />
+            <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username} />
             <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password} />
             <TouchableOpacity style={styles.button} onPress={this.onPress}>
               <Text style={styles.buttonText}>Sign In</Text>
