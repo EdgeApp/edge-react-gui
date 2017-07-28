@@ -34,8 +34,10 @@ const selectedFiat = (state = '', action) => {
   }
 }
 
-export default createWallet = combineReducers({
+const createWallet = combineReducers({
   walletName,
   selectedBlockchain,
   selectedFiat
 })
+
+export default createWallet

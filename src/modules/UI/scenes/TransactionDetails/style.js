@@ -1,7 +1,7 @@
-import React, {StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 import {colors as c} from '../../../../theme/variables/airbitz'
 
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
 
   container: {
     flex: 1,
@@ -12,28 +12,27 @@ module.exports = StyleSheet.create({
     height: 32,
     flexDirection: 'row',
     justifyContent: 'center'
-
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 25,
-    backgroundColor: 'white', 
-    height: 50, 
+    backgroundColor: 'white',
+    height: 50,
     width: 50,
     position: 'relative',
-    top: 10    
+    top: 10
   },
   modalHeaderIconWrapTop: {
-    borderRadius: 25, 
-    backgroundColor: 'white', 
-    zIndex: 100, 
+    borderRadius: 25,
+    backgroundColor: 'white',
+    zIndex: 100,
     elevation: 100,
-    height: 48, 
+    height: 48,
     width: 48
   },
   payeeIcon: {
-     width: 50,
-     height: 50,
-     backgroundColor: 'transparent'    
+    width: 50,
+    height: 50,
+    backgroundColor: 'transparent'
   },
   dataArea: {
     position: 'relative',
@@ -59,7 +58,7 @@ module.exports = StyleSheet.create({
   payeeSeperator: {
     borderBottomWidth: 1,
     borderBottomColor: '#CCCCCC',
-    width: '38%',    
+    width: '38%',
     height: 1
   },
   dateWrap: {
@@ -78,7 +77,7 @@ module.exports = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
     paddingLeft: 15,
-    paddingRight: 15    
+    paddingRight: 15
   },
   amountAreaLeft: {
     flex: 1,
@@ -89,7 +88,7 @@ module.exports = StyleSheet.create({
     fontSize: 14
   },
   amountAreaMiddle: {
-    flex: 3, 
+    flex: 3,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center'
@@ -101,9 +100,7 @@ module.exports = StyleSheet.create({
     fontSize: 26,
     color: c.gray1
   },
-  amountAreaMiddleBottom: {
-
-  },
+  amountAreaMiddleBottom: {},
   amountAreaMiddleBottomText: {
     fontSize: 14,
     color: c.gray2
@@ -115,12 +112,12 @@ module.exports = StyleSheet.create({
   },
   amountAreaRightText: {
     color: c.gray2,
-    fontSize: 14,   
+    fontSize: 14
   },
   editableFiatRow: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     paddingLeft: 15,
-    paddingRight: 15    
+    paddingRight: 15
   },
   editableFiatLeft: {
     flex: 1
@@ -145,13 +142,13 @@ module.exports = StyleSheet.create({
   },
   editableFiatRightText: {
     color: c.gray2,
-    fontSize: 14    
+    fontSize: 14
   },
   categoryRow: {
     marginTop: 10,
-    flexDirection: 'row', 
+    flexDirection: 'row',
     paddingLeft: 15,
-    paddingRight: 15    
+    paddingRight: 15
   },
 
   exchange: {
@@ -183,16 +180,14 @@ module.exports = StyleSheet.create({
     marginLeft: 11,
     height: 27,
     justifyContent: 'center',
-    alignItems: 'flex-start',
-
+    alignItems: 'flex-start'
   },
   categoryInput: {
     height: 16,
-    fontSize: 13,
-
+    fontSize: 13
   },
   notesRow: {
-    paddingBottom: 20, 
+    paddingBottom: 20,
     paddingTop: 14,
     paddingLeft: 15,
     paddingRight: 15
@@ -202,7 +197,7 @@ module.exports = StyleSheet.create({
     borderColor: '#CCCCCC',
     borderRadius: 3,
     height: 50,
-    padding: 3    
+    padding: 3
   },
   notesInput: {
     color: c.gray1,
@@ -231,5 +226,4 @@ module.exports = StyleSheet.create({
     color: c.secondary,
     fontSize: 14
   }
-});
-
+})

@@ -7,24 +7,20 @@ import {
   View,
   TouchableHighlight,
   TextInput,
-  Clipboard,
-  InteractionManager } from 'react-native'
+  Clipboard
+} from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
-import Modal from 'react-native-modal'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions.js'
-import WalletTransferList from '../WalletTransferList/WalletTransferList.ui'
 import styles from './style'
-import { WalletListModalConnect } from '../../components/WalletListModal/WalletListModal.ui'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleEnableTorch, toggleAddressModal, updateRecipientAddress  } from './action'
+import { toggleEnableTorch, toggleAddressModal } from './action'
 
 import {
   processURI,
@@ -33,12 +29,10 @@ import {
 } from '../SendConfirmation/action.js'
 
 import { toggleWalletListModal } from '../WalletTransferList/action'
-import { getWalletTransferList } from '../WalletTransferList/middleware'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import {TertiaryButton} from '../../components/Buttons'
 import ModalStyle from '../../components/Modal/style'
 import {border as b} from '../../../utils'
-
 
 class Scan extends Component {
   constructor (props) {
@@ -47,8 +41,8 @@ class Scan extends Component {
       cameraPermission: undefined
     }
   }
-  //check the status of a single permission
-  componentDidMount() {
+  // check the status of a single permission
+  componentDidMount () {
     PERMISSIONS.request('camera')
     .then(this.setCameraPermission)
   }
@@ -86,7 +80,6 @@ class Scan extends Component {
     const options = { takePhotoButtonTitle: null }
 
     ImagePicker.showImagePicker(options, (response) => {
-
       if (response.didCancel) {
         console.log('User cancelled photo picker')
       } else if (response.error) {
@@ -94,7 +87,6 @@ class Scan extends Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton)
       } else {
-        let source = { uri: response.uri }
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
@@ -175,11 +167,11 @@ class Scan extends Component {
 
 const mapStateToProps = state => {
   return {
-    scene:                             state.routes.scene.name,
-    torchEnabled:                      state.ui.scenes.scan.torchEnabled,
-    walletListModalVisible:            state.ui.scenes.walletTransferList.walletListModalVisible,
+    scene: state.routes.scene.name,
+    torchEnabled: state.ui.scenes.scan.torchEnabled,
+    walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
-    scanToWalletListModalVisibility:   state.ui.scenes.scan.scanToWalletListModalVisibility
+    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 
@@ -188,7 +180,6 @@ const mapDispatchToProps = dispatch => {
     toggleEnableTorch: () => dispatch(toggleEnableTorch()),
     toggleAddressModal: () => dispatch(toggleAddressModal()),
     toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-    getWalletTransferList: () => dispatch(getWalletTransferList()),
 
     processURI: uri => dispatch(processURI(uri)),
     updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
@@ -199,10 +190,10 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
-  render() {
-    return(
+  render () {
+    return (
       <StylizedModal
-        featuredIcon={<FAIcon name='address-book-o'size={24} color="#2A5799" style={[{position: 'relative', top:12, left:13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
+        featuredIcon={<FAIcon name='address-book-o'size={24} color='#2A5799' style={[{position: 'relative', top: 12, left: 13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
         headerText='fragment_send_address_dialog_title'
         modalMiddle={<AddressInputRecipientConnect />}
         modalBottom={<SendAddressButtonsConnect />}
@@ -212,19 +203,19 @@ class WalletAddressModal extends Component {
   }
 }
 
-export const WalletAddressModalConnect = connect( state => ({
-  addressModalVisible: state.ui.scenes.scan.addressModalVisible,
+export const WalletAddressModalConnect = connect(state => ({
+  addressModalVisible: state.ui.scenes.scan.addressModalVisible
 }))(WalletAddressModal)
 
 class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       uri: ''
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     Clipboard.getString().then(uri => {
       this.setState({
         uri
@@ -239,12 +230,11 @@ class AddressInputRecipient extends Component { // this component is for the inp
     Actions.sendConfirmation()
   }
 
-  render() {
-    let innerText = ''
+  render () {
     console.log('rendering Rename Address, this.state is: ', this.state)
     const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.uri)
 
-    return(
+    return (
       <View>
         <View style={[styles.addressInputWrap]}>
           <TextInput style={[styles.addressInput]}
@@ -267,11 +257,9 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 }
 
-export const AddressInputRecipientConnect = connect( state => ({
+export const AddressInputRecipientConnect = connect(state => ({
   recipientAddress: state.ui.scenes.scan.recipientAddress
 }))(AddressInputRecipient)
-
-
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
@@ -285,24 +273,24 @@ class SendAddressButtons extends Component { // this component is for the button
     this.props.dispatch(toggleAddressModal())
   }
 
-  render( ) {
-    return(
+  render () {
+    return (
       <View style={[ModalStyle.buttonsWrap, b('gray')]}>
         <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
             <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
-            <View style={ModalStyle.stylizedButtonTextWrap}>
-              <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
-            </View>
-          </TouchableHighlight>
+          </View>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
+          <View style={ModalStyle.stylizedButtonTextWrap}>
+            <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
+          </View>
+        </TouchableHighlight>
       </View>
     )
   }
 }
 
 const SendAddressButtonsConnect = connect(state => ({
-  recipientAddress: state.ui.scenes.scan.recipientAddress,
+  recipientAddress: state.ui.scenes.scan.recipientAddress
 }))(SendAddressButtons)

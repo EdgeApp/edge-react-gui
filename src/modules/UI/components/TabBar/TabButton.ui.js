@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Icon, Text } from 'native-base'
 
 const Tab = ({displayName, iconName, isActive, onPress}) => {

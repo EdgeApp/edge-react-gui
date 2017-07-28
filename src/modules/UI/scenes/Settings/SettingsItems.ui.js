@@ -1,36 +1,25 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {
   Switch,
   TouchableOpacity,
-  Image,
-  ScrollView,
-  ListView,
-  Text,
-  TextInput,
-  View,
-  StyleSheet,
-  TouchableHighlight,
-  Animated } from 'react-native'
+  View
+} from 'react-native'
 import T from '../../components/FormattedText'
-import { connect } from 'react-redux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
-import IonIcon from 'react-native-vector-icons/Ionicons'
-import { Actions } from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux'
 import s from './style'
 import {border as b} from '../../../utils'
 
 class SettingsItemWithRoute extends Component {
   _handleOnPressRouting (route) {
     Actions[route]()
-    goRoute()
+    // goRoute()
   }
 
   render () {
     return (
-      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
-        onPress={() => this.props.routeFunction()}>
+      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this.props.routeFunction()}>
 
         <View style={[s.settingsRowTextRow, b('red')]}>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>
@@ -53,10 +42,9 @@ class SettingsItemWithModal extends Component {
     console.log('toggle modal: ', modalKey)
   }
 
-  render() {
+  render () {
     return (
-      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
-        onPress={this._toggleModal(this.props.modal)}>
+      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={this._toggleModal(this.props.modal)}>
 
         <View style={[s.settingsRowTextRow, b('red')]}>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>
@@ -81,15 +69,13 @@ class SettingsItemWithSwitch extends Component {
 
   render () {
     return (
-      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false}
-        onPress={() => this. _onPressToggleSetting(this.props.property)}>
+      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._onPressToggleSetting(this.props.property)}>
 
         <View style={[s.settingsRowTextRow, b('red')]}>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>
             <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
           </View>
-          <Switch
-            onValueChange={ () => this._onPressToggleSetting(this.props.property)  } value={false} />
+          <Switch onValueChange={() => this._onPressToggleSetting(this.props.property)} value={false} />
         </View>
 
       </TouchableOpacity>

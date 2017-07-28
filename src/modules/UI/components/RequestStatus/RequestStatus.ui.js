@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Text, View } from 'react-native'
 import T from '../FormattedText/'
 import { connect } from 'react-redux'
-// import styles from './styles.js'
-import { Container, Content } from 'native-base'
-import { dev, border as b } from '../../../utils.js'
+import { border as b } from '../../../utils.js'
 
 const styles = {
   view: {
@@ -26,39 +24,38 @@ const RequestStatus = (props) => {
   console.log('inside RequestStatus, props is: ', props)
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
-  const amountRequestedInFiat = props.amountFiat
   const { publicAddress } = props
   const requestAddress = props.requestAddress
   console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
 
-  hasReceivedPartialPayment = () => {
+  const hasReceivedPartialPayment = () => {
     const hasReceivedPartialPayment =
       (hasReceivedPayment() && !isPaymentSufficient())
 
     return hasReceivedPartialPayment
   }
 
-  hasReceivedPayment = () => {
+  const hasReceivedPayment = () => {
     const hasReceivedPayment = !!amountReceivedInCrypto
 
     return hasReceivedPayment
   }
 
-  isPaymentSufficient = () => {
+  const isPaymentSufficient = () => {
     const isPaymentSufficient =
       amountReceivedInCrypto >= amountRequestedInCrypto
 
     return isPaymentSufficient
   }
 
-  getOutstandingDebtInCrypto = () => {
+  const getOutstandingDebtInCrypto = () => {
     const outstandingDebtInCrypto =
       (amountRequestedInCrypto - amountReceivedInCrypto)
 
     return outstandingDebtInCrypto
   }
 
-  getDisplayRequestStatus = () => {
+  const getDisplayRequestStatus = () => {
     const waitingForPayment =
       <View style={styles.view}>
         <Text style={styles.text}>
@@ -93,17 +90,16 @@ const RequestStatus = (props) => {
     return displayStatus
   }
 
-  console.log('in RequestStatus.ui, this.props is: ' , this)
+  console.log('in RequestStatus.ui, this.props is: ', this)
   return (
-
     <View style={styles.view}>
       {getDisplayRequestStatus()}
     </View>
   )
 }
 
-export default connect(state => ({
-
+const mapStateToProps = state => ({
   request: state.request
+})
 
-}))(RequestStatus)
+export default connect(mapStateToProps)(RequestStatus)

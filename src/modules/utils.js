@@ -1,21 +1,21 @@
 import borderColors from '../theme/variables/css3Colors'
 
 export const cutOffText = (str, lng) => {
-  if(str.length >= lng ) {
+  if (str.length >= lng) {
     return str.slice(0, lng) + '...'
   } else {
     return str
   }
 }
 
-/*export const cuttMiddleText = (str, lng1, lng2)=> {
+/* export const cuttMiddleText = (str, lng1, lng2)=> {
   // for later insertion
-}*/
+} */
 
 export const findDenominationSymbol = (denoms, value) => {
-  console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
-  for(v of denoms) {
-    if(v.name === value) {
+  console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
+  for (const v of denoms) {
+    if (v.name === value) {
       return v.symbol
     }
   }
@@ -59,12 +59,15 @@ const logError = (msg) => {
 }
 
 const border = (color) => {
-  var randColor = borderColors[Math.floor(Math.random() * borderColors.length)]
-  let borderColor = color ? color : randColor
+  let borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
     borderWidth: 0
   }
+}
+
+const getRandomColor = () => {
+  return borderColors[Math.floor(Math.random() * borderColors.length)]
 }
 
 export {

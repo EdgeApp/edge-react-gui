@@ -1,31 +1,24 @@
-import React, { Component } from 'react'
+import React from 'react'
 import {
   View,
-  ToastAndroid,
-  Platform,
   StyleSheet,
-  Dimensions,
-  Share,
-  TextInput,
-  TouchableHighlight,
-  Keyboard
+  TextInput
 } from 'react-native'
 import { connect } from 'react-redux'
 // import styles from './styles.js'
 
 const styles = StyleSheet.create({
   view: {
-    flex: 1,
+    flex: 1
   },
   textInput: {
     flex: 1,
     textAlign: 'center',
-    color: 'white',
-  },
+    color: 'white'
+  }
 })
 
 const PinInput = ({onPinChange}) => {
-
   return (
     <View style={styles.view}>
       <TextInput
@@ -34,7 +27,7 @@ const PinInput = ({onPinChange}) => {
         secureTextEntry
         maxLength={4}
         placeholder={'PIN'}
-        onChangeText={onPinChange}/>
+        onChangeText={onPinChange} />
     </View>
   )
 }

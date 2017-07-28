@@ -1,9 +1,8 @@
-import React, {StyleSheet, Platform} from 'react-native'
+import { StyleSheet } from 'react-native'
 
+module.exports = StyleSheet.create({
 
-  module.exports = StyleSheet.create({
-
-  //buttons
+  // buttons
   buttonsWrap: {
     flex: 1,
     flexDirection: 'row',
@@ -21,11 +20,11 @@ import React, {StyleSheet, Platform} from 'react-native'
   },
   stylizedButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 16
   },
 
   primaryButtonWrap: {
-    backgroundColor: '#4977BB',
+    backgroundColor: '#4977BB'
   },
   primaryButton: {
     color: '#3c76cd'

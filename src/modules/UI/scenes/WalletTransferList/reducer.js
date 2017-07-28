@@ -10,8 +10,8 @@ const walletTransferList = (state = [], action) => {
   }
 }
 
-const walletListModalVisible = ( state = false, action) => {
-  switch(action.type){
+const walletListModalVisible = (state = false, action) => {
+  switch (action.type) {
     case ACTION.TOGGLE_WALLET_LIST_MODAL_VISIBILITY:
       return !state
     default:
@@ -21,7 +21,7 @@ const walletListModalVisible = ( state = false, action) => {
 
 const walletTransferListReducer = combineReducers({
   walletTransferList,
-  walletListModalVisible,
+  walletListModalVisible
 })
 
 export default walletTransferListReducer

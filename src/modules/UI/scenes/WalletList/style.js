@@ -1,4 +1,8 @@
-import React, {StyleSheet, Dimensions, Platform} from 'react-native'
+import {
+  StyleSheet,
+  Dimensions,
+  Platform
+} from 'react-native'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
@@ -45,7 +49,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-around',
     flex: 1
   },
-    // bottom major portion of screen
+  // bottom major portion of screen
   walletsBox: { // one
     flex: 9
   },
@@ -55,8 +59,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     height: 50
   },
-  walletsBoxHeaderTextWrap: {
-  },
+  walletsBoxHeaderTextWrap: {},
   leftArea: {
     flexDirection: 'row'
   },
@@ -90,8 +93,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     height: 50
   },
-  archiveBoxHeaderTextWrap: {
-  },
+  archiveBoxHeaderTextWrap: {},
   archiveIcon: {
     backgroundColor: 'transparent',
     fontSize: 28
@@ -152,7 +154,7 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 10
   },
-    // beginning of options component
+  // beginning of options component
   menuOption: {
     borderBottomColor: '#D4D4D4',
     borderBottomWidth: 1,
@@ -191,11 +193,14 @@ module.exports = StyleSheet.create({
     marginTop: 0,
     marginBottom: 0,
     borderBottomColor: '#dddddd',
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
-
+    borderBottomWidth: (Platform.OS === 'ios')
+      ? 1
+      : 0
   },
   nameInput: {
-    height: (Platform.OS === 'ios') ? 26 : 46,
+    height: (Platform.OS === 'ios')
+      ? 26
+      : 46,
     textAlign: 'center',
     fontSize: 20
   },
@@ -220,8 +225,7 @@ module.exports = StyleSheet.create({
     flex: 1,
     borderRadius: 3
   },
-  stylizedButtonTextWrap: {
-  },
+  stylizedButtonTextWrap: {},
   stylizedButtonText: {
     color: 'white',
     fontSize: 16
@@ -261,5 +265,5 @@ module.exports = StyleSheet.create({
     fontSize: 16,
     color: '#58595C'
   }
-    // end of token rows //
+  // end of token rows //,,
 })

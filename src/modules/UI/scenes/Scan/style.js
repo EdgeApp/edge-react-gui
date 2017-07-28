@@ -1,10 +1,13 @@
-import React from 'react-native'
-import {Dimensions, StyleSheet, Platform} from 'react-native';
+import {
+  Dimensions,
+  StyleSheet,
+  Platform
+} from 'react-native'
 
 module.exports = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   preview: {
     flex: 1,
@@ -26,7 +29,7 @@ module.exports = StyleSheet.create({
   },
   overlayTopText: {
     color: 'white',
-    fontSize: 14    
+    fontSize: 14
   },
   overlayBlank: {
     flex: 10
@@ -51,12 +54,12 @@ module.exports = StyleSheet.create({
     borderRadius: 3,
     height: 50,
     marginLeft: 1,
-    marginRight: 1,
+    marginRight: 1
   },
   bottomButtonTextWrap: {
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'    
+    alignItems: 'center'
   },
   bottomButtonText: {
     opacity: 1,
@@ -67,7 +70,7 @@ module.exports = StyleSheet.create({
   transferButtonWrap: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   transferArrowIcon: {
     color: 'white',
@@ -78,23 +81,23 @@ module.exports = StyleSheet.create({
   addressButtonWrap: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   addressBookIcon: {
     color: 'white',
     fontSize: 16,
-    height: 16,   
-    transform: [{scaleX: -1.0}]     
+    height: 16,
+    transform: [{scaleX: -1.0}]
   },
   photosButtonWrap: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   cameraIcon: {
     color: 'white',
     fontSize: 22,
-    height: 18,    
+    height: 18
   },
   flashButtonWrap: {
     flex: 1,
@@ -104,25 +107,10 @@ module.exports = StyleSheet.create({
   flashIcon: {
     color: 'white',
     fontSize: 22,
-    height: 18,       
-  },
-  transferButtonText: {
-
-  },
-  addressButtonText: {
-
-  },
-  photosButtonText: {
-
-  },
-  flashButtonText: {
-
-  },
-  modalElement: {
-
+    height: 18
   },
   modalContainer: {
-    flex: 1 ,
+    flex: 1,
     alignItems: 'center'
   },
   modalOverlay: {
@@ -130,7 +118,7 @@ module.exports = StyleSheet.create({
     padding: 10
   },
   modalBox: {
-    top: Dimensions.get('window').height /5,
+    top: Dimensions.get('window').height / 5,
     borderRadius: 3,
     alignItems: 'stretch',
     height: (Dimensions.get('window').height) / 4,
@@ -158,12 +146,11 @@ module.exports = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     borderBottomColor: '#dddddd',
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0         
-
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
   },
   addressInput: {
     height: 26,
-    textAlign: 'center', 
+    textAlign: 'center',
     fontSize: 20
   },
   pasteButtonRow: {
@@ -197,6 +184,5 @@ module.exports = StyleSheet.create({
   doneButton: {
     fontSize: 28,
     color: '#3c76cd'
-  },
-
+  }
 })

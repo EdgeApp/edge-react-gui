@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-/* eslint-disable no-undef */
 import { createStore, applyMiddleware, compose } from 'redux'
 
 import rootReducer from './rootReducer'

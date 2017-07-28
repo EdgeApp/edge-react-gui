@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux'
 import * as ACTION from './action'
 
-const headerHeight = ( state = 0, action) => {
-  switch(action.type){
+const headerHeight = (state = 0, action) => {
+  switch (action.type) {
     case ACTION.SET_HEADER_HEIGHT:
       return action.data
     default:
@@ -10,8 +10,8 @@ const headerHeight = ( state = 0, action) => {
   }
 }
 
-const tabBarHeight = ( state = 0, action) => {
-  switch(action.type){
+const tabBarHeight = (state = 0, action) => {
+  switch (action.type) {
     case ACTION.SET_TAB_BAR_HEIGHT:
       return action.data
     default:
@@ -20,7 +20,7 @@ const tabBarHeight = ( state = 0, action) => {
 }
 
 const deviceDimensions = (state = {}, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case ACTION.SET_DEVICE_DIMENSIONS:
       return action.data
     default:

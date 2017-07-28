@@ -3,8 +3,6 @@ import {connect} from 'react-redux'
 import {
   KeyboardAvoidingView,
   ActivityIndicator,
-  Alert,
-  Button,
   Image,
   InteractionManager,
   StyleSheet,
@@ -17,9 +15,7 @@ import {
 // import styles from './styles.js'
 import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
-import {makeContext} from 'airbitz-core-js'
-import {getUsersList} from '../../components/ControlPanel/action.js'
-import { BlurView, VibrancyView } from 'react-native-blur';
+import {BlurView} from 'react-native-blur'
 
 const Logo = require('../../../../img/edge_logo_3x.png')
 
@@ -70,7 +66,7 @@ const styles = StyleSheet.create({
   modal: {
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
 
   },
   modalInner: {
@@ -92,16 +88,19 @@ const styles = StyleSheet.create({
   },
   container: {
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   absolute: {
-    position: "absolute",
-    top: 0, left: 0, bottom: 0, right: 0,
-  },
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0
+  }
 })
 
 class Login extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.state = {
@@ -122,22 +121,22 @@ class Login extends Component {
     })
   }
 
-  render() {
+  render () {
     InteractionManager.runAfterInteractions(this.login)
 
     return (
       <LinearGradient style={styles.background} start={{
         x: 0,
-        y: 0,
+        y: 0
       }} end={{
         x: 1,
-        y: 0,
-      }} colors={['#3b7adb', '#2b569a',]}>
+        y: 0
+      }} colors={['#3b7adb', '#2b569a']}>
 
         <Modal style={styles.modal} animationType={'fade'} transparent visible={this.state.loggingInModalVisible}>
           <View style={styles.modalInner}>
             <Text style={styles.modalText}>Signing in...</Text>
-            <ActivityIndicator size={'large'} animating={this.state.animating} style={styles.spinner}/>
+            <ActivityIndicator size={'large'} animating={this.state.animating} style={styles.spinner} />
           </View>
         </Modal>
 
@@ -147,8 +146,8 @@ class Login extends Component {
             <Image source={Logo}
               style={styles.logo}
               resizeMode={'contain'} />
-            <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} autoFocus style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username}/>
-            <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password}/>
+            <TextInput placeholder={'username'} keyboardShouldPersistTaps={'always'} autoCorrect={false} style={styles.textInput} onChangeText={this.updateUsername} value={this.state.username} />
+            <TextInput placeholder={'password'} keyboardShouldPersistTaps={'always'} secureTextEntry style={styles.textInput} onChangeText={this.updatePassword} value={this.state.password} />
             <TouchableOpacity style={styles.button} onPress={this.onPress}>
               <Text style={styles.buttonText}>Sign In</Text>
             </TouchableOpacity>
@@ -157,7 +156,7 @@ class Login extends Component {
           { this.state.shouldBlur &&
             <BlurView style={styles.absolute}
               viewRef={this.state.viewRef}
-              blurType="dark"
+              blurType='dark'
               blurAmount={this.state.blurAmount} />}
 
         </KeyboardAvoidingView>
@@ -183,12 +182,14 @@ class Login extends Component {
     }
     console.log('logging in')
 
-    const {username, password,} = this.state
+    const {username, password} = this.state
     const {callbacks} = this.props
 
     this.props.context.loginWithPassword(username, password, null, callbacks).then(account => {
-      getListUsernames(this.props.context, this.props.dispatch)
-      this.setState({loggingInModalVisible: false, shouldLogin: false})
+      this.setState({
+        loggingInModalVisible: false,
+        shouldLogin: false
+      })
       this.props.onLoggedIn(account)
     })
     // .catch(error => {
@@ -198,15 +199,6 @@ class Login extends Component {
     //   }, console.log(error))
     // })
   }
-
 }
 
 export default connect()(Login)
-
-const getListUsernames = (context, dispatch) => {
-
-  context.listUsernames((error, usernames) => {
-    return dispatch(getUsersList(usernames))
-  })
-
-}

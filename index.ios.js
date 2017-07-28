@@ -1,6 +1,5 @@
-import "./shim.js";
-import App from './src/app.js'
+import './shim.js'
+import { AppRegistry } from 'react-native'
+import App from './src/app'
 
-// uncomment to enable device mirroring
-// import MK from 'maya-kai'
-// MK.start()
+AppRegistry.registerComponent('edge', () => App)

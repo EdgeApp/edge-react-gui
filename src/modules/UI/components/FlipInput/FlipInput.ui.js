@@ -1,31 +1,16 @@
 import React, {Component} from 'react'
 import {
   Animated,
-  Text,
   TextInput,
-  View,
-  StyleSheet,
-  Easing,
-  TouchableOpacity
+  View
 } from 'react-native'
 import {connect} from 'react-redux'
 import styles from './styles.js'
-import {devStyle, border as b, getCryptoFromFiat, getFiatFromCrypto } from '../../../utils.js'
+import { border as b, getCryptoFromFiat, getFiatFromCrypto } from '../../../utils.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
-import FlipView from 'react-native-flip-view'
-import * as Animatable from 'react-native-animatable'
+import T from '../FormattedText'
 import {
-  updateAmountSatoshiRequest,
-  updateAmountSatoshi,
-  updateAmountFiat,
-  updateFiatPerCrypto,
   updateInputCurrencySelected,
-  updateLabel,
-  updateMaxSatoshiRequest,
-  updateDraftStatus,
-  updateIsKeyboardVisible,
-  signBroadcastAndSave,
-  useMaxSatoshi,
   updateSpendSufficientFunds
 } from '../../scenes/SendConfirmation/action'
 
@@ -41,9 +26,6 @@ class FlipInput extends Component {
   render () {
     console.log('rendering FlipInput, this.props is: ', this.props)
     const {
-      mode,
-      onCryptoInputChange,
-      onFiatInputChange,
       onInputChange,
       amountSatoshi,
       amountFiat,
@@ -52,16 +34,16 @@ class FlipInput extends Component {
       feeInCrypto,
       displayFees,
       inputCurrencySelected,
-      fiatCurrencyCode,
       cryptoDenom
     } = this.props
 
-    let primaryPlaceholderSyntax
     let secondaryPlaceholderSyntax
     let primaryAmountRequested
     let secondaryAmountRequested
     let primaryFeeAmount
     let secondaryFeeAmount
+    let primaryDenomSymbol
+    let secondaryDenomSymbol
 
     let cryptoPlaceholder = '0.00'
     let fiatPlaceholder = '0.00'
@@ -69,7 +51,6 @@ class FlipInput extends Component {
     if (inputCurrencySelected === 'crypto') {
       primaryDenomSymbol = this.props.cryptoDenom.name
       secondaryDenomSymbol = this.props.fiatCurrencyCode
-      primaryPlaceHolderSyntax = cryptoPlaceholder
       secondaryPlaceholderSyntax = fiatPlaceholder
       primaryAmountRequested = amountSatoshi || 0
       secondaryAmountRequested = amountFiat
@@ -78,7 +59,6 @@ class FlipInput extends Component {
     } else {
       primaryDenomSymbol = this.props.fiatCurrencyCode
       secondaryDenomSymbol = this.props.cryptoDenom.name
-      primaryPlaceholderSyntax = fiatPlaceholder
       secondaryPlaceholderSyntax = cryptoPlaceholder
       primaryAmountRequested = amountFiat
       secondaryAmountRequested = amountSatoshi || 0
@@ -126,29 +106,14 @@ class FlipInputInside extends Component {
   render () {
     console.log('rendering FlipInputInside, this.props is: ', this.props)
     const {
-      onInputChange,
-      amountRequestedPrimary,
       amountRequestedSecondary,
-      onInputCurrencyToggle,
-      primaryFee,
-      secondaryFee,
       primaryPlaceholder,
       secondaryPlaceholder,
-      displayFees,
-      cryptoDenom
+      primaryDenomSymbol,
+      secondaryDenomSymbol
     } = this.props
 
-    const getPrimaryAmount = () => { // this function may need to be integrated with inputChange
-      console.log('inside getPrimaryAmount')
-      if ([0, '', undefined, null ].includes(amountRequestedPrimary)) {
-        console.log('inside getPrimaryAmount, handling blank input')
-        return ''
-      }
-      console.log('inside getPrimaryAmount, handling numerical input')
-      return amountRequestedPrimary.toString()
-    }
-
-    _onInputCurrencyToggle = () => {
+    const _onInputCurrencyToggle = () => {
       console.log('SendConfirmation->onInputCurrencyToggle called')
       const {inputCurrencySelected} = this.props
       const nextInputCurrencySelected = inputCurrencySelected === 'crypto'
@@ -176,10 +141,6 @@ class FlipInputInside extends Component {
           duration: 100
         }).start()
       })
-    }
-
-    const animateFlipInput = () => {
-      console.log('wihtin animateFlipInput')
     }
 
     const limitFiatDecimals = (num) => {
@@ -214,7 +175,7 @@ class FlipInputInside extends Component {
         secondaryInputValue: getSecondaryAmount(input)
       }, () => {
         console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
-        if(input === '' || parseInt(input) === 0) {
+        if (input === '' || parseInt(input) === 0) {
           this.props.dispatch(updateSpendSufficientFunds(null))
         }
         if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////
@@ -242,7 +203,7 @@ class FlipInputInside extends Component {
     const getSecondaryAmount = (input) => {
       // Need to figure out if primary is crypto or fiat
       console.log('calling getSecondaryAmount, input is: ', input, ' and amountRequestedSecondary is: ', amountRequestedSecondary)
-      if ([0, '', undefined, null ].includes(input) || (isNaN(input) === true)) {
+      if ([0, '', undefined, null].includes(input) || (isNaN(input) === true)) {
         console.log('value is falsy')
         return ''
       }
@@ -255,22 +216,7 @@ class FlipInputInside extends Component {
       }
     }
 
-    getFeeInFiat = feeSatoshi => {
-      const fiatPerCrypto = this.props.fiatPerCrypto
-      const feeFiat = getFiatFromCrypto(feeSatoshi, fiatPerCrypto)
-
-      return feeFiat
-    }
-
-    getAmountFiat = amountSatoshi => {
-      console.log('in getAmountFiat')
-      const fiatPerCrypto = this.props.fiatPerCrypto
-      const amountFiat = getFiatFromCrypto(amountSatoshi, fiatPerCrypto).toFixed(2) // also need opposite
-
-      return amountFiat
-    }
-
-    getTextColor = () => {
+    const getTextColor = () => {
       console.log('inside getTextColor:, this.state.mode is: ', this.state.mode)
       switch (this.props.mode) {
         case 'over':
@@ -282,14 +228,10 @@ class FlipInputInside extends Component {
       }
     }
 
-    const clearText = (fieldName) => {
-      this.refs[fieldName].setNativeProps({text: ''})
-    }
-
     const renderMainInput = () => {
       return (
-        <View style={[styles.mainInputRow, b() ]}>
-          <View style={[styles.primaryInputContainer, b() ]} name='InputAndFeesElement'>
+        <View style={[styles.mainInputRow, b()]}>
+          <View style={[styles.primaryInputContainer, b()]} name='InputAndFeesElement'>
             <Animated.View style={{
               opacity: this.state.flipInputOpacity
             }}>
@@ -317,12 +259,9 @@ class FlipInputInside extends Component {
             },
             b()
           ]}>
-            <Text style={[
-              styles.fees,
-              b(), {
-                color: getTextColor()
-              }
-            ]}>{primaryDenomSymbol}</Text>
+            <T style={[styles.fees, b(), {color: getTextColor()}]}>
+              {primaryDenomSymbol}
+            </T>
           </Animated.View>
         </View>
       )
@@ -337,13 +276,13 @@ class FlipInputInside extends Component {
           }
         ]}>
           <View style={styles.secondaryTextContainer}>
-            <Text numberOfLines={1} ellipsizeMode='clip' style={[
+            <T numberOfLines={1} ellipsizeMode='middle' style={[
               styles.secondaryText, {
                 color: getTextColor()
               }
             ]}>
               {this.state.secondaryInputValue || secondaryPlaceholder}
-            </Text>
+            </T>
           </View>
           <View style={[
             {
@@ -351,12 +290,9 @@ class FlipInputInside extends Component {
             },
             b()
           ]}>
-            <Text style={[
-              styles.fees,
-              b(), {
-                color: getTextColor()
-              }
-            ]}>{secondaryDenomSymbol}</Text>
+            <T style={[styles.fees, b(), {color: getTextColor()}]}>
+              {secondaryDenomSymbol}
+            </T>
           </View>
         </Animated.View>
       )

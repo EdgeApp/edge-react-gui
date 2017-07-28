@@ -2,59 +2,45 @@ import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
-import { Easing, TextInput, Image, ScrollView, ListView, Text, View, StyleSheet, TouchableHighlight, Animated, ActivityIndicator, TouchableOpacity } from 'react-native'
+import {
+  TextInput,
+  Image,
+  ScrollView,
+  ListView,
+  Text,
+  View,
+  TouchableHighlight,
+  Animated,
+  ActivityIndicator,
+  TouchableOpacity } from 'react-native'
 import T from '../../components/FormattedText'
-import { Container, Header, InputGroup, Input, Icon, Button } from 'native-base'
 import { connect } from 'react-redux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'
 import {
   transactionsSearchVisible,
   transactionsSearchHidden,
-  deleteTransactionsList,
-  updateTransactionsList,
-  updateContactsList,
-  updateSearchResults,
-  getTransactionsRequest } from './action'
+  getTransactionsRequest
+} from './action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
-import * as Animatable from 'react-native-animatable'
-import Contacts from 'react-native-contacts'
+// import Contacts from 'react-native-contacts'
 import styles from './style'
-import { border as b , findDenominationSymbol as symbolize} from '../../../utils'
+import { border as b, findDenominationSymbol as symbolize } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import request_image from '../../../../assets/images/transactions/transactions-request.png'
-import send_image from '../../../../assets/images/transactions/transactions-send.png'
-import sent_type_image from '../../../../assets/images/transactions/transaction-type-sent.png'
-import received_type_image from '../../../../assets/images/transactions/transaction-type-received.png'
-
-const monthNames = [
-    sprintf(strings.enUS['transactions_list_date_jan']),
-    sprintf(strings.enUS['transactions_list_date_feb']),
-    sprintf(strings.enUS['transactions_list_date_mar']),
-    sprintf(strings.enUS['transactions_list_date_apr']),
-    sprintf(strings.enUS['transactions_list_date_may']),
-    sprintf(strings.enUS['transactions_list_date_jun']),
-    sprintf(strings.enUS['transactions_list_date_jul']),
-    sprintf(strings.enUS['transactions_list_date_aug']),
-    sprintf(strings.enUS['transactions_list_date_sep']),
-    sprintf(strings.enUS['transactions_list_date_oct']),
-    sprintf(strings.enUS['transactions_list_date_nov']),
-    sprintf(strings.enUS['transactions_list_date_dec'])
-  ]
-var dateStrings = []
-var iterator = -1
+import requestImage from '../../../../assets/images/transactions/transactions-request.png'
+import sendImage from '../../../../assets/images/transactions/transactions-send.png'
+import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
+import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
 
 class TransactionList extends Component {
-   constructor(props) {
-     super(props)
-     this.state = {
-      //balance: 0,
+  constructor (props) {
+    super(props)
+    this.state = {
+      // balance: 0,
       focused: false,
       animation: new Animated.Value(0),
       op: new Animated.Value(0),
@@ -65,9 +51,8 @@ class TransactionList extends Component {
       renderedTxCount: 0,
       completedTx: [],
       dataSrc: []
-     }
-     var completedTxList = []
-   }
+    }
+  }
 
   componentDidMount () {
     const walletId = this.props.selectedWalletId
@@ -85,7 +70,7 @@ class TransactionList extends Component {
   }
 
   _onSearchChange = () => {
-    //this.props.dispatch(updateSearchResults(null))
+    // this.props.dispatch(updateSearchResults(null))
     console.log('this._onSearchChange executing')
   }
 
@@ -103,26 +88,26 @@ class TransactionList extends Component {
 
   _onFocus = () => {
     this.setState({
-      focused: true,
+      focused: true
     })
     this._toggleCancelVisibility()
   }
 
   _onBlur = () => {
     this.setState({
-      focused: false,
+      focused: false
     })
     this._toggleCancelVisibility()
   }
 
   _toggleCancelVisibility = () => {
-    let toOpacity, toWidth, toBalanceBoxHeight
-    if(this.state.focused){
+    let toOpacity, toWidth, toBalanceBoxHeight, toBalanceBoxOpacity
+    if (this.state.focused) {
       toOpacity = 0
       toWidth = 0
       toBalanceBoxHeight = 200
       toBalanceBoxOpacity = 1.0
-      this.setState({balanceBoxVisible: true}  )
+      this.setState({balanceBoxVisible: true})
 
       Animated.parallel([
         Animated.sequence([
@@ -162,7 +147,7 @@ class TransactionList extends Component {
       toOpacity = 1
       toWidth = 60
       toBalanceBoxHeight = 0
-      toBalanceBoxOpacity= 0.0
+      toBalanceBoxOpacity = 0.0
 
       Animated.parallel([
         Animated.sequence([
@@ -190,7 +175,7 @@ class TransactionList extends Component {
                 duration: 400
               }
             )
-        ]),
+          ]),
           Animated.timing(
             this.state.balanceBoxHeight,
             {
@@ -222,14 +207,11 @@ class TransactionList extends Component {
       return a > b ? -1 : a < b ? 1 : 0
     })
 
-      completedTxList = renderableTransactionList.map((x, i) => {
+    let completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
       newValue.multiplier = this.props.multiplier
       let txDate = new Date(x.date * 1000)
-      let month = txDate.getMonth()
-      let day = txDate.getDate()
-      let year = txDate.getFullYear()
       // let time = formatAMPM(txDate)
       // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
       let dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -241,10 +223,13 @@ class TransactionList extends Component {
     var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
     let dataSrc = ds.cloneWithRows(completedTxList)
     let logo
-    if(this.props.uiWallet.currencyCode != this.props.selectedCurrencyCode) {
-      for(mt of this.props.uiWallet.metaTokens) {
-        if(mt.currencyCode === this.props.selectedCurrencyCode) {
-          logo = mt.symbolImage
+
+    console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
+    if (this.props.uiWallet.currencyCode !== this.props.selectedCurrencyCode) {
+      for (var metatoken of this.props.uiWallet.metaTokens) {
+        console.log('metatoken is: ', metatoken)
+        if (metatoken.currencyCode === this.props.selectedCurrencyCode) {
+          logo = metatoken.symbolImage
         }
       }
     } else {
@@ -252,34 +237,34 @@ class TransactionList extends Component {
     }
 
     return (
-        <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0,y: 44}}>
-          <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
-          <View style={[styles.container, b()]}>
-            <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
-              <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[styles.currentBalanceBox, b()]} colors={["#3b7adb","#2b569a"]}>
-                {this.state.balanceBoxVisible &&
-                  <Animated.View style={{flex: 1, paddingTop: 10,paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
-                    {this.props.updatingBalance ? (
-                      <View style={[styles.currentBalanceWrap]}>
-                        <View style={[ styles.updatingBalanceWrap]}>
-                          <ActivityIndicator
-                            animating={this.props.updatingBalance}
-                            style={[styles.updatingBalance, {height: 40}]}
-                            size="small"
+      <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
+        <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
+        <View style={[styles.container, b()]}>
+          <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
+            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={['#3b7adb', '#2b569a']}>
+              {this.state.balanceBoxVisible &&
+              <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+                {this.props.updatingBalance ? (
+                  <View style={[styles.currentBalanceWrap]}>
+                    <View style={[styles.updatingBalanceWrap]}>
+                      <ActivityIndicator
+                        animating={this.props.updatingBalance}
+                        style={[styles.updatingBalance, {height: 40}]}
+                        size='small'
                           />
-                        </View>
-                      </View>
+                    </View>
+                  </View>
                     ) : (
                       <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b()]}>
                         {this.state.showBalance ? (
                           <View style={styles.balanceShownContainer}>
                             <View style={[styles.iconWrap, b()]}>
-                              { logo ?
-                                <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} /> :
-                                <T style={[styles.request]}>{this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]}</T>
+                              {logo
+                                ? <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />
+                                : <T style={[styles.request]}>{this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]}</T>
                               }
                             </View>
-                           <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
+                            <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
                                 {this.props.selectedCurrencyCode} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
                               </T>
@@ -292,71 +277,66 @@ class TransactionList extends Component {
                           <View style={[b(), styles.balanceHiddenContainer]}>
                             <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
-                        )
-                        }
+                        )}
                       </TouchableOpacity>
                     )}
-                    <View style={[styles.requestSendRow, b()]}>
-                      <TouchableHighlight onPress={() => Actions.request() }style={[styles.requestBox, styles.button]}>
-                        <View  style={[styles.requestWrap]}>
-                          <Image
-                            style={{width: 25, height: 25}}
-                            source={request_image}
+                <View style={[styles.requestSendRow, b()]}>
+                  <TouchableHighlight onPress={() => Actions.request()}style={[styles.requestBox, styles.button]}>
+                    <View style={[styles.requestWrap]}>
+                      <Image
+                        style={{width: 25, height: 25}}
+                        source={requestImage}
                           />
-                          <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
-                        </View>
-                      </TouchableHighlight>
-                      <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
-                        <View style={[styles.sendWrap]}>
-                          <Image
-                            style={{width: 25, height: 25}}
-                            source={send_image}
-                          />
-                          <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
-                        </View>
-                      </TouchableHighlight>
+                      <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                     </View>
-                  </Animated.View>
+                  </TouchableHighlight>
+                  <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                    <View style={[styles.sendWrap]}>
+                      <Image
+                        style={{width: 25, height: 25}}
+                        source={sendImage}
+                          />
+                      <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
+                    </View>
+                  </TouchableHighlight>
+                </View>
+              </Animated.View>
                 }
-              </LinearGradient>
-            </Animated.View>
-            <View style={[styles.transactionsWrap]}>
-              <ListView
-                style={[styles.transactionsScrollWrap]}
-                dataSource={dataSrc}
-                renderRow={this.renderTx}
-                onEndReached={this.loadMoreTransactions}
-                onEndReachedThreshold={60}
-                enableEmptySections
-                initialIterator={-1}
+            </LinearGradient>
+          </Animated.View>
+          <View style={[styles.transactionsWrap]}>
+            <ListView
+              style={[styles.transactionsScrollWrap]}
+              dataSource={dataSrc}
+              renderRow={(tx) => this.renderTx(tx, completedTxList)}
+              onEndReached={this.loadMoreTransactions}
+              onEndReachedThreshold={60}
+              enableEmptySections
+              initialIterator={-1}
               />
-            </View>
           </View>
-        </ScrollView>
+        </View>
+      </ScrollView>
     )
   }
 
-  _goToTxDetail = ( txId, currencyCode, tx) => {
+  _goToTxDetail = (txId, currencyCode, tx) => {
     Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
   }
 
-  renderTx = (tx) => {
-    let sendReceiveSyntax, expenseIncomeSyntax, txColor
+  renderTx = (tx, completedTxList) => {
+    let txColor
     let txName = ''
     let txImage
     if (tx.amountSatoshi < 0) {
-      sendReceiveSyntax = sprintf(strings.enUS['fragment_send_subtitle'])
-      expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_expense'])
       // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColor = '#F03A47'
       txName = strings.enUS['fragment_transaction_list_sent_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
-      txImage = sent_type_image
+      txImage = sentTypeImage
     } else {
-      sendReceiveSyntax = sprintf(strings.enUS['fragment_transaction_receive'])
-      expenseIncomeSyntax = sprintf(strings.enUS['fragment_transaction_income'])
       txColor = '#7FC343'
       txName = strings.enUS['fragment_transaction_list_receive_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
-      txImage = received_type_image
+      txImage = receivedTypeImage
     }
 
     return (
@@ -368,7 +348,7 @@ class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail( tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
           <View style={[styles.transactionInfoWrap, b()]}>
             <View style={styles.transactionLeft}>
               {tx.hasThumbnail ? (
@@ -385,8 +365,8 @@ class TransactionList extends Component {
               </View>
             </View>
             <View style={[styles.transactionRight, b()]}>
-              <T style={[styles.transactionBitAmount, {color: txColor} ]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, {color: txColor} ]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}</T>
+              <T style={[styles.transactionBitAmount, {color: txColor}]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
+              <T style={[styles.transactionDollarAmount, {color: txColor}]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}</T>
             </View>
           </View>
         </TouchableOpacity>
@@ -404,25 +384,25 @@ TransactionList.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-  const selectedWalletId     = UI_SELECTORS.getSelectedWalletId(state)
-  const currencyCode         = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const wallet               = UI_SELECTORS.getSelectedWallet(state)
-  const settings             = SETTINGS_SELECTORS.getSettings(state)
-  const isoFiatCurrencyCode  = wallet.isoFiatCurrencyCode
-  const currencyConverter    = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto      = wallet.balances[currencyCode]
-  const balanceInFiat        = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCrypto)
-  const transactions         = UI_SELECTORS.getTransactions(state)
-  const index                = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const denomination         = wallet.allDenominations[currencyCode][index]
-  const multiplier           = denomination.multiplier
+  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const settings = SETTINGS_SELECTORS.getSettings(state)
+  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const balanceInCrypto = wallet.balances[currencyCode]
+  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCrypto)
+  const transactions = UI_SELECTORS.getTransactions(state)
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination = wallet.allDenominations[currencyCode][index]
+  const multiplier = denomination.multiplier
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
     updatingBalance: false,
     transactions,
-    searchVisible:   state.ui.scenes.transactionList.searchVisible,
-    contactsList:    state.ui.scenes.transactionList.contactsList,
+    searchVisible: state.ui.scenes.transactionList.searchVisible,
+    contactsList: state.ui.scenes.transactionList.contactsList,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
@@ -439,19 +419,19 @@ const mapDispatchToProps = dispatch => ({
   getTransactions: (walletId, currencyCode) => { dispatch(getTransactionsRequest(walletId, currencyCode)) }
 })
 
-export default TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
-
+const TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
+export default TransactionListConnect
 
 class SearchBar extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = this.props.state
   }
 
-  render() {
-    return(
+  render () {
+    return (
       <View style={[styles.searchContainer, b()]}>
-        <View style={[ styles.innerSearch, b()]}>
+        <View style={[styles.innerSearch, b()]}>
           <EvilIcons name='search' style={[styles.searchIcon, b()]} color='#9C9C9D' size={20} />
           <TextInput style={[styles.searchInput, b()]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
         </View>

@@ -9,5 +9,4 @@ export const helpModal = (state = false, action) => {
     default:
       return state
   }
-
 }

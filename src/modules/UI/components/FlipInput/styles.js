@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 
-const sideWidth = 80;
+const sideWidth = 80
 
 const styles = StyleSheet.create({
 
@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     fontSize: 20,
-    color: "#FFF",
+    color: '#FFF',
     textAlign: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   }
 
   // primaryFee: {

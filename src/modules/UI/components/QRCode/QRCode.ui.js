@@ -1,14 +1,9 @@
 import React from 'react'
 import { Dimensions, View } from 'react-native'
 import { connect } from 'react-redux'
-import styles from './styles.js'
 import QrCode from 'react-native-qrcode'
 
-import { dev } from '../../../utils.js'
-const devMode = true
-
 const ABQRCode = ({qrCodeText}) => {
-
   console.log('qrCodeText: ' + qrCodeText)
   const windowHeight = Dimensions.get('window').height
 
@@ -16,7 +11,7 @@ const ABQRCode = ({qrCodeText}) => {
     qrCodeBorder: {
       backgroundColor: 'white',
       borderRadius: 4,
-      padding: 10,
+      padding: 10
     }
   }
 
@@ -27,7 +22,7 @@ const ABQRCode = ({qrCodeText}) => {
         value={qrCodeText}
         bgColor={'black'}
         fgColor={'white'}
-        size={windowHeight / 4}/>
+        size={windowHeight / 4} />
     </View>
   )
 }

@@ -1,7 +1,6 @@
-import React from 'react-native'
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native'
 
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
   topLevel: {
     zIndex: 10,
     width: Dimensions.get('window').width,
@@ -9,21 +8,21 @@ module.exports = StyleSheet.create({
     alignSelf: 'stretch'
   },
   modalRoot: {
-    paddingTop: 50,
+    paddingTop: 50
   },
   headerContainer: {
-    backgroundColor: '#5c5d5f',
+    backgroundColor: '#5c5d5f'
   },
   modalBody: {
     width: Dimensions.get('window').width,
-    zIndex: 4,
+    zIndex: 4
   },
   rowContainer: {
     backgroundColor: 'white',
     padding: 16,
     paddingLeft: 20,
     paddingRight: 20,
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   rowNameText: {
     fontSize: 18

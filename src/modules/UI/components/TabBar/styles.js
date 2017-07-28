@@ -1,8 +1,6 @@
-const React = require('react-native')
+import { StyleSheet } from 'react-native'
 
-const { StyleSheet } = React
-
-export default {
+export default StyleSheet.create({
   container: {
     backgroundColor: '#FFF'
   },
@@ -13,4 +11,4 @@ export default {
   mb: {
     marginBottom: 15
   }
-}
+})

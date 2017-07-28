@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Text, Icon } from 'native-base'
-import { Actions } from 'react-native-router-flux'
+import { Text } from 'native-base'
 import { openHelpModal } from '../../HelpModal/actions.js'
 import { connect } from 'react-redux'
-
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
 
 class HelpButton extends Component {
@@ -17,26 +15,26 @@ class HelpButton extends Component {
   }
 }
 
-HelpButton = connect()(HelpButton)
+const HelpButtonConnect = connect()(HelpButton)
 
 export default class Right extends Component {
 
   render () {
     switch (this.props.routes.scene.sceneKey) {
       case 'scan':
-        return <HelpButton />
+        return <HelpButtonConnect />
       case 'walletList':
-        return <HelpButton />
+        return <HelpButtonConnect />
       case 'directory':
-        return <HelpButton />
+        return <HelpButtonConnect />
       case 'transactions':
-        return <HelpButton />
+        return <HelpButtonConnect />
       case 'request':
-        return <HelpButton />
+        return <HelpButtonConnect />
       case 'sendConfirmation':
         return <SendConfirmationOptions />
       case 'createWallet':
-        return <HelpButton />
+        return <HelpButtonConnect />
       default:
         return null
     }

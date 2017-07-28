@@ -1,25 +1,23 @@
-import React from 'react-native'
-import {StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native'
 
-module.exports = StyleSheet.create({
-
+const styles = StyleSheet.create({
   container: {
-      bottom: Dimensions.get('window').height / 10,
-      maxHeight: Dimensions.get('window').height * 0.8,
-      alignItems: 'stretch',
-      backgroundColor: 'white'
+    bottom: Dimensions.get('window').height / 10,
+    maxHeight: Dimensions.get('window').height * 0.8,
+    alignItems: 'stretch',
+    backgroundColor: 'white'
   },
   headerRowWrap: {
     height: 50,
-    justifyContent: "center",
-    flexDirection: "row",
+    justifyContent: 'center',
+    flexDirection: 'row',
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
     backgroundColor: '#dddddd',
     borderBottomColor: '#666666',
-    borderBottomWidth: 1,
+    borderBottomWidth: 1
   },
   headerTextWrap: {
     flex: 5,
@@ -27,7 +25,7 @@ module.exports = StyleSheet.create({
     alignItems: 'flex-start'
   },
   headerText: {
-    color: "#666666",
+    color: '#666666',
     fontSize: 20
   },
   exitIconWrap: {
@@ -48,5 +46,6 @@ module.exports = StyleSheet.create({
   individualRowText: {
     fontSize: 16
   }
+})
 
-});
+export default styles

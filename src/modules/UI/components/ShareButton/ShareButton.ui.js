@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
-import { Icon } from 'native-base'
 
 const ShareButton = ({displayName, iconName, onPress, style}) => {
   return (
@@ -14,19 +13,19 @@ const ShareButton = ({displayName, iconName, onPress, style}) => {
 
 const styles = StyleSheet.flatten({
   shareButton: {
-    flex:1,
+    flex: 1,
     backgroundColor: 'transparent',
     borderColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: 2,
-    marginVertical: 14,
+    marginVertical: 14
   },
   view: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 1,
+    margin: 1
   },
   text: {
     fontSize: 16,

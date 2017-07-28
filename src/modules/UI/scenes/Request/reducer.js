@@ -16,7 +16,7 @@ const initialState = {
   }
 }
 
-export default request = (state = initialState, action) => {
+const request = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
@@ -160,3 +160,5 @@ export default request = (state = initialState, action) => {
       return state
   }
 }
+
+export default request

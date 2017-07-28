@@ -14,7 +14,14 @@
 .*/Libraries/react-native/React.js
 .*/Libraries/react-native/ReactNative.js
 
+.*/node_modules/react-native/.*
+.*/node_modules/react-native-experimental-navigation/.*
+.*/node_modules/react-native-linear-gradient/.*
+.*/node_modules/react-native-tcp/.*
+.*/node_modules/react-native-udp/.*
+.*/node_modules/react-static-container/.*
 [include]
+.*/src/app.js
 
 [libs]
 node_modules/react-native/Libraries/react-native/react-native-interface.js
@@ -44,4 +51,4 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 unsafe.enable_getters_and_setters=true
 
 [version]
-^0.40.0
+^0.51.1

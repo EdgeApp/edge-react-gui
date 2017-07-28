@@ -185,47 +185,17 @@ const loadSettings = () => {
     SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
       console.log('*** Duplicated in Settings/reducer.js ***')
-      const syncDefaults = {
-        autoLogoutTimeInSeconds: 3600,
-        defaultFiat: 'USD',
-        merchantMode: false,
-        'BTC': {
-          denomination: 100000000
-        },
-        'ETH': {
-          denomination: 100000000
-        },
-        'REP': {
-          denomination: 100000000
-        },
-        'WINGS': {
-          denomination: 100000000
-        },
-        'LUN': {
-          denomination: 100000000
-        },
-        'TRD': {
-          denomination: 1000
-        },
-        'DOGESHIT': {
-          denomination: 100
-        },
-        'HOLYSHIT': {
-          denomination: 100
-        },
-        'ANA': {
-          denomination: 100
-        }
-      }
-
+      const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, settings)
 
       // Add all the  settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
+
       dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setEthereumDenomination(syncFinal.ETH.denomination))
+
       dispatch(SETTINGS_ACTIONS.setRepDenomination(syncFinal.REP.denomination))
       dispatch(SETTINGS_ACTIONS.setWingsDenomination(syncFinal.WINGS.denomination))
       dispatch(SETTINGS_ACTIONS.setLunyrDenomination(syncFinal.LUN.denomination))
@@ -233,9 +203,7 @@ const loadSettings = () => {
 
     SETTINGS_API.getLocalSettings(account)
     .then(settings => {
-      const localDefaults = {
-        bluetoothMode: true
-      }
+      const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
 
       const localFinal = Object.assign({}, localDefaults, settings)
       // Add all the local settings to UI/Settings
@@ -244,10 +212,7 @@ const loadSettings = () => {
 
     SETTINGS_API.getCoreSettings(account)
     .then(settings => {
-      const coreDefaults = {
-        pinMode: false,
-        otpMode: false
-      }
+      const coreDefaults = SETTINGS_API.CORE_DEFAULTS
 
       const coreFinal = Object.assign({}, coreDefaults, settings)
       dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))

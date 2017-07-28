@@ -6,9 +6,11 @@
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
     "updot": "updot",
     "android:run": "npm run android:clean; react-native run-android",
-    "lint": "standard --verbose --parser babel-eslint; exit 0",
-    "lints": "standard --verbose --parser babel-eslint | snazzy; exit 0",
-    "lint:fix": "standard --fix --verbose --parser babel-eslint | snazzy; exit 0",
+    "lint:0": "standard --verbose --parser babel-eslint; exit 0",
+    "lint": "standard --verbose --parser babel-eslint",
+    "lint:s": "standard --verbose --parser babel-eslint | snazzy",
+    "lint:s0": "standard --verbose --parser babel-eslint | snazzy; exit 0",
+    "lint:fix": "standard --fix --verbose --parser babel-eslint | snazzy",
     "android:clean": "cd android && ./gradlew clean && rm -rf build && cd ../",
     "android:release": "cd android && ./gradlew assembleRelease; cd ../",
     "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
@@ -16,7 +18,11 @@
     "ios:run": "react-native run-ios",
     "postinstall": "rn-nodeify --hack",
     "tron": "node_modules/.bin/reactotron",
-    "flow": "flow --show-all-errors"
+    "flow:0": "flow; exit 0",
+    "flow": "flow",
+    "flow:cover": "flow-coverage-report",
+    "precommit": "npm run lint",
+    "prepush": "npm run lint"
   },
   "rnpm": {
     "assets": [
@@ -108,7 +114,8 @@
     "babel-eslint": "^7.1.1",
     "babel-preset-react-native": "^1.9.0",
     "eslint": "^3.11.1",
-    "flow-bin": "^0.37.4",
+    "flow-bin": "^0.51.1",
+    "flow-coverage-report": "github:rpl/flow-coverage-report#master",
     "husky": "^0.12.0",
     "nyc": "^10.0.0",
     "redux-logger": "^2.7.4",
@@ -118,10 +125,27 @@
     "updot": "^1.0.2"
   },
   "standard": {
+    "parser": "babel-eslint",
     "ignore": [
+      "flow-coverage",
       "theme"
     ],
-    "parser": "babel-eslint"
+    "globals": [
+      "__DEV__",
+      "localStorage",
+      "alert"
+    ]
+  },
+  "flow-coverage-report": {
+    "includeGlob": [
+      "src/lib/**/*.js",
+      "src/lib/**/*.jsx"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "react-native": {
     "crypto": "react-native-crypto",

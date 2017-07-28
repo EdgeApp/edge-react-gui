@@ -1,11 +1,10 @@
-import React from 'react-native'
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native'
 
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
 
   container: {
-      flex: 1,
-      alignItems: 'stretch',
+    flex: 1,
+    alignItems: 'stretch'
   },
 
   // searchbar stuff
@@ -53,8 +52,8 @@ module.exports = StyleSheet.create({
   // end of searchbar stuff
 
   currentBalanceBox: {
-    flex:1,
-    justifyContent: "center"
+    flex: 1,
+    justifyContent: 'center'
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -66,37 +65,37 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  currentBalanceWrap: { //one
+  currentBalanceWrap: { // one
     flex: 3,
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   balanceShownContainer: {
     justifyContent: 'center',
     alignItems: 'center'
   },
-  iconWrap: { //two
+  iconWrap: { // two
     flex: 3,
     justifyContent: 'flex-start',
     backgroundColor: 'transparent'
   },
-  currentBalanceBoxBitssWrap: { //two
+  currentBalanceBoxBitssWrap: { // two
     flex: 4,
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: 'transparent'
   },
   currentBalanceBoxBits: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 40
   },
   currentBalanceBoxDollarsWrap: {
-    justifyContent: "flex-start",
+    justifyContent: 'flex-start',
     flex: 4,
     paddingTop: 4
   },
-  currentBalanceBoxDollars: { //two
-    color: "#FFFFFF",
+  currentBalanceBoxDollars: { // two
+    color: '#FFFFFF',
     fontSize: 20
   },
   balanceHiddenContainer: {
@@ -109,7 +108,7 @@ module.exports = StyleSheet.create({
     color: 'white',
     fontSize: 36
   },
-  requestSendRow: { //two
+  requestSendRow: { // two
     flex: 1,
     flexDirection: 'row'
   },
@@ -118,13 +117,13 @@ module.exports = StyleSheet.create({
   },
   requestBox: {
     backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: .9,
+    opacity: 0.9,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
     marginRight: 1,
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   requestWrap: {
     flexDirection: 'row',
@@ -138,13 +137,13 @@ module.exports = StyleSheet.create({
   },
   sendBox: {
     backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: .9,
+    opacity: 0.9,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 1,
     marginRight: 8,
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   sendWrap: {
     flexDirection: 'row',
@@ -158,12 +157,12 @@ module.exports = StyleSheet.create({
   },
   request: {
     fontSize: 18,
-    color: "#ffffff",
+    color: '#ffffff',
     marginHorizontal: 12
   },
   send: {
     fontSize: 18,
-    color: "#ffffff",
+    color: '#ffffff',
     marginHorizontal: 12
   },
 
@@ -176,7 +175,7 @@ module.exports = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 24,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   searchBarMagnifyingGlass: {
 
@@ -204,7 +203,7 @@ module.exports = StyleSheet.create({
     padding: 10,
     paddingRight: 30,
     paddingLeft: 3,
-    marginLeft: 15,
+    marginLeft: 15
   },
   singleTransactionWrap: {
     flexDirection: 'column',
@@ -222,7 +221,7 @@ module.exports = StyleSheet.create({
     flex: 1
   },
   formattedDate: {
-    color: "#909091",
+    color: '#909091',
     fontSize: 14
   },
   rightDateSearch: {
@@ -236,7 +235,7 @@ module.exports = StyleSheet.create({
 
   },
   transactionInfoWrap: {
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 40,
     flex: 1,
     justifyContent: 'space-between'
@@ -250,16 +249,16 @@ module.exports = StyleSheet.create({
     marginRight: 10
   },
   transactionLeftTextWrap: {
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   transactionPartner: {
     fontSize: 16,
-    color: "#58595C",
+    color: '#58595C',
     textAlignVertical: 'center'
   },
   transactionBitAmount: {
     fontSize: 16,
-    color: "#000000",
+    color: '#000000',
     textAlignVertical: 'center'
   },
   transactionRight: {
@@ -268,17 +267,17 @@ module.exports = StyleSheet.create({
   },
   transactionTime: {
     fontSize: 12,
-    color: "#58595C",
+    color: '#58595C',
     textAlignVertical: 'bottom',
     position: 'relative',
     top: 4
   },
   transactionDollarAmount: {
     fontSize: 12,
-    color: "#909091",
+    color: '#909091',
     textAlignVertical: 'center',
     position: 'relative',
     top: 4
   }
 
-});
+})
