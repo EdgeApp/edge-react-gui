@@ -23,7 +23,7 @@ export const UPDATE_SPEND_INFO = 'UPDATE_SPEND_INFO'
 export const RESET = 'RESET'
 
 import { Actions } from 'react-native-router-flux'
-import { openABAlert, closeABAlert } from '../../components/ABAlert/action'
+import { openABAlert } from '../../components/ABAlert/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -32,7 +32,7 @@ export const updateAmountSatoshiRequest = (amountSatoshiString) => {
   return (dispatch, getState) => {
     const amountSatoshi = parseFloat(amountSatoshiString)
     dispatch(updateAmountSatoshi(amountSatoshi))
-    if (amountSatoshi == 0) return
+    if (amountSatoshi === 0) return
 
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -200,10 +200,6 @@ export const updateWalletTransfer = (wallet) => {
 
 export const updatePublicAddressRequest = (publicAddress) => {
   return (dispatch) => {
-    const spendInfo = makeSpendInfo({
-      publicAddress
-    })
-
     dispatch(updatePublicAddress(publicAddress))
   }
 }

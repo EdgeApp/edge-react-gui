@@ -2,33 +2,17 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import {
   View,
-  Share,
-  Text,
-  TouchableHighlight,
-  Keyboard,
-  Button,
-  Platform,
   ScrollView,
   ActivityIndicator
 } from 'react-native'
 import { connect } from 'react-redux'
 import styles from './styles.js'
-
-import T from '../../components/FormattedText'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
-import MaxButton from '../../components/MaxButton/index.js'
 import FlipInput from '../../components/FlipInput/index.js'
-import Password from './SendConfirmationPasswordSample.js'
-
-import ABQRCode from '../../components/QRCode/index.js'
-import RequestStatus from '../../components/RequestStatus/index.js'
-import ShareButtons from '../../components/ShareButtons/index.js'
-
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
-import Fees from '../../components/Fees/index.js'
 
-import { getCryptoFromFiat, getFiatFromCrypto, sanitizeInput, border as b } from '../../../utils.js'
+import { getCryptoFromFiat, getFiatFromCrypto, border as b } from '../../../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -37,13 +21,7 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import {
   updateAmountSatoshiRequest,
-  updateAmountFiat,
-  updateFiatPerCrypto,
-  updateInputCurrencySelected,
-  updateLabel,
   updateMaxSatoshiRequest,
-  updateDraftStatus,
-  updateIsKeyboardVisible,
   signBroadcastAndSave,
   useMaxSatoshi,
   updateSpendPending
@@ -58,10 +36,6 @@ class SendConfirmation extends Component {
     this.props.dispatch(updateAmountSatoshiRequest(this.props.amountSatoshi || 0))
   }
 
-  componentDidMount () {
-
-  }
-
   _onFocus = () => {
     this.setState({keyboardVisible: true})
   }
@@ -72,10 +46,7 @@ class SendConfirmation extends Component {
 
   render () {
     const {
-      amountSatoshi,
-      amountFiat,
       label,
-      isSliderLocked,
       publicAddress
      } = this.props.sendConfirmation
 
@@ -236,8 +207,6 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = (dispatch) => ({
   updateAmountSatoshi: amountSatoshi => dispatch(updateAmountSatoshiRequest(amountSatoshi)),
-  updateAmountFiat: amountFiat => dispatch(updateAmountFiatRequest(amountFiat)),
-  toggleCurrencyInput: () => dispatch(toggleCurrencyInput()),
   signBroadcastAndSave: transaction => dispatch(signBroadcastAndSave(transaction)),
   updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),
   useMaxSatoshi: () => dispatch(useMaxSatoshi())

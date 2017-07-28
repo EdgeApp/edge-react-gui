@@ -18,7 +18,7 @@ const initialState = {
   mode: null
 }
 
-export default sendConfirmation = (state = initialState, action) => {
+const sendConfirmation = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_AMOUNT_SATOSHI:
@@ -120,3 +120,5 @@ export default sendConfirmation = (state = initialState, action) => {
       return state
   }
 }
+
+export default sendConfirmation

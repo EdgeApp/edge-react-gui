@@ -2,14 +2,11 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  TouchableHighlight,
   StyleSheet,
   TextInput
 } from 'react-native'
-import { connect } from 'react-redux'
 
 export default class Password extends Component {
-
   render () {
     return (
       <View style={styles.container}>
