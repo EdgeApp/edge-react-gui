@@ -1,5 +1,5 @@
 import React, {StyleSheet} from 'react-native'
-
+import {colors as c} from '../../../../theme/variables/airbitz'
 
 module.exports = StyleSheet.create({
 
@@ -23,9 +23,6 @@ module.exports = StyleSheet.create({
     top: 10    
   },
   modalHeaderIconWrapTop: {
-    position: 'relative', 
-    top: 1, 
-    left: 1, 
     borderRadius: 25, 
     backgroundColor: 'white', 
     zIndex: 100, 
@@ -34,10 +31,9 @@ module.exports = StyleSheet.create({
     width: 48
   },
   payeeIcon: {
-    position: 'relative', 
-    top: 2, 
-    left: 16, 
-    backgroundColor: 'transparent'    
+     width: 50,
+     height: 50,
+     backgroundColor: 'transparent'    
   },
   dataArea: {
     position: 'relative',
@@ -47,26 +43,30 @@ module.exports = StyleSheet.create({
   payeeNameArea: {
     alignItems: 'center',
     flexDirection: 'column'
-
   },
   payeeNameWrap: {
-    width: '38%',
-    borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
+    width: '80%',
     padding: 6,
     alignItems: 'center'
   },
   payeeNameInput: {
-    color: '#58595C',
+    color: c.gray1,
     fontSize: 17,
     height: 20,
-    textAlign: 'center'
+    textAlign: 'center',
+    width: '100%'
+  },
+  payeeSeperator: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    width: '38%',    
+    height: 1
   },
   dateWrap: {
     padding: 4
   },
   date: {
-    color: '#909091',
+    color: c.gray2,
     fontSize: 14
   },
   amountAreaContainer: {
@@ -99,14 +99,14 @@ module.exports = StyleSheet.create({
   },
   amountAreaMiddleTopText: {
     fontSize: 26,
-    color: '#58595C'
+    color: c.gray1
   },
   amountAreaMiddleBottom: {
 
   },
   amountAreaMiddleBottomText: {
     fontSize: 14,
-    color: '#909091'
+    color: c.gray2
   },
   amountAreaRight: {
     flex: 1,
@@ -114,7 +114,7 @@ module.exports = StyleSheet.create({
     alignItems: 'flex-end'
   },
   amountAreaRightText: {
-    color: '#909091',
+    color: c.gray2,
     fontSize: 14,   
   },
   editableFiatRow: {
@@ -133,7 +133,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   editableFiat: {
-    color: '#58595C',
+    color: c.gray1,
     fontSize: 17,
     textAlign: 'center',
     height: 36
@@ -144,7 +144,7 @@ module.exports = StyleSheet.create({
     alignItems: 'flex-end'
   },
   editableFiatRightText: {
-    color: '#909091',
+    color: c.gray2,
     fontSize: 14    
   },
   categoryRow: {
@@ -153,6 +153,24 @@ module.exports = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15    
   },
+
+  exchange: {
+    color: c.accentOrange,
+    borderColor: c.accentOrange
+  },
+  expense: {
+    color: c.secondary,
+    borderColor: c.secondary
+  },
+  transfer: {
+    color: c.primary,
+    borderColor: c.primary
+  },
+  receive: {
+    color: c.accentGreen,
+    borderColor: c.accentGreen
+  },
+
   categoryLeft: {
     borderRadius: 3,
     borderWidth: 1,
@@ -187,11 +205,11 @@ module.exports = StyleSheet.create({
     padding: 3    
   },
   notesInput: {
-    color: '#58595C',
+    color: c.gray1,
     fontSize: 12
   },
   footerArea: {
-    backgroundColor: '#F6F6F6',
+    backgroundColor: c.gray4,
     height: 123,
     paddingTop: 20,
     paddingLeft: 15,
@@ -210,7 +228,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   advancedTxText: {
-    color: '#4977BB',
+    color: c.secondary,
     fontSize: 14
   }
 });

@@ -15,6 +15,8 @@ import {
   Animated,
   ActivityIndicator
 } from 'react-native'
+import ReceivedIcon from '../../../../assets/images/transactions/transaction-type-received.png'
+import SentIcon from '../../../../assets/images/transactions/transaction-type-received.png'
 import T from '../../components/FormattedText'
 import {PrimaryButton} from '../../components/Buttons'
 import {connect} from 'react-redux'
@@ -25,6 +27,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
 import {} from './action'
 import Contacts from 'react-native-contacts'
+import {colors as c} from '../../../../theme/variables/airbitz'
 import styles from './style'
 import {border as b} from '../../../utils'
 import { setTransactionDetails } from './action.js'
@@ -50,18 +53,23 @@ class TransactionDetails extends Component {
      super(props)
      console.log('Constructor of TransactionDetails, this.props is: ', this.props)
      const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
+     const dateTime = new Date(this.props.tx.date * 1000)
+     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
+     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
      this.state = {
         tx: this.props.tx,
         //payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '',
         direction,
         txid : this.props.tx.txid,
-        payeeName: this.props.tx.payeeName || 'payeeName', // remove commenting once metaData in Redux
-        category: this.props.tx.category || 'fakeCategory',
-        notes: this.props.tx.notes || 'fake notes',
+        payeeName: this.props.tx.payeeName, // remove commenting once metaData in Redux
+        category: this.props.tx.category,
+        notes: this.props.tx.notes,
         amountFiat: this.props.tx.amountFiat || '3.56',
         bizId: this.props.tx.bizId || 12345,
-        miscJson: this.props.tx.miscJson || null
+        miscJson: this.props.tx.miscJson || null,
+        dateTimeSyntax: dateString + ' ' + timeString     
      }
+
    }
 
   contactSearch (nameKey, myArray) {
@@ -104,7 +112,7 @@ class TransactionDetails extends Component {
     console.log('rendering Transaction Details scene, this.props is: ', this.props, ' and this.state is: ', this.state)
     let initialValues = this.state
     return (
-        <ScrollView overScrollMode='never' /* alwaysBounceVertical={false}*/ >
+        <ScrollView overScrollMode='never' /* alwaysBounceVertical={false}*/ bounces={false} >
           <View style={[b(), styles.container]}>
             <View>
               <LinearGradient start={{x:0,y:0}} end={{x:1, y:0}} style={[b(), styles.expandedHeader, b()]} colors={["#3b7adb","#2b569a"]}>
@@ -113,11 +121,14 @@ class TransactionDetails extends Component {
             </View>
             <View style={[styles.dataArea]}>
               <View style={[styles.payeeNameArea]}>
-                <View style={[styles.payeeNameWrap]}>
-                  <TextInput onChangeText={this.onChangePayee} style={[styles.payeeNameInput, b()]} defaultValue={this.props.payeeName || 'Payee'} />
+                <View style={[styles.payeeNameWrap, b()]}>
+                  <TextInput autoCapitalize='none' autoCorrect={false} onChangeText={this.onChangePayee} style={[styles.payeeNameInput, b()]} placeholder='Payee' defaultValue={this.props.payeeName} />
+                </View>
+                <View style={styles.payeeSeperator}>
+
                 </View>
                 <View style={[styles.dateWrap]}>
-                  <T style={[styles.date]}>{this.props.tx.date}</T>
+                  <T style={[styles.date]}>{this.state.dateTimeSyntax}</T>
                 </View>
               </View>
               <AmountArea
@@ -193,7 +204,7 @@ class AmountArea extends Component {
             <T style={[styles.editableFiatLeftText]}></T>
           </View>
           <View style={[styles.editableFiatArea]}>
-            <TextInput onChangeText={this.props.onChangeFiatFxn} style={[styles.editableFiat]} keyboardType='numeric' defaultValue={this.props.info.amountFiat || '' } />
+            <TextInput autoCapitalize='none' autoCorrect={false} onChangeText={this.props.onChangeFiatFxn} style={[styles.editableFiat]} keyboardType='numeric' placeholder={'Notes'} defaultValue={this.props.info.amountFiat || '' } />
           </View>
           <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>USD</T>
@@ -205,12 +216,12 @@ class AmountArea extends Component {
             <T style={[styles.categoryLeftText, {color: this.types[this.props.info.direction].color}]}>{this.props.info.direction}</T>
           </View>
           <View style={[b(), styles.categoryInputArea]}>
-            <TextInput onChangeText={this.props.onChangeCategoryFxn} style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || 'myCategory'} placeholder='Monthly exchange' />
+            <TextInput onChangeText={this.props.onChangeCategoryFxn} style={[b(), styles.categoryInput]} defaultValue={this.props.info.category || ''} placeholder='Category'  autoCapitalize='none' autoCorrect={false} />
           </View>              
         </View>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' />
+            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} multiline={true} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes'  autoCapitalize='none' autoCorrect={false} />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
@@ -234,10 +245,10 @@ class PayeeIcon extends Component {
 
   render() {
     console.log('rendering PayeeIcon, this.props is: ', this.props)
-    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
+    let iconBgColor = (this.props.direction === 'receive') ? c.accentGreen : c.secondary
     return(
-        <View style={[styles.modalHeaderIconWrapBottom, {backgroundColor: iconBgColor}]}>
-            <View style={[styles.modalHeaderIconWrapTop, b('purple')]}>
+        <View style={[styles.modalHeaderIconWrapBottom]}>
+            <View style={[styles.modalHeaderIconWrapTop, b()]}>
               {this.renderIcon()}
             </View>
         </View>
@@ -246,14 +257,14 @@ class PayeeIcon extends Component {
 
   renderIcon() {
     console.log('rendering txDetails icon, this.props is: ', this.props)
-    let iconBgColor = (this.props.direction === 'receive') ? '#7FC343' : '#4977BB'
+    let iconBgColor = (this.props.direction === 'receive') ? c.accentGreen : c.secondary
     if (this.props.direction === 'receive'){
       return(
-        <Ionicon name="ios-arrow-round-down" color={iconBgColor} size={44} style={[styles.payeeIcon]} />
+        <Image source={ReceivedIcon} style={styles.payeeIcon} />
       )
     } else {
       return(
-        <Ionicon name="ios-arrow-round-up" color={iconBgColor} size={44} style={[ styles.payeeIcon]} />
+        <Image source={SentIcon} style={styles.payeeIcon} />
       )
     }
   }
@@ -267,7 +278,7 @@ class ContactIcon extends Component {
   }
 
   render() {
-    let iconBgColor = (this.props.direction === 'receive') ? 'green' : 'red'
+    let iconBgColor = (this.props.direction === 'receive') ? c.accentGreen : c.accentRed
     return(
         <View style={[b(), styles.modalHeaderIconWrapBottom]}>
           <View style={styles.modalHeaderIconWrapTop}>
