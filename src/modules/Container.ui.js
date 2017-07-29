@@ -21,7 +21,7 @@ import CreateWallet from './UI/scenes/CreateWallet/index.js'
 import {SettingsOverview, BTCSettings, ETHSettings} from './UI/scenes/Settings'
 
 import Login from './UI/scenes/Login/index.js'
-
+import Locale from 'react-native-locale'
 import SideMenu from './UI/components/SideMenu/SideMenu.ui'
 import Header from './UI/components/Header/Header.ui'
 import TabBar from './UI/components/TabBar/TabBar.ui'
@@ -38,6 +38,7 @@ import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
 import * as PLUGINS from 'airbitz-exchange-plugins'
+import {setLocaleInfo} from './UI/locale/action'
 
 import styles from './style.js'
 
@@ -50,7 +51,9 @@ const RouterWithRedux = connect()(Router)
 class Main extends Component {
   constructor (props) {
     super(props)
-
+    const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
+    this.props.dispatch(setLocaleInfo(localeInfo))
+    console.log('just dispatched localeInfo: ', localeInfo)
     console.log('main constructor props', props)
 
     this.state = {

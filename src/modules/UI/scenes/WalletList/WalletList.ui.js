@@ -6,7 +6,6 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native'
-import Locale from 'react-native-locale'
 import T from '../../components/FormattedText'
 import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -20,7 +19,6 @@ import SortableListView from 'react-native-sortable-listview'
 import WalletListRow from './WalletListRow.ui'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-
 import {
   toggleArchiveVisibility,
   updateRenameWalletInput,
@@ -39,13 +37,6 @@ import * as UI_SELECTORS from '../../selectors.js'
 class WalletList extends Component {
   toggleArchiveDropdown = () => {
     this.props.dispatch(toggleArchiveVisibility())
-  }
-
-  constructor (props) {
-    super(props)
-    const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-    console.log('localeInfo is: ', localeInfo)
-    console.log('strings is: ', strings)
   }
 
   render () {
