@@ -6,6 +6,9 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native'
+import Permissions from 'react-native-permissions'
+import Contacts from 'react-native-contacts'
+import {setContactList} from '../../contacts/action'
 import T from '../../components/FormattedText'
 import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -37,6 +40,26 @@ import * as UI_SELECTORS from '../../selectors.js'
 class WalletList extends Component {
   toggleArchiveDropdown = () => {
     this.props.dispatch(toggleArchiveVisibility())
+  }
+
+  componentDidMount () {
+    console.log('in WalletList->componentDidMount')
+    Permissions.getPermissionStatus('contacts').then((response) => {
+      console.log('Contacts permission status on walletList is: ', response)
+      if (response === 'authorized') {
+        Contacts.getAll((err, contacts) => {
+          if (err === 'denied') {
+            // error
+          } else {
+            console.log('all contacts: ', contacts)
+            contacts.sort((a, b) => {
+              return a.givenName > b.givenName
+            })
+            this.props.dispatch(setContactList(contacts))
+          }
+        })
+      }
+    })
   }
 
   render () {

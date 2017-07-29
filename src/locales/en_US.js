@@ -775,6 +775,8 @@ const strings = {
   fragment_transaction_expense: 'Expense',
   fragment_transaction_receive: 'Receive',
   fragment_transaction_income: 'Income',
+  fragment_transaction_transfer: 'Transfer',
+  fragment_transaction_exchange: 'Exchange',
   transactions_list_date_jan: 'Jan',
   transactions_list_date_feb: 'Feb',
   transactions_list_date_mar: 'Mar',
