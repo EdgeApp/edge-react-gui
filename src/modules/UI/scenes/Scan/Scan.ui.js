@@ -18,6 +18,10 @@ import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as UI_SELECTORS from '../../selectors.js'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+
 import styles from './style'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
 import { toggleEnableTorch, toggleAddressModal } from './action'
@@ -211,15 +215,26 @@ class AddressInputRecipient extends Component { // this component is for the inp
   constructor (props) {
     super(props)
     this.state = {
-      uri: ''
+      uri: '',
+      clipboard: ''
     }
   }
 
   componentDidMount () {
+    // grab the contents of the clipboard
+    // ask the selected core wallet to parse
+    // if success, add to this.state.clipboard
+
     Clipboard.getString().then(uri => {
-      this.setState({
-        uri
-      })
+      const wallet = this.props.coreWallet
+      try {
+        WALLET_API.parseURI(wallet, uri)
+        this.setState({
+          clipboard: uri
+        })
+      } catch (e) {
+        console.log(e)
+      }
     })
   }
 
@@ -232,19 +247,22 @@ class AddressInputRecipient extends Component { // this component is for the inp
 
   render () {
     console.log('rendering Rename Address, this.state is: ', this.state)
-    const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.uri)
+    const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
 
     return (
       <View>
         <View style={[styles.addressInputWrap]}>
           <TextInput style={[styles.addressInput]}
+            value={this.state.uri}
+            onChangeText={(uri) => this.setState({uri})}
+            autoCapitalize={'none'}
             autoFocus
             placeholder={copyMessage}
             returnKeyType={'done'}
             autoCorrect={false}
             onSubmitEditing={this._processURI} />
         </View>
-        {this.state.uri.length !== 0 &&
+        {this.state.clipboard.length !== 0 &&
           <View style={styles.pasteButtonRow}>
             <TertiaryButton text={copyMessage}
               ellipsizeMode={'middle'}
@@ -257,14 +275,20 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 }
 
-export const AddressInputRecipientConnect = connect(state => ({
-  recipientAddress: state.ui.scenes.scan.recipientAddress
-}))(AddressInputRecipient)
+export const AddressInputRecipientConnect = connect((state) => {
+  const walletId = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
+
+  return {
+    coreWallet,
+    recipientAddress: state.ui.scenes.scan.recipientAddress
+  }
+})(AddressInputRecipient)
 
 class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
   _onModalDone = () => {
     console.log('recipient address done, this.props.recipientAddress is: ', this.props.recipientAddress)
-    processURI(this.props.recipientAddress)
+    this.props.dispatch(processURI(this.props.recipientAddress))
     this.props.dispatch(updatePublicAddressRequest(this.props.recipientAddress))
     this._onToggleAddressModal()
     Actions.sendConfirmation({ type: 'reset', recipientPublicAddress: this.props.recipientAddress })

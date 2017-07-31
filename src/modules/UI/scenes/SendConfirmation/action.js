@@ -217,28 +217,25 @@ export const processURI = (uri) => {
     const state = getState()
     const walletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
-    wallet.parseURI = (uri) => {
-      return {
-        publicAddress: uri,
-        amountSatoshi: 0,
-        metadata: {}
-      }
-    }
-    const {
-      publicAddress,
-      amountSatoshi,
-      metadata
-    } = wallet.parseURI(uri)
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-    const spendInfo = makeSpendInfo({
-      publicAddress,
-      amountSatoshi,
-      metadata,
-      currencyCode
-    })
+    try {
+      const {
+        publicAddress,
+        amountSatoshi,
+        metadata
+      } = WALLET_API.parseURI(wallet, uri)
+      const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+      const spendInfo = makeSpendInfo({
+        publicAddress,
+        amountSatoshi,
+        metadata,
+        currencyCode
+      })
 
-    dispatch(updateSpendInfo(spendInfo))
-    dispatch(updatePublicAddress(publicAddress))
+      dispatch(updateSpendInfo(spendInfo))
+      dispatch(updatePublicAddress(publicAddress))
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 

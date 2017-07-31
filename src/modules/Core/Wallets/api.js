@@ -85,3 +85,7 @@ export const getBalance = (wallet, currencyCode) => {
 export const enableTokens = (wallet, tokens) => {
   return wallet
 }
+
+export const parseURI = (wallet, uri) => {
+  return wallet.parseUri(uri)
+}
