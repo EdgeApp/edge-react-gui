@@ -112,18 +112,6 @@ export const settings = (state = initialState, action) => {
       }
     }
 
-    case ACTION.SET_SHITCOIN_DENOMINATION: {
-      const { denomination } = data
-      const TRD = state['TRD']
-      return {
-        ...state,
-        TRD: {
-          ...TRD,
-          denomination
-        }
-      }
-    }
-
     default:
       return state
   }

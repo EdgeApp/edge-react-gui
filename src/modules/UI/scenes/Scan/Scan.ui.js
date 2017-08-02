@@ -6,7 +6,6 @@ import {
   Text,
   View,
   TouchableHighlight,
-  TextInput,
   Clipboard
 } from 'react-native'
 import T from '../../components/FormattedText'
@@ -34,9 +33,9 @@ import {
 
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import StylizedModal from '../../components/Modal/Modal.ui'
-import {TertiaryButton} from '../../components/Buttons'
-import ModalStyle from '../../components/Modal/style'
 import {border as b} from '../../../utils'
+import { AddressInput } from './components/AddressInput.js'
+import { AddressInputButtons } from './components/AddressInputButtons.js'
 
 class Scan extends Component {
   constructor (props) {
@@ -168,7 +167,6 @@ class Scan extends Component {
     )
   }
 }
-
 const mapStateToProps = state => {
   return {
     scene: state.routes.scene.name,
@@ -178,7 +176,6 @@ const mapStateToProps = state => {
     scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
-
 const mapDispatchToProps = dispatch => {
   return {
     toggleEnableTorch: () => dispatch(toggleEnableTorch()),
@@ -190,30 +187,12 @@ const mapDispatchToProps = dispatch => {
     updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
   }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
 
 class WalletAddressModal extends Component {
-  render () {
-    return (
-      <StylizedModal
-        featuredIcon={<FAIcon name='address-book-o'size={24} color='#2A5799' style={[{position: 'relative', top: 12, left: 13, height: 24, width: 24, backgroundColor: 'transparent', zIndex: 1015, elevation: 1015}]} />}
-        headerText='fragment_send_address_dialog_title'
-        modalMiddle={<AddressInputRecipientConnect />}
-        modalBottom={<SendAddressButtonsConnect />}
-        visibilityBoolean={this.props.addressModalVisible}
-      />
-    )
-  }
-}
-
-export const WalletAddressModalConnect = connect(state => ({
-  addressModalVisible: state.ui.scenes.scan.addressModalVisible
-}))(WalletAddressModal)
-
-class AddressInputRecipient extends Component { // this component is for the input area of the Recipient Address Modal
   constructor (props) {
     super(props)
+
     this.state = {
       uri: '',
       clipboard: ''
@@ -221,10 +200,6 @@ class AddressInputRecipient extends Component { // this component is for the inp
   }
 
   componentDidMount () {
-    // grab the contents of the clipboard
-    // ask the selected core wallet to parse
-    // if success, add to this.state.clipboard
-
     Clipboard.getString().then(uri => {
       const wallet = this.props.coreWallet
       try {
@@ -238,83 +213,62 @@ class AddressInputRecipient extends Component { // this component is for the inp
     })
   }
 
-  _processURI = () => {
-    console.log('this.state.uri', this.state.uri)
+  onPasteFromClipboard = () => {
+    this.setState({ uri: this.state.clipboard }, this.onSubmit)
+  }
+  onSubmit = () => {
     this.props.dispatch(toggleAddressModal())
     this.props.dispatch(processURI(this.state.uri))
     Actions.sendConfirmation()
   }
+  onCancel = () => {
+    this.props.dispatch(toggleAddressModal())
+  }
+
+  onChangeText = (uri) => {
+    this.setState({ uri })
+  }
 
   render () {
-    console.log('rendering Rename Address, this.state is: ', this.state)
+    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
+      style={[{
+        position: 'relative',
+        top: 12,
+        left: 13,
+        height: 24,
+        width: 24,
+        backgroundColor: 'transparent',
+        zIndex: 1015,
+        elevation: 1015}]} />
+
     const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
+    const middle = <AddressInput
+      copyMessage={copyMessage}
+      onChangeText={this.onChangeText}
+      onSubmit={this.processURI}
+      onPaste={this.onPasteFromClipboard} />
+
+    const bottom = <AddressInputButtons
+      onSubmit={this.processURI}
+      onCancel={this.onCancel} />
 
     return (
-      <View>
-        <View style={[styles.addressInputWrap]}>
-          <TextInput style={[styles.addressInput]}
-            value={this.state.uri}
-            onChangeText={(uri) => this.setState({uri})}
-            autoCapitalize={'none'}
-            autoFocus
-            placeholder={copyMessage}
-            returnKeyType={'done'}
-            autoCorrect={false}
-            onSubmitEditing={this._processURI} />
-        </View>
-        {this.state.clipboard.length !== 0 &&
-          <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={copyMessage}
-              ellipsizeMode={'middle'}
-              onPressFunction={this._processURI}
-              numberOfLines={1} />
-          </View>
-        }
-      </View>
+      <StylizedModal
+        featuredIcon={icon}
+        headerText='fragment_send_address_dialog_title'
+        modalMiddle={middle}
+        modalBottom={bottom}
+        visibilityBoolean={this.props.addressModalVisible}
+      />
     )
   }
 }
-
-export const AddressInputRecipientConnect = connect((state) => {
+export const WalletAddressModalConnect = connect(state => {
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
 
   return {
     coreWallet,
-    recipientAddress: state.ui.scenes.scan.recipientAddress
+    addressModalVisible: state.ui.scenes.scan.addressModalVisible
   }
-})(AddressInputRecipient)
-
-class SendAddressButtons extends Component { // this component is for the button area of the Recipient Address Modal
-  _onModalDone = () => {
-    console.log('recipient address done, this.props.recipientAddress is: ', this.props.recipientAddress)
-    this.props.dispatch(processURI(this.props.recipientAddress))
-    this.props.dispatch(updatePublicAddressRequest(this.props.recipientAddress))
-    this._onToggleAddressModal()
-    Actions.sendConfirmation({ type: 'reset', recipientPublicAddress: this.props.recipientAddress })
-  }
-  _onToggleAddressModal = () => {
-    this.props.dispatch(toggleAddressModal())
-  }
-
-  render () {
-    return (
-      <View style={[ModalStyle.buttonsWrap, b('gray')]}>
-        <TouchableHighlight onPress={this._onToggleAddressModal} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
-          <View style={ModalStyle.stylizedButtonTextWrap}>
-            <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={this._onModalDone} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
-          <View style={ModalStyle.stylizedButtonTextWrap}>
-            <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-}
-
-const SendAddressButtonsConnect = connect(state => ({
-  recipientAddress: state.ui.scenes.scan.recipientAddress
-}))(SendAddressButtons)
+})(WalletAddressModal)
