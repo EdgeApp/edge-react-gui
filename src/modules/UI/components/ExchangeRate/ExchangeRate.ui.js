@@ -11,11 +11,11 @@ const styles = StyleSheet.create({
   }
 })
 
-const ExchangeRate = ({fiatPerCrypto, fiatCurrencyCode, cryptoDenom}) => {
+const ExchangeRate = ({fiatPerCrypto, fiatCurrencyCode, cryptoDenomination}) => {
   const text = fiatPerCrypto === 0
     ? <Text style={styles.text}>Exchange Rate loading...</Text>
     : <Text style={styles.text}>
-      1 {cryptoDenom.name} = {fiatCurrencyCode} {(fiatPerCrypto).toFixed(2)}
+      1 {cryptoDenomination.name} = {fiatCurrencyCode} {(fiatPerCrypto).toFixed(2)}
     </Text>
 
   return (

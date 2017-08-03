@@ -65,21 +65,34 @@ class Request extends Component {
         colors={['#3b7adb', '#2b569a']}>
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode}
-            cryptoDenom={this.props.inputCurrencyDenom} />
+          <ExchangeRate
+            fiatPerCrypto={this.props.fiatPerCrypto}
+            fiatCurrencyCode={this.props.fiatCurrencyCode}
+            cryptoDenomination={this.props.inputCurrencyDenomination} />
         </View>
 
         <View style={styles.main}>
           {this.props.inputCurrencySelected === 'crypto'
-            ? <FlipInput onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange} amountSatoshi={amountSatoshi || 0}
-              amountFiat={amountFiat} inputCurrencySelected={this.props.inputCurrencySelected} // crypto
-              cryptoDenom={this.props.inputCurrencyDenom} fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus} inputOnBlur={this._onBlur} />
-            : <FlipInput onCryptoInputChange={this.onCryptoInputChange} onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={amountSatoshi || 0} amountFiat={amountFiat} inputCurrencySelected={this.props.inputCurrencySelected} // fiat
-              cryptoDenom={this.props.inputCurrencyDenom} fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus} inputOnBlur={this._onBlur} />}
+            ? <FlipInput
+              onCryptoInputChange={this.onCryptoInputChange}
+              onFiatInputChange={this.onFiatInputChange}
+              amountSatoshi={amountSatoshi || 0}
+              amountFiat={amountFiat}
+              inputCurrencySelected={this.props.inputCurrencySelected} // crypto
+              cryptoDenomination={this.props.inputCurrencyDenomination}
+              fiatCurrencyCode={this.props.fiatCurrencyCode}
+              inputOnFocus={this._onFocus}
+              inputOnBlur={this._onBlur} />
+            : <FlipInput
+              onCryptoInputChange={this.onCryptoInputChange}
+              onFiatInputChange={this.onFiatInputChange}
+              amountSatoshi={amountSatoshi || 0}
+              amountFiat={amountFiat}
+              inputCurrencySelected={this.props.inputCurrencySelected} // fiat
+              cryptoDenomination={this.props.inputCurrencyDenomination}
+              fiatCurrencyCode={this.props.fiatCurrencyCode}
+              inputOnFocus={this._onFocus}
+              inputOnBlur={this._onBlur} />}
 
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus requestAddress={publicAddress} amountRequestedInCrypto={amountSatoshi} amountReceivedInCrypto={amountFiat} />
@@ -204,7 +217,7 @@ class Request extends Component {
 
 const mapStateToProps = (state) => {
   let exchangeRate = 0
-  let inputCurrencyDenom = {}
+  let inputCurrencyDenomination = {}
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (wallet) {
@@ -212,7 +225,7 @@ const mapStateToProps = (state) => {
     const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
     exchangeRate = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
     const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-    inputCurrencyDenom = wallet.allDenominations[currencyCode][index]
+    inputCurrencyDenomination = wallet.allDenominations[currencyCode][index]
   }
 
   return {
@@ -223,7 +236,7 @@ const mapStateToProps = (state) => {
     currencyCode,
     settings: state.ui.settings,
     inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
-    inputCurrencyDenom,
+    inputCurrencyDenomination,
     fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
     // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,,,
   }
