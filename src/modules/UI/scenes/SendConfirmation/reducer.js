@@ -32,9 +32,11 @@ const sendConfirmation = (state = initialState, action) => {
       }
     case ACTION.UPDATE_PARSED_URI:
       const { parsedURI = {} } = data
+      const publicAddress = parsedURI.publicAddress
       return {
         ...state,
-        parsedURI
+        parsedURI,
+        publicAddress
       }
     case ACTION.UPDATE_DISPLAY_AMOUNT:
       const { displayAmount } = data

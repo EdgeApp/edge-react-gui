@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
+import { sprintf } from 'sprintf-js'
 import {
   ActivityIndicator,
   Text,
   View,
-  TouchableHighlight,
-  Clipboard
+  TouchableHighlight
 } from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
@@ -32,10 +31,8 @@ import {
 } from '../SendConfirmation/action.js'
 
 import { toggleWalletListModal } from '../WalletTransferList/action'
-import StylizedModal from '../../components/Modal/Modal.ui'
-import {border as b} from '../../../utils'
-import { AddressInput } from './components/AddressInput.js'
-import { AddressInputButtons } from './components/AddressInputButtons.js'
+import { border } from '../../../utils'
+import { AddressModal } from './components/AddressModal.js'
 
 class Scan extends Component {
   constructor (props) {
@@ -73,10 +70,17 @@ class Scan extends Component {
   onBarCodeRead = (scan) => {
     if (this.props.scene !== 'scan') return
     const uri = scan.data
-    this.props.processURI(uri)
-    Actions.sendConfirmation()
-    // // React Native Router Flux does not fully unmount scenes when transitioning
-    // // {type: 'reset'} is needed to fully unmount the Scan scene, or else the camera will keep scanning
+    this.parseURI(uri)
+  }
+
+  parseURI = (uri) => {
+    try {
+      const parsedURI = WALLET_API.parseURI(this.props.coreWallet, uri)
+      this.props.updateParsedURI(parsedURI)
+      Actions.sendConfirmation()
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   selectPhotoTapped = () => {
@@ -128,36 +132,36 @@ class Scan extends Component {
     return (
       <View style={styles.container}>
         {this.renderCamera()}
-        <View style={[styles.overlay, b('red')]}>
+        <View style={[styles.overlay, border('red')]}>
 
-          <WalletAddressModalConnect />
+          <AddressModal />
 
-          <View style={[styles.overlayTop, b('yellow')]}>
-            <T style={[styles.overlayTopText, b('green')]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
+          <View style={[styles.overlayTop, border('yellow')]}>
+            <T style={[styles.overlayTopText, border('green')]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
           </View>
           <View style={[styles.overlayBlank]} />
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, b('red')]}>
+          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap, border('red')]}>
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, b('green')]} />
+                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon, border('green')]} />
                 <T style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</T>
               </View>
             </TouchableHighlight>
-            <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, b('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
+            <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton, border('yellow')]} onPress={this._onToggleAddressModal.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, b('green')]} />
-                <T style={[styles.addressButtonText, styles.bottomButtonText, b('purple')]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
+                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon, border('green')]} />
+                <T style={[styles.addressButtonText, styles.bottomButtonText, border('purple')]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, b('green')]} />
+                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon, border('green')]} />
                 <T style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</T>
               </View>
             </TouchableHighlight>
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch.bind(this)} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, b('green')]} />
+                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon, border('green')]} />
                 <T style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</T>
               </View>
             </TouchableHighlight>
@@ -167,8 +171,12 @@ class Scan extends Component {
     )
   }
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
+  const walletId = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
+
   return {
+    coreWallet,
     scene: state.routes.scene.name,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
@@ -188,87 +196,3 @@ const mapDispatchToProps = dispatch => {
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
-
-class WalletAddressModal extends Component {
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      uri: '',
-      clipboard: ''
-    }
-  }
-
-  componentDidMount () {
-    Clipboard.getString().then(uri => {
-      const wallet = this.props.coreWallet
-      try {
-        WALLET_API.parseURI(wallet, uri)
-        this.setState({
-          clipboard: uri
-        })
-      } catch (e) {
-        console.log(e)
-      }
-    })
-  }
-
-  onPasteFromClipboard = () => {
-    this.setState({ uri: this.state.clipboard }, this.onSubmit)
-  }
-  onSubmit = () => {
-    this.props.dispatch(toggleAddressModal())
-    this.props.dispatch(processURI(this.state.uri))
-    Actions.sendConfirmation()
-  }
-  onCancel = () => {
-    this.props.dispatch(toggleAddressModal())
-  }
-
-  onChangeText = (uri) => {
-    this.setState({ uri })
-  }
-
-  render () {
-    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
-      style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
-        backgroundColor: 'transparent',
-        zIndex: 1015,
-        elevation: 1015}]} />
-
-    const copyMessage = sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
-    const middle = <AddressInput
-      copyMessage={copyMessage}
-      onChangeText={this.onChangeText}
-      onSubmit={this.processURI}
-      onPaste={this.onPasteFromClipboard} />
-
-    const bottom = <AddressInputButtons
-      onSubmit={this.processURI}
-      onCancel={this.onCancel} />
-
-    return (
-      <StylizedModal
-        featuredIcon={icon}
-        headerText='fragment_send_address_dialog_title'
-        modalMiddle={middle}
-        modalBottom={bottom}
-        visibilityBoolean={this.props.addressModalVisible}
-      />
-    )
-  }
-}
-export const WalletAddressModalConnect = connect(state => {
-  const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
-
-  return {
-    coreWallet,
-    addressModalVisible: state.ui.scenes.scan.addressModalVisible
-  }
-})(WalletAddressModal)

@@ -13,40 +13,41 @@ export const UPDATE_MAX_SATOSHI = PREFIX + 'UPDATE_MAX_SATOSHI'
 export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
 export const UPDATE_SPEND_SUFFICIENT_FUNDS = PREFIX + 'UPDATE_SPEND_SUFFICIENT_FUNDS'
 
-export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
-export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
-
 export const UPDATE_WALLET_TRANSFER = PREFIX + 'UPDATE_WALLET_TRANSFER'
 export const UPDATE_PUBLIC_ADDRESS = PREFIX + 'UPDATE_PUBLIC_ADDRESS'
 export const UPDATE_SPEND_INFO = PREFIX + 'UPDATE_SPEND_INFO'
 export const RESET = PREFIX + 'RESET'
 
+export const UPDATE_CRYPTO_AMOUNT_REQUEST = PREFIX + 'UPDATE_CRYPTO_AMOUNT_REQUEST'
+export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
+export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
+export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
+
 import { Actions } from 'react-native-router-flux'
 import { openABAlert } from '../../components/ABAlert/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import { convertDenominationToNative } from '../../../utils.js'
 
-export const updateAmountSatoshiRequest = (amountCryptoString) => {
+export const updateCryptoAmountRequest = (cryptoAmountInDenomination: string = '0') => {
   return (dispatch, getState) => {
-    const amountSatoshi = parseFloat(amountCryptoString)
-    dispatch(updateAmountSatoshi(amountSatoshi))
-    if (amountSatoshi === 0) return
+    if (parseFloat(cryptoAmountInDenomination) === 0) return
 
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const nativeToDenominationRatio = SETTINGS_SELECTORS.getNativeToDenominationRatio(state, currencyCode)
+    const nativeAmount = convertDenominationToNative(nativeToDenominationRatio, cryptoAmountInDenomination)
+    const publicAddress = state.ui.scenes.sendConfirmation.publicAddress
 
-    const { publicAddress } = state.ui.scenes.sendConfirmation
-    const spendInfo = makeSpendInfo({ nativeAmount: amountSatoshi, publicAddress, currencyCode })
+    const spendInfo = makeSpendInfo({ nativeAmount, publicAddress, currencyCode })
 
     WALLET_API.makeSpend(wallet, spendInfo)
     .then(transaction => {
-      const { providerFee = 0, networkFee = 0 } = transaction
-      const feeTotal = providerFee + networkFee
       dispatch(updateTransaction(transaction))
-      dispatch(updateFee(feeTotal))
       dispatch(updateSpendSufficientFunds(null))
     })
     .catch(e => {
@@ -181,10 +182,6 @@ export const useMaxSatoshi = () => {
 
 export const updateWalletTransfer = (wallet) => {
   return (dispatch) => {
-    const spendInfo = makeSpendInfo({
-      wallet
-    })
-
     dispatch(updateLabel(wallet.name))
   }
 }

@@ -1,4 +1,3 @@
-// @flow
 import borderColors from '../theme/variables/css3Colors'
 import BS from 'biggystring'
 

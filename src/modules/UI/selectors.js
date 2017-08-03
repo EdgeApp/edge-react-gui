@@ -3,7 +3,7 @@ export const getWallets = (state) => {
   return wallets
 }
 
-export const getWallet = (state, walletId) => {
+export const getWallet = (state, walletId: string) => {
   const wallets = getWallets(state)
   const wallet = wallets[walletId]
   return wallet
