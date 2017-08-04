@@ -1,5 +1,5 @@
 import borderColors from '../theme/variables/css3Colors'
-import BS from 'biggystring'
+import { divf, mulf } from 'biggystring'
 
 export const cutOffText = (str, lng) => {
   if (str.length >= lng) {
@@ -69,36 +69,36 @@ export const getRandomColor = () => {
 
 // Used to convert outputs form core to amounts ready for display
 export const convertNativeToDenomination = (nativeToDenominationRatio: string) => {
-  return (nativeAmount: string): string => {
-    return BS.divF(nativeAmount, nativeToDenominationRatio)
+  return (nativeAmount: string): number => {
+    return divf(nativeAmount, nativeToDenominationRatio)
   }
 }
 
 // Used to convert amounts from display to core inputs
 export const convertDenominationToNative = (nativeToDenominationRatio: string) => {
   return (denominationAmount: number): number => {
-    return BS.mulF(denominationAmount, nativeToDenominationRatio)
+    return mulf(denominationAmount, nativeToDenominationRatio)
   }
 }
 
 // Used to convert exchange output to amounts ready for display
 export const convertBaseToDenomination = (denominationToBaseRatio: string) => {
   return (baseAmount: string): string => {
-    return BS.mulF(baseAmount, denominationToBaseRatio)
+    return mulf(baseAmount, denominationToBaseRatio)
   }
 }
 
 // Used to convert amounts from display to exchange inputs
 export const convertDenominationToBase = (denominationToBaseRatio: string) => {
   return (denominationAmount: string): number => {
-    return BS.divF(denominationAmount, denominationToBaseRatio)
+    return divf(denominationAmount, denominationToBaseRatio)
   }
 }
 
 // Used to get the ratio used for converting a denominationAmount into a
 // baseAmount when using the currency exchange
 export const deriveDenominationToBaseRatio = (targetNativeToDenominationRatio: string) => {
-  return (sourceNativeToDenominationRatio: string): string => {
-    return BS.divf(sourceNativeToDenominationRatio, targetNativeToDenominationRatio)
+  return (sourceNativeToDenominationRatio: string): number => {
+    return divf(sourceNativeToDenominationRatio, targetNativeToDenominationRatio)
   }
 }

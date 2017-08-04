@@ -1,12 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   Animated,
   TextInput,
   View
 } from 'react-native'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import styles from './styles.js'
-import { border as b, getCryptoFromFiat, getFiatFromCrypto } from '../../../utils.js'
+import { border, getCryptoFromFiat, getFiatFromCrypto } from '../../../utils.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import T from '../FormattedText'
 import {
@@ -14,7 +14,7 @@ import {
   updateSpendSufficientFunds
 } from '../../scenes/SendConfirmation/action'
 
-import {updateInputCurrencySelected as updateRequestInputCurrency} from '../../scenes/Request/action'
+import { updateInputCurrencySelected as updateRequestInputCurrency } from '../../scenes/Request/action'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -26,10 +26,8 @@ class FlipInput extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      primary: props.primary,
-      secondary: props.secondary,
       inputCurrencySelected: 'fiat',
-      color: props.color
+      color: props.color,
 
       primaryInputValue: '',
       secondaryInputValue: '',
@@ -82,9 +80,10 @@ class FlipInput extends Component {
     }
 
     return (
-      <FlipInputInsideConnect style={[b()]}
-        primary={primary}
-        secondary={secondary}
+      <FlipInputInsideConnect style={[border()]}
+        primary={this.state.primary}
+        secondary={this.state.secondary}
+        exchangeRate={this.props.fiatPerCrypto}
 
         currencySelected={inputCurrencySelected}
         mode={this.props.mode}

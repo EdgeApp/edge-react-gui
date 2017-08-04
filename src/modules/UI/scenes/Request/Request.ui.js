@@ -42,13 +42,15 @@ class Request extends Component {
   componentDidMount () {
     this.props.updateReceiveAddress(this.props.walletId, this.props.currencyCode)
   }
+  _onFocus = () => this.setState({keyboardVisible: true})
+  _onBlur = () => this.setState({keyboardVisible: false})
 
-  _onFocus = () => {
-    this.setState({keyboardVisible: true})
+  onPrimaryAmountChange = (primaryDenominationAmount) => {
+    console.log('onPrimaryAmountChange', primaryDenominationAmount)
   }
 
-  _onBlur = () => {
-    this.setState({keyboardVisible: false})
+  onSecondaryAmountChange = (secondaryDenominationAmount) => {
+    console.log('onSecondaryAmountChange', secondaryDenominationAmount)
   }
 
   render () {
@@ -67,15 +69,17 @@ class Request extends Component {
       currencyCode: 'USD',
       denominationSymbol: 'S',
       placeholder: '0.00',
-      onAmountChange: () => { console.log('onAmountChange PRIMARY') }
+      precision: 2,
+      onAmountChange: this.onPrimaryAmountChange
     }
 
     const secondary = {
       amount: 0,
-      currencyCode: 'B',
-      denominationSymbol: 'BTC',
+      currencyCode: 'BTC',
+      denominationSymbol: 'mB',
       placeholder: '0.00',
-      onAmountChange: () => { console.log('onAmountChange SECONDARY') }
+      precision: 5,
+      onAmountChange: this.onSecondaryAmountChange
     }
 
     const color = 'white'
@@ -265,7 +269,7 @@ const mapStateToProps = (state) => {
     settings: state.ui.settings,
     inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
     inputCurrencyDenomination,
-    fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
+    fiatCurrencyCode: wallet.fiatCurrencyCode
     // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,,,
   }
 }
