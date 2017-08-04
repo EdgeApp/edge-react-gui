@@ -45,11 +45,11 @@ export default class FlipInput extends Component {
   renderRows = () => {
     this.state.isToggled
       ? [
-        this.renderTopRow(this.props.primary, this.props.onChangeText),
+        this.renderTopRow(this.props.primary, this.props.onSecondaryAmountChange),
         this.renderBottomRow(this.props.secondary)
       ]
       : [
-        this.renderTopRow(this.props.secondary, this.props.onChangeText),
+        this.renderTopRow(this.props.secondary, this.props.onPrimaryAmountChange),
         this.renderBottomRow(this.props.primary)
       ]
   }

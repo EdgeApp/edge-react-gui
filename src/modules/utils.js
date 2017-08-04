@@ -69,14 +69,14 @@ export const getRandomColor = () => {
 
 // Used to convert outputs form core to amounts ready for display
 export const convertNativeToDenomination = (nativeToDenominationRatio: string) => {
-  return (nativeAmount: string): number => {
-    return divf(nativeAmount, nativeToDenominationRatio)
+  return (nativeAmount: string): string => {
+    return divf(nativeAmount, nativeToDenominationRatio).toString()
   }
 }
 
 // Used to convert amounts from display to core inputs
 export const convertDenominationToNative = (nativeToDenominationRatio: string) => {
-  return (denominationAmount: number): string => {
+  return (denominationAmount: string): string => {
     return mulf(denominationAmount, nativeToDenominationRatio)
   }
 }

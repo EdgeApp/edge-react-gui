@@ -13,7 +13,7 @@ import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ABQRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import {getCryptoFromFiat, getFiatFromCrypto, sanitizeInput} from '../../../utils.js'
+import { convertDenominationToNative } from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -46,11 +46,17 @@ class Request extends Component {
   _onFocus = () => this.setState({keyboardVisible: true})
   _onBlur = () => this.setState({keyboardVisible: false})
 
-  onAmountsChange = ({ primaryAmount, secondaryAmount }) => {
+  onAmountsChange = ({ primaryDenominationAmount, secondaryDenominationAmount }) => {
+    const primaryNativeToDenominationRatio = this.props.primary.denomination.multiplier
+    const secondaryNativeToDenominationRatio = this.props.secondary.denomination.multiplier
+
+    const primaryNativeAmount = convertDenominationToNative(primaryNativeToDenominationRatio)(primaryDenominationAmount)
+    const secondaryNativeAmount = convertDenominationToNative(secondaryNativeToDenominationRatio)(secondaryDenominationAmount)
+
     this.setState({
-      primaryAmount,
-      secondaryAmount
-    }, console.log(`onAmountsChange: ${primaryAmount}, ${secondaryAmount}`))
+      primaryNativeAmount,
+      secondaryNativeAmount
+    }, console.log(`onAmountsChange: primaryDenominationAmount: ${primaryDenominationAmount}, secondaryDenominationAmount: ${secondaryDenominationAmount}\n onAmountsChange: primaryNativeAmount: ${primaryNativeAmount}, secondaryNativeAmount: ${secondaryNativeAmount}`))
   }
 
   render () {
@@ -97,31 +103,6 @@ class Request extends Component {
     )
   }
 
-  // /////////////// Start Critical Input and Conversion Area //////////////////////
-  onCryptoInputChange = (amountRequestedInCrypto) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ', amountRequestedInCrypto)
-    amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
-    if (this.invalidInput(amountRequestedInCrypto)) {
-      return
-    }
-    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.props.fiatPerCrypto)
-
-    this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
-    this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
-  }
-
-  onFiatInputChange = (amountRequestedInFiat) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ', amountRequestedInCrypto)
-    amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
-    if (this.invalidInput(amountRequestedInFiat)) {
-      return
-    }
-
-    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.props.fiatPerCrypto)
-    this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
-    this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
-  }
-  // /////////////// End Critical Input and Conversion Area //////////////////////
   copyToClipboard = (publicAddress, amountSatoshi) => {
     Clipboard.setString(this.getRequestInfoForClipboard(publicAddress, amountSatoshi))
 
