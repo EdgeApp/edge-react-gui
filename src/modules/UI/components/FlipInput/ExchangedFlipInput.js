@@ -19,7 +19,8 @@ export default class ExchangedFlipInput extends Component {
   }
 
   onPrimaryAmountChange = (primaryDenominationAmount) => {
-    const secondaryDenominationAmount = this.convertPrimaryDenominationToSecondaryDenomination(primaryDenominationAmount)
+    const secondaryDenominationAmount =
+      this.convertPrimaryDenominationToSecondaryDenomination(primaryDenominationAmount)
     this.setState({
       primaryDenominationAmount,
       secondaryDenominationAmount
@@ -31,7 +32,8 @@ export default class ExchangedFlipInput extends Component {
   }
 
   onSecondaryAmountChange = (secondaryDenominationAmount) => {
-    const primaryDenominationAmount = this.convertSecondaryDenominationToPrimaryDenomination(secondaryDenominationAmount)
+    const primaryDenominationAmount =
+      this.convertSecondaryDenominationToPrimaryDenomination(secondaryDenominationAmount)
     this.setState({
       primaryDenominationAmount,
       secondaryDenominationAmount
@@ -40,34 +42,6 @@ export default class ExchangedFlipInput extends Component {
       primaryDenominationAmount,
       secondaryDenominationAmount
     })
-  }
-
-  getPrimaryDenominationToBaseRatio = () => {
-    return deriveDenominationToBaseRatio(this.props.primary.baseDenomination.multiplier)(this.props.primary.denomination.multiplier)
-  }
-  getSecondaryDenominationToBaseRatio = () => {
-    return deriveDenominationToBaseRatio(this.props.secondary.baseDenomination.multiplier)(this.props.secondary.denomination.multiplier)
-  }
-
-  convertPrimaryDenominationToPrimaryBase = (primaryDenominationAmount: string) => {
-    return convertDenominationToBase(this.getPrimaryDenominationToBaseRatio())(primaryDenominationAmount)
-  }
-  convertSecondaryDenominationToSecondaryBase = (secondaryDenominationAmount: string) => {
-    return convertDenominationToBase(this.getSecondaryDenominationToBaseRatio())(secondaryDenominationAmount)
-  }
-
-  convertPrimaryBaseToSecondaryBase = (primaryBaseAmount: number): number => {
-    return convertBaseToBase(this.props.secondaryToPrimaryRatio)(primaryBaseAmount)
-  }
-  convertSecondaryBaseToPrimaryBase = (secondaryBaseAmount: number): number => {
-    return convertBaseToBase(1 / this.props.secondaryToPrimaryRatio)(secondaryBaseAmount)
-  }
-
-  convertPrimaryBaseToPrimaryDenomination = (primaryBaseAmount: number): string => {
-    return convertBaseToDenomination(this.getPrimaryDenominationToBaseRatio())(primaryBaseAmount)
-  }
-  convertSecondaryBaseToSecondaryDenomination = (secondaryBaseAmount: number): string => {
-    return convertBaseToDenomination(this.getSecondaryDenominationToBaseRatio())(secondaryBaseAmount)
   }
 
   convertPrimaryDenominationToSecondaryDenomination = (primaryDenominationAmount: string): string => {
@@ -102,5 +76,33 @@ export default class ExchangedFlipInput extends Component {
         secondaryDenomination={secondary.denomination}
         onSecondaryAmountChange={this.onSecondaryAmountChange} />
     )
+  }
+
+  getPrimaryDenominationToBaseRatio = (): string => {
+    return deriveDenominationToBaseRatio(this.props.primary.baseDenomination.multiplier)(this.props.primary.denomination.multiplier)
+  }
+  getSecondaryDenominationToBaseRatio = (): string => {
+    return deriveDenominationToBaseRatio(this.props.secondary.baseDenomination.multiplier)(this.props.secondary.denomination.multiplier)
+  }
+
+  convertPrimaryDenominationToPrimaryBase = (primaryDenominationAmount: string): number => {
+    return convertDenominationToBase(this.getPrimaryDenominationToBaseRatio())(primaryDenominationAmount)
+  }
+  convertSecondaryDenominationToSecondaryBase = (secondaryDenominationAmount: string): number => {
+    return convertDenominationToBase(this.getSecondaryDenominationToBaseRatio())(secondaryDenominationAmount)
+  }
+
+  convertPrimaryBaseToSecondaryBase = (primaryBaseAmount: number): number => {
+    return convertBaseToBase(this.props.secondaryToPrimaryRatio)(primaryBaseAmount)
+  }
+  convertSecondaryBaseToPrimaryBase = (secondaryBaseAmount: number): number => {
+    return convertBaseToBase(1 / this.props.secondaryToPrimaryRatio)(secondaryBaseAmount)
+  }
+
+  convertPrimaryBaseToPrimaryDenomination = (primaryBaseAmount: number): string => {
+    return convertBaseToDenomination(this.getPrimaryDenominationToBaseRatio())(primaryBaseAmount)
+  }
+  convertSecondaryBaseToSecondaryDenomination = (secondaryBaseAmount: number): string => {
+    return convertBaseToDenomination(this.getSecondaryDenominationToBaseRatio())(secondaryBaseAmount)
   }
 }
