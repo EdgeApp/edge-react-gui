@@ -81,7 +81,7 @@ class Request extends Component {
           <ExchangedFlipInput
             primary={primary}
             secondary={secondary}
-            exchangeRate={this.props.fiatPerCrypto}
+            primaryToSecondaryRatio={this.props.fiatPerCrypto}
             onAmountsChange={this.onAmountsChange}
             color={color} />
 
@@ -230,15 +230,15 @@ const mapStateToProps = (state) => {
   const primary = {
     displayCurrencyCode: currencyCode,
     exchangeCurrencyCode: currencyCode,
-    ...primaryDenomination,
-    ...primaryBaseDenomination
+    denomination: primaryDenomination,
+    baseDenomination: primaryBaseDenomination
   }
 
   const secondary = {
     displayCurrencyCode: wallet.fiatCurrencyCode,
     exchangeCurrencyCode: wallet.isoFiatCurrencyCode,
-    ...secondaryDenomination,
-    ...secondaryBaseDenomination
+    denomination: secondaryDenomination,
+    baseDenomination: secondaryBaseDenomination
   }
 
   return {

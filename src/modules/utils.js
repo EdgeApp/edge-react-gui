@@ -103,8 +103,8 @@ export const convertBaseToBase = (ratio: number): number => {
 
 // Used to get the ratio used for converting a denominationAmount into a
 // baseAmount when using the currency exchange
-export const deriveDenominationToBaseRatio = (targetNativeToDenominationRatio: string) => {
-  return (sourceNativeToDenominationRatio: string): number => {
-    return divf(sourceNativeToDenominationRatio, targetNativeToDenominationRatio)
+export const deriveDenominationToBaseRatio = (baseNativeToDenominationRatio: string) => {
+  return (denominationNativeToDenominationRatio: string): number => {
+    return divf(denominationNativeToDenominationRatio, baseNativeToDenominationRatio)
   }
 }

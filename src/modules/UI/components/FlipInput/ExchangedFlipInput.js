@@ -19,35 +19,70 @@ export default class ExchangedFlipInput extends Component {
   }
 
   onPrimaryAmountChange = (primaryDenominationAmount) => {
-    this.setState({ primaryDenominationAmount, secondaryDenominationAmount })
-    this.props.onAmountsChange({ primaryDenominationAmount, secondaryDenominationAmount })
-  }
-
-  onSecondaryAmountChange = (secondaryDenominationAmount) => {
+    const secondaryDenominationAmount = this.convertPrimaryDenominationToSecondaryDenomination(primaryDenominationAmount)
     this.setState({
       primaryDenominationAmount,
       secondaryDenominationAmount
     })
-    this.props.onAmountsChange({ primaryDenominationAmount, secondaryDenominationAmount })
+    this.props.onAmountsChange({
+      primaryDenominationAmount,
+      secondaryDenominationAmount
+    })
   }
 
-  convertSourceDenominationToSourceBase = (sourceDenominationAmount) => {
-    return convertDenominationToBase(sourceDenominationToBaseRatio)
+  onSecondaryAmountChange = (secondaryDenominationAmount) => {
+    const primaryDenominationAmount = this.convertSecondaryDenominationToPrimaryDenomination(secondaryDenominationAmount)
+    this.setState({
+      primaryDenominationAmount,
+      secondaryDenominationAmount
+    })
+    this.props.onAmountsChange({
+      primaryDenominationAmount,
+      secondaryDenominationAmount
+    })
+  }
+
+  getPrimaryDenominationToBaseRatio = () => {
+    return deriveDenominationToBaseRatio(this.props.primary.baseDenomination.multiplier)(this.props.primary.denomination.multiplier)
+  }
+  getSecondaryDenominationToBaseRatio = () => {
+    return deriveDenominationToBaseRatio(this.props.secondary.baseDenomination.multiplier)(this.props.secondary.denomination.multiplier)
+  }
+
+  convertDenominationToBase = (sourceDenominationToBaseRatio) => {
+    return convertDenominationToBase(primaryDenominationToBaseRatio)
+  }
+
+  convertTargetBaseToTargetDenomination = (targetBaseAmount: number): string => {
+    return (targetDenominationToBaseRatio) => {
+      convertBaseToDenomination(targetDenominationToBaseRatio)
+    }
   }
 
   convertSourceBaseToTargetBase = (sourceBaseAmount: number): number => {
     return convertBaseToBase(ratio)
   }
 
-  convertTargetBaseToTargetDenomination = (targetBaseAmount: number): string => {
-    return convertBaseToDenomination(targetDenominationToBaseRatio)
-  }
+  // convertPrimaryDenominationToPrimaryBase = (denominationToBaseRatio) => {
+  //   return (sourceDenominationAmount) => {
+  //     convertSourceDenominationToSourceBase(this.props.primary.denominationToBaseRatio)
+  //   }
+  // }
 
   convertSourceDenominationToTargetDenomination = (sourceDenominationAmount: string): number => {
-    const sourceBaseAmount = convertSourceDenominationToSourceBase(sourceDenominationAmount)
-    const targetBaseAmount = convertSourceBaseToTargetBase(sourceBaseAmount)
-    const targetDenomination = convertTargetBaseToTargetDenomination(targetBaseAmount)
+    const sourceBaseAmount = this.convertSourceDenominationToSourceBase(sourceDenominationAmount)
+    const targetBaseAmount = this.convertSourceBaseToTargetBase(sourceBaseAmount)
+    const targetDenomination = this.convertTargetBaseToTargetDenomination(targetBaseAmount)
     return targetDenomination
+  }
+
+  convertPrimaryDenominationToSecondaryDenomination = (primaryDenominationAmount: string): string => {
+    const primaryBaseDenomination = convertDenominationToBase(primaryBaseToDenominationRatio)(primaryDenominationAmount)
+    return secondaryDenominationAmount
+  }
+
+  convertSecondaryDenominationToPrimaryDenomination = (secondaryDenominationAmount: string): string => {
+    return primaryDenominationAmount
   }
 
   render () {
