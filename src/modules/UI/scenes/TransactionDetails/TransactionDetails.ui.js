@@ -213,9 +213,9 @@ class TransactionDetails extends Component {
             <View style={[styles.payeeNameArea, b()]}>
               <View style={[styles.payeeNameWrap, b()]}>
                 <TextInput
+                  blurOnSubmit
                   onSubmitEditing={this.onBlurPayee}
                   autoCapitalize='words'
-                  onBlur={this.onBlurPayee}
                   onFocus={this.onFocusPayee}
                   autoCorrect={false}
                   onChangeText={this.onChangePayee}
@@ -261,6 +261,7 @@ class TransactionDetails extends Component {
               onExitCategories={this.onExitCategories}
               usableHeight={this.props.usableHeight}
               onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
+              dimensions={this.props.dimensions}
             />
           </View>
         </View>
@@ -276,7 +277,8 @@ const mapStateToProps = state => ({
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
   fiatSymbol: getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
-  usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight
+  usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
+  dimensions: state.ui.scenes.dimensions
 })
 const mapDispatchToProps = dispatch => ({
   setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
@@ -389,7 +391,12 @@ class AmountArea extends Component {
           </View>
         </View>
         {this.props.subCategorySelectVisibility &&
-          <SubCategorySelectConnect onPressFxn={this.props.onSelectSubCategory} enteredSubcategory={this.props.subCategory} usableHeight={this.props.usableHeight} />
+          <SubCategorySelectConnect
+            onPressFxn={this.props.onSelectSubCategory}
+            enteredSubcategory={this.props.subCategory}
+            usableHeight={this.props.usableHeight}
+            deviceDimensions={this.props.deviceDimensions}
+          />
         }
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
           <Picker style={[b(), {backgroundColor: 'white', width: this.props.dimensions.deviceDimensions.width, height: this.props.dimensions.deviceDimensions.height / 3, position: 'absolute', top: this.props.dimensions.deviceDimensions.height - this.props.dimensions.deviceDimensions.height / 3, left: -20}]}
@@ -430,6 +437,8 @@ class SubCategorySelect extends Component {
       filteredSubcategories: subcats.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
+    const dimensions = this.props.dimensions
+    this.props.usableHight = dimensions.deviceDimensions.height - dimensions.headerHeight - dimensions.tabBarHeight
   }
 
   render () {
@@ -442,9 +451,9 @@ class SubCategorySelect extends Component {
     let newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
       return this.state.subcategories.indexOf(cat) < 0
     })
-
+    console.log('about to render subcategorySelectArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
-      <ScrollView keyboardShouldPersistTaps='always' style={[styles.subCategoryContainer, {height: this.props.usableHeight}]}>
+ /*     <ScrollView keyboardShouldPersistTaps='always' style={[styles.subCategoryContainer, {height: this.props.usableHeight}]}>
         {filteredSubcats.map((subCategory, index) => (
           <TouchableHighlight delayPressIn={60} key={index} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (this.props.onPressFxn(subCategory))}>
             <View style={[styles.rowContent]}>
@@ -466,8 +475,39 @@ class SubCategorySelect extends Component {
             </View>
           </TouchableHighlight>
         ))}
-      </ScrollView>
+      </ScrollView> */
+      <SearchResults
+        renderRegularResultFxn={this.renderPayee}
+        onRegularSelectFxn={this.props.onPressFxn}
+        regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
+        usableHeight={this.props.usableHeight}
+        style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
+        keyExtractor={this.keyExtractor}
+        dimensions={this.props.dimensions}
+        height={this.props.usableHeight - 60}
+        extraTopSpace={136}
+      />
     )
+  }
+
+  renderPayee (data, onRegularSelectFxn) {
+    console.log('about to renderPayee, data is: ', data)
+    return (
+      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={(data) => (onRegularSelectFxn(data.item))}>
+        <View style={[styles.rowContent]}>
+          <View style={[b(), styles.rowCategoryTextWrap]}>
+            <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
+          </View>
+          <View style={[styles.rowPlusWrap]}>
+            <T style={[styles.rowPlus]}>+</T>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  }
+
+  keyExtractor = (item, index) => {
+    return index
   }
 }
 SubCategorySelect.propTypes = {
