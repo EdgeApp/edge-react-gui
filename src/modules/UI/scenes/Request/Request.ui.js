@@ -224,9 +224,7 @@ class Request extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let exchangeRate = 0
-  let primaryDenomination = {}
-  let secondaryDenomination = {}
+  let fiatPerCrypto = 0
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -237,18 +235,14 @@ const mapStateToProps = (state) => {
   }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    exchangeRate = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
-    primaryDenomination = wallet.allDenominations[currencyCode]
-    secondaryDenomination = wallet.allDenominations['fiat'] || defaultFiatDenomination
+    fiatPerCrypto = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
   }
 
   return {
-    fiatPerCrypto: exchangeRate,
     request: state.ui.scenes.request,
+    fiatPerCrypto,
     wallet,
     currencyCode,
-    primaryDenomination,
-    secondaryDenomination,
     currencyConverter
   }
 }

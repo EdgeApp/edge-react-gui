@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {
   Animated,
+  Text,
   TextInput,
   View
 } from 'react-native'
@@ -16,30 +17,33 @@ export default class FlipInput extends Component {
     }
   }
 
+  renderPrimaryRow = (primary) => {
+    <Animated.View style={{ opacity: this.state.flipInputOpacity }}>
+      <Text>{primary.denomination.symbol}</Text>
+      <TextInput style={styles.primaryTextInput}
+        value={primary.amount}
+        autoCorrect={false}
+        keyboardType='numeric'
+        returnKeyType='done' />
+      <Text>{primary.currencyCode}</Text>
+    </Animated.View>
+  }
+
+  renderSecondaryRow = (secondary) => {
+    <Animated.View style={{ opacity: this.state.flipInputOpacity, alignSelf: 'center' }}>
+      <Text>{secondary.denomination.symbol}</Text>
+      <T style={styles.fees}>
+        {secondary.amount}
+      </T>
+      <Text>{secondary.currencyCode}</Text>
+    </Animated.View>
+  }
+
   render () {
     <View style={styles.view}>
-      <Animated.View style={[styles.row]}>
-        <FAIcon style={styles.icon} onPress={() => console.log('onToggleFlipInput')} name='swap-vert' size={36} />
-
-        <View style={[{ flex: 1 }]}>
-          <View style={[styles.mainInputRow]}>
-            <View style={[styles.primaryInputContainer]} name='InputAndFeesElement'>
-              <Animated.View style={{ opacity: this.state.flipInputOpacity }}>
-                <TextInput style={[ styles.primaryInput ]}
-                  ref={'primaryInput'}
-                  autoCorrect={false}
-                  keyboardType='numeric'
-                  returnKeyType='done' />
-              </Animated.View>
-            </View>
-            <Animated.View style={[{ opacity: this.state.flipInputOpacity, alignSelf: 'center' }]}>
-              <T style={styles.fees}>
-                {primary.currencyConverter}
-              </T>
-            </Animated.View>
-          </View>
-        </View>
-      </Animated.View>
+      <FAIcon style={styles.icon} onPress={() => console.log('onToggleFlipInput')} name='swap-vert' size={36} />
+      {this.renderPrimaryRow(this.props.primary)}
+      {this.renderSecondaryRow(this.props.secondary)}
     </View>
   }
 }
