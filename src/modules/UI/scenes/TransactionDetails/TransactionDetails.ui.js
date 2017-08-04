@@ -71,6 +71,7 @@ class TransactionDetails extends Component {
     this.setState({
       contactSearchVisibility: false
     })
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onChangePayee = (input) => {
@@ -117,6 +118,10 @@ class TransactionDetails extends Component {
   onExitSubcategories = () => {
     console.log('setting subCategorySelectVisibility to false')
     // this.setState({subCategorySelectVisibility: false})
+  }
+
+  onSubcategoriesKeyboardReturn = () => {
+    this.setState({subCategorySelectVisibility: false})
   }
 
   onSelectSubCategory = (input) => {
@@ -208,6 +213,7 @@ class TransactionDetails extends Component {
             <View style={[styles.payeeNameArea, b()]}>
               <View style={[styles.payeeNameWrap, b()]}>
                 <TextInput
+                  onSubmitEditing={this.onBlurPayee}
                   autoCapitalize='words'
                   onBlur={this.onBlurPayee}
                   onFocus={this.onFocusPayee}
@@ -254,6 +260,7 @@ class TransactionDetails extends Component {
               onEnterCategories={this.onEnterCategories}
               onExitCategories={this.onExitCategories}
               usableHeight={this.props.usableHeight}
+              onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
             />
           </View>
         </View>
@@ -377,6 +384,7 @@ class AmountArea extends Component {
               defaultValue={this.props.subCategory || ''}
               placeholder='Category'
               autoCorrect={false}
+              onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
             />
           </View>
         </View>
@@ -523,19 +531,19 @@ class ContactSearchResults extends Component {
     console.log('rendering a result, data is: ', data, ' , and onRegularSelectFxn is: ', onRegularSelectFxn)
     return (
       <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(data.givenName + ' ' + data.familyName)} style={[styles.singleContact, b()]}>
+        <TouchableHighlight onPress={() => onRegularSelectFxn(data.item.givenName + ' ' + data.item.familyName)} style={[styles.singleContact, b()]}>
           <View style={[styles.contactInfoWrap, b()]}>
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo, b()]} >
-                {data.thumbnailPath ? (
-                  <Image source={{uri: data.thumbnailPath}} style={{height: 40, width: 40, borderRadius: 20}} />
+                {data.item.thumbnailPath ? (
+                  <Image source={{uri: data.item.thumbnailPath}} style={{height: 40, width: 40, borderRadius: 20}} />
                 ) : (
                   <Image source={ContactImage} style={{height: 40, width: 40, borderRadius: 20}} />
                 )}
 
               </View>
               <View style={[styles.contactLeftTextWrap, b()]}>
-                <T style={[styles.contactName]}>{data.givenName} {data.familyName}</T>
+                <T style={[styles.contactName]}>{data.item.givenName} {data.item.familyName}</T>
               </View>
             </View>
           </View>

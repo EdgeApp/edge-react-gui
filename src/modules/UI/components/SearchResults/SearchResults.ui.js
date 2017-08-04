@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react'
 import {
-  ListView
+  ListView,
+  FlatList
 } from 'react-native'
 import style from './styles'
 
@@ -15,7 +16,7 @@ class SearchResults extends Component {
     let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
     console.log('constructor ds is: ', ds)
     this.state = {
-      dataSource: ds.cloneWithRows(completedContactList)
+      dataSource: completedContactList
     }
   }
 
@@ -35,16 +36,12 @@ class SearchResults extends Component {
       newValue.key = i
       return newValue
     })
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    console.log('ds is: ', ds)
-    const completedDataSource = ds.cloneWithRows(completedContactList)
-    console.log('rendering SearchResults, this.props is: ', this.props, ' , and this.state is: ', this.state, ' and completedDataSource is: ', completedDataSource)
+    console.log('completedContactList is: ', completedContactList)
     return (
-      <ListView
-        keyboardShouldPersistTaps='always'
+      <FlatList
         style={[style.searchResultsContainer, {height: this.props.usableHeight}]}
-        dataSource={completedDataSource}
-        renderRow={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn)}
+        data={completedContactList}
+        renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn)}
         initialListSize={20}
         scrollRenderAheadDistance={800}
       />
