@@ -68,15 +68,23 @@ class TransactionDetails extends Component {
 
   onBlurPayee = () => {
     console.log('onBlurPayee executing')
-    this.setState({
+     /* this.setState({
       contactSearchVisibility: false
-    })
+    }) */
   }
 
   onChangePayee = (input) => {
     console.log('payeeName changed to: ', input)
     this.setState({
       payeeName: input
+    })
+  }
+
+  onSelectPayee = (input) => {
+    console.log('payeeName selected as: ', input)
+    this.setState({
+      payeeName: input,
+      contactSearchVisibility: false
     })
   }
 
@@ -208,6 +216,7 @@ class TransactionDetails extends Component {
             <View style={[styles.payeeNameArea, b()]}>
               <View style={[styles.payeeNameWrap, b()]}>
                 <TextInput
+                  blurOnSubmit
                   autoCapitalize='words'
                   onBlur={this.onBlurPayee}
                   onFocus={this.onFocusPayee}
@@ -222,7 +231,7 @@ class TransactionDetails extends Component {
             </View>
             {this.state.contactSearchVisibility &&
               <ContactSearchResults
-                onChangePayee={this.onChangePayee}
+                onChangePayee={this.onSelectPayee}
                 contacts={this.props.contacts}
                 style={[{width: '100%'}, b()]}
                 usableHeight={this.props.usableHeight - 32}
