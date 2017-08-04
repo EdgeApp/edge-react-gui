@@ -43,6 +43,7 @@
     "buffer": "^3.6.0",
     "console-browserify": "^1.1.0",
     "constants-browserify": "0.0.1",
+    "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "has-flag": "^2.0.0",

@@ -28,7 +28,7 @@ class WalletListModal extends Component {
 
   render () {
     return (
-      <Animatable.View style={[b('green'), styles.topLevel, {position: 'absolute', top: 38, height: (this.props.dimensions.deviceDimensions.height - this.props.dimensions.headerHeight - this.props.dimensions.tabBarHeight)}]}
+      <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: 38, height: (this.props.dimensions.deviceDimensions.height - this.props.dimensions.headerHeight - this.props.dimensions.tabBarHeight)}]}
         animation='fadeInDown'
         duration={100} >
         <ScrollView>

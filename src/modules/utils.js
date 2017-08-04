@@ -1,4 +1,5 @@
 import borderColors from '../theme/variables/css3Colors'
+import getSymbolFromCurrency from 'currency-symbol-map'
 
 export const cutOffText = (str, lng) => {
   if (str.length >= lng) {
@@ -21,6 +22,10 @@ export const findDenominationSymbol = (denoms, value) => {
   }
 }
 
+export const getFiatSymbol = (code) => {
+  return getSymbolFromCurrency(code)
+}
+
 const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
   const fiatFromCrypto = (crypto * fiatPerCrypto)
 
@@ -38,6 +43,28 @@ const sanitizeInput = (input) => {
   const sanitizedInput = input.toString().match(numbers)[0]
 
   return sanitizedInput
+}
+
+export const limitFiatDecimals = (num) => {
+  console.log('num: ', num)
+  let inputString = num.toString()
+  let periodPosition = inputString.indexOf('.')
+  console.log('periodPosition: ', periodPosition)
+  let first
+  let second
+  if (periodPosition > -1) {
+    first = inputString.split('.')[0]
+    console.log('first: ', first)
+    second = inputString.split('.')[1]
+    console.log('second: ', second)
+    if (second.length > 2) {
+      return first + '.' + second.slice(0, 2)
+    } else {
+      return first + '.' + second
+    }
+  } else {
+    return num
+  }
 }
 
 const devStyle = {

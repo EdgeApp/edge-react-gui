@@ -24,7 +24,9 @@ import {
   getTransactionsRequest
 } from './action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
-// import Contacts from 'react-native-contacts'
+import Contacts from 'react-native-contacts'
+import Permissions from 'react-native-permissions'
+import {setContactList} from '../../contacts/action'
 import styles from './style'
 import { border as b, findDenominationSymbol as symbolize } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -59,13 +61,24 @@ class TransactionList extends Component {
     const currencyCode = this.props.selectedCurrencyCode
     this.props.dispatch(updateExchangeRates())
     this.props.getTransactions(walletId, currencyCode)
-  }
 
-  contactSearch (nameKey, myArray) {
-    for (var i = 0; i < myArray.length; i++) {
-      if (myArray[i].givenName === nameKey) {
-        return myArray[i]
-      }
+    const permissionStatus = ['authorized', 'undetermined']
+    if (!this.props.contact) {
+      Permissions.getPermissionStatus('contacts').then((response) => {
+        if (permissionStatus.indexOf(response)) {
+          Contacts.getAll((err, contacts) => {
+            if (err === 'denied') {
+              // error
+            } else {
+              console.log('all contacts: ', contacts)
+              contacts.sort((a, b) => {
+                return a.givenName > b.givenName
+              })
+              this.props.dispatch(setContactList(contacts))
+            }
+          })
+        }
+      })
     }
   }
 
@@ -328,6 +341,8 @@ class TransactionList extends Component {
     let txColor
     let txName = ''
     let txImage
+
+    tx.metadata.name = 'John'
     if (tx.amountSatoshi < 0) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColor = '#F03A47'
@@ -337,6 +352,35 @@ class TransactionList extends Component {
       txColor = '#7FC343'
       txName = strings.enUS['fragment_transaction_list_receive_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
       txImage = receivedTypeImage
+    }
+
+    if (tx.metadata.name) {
+      Contacts.getAll((err, contacts) => {
+        if (err === 'denied') {
+          // error
+        } else {
+          console.log('all contacts: ', contacts)
+        }
+      })
+      Contacts.getContactsMatchingString(tx.metadata.name, (error, contacts) => {
+        if (error) {
+          console.log('contact search error: ', error)
+        } else {
+          console.log('contacts found:', contacts)
+          if (contacts.length >= 1) {
+            console.log('contacts[0].recordID is: ', contacts[0].recordID)
+            Contacts.getPhotoForId(contacts[0].recordID, (err, path) => {
+              if (err) {
+                console.log('contact image error: ', err)
+              } else {
+                console.log('contact stuff: ', path)
+                tx.thumbnailPath = path
+                tx.hasThumbnail = true
+              }
+            })
+          }
+        }
+      })
     }
 
     return (
@@ -411,7 +455,8 @@ const mapStateToProps = (state) => {
     balanceInCrypto,
     balanceInFiat,
     currencyConverter,
-    multiplier
+    multiplier,
+    contacts: state.ui.contacts.contactsList
   }
 }
 
