@@ -29,6 +29,8 @@ import {
   saveReceiveAddress
 } from './action.js'
 
+import { ExchangedFlipInput } from './ExchangedFlipInput.js'
+
 class Request extends Component {
   constructor (props) {
     super(props)
@@ -62,24 +64,22 @@ class Request extends Component {
       amountSatoshi = null,
       metadata = {}
     } = receiveAddress
-    const {amountFiat = null} = metadata
+    const { amountFiat = null } = metadata
 
     const primary = {
-      amount: 0,
-      currencyCode: 'USD',
-      denominationSymbol: 'S',
-      placeholder: '0.00',
-      precision: 2,
+      amount: '0',
+      displayCurrencyCode: this.props.currencyCode,
+      exchangeCurrencyCode: this.props.currencyCode,
+      denomination: this.props.primaryDenomination,
       onAmountChange: this.onPrimaryAmountChange
     }
 
     const secondary = {
-      amount: 0,
-      currencyCode: 'BTC',
-      denominationSymbol: 'mB',
-      placeholder: '0.00',
-      precision: 5,
-      onAmountChange: this.onSecondaryAmountChange
+      amount: '0',
+      displayCurrencyCode: this.props.wallet.fiatCurrencyCode,
+      exchangeCurrencyCode: this.props.wallet.isoFiatCurrencyCode,
+      denomination: this.props.secondaryDenomination,
+      onAmountChange: this.props.onSecondaryAmountChange
     }
 
     const color = 'white'
@@ -96,35 +96,11 @@ class Request extends Component {
         </View>
 
         <View style={styles.main}>
-          {this.props.inputCurrencySelected === 'crypto'
-            ? <FlipInput
-              primary={primary}
-              secondary={secondary}
-              color={color}
-
-              onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={amountSatoshi || 0}
-              amountFiat={amountFiat}
-              inputCurrencySelected={this.props.inputCurrencySelected} // crypto
-              cryptoDenomination={this.props.inputCurrencyDenomination}
-              fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur} />
-            : <FlipInput
-              primary={primary}
-              secondary={secondary}
-              color={color}
-
-              onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={amountSatoshi || 0}
-              amountFiat={amountFiat}
-              inputCurrencySelected={this.props.inputCurrencySelected} // fiat
-              cryptoDenomination={this.props.inputCurrencyDenomination}
-              fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus}
-              inputOnBlur={this._onBlur} />}
+          <ExchangedFlipInput
+            currencyConverter={this.props.currencyConverter}
+            primary={primary}
+            secondary={secondary}
+            color={color} />
 
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
           <RequestStatus requestAddress={publicAddress} amountRequestedInCrypto={amountSatoshi} amountReceivedInCrypto={amountFiat} />
@@ -249,28 +225,31 @@ class Request extends Component {
 
 const mapStateToProps = (state) => {
   let exchangeRate = 0
-  let inputCurrencyDenomination = {}
+  let primaryDenomination = {}
+  let secondaryDenomination = {}
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const defaultFiatDenomination = {
+    name: 'Dollars',
+    symbol: '$',
+    multiplier: '100'
+  }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
     exchangeRate = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
-    const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-    inputCurrencyDenomination = wallet.allDenominations[currencyCode][index]
+    primaryDenomination = wallet.allDenominations[currencyCode]
+    secondaryDenomination = wallet.allDenominations['fiat'] || defaultFiatDenomination
   }
 
   return {
     fiatPerCrypto: exchangeRate,
     request: state.ui.scenes.request,
-    wallets: state.ui.wallets,
-    walletId: state.ui.wallets.selectedWalletId,
+    wallet,
     currencyCode,
-    settings: state.ui.settings,
-    inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
-    inputCurrencyDenomination,
-    fiatCurrencyCode: wallet.fiatCurrencyCode
-    // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,,,
+    primaryDenomination,
+    secondaryDenomination,
+    currencyConverter
   }
 }
 const mapDispatchToProps = (dispatch) => ({
