@@ -33,7 +33,9 @@ class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      keyboardVisible: false
+      keyboardVisible: false,
+      primaryAmount: 0,
+      secondaryAmount: 0
     }
   }
 
@@ -60,6 +62,24 @@ class Request extends Component {
     } = receiveAddress
     const {amountFiat = null} = metadata
 
+    const primary = {
+      amount: 0,
+      currencyCode: 'USD',
+      denominationSymbol: 'S',
+      placeholder: '0.00',
+      onAmountChange: () => { console.log('onAmountChange PRIMARY') }
+    }
+
+    const secondary = {
+      amount: 0,
+      currencyCode: 'B',
+      denominationSymbol: 'BTC',
+      placeholder: '0.00',
+      onAmountChange: () => { console.log('onAmountChange SECONDARY') }
+    }
+
+    const color = 'white'
+
     return (
       <LinearGradient style={styles.view} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
         colors={['#3b7adb', '#2b569a']}>
@@ -74,6 +94,10 @@ class Request extends Component {
         <View style={styles.main}>
           {this.props.inputCurrencySelected === 'crypto'
             ? <FlipInput
+              primary={primary}
+              secondary={secondary}
+              color={color}
+
               onCryptoInputChange={this.onCryptoInputChange}
               onFiatInputChange={this.onFiatInputChange}
               amountSatoshi={amountSatoshi || 0}
@@ -84,6 +108,10 @@ class Request extends Component {
               inputOnFocus={this._onFocus}
               inputOnBlur={this._onBlur} />
             : <FlipInput
+              primary={primary}
+              secondary={secondary}
+              color={color}
+
               onCryptoInputChange={this.onCryptoInputChange}
               onFiatInputChange={this.onFiatInputChange}
               amountSatoshi={amountSatoshi || 0}

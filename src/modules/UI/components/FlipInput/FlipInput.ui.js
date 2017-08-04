@@ -20,13 +20,21 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 
 import * as REQUEST_ACTIONS from '../../Request/action.js'
+import * as SEND_ACTIONS from '../../scenes/SendConfirmation/action.js'
 
 class FlipInput extends Component {
   constructor (props) {
     super(props)
     this.state = {
       primary: props.primary,
-      secondary: props.secondary
+      secondary: props.secondary,
+      inputCurrencySelected: 'fiat',
+      color: props.color
+
+      primaryInputValue: '',
+      secondaryInputValue: '',
+      flipInputOpacity: new Animated.Value(1),
+      mode: this.props.mode
     }
   }
 
@@ -40,9 +48,9 @@ class FlipInput extends Component {
       feeInFiat,
       feeInCrypto,
       displayFees,
-      inputCurrencySelected,
       cryptoDenomination
     } = this.props
+    const inputCurrencySelected = this.state.inputCurrencySelected
 
     let secondaryPlaceholderSyntax
     let primaryAmountRequested
@@ -75,6 +83,9 @@ class FlipInput extends Component {
 
     return (
       <FlipInputInsideConnect style={[b()]}
+        primary={primary}
+        secondary={secondary}
+
         currencySelected={inputCurrencySelected}
         mode={this.props.mode}
         primaryPlaceholder={secondaryPlaceholderSyntax}
@@ -96,13 +107,16 @@ class FlipInput extends Component {
   }
 }
 
-export default connect(state => ({}))(FlipInput)
+export default FlipInput
 
 class FlipInputInside extends Component {
   constructor (props) {
     console.log('in FlipInput constructor')
     super(props)
     this.state = {
+      primary: props.primary,
+      secondary: props.secondary,
+
       primaryInputValue: '',
       secondaryInputValue: '',
       flipInputOpacity: new Animated.Value(1),
@@ -121,6 +135,8 @@ class FlipInputInside extends Component {
     } = this.props
 
     const _onInputCurrencyToggle = () => {
+
+
       console.log('SendConfirmation->onInputCurrencyToggle called')
       const {inputCurrencySelected} = this.props
       const nextInputCurrencySelected = inputCurrencySelected === 'crypto'
@@ -150,100 +166,6 @@ class FlipInputInside extends Component {
           duration: 100
         }).start()
       })
-    }
-
-    const limitFiatDecimals = (num) => {
-      console.log('num: ', num)
-      let inputString = num
-      let periodPosition = inputString.indexOf('.')
-      console.log('periodPosition: ', periodPosition)
-      let first
-      let second
-      if (periodPosition > -1) {
-        first = inputString.split('.')[0]
-        console.log('first: ', first)
-        second = inputString.split('.')[1]
-        console.log('second: ', second)
-        if (second.length > 2) {
-          return first + '.' + second.slice(0, 2)
-        } else {
-          return first + '.' + second
-        }
-      } else {
-        return num
-      }
-    }
-
-    const inputChange = (input) => {
-      console.log('inputChange executing, input is: ', input)
-      // onInputChange(input)
-      this.setState({
-        primaryInputValue: (this.props.inputCurrencySelected === 'crypto')
-          ? input
-          : limitFiatDecimals(input.toString()),
-        secondaryInputValue: getSecondaryAmount(input)
-      }, () => {
-        console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
-        if (input === '' || parseInt(input) === 0) {
-          this.props.dispatch(updateSpendSufficientFunds(null))
-        }
-        if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////
-
-// start ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-          if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
-            const amountSatoshi = this.state.primaryInputValue
-            const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenomination.multiplier)
-            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
-// end ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-          } else { // Request ////////////////////////////////////////////////////////////////////
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
-          }
-        } else { // Change Fiat Input ////////////////////////////////////////////////////////////
-
-
-// start ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-          if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
-            console.log('sendConfirmation fiat changed to: ', input)
-            const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto))
-            const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenomination.multiplier)
-            this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
-// end ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-          } else { // Request ////////////////////////////////////////////////////////////////////
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
-            this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString())))
-          }
-        }
-      })
-    }
-
-    const getSecondaryAmount = (input) => {
-      // Need to figure out if primary is crypto or fiat
-      console.log('calling getSecondaryAmount, input is: ', input, ' and amountRequestedSecondary is: ', amountRequestedSecondary)
-      if ([0, '', undefined, null].includes(input) || (isNaN(input) === true)) {
-        console.log('value is falsy')
-        return ''
-      }
-      console.log('value is truthy: ', input, ' , this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
-      if (this.props.inputCurrencySelected === 'crypto') {
-        return getFiatFromCrypto(Number(input), this.props.fiatPerCrypto).toFixed(2).toString()
-      } else {
-        console.log('about to use input.toPrecsion(12), input is: ', input)
-        return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString()
-      }
-    }
-
-    const getTextColor = () => {
-      console.log('inside getTextColor:, this.state.mode is: ', this.state.mode)
-      switch (this.props.mode) {
-        case 'over':
-          return '#F03A47'
-        case 'max':
-          return '#F6A623'
-        default:
-          return 'white'
-      }
     }
 
     const renderMainInput = () => {
@@ -320,16 +242,107 @@ class FlipInputInside extends Component {
       <View style={[styles.view]}>
         <Animated.View style={[styles.row]}>
           <FAIcon style={styles.icon} onPress={_onInputCurrencyToggle} name='swap-vert' size={36} />
-          <View style={[{
-            flex: 1
-          }
-          ]}>
+          <View style={[{ flex: 1 }]}>
             {renderMainInput()}
             {renderConvertedInput()}
           </View>
         </Animated.View>
       </View>
     )
+  }
+
+  const limitFiatDecimals = (num) => {
+    console.log('num: ', num)
+    let inputString = num
+    let periodPosition = inputString.indexOf('.')
+    console.log('periodPosition: ', periodPosition)
+    let first
+    let second
+    if (periodPosition > -1) {
+      first = inputString.split('.')[0]
+      console.log('first: ', first)
+      second = inputString.split('.')[1]
+      console.log('second: ', second)
+      if (second.length > 2) {
+        return first + '.' + second.slice(0, 2)
+      } else {
+        return first + '.' + second
+      }
+    } else {
+      return num
+    }
+  }
+
+  const inputChange = (input) => {
+    console.log('inputChange executing, input is: ', input)
+    // onInputChange(input)
+    this.setState({
+      primaryInputValue: (this.props.inputCurrencySelected === 'crypto')
+        ? input
+        : limitFiatDecimals(input.toString()),
+      secondaryInputValue: getSecondaryAmount(input)
+    }, () => {
+      console.log('in inputChange, this.state is: ', this.state, ' and input is: ', input, ' , and this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
+      if (input === '' || parseInt(input) === 0) {
+        this.props.dispatch(updateSpendSufficientFunds(null))
+      }
+      if (this.props.inputCurrencySelected === 'crypto') { // Change Crypto Input //////////////
+
+// start ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
+          const amountSatoshi = this.state.primaryInputValue
+          const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenomination.multiplier)
+          this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
+// end ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        } else { // Request ////////////////////////////////////////////////////////////////////
+          this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(this.state.primaryInputValue))
+        }
+      } else { // Change Fiat Input ////////////////////////////////////////////////////////////
+
+
+// start ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        if (this.props.scene.sceneKey === 'sendConfirmation') { // Send //////////////////////////
+          console.log('sendConfirmation fiat changed to: ', input)
+          const amountSatoshi = Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto))
+          const amountInBaseDenomination = Math.round(amountSatoshi * this.props.cryptoDenomination.multiplier)
+          this.props.dispatch(SEND_ACTIONS.updateAmountSatoshiRequest(amountInBaseDenomination))
+// end ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        } else { // Request ////////////////////////////////////////////////////////////////////
+          this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInFiat(Number(input)))
+          this.props.dispatch(REQUEST_ACTIONS.updateAmountRequestedInCrypto(Number(getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString())))
+        }
+      }
+    })
+  }
+
+  const getSecondaryAmount = (input) => {
+    // Need to figure out if primary is crypto or fiat
+    console.log('calling getSecondaryAmount, input is: ', input, ' and amountRequestedSecondary is: ', amountRequestedSecondary)
+    if ([0, '', undefined, null].includes(input) || (isNaN(input) === true)) {
+      console.log('value is falsy')
+      return ''
+    }
+    console.log('value is truthy: ', input, ' , this.props.inputCurrencySelected is: ', this.props.inputCurrencySelected)
+    if (this.props.inputCurrencySelected === 'crypto') {
+      return getFiatFromCrypto(Number(input), this.props.fiatPerCrypto).toFixed(2).toString()
+    } else {
+      console.log('about to use input.toPrecsion(12), input is: ', input)
+      return getCryptoFromFiat(Number(input), this.props.fiatPerCrypto).toString()
+    }
+  }
+
+  const getTextColor = () => {
+    console.log('inside getTextColor:, this.state.mode is: ', this.state.mode)
+    switch (this.props.mode) {
+      case 'over':
+        return '#F03A47'
+      case 'max':
+        return '#F6A623'
+      default:
+        return 'white'
+    }
   }
 }
 export const FlipInputInsideConnect = connect(state => {

@@ -67,14 +67,38 @@ export const getRandomColor = () => {
   return borderColors[Math.floor(Math.random() * borderColors.length)]
 }
 
+// Used to convert outputs form core to amounts ready for display
 export const convertNativeToDenomination = (nativeToDenominationRatio: string) => {
   return (nativeAmount: string): string => {
     return BS.divF(nativeAmount, nativeToDenominationRatio)
   }
 }
 
+// Used to convert amounts from display to core inputs
 export const convertDenominationToNative = (nativeToDenominationRatio: string) => {
-  return (displayAmount: number): number => {
-    return BS.mulF(displayAmount, nativeToDenominationRatio)
+  return (denominationAmount: number): number => {
+    return BS.mulF(denominationAmount, nativeToDenominationRatio)
+  }
+}
+
+// Used to convert exchange output to amounts ready for display
+export const convertBaseToDenomination = (denominationToBaseRatio: string) => {
+  return (baseAmount: string): string => {
+    return BS.mulF(baseAmount, denominationToBaseRatio)
+  }
+}
+
+// Used to convert amounts from display to exchange inputs
+export const convertDenominationToBase = (denominationToBaseRatio: string) => {
+  return (denominationAmount: string): number => {
+    return BS.divF(denominationAmount, denominationToBaseRatio)
+  }
+}
+
+// Used to get the ratio used for converting a denominationAmount into a
+// baseAmount when using the currency exchange
+export const deriveDenominationToBaseRatio = (targetNativeToDenominationRatio: string) => {
+  return (sourceNativeToDenominationRatio: string): string => {
+    return BS.divf(sourceNativeToDenominationRatio, targetNativeToDenominationRatio)
   }
 }
