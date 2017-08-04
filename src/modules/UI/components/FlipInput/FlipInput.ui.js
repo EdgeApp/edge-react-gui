@@ -13,15 +13,18 @@ export default class FlipInput extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      flipInputOpacity: new Animated.Value(1)
+      isToggled: false,
+      animatedTextOpacity: new Animated.Value(1)
     }
   }
+  onToggleFlipInput = () => this.setState({isToggled: !this.state.isToggled})
 
-  renderPrimaryRow = (primary) => {
-    <Animated.View style={{ opacity: this.state.flipInputOpacity }}>
+  renderTopRow = (primary, onChangeText) => {
+    <Animated.View style={{ opacity: this.state.animatedTextOpacity }}>
       <Text>{primary.denomination.symbol}</Text>
       <TextInput style={styles.primaryTextInput}
-        value={primary.amount}
+        value={primary.denominationAmount}
+        onChangeText={onChangeText}
         autoCorrect={false}
         keyboardType='numeric'
         returnKeyType='done' />
@@ -29,21 +32,32 @@ export default class FlipInput extends Component {
     </Animated.View>
   }
 
-  renderSecondaryRow = (secondary) => {
-    <Animated.View style={{ opacity: this.state.flipInputOpacity, alignSelf: 'center' }}>
+  renderBottomRow = (secondary) => {
+    <Animated.View style={{ opacity: this.state.animatedTextOpacity, alignSelf: 'center' }}>
       <Text>{secondary.denomination.symbol}</Text>
       <T style={styles.fees}>
-        {secondary.amount}
+        {secondary.denominationAmount}
       </T>
       <Text>{secondary.currencyCode}</Text>
     </Animated.View>
   }
 
+  renderRows = () => {
+    this.state.isToggled
+      ? [
+        this.renderTopRow(this.props.primary, this.props.onChangeText),
+        this.renderBottomRow(this.props.secondary)
+      ]
+      : [
+        this.renderTopRow(this.props.secondary, this.props.onChangeText),
+        this.renderBottomRow(this.props.primary)
+      ]
+  }
+
   render () {
     <View style={styles.view}>
-      <FAIcon style={styles.icon} onPress={() => console.log('onToggleFlipInput')} name='swap-vert' size={36} />
-      {this.renderPrimaryRow(this.props.primary)}
-      {this.renderSecondaryRow(this.props.secondary)}
+      <FAIcon style={styles.icon} onPress={this.onToggleFlipInput} name='swap-vert' size={36} />
+      {this.renderRows()}
     </View>
   }
 }

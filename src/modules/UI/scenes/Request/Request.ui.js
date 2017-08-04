@@ -10,7 +10,6 @@ import {
 import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
-import FlipInput from '../../components/FlipInput/index.js'
 import ABQRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
@@ -36,8 +35,8 @@ class Request extends Component {
     super(props)
     this.state = {
       keyboardVisible: false,
-      primaryAmount: 0,
-      secondaryAmount: 0
+      primaryNativeAmount: 0,
+      secondaryNativeAmount: 0
     }
   }
 
@@ -47,12 +46,11 @@ class Request extends Component {
   _onFocus = () => this.setState({keyboardVisible: true})
   _onBlur = () => this.setState({keyboardVisible: false})
 
-  onPrimaryAmountChange = (primaryDenominationAmount) => {
-    console.log('onPrimaryAmountChange', primaryDenominationAmount)
-  }
-
-  onSecondaryAmountChange = (secondaryDenominationAmount) => {
-    console.log('onSecondaryAmountChange', secondaryDenominationAmount)
+  onAmountsChange = ({ primaryAmount, secondaryAmount }) => {
+    this.setState({
+      primaryAmount,
+      secondaryAmount
+    }, console.log(`onAmountsChange: ${primaryAmount}, ${secondaryAmount}`))
   }
 
   render () {
@@ -65,24 +63,8 @@ class Request extends Component {
       metadata = {}
     } = receiveAddress
     const { amountFiat = null } = metadata
-
-    const primary = {
-      amount: '0',
-      displayCurrencyCode: this.props.currencyCode,
-      exchangeCurrencyCode: this.props.currencyCode,
-      denomination: this.props.primaryDenomination,
-      onAmountChange: this.onPrimaryAmountChange
-    }
-
-    const secondary = {
-      amount: '0',
-      displayCurrencyCode: this.props.wallet.fiatCurrencyCode,
-      exchangeCurrencyCode: this.props.wallet.isoFiatCurrencyCode,
-      denomination: this.props.secondaryDenomination,
-      onAmountChange: this.props.onSecondaryAmountChange
-    }
-
     const color = 'white'
+    const { primary, secondary } = this.props
 
     return (
       <LinearGradient style={styles.view} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
@@ -97,9 +79,10 @@ class Request extends Component {
 
         <View style={styles.main}>
           <ExchangedFlipInput
-            currencyConverter={this.props.currencyConverter}
             primary={primary}
             secondary={secondary}
+            exchangeRate={this.props.fiatPerCrypto}
+            onAmountsChange={this.onAmountsChange}
             color={color} />
 
           <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
@@ -225,17 +208,37 @@ class Request extends Component {
 
 const mapStateToProps = (state) => {
   let fiatPerCrypto = 0
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const defaultFiatDenomination = {
+  const primaryDenomination = SETTINGS_SELECTORS.getDenomination(state, currencyCode)
+  const primaryBaseDenomination = SETTINGS_SELECTORS.getBaseDenomination(state, currencyCode)
+  const secondaryBaseDenomination = {
+    name: 'Dollars',
+    symbol: '$',
+    multiplier: '100'
+  }
+  const secondaryDenomination = {
     name: 'Dollars',
     symbol: '$',
     multiplier: '100'
   }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    fiatPerCrypto = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
+    fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  }
+
+  const primary = {
+    displayCurrencyCode: currencyCode,
+    exchangeCurrencyCode: currencyCode,
+    ...primaryDenomination,
+    ...primaryBaseDenomination
+  }
+
+  const secondary = {
+    displayCurrencyCode: wallet.fiatCurrencyCode,
+    exchangeCurrencyCode: wallet.isoFiatCurrencyCode,
+    ...secondaryDenomination,
+    ...secondaryBaseDenomination
   }
 
   return {
@@ -243,7 +246,8 @@ const mapStateToProps = (state) => {
     fiatPerCrypto,
     wallet,
     currencyCode,
-    currencyConverter
+    primary,
+    secondary
   }
 }
 const mapDispatchToProps = (dispatch) => ({

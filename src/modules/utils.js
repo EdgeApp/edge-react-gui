@@ -76,14 +76,14 @@ export const convertNativeToDenomination = (nativeToDenominationRatio: string) =
 
 // Used to convert amounts from display to core inputs
 export const convertDenominationToNative = (nativeToDenominationRatio: string) => {
-  return (denominationAmount: number): number => {
+  return (denominationAmount: number): string => {
     return mulf(denominationAmount, nativeToDenominationRatio)
   }
 }
 
 // Used to convert exchange output to amounts ready for display
 export const convertBaseToDenomination = (denominationToBaseRatio: string) => {
-  return (baseAmount: string): string => {
+  return (baseAmount: number): string => {
     return mulf(baseAmount, denominationToBaseRatio)
   }
 }
@@ -92,6 +92,12 @@ export const convertBaseToDenomination = (denominationToBaseRatio: string) => {
 export const convertDenominationToBase = (denominationToBaseRatio: string) => {
   return (denominationAmount: string): number => {
     return divf(denominationAmount, denominationToBaseRatio)
+  }
+}
+
+export const convertBaseToBase = (ratio: number): number => {
+  return (sourceBaseAmount: number): number => {
+    return sourceBaseAmount * ratio
   }
 }
 
