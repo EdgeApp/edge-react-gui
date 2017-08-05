@@ -66,14 +66,12 @@ export default class ExchangedFlipInput extends Component {
       <FlipInput
         color={this.props.color}
 
+        primary={primary}
         primaryDenominationAmount={this.state.primaryDenominationAmount}
-        primaryCurrencyCode={primary.currencyCode}
-        primaryDenomination={primary.denomination}
         onPrimaryAmountChange={this.onPrimaryAmountChange}
 
+        secondary={secondary}
         secondaryDenominationAmount={this.state.secondaryDenominationAmount}
-        secondaryCurrencyCode={secondary.currencyCode}
-        secondaryDenomination={secondary.denomination}
         onSecondaryAmountChange={this.onSecondaryAmountChange} />
     )
   }

@@ -23,12 +23,10 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import {
   updateReceiveAddress,
-  updateAmountRequestedInCrypto,
-  updateAmountRequestedInFiat,
   saveReceiveAddress
 } from './action.js'
 
-import { ExchangedFlipInput } from './ExchangedFlipInput.js'
+import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput.js'
 
 class Request extends Component {
   constructor (props) {
@@ -70,7 +68,7 @@ class Request extends Component {
     } = receiveAddress
     const { amountFiat = null } = metadata
     const color = 'white'
-    const { primary, secondary } = this.props
+    const { primaryDenominationInfo, secondaryDenominationInfo } = this.props
 
     return (
       <LinearGradient style={styles.view} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
@@ -85,8 +83,8 @@ class Request extends Component {
 
         <View style={styles.main}>
           <ExchangedFlipInput
-            primary={primary}
-            secondary={secondary}
+            primaryDenominationInfo={primaryDenominationInfo}
+            secondaryDenominationInfo={secondaryDenominationInfo}
             primaryToSecondaryRatio={this.props.fiatPerCrypto}
             onAmountsChange={this.onAmountsChange}
             color={color} />
@@ -191,7 +189,7 @@ const mapStateToProps = (state) => {
   let fiatPerCrypto = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDenomination = SETTINGS_SELECTORS.getDenomination(state, currencyCode)
+  const primaryDenomination = SETTINGS_SELECTORS.getCurrencyDenomination(state, currencyCode)
   const primaryBaseDenomination = SETTINGS_SELECTORS.getBaseDenomination(state, currencyCode)
   const secondaryBaseDenomination = {
     name: 'Dollars',
@@ -208,14 +206,14 @@ const mapStateToProps = (state) => {
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
-  const primary = {
+  const primaryDenominationInfo = {
     displayCurrencyCode: currencyCode,
     exchangeCurrencyCode: currencyCode,
     denomination: primaryDenomination,
     baseDenomination: primaryBaseDenomination
   }
 
-  const secondary = {
+  const secondaryDenominationInfo = {
     displayCurrencyCode: wallet.fiatCurrencyCode,
     exchangeCurrencyCode: wallet.isoFiatCurrencyCode,
     denomination: secondaryDenomination,
@@ -227,8 +225,8 @@ const mapStateToProps = (state) => {
     fiatPerCrypto,
     wallet,
     currencyCode,
-    primary,
-    secondary
+    primaryDenominationInfo,
+    secondaryDenominationInfo
   }
 }
 const mapDispatchToProps = (dispatch) => ({

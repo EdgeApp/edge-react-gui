@@ -17,7 +17,7 @@ export default class FlipInput extends Component {
       animatedTextOpacity: new Animated.Value(1)
     }
   }
-  onToggleFlipInput = () => this.setState({isToggled: !this.state.isToggled})
+  onToggleFlipInput = () => this.setState({ isToggled: !this.state.isToggled })
 
   renderTopRow = (primary, onChangeText) => {
     <Animated.View style={{ opacity: this.state.animatedTextOpacity }}>

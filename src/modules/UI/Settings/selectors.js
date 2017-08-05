@@ -30,3 +30,14 @@ export const getNativeToDenominationRatio = (state, currencyCode: string) => {
   const nativeToDenominationRatio = currencySettings.denomination.nativeToDenominationRatio
   return nativeToDenominationRatio
 }
+
+export const getAdapters = (state) => {
+  const settings = getSettings(state)
+  const adapters = settings.adapters
+  return adapters
+}
+
+export const getBaseDenomination = (state, currencyCode: string): string => {
+  const currencySettings = getCurrencySettings(state, currencyCode)
+  currencySettings.denomination
+}
