@@ -81,6 +81,12 @@ class TransactionDetails extends Component {
     })
   }
 
+  onSelectPayee = (input) => {
+    this.onChangePayee(input)
+    this.onBlurPayee()
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
+  }
+
   onChangeFiat = (input) => {
     console.log('in onChangeFiat, input is: ', input, ' , and this.props.fiatSymbol is: ', this.props.fiatSymbol)
     this.setState({
@@ -122,6 +128,7 @@ class TransactionDetails extends Component {
 
   onSubcategoriesKeyboardReturn = () => {
     this.setState({subCategorySelectVisibility: false})
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onSelectSubCategory = (input) => {
@@ -152,6 +159,7 @@ class TransactionDetails extends Component {
       }
     }
     this.setState({subCategorySelectVisibility: false})
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onEnterCategories = () => {
@@ -231,8 +239,10 @@ class TransactionDetails extends Component {
                 onChangePayee={this.onChangePayee}
                 contacts={this.props.contacts}
                 style={[{width: '100%'}, b()]}
-                usableHeight={this.props.usableHeight - 32}
+                usableHeight={this.props.usableHeight}
                 currentPayeeText={this.state.payeeName || ''}
+                dimensions={this.props.dimensions}
+                onSelectPayee={this.onSelectPayee}
             />
             }
             <View style={styles.payeeSeperator} />
@@ -453,29 +463,6 @@ class SubCategorySelect extends Component {
     })
     console.log('about to render subcategorySelectArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
- /*     <ScrollView keyboardShouldPersistTaps='always' style={[styles.subCategoryContainer, {height: this.props.usableHeight}]}>
-        {filteredSubcats.map((subCategory, index) => (
-          <TouchableHighlight delayPressIn={60} key={index} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (this.props.onPressFxn(subCategory))}>
-            <View style={[styles.rowContent]}>
-              <View style={[b(), styles.rowCategoryTextWrap]}>
-                <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{subCategory}</T>
-              </View>
-            </View>
-          </TouchableHighlight>
-        ))}
-        {newPotentialSubCategoriesFiltered.map((subCategory, index) => (
-          <TouchableHighlight delayPressIn={60} key={index} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (this.props.onPressFxn(subCategory))}>
-            <View style={[styles.rowContent]}>
-              <View style={[b(), styles.rowCategoryTextWrap]}>
-                <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{subCategory}</T>
-              </View>
-              <View style={[styles.rowPlusWrap]}>
-                <T style={[styles.rowPlus]}>+</T>
-              </View>
-            </View>
-          </TouchableHighlight>
-        ))}
-      </ScrollView> */
       <SearchResults
         renderRegularResultFxn={this.renderPayee}
         onRegularSelectFxn={this.props.onPressFxn}
@@ -484,16 +471,16 @@ class SubCategorySelect extends Component {
         style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
         keyExtractor={this.keyExtractor}
         dimensions={this.props.dimensions}
-        height={this.props.usableHeight - 60}
-        extraTopSpace={136}
+        height={this.props.usableHeight - 62}
+        extraTopSpace={138}
       />
     )
   }
 
   renderPayee (data, onRegularSelectFxn) {
-    console.log('about to renderPayee, data is: ', data)
+    console.log('about to renderPayee, data is: ', data, ' , and onRegularResultFxn is: ', onRegularSelectFxn)
     return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={(data) => (onRegularSelectFxn(data.item))}>
+      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
           <View style={[b(), styles.rowCategoryTextWrap]}>
             <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
@@ -559,19 +546,26 @@ class ContactSearchResults extends Component {
     return (
       <SearchResults
         renderRegularResultFxn={this.renderResult}
-        onRegularSelectFxn={this.props.onChangePayee}
+        onRegularSelectFxn={this.props.onSelectPayee}
         regularArray={filteredArray}
         usableHeight={this.props.usableHeight}
         style={[{width: '100%'}, b()]}
+        // style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
+        keyExtractor={this.keyExtractor}
+        dimensions={this.props.dimensions}
+        height={this.props.usableHeight - 32}
+        extraTopSpace={-32}
       />
     )
   }
 
   renderResult = (data, onRegularSelectFxn) => {
     console.log('rendering a result, data is: ', data, ' , and onRegularSelectFxn is: ', onRegularSelectFxn)
+    let fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
+
     return (
       <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(data.item.givenName + ' ' + data.item.familyName)} style={[styles.singleContact, b()]}>
+        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName)} style={[styles.singleContact, b()]}>
           <View style={[styles.contactInfoWrap, b()]}>
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo, b()]} >
@@ -583,13 +577,17 @@ class ContactSearchResults extends Component {
 
               </View>
               <View style={[styles.contactLeftTextWrap, b()]}>
-                <T style={[styles.contactName]}>{data.item.givenName} {data.item.familyName}</T>
+                <T style={[styles.contactName]}>{fullName}</T>
               </View>
             </View>
           </View>
         </TouchableHighlight>
       </View>
     )
+  }
+
+  keyExtractor = (item, index) => {
+    return index
   }
 }
 
