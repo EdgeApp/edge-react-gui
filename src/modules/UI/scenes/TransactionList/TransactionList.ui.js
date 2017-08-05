@@ -342,7 +342,7 @@ class TransactionList extends Component {
     let txName = ''
     let txImage
 
-    tx.metadata.name = 'John'
+    tx.metadata.name = 'Kylan' // this will need to be removed
     if (tx.amountSatoshi < 0) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColor = '#F03A47'
@@ -354,33 +354,20 @@ class TransactionList extends Component {
       txImage = receivedTypeImage
     }
 
+    console.log('tx.metadata.name is: ', tx.metadata.name)
     if (tx.metadata.name) {
-      Contacts.getAll((err, contacts) => {
-        if (err === 'denied') {
-          // error
-        } else {
-          console.log('all contacts: ', contacts)
+      console.log('inside of tx.metadata.name conditional, this.props is: ', this.props)
+      if (this.props.contacts) {
+        let contact = this.props.contacts.find((element) => {
+          console.log('element is: ', element)
+          return element.givenName === tx.metadata.name
+        })
+        console.log('contact is now: ', contact)
+        if (contact) {
+          tx.thumbnailPath = contact.thumbnailPath
+          tx.hasThumbnail = contact.hasThumbnail
         }
-      })
-      Contacts.getContactsMatchingString(tx.metadata.name, (error, contacts) => {
-        if (error) {
-          console.log('contact search error: ', error)
-        } else {
-          console.log('contacts found:', contacts)
-          if (contacts.length >= 1) {
-            console.log('contacts[0].recordID is: ', contacts[0].recordID)
-            Contacts.getPhotoForId(contacts[0].recordID, (err, path) => {
-              if (err) {
-                console.log('contact image error: ', err)
-              } else {
-                console.log('contact stuff: ', path)
-                tx.thumbnailPath = path
-                tx.hasThumbnail = true
-              }
-            })
-          }
-        }
-      })
+      }
     }
 
     return (
@@ -395,7 +382,7 @@ class TransactionList extends Component {
         <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
           <View style={[styles.transactionInfoWrap, b()]}>
             <View style={styles.transactionLeft}>
-              {tx.hasThumbnail ? (
+              {tx.thumbnailPath ? (
                 <Image style={[styles.transactionLogo, b()]} source={{ uri: tx.thumbnailPath }} />
               ) : (
                 <Image
@@ -456,7 +443,7 @@ const mapStateToProps = (state) => {
     balanceInFiat,
     currencyConverter,
     multiplier,
-    contacts: state.ui.contacts.contactsList
+    contacts: state.ui.contacts.contactList
   }
 }
 

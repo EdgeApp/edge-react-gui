@@ -8,7 +8,8 @@ import {
   View,
   TouchableHighlight,
   Picker,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
@@ -70,7 +71,9 @@ class TransactionDetails extends Component {
     console.log('onBlurPayee executing')
      /* this.setState({
       contactSearchVisibility: false
+
     }) */
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onChangePayee = (input) => {
@@ -81,11 +84,9 @@ class TransactionDetails extends Component {
   }
 
   onSelectPayee = (input) => {
-    console.log('payeeName selected as: ', input)
-    this.setState({
-      payeeName: input,
-      contactSearchVisibility: false
-    })
+    this.onChangePayee(input)
+    this.onBlurPayee()
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onChangeFiat = (input) => {
@@ -116,6 +117,17 @@ class TransactionDetails extends Component {
     })
   }
 
+  onFocusNotes = (input) => {
+    console.log('notes changed to: ', input)
+    this.refs._scrollView.scrollTo({x: 0, y: 320, animated: true})
+  }
+
+  onBlurNotes = (input) => {
+    console.log('notes changed to: ', input)
+    Keyboard.dismiss()
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
+  }
+
   onEnterSubcategories = () => {
     console.log('setting subCategorySelectVisibility to true')
     this.setState({subCategorySelectVisibility: true})
@@ -125,6 +137,11 @@ class TransactionDetails extends Component {
   onExitSubcategories = () => {
     console.log('setting subCategorySelectVisibility to false')
     // this.setState({subCategorySelectVisibility: false})
+  }
+
+  onSubcategoriesKeyboardReturn = () => {
+    this.setState({subCategorySelectVisibility: false})
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onSelectSubCategory = (input) => {
@@ -155,6 +172,7 @@ class TransactionDetails extends Component {
       }
     }
     this.setState({subCategorySelectVisibility: false})
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onEnterCategories = () => {
@@ -217,8 +235,8 @@ class TransactionDetails extends Component {
               <View style={[styles.payeeNameWrap, b()]}>
                 <TextInput
                   blurOnSubmit
+                  onSubmitEditing={this.onBlurPayee}
                   autoCapitalize='words'
-                  onBlur={this.onBlurPayee}
                   onFocus={this.onFocusPayee}
                   autoCorrect={false}
                   onChangeText={this.onChangePayee}
@@ -234,8 +252,10 @@ class TransactionDetails extends Component {
                 onChangePayee={this.onSelectPayee}
                 contacts={this.props.contacts}
                 style={[{width: '100%'}, b()]}
-                usableHeight={this.props.usableHeight - 32}
+                usableHeight={this.props.usableHeight}
                 currentPayeeText={this.state.payeeName || ''}
+                dimensions={this.props.dimensions}
+                onSelectPayee={this.onSelectPayee}
             />
             }
             <View style={styles.payeeSeperator} />
@@ -263,6 +283,10 @@ class TransactionDetails extends Component {
               onEnterCategories={this.onEnterCategories}
               onExitCategories={this.onExitCategories}
               usableHeight={this.props.usableHeight}
+              onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
+              dimensions={this.props.dimensions}
+              onFocusNotes={this.onFocusNotes}
+              onBlurNotes={this.onBlurNotes}
             />
           </View>
         </View>
@@ -278,7 +302,8 @@ const mapStateToProps = state => ({
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
   fiatSymbol: getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
-  usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight
+  usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
+  dimensions: state.ui.scenes.dimensions
 })
 const mapDispatchToProps = dispatch => ({
   setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
@@ -345,7 +370,7 @@ class AmountArea extends Component {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: leftData.color}]}>{leftData.syntax}</T>
+            <T style={[styles.amountAreaLeftText, {color: leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.info.direction])}</T>
           </View>
           <View style={[b(), styles.amountAreaMiddle]}>
             <View style={[b(), styles.amountAreaMiddleTop]}>
@@ -386,11 +411,17 @@ class AmountArea extends Component {
               defaultValue={this.props.subCategory || ''}
               placeholder='Category'
               autoCorrect={false}
+              onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
             />
           </View>
         </View>
         {this.props.subCategorySelectVisibility &&
-          <SubCategorySelectConnect onPressFxn={this.props.onSelectSubCategory} enteredSubcategory={this.props.subCategory} usableHeight={this.props.usableHeight} />
+          <SubCategorySelectConnect
+            onPressFxn={this.props.onSelectSubCategory}
+            enteredSubcategory={this.props.subCategory}
+            usableHeight={this.props.usableHeight}
+            deviceDimensions={this.props.deviceDimensions}
+          />
         }
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
           <Picker style={[b(), {backgroundColor: 'white', width: this.props.dimensions.deviceDimensions.width, height: this.props.dimensions.deviceDimensions.height / 3, position: 'absolute', top: this.props.dimensions.deviceDimensions.height - this.props.dimensions.deviceDimensions.height / 3, left: -20}]}
@@ -404,7 +435,17 @@ class AmountArea extends Component {
         </Modal>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' autoCapitalize='none' autoCorrect={false} />
+            <TextInput
+              onChangeText={this.props.onChangeNotesFxn}
+              numberOfLines={3} defaultValue={this.props.info.notes || ''}
+              style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'}
+              placeholder='Notes'
+              autoCapitalize='none'
+              autoCorrect={false}
+              onFocus={this.props.onFocusNotes}
+              onBlur={this.props.onBlurNotes}
+              onSubmitEditing={this.props.onBlurNotes}
+            />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
@@ -431,6 +472,8 @@ class SubCategorySelect extends Component {
       filteredSubcategories: subcats.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
+    const dimensions = this.props.dimensions
+    this.props.usableHight = dimensions.deviceDimensions.height - dimensions.headerHeight - dimensions.tabBarHeight
   }
 
   render () {
@@ -443,32 +486,40 @@ class SubCategorySelect extends Component {
     let newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
       return this.state.subcategories.indexOf(cat) < 0
     })
-
+    console.log('about to render subcategorySelectArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
-      <ScrollView keyboardShouldPersistTaps='always' style={[styles.subCategoryContainer, {height: this.props.usableHeight}]}>
-        {filteredSubcats.map((subCategory, index) => (
-          <TouchableHighlight delayPressIn={60} key={index} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (this.props.onPressFxn(subCategory))}>
-            <View style={[styles.rowContent]}>
-              <View style={[b(), styles.rowCategoryTextWrap]}>
-                <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{subCategory}</T>
-              </View>
-            </View>
-          </TouchableHighlight>
-        ))}
-        {newPotentialSubCategoriesFiltered.map((subCategory, index) => (
-          <TouchableHighlight delayPressIn={60} key={index} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (this.props.onPressFxn(subCategory))}>
-            <View style={[styles.rowContent]}>
-              <View style={[b(), styles.rowCategoryTextWrap]}>
-                <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{subCategory}</T>
-              </View>
-              <View style={[styles.rowPlusWrap]}>
-                <T style={[styles.rowPlus]}>+</T>
-              </View>
-            </View>
-          </TouchableHighlight>
-        ))}
-      </ScrollView>
+      <SearchResults
+        renderRegularResultFxn={this.renderPayee}
+        onRegularSelectFxn={this.props.onPressFxn}
+        regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
+        usableHeight={this.props.usableHeight}
+        style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
+        keyExtractor={this.keyExtractor}
+        dimensions={this.props.dimensions}
+        height={this.props.usableHeight - 62}
+        extraTopSpace={138}
+      />
     )
+  }
+
+  renderPayee (data, onRegularSelectFxn) {
+    console.log('about to renderPayee, data is: ', data, ' , and onRegularResultFxn is: ', onRegularSelectFxn)
+    return (
+      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (onRegularSelectFxn(data.item))}>
+        <View style={[styles.rowContent]}>
+          <View style={[b(), styles.rowCategoryTextWrap]}>
+            <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
+          </View>
+          <View style={[styles.rowPlusWrap]}>
+            <T style={[styles.rowPlus]}>+</T>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  }
+
+  keyExtractor = (item, index) => {
+    return index
   }
 }
 SubCategorySelect.propTypes = {
@@ -520,37 +571,48 @@ class ContactSearchResults extends Component {
     return (
       <SearchResults
         renderRegularResultFxn={this.renderResult}
-        onRegularSelectFxn={this.props.onChangePayee}
+        onRegularSelectFxn={this.props.onSelectPayee}
         regularArray={filteredArray}
         usableHeight={this.props.usableHeight}
         style={[{width: '100%'}, b()]}
+        // style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
+        keyExtractor={this.keyExtractor}
+        dimensions={this.props.dimensions}
+        height={this.props.usableHeight - 32}
+        extraTopSpace={-32}
       />
     )
   }
 
   renderResult = (data, onRegularSelectFxn) => {
     console.log('rendering a result, data is: ', data, ' , and onRegularSelectFxn is: ', onRegularSelectFxn)
+    let fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
+
     return (
       <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(data.givenName + ' ' + data.familyName)} style={[styles.singleContact, b()]}>
+        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName)} style={[styles.singleContact, b()]}>
           <View style={[styles.contactInfoWrap, b()]}>
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo, b()]} >
-                {data.thumbnailPath ? (
-                  <Image source={{uri: data.thumbnailPath}} style={{height: 40, width: 40, borderRadius: 20}} />
+                {data.item.thumbnailPath ? (
+                  <Image source={{uri: data.item.thumbnailPath}} style={{height: 40, width: 40, borderRadius: 20}} />
                 ) : (
                   <Image source={ContactImage} style={{height: 40, width: 40, borderRadius: 20}} />
                 )}
 
               </View>
               <View style={[styles.contactLeftTextWrap, b()]}>
-                <T style={[styles.contactName]}>{data.givenName} {data.familyName}</T>
+                <T style={[styles.contactName]}>{fullName}</T>
               </View>
             </View>
           </View>
         </TouchableHighlight>
       </View>
     )
+  }
+
+  keyExtractor = (item, index) => {
+    return index
   }
 }
 

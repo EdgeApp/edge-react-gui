@@ -246,6 +246,7 @@ export default StyleSheet.create({
   transactionLogo: {
     width: 40,
     height: 40,
+    borderRadius: 20,
     marginRight: 10
   },
   transactionLeftTextWrap: {
