@@ -8,7 +8,8 @@ import {
   View,
   TouchableHighlight,
   Picker,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
@@ -113,6 +114,17 @@ class TransactionDetails extends Component {
     this.setState({
       notes: input
     })
+  }
+
+  onFocusNotes = (input) => {
+    console.log('notes changed to: ', input)
+    this.refs._scrollView.scrollTo({x: 0, y: 320, animated: true})
+  }
+
+  onBlurNotes = (input) => {
+    console.log('notes changed to: ', input)
+    Keyboard.dismiss()
+    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onEnterSubcategories = () => {
@@ -272,6 +284,8 @@ class TransactionDetails extends Component {
               usableHeight={this.props.usableHeight}
               onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
               dimensions={this.props.dimensions}
+              onFocusNotes={this.onFocusNotes}
+              onBlurNotes={this.onBlurNotes}
             />
           </View>
         </View>
@@ -355,7 +369,7 @@ class AmountArea extends Component {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: leftData.color}]}>{leftData.syntax}</T>
+            <T style={[styles.amountAreaLeftText, {color: leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.info.direction])}</T>
           </View>
           <View style={[b(), styles.amountAreaMiddle]}>
             <View style={[b(), styles.amountAreaMiddleTop]}>
@@ -420,7 +434,17 @@ class AmountArea extends Component {
         </Modal>
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
-            <TextInput onChangeText={this.props.onChangeNotesFxn} numberOfLines={3} defaultValue={this.props.info.notes || ''} style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'} placeholder='Notes' autoCapitalize='none' autoCorrect={false} />
+            <TextInput
+              onChangeText={this.props.onChangeNotesFxn}
+              numberOfLines={3} defaultValue={this.props.info.notes || ''}
+              style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'}
+              placeholder='Notes'
+              autoCapitalize='none'
+              autoCorrect={false}
+              onFocus={this.props.onFocusNotes}
+              onBlur={this.props.onBlurNotes}
+              onSubmitEditing={this.props.onBlurNotes}
+            />
           </View>
         </View>
         <View style={[b(), styles.footerArea]}>
