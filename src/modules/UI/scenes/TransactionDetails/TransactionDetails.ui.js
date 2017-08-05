@@ -69,10 +69,10 @@ class TransactionDetails extends Component {
 
   onBlurPayee = () => {
     console.log('onBlurPayee executing')
-     /* this.setState({
+    this.setState({
       contactSearchVisibility: false
 
-    }) */
+    })
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
