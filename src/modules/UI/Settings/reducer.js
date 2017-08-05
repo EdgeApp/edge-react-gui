@@ -112,14 +112,26 @@ export const settings = (state = initialState, action) => {
       }
     }
 
-    case ACTION.SET_SHITCOIN_DENOMINATION: {
-      const { denomination } = data
-      const TRD = state['TRD']
+    case ACTION.ADD_BITCOIN_PLUGIN: {
+      const { plugin } = data
+      const { plugins } = state
       return {
         ...state,
-        TRD: {
-          ...TRD,
-          denomination
+        plugins: {
+          ...plugins,
+          bitcoin: plugin
+        }
+      }
+    }
+
+    case ACTION.ADD_ETHEREUM_PLUGIN: {
+      const { plugin } = data
+      const { plugins } = state
+      return {
+        ...state,
+        plugins: {
+          ...plugins,
+          ethereum: plugin
         }
       }
     }

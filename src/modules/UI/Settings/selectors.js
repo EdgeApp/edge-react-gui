@@ -12,3 +12,25 @@ export const getDenominationIndex = (state, currencyCode) => {
   }
   return denominationIndex
 }
+
+export const getPlugins = (state) => {
+  const settings = getSettings(state)
+  const plugins = settings.plugins
+  return plugins
+}
+
+export const getPlugin = (state, type) => {
+  const plugins = getPlugins(state)
+  const plugin = plugins[type]
+  return plugin
+}
+
+export const getBitcoinPlugin = (state) => {
+  const bitcoinPlugin = getPlugin(state, 'bitcoin')
+  return bitcoinPlugin
+}
+
+export const getEthereumPlugin = (state) => {
+  const ethereumPlugin = getPlugin(state, 'ethereum')
+  return ethereumPlugin
+}

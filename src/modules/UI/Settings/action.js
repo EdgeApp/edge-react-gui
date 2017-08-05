@@ -1,9 +1,7 @@
 // UI/Settings
-
 const PREFIX = 'UI/Settings/'
 
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'
-
 export const LOAD_SETTINGS = PREFIX + 'LOAD_SETTINGS'
 
 // Core Settings
@@ -21,13 +19,16 @@ export const SET_MERCHANT_MODE = PREFIX + 'SET_MERCHANT_MODE'
 export const SET_BLUETOOTH_MODE = PREFIX + 'SET_BLUETOOTH_MODE'
 
 // Currency Settings
-export const SET_BITCOIN_DENOMINATION = PREFIX + 'SET_BITCOIN_DENOMINATION'
+export const SET_BTC_DENOMINATION = PREFIX + 'SET_BITCOIN_DENOMINATION'
 export const SET_BITCOIN_OVERRIDE_SERVER = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER'
-export const SET_SHITCOIN_DENOMINATION = PREFIX + 'SET_SHITCOIN_DENOMINATION'
-export const SET_ETHEREUM_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
+export const SET_ETH_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
 export const SET_REP_DENOMINATION = PREFIX + 'SET_REP_DENOMINATION'
 export const SET_WINGS_DENOMINATION = PREFIX + 'SET_WINGS_DENOMINATION'
-export const SET_LUNYR_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
+export const SET_LUN_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
+
+// Plugins
+export const ADD_BITCOIN_PLUGIN = PREFIX + 'ADD_BITCOIN_PLUGIN'
+export const ADD_ETHEREUM_PLUGIN = PREFIX + 'ADD_ETHEREUM_PLUGIN'
 
 export const updateSettings = settings => {
   return {
@@ -99,13 +100,7 @@ export const setBluetoothMode = bluetoothMode => {
   }
 }
 
-export const setBitcoinDenomination = denomination => {
-  return {
-    type: SET_BITCOIN_DENOMINATION,
-    data: { denomination }
-  }
-}
-
+// BTC Settings
 export const setBitcoinOverrideServer = overrideServer => {
   return {
     type: SET_BITCOIN_OVERRIDE_SERVER,
@@ -113,37 +108,56 @@ export const setBitcoinOverrideServer = overrideServer => {
   }
 }
 
-export const setShitcoinDenomination = denomination => {
+export const setBTCDenomination = denomination => {
   return {
-    type: SET_SHITCOIN_DENOMINATION,
+    type: SET_BTC_DENOMINATION,
     data: { denomination }
   }
 }
 
-export const setEthereumDenomination = denomination => {
+// ETH Settings
+export const setETHDenomination = denomination => {
   return {
-    type: SET_ETHEREUM_DENOMINATION,
+    type: SET_ETH_DENOMINATION,
     data: { denomination }
   }
 }
 
-export const setRepDenomination = denomination => {
+// REP Settings
+export const setREPDenomination = denomination => {
   return {
     type: SET_REP_DENOMINATION,
     data: { denomination }
   }
 }
 
-export const setWingsDenomination = denomination => {
+// WINGS Settings
+export const setWINGSDenomination = denomination => {
   return {
     type: SET_WINGS_DENOMINATION,
     data: { denomination }
   }
 }
 
-export const setLunyrDenomination = denomination => {
+// LUN Settings
+export const setLUNDenomination = denomination => {
   return {
-    type: SET_LUNYR_DENOMINATION,
+    type: SET_LUN_DENOMINATION,
     data: { denomination }
+  }
+}
+
+// Plugins
+export const addBitcoinPlugin = (plugin) => {
+  return {
+    type: ADD_BITCOIN_PLUGIN,
+    data: { plugin: plugin }
+  }
+}
+
+export const addEthereumPlugin = (plugin) => {
+  return {
+    type: ADD_ETHEREUM_PLUGIN,
+    data: { plugin: plugin }
   }
 }

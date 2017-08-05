@@ -23,18 +23,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   },
   'LUN': {
     denomination: 100000000
-  },
-  'TRD': {
-    denomination: 1000
-  },
-  'DOGESHIT': {
-    denomination: 100
-  },
-  'HOLYSHIT': {
-    denomination: 100
-  },
-  'ANA': {
-    denomination: 100
   }
 }
 

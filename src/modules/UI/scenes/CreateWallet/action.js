@@ -4,14 +4,11 @@ export const SELECT_FIAT = 'SELECT_FIAT'
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-// import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import * as LOGIN_ACTIONS from '../../../Login/action.js'
 
 import { Actions } from 'react-native-router-flux'
-
-import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
-import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
 
 export const updateWalletName = walletName => {
   return {
@@ -39,9 +36,9 @@ export const createWallet = (walletName, walletType) => {
     const state = getState()
 
     const account = CORE_SELECTORS.getAccount(state)
-    const io = CORE_SELECTORS.getIO(state)
-    const bitcoinPlugin = makeBitcoinPlugin({ io })
-    const ethereumPlugin = makeEthereumPlugin({ io })
+    const bitcoinPlugin = SETTINGS_SELECTORS.getBitcoinPlugin(state)
+    const ethereumPlugin = SETTINGS_SELECTORS.getEthereumPlugin(state)
+
     const type = walletType.replace('wallet:', '').toLowerCase()
     let keys
     if (type === ethereumPlugin.getInfo().walletTypes[0]) {

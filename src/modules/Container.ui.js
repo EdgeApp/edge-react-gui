@@ -35,9 +35,14 @@ import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
 import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 
+import { addBitcoinPlugin, addEthereumPlugin } from './UI/Settings/action.js'
+
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
 import * as PLUGINS from 'airbitz-exchange-plugins'
+import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
+import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
+
 import {setLocaleInfo} from './UI/locale/action'
 
 import styles from './style.js'
@@ -80,6 +85,12 @@ class Main extends Component {
       io.console.info = (...rest) => { abcInfo('ABC_CORE', ...rest) }
       io.console.warn = (...rest) => { abcWarn('ABC_CORE', ...rest) }
       io.console.error = (...rest) => { abcError('ABC_CORE', ...rest) }
+
+      const bitcoinPlugin = makeBitcoinPlugin({io})
+      this.props.dispatch(addBitcoinPlugin(bitcoinPlugin))
+
+      const ethereumPlugin = makeEthereumPlugin({io})
+      this.props.dispatch(addEthereumPlugin(ethereumPlugin))
 
       const context = makeContext({
         plugins: Object.values(PLUGINS),

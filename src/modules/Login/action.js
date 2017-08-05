@@ -193,12 +193,12 @@ const loadSettings = () => {
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
 
-      dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(syncFinal.BTC.denomination))
-      dispatch(SETTINGS_ACTIONS.setEthereumDenomination(syncFinal.ETH.denomination))
+      dispatch(SETTINGS_ACTIONS.setBTCDenomination(syncFinal.BTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setETHDenomination(syncFinal.ETH.denomination))
 
-      dispatch(SETTINGS_ACTIONS.setRepDenomination(syncFinal.REP.denomination))
-      dispatch(SETTINGS_ACTIONS.setWingsDenomination(syncFinal.WINGS.denomination))
-      dispatch(SETTINGS_ACTIONS.setLunyrDenomination(syncFinal.LUN.denomination))
+      dispatch(SETTINGS_ACTIONS.setREPDenomination(syncFinal.REP.denomination))
+      dispatch(SETTINGS_ACTIONS.setWINGSDenomination(syncFinal.WINGS.denomination))
+      dispatch(SETTINGS_ACTIONS.setLUNDenomination(syncFinal.LUN.denomination))
     })
 
     SETTINGS_API.getLocalSettings(account)
