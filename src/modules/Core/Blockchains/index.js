@@ -2,7 +2,7 @@ import {Platform} from 'react-native'
 
 export const supportedWalletTypes = Platform.select({
   'ios': [
-    'wallet:bitcoin',
+    // 'wallet:bitcoin',
     'wallet:ethereum'
   ],
   'android': [
@@ -12,7 +12,7 @@ export const supportedWalletTypes = Platform.select({
 
 export const supportedBlockchains = Platform.select({
   'ios': [
-    'Bitcoin',
+    // 'Bitcoin',
     'Ethereum'
   ],
   'android': [
