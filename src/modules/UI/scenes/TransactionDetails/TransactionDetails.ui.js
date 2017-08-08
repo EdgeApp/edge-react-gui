@@ -9,14 +9,15 @@ import {
   TouchableHighlight,
   Picker,
   TouchableOpacity,
-  Keyboard
+  Keyboard,
+  TouchableWithoutFeedback
 } from 'react-native'
 import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import {setContactList} from '../../contacts/action'
-import ReceivedIcon from '../../../../assets/images/transactions/transaction-type-received.png'
-import SentIcon from '../../../../assets/images/transactions/transaction-type-sent.png'
+import ReceivedIcon from '../../../../assets/images/transactions/transaction-details-received.png'
+import SentIcon from '../../../../assets/images/transactions/transaction-details-sent.png'
 import ContactImage from '../../../../assets/images/contact.png'
 import T from '../../components/FormattedText'
 import {PrimaryButton} from '../../components/Buttons'
@@ -30,6 +31,7 @@ import { setTransactionDetails } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import { subcategories as subcats } from './subcategories.temp'
 import SearchResults from '../../components/SearchResults'
+import { openHelpModal } from '../../components/HelpModal/actions'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -119,7 +121,7 @@ class TransactionDetails extends Component {
 
   onFocusNotes = (input) => {
     console.log('notes changed to: ', input)
-    this.refs._scrollView.scrollTo({x: 0, y: 320, animated: true})
+    this.refs._scrollView.scrollTo({x: 0, y: 300, animated: true})
   }
 
   onBlurNotes = (input) => {
@@ -128,10 +130,14 @@ class TransactionDetails extends Component {
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
+  onNotesKeyboardReturn = () => {
+    this.onBlurNotes()
+  }
+
   onEnterSubcategories = () => {
     console.log('setting subCategorySelectVisibility to true')
     this.setState({subCategorySelectVisibility: true})
-    this.refs._scrollView.scrollTo({x: 0, y: 265, animated: true})
+    this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
   }
 
   onExitSubcategories = () => {
@@ -145,7 +151,7 @@ class TransactionDetails extends Component {
   }
 
   onSelectSubCategory = (input) => {
-    console.log('subcategory selected as: ', input)
+    console.log('in onSelectSubcategory, subcategory selected as: ', input, ' , this.state is: ', this.state)
     let stringArray
     // check if there is a colon that delineates category and subcategory
     if (!input) {
@@ -155,7 +161,8 @@ class TransactionDetails extends Component {
     } else {
       if (input.indexOf(':')) {
         stringArray = input.split(':')
-        if (categories.indexOf(stringArray[0].toLowerCase())) {
+        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
+          console.log('If it is an actual main category: ')
           this.setState({
             category: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
@@ -285,6 +292,7 @@ class TransactionDetails extends Component {
               usableHeight={this.props.usableHeight}
               onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
               dimensions={this.props.dimensions}
+              onNotesKeyboardReturn={this.onNotesKeyboardReturn}
               onFocusNotes={this.onFocusNotes}
               onBlurNotes={this.onBlurNotes}
             />
@@ -367,10 +375,10 @@ class AmountArea extends Component {
     console.log('rendering AmountArea, category is: ', category, ' and categories is: ', categories)
     let color = category.color
     return (
-      <View style={[styles.amountAreaContainer]}>
-        <View style={[styles.amountAreaCryptoRow]}>
-          <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.info.direction])}</T>
+      <View style={[b(), styles.amountAreaContainer]}>
+        <View style={[b(), styles.amountAreaCryptoRow]}>
+          <View style={[b(), styles.amountAreaLeft]}>
+            <T style={[b(), styles.amountAreaLeftText, {color: leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.info.direction + '_past'])}</T>
           </View>
           <View style={[b(), styles.amountAreaMiddle]}>
             <View style={[b(), styles.amountAreaMiddleTop]}>
@@ -397,8 +405,8 @@ class AmountArea extends Component {
         </View>
 
         <View style={[styles.categoryRow, b()]}>
-          <TouchableOpacity style={[styles.categoryLeft, {borderColor: color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
-            <T style={[{color: color}, styles.categoryLeftText]}>{category.syntax}</T>
+          <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
+            <T style={[b(), {color: color}, styles.categoryLeftText]}>{category.syntax}</T>
           </TouchableOpacity>
           <View style={[b(), styles.categoryInputArea]}>
             <TextInput
@@ -409,7 +417,7 @@ class AmountArea extends Component {
               onChangeText={this.props.onChangeSubcategoryFxn}
               style={[styles.categoryInput]}
               defaultValue={this.props.subCategory || ''}
-              placeholder='Category'
+              placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
               autoCorrect={false}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
             />
@@ -445,6 +453,7 @@ class AmountArea extends Component {
               onFocus={this.props.onFocusNotes}
               onBlur={this.props.onBlurNotes}
               onSubmitEditing={this.props.onBlurNotes}
+              blurOnSubmit
             />
           </View>
         </View>
@@ -452,9 +461,9 @@ class AmountArea extends Component {
           <View style={[b(), styles.buttonArea]}>
             <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
-          <View style={[b(), styles.advancedTxArea]}>
-            <T onPress={() => console.log('going to advanced Tx data')} style={[b(), styles.advancedTxText]}>View advanced transaction data</T>
-          </View>
+          <TouchableWithoutFeedback onPress={() => this.props.dispatch(openHelpModal())} style={[b(), styles.advancedTxArea]}>
+            <T style={[b(), styles.advancedTxText]}>{sprintf(strings.enUS['transaction_details_view_advanced_data'])}</T>
+          </TouchableWithoutFeedback>
         </View>
       </View>
     )
@@ -472,8 +481,8 @@ class SubCategorySelect extends Component {
       filteredSubcategories: subcats.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
-    const dimensions = this.props.dimensions
-    this.props.usableHight = dimensions.deviceDimensions.height - dimensions.headerHeight - dimensions.tabBarHeight
+    // const dimensions = this.props.dimensions
+    // this.props.usableHight = dimensions.deviceDimensions.height - dimensions.headerHeight - dimensions.tabBarHeight
   }
 
   render () {
@@ -489,23 +498,23 @@ class SubCategorySelect extends Component {
     console.log('about to render subcategorySelectArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
       <SearchResults
-        renderRegularResultFxn={this.renderPayee}
+        renderRegularResultFxn={this.renderSubcategory}
         onRegularSelectFxn={this.props.onPressFxn}
         regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         usableHeight={this.props.usableHeight}
         style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
         keyExtractor={this.keyExtractor}
         dimensions={this.props.dimensions}
-        height={this.props.usableHeight - 62}
-        extraTopSpace={138}
+        height={this.props.usableHeight - 42}
+        extraTopSpace={118}
       />
     )
   }
 
-  renderPayee (data, onRegularSelectFxn) {
-    console.log('about to renderPayee, data is: ', data, ' , and onRegularResultFxn is: ', onRegularSelectFxn)
+  renderSubcategory (data, onRegularSelectFxn) {
+    console.log('about to renderSubcategory, data is: ', data, ' , and onRegularResultFxn is: ', onRegularSelectFxn)
     return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={'#eee'} onPress={() => (onRegularSelectFxn(data.item))}>
+      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={c.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
           <View style={[b(), styles.rowCategoryTextWrap]}>
             <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
@@ -534,10 +543,8 @@ class PayeeIcon extends Component {
   render () {
     console.log('rendering PayeeIcon, this.props is: ', this.props)
     return (
-      <View style={[styles.modalHeaderIconWrapBottom]}>
-        <View style={[styles.modalHeaderIconWrapTop, b()]}>
-          {this.renderIcon()}
-        </View>
+      <View style={[b(), styles.modalHeaderIconWrapBottom]}>
+        {this.renderIcon()}
       </View>
     )
   }
@@ -590,7 +597,7 @@ class ContactSearchResults extends Component {
 
     return (
       <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName)} style={[styles.singleContact, b()]}>
+        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName)} underlayColor={c.gray4} style={[styles.singleContact, b()]}>
           <View style={[styles.contactInfoWrap, b()]}>
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo, b()]} >
@@ -615,22 +622,3 @@ class ContactSearchResults extends Component {
     return index
   }
 }
-
-/* class ContactIcon extends Component {
-  constructor(props) {
-    super(props)
-
-  }
-
-  render() {
-    let iconBgColor = (this.props.direction === 'receive') ? c.accentGreen : c.accentRed
-    return(
-        <View style={[b(), styles.modalHeaderIconWrapBottom]}>
-          <View style={styles.modalHeaderIconWrapTop}>
-            {this.props.featuredIcon}
-          </View>
-        </View>
-    )
-  }
-}
-*/

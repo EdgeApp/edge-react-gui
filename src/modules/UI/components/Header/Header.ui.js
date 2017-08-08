@@ -15,6 +15,7 @@ import RightComponent from './Component/Right.js'
 import BodyComponent from './Component/Body.js'
 import {setHeaderHeight} from '../../dimensions/action'
 import styles from './style'
+import {colors as c} from '../../../../theme/variables/airbitz'
 
 class HeaderUI extends Component {
   _renderTitle = () => {
@@ -38,7 +39,7 @@ class HeaderUI extends Component {
 
   render () {
     return (
-      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3b7adb', '#2b569a']} style={[styles.headerRoot]} onLayout={this._onLayout}>
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={[c.gradient.light, c.gradient.dark]} style={[styles.headerRoot]} onLayout={this._onLayout}>
         <Header>
           <Left style={{flex: 1}}>
             <LeftComponent routes={this.props.routes} />

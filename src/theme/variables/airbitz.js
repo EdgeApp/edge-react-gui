@@ -24,3 +24,7 @@ export const colors = {
     black: 'black',
     white: 'white'
 }
+
+export const font = {
+    default:  'SourceSansPro-Black'
+}

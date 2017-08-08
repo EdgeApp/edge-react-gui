@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import {colors as c, font} from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
 
@@ -14,26 +14,19 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   modalHeaderIconWrapBottom: {
-    borderRadius: 25,
-    backgroundColor: 'white',
-    height: 50,
-    width: 50,
+    borderRadius: 24,
+    backgroundColor: 'transparent',
+    height: 48,
+    width: 48,
     position: 'relative',
     top: 10
   },
-  modalHeaderIconWrapTop: {
-    borderRadius: 25,
-    backgroundColor: 'white',
-    zIndex: 100,
-    elevation: 100,
-    height: 48,
-    width: 48
-  },
   payeeIcon: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'transparent'
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'transparent',
+    position: 'relative'
   },
   dataArea: {
     position: 'relative',
@@ -54,7 +47,8 @@ export default StyleSheet.create({
     fontSize: 17,
     height: 24,
     textAlign: 'center',
-    width: '100%'
+    width: '100%',
+    fontFamily: font.default
   },
   payeeSeperator: {
     borderBottomWidth: 1,
@@ -78,7 +72,7 @@ export default StyleSheet.create({
   amountAreaCryptoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 20,
+    paddingTop: 10,
     paddingBottom: 20,
     paddingLeft: 15,
     paddingRight: 15
@@ -92,7 +86,7 @@ export default StyleSheet.create({
     fontSize: 14
   },
   amountAreaMiddle: {
-    paddingTop: 18,
+    paddingTop: 10,
     flex: 3,
     alignSelf: 'center',
     justifyContent: 'center',
@@ -143,7 +137,8 @@ export default StyleSheet.create({
     fontSize: 17,
     textAlign: 'center',
     height: 26,
-    flex: 1
+    flex: 1,
+    fontFamily: font.default
   },
   editableFiatRight: {
     flex: 1,
@@ -166,11 +161,14 @@ export default StyleSheet.create({
   categoryLeft: {
     borderRadius: 3,
     borderWidth: 1,
-    padding: 5,
-    height: 28
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingTop: 4,
+    paddingBottom: 6,
+    height: 29
   },
   categoryLeftText: {
-    fontSize: 14
+    fontSize: 15
   },
   categoryInputArea: {
     flex: 1,
@@ -186,7 +184,8 @@ export default StyleSheet.create({
     height: 22,
     fontSize: 13,
     flex: 1,
-    color: c.gray1
+    color: c.gray1,
+    fontFamily: font.default
   },
   notesRow: {
     paddingBottom: 20,
@@ -203,12 +202,13 @@ export default StyleSheet.create({
   },
   notesInput: {
     color: c.gray1,
-    fontSize: 12
+    fontSize: 12,
+    fontFamily: font.default
   },
   footerArea: {
     backgroundColor: c.gray4,
-    height: 123,
     paddingTop: 20,
+    height: 150,
     paddingLeft: 15,
     paddingRight: 15
   },
@@ -219,14 +219,18 @@ export default StyleSheet.create({
     height: 50
   },
   advancedTxArea: {
-    padding: 15,
-    paddingBottom: 20,
+    padding: 12,
+    paddingBottom: 12,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    height: 50
   },
   advancedTxText: {
     color: c.secondary,
-    fontSize: 14
+    fontSize: 14,
+    paddingTop: 12,
+    paddingBottom: 12,
+    alignSelf: 'center'
   },
 
   // subcategory selector

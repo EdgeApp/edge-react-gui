@@ -15,6 +15,8 @@ class HelpModal extends Component {
         return require('../../../../html/enUS/info_wallets.html')
       case 'transactions':
         return require('../../../../html/enUS/info_transactions.html')
+      case 'transactionDetails':
+        return require('../../../../html/enUS/transaction_details.html')
       case 'request':
         return require('../../../../html/enUS/info_request.html')
       case 'sendConfirmation':

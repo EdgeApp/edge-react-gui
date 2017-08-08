@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import {colors as c} from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
 
@@ -86,7 +87,7 @@ export default StyleSheet.create({
     backgroundColor: 'transparent'
   },
   currentBalanceBoxBits: {
-    color: '#FFFFFF',
+    color: 'white',
     fontSize: 40
   },
   currentBalanceBoxDollarsWrap: {
@@ -95,7 +96,7 @@ export default StyleSheet.create({
     paddingTop: 4
   },
   currentBalanceBoxDollars: { // two
-    color: '#FFFFFF',
+    color: 'white',
     fontSize: 20
   },
   balanceHiddenContainer: {
@@ -157,12 +158,12 @@ export default StyleSheet.create({
   },
   request: {
     fontSize: 18,
-    color: '#ffffff',
+    color: 'white',
     marginHorizontal: 12
   },
   send: {
     fontSize: 18,
-    color: '#ffffff',
+    color: 'white',
     marginHorizontal: 12
   },
 
@@ -199,7 +200,7 @@ export default StyleSheet.create({
   singleTransaction: {
     height: 60,
     borderBottomWidth: 1,
-    borderBottomColor: '#D8D6D6',
+    borderBottomColor: c.gray3,
     padding: 10,
     paddingRight: 30,
     paddingLeft: 3,
@@ -210,7 +211,7 @@ export default StyleSheet.create({
     flex: 1
   },
   singleDateArea: {
-    backgroundColor: '#f6f6f6',
+    backgroundColor: c.gray4,
     flex: 3,
     padding: 8,
     paddingLeft: 15,
@@ -221,7 +222,7 @@ export default StyleSheet.create({
     flex: 1
   },
   formattedDate: {
-    color: '#909091',
+    color: c.gray2,
     fontSize: 14
   },
   rightDateSearch: {
@@ -254,12 +255,11 @@ export default StyleSheet.create({
   },
   transactionPartner: {
     fontSize: 16,
-    color: '#58595C',
+    color: c.gray1,
     textAlignVertical: 'center'
   },
   transactionBitAmount: {
     fontSize: 16,
-    color: '#000000',
     textAlignVertical: 'center'
   },
   transactionRight: {
@@ -268,17 +268,22 @@ export default StyleSheet.create({
   },
   transactionTime: {
     fontSize: 12,
-    color: '#58595C',
+    color: c.gray1,
     textAlignVertical: 'bottom',
     position: 'relative',
     top: 4
   },
   transactionDollarAmount: {
     fontSize: 12,
-    color: '#909091',
+    color: c.gray2,
     textAlignVertical: 'center',
     position: 'relative',
     top: 4
+  },
+  accentGreen: {
+    color: c.accentGreen
+  },
+  accentRed: {
+    color: c.accentRed
   }
-
 })

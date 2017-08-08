@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { Text } from 'native-base'
 import { Actions } from 'react-native-router-flux'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../../locales/default'
+import T from '../../../components/FormattedText'
+import styles from '../style'
 
 export default class Left extends Component {
   render () {
@@ -30,13 +33,13 @@ class BackButton extends Component {
   constructor (props) {
     super(props)
     this.props.pressFxn = this.props.onPressFxn ? this.props.onPressFxn : Actions.pop
-    this.props.syntax = this.props.syntax ? this.props.syntax : 'Back'
+    this.props.syntax = this.props.syntax ? this.props.syntax : sprintf(strings.enUS['back_button_text'])
   }
 
   render () {
     return (
-      <TouchableOpacity onPress={this.props.onPressFxn ? this.props.onPressFxn : (e) => Actions.pop()}>
-        <Text>{this.props.syntax}</Text>
+      <TouchableOpacity style={styles.sideTextWrap} onPress={this.props.onPressFxn ? this.props.onPressFxn : (e) => Actions.pop()}>
+        <T style={[styles.sideText]}>{this.props.syntax}</T>
       </TouchableOpacity>
     )
   }

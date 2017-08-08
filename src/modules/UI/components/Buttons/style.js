@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native'
+import {colors as c} from '../../../../theme/variables/airbitz'
 
 module.exports = StyleSheet.create({
 
@@ -24,27 +25,27 @@ module.exports = StyleSheet.create({
   },
 
   primaryButtonWrap: {
-    backgroundColor: '#4977BB'
+    backgroundColor: c.secondary
   },
   primaryButton: {
-    color: '#3c76cd'
+    color: c.gradient.light // not used?
   },
 
   secondaryButtonWrap: {
-    backgroundColor: '#909091',
+    backgroundColor: c.gray2,
     alignSelf: 'flex-start'
   },
   secondaryButton: {
-    color: '#3c76cd'
+    color: c.gradient.light
   },
 
   tertiaryButtonWrap: {
     backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: '#4977BB'
+    borderColor: c.secondary
   },
   tertiaryButton: {
-    color: '#4977BB',
+    color: c.secondary,
     paddingHorizontal: 10
   }
 })

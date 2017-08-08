@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../../locales/default'
 import { TouchableOpacity } from 'react-native'
-import { Text } from 'native-base'
 import { openHelpModal } from '../../HelpModal/actions.js'
 import { connect } from 'react-redux'
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
+import T from '../../../components/FormattedText'
+import styles from '../style'
 
 class HelpButton extends Component {
   render () {
     return (
-      <TouchableOpacity onPress={e => this.props.dispatch(openHelpModal())}>
-        <Text>Help</Text>
+      <TouchableOpacity style={styles.sideTextWrap} onPress={() => this.props.dispatch(openHelpModal())}>
+        <T style={[styles.sideText]}>{sprintf(strings.enUS['string_help'])}</T>
       </TouchableOpacity>
     )
   }
@@ -28,6 +31,8 @@ export default class Right extends Component {
       case 'directory':
         return <HelpButtonConnect />
       case 'transactions':
+        return <HelpButtonConnect />
+      case 'transactionDetails':
         return <HelpButtonConnect />
       case 'request':
         return <HelpButtonConnect />

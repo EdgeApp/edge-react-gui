@@ -338,18 +338,18 @@ class TransactionList extends Component {
   }
 
   renderTx = (tx, completedTxList) => {
-    let txColor
+    let txColorStyle
     let txName = ''
     let txImage
 
     tx.metadata.name = 'Kylan' // this will need to be removed
     if (tx.amountSatoshi < 0) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
-      txColor = '#F03A47'
+      txColorStyle = styles.accentRed
       txName = strings.enUS['fragment_transaction_list_sent_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
       txImage = sentTypeImage
     } else {
-      txColor = '#7FC343'
+      txColorStyle = styles.accentGreen
       txName = strings.enUS['fragment_transaction_list_receive_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
       txImage = receivedTypeImage
     }
@@ -396,8 +396,8 @@ class TransactionList extends Component {
               </View>
             </View>
             <View style={[styles.transactionRight, b()]}>
-              <T style={[styles.transactionBitAmount, {color: txColor}]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, {color: txColor}]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}</T>
+              <T style={[styles.transactionBitAmount, txColorStyle]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
+              <T style={[styles.transactionDollarAmount, txColorStyle]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}</T>
             </View>
           </View>
         </TouchableOpacity>
