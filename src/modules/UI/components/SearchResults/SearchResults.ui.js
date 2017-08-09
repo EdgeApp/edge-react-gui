@@ -19,13 +19,11 @@ class SearchResults extends Component {
   }
 
   render () {
-    console.log('rendering SearchResults, this.props is: ', this.props, ' , and this.state is: ', this.state)
     let completedDataList = this.props.regularArray.map((x, i) => {
       let newValue = x
       newValue.key = i
       return newValue
     })
-    console.log('completedDataList is: ', completedDataList)
     return (
       <View style={[style.searchResultsContainer, {backgroundColor: 'white', height: this.props.height, width: this.props.dimensions.deviceDimensions.width, top: this.props.dimensions.headerHeight + this.props.extraTopSpace, zIndex: 999}]}>
         <FlatList
@@ -42,7 +40,6 @@ class SearchResults extends Component {
   }
 
   renderRegularRow = (data, onPressFxn) => {
-    console.log('in renderRegularRow, data is: ', data, ' , and onPressFxn is: ', onPressFxn)
     return this.props.regularResult(data, onPressFxn)
   }
 }

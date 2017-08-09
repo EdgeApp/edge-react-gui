@@ -62,7 +62,6 @@ class TransactionDetails extends Component {
   }
 
   onFocusPayee = () => {
-    console.log('onFocusPayee executing')
     this.setState({
       contactSearchVisibility: true
     })
@@ -70,7 +69,6 @@ class TransactionDetails extends Component {
   }
 
   onBlurPayee = () => {
-    console.log('onBlurPayee executing')
     this.setState({
       contactSearchVisibility: false
 
@@ -79,7 +77,6 @@ class TransactionDetails extends Component {
   }
 
   onChangePayee = (input) => {
-    console.log('payeeName changed to: ', input)
     this.setState({
       payeeName: input
     })
@@ -92,40 +89,34 @@ class TransactionDetails extends Component {
   }
 
   onChangeFiat = (input) => {
-    console.log('in onChangeFiat, input is: ', input, ' , and this.props.fiatSymbol is: ', this.props.fiatSymbol)
     this.setState({
       amountFiat: this.props.fiatSymbol + ' ' + limitFiatDecimals(input.replace(this.props.fiatSymbol, '').replace(' ', ''))
     })
   }
 
   onChangeCategory = (input) => {
-    console.log('category changed to: ', input)
     this.setState({
       category: input
     })
   }
 
   onChangeSubcategory = (input) => {
-    console.log('subcategory changed to: ', input)
     this.setState({
       subCategory: input
     })
   }
 
   onChangeNotes = (input) => {
-    console.log('notes changed to: ', input)
     this.setState({
       notes: input
     })
   }
 
   onFocusNotes = (input) => {
-    console.log('notes changed to: ', input)
     this.refs._scrollView.scrollTo({x: 0, y: 300, animated: true})
   }
 
   onBlurNotes = (input) => {
-    console.log('notes changed to: ', input)
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
@@ -135,13 +126,11 @@ class TransactionDetails extends Component {
   }
 
   onEnterSubcategories = () => {
-    console.log('setting subCategorySelectVisibility to true')
     this.setState({subCategorySelectVisibility: true})
     this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
   }
 
   onExitSubcategories = () => {
-    console.log('setting subCategorySelectVisibility to false')
     // this.setState({subCategorySelectVisibility: false})
   }
 
@@ -151,7 +140,6 @@ class TransactionDetails extends Component {
   }
 
   onSelectSubCategory = (input) => {
-    console.log('in onSelectSubcategory, subcategory selected as: ', input, ' , this.state is: ', this.state)
     let stringArray
     // check if there is a colon that delineates category and subcategory
     if (!input) {
@@ -162,7 +150,6 @@ class TransactionDetails extends Component {
       if (input.indexOf(':')) {
         stringArray = input.split(':')
         if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
-          console.log('If it is an actual main category: ')
           this.setState({
             category: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
@@ -183,23 +170,19 @@ class TransactionDetails extends Component {
   }
 
   onEnterCategories = () => {
-    console.log('setting categorySelectVisibility to true')
     this.setState({categorySelectVisibility: true})
   }
 
   onExitCategories = () => {
-    console.log('setting scategorySelectVisibility to false')
     this.setState({categorySelectVisibility: false})
   }
 
   onSelectCategory = (item) => {
-    console.log('onSelectCategory executing, item is: ', item)
     this.setState({category: item.itemValue})
     this.onExitCategories()
   }
 
   onPressSave = () => {
-    console.log('onPressSave executing, this.state is: ', this.state)
     const { txid, payeeName, category, notes, amountFiat, bizId, miscJson } = this.state
     const transactionDetails = { txid, payeeName, category, notes, amountFiat, bizId, miscJson }
     console.log('transactionDetails are: ', transactionDetails)
@@ -228,7 +211,6 @@ class TransactionDetails extends Component {
   }
 
   render () {
-    console.log('rendering Transaction Details scene, this.props is: ', this.props, ' and this.state is: ', this.state)
     return (
       <ScrollView ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
         <View style={[b(), styles.container]}>
@@ -372,7 +354,6 @@ class AmountArea extends Component {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)
       leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
     }
-    console.log('rendering AmountArea, category is: ', category, ' and categories is: ', categories)
     let color = category.color
     return (
       <View style={[b(), styles.amountAreaContainer]}>
@@ -447,8 +428,8 @@ class AmountArea extends Component {
               onChangeText={this.props.onChangeNotesFxn}
               numberOfLines={3} defaultValue={this.props.info.notes || ''}
               style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'}
-              placeholder='Notes'
-              autoCapitalize='none'
+              placeholder={sprintf(strings.enUS['transaction_details_notes_title'])}
+              autoCapitalize='sentences'
               autoCorrect={false}
               onFocus={this.props.onFocusNotes}
               onBlur={this.props.onBlurNotes}
@@ -495,7 +476,6 @@ class SubCategorySelect extends Component {
     let newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
       return this.state.subcategories.indexOf(cat) < 0
     })
-    console.log('about to render subcategorySelectArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
       <SearchResults
         renderRegularResultFxn={this.renderSubcategory}
@@ -512,7 +492,6 @@ class SubCategorySelect extends Component {
   }
 
   renderSubcategory (data, onRegularSelectFxn) {
-    console.log('about to renderSubcategory, data is: ', data, ' , and onRegularResultFxn is: ', onRegularSelectFxn)
     return (
       <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={c.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
@@ -541,7 +520,6 @@ export const SubCategorySelectConnect = connect(state => ({
 
 class PayeeIcon extends Component {
   render () {
-    console.log('rendering PayeeIcon, this.props is: ', this.props)
     return (
       <View style={[b(), styles.modalHeaderIconWrapBottom]}>
         {this.renderIcon()}
@@ -550,7 +528,6 @@ class PayeeIcon extends Component {
   }
 
   renderIcon () {
-    console.log('rendering txDetails icon, this.props is: ', this.props)
     if (this.props.thumbnailPath) {
       return <Image source={{uri: this.props.thumbnailPath}} style={styles.payeeIcon} />
     } else {
@@ -570,7 +547,6 @@ class PayeeIcon extends Component {
 class ContactSearchResults extends Component {
 
   render () {
-    console.log('rendeirng ContactSearchResults, this.props is: ', this.props)
     let filteredArray = this.props.contacts.filter((entry) => {
       return (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0
     })
@@ -592,7 +568,6 @@ class ContactSearchResults extends Component {
   }
 
   renderResult = (data, onRegularSelectFxn) => {
-    console.log('rendering a result, data is: ', data, ' , and onRegularSelectFxn is: ', onRegularSelectFxn)
     let fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
 
     return (
