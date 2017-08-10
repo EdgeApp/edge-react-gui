@@ -212,7 +212,7 @@ class TransactionDetails extends Component {
 
   render () {
     return (
-      <ScrollView ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
+      <ScrollView keyboardShouldPersistTaps='handled' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
         <View style={[b(), styles.container]}>
           <View>
             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[b(), styles.expandedHeader]} colors={[c.gradient.light, c.gradient.dark]}>
@@ -427,7 +427,8 @@ class AmountArea extends Component {
             <TextInput
               onChangeText={this.props.onChangeNotesFxn}
               numberOfLines={3} defaultValue={this.props.info.notes || ''}
-              style={[styles.notesInput]} placeholderTextColor={'#CCCCCC'}
+              style={[styles.notesInput]}
+              placeholderTextColor={'#CCCCCC'}
               placeholder={sprintf(strings.enUS['transaction_details_notes_title'])}
               autoCapitalize='sentences'
               autoCorrect={false}
