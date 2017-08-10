@@ -43,7 +43,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   payeeNameInput: {
-    color: c.gray1,
+    color: c.gray2,
     fontSize: 17,
     height: 24,
     textAlign: 'center',
@@ -184,7 +184,7 @@ export default StyleSheet.create({
     height: 22,
     fontSize: 13,
     flex: 1,
-    color: c.gray1,
+    color: c.gray2,
     fontFamily: font.default
   },
   notesRow: {
@@ -201,7 +201,7 @@ export default StyleSheet.create({
     padding: 3
   },
   notesInput: {
-    color: c.gray1,
+    color: c.gray2,
     fontSize: 12,
     fontFamily: font.default
   },
