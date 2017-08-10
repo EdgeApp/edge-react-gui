@@ -426,6 +426,7 @@ class AmountArea extends Component {
           <View style={[styles.notesInputWrap]} >
             <TextInput
               onChangeText={this.props.onChangeNotesFxn}
+              multiline={true}
               numberOfLines={3} defaultValue={this.props.info.notes || ''}
               style={[styles.notesInput]}
               placeholderTextColor={'#CCCCCC'}
