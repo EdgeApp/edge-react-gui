@@ -208,7 +208,7 @@ export default StyleSheet.create({
   footerArea: {
     backgroundColor: c.gray4,
     paddingTop: 20,
-    height: 150,
+    height: 450,
     paddingLeft: 15,
     paddingRight: 15
   },
