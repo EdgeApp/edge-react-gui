@@ -378,7 +378,7 @@ class AmountArea extends Component {
             <T style={[b(), styles.editableFiatLeftText]} />
           </View>
           <View style={[b(), styles.editableFiatArea]}>
-            <TextInput autoCapitalize='none' autoCorrect={false} onChangeText={this.props.onChangeFiatFxn} style={[b(), styles.editableFiat]} keyboardType='numeric' placeholder={currencySymbol + ' '} value={this.props.fiatAmount.toString()} defaultValue={currencySymbol + ' '} />
+            <TextInput returnKeyType='done' autoCapitalize='none' autoCorrect={false} onChangeText={this.props.onChangeFiatFxn} style={[b(), styles.editableFiat]} keyboardType='numeric' placeholder={currencySymbol + ' '} value={this.props.fiatAmount.toString()} defaultValue={currencySymbol + ' '} />
           </View>
           <View style={[styles.editableFiatRight]}>
             <T style={[styles.editableFiatRightText]}>{this.props.fiatCurrencyCode}</T>
