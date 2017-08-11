@@ -30,6 +30,10 @@ Edge is:
 
   `npm install`
 
+4. CocoaPods Install
+
+  `cd ios && pod install`
+
 5. Run the app in debug mode
 
   `react-native run-ios` or `react-native run-android`
