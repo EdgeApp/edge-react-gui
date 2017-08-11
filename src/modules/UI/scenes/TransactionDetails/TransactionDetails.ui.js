@@ -212,7 +212,7 @@ class TransactionDetails extends Component {
 
   render () {
     return (
-      <ScrollView keyboardShouldPersistTaps='handled' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
+      <ScrollView keyboardDismissMode='on-drag' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
         <View style={[b(), styles.container]}>
           <View>
             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[b(), styles.expandedHeader]} colors={[c.gradient.light, c.gradient.dark]}>
@@ -426,7 +426,7 @@ class AmountArea extends Component {
           <View style={[styles.notesInputWrap]} >
             <TextInput
               onChangeText={this.props.onChangeNotesFxn}
-              multiline={true}
+              multiline
               numberOfLines={3} defaultValue={this.props.info.notes || ''}
               style={[styles.notesInput]}
               placeholderTextColor={'#CCCCCC'}
