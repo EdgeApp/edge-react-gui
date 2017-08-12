@@ -118,7 +118,7 @@ class TransactionDetails extends Component {
 
   onBlurNotes = (input) => {
     Keyboard.dismiss()
-    this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
+    // this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onNotesKeyboardReturn = () => {
@@ -348,10 +348,10 @@ class AmountArea extends Component {
     }
 
     if (this.props.info.direction === 'receive') {
-      feeSyntax = ''
+      feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], this.props.info.tx.networkFee)
       leftData = { color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income']) }
     } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)
+      feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], this.props.info.tx.networkFee)
       leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
     }
     let color = category.color

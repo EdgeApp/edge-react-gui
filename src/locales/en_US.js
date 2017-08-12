@@ -796,7 +796,7 @@ const strings = {
 
   // Transaction Details Page
   title_Transaction_Details: 'Transaction Details',
-  fragmet_tx_detail_mining_fee: '+ %u (Fee)',
+  fragment_tx_detail_mining_fee: '+ %u (Fee)',
 
   // Not new to react-gui (I don't think), not sure why at end of JSON
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
