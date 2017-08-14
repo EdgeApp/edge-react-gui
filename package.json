@@ -21,9 +21,9 @@
     "flow:0": "flow; exit 0",
     "flow": "flow",
     "flow:cover": "flow-coverage-report",
-    "precommit": "npm run lint",
-    "prepush": "npm run lint",
-    "test": "jest"
+    "precommit": "npm test",
+    "prepush": "npm test",
+    "test": "npm run lint && npm run flow && jest"
   },
   "jest": {
     "preset": "react-native"
