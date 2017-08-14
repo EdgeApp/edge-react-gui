@@ -22,7 +22,11 @@
     "flow": "flow",
     "flow:cover": "flow-coverage-report",
     "precommit": "npm run lint",
-    "prepush": "npm run lint"
+    "prepush": "npm run lint",
+    "test": "jest"
+  },
+  "jest": {
+    "preset": "react-native"
   },
   "rnpm": {
     "assets": [
@@ -113,12 +117,15 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
+    "babel-jest": "^20.0.3",
     "babel-preset-react-native": "^1.9.0",
     "eslint": "^3.11.1",
     "flow-bin": "^0.51.1",
     "flow-coverage-report": "github:rpl/flow-coverage-report#master",
     "husky": "^0.12.0",
+    "jest": "^20.0.4",
     "nyc": "^10.0.0",
+    "react-test-renderer": "^15.6.1",
     "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",
