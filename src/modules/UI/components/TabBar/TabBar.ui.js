@@ -42,7 +42,7 @@ class TabBar extends Component {
           <FooterTab>
 
             <Button
-              onPress={() => Actions.walletList()}
+              onPress={() => Actions.walletList({type: 'reset'})}
               active={this.props.routes.scene.name === 'walletList'}
             >
               <Image
@@ -53,7 +53,7 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={() => Actions.request()}
+              onPress={() => Actions.request({type: 'reset'})}
               active={this.props.routes.scene.name === 'request'}
             >
               <Image
@@ -64,7 +64,7 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={() => Actions.scan()}
+              onPress={() => Actions.scan({type: 'reset'})}
               active={this.props.routes.scene.name === 'scan'}
             >
               <Image

@@ -51,7 +51,7 @@ export const createWallet = (walletName, walletType) => {
 
     ACCOUNT_API.createWalletRequest(account, keys, walletType)
     .then((walletId) => {
-      Actions.walletList()
+      Actions.walletList({type: 'reset'})
       dispatch(LOGIN_ACTIONS.updateWallets())
     })
   }

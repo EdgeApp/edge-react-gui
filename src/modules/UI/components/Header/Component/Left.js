@@ -12,7 +12,7 @@ export default class Left extends Component {
       case 'directory':
         return <BackButton />
       case 'sendConfirmation':
-        return <BackButton syntax='Back' onPressFxn={e => Actions.scan()} />
+        return <BackButton syntax='Back' onPressFxn={e => Actions.scan({type: 'reset'})} />
       case 'createWallet':
         return <BackButton syntax='Cancel' />
       case 'transactionList':

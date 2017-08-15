@@ -224,13 +224,13 @@ class MainComponent extends Component {
   _handleOnPressRouting = (route) => {
     switch (route) {
       case 'settingsOverview':
-        Actions.settingsOverview()
+        Actions.settingsOverview({type: 'reset'})
         break
       case 'walletList':
-        Actions.walletList()
+        Actions.walletList({type: 'reset'})
         break
       case 'transactions':
-        Actions.transactionList()
+        Actions.transactionList({type: 'reset'})
         break
       default:
         null

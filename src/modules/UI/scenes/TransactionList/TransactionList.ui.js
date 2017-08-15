@@ -294,7 +294,7 @@ class TransactionList extends Component {
                       </TouchableOpacity>
                     )}
                 <View style={[styles.requestSendRow, b()]}>
-                  <TouchableHighlight onPress={() => Actions.request()}style={[styles.requestBox, styles.button]}>
+                  <TouchableHighlight onPress={() => Actions.request({type: 'reset'})}style={[styles.requestBox, styles.button]}>
                     <View style={[styles.requestWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
@@ -303,7 +303,7 @@ class TransactionList extends Component {
                       <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                  <TouchableHighlight onPress={() => Actions.scan({type: 'reset'})} style={[styles.sendBox, styles.button]}>
                     <View style={[styles.sendWrap]}>
                       <Image
                         style={{width: 25, height: 25}}

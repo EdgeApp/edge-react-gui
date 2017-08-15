@@ -139,7 +139,7 @@ export const signBroadcastAndSave = unsignedTransaction => {
     })
     .then(() => {
       dispatch(updateSpendPending(false))
-      Actions.transactionList()
+      Actions.transactionList({type: 'reset'})
       alertSyntax = { title: 'Transaction Sent', message: 'Your transaction has been successfully sent.' }
       dispatch(openABAlert(alertSyntax))
     })
