@@ -9,6 +9,9 @@ let logger = createLogger()
 
 if (__DEV__) {
   middleware = [...middleware, logger]
+
+  // Comment line below to reenable logger
+  middleware = [...middleware]
 } else {
   middleware = [...middleware]
 }
