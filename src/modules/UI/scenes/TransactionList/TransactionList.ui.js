@@ -359,10 +359,10 @@ class TransactionList extends Component {
       console.log('inside of tx.metadata.name conditional, this.props is: ', this.props)
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
-          console.log('element is: ', element)
+          // console.log('element is: ', element)
           return element.givenName === tx.metadata.name
         })
-        console.log('contact is now: ', contact)
+        // console.log('contact is now: ', contact)
         if (contact) {
           tx.thumbnailPath = contact.thumbnailPath
           tx.hasThumbnail = contact.hasThumbnail
