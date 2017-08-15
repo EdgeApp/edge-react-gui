@@ -30,7 +30,7 @@ class WalletListRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {
     // console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
-    Actions.transactionList({params: 'walletList'})
+    Actions.transactionList({type: 'reset', params: 'walletList'})
   }
 
   renderTokenRow = (metaTokenBalances) => {
