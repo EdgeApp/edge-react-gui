@@ -6,6 +6,11 @@ import Container from './modules/Container.ui'
 
 const store: {} = configureStore()
 
+if (!__DEV__) {
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  console.log = (...args) => {}
+}
+
 export default class App extends Component {
   render () {
     return (
