@@ -383,6 +383,7 @@ class TransactionDetails extends Component {
                 autoCorrect={false}
                 onSubmitEditing={this.onSubcategoriesKeyboardReturn}
                 placeholderTextColor={c.gray2}
+                initialNumToRender={8}
               />
             </View>
           </View>

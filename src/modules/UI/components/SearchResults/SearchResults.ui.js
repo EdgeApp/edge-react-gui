@@ -37,8 +37,8 @@ class SearchResults extends Component {
           style={[{width: '100%'}]}
           data={completedDataList}
           renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn)}
-          initialNumToRender={20}
-          scrollRenderAheadDistance={800}
+          initialNumToRender={this.props.initialNumToRender || 12}
+          scrollRenderAheadDistance={this.props.scrollRenderAheadDistance || 800}
           keyExtractor={this.props.keyExtractor}
           overScrollMode='never'
           keyboardShouldPersistTaps='handled'
