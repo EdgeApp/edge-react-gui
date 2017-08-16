@@ -570,6 +570,7 @@ class AmountArea extends Component {
               onBlur={this.props.onBlurNotes}
               onSubmitEditing={this.props.onBlurNotes}
               blurOnSubmit
+              onScroll={this.props.onBlurNotes}
             />
           </View>
         </View>
