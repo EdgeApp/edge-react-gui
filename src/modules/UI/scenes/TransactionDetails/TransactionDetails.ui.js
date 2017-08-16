@@ -121,6 +121,7 @@ class TransactionDetails extends Component {
     this.setState({
       notes: input
     })
+    console.log('in onChangeNotes')
   }
 
   onFocusNotes = (input) => {
@@ -128,11 +129,13 @@ class TransactionDetails extends Component {
   }
 
   onBlurNotes = (input) => {
+    console.log('executing onBlurNotes')
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onNotesKeyboardReturn = () => {
+    console.log('in onNotesKeyboardReturn')
     this.onBlurNotes()
   }
 
@@ -570,9 +573,9 @@ class AmountArea extends Component {
               autoCorrect={false}
               onFocus={this.props.onFocusNotes}
               onBlur={this.props.onBlurNotes}
-              onSubmitEditing={this.props.onBlurNotes}
-              blurOnSubmit
-              onScroll={this.props.onBlurNotes}
+              // onSubmitEditing={this.props.onBlurNotes}
+              blurOnSubmit={false}
+              onScroll={() => Keyboard.dismiss()}
             />
           </View>
         </View>
