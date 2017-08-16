@@ -10,19 +10,16 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   merchantMode: false,
   'BTC': {
-    denomination: 100000000
+    denomination: '100000000'
   },
   'ETH': {
-    denomination: 100000000
+    denomination: '1000000000000000000'
   },
   'REP': {
-    denomination: 100000000
+    denomination: '1000000000000000000'
   },
   'WINGS': {
-    denomination: 100000000
-  },
-  'LUN': {
-    denomination: 100000000
+    denomination: '1000000000000000000'
   }
 }
 

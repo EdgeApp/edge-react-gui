@@ -1,7 +1,9 @@
+// @flow
+
 import { combineReducers } from 'redux'
 import * as ACTION from './action'
 
-export const byId = (state = {}, action) => {
+export const byId = (state:any = {}, action:any) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPSERT_WALLET:
@@ -22,7 +24,7 @@ export const byId = (state = {}, action) => {
   }
 }
 
-export const activeWalletIds = (state = [], action) => {
+export const activeWalletIds = (state:any = [], action:any) => {
   const { type, data = {} } = action
   const { wallet } = data
   switch (type) {
@@ -36,7 +38,7 @@ export const activeWalletIds = (state = [], action) => {
   }
 }
 
-export const archivedWalletIds = (state = [], action) => {
+export const archivedWalletIds = (state:any = [], action:any) => {
   const { type, data = {} } = action
   const { wallet } = data
   switch (type) {
@@ -50,7 +52,7 @@ export const archivedWalletIds = (state = [], action) => {
   }
 }
 
-export const selectedWalletId = (state = '', action) => {
+export const selectedWalletId = (state:string = '', action:any) => {
   const { type, data = {} } = action
   const { walletId } = data
 
@@ -62,7 +64,7 @@ export const selectedWalletId = (state = '', action) => {
   }
 }
 
-export const selectedCurrencyCode = (state = '', action) => {
+export const selectedCurrencyCode = (state:string = '', action:any) => {
   const { type, data = {} } = action
   const { currencyCode } = data
 
@@ -75,9 +77,9 @@ export const selectedCurrencyCode = (state = '', action) => {
 }
 
 const schema = wallet => {
-  const id = wallet.id
-  const type = wallet.type
-  const name = wallet.name || 'no wallet name'
+  const id:string = wallet.id
+  const type:string = wallet.type
+  const name:string = wallet.name || 'no wallet name'
   const sortIndex = wallet.sortIndex
   const archived = wallet.archived
   const deleted = wallet.deleted
@@ -96,9 +98,9 @@ const schema = wallet => {
     allDenominations[currencyCode][denomination.multiplier] = denomination
   })
 
-  const balances = {}
+  const nativeBalances = {}
   // Add parent wallet balance to balances
-  balances[currencyCode] = wallet.getBalance({ currencyCode })
+  nativeBalances[currencyCode] = wallet.getBalance({ currencyCode })
   const currencyNames = {}
   currencyNames[currencyCode] = wallet.currencyInfo.currencyName
 
@@ -110,7 +112,7 @@ const schema = wallet => {
 
     // Add token balance to allBalances
     metaToken.balance = tokenBalance
-    balances[currencyCode] = tokenBalance
+    nativeBalances[currencyCode] = tokenBalance
     currencyNames[currencyCode] = currencyName
 
     // Add all token denominations to allDenominations
@@ -120,14 +122,14 @@ const schema = wallet => {
     })
   })
 
-  const balance = balances[currencyCode]
+  const primaryNativeBalance = nativeBalances[currencyCode]
 
   const newWallet = {
     id,
     type,
     name,
-    balance,
-    balances,
+    primaryNativeBalance,
+    nativeBalances,
     currencyNames,
     currencyCode,
     isoFiatCurrencyCode,

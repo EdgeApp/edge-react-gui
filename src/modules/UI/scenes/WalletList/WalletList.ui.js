@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   ActivityIndicator,
@@ -10,11 +12,13 @@ import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import {setContactList} from '../../contacts/action'
 import T from '../../components/FormattedText'
+import { bns } from 'biggystring'
 import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
+// $FlowFixMe: suppressing this error since module IS available
 import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
@@ -203,15 +207,20 @@ class WalletList extends Component {
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
-    for (var parentProp in this.props.wallets) {
-      for (var balanceProp in this.props.wallets[parentProp].balances) {
+    for (const parentProp in this.props.wallets) {
+      for (const balanceProp in this.props.wallets[parentProp].nativeBalances) {
         if (!temporaryTotalCrypto[balanceProp]) {
           temporaryTotalCrypto[balanceProp] = 0
         }
-        if (!isNaN(this.props.wallets[parentProp].balances[balanceProp])) {
-          // now to divide the amount by its multiplier
-          var denomMultiplier = this.props.wallets[parentProp].allDenominations[balanceProp][this.props.settings[balanceProp].denomination].multiplier
-          temporaryTotalCrypto[balanceProp] += (this.props.wallets[parentProp].balances[balanceProp] / denomMultiplier)
+        const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
+        if (nativeBalance && nativeBalance !== '0') {
+          const wallet = this.props.wallets[parentProp]
+          const currencyDenomination:string = wallet.allDenominations[balanceProp]
+          const currencySettings = this.props.settings[balanceProp]
+          const denomMultiplier:string = currencyDenomination[currencySettings.denomination]
+
+          const cryptoAmount:number = bns.divf(nativeBalance, denomMultiplier)
+          temporaryTotalCrypto[balanceProp] += cryptoAmount
         }
       }
     }
@@ -372,6 +381,8 @@ export const WalletNameInputConnect = connect(state => ({
 }))(WalletNameInput)
 
 class RenameWalletButtons extends Component {
+  state:any
+
   constructor (props) {
     super(props)
     this.state = {}
