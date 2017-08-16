@@ -240,6 +240,7 @@ class FlipInputInside extends Component {
                   color: getTextColor()
                 }
               ]}
+                selectionColor={'white'}
                 ref={'primaryInput'}
                 autoCorrect={false}
                 placeholder={primaryPlaceholder}
