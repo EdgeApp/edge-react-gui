@@ -1,7 +1,7 @@
 import HockeyApp from 'react-native-hockeyapp'
 import SplashScreen from 'react-native-splash-screen'
 import React, { Component } from 'react'
-import { View, StatusBar, Platform } from 'react-native'
+import { View, StatusBar, Platform, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { Scene, Router } from 'react-native-router-flux'
 import { Container, StyleProvider } from 'native-base'
@@ -30,7 +30,7 @@ import ABAlert from './UI/components/ABAlert'
 import TransactionAlert from './UI/components/TransactionAlert'
 
 import { updateExchangeRates } from './ExchangeRates/action.js'
-import { setDeviceDimensions } from './UI/dimensions/action'
+import { setDeviceDimensions, setKeyboardHeight } from './UI/dimensions/action'
 import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
 import { addContext, addUsernamesRequest } from './Core/Context/action.js'
@@ -70,6 +70,22 @@ class Main extends Component {
 
   componentWillMount () {
     HockeyApp.configure(HOCKEY_APP_ID, true)
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
+  }
+
+  componentWillUnmount () {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+  _keyboardDidShow = (e) => {
+    let keyboardHeight = e.endCoordinates.height
+    this.props.dispatch(setKeyboardHeight(keyboardHeight))
+  }
+
+  _keyboardDidHide = (e) => {
+    this.props.dispatch(setKeyboardHeight(0))
   }
 
   componentDidMount () {

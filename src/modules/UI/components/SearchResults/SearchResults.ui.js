@@ -3,6 +3,7 @@ import {
   FlatList,
   View
 } from 'react-native'
+import {connect} from 'react-redux'
 import style from './styles'
 
 class SearchResults extends Component {
@@ -19,13 +20,19 @@ class SearchResults extends Component {
   }
 
   render () {
+    let searchResultsHeight
     let completedDataList = this.props.regularArray.map((x, i) => {
       let newValue = x
       newValue.key = i
       return newValue
     })
+    if (this.props.dimensions.keyboardHeight) {
+      searchResultsHeight = this.props.height + this.props.dimensions.tabBarHeight - this.props.dimensions.keyboardHeight
+    } else {
+      searchResultsHeight = this.props.height
+    }
     return (
-      <View style={[style.searchResultsContainer, {backgroundColor: 'white', height: this.props.height, width: this.props.dimensions.deviceDimensions.width, top: this.props.dimensions.headerHeight + this.props.extraTopSpace, zIndex: 999}]}>
+      <View style={[style.searchResultsContainer, {backgroundColor: 'white', height: searchResultsHeight, width: this.props.dimensions.deviceDimensions.width, top: this.props.dimensions.headerHeight + this.props.extraTopSpace, zIndex: 999}]}>
         <FlatList
           style={[{width: '100%'}]}
           data={completedDataList}
@@ -51,4 +58,9 @@ SearchResults.propTypes = {
   usableHeight: PropTypes.number
 }
 
-export default SearchResults
+const mapStateToProps = state => ({
+  dimensions: state.ui.scenes.dimensions
+})
+
+export default connect(mapStateToProps)(SearchResults)
+
