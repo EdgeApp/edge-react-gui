@@ -348,6 +348,7 @@ class TransactionDetails extends Component {
                 defaultValue={this.state.name}
                 value={this.state.name}
                 placeholderTextColor={c.gray2}
+                returnKeyType={'done'}
               />
             </View>
           </View>
@@ -384,6 +385,7 @@ class TransactionDetails extends Component {
                 onSubmitEditing={this.onSubcategoriesKeyboardReturn}
                 placeholderTextColor={c.gray2}
                 initialNumToRender={8}
+                returnKeyType={'done'}
               />
             </View>
           </View>
