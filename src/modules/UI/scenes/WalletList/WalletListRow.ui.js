@@ -4,7 +4,10 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
   View,
-  TouchableHighlight
+  TouchableHighlight,
+  Animated,
+  Platform,
+  Easing
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
@@ -27,6 +30,52 @@ export const findDenominationSymbol = (denoms, value) => {
 }
 
 class WalletListRow extends Component {
+  constructor (props) {
+    super(props)
+
+    this._active = new Animated.Value(0)
+
+    this._style = {
+      ...Platform.select({
+        ios: {
+          transform: [{
+            scale: this._active.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1.1]
+            })
+          }],
+          shadowRadius: this._active.interpolate({
+            inputRange: [0, 1],
+            outputRange: [2, 10]
+          })
+        },
+
+        android: {
+          transform: [{
+            scale: this._active.interpolate({
+              inputRange: [0, 1],
+              outputRange: [1, 1.07]
+            })
+          }],
+          elevation: this._active.interpolate({
+            inputRange: [0, 1],
+            outputRange: [2, 6]
+          })
+        }
+      })
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (this.props.active !== nextProps.active) {
+      Animated.timing(this._active, {
+        duration: 300,
+        easing: Easing.bounce,
+        toValue: Number(nextProps.active)
+      }).start()
+    }
+  }
+
   _onPressSelectWallet = (walletId, currencyCode) => {
     // console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
@@ -46,41 +95,36 @@ class WalletListRow extends Component {
   }
 
   render () {
-    let id = this.props.data.id
-    let name = this.props.data.name || sprintf(strings.enUS['string_no_name'])
-    let symbol = findDenominationSymbol(this.props.data.denominations, this.props.data.currencyCode)
-    const currencyCode = this.props.data.currencyCode
-    const multiplier = this.props.multiplier
-
+    console.log('about to render, this is: ', this)
+    let walletData = this.props.data[0]
+    let id = walletData.id
+    let name = walletData.name || sprintf(strings.enUS['string_no_name'])
+    let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
+    const currencyCode = walletData.currencyCode
+    const multiplier = walletData.multiplier
+    console.log('walletData is: ', walletData, ' , name is: ', name)
     return (
-      <View>
-        <TouchableHighlight style={[styles.rowContainer]} underlayColor={'#eee'} delayLongPress={500} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(this.props.data.id, currencyCode)}>
-          <View style={[styles.rowContent]}>
+      <View style={[{flex: 1}, b('green')]}>
+        <TouchableHighlight style={[{width: 400}, styles.rowContainer]} underlayColor={'#eee'} delayLongPress={300} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
+          <View style={[styles.rowContent, {width: 350}]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
-            <View style={[styles.rowBalanceTextWrap, b()]}>
-              <T style={[styles.rowBalanceAmountText, b()]}>{this.props.data.balance / multiplier}</T>
-              <T style={[styles.rowBalanceDenominationText, b()]}>{this.props.data.currencyCode}
+            <View style={[styles.rowBalanceTextWrap]}>
+              <T style={[styles.rowBalanceAmountText]}>{walletData.balance / multiplier}</T>
+              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
-        {this.renderTokenRow(this.props.wallets[id].balances)}
       </View>
     )
   }
 }
 
 export default connect((state, ownProps) => {
-  const wallet = ownProps.data
-  const currencyCode = wallet.currencyCode
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const denomination = wallet.allDenominations[currencyCode][index]
-  const multiplier = denomination.multiplier
-
-  return {wallets: state.ui.wallets.byId, settings: state.ui.settings, denomination, multiplier}
+  return {wallets: state.ui.wallets.byId}
 })(WalletListRow)
 
 class WalletListTokenRow extends Component {

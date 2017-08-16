@@ -89,7 +89,7 @@ const border = (color) => {
   let borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
-    borderWidth: 0
+    borderWidth: 1
   }
 }
 

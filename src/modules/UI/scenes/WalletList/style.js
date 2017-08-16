@@ -109,6 +109,10 @@ module.exports = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  sortableWalletList: {
+    width: '100%',
+    flex: 1
+  },
   rowContainer: {
     flex: 1,
     height: 50,

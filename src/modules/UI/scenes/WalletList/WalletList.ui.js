@@ -19,6 +19,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
+import SortableList from 'react-native-sortable-list'
 import WalletListRow from './WalletListRow.ui'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -115,9 +116,16 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveSortableList = (data, order, label, renderRow, onRowMoved) => {
+  renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
+    console.log('rendering activeSortableList, data is: ', datum)
+    let data = {}
+    for (var props in datum) {
+      console.log('props is: ', props, ' data[props] is now: ', datum[props])
+      data[datum[props].sortIndex] = datum[props]
+    }
+    console.log('data is now: ', data)
     if (order) {
-      return <SortableListView style={styles.sortableWalletList} data={data} order={order} render={label} onRowMoved={this.onActiveRowMoved} renderRow={renderRow} />
+      return <SortableList style={styles.sortableWalletList} contentContainerStyle={[styles.rowContainer, b('red')]} data={data} order={order} render={label} onRowMoved={this.onActiveRowMoved} renderRow={() => this.renderActiveRow(data)} />
     }
   }
 
@@ -127,12 +135,13 @@ class WalletList extends Component {
     }
   }
 
-  renderActiveRow = row => {
-    return <WalletListRow data={row} archiveLabel='Archive' />
+  renderActiveRow = (data, active) => {
+    console.log('renderActiveRow, data is: ', data)
+    return <WalletListRow style={[{width: '100%'}, b()]} active={active} data={data} archiveLabel='Archive' />
   }
 
-  renderArchivedRow = row => {
-    return <WalletListRow data={row} archiveLabel='Restore' />
+  renderArchivedRow = data => {
+    return <WalletListRow data={data} archiveLabel='Restore' />
   }
 
   sortActiveWallets = (wallets) => {
