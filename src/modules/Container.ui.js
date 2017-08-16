@@ -35,13 +35,13 @@ import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
 import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 
-import { addBitcoinPlugin, addEthereumPlugin } from './UI/Settings/action.js'
+import { addCurrencyPlugin } from './UI/Settings/action.js'
 
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
 import * as PLUGINS from 'airbitz-exchange-plugins'
-import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
-import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
+// import { BitcoinPlugin } from 'airbitz-currency-bitcoin'
+import { EthereumPlugin } from 'airbitz-currency-ethereum'
 
 import {setLocaleInfo} from './UI/locale/action'
 
@@ -52,6 +52,11 @@ const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
+
+const currencyPlugins = [
+  EthereumPlugin
+]
+global.madeCurrencyPlugins = []
 
 class Main extends Component {
   constructor (props) {
@@ -65,6 +70,16 @@ class Main extends Component {
       loading: true,
       loginVisible: true,
       context: {}
+    }
+  }
+
+  async makeAllPlugins (io) {
+    if (global.madeCurrencyPlugins.length === 0) {
+      for (const plugin of currencyPlugins) {
+        const madePlugin = await plugin.makePlugin({io})
+        global.madeCurrencyPlugins.push(madePlugin)
+        this.props.dispatch(addCurrencyPlugin(madePlugin))
+      }
     }
   }
 
@@ -86,24 +101,20 @@ class Main extends Component {
       io.console.warn = (...rest) => { abcWarn('ABC_CORE', ...rest) }
       io.console.error = (...rest) => { abcError('ABC_CORE', ...rest) }
 
-      const bitcoinPlugin = makeBitcoinPlugin({io})
-      this.props.dispatch(addBitcoinPlugin(bitcoinPlugin))
+      this.makeAllPlugins(io).then(() => {
+        const context = makeContext({
+          plugins: Object.values(PLUGINS),
+          apiKey: AIRBITZ_API_KEY,
+          io
+        })
 
-      const ethereumPlugin = makeEthereumPlugin({io})
-      this.props.dispatch(addEthereumPlugin(ethereumPlugin))
-
-      const context = makeContext({
-        plugins: Object.values(PLUGINS),
-        apiKey: AIRBITZ_API_KEY,
-        io
+        this.props.dispatch(addContext(context))
+        this.props.dispatch(addUsernamesRequest(context))
+        this.setState({
+          context,
+          loading: false
+        }, () => { SplashScreen.hide() })
       })
-
-      this.props.dispatch(addContext(context))
-      this.props.dispatch(addUsernamesRequest(context))
-      this.setState({
-        context,
-        loading: false
-      }, () => { SplashScreen.hide() })
     })
     // Dummy dispatch to allow scenes to update mapStateToProps
     setInterval(() => { this.props.dispatch(updateExchangeRates()) }, 30000)

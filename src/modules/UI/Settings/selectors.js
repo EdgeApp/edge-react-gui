@@ -1,9 +1,11 @@
-export const getSettings = (state) => {
+// @flow
+
+export const getSettings = (state:any) => {
   const settings = state.ui.settings
   return settings
 }
 
-export const getDenominationIndex = (state, currencyCode) => {
+export const getDenominationIndex = (state:any, currencyCode:string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   let denominationIndex
@@ -13,24 +15,8 @@ export const getDenominationIndex = (state, currencyCode) => {
   return denominationIndex
 }
 
-export const getPlugins = (state) => {
+export const getPlugins = (state:any) => {
   const settings = getSettings(state)
   const plugins = settings.plugins
   return plugins
-}
-
-export const getPlugin = (state, type) => {
-  const plugins = getPlugins(state)
-  const plugin = plugins[type]
-  return plugin
-}
-
-export const getBitcoinPlugin = (state) => {
-  const bitcoinPlugin = getPlugin(state, 'bitcoin')
-  return bitcoinPlugin
-}
-
-export const getEthereumPlugin = (state) => {
-  const ethereumPlugin = getPlugin(state, 'ethereum')
-  return ethereumPlugin
 }

@@ -1,34 +1,40 @@
+// @flow
+
 // import { renameWalletStart } from ''
 
 import { makeCurrencyWallet } from 'airbitz-core-js'
-import { makeEthereumPlugin } from 'airbitz-currency-ethereum'
-import { makeBitcoinPlugin } from 'airbitz-currency-bitcoin'
 import { makeWalletCallbacks } from './callbacks.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 
-export const makeCurrencyWalletRequest = (keyInfo, dispatch, getState) => {
+export const makeCurrencyWalletRequest = (keyInfo:any, dispatch:any, getState:any) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const io = CORE_SELECTORS.getIO(state)
   const walletType = keyInfo.type.replace('wallet:', '').toLowerCase()
 
-  const bitcoinPlugin = makeBitcoinPlugin({ io })
-  const ethereumPlugin = makeEthereumPlugin({ io })
+  let matchingPlugin = null
 
-  let plugin
+  for (const madePlugin of global.madeCurrencyPlugins) {
+    for (const type of madePlugin.currencyInfo.walletTypes) {
+      if (walletType.replace('wallet:', '') === type.replace('wallet:', '')) {
+        matchingPlugin = madePlugin
+        break
+      }
+    }
+    if (matchingPlugin) {
+      break
+    }
+  }
 
-  if (walletType === ethereumPlugin.getInfo().walletTypes[0]) {
-    plugin = ethereumPlugin
-  } else if (walletType === 'bitcoin') {
-    plugin = bitcoinPlugin
-  } else {
+  if (!matchingPlugin) {
     throw (new Error('Wallets/api.js Invalid wallet type:' + walletType))
   }
+
   const walletId = keyInfo.id
   const callbacks = makeWalletCallbacks(dispatch, walletId)
   const opts = {
     account,
-    plugin,
+    plugin: matchingPlugin,
     callbacks,
     io
   }
@@ -36,14 +42,14 @@ export const makeCurrencyWalletRequest = (keyInfo, dispatch, getState) => {
   return makeCurrencyWallet(keyInfo, opts)
 }
 
-export const renameWalletRequest = (wallet, name) => {
+export const renameWalletRequest = (wallet:any, name:string) => {
   return wallet.renameWallet(name)
   .then(() => {
     Promise.resolve(wallet)
   })
 }
 
-export const activateWalletRequest = wallet => {
+export const activateWalletRequest = (wallet:any) => {
   return wallet.startEngine()
   .then(() => {
     wallet.archived = false
@@ -52,7 +58,7 @@ export const activateWalletRequest = wallet => {
   })
 }
 
-export const archiveWalletRequest = wallet => {
+export const archiveWalletRequest = (wallet:any) => {
   return wallet.stopEngine()
   .then(() => {
     wallet.archived = true
@@ -61,32 +67,33 @@ export const archiveWalletRequest = wallet => {
   })
 }
 
-export const getTransactions = (wallet, currencyCode) => {
+export const getTransactions = (wallet:any, currencyCode:string) => {
   return wallet.getTransactions({ currencyCode })
 }
 
-export const setTransactionDetailsRequest = (wallet, currencyCode, transactionDetails) => {
+export const setTransactionDetailsRequest = (wallet:any, currencyCode:string, transactionDetails:any) => {
   console.log('in api.setTransactionDetailsRequest: ', wallet, transactionDetails.id, currencyCode, transactionDetails)
   return wallet.saveTxMetadata(transactionDetails.id, currencyCode, transactionDetails)
 }
 
-export const getReceiveAddress = (wallet, currencyCode) => {
+export const getReceiveAddress = (wallet:any, currencyCode:string) => {
   return wallet.getReceiveAddress()
 }
 
-export const makeSpend = (wallet, spendInfo) => {
+export const makeSpend = (wallet:any, spendInfo:any) => {
   return wallet.makeSpend(spendInfo)
 }
 
-export const getBalance = (wallet, currencyCode) => {
+export const getBalance = (wallet:any, currencyCode:string) => {
   const balance = wallet.getBalance({ currencyCode })
   return balance
 }
 
-export const enableTokens = (wallet, tokens) => {
+export const enableTokens = (wallet:any, tokens:Array<string>) => {
+  // XXX need to hook up to Core -paulvp
   return wallet
 }
 
-export const parseURI = (wallet, uri) => {
+export const parseURI = (wallet:any, uri:string) => {
   return wallet.parseUri(uri)
 }
