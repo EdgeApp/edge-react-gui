@@ -34,6 +34,7 @@ class SearchResults extends Component {
           scrollRenderAheadDistance={800}
           keyExtractor={this.props.keyExtractor}
           overScrollMode='never'
+          keyboardShouldPersistTaps='handled'
         />
       </View>
     )

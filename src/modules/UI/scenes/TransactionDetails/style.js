@@ -6,7 +6,9 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'stretch',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    zIndex: 1,
+    backgroundColor: 'white'
   },
   expandedHeader: {
     height: 32,
@@ -43,7 +45,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   payeeNameInput: {
-    color: c.gray2,
+    color: c.gray1,
     fontSize: 17,
     height: 24,
     textAlign: 'center',
@@ -157,7 +159,13 @@ export default StyleSheet.create({
     paddingRight: 15,
     height: 44
   },
-
+  modalCategoryRow: {
+    paddingTop: 8,
+    flexDirection: 'row',
+    paddingLeft: 15,
+    paddingRight: 15,
+    height: 38
+  },
   categoryLeft: {
     borderRadius: 3,
     borderWidth: 1,
@@ -180,7 +188,17 @@ export default StyleSheet.create({
     alignItems: 'flex-start',
     flexDirection: 'row'
   },
+  modalCategoryInputArea: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: '#CCCCCC',
+    marginLeft: 11,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    flexDirection: 'row'
+  },
   categoryInput: {
+    paddingTop: 4,
     height: 22,
     fontSize: 13,
     flex: 1,

@@ -65,8 +65,9 @@ export const getTransactions = (wallet, currencyCode) => {
   return wallet.getTransactions({ currencyCode })
 }
 
-export const setTransactionDetailsRequest = (wallet, transactionDetails) => {
-  return wallet.saveTx(transactionDetails)
+export const setTransactionDetailsRequest = (wallet, currencyCode, transactionDetails) => {
+  console.log('in api.setTransactionDetailsRequest: ', wallet, transactionDetails.id, currencyCode, transactionDetails)
+  return wallet.saveTxMetadata(transactionDetails.id, currencyCode, transactionDetails)
 }
 
 export const getReceiveAddress = (wallet, currencyCode) => {

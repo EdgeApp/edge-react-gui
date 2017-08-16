@@ -237,10 +237,8 @@ class TransactionList extends Component {
     let dataSrc = ds.cloneWithRows(completedTxList)
     let logo
 
-    console.log('mt stuff, this.props.uiWallet.currencyCode: ', this.props.uiWallet.currencyCode, ' , this.props.selectedCurrencyCode: ', this.props.selectedCurrencyCode)
     if (this.props.uiWallet.currencyCode !== this.props.selectedCurrencyCode) {
       for (var metatoken of this.props.uiWallet.metaTokens) {
-        console.log('metatoken is: ', metatoken)
         if (metatoken.currencyCode === this.props.selectedCurrencyCode) {
           logo = metatoken.symbolImage
         }
@@ -248,7 +246,7 @@ class TransactionList extends Component {
     } else {
       logo = this.props.uiWallet.symbolImage
     }
-
+    console.log('rendering txList, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -294,7 +292,7 @@ class TransactionList extends Component {
                       </TouchableOpacity>
                     )}
                 <View style={[styles.requestSendRow, b()]}>
-                  <TouchableHighlight onPress={() => Actions.request({type: 'reset'})}style={[styles.requestBox, styles.button]}>
+                  <TouchableHighlight onPress={() => Actions.request()}style={[styles.requestBox, styles.button]}>
                     <View style={[styles.requestWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
@@ -303,7 +301,7 @@ class TransactionList extends Component {
                       <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight onPress={() => Actions.scan({type: 'reset'})} style={[styles.sendBox, styles.button]}>
+                  <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                     <View style={[styles.sendWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
@@ -342,7 +340,6 @@ class TransactionList extends Component {
     let txName = ''
     let txImage
 
-    tx.metadata.name = 'Kylan' // this will need to be removed
     if (tx.amountSatoshi < 0) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColorStyle = styles.accentRed
@@ -354,15 +351,15 @@ class TransactionList extends Component {
       txImage = receivedTypeImage
     }
 
-    console.log('tx.metadata.name is: ', tx.metadata.name)
+    console.log('tx.metadata: ', tx.metadata)
     if (tx.metadata.name) {
-      console.log('inside of tx.metadata.name conditional, this.props is: ', this.props)
+      console.log('inside of tx.metadata.name conditional, this.props is: ', this.props, ' and tx is: ', tx)
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
-          // console.log('element is: ', element)
+          console.log('element is: ', element)
           return element.givenName === tx.metadata.name
         })
-        // console.log('contact is now: ', contact)
+        console.log('contact is now: ', contact, ' tx is: ', tx)
         if (contact) {
           tx.thumbnailPath = contact.thumbnailPath
           tx.hasThumbnail = contact.hasThumbnail
@@ -379,7 +376,7 @@ class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, tx.currencyCode, tx)} style={[styles.singleTransaction, b()]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, b()]}>
           <View style={[styles.transactionInfoWrap, b()]}>
             <View style={styles.transactionLeft}>
               {tx.thumbnailPath ? (
@@ -391,7 +388,7 @@ class TransactionList extends Component {
                 />
               )}
               <View style={[styles.transactionLeftTextWrap, b()]}>
-                <T style={[styles.transactionPartner]}>{tx.metadata.payee || txName}</T>
+                <T style={[styles.transactionPartner]}>{tx.metadata.name || txName}</T>
                 <T style={[styles.transactionTime]}>{tx.time}</T>
               </View>
             </View>
