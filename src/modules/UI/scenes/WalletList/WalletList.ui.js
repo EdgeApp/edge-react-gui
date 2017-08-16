@@ -217,7 +217,7 @@ class WalletList extends Component {
           const wallet = this.props.wallets[parentProp]
           const currencyDenomination:string = wallet.allDenominations[balanceProp]
           const currencySettings = this.props.settings[balanceProp]
-          const denomMultiplier:string = currencyDenomination[currencySettings.denomination]
+          const denomMultiplier:string = currencyDenomination[currencySettings.denomination].multiplier
 
           const cryptoAmount:number = bns.divf(nativeBalance, denomMultiplier)
           temporaryTotalCrypto[balanceProp] += cryptoAmount
