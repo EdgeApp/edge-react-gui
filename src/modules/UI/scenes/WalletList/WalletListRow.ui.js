@@ -123,9 +123,7 @@ class WalletListRow extends Component {
   }
 }
 
-export default connect((state, ownProps) => {
-  return {wallets: state.ui.wallets.byId}
-})(WalletListRow)
+export default WalletListRow
 
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {
