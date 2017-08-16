@@ -376,7 +376,7 @@ class TransactionDetails extends Component {
                 blurOnSubmit
                 autoCapitalize='words'
                 onBlur={this.onExitSubcategories}
-                onChangeText={this.onChangeSubcategoryFxn}
+                onChangeText={this.onChangeSubcategory}
                 style={[styles.categoryInput]}
                 defaultValue={this.state.subCategory || ''}
                 placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
@@ -422,7 +422,6 @@ class TransactionDetails extends Component {
               <AmountAreaConnect
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
-                onChangeSubcategoryFxn={this.onChangeSubcategory}
                 onChangeFiatFxn={this.onChangeFiat}
                 info={this.state}
                 onPressFxn={this.onSaveTxDetails}
