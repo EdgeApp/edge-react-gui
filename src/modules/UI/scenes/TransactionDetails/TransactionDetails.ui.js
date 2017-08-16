@@ -381,7 +381,7 @@ class TransactionDetails extends Component {
                 defaultValue={this.state.subCategory || ''}
                 placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
                 autoCorrect={false}
-                onSubmitEditing={this.onSubcategoryKeyboardReturn}
+                onSubmitEditing={this.onSubcategoriesKeyboardReturn}
                 placeholderTextColor={c.gray2}
               />
             </View>
@@ -558,7 +558,8 @@ class AmountArea extends Component {
             <TextInput
               onChangeText={this.props.onChangeNotesFxn}
               multiline
-              numberOfLines={3} defaultValue={this.props.info.notes || ''}
+              numberOfLines={3}
+              defaultValue={this.props.info.notes || ''}
               style={[styles.notesInput]}
               placeholderTextColor={c.gray2}
               placeholder={sprintf(strings.enUS['transaction_details_notes_title'])}
