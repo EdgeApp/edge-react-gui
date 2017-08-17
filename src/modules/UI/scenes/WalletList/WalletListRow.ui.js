@@ -123,9 +123,21 @@ class WalletListRow extends Component {
   }
 }
 
-export default connect(state => ({
-  dimensions: state.ui.scenes.dimensions
-}))(WalletListRow)
+export default connect((state, ownProps) => {
+  const wallet = ownProps.data
+  const currencyCode = wallet.currencyCode
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const denomination = wallet.allDenominations[currencyCode][index]
+  const multiplier = denomination.multiplier
+
+  return {
+    wallets: state.ui.wallets.byId,
+    settings: state.ui.settings,
+    denomination,
+    multiplier,
+    dimensions: state.ui.scenes.dimensions
+  }
+})(WalletListRow)
 
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {
