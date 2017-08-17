@@ -1,6 +1,7 @@
 // @flow
 
 import { combineReducers } from 'redux'
+import { ABCDenomination, ABCMetaToken, GUIWallet } from '../../../types.js'
 import * as ACTION from './action'
 
 export const byId = (state:any = {}, action:any) => {
@@ -76,55 +77,59 @@ export const selectedCurrencyCode = (state:string = '', action:any) => {
   }
 }
 
-const schema = wallet => {
+function schema (wallet:any):GUIWallet {
   const id:string = wallet.id
   const type:string = wallet.type
   const name:string = wallet.name || 'no wallet name'
-  const sortIndex = wallet.sortIndex
-  const archived = wallet.archived
-  const deleted = wallet.deleted
+  const sortIndex:number = wallet.sortIndex
+  const archived:boolean = wallet.archived
+  const deleted:boolean = wallet.deleted
 
-  const currencyCode = wallet.currencyInfo.currencyCode
-  const fiatCurrencyCode = wallet.fiatCurrencyCode.replace('iso:', '')
-  const isoFiatCurrencyCode = wallet.fiatCurrencyCode
-  const symbolImage = wallet.currencyInfo.symbolImage
-  const metaTokens = wallet.currencyInfo.metaTokens
-  const denominations = wallet.currencyInfo.denominations
+  const currencyCode:string = wallet.currencyInfo.currencyCode
+  const fiatCurrencyCode:string = wallet.fiatCurrencyCode.replace('iso:', '')
+  const isoFiatCurrencyCode:string = wallet.fiatCurrencyCode
+  const symbolImage:string = wallet.currencyInfo.symbolImage
+  const metaTokens:Array<ABCMetaToken> = wallet.currencyInfo.metaTokens
+  const denominations:Array<ABCDenomination> = wallet.currencyInfo.denominations
 
-  const allDenominations = {}
-  allDenominations[currencyCode] = {}
+  let allDenominations: { [currencyCode: string]: { [denomination: string]: ABCDenomination } } = {}
+
+  // allDenominations[currencyCode] = {}
   // Add all parent wallet denominations to allDenominations
   denominations.forEach(denomination => {
-    allDenominations[currencyCode][denomination.multiplier] = denomination
+    let denomIndex:{[denomination: string]: ABCDenomination} = {}
+    denomIndex[denomination.multiplier] = denomination
+    allDenominations[currencyCode] = denomIndex
   })
 
-  const nativeBalances = {}
+  const nativeBalances: { [currencyCode: string]: string} = {}
   // Add parent wallet balance to balances
   nativeBalances[currencyCode] = wallet.getBalance({ currencyCode })
-  const currencyNames = {}
+  const currencyNames: { [currencyCode: string]: string} = {}
   currencyNames[currencyCode] = wallet.currencyInfo.currencyName
 
   metaTokens.forEach(metaToken => {
-    const currencyCode = metaToken.currencyCode
-    const currencyName = metaToken.currencyName
-    const tokenBalance = wallet.getBalance({ currencyCode })
-    const tokenDenominations = metaToken.denominations
+    const currencyCode:string = metaToken.currencyCode
+    const currencyName:string = metaToken.currencyName
+    const tokenBalance:string = wallet.getBalance({ currencyCode })
+    const tokenDenominations:Array<ABCDenomination> = metaToken.denominations
 
     // Add token balance to allBalances
-    metaToken.balance = tokenBalance
     nativeBalances[currencyCode] = tokenBalance
     currencyNames[currencyCode] = currencyName
 
     // Add all token denominations to allDenominations
-    allDenominations[currencyCode] = {}
+    // allDenominations[currencyCode] = {}
     tokenDenominations.forEach(denomination => {
-      allDenominations[currencyCode][denomination.multiplier] = denomination
+      let denomIndex:{[denomination: string]: ABCDenomination} = {}
+      denomIndex[denomination.multiplier] = denomination
+      allDenominations[currencyCode] = denomIndex
     })
   })
 
-  const primaryNativeBalance = nativeBalances[currencyCode]
+  const primaryNativeBalance:string = nativeBalances[currencyCode]
 
-  const newWallet = {
+  const newWallet = new GUIWallet(
     id,
     type,
     name,
@@ -141,7 +146,7 @@ const schema = wallet => {
     sortIndex,
     archived,
     deleted
-  }
+  )
 
   return newWallet
 }

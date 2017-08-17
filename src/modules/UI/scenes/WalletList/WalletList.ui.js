@@ -215,7 +215,7 @@ class WalletList extends Component {
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
         if (nativeBalance && nativeBalance !== '0') {
           const wallet = this.props.wallets[parentProp]
-          const currencyDenomination:string = wallet.allDenominations[balanceProp]
+          const currencyDenomination = wallet.allDenominations[balanceProp]
           const currencySettings = this.props.settings[balanceProp]
           const denomMultiplier:string = currencyDenomination[currencySettings.denomination].multiplier
 

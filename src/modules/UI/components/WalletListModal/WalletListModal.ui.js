@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react'
 import { View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import strings from '../../../../locales/default'
@@ -17,6 +19,7 @@ import * as Animatable from 'react-native-animatable'
 import {border as b, cutOffText} from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import {updateReceiveAddress} from '../../scenes/Request/action.js'
+import { bns } from 'biggystring'
 
 class WalletListModal extends Component {
   constructor (props) {
@@ -78,6 +81,7 @@ class WalletListModalBody extends Component {
 
   renderTokenRowContent = (parentId, currencyCode, balance) => {
     let multiplier = this.props.walletList[parentId].allDenominations[currencyCode][this.props.settings[currencyCode].denomination].multiplier
+    let cryptoAmount = bns.divf(balance, multiplier)
 
     return (
       <TouchableOpacity style={[styles.tokenRowContainer]}
@@ -92,53 +96,55 @@ class WalletListModalBody extends Component {
             <T style={[styles.currencyRowText]}>{currencyCode}</T>
           </View>
           <View style={[styles.currencyRowBalanceTextWrap]}>
-            <T style={[styles.currencyRowText]}>{balance / multiplier}</T>
+            <T style={[styles.currencyRowText]}>{ cryptoAmount }</T>
           </View>
         </View>
       </TouchableOpacity>
     )
   }
 
-  renderWalletRow = (wallet, i) => {
-    let multiplier = wallet.allDenominations[wallet.currencyCode][this.props.settings[wallet.currencyCode].denomination].multiplier
-    let symbol = wallet.allDenominations[wallet.currencyCode][multiplier].symbol
+  renderWalletRow = (guiWallet, i) => {
+    let multiplier = guiWallet.allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination].multiplier
+    let symbol = guiWallet.allDenominations[guiWallet.currencyCode][multiplier].symbol
+    let denomAmount = bns.divf(guiWallet.primaryNativeBalance, multiplier)
 
     return (
       <View key={i}>
         <TouchableOpacity style={[styles.rowContainer]}
           onPress={() => {
-            this.props.getTransactions(wallet.id, wallet.currencyCode)
+            this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet(wallet.id, wallet.currencyCode)
-            this.props.updateReceiveAddress(wallet.id, wallet.currencyCode)
+            this.props.selectWallet(guiWallet.id, guiWallet.currencyCode)
+            this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>
             <View style={[styles.currencyRowNameTextWrap]}>
-              <T style={[styles.currencyRowText]}>{cutOffText(wallet.name, 34)}</T>
+              <T style={[styles.currencyRowText]}>{cutOffText(guiWallet.name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>{symbol || ''} { wallet.balance / multiplier }</T>
+              <T style={[styles.currencyRowText]}>{symbol || ''} { denomAmount }</T>
             </View>
           </View>
         </TouchableOpacity>
 
-        {this.renderTokens(wallet.id, wallet.balances, wallet.currencyCode)}
+        {this.renderTokens(guiWallet.id, guiWallet.nativeBalances, guiWallet.currencyCode)}
       </View>
     )
+  }
+
+  renderWalletRows () {
+    for (let i = 0; i < this.props.walletList.length; i++) {
+      const guiWallet = this.props.walletList[i]
+      if (this.props.activeWalletIds.includes(guiWallet.id)) {
+        return this.renderWalletRow(guiWallet, i)
+      }
+    }
   }
 
   render () {
     console.log('rendering dropdown', this.props.selectedWalletId)
     return (
-      <View>
-        {
-          Object.values(this.props.walletList).map((wallet, i) => {
-            if (this.props.activeWalletIds.includes(wallet.id)) {
-              return this.renderWalletRow(wallet, i)
-            }
-          })
-        }
-      </View>
+      <View> { this.renderWalletRows() }</View>
     )
   }
 }

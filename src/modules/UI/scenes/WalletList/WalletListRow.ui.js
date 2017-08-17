@@ -2,6 +2,8 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
+import { bns } from 'biggystring'
+import { ABCDenomination, GUIWallet } from '../../../../types.js'
 import {
   View,
   TouchableHighlight
@@ -60,14 +62,16 @@ class WalletListRow extends Component {
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap, b()]}>
-              <T style={[styles.rowBalanceAmountText, b()]}>{this.props.data.balance / multiplier}</T>
+              <T style={[styles.rowBalanceAmountText, b()]}>{
+                bns.divf(this.props.data.primaryNativeBalance, multiplier)
+              }</T>
               <T style={[styles.rowBalanceDenominationText, b()]}>{this.props.data.currencyCode}
                 ({symbol || ''})</T>
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
-        {this.renderTokenRow(this.props.wallets[id].balances)}
+        {this.renderTokenRow(this.props.wallets[id].nativeBalances)}
       </View>
     )
   }
@@ -98,7 +102,9 @@ class WalletListTokenRow extends Component {
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
           </View>
           <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>{(this.props.balance / this.props.multiplier) || 0}</T>
+            <T style={[styles.tokenRowText]}>{
+              bns.divf(this.props.balance, this.props.multiplier) || '0'
+            }</T>
           </View>
         </View>
       </TouchableHighlight>
@@ -108,17 +114,17 @@ class WalletListTokenRow extends Component {
 
 WalletListTokenRow.propTypes = {
   currencyCode: PropTypes.string,
-  balance: PropTypes.number
+  balance: PropTypes.string
 }
 
 export const WalletListTokenRowConnect = connect((state, ownProps) => {
   const walletId = ownProps.parentId
   const currencyCode = ownProps.currencyCode
-  const wallet = UI_SELECTORS.getWallet(state, walletId)
-  let denomination = {}
-  let multiplier = 0
+  const wallet:GUIWallet = UI_SELECTORS.getWallet(state, walletId)
+  let denomination:ABCDenomination = {}
+  let multiplier:string = '0'
   if (wallet) {
-    const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+    const index:string = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
     denomination = wallet.allDenominations[currencyCode][index]
     multiplier = denomination.multiplier
   }

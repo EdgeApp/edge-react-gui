@@ -8,7 +8,7 @@ export const getSettings = (state:any) => {
 export const getDenominationIndex = (state:any, currencyCode:string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
-  let denominationIndex
+  let denominationIndex:string
   if (currencySettings) {
     denominationIndex = currencySettings.denomination
   }
