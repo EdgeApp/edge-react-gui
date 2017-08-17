@@ -35,6 +35,7 @@ import {
 } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {border as b} from '../../../utils'
+import {colors as c} from '../../../../theme/variables/airbitz'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
 
@@ -46,13 +47,11 @@ class WalletList extends Component {
   componentDidMount () {
     console.log('in WalletList->componentDidMount')
     Permissions.getPermissionStatus('contacts').then((response) => {
-      console.log('Contacts permission status on walletList is: ', response)
       if (response === 'authorized') {
         Contacts.getAll((err, contacts) => {
           if (err === 'denied') {
             // error
           } else {
-            console.log('all contacts: ', contacts)
             contacts.sort((a, b) => {
               return a.givenName > b.givenName
             })
@@ -77,7 +76,7 @@ class WalletList extends Component {
                 {sprintf(strings.enUS['fragment_wallets_balance_text'])}
               </T>
             </View>
-            <View style={[styles.currentBalanceBoxDollarsWrap, b('green')]}>
+            <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
               <T style={[styles.currentBalanceBoxDollars]}>
                 $ {this.tallyUpTotalCrypto()}
                 {/* {this.props.settings.defaultFiat} */}
@@ -93,7 +92,7 @@ class WalletList extends Component {
           }} end={{
             x: 1,
             y: 0
-          }} style={[styles.walletsBoxHeaderWrap]} colors={['#3B7ADA', '#2B5698']}>
+          }} style={[styles.walletsBoxHeaderWrap]} colors={[c.gradient.light, c.gradient.dark]}>
             <View style={[styles.walletsBoxHeaderTextWrap, b()]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon, b()]} color='white' />
@@ -154,11 +153,11 @@ class WalletList extends Component {
   }
 
   renderActiveRow = (data, active) => {
-    return <WalletListRow active={active} data={data.data} archiveLabel='Archive' />
+    return <WalletListRow active={active} data={data.data} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
   }
 
   renderArchivedRow = data => {
-    return <WalletListRow data={data} archiveLabel='Restore' />
+    return <WalletListRow data={data} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized'])} />
   }
 
   sortActiveWallets = (wallets) => {
@@ -219,10 +218,6 @@ class WalletList extends Component {
       headerSubtext={this.props.walletName} modalMiddle={< WalletNameInputConnect />}
       modalBottom={< RenameWalletButtonsConnect />} walletId={this.props.walletId}
       visibilityBoolean={this.props.renameWalletModalVisible} />
-  }
-
-  checkIndexIsEven = (n) => {
-    return n % 2 === 0
   }
 
   tallyUpTotalCrypto = () => {
@@ -291,7 +286,7 @@ export default connect((mapStateToProps), (mapDispatchToProps))(WalletList)
 
 class DeleteIcon extends Component {
   render () {
-    return <FAIcon name='trash-o' size={24} color='#2A5799' style={[{
+    return <FAIcon name='trash-o' size={24} color={c.primary} style={[{
       position: 'relative',
       top: 12,
       left: 14,
@@ -318,7 +313,9 @@ class DeleteSubtext extends Component {
     )
   }
 }
-export const DeleteSubtextConnect = connect(state => ({currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted}))(DeleteSubtext)
+export const DeleteSubtextConnect = connect(state => ({
+  currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted
+}))(DeleteSubtext)
 
 class DeleteWalletButtons extends Component {
   _onCancelDeleteModal = () => {
@@ -360,7 +357,7 @@ export const DeleteWalletButtonsConnect = connect(state => ({}))(DeleteWalletBut
 
 class AddressIcon extends Component {
   render () {
-    return <MAIcon name='edit' size={24} color='#2A5799' style={[{
+    return <MAIcon name='edit' size={24} color={c.primary} style={[{
       position: 'relative',
       top: 12,
       left: 14,
@@ -413,7 +410,7 @@ class RenameWalletButtons extends Component {
 
   render () {
     return (
-      <View style={[styles.buttonsWrap, b('gray')]}>
+      <View style={[styles.buttonsWrap, b()]}>
 
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
