@@ -27,8 +27,9 @@ export const SET_WINGS_DENOMINATION = PREFIX + 'SET_WINGS_DENOMINATION'
 export const SET_LUN_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
 
 // Plugins
-export const ADD_BITCOIN_PLUGIN = PREFIX + 'ADD_BITCOIN_PLUGIN'
-export const ADD_ETHEREUM_PLUGIN = PREFIX + 'ADD_ETHEREUM_PLUGIN'
+// export const ADD_BITCOIN_PLUGIN = PREFIX + 'ADD_BITCOIN_PLUGIN'
+// export const ADD_ETHEREUM_PLUGIN = PREFIX + 'ADD_ETHEREUM_PLUGIN'
+export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
 export const updateSettings = settings => {
   return {
@@ -148,16 +149,9 @@ export const setLUNDenomination = denomination => {
 }
 
 // Plugins
-export const addBitcoinPlugin = (plugin) => {
+export const addCurrencyPlugin = (plugin) => {
   return {
-    type: ADD_BITCOIN_PLUGIN,
-    data: { plugin: plugin }
-  }
-}
-
-export const addEthereumPlugin = (plugin) => {
-  return {
-    type: ADD_ETHEREUM_PLUGIN,
+    type: ADD_CURRENCY_PLUGIN,
     data: { plugin: plugin }
   }
 }

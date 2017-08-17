@@ -198,7 +198,6 @@ const loadSettings = () => {
 
       dispatch(SETTINGS_ACTIONS.setREPDenomination(syncFinal.REP.denomination))
       dispatch(SETTINGS_ACTIONS.setWINGSDenomination(syncFinal.WINGS.denomination))
-      dispatch(SETTINGS_ACTIONS.setLUNDenomination(syncFinal.LUN.denomination))
     })
 
     SETTINGS_API.getLocalSettings(account)

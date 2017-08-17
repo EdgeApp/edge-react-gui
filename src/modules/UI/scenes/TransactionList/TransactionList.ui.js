@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
+import { bns } from 'biggystring'
 import PropTypes from 'prop-types'
 import {
   TextInput,
@@ -246,6 +247,7 @@ class TransactionList extends Component {
     } else {
       logo = this.props.uiWallet.symbolImage
     }
+    const cryptoAmount:string = bns.divf(this.props.balanceInCrypto, this.props.multiplier)
     console.log('rendering txList, this.props is: ', this.props, ' , and this.state is: ', this.state)
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
@@ -277,11 +279,11 @@ class TransactionList extends Component {
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.selectedCurrencyCode} {((this.props.balanceInCrypto / this.props.multiplier)) || '0'}
+                                {this.props.selectedCurrencyCode} {(cryptoAmount) || '0'}
                               </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
-                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {(this.props.balanceInFiat / this.props.multiplier).toFixed(2)}</T>
+                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}</T>
                             </View>
                           </View>
                         ) : (
@@ -407,8 +409,8 @@ TransactionList.propTypes = {
   transactionsList: PropTypes.array,
   searchVisible: PropTypes.bool,
   contactsList: PropTypes.array,
-  balanceInCrypto: PropTypes.number,
-  multiplier: PropTypes.number
+  balanceInCrypto: PropTypes.string,
+  multiplier: PropTypes.string
 }
 
 const mapStateToProps = (state) => {
@@ -418,12 +420,13 @@ const mapStateToProps = (state) => {
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto = wallet.balances[currencyCode]
-  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCrypto)
+  const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const transactions = UI_SELECTORS.getTransactions(state)
   const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
   const denomination = wallet.allDenominations[currencyCode][index]
   const multiplier = denomination.multiplier
+  const balanceInCryptoDisplay = bns.divf(balanceInCrypto, multiplier)
+  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,

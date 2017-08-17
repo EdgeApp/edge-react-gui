@@ -112,28 +112,25 @@ export const settings = (state = initialState, action) => {
       }
     }
 
-    case ACTION.ADD_BITCOIN_PLUGIN: {
+    case ACTION.ADD_CURRENCY_PLUGIN: {
       const { plugin } = data
       const { plugins } = state
-      return {
-        ...state,
-        plugins: {
-          ...plugins,
-          bitcoin: plugin
-        }
-      }
-    }
+      const pluginName = plugin.pluginName
 
-    case ACTION.ADD_ETHEREUM_PLUGIN: {
-      const { plugin } = data
-      const { plugins } = state
-      return {
+      const out = {
         ...state,
         plugins: {
-          ...plugins,
-          ethereum: plugin
+          ...plugins
         }
       }
+
+      // Add the plugin both to an array and to an object (map) for easy lookup
+      if (typeof out.plugins.arrayPlugins === 'undefined') {
+        out.plugins.arrayPlugins = []
+      }
+      out.plugins.arrayPlugins.push(plugins)
+      out.plugins[pluginName] = plugin
+      return out
     }
 
     default:
