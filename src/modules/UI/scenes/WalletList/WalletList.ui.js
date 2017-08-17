@@ -103,7 +103,7 @@ class WalletList extends Component {
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, b('red'), {width: 35}]}
+            <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, b(), {width: 35}]}
               onPress={() => Actions.createWallet()}>
               <Ionicon name='md-add' style={[styles.dropdownIcon, b()]} color='white' />
             </TouchableOpacity>
@@ -117,27 +117,48 @@ class WalletList extends Component {
   }
 
   renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
-    console.log('rendering activeSortableList, data is: ', datum)
+    console.log('rendering activeSortableList, datum is: ', datum, ' , data1 is: ', data, ' , and order is: ', order)
     let data = {}
     for (var props in datum) {
-      console.log('props is: ', props, ' data[props] is now: ', datum[props])
+      console.log('props is: ', props, ' datum[props] is now: ', datum[props])
       data[datum[props].sortIndex] = datum[props]
     }
-    console.log('data is now: ', data)
+    console.log('data1 is now: ', data)
     if (order) {
-      return <SortableList style={styles.sortableWalletList} contentContainerStyle={[styles.rowContainer, b('red')]} data={data} order={order} render={label} onRowMoved={this.onActiveRowMoved} renderRow={() => this.renderActiveRow(data)} />
+      return (
+        <View style={[{flex: 1, flexDirection: 'column'}]}>
+          <SortableList
+            rowActivationTime={20}
+            style={[styles.sortableWalletList, {flexDirection: 'row'}]}
+            contentContainerStyle={[styles.sortableWalletList]}
+            data={data}
+            render={label}
+            onRowMoved={this.onActiveRowMoved}
+            renderRow={this.renderActiveRow}
+          />
+        </View>
+      )
     }
   }
 
   renderArchivedSortableList = (data, order, label, renderRow, onRowMoved) => {
     if (order) {
-      return <SortableListView style={styles.sortableWalletList} data={data} order={order} render={label} onRowMoved={this.onArchivedRowMoved} renderRow={renderRow} />
+      return (
+        <SortableListView
+          style={styles.sortableWalletList}
+          data={data}
+          order={order}
+          render={label}
+          onRowMoved={this.onArchivedRowMoved}
+          renderRow={renderRow}
+        />
+      )
     }
   }
 
   renderActiveRow = (data, active) => {
-    console.log('renderActiveRow, data is: ', data)
-    return <WalletListRow style={[{width: '100%'}, b()]} active={active} data={data} archiveLabel='Archive' />
+    console.log('renderActiveRow, data is: ', data, ' and this is: ', this)
+    return <WalletListRow active={active} data={data.data} archiveLabel='Archive' />
   }
 
   renderArchivedRow = data => {

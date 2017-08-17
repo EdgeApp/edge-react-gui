@@ -82,21 +82,10 @@ class WalletListRow extends Component {
     Actions.transactionList({type: 'reset', params: 'walletList'})
   }
 
-  renderTokenRow = (metaTokenBalances) => {
-    var tokens = []
-    for (var property in metaTokenBalances) {
-      if (property !== this.props.data.currencyCode) {
-        tokens.push(
-          <WalletListTokenRowConnect parentId={this.props.data.id}
-            currencyCode={property} key={property} balance={metaTokenBalances[property]} />)
-      }
-    }
-    return tokens
-  }
-
   render () {
     console.log('about to render, this is: ', this)
-    let walletData = this.props.data[0]
+    const {datae} = this.props
+    let walletData = data
     let id = walletData.id
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
@@ -104,9 +93,9 @@ class WalletListRow extends Component {
     const multiplier = walletData.multiplier
     console.log('walletData is: ', walletData, ' , name is: ', name)
     return (
-      <View style={[{flex: 1}, b('green')]}>
-        <TouchableHighlight style={[{width: 400}, styles.rowContainer]} underlayColor={'#eee'} delayLongPress={300} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
-          <View style={[styles.rowContent, {width: 350}]}>
+      <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
+        <TouchableHighlight style={[styles.rowContainer]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
+          <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
@@ -118,12 +107,27 @@ class WalletListRow extends Component {
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
-      </View>
+        {this.renderTokenRow(walletData.balances)}
+      </Animated.View>
     )
+  }
+
+  renderTokenRow = (metaTokenBalances) => {
+    var tokens = []
+    for (var property in metaTokenBalances) {
+      if (property !== this.props.data.currencyCode) {
+        tokens.push(
+          <WalletListTokenRowConnect parentId={this.props.data.id}
+            currencyCode={property} key={property} balance={metaTokenBalances[property]} />)
+      }
+    }
+    return tokens
   }
 }
 
-export default WalletListRow
+export default connect(state => ({
+  dimensions: state.ui.scenes.dimensions
+}))(WalletListRow)
 
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {

@@ -110,7 +110,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   sortableWalletList: {
-    width: '100%',
+    flexDirection: 'row',
     flex: 1
   },
   rowContainer: {
