@@ -117,13 +117,10 @@ class WalletList extends Component {
   }
 
   renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
-    console.log('rendering activeSortableList, datum is: ', datum, ' , data1 is: ', data, ' , and order is: ', order)
     let data = {}
     for (var props in datum) {
-      console.log('props is: ', props, ' datum[props] is now: ', datum[props])
       data[datum[props].sortIndex] = datum[props]
     }
-    console.log('data1 is now: ', data)
     if (order) {
       return (
         <View style={[{flex: 1, flexDirection: 'column'}]}>
@@ -157,7 +154,6 @@ class WalletList extends Component {
   }
 
   renderActiveRow = (data, active) => {
-    console.log('renderActiveRow, data is: ', data, ' and this is: ', this)
     return <WalletListRow active={active} data={data.data} archiveLabel='Archive' />
   }
 
@@ -209,8 +205,6 @@ class WalletList extends Component {
     const newOrder = [].concat(order)
     newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
 
-    console.log('order', order)
-    console.log('newOrder', newOrder)
     return newOrder
   }
 
@@ -386,8 +380,8 @@ class WalletNameInput extends Component {
 
   render () {
     return (
-      <View style={[styles.nameInputWrap, b('orange')]}>
-        <TextInput style={[styles.nameInput, b('red')]}
+      <View style={[styles.nameInputWrap, b()]}>
+        <TextInput style={[styles.nameInput, b()]}
           onChangeText={(input) => this._onNameInputChange(input)}
           defaultValue={this.props.currentWalletBeingRenamed} autoFocus />
       </View>

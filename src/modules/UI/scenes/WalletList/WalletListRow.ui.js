@@ -21,7 +21,6 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 export const findDenominationSymbol = (denoms, value) => {
-  // console.log('in findDenominationSymbol, denoms is: ' , denoms, ' , and value is : ', value)
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -77,21 +76,18 @@ class WalletListRow extends Component {
   }
 
   _onPressSelectWallet = (walletId, currencyCode) => {
-    // console.log('selecting wallet with walletId: ' , walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList({type: 'reset', params: 'walletList'})
   }
 
   render () {
-    console.log('about to render, this is: ', this)
-    const {datae} = this.props
+    const {data} = this.props
     let walletData = data
     let id = walletData.id
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     const currencyCode = walletData.currencyCode
     const multiplier = walletData.multiplier
-    console.log('walletData is: ', walletData, ' , name is: ', name)
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
         <TouchableHighlight style={[styles.rowContainer]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
@@ -131,7 +127,6 @@ export default connect(state => ({
 
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {
-    console.log('selecting wallet with walletId: ', walletId, ' and currencyCode: ', currencyCode)
     this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList({type: 'reset', params: 'walletList'})
   }
