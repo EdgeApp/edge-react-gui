@@ -35,7 +35,7 @@ import {
 } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {border as b} from '../../../utils'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
 
