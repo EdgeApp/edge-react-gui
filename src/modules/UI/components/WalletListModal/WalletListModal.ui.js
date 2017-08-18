@@ -144,7 +144,7 @@ class WalletListModalBody extends Component {
   render () {
     console.log('rendering dropdown', this.props.selectedWalletId)
     return (
-      <View> { this.renderWalletRows() }</View>
+      <View>{ this.renderWalletRows() }</View>
     )
   }
 }
