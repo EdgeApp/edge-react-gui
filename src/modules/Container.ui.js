@@ -20,7 +20,7 @@ import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import CreateWallet from './UI/scenes/CreateWallet/index.js'
 import {SettingsOverview, BTCSettings, ETHSettings} from './UI/scenes/Settings'
 
-import Login from './UI/scenes/Login/index.js'
+import { LoginScreen } from 'airbitz-core-js-ui'
 import Locale from 'react-native-locale'
 import SideMenu from './UI/components/SideMenu/SideMenu.ui'
 import Header from './UI/components/Header/Header.ui'
@@ -155,17 +155,12 @@ class Main extends Component {
 
     if (this.state.loginVisible) {
       return (
-        <Login
+        <LoginScreen
           callbacks={makeAccountCallbacks(this.props.dispatch)}
           context={this.state.context}
-          onLoggedIn={account => {
+          onLogin={(error = null, account) => {
             this.props.dispatch(initializeAccount(account))
             this.setState({ loginVisible: false })
-          }}
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center'
           }}
         />
       )
