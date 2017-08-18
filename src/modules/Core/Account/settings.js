@@ -1,3 +1,5 @@
+import {subcategories} from './subcategories.js'
+
 // Default Core Settings
 export const CORE_DEFAULTS = {
   otpMode: false,
@@ -21,6 +23,10 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   'WINGS': {
     denomination: '1000000000000000000'
   }
+}
+
+export const SYNCED_SUBCATEGORIES_DEFAULTS = {
+  subcategories: subcategories
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {
@@ -91,6 +97,13 @@ export const setBluetoothModeRequest = (account, bluetoothMode) => {
   })
 }
 
+export const setSubcategoriesRequest = (account, subcategories) => {
+  return getSyncedSubcategories(account)
+  .then(subcategories => {
+    return setSyncedSubcategories(account, subcategories)
+  })
+}
+
 // Bitcoin Settings
 export const setBitcoinDenominationRequest = (account, denomination) => {
   return getSyncedSettings(account)
@@ -132,6 +145,28 @@ export const setSyncedSettings = (account, settings) => {
   return SettingsFile.setText(text)
 }
 
+export const getSyncedSubcategories = account => {
+  return getSyncedSubcategoriesFile(account).getText()
+  .then(text => {
+    return JSON.parse(text)
+  })
+  .catch(e => {
+    console.log(e)
+    // If Settings.json doesn't exist yet, create it, and return it
+    return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
+    .then(() => {
+      return SYNCED_SUBCATEGORIES_DEFAULTS
+    })
+  })
+}
+
+export const setSyncedSubcategories = (account, subcategories) => {
+  const text = JSON.stringify(subcategories)
+  const SubcategoriesFile = getSyncedSettingsFile(account)
+
+  return SubcategoriesFile.setText(text)
+}
+
 export const getLocalSettings = account => {
   return getLocalSettingsFile(account).getText()
   .then(text => {
@@ -164,6 +199,10 @@ export const getCoreSettings = account => {
 
 export const getSyncedSettingsFile = account => {
   return account.folder.file('Settings.json')
+}
+
+export const getSyncedSubcategoriesFile = account => {
+  return account.folder.file('subcategories.js')
 }
 
 export const getLocalSettingsFile = account => {

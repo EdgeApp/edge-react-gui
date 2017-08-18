@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 import scan from './Scan/reducer'
 import sendConfirmation from './SendConfirmation/reducer'
 import transactionList from './TransactionList/reducer'
+import transactionDetails from './TransactionDetails/reducer'
 import walletList from './WalletList/reducer'
 import walletTransferListReducer from './WalletTransferList/reducer'
 import request from './Request/reducer.js'
@@ -31,5 +32,6 @@ export const scenes = combineReducers({
   helpModal,
   transactionAlert,
   exchangeRate,
-  ABAlert
+  ABAlert,
+  transactionDetails
 })

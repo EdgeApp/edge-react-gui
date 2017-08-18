@@ -28,9 +28,9 @@ import LinearGradient from 'react-native-linear-gradient'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 import {border as b, limitFiatDecimals, getFiatSymbol} from '../../../utils'
-import { setTransactionDetails } from './action.js'
+import { setTransactionDetails, setNewSubcategory } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
-import { subcategories as subcats } from './subcategories.temp'
+import { subcategories as subcats } from '../../../Core/Account/subcategories.js'
 import SearchResults from '../../components/SearchResults'
 import { openHelpModal } from '../../components/HelpModal/actions'
 
@@ -173,6 +173,9 @@ class TransactionDetails extends Component {
             category: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
+          if (subcats.indexOf(input) === -1) { // if this is a new subcategory
+            this.addNewSubcategory(input)
+          }
         } else {
           this.setState({
             subCategory: input
@@ -188,6 +191,10 @@ class TransactionDetails extends Component {
     this._toggleSubcategoryVisibility()
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
+  }
+
+  addNewSubcategory = (newSubcategory) => {
+    this.props.dispatch(setNewSubcategory(newSubcategory, subcats))
   }
 
   onEnterCategories = () => {
