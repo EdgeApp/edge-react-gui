@@ -89,7 +89,7 @@ class WalletListRow extends Component {
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     const currencyCode = walletData.currencyCode
-    const multiplier = walletData.multiplier
+    const multiplier = this.props.multiplier
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
         <TouchableHighlight style={[styles.rowContainer]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
