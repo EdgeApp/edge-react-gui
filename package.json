@@ -34,7 +34,6 @@
     ]
   },
   "dependencies": {
-    "airbitz-core-js": "git+ssh://git@github.com/Airbitz/airbitz-core-js.git",
     "airbitz-core-js-ui": "git+ssh://git@github.com/Airbitz/airbitz-core-js-ui.git#react-native",
     "airbitz-core-react-native": "git+ssh://git@github.com/airbitz/airbitz-core-react-native.git",
     "airbitz-currency-bitcoin": "git+ssh://git@github.com/Airbitz/airbitz-currency-bitcoin.git",
