@@ -79,7 +79,7 @@ class WalletListRow extends Component {
 
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.dispatch(selectWallet(walletId, currencyCode))
-    Actions.transactionList({type: 'reset', params: 'walletList'})
+    Actions.transactionList({ params: 'walletList' })
   }
 
   render () {
@@ -142,7 +142,7 @@ export default connect((state, ownProps) => {
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.dispatch(selectWallet(walletId, currencyCode))
-    Actions.transactionList({type: 'reset', params: 'walletList'})
+    Actions.transactionList({params: 'walletList'})
   }
 
   render () {
