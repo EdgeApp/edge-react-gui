@@ -36,14 +36,13 @@ export const selectFiat = (fiat:string) => {
 export const createWallet = (walletName:string, walletType:string) => {
   return (dispatch:any, getState:any) => {
     const state = getState()
-
     const account = CORE_SELECTORS.getAccount(state)
     const plugins = SETTINGS_SELECTORS.getPlugins(state)
-
+    const formattedWalletType = walletType.replace('wallet:', '').toLowerCase()
     let matchingPlugin = null
     for (const madePlugin of plugins.arrayPlugins) {
       for (const type of madePlugin.currencyInfo.walletTypes) {
-        if (walletType.replace('wallet:', '') === type.replace('wallet:', '')) {
+        if (formattedWalletType === type.replace('wallet:', '')) {
           matchingPlugin = madePlugin
           break
         }
@@ -54,15 +53,15 @@ export const createWallet = (walletName:string, walletType:string) => {
     }
 
     if (!matchingPlugin) {
-      throw (new Error('Wallets/api.js Invalid wallet type:' + walletType))
+      throw (new Error('Wallets/api.js Invalid wallet type:' + formattedWalletType))
     }
 
-    const privateKeys = matchingPlugin.createPrivateKey(walletType)
-    const walletInfo = { keys: privateKeys, type: walletType }
+    const privateKeys = matchingPlugin.createPrivateKey(formattedWalletType)
+    const walletInfo = { keys: privateKeys, type: formattedWalletType }
     const publicKeys = matchingPlugin.derivePublicKey(walletInfo)
     const keys = Object.assign({}, privateKeys, publicKeys)
 
-    ACCOUNT_API.createWalletRequest(account, keys, walletType)
+    ACCOUNT_API.createWalletRequest(account, keys, formattedWalletType)
     .then((walletId) => {
       Actions.walletList({type: 'reset'})
       dispatch(LOGIN_ACTIONS.updateWallets())

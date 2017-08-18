@@ -35,15 +35,22 @@ import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
 import { initializeAccount } from './Login/action.js'
 import { addContext, addUsernamesRequest } from './Core/Context/action.js'
 
+import {setHeaderHeight} from './UI/dimensions/action.js'
+
 import { addCurrencyPlugin } from './UI/Settings/action.js'
 
 import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
-import * as PLUGINS from 'airbitz-exchange-plugins'
+import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
 // import { BitcoinPlugin } from 'airbitz-currency-bitcoin'
 import { EthereumPlugin } from 'airbitz-currency-ethereum'
+const currencyPlugins = [
+  EthereumPlugin
+]
+global.madeCurrencyPlugins = []
 
 import {setLocaleInfo} from './UI/locale/action'
+const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 import styles from './style.js'
 
@@ -53,18 +60,9 @@ const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
 
-const currencyPlugins = [
-  EthereumPlugin
-]
-global.madeCurrencyPlugins = []
-
 class Main extends Component {
   constructor (props) {
     super(props)
-    const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-    this.props.dispatch(setLocaleInfo(localeInfo))
-    console.log('just dispatched localeInfo: ', localeInfo)
-    console.log('main constructor props', props)
 
     this.state = {
       loading: true,
@@ -78,7 +76,7 @@ class Main extends Component {
       for (const plugin of currencyPlugins) {
         const madePlugin = await plugin.makePlugin({io})
         global.madeCurrencyPlugins.push(madePlugin)
-        this.props.dispatch(addCurrencyPlugin(madePlugin))
+        this.props.addCurrencyPlugin(madePlugin)
       }
     }
   }
@@ -94,13 +92,13 @@ class Main extends Component {
     this.keyboardDidHideListener.remove()
   }
 
-  _keyboardDidShow = (e) => {
-    let keyboardHeight = e.endCoordinates.height
-    this.props.dispatch(setKeyboardHeight(keyboardHeight))
+  _keyboardDidShow = (event) => {
+    let keyboardHeight = event.endCoordinates.height
+    this.props.setKeyboardHeight(keyboardHeight)
   }
 
-  _keyboardDidHide = (e) => {
-    this.props.dispatch(setKeyboardHeight(0))
+  _keyboardDidHide = (_event) => {
+    this.props.setKeyboardHeight(0)
   }
 
   componentDidMount () {
@@ -119,31 +117,33 @@ class Main extends Component {
 
       this.makeAllPlugins(io).then(() => {
         const context = makeContext({
-          plugins: Object.values(PLUGINS),
+          plugins: Object.values(EXCHANGE_PLUGINS),
           apiKey: AIRBITZ_API_KEY,
           io
         })
 
-        this.props.dispatch(addContext(context))
-        this.props.dispatch(addUsernamesRequest(context))
+        this.props.addContext(context)
+        this.props.addUsernamesRequest(context)
         this.setState({
           context,
           loading: false
         }, () => { SplashScreen.hide() })
       })
     })
-    // Dummy dispatch to allow scenes to update mapStateToProps
-    setInterval(() => { this.props.dispatch(updateExchangeRates()) }, 30000)
+    this.props.setLocaleInfo(localeInfo)
+    setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
   }
 
   _onLayout = (event) => {
     const { width, height } = event.nativeEvent.layout
     const xScale = (width / 375).toFixed(2)
     const yScale = (height / 647).toFixed(2)
-    this.props.dispatch(setDeviceDimensions({ width, height, xScale, yScale }))
+    this.props.setDeviceDimensions({ width, height, xScale, yScale })
   }
 
   render () {
+    const routes = this.props.routes
+
     if (this.state.loading) {
       return (
         <LinearGradient
@@ -159,7 +159,7 @@ class Main extends Component {
           callbacks={makeAccountCallbacks(this.props.dispatch)}
           context={this.state.context}
           onLogin={(error = null, account) => {
-            this.props.dispatch(initializeAccount(account))
+            this.props.initializeAccount(account)
             this.setState({ loginVisible: false })
           }}
         />
@@ -168,48 +168,42 @@ class Main extends Component {
 
     return (
       <StyleProvider style={getTheme(platform)}>
-
         <MenuContext style={{ flex: 1 }}>
-
           <View style={styles.statusBarHack}>
-
             <Container onLayout={this._onLayout}>
 
               <StatusBar backgroundColor='green' barStyle='light-content' />
+
               <SideMenu>
-                <Header />
+                <Header routes={routes} setHeaderHeight={this.props.setHeaderHeight} />
 
                 <RouterWithRedux>
 
                   <Scene key='root' hideNavBar>
-
-                    <Scene key='scan' component={Scan} title='Scan' animation={'fade'} duration={300} />
-
-                    <Scene key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={300} />
-
-                    <Scene key='directory' component={Directory} title='Directory' animation={'fade'} duration={300} />
+                    <Scene key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
+                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={300} />
 
                     <Scene key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={300} />
-
                     <Scene key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
+
+                    <Scene key='scan' component={Scan} title='Scan' animation={'fade'} duration={300} />
+                    <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={300} />
 
                     <Scene key='request' component={Request} title='Request' animation={'fade'} duration={300} />
 
-                    <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={300} />
-
-                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={300} />
-
                     <Scene key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={300} />
-
                     <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={300} />
-
                     <Scene key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={300} />
 
+                    <Scene key='directory' component={Directory} title='Directory' animation={'fade'} duration={300} />
                   </Scene>
+
                 </RouterWithRedux>
+
                 <HelpModal />
                 <ABAlert />
                 <TransactionAlert />
+
               </SideMenu>
               <TabBar />
             </Container>
@@ -218,7 +212,21 @@ class Main extends Component {
       </StyleProvider>
     )
   }
-
 }
 
-export default connect()(Main)
+const mapStateToProps = (state) => ({
+  routes: state.routes
+})
+const mapDispatchToProps = (dispatch) => ({
+  dispatch: () => dispatch,
+  addCurrencyPlugin: (madePlugin) => dispatch(addCurrencyPlugin(madePlugin)),
+  setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
+  addContext: (context) => dispatch(addContext(context)),
+  addUsernamesRequest: (context) => dispatch(addUsernamesRequest(context)),
+  setLocaleInfo: (localInfo) => dispatch(setLocaleInfo(localeInfo)),
+  updateExchangeRates: () => dispatch(updateExchangeRates()),
+  setDeviceDimensions: (dimensions) => dispatch(setDeviceDimensions(dimensions)),
+  initializeAccount: (account) => dispatch(initializeAccount(account)),
+  setHeaderHeight: (height) => dispatch(setHeaderHeight(height))
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Main)

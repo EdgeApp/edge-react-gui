@@ -20,3 +20,9 @@ export const getPlugins = (state:any) => {
   const plugins = settings.plugins
   return plugins
 }
+
+export const getSupportedWalletTypes = (state:any) => {
+  const plugins = getPlugins(state)
+  const supportedWalletTypes = plugins.supportedWalletTypes
+  return supportedWalletTypes
+}

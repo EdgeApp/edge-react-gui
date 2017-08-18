@@ -16,7 +16,7 @@ export const makeCurrencyWalletRequest = (keyInfo:any, dispatch:any, getState:an
 
   for (const madePlugin of global.madeCurrencyPlugins) {
     for (const type of madePlugin.currencyInfo.walletTypes) {
-      if (walletType.replace('wallet:', '') === type.replace('wallet:', '')) {
+      if (walletType.replace('wallet:', '').toLowerCase() === type.replace('wallet:', '')) {
         matchingPlugin = madePlugin
         break
       }

@@ -150,8 +150,10 @@ export const setLUNDenomination = denomination => {
 
 // Plugins
 export const addCurrencyPlugin = (plugin) => {
+  const pluginName = plugin.pluginName
+  const walletTypes = plugin.currencyInfo.walletTypes
   return {
     type: ADD_CURRENCY_PLUGIN,
-    data: { plugin: plugin }
+    data: { pluginName, plugin, walletTypes }
   }
 }

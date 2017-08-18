@@ -9,7 +9,8 @@ const initialState = Object.assign(
   {},
   SYNCED_ACCOUNT_DEFAULTS,
   LOCAL_ACCOUNT_DEFAULTS,
-  CORE_DEFAULTS
+  CORE_DEFAULTS,
+  { plugins: { arrayPlugins: [], supportedWalletTypes: [] } }
 )
 
 export const settings = (state = initialState, action) => {
@@ -113,24 +114,26 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
-      const { plugin } = data
       const { plugins } = state
-      const pluginName = plugin.pluginName
+      const { supportedWalletTypes } = plugins
+      const { arrayPlugins } = plugins
+      const { pluginName, plugin, walletTypes } = data
 
-      const out = {
+      return {
         ...state,
         plugins: {
-          ...plugins
+          ...plugins,
+          [pluginName]: plugin,
+          arrayPlugins: [
+            ...arrayPlugins,
+            plugin
+          ],
+          supportedWalletTypes: [
+            ...supportedWalletTypes,
+            ...walletTypes
+          ]
         }
       }
-
-      // Add the plugin both to an array and to an object (map) for easy lookup
-      if (typeof out.plugins.arrayPlugins === 'undefined') {
-        out.plugins.arrayPlugins = []
-      }
-      out.plugins.arrayPlugins.push(plugins)
-      out.plugins[pluginName] = plugin
-      return out
     }
 
     default:
