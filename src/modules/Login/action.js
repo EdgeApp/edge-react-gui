@@ -96,6 +96,11 @@ const activateWallet = (keyInfo, dispatch, getState) => {
     })
     // dispatch(UI_ACTIONS.upsertWalletRequest(wallet))
   })
+  .catch(err => {
+    if (err !== 'NoMatchingPluginError') {
+      console.log(err)
+    }
+  })
 }
 
 const archiveWallet = (keyInfo, dispatch, getState) => {

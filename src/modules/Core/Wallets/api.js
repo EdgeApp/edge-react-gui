@@ -27,7 +27,7 @@ export const makeCurrencyWalletRequest = (keyInfo:any, dispatch:any, getState:an
   }
 
   if (!matchingPlugin) {
-    throw (new Error('Wallets/api.js Invalid wallet type:' + walletType))
+    return Promise.reject('NoMatchingPluginError')
   }
 
   const walletId = keyInfo.id
