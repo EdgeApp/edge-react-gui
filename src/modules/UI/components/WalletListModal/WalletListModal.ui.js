@@ -133,9 +133,11 @@ class WalletListModalBody extends Component {
   }
 
   renderWalletRows () {
-    for (let i = 0; i < this.props.walletList.length; i++) {
-      const guiWallet = this.props.walletList[i]
-      if (this.props.activeWalletIds.includes(guiWallet.id)) {
+    let i = -1
+    for (const n in this.props.walletList) {
+      i++
+      const guiWallet = this.props.walletList[n]
+      if (typeof guiWallet.id !== 'undefined' && this.props.activeWalletIds.includes(guiWallet.id)) {
         return this.renderWalletRow(guiWallet, i)
       }
     }
