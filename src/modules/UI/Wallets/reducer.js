@@ -99,7 +99,7 @@ function schema (wallet:any):GUIWallet {
   denominations.forEach(denomination => {
     let denomIndex:{[denomination: string]: ABCDenomination} = {}
     denomIndex[denomination.multiplier] = denomination
-    allDenominations[currencyCode] = denomIndex
+    allDenominations[denomination.name] = denomIndex
   })
 
   const nativeBalances: { [currencyCode: string]: string} = {}
