@@ -93,7 +93,7 @@ class WalletListRow extends Component {
     const multiplier = this.props.multiplier
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
-        <TouchableHighlight style={[styles.rowContainer]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
+        <TouchableHighlight style={[styles.rowContainer, {opacity: this.props.active ? 0.3 : 1}]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -106,7 +106,7 @@ class WalletListRow extends Component {
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
-        {this.renderTokenRow(walletData.nativeBalances)}
+        {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
   }
@@ -117,7 +117,7 @@ class WalletListRow extends Component {
       if (property !== this.props.data.currencyCode) {
         tokens.push(
           <WalletListTokenRowConnect parentId={this.props.data.id}
-            currencyCode={property} key={property} balance={metaTokenBalances[property]} />)
+            currencyCode={property} key={property} balance={metaTokenBalances[property]} active={this.props.active} />)
       }
     }
     return tokens
@@ -148,7 +148,7 @@ class WalletListTokenRow extends Component {
 
   render () {
     return (
-      <TouchableHighlight style={[styles.tokenRowContainer]} underlayColor={'#eee'} delayLongPress={500} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode)}>
+      <TouchableHighlight style={[styles.tokenRowContainer, {opacity: this.props.active ? 0.3 : 1}]} underlayColor={'#eee'} delayLongPress={500} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode)}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>

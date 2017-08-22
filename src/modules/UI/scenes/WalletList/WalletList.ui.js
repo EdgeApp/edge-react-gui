@@ -122,28 +122,17 @@ class WalletList extends Component {
 
   renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
     console.log('going into renderActiveSortable list, datum is: ', datum, ' , order is: ', order, ' , label is: ', label)
-    let data = {}
-    for (var props in datum) { // is this clause obsolete now?
-      if (data[datum[props].sortIndex]) {
-        let step = 0
-        while (data[datum[props].sortIndex + step]) {
-          step++
-        }
-        data[datum[props].sortIndex + step] = datum[props]
-      } else {
-        data[datum[props].sortIndex] = datum[props]
-      }
-    }
 
     if (order) {
-      console.log('order is true, data is: ', data)
+      console.log('order is true, datum is: ', datum)
       return (
         <View style={[{flex: 1, flexDirection: 'column'}]}>
           <SortableList
             rowActivationTime={500}
             style={[styles.sortableWalletList, b(), {flexDirection: 'row'}]}
             contentContainerStyle={[styles.sortableWalletList]}
-            data={data}
+            data={datum}
+            order={order}
             render={label}
             onRowMoved={this.onActiveRowMoved}
             renderRow={this.renderActiveRow}
@@ -169,7 +158,7 @@ class WalletList extends Component {
   }
 
   renderActiveRow = (data, active) => {
-    return <WalletListRow active={active} data={data.data} key={data.data.id} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
+    return <WalletListRow active={data.active} data={data.data} key={data.data.id} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
   }
 
   renderArchivedRow = data => {
@@ -181,8 +170,13 @@ class WalletList extends Component {
       return !wallets[key].archived
     }) // filter out archived wallets
     .sort((a, b) => {
-      return wallets[a].sortIndex - wallets[b].sortIndex
+      if (wallets[a].sortIndex === wallets[b].sortIndex) {
+        return -1
+      } else {
+        return wallets[a].sortIndex - wallets[b].sortIndex
+      }
     }) // sort them according to their (previous) sortIndices
+    console.log('activeOrdered is now: ', activeOrdered)
     return activeOrdered
   }
 
