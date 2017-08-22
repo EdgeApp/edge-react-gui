@@ -86,14 +86,15 @@ class WalletListRow extends Component {
     console.log('rendering wallet row, this is: ', this)
     const {data} = this.props
     let walletData = data
+    let currencyCode = walletData.currencyCode
+    let denomination = walletData.allDenominations[currencyCode][this.props.index]
+    let multiplier = denomination.multiplier
     let id = walletData.id
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
-    const currencyCode = walletData.currencyCode
-    const multiplier = this.props.multiplier
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
-        <TouchableHighlight style={[styles.rowContainer, {opacity: this.props.active ? 0.3 : 1}]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
+        <TouchableHighlight style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -125,18 +126,10 @@ class WalletListRow extends Component {
 }
 
 export default connect((state, ownProps) => {
-  const wallet = ownProps.data
-  const currencyCode = wallet.currencyCode
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const denomination = wallet.allDenominations[currencyCode][index]
-  const multiplier = denomination.multiplier
-
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, ownProps.data.currencyCode)
   return {
-    wallets: state.ui.wallets.byId,
-    settings: state.ui.settings,
-    denomination,
-    multiplier,
-    dimensions: state.ui.scenes.dimensions
+    dimensions: state.ui.scenes.dimensions,
+    index
   }
 })(WalletListRow)
 
@@ -148,7 +141,7 @@ class WalletListTokenRow extends Component {
 
   render () {
     return (
-      <TouchableHighlight style={[styles.tokenRowContainer, {opacity: this.props.active ? 0.3 : 1}]} underlayColor={'#eee'} delayLongPress={500} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode)}>
+      <TouchableHighlight style={[styles.tokenRowContainer, (this.props.active && styles.activeOpacity)]} underlayColor={'#eee'} delayLongPress={500} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode)}>
         <View style={[styles.tokenRowContent]}>
           <View style={[styles.tokenRowNameTextWrap]}>
             <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>

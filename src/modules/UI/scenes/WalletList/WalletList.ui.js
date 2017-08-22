@@ -67,7 +67,7 @@ class WalletList extends Component {
   }
 
   render () {
-    console.log('entering walletList render, this is: ', this)
+    console.log('entering walletList render, this.props.wallets is: ', this.props.wallets)
     const {wallets} = this.props
     return (
       <View style={styles.container}>
@@ -113,7 +113,7 @@ class WalletList extends Component {
             </TouchableOpacity>
           </LinearGradient>
           {Object.keys(wallets).length > 0
-            ? this.renderActiveSortableList(wallets, this.sortActiveWallets(wallets), sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']), this.renderActiveRow, this.onActiveRowMoved)
+            ? this.renderActiveSortableList(this.props.wallets, this.sortActiveWallets(this.props.wallets), sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']), this.renderActiveRow, this.onActiveRowMoved)
             : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
         </View>
       </View>
@@ -162,7 +162,7 @@ class WalletList extends Component {
   }
 
   renderArchivedRow = data => {
-    return <WalletListRow data={data} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized'])} />
+    return <WalletListRow settings={this.props.settings} data={data} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized'])} />
   }
 
   sortActiveWallets = (wallets) => {
@@ -176,7 +176,7 @@ class WalletList extends Component {
         return wallets[a].sortIndex - wallets[b].sortIndex
       }
     }) // sort them according to their (previous) sortIndices
-    console.log('activeOrdered is now: ', activeOrdered)
+    console.log('inside sortActiveWallets, wallets is: ', wallets, ' , activeOrdered is now: ', activeOrdered)
     return activeOrdered
   }
 

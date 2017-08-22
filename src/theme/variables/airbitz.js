@@ -25,6 +25,10 @@ export const colors = {
     white: 'white'
 }
 
+export const opacity = {
+    active: 0.3
+}
+
 export const font = {
     default:  'SourceSansPro-Black'
 }

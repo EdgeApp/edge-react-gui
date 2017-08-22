@@ -105,6 +105,7 @@ export const renameWalletSuccess = walletId => {
 }
 
 export const refreshWallet = (walletId) => {
+  console.log('refreshWallet')
   return (dispatch, getState) => {
     const state = getState()
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
@@ -129,6 +130,7 @@ export const refreshWallets = () => {
 }
 
 export const upsertWalletRequest = wallet => {
+  console.log('upsertWalletRequest')
   return (dispatch, getState) => {
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)

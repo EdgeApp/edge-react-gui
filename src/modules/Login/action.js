@@ -90,12 +90,12 @@ const activateWallet = (keyInfo, dispatch, getState) => {
       return processKeyInfo(keyInfo, dispatch, getState)
     }
 
-    dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
+    /* dispatch(WALLET_ACTIONS.updateWalletComplete(keyInfo.id))
     const wallets = getState().core.wallets.byId
     Object.keys(wallets).forEach(id => {
       dispatch(UI_ACTIONS.upsertWalletRequest(wallets[id]))
-    })
-    // dispatch(UI_ACTIONS.upsertWalletRequest(wallet))
+    }) */
+    dispatch(UI_ACTIONS.upsertWalletRequest(wallet))
   })
   .catch(err => {
     if (err !== 'NoMatchingPluginError') {

@@ -3,6 +3,7 @@ import {
   Dimensions,
   Platform
 } from 'react-native'
+import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
@@ -32,7 +33,7 @@ module.exports = StyleSheet.create({
   },
   totalBalanceText: {
     fontSize: 18,
-    color: '#2A5799'
+    color: c.primary
   },
   currentBalanceBoxDollarsWrap: {
     flex: 3,
@@ -41,11 +42,11 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   currentBalanceBoxDollars: {
-    color: '#2A5799',
+    color: c.priary,
     fontSize: 44
   },
   currentBalanceBoxBits: {
-    color: '#FFFFFF',
+    color: 'white',
     justifyContent: 'space-around',
     flex: 1
   },
@@ -134,19 +135,19 @@ module.exports = StyleSheet.create({
   },
   rowNameText: {
     fontSize: 18,
-    color: '#58595C'
+    color: c.gray1
   },
   rowBalanceTextWrap: {
     justifyContent: 'center'
   },
   rowBalanceAmountText: {
     fontSize: 16,
-    color: '#58595C',
+    color: c.gray1,
     textAlign: 'right'
   },
   rowBalanceDenominationText: {
     fontSize: 14,
-    color: '#58595C',
+    color: c.gray1,
     textAlign: 'right'
   },
   rowDotsWrap: {
@@ -168,11 +169,11 @@ module.exports = StyleSheet.create({
     flexDirection: 'row'
   },
   optionIcon: {
-    color: '#58595C',
+    color: c.gray1,
     marginRight: 10
   },
   optionText: {
-    color: '#58595C',
+    color: c.gray1,
     fontSize: 18
   },
   editIcon: {
@@ -212,7 +213,7 @@ module.exports = StyleSheet.create({
     flex: 1
   },
   subHeaderSyntax: {
-    color: '#58595C',
+    color: c.gray1,
     textAlign: 'center',
     fontSize: 14
   },
@@ -235,7 +236,7 @@ module.exports = StyleSheet.create({
     fontSize: 16
   },
   cancelButtonWrap: {
-    backgroundColor: '#909091',
+    backgroundColor: c.gray2,
     alignSelf: 'flex-start'
   },
   cancelButton: {
@@ -267,7 +268,11 @@ module.exports = StyleSheet.create({
   },
   tokenRowText: {
     fontSize: 16,
-    color: '#58595C'
-  }
+    color: c.gray1
+  },
   // end of token rows //,,
+
+  activeOpacity: {
+    opacity: activeOpacity.opacity
+  }
 })
