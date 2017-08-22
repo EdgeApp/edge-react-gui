@@ -83,6 +83,7 @@ class WalletListRow extends Component {
   }
 
   render () {
+    console.log('rendering wallet row, this is: ', this)
     const {data} = this.props
     let walletData = data
     let id = walletData.id

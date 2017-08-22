@@ -67,6 +67,7 @@ class WalletList extends Component {
   }
 
   render () {
+    console.log('entering walletList render, this is: ', this)
     const {wallets} = this.props
     return (
       <View style={styles.container}>
@@ -75,12 +76,12 @@ class WalletList extends Component {
 
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader, b()]}>
+            <View style={[styles.totalBalanceHeader]}>
               <T style={[styles.totalBalanceText]}>
                 {sprintf(strings.enUS['fragment_wallets_balance_text'])}
               </T>
             </View>
-            <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
+            <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
                 $ {this.tallyUpTotalCrypto()}
                 {/* {this.props.settings.defaultFiat} */}
@@ -97,22 +98,22 @@ class WalletList extends Component {
             x: 1,
             y: 0
           }} style={[styles.walletsBoxHeaderWrap]} colors={[c.gradient.light, c.gradient.dark]}>
-            <View style={[styles.walletsBoxHeaderTextWrap, b()]}>
+            <View style={[styles.walletsBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon, b()]} color='white' />
+                <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
                   {sprintf(strings.enUS['fragment_wallets_header'])}
                 </T>
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, b(), {width: 35}]}
+            <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 35}]}
               onPress={() => Actions.createWallet()}>
-              <Ionicon name='md-add' style={[styles.dropdownIcon, b()]} color='white' />
+              <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
             </TouchableOpacity>
           </LinearGradient>
           {Object.keys(wallets).length > 0
-            ? this.renderActiveSortableList(wallets, this.sortActiveWallets(this.props.wallets), sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']), this.renderActiveRow, this.onActiveRowMoved)
+            ? this.renderActiveSortableList(wallets, this.sortActiveWallets(wallets), sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']), this.renderActiveRow, this.onActiveRowMoved)
             : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
         </View>
       </View>
@@ -120,16 +121,27 @@ class WalletList extends Component {
   }
 
   renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
+    console.log('going into renderActiveSortable list, datum is: ', datum, ' , order is: ', order, ' , label is: ', label)
     let data = {}
-    for (var props in datum) {
-      data[datum[props].sortIndex] = datum[props]
+    for (var props in datum) { // is this clause obsolete now?
+      if (data[datum[props].sortIndex]) {
+        let step = 0
+        while (data[datum[props].sortIndex + step]) {
+          step++
+        }
+        data[datum[props].sortIndex + step] = datum[props]
+      } else {
+        data[datum[props].sortIndex] = datum[props]
+      }
     }
+
     if (order) {
+      console.log('order is true, data is: ', data)
       return (
         <View style={[{flex: 1, flexDirection: 'column'}]}>
           <SortableList
             rowActivationTime={500}
-            style={[styles.sortableWalletList, {flexDirection: 'row'}]}
+            style={[styles.sortableWalletList, b(), {flexDirection: 'row'}]}
             contentContainerStyle={[styles.sortableWalletList]}
             data={data}
             render={label}
@@ -157,7 +169,7 @@ class WalletList extends Component {
   }
 
   renderActiveRow = (data, active) => {
-    return <WalletListRow active={active} data={data.data} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
+    return <WalletListRow active={active} data={data.data} key={data.data.id} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
   }
 
   renderArchivedRow = data => {
@@ -337,7 +349,7 @@ class DeleteWalletButtons extends Component {
 
   render () {
     return (
-      <View style={[styles.buttonsWrap, b()]}>
+      <View style={[styles.buttonsWrap]}>
 
         <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
@@ -386,8 +398,8 @@ class WalletNameInput extends Component {
 
   render () {
     return (
-      <View style={[styles.nameInputWrap, b()]}>
-        <TextInput style={[styles.nameInput, b()]}
+      <View style={[styles.nameInputWrap]}>
+        <TextInput style={[styles.nameInput]}
           onChangeText={(input) => this._onNameInputChange(input)}
           defaultValue={this.props.currentWalletBeingRenamed} autoFocus />
       </View>
@@ -421,7 +433,7 @@ class RenameWalletButtons extends Component {
 
   render () {
     return (
-      <View style={[styles.buttonsWrap, b()]}>
+      <View style={[styles.buttonsWrap]}>
 
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
 
