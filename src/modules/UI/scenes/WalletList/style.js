@@ -42,7 +42,7 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent'
   },
   currentBalanceBoxDollars: {
-    color: c.priary,
+    color: c.primary,
     fontSize: 44
   },
   currentBalanceBoxBits: {
