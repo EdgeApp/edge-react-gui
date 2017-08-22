@@ -1,19 +1,35 @@
 import * as ACTION from './action'
 
 const initialState = {
-  amountSatoshi: 0,
-  fiatPerCrypto: 0,
+  transaction: {
+    wallet: {},
+    metadata: {},
+    txid: '',
+    date: 0,
+    blockHeight: '0',
+    providerFee: '0',
+    networkFee: '0',
+    runningBalance: '0',
+    signedTx: '0',
+    otherParams: {},
+    nativeAmount: ''
+  },
+  parsedURI: {
+    publicAddress: '',
+    nativeAmount: ''
+  },
+
+  displayAmount: 0,
   publicAddress: '',
+  feeSatoshi: 0,
   label: '',
+
   inputCurrencySelected: 'fiat',
   maxSatoshi: 0,
   isPinEnabled: false,
   isSliderLocked: false,
   draftStatus: 'under',
   isKeyboardVisible: false,
-  feeSatoshi: 0,
-  transaction: {},
-  spendInfo: {},
   pending: false,
   mode: null
 }
@@ -21,29 +37,29 @@ const initialState = {
 const sendConfirmation = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
-    case ACTION.UPDATE_AMOUNT_SATOSHI:
-      const { amountSatoshi } = data
+    case ACTION.UPDATE_TRANSACTION:
+      const transaction = { ...state.transaction, ...data.transaction }
+      const networkFee = transaction.networkFee
+      const providerFee = transaction.providerFee
       return {
         ...state,
-        amountSatoshi
+        transaction,
+        networkFee,
+        providerFee
       }
-    case ACTION.UPDATE_FIAT_PER_CRYPTO:
-      const { fiatPerCrypto } = data
+    case ACTION.UPDATE_PARSED_URI:
+      const { parsedURI = {} } = data
+      const publicAddress = parsedURI.publicAddress
       return {
         ...state,
-        fiatPerCrypto
-      }
-    case ACTION.UPDATE_PUBLIC_ADDRESS:
-      const { publicAddress } = data
-      return {
-        ...state,
+        parsedURI,
         publicAddress
       }
-    case ACTION.UPDATE_LABEL:
-      const { label } = data
+    case ACTION.UPDATE_DISPLAY_AMOUNT:
+      const { displayAmount } = data
       return {
         ...state,
-        label
+        displayAmount
       }
     case ACTION.UPDATE_INPUT_CURRENCY_SELECTED:
       const { inputCurrencySelected } = data
@@ -61,8 +77,7 @@ const sendConfirmation = (state = initialState, action) => {
       const { maxSatoshi } = data
       return {
         ...state,
-        maxSatoshi,
-        amountSatoshi: maxSatoshi
+        maxSatoshi
       }
     }
     case ACTION.UNLOCK_SLIDER:
@@ -82,24 +97,6 @@ const sendConfirmation = (state = initialState, action) => {
       return {
         ...state,
         isKeyboardVisible
-      }
-    case ACTION.UPDATE_FEE:
-      const { feeSatoshi } = data
-      return {
-        ...state,
-        feeSatoshi
-      }
-    case ACTION.UPDATE_TRANSACTION:
-      const { transaction = {} } = data
-      return {
-        ...state,
-        transaction
-      }
-    case ACTION.UPDATE_SPEND_INFO:
-      const { spendInfo = {} } = data
-      return {
-        ...state,
-        spendInfo
       }
     case ACTION.UPDATE_SPEND_PENDING:
       const { pending } = data

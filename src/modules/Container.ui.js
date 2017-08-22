@@ -131,7 +131,9 @@ class Main extends Component {
       })
     })
     this.props.setLocaleInfo(localeInfo)
-    setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    console.warn('REMOVE BEFORE FLIGHT')
+    setInterval(() => { this.props.updateExchangeRates() }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    // setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
   }
 
   _onLayout = (event) => {

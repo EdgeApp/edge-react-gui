@@ -1,0 +1,241 @@
+/* globals describe test expect */
+
+import * as UTILS from '../src/modules/utils.js'
+
+describe('isValidInput', function () {
+  describe('when input is valid', function () {
+    test('1 => true', function () {
+      const validInput = '1'
+      const expected = true
+      const actual = UTILS.isValidInput(validInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('. => true', function () {
+      const validInput = '.'
+      const expected = true
+      const actual = UTILS.isValidInput(validInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('.0 => true', function () {
+      const validInput = '.'
+      const expected = true
+      const actual = UTILS.isValidInput(validInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0.0 => true', function () {
+      const validInput = '.'
+      const expected = true
+      const actual = UTILS.isValidInput(validInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0.01 => true', function () {
+      const validInput = '.'
+      const expected = true
+      const actual = UTILS.isValidInput(validInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0 => true', function () {
+      const validInput = '.'
+      const expected = true
+      const actual = UTILS.isValidInput(validInput)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('when input is invalid', function () {
+    test('R => false', function () {
+      const invalidInput = 'R'
+      const expected = false
+      const actual = UTILS.isValidInput(invalidInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0R => false', function () {
+      const invalidInput = '0R'
+      const expected = false
+      const actual = UTILS.isValidInput(invalidInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0.R => false', function () {
+      const invalidInput = '0.R'
+      const expected = false
+      const actual = UTILS.isValidInput(invalidInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0.0. => false', function () {
+      const invalidInput = '0.0.'
+      const expected = false
+      const actual = UTILS.isValidInput(invalidInput)
+      expect(actual).toBe(expected)
+    })
+
+    test('0.123q => false', function () {
+      const invalidInput = '0.123q'
+      const expected = false
+      const actual = UTILS.isValidInput(invalidInput)
+      expect(actual).toBe(expected)
+    })
+  })
+})
+
+describe('convertNativeToDisplay', function () {
+  test('100000000 => 1', function () {
+    const nativeToDisplayRatio = '100000000'
+    const nativeAmount = '100000000'
+    const expected = '1'
+    const actual = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeAmount)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('convertDisplayToNative', function () {
+  test('100000000 => 1', function () {
+    const nativeToDisplayRatio = '100000000'
+    const displayAmount = '1'
+    const expected = '100000000'
+    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('convertExchangeToDisplay', function () {
+  test('1 => 1', function () {
+    const nativeToDisplayRatio = '100000000'
+    const displayAmount = '1'
+    const expected = '100000000'
+    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.00000000 => 1', function () {
+    const nativeToDisplayRatio = '100000000'
+    const displayAmount = '1.00000000'
+    const expected = '100000000'
+    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.123456789 => 1.123456789', function () {
+    const nativeToDisplayRatio = '100000000'
+    const displayAmount = '1.12345678'
+    const expected = '112345678'
+    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('convertExchangeToExchange', function () {
+  test('1 => 1000', function () {
+    const ratio = '1000.00000000'
+    const exchangeAmount = '1'
+    const expected = '1000'
+    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
+    expect(actual).toBe(expected)
+  })
+
+  test('1000 => 1000', function () {
+    const ratio = '1.00000000'
+    const exchangeAmount = '1000'
+    const expected = '1000'
+    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
+    expect(actual).toBe(expected)
+  })
+
+  test('1000 => 1', function () {
+    const ratio = '.00100000'
+    const exchangeAmount = '1000'
+    const expected = '1'
+    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('deriveDisplayToExchangeRatio', function () {
+  test('1 / 1', function () {
+    const exchangeNativeToExchangeRatio = '100000000'
+    const displayNativeToDisplayRatio = '100000000'
+    const expected = '1'
+    const actual = UTILS.deriveDisplayToExchangeRatio(exchangeNativeToExchangeRatio)(displayNativeToDisplayRatio)
+    expect(actual).toBe(expected)
+  })
+
+  test('1000 / 10', function () {
+    const exchangeNativeToExchangeRatio = '1000'
+    const displayNativeToDisplayRatio = '10'
+    const expected = '100'
+    const actual = UTILS.deriveDisplayToExchangeRatio(exchangeNativeToExchangeRatio)(displayNativeToDisplayRatio)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('truncateDecimals', function () {
+  test('1 => 1', function () {
+    const input = '1'
+    const precision = 0
+    const expected = '1'
+    const actual = UTILS.truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
+
+  test('1 => 1', function () {
+    const input = '1'
+    const precision = 8
+    const expected = '1'
+    const actual = UTILS.truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.0 => 1', function () {
+    const input = '1.0'
+    const precision = 1
+    const expected = '1.0'
+    const actual = UTILS.truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.123456789 => 1.0', function () {
+    const input = '1.123456789'
+    const precision = 1
+    const expected = '1.1'
+    const actual = UTILS.truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.19 => 1.0', function () {
+    const input = '1.19'
+    const precision = 1
+    const expected = '1.1'
+    const actual = UTILS.truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('absoluteValue', function () {
+  test('1 => 1', function () {
+    const input = '1'
+    const expected = '1'
+    const actual = UTILS.absoluteValue(input)
+    expect(actual).toBe(expected)
+  })
+
+  test('-1 => 1', function () {
+    const input = '-1'
+    const expected = '1'
+    const actual = UTILS.absoluteValue(input)
+    expect(actual).toBe(expected)
+  })
+
+  test('-1.0 => 1.0', function () {
+    const input = '-1.0'
+    const expected = '1.0'
+    const actual = UTILS.absoluteValue(input)
+    expect(actual).toBe(expected)
+  })
+})

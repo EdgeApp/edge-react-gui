@@ -41,6 +41,18 @@ export const getCurrencyConverter = (state) => {
   return currencyConverter
 }
 
+export const getExchangeRate = (state, fromCurrencyCode, toCurrencyCode) => {
+  const currencyConverter = getCurrencyConverter(state)
+  const exchangeRate = currencyConverter.convertCurrency(fromCurrencyCode, toCurrencyCode, 1)
+  return exchangeRate
+}
+
+export const getFakeExchangeRate = (state, fromCurrencyCode, toCurrencyCode) => {
+  const currencyConverter = getCurrencyConverter(state)
+  const exchangeRate = currencyConverter.convertCurrency(fromCurrencyCode, toCurrencyCode, 1)
+  return exchangeRate + (Math.random() * 10)
+}
+
 export const getBalanceInCrypto = (state, walletId, currencyCode) => {
   const balanceInCrypto = getWallet(state, walletId).getBalance(currencyCode)
   console.log('balanceInCrypto', balanceInCrypto)

@@ -81,6 +81,7 @@ export const getReceiveAddress = (wallet:any, currencyCode:string) => {
 }
 
 export const makeSpend = (wallet:any, spendInfo:any) => {
+  console.log('spendInfo', spendInfo)
   return wallet.makeSpend(spendInfo)
 }
 

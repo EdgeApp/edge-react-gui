@@ -1,53 +1,53 @@
-export const UPDATE_AMOUNT_SATOSHI = 'UPDATE_AMOUNT_SATOSHI'
-export const UPDATE_AMOUNT_FIAT = 'UPDATE_AMOUNT_FIAT'
-export const UPDATE_FIAT_PER_CRYPTO = 'UPDATE_FIAT_PER_CRYPTO'
-export const UPDATE_INPUT_CURRENCY_SELECTED = 'UPDATE_INPUT_CURRENCY_SELECTED'
-export const UPDATE_LABEL = 'UPDATE_LABEL'
-export const UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO = 'UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO'
-export const ENABLE_SLIDER = 'ENABLE_SLIDER'
-export const UPDATE_DRAFT_STATUS = 'UPDATE_DRAFT_STATUS'
-export const UPDATE_IS_KEYBOARD_VISIBLE = 'UPDATE_IS_KEYBOARD_VISIBLE'
-export const UPDATE_URI_SUCCESS = 'UPDATE_URI_SUCCESS'
-export const UPDATE_TRANSACTION = 'UPDATE_TRANSACTION'
-export const UPDATE_FEE = 'UPDATE_FEE'
-export const UPDATE_MAX_SATOSHI = 'UPDATE_MAX_SATOSHI'
-export const UPDATE_SPEND_PENDING = 'UPDATE_SPEND_PENDING'
-export const UPDATE_SPEND_SUFFICIENT_FUNDS = 'UPDATE_SPEND_SUFFICIENT_FUNDS'
+const PREFIX = 'UI/SendConfimation/'
+export const UPDATE_AMOUNT_SATOSHI = PREFIX + 'UPDATE_AMOUNT_SATOSHI'
+export const UPDATE_AMOUNT_FIAT = PREFIX + 'UPDATE_AMOUNT_FIAT'
+export const UPDATE_FIAT_PER_CRYPTO = PREFIX + 'UPDATE_FIAT_PER_CRYPTO'
+export const UPDATE_INPUT_CURRENCY_SELECTED = PREFIX + 'UPDATE_INPUT_CURRENCY_SELECTED'
+export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
+export const UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO = PREFIX + 'UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO'
+export const ENABLE_SLIDER = PREFIX + 'ENABLE_SLIDER'
+export const UPDATE_DRAFT_STATUS = PREFIX + 'UPDATE_DRAFT_STATUS'
+export const UPDATE_IS_KEYBOARD_VISIBLE = PREFIX + 'UPDATE_IS_KEYBOARD_VISIBLE'
+export const UPDATE_FEE = PREFIX + 'UPDATE_FEE'
+export const UPDATE_MAX_SATOSHI = PREFIX + 'UPDATE_MAX_SATOSHI'
+export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
+export const UPDATE_SPEND_SUFFICIENT_FUNDS = PREFIX + 'UPDATE_SPEND_SUFFICIENT_FUNDS'
 
-export const PROCESS_URI = 'PROCESS_URI'
-export const UPDATE_PARSED_URI = 'UPDATE_PARSED_URI'
+export const UPDATE_WALLET_TRANSFER = PREFIX + 'UPDATE_WALLET_TRANSFER'
+export const UPDATE_PUBLIC_ADDRESS = PREFIX + 'UPDATE_PUBLIC_ADDRESS'
+export const UPDATE_SPEND_INFO = PREFIX + 'UPDATE_SPEND_INFO'
+export const RESET = PREFIX + 'RESET'
 
-export const UPDATE_WALLET_TRANSFER = 'UPDATE_WALLET_TRANSFER'
-export const UPDATE_PUBLIC_ADDRESS = 'UPDATE_PUBLIC_ADDRESS'
-export const UPDATE_SPEND_INFO = 'UPDATE_SPEND_INFO'
-export const RESET = 'RESET'
+export const UPDATE_CRYPTO_AMOUNT_REQUEST = PREFIX + 'UPDATE_CRYPTO_AMOUNT_REQUEST'
+export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
+export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
+export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
 import { Actions } from 'react-native-router-flux'
 import { openABAlert } from '../../components/ABAlert/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import { convertDenominationToNative } from '../../../utils.js'
 
-export const updateAmountSatoshiRequest = (amountSatoshiString) => {
+export const updateCryptoAmountRequest = (cryptoAmountInDenomination: string = '0') => {
   return (dispatch, getState) => {
-    const amountSatoshi = parseFloat(amountSatoshiString)
-    dispatch(updateAmountSatoshi(amountSatoshi))
-    if (amountSatoshi === 0) return
+    if (parseFloat(cryptoAmountInDenomination) === 0) return
 
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+    const nativeToDenominationRatio = SETTINGS_SELECTORS.getNativeToDenominationRatio(state, currencyCode)
+    const nativeAmount = convertDenominationToNative(nativeToDenominationRatio, cryptoAmountInDenomination)
+    const publicAddress = state.ui.scenes.sendConfirmation.publicAddress
 
-    const { publicAddress } = state.ui.scenes.sendConfirmation
-    const spendInfo = makeSpendInfo({ amountSatoshi, publicAddress, currencyCode })
+    const spendInfo = makeSpendInfo({ nativeAmount, publicAddress, currencyCode })
 
     WALLET_API.makeSpend(wallet, spendInfo)
     .then(transaction => {
-      const { providerFee = 0, networkFee = 0 } = transaction
-      const feeTotal = providerFee + networkFee
       dispatch(updateTransaction(transaction))
-      dispatch(updateFee(feeTotal))
       dispatch(updateSpendSufficientFunds(null))
     })
     .catch(e => {
@@ -108,7 +108,7 @@ export const updateDraftStatus = draftStatus => {
   }
 }
 
-export const updateTransaction = transaction => {
+export const updateTransaction = (transaction) => {
   return {
     type: UPDATE_TRANSACTION,
     data: { transaction }
@@ -129,8 +129,7 @@ export const signBroadcastAndSave = unsignedTransaction => {
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
     let alertSyntax
 
-    // TODO: refactor this to use WALLET_API
-    wallet.signTx(unsignedTransaction)
+    WALLET_API.signTx(wallet, unsignedTransaction)
     .then(transaction => {
       console.log('broadcast transaction', transaction)
       return wallet.broadcastTx(transaction).then(() =>
@@ -180,21 +179,9 @@ export const useMaxSatoshi = () => {
   }
 }
 
-export const updateSpendInfo = spendInfo => {
-  return {
-    type: UPDATE_SPEND_INFO,
-    data: { spendInfo }
-  }
-}
-
 export const updateWalletTransfer = (wallet) => {
   return (dispatch) => {
-    const spendInfo = makeSpendInfo({
-      wallet
-    })
-
     dispatch(updateLabel(wallet.name))
-    dispatch(updateSpendInfo(spendInfo))
   }
 }
 
@@ -211,34 +198,25 @@ export const updatePublicAddress = publicAddress => {
   }
 }
 
-export const processURI = (uri) => {
+export const processURI = (parsedURI) => {
   return (dispatch, getState) => {
-    console.log('uri', uri)
     const state = getState()
     const walletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
-    try {
-      const {
-        publicAddress,
-        amountSatoshi,
-        metadata
-      } = WALLET_API.parseURI(wallet, uri)
-      const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-      const spendInfo = makeSpendInfo({
-        publicAddress,
-        amountSatoshi,
-        metadata,
-        currencyCode
-      })
+    const spendInfo = makeSpendInfo(parsedURI)
 
-      dispatch(updateSpendInfo(spendInfo))
-      dispatch(updatePublicAddress(publicAddress))
-    } catch (e) {
-      console.log(e)
-    }
+    return WALLET_API.makeSpend(wallet, spendInfo).then(unsignedTransaction => {
+      dispatch(updateTransaction(unsignedTransaction))
+    })
   }
 }
 
+export const updateParsedURI = (parsedURI) => {
+  return {
+    type: UPDATE_PARSED_URI,
+    data: { parsedURI }
+  }
+}
 export const updateLabel = label => {
   return {
     type: UPDATE_LABEL,
@@ -253,8 +231,8 @@ export const reset = () => {
   }
 }
 
-const makeSpendInfo = ({ amountSatoshi = 0, publicAddress = '', currencyCode = '', wallet, metadata = {} }) => {
-  const spendTargets = [{ wallet, publicAddress, amountSatoshi }]
+const makeSpendInfo = ({ nativeAmount = '0', publicAddress = '', currencyCode = '', wallet, metadata = {} }) => {
+  const spendTargets = [{ wallet, publicAddress, nativeAmount }]
   const spendInfo = {
     currencyCode,
     metadata,
