@@ -33,12 +33,13 @@ export const getSubcategories = () => {
   console.log('ACCOUNT_SETTINGS is: ', ACCOUNT_SETTINGS)
   return (dispatch, getState) => {
     const { account } = getState().core
-    console.log('in action->getSubcategories, account is: ', account)
+    console.log('in action->getSubcategories, account is: ', account, ' ACCOUNT_SETTINGS.getSyncedSubcategories(account) is: ', ACCOUNT_SETTINGS.getSyncedSubcategories(account))
     return ACCOUNT_SETTINGS.getSyncedSubcategories(account)
   }
 }
 
 export const setSubcategories = subcategories => {
+  console.log('in txDetails.action->setSubcategories and subcategories is: ', subcategories)
   return {
     type: SET_TRANSACTION_SUBCATEGORIES,
     data: { subcategories }
@@ -64,6 +65,7 @@ export const getSelectedWallet = state => {
 }
 
 export const setSubcategoriesRequest = subcategories => {
+  console.log('in setSubcategoriesRequest, subcategories is: ', subcategories)
   return (dispatch, getState) => {
     const { account } = getState().core
     ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)

@@ -148,7 +148,9 @@ export const getSyncedSubcategories = account => {
   console.log('in getSyncedSubcategories, account is: ', account)
   return getSyncedSubcategoriesFile(account).getText()
   .then(text => {
-    return JSON.parse(text)
+    console.log('in getSyncedSubcategories, no error and text is: ', text)
+    let categoriesText = JSON.parse(text)
+    return setSyncedSubcategories(account, categoriesText.categories)
   })
   .catch(e => {
     console.log('in getSyncedSubcategories, error: ', e)
@@ -158,6 +160,11 @@ export const getSyncedSubcategories = account => {
       return SYNCED_SUBCATEGORIES_DEFAULTS
     })
   })
+}
+
+export const getSyncedSubcategoriesFile = account => {
+  console.log('in getSyncedSubcategoriesFile, account is: ', account)
+  return account.folder.file('Categories.json')
 }
 
 export const setSyncedSubcategories = (account, subcategories) => {
@@ -199,11 +206,6 @@ export const getCoreSettings = account => {
 
 export const getSyncedSettingsFile = account => {
   return account.folder.file('Settings.json')
-}
-
-export const getSyncedSubcategoriesFile = account => {
-  console.log('in getSyncedSubcategoriesFile, account is: ', account)
-  return account.folder.file('Categories.json')
 }
 
 export const getLocalSettingsFile = account => {
