@@ -3,6 +3,7 @@ import strings from '../../../../locales/default'
 import { sprintf } from 'sprintf-js'
 import {
   ActivityIndicator,
+  Alert,
   Text,
   View,
   TouchableHighlight
@@ -77,9 +78,10 @@ class Scan extends Component {
       const parsedURI = WALLET_API.parseURI(this.props.coreWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
-    } catch (e) {
+    } catch (error) {
+      Alert.alert('Scanning Error', error)
       // show popup with error message
-      console.log(e)
+      console.log(error)
     }
   }
 
