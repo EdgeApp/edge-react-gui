@@ -128,7 +128,7 @@ class WalletList extends Component {
       return (
         <View style={[{flex: 1, flexDirection: 'column'}]}>
           <SortableList
-            rowActivationTime={500}
+            rowActivationTime={350}
             style={[styles.sortableWalletList, b(), {flexDirection: 'row'}]}
             contentContainerStyle={[styles.sortableWalletList]}
             data={datum}

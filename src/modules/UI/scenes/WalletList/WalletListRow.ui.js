@@ -7,9 +7,7 @@ import { ABCDenomination, GUIWallet } from '../../../../types.js'
 import {
   View,
   TouchableHighlight,
-  Animated,
-  Platform,
-  Easing
+  Animated
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
@@ -31,10 +29,8 @@ export const findDenominationSymbol = (denoms, value) => {
 }
 
 class WalletListRow extends Component {
-  constructor (props) {
-    super(props)
 
-    this._active = new Animated.Value(0)
+    /* this._active = new Animated.Value(0)
 
     this._style = {
       ...Platform.select({
@@ -64,10 +60,9 @@ class WalletListRow extends Component {
           })
         }
       })
-    }
-  }
+    } */
 
-  componentWillReceiveProps (nextProps) {
+  /* componentWillReceiveProps (nextProps) {
     if (this.props.active !== nextProps.active) {
       Animated.timing(this._active, {
         duration: 300,
@@ -75,7 +70,7 @@ class WalletListRow extends Component {
         toValue: Number(nextProps.active)
       }).start()
     }
-  }
+  } */
 
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.dispatch(selectWallet(walletId, currencyCode))

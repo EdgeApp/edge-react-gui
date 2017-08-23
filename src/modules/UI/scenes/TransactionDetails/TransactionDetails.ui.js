@@ -28,7 +28,12 @@ import LinearGradient from 'react-native-linear-gradient'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 import {border as b, limitFiatDecimals, getFiatSymbol} from '../../../utils'
-import { setTransactionDetails, setNewSubcategory } from './action.js'
+import {
+  setTransactionDetails,
+  setNewSubcategory,
+  getSubcategories,
+  setSubcategories
+} from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import SearchResults from '../../components/SearchResults'
 import { openHelpModal } from '../../components/HelpModal/actions'
@@ -239,6 +244,7 @@ class TransactionDetails extends Component {
         }
       })
     }
+    this.props.dispatch(setSubcategories(this.props.dispatch(getSubcategories())))
   }
 
   _togglePayeeVisibility = () => {
