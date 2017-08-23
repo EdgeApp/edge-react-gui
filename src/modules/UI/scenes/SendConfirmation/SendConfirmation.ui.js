@@ -19,7 +19,6 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils.js'
 
 import {
-  updateCryptoAmountRequest,
   signBroadcastAndSave,
 
   updateAmountSatoshiRequest,
@@ -208,7 +207,6 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => ({
   processURI: (parsedURI) => dispatch(processURI(parsedURI)),
-  updateCryptoAmount: cryptoAmount => dispatch(updateCryptoAmountRequest(cryptoAmount)),
   updateAmountSatoshi: cryptoAmount => dispatch(updateAmountSatoshiRequest(cryptoAmount)),
   signBroadcastAndSave: transaction => dispatch(signBroadcastAndSave(transaction)),
   updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),

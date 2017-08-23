@@ -27,42 +27,14 @@ import { Actions } from 'react-native-router-flux'
 import { openABAlert } from '../../components/ABAlert/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+// import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import { convertDenominationToNative } from '../../../utils.js'
+// import { convertDenominationToNative } from '../../../utils.js'
 
-export const updateCryptoAmountRequest = (cryptoAmountInDenomination: string = '0') => {
-  return (dispatch, getState) => {
-    if (parseFloat(cryptoAmountInDenomination) === 0) return
-
-    const state = getState()
-    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-    const nativeToDenominationRatio = SETTINGS_SELECTORS.getNativeToDenominationRatio(state, currencyCode)
-    const nativeAmount = convertDenominationToNative(nativeToDenominationRatio, cryptoAmountInDenomination)
-    const publicAddress = state.ui.scenes.sendConfirmation.publicAddress
-
-    const spendInfo = makeSpendInfo({ nativeAmount, publicAddress, currencyCode })
-
-    WALLET_API.makeSpend(wallet, spendInfo)
-    .then(transaction => {
-      dispatch(updateTransaction(transaction))
-      dispatch(updateSpendSufficientFunds(null))
-    })
-    .catch(e => {
-      if (e.name === 'InsufficientFundsError') {
-        console.log('make text red!')
-        dispatch(updateSpendSufficientFunds('over'))
-      }
-    })
-  }
-}
-
-export const updateSpendSufficientFunds = mode => {
+export const updateSpendError = error => {
   return {
     type: UPDATE_SPEND_SUFFICIENT_FUNDS,
-    data: { mode }
+    data: { error }
   }
 }
 
@@ -122,31 +94,28 @@ export const updateSpendPending = pending => {
   }
 }
 
-export const signBroadcastAndSave = unsignedTransaction => {
+export const signBroadcastAndSave = (unsignedTransaction) => {
   return (dispatch, getState) => {
     const state = getState()
     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-    let alertSyntax
 
-    WALLET_API.signTx(wallet, unsignedTransaction)
-    .then(transaction => {
-      console.log('broadcast transaction', transaction)
-      return wallet.broadcastTx(transaction).then(() =>
-        wallet.saveTx(transaction)
-      )
-    })
-    .then(() => {
+    WALLET_API.signTransaction(wallet, unsignedTransaction)
+    .then(signedTransaction => {
+      return WALLET_API.broadcastTransaction(wallet, signedTransaction)
+    }).then(signedTransaction => {
+      return WALLET_API.saveTransaction(wallet, signedTransaction)
+    }).then((_completedTransaction) => {
       dispatch(updateSpendPending(false))
       Actions.transactionList({type: 'reset'})
-      alertSyntax = { title: 'Transaction Sent', message: 'Your transaction has been successfully sent.' }
-      dispatch(openABAlert(alertSyntax))
+      const successInfo = { title: 'Transaction Sent', message: 'Your transaction has been successfully sent.' }
+      dispatch(openABAlert(successInfo))
     })
     .catch(e => {
       console.log('error is: ', e)
       dispatch(updateSpendPending(false))
-      alertSyntax = { title: 'Transaction Failure', message: e.message }
-      dispatch(openABAlert(alertSyntax))
+      const errorInfo = { title: 'Transaction Failure', message: e.message }
+      dispatch(openABAlert(errorInfo))
     })
   }
 }
@@ -205,11 +174,49 @@ export const processURI = (parsedURI) => {
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
     const spendInfo = makeSpendInfo(parsedURI)
 
-    return WALLET_API.makeSpend(wallet, spendInfo).then(unsignedTransaction => {
+    return WALLET_API.makeSpend(wallet, spendInfo)
+    .then(unsignedTransaction => {
       dispatch(updateTransaction(unsignedTransaction))
+    })
+    .catch(error => {
+      const {
+        nativeAmount,
+        currencyCode,
+        publicAddress
+      } = parsedURI
+      const invalidTransaction = makeInvalidTransaction({nativeAmount, publicAddress, currencyCode})
+      dispatch(updateTransaction(invalidTransaction))
+      return dispatch(updateSpendError(error))
     })
   }
 }
+
+// export const updateCryptoAmountRequest = (cryptoAmountInDenomination: string = '0') => {
+//   return (dispatch, getState) => {
+//     if (parseFloat(cryptoAmountInDenomination) === 0) return
+//
+//     const state = getState()
+//     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+//     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+//     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+//     const nativeToDenominationRatio = SETTINGS_SELECTORS.getNativeToDenominationRatio(state, currencyCode)
+//     const nativeAmount = convertDenominationToNative(nativeToDenominationRatio, cryptoAmountInDenomination)
+//     const publicAddress = state.ui.scenes.sendConfirmation.publicAddress
+//
+//     const spendInfo = makeSpendInfo({ nativeAmount, publicAddress, currencyCode })
+//
+//     WALLET_API.makeSpend(wallet, spendInfo)
+//     .then(validTransaction => {
+//       dispatch(updateTransaction(validTransaction))
+//       dispatch(updateSpendError(null))
+//     })
+//     .catch(error => {
+//       const invalidTransaction = makeInvalidTransaction({nativeAmount, publicAddress, currencyCode})
+//       dispatch(updateTransaction(invalidTransaction))
+//       return dispatch(updateSpendError(error))
+//     })
+//   }
+// }
 
 export const updateParsedURI = (parsedURI) => {
   return {
@@ -239,4 +246,12 @@ const makeSpendInfo = ({ nativeAmount = '0', publicAddress = '', currencyCode = 
     spendTargets
   }
   return spendInfo
+}
+
+const makeInvalidTransaction = ({currencyCode, nativeAmount, publicAddress}) => {
+  return {
+    currencyCode,
+    nativeAmount,
+    publicAddress
+  }
 }
