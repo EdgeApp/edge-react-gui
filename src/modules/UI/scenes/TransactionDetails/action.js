@@ -29,6 +29,15 @@ export const setTransactionDetails = (transactionDetails, currencyCode) => {
   }
 }
 
+export const getSubcategories = () => {
+  console.log('ACCOUNT_SETTINGS is: ', ACCOUNT_SETTINGS)
+  return (dispatch, getState) => {
+    const { account } = getState().core
+    console.log('in action->getSubcategories, account is: ', account)
+    return ACCOUNT_SETTINGS.getSyncedSubcategories(account)
+  }
+}
+
 export const setSubcategories = subcategories => {
   return {
     type: SET_TRANSACTION_SUBCATEGORIES,

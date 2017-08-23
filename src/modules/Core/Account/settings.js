@@ -25,10 +25,6 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   }
 }
 
-export const SYNCED_SUBCATEGORIES_DEFAULTS = {
-  subcategories: subcategories
-}
-
 export const LOCAL_ACCOUNT_DEFAULTS = {
   bluetoothMode: false
 }
@@ -98,6 +94,7 @@ export const setBluetoothModeRequest = (account, bluetoothMode) => {
 }
 
 export const setSubcategoriesRequest = (account, subcategories) => {
+  console.log('in setSubcategoriesRequest, account is: ', account)
   return getSyncedSubcategories(account)
   .then(subcategories => {
     return setSyncedSubcategories(account, subcategories)
@@ -146,12 +143,13 @@ export const setSyncedSettings = (account, settings) => {
 }
 
 export const getSyncedSubcategories = account => {
+  console.log('in getSyncedSubcategories, account is: ', account)
   return getSyncedSubcategoriesFile(account).getText()
   .then(text => {
     return JSON.parse(text)
   })
   .catch(e => {
-    console.log(e)
+    console.log('in getSyncedSubcategories, error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
     return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
     .then(() => {
@@ -202,7 +200,8 @@ export const getSyncedSettingsFile = account => {
 }
 
 export const getSyncedSubcategoriesFile = account => {
-  return account.folder.file('subcategories.js')
+  console.log('in getSyncedSubcategoriesFile, account is: ', account)
+  return account.folder.file('Categories.json')
 }
 
 export const getLocalSettingsFile = account => {
@@ -229,4 +228,8 @@ export const updateSettings = (currentSettings, newSettings) => {
     ...newSettings
   }
   return updatedSettings
+}
+
+export const SYNCED_SUBCATEGORIES_DEFAULTS = {
+  subcategories: subcategories
 }

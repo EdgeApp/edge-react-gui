@@ -30,7 +30,6 @@ import {colors as c} from '../../../../theme/variables/airbitz'
 import {border as b, limitFiatDecimals, getFiatSymbol} from '../../../utils'
 import { setTransactionDetails, setNewSubcategory } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
-import { subcategories as subcats } from '../../../Core/Account/subcategories.js'
 import SearchResults from '../../components/SearchResults'
 import { openHelpModal } from '../../components/HelpModal/actions'
 
@@ -173,7 +172,7 @@ class TransactionDetails extends Component {
             category: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
-          if (subcats.indexOf(input) === -1) { // if this is a new subcategory
+          if (this.props.subcategoriesList.indexOf(input) === -1) { // if this is a new subcategory
             this.addNewSubcategory(input)
           }
         } else {
@@ -194,7 +193,7 @@ class TransactionDetails extends Component {
   }
 
   addNewSubcategory = (newSubcategory) => {
-    this.props.dispatch(setNewSubcategory(newSubcategory, subcats))
+    this.props.dispatch(setNewSubcategory(newSubcategory, this.props.subcategoriesList))
   }
 
   onEnterCategories = () => {
@@ -404,6 +403,7 @@ class TransactionDetails extends Component {
             enteredSubcategory={this.state.subCategory}
             usableHeight={this.props.usableHeight}
             deviceDimensions={this.props.dimensions}
+            subcategoriesList={this.props.subcategoriesList}
           />
         </Animated.View>
         <ScrollView keyboardShouldPersistTaps='handled' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
@@ -462,6 +462,7 @@ class TransactionDetails extends Component {
                 color={color}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
+                subcategoriesList={this.props.subcategoriesList}
               />
             </View>
           </View>
@@ -479,7 +480,8 @@ const mapStateToProps = state => ({
   fiatSymbol: getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
   usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
-  dimensions: state.ui.scenes.dimensions
+  dimensions: state.ui.scenes.dimensions,
+  subcategoriesList: state.ui.scenes.transactionDetails.subcategories
 })
 const mapDispatchToProps = dispatch => ({
   setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
@@ -606,8 +608,8 @@ class SubCategorySelect extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      subcategories: subcats.sort(),
-      filteredSubcategories: subcats.sort(),
+      subcategories: this.props.subcategoriesList.sort(),
+      filteredSubcategories: this.props.subcategoriesList.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
     // const dimensions = this.props.dimensions
