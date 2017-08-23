@@ -26,6 +26,7 @@ import { toggleScanToWalletListModal } from '../../components/WalletListModal/ac
 import { toggleEnableTorch, toggleAddressModal } from './action'
 
 import {
+  updateParsedURI,
   updatePublicAddressRequest,
   updateWalletTransfer
 } from '../SendConfirmation/action.js'
@@ -79,7 +80,7 @@ class Scan extends Component {
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
-      Alert.alert('Scanning Error', error)
+      Alert.alert('Scanning Error', error.toString())
       // show popup with error message
       console.log(error)
     }
@@ -198,7 +199,7 @@ const mapDispatchToProps = dispatch => {
     toggleEnableTorch: () => dispatch(toggleEnableTorch()),
     toggleAddressModal: () => dispatch(toggleAddressModal()),
     toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-
+    updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
     updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
     updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
   }
