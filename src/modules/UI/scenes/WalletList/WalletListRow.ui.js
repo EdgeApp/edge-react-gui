@@ -9,7 +9,8 @@ import {
   TouchableHighlight,
   Animated,
   Platform,
-  Easing
+  Easing,
+  TouchableOpacity
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
@@ -94,7 +95,14 @@ class WalletListRow extends Component {
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
-        <TouchableHighlight style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
+        <TouchableOpacity
+          onPressIn={() => console.log('onPressIn triggered')}
+          onLongPress={() => console.log('onLongPress triggered')}
+          style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]}
+          underlayColor={'#eee'}
+          {...this.props.sortHandlers}
+          onPress={() => this._onPressSelectWallet(id, currencyCode)}
+          >
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -106,7 +114,7 @@ class WalletListRow extends Component {
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
         {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
