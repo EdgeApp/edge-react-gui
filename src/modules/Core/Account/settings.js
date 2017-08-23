@@ -1,4 +1,5 @@
 import {subcategories} from './subcategories.js'
+import {dumpFolder} from '../../Container.ui.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -143,6 +144,7 @@ export const setSyncedSettings = (account, settings) => {
 }
 
 export const getSyncedSubcategories = account => {
+  dumpFolder(account.folder)
   console.log('in getSyncedSubcategories, account is: ', account)
   return getSyncedSubcategoriesFile(account).getText()
   .then(text => {
