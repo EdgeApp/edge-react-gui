@@ -1,4 +1,4 @@
-import {subcategories} from './subcategories.js'
+import {categories} from './subcategories.js'
 import {dumpFolder} from '../../Container.ui.js'
 
 // Default Core Settings
@@ -94,14 +94,6 @@ export const setBluetoothModeRequest = (account, bluetoothMode) => {
   })
 }
 
-export const setSubcategoriesRequest = (account, subcategories) => {
-  console.log('in setSubcategoriesRequest, account is: ', account)
-  return getSyncedSubcategories(account)
-  .then(subcategories => {
-    return setSyncedSubcategories(account, subcategories)
-  })
-}
-
 // Bitcoin Settings
 export const setBitcoinDenominationRequest = (account, denomination) => {
   return getSyncedSettings(account)
@@ -143,6 +135,26 @@ export const setSyncedSettings = (account, settings) => {
   return SettingsFile.setText(text)
 }
 
+export const setSubcategoriesRequest = (account, subcategories) => {
+  console.log('in setSubcategoriesRequest, account is: ', account)
+  return getSyncedSubcategories(account)
+  .then(subcategories => {
+    return setSyncedSubcategories(account, subcategories)
+  })
+}
+
+export const setSyncedSubcategories = (account, subcategories) => {
+  const text = JSON.stringify(subcategories)
+  if (!text.categories) text.categories = subcategories
+  console.log('in setSyncedSubcategories and text is: ', text, ' , and subcategories is: ', subcategories)
+  const SubcategoriesFile = getSyncedSubcategoriesFile(account)
+  console.log('setting Subcategories file')
+  return SubcategoriesFile.setText(text).then((txt) => {
+    console.log('in setSyncedSubcategories and returning SubcategoriesFile.setText, txt is: ', txt)
+    txt
+  })
+}
+
 export const getSyncedSubcategories = account => {
   dumpFolder(account.folder)
   console.log('in getSyncedSubcategories, account is: ', account)
@@ -150,28 +162,22 @@ export const getSyncedSubcategories = account => {
   .then(text => {
     console.log('in getSyncedSubcategories, no error and text is: ', text)
     let categoriesText = JSON.parse(text)
-    return setSyncedSubcategories(account, categoriesText.categories)
+    return setSyncedSubcategories(account, categoriesText.categories).then((resp) => resp)
   })
   .catch(e => {
-    console.log('in getSyncedSubcategories, error: ', e)
-    // If Settings.json doesn't exist yet, create it, and return it
+    console.log('in getSyncedSubcategories, error: ', e, ' , and setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS) is : ', setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS))
+    // If Categories.json doesn't exist yet, create it, and return it
     return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
     .then(() => {
+      console.log('at end of error clause of getSyncedSubcategories, returning SYNCED_SUBCATEGORIES_DEFAULTS: ', SYNCED_SUBCATEGORIES_DEFAULTS)
       return SYNCED_SUBCATEGORIES_DEFAULTS
     })
   })
 }
 
 export const getSyncedSubcategoriesFile = account => {
-  console.log('in getSyncedSubcategoriesFile, account is: ', account)
+  console.log('in getSyncedSubcategoriesFile, account is: ', account, ' and account.folder.file for Categories.json is: ', account.folder.file('Categories.json'))
   return account.folder.file('Categories.json')
-}
-
-export const setSyncedSubcategories = (account, subcategories) => {
-  const text = JSON.stringify(subcategories)
-  const SubcategoriesFile = getSyncedSettingsFile(account)
-
-  return SubcategoriesFile.setText(text)
 }
 
 export const getLocalSettings = account => {
@@ -235,5 +241,5 @@ export const updateSettings = (currentSettings, newSettings) => {
 }
 
 export const SYNCED_SUBCATEGORIES_DEFAULTS = {
-  subcategories: subcategories
+  categories: categories
 }

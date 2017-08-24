@@ -34,7 +34,10 @@ export const getSubcategories = () => {
   return (dispatch, getState) => {
     const { account } = getState().core
     console.log('in action->getSubcategories, account is: ', account, ' ACCOUNT_SETTINGS.getSyncedSubcategories(account) is: ', ACCOUNT_SETTINGS.getSyncedSubcategories(account))
-    return ACCOUNT_SETTINGS.getSyncedSubcategories(account)
+    ACCOUNT_SETTINGS.getSyncedSubcategories(account).then((s) => {
+      console.log('inside THEN of action->getSubcategories and s is: ', s)
+      return dispatch(setSubcategories(s.categories))
+    })
   }
 }
 
@@ -64,6 +67,7 @@ export const getSelectedWallet = state => {
   return selectedWallet
 }
 
+// is this following function necessary?
 export const setSubcategoriesRequest = subcategories => {
   console.log('in setSubcategoriesRequest, subcategories is: ', subcategories)
   return (dispatch, getState) => {

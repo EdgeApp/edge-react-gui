@@ -31,8 +31,9 @@ import {border as b, limitFiatDecimals, getFiatSymbol} from '../../../utils'
 import {
   setTransactionDetails,
   setNewSubcategory,
-  getSubcategories,
-  setSubcategories
+  getSubcategories
+  // setSubcategories,
+  // setSubcategoriesRequest
 } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import SearchResults from '../../components/SearchResults'
@@ -244,7 +245,9 @@ class TransactionDetails extends Component {
         }
       })
     }
-    this.props.dispatch(setSubcategories(this.props.dispatch(getSubcategories())))
+    console.log('TransactionDetails.ui.js getSubcategories is: ', getSubcategories())
+    this.props.dispatch(getSubcategories())
+    // getSubcategories().then((subs) => { this.props.dispatch(setSubcategoriesRequest(subs)) })
   }
 
   _togglePayeeVisibility = () => {
