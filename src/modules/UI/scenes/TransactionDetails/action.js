@@ -53,9 +53,8 @@ export const setNewSubcategory = (newSubcategory) => {
   return (dispatch, getState) => {
     const state = getState()
     let oldSubcats = state.ui.scenes.transactionDetails.subcategories
-    console.log('oldSubcats is : ', oldSubcats)
-    const newSubcategories = oldSubcats.push(newSubcategory)
-    console.log('adding new subcategory: ', newSubcategory)
+    const newSubcategories = [...oldSubcats, newSubcategory]
+    console.log('adding new subcategory: ', newSubcategory, ',oldSubcats is : ', oldSubcats, ' , making newSubcategories: ', newSubcategories)
     return dispatch(setSubcategoriesRequest(newSubcategories))
   }
 }
@@ -69,9 +68,10 @@ export const getSelectedWallet = state => {
 
 // is this following function necessary?
 export const setSubcategoriesRequest = subcategories => {
-  console.log('in setSubcategoriesRequest, subcategories is: ', subcategories)
+  console.log('in action->setSubcategoriesRequest, subcategories is: ', subcategories)
   return (dispatch, getState) => {
     const { account } = getState().core
+    console.log('in action->setSubcategoriesRequest and about to call ACCOUNT_SETTINGS.setSubcategoriesRequest')
     ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)
     .then(() => {
       return dispatch(setSubcategories(subcategories))

@@ -135,29 +135,33 @@ export const setSyncedSettings = (account, settings) => {
   return SettingsFile.setText(text)
 }
 
-export const setSubcategoriesRequest = (account, subcategories) => {
-  console.log('in setSubcategoriesRequest, account is: ', account)
-  return getSyncedSubcategories(account)
-  .then(subcategories => {
-    return setSyncedSubcategories(account, subcategories)
-  })
+export async function setSubcategoriesRequest (account, subcategories) {
+  console.log('in settings->setSubcategoriesRequest, account is: ', account)
+  // const subcats = await getSyncedSubcategories(account)
+  return setSyncedSubcategories(account, subcategories)
 }
 
-export const setSyncedSubcategories = (account, subcategories) => {
+export async function setSyncedSubcategories (account, subcategories) {
   let finalText = {}
-  let text = JSON.stringify(subcategories)
-  if (!text.categories) {
+  if (!subcategories.categories) {
+    console.log('in settings->setSyncedSubcategories, subcategories.categories does not exist')
     finalText.categories = subcategories
   } else {
+    console.log('subcategories.categories DOES exist')
     finalText = subcategories
   }
-  console.log('in setSyncedSubcategories and text is: ', finalText, ' , and subcategories is: ', subcategories)
+  console.log('in settings->setSyncedSubcategories and finalText is: ', finalText, ' , and subcategories is: ', subcategories)
   const SubcategoriesFile = getSyncedSubcategoriesFile(account)
   console.log('setting Subcategories file')
-  return SubcategoriesFile.setText(finalText).then((txt) => {
-    console.log('in setSyncedSubcategories and returning SubcategoriesFile.setText, txt is: ', txt)
-    txt
-  })
+  let stringifiedSubcategories = JSON.stringify(finalText)
+  console.log('in settings->setSyncedSubcategories, stringifiedSubcategories is : ', stringifiedSubcategories, ' and SubcategoriesFile is: ', SubcategoriesFile)
+  try {
+    await SubcategoriesFile.setText(stringifiedSubcategories)
+  } catch (e) {
+    console.log('error setting text, e: ', e)
+  }
+
+  dumpFolder(account.folder)
 }
 
 export const getSyncedSubcategories = account => {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {PropTypes, Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
@@ -171,14 +171,15 @@ class TransactionDetails extends Component {
         subCategory: ''
       })
     } else {
-      if (input.indexOf(':')) {
-        stringArray = input.split(':')
+      let colonOccurrence = input.indexOf(':')
+      if (colonOccurrence) {
+        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence, -1)]
         if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
           this.setState({
             category: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
-          if (this.props.subcategoriesList.indexOf(input) === -1) { // if this is a new subcategory
+          if ((this.props.subcategoriesList.indexOf(input) === -1) && categories.indexOf(stringArray[0] >= 0)) { // if this is a new subcategory and the parent category is an accepted type
             this.addNewSubcategory(input)
           }
         } else {
@@ -414,7 +415,7 @@ class TransactionDetails extends Component {
             enteredSubcategory={this.state.subCategory}
             usableHeight={this.props.usableHeight}
             deviceDimensions={this.props.dimensions}
-            subcategoriesList={this.props.subcategoriesList}
+            subcategoriesList={this.props.subcategoriesList.sort()}
           />
         </Animated.View>
         <ScrollView keyboardShouldPersistTaps='handled' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
@@ -484,6 +485,7 @@ class TransactionDetails extends Component {
 }
 
 TransactionDetails.propTypes = {
+  subcategoriesList: PropTypes.array
 }
 
 const mapStateToProps = state => ({
@@ -492,7 +494,7 @@ const mapStateToProps = state => ({
   contacts: state.ui.contacts.contactList,
   usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
   dimensions: state.ui.scenes.dimensions,
-  subcategoriesList: state.ui.scenes.transactionDetails.subcategories.sort()
+  subcategoriesList: state.ui.scenes.transactionDetails.subcategories
 })
 const mapDispatchToProps = dispatch => ({
   setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
@@ -636,7 +638,8 @@ class SubCategorySelect extends Component {
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
-      categories.map((cat) => {
+      console.log('inside of this.props.enteredSubcategory clause, categories is: ', categories)
+      newPotentialSubCategories = categories.map((cat) => {
         return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
       })
       newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
