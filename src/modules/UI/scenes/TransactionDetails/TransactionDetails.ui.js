@@ -49,6 +49,13 @@ class TransactionDetails extends Component {
     const dateTime = new Date(this.props.tx.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
+    let type
+    if (this.props.category) {
+      let colonOccurrence = this.props.category.indexOf(':')
+      if (colonOccurrence) {
+        type = this.props.category.substring(0, colonOccurrence)
+      }
+    }
     this.state = {
       tx: this.props.tx,
       // payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '',
@@ -70,7 +77,8 @@ class TransactionDetails extends Component {
       payeeOpacity: new Animated.Value(0),
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,
-      subcatZIndex: 0
+      subcatZIndex: 0,
+      type: type
     }
   }
 
@@ -112,7 +120,7 @@ class TransactionDetails extends Component {
 
   onChangeCategory = (input) => {
     this.setState({
-      category: input
+      type: input
     })
   }
 
@@ -173,10 +181,11 @@ class TransactionDetails extends Component {
     } else {
       let colonOccurrence = input.indexOf(':')
       if (colonOccurrence) {
-        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence, -1)]
-        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
+        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
+        console.log('stringArray is: ', stringArray)
+        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) { // if the type is of the 4 options
           this.setState({
-            category: stringArray[0].toLowerCase(),
+            type: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
           if ((this.props.subcategoriesList.indexOf(input) === -1) && categories.indexOf(stringArray[0] >= 0)) { // if this is a new subcategory and the parent category is an accepted type
@@ -184,12 +193,12 @@ class TransactionDetails extends Component {
           }
         } else {
           this.setState({
-            subCategory: input
+            subCategory: stringArray[1]
           })
         }
       } else {
         this.setState({
-          subCategory: input
+          subCategory: stringArray[1]
         })
       }
     }
@@ -212,7 +221,7 @@ class TransactionDetails extends Component {
   }
 
   onSelectCategory = (item) => {
-    this.setState({category: item.itemValue})
+    this.setState({typ: item.itemValue})
     this.onExitCategories()
   }
 
@@ -221,7 +230,8 @@ class TransactionDetails extends Component {
   }
 
   onPressSave = () => {
-    const { txid, name, category, notes, amountFiat, bizId, miscJson } = this.state
+    const category = this.state.type + ':' + this.state.subcategory
+    const { txid, name, notes, amountFiat, bizId, miscJson } = this.state
     const transactionDetails = { txid, name, category, notes, amountFiat, bizId, miscJson }
     console.log('transactionDetails are: ', transactionDetails)
     this.props.setTransactionDetails(transactionDetails)
@@ -306,7 +316,7 @@ class TransactionDetails extends Component {
   }
 
   render () {
-    let leftData, feeSyntax, category
+    let leftData, feeSyntax, type
 
     const types = {
       exchange: {
@@ -331,14 +341,14 @@ class TransactionDetails extends Component {
       }
     }
 
-    if (!this.state.category) {
+    if (!this.state.type) {
       if (this.state.direction === 'receive') {
-        category = types.income
+        type = types.income
       } else {
-        category = types.expense
+        type = types.expense
       }
     } else {
-      category = types[this.state.category]
+      type = types[this.state.type]
     }
 
     if (this.state.direction === 'receive') {
@@ -348,7 +358,7 @@ class TransactionDetails extends Component {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)
       leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
     }
-    let color = category.color
+    let color = type.color
     console.log('rendering txDetails, this is: ', this)
     return (
       <View style={[b()]}>
@@ -390,7 +400,7 @@ class TransactionDetails extends Component {
           >
           <View style={[styles.modalCategoryRow, b()]}>
             <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: color}]} disabled>
-              <T style={[b(), {color: color}, styles.categoryLeftText]}>{category.syntax}</T>
+              <T style={[b(), {color: color}, styles.categoryLeftText]}>{type.syntax}</T>
             </TouchableOpacity>
             <View style={[b(), styles.modalCategoryInputArea]}>
               <TextInput
@@ -458,7 +468,7 @@ class TransactionDetails extends Component {
                 categorySelectVisibility={this.state.categorySelectVisibility}
                 onSelectSubCategory={this.onSelectSubCategory}
                 subCategory={this.state.subCategory}
-                category={category}
+                type={type}
                 selectCategory={this.onSelectCategory}
                 onEnterCategories={this.onEnterCategories}
                 onExitCategories={this.onExitCategories}
@@ -554,7 +564,7 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.categoryRow, b()]}>
           <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
-            <T style={[b(), {color: this.props.color}, styles.categoryLeftText]}>{this.props.category.syntax}</T>
+            <T style={[b(), {color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</T>
           </TouchableOpacity>
           <View style={[b(), styles.categoryInputArea]}>
             <TextInput
@@ -574,7 +584,7 @@ class AmountArea extends Component {
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
           <Picker style={[b(), {backgroundColor: 'white', width: this.props.dimensions.deviceDimensions.width, height: this.props.dimensions.deviceDimensions.height / 3, position: 'absolute', top: this.props.dimensions.deviceDimensions.height - this.props.dimensions.deviceDimensions.height / 3, left: -20}]}
             itemStyle={{fontFamily: 'SourceSansPro-Black', color: c.gray1, fontSize: 30, paddingBottom: 14}}
-            selectedValue={this.props.category.key}
+            selectedValue={this.props.type.key}
             onValueChange={(itemValue, itemIndex) => this.props.selectCategory({itemValue})}>
             {categories.map((x, i) => (
               <Picker.Item label={this.props.types[x].syntax} value={x} key={this.props.types[x].key} />
