@@ -20,6 +20,9 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
+import Action from 'react-native-router-flux'
+import { openABAlert } from '../../components/ABAlert/action.js'
+
 export const getTransactionsRequest = (walletId, currencyCode) => {
   return (dispatch, getState) => {
     const state = getState()
@@ -32,17 +35,6 @@ export const getTransactionsRequest = (walletId, currencyCode) => {
   }
 }
 
-export const newTransactionsRequest = (transactions, walletId) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-
-    if (walletId === selectedWalletId) {
-      return dispatch(newTransactions(transactions))
-    }
-  }
-}
-
 export const refreshTransactionsRequest = (walletId) => {
   return (dispatch, getState) => {
     const state = getState()
@@ -52,6 +44,19 @@ export const refreshTransactionsRequest = (walletId) => {
     if (walletId === selectedWalletId) {
       return dispatch(getTransactionsRequest(walletId, currencyCode))
     }
+  }
+}
+
+export const newTransactionsRequest = (walletId, transactions) => {
+  return (dispatch) => {
+    const messageInfo = {
+      title: 'Transaction Received',
+      message: 'You have received a new transaction',
+      buttons: [
+        { text: 'View', onPress: () => Action.transactionDetails(transactions[0]) }
+      ]
+    }
+    dispatch(openABAlert(messageInfo))
   }
 }
 

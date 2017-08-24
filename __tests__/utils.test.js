@@ -239,3 +239,67 @@ describe('absoluteValue', function () {
     expect(actual).toBe(expected)
   })
 })
+
+describe('getNewArrayWithItem', function () {
+  describe('returns new array', function () {
+    test('input !== output', function () {
+      const array = [1, 2, 3]
+      const input = 4
+      const expected = array
+      const actual = UTILS.getNewArrayWithItem(array, input)
+      expect(actual).not.toBe(expected)
+    })
+  })
+
+  describe('when array includes item', function () {
+    test('[1, 2, 3] => [1, 2, 3]', function () {
+      const array = [1, 2, 3]
+      const input = 1
+      const expected = [1, 2, 3]
+      const actual = UTILS.getNewArrayWithItem(array, input)
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe('when array does not include item', function () {
+    test('[1, 2, 3] => [1, 2, 3, 4]', function () {
+      const array = [1, 2, 3]
+      const input = 4
+      const expected = [1, 2, 3, 4]
+      const actual = UTILS.getNewArrayWithItem(array, input)
+      expect(actual).toEqual(expected)
+    })
+  })
+})
+
+describe('getNewArrayWithoutItem', function () {
+  describe('returns new array', function () {
+    test('input !== output', function () {
+      const array = [1, 2, 3]
+      const input = 1
+      const expected = array
+      const actual = UTILS.getNewArrayWithoutItem(array, input)
+      expect(actual).not.toBe(expected)
+    })
+  })
+
+  describe('when array includes item', function () {
+    test('[1, 2, 3] => [1, 2, 3]', function () {
+      const array = [1, 2, 3]
+      const input = 1
+      const expected = [2, 3]
+      const actual = UTILS.getNewArrayWithoutItem(array, input)
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe('when array does not include item', function () {
+    test('[1, 2, 3] => [1, 2, 3, 4]', function () {
+      const array = [1, 2, 3]
+      const input = 4
+      const expected = [1, 2, 3]
+      const actual = UTILS.getNewArrayWithoutItem(array, input)
+      expect(actual).toEqual(expected)
+    })
+  })
+})

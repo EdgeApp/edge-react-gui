@@ -146,3 +146,16 @@ export const truncateDecimals = (input: string, precision: number): string => {
 export const absoluteValue = (input: string): string => {
   return input.replace('-', '')
 }
+
+export const getNewArrayWithoutItem = (list, targetItem) => {
+  return list.filter(item => {
+    return item !== targetItem
+  })
+}
+
+export const getNewArrayWithItem = (list, item) => {
+  if (!list.includes(item)) {
+    return [...list, item]
+  }
+  return list
+}
