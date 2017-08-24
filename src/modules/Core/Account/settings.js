@@ -144,12 +144,17 @@ export const setSubcategoriesRequest = (account, subcategories) => {
 }
 
 export const setSyncedSubcategories = (account, subcategories) => {
-  const text = JSON.stringify(subcategories)
-  if (!text.categories) text.categories = subcategories
-  console.log('in setSyncedSubcategories and text is: ', text, ' , and subcategories is: ', subcategories)
+  let finalText = {}
+  let text = JSON.stringify(subcategories)
+  if (!text.categories) {
+    finalText.categories = subcategories
+  } else {
+    finalText = subcategories
+  }
+  console.log('in setSyncedSubcategories and text is: ', finalText, ' , and subcategories is: ', subcategories)
   const SubcategoriesFile = getSyncedSubcategoriesFile(account)
   console.log('setting Subcategories file')
-  return SubcategoriesFile.setText(text).then((txt) => {
+  return SubcategoriesFile.setText(finalText).then((txt) => {
     console.log('in setSyncedSubcategories and returning SubcategoriesFile.setText, txt is: ', txt)
     txt
   })

@@ -245,9 +245,6 @@ class TransactionDetails extends Component {
         }
       })
     }
-    console.log('TransactionDetails.ui.js getSubcategories is: ', getSubcategories())
-    this.props.dispatch(getSubcategories())
-    // getSubcategories().then((subs) => { this.props.dispatch(setSubcategoriesRequest(subs)) })
   }
 
   _togglePayeeVisibility = () => {
@@ -300,6 +297,11 @@ class TransactionDetails extends Component {
         subcatZIndex: 0
       })
     }
+  }
+
+  componentWillMount () {
+    console.log('TransactionDetails.ui.js getSubcategories is: ', getSubcategories())
+    this.props.dispatch(getSubcategories())
   }
 
   render () {
@@ -490,7 +492,7 @@ const mapStateToProps = state => ({
   contacts: state.ui.contacts.contactList,
   usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
   dimensions: state.ui.scenes.dimensions,
-  subcategoriesList: state.ui.scenes.transactionDetails.subcategories
+  subcategoriesList: state.ui.scenes.transactionDetails.subcategories.sort()
 })
 const mapDispatchToProps = dispatch => ({
   setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
@@ -616,8 +618,9 @@ export const AmountAreaConnect = connect(state => ({
 class SubCategorySelect extends Component {
   constructor (props) {
     super(props)
+    console.log('in SubCategorySelect constructor, this.props.subcategoriesList is: ', this.props.subcategoriesList)
     this.state = {
-      subcategories: this.props.subcategoriesList.sort(),
+      subcategories: this.props.subcategoriesList,
       filteredSubcategories: this.props.subcategoriesList.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
@@ -626,15 +629,17 @@ class SubCategorySelect extends Component {
   }
 
   render () {
-    let filteredSubcats = (!this.props.enteredSubcategory) ? this.state.subcategories : this.state.subcategories.filter((entry) => {
+    console.log('in SubCategorySelect rendering, this is: ', this)
+    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => {
       return entry.indexOf(this.props.enteredSubcategory) >= 0
     })
     let newPotentialSubCategories = categories.map((cat) => {
       return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
     })
     let newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
-      return this.state.subcategories.indexOf(cat) < 0
+      return this.props.subcategoriesList.indexOf(cat) < 0
     })
+    console.log('rendering SubcategorySelect, filteredSubcats is: ', filteredSubcats, ' , newPotentialSubcategories is: ', newPotentialSubCategories, ' , and newPotentialSubcategoriesFiltered: ', newPotentialSubCategoriesFiltered)
     return (
       <SearchResults
         renderRegularResultFxn={this.renderSubcategory}
