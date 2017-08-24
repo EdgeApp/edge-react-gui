@@ -633,12 +633,17 @@ class SubCategorySelect extends Component {
     let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => {
       return entry.indexOf(this.props.enteredSubcategory) >= 0
     })
-    let newPotentialSubCategories = categories.map((cat) => {
-      return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
-    })
-    let newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
-      return this.props.subcategoriesList.indexOf(cat) < 0
-    })
+    let newPotentialSubCategories = []
+    let newPotentialSubCategoriesFiltered = []
+    if (this.props.enteredSubcategory) {
+      categories.map((cat) => {
+        return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
+      })
+      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
+        return this.props.subcategoriesList.indexOf(cat) < 0
+      })
+    }
+
     console.log('rendering SubcategorySelect, filteredSubcats is: ', filteredSubcats, ' , newPotentialSubcategories is: ', newPotentialSubCategories, ' , and newPotentialSubcategoriesFiltered: ', newPotentialSubCategoriesFiltered)
     return (
       <SearchResults
