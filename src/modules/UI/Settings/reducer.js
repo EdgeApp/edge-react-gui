@@ -120,7 +120,6 @@ export const settings = (state = initialState, action) => {
       const currencyInfo = plugin.currencyInfo
 
       // Build up object with all the information for the parent currency, accesible by the currencyCode
-
       const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
       const parentCurrencyInfo = {
         [currencyInfo.currencyCode]: {

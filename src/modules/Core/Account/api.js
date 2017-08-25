@@ -5,8 +5,7 @@ export const logout = account => {
 }
 
 export const createWalletRequest = (account, keys, walletType) => {
-  const formattedWalletType = 'wallet:' + walletType.toLowerCase()
-  return account.createWallet(formattedWalletType, keys)
+  return account.createWallet(walletType, keys)
 }
 
 export const activateWalletRequest = (account, walletId) => {

@@ -1,7 +1,7 @@
 // @flow
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
-export const SELECT_BLOCKCHAIN = 'SELECT_BLOCKCHAIN'
+export const SELECT_WALLET_TYPE = 'SELECT_WALLET_TYPE'
 export const SELECT_FIAT = 'SELECT_FIAT'
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
@@ -19,10 +19,10 @@ export const updateWalletName = (walletName:string) => {
   }
 }
 
-export const selectBlockchain = (blockchain:string) => {
+export const selectWalletType = (walletType:string) => {
   return {
-    type: SELECT_BLOCKCHAIN,
-    data: { blockchain }
+    type: SELECT_WALLET_TYPE,
+    data: { walletType }
   }
 }
 
@@ -61,7 +61,7 @@ export const createWallet = (walletName:string, walletType:string) => {
     const publicKeys = matchingPlugin.derivePublicKey(walletInfo)
     const keys = Object.assign({}, privateKeys, publicKeys)
 
-    ACCOUNT_API.createWalletRequest(account, keys, formattedWalletType)
+    ACCOUNT_API.createWalletRequest(account, keys, walletType)
     .then((walletId) => {
       Actions.walletList({type: 'reset'})
       dispatch(LOGIN_ACTIONS.updateWallets())
