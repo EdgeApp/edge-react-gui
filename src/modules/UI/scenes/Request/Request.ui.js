@@ -201,7 +201,7 @@ const mapStateToProps = (state) => {
   }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    console.warn('REMOVE BEFORE FLIGHT')
+    // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
     fiatPerCrypto = CORE_SELECTORS.getFakeExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     // fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }

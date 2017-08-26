@@ -131,7 +131,7 @@ class Main extends Component {
       })
     })
     this.props.setLocaleInfo(localeInfo)
-    console.warn('REMOVE BEFORE FLIGHT')
+    // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
     setInterval(() => { this.props.updateExchangeRates() }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
     // setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
   }
