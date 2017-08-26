@@ -19,7 +19,7 @@ import { updateWalletName, selectWalletType, selectFiat, createWallet } from './
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
-const BLOCKCHAIN_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
+const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type' // sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
 const FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
 
 const DONE_TEXT = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
@@ -122,7 +122,7 @@ class CreateWallet extends Component {
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
           listItems={this.getSupportedWalletTypes()}
-          placeholder={BLOCKCHAIN_PICKER_PLACEHOLDER}
+          placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
           onSelect={this.handleSelectWalletType} />
 
         <DropdownPicker

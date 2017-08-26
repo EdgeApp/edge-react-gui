@@ -63,6 +63,7 @@ export const getEthereumPlugin = (state:any) => {
 export const getSupportedWalletTypes = (state:any) => {
   const plugins = getPlugins(state).arrayPlugins
   const supportedWalletTypes = plugins.reduce((walletTypes, plugin) => ({
+    ...walletTypes,
     [plugin.currencyInfo.currencyName]: plugin.currencyInfo.walletTypes[0]
   }), {})
   return supportedWalletTypes
