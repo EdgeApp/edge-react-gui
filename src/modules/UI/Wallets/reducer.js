@@ -1,7 +1,8 @@
 // @flow
 
 import { combineReducers } from 'redux'
-import { ABCDenomination, ABCMetaToken, GUIWallet } from '../../../types.js'
+import { GUIWallet } from '../../../types.js'
+import type { EsDenomination, EsMetaToken } from 'airbitz-core-js'
 import * as ACTION from './action'
 import * as UTILS from '../../utils.js'
 
@@ -90,13 +91,13 @@ function schema (wallet:any):GUIWallet {
   const fiatCurrencyCode:string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode:string = wallet.fiatCurrencyCode
   const symbolImage:string = wallet.currencyInfo.symbolImage
-  const metaTokens:Array<ABCMetaToken> = wallet.currencyInfo.metaTokens
-  const denominations:Array<ABCDenomination> = wallet.currencyInfo.denominations
+  const metaTokens:Array<EsMetaToken> = wallet.currencyInfo.metaTokens
+  const denominations:Array<EsDenomination> = wallet.currencyInfo.denominations
 
-  const allDenominations: { [currencyCode: string]: { [denomination: string]: ABCDenomination } } = {}
+  const allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } } = {}
   // Add all parent currency denominations to allDenominations
   denominations.forEach(denomination => {
-    const denomIndex:{[denomination: string]: ABCDenomination} = {}
+    const denomIndex:{[denomination: string]: EsDenomination} = {}
     denomIndex[denomination.multiplier] = denomination
     allDenominations[denomination.name] = denomIndex
   })
@@ -113,7 +114,7 @@ function schema (wallet:any):GUIWallet {
     const currencyCode:string = metaToken.currencyCode
     const currencyName:string = metaToken.currencyName
     const tokenBalance:string = wallet.getBalance({ currencyCode })
-    const tokenDenominations:Array<ABCDenomination> = metaToken.denominations
+    const tokenDenominations:Array<EsDenomination> = metaToken.denominations
 
     // Add token balance to allBalances
     nativeBalances[currencyCode] = tokenBalance
@@ -122,7 +123,7 @@ function schema (wallet:any):GUIWallet {
     // Add all token denominations to allDenominations
     // allDenominations[currencyCode] = {}
     tokenDenominations.forEach(denomination => {
-      let denomIndex:{[denomination: string]: ABCDenomination} = {}
+      let denomIndex:{[denomination: string]: EsDenomination} = {}
       denomIndex[denomination.multiplier] = denomination
       allDenominations[currencyCode] = denomIndex
     })

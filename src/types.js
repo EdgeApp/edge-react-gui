@@ -1,22 +1,9 @@
 /**
  * Created by paul on 8/16/17.
  */
-
 // @flow
 
-export interface ABCDenomination {
-  name:string,
-  multiplier:string,
-  symbol:string|null
-}
-
-export interface ABCMetaToken {
-  currencyCode:string,
-  currencyName:string,
-  denominations:Array<ABCDenomination>,
-  contractAddress:string|null,
-  symbolImage:string|null
-}
+import { EsDenomination, EsMetaToken } from 'airbitz-core-js'
 
 export class GUIWallet {
   id:string
@@ -28,10 +15,10 @@ export class GUIWallet {
   currencyCode:string
   isoFiatCurrencyCode:string
   fiatCurrencyCode:string
-  denominations:Array<ABCDenomination>
-  allDenominations: { [currencyCode: string]: { [denomination: string]: ABCDenomination } }
+  denominations:Array<EsDenomination>
+  allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } }
   symbolImage:string
-  metaTokens:Array<ABCMetaToken>
+  metaTokens:Array<EsMetaToken>
   sortIndex:number
   archived:boolean
   deleted:boolean
@@ -45,10 +32,10 @@ export class GUIWallet {
     currencyCode:string,
     isoFiatCurrencyCode:string,
     fiatCurrencyCode:string,
-    denominations:Array<ABCDenomination>,
-    allDenominations: { [currencyCode: string]: { [denomination: string]: ABCDenomination } },
+    denominations:Array<EsDenomination>,
+    allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } },
     symbolImage:string,
-    metaTokens:Array<ABCMetaToken>,
+    metaTokens:Array<EsMetaToken>,
     sortIndex:number,
     archived:boolean,
     deleted:boolean

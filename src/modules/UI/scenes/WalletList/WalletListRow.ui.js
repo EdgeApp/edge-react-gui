@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { bns } from 'biggystring'
-import { ABCDenomination, GUIWallet } from '../../../../types.js'
+import { GUIWallet } from '../../../../types.js'
+import type { EsDenomination } from 'airbitz-core-js'
 import {
   View,
   TouchableHighlight,
@@ -174,7 +175,7 @@ export const WalletListTokenRowConnect = connect((state, ownProps) => {
   const walletId = ownProps.parentId
   const currencyCode = ownProps.currencyCode
   const wallet:GUIWallet = UI_SELECTORS.getWallet(state, walletId)
-  let denomination:ABCDenomination = {}
+  let denomination:EsDenomination = {}
   let multiplier:string = '0'
   if (wallet) {
     const index:string = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
