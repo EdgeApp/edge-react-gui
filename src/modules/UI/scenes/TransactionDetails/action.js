@@ -7,7 +7,7 @@ import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 export const SET_TRANSACTION_SUBCATEGORIES_START = 'SET_TRANSACTION_SUBCATEGORIES_START'
 export const SET_TRANSACTION_SUBCATEGORIES = 'SET_TRANSACTION_SUBCATEGORIES'
 
-export const setTransactionDetails = (transactionDetails, currencyCode) => {
+export const setTransactionDetails = (currencyCode, transactionDetails) => {
   return (dispatch, getState) => {
     const state = getState()
     const wallet = getSelectedWallet(state)
@@ -17,6 +17,9 @@ export const setTransactionDetails = (transactionDetails, currencyCode) => {
     const onError = () => {
 
     }
+    console.log('in action, wallet is: ', wallet)
+    console.log('in action, currencyCode is: ', currencyCode)
+    console.log('in action, transactionDetails is: ', transactionDetails)
     WALLET_API.setTransactionDetailsRequest(wallet, currencyCode, transactionDetails)
       .then(onSuccess)
       .catch(onError)

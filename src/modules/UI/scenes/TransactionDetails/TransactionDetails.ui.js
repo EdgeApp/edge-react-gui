@@ -82,10 +82,6 @@ class TransactionDetails extends Component {
     }
   }
 
-  onSaveTxDetails = () => {
-    this.props.dispatch(setTransactionDetails(this.props.selectedWallet, this.state, this.props.currencyCode))
-  }
-
   onFocusPayee = () => {
     this._togglePayeeVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 62, animated: true})
@@ -229,12 +225,14 @@ class TransactionDetails extends Component {
     this.refs._scrollView.scrollTo({x: 0, y: 90, animated: true})
   }
 
-  onPressSave = () => {
+  onSaveTxDetails = () => {
     const category = this.state.type + ':' + this.state.subcategory
     const { txid, name, notes, amountFiat, bizId, miscJson } = this.state
     const transactionDetails = { txid, name, category, notes, amountFiat, bizId, miscJson }
-    console.log('transactionDetails are: ', transactionDetails)
-    this.props.setTransactionDetails(transactionDetails)
+    console.log('in onSaveTxDetails, this.props.selectedWallet is: ', this.props.selectedWallet)
+    console.log('in onSaveTxDetails, this.props.selectedWallet.currencyCode is: ', this.props.selectedWallet.currencyCode)
+    console.log('in onSaveTxDetails, transactionDetails are: ', transactionDetails)
+    this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
   }
 
   componentDidMount () {
@@ -507,7 +505,7 @@ const mapStateToProps = state => ({
   subcategoriesList: state.ui.scenes.transactionDetails.subcategories
 })
 const mapDispatchToProps = dispatch => ({
-  setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
+  setTransactionDetails: (currencyCode, transactionDetails) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
