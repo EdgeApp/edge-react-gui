@@ -4,7 +4,7 @@ import {
   View,
   Share
 } from 'react-native'
-import Alert from './alert.js'
+import Alert from './alert'
 import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
