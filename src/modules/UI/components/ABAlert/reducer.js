@@ -1,7 +1,7 @@
 import * as ACTION from './action'
 import { combineReducers } from 'redux'
 
-const view = (state = '', action) => {
+const view = (state = false, action) => {
   switch (action.type) {
     case ACTION.OPEN_AB_ALERT :
       return true

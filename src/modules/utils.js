@@ -1,4 +1,5 @@
 import borderColors from '../theme/variables/css3Colors'
+import { divf, mulf } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 
 export const cutOffText = (str, lng) => {
@@ -8,10 +9,6 @@ export const cutOffText = (str, lng) => {
     return str
   }
 }
-
-/* export const cuttMiddleText = (str, lng1, lng2)=> {
-  // for later insertion
-} */
 
 export const findDenominationSymbol = (denoms, value) => {
   console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
@@ -26,19 +23,7 @@ export const getFiatSymbol = (code) => {
   return getSymbolFromCurrency(code)
 }
 
-const getFiatFromCrypto = (crypto, fiatPerCrypto) => {
-  const fiatFromCrypto = (crypto * fiatPerCrypto)
-
-  return fiatFromCrypto
-}
-
-const getCryptoFromFiat = (fiat, fiatPerCrypto) => {
-  const cryptoFromFiat = (fiat / fiatPerCrypto)
-
-  return parseFloat(cryptoFromFiat.toFixed(5))
-}
-
-const sanitizeInput = (input) => {
+export const sanitizeInput = (input) => {
   const numbers = /\d*[.]?\d*/
   const sanitizedInput = input.toString().match(numbers)[0]
 
@@ -67,25 +52,25 @@ export const limitFiatDecimals = (num) => {
   }
 }
 
-const devStyle = {
+export const devStyle = {
   borderColor: 'red',
   borderWidth: 1,
   backgroundColor: 'yellow'
 }
 
-const logInfo = (msg) => {
+export const logInfo = (msg: string) => {
   console.log('%c ' + msg, 'background: grey; font-weight: bold; display: block;')
 }
 
-const logWarning = (msg) => {
+export const logWarning = (msg: string) => {
   console.log('%c ' + msg, 'background: yellow; font-weight: bold; display: block;')
 }
 
-const logError = (msg) => {
+export const logError = (msg: string) => {
   console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
 }
 
-const border = (color) => {
+export const border = (color: string) => {
   let borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
@@ -93,17 +78,84 @@ const border = (color) => {
   }
 }
 
-const getRandomColor = () => {
+export const getRandomColor = () => {
   return borderColors[Math.floor(Math.random() * borderColors.length)]
 }
 
-export {
-  getFiatFromCrypto,
-  getCryptoFromFiat,
-  sanitizeInput,
-  devStyle,
-  logInfo,
-  logError,
-  logWarning,
-  border
+// Used to reject non-numeric (expect '.') values in the FlipInput
+export const isValidInput = (input: string): boolean => {
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
+  return !isNaN(+input) || input === '.'
+}
+
+export const formatNumber = (input: string): string => {
+  return input === '.' ? '0.' : input
+}
+
+// Used to convert outputs form core to amounts ready for display
+export const convertNativeToDisplay = (nativeToDisplayRatio: string) => {
+  return (nativeAmount: string): string => {
+    return divf(nativeAmount, nativeToDisplayRatio).toString()
+  }
+}
+
+// Used to convert amounts from display to core inputs
+export const convertDisplayToNative = (nativeToDisplayRatio: string) => {
+  return (displayAmount: string): string => {
+    if (!displayAmount) return ''
+    return mulf(displayAmount, nativeToDisplayRatio)
+  }
+}
+
+// Used to convert exchange output to amounts ready for display
+export const convertExchangeToDisplay = (displayToExchangeRatio: string) => {
+  return (exchangeAmount: string): string => {
+    return (parseFloat(exchangeAmount) * parseFloat(displayToExchangeRatio)).toString()
+  }
+}
+
+// Used to convert amounts from display to exchange inputs
+export const convertDisplayToExchange = (displayToExchangeRatio: string) => {
+  return (displayAmount: string): string => {
+    return (parseFloat(displayAmount) / parseFloat(displayToExchangeRatio)).toString()
+  }
+}
+
+// Used to convert amounts in their respective exchange denominations
+export const convertExchangeToExchange = (ratio: string) => {
+  return (exchangeAmount: string): string => {
+    return (parseFloat(exchangeAmount) * parseFloat(ratio)).toString()
+  }
+}
+
+// Used to get the ratio used for converting a displayAmount into a
+// exchangeAmount when using the currency exchange
+export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: string) => {
+  return (displayNativeToDisplayRatio: string): string => {
+    return divf(exchangeNativeToDisplayRatio, displayNativeToDisplayRatio).toString()
+  }
+}
+
+// Used to limit the decimals of a displayAmount
+export const truncateDecimals = (input: string, precision: number): string => {
+  if (!input.includes('.')) { return input }
+  const [integers, decimals] = input.split('.')
+  return `${integers}.${decimals.slice(0, precision)}`
+}
+
+export const absoluteValue = (input: string): string => {
+  return input.replace('-', '')
+}
+
+export const getNewArrayWithoutItem = (list, targetItem) => {
+  return list.filter(item => {
+    return item !== targetItem
+  })
+}
+
+export const getNewArrayWithItem = (list, item) => {
+  if (!list.includes(item)) {
+    return [...list, item]
+  }
+  return list
 }

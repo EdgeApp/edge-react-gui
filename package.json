@@ -23,7 +23,8 @@
     "flow:cover": "flow-coverage-report",
     "precommit": "npm test",
     "prepush": "npm test",
-    "test": "npm run lint && npm run flow && jest"
+    "test": "npm run lint && npm run flow && jest",
+    "watch": "npm test -- --watch"
   },
   "jest": {
     "preset": "react-native"
@@ -43,6 +44,7 @@
     "async": "^2.3.0",
     "asyncstorage-down": "^4.0.1",
     "base64-js": "^1.2.0",
+    "biggystring": "^1.0.6",
     "browserify-zlib": "^0.1.4",
     "buffer": "^3.6.0",
     "console-browserify": "^1.1.0",
@@ -126,7 +128,9 @@
     "husky": "^0.12.0",
     "jest": "^20.0.4",
     "nyc": "^10.0.0",
-    "react-test-renderer": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-native-mock": "^0.3.1",
+    "react-test-renderer": "^16.0.0-beta.5",
     "redux-logger": "^2.7.4",
     "rn-nodeify": "^7.0.1",
     "snazzy": "^5.0.0",

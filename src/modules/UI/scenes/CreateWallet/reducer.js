@@ -12,12 +12,12 @@ const walletName = (state = '', action) => {
   }
 }
 
-const selectedBlockchain = (state = '', action) => {
+const selectedWalletType = (state = '', action) => {
   const { type, data = {} } = action
-  const { blockchain } = data
+  const { walletType } = data
   switch (type) {
-    case ACTION.SELECT_BLOCKCHAIN:
-      return blockchain
+    case ACTION.SELECT_WALLET_TYPE:
+      return walletType
     default:
       return state
   }
@@ -36,7 +36,7 @@ const selectedFiat = (state = '', action) => {
 
 const createWallet = combineReducers({
   walletName,
-  selectedBlockchain,
+  selectedWalletType,
   selectedFiat
 })
 

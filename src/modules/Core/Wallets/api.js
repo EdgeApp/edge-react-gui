@@ -81,6 +81,7 @@ export const getReceiveAddress = (wallet:any, currencyCode:string) => {
 }
 
 export const makeSpend = (wallet:any, spendInfo:any) => {
+  console.log('spendInfo', spendInfo)
   return wallet.makeSpend(spendInfo)
 }
 
@@ -97,3 +98,21 @@ export const enableTokens = (wallet:any, tokens:Array<string>) => {
 export const parseURI = (wallet:any, uri:string) => {
   return wallet.parseUri(uri)
 }
+
+export const signTransaction = (wallet:any, unsignedTransaction:any) => {
+  return wallet.signTx(unsignedTransaction)
+}
+
+export const broadcastTransaction = (wallet:any, signedTransaction:any) => {
+  return wallet.broadcastTx(signedTransaction)
+}
+
+export const saveTransaction = (wallet:any, signedTransaction:any) => {
+  return wallet.saveTx(signedTransaction)
+}
+
+// Documented but not implemented in the core
+// Do not use for Glidera transactions
+// export const signBroadcastAndSaveTransaction = (wallet:any, unsignedTransaction:any) => {
+//   return wallet.signBroadcastAndSaveTransactionTx(unsignedTransaction)
+// }

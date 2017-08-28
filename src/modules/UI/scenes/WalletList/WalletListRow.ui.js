@@ -3,10 +3,12 @@ import PropTypes from 'prop-types'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { bns } from 'biggystring'
-import { ABCDenomination, GUIWallet } from '../../../../types.js'
+import { GUIWallet } from '../../../../types.js'
+import type { EsDenomination } from 'airbitz-core-js'
 import {
   View,
   TouchableHighlight,
+  TouchableOpacity,
   Animated
 } from 'react-native'
 import {connect} from 'react-redux'
@@ -89,7 +91,14 @@ class WalletListRow extends Component {
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
-        <TouchableHighlight style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]} underlayColor={'#eee'} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(id, currencyCode)}>
+        <TouchableOpacity
+          onPressIn={() => console.log('onPressIn triggered')}
+          onLongPress={() => console.log('onLongPress triggered')}
+          style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]}
+          underlayColor={'#eee'}
+          {...this.props.sortHandlers}
+          onPress={() => this._onPressSelectWallet(id, currencyCode)}
+          >
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -101,7 +110,7 @@ class WalletListRow extends Component {
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
         {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
@@ -161,7 +170,7 @@ export const WalletListTokenRowConnect = connect((state, ownProps) => {
   const walletId = ownProps.parentId
   const currencyCode = ownProps.currencyCode
   const wallet:GUIWallet = UI_SELECTORS.getWallet(state, walletId)
-  let denomination:ABCDenomination = {}
+  let denomination:EsDenomination = {}
   let multiplier:string = '0'
   if (wallet) {
     const index:string = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)

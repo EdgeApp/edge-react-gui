@@ -10,144 +10,114 @@ import {
 import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
-import FlipInput from '../../components/FlipInput/index.js'
-import ABQRCode from '../../components/QRCode/index.js'
+import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import {getCryptoFromFiat, getFiatFromCrypto, sanitizeInput} from '../../../utils.js'
+import { convertDisplayToNative } from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 
+import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import {
-  updateReceiveAddress,
-  updateAmountRequestedInCrypto,
-  updateAmountRequestedInFiat,
   saveReceiveAddress
 } from './action.js'
+
+import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 
 class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      keyboardVisible: false
+      primaryNativeAmount: '',
+      secondaryNativeAmount: '',
+      encodedURI: ''
     }
   }
 
   componentDidMount () {
-    this.props.updateReceiveAddress(this.props.walletId, this.props.currencyCode)
+    const { coreWallet, currencyCode } = this.props
+    WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    .then(receiveAddress => {
+      const { publicAddress } = receiveAddress
+      const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+      this.setState({
+        encodedURI,
+        publicAddress
+      })
+    })
   }
 
-  _onFocus = () => {
-    this.setState({keyboardVisible: true})
-  }
+  onAmountsChange = ({ primaryDisplayAmount, secondaryDisplayAmount }) => {
+    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
+    const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
-  _onBlur = () => {
-    this.setState({keyboardVisible: false})
+    const primaryNativeAmount = convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
+    const secondaryNativeAmount = convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
+
+    const parsedURI = {
+      publicAddress: this.state.publicAddress,
+      nativeAmount: primaryNativeAmount
+    }
+    const encodedURI = this.props.coreWallet.encodeUri(parsedURI)
+
+    this.setState({
+      primaryNativeAmount,
+      secondaryNativeAmount,
+      encodedURI
+    })
   }
 
   render () {
-    console.log('rendering Request.ui, this.state is: ', this.state, ' this.props is: ', this.props)
-    const {request = {}} = this.props
-    const {receiveAddress = {}} = request
+    const color = 'white'
     const {
-      publicAddress = '',
-      amountSatoshi = null,
-      metadata = {}
-    } = receiveAddress
-    const {amountFiat = null} = metadata
-
+      fiatPerCrypto,
+      primaryInfo,
+      secondaryInfo
+    } = this.props
+    const nativeAmount = this.state.primaryNativeAmount
     return (
       <LinearGradient style={styles.view} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
         colors={['#3b7adb', '#2b569a']}>
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode}
-            cryptoDenom={this.props.inputCurrencyDenom} />
+          <ExchangeRate
+            fiatPerCrypto={fiatPerCrypto}
+            primaryInfo={primaryInfo}
+            secondaryInfo={secondaryInfo} />
         </View>
 
         <View style={styles.main}>
-          {this.props.inputCurrencySelected === 'crypto'
-            ? <FlipInput onCryptoInputChange={this.onCryptoInputChange}
-              onFiatInputChange={this.onFiatInputChange} amountSatoshi={amountSatoshi || 0}
-              amountFiat={amountFiat} inputCurrencySelected={this.props.inputCurrencySelected} // crypto
-              cryptoDenom={this.props.inputCurrencyDenom} fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus} inputOnBlur={this._onBlur} />
-            : <FlipInput onCryptoInputChange={this.onCryptoInputChange} onFiatInputChange={this.onFiatInputChange}
-              amountSatoshi={amountSatoshi || 0} amountFiat={amountFiat} inputCurrencySelected={this.props.inputCurrencySelected} // fiat
-              cryptoDenom={this.props.inputCurrencyDenom} fiatCurrencyCode={this.props.fiatCurrencyCode}
-              inputOnFocus={this._onFocus} inputOnBlur={this._onBlur} />}
+          <ExchangedFlipInput
+            primaryInfo={{...primaryInfo, nativeAmount}}
+            secondaryInfo={secondaryInfo}
+            secondaryToPrimaryRatio={fiatPerCrypto}
+            onAmountsChange={this.onAmountsChange}
+            color={color} />
 
-          <ABQRCode qrCodeText={this.getQrCodeText(publicAddress, amountSatoshi)} />
-          <RequestStatus requestAddress={publicAddress} amountRequestedInCrypto={amountSatoshi} amountReceivedInCrypto={amountFiat} />
+          <QRCode value={this.state.encodedURI} />
+          <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
         </View>
 
         <View style={styles.shareButtonsContainer}>
-          <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={() => this.copyToClipboard(publicAddress, amountSatoshi)} />
+          <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
         </View>
 
       </LinearGradient>
     )
   }
 
-  // /////////////// Start Critical Input and Conversion Area //////////////////////
-  onCryptoInputChange = (amountRequestedInCrypto) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ', amountRequestedInCrypto)
-    amountRequestedInCrypto = sanitizeInput(amountRequestedInCrypto)
-    if (this.invalidInput(amountRequestedInCrypto)) {
-      return
-    }
-    const amountRequestedInFiat = getFiatFromCrypto(amountRequestedInCrypto, this.props.fiatPerCrypto)
-
-    this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
-    this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
-  }
-
-  onFiatInputChange = (amountRequestedInFiat) => {
-    console.log('inside Request.ui->onCryptoInputChange, amountRequestedInCrypto is: ', amountRequestedInCrypto)
-    amountRequestedInFiat = sanitizeInput(amountRequestedInFiat)
-    if (this.invalidInput(amountRequestedInFiat)) {
-      return
-    }
-
-    const amountRequestedInCrypto = getCryptoFromFiat(amountRequestedInFiat, this.props.fiatPerCrypto)
-    this.props.dispatch(updateAmountRequestedInCrypto(amountRequestedInCrypto))
-    this.props.dispatch(updateAmountRequestedInFiat(amountRequestedInFiat))
-  }
-  // /////////////// End Critical Input and Conversion Area //////////////////////
-  copyToClipboard = (publicAddress, amountSatoshi) => {
-    Clipboard.setString(this.getRequestInfoForClipboard(publicAddress, amountSatoshi))
+  copyToClipboard = () => {
+    Clipboard.setString(this.state.encodedURI)
 
     if (Platform.OS === 'android') { // needs internationalization and string replacement still
       ToastAndroid.show('Request copied to clipboard', ToastAndroid.SHORT)
     } else if (Platform.OS === 'ios') {
       AlertIOS.alert('Request copied to clipboard')
     }
-  }
-
-  getQrCodeText = (publicAddress, amountSatoshi) => {
-    const qrCodeText = publicAddress
-
-    return qrCodeText
-  }
-
-  getRequestInfoForClipboard = (publicAddress, amountSatoshi) => {
-    const requestInfoForClipboard = publicAddress
-
-    return requestInfoForClipboard
-  }
-
-  getRequestInfoForShare = (publicAddress, amountSatoshi) => {
-    const requestInforForShare = publicAddress
-
-    return requestInforForShare
-  }
-
-  invalidInput = (input) => {
-    return (typeof parseInt(input) !== 'number' || isNaN(input))
   }
 
   showResult = (result) => {
@@ -168,16 +138,19 @@ class Request extends Component {
 
   shareMessage = () => {
     Share.share({
-      message: this.getRequestInfoForShare(),
+      message: this.state.encodedURI,
       url: 'https://airbitz.co', // will need to refactor for white labeling
       title: 'Share Airbitz Request'
-    }, {dialogTitle: 'Share Airbitz Request'}).then(this.showResult).catch((error) => this.setState({
+    }, {dialogTitle: 'Share Airbitz Request'})
+    .then(this.showResult)
+    .catch((error) => this.setState({
       result: 'error: ' + error.message
     }))
   }
 
   shareViaEmail = () => {
-    ContactsWrapper.getContact().then((contact) => {
+    ContactsWrapper.getContact()
+    .then((contact) => {
       this.shareMessage()
       console.log('shareViaEmail')
     }).catch((error) => {
@@ -203,34 +176,45 @@ class Request extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let exchangeRate = 0
-  let inputCurrencyDenom = {}
+  let fiatPerCrypto = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const secondaryExchangeDenomination = {
+    name: 'Dollars',
+    symbol: '$',
+    multiplier: '100',
+    precision: 2
+  }
+  const secondaryDisplayDenomination = secondaryExchangeDenomination
+  const primaryInfo = {
+    displayCurrencyCode: currencyCode,
+    displayDenomination: primaryDisplayDenomination,
+    exchangeDenomination: primaryExchangeDenomination
+  }
+  const secondaryInfo = {
+    displayCurrencyCode: wallet.fiatCurrencyCode,
+    displayDenomination: secondaryDisplayDenomination,
+    exchangeDenomination: secondaryExchangeDenomination
+  }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-    exchangeRate = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
-    const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-    inputCurrencyDenom = wallet.allDenominations[currencyCode][index]
+    // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
+    fiatPerCrypto = CORE_SELECTORS.getFakeExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    // fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
   return {
-    fiatPerCrypto: exchangeRate,
     request: state.ui.scenes.request,
-    wallets: state.ui.wallets,
-    walletId: state.ui.wallets.selectedWalletId,
+    coreWallet,
+    fiatPerCrypto,
+    wallet,
     currencyCode,
-    settings: state.ui.settings,
-    inputCurrencySelected: state.ui.scenes.request.inputCurrencySelected,
-    inputCurrencyDenom,
-    fiatCurrencyCode: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].fiatCurrencyCode
-    // fiatPerCrypto:  state.ui.scenes.exchangeRate.exchangeRates[state.ui.wallets.byId[state.ui.wallets.selectedWalletId].currencyCode].value,,,
+    primaryInfo,
+    secondaryInfo
   }
 }
-const mapDispatchToProps = (dispatch) => ({
-  updateReceiveAddress: (walletId, currencyCode) => {
-    dispatch(updateReceiveAddress(walletId, currencyCode))
-  }
-})
+const mapDispatchToProps = (dispatch) => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(Request)

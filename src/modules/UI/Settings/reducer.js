@@ -5,13 +5,12 @@ import {
   CORE_DEFAULTS
 } from '../../Core/Account/settings.js'
 
-const initialState = Object.assign(
-  {},
-  SYNCED_ACCOUNT_DEFAULTS,
-  LOCAL_ACCOUNT_DEFAULTS,
-  CORE_DEFAULTS,
-  { plugins: { arrayPlugins: [], supportedWalletTypes: [] } }
-)
+const initialState = {
+  ...SYNCED_ACCOUNT_DEFAULTS,
+  ...LOCAL_ACCOUNT_DEFAULTS,
+  ...CORE_DEFAULTS,
+  plugins: {arrayPlugins: [], supportedWalletTypes: []}
+}
 
 export const settings = (state = initialState, action) => {
   const { type, data = {} } = action
@@ -118,9 +117,44 @@ export const settings = (state = initialState, action) => {
       const { supportedWalletTypes } = plugins
       const { arrayPlugins } = plugins
       const { pluginName, plugin, walletTypes } = data
+      const currencyInfo = plugin.currencyInfo
+
+      // Build up object with all the information for the parent currency, accesible by the currencyCode
+      const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
+      const parentCurrencyInfo = {
+        [currencyInfo.currencyCode]: {
+          ...defaultParentCurrencyInfo,
+          currencyName: currencyInfo.currencyName,
+          currencyCode: currencyInfo.currencyCode,
+          denominations: currencyInfo.denominations,
+          symbolImage: currencyInfo.symbolImage
+        }
+      }
+
+      // Build up object with all the information for each metatoken, accessible by the token currencyCode
+      const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
+        const defaultMetatokenInfo = state[metatoken.currencyCode]
+        return {
+          ...acc,
+          [metatoken.currencyCode]: {
+            ...defaultMetatokenInfo,
+            currencyName: metatoken.currencyName,
+            currencyCode: metatoken.currencyCode,
+            denominations: metatoken.denominations,
+            symbolImage: metatoken.symbolImage
+          }
+        }
+      }, {})
+
+      // Build up object with all the currency information for each currency supported by the plugin, accessible by the currencyCode
+      const currencyInfos = {
+        ...parentCurrencyInfo,
+        ...metatokenCurrencyInfos
+      }
 
       return {
         ...state,
+        ...currencyInfos,
         plugins: {
           ...plugins,
           [pluginName]: plugin,

@@ -1,84 +1,103 @@
 import { StyleSheet } from 'react-native'
 
-const sideWidth = 80
-
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
 
   // Main Flip Input Styles
-  view: {
-    // flex: 1,
-    marginBottom: 20,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    alignSelf: 'stretch'
+  dev: {
+    borderColor: 'red',
+    borderWidth: 1
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  icon: {
+  container: {
+    flex: 1,
+    margin: 20,
+    alignSelf: 'stretch',
     backgroundColor: 'transparent',
-    color: 'rgba(255,255,255,0.6)',
-    width: sideWidth,
-    textAlign: 'center'
-  },
-  currency: {
-    backgroundColor: 'transparent',
-    color: '#FFF',
-    fontSize: 16,
-    width: sideWidth,
-    textAlign: 'center'
-  },
-  fees: {
-    backgroundColor: 'transparent',
-    color: '#FFF',
-    fontSize: 14,
-    width: sideWidth,
-    textAlign: 'center'
-  },
-
-  // Main Input Styles
-  mainInputRow: {
     flexDirection: 'row'
   },
-  primaryInputContainer: {
+  flipButton: {
     flex: 1,
-    paddingBottom: 5,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.6)'
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
-  primaryInput: {
-    fontSize: 42,
-    height: 42,
-    textAlign: 'center'
+  flipIcon: {
+    color: 'rgba(255,255,255,0.6)'
   },
-
-  // Converted Input Styles
-  convertedInputRow: {
-    flexDirection: 'row',
-    paddingTop: 5
+  spacer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
-  secondaryTextContainer: {
-    flex: 1
-  },
-  secondaryText: {
-    fontSize: 20,
-    color: '#FFF',
-    textAlign: 'center',
+  rows: {
+    flex: 8,
+    flexDirection: 'column',
     backgroundColor: 'transparent'
   }
-
-  // primaryFee: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'flex-end'
-  // },
-  // primaryFeeText: {
-  //   color: 'white',
-  //   fontSize: 15
-  // }
 })
 
-export default styles
+export const top = StyleSheet.create({
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+    borderBottomWidth: 1
+  },
+  symbol: {
+    flex: 1,
+    fontSize: 20,
+    color: 'white',
+    textAlign: 'center',
+    backgroundColor: 'transparent'
+  },
+  amount: {
+    flex: 4,
+    fontSize: 40,
+    color: 'white',
+    textAlign: 'center',
+    backgroundColor: 'transparent'
+  },
+  currencyCode: {
+    flex: 1,
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'right',
+    marginRight: 5,
+    backgroundColor: 'transparent'
+  }
+})
+
+export const bottom = StyleSheet.create({
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent'
+  },
+  symbol: {
+    flex: 1,
+    fontSize: 17,
+    color: 'white',
+    textAlign: 'center',
+    backgroundColor: 'transparent'
+  },
+  amount: {
+    fontSize: 17,
+    flex: 4,
+    color: 'white',
+    textAlign: 'center',
+    backgroundColor: 'transparent'
+  },
+  currencyCode: {
+    flex: 1,
+    fontSize: 17,
+    color: 'white',
+    textAlign: 'right',
+    marginRight: 5,
+    backgroundColor: 'transparent'
+  }
+})

@@ -43,9 +43,9 @@ import { makeReactNativeIo } from 'airbitz-core-react-native'
 import { makeContext } from 'airbitz-core-js'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
 // import { BitcoinPlugin } from 'airbitz-currency-bitcoin'
-import { EthereumPlugin } from 'airbitz-currency-ethereum'
+import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
 const currencyPlugins = [
-  EthereumPlugin
+  EthereumCurrencyPluginFactory
 ]
 global.madeCurrencyPlugins = []
 
@@ -82,8 +82,8 @@ class Main extends Component {
 
   async makeAllPlugins (io) {
     if (global.madeCurrencyPlugins.length === 0) {
-      for (const plugin of currencyPlugins) {
-        const madePlugin = await plugin.makePlugin({io})
+      for (const pluginFactory of currencyPlugins) {
+        const madePlugin = await pluginFactory.makePlugin({io})
         global.madeCurrencyPlugins.push(madePlugin)
         this.props.addCurrencyPlugin(madePlugin)
       }
@@ -140,7 +140,9 @@ class Main extends Component {
       })
     })
     this.props.setLocaleInfo(localeInfo)
-    setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
+    setInterval(() => { this.props.updateExchangeRates() }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    // setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
   }
 
   _onLayout = (event) => {

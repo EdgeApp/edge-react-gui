@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
+import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 import {
   View,
   Keyboard,
@@ -8,16 +8,18 @@ import {
   TouchableOpacity,
   TextInput } from 'react-native'
 import T from '../../components/FormattedText'
-import { connect } from 'react-redux'
 import styles from './styles.js'
-import { updateWalletName, selectBlockchain, selectFiat, createWallet } from './action'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 
-import { Actions } from 'react-native-router-flux'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+
+import { updateWalletName, selectWalletType, selectFiat, createWallet } from './action'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
-const BLOCKCHAIN_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
+const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type' // sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
 const FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
 
 const DONE_TEXT = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
@@ -27,13 +29,8 @@ const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_va
 // //////////////////////////// ROOT ///////////////////////////////////////////
 
 class CreateWallet extends Component {
-  getSupportedBlockchains = () => {
-    const supportedBlockchains = [
-      sprintf(strings.enUS['fragment_blockchain_btc']),
-      sprintf(strings.enUS['fragment_blockchain_eth'])
-    ]
-
-    return supportedBlockchains
+  getSupportedWalletTypes = () => {
+    return Object.keys(this.props.supportedWalletTypes)
   }
 
   getSupportedFiats = () => {
@@ -51,10 +48,10 @@ class CreateWallet extends Component {
 
   isValidData = () => {
     const isValidWalletName = !!this.isValidWalletName()
-    const isValidBlockchain = !!this.isValidBlockchain()
+    const isValidWalletType = !!this.isValidWalletType()
     const isValidFiat = !!this.isValidFiat()
 
-    return (isValidWalletName && isValidBlockchain && isValidFiat)
+    return (isValidWalletName && isValidWalletType && isValidFiat)
   }
 
   isValidWalletName = () => {
@@ -63,12 +60,11 @@ class CreateWallet extends Component {
     return isValid
   }
 
-  isValidBlockchain = () => {
-    const supportedBlockchains = this.getSupportedBlockchains()
-    const { selectedBlockchain } = this.props
+  isValidWalletType = () => {
+    const { supportedWalletTypes, selectedWalletType } = this.props
 
-    const isValid = supportedBlockchains.find((blockchain) => {
-      return blockchain === selectedBlockchain
+    const isValid = Object.values(supportedWalletTypes).find((walletType) => {
+      return walletType === selectedWalletType
     })
 
     return isValid
@@ -90,10 +86,10 @@ class CreateWallet extends Component {
       alert(INVALID_DATA_TEXT)
     } else {
       Keyboard.dismiss()
-      const { walletName, selectedBlockchain } = this.props
+      const { walletName, selectedWalletType } = this.props
       console.log('walletName', walletName)
-      console.log('selectedBlockchain', selectedBlockchain)
-      this.props.createWallet(walletName, selectedBlockchain)
+      console.log('selectedWalletType', selectedWalletType)
+      this.props.createWallet(walletName, selectedWalletType)
     }
   }
 
@@ -106,8 +102,9 @@ class CreateWallet extends Component {
     this.props.updateWalletName(input)
   }
 
-  handleSelectBlockchain = blockchain => {
-    this.props.selectBlockchain(blockchain)
+  handleSelectWalletType = currencyName => {
+    const walletType = this.props.supportedWalletTypes[currencyName] || ''
+    this.props.selectWalletType(walletType)
   }
 
   handleSelectFiat = fiat => {
@@ -124,9 +121,9 @@ class CreateWallet extends Component {
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
-          listItems={this.getSupportedBlockchains()}
-          placeholder={BLOCKCHAIN_PICKER_PLACEHOLDER}
-          onSelect={this.handleSelectBlockchain} />
+          listItems={this.getSupportedWalletTypes()}
+          placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
+          onSelect={this.handleSelectWalletType} />
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
@@ -144,17 +141,18 @@ class CreateWallet extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   walletName: state.ui.scenes.createWallet.walletName,
-  selectedBlockchain: state.ui.scenes.createWallet.selectedBlockchain,
-  selectedFiat: state.ui.scenes.createWallet.selectedFiat
+  selectedWalletType: state.ui.scenes.createWallet.selectedWalletType,
+  selectedFiat: state.ui.scenes.createWallet.selectedFiat,
+  supportedWalletTypes: SETTINGS_SELECTORS.getSupportedWalletTypes(state)
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   updateWalletName: walletName => dispatch(updateWalletName(walletName)),
-  selectBlockchain: blockchain => dispatch(selectBlockchain(blockchain)),
+  selectWalletType: walletType => dispatch(selectWalletType(walletType)),
   selectFiat: fiat => dispatch(selectFiat(fiat)),
-  createWallet: (walletName, blockchain) => dispatch(createWallet(walletName, blockchain))
+  createWallet: (walletName, walletType) => dispatch(createWallet(walletName, walletType))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)

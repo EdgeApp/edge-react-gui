@@ -30,9 +30,7 @@ class ControlPanel extends Component {
           Exchange Rate loading
         </Text>
       : <Text style={styles.bitcoin.value}>
-          1
-          {this.props.currencyCode} = $
-          {this.props.exchangeRate.toFixed(2)} USD
+          1 {this.props.currencyCode} = $ {this.props.exchangeRate.toFixed(2)} USD
         </Text>
   }
 

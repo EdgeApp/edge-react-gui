@@ -8,40 +8,64 @@ import {
 import { connect } from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
-import FlipInput from '../../components/FlipInput/index.js'
+import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
-
-import { getCryptoFromFiat, getFiatFromCrypto, border as b } from '../../../utils.js'
 import LinearGradient from 'react-native-linear-gradient'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import * as UTILS from '../../../utils.js'
 
 import {
+  signBroadcastAndSave,
+
   updateAmountSatoshiRequest,
   updateMaxSatoshiRequest,
-  signBroadcastAndSave,
   useMaxSatoshi,
-  updateSpendPending
+  updateSpendPending,
+
+  processURI
 } from './action.js'
 
 class SendConfirmation extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      primaryNativeAmount: props.transaction.nativeAmount,
+      secondaryNativeAmount: '',
       keyboardVisible: false
     }
-    this.props.dispatch(updateAmountSatoshiRequest(this.props.amountSatoshi || 0))
+  }
+  _onFocus = () => this.setState({ keyboardVisible: true })
+  _onBlur = () => this.setState({ keyboardVisible: false })
+
+  componentDidMount () {
+    this.props.processURI(this.props.sendConfirmation.parsedURI)
   }
 
-  _onFocus = () => {
-    this.setState({keyboardVisible: true})
-  }
+  onAmountsChange = ({ primaryDisplayAmount, secondaryDisplayAmount }) => {
+    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
+    const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
-  _onBlur = () => {
-    this.setState({keyboardVisible: false})
+    const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
+    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
+
+    const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
+
+    const parsedURI = this.props.sendConfirmation.parsedURI
+    parsedURI.metadata = {
+      amountFiat: secondaryExchangeAmount
+    }
+    parsedURI.nativeAmount = primaryNativeAmount
+
+    this.props.processURI(parsedURI)
+
+    this.setState({
+      primaryNativeAmount,
+      secondaryNativeAmount
+    })
   }
 
   render () {
@@ -49,70 +73,47 @@ class SendConfirmation extends Component {
       label,
       publicAddress
      } = this.props.sendConfirmation
+    const {
+      primaryInfo,
+      secondaryInfo,
+      fiatPerCrypto
+    } = this.props
+    const nativeAmount = this.props.transaction.nativeAmount
+    console.log('nativeAmount', nativeAmount)
+    const color = 'white'
 
     console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
     return (
       <LinearGradient
         style={[styles.view]}
         start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}
-      >
+        colors={['#3b7adb', '#2b569a']}>
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
-          <View style={[styles.exchangeRateContainer, b()]} >
-            <ExchangeRate fiatPerCrypto={this.props.fiatPerCrypto} fiatCurrencyCode={this.props.fiatCurrencyCode} cryptoDenom={this.props.inputCurrencyDenom} />
+
+          <View style={[styles.exchangeRateContainer, UTILS.border()]}>
+            <ExchangeRate
+              fiatPerCrypto={this.props.fiatPerCrypto}
+              primaryInfo={this.props.primaryInfo}
+              secondaryInfo={this.props.secondaryInfo} />
           </View>
 
-          <View style={[styles.main, b(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
-
-            {this.props.inputCurrencySelected === 'crypto' ? (
-              <FlipInput
-                mode={this.props.sendConfirmation.mode}
-                onCryptoInputChange={this.onCryptoInputChange}
-                onFiatInputChange={this.onFiatInputChange}
-                onInputChange={this.onCryptoInputChange}
-                amountSatoshi={this.props.amountSatoshi || 0}
-                amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
-                inputCurrencySelected={this.props.inputCurrencySelected} // crypto
-                maxAvailableToSpendInCrypto={this.props.maxSatoshi}
-                displayFees
-                feeInCrypto={this.props.feeSatoshi}
-                feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
-                cryptoDenom={this.props.inputCurrencyDenom}
-                fiatCurrencyCode={this.props.fiatCurrencyCode}
-                inputOnFocus={this._onFocus}
-                inputOnBlur={this._onBlur}
-                clearInput={this.clearInput}
-              />
-            ) : ( // inputCurrencySelected === 'fiat'
-              <FlipInput
-                mode={this.props.sendConfirmation.mode}
-                onCryptoInputChange={this.onCryptoInputChange}
-                onFiatInputChange={this.onFiatInputChange}
-                onInputChange={this.onFiatInputChange}
-                amountSatoshi={this.props.amountSatoshi || 0}
-                amountFiat={this.getAmountFiat(this.props.amountSatoshi)}
-                inputCurrencySelected={this.props.inputCurrencySelected} // fiat
-                maxAvailableToSpendInCrypto={this.props.maxSatoshi}
-                displayFees
-                feeInCrypto={this.props.feeSatoshi}
-                feeInFiat={this.getFeeInFiat(this.props.feeSatoshi)}
-                cryptoDenom={this.props.inputCurrencyDenom}
-                fiatCurrencyCode={this.props.fiatCurrencyCode}
-                inputOnFocus={this._onFocus}
-                inputOnBlur={this._onBlur}
-                clearInput={this.clearInput}
-              />
-            )
-            }
+          <View style={[styles.main, UTILS.border(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <ExchangedFlipInput
+              primaryInfo={{...primaryInfo, nativeAmount}}
+              secondaryInfo={secondaryInfo}
+              secondaryToPrimaryRatio={fiatPerCrypto}
+              onAmountsChange={this.onAmountsChange}
+              color={color} />
+            {/* <ExchangedFees networkFee={networkFee} providerFee={providerFee} /> */}
             <Recipient label={label} link={''} publicAddress={publicAddress} />
             {/* <Password /> */}
           </View>
           <View style={[styles.pendingSymbolArea]}>
             {this.props.sendConfirmation.pending &&
-              <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, b()]} size={'small'} />
+              <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, UTILS.border()]} size={'small'} />
             }
           </View>
-          <ABSlider style={[b()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
+          <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
         </ScrollView>
       </LinearGradient>
     )
@@ -144,30 +145,14 @@ class SendConfirmation extends Component {
     this.props.useMaxSatoshi()
   }
 
-  onCryptoInputChange = amountSatoshi => {
-    console.log('in onCryptoInputChange')
-    this.props.updateAmountSatoshi(parseInt(amountSatoshi))
+  convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
+    const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
+    return (UTILS.convertDisplayToExchange(secondaryDisplayToExchangeRatio)(secondaryDisplayAmount)).toString()
   }
-
-  onFiatInputChange = (amountFiat) => {
-    console.log('in onFiatInputChange')
-    const amountSatoshi = getCryptoFromFiat(amountFiat, this.props.fiatPerCrypto)
-    this.props.updateAmountSatoshi(amountSatoshi)
-  }
-
-  getFeeInFiat = feeSatoshi => {
-    const fiatPerCrypto = this.props.fiatPerCrypto
-    const feeFiat = getFiatFromCrypto(feeSatoshi, fiatPerCrypto)
-
-    return feeFiat
-  }
-
-  getAmountFiat = amountSatoshi => {
-    console.log('in getAmountFiat')
-    const fiatPerCrypto = this.props.fiatPerCrypto
-    const amountFiat = getFiatFromCrypto(amountSatoshi, fiatPerCrypto).toFixed(2) // also need opposite
-
-    return amountFiat
+  getSecondaryDisplayToExchangeRatio = (): string => {
+    const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier.toString()
+    const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier.toString()
+    return (UTILS.deriveDisplayToExchangeRatio(exchangeMultiplier)(displayMultiplier)).toString()
   }
 }
 
@@ -178,35 +163,51 @@ SendConfirmation.propTypes = {
   fiatCurrencyCode: PropTypes.string
 }
 
-const mapStateToProps = state => {
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+const mapStateToProps = (state) => {
+  let fiatPerCrypto = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const fiatCurrencyCode = wallet.fiatCurrencyCode
+  const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const cryptoPerFiat = currencyConverter.convertCurrency(isoFiatCurrencyCode, currencyCode, 1)
-  const fiatPerCrypto = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, 1)
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-  const inputCurrencyDenom = wallet.allDenominations[currencyCode][index]
+  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const secondaryExchangeDenomination = {
+    name: 'Dollars',
+    symbol: '$',
+    multiplier: '100',
+    precision: 2
+  }
+  const secondaryDisplayDenomination = secondaryExchangeDenomination
+  const primaryInfo = {
+    displayCurrencyCode: currencyCode,
+    exchangeCurrencyCode: currencyCode,
+    displayDenomination: primaryDisplayDenomination,
+    exchangeDenomination: primaryExchangeDenomination
+  }
+  const secondaryInfo = {
+    displayCurrencyCode: wallet.fiatCurrencyCode,
+    exchangeCurrencyCode: wallet.isoFiatCurrencyCode,
+    displayDenomination: secondaryDisplayDenomination,
+    exchangeDenomination: secondaryExchangeDenomination
+  }
+  if (wallet) {
+    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+    fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+  }
 
   return {
     sendConfirmation: state.ui.scenes.sendConfirmation,
-    amountSatoshi: state.ui.scenes.sendConfirmation.amountSatoshi,
-    maxSatoshi: state.ui.wallets.byId[state.ui.wallets.selectedWalletId].balance,
-    wallet,
-    feeSatoshi: state.ui.scenes.sendConfirmation.feeSatoshi,
-    fiatPerCrypto,
-    cryptoPerFiat,
-    inputCurrencySelected: state.ui.scenes.sendConfirmation.inputCurrencySelected,
-    publicAddress: state.ui.scenes.sendConfirmation.publicAddress,
-    spendInfo: state.ui.scenes.sendConfirmation.spendInfo,
     transaction: state.ui.scenes.sendConfirmation.transaction,
-    inputCurrencyDenom,
-    fiatCurrencyCode
+    coreWallet,
+    fiatPerCrypto,
+    wallet,
+    currencyCode,
+    primaryInfo,
+    secondaryInfo
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  updateAmountSatoshi: amountSatoshi => dispatch(updateAmountSatoshiRequest(amountSatoshi)),
+  processURI: (parsedURI) => dispatch(processURI(parsedURI)),
+  updateAmountSatoshi: cryptoAmount => dispatch(updateAmountSatoshiRequest(cryptoAmount)),
   signBroadcastAndSave: transaction => dispatch(signBroadcastAndSave(transaction)),
   updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),
   useMaxSatoshi: () => dispatch(useMaxSatoshi())

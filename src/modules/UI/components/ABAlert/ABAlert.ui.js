@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 import {closeABAlert} from './action.js'
 
 class ABAlert extends Component {
-
   componentWillReceiveProps (nextProps) {
     if (nextProps.view) {
       return this._openAlert(nextProps)
@@ -44,7 +43,10 @@ class ABAlert extends Component {
     return null
   }
 }
-
-const mapStateToProps = state => ({view: state.ui.scenes.ABAlert.view, message: state.ui.scenes.ABAlert.syntax.message, title: state.ui.scenes.ABAlert.syntax.title, route: state.ui.scenes.ABAlert.route})
-
+const mapStateToProps = (state) => ({
+  view: state.ui.scenes.ABAlert.view,
+  message: state.ui.scenes.ABAlert.syntax.message,
+  title: state.ui.scenes.ABAlert.syntax.title,
+  route: state.ui.scenes.ABAlert.route
+})
 export default connect(mapStateToProps)(ABAlert)
