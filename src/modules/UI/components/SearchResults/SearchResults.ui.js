@@ -1,8 +1,9 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
 import {
   FlatList,
   View
 } from 'react-native'
+import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import style from './styles'
 
@@ -63,4 +64,3 @@ const mapStateToProps = state => ({
 })
 
 export default connect(mapStateToProps)(SearchResults)
-

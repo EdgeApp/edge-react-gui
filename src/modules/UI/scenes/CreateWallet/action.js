@@ -12,29 +12,29 @@ import * as LOGIN_ACTIONS from '../../../Login/action.js'
 
 import { Actions } from 'react-native-router-flux'
 
-export const updateWalletName = (walletName:string) => {
+export const updateWalletName = (walletName: string) => {
   return {
     type: UPDATE_WALLET_NAME,
     data: { walletName }
   }
 }
 
-export const selectWalletType = (walletType:string) => {
+export const selectWalletType = (walletType: string) => {
   return {
     type: SELECT_WALLET_TYPE,
     data: { walletType }
   }
 }
 
-export const selectFiat = (fiat:string) => {
+export const selectFiat = (fiat: string) => {
   return {
     type: SELECT_FIAT,
     data: { fiat }
   }
 }
 
-export const createWallet = (walletName:string, walletType:string) => {
-  return (dispatch:any, getState:any) => {
+export const createWallet = (walletName: string, walletType: string) => {
+  return (dispatch: any, getState: any) => {
     const state = getState()
     const account = CORE_SELECTORS.getAccount(state)
     const plugins = SETTINGS_SELECTORS.getPlugins(state)
@@ -62,7 +62,7 @@ export const createWallet = (walletName:string, walletType:string) => {
     const keys = Object.assign({}, privateKeys, publicKeys)
 
     ACCOUNT_API.createWalletRequest(account, keys, walletType)
-    .then((walletId) => {
+    .then(() => {
       Actions.walletList({type: 'reset'})
       dispatch(LOGIN_ACTIONS.updateWallets())
     })

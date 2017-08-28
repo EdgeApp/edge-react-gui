@@ -97,7 +97,7 @@ export const setBluetoothModeRequest = (account, bluetoothMode) => {
   })
 }
 
-export const setSubcategoriesRequest = (account, subcategories) => {
+export const setSubcategoriesRequest = (account) => {
   return getSyncedSubcategories(account)
   .then(subcategories => {
     return setSyncedSubcategories(account, subcategories)
@@ -189,7 +189,7 @@ export const setLocalSettings = (account, settings) => {
   return localSettingsFile.setText(text)
 }
 
-export const getCoreSettings = account => {
+export const getCoreSettings = () => {
   const coreSettings = CORE_DEFAULTS
   // TODO: Get each setting separately,
   // build up settings object,

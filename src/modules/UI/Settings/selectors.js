@@ -1,12 +1,12 @@
 // @flow
 import isoFiatDenominations from './IsoFiatDenominations.js'
 
-export const getSettings = (state:any) => {
+export const getSettings = (state: any) => {
   const settings = state.ui.settings
   return settings
 }
 
-export const getDenominationIndex = (state:any, currencyCode:string) => {
+export const getDenominationIndex = (state: any, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   let denominationIndex:string
@@ -16,13 +16,13 @@ export const getDenominationIndex = (state:any, currencyCode:string) => {
   return denominationIndex
 }
 
-export const getCurrencySettings = (state:any, currencyCode: string) => {
+export const getCurrencySettings = (state: any, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   return currencySettings
 }
 
-export const getDisplayDenomination = (state:any, currencyCode: string) => {
+export const getDisplayDenomination = (state: any, currencyCode: string) => {
   const currencySettings = getCurrencySettings(state, currencyCode)
   const multiplier = currencySettings.denomination.toString()
   const denominations = currencySettings.denominations
@@ -32,35 +32,35 @@ export const getDisplayDenomination = (state:any, currencyCode: string) => {
   return displayDenomination
 }
 
-export const getNativeToDenominationRatio = (state:any, currencyCode: string) => {
+export const getNativeToDenominationRatio = (state: any, currencyCode: string) => {
   const currencySettings = getCurrencySettings(state, currencyCode)
   const nativeToDenominationRatio = currencySettings.displayDenomination.nativeToDenominationRatio
   return nativeToDenominationRatio
 }
 
-export const getPlugins = (state:any) => {
+export const getPlugins = (state: any) => {
   const settings = getSettings(state)
   const plugins = settings.plugins
   return plugins
 }
 
-export const getPlugin = (state:any, type:string) => {
+export const getPlugin = (state: any, type: string) => {
   const plugins = getPlugins(state)
   const plugin = plugins[type]
   return plugin
 }
 
-export const getBitcoinPlugin = (state:any) => {
+export const getBitcoinPlugin = (state: any) => {
   const bitcoinPlugin = getPlugin(state, 'bitcoin')
   return bitcoinPlugin
 }
 
-export const getEthereumPlugin = (state:any) => {
+export const getEthereumPlugin = (state: any) => {
   const ethereumPlugin = getPlugin(state, 'ethereum')
   return ethereumPlugin
 }
 
-export const getSupportedWalletTypes = (state:any) => {
+export const getSupportedWalletTypes = (state: any) => {
   const plugins = getPlugins(state).arrayPlugins
   const supportedWalletTypes = plugins.reduce((walletTypes, plugin) => ({
     ...walletTypes,

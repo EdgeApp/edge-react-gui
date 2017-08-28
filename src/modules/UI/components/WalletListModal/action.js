@@ -92,34 +92,3 @@ export const disableTransactionsWalletListModal = () => {
 // ///////// start transactionList wallet modal (same as selected wallet?) ///////////////
 
 // ///// was going to attempt to loop through but Javascript isn't great with dynamic variable names (for functions and constants)
-
-const types = [{
-  uc: 'ENABLE',
-  lc: 'enable'
-}, {
-  uc: 'DISABLE',
-  lc: 'disable'
-}, {
-  uc: 'TOGGLE',
-  lc: 'toggle'
-}]
-
-const wallets = [{
-  uc: 'WALLET_LIST_MODAL_VISIBILITY',
-  lc: 'WalletListModalVisibility'
-}, {
-  uc: 'SELECTED_WALLET_LIST_MODAL',
-  lc: 'SelectedWalletListModal'
-}, {
-  uc: 'SCAN_TO_WALLET_LIST_MODAL',
-  lc: 'ScanToWalletListModal'
-}, {
-  uc: 'TRANSACTIONS_WALLET_LIST_MODAL',
-  lc: 'TransactionsWalletListModal'
-}]
-
-types.map((type) => {
-  wallets.map((wallet) => {
-
-  })
-})

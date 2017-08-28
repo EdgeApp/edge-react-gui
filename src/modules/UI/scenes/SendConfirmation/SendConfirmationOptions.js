@@ -8,8 +8,8 @@ import { openHelpModal } from '../../components/HelpModal/actions.js'
 class SendConfirmationOptions extends Component {
   _handleMenuOptions (key) {
     switch (key) {
-      case 'help':
-        return this.props.dispatch(openHelpModal())
+    case 'help':
+      return this.props.dispatch(openHelpModal())
     }
   }
 

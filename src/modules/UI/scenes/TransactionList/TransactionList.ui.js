@@ -88,11 +88,11 @@ class TransactionList extends Component {
     console.log('this._onSearchChange executing')
   }
 
-  _onPressSearch = (event) => {
+  _onPressSearch = () => {
     this.props.dispatch(transactionsSearchVisible())
   }
 
-  _onSearchExit = (event) => {
+  _onSearchExit = () => {
     this.props.dispatch(transactionsSearchHidden())
   }
 

@@ -97,7 +97,7 @@ class Main extends Component {
     this.props.setKeyboardHeight(keyboardHeight)
   }
 
-  _keyboardDidHide = (_event) => {
+  _keyboardDidHide = () => {
     this.props.setKeyboardHeight(0)
   }
 
@@ -225,7 +225,7 @@ const mapDispatchToProps = (dispatch) => ({
   setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
   addContext: (context) => dispatch(addContext(context)),
   addUsernamesRequest: (context) => dispatch(addUsernamesRequest(context)),
-  setLocaleInfo: (localInfo) => dispatch(setLocaleInfo(localeInfo)),
+  setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
   setDeviceDimensions: (dimensions) => dispatch(setDeviceDimensions(dimensions)),
   initializeAccount: (account) => dispatch(initializeAccount(account)),

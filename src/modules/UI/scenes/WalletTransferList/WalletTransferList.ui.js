@@ -61,5 +61,4 @@ class WalletTransferList extends Component {
 }
 
 const mapStateToProps = state => ({walletTransferList: state.ui.scenes.walletTransferList.walletTransferList, walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible})
-
-export default connect(state => (mapStateToProps))(WalletTransferList)
+export default connect(mapStateToProps)(WalletTransferList)

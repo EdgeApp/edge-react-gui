@@ -37,7 +37,7 @@ class AddressModal extends Component {
           clipboard: uri
         })
       } catch (e) {
-        console.log(`Clipboard does not contain a valid address.`)
+        console.log('Clipboard does not contain a valid address.')
         console.log(`Clipboard: ${uri}`)
         console.log(e)
       }

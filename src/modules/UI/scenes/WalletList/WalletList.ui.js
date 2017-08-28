@@ -1,5 +1,4 @@
 // @flow
-
 import React, {Component} from 'react'
 import {
   ActivityIndicator,
@@ -113,14 +112,18 @@ class WalletList extends Component {
             </TouchableOpacity>
           </LinearGradient>
           {Object.keys(wallets).length > 0
-            ? this.renderActiveSortableList(this.props.wallets, this.sortActiveWallets(this.props.wallets), sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']), this.renderActiveRow, this.onActiveRowMoved)
+            ? this.renderActiveSortableList(
+              this.props.wallets,
+              this.sortActiveWallets(this.props.wallets),
+              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])
+            )
             : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
         </View>
       </View>
     )
   }
 
-  renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
+  renderActiveSortableList = (datum, order, label) => {
     console.log('going into renderActiveSortable list, datum is: ', datum, ' , order is: ', order, ' , label is: ', label)
 
     if (order) {
@@ -142,7 +145,7 @@ class WalletList extends Component {
     }
   }
 
-  renderArchivedSortableList = (data, order, label, renderRow, onRowMoved) => {
+  renderArchivedSortableList = (data, order, label, renderRow) => {
     if (order) {
       return (
         <SortableListView
@@ -157,7 +160,7 @@ class WalletList extends Component {
     }
   }
 
-  renderActiveRow = (data, active) => {
+  renderActiveRow = (data) => {
     return <WalletListRow active={data.active} data={data.data} key={data.data.id} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
   }
 
@@ -364,7 +367,7 @@ class DeleteWalletButtons extends Component {
     )
   }
 }
-export const DeleteWalletButtonsConnect = connect(state => ({}))(DeleteWalletButtons)
+export const DeleteWalletButtonsConnect = connect()(DeleteWalletButtons)
 
 // ///////End of Delete Area //////////
 
@@ -408,13 +411,6 @@ export const WalletNameInputConnect = connect(state => ({
 }))(WalletNameInput)
 
 class RenameWalletButtons extends Component {
-  state:any
-
-  constructor (props) {
-    super(props)
-    this.state = {}
-  }
-
   _onRenameModalDone = () => {
     this.props.dispatch(closeRenameWalletModal())
     this.props.dispatch(renameWallet(this.props.walletId, this.props.renameWalletInput))
@@ -430,20 +426,17 @@ class RenameWalletButtons extends Component {
       <View style={[styles.buttonsWrap]}>
 
         <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
-
           <View style={styles.stylizedButtonTextWrap}>
             <T style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
           </View>
-
         </TouchableHighlight>
 
         <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
-
           <View style={styles.stylizedButtonTextWrap}>
             <T style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['calculator_done'])}</T>
           </View>
-
         </TouchableHighlight>
+
       </View>
     )
   }

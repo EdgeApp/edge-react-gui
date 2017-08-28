@@ -1,8 +1,10 @@
+// @flow
 import borderColors from '../theme/variables/css3Colors'
 import { divf, mulf } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
+import { EsDenomination } from 'airbitz-core-js'
 
-export const cutOffText = (str, lng) => {
+export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
     return str.slice(0, lng) + '...'
   } else {
@@ -10,7 +12,7 @@ export const cutOffText = (str, lng) => {
   }
 }
 
-export const findDenominationSymbol = (denoms, value) => {
+export const findDenominationSymbol = (denoms: Array<EsDenomination>, value: string) => {
   console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
   for (const v of denoms) {
     if (v.name === value) {
@@ -19,18 +21,11 @@ export const findDenominationSymbol = (denoms, value) => {
   }
 }
 
-export const getFiatSymbol = (code) => {
+export const getFiatSymbol = (code: string) => {
   return getSymbolFromCurrency(code)
 }
 
-export const sanitizeInput = (input) => {
-  const numbers = /\d*[.]?\d*/
-  const sanitizedInput = input.toString().match(numbers)[0]
-
-  return sanitizedInput
-}
-
-export const limitFiatDecimals = (num) => {
+export const limitFiatDecimals = (num: number) => {
   console.log('num: ', num)
   let inputString = num.toString()
   let periodPosition = inputString.indexOf('.')
@@ -70,7 +65,7 @@ export const logError = (msg: string) => {
   console.log('%c ' + msg, 'background: red; font-weight: bold; display: block;')
 }
 
-export const border = (color: string) => {
+export const border = (color: ?string) => {
   let borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
@@ -103,7 +98,7 @@ export const convertNativeToDisplay = (nativeToDisplayRatio: string) => {
 export const convertDisplayToNative = (nativeToDisplayRatio: string) => {
   return (displayAmount: string): string => {
     if (!displayAmount) return ''
-    return mulf(displayAmount, nativeToDisplayRatio)
+    return mulf(parseFloat(displayAmount), nativeToDisplayRatio)
   }
 }
 
@@ -147,15 +142,15 @@ export const absoluteValue = (input: string): string => {
   return input.replace('-', '')
 }
 
-export const getNewArrayWithoutItem = (list, targetItem) => {
-  return list.filter(item => {
+export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) => {
+  return array.filter(item => {
     return item !== targetItem
   })
 }
 
-export const getNewArrayWithItem = (list, item) => {
-  if (!list.includes(item)) {
-    return [...list, item]
+export const getNewArrayWithItem = (array: Array<any>, item: any) => {
+  if (!array.includes(item)) {
+    return [...array, item]
   }
-  return list
+  return array
 }

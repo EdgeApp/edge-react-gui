@@ -6,39 +6,39 @@
 import { EsDenomination, EsMetaToken } from 'airbitz-core-js'
 
 export class GUIWallet {
-  id:string
-  type:string
-  name:string
-  primaryNativeBalance:string
+  id: string
+  type: string
+  name: string
+  primaryNativeBalance: string
   nativeBalances: { [currencyCode: string]: string }
   currencyNames: { [currencyCode: string]: string }
-  currencyCode:string
-  isoFiatCurrencyCode:string
-  fiatCurrencyCode:string
-  denominations:Array<EsDenomination>
+  currencyCode: string
+  isoFiatCurrencyCode: string
+  fiatCurrencyCode: string
+  denominations: Array<EsDenomination>
   allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } }
-  symbolImage:string
-  metaTokens:Array<EsMetaToken>
-  sortIndex:number
-  archived:boolean
-  deleted:boolean
+  symbolImage: string
+  metaTokens: Array<EsMetaToken>
+  sortIndex: number
+  archived: boolean
+  deleted: boolean
   constructor (
-    id:string,
-    type:string,
-    name:string,
-    primaryNativeBalance:string,
+    id: string,
+    type: string,
+    name: string,
+    primaryNativeBalance: string,
     nativeBalances: { [currencyCode: string]: string },
     currencyNames: { [currencyCode: string]: string },
-    currencyCode:string,
-    isoFiatCurrencyCode:string,
-    fiatCurrencyCode:string,
-    denominations:Array<EsDenomination>,
+    currencyCode: string,
+    isoFiatCurrencyCode: string,
+    fiatCurrencyCode: string,
+    denominations: Array<EsDenomination>,
     allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } },
-    symbolImage:string,
-    metaTokens:Array<EsMetaToken>,
-    sortIndex:number,
-    archived:boolean,
-    deleted:boolean
+    symbolImage: string,
+    metaTokens: Array<EsMetaToken>,
+    sortIndex: number,
+    archived: boolean,
+    deleted: boolean
   ) {
     this.id = id
     this.type = type

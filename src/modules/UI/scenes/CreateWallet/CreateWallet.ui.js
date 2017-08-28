@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import {
+  Alert,
   View,
   Keyboard,
   ListView,
@@ -83,7 +84,7 @@ class CreateWallet extends Component {
 
   handleOnDone = () => {
     if (!this.isValidData()) {
-      alert(INVALID_DATA_TEXT)
+      Alert.alert(INVALID_DATA_TEXT)
     } else {
       Keyboard.dismiss()
       const { walletName, selectedWalletType } = this.props

@@ -150,7 +150,7 @@ class Request extends Component {
 
   shareViaEmail = () => {
     ContactsWrapper.getContact()
-    .then((contact) => {
+    .then(() => {
       this.shareMessage()
       console.log('shareViaEmail')
     }).catch((error) => {
@@ -160,7 +160,7 @@ class Request extends Component {
   }
 
   shareViaSMS = () => {
-    ContactsWrapper.getContact().then((contact) => {
+    ContactsWrapper.getContact().then(() => {
       this.shareMessage()
       console.log('shareViaSMS')
     }).catch((error) => {
@@ -216,5 +216,5 @@ const mapStateToProps = (state) => {
     secondaryInfo
   }
 }
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = () => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(Request)

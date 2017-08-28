@@ -1,3 +1,5 @@
+// @flow
+/* global window __DEV__ */
 import { createStore, applyMiddleware, compose } from 'redux'
 
 import rootReducer from './rootReducer'
@@ -18,7 +20,7 @@ if (__DEV__) {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-export default function configureStore (initialState) {
+export default function configureStore (initialState: Object) {
   return createStore(
     rootReducer,
     initialState,

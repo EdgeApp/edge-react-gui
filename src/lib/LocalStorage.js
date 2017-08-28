@@ -39,8 +39,9 @@ const init = (ctx, data) => {
 }
 
 const writeToDisk = ctx => {
-  RNFS.writeFile(RNFS.DocumentDirectoryPath + ctx.pathToDb, JSON.stringify(ctx.list), 'utf8').then((success) => {
-
+  RNFS.writeFile(RNFS.DocumentDirectoryPath + ctx.pathToDb, JSON.stringify(ctx.list), 'utf8')
+  .then((success) => {
+    return success
   }).catch(err => {
     throw err
   })

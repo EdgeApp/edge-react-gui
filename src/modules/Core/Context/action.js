@@ -12,7 +12,7 @@ export const addContext = (context) => {
 }
 
 export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
-export const addUsernamesRequest = (context) => {
+export const addUsernamesRequest = () => {
   return (dispatch, getState) => {
     const state = getState()
     const context = CORE_SELECTORS.getContext(state)

@@ -162,11 +162,11 @@ class SettingsOverview extends Component {
     return <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
   }
 
-  renderSettingsItemWithSwitch = (x, i) => {
+  renderSettingsItemWithSwitch = (x) => {
     return <SettingsItemWithSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
   }
 
-  renderSettingsItemWithModal = (x, i) => {
+  renderSettingsItemWithModal = (x) => {
     return <SettingsItemWithModal leftText={x.text} key={x.key} modal={x.key} />
   }
 }

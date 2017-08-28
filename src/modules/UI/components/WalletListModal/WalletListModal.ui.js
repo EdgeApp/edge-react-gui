@@ -1,5 +1,4 @@
 // @flow
-
 import React, { Component } from 'react'
 import { View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
 import strings from '../../../../locales/default'
@@ -60,11 +59,13 @@ export const WalletListModalConnect = connect(mapStateToProps)(WalletListModal)
 
 class WalletListModalBody extends Component {
   selectFromWallet = (id, currencyCode = null) => {
+    console.log('currencyCode', currencyCode)
     LayoutAnimation.easeInEaseOut()
     this.props.disableWalletListModalVisibility()
   }
 
   selectToWallet = (idx, currencyCode = null) => {
+    console.log('currencyCode', currencyCode)
     LayoutAnimation.easeInEaseOut()
     this.props.disableWalletListModalVisibility()
   }

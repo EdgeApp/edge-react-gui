@@ -36,51 +36,51 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 export const executeWalletRowOption = (walletId, option) => {
   switch (option) {
-    case 'Restore':
-    case 'Activate':
-      return (dispatch, getState) => {
-        const state = getState()
-        const account = CORE_SELECTORS.getAccount(state)
+  case 'Restore':
+  case 'Activate':
+    return (dispatch, getState) => {
+      const state = getState()
+      const account = CORE_SELECTORS.getAccount(state)
 
-        dispatch(activateWalletStart(walletId))
+      dispatch(activateWalletStart(walletId))
 
-        ACCOUNT_API.activateWalletRequest(account, walletId)
+      ACCOUNT_API.activateWalletRequest(account, walletId)
         .then(() => {
           dispatch(activateWalletSuccess(walletId))
           dispatch(LOGIN.updateWallets(account))
         })
         .catch(e => console.log(e))
-      }
+    }
 
-    case 'Archive':
-      return (dispatch, getState) => {
-        const state = getState()
-        const account = CORE_SELECTORS.getAccount(state)
+  case 'Archive':
+    return (dispatch, getState) => {
+      const state = getState()
+      const account = CORE_SELECTORS.getAccount(state)
 
-        dispatch(archiveWalletStart(walletId))
+      dispatch(archiveWalletStart(walletId))
 
-        ACCOUNT_API.archiveWalletRequest(account, walletId)
+      ACCOUNT_API.archiveWalletRequest(account, walletId)
         .then(() => {
           dispatch(archiveWalletSuccess(walletId))
           dispatch(LOGIN.updateWallets(account))
         })
         .catch(e => console.log(e))
-      }
+    }
 
-    case 'Delete':
-      return dispatch => {
-        dispatch(openDeleteWalletModal(walletId))
-      }
+  case 'Delete':
+    return dispatch => {
+      dispatch(openDeleteWalletModal(walletId))
+    }
 
-    case 'Rename':
-      return dispatch => {
-        dispatch(openRenameWalletModal(walletId))
-      }
+  case 'Rename':
+    return dispatch => {
+      dispatch(openRenameWalletModal(walletId))
+    }
 
-    case 'Add Token':
-      return dispatch => {
-        dispatch(addToken(walletId))
-      }
+  case 'Add Token':
+    return dispatch => {
+      dispatch(addToken(walletId))
+    }
   }
 }
 
@@ -123,6 +123,7 @@ export const updateActiveWalletsOrder = activeWalletIds => {
     dispatch(updateActiveWalletsOrderStart(activeWalletIds))
     ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
     .then(response => {
+      console.log('response', response)
       dispatch(updateActiveWalletsOrderSuccess(activeWalletIds))
       for (var k in activeWalletIds) {
         dispatch(updateIndividualWalletSortIndex(activeWalletIds[k], k))

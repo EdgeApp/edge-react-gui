@@ -5,9 +5,9 @@ export const account = (state = {}, action) => {
   const { account } = data
 
   switch (type) {
-    case ACTION.ADD_ACCOUNT:
-      return account
-    default:
-      return state
+  case ACTION.ADD_ACCOUNT:
+    return account
+  default:
+    return state
   }
 }

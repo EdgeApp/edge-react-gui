@@ -18,7 +18,7 @@ class RadioRows extends Component {
     console.log('RadioRows render, this.props is: ', this.props)
     return (
       <View style={[{height: 200}]}>
-        {this.props.options.map((x, i) => (
+        {this.props.options.map((x) => (
           <TouchableOpacity onPress={() => this.handlePress(x.value, this.props.option)}
             style={[s.rowContainer, b('blue')]} key={x.value}>
             <View style={[s.rowTextRow, b('red')]}>

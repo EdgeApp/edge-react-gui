@@ -54,7 +54,7 @@ export default class FlipInput extends Component {
   onSecondaryAmountChange = (secondaryDisplayAmount) => {
     if (!this.props.isValidInput(secondaryDisplayAmount)) { return }
     const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(secondaryDisplayAmount), 2)
-    console.log(`BEFORE: this.setState`, this.state)
+    console.log('BEFORE: this.setState', this.state)
     this.setState({
       secondaryDisplayAmount: formattedSecondaryDisplayAmount,
       primaryShouldUpdate: !this.state.primaryShouldUpdate,

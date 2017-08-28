@@ -24,24 +24,24 @@ export default class Right extends Component {
 
   render () {
     switch (this.props.routes.scene.sceneKey) {
-      case 'scan':
-        return <HelpButtonConnect />
-      case 'walletList':
-        return <HelpButtonConnect />
-      case 'directory':
-        return <HelpButtonConnect />
-      case 'transactions':
-        return <HelpButtonConnect />
-      case 'transactionDetails':
-        return <HelpButtonConnect />
-      case 'request':
-        return <HelpButtonConnect />
-      case 'sendConfirmation':
-        return <SendConfirmationOptions />
-      case 'createWallet':
-        return <HelpButtonConnect />
-      default:
-        return null
+    case 'scan':
+      return <HelpButtonConnect />
+    case 'walletList':
+      return <HelpButtonConnect />
+    case 'directory':
+      return <HelpButtonConnect />
+    case 'transactions':
+      return <HelpButtonConnect />
+    case 'transactionDetails':
+      return <HelpButtonConnect />
+    case 'request':
+      return <HelpButtonConnect />
+    case 'sendConfirmation':
+      return <SendConfirmationOptions />
+    case 'createWallet':
+      return <HelpButtonConnect />
+    default:
+      return null
     }
   }
 

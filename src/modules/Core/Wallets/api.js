@@ -1,12 +1,10 @@
 // @flow
-
 // import { renameWalletStart } from ''
-
 import { makeCurrencyWallet } from 'airbitz-core-js'
 import { makeWalletCallbacks } from './callbacks.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 
-export const makeCurrencyWalletRequest = (keyInfo:any, dispatch:any, getState:any) => {
+export const makeCurrencyWalletRequest = (keyInfo: any, dispatch: any, getState: any) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const io = CORE_SELECTORS.getIO(state)
@@ -42,14 +40,14 @@ export const makeCurrencyWalletRequest = (keyInfo:any, dispatch:any, getState:an
   return makeCurrencyWallet(keyInfo, opts)
 }
 
-export const renameWalletRequest = (wallet:any, name:string) => {
+export const renameWalletRequest = (wallet: any, name: string) => {
   return wallet.renameWallet(name)
   .then(() => {
     Promise.resolve(wallet)
   })
 }
 
-export const activateWalletRequest = (wallet:any) => {
+export const activateWalletRequest = (wallet: any) => {
   return wallet.startEngine()
   .then(() => {
     wallet.archived = false
@@ -58,7 +56,7 @@ export const activateWalletRequest = (wallet:any) => {
   })
 }
 
-export const archiveWalletRequest = (wallet:any) => {
+export const archiveWalletRequest = (wallet: any) => {
   return wallet.stopEngine()
   .then(() => {
     wallet.archived = true
@@ -67,47 +65,47 @@ export const archiveWalletRequest = (wallet:any) => {
   })
 }
 
-export const getTransactions = (wallet:any, currencyCode:string) => {
+export const getTransactions = (wallet: any, currencyCode: string) => {
   return wallet.getTransactions({ currencyCode })
 }
 
-export const setTransactionDetailsRequest = (wallet:any, currencyCode:string, transactionDetails:any) => {
+export const setTransactionDetailsRequest = (wallet: any, currencyCode: string, transactionDetails: any) => {
   console.log('in api.setTransactionDetailsRequest: ', wallet, transactionDetails.id, currencyCode, transactionDetails)
   return wallet.saveTxMetadata(transactionDetails.id, currencyCode, transactionDetails)
 }
 
-export const getReceiveAddress = (wallet:any, currencyCode:string) => {
-  return wallet.getReceiveAddress()
+export const getReceiveAddress = (wallet: any, currencyCode: string) => {
+  return wallet.getReceiveAddress(currencyCode)
 }
 
-export const makeSpend = (wallet:any, spendInfo:any) => {
+export const makeSpend = (wallet: any, spendInfo: any) => {
   console.log('spendInfo', spendInfo)
   return wallet.makeSpend(spendInfo)
 }
 
-export const getBalance = (wallet:any, currencyCode:string) => {
+export const getBalance = (wallet: any, currencyCode: string) => {
   const balance = wallet.getBalance({ currencyCode })
   return balance
 }
 
-export const enableTokens = (wallet:any, tokens:Array<string>) => {
+export const enableTokens = (wallet: any, tokens: Array<string>) => {
   // XXX need to hook up to Core -paulvp
-  return wallet
+  return wallet.enableTokens(tokens)
 }
 
-export const parseURI = (wallet:any, uri:string) => {
+export const parseURI = (wallet: any, uri: string) => {
   return wallet.parseUri(uri)
 }
 
-export const signTransaction = (wallet:any, unsignedTransaction:any) => {
+export const signTransaction = (wallet: any, unsignedTransaction: any) => {
   return wallet.signTx(unsignedTransaction)
 }
 
-export const broadcastTransaction = (wallet:any, signedTransaction:any) => {
+export const broadcastTransaction = (wallet: any, signedTransaction: any) => {
   return wallet.broadcastTx(signedTransaction)
 }
 
-export const saveTransaction = (wallet:any, signedTransaction:any) => {
+export const saveTransaction = (wallet: any, signedTransaction: any) => {
   return wallet.saveTx(signedTransaction)
 }
 

@@ -7,7 +7,7 @@ export const REMOVE_USERS_SIDEBAR = 'REMOVE_USERS_SIDEBAR'
 export const LOGOUT = 'LOGOUT'
 
 export const logoutRequest = () => {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch(logout())
   }
 }

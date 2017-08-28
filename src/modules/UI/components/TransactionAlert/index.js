@@ -29,7 +29,7 @@ class TransactionAlert extends Component {
     return this.props.dispatch(closeTransactionAlert())
   }
 
-  _onPress = (props) => {
+  _onPress = () => {
     return this._closeAlert()
   }
 

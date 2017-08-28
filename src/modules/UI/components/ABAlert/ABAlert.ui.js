@@ -35,7 +35,7 @@ class ABAlert extends Component {
     return this.props.dispatch(closeABAlert())
   }
 
-  _onPress = (props) => {
+  _onPress = () => {
     return this._closeAlert()
   }
 

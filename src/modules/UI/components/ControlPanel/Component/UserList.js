@@ -12,7 +12,7 @@ import * as CONTEXT_API from '../../../../Core/Context/api.js'
 
 class UserListComponent extends Component {
 
-  _handlePressUserSelect = (id) => {}
+  _handlePressUserSelect = () => {}
 
   _handleDeleteLocalAccount = (username) => {
     this.props.deleteLocalAccount(username)
@@ -21,7 +21,7 @@ class UserListComponent extends Component {
   _handlePressDeleteLocalAccount = (username) => {
     return Alert.alert(
       'Delete Account',
-      "Delete '" + username + "' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days",
+      'Delete \'' + username + '\' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days',
       [
         {text: 'No', style: 'cancel'},
         {text: 'Yes', onPress: () => this._handleDeleteLocalAccount(username)}
@@ -34,10 +34,11 @@ class UserListComponent extends Component {
       if (platform === 'android') {
         return (
           <View key={index} style={styles.userList.row}>
-            <TouchableNativeFeedback onPress={e => this._handlePressUserSelect(username)} background={TouchableNativeFeedback.SelectableBackground()} >
+            <TouchableNativeFeedback onPress={() => this._handlePressUserSelect(username)}
+              background={TouchableNativeFeedback.SelectableBackground()} >
               <Text style={styles.userList.text}>{username}</Text>
             </TouchableNativeFeedback>
-            <TouchableOpacity style={styles.userList.icon} onPress={e => this._handlePressDeleteLocalAccount(username)}>
+            <TouchableOpacity style={styles.userList.icon} onPress={() => this._handlePressDeleteLocalAccount(username)}>
               <Icon name='close' />
             </TouchableOpacity>
           </View>
@@ -46,10 +47,10 @@ class UserListComponent extends Component {
       if (platform !== 'android') {
         return (
           <View key={index} style={styles.userList.row}>
-            <TouchableOpacity style={styles.userList.text} onPress={e => this._handlePressUserSelect(username)}>
+            <TouchableOpacity style={styles.userList.text} onPress={() => this._handlePressUserSelect(username)}>
               <Text>{username}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.userList.icon} onPress={e => this._handlePressDeleteLocalAccount(username)}>
+            <TouchableOpacity style={styles.userList.icon} onPress={() => this._handlePressDeleteLocalAccount(username)}>
               <Icon name='close' />
             </TouchableOpacity>
           </View>

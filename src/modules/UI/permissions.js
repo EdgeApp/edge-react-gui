@@ -4,10 +4,10 @@ import Permissions from 'react-native-permissions'
 export const request = (request) => {
   console.log('Requesting permission')
   switch (request) {
-    case 'camera':
-      return requestCameraPermission()
-    default:
-      return
+  case 'camera':
+    return requestCameraPermission()
+  default:
+    return
   }
 }
 

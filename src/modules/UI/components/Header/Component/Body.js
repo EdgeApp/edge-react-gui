@@ -14,28 +14,28 @@ import {border as b} from '../../../../utils'
 class Body extends Component {
   render () {
     switch (this.props.routes.scene.sceneKey) {
-      case 'scan':
-        return <ExampleFromWalletConnect walletList={this.props.walletList}
+    case 'scan':
+      return <ExampleFromWalletConnect walletList={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
           visibleFlag='selectedWalletListModalVisibility' style={b()} />
 
-      case 'request':
-        return <ExampleFromWalletConnect wallets={this.props.walletList}
+    case 'request':
+      return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
           visibleFlag='selectedWalletListModalVisibility' />
 
-      case 'transactionList':
-        return <ExampleFromWalletConnect wallets={this.props.walletList}
+    case 'transactionList':
+      return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
           visibleFlag='selectedWalletListModalVisibility' />
 
-      case 'sendConfirmation':
-        return <ExampleFromWalletConnect wallets={this.props.walletList}
+    case 'sendConfirmation':
+      return <ExampleFromWalletConnect wallets={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
           visibleFlag='selectedWalletListModalVisibility' />
 
-      default:
-        return <DefaultHeader routes={this.props.routes} />
+    default:
+      return <DefaultHeader routes={this.props.routes} />
     }
   }
 }
@@ -45,7 +45,7 @@ const mapStateToProps = state => ({
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
 })
-export default connect((state) => (mapStateToProps))(Body)
+export default connect(mapStateToProps)(Body)
 
 class DefaultHeader extends Component {
   _renderTitle = () => {

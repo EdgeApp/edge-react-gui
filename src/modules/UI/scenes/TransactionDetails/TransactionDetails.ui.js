@@ -124,11 +124,11 @@ class TransactionDetails extends Component {
     console.log('in onChangeNotes')
   }
 
-  onFocusNotes = (input) => {
+  onFocusNotes = () => {
     this.refs._scrollView.scrollTo({x: 0, y: 300, animated: true})
   }
 
-  onBlurNotes = (input) => {
+  onBlurNotes = () => {
     console.log('executing onBlurNotes')
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
@@ -557,11 +557,20 @@ class AmountArea extends Component {
           </View>
         </View>
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
-          <Picker style={[b(), {backgroundColor: 'white', width: this.props.dimensions.deviceDimensions.width, height: this.props.dimensions.deviceDimensions.height / 3, position: 'absolute', top: this.props.dimensions.deviceDimensions.height - this.props.dimensions.deviceDimensions.height / 3, left: -20}]}
+          <Picker style={[ b(),
+            {
+              backgroundColor: 'white',
+              width: this.props.dimensions.deviceDimensions.width,
+              height: this.props.dimensions.deviceDimensions.height / 3,
+              position: 'absolute',
+              top: this.props.dimensions.deviceDimensions.height - this.props.dimensions.deviceDimensions.height / 3,
+              left: -20
+            }
+          ]}
             itemStyle={{fontFamily: 'SourceSansPro-Black', color: c.gray1, fontSize: 30, paddingBottom: 14}}
             selectedValue={this.props.category.key}
-            onValueChange={(itemValue, itemIndex) => this.props.selectCategory({itemValue})}>
-            {categories.map((x, i) => (
+            onValueChange={(itemValue) => this.props.selectCategory({itemValue})}>
+            {categories.map((x) => (
               <Picker.Item label={this.props.types[x].syntax} value={x} key={this.props.types[x].key} />
             ))}
           </Picker>

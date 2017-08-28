@@ -3,12 +3,12 @@ import {combineReducers} from 'redux'
 
 const view = (state = false, action) => {
   switch (action.type) {
-    case ACTION.OPEN_SIDEBAR :
-      return true
-    case ACTION.CLOSE_SIDEBAR :
-      return false
-    default:
-      return state
+  case ACTION.OPEN_SIDEBAR :
+    return true
+  case ACTION.CLOSE_SIDEBAR :
+    return false
+  default:
+    return state
   }
 }
 
