@@ -49,6 +49,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
+    "eslint-plugin-react-native": "^3.0.1",
     "has-flag": "^2.0.0",
     "https-browserify": "0.0.1",
     "inherits": "^2.0.3",

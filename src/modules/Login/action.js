@@ -72,7 +72,8 @@ const activateWallet = (keyInfo, dispatch, getState) => {
     return WALLET_API.activateWalletRequest(wallet)
   })
   .then(wallet => {
-    return WALLET_API.enableTokens(wallet, ['REP', 'WINGS', 'LUN'])
+    return Promise.resolve(wallet)
+    // return WALLET_API.enableTokens(wallet, ['REP', 'WINGS', 'LUN'])
   })
   .then(wallet => {
     wallet.archived = false

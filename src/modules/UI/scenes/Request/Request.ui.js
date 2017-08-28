@@ -2,11 +2,9 @@ import React, {Component} from 'react'
 import {
   Clipboard,
   View,
-  ToastAndroid,
-  AlertIOS,
-  Platform,
   Share
 } from 'react-native'
+import Alert from './alert.js'
 import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
@@ -112,12 +110,7 @@ class Request extends Component {
 
   copyToClipboard = () => {
     Clipboard.setString(this.state.encodedURI)
-
-    if (Platform.OS === 'android') { // needs internationalization and string replacement still
-      ToastAndroid.show('Request copied to clipboard', ToastAndroid.SHORT)
-    } else if (Platform.OS === 'ios') {
-      AlertIOS.alert('Request copied to clipboard')
-    }
+    Alert.alert('Request copied to clipboard')
   }
 
   showResult = (result) => {

@@ -7,7 +7,8 @@ module.exports = {
     "extends": [
       "eslint:recommended",
       "plugin:flowtype/recommended",
-      "plugin:react/recommended"
+      "plugin:react/recommended",
+      "plugin:react-native/all"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -18,9 +19,14 @@ module.exports = {
     },
     "plugins": [
         "react",
+        "react-native",
         "flowtype"
     ],
     "rules": {
+        "react-native/no-unused-styles": 0,
+        "react-native/split-platform-components": 2,
+        "react-native/no-inline-styles": 0,
+        "react-native/no-color-literals": 0,
         "flowtype/no-types-missing-file-annotation": 0,
         "react/prop-types": 0,
         "react/no-string-refs": 0,
