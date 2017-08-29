@@ -1,3 +1,4 @@
+// Account/settings.js
 import {subcategories} from './subcategories.js'
 
 // Default Core Settings
@@ -104,26 +105,18 @@ export const setSubcategoriesRequest = (account) => {
   })
 }
 
-// Bitcoin Settings
-export const setBitcoinDenominationRequest = (account, denomination) => {
+// Currency Settings
+// Bitcoin
+export const setDenominationKeyRequest = (account, currencyCode, denomination) => {
   return getSyncedSettings(account)
   .then(settings => {
-    const updatedSettings = updateCurrencySettings(settings, 'BTC', { denomination })
-    return setSyncedSettings(account, updatedSettings)
-  })
-}
-
-// Ethereum Settings
-export const setEthereumDenominationRequest = (account, denomination) => {
-  return getSyncedSettings(account)
-  .then(settings => {
-    const updatedSettings = updateCurrencySettings(settings, 'ETH', { denomination })
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
     return setSyncedSettings(account, updatedSettings)
   })
 }
 
 // Helper Functions
-export const getSyncedSettings = account => {
+export const getSyncedSettings = (account) => {
   return getSyncedSettingsFile(account).getText()
   .then(text => {
     return JSON.parse(text)

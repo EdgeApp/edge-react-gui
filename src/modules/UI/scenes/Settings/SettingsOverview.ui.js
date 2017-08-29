@@ -15,15 +15,6 @@ import {Actions} from 'react-native-router-flux'
 import s from './style'
 import {border as b} from '../../../utils'
 
-import {
-  setAutoLogoutTimeRequest,
-  setDefaultFiatRequest,
-  setMerchantModeRequest,
-  setBitcoinDenominationRequest,
-  setBitcoinOverrideServerRequest,
-  setEthereumDenominationRequest
-} from './action.js'
-
 class SettingsOverview extends Component {
   constructor (props) {
     super(props)
@@ -172,26 +163,6 @@ class SettingsOverview extends Component {
 }
 
 const mapStateToProps = state => ({settingsFile: state.core.account.folder.file('settings.json')})
-const mapDispatchToProps = dispatch => ({
-  setAutoLogoutTime: autoLogoffTimeInSeconds => {
-    dispatch(setAutoLogoutTimeRequest(autoLogoffTimeInSeconds))
-  },
-  setDefaultFiat: defaultFiat => {
-    dispatch(setDefaultFiatRequest(defaultFiat))
-  },
-  setMerchantMode: merchantMode => {
-    dispatch(setMerchantModeRequest(merchantMode))
-  },
-  setBitcoinDenomination: denomination => {
-    dispatch(setBitcoinDenominationRequest(denomination))
-  },
-  setBitcoinOverrideServer: overrideServer => {
-    dispatch(setBitcoinOverrideServerRequest(overrideServer))
-  },
-  setEthereumDenomination: denomination => {
-    dispatch(setEthereumDenominationRequest(denomination))
-  }
-})
-
+const mapDispatchToProps = () => ({})
 const SettingsOverviewConnect = connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
 export default SettingsOverviewConnect

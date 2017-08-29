@@ -1,5 +1,4 @@
 // UI/Scenes/Settings
-
 const PREFIX = 'UI/Scenes/Settings/'
 
 const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
@@ -13,9 +12,7 @@ const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
 
 const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
 
-const SET_BITCOIN_DENOMINATION_START = PREFIX + 'SET_BITCOIN_DENOMINATION_START'
 const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
-const SET_ETHEREUM_DENOMINATION_START = PREFIX + 'SET_ETHEREUM_DENOMINATION_START'
 
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
@@ -124,16 +121,16 @@ export const setBluetoothModeRequest = bluetoothMode => {
   }
 }
 
-export const setBitcoinDenominationRequest = denomination => {
+// Denominations
+export const setDenominationKeyRequest = (currencyCode, denominationKey) => {
   return (dispatch, getState) => {
-    dispatch(setBitcoinDenominationStart(denomination))
-
     const { account } = getState().core
-    ACCOUNT_SETTINGS.setBitcoinDenominationRequest(account, denomination)
-    .then(() => {
-      return dispatch(SETTINGS_ACTIONS.setBitcoinDenomination(denomination))
-    })
-    .catch(e => { console.error(e) })
+    const onSuccess = () => dispatch(SETTINGS_ACTIONS.setDenominationKey(currencyCode, denominationKey))
+    const onError = (e) => console.log(e)
+
+    return ACCOUNT_SETTINGS.setDenominationKeyRequest(account, currencyCode, denominationKey)
+    .then(onSuccess)
+    .catch(onError)
   }
 }
 
@@ -145,19 +142,6 @@ export const setBitcoinOverrideServerRequest = overrideServer => {
     ACCOUNT_SETTINGS.setBitcoinOverrideServerRequest(account, overrideServer)
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
-    })
-    .catch(e => { console.error(e) })
-  }
-}
-
-export const setEthereumDenominationRequest = denomination => {
-  return (dispatch, getState) => {
-    dispatch(setEthereumDenominationStart(denomination))
-
-    const { account } = getState().core
-    ACCOUNT_SETTINGS.setEthereumDenominationRequest(account, denomination)
-    .then(() => {
-      return dispatch(SETTINGS_ACTIONS.setEthereumDenomination(denomination))
     })
     .catch(e => { console.error(e) })
   }
@@ -220,13 +204,6 @@ const setBluetoothModeStart = bluetoothMode => {
   }
 }
 
-const setBitcoinDenominationStart = denomination => {
-  return {
-    type: SET_BITCOIN_DENOMINATION_START,
-    data: { denomination }
-  }
-}
-
 const setBitcoinOverrideServerStart = overrideServer => {
   return {
     type: SET_BITCOIN_OVERRIDE_SERVER_START,
@@ -234,12 +211,6 @@ const setBitcoinOverrideServerStart = overrideServer => {
   }
 }
 
-const setEthereumDenominationStart = denomination => {
-  return {
-    type: SET_ETHEREUM_DENOMINATION_START,
-    data: { denomination }
-  }
-}
 // Settings
 
 // Account Settings

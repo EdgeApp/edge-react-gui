@@ -135,7 +135,7 @@ class WalletListRow extends Component {
 }
 
 export default connect((state, ownProps) => {
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, ownProps.data.currencyCode)
+  const index = SETTINGS_SELECTORS.getSelectedDenominationKey(state, ownProps.data.currencyCode)
   return {
     dimensions: state.ui.scenes.dimensions,
     index
@@ -178,7 +178,7 @@ export const WalletListTokenRowConnect = connect((state, ownProps) => {
   let denomination:AbcDenomination = {}
   let multiplier:string = '0'
   if (wallet) {
-    const index:string = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+    const index:string = SETTINGS_SELECTORS.getSelectedDenominationKey(state, currencyCode)
     denomination = wallet.allDenominations[currencyCode][index]
     multiplier = denomination.multiplier
   }

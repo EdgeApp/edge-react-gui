@@ -26,6 +26,9 @@ export const SET_REP_DENOMINATION = PREFIX + 'SET_REP_DENOMINATION'
 export const SET_WINGS_DENOMINATION = PREFIX + 'SET_WINGS_DENOMINATION'
 export const SET_LUN_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
 
+// Denomination
+export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
+
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
@@ -107,42 +110,11 @@ export const setBitcoinOverrideServer = overrideServer => {
   }
 }
 
-export const setBTCDenomination = denomination => {
+// Denomination
+export const setDenominationKey = (currencyCode, denominationKey) => {
   return {
-    type: SET_BTC_DENOMINATION,
-    data: { denomination }
-  }
-}
-
-// ETH Settings
-export const setETHDenomination = denomination => {
-  return {
-    type: SET_ETH_DENOMINATION,
-    data: { denomination }
-  }
-}
-
-// REP Settings
-export const setREPDenomination = denomination => {
-  return {
-    type: SET_REP_DENOMINATION,
-    data: { denomination }
-  }
-}
-
-// WINGS Settings
-export const setWINGSDenomination = denomination => {
-  return {
-    type: SET_WINGS_DENOMINATION,
-    data: { denomination }
-  }
-}
-
-// LUN Settings
-export const setLUNDenomination = denomination => {
-  return {
-    type: SET_LUN_DENOMINATION,
-    data: { denomination }
+    type: SET_DENOMINATION_KEY,
+    data: { currencyCode, denominationKey }
   }
 }
 

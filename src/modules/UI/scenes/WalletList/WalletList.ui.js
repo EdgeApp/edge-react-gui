@@ -91,13 +91,7 @@ class WalletList extends Component {
         </View>
 
         <View style={styles.walletsBox}>
-          <LinearGradient start={{
-            x: 0,
-            y: 0
-          }} end={{
-            x: 1,
-            y: 0
-          }} style={[styles.walletsBoxHeaderWrap]} colors={[c.gradient.light, c.gradient.dark]}>
+          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={[c.gradient.light, c.gradient.dark]}>
             <View style={[styles.walletsBoxHeaderTextWrap]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
@@ -112,13 +106,17 @@ class WalletList extends Component {
               <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
             </TouchableOpacity>
           </LinearGradient>
-          {Object.keys(wallets).length > 0
-            ? this.renderActiveSortableList(
-              this.props.wallets,
-              this.sortActiveWallets(this.props.wallets),
-              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])
-            )
-            : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
+
+          {
+            // Object.keys(wallets).length > 0
+            // ? this.renderActiveSortableList(
+            //   this.props.wallets,
+            //   this.sortActiveWallets(this.props.wallets),
+            //   sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])
+            // )
+            // :
+            <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
+
         </View>
       </View>
     )

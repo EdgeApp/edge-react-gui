@@ -76,7 +76,7 @@ export const settings = (state = initialState, action) => {
     }
   }
 
-  case ACTION.SET_BITCOIN_DENOMINATION: {
+  case ACTION.SET_BTC_DENOMINATION: {
     const { denomination } = data
     const BTC = state['BTC']
     return {
@@ -100,7 +100,7 @@ export const settings = (state = initialState, action) => {
     }
   }
 
-  case ACTION.SET_ETHEREUM_DENOMINATION: {
+  case ACTION.SET_ETH_DENOMINATION: {
     const { denomination } = data
     const ETH = state['ETH']
     return {
@@ -112,13 +112,25 @@ export const settings = (state = initialState, action) => {
     }
   }
 
+  case ACTION.SET_DENOMINATION_KEY: {
+    const currencyCode = data.currencyCode
+    const denomination = data.denominationKey
+    const currencyState = state[currencyCode]
+    return {
+      ...state,
+      [currencyCode]: {
+        ...currencyState,
+        denomination
+      }
+    }
+  }
+
   case ACTION.ADD_CURRENCY_PLUGIN: {
     const { plugins } = state
     const { supportedWalletTypes } = plugins
     const { arrayPlugins } = plugins
     const { pluginName, plugin, walletTypes } = data
     const currencyInfo = plugin.currencyInfo
-
       // Build up object with all the information for the parent currency, accesible by the currencyCode
     const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
     const parentCurrencyInfo = {

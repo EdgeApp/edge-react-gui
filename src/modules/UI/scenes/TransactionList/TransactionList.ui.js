@@ -422,7 +422,7 @@ const mapStateToProps = (state) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const transactions = UI_SELECTORS.getTransactions(state)
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
+  const index = SETTINGS_SELECTORS.getSelectedDenominationKey(state, currencyCode)
   const denomination = wallet.allDenominations[currencyCode][index]
   const multiplier = denomination.multiplier
   const balanceInCryptoDisplay = bns.divf(balanceInCrypto, multiplier)

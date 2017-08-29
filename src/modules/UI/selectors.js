@@ -8,6 +8,7 @@ export const getWallet = (state, walletId) => {
   const wallet = wallets[walletId]
   return wallet
 }
+
 export const getSelectedWalletId = (state) => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId

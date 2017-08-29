@@ -7,7 +7,8 @@ import {
 import Alert from './alert'
 import {connect} from 'react-redux'
 import styles from './styles.js'
-import ExchangeRate from '../../components/ExchangeRate/index.js'
+import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
+import ExchangedExchangeRate from '../../components/ExchangedExchangeRate/index.js'
 import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
@@ -20,11 +21,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import {
-  saveReceiveAddress
-} from './action.js'
-
-import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
+import { saveReceiveAddress } from './action.js'
 
 class Request extends Component {
   constructor (props) {
@@ -82,7 +79,7 @@ class Request extends Component {
         colors={['#3b7adb', '#2b569a']}>
 
         <View style={styles.exchangeRateContainer}>
-          <ExchangeRate
+          <ExchangedExchangeRate
             fiatPerCrypto={fiatPerCrypto}
             primaryInfo={primaryInfo}
             secondaryInfo={secondaryInfo} />
@@ -173,7 +170,7 @@ const mapStateToProps = (state) => {
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryDisplayDenomination = SETTINGS_SELECTORS.getSelectedDenomination(state, currencyCode)
   const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination = {
     name: 'Dollars',
@@ -194,9 +191,7 @@ const mapStateToProps = (state) => {
   }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
-    fiatPerCrypto = CORE_SELECTORS.getFakeExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    // fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
   return {

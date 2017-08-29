@@ -93,12 +93,7 @@ export default class ExchangedFlipInput extends Component {
   }
 
   render () {
-    console.log('ExchangedFlipInput')
-    console.log('secondaryToPrimaryRatio', this.props.secondaryToPrimaryRatio)
-    console.log('primaryDisplayAmount', this.state.primaryDisplayAmount)
-
     const secondaryDisplayAmount = this.convertPrimaryDisplayToSecondaryDisplay(this.state.primaryDisplayAmount)
-
     const primaryInfo = {
       displayAmount: this.state.primaryDisplayAmount,
       ...this.props.primaryInfo

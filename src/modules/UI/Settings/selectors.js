@@ -6,36 +6,32 @@ export const getSettings = (state: any) => {
   return settings
 }
 
-export const getDenominationIndex = (state: any, currencyCode: string) => {
-  const settings = getSettings(state)
-  const currencySettings = settings[currencyCode]
-  let denominationIndex:string
-  if (currencySettings) {
-    denominationIndex = currencySettings.denomination
-  }
-  return denominationIndex
-}
-
 export const getCurrencySettings = (state: any, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   return currencySettings
 }
 
-export const getDisplayDenomination = (state: any, currencyCode: string) => {
+export const getDenominations = (state: any, currencyCode: string) => {
   const currencySettings = getCurrencySettings(state, currencyCode)
-  const multiplier = currencySettings.denomination.toString()
   const denominations = currencySettings.denominations
-  const displayDenomination = denominations.find(denomination => {
-    return denomination.multiplier.toString() === multiplier
-  })
-  return displayDenomination
+  return denominations
 }
 
-export const getNativeToDenominationRatio = (state: any, currencyCode: string) => {
-  const currencySettings = getCurrencySettings(state, currencyCode)
-  const nativeToDenominationRatio = currencySettings.displayDenomination.nativeToDenominationRatio
-  return nativeToDenominationRatio
+export const getSelectedDenominationKey = (state: any, currencyCode: string) => {
+  const settings = getSettings(state)
+  const currencySettings = settings[currencyCode]
+  const selectedDenominationKey = currencySettings.denomination
+  return selectedDenominationKey
+}
+
+export const getSelectedDenomination = (state: any, currencyCode: string) => {
+  const selectedDenominationKey = getSelectedDenominationKey(state, currencyCode)
+  const denominations = getDenominations(state, currencyCode)
+  const selectedDenomination = denominations.find(denomination => {
+    return denomination.multiplier === selectedDenominationKey
+  })
+  return selectedDenomination
 }
 
 export const getPlugins = (state: any) => {

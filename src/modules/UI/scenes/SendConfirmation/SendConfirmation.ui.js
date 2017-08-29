@@ -168,7 +168,7 @@ const mapStateToProps = (state) => {
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryDisplayDenomination = SETTINGS_SELECTORS.getSelectedDenomination(state, currencyCode)
   const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination = {
     name: 'Dollars',

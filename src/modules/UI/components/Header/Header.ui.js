@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-Header,
-Left,
-Right,
-Body,
-Icon
+  Header,
+  Left,
+  Right,
+  Body,
+  Icon
 } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import { Actions } from 'react-native-router-flux'

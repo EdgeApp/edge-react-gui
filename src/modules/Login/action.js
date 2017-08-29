@@ -191,19 +191,19 @@ const loadSettings = () => {
     const { account } = getState().core
     SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
-      console.log('*** Duplicated in Settings/reducer.js ***')
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, settings)
+
       // Add all the  settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
 
-      dispatch(SETTINGS_ACTIONS.setBTCDenomination(syncFinal.BTC.denomination))
-      dispatch(SETTINGS_ACTIONS.setETHDenomination(syncFinal.ETH.denomination))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
 
-      dispatch(SETTINGS_ACTIONS.setREPDenomination(syncFinal.REP.denomination))
-      dispatch(SETTINGS_ACTIONS.setWINGSDenomination(syncFinal.WINGS.denomination))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))
     })
     SETTINGS_API.getSyncedSubcategories(account)
     .then(subcategories => {

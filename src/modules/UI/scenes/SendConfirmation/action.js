@@ -191,33 +191,6 @@ export const processURI = (parsedURI) => {
   }
 }
 
-// export const updateCryptoAmountRequest = (cryptoAmountInDenomination: string = '0') => {
-//   return (dispatch, getState) => {
-//     if (parseFloat(cryptoAmountInDenomination) === 0) return
-//
-//     const state = getState()
-//     const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-//     const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-//     const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-//     const nativeToDenominationRatio = SETTINGS_SELECTORS.getNativeToDenominationRatio(state, currencyCode)
-//     const nativeAmount = convertDenominationToNative(nativeToDenominationRatio, cryptoAmountInDenomination)
-//     const publicAddress = state.ui.scenes.sendConfirmation.publicAddress
-//
-//     const spendInfo = makeSpendInfo({ nativeAmount, publicAddress, currencyCode })
-//
-//     WALLET_API.makeSpend(wallet, spendInfo)
-//     .then(validTransaction => {
-//       dispatch(updateTransaction(validTransaction))
-//       dispatch(updateSpendError(null))
-//     })
-//     .catch(error => {
-//       const invalidTransaction = makeInvalidTransaction({nativeAmount, publicAddress, currencyCode})
-//       dispatch(updateTransaction(invalidTransaction))
-//       return dispatch(updateSpendError(error))
-//     })
-//   }
-// }
-
 export const updateParsedURI = (parsedURI) => {
   return {
     type: UPDATE_PARSED_URI,
