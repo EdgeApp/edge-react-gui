@@ -1,2 +1,4 @@
 import { ToastAndroid } from 'react-native'
-export const alert = (message) => ToastAndroid.show(message, ToastAndroid.SHORT)
+export default {
+  alert: (message) => ToastAndroid.show(message, ToastAndroid.SHORT)
+}

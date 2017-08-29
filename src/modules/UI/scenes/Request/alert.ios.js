@@ -1,2 +1,4 @@
 import { AlertIOS } from 'react-native'
-export const alert = (message) => AlertIOS.alert(message)
+export default {
+  alert: (message) => AlertIOS.alert(message)
+}
