@@ -1,9 +1,5 @@
 // Core/Context/api.js
 
-export const listUsernames = (context) => {
-  return context.listUsernames()
-}
-
 export const createAccount = (context, ...opts) => {
   return context.createAccount(...opts)
 }

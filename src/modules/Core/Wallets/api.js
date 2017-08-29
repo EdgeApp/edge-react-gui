@@ -3,6 +3,7 @@
 import { makeCurrencyWallet } from 'airbitz-core-js'
 import { makeWalletCallbacks } from './callbacks.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
+import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors.js'
 
 export const makeCurrencyWalletRequest = (keyInfo: any, dispatch: any, getState: any) => {
   const state = getState()
@@ -12,7 +13,7 @@ export const makeCurrencyWalletRequest = (keyInfo: any, dispatch: any, getState:
 
   let matchingPlugin = null
 
-  for (const madePlugin of global.madeCurrencyPlugins) {
+  for (const madePlugin of SETTINGS_SELECTORS.getPlugins(state).arrayPlugins) {
     for (const type of madePlugin.currencyInfo.walletTypes) {
       if (walletType.replace('wallet:', '').toLowerCase() === type.replace('wallet:', '')) {
         matchingPlugin = madePlugin
