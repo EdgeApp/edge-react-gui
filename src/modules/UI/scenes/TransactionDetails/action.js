@@ -17,9 +17,6 @@ export const setTransactionDetails = (currencyCode, transactionDetails) => {
     const onError = () => {
 
     }
-    console.log('in action, wallet is: ', wallet)
-    console.log('in action, currencyCode is: ', currencyCode)
-    console.log('in action, transactionDetails is: ', transactionDetails)
     WALLET_API.setTransactionDetailsRequest(wallet, currencyCode, transactionDetails)
       .then(onSuccess)
       .catch(onError)

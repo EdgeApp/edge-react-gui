@@ -19,6 +19,16 @@ export const findDenominationSymbol = (denoms, value) => {
   }
 }
 
+export const getWalletDefaultDenomProps = (wallet, settingsState) => {
+  console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
+  let allWalletDenoms = wallet.allDenominations
+  let walletCurrencyCode = wallet.currencyCode
+  let currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
+  let denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
+  console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
+  return denomProperties
+}
+
 export const getFiatSymbol = (code) => {
   return getSymbolFromCurrency(code)
 }
@@ -28,28 +38,6 @@ export const sanitizeInput = (input) => {
   const sanitizedInput = input.toString().match(numbers)[0]
 
   return sanitizedInput
-}
-
-export const limitFiatDecimals = (num) => {
-  console.log('num: ', num)
-  let inputString = num.toString()
-  let periodPosition = inputString.indexOf('.')
-  console.log('periodPosition: ', periodPosition)
-  let first
-  let second
-  if (periodPosition > -1) {
-    first = inputString.split('.')[0]
-    console.log('first: ', first)
-    second = inputString.split('.')[1]
-    console.log('second: ', second)
-    if (second.length > 2) {
-      return first + '.' + second.slice(0, 2)
-    } else {
-      return first + '.' + second
-    }
-  } else {
-    return num
-  }
 }
 
 export const devStyle = {
@@ -86,6 +74,14 @@ export const getRandomColor = () => {
 export const isValidInput = (input: string): boolean => {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
   return !isNaN(+input) || input === '.'
+}
+
+// Used to limit the decimals of a displayAmount
+export const truncateDecimals = (input: string, precision: number): string => {
+  input = (input === '') ? '0' : input
+  if (!input.includes('.')) { return input }
+  const [integers, decimals] = input.split('.')
+  return `${integers}.${decimals.slice(0, precision)}`
 }
 
 export const formatNumber = (input: string): string => {
@@ -134,13 +130,6 @@ export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: strin
   return (displayNativeToDisplayRatio: string): string => {
     return divf(exchangeNativeToDisplayRatio, displayNativeToDisplayRatio).toString()
   }
-}
-
-// Used to limit the decimals of a displayAmount
-export const truncateDecimals = (input: string, precision: number): string => {
-  if (!input.includes('.')) { return input }
-  const [integers, decimals] = input.split('.')
-  return `${integers}.${decimals.slice(0, precision)}`
 }
 
 export const absoluteValue = (input: string): string => {

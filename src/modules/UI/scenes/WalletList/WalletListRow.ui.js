@@ -8,7 +8,6 @@ import type { EsDenomination } from 'airbitz-core-js'
 import {
   View,
   TouchableHighlight,
-  TouchableOpacity,
   Animated
 } from 'react-native'
 import {connect} from 'react-redux'
@@ -91,7 +90,7 @@ class WalletListRow extends Component {
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
-        <TouchableOpacity
+        <TouchableHighlight
           onPressIn={() => console.log('onPressIn triggered')}
           onLongPress={() => console.log('onLongPress triggered')}
           style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]}
@@ -110,7 +109,7 @@ class WalletListRow extends Component {
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
-        </TouchableOpacity>
+        </TouchableHighlight>
         {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
