@@ -2,7 +2,7 @@
 import borderColors from '../theme/variables/css3Colors'
 import { divf, mulf } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import { EsDenomination } from 'airbitz-core-js'
+import { AbcDenomination } from 'airbitz-core-js'
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
@@ -12,7 +12,7 @@ export const cutOffText = (str: string, lng: number) => {
   }
 }
 
-export const findDenominationSymbol = (denoms: Array<EsDenomination>, value: string) => {
+export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: string) => {
   console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
   for (const v of denoms) {
     if (v.name === value) {

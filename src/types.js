@@ -3,7 +3,7 @@
  */
 // @flow
 
-import { EsDenomination, EsMetaToken } from 'airbitz-core-js'
+import { AbcDenomination, AbcMetaToken } from 'airbitz-core-js'
 
 export class GUIWallet {
   id: string
@@ -15,10 +15,10 @@ export class GUIWallet {
   currencyCode: string
   isoFiatCurrencyCode: string
   fiatCurrencyCode: string
-  denominations: Array<EsDenomination>
-  allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } }
+  denominations: Array<AbcDenomination>
+  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } }
   symbolImage: string
-  metaTokens: Array<EsMetaToken>
+  metaTokens: Array<AbcMetaToken>
   sortIndex: number
   archived: boolean
   deleted: boolean
@@ -32,10 +32,10 @@ export class GUIWallet {
     currencyCode: string,
     isoFiatCurrencyCode: string,
     fiatCurrencyCode: string,
-    denominations: Array<EsDenomination>,
-    allDenominations: { [currencyCode: string]: { [denomination: string]: EsDenomination } },
+    denominations: Array<AbcDenomination>,
+    allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
     symbolImage: string,
-    metaTokens: Array<EsMetaToken>,
+    metaTokens: Array<AbcMetaToken>,
     sortIndex: number,
     archived: boolean,
     deleted: boolean

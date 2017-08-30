@@ -4,7 +4,7 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { bns } from 'biggystring'
 import { GUIWallet } from '../../../../types.js'
-import type { EsDenomination } from 'airbitz-core-js'
+import type { AbcDenomination } from 'airbitz-core-js'
 import {
   View,
   TouchableHighlight,
@@ -175,7 +175,7 @@ export const WalletListTokenRowConnect = connect((state, ownProps) => {
   const walletId = ownProps.parentId
   const currencyCode = ownProps.currencyCode
   const wallet:GUIWallet = UI_SELECTORS.getWallet(state, walletId)
-  let denomination:EsDenomination = {}
+  let denomination:AbcDenomination = {}
   let multiplier:string = '0'
   if (wallet) {
     const index:string = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
