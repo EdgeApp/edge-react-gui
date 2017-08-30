@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native'
+// $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import {setContactList} from '../../contacts/action'
