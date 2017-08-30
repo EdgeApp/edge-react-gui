@@ -41,8 +41,7 @@ import {setHeaderHeight} from './UI/dimensions/action.js'
 
 import { addCurrencyPlugin } from './UI/Settings/action.js'
 
-import { makeReactNativeIo } from 'airbitz-core-react-native'
-import { makeContext } from 'airbitz-core-js'
+import { makeContext, makeReactNativeIo } from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
 import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
