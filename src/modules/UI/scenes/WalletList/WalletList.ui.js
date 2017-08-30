@@ -7,6 +7,7 @@ import {
   TouchableHighlight,
   TouchableOpacity
 } from 'react-native'
+// $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import {setContactList} from '../../contacts/action'
@@ -49,7 +50,7 @@ class WalletList extends Component {
 
   componentDidMount () {
     console.log('in WalletList->componentDidMount')
-    Permissions.getPermissionStatus('contacts').then((response) => {
+    Permissions.request('contacts').then((response) => {
       if (response === 'authorized') {
         Contacts.getAll((err, contacts) => {
           if (err === 'denied') {
