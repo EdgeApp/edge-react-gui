@@ -50,7 +50,7 @@ class WalletList extends Component {
 
   componentDidMount () {
     console.log('in WalletList->componentDidMount')
-    Permissions.getPermissionStatus('contacts').then((response) => {
+    Permissions.request('contacts').then((response) => {
       if (response === 'authorized') {
         Contacts.getAll((err, contacts) => {
           if (err === 'denied') {

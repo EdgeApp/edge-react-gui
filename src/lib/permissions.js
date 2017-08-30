@@ -2,7 +2,7 @@ const Permissions = require('react-native-permissions')
 
 export async function checkCameraPermission (callback) {
   try {
-    Permissions.getPermissionStatus('camera')
+    Permissions.check('camera')
       .then(response => {
         let granted = false
         if (response === 'authorized') {
@@ -19,7 +19,7 @@ export async function checkCameraPermission (callback) {
 
 export async function requestCameraPermission (callback) {
   try {
-    Permissions.requestPermission('camera')
+    Permissions.request('camera')
       .then(response => {
         let granted = false
         if (response === 'authorized') {
@@ -36,7 +36,7 @@ export async function requestCameraPermission (callback) {
 
 export async function checkReadContactPermission (callback) {
   try {
-    Permissions.getPermissionStatus('contacts')
+    Permissions.check('contacts')
       .then(response => {
         let granted = false
         if (response === 'authorized') {
@@ -53,7 +53,7 @@ export async function checkReadContactPermission (callback) {
 
 export async function requestReadContactPermission (callback) {
   try {
-    Permissions.requestPermission('contacts')
+    Permissions.request('contacts')
       .then(response => {
         let granted = false
         if (response === 'authorized') {

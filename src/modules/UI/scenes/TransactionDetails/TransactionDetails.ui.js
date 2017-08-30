@@ -224,7 +224,7 @@ class TransactionDetails extends Component {
   componentDidMount () {
     const permissionStatus = ['authorized', 'undetermined']
     if (!this.props.contacts) {
-      Permissions.getPermissionStatus('contacts').then((response) => {
+      Permissions.check('contacts').then((response) => {
         if (permissionStatus.indexOf(response)) {
           Contacts.getAll((err, contacts) => {
             if (err === 'denied') {
