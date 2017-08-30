@@ -3,18 +3,42 @@
 import * as UTILS from '../src/modules/utils.js'
 
 describe('convertExchangeToDisplay', function () {
-  test('1 BTC = $ 4,500 => 1 mBTC = $ 4.50', function () {
-    const expected = 4.5
+  const primaryCurrencyDenominationdenominations = [
+    {
+      name: 'ETH',
+      multiplier: '1000000000000000000',
+      symbol: 'Ξ'
+    },
+    {
+      name: 'mETH',
+      multiplier: '1000000000000000',
+      symbol: 'mΞ'
+    }
+  ]
 
-    const primaryInfo = {}
-    const secondaryInfo = {}
+  const secondaryCurrencyDenominationdenominations = [
+    {
+      name: 'USD',
+      multiplier: '100',
+      symbol: 'Ξ'
+    }
+  ]
 
-    const convertPrimaryExchangeToPrimaryDisplay = UTILS.convertExchangeToDisplay()
-    const convertSecondaryExchangeToSecondaryDisplay = UTILS.convertExchangeToDisplay()
+  test('1 ETH = $ 350 => 1 mETH = $ 0.35', function () {
+    const primaryCurrencyDenominationKey = '1000000000000000000'
+    const secondaryCurrencyDenominationKey = '100'
 
-    const primaryDisplay = convertPrimaryExchangeToPrimaryDisplay()
-    const secondaryDisplay = convertSecondaryExchangeToSecondaryDisplay()
+    const primaryCurrencyInfo = {
+      nativeAmount: '1000000000000000000',
+      currencyCode: 'ETH'
+    }
 
+    const secondaryCurrencyInfo = {
+      nativeAmount: '0.35',
+      currencyCode: 'USD'
+    }
+
+    UTILS.convertExchangeToDisplay
     expect(actual).toBe(expected)
   })
 })

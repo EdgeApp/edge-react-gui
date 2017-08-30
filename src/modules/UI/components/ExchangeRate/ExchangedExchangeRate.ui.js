@@ -1,42 +1,32 @@
 import React, { Component } from 'react'
 import ExchangeRate from './ExchangeRate.ui.js'
-import * as UTILS from '../../../utils.js'
 
 export default class ExchangedExchangeRate extends Component {
-  constructor (props) {
-    super(props)
 
-    this.state = {
-      primaryDisplayAmount: '',
-      secondaryDisplayAmount: ''
-    }
+  getSecondaryDisplayAmount () {
+    const secondaryDisplayAmount =
+      parseFloat(1) *
+      parseFloat(this.props.secondaryToPrimaryRatio) *
+      parseFloat(this.props.primaryInfo.displayDenomination.multiplier) /
+      parseFloat(this.props.primaryInfo.exchangeDenomination.multiplier)
+
+    return secondaryDisplayAmount
   }
 
   render () {
-    const primaryInfo = {}
-    const secondaryInfo = {}
-    const secondaryDisplayAmount = '0000'
+    const primaryDisplayAmount = '1'
+    const primaryInfo = this.props.primaryInfo
+    const secondaryInfo = this.props.secondaryInfo
 
     return (
       <ExchangeRate
         color={this.props.color}
 
-        primaryDisplayAmount={this.state.primaryDisplayAmount}
+        primaryDisplayAmount={primaryDisplayAmount}
         primaryInfo={primaryInfo}
 
-        secondaryDisplayAmount={secondaryDisplayAmount}
+        secondaryDisplayAmount={this.getSecondaryDisplayAmount()}
         secondaryInfo={secondaryInfo} />
     )
-  }
-
-  this.props.primaryInfo = {
-    exchangeDenomination,
-    displayDenomination
-  }
-
-  const primaryDisplayToExchangeRatio = UTILS.deriveDisplayToExchangeRatio(this.props.primaryInfo.exchangeDenomination.multiplier)(this.props.primaryInfo.displayDenomination.multiplier)
-  const secondaryDisplayToExchangeRatio = UTILS.deriveDisplayToExchangeRatio(this.props.secondaryInfo.exchangeDenomination.multiplier)(this.props.secondaryInfo.displayDenomination.multiplier)
-  const secondaryDisplayAmount = convertExchangeExchangeRateToDisplayExchangeRate = (primaryDisplayToExchangeRatio) => {
-
   }
 }
