@@ -14,7 +14,6 @@ import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
 import cl.json.RNSharePackage;
 import com.bitgo.randombytes.RandomBytesPackage;
-import com.joshblour.reactnativepermissions.ReactNativePermissionsPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.imagepicker.ImagePickerPackage;
@@ -54,7 +53,6 @@ public class MainApplication extends Application implements ReactApplication {
             new TcpSocketsModule(),
             new RNSharePackage(),
             new RandomBytesPackage(),
-            new ReactNativePermissionsPackage(),
             new ReactMaterialKitPackage(),
             new LinearGradientPackage(),
             new ImagePickerPackage(),

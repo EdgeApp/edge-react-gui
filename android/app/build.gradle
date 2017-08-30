@@ -148,7 +148,6 @@ dependencies {
     compile project(':react-native-tcp')
     compile project(':react-native-share')
     compile project(':react-native-randombytes')
-    compile project(':react-native-permissions')
     compile project(':react-native-material-kit')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-image-picker')
