@@ -79,7 +79,6 @@ class WalletListRow extends Component {
   }
 
   render () {
-    console.log('rendering wallet row, this is: ', this)
     const {data} = this.props
     let walletData = data
     let currencyCode = walletData.currencyCode
@@ -91,8 +90,6 @@ class WalletListRow extends Component {
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
         <TouchableHighlight
-          onPressIn={() => console.log('onPressIn triggered')}
-          onLongPress={() => console.log('onLongPress triggered')}
           style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]}
           underlayColor={'#eee'}
           {...this.props.sortHandlers}
