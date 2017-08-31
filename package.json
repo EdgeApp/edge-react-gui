@@ -19,7 +19,6 @@
     "flow": "flow",
     "flow:cover": "flow-coverage-report",
     "precommit": "npm test",
-    "prepush": "npm test",
     "test": "npm run lint && npm run flow && jest",
     "watch": "npm test -- --watch"
   },

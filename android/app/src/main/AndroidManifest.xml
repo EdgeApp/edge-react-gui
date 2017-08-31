@@ -24,7 +24,7 @@
 
   <uses-sdk
     android:minSdkVersion="19"
-    android:targetSdkVersion="24" />
+    android:targetSdkVersion="25" />
 
   <application
     android:name=".MainApplication"

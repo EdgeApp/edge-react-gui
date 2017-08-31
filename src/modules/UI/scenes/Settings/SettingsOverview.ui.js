@@ -1,4 +1,4 @@
-import HockeyApp from 'react-native-hockeyapp'
+// import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
@@ -110,7 +110,7 @@ class SettingsOverview extends Component {
   }
 
   _onPressDebug = () => {
-    HockeyApp.generateTestCrash()
+    // HockeyApp.generateTestCrash()
   }
 
   render () {

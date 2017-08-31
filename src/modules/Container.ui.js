@@ -1,4 +1,4 @@
-import HockeyApp from 'react-native-hockeyapp'
+// import HockeyApp from 'react-native-hockeyapp'
 import SplashScreen from 'react-native-splash-screen'
 import React, { Component } from 'react'
 import { View, StatusBar, Platform, Keyboard } from 'react-native'
@@ -44,10 +44,19 @@ import { makeContext } from 'airbitz-core-js'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
 import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
-const currencyPlugins = [
-  EthereumCurrencyPluginFactory,
-  BitcoinCurrencyPluginFactory
-]
+
+let currencyPlugins = []
+
+if (Platform.OS === 'ios') {
+  currencyPlugins = [
+    BitcoinCurrencyPluginFactory,
+    EthereumCurrencyPluginFactory
+  ]
+} else if (Platform.OS === 'android') {
+  currencyPlugins = [
+    EthereumCurrencyPluginFactory
+  ]
+}
 
 import {setLocaleInfo} from './UI/locale/action'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -56,7 +65,7 @@ import styles from './style.js'
 
 import ENV from '../../env.json'
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
-const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
+// const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
 
@@ -72,7 +81,7 @@ class Main extends Component {
   }
 
   componentWillMount () {
-    HockeyApp.configure(HOCKEY_APP_ID, true)
+    // HockeyApp.configure(HOCKEY_APP_ID, true)
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
   }
@@ -126,8 +135,8 @@ class Main extends Component {
   }
 
   componentDidMount () {
-    HockeyApp.start()
-    HockeyApp.checkForUpdate() // optional
+    // HockeyApp.start()
+    // HockeyApp.checkForUpdate() // optional
 
     this.makeCoreContext().then(context => {
       this.setState({ context, loading: false }, () => SplashScreen.hide())
