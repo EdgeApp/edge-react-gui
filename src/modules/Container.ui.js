@@ -64,6 +64,15 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 import styles from './style.js'
 
 import ENV from '../../env.json'
+import { mapAllFiles } from 'disklet'
+
+// import { dumpFolder } from '../../debugTools.js'
+export function dumpFolder (folder) {
+  return mapAllFiles(folder, (file, path) =>
+    file.getText(file).then(text => console.log(`dumpfolder: "${path}": "${text}"`))
+  )
+}
+
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 // const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 

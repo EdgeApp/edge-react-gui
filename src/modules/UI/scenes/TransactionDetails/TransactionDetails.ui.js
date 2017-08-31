@@ -14,6 +14,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native'
+import { bns } from 'biggystring'
 import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
@@ -27,10 +28,15 @@ import {connect} from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
-import {border as b, limitFiatDecimals, getFiatSymbol} from '../../../utils'
-import { setTransactionDetails, setNewSubcategory } from './action.js'
+import {border as b, getFiatSymbol, truncateDecimals, formatNumber, getWalletDefaultDenomProps} from '../../../utils'
+import {
+  setTransactionDetails,
+  setNewSubcategory,
+  getSubcategories
+  // setSubcategories,
+  // setSubcategoriesRequest
+} from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
-import { subcategories as subcats } from '../../../Core/Account/subcategories.js'
 import SearchResults from '../../components/SearchResults'
 import { openHelpModal } from '../../components/HelpModal/actions'
 
@@ -44,9 +50,18 @@ class TransactionDetails extends Component {
     const dateTime = new Date(this.props.tx.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
+    let type, subCategory
+    if (this.props.tx.metadata.category) {
+      let colonOccurrence = this.props.tx.metadata.category.indexOf(':')
+      if (colonOccurrence) {
+        type = this.props.tx.metadata.category.substring(0, colonOccurrence)
+        type = type.charAt(0).toLowerCase() + type.slice(1)
+        subCategory = this.props.tx.metadata.category.substring(colonOccurrence + 1, this.props.tx.metadata.category.length)
+      }
+    }
+
     this.state = {
       tx: this.props.tx,
-      // payee: this.props.tx.metaData.payee ? this.props.tx.metaData.payee : '',
       direction,
       txid: this.props.tx.txid,
       name: this.props.tx.metadata.name, // remove commenting once metaData in Redux
@@ -59,18 +74,16 @@ class TransactionDetails extends Component {
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
-      subCategory: this.props.tx.metadata.subcategory,
+      subCategory: subCategory || null,
       contactSearchVisibility: false,
       animation: new Animated.Value(0),
       payeeOpacity: new Animated.Value(0),
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,
-      subcatZIndex: 0
+      subcatZIndex: 0,
+      type: type,
+      walletDefaultDenomProps: {}
     }
-  }
-
-  onSaveTxDetails = () => {
-    this.props.dispatch(setTransactionDetails(this.props.selectedWallet, this.state, this.props.currencyCode))
   }
 
   onFocusPayee = () => {
@@ -86,7 +99,6 @@ class TransactionDetails extends Component {
   }
 
   onChangePayee = (contactName, thumbnailPath) => {
-    console.log('changing payee, contactName is: ', contactName, ' , and thumbnailPath is: ', thumbnailPath)
     this.setState({
       name: contactName,
       thumbnailPath: thumbnailPath
@@ -100,14 +112,18 @@ class TransactionDetails extends Component {
   }
 
   onChangeFiat = (input) => {
+    let newInput
+    console.log('onChangeFiat being executed, input is: ', input)
+    newInput = (isNaN(input) || (input === '')) ? '' : formatNumber(truncateDecimals(input, 2))
+    console.log('onChangeFiat, now newInput is: ', newInput)
     this.setState({
-      amountFiat: this.props.fiatSymbol + ' ' + limitFiatDecimals(input.replace(this.props.fiatSymbol, '').replace(' ', ''))
+      amountFiat: newInput
     })
   }
 
   onChangeCategory = (input) => {
     this.setState({
-      category: input
+      type: input
     })
   }
 
@@ -121,7 +137,6 @@ class TransactionDetails extends Component {
     this.setState({
       notes: input
     })
-    console.log('in onChangeNotes')
   }
 
   onFocusNotes = () => {
@@ -129,36 +144,30 @@ class TransactionDetails extends Component {
   }
 
   onBlurNotes = () => {
-    console.log('executing onBlurNotes')
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onNotesKeyboardReturn = () => {
-    console.log('in onNotesKeyboardReturn')
     this.onBlurNotes()
   }
 
   onEnterSubcategories = () => {
-    console.log('in onEnterSubcategories, this is: ', this)
     this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
     this._toggleSubcategoryVisibility()
     this.subcategoryTextInput.focus()
   }
 
   onExitSubcategories = () => {
-    console.log('in onExitSubcategories, this is: ', this)
     // this._toggleSubcategoryVisibility()
   }
 
   onSubcategoriesKeyboardReturn = () => {
-    console.log('in onSubcategoriesKeyboardReturn, this is: ', this)
     this._toggleSubcategoryVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   onSelectSubCategory = (input) => {
-    console.log('in onSelectSubCategory, this is: ', this, ' , and input is: ', input)
     let stringArray
     // check if there is a colon that delineates category and subcategory
     if (!input) {
@@ -166,35 +175,36 @@ class TransactionDetails extends Component {
         subCategory: ''
       })
     } else {
-      if (input.indexOf(':')) {
-        stringArray = input.split(':')
-        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) {
+      let colonOccurrence = input.indexOf(':')
+      if (colonOccurrence) {
+        stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
+        console.log('stringArray is: ', stringArray)
+        if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) { // if the type is of the 4 options
           this.setState({
-            category: stringArray[0].toLowerCase(),
+            type: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
-          if (subcats.indexOf(input) === -1) { // if this is a new subcategory
+          if ((this.props.subcategoriesList.indexOf(input) === -1) && categories.indexOf(stringArray[0] >= 0)) { // if this is a new subcategory and the parent category is an accepted type
             this.addNewSubcategory(input)
           }
         } else {
           this.setState({
-            subCategory: input
+            subCategory: stringArray[1]
           })
         }
       } else {
         this.setState({
-          subCategory: input
+          subCategory: stringArray[1]
         })
       }
     }
-    console.log('in end of onSelectSubCategory, this is: ', this)
     this._toggleSubcategoryVisibility()
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
   addNewSubcategory = (newSubcategory) => {
-    this.props.dispatch(setNewSubcategory(newSubcategory, subcats))
+    this.props.dispatch(setNewSubcategory(newSubcategory, this.props.subcategoriesList))
   }
 
   onEnterCategories = () => {
@@ -206,7 +216,7 @@ class TransactionDetails extends Component {
   }
 
   onSelectCategory = (item) => {
-    this.setState({category: item.itemValue})
+    this.setState({typ: item.itemValue})
     this.onExitCategories()
   }
 
@@ -214,11 +224,19 @@ class TransactionDetails extends Component {
     this.refs._scrollView.scrollTo({x: 0, y: 90, animated: true})
   }
 
-  onPressSave = () => {
-    const { txid, name, category, notes, amountFiat, bizId, miscJson } = this.state
+  onSaveTxDetails = () => {
+    let amountFiat
+    let category
+    if (this.state.type && this.state.subCategory) {
+      category = this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1) + ':' + this.state.subCategory
+    } else {
+      category = undefined
+    }
+    const { txid, name, notes, bizId, miscJson } = this.state
+    let newAmountFiat = this.state.amountFiat
+    amountFiat = (!newAmountFiat) ? 0.00 : Number.parseInt(newAmountFiat).toFixed(2)
     const transactionDetails = { txid, name, category, notes, amountFiat, bizId, miscJson }
-    console.log('transactionDetails are: ', transactionDetails)
-    this.props.setTransactionDetails(transactionDetails)
+    this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
   }
 
   componentDidMount () {
@@ -230,7 +248,6 @@ class TransactionDetails extends Component {
             if (err === 'denied') {
               // error
             } else {
-              console.log('all contacts: ', contacts)
               contacts.sort((a, b) => {
                 return a.givenName > b.givenName
               })
@@ -247,7 +264,6 @@ class TransactionDetails extends Component {
     if (!this.state.contactSearchVisibility) {
       toOpacity = 1
       this.setState({contactSearchVisibility: true, payeeZIndex: 99999}, () => {
-        console.log('in _togglePayeeVisibility, this is: ', this)
         Animated.timing(
           this.state.payeeOpacity,
           {
@@ -273,7 +289,6 @@ class TransactionDetails extends Component {
     if (!this.state.subCategorySelectVisibility) {
       toOpacity = 1
       this.setState({subCategorySelectVisibility: true, subcatZIndex: 99999}, () => {
-        console.log('in _toggleSubcategoryVisibility, this is: ', this)
         Animated.timing(
           this.state.subcategoryOpacity,
           {
@@ -294,8 +309,13 @@ class TransactionDetails extends Component {
     }
   }
 
+  componentWillMount () {
+    this.props.dispatch(getSubcategories())
+    this.setState({walletDefaultDenomProps: getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
+  }
+
   render () {
-    let leftData, feeSyntax, category
+    let leftData, feeSyntax, type
 
     const types = {
       exchange: {
@@ -320,14 +340,14 @@ class TransactionDetails extends Component {
       }
     }
 
-    if (!this.state.category) {
+    if (!this.state.type) {
       if (this.state.direction === 'receive') {
-        category = types.income
+        type = types.income
       } else {
-        category = types.expense
+        type = types.expense
       }
     } else {
-      category = types[this.state.category]
+      type = types[this.state.type]
     }
 
     if (this.state.direction === 'receive') {
@@ -337,7 +357,7 @@ class TransactionDetails extends Component {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)
       leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
     }
-    let color = category.color
+    let color = type.color
     console.log('rendering txDetails, this is: ', this)
     return (
       <View style={[b()]}>
@@ -379,7 +399,7 @@ class TransactionDetails extends Component {
           >
           <View style={[styles.modalCategoryRow, b()]}>
             <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: color}]} disabled>
-              <T style={[b(), {color: color}, styles.categoryLeftText]}>{category.syntax}</T>
+              <T style={[b(), {color: color}, styles.categoryLeftText]}>{type.syntax}</T>
             </TouchableOpacity>
             <View style={[b(), styles.modalCategoryInputArea]}>
               <TextInput
@@ -404,6 +424,7 @@ class TransactionDetails extends Component {
             enteredSubcategory={this.state.subCategory}
             usableHeight={this.props.usableHeight}
             deviceDimensions={this.props.dimensions}
+            subcategoriesList={this.props.subcategoriesList.sort()}
           />
         </Animated.View>
         <ScrollView keyboardShouldPersistTaps='handled' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
@@ -440,13 +461,13 @@ class TransactionDetails extends Component {
                 onPressFxn={this.onSaveTxDetails}
                 fiatCurrencyCode={this.props.selectedWallet.fiatCurrencyCode}
                 fiatCurrencySymbol={this.props.fiatSymbol}
-                fiatAmount={this.props.fiatSymbol + ' ' + limitFiatDecimals(this.state.amountFiat.toString().replace(this.props.fiatSymbol, '').replace(' ', ''))}
+                fiatAmount={this.state.amountFiat}
                 onEnterSubcategories={this.onEnterSubcategories}
                 subCategorySelectVisibility={this.state.subCategorySelectVisibility}
                 categorySelectVisibility={this.state.categorySelectVisibility}
                 onSelectSubCategory={this.onSelectSubCategory}
                 subCategory={this.state.subCategory}
-                category={category}
+                type={type}
                 selectCategory={this.onSelectCategory}
                 onEnterCategories={this.onEnterCategories}
                 onExitCategories={this.onExitCategories}
@@ -462,6 +483,8 @@ class TransactionDetails extends Component {
                 color={color}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
+                subcategoriesList={this.props.subcategoriesList}
+                walletDefaultDenomProps={this.state.walletDefaultDenomProps}
               />
             </View>
           </View>
@@ -471,18 +494,17 @@ class TransactionDetails extends Component {
   }
 }
 
-TransactionDetails.propTypes = {
-}
-
 const mapStateToProps = state => ({
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
   fiatSymbol: getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
   usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
-  dimensions: state.ui.scenes.dimensions
+  dimensions: state.ui.scenes.dimensions,
+  subcategoriesList: state.ui.scenes.transactionDetails.subcategories,
+  settings: state.ui.settings
 })
 const mapDispatchToProps = dispatch => ({
-  setTransactionDetails: (transactionDetails) => { dispatch(setTransactionDetails(transactionDetails)) }
+  setTransactionDetails: (currencyCode, transactionDetails) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
@@ -505,14 +527,14 @@ class AmountArea extends Component {
           </View>
           <View style={[b(), styles.amountAreaMiddle]}>
             <View style={[b(), styles.amountAreaMiddleTop]}>
-              <T style={[b(), styles.amountAreaMiddleTopText]}>{this.props.info.tx.amountSatoshi}</T>
+              <T style={[b(), styles.amountAreaMiddleTopText]}>{bns.divf(this.props.info.tx.nativeAmount, this.props.walletDefaultDenomProps.multiplier).toFixed(6)}</T>
             </View>
             <View style={[b(), styles.amountAreaMiddleBottom]}>
               <T style={[b(), styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</T>
             </View>
           </View>
           <View style={[b(), styles.amountAreaRight]}>
-            <T style={[b(), styles.amountAreaRightText]}>bits</T>
+            <T style={[b(), styles.amountAreaRightText]}>{this.props.walletDefaultDenomProps.symbol}</T>
           </View>
         </View>
         <View style={[b(), styles.editableFiatRow]}>
@@ -520,6 +542,7 @@ class AmountArea extends Component {
             <T style={[b(), styles.editableFiatLeftText]} />
           </View>
           <View style={[b(), styles.editableFiatArea]}>
+            <T style={styles.fiatSymbol}>{this.props.fiatCurrencySymbol}</T>
             <TextInput
               returnKeyType='done'
               autoCapitalize='none'
@@ -528,9 +551,9 @@ class AmountArea extends Component {
               onChangeText={this.props.onChangeFiatFxn}
               style={[b(), styles.editableFiat]}
               keyboardType='numeric'
-              placeholder={this.props.fiatCurrencySymbol + ' '}
-              value={this.props.fiatAmount.toString()}
-              defaultValue={this.props.fiatCurrencySymbol + ' '}
+              placeholder={''}
+              value={this.props.fiatAmount}
+              defaultValue={''}
             />
           </View>
           <View style={[styles.editableFiatRight]}>
@@ -539,7 +562,7 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.categoryRow, b()]}>
           <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
-            <T style={[b(), {color: this.props.color}, styles.categoryLeftText]}>{this.props.category.syntax}</T>
+            <T style={[b(), {color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</T>
           </TouchableOpacity>
           <View style={[b(), styles.categoryInputArea]}>
             <TextInput
@@ -568,7 +591,7 @@ class AmountArea extends Component {
             }
           ]}
             itemStyle={{fontFamily: 'SourceSansPro-Black', color: c.gray1, fontSize: 30, paddingBottom: 14}}
-            selectedValue={this.props.category.key}
+            selectedValue={this.props.type.key}
             onValueChange={(itemValue) => this.props.selectCategory({itemValue})}>
             {categories.map((x) => (
               <Picker.Item label={this.props.types[x].syntax} value={x} key={this.props.types[x].key} />
@@ -615,8 +638,8 @@ class SubCategorySelect extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      subcategories: subcats.sort(),
-      filteredSubcategories: subcats.sort(),
+      subcategories: this.props.subcategoriesList,
+      filteredSubcategories: this.props.subcategoriesList.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
     // const dimensions = this.props.dimensions
@@ -624,15 +647,20 @@ class SubCategorySelect extends Component {
   }
 
   render () {
-    let filteredSubcats = (!this.props.enteredSubcategory) ? this.state.subcategories : this.state.subcategories.filter((entry) => {
+    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => {
       return entry.indexOf(this.props.enteredSubcategory) >= 0
     })
-    let newPotentialSubCategories = categories.map((cat) => {
-      return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
-    })
-    let newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
-      return this.state.subcategories.indexOf(cat) < 0
-    })
+    let newPotentialSubCategories = []
+    let newPotentialSubCategoriesFiltered = []
+    if (this.props.enteredSubcategory) {
+      newPotentialSubCategories = categories.map((cat) => {
+        return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
+      })
+      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
+        return this.props.subcategoriesList.indexOf(cat) < 0
+      })
+    }
+
     return (
       <SearchResults
         renderRegularResultFxn={this.renderSubcategory}

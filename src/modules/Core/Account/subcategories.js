@@ -1,4 +1,4 @@
-export const subcategories = [
+export const categories = [
   'Exchange:Buy Bitcoin',
   'Income:Sell Bitcoin',
   'Expense:Air Travel',

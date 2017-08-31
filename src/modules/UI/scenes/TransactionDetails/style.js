@@ -132,7 +132,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   fiatSymbol: {
-
+    color: c.gray2
   },
   editableFiat: {
     color: c.gray1,
