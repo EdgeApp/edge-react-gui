@@ -107,7 +107,7 @@ class WalletListRow extends Component {
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
         </TouchableHighlight>
-        {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
+        {this.props.sortablMode && this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
   }

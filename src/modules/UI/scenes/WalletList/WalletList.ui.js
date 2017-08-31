@@ -23,7 +23,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
-import SortableList from 'react-native-sortable-list'
 import WalletListRow from './WalletListRow.ui'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -44,6 +43,15 @@ import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
 
 class WalletList extends Component {
+  state: { sortableMode: boolean }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      sortableMode: false
+    }
+  }
+
   toggleArchiveDropdown = () => {
     this.props.dispatch(toggleArchiveVisibility())
   }
@@ -83,7 +91,7 @@ class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                $ {this.tallyUpTotalCrypto()}
+                $ {this.tallyUpTotalCrypto()} 
                 {/* {this.props.settings.defaultFiat} */}
               </T>
             </View>
@@ -116,7 +124,9 @@ class WalletList extends Component {
             ? this.renderActiveSortableList(
               this.props.wallets,
               this.sortActiveWallets(this.props.wallets),
-              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])
+              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
+              this.renderActiveRow,
+              this.onActiveRowMoved
             )
             : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
         </View>
@@ -124,16 +134,17 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveSortableList = (datum, order, label) => {
-    console.log('going into renderActiveSortable list, datum is: ', datum, ' , order is: ', order, ' , label is: ', label)
+  renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
+    console.log('going into renderActiveSortable list, datum is: ', datum, ' , order is: ', order, ' , label is: ', label, ', onRowMoved is: ', onRowMoved)
 
     if (order) {
       console.log('order is true, datum is: ', datum)
       return (
         <View style={[{flex: 1, flexDirection: 'column'}]}>
-          <SortableList
+          <SortableListView
             rowActivationTime={350}
-            style={[styles.sortableWalletList, b(), {flexDirection: 'row'}]}
+            sortableMode={this.state.sortableMode}
+            style={[styles.sortableWalletList, b()]}
             contentContainerStyle={[styles.sortableWalletList]}
             data={datum}
             order={order}
@@ -161,8 +172,8 @@ class WalletList extends Component {
     }
   }
 
-  renderActiveRow = (data) => {
-    return <WalletListRow active={data.active} data={data.data} key={data.data.id} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
+  renderActiveRow = (row) => {
+    return <WalletListRow data={row} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
   }
 
   renderArchivedRow = data => {
