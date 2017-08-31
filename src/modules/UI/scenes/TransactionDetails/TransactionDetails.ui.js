@@ -234,7 +234,7 @@ class TransactionDetails extends Component {
     }
     const { txid, name, notes, bizId, miscJson } = this.state
     let newAmountFiat = this.state.amountFiat
-    amountFiat = (!newAmountFiat) ? 0.00 : Number.parseInt(newAmountFiat).toFixed(2)
+    amountFiat = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat).toFixed(2)
     const transactionDetails = { txid, name, category, notes, amountFiat, bizId, miscJson }
     this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
   }
