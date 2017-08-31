@@ -8,8 +8,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import { openSelectUser, closeSelectUser } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import Main from './Component/Main'
+import ExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
 import styles from './style'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
@@ -35,6 +37,11 @@ class ControlPanel extends Component {
   }
 
   render () {
+    const primaryDisplayAmount = '1'
+    const primaryInfo = this.props.primaryInfo
+    const secondaryInfo = this.props.secondaryInfo
+    const secondaryDisplayAmount = this.props.secondaryDisplayAmount
+
     return (
       <LinearGradient
         style={styles.container}
@@ -43,7 +50,12 @@ class ControlPanel extends Component {
         colors={['#2B5698', '#3B7ADA']}>
         <View style={styles.bitcoin.container}>
           <Text style={styles.bitcoin.icon} />
-          {this._getExchangeRate()}
+          <ExchangeRate
+            primaryDisplayAmount={primaryDisplayAmount}
+            primaryInfo={primaryInfo}
+            secondaryDisplayAmount={secondaryDisplayAmount}
+            secondaryInfo={secondaryInfo}
+            secondaryToPrimaryRatio />
         </View>
         <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
           <View style={styles.iconImageContainer}>
@@ -61,21 +73,54 @@ class ControlPanel extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let exchangeRate = 0
+  let secondaryToPrimaryRatio = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
-  let currencyCode = ''
-  let fiatCurrencyCode = ''
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  let primaryDisplayDenomination = {}
+  let primaryExchangeDenomination = {}
+  let secondaryExchangeDenomination = {}
+  let secondaryDisplayDenomination = {}
+  let primaryInfo = {}
+  let secondaryInfo = {}
+  let secondaryDisplayAmount = '0'
+
+  if (wallet && currencyCode) {
+    primaryDisplayDenomination = SETTINGS_SELECTORS.getSelectedDenomination(state, currencyCode)
+    primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+    secondaryExchangeDenomination = {
+      name: 'Dollars',
+      symbol: '$',
+      multiplier: '100',
+      precision: 2
+    }
+    secondaryDisplayDenomination = secondaryExchangeDenomination
+    primaryInfo = {
+      displayCurrencyCode: currencyCode,
+      displayDenomination: primaryDisplayDenomination,
+      exchangeDenomination: primaryExchangeDenomination
+    }
+    secondaryInfo = {
+      displayCurrencyCode: wallet.fiatCurrencyCode,
+      displayDenomination: secondaryDisplayDenomination,
+      exchangeDenomination: secondaryExchangeDenomination
+    }
+    secondaryDisplayAmount =
+      parseFloat(1) *
+      parseFloat(secondaryToPrimaryRatio) *
+      parseFloat(primaryInfo.displayDenomination.multiplier) /
+      parseFloat(primaryInfo.exchangeDenomination.multiplier)
+  }
   if (wallet) {
-    currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-    const fiatCurrencyCode = wallet.isoFiatCurrencyCode
-    const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-    exchangeRate = currencyConverter.convertCurrency(currencyCode, fiatCurrencyCode, 1)
+    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
   return {
     currencyCode,
-    fiatCurrencyCode,
-    exchangeRate: exchangeRate,
+    primaryInfo,
+    secondaryInfo,
+    secondaryDisplayAmount,
+    secondaryToPrimaryRatio,
     usersView: state.ui.scenes.controlPanel.usersView,
     username: CORE_SELECTORS.getUsername(state)
   }

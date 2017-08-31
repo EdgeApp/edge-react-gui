@@ -69,7 +69,7 @@ class Request extends Component {
   render () {
     const color = 'white'
     const {
-      fiatPerCrypto,
+      secondaryToPrimaryRatio,
       primaryInfo,
       secondaryInfo
     } = this.props
@@ -80,16 +80,16 @@ class Request extends Component {
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
-            fiatPerCrypto={fiatPerCrypto}
             primaryInfo={primaryInfo}
-            secondaryInfo={secondaryInfo} />
+            secondaryInfo={secondaryInfo}
+            secondaryToPrimaryRatio={secondaryToPrimaryRatio} />
         </View>
 
         <View style={styles.main}>
           <ExchangedFlipInput
             primaryInfo={{...primaryInfo, nativeAmount}}
             secondaryInfo={secondaryInfo}
-            secondaryToPrimaryRatio={fiatPerCrypto}
+            secondaryToPrimaryRatio={secondaryToPrimaryRatio}
             onAmountsChange={this.onAmountsChange}
             color={color} />
 
@@ -166,7 +166,7 @@ class Request extends Component {
 }
 
 const mapStateToProps = (state) => {
-  let fiatPerCrypto = 0
+  let secondaryToPrimaryRatio = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -191,13 +191,13 @@ const mapStateToProps = (state) => {
   }
   if (wallet) {
     const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
   return {
     request: state.ui.scenes.request,
     coreWallet,
-    fiatPerCrypto,
+    secondaryToPrimaryRatio,
     wallet,
     currencyCode,
     primaryInfo,

@@ -168,6 +168,7 @@ class Main extends Component {
           callbacks={makeAccountCallbacks(this.props.dispatch)}
           context={this.state.context}
           onLogin={(error = null, account) => {
+            if (error) return
             this.props.initializeAccount(account)
             this.setState({ loginVisible: false })
           }}

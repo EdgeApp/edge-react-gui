@@ -48,7 +48,7 @@ export const top = StyleSheet.create({
   },
   symbol: {
     flex: 1,
-    fontSize: 20,
+    fontSize: 15,
     color: 'white',
     textAlign: 'center',
     backgroundColor: 'transparent'
@@ -63,7 +63,7 @@ export const top = StyleSheet.create({
   currencyCode: {
     flex: 1,
     color: 'white',
-    fontSize: 20,
+    fontSize: 15,
     textAlign: 'right',
     marginRight: 5,
     backgroundColor: 'transparent'
@@ -80,13 +80,13 @@ export const bottom = StyleSheet.create({
   },
   symbol: {
     flex: 1,
-    fontSize: 17,
+    fontSize: 10,
     color: 'white',
     textAlign: 'center',
     backgroundColor: 'transparent'
   },
   amount: {
-    fontSize: 17,
+    fontSize: 10,
     flex: 4,
     color: 'white',
     textAlign: 'center',
@@ -94,7 +94,7 @@ export const bottom = StyleSheet.create({
   },
   currencyCode: {
     flex: 1,
-    fontSize: 17,
+    fontSize: 10,
     color: 'white',
     textAlign: 'right',
     marginRight: 5,

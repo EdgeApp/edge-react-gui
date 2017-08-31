@@ -83,7 +83,7 @@ export default class FlipInput extends Component {
         keyboardType='numeric'
         returnKeyType='done' />
       <Text style={[top.currencyCode]}>
-        {denominationInfo.displayCurrencyCode}
+        {denominationInfo.displayDenomination.name}
       </Text>
     </View>
   }
@@ -98,7 +98,7 @@ export default class FlipInput extends Component {
         {amount || '0'}
       </Text>
       <Text style={[bottom.currencyCode]}>
-        {denominationInfo.displayCurrencyCode}
+        {denominationInfo.displayDenomination.name}
       </Text>
     </View></TouchableWithoutFeedback>
   }

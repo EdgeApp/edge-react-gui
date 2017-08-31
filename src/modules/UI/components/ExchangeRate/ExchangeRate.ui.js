@@ -18,7 +18,7 @@ export default class ExchangeRate extends Component {
           this.props.fiatPerCrypto === 0
           ? <Text style={styles.text}>Exchange Rate loading...</Text>
           : <Text style={styles.text}>
-            1 {this.props.primaryInfo.displayDenomination.name} = {this.props.secondaryInfo.displayDenomination.symbol} {this.props.fiatPerCrypto.toFixed(this.props.secondaryInfo.displayDenomination.precision)} {this.props.secondaryInfo.displayDenomination.currencyCode}
+            1 {this.props.primaryInfo.displayDenomination.name} = {this.props.secondaryInfo.displayDenomination.symbol} {parseFloat(this.props.secondaryDisplayAmount).toFixed(this.props.secondaryInfo.displayDenomination.precision)} {this.props.secondaryInfo.displayDenomination.currencyCode}
           </Text>
         }
       </View>
