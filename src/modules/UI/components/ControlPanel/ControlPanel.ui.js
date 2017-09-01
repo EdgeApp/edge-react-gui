@@ -27,20 +27,38 @@ class ControlPanel extends Component {
   }
 
   _getExchangeRate = () => {
-    return this.props.exchangeRate === 0
+    const {
+      exchangeRate,
+      primaryInfo,
+      primaryDisplayAmount,
+      secondaryInfo,
+      secondaryDisplayAmount
+    } = this.props
+
+    return exchangeRate === 0
       ? <Text style={styles.bitcoin.value}>
           Exchange Rate loading
         </Text>
       : <Text style={styles.bitcoin.value}>
-          1 {this.props.currencyCode} = $ {this.props.exchangeRate.toFixed(2)} USD
+          <ExchangeRate
+            primaryDisplayAmount={primaryDisplayAmount}
+            primaryInfo={primaryInfo}
+
+            secondaryDisplayAmount={secondaryDisplayAmount}
+            secondaryInfo={secondaryInfo}
+
+            secondaryToPrimaryRatio={exchangeRate} />
         </Text>
   }
 
   render () {
     const primaryDisplayAmount = '1'
-    const primaryInfo = this.props.primaryInfo
-    const secondaryInfo = this.props.secondaryInfo
-    const secondaryDisplayAmount = this.props.secondaryDisplayAmount
+    const {
+      primaryInfo,
+      secondaryInfo,
+      secondaryDisplayAmount,
+      secondaryToPrimaryRatio
+    } = this.props
 
     return (
       <LinearGradient
@@ -55,7 +73,7 @@ class ControlPanel extends Component {
             primaryInfo={primaryInfo}
             secondaryDisplayAmount={secondaryDisplayAmount}
             secondaryInfo={secondaryInfo}
-            secondaryToPrimaryRatio />
+            secondaryToPrimaryRatio={secondaryToPrimaryRatio} />
         </View>
         <TouchableOpacity style={styles.user.container} onPress={this._handlePressUserList}>
           <View style={styles.iconImageContainer}>
@@ -85,7 +103,9 @@ const mapStateToProps = (state) => {
   let secondaryDisplayAmount = '0'
 
   if (wallet && currencyCode) {
-    primaryDisplayDenomination = SETTINGS_SELECTORS.getSelectedDenomination(state, currencyCode)
+    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
     primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
     secondaryExchangeDenomination = {
       name: 'Dollars',
@@ -109,10 +129,6 @@ const mapStateToProps = (state) => {
       parseFloat(secondaryToPrimaryRatio) *
       parseFloat(primaryInfo.displayDenomination.multiplier) /
       parseFloat(primaryInfo.exchangeDenomination.multiplier)
-  }
-  if (wallet) {
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
   return {

@@ -46,7 +46,7 @@ export class ETHSettings extends Component {
 
 const mapStateToProps = (state) => ({
   denominations: SETTINGS_SELECTORS.getDenominations(state, 'ETH'),
-  selectedDenominationKey: SETTINGS_SELECTORS.getSelectedDenominationKey(state, 'ETH')
+  selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, 'ETH')
 })
 const mapDispatchToProps = (dispatch) => ({
   selectDenomination: (currencyCode, denominationKey) => dispatch(setDenominationKeyRequest(currencyCode, denominationKey))

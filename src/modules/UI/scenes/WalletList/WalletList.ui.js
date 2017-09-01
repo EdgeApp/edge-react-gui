@@ -12,7 +12,6 @@ import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import {setContactList} from '../../contacts/action'
 import T from '../../components/FormattedText'
-import { bns } from 'biggystring'
 import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import MAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -42,6 +41,8 @@ import {border as b} from '../../../utils'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors'
+import * as UTILS from '../../../utils'
 
 class WalletList extends Component {
   toggleArchiveDropdown = () => {
@@ -108,14 +109,14 @@ class WalletList extends Component {
           </LinearGradient>
 
           {
-            // Object.keys(wallets).length > 0
-            // ? this.renderActiveSortableList(
-            //   this.props.wallets,
-            //   this.sortActiveWallets(this.props.wallets),
-            //   sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])
-            // )
-            // :
-            <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
+            Object.keys(wallets).length > 0
+            ? this.renderActiveSortableList(
+              this.props.wallets,
+              this.sortActiveWallets(this.props.wallets),
+              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])
+            )
+            : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+          }
 
         </View>
       </View>
@@ -241,12 +242,13 @@ class WalletList extends Component {
         }
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
         if (nativeBalance && nativeBalance !== '0') {
-          const wallet = this.props.wallets[parentProp]
-          const currencyDenomination = wallet.allDenominations[balanceProp]
-          const currencySettings = this.props.settings[balanceProp]
-          const denomMultiplier:string = currencyDenomination[currencySettings.denomination].multiplier
+          const denominations = this.props.settings[balanceProp].denominations
+          const exchangeDenomination = denominations.find(denomination => {
+            return denomination.name === balanceProp
+          })
+          const nativeToExchangeRatio:string = exchangeDenomination.multiplier
 
-          const cryptoAmount:number = bns.divf(nativeBalance, denomMultiplier)
+          const cryptoAmount:number = parseFloat(UTILS.convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
           temporaryTotalCrypto[balanceProp] += cryptoAmount
         }
       }
@@ -270,9 +272,11 @@ WalletList.propTypes = {}
 
 const mapStateToProps = (state) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+  const settings = SETTINGS_SELECTORS.getSettings(state)
 
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
+    settings,
     coreWallets: state.core.wallets.byId,
     wallets: state.ui.wallets.byId,
     activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
@@ -283,7 +287,6 @@ const mapStateToProps = (state) => {
     walletName: state.ui.scenes.walletList.walletName,
     walletId: state.ui.scenes.walletList.walletId,
     walletOrder: state.ui.wallets.walletListOrder,
-    settings: state.ui.settings,
     currencyConverter
   }
 }

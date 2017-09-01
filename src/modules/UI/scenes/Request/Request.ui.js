@@ -33,6 +33,21 @@ class Request extends Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
+      const { coreWallet, currencyCode } = this.props
+      WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+      .then(receiveAddress => {
+        const { publicAddress } = receiveAddress
+        const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+        this.setState({
+          encodedURI,
+          publicAddress
+        })
+      })
+    }
+  }
+
   componentDidMount () {
     const { coreWallet, currencyCode } = this.props
     WALLET_API.getReceiveAddress(coreWallet, currencyCode)
@@ -170,7 +185,7 @@ const mapStateToProps = (state) => {
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getSelectedDenomination(state, currencyCode)
+  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination = {
     name: 'Dollars',

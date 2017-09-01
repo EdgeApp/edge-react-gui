@@ -46,7 +46,7 @@ export class BTCSettings extends Component {
 
 const mapStateToProps = (state) => ({
   denominations: SETTINGS_SELECTORS.getDenominations(state, 'BTC'),
-  selectedDenominationKey: SETTINGS_SELECTORS.getSelectedDenominationKey(state, 'BTC')
+  selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, 'BTC')
 })
 const mapDispatchToProps = (dispatch) => ({
   selectDenomination: (currencyCode, denominationKey) => { dispatch(setDenominationKeyRequest(currencyCode, denominationKey)) },

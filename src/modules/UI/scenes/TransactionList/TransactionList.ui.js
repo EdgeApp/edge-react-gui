@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import { bns } from 'biggystring'
 import PropTypes from 'prop-types'
 import {
   TextInput,
@@ -29,10 +28,11 @@ import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import {setContactList} from '../../contacts/action'
 import styles from './style'
-import { border as b, findDenominationSymbol as symbolize } from '../../../utils'
+import { border as b } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import * as UTILS from '../../../utils'
 
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
@@ -247,8 +247,9 @@ class TransactionList extends Component {
     } else {
       logo = this.props.uiWallet.symbolImage
     }
-    const cryptoAmount:string = bns.divf(this.props.balanceInCrypto, this.props.multiplier)
     console.log('rendering txList, this.props is: ', this.props, ' , and this.state is: ', this.state)
+    console.log('rendering txList, this.props is: ', this.props, ' , and this.state is: ', this.state)
+    const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -274,16 +275,18 @@ class TransactionList extends Component {
                             <View style={[styles.iconWrap, b()]}>
                               {logo
                                 ? <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />
-                                : <T style={[styles.request]}>{this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]}</T>
+                                : <T style={[styles.request]}>{this.props.displayDenomination.symbol}</T>
                               }
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.selectedCurrencyCode} {(cryptoAmount) || '0'}
+                                {this.props.displayDenomination.symbol} {(cryptoAmount) || '0'}
                               </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
-                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>{this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}</T>
+                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>
+                                {this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}
+                              </T>
                             </View>
                           </View>
                         ) : (
@@ -294,7 +297,7 @@ class TransactionList extends Component {
                       </TouchableOpacity>
                     )}
                 <View style={[styles.requestSendRow, b()]}>
-                  <TouchableHighlight onPress={() => Actions.request()}style={[styles.requestBox, styles.button]}>
+                  <TouchableHighlight onPress={() => Actions.request()} style={[styles.requestBox, styles.button]}>
                     <View style={[styles.requestWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
@@ -337,12 +340,20 @@ class TransactionList extends Component {
     Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
   }
 
+  isReceivedTransaction (tx) {
+    return UTILS.isGreaterThan('0')(tx.nativeAmount)
+  }
+
+  isSentTransaction (tx) {
+    return !this.isReceivedTransaction(tx)
+  }
+
   renderTx = (tx, completedTxList) => {
     let txColorStyle
     let txName = ''
     let txImage
 
-    if (tx.amountSatoshi < 0) {
+    if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
       txColorStyle = styles.accentRed
       txName = strings.enUS['fragment_transaction_list_sent_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
@@ -395,8 +406,12 @@ class TransactionList extends Component {
               </View>
             </View>
             <View style={[styles.transactionRight, b()]}>
-              <T style={[styles.transactionBitAmount, txColorStyle]}>{symbolize(this.props.uiWallet.denominations, this.props.uiWallet.currencyCode)} {(tx.amountSatoshi / tx.multiplier)}</T>
-              <T style={[styles.transactionDollarAmount, txColorStyle]}>{tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}</T>
+              <T style={[styles.transactionBitAmount, txColorStyle]}>
+                {this.props.displayDenomination.symbol} {UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount)}
+              </T>
+              <T style={[styles.transactionDollarAmount, txColorStyle]}>
+                {tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}
+              </T>
             </View>
           </View>
         </TouchableOpacity>
@@ -422,14 +437,16 @@ const mapStateToProps = (state) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
   const transactions = UI_SELECTORS.getTransactions(state)
-  const index = SETTINGS_SELECTORS.getSelectedDenominationKey(state, currencyCode)
+  const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
   const denomination = wallet.allDenominations[currencyCode][index]
   const multiplier = denomination.multiplier
-  const balanceInCryptoDisplay = bns.divf(balanceInCrypto, multiplier)
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
-
+  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   return {
     // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
+    displayDenomination,
     updatingBalance: false,
     transactions,
     searchVisible: state.ui.scenes.transactionList.searchVisible,

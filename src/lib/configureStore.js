@@ -13,7 +13,7 @@ if (__DEV__) {
   middleware = [...middleware, logger]
 
   // Comment line below to reenable logger
-  // middleware = [...middleware]
+  middleware = [...middleware]
 } else {
   middleware = [...middleware]
 }

@@ -131,6 +131,8 @@ class Main extends Component {
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
 
+    // SETUP REDUX STORE COMPLETELY, denominations
+
     this.makeCoreContext().then(context => {
       this.setState({ context, loading: false }, () => SplashScreen.hide())
 
@@ -138,8 +140,8 @@ class Main extends Component {
       // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
       setInterval(() => {
         this.props.updateExchangeRates()
-      }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
-      // setInterval(() => { this.props.updateExchangeRates() }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+      // }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
+      }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
     })
   }
 
@@ -148,6 +150,12 @@ class Main extends Component {
     const xScale = (width / 375).toFixed(2)
     const yScale = (height / 647).toFixed(2)
     this.props.setDeviceDimensions({ width, height, xScale, yScale })
+  }
+
+  onLogin = (error = null, account) => {
+    if (error) return
+    this.props.initializeAccount(account)
+    this.setState({ loginVisible: false })
   }
 
   render () {
@@ -167,11 +175,7 @@ class Main extends Component {
         <LoginScreen
           callbacks={makeAccountCallbacks(this.props.dispatch)}
           context={this.state.context}
-          onLogin={(error = null, account) => {
-            if (error) return
-            this.props.initializeAccount(account)
-            this.setState({ loginVisible: false })
-          }}
+          onLogin={this.onLogin}
         />
       )
     }

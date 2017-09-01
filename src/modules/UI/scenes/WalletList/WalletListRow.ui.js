@@ -1,13 +1,9 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import { bns } from 'biggystring'
-import { GUIWallet } from '../../../../types.js'
-import type { AbcDenomination } from 'airbitz-core-js'
 import {
   View,
-  TouchableHighlight,
   Animated,
   Platform,
   Easing,
@@ -18,10 +14,10 @@ import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import T from '../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
+import WalletListTokenRow from './WalletListTokenRow.ui'
 import {border as b, cutOffText} from '../../../utils'
 import {selectWallet} from '../../Wallets/action.js'
 
-import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 export const findDenominationSymbol = (denoms, value) => {
@@ -89,11 +85,11 @@ class WalletListRow extends Component {
     const {data} = this.props
     let walletData = data
     let currencyCode = walletData.currencyCode
-    let denomination = walletData.allDenominations[currencyCode][this.props.index]
+    let denomination = this.props.displayDenomination
     let multiplier = denomination.multiplier
     let id = walletData.id
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
-    let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
+    let symbol = denomination.symbol
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
         <TouchableOpacity
@@ -109,7 +105,9 @@ class WalletListRow extends Component {
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>{bns.divf(walletData.primaryNativeBalance, multiplier)}</T>
+              <T style={[styles.rowBalanceAmountText]}>
+                {bns.divf(walletData.primaryNativeBalance, multiplier)}
+              </T>
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
@@ -126,7 +124,7 @@ class WalletListRow extends Component {
     for (var property in metaTokenBalances) {
       if (property !== this.props.data.currencyCode) {
         tokens.push(
-          <WalletListTokenRowConnect parentId={this.props.data.id}
+          <WalletListTokenRow parentId={this.props.data.id}
             currencyCode={property} key={property} balance={metaTokenBalances[property]} active={this.props.active} />)
       }
     }
@@ -135,53 +133,12 @@ class WalletListRow extends Component {
 }
 
 export default connect((state, ownProps) => {
-  const index = SETTINGS_SELECTORS.getSelectedDenominationKey(state, ownProps.data.currencyCode)
+  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.currencyCode)
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.currencyCode)
+
   return {
     dimensions: state.ui.scenes.dimensions,
-    index
+    displayDenomination,
+    exchangeDenomination
   }
 })(WalletListRow)
-
-class WalletListTokenRow extends Component {
-  _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet(walletId, currencyCode))
-    Actions.transactionList({params: 'walletList'})
-  }
-
-  render () {
-    return (
-      <TouchableHighlight style={[styles.tokenRowContainer, (this.props.active && styles.activeOpacity)]} underlayColor={'#eee'} delayLongPress={500} {...this.props.sortHandlers} onPress={() => this._onPressSelectWallet(this.props.parentId, this.props.currencyCode)}>
-        <View style={[styles.tokenRowContent]}>
-          <View style={[styles.tokenRowNameTextWrap]}>
-            <T style={[styles.tokenRowText]}>{this.props.currencyCode}</T>
-          </View>
-          <View style={[styles.tokenRowBalanceTextWrap]}>
-            <T style={[styles.tokenRowText]}>{
-              bns.divf(this.props.balance, this.props.multiplier) || '0'
-            }</T>
-          </View>
-        </View>
-      </TouchableHighlight>
-    )
-  }
-}
-
-WalletListTokenRow.propTypes = {
-  currencyCode: PropTypes.string,
-  balance: PropTypes.string
-}
-
-export const WalletListTokenRowConnect = connect((state, ownProps) => {
-  const walletId = ownProps.parentId
-  const currencyCode = ownProps.currencyCode
-  const wallet:GUIWallet = UI_SELECTORS.getWallet(state, walletId)
-  let denomination:AbcDenomination = {}
-  let multiplier:string = '0'
-  if (wallet) {
-    const index:string = SETTINGS_SELECTORS.getSelectedDenominationKey(state, currencyCode)
-    denomination = wallet.allDenominations[currencyCode][index]
-    multiplier = denomination.multiplier
-  }
-
-  return {denomination, multiplier}
-})(WalletListTokenRow)

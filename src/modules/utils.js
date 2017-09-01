@@ -1,6 +1,6 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import { divf, mulf } from 'biggystring'
+import { divf, mulf, gt } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import { AbcDenomination } from 'airbitz-core-js'
 
@@ -87,12 +87,19 @@ export const formatNumber = (input: string): string => {
   return input === '.' ? '0.' : input
 }
 
-// Used to convert outputs form core to amounts ready for display
-export const convertNativeToDisplay = (nativeToDisplayRatio: string) => {
+// Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
+export const convertNativeToDenomination = (nativeToTargetRatio: string) => {
   return (nativeAmount: string): string => {
-    return divf(nativeAmount, nativeToDisplayRatio).toString()
+    return divf(nativeAmount, nativeToTargetRatio).toString()
   }
 }
+
+// Alias for convertNativeToDenomination
+// Used to convert outputs from core to amounts ready for display
+export const convertNativeToDisplay = convertNativeToDenomination
+// Alias for convertNativeToDenomination
+// Used to convert outputs from core to amounts ready for display
+export const convertNativeToExchange = convertNativeToDenomination
 
 // Used to convert amounts from display to core inputs
 export const convertDisplayToNative = (nativeToDisplayRatio: string) => {
@@ -153,4 +160,11 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) => {
     return [...array, item]
   }
   return array
+}
+
+export const isGreaterThan = (comparedTo: string) => {
+  // $FlowFixMe
+  return (amountString: string): boolean => {
+    return gt(amountString, comparedTo)
+  }
 }

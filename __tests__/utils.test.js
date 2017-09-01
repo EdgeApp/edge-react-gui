@@ -85,12 +85,32 @@ describe('isValidInput', function () {
   })
 })
 
+describe('convertNativeToDenomination', function () {
+  test('100000000 => 1', function () {
+    const nativeToDisplayRatio = '100000000'
+    const nativeAmount = '100000000'
+    const expected = '1'
+    const actual = UTILS.convertNativeToDenomination(nativeToDisplayRatio)(nativeAmount)
+    expect(actual).toBe(expected)
+  })
+})
+
 describe('convertNativeToDisplay', function () {
   test('100000000 => 1', function () {
     const nativeToDisplayRatio = '100000000'
     const nativeAmount = '100000000'
     const expected = '1'
     const actual = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeAmount)
+    expect(actual).toBe(expected)
+  })
+})
+
+describe('convertNativeToExchange', function () {
+  test('100000000 => 1', function () {
+    const nativeToDisplayRatio = '100000000'
+    const nativeAmount = '100000000'
+    const expected = '1'
+    const actual = UTILS.convertNativeToExchange(nativeToDisplayRatio)(nativeAmount)
     expect(actual).toBe(expected)
   })
 })
@@ -301,5 +321,63 @@ describe('getNewArrayWithoutItem', function () {
       const actual = UTILS.getNewArrayWithoutItem(array, input)
       expect(actual).toEqual(expected)
     })
+  })
+})
+
+describe('isGreaterThan', function () {
+  test('5.123 > 5.123 => false', function () {
+    const amountString = '5.123'
+    const comparedTo = '5.123'
+    const expected = false
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
+  })
+
+  test('5.123 > 4.123 => true', function () {
+    const amountString = '5.123'
+    const comparedTo = '4.123'
+    const expected = true
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
+  })
+
+  test('4.123 > 5.123 => false', function () {
+    const amountString = '4.123'
+    const comparedTo = '5.123'
+    const expected = false
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.123 > 0 => true', function () {
+    const amountString = '1.123'
+    const comparedTo = '0'
+    const expected = true
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
+  })
+
+  test('1.123 > 0.0 => true', function () {
+    const amountString = '1.123'
+    const comparedTo = '0.0'
+    const expected = true
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
+  })
+
+  test('-1.123 > 0 => false', function () {
+    const amountString = '-1.123'
+    const comparedTo = '0'
+    const expected = false
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
+  })
+
+  test('-1.123 > 0.0 => false', function () {
+    const amountString = '-1.123'
+    const comparedTo = '0.0'
+    const expected = false
+    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
+    expect(actual).toBe(expected)
   })
 })

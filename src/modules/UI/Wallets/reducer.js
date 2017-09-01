@@ -94,13 +94,14 @@ function schema (wallet: any): GUIWallet {
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
 
-  const allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } } = {}
+  const allDenominations: {[currencyCode: string]: {[denomination: string]: AbcDenomination}} = {}
+
   // Add all parent currency denominations to allDenominations
-  denominations.forEach(denomination => {
-    const denomIndex:{[denomination: string]: AbcDenomination} = {}
-    denomIndex[denomination.multiplier] = denomination
-    allDenominations[denomination.name] = denomIndex
-  })
+  const parentDenominations = denominations.reduce((denominations, denomination) => {
+    return {...denominations, [denomination.multiplier]: denomination}
+  }, {})
+
+  allDenominations[currencyCode] = parentDenominations
 
   const nativeBalances: { [currencyCode: string]: string} = {}
   // Add parent currency balance to balances
@@ -113,20 +114,19 @@ function schema (wallet: any): GUIWallet {
   metaTokens.forEach(metaToken => {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
-    const tokenBalance: string = wallet.getBalance({ currencyCode })
-    const tokenDenominations: Array<AbcDenomination> = metaToken.denominations
+    const balance: string = wallet.getBalance({ currencyCode })
+    const denominations: Array<AbcDenomination> = metaToken.denominations
 
     // Add token balance to allBalances
-    nativeBalances[currencyCode] = tokenBalance
+    nativeBalances[currencyCode] = balance
     currencyNames[currencyCode] = currencyName
 
     // Add all token denominations to allDenominations
-    // allDenominations[currencyCode] = {}
-    tokenDenominations.forEach(denomination => {
-      let denomIndex: {[denomination: string]: AbcDenomination} = {}
-      denomIndex[denomination.multiplier] = denomination
-      allDenominations[currencyCode] = denomIndex
-    })
+    const tokenDenominations: {[denomination: string]: AbcDenomination} =
+      denominations.reduce((denominations, denomination) => {
+        return {...denominations, [denomination.multiplier]: denomination}
+      }, {})
+    allDenominations[currencyCode] = tokenDenominations
   })
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
