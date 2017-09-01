@@ -4,7 +4,8 @@ import {
   TextInput,
   View,
   TouchableHighlight,
-  TouchableOpacity
+  TouchableOpacity,
+  ActivityIndicator  
 } from 'react-native'
 // $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
@@ -40,27 +41,6 @@ import {border as b} from '../../../utils'
 import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
-
-let data = {
-  hello: { text: 'world' },
-  how: { text: 'are you' },
-  test: { text: 123 },
-  this: { text: 'is' },
-  a: { text: 'a' },
-  real: { text: 'real' },
-  drag: { text: 'drag and drop' },
-  bb: { text: 'bb' },
-  cc: { text: 'cc' },
-  dd: { text: 'dd' },
-  ee: { text: 'ee' },
-  ff: { text: 'ff' },
-  gg: { text: 'gg' },
-  hh: { text: 'hh' },
-  ii: { text: 'ii' },
-  jj: { text: 'jj' },
-  kk: { text: 'kk' },
-}
-let order = Object.keys(data) //Array of keys
 
 class WalletList extends Component {
   state: { sortableMode: boolean }
@@ -139,18 +119,18 @@ class WalletList extends Component {
               <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
             </TouchableOpacity>
           </LinearGradient>
-          <SortableListView
-            style={{ flex: 1}}
-            data={wallets}
-            order={this.sortActiveWallets(this.props.wallets)}
-            onRowMoved={e => {
-              order.splice(e.to, 0, order.splice(e.from, 1)[0])
-              this.forceUpdate()
-            }}
-            render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
-            renderRow={this.renderActiveRow/*, this.onActiveRowMoved*/}
-
-          />
+          {Object.keys(wallets).length > 0 ? (
+            <SortableListView
+              style={{ flex: 1}}
+              data={wallets}
+              order={this.sortActiveWallets(this.props.wallets)}
+              onRowMoved={this.onActiveRowMoved}
+              render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
+              renderRow={this.renderActiveRow/*, this.onActiveRowMoved*/}
+            />)
+            :
+            (<ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />)
+          }
         </View>
       </View>
     )
