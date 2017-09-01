@@ -115,14 +115,13 @@ module.exports = StyleSheet.create({
     alignContent: 'stretch'
   },
   rowContainer: {
-    flex: 1,
-    height: 50,
+    padding: 6,
     paddingLeft: 16,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderColor: '#EEE'
+ 
   },
   rowContent: {
     flex: 1,

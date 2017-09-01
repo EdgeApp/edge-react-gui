@@ -1,7 +1,6 @@
 // @flow
 import React, {Component} from 'react'
 import {
-  ActivityIndicator,
   TextInput,
   View,
   TouchableHighlight,
@@ -38,9 +37,30 @@ import {
 } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {border as b} from '../../../utils'
-import {colors as c} from '../../../../theme/variables/airbitz.js'
+import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
+
+let data = {
+  hello: { text: 'world' },
+  how: { text: 'are you' },
+  test: { text: 123 },
+  this: { text: 'is' },
+  a: { text: 'a' },
+  real: { text: 'real' },
+  drag: { text: 'drag and drop' },
+  bb: { text: 'bb' },
+  cc: { text: 'cc' },
+  dd: { text: 'dd' },
+  ee: { text: 'ee' },
+  ff: { text: 'ff' },
+  gg: { text: 'gg' },
+  hh: { text: 'hh' },
+  ii: { text: 'ii' },
+  jj: { text: 'jj' },
+  kk: { text: 'kk' },
+}
+let order = Object.keys(data) //Array of keys
 
 class WalletList extends Component {
   state: { sortableMode: boolean }
@@ -92,7 +112,6 @@ class WalletList extends Component {
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
                 $ {this.tallyUpTotalCrypto()} 
-                {/* {this.props.settings.defaultFiat} */}
               </T>
             </View>
           </View>
@@ -120,15 +139,18 @@ class WalletList extends Component {
               <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
             </TouchableOpacity>
           </LinearGradient>
-          {Object.keys(wallets).length > 0
-            ? this.renderActiveSortableList(
-              this.props.wallets,
-              this.sortActiveWallets(this.props.wallets),
-              sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized']),
-              this.renderActiveRow,
-              this.onActiveRowMoved
-            )
-            : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
+          <SortableListView
+            style={{ flex: 1}}
+            data={wallets}
+            order={this.sortActiveWallets(this.props.wallets)}
+            onRowMoved={e => {
+              order.splice(e.to, 0, order.splice(e.from, 1)[0])
+              this.forceUpdate()
+            }}
+            render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
+            renderRow={this.renderActiveRow/*, this.onActiveRowMoved*/}
+
+          />
         </View>
       </View>
     )
@@ -142,6 +164,7 @@ class WalletList extends Component {
       return (
         <View style={[{flex: 1, flexDirection: 'column'}]}>
           <SortableListView
+            activeOpacity={activeOpacity.opacity}
             rowActivationTime={350}
             sortableMode={this.state.sortableMode}
             style={[styles.sortableWalletList, b()]}

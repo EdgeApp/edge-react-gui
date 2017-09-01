@@ -90,7 +90,7 @@ class WalletListRow extends Component {
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
         <TouchableHighlight
-          style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]}
+          style={[styles.rowContainer]}
           underlayColor={'#eee'}
           {...this.props.sortHandlers}
           onPress={() => this._onPressSelectWallet(id, currencyCode)}
