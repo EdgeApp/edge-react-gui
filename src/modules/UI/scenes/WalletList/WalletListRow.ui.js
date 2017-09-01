@@ -4,10 +4,8 @@ import {sprintf} from 'sprintf-js'
 import { bns } from 'biggystring'
 import {
   View,
-  Animated,
-  Platform,
-  Easing,
-  TouchableOpacity
+  TouchableHighlight,
+  Animated
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
@@ -29,10 +27,8 @@ export const findDenominationSymbol = (denoms, value) => {
 }
 
 class WalletListRow extends Component {
-  constructor (props) {
-    super(props)
 
-    this._active = new Animated.Value(0)
+    /* this._active = new Animated.Value(0)
 
     this._style = {
       ...Platform.select({
@@ -62,10 +58,9 @@ class WalletListRow extends Component {
           })
         }
       })
-    }
-  }
+    } */
 
-  componentWillReceiveProps (nextProps) {
+  /* componentWillReceiveProps (nextProps) {
     if (this.props.active !== nextProps.active) {
       Animated.timing(this._active, {
         duration: 300,
@@ -73,7 +68,7 @@ class WalletListRow extends Component {
         toValue: Number(nextProps.active)
       }).start()
     }
-  }
+  } */
 
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.dispatch(selectWallet(walletId, currencyCode))
@@ -81,7 +76,6 @@ class WalletListRow extends Component {
   }
 
   render () {
-    console.log('rendering wallet row, this is: ', this)
     const {data} = this.props
     let walletData = data
     let currencyCode = walletData.currencyCode
@@ -92,9 +86,7 @@ class WalletListRow extends Component {
     let symbol = denomination.symbol
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
-        <TouchableOpacity
-          onPressIn={() => console.log('onPressIn triggered')}
-          onLongPress={() => console.log('onLongPress triggered')}
+        <TouchableHighlight
           style={[styles.rowContainer, (this.props.active && styles.activeOpacity)]}
           underlayColor={'#eee'}
           {...this.props.sortHandlers}
@@ -113,7 +105,7 @@ class WalletListRow extends Component {
             </View>
             <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
           </View>
-        </TouchableOpacity>
+        </TouchableHighlight>
         {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )

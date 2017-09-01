@@ -6,7 +6,7 @@ import * as WALLET_ACTIONS from '../Core/Wallets/action.js'
 import * as UI_ACTIONS from '../UI/Wallets/action.js'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
-import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
+// import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 
 import * as CORE_SELECTORS from '../Core/selectors.js'
 
@@ -205,13 +205,14 @@ const loadSettings = () => {
       dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))
     })
-    SETTINGS_API.getSyncedSubcategories(account)
+    /* SETTINGS_API.getSyncedSubcategories(account)
     .then(subcategories => {
       console.log('subcategories have been loaded and are: ', subcategories)
       const syncDefaults = SETTINGS_API.SYNCED_SUBCATEGORY_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, subcategories)
+      console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
       dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
-    })
+    }) */
 
     SETTINGS_API.getLocalSettings(account)
     .then(settings => {

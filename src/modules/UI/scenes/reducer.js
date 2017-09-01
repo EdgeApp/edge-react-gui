@@ -21,6 +21,7 @@ export const scenes = combineReducers({
   scan,
   sendConfirmation,
   transactionList,
+  transactionDetails,
   controlPanel,
   walletList,
   walletTransferList: walletTransferListReducer,
@@ -32,6 +33,5 @@ export const scenes = combineReducers({
   helpModal,
   transactionAlert,
   exchangeRate,
-  ABAlert,
-  transactionDetails
+  ABAlert
 })

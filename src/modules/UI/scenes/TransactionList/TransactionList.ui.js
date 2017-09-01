@@ -12,7 +12,7 @@ import {
   TouchableHighlight,
   Animated,
   ActivityIndicator,
-  TouchableOpacity } from 'react-native'
+  TouchableOpacity} from 'react-native'
 import T from '../../components/FormattedText'
 import { connect } from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
@@ -28,7 +28,7 @@ import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import {setContactList} from '../../contacts/action'
 import styles from './style'
-import { border as b } from '../../../utils'
+import { border as b, getFiatSymbol } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -369,8 +369,9 @@ class TransactionList extends Component {
       console.log('inside of tx.metadata.name conditional, this.props is: ', this.props, ' and tx is: ', tx)
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
-          console.log('element is: ', element)
-          return element.givenName === tx.metadata.name
+          let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
+          if (found) console.log('element is: ', element)
+          return found
         })
         console.log('contact is now: ', contact, ' tx is: ', tx)
         if (contact) {
@@ -410,7 +411,7 @@ class TransactionList extends Component {
                 {this.props.displayDenomination.symbol} {UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount)}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {tx.metadata.amountFiat && '$ ' + tx.metadata.amountFiat.toFixed(2)}
+                {tx.metadata.amountFiat && this.props.fiatSymbol + ' ' + tx.metadata.amountFiat}
               </T>
             </View>
           </View>
@@ -430,6 +431,7 @@ TransactionList.propTypes = {
 
 const mapStateToProps = (state) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const fiatSymbol = getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -460,7 +462,8 @@ const mapStateToProps = (state) => {
     balanceInFiat,
     currencyConverter,
     multiplier,
-    contacts: state.ui.contacts.contactList
+    contacts: state.ui.contacts.contactList,
+    fiatSymbol
   }
 }
 
