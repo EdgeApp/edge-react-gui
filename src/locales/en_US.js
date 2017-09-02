@@ -759,6 +759,7 @@ const strings = {
   fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
   fragmet_wallets_addtoken_option: 'Add Token',
+  fragment_wallets_sort: 'Sort',
   fragment_wallets_this_wallet: 'this wallet?', // needs work
   fragment_select_wallet_header_title: 'Choose one of the following as selected wallet:',
   title_Create_Wallet: 'Create Wallet',

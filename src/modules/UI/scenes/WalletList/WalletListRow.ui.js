@@ -14,7 +14,7 @@ import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import T from '../../components/FormattedText'
-import RowOptions from './WalletListRowOptions.ui'
+import RowOptions, {options} from './WalletListRowOptions.ui'
 import {border as b, cutOffText} from '../../../utils'
 import {selectWallet} from '../../Wallets/action.js'
 
@@ -29,49 +29,57 @@ export const findDenominationSymbol = (denoms, value) => {
   }
 }
 
-class WalletListRow extends Component {
+class SortableWalletListRow extends Component {
 
-    /* this._active = new Animated.Value(0)
-
-    this._style = {
-      ...Platform.select({
-        ios: {
-          transform: [{
-            scale: this._active.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 1.1]
-            })
-          }],
-          shadowRadius: this._active.interpolate({
-            inputRange: [0, 1],
-            outputRange: [2, 10]
-          })
-        },
-
-        android: {
-          transform: [{
-            scale: this._active.interpolate({
-              inputRange: [0, 1],
-              outputRange: [1, 1.07]
-            })
-          }],
-          elevation: this._active.interpolate({
-            inputRange: [0, 1],
-            outputRange: [2, 6]
-          })
-        }
-      })
-    } */
-
-  /* componentWillReceiveProps (nextProps) {
-    if (this.props.active !== nextProps.active) {
-      Animated.timing(this._active, {
-        duration: 300,
-        easing: Easing.bounce,
-        toValue: Number(nextProps.active)
-      }).start()
-    }
+  /* _onPressSelectWallet = (walletId, currencyCode) => {
+    this.props.dispatch(selectWallet(walletId, currencyCode))
+    Actions.transactionList({ params: 'walletList' })
   } */
+
+  render () {
+    console.log('rendering walltListRow, this is: ', this)
+    const {data} = this.props
+    let walletData = data
+    let currencyCode = walletData.currencyCode
+    console.log('still in walletListRow, currencyCode is : ', currencyCode, ' , walletData is : ', walletData, ' , this.props.index is: ', this.props.index)
+    let denomination = walletData.allDenominations[currencyCode][this.props.index]
+    let multiplier = denomination.multiplier
+    let id = walletData.id
+    let name = walletData.name || sprintf(strings.enUS['string_no_name'])
+    let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
+    return (
+      <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
+        <TouchableHighlight
+          style={[styles.rowContainer]}
+          underlayColor={'#eee'}
+          {...this.props.sortHandlers}
+          >
+          <View style={[styles.rowContent]}>
+            <View style={[styles.rowNameTextWrap]}>
+              <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
+            </View>
+            <View style={[styles.rowBalanceTextWrap]}>
+              <T style={[styles.rowBalanceAmountText]}>{bns.divf(walletData.primaryNativeBalance, multiplier)}</T>
+              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
+                ({symbol || ''})</T>
+            </View>
+            <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
+          </View>
+        </TouchableHighlight>
+      </Animated.View>
+    )
+  }
+}
+
+export const SortableWalletListRowConnect =  connect((state, ownProps) => {
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, ownProps.data.currencyCode)
+  return {
+    dimensions: state.ui.scenes.dimensions,
+    index
+  }
+})(SortableWalletListRow)
+
+class FullWalletListRow extends Component {
 
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.dispatch(selectWallet(walletId, currencyCode))
@@ -79,9 +87,11 @@ class WalletListRow extends Component {
   }
 
   render () {
+    console.log('rendering walltListRow, this is: ', this)
     const {data} = this.props
-    let walletData = data
+    let walletData = data.item
     let currencyCode = walletData.currencyCode
+    console.log('still in walletListRow, currencyCode is : ', currencyCode, ' , walletData is : ', walletData, ' , this.props.index is: ', this.props.index)
     let denomination = walletData.allDenominations[currencyCode][this.props.index]
     let multiplier = denomination.multiplier
     let id = walletData.id
@@ -104,10 +114,10 @@ class WalletListRow extends Component {
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
-            <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
+            <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={this.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
           </View>
         </TouchableHighlight>
-        {this.props.sortablMode && this.renderTokenRow(walletData.nativeBalances, this.props.active)}
+        {/*!this.props.sortablMode && this.renderTokenRow(walletData.nativeBalances, this.props.active) */}
       </Animated.View>
     )
   }
@@ -123,15 +133,38 @@ class WalletListRow extends Component {
     }
     return tokens
   }
+
+  executeWalletRowOption = (walletId, option) => {
+    console.log('in executeWalletRowOption, option is: ', option)
+    switch (option) {
+    case options[0].value: // 'rename'
+      console.log('executing rename')
+      break
+    case options[1].value: // 'sort'
+      console.log('executing sort')
+      break
+
+    case options[2].value: // 'addToken'
+      console.log('executing addToken')
+      break
+    case options[3].value: // 'archive'
+      console.log('executing archive / restore')
+      break
+    case options[4].value: // 'delete
+      console.log('executing delete')
+      break
+    }
+  }
 }
 
-export default connect((state, ownProps) => {
-  const index = SETTINGS_SELECTORS.getDenominationIndex(state, ownProps.data.currencyCode)
+export const FullWalletListRowConnect =  connect((state, ownProps) => {
+  const index = SETTINGS_SELECTORS.getDenominationIndex(state, ownProps.data.item.currencyCode)
+  console.log('in fullWalletListRow, ownProps.data.item is: ', ownProps.data.item, ' index is now: ', index)
   return {
     dimensions: state.ui.scenes.dimensions,
     index
   }
-})(WalletListRow)
+})(FullWalletListRow)
 
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {

@@ -5,7 +5,9 @@ import {
   View,
   TouchableHighlight,
   TouchableOpacity,
-  ActivityIndicator  
+  ActivityIndicator,
+  Animated,
+  FlatList
 } from 'react-native'
 // $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
@@ -23,7 +25,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
-import WalletListRow from './WalletListRow.ui'
+import {
+  FullWalletListRowConnect as FullWalletListRow,
+  SortableWalletListRowConnect as SortableWalletListRow
+} from './WalletListRow.ui'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
@@ -37,18 +42,19 @@ import {
   updateArchivedWalletsOrder
 } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import {border as b} from '../../../utils'
-import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
+import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UI_SELECTORS from '../../selectors.js'
 
 class WalletList extends Component {
-  state: { sortableMode: boolean }
+  state: { sortableMode: boolean, sortableListOpacity: number, fullListOpacity: number }
 
   constructor(props) {
     super(props)
     this.state = {
-      sortableMode: false
+      sortableMode: false,
+      sortableListOpacity: new Animated.Value(1),
+      fullListOpacity: new Animated.Value(1)
     }
   }
 
@@ -77,6 +83,13 @@ class WalletList extends Component {
   render () {
     console.log('entering walletList render, this.props.wallets is: ', this.props.wallets)
     const {wallets} = this.props
+    let walletsArray = []
+    for (var wallet in wallets) {
+      let theWallet = wallets[wallet]
+      theWallet.key = wallet
+      walletsArray.push(theWallet)
+      console.log('walletsArray is now: ', walletsArray)      
+    }    
     return (
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
@@ -114,50 +127,93 @@ class WalletList extends Component {
               </View>
             </View>
 
-            <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 35}]}
-              onPress={() => Actions.createWallet()}>
-              <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
-            </TouchableOpacity>
+              {this.state.sortableMode ? (
+                <TouchableOpacity style={[]} onPress={() => this.disableSorting()}>
+                  <T>{sprintf(strings.enUS['string_done_cap'])}</T>
+                </TouchableOpacity>
+                ) : (
+                <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 35}]}
+                  onPress={() => Actions.createWallet()}>                  
+                    <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
+                </TouchableOpacity>
+              )}
           </LinearGradient>
-          {Object.keys(wallets).length > 0 ? (
-            <SortableListView
-              style={{ flex: 1}}
-              data={wallets}
-              order={this.sortActiveWallets(this.props.wallets)}
-              onRowMoved={this.onActiveRowMoved}
-              render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
-              renderRow={this.renderActiveRow/*, this.onActiveRowMoved*/}
-            />)
-            :
-            (<ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />)
-          }
+          {Object.keys(wallets).length > 0 ? this.renderActiveSortableList(walletsArray) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
         </View>
       </View>
     )
   }
 
-  renderActiveSortableList = (datum, order, label, renderRow, onRowMoved) => {
-    console.log('going into renderActiveSortable list, datum is: ', datum, ' , order is: ', order, ' , label is: ', label, ', onRowMoved is: ', onRowMoved)
-
-    if (order) {
-      console.log('order is true, datum is: ', datum)
+  renderActiveSortableList = (walletsArray) => {
+    if(this.state.sortableMode) {
       return (
-        <View style={[{flex: 1, flexDirection: 'column'}]}>
-          <SortableListView
-            activeOpacity={activeOpacity.opacity}
-            rowActivationTime={350}
-            sortableMode={this.state.sortableMode}
-            style={[styles.sortableWalletList, b()]}
-            contentContainerStyle={[styles.sortableWalletList]}
-            data={datum}
-            order={order}
-            render={label}
-            onRowMoved={this.onActiveRowMoved}
-            renderRow={this.renderActiveRow}
-          />
-        </View>
+        <SortableListView
+          style={{ flex: 1}}
+          data={this.props.wallets}
+          order={this.sortActiveWallets(this.props.wallets)}
+          onRowMoved={this.onActiveRowMoved}
+          render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
+          renderRow={this.renderActiveRow /*, this.onActiveRowMoved*/}
+          sortableMode={this.state.sortableMode}
+        />
+      )} else {
+      console.log('in this.state.sortableMode is false clause, walletsArray is: ', walletsArray)        
+      return (
+        <FlatList
+          style={{ flex: 1}}          
+          data={walletsArray}
+          renderItem={(item) => <FullWalletListRow data={item} />}
+          sortableMode={this.state.sortableMode}
+        />
       )
     }
+  }
+
+  renderActiveRow = (row) => {
+    console.log('executing renderActiveRow, row is: ', row)
+    return <SortableWalletListRow data={row} />
+  }
+
+  enableSorting = () => {
+    // start animation, use callback to setState, then setState's callback to execute 2nd animation
+    let sortableToOpacity = 1
+    let fullListToOpacity = 0
+
+    Animated.timing(
+      this.state.fullListOpacity,
+      {
+        toValue: fullListToOpacity,
+        timing: 200
+      }
+    ).start(() => this.setState({sortableMode: true}, () => {
+      Animated.timing(
+        this.state.sortableListOpacity,
+        {
+          toValue: sortableToOpacity,
+          duration: 200
+        }
+      ).start()
+    }))
+  }
+
+  disableSorting = () => {
+    let sortableToOpacity = 0
+    let fullListToOpacity = 1  
+    Animated.timing(
+      this.state.sortableListOpacity,
+      {
+        toValue: sortableToOpacity,
+        timing: 200
+      }
+    ).start(() => this.setState({sortableMode: false}, () => {
+      Animated.timing(
+        this.state.fullListOpacity,
+        {
+          toValue: fullListToOpacity,
+          duration: 200
+        }
+      ).start()
+    }))  
   }
 
   renderArchivedSortableList = (data, order, label, renderRow) => {
@@ -173,14 +229,6 @@ class WalletList extends Component {
         />
       )
     }
-  }
-
-  renderActiveRow = (row) => {
-    return <WalletListRow data={row} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])} />
-  }
-
-  renderArchivedRow = data => {
-    return <WalletListRow settings={this.props.settings} data={data} archiveLabel={sprintf(strings.enUS['fragmet_wallets_list_restore_title_capitalized'])} />
   }
 
   sortActiveWallets = (wallets) => {
