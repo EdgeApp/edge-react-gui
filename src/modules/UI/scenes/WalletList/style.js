@@ -74,6 +74,11 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent',
     marginLeft: 16
   },
+  walletsBoxDoneText: {
+    fontSize: 18,
+    color: 'white',
+    backgroundColor: 'transparent',    
+  },
   walletsBoxHeaderAddWallet: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -111,15 +116,14 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   sortableWalletList: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignContent: 'stretch'
   },
   rowContainer: {
-    flex: 1,
-    height: 50,
+    padding: 6,
     paddingLeft: 16,
+    marginRight: 4,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderColor: '#EEE'
@@ -152,12 +156,21 @@ module.exports = StyleSheet.create({
   },
   rowDotsWrap: {
     flexDirection: 'row',
-    width: 44
+    width: 46
+  },
+  rowDragArea: {
+    paddingLeft: 14,
+    justifyContent: 'center',
+  },
+  rowDragIcon: {
+    position: 'relative',
+    top: 14
   },
   menuTrigger: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 10
+    paddingLeft: 14,
+    paddingRight: 10
   },
   // beginning of options component
   menuOption: {
@@ -167,10 +180,6 @@ module.exports = StyleSheet.create({
   },
   menuOptionItem: {
     flexDirection: 'row'
-  },
-  optionIcon: {
-    color: c.gray1,
-    marginRight: 10
   },
   optionText: {
     color: c.gray1,
