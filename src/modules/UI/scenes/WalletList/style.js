@@ -18,7 +18,7 @@ module.exports = StyleSheet.create({
     alignItems: 'stretch'
   },
   totalBalanceBox: { // one
-    flex: 3,
+    height: 111,
     justifyContent: 'center'
   },
   totalBalanceWrap: {
@@ -52,7 +52,7 @@ module.exports = StyleSheet.create({
   },
   // bottom major portion of screen
   walletsBox: { // one
-    flex: 9
+    flex: 1
   },
   walletsBoxHeaderWrap: {
     padding: 12,

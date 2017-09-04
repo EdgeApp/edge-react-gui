@@ -19,7 +19,8 @@ export class AddressInput extends Component { // this component is for the input
             placeholder={this.props.copyMessage}
             returnKeyType={'done'}
             autoCorrect={false}
-            onSubmitEditing={this.props.onSubmit} />
+            onSubmitEditing={this.props.onSubmit}
+          />
         </View>
         {this.props.copyMessage &&
           <View style={styles.pasteButtonRow}>
