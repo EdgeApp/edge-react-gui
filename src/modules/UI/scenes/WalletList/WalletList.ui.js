@@ -34,12 +34,13 @@ import {sprintf} from 'sprintf-js'
 import {
   toggleArchiveVisibility,
   updateRenameWalletInput,
-  closeWalletDeleteModal,
+  closeDeleteWalletModal,
   closeRenameWalletModal,
   renameWallet,
   deleteWallet,
   updateActiveWalletsOrder,
-  updateArchivedWalletsOrder
+  updateArchivedWalletsOrder,
+  dispatchWalletRowOption  
 } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
@@ -88,6 +89,7 @@ class WalletList extends Component {
     switch (option) {
     case options[0].value: // 'rename'
       console.log('executing rename')
+      this.props.dispatch(dispatchWalletRowOption(walletId, 'rename'))
       break
     case options[1].value: // 'sort'
       if (this.state.sortableMode) {
@@ -97,13 +99,17 @@ class WalletList extends Component {
       }
       break
     case options[2].value: // 'addToken'
-      console.log('executing addToken')
+      this.props.dispatch(dispatchWalletRowOption(walletId, 'addToken'))
       break
     case options[3].value: // 'archive'
-      console.log('executing archive / restore')
+      if(!this.props.walletsp[walletId].archived) {
+        this.props.dispatch(dispatchWalletRowOption(walletId, 'archive'))
+      } else {
+        this.props.dispatch(dispatchWalletRowOption(walletId, 'activate'))        
+      }
       break
     case options[4].value: // 'delete
-      console.log('executing delete')
+      this.props.dispatch(dispatchWalletRowOption(walletId, 'delete'))
       break
     }
   }
@@ -434,7 +440,7 @@ export const DeleteSubtextConnect = connect(state => ({
 
 class DeleteWalletButtons extends Component {
   _onCancelDeleteModal = () => {
-    this.props.dispatch(closeWalletDeleteModal())
+    this.props.dispatch(closeDeleteWalletModal())
   }
 
   _onDeleteModalDone = () => {

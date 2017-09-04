@@ -159,12 +159,13 @@ module.exports = StyleSheet.create({
     width: 46
   },
   rowDragArea: {
-    paddingLeft: 14,
+    paddingLeft: 16,
     justifyContent: 'center',
+    marginRight: 14
   },
   rowDragIcon: {
     position: 'relative',
-    top: 14
+    top: 16
   },
   menuTrigger: {
     flex: 1,
@@ -216,7 +217,8 @@ module.exports = StyleSheet.create({
       ? 26
       : 46,
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
+    color: c.gray1
   },
   emptyBottom: {
     flex: 1

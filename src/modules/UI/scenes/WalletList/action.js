@@ -33,10 +33,10 @@ import * as UI_ACTIONS from '../../Wallets/action.js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
-export const executeWalletRowOption = (walletId, option) => {
+export const dispatchWalletRowOption = (walletId, option) => {
   switch (option) {
-  case 'Restore':
-  case 'Activate':
+  case 'restore':
+  case 'activate':
     return (dispatch, getState) => {
       const state = getState()
       const account = CORE_SELECTORS.getAccount(state)
@@ -50,7 +50,7 @@ export const executeWalletRowOption = (walletId, option) => {
         .catch(e => console.log(e))
     }
 
-  case 'Archive':
+  case 'archive':
     return (dispatch, getState) => {
       const state = getState()
       const account = CORE_SELECTORS.getAccount(state)
@@ -64,17 +64,17 @@ export const executeWalletRowOption = (walletId, option) => {
         .catch(e => console.log(e))
     }
 
-  case 'Delete':
+  case 'delete':
     return dispatch => {
       dispatch(openDeleteWalletModal(walletId))
     }
 
-  case 'Rename':
+  case 'rename':
     return dispatch => {
       dispatch(openRenameWalletModal(walletId))
     }
 
-  case 'Add Token':
+  case 'addToken':
     return dispatch => {
       dispatch(addToken(walletId))
     }
@@ -107,6 +107,7 @@ export const deleteWallet = walletId => {
     ACCOUNT_API.deleteWalletRequest(account, walletId)
     .then(() => {
       dispatch(deleteWalletSuccess(walletId))
+      dispatch(closeDeleteWalletModal())
     })
     .catch(e => console.log(e))
   }

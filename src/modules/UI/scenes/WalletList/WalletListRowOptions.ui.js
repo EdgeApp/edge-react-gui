@@ -46,8 +46,8 @@ class WalletListRowOptions extends Component {
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (
       <View style={[styles.rowDotsWrap, b()]}>
-        <Menu style={styles.menuButton} onSelect={(value) => this.optionAction(value)}>
-          <MenuTrigger style={styles.menuTrigger}>
+        <Menu style={[styles.menuButton, b()]} onSelect={(value) => this.optionAction(value)}>
+          <MenuTrigger style={[styles.menuTrigger, b()]}>
             <Text style={{fontSize: 20}}>
               &#8942;
             </Text>

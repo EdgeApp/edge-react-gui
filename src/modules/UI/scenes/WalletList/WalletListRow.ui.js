@@ -5,9 +5,9 @@ import { bns } from 'biggystring'
 import {
   View,
   TouchableHighlight,
-  Animated
+  Animated,
+  Image
 } from 'react-native'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
@@ -16,6 +16,7 @@ import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRow.ui'
 import {border as b, cutOffText} from '../../../utils'
 import {selectWallet} from '../../Wallets/action.js'
+import sort from '../../../../assets/images/walletlist/sort.png'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -61,7 +62,10 @@ class SortableWalletListRow extends Component {
                 ({symbol || ''})</T>
             </View>
             <View style={[styles.rowDragArea, b()]}>
-              <MAIcon name='dehaze' size={24} color='gray' style={[b()]} />
+              <Image 
+                source={sort}
+                style={{height: 15, width: 15}}
+              />
             </View>
           </View>
         </TouchableHighlight>
@@ -118,7 +122,7 @@ class FullWalletListRow extends Component {
             <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
           </View>
         </TouchableHighlight>
-        {/*!this.props.sortablMode && this.renderTokenRow(walletData.nativeBalances, this.props.active) */}
+        {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
   }
