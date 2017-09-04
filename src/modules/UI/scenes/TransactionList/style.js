@@ -110,7 +110,7 @@ export default StyleSheet.create({
     fontSize: 36
   },
   requestSendRow: { // two
-    flex: 1,
+    height: 50,
     flexDirection: 'row'
   },
   button: {

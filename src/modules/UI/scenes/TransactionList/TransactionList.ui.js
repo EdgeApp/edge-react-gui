@@ -305,7 +305,7 @@ class TransactionList extends Component {
                       <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+                  <TouchableHighlight underlayColor='rgba(0,0,0,0.25)' onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
                     <View style={[styles.sendWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
