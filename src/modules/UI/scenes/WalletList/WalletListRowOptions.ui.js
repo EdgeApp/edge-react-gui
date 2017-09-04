@@ -4,10 +4,9 @@ import { connect } from 'react-redux'
 import styles from './style'
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import T from '../../components/FormattedText'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import {updateRenameWalletInput} from './action'
 import strings from '../../../../locales/default'
+import {border as b} from '../../../utils.js'
 import {sprintf} from 'sprintf-js'
 
 export const options = [
@@ -45,9 +44,8 @@ class WalletListRowOptions extends Component {
 
   render () {
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
-    console.log('about to render walletListRowOptions, this is: ', this, ' , and options is: ', options)
     return (
-      <View style={styles.rowDotsWrap}>
+      <View style={[styles.rowDotsWrap, b()]}>
         <Menu style={styles.menuButton} onSelect={(value) => this.optionAction(value)}>
           <MenuTrigger style={styles.menuTrigger}>
             <Text style={{fontSize: 20}}>
@@ -57,19 +55,16 @@ class WalletListRowOptions extends Component {
           <MenuOptions>
             <MenuOption value={options[0].value} style={styles.menuOption}>
               <View style={[styles.menuOptionItem]}>
-                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon]} />
                 <T style={[styles.optionText]}>{options[0].syntax}</T>
               </View>
             </MenuOption>
             <MenuOption value={options[1].value} style={styles.menuOption}>
               <View style={[styles.menuOptionItem]}>
-                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon]} />
                 <T style={[styles.optionText]}>{options[1].syntax}</T>
               </View>
             </MenuOption>            
             <MenuOption value={options[2].value} style={styles.menuOption}>
               <View style={[styles.menuOptionItem]}>
-                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon]} />
                 <T style={[styles.optionText]}>{options[2].syntax}</T>
               </View>
             </MenuOption>
@@ -81,7 +76,6 @@ class WalletListRowOptions extends Component {
             </MenuOption>
             <MenuOption value={options[4].value} style={styles.menuOption}>
               <View style={[styles.menuOptionItem]}>
-                <FAIcon name='trash-o' size={24} style={[styles.optionIcon, styles.trashIcon]} />
                 <T style={[styles.optionText]}>{options[4].syntax}</T>
               </View>
             </MenuOption>

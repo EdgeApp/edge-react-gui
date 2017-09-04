@@ -10,11 +10,12 @@ import {
   TouchableHighlight,
   Animated
 } from 'react-native'
+import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import T from '../../components/FormattedText'
-import RowOptions, {options} from './WalletListRowOptions.ui'
+import RowOptions from './WalletListRowOptions.ui'
 import {border as b, cutOffText} from '../../../utils'
 import {selectWallet} from '../../Wallets/action.js'
 
@@ -44,7 +45,6 @@ class SortableWalletListRow extends Component {
     console.log('still in walletListRow, currencyCode is : ', currencyCode, ' , walletData is : ', walletData, ' , this.props.index is: ', this.props.index)
     let denomination = walletData.allDenominations[currencyCode][this.props.index]
     let multiplier = denomination.multiplier
-    let id = walletData.id
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     return (
@@ -63,7 +63,9 @@ class SortableWalletListRow extends Component {
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
-            <RowOptions walletKey={id} archiveLabel={this.props.archiveLabel} />
+            <View style={[styles.rowDragArea, b()]}>
+              <MAIcon name='dehaze' size={24} color='gray' style={[b()]} />
+            </View>
           </View>
         </TouchableHighlight>
       </Animated.View>
@@ -87,11 +89,9 @@ class FullWalletListRow extends Component {
   }
 
   render () {
-    console.log('rendering walltListRow, this is: ', this)
     const {data} = this.props
     let walletData = data.item
     let currencyCode = walletData.currencyCode
-    console.log('still in walletListRow, currencyCode is : ', currencyCode, ' , walletData is : ', walletData, ' , this.props.index is: ', this.props.index)
     let denomination = walletData.allDenominations[currencyCode][this.props.index]
     let multiplier = denomination.multiplier
     let id = walletData.id
@@ -104,7 +104,7 @@ class FullWalletListRow extends Component {
           underlayColor={'#eee'}
           {...this.props.sortHandlers}
           onPress={() => this._onPressSelectWallet(id, currencyCode)}
-          >
+        >
           <View style={[styles.rowContent]}>
             <View style={[styles.rowNameTextWrap]}>
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
@@ -114,7 +114,7 @@ class FullWalletListRow extends Component {
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
-            <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={this.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
+            <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
           </View>
         </TouchableHighlight>
         {/*!this.props.sortablMode && this.renderTokenRow(walletData.nativeBalances, this.props.active) */}
@@ -133,33 +133,10 @@ class FullWalletListRow extends Component {
     }
     return tokens
   }
-
-  executeWalletRowOption = (walletId, option) => {
-    console.log('in executeWalletRowOption, option is: ', option)
-    switch (option) {
-    case options[0].value: // 'rename'
-      console.log('executing rename')
-      break
-    case options[1].value: // 'sort'
-      console.log('executing sort')
-      break
-
-    case options[2].value: // 'addToken'
-      console.log('executing addToken')
-      break
-    case options[3].value: // 'archive'
-      console.log('executing archive / restore')
-      break
-    case options[4].value: // 'delete
-      console.log('executing delete')
-      break
-    }
-  }
 }
 
 export const FullWalletListRowConnect =  connect((state, ownProps) => {
   const index = SETTINGS_SELECTORS.getDenominationIndex(state, ownProps.data.item.currencyCode)
-  console.log('in fullWalletListRow, ownProps.data.item is: ', ownProps.data.item, ' index is now: ', index)
   return {
     dimensions: state.ui.scenes.dimensions,
     index
