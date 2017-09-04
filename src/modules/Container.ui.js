@@ -191,7 +191,7 @@ class Main extends Component {
     if (this.state.loginVisible) {
       return (
         <LoginScreen
-          callbacks={makeAccountCallbacks(this.props.dispatch)}
+          accountOptions={{ callbacks: makeAccountCallbacks(this.props.dispatch) }}
           context={this.state.context}
           onLogin={this.onLogin}
         />
@@ -250,7 +250,7 @@ const mapStateToProps = (state) => ({
   routes: state.routes
 })
 const mapDispatchToProps = (dispatch) => ({
-  dispatch: () => dispatch,
+  dispatch,
   addCurrencyPlugin: (madePlugin) => dispatch(addCurrencyPlugin(madePlugin)),
   setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
   addContext: (context) => dispatch(addContext(context)),
