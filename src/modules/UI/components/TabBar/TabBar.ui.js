@@ -20,6 +20,7 @@ import moreSelected from '../../../../assets/images/tabbar/more_selected.png'
 class TabBar extends Component {
 
   _handleToggleSideBar = () => {
+    Actions.login()
     if (!this.props.sidemenu) {
       this.props.dispatch(openSidebar())
     }

@@ -2,7 +2,7 @@
 import borderColors from '../theme/variables/css3Colors'
 import { divf, mulf, gt } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import { AbcDenomination } from 'airbitz-core-js'
+import type { AbcDenomination } from 'airbitz-core-types'
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
