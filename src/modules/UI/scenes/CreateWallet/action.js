@@ -8,8 +8,6 @@ import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import * as LOGIN_ACTIONS from '../../../Login/action.js'
-
 import { Actions } from 'react-native-router-flux'
 
 export const updateWalletName = (walletName: string) => {
@@ -64,7 +62,6 @@ export const createWallet = (walletName: string, walletType: string) => {
     ACCOUNT_API.createWalletRequest(account, keys, walletType)
     .then(() => {
       Actions.walletList({type: 'reset'})
-      dispatch(LOGIN_ACTIONS.updateWallets())
     })
   }
 }

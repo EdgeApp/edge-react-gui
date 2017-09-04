@@ -29,7 +29,6 @@ export const ADD_TOKEN = 'ADD_TOKEN'
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as LOGIN from '../../../Login/action.js'
 import * as UI_ACTIONS from '../../Wallets/action.js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -47,7 +46,6 @@ export const executeWalletRowOption = (walletId, option) => {
       ACCOUNT_API.activateWalletRequest(account, walletId)
         .then(() => {
           dispatch(activateWalletSuccess(walletId))
-          dispatch(LOGIN.updateWallets(account))
         })
         .catch(e => console.log(e))
     }
@@ -62,7 +60,6 @@ export const executeWalletRowOption = (walletId, option) => {
       ACCOUNT_API.archiveWalletRequest(account, walletId)
         .then(() => {
           dispatch(archiveWalletSuccess(walletId))
-          dispatch(LOGIN.updateWallets(account))
         })
         .catch(e => console.log(e))
     }
@@ -94,7 +91,7 @@ export const renameWallet = (walletId, walletName) => {
     WALLET_API.renameWalletRequest(wallet, walletName)
     .then(() => {
       dispatch(renameWalletSuccess(walletId))
-      dispatch(UI_ACTIONS.refreshWallets())
+      dispatch(UI_ACTIONS.refreshWallet(walletId))
     })
     .catch(e => console.log(e))
   }
@@ -110,7 +107,6 @@ export const deleteWallet = walletId => {
     ACCOUNT_API.deleteWalletRequest(account, walletId)
     .then(() => {
       dispatch(deleteWalletSuccess(walletId))
-      dispatch(LOGIN.updateWallets(account))
     })
     .catch(e => console.log(e))
   }
@@ -128,7 +124,6 @@ export const updateActiveWalletsOrder = activeWalletIds => {
       for (var k in activeWalletIds) {
         dispatch(updateIndividualWalletSortIndex(activeWalletIds[k], k))
       }
-      dispatch(LOGIN.updateWallets(account))
     })
     .catch(e => console.log(e))
   }
@@ -153,7 +148,6 @@ export const updateArchivedWalletsOrder = archivedWalletIds => {
     ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds)
     .then(response => {
       dispatch(updateArchivedWalletsOrderSuccess(response))
-      dispatch(LOGIN.updateWallets(account))
     })
     .catch(e => console.log(e))
   }

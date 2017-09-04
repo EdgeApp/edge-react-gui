@@ -1,4 +1,4 @@
-import { updateWallets } from '../../Login/action.js'
+import { updateWalletsRequest } from '../Wallets/action.js'
 import { refreshWallet } from '../../UI/Wallets/action.js'
 import {
   newTransactionsRequest,
@@ -11,9 +11,9 @@ export const makeAccountCallbacks = dispatch => {
       console.log('onDataChanged')
     },
 
-    onKeyListChanged: keyInfos => {
+    onKeyListChanged: () => {
       console.log('onKeyListChanged')
-      dispatch(updateWallets(keyInfos))
+      dispatch(updateWalletsRequest())
     },
 
     onLoggedOut: () => {
