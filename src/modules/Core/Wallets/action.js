@@ -1,41 +1,23 @@
 export const PREFIX = 'Core/Wallets/'
-export const ADD_WALLET = PREFIX + 'ADD_WALLET'
-export const DELETE_WALLET = PREFIX + 'DELETE_WALLET'
-export const UPDATE_WALLET_START = PREFIX + 'UPDATE_WALLET_START'
-export const UPDATE_WALLET_COMPLETE = PREFIX + 'UPDATE_WALLET_COMPLETE'
-export const REMOVE_PENDING_STATUS = PREFIX + 'REMOVE_PENDING_STATUS'
+export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'
 
-export const addWallet = wallet => {
+export const updateWallets = (activeWalletIds, archivedWalletIds, currencyWallets) => {
   return {
-    type: ADD_WALLET,
-    data: { wallet }
+    type: UPDATE_WALLETS,
+    data: {
+      activeWalletIds,
+      archivedWalletIds,
+      currencyWallets
+    }
   }
 }
 
-export const deleteWallet = walletId => {
-  return {
-    type: DELETE_WALLET,
-    data: { walletId }
-  }
-}
+export const updateWalletsRequest = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const account = state.core.account
+    const { activeWalletIds, archivedWalletIds, currencyWallets } = account
 
-export const updateWalletStart = walletId => {
-  return {
-    type: UPDATE_WALLET_START,
-    data: { walletId }
-  }
-}
-
-export const updateWalletComplete = walletId => {
-  return {
-    type: UPDATE_WALLET_COMPLETE,
-    data: { walletId }
-  }
-}
-
-export const removePendingStatus = walletId => {
-  return {
-    type: REMOVE_PENDING_STATUS,
-    data: { walletId }
+    return dispatch(updateWallets(activeWalletIds, archivedWalletIds, currencyWallets))
   }
 }
