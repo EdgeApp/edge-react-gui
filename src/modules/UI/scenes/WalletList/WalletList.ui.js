@@ -118,7 +118,6 @@ class WalletList extends Component {
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
-      console.log('walletsArray is now: ', walletsArray)      
     }    
     return (
       <View style={styles.container}>
