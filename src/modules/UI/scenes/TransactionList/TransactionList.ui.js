@@ -247,8 +247,7 @@ class TransactionList extends Component {
     } else {
       logo = this.props.uiWallet.symbolImage
     }
-    console.log('rendering txList, this.props is: ', this.props, ' , and this.state is: ', this.state)
-    console.log('rendering txList, this.props is: ', this.props, ' , and this.state is: ', this.state)
+
     const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
@@ -297,7 +296,7 @@ class TransactionList extends Component {
                       </TouchableOpacity>
                     )}
                 <View style={[styles.requestSendRow, b()]}>
-                  <TouchableHighlight onPress={() => Actions.request()} style={[styles.requestBox, styles.button]}>
+                  <TouchableHighlight underlayColor='rgba(0,0,0,0.25)' onPress={() => Actions.request()} style={[styles.requestBox, styles.button]}>
                     <View style={[styles.requestWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
