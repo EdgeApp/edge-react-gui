@@ -81,6 +81,7 @@ export default class FlipInput extends Component {
         onChangeText={onChangeText}
         autoCorrect={false}
         keyboardType='numeric'
+        selectionColor='white'
         returnKeyType='done' />
       <Text style={[top.currencyCode]}>
         {denominationInfo.displayDenomination.name}
