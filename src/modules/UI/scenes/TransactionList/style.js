@@ -88,7 +88,8 @@ export default StyleSheet.create({
   },
   currentBalanceBoxBits: {
     color: 'white',
-    fontSize: 40
+    fontSize: 40,
+    fontWeight: '400'
   },
   currentBalanceBoxDollarsWrap: {
     justifyContent: 'flex-start',

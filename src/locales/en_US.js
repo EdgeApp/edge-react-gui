@@ -593,6 +593,8 @@ const strings = {
   drawer_request: 'Request',
   drawer_transactions: 'Transactions',
   drawer_wallets: 'Wallets',
+  drawer_scan: 'Scan',
+  drawer_more: 'More',
   drawer_logout: 'Logout',
   drawer_settings: 'Settings',
   drawer_affiliates: 'REFER YOUR FRIENDS\\n(Earn Bitcoin)',

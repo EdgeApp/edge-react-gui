@@ -136,7 +136,7 @@ export default {
 
 
     // Footer
-  footerHeight: 60,
+  footerHeight: 50,
   // footerHeight: 70,
   footerDefaultBg: (platform === 'ios') ? '#F8F8F8' : '#4179F7',
 
@@ -162,7 +162,7 @@ export default {
     // Header
   toolbarBtnColor: (platform === 'ios') ? '#007aff' : '#fff',
   toolbarDefaultBg: (platform === 'ios') ? '#F8F8F8' : '#3F51B5',
-  toolbarHeight: (platform === 'ios') ? 64 : 56,
+  toolbarHeight: (platform === 'ios') ? 44 : 56,
   toolbarIconSize: (platform === 'ios') ? 20 : 22,
   toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
   toolbarInputColor: (platform === 'ios') ? '#CECDD2' : '#fff',
