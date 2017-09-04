@@ -2,7 +2,7 @@
 
 import { combineReducers } from 'redux'
 import { GUIWallet } from '../../../types.js'
-import type { AbcDenomination, AbcMetaToken } from 'airbitz-core-js'
+import type { AbcDenomination, AbcMetaToken } from 'airbitz-core-types'
 import * as ACTION from './action'
 import * as UTILS from '../../utils.js'
 
