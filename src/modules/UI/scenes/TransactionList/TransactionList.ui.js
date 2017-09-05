@@ -28,6 +28,7 @@ import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import {setContactList} from '../../contacts/action'
 import styles from './style'
+import { colors as c } from '../../../../theme/variables/airbitz.js'
 import { border as b, getFiatSymbol } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -254,7 +255,7 @@ class TransactionList extends Component {
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
         <View style={[styles.container, b()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
-            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={['#3b7adb', '#2b569a']}>
+            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={[c.gradient.light, c.gradient.dark]}>
               {this.state.balanceBoxVisible &&
               <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                 {this.props.updatingBalance ? (
@@ -279,7 +280,7 @@ class TransactionList extends Component {
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.displayDenomination.symbol} {(cryptoAmount) || '0'}
+                                {this.props.displayDenomination.symbol} {cryptoAmount || '0'}
                               </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>

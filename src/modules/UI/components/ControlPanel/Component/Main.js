@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Platform, View, ScrollView, TouchableNativeFeedback, TouchableHighlight, Image } from 'react-native'
 import { connect } from 'react-redux'
-import { Text } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 
 import { closeSidebar } from '../../SideMenu/action'
@@ -11,6 +10,7 @@ import { logout } from '../action.js'
 
 import styles from '../style'
 const platform = Platform.OS
+import T from '../../../components/FormattedText'
 
 import buyAndSell from '../../../../../assets/images/sidenav/buysell.png'
 import directory from '../../../../../assets/images/sidenav/directory.png'
@@ -38,12 +38,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={buyAndSell} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Buy/Sell Digital Currency
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       i.e Bitcoin/Ether
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -53,12 +53,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={spend} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Spend Bitcoins
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       Plugins
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -68,12 +68,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={refer} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Refer Your Friends
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       Earn Money
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -83,12 +83,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={directory} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Directory
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       Find Local Business
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -100,9 +100,9 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={logoutImage} />
                   </View>
                   <View style={styles.others.textContainer}>
-                    <Text style={styles.others.text}>
+                    <T style={styles.others.text}>
                       Logout
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -112,9 +112,9 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={settings} />
                   </View>
                   <View style={styles.others.textContainer}>
-                    <Text style={styles.others.text}>
+                    <T style={styles.others.text}>
                       Settings
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableNativeFeedback>
@@ -134,12 +134,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={buyAndSell} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Buy/Sell Digital Currency
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       i.e Bitcoin/Ether
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableHighlight>
@@ -149,12 +149,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={spend} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Spend Bitcoins
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       Plugins
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableHighlight>
@@ -164,12 +164,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={refer} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Refer Your Friends
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       Earn Money
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableHighlight>
@@ -179,12 +179,12 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={directory} />
                   </View>
                   <View style={styles.main.textContainer}>
-                    <Text style={styles.main.text}>
+                    <T style={styles.main.text}>
                       Directory
-                    </Text>
-                    <Text style={styles.main.textItalic}>
+                    </T>
+                    <T style={styles.main.textItalic}>
                       Find Local Business
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableHighlight>
@@ -196,9 +196,9 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={logoutImage} />
                   </View>
                   <View style={styles.others.textContainer}>
-                    <Text style={styles.others.text}>
+                    <T style={styles.others.text}>
                       Logout
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableHighlight>
@@ -208,9 +208,9 @@ class MainComponent extends Component {
                     <Image style={styles.iconImage} source={settings} />
                   </View>
                   <View style={styles.others.textContainer}>
-                    <Text style={styles.others.text}>
+                    <T style={styles.others.text}>
                       Settings
-                    </Text>
+                    </T>
                   </View>
                 </View>
               </TouchableHighlight>
@@ -248,12 +248,12 @@ class MainComponent extends Component {
               <Image style={styles.iconImage} source={security} />
             </View>
             <View style={styles.main.textContainer}>
-              <Text style={styles.main.text}>
+              <T style={styles.main.text}>
                 Secure Your Account
-              </Text>
-              <Text style={styles.main.textItalic}>
+              </T>
+              <T style={styles.main.textItalic}>
                 Enable 2FA / Set Password Recovery
-              </Text>
+              </T>
             </View>
           </View>
         </TouchableNativeFeedback>
@@ -268,12 +268,12 @@ class MainComponent extends Component {
               <Image style={styles.iconImage} source={security} />
             </View>
             <View style={styles.main.textContainer}>
-              <Text style={styles.main.text}>
+              <T style={styles.main.text}>
                 Secure Your Account
-              </Text>
-              <Text style={styles.main.textItalic}>
+              </T>
+              <T style={styles.main.textItalic}>
                 Enable 2FA / Set Password Recovery
-              </Text>
+              </T>
             </View>
           </View>
         </TouchableHighlight>
