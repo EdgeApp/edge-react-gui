@@ -170,7 +170,7 @@ class Main extends Component {
   }
 
   onLogin = (error = null, account) => {
-    if (error) return
+    if (error || !account) return
     this.props.initializeAccount(account)
     this.setState({ loginVisible: false })
   }

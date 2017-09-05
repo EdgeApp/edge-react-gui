@@ -2,12 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import {
+  ActivityIndicator,
   Alert,
   View,
   Keyboard,
   ListView,
   TouchableOpacity,
-  TextInput } from 'react-native'
+  TextInput
+} from 'react-native'
 import T from '../../components/FormattedText'
 import styles from './styles.js'
 import strings from '../../../../locales/default'
@@ -30,6 +32,13 @@ const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_va
 // //////////////////////////// ROOT ///////////////////////////////////////////
 
 class CreateWallet extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      isCreatingWallet: false
+    }
+  }
+
   getSupportedWalletTypes = () => {
     return Object.keys(this.props.supportedWalletTypes)
   }
@@ -82,10 +91,11 @@ class CreateWallet extends Component {
     return isValid
   }
 
-  handleOnDone = () => {
+  onSubmit = () => {
     if (!this.isValidData()) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
+      this.setState({ isCreatingWallet: true })
       Keyboard.dismiss()
       const { walletName, selectedWalletType } = this.props
       console.log('walletName', walletName)
@@ -94,7 +104,7 @@ class CreateWallet extends Component {
     }
   }
 
-  handleOnCancel = () => {
+  onCancel = () => {
     Keyboard.dismiss()
     Actions.walletList() // redirect to the list of wallets
   }
@@ -134,8 +144,9 @@ class CreateWallet extends Component {
 
         <Buttons
           style={styles.buttons}
-          onDone={this.handleOnDone}
-          onCancel={this.handleOnCancel} />
+          isCreatingWallet={this.state.isCreatingWallet}
+          onDone={this.onSubmit}
+          onCancel={this.onCancel} />
 
       </View>
     )
@@ -160,20 +171,25 @@ export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)
 
 // //////////////////////////// Buttons ////////////////////////////////////////
 
-const Buttons = (props) => {
+const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
   return (
     <View style={styles.buttons}>
 
       <TouchableOpacity
         style={[styles.cancel]}
-        onPress={props.onCancel}>
+        onPress={onCancel}>
         <T style={styles.buttonText}>{CANCEL_TEXT}</T>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={[styles.submit]}
-        onPress={props.onDone}>
-        <T style={styles.buttonText}>{DONE_TEXT}</T>
+        disabled={isCreatingWallet}
+        onPress={onDone}>
+        {
+          isCreatingWallet ?
+          <ActivityIndicator /> :
+          <T style={styles.buttonText}>{DONE_TEXT}</T>
+        }
       </TouchableOpacity>
 
     </View>
