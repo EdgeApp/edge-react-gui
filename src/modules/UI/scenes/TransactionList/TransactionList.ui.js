@@ -351,6 +351,7 @@ class TransactionList extends Component {
     let txColorStyle
     let txName = ''
     let txImage
+    let lastOfDate
 
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
@@ -363,16 +364,13 @@ class TransactionList extends Component {
       txImage = receivedTypeImage
     }
 
-    console.log('tx.metadata: ', tx.metadata)
     if (tx.metadata.name) {
-      console.log('inside of tx.metadata.name conditional, this.props is: ', this.props, ' and tx is: ', tx)
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
           let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
           if (found) console.log('element is: ', element)
           return found
         })
-        console.log('contact is now: ', contact, ' tx is: ', tx)
         if (contact) {
           tx.thumbnailPath = contact.thumbnailPath
           tx.hasThumbnail = contact.hasThumbnail
@@ -380,8 +378,13 @@ class TransactionList extends Component {
       }
     }
 
+    if(completedTxList[tx.key+1]) { // is there a subsequent transaction?
+      lastOfDate = (tx.dateString === completedTxList[tx.key + 1].dateString) ? false : true
+    } else {
+      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
+    }
     return (
-      <View style={styles.singleTransactionWrap}>
+      <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
@@ -389,7 +392,7 @@ class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, b()]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
           <View style={[styles.transactionInfoWrap, b()]}>
             <View style={styles.transactionLeft}>
               {tx.thumbnailPath ? (

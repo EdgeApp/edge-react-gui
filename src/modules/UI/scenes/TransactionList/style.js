@@ -211,6 +211,9 @@ export default StyleSheet.create({
     flexDirection: 'column',
     flex: 1
   },
+  bottomDivider: {
+    
+  },
   singleDateArea: {
     backgroundColor: c.gray4,
     flex: 3,
