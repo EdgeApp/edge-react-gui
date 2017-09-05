@@ -31,13 +31,7 @@ export const findDenominationSymbol = (denoms, value) => {
 
 class SortableWalletListRow extends Component {
 
-  /* _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet(walletId, currencyCode))
-    Actions.transactionList({ params: 'walletList' })
-  } */
-
   render () {
-    console.log('rendering walltListRow, this is: ', this)
     const {data} = this.props
     let walletData = data
     let currencyCode = walletData.currencyCode
@@ -122,17 +116,17 @@ class FullWalletListRow extends Component {
             <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
           </View>
         </TouchableHighlight>
-        {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
+        {this.renderTokenRow(id, walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
   }
 
-  renderTokenRow = (metaTokenBalances) => {
+  renderTokenRow = (parentId, metaTokenBalances) => {
     var tokens = []
     for (var property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
         tokens.push(
-          <WalletListTokenRow parentId={this.props.data.id}
+          <WalletListTokenRow parentId={parentId}
             currencyCode={property} key={property} balance={metaTokenBalances[property]} active={this.props.active} />)
       }
     }
