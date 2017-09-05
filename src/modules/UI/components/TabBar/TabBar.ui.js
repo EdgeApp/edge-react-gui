@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { Image } from 'react-native'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
-import { Footer, FooterTab, Button, Text } from 'native-base'
+import { Footer, FooterTab, Button} from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
 import { setTabBarHeight } from '../../dimensions/action'
 import { openSidebar, closeSidebar } from '../SideMenu/action'
+import T from '../FormattedText'
 import wallet from '../../../../assets/images/tabbar/wallets.png'
 import walletSelected from '../../../../assets/images/tabbar/wallets_selected.png'
 import receive from '../../../../assets/images/tabbar/receive.png'
@@ -16,6 +19,7 @@ import exchange from '../../../../assets/images/tabbar/exchange.png'
 import exchangeSelected from '../../../../assets/images/tabbar/exchange_selected.png'
 import more from '../../../../assets/images/tabbar/more.png'
 import moreSelected from '../../../../assets/images/tabbar/more_selected.png'
+import styles from './styles.js'
 
 class TabBar extends Component {
 
@@ -47,10 +51,10 @@ class TabBar extends Component {
               active={this.props.routes.scene.name === 'walletList'}
             >
               <Image
-                style={{width: 25, height: 25}}
-                source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet}
+                style={[{width: 25, height: 25, marginTop: 3}]}
+                source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet}               
               />
-              <Text style={{ marginTop: 5 }}>Wallets</Text>
+              <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'walletList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_wallets'])}</T>
             </Button>
 
             <Button
@@ -58,10 +62,10 @@ class TabBar extends Component {
               active={this.props.routes.scene.name === 'request'}
             >
               <Image
-                style={{width: 25, height: 25}}
+                style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'request' ? receiveSelected : receive}
               />
-              <Text style={{ marginTop: 5 }}>Request</Text>
+              <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'request' && styles.activeButton]}>{sprintf(strings.enUS['drawer_request'])}</T>
             </Button>
 
             <Button
@@ -69,10 +73,10 @@ class TabBar extends Component {
               active={this.props.routes.scene.name === 'scan'}
             >
               <Image
-                style={{width: 25, height: 25}}
+                style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'scan' ? scanSelected : scan}
               />
-              <Text style={{ marginTop: 5 }}>Scan</Text>
+              <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'scan' && styles.activeButton]}>{sprintf(strings.enUS['drawer_scan'])}</T>
             </Button>
 
             <Button
@@ -80,10 +84,10 @@ class TabBar extends Component {
               active={this.props.routes.scene.name === 'transactionList'}
             >
               <Image
-                style={{width: 25, height: 25}}
+                style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'transactionList' ? exchangeSelected : exchange}
               />
-              <Text style={{ marginTop: 5 }}>Transactions</Text>
+              <T style={[{ marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'transactionList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_transactions'])}</T>
             </Button>
 
             <Button
@@ -91,10 +95,10 @@ class TabBar extends Component {
               active={this.props.sidemenu}
             >
               <Image
-                style={{width: 25, height: 25}}
+                style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.sidemenu ? moreSelected : more}
               />
-              <Text style={{ marginTop: 5 }}>More</Text>
+              <T style={[{ marginTop: 5 }, styles.buttonText]}>{sprintf(strings.enUS['drawer_more'])}</T>
             </Button>
 
           </FooterTab>

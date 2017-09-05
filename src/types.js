@@ -3,7 +3,7 @@
  */
 // @flow
 
-import { AbcDenomination, AbcMetaToken } from 'airbitz-core-types'
+import type { AbcDenomination, AbcMetaToken } from 'airbitz-core-types'
 
 export class GUIWallet {
   id: string
@@ -19,9 +19,6 @@ export class GUIWallet {
   allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } }
   symbolImage: string
   metaTokens: Array<AbcMetaToken>
-  sortIndex: number
-  archived: boolean
-  deleted: boolean
   constructor (
     id: string,
     type: string,
@@ -36,9 +33,6 @@ export class GUIWallet {
     allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
     symbolImage: string,
     metaTokens: Array<AbcMetaToken>,
-    sortIndex: number,
-    archived: boolean,
-    deleted: boolean
   ) {
     this.id = id
     this.type = type
@@ -53,8 +47,5 @@ export class GUIWallet {
     this.allDenominations = allDenominations
     this.symbolImage = symbolImage
     this.metaTokens = metaTokens
-    this.sortIndex = sortIndex
-    this.archived = archived
-    this.deleted = deleted
   }
 }

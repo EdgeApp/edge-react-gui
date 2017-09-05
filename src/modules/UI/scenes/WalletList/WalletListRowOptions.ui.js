@@ -4,56 +4,79 @@ import { connect } from 'react-redux'
 import styles from './style'
 import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
 import T from '../../components/FormattedText'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
-import {executeWalletRowOption, updateRenameWalletInput} from './action'
-import {border as b} from '../../../utils'
+import {updateRenameWalletInput} from './action'
 import strings from '../../../../locales/default'
+import {border as b} from '../../../utils.js'
 import {sprintf} from 'sprintf-js'
 
+export const options = [
+  {
+    value: 'rename',
+    syntax: sprintf(strings.enUS['string_rename'])
+  },{
+    value: 'sort',
+    syntax: sprintf(strings.enUS['fragment_wallets_sort'])
+  },{
+    value: 'addToken',
+    syntax: sprintf(strings.enUS['fragmet_wallets_addtoken_option'])
+  },{
+    value: 'archive'
+  },{
+    value: 'delete',
+    syntax: sprintf(strings.enUS['string_delete'])
+  }
+]
+
 class WalletListRowOptions extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      archiveSyntax: sprintf(strings.enUS['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized'])
+    }
+  }
+
   optionAction (optionKey) {
-    this.props.dispatch(executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives))
+    this.props.executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives)
     if (optionKey === 'Rename') {
       this.props.dispatch(updateRenameWalletInput(this.props.wallets[this.props.walletKey].name))
     }
   }
 
   render () {
-    const options = [sprintf(strings.enUS['string_rename']), sprintf(strings.enUS['fragmet_wallets_addtoken_option']), this.props.archiveLabel, sprintf(strings.enUS['string_delete'])]
-
     // possibly refactor MenuOptions into component that gets looped. Properties could be put into array form
     return (
-      <View style={styles.rowDotsWrap}>
-        <Menu style={styles.menuButton} onSelect={(value) => this.optionAction(value)}>
-          <MenuTrigger style={styles.menuTrigger}>
+      <View style={[styles.rowDotsWrap, b()]}>
+        <Menu style={[styles.menuButton, b()]} onSelect={(value) => this.optionAction(value)}>
+          <MenuTrigger style={[styles.menuTrigger, b()]}>
             <Text style={{fontSize: 20}}>
               &#8942;
             </Text>
           </MenuTrigger>
           <MenuOptions>
-            <MenuOption value={options[0]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, b('green')]}>
-                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon, b('red')]} />
-                <T style={[styles.optionText]}>{options[0]}</T>
+            <MenuOption value={options[0].value} style={styles.menuOption}>
+              <View style={[styles.menuOptionItem]}>
+                <T style={[styles.optionText]}>{options[0].syntax}</T>
               </View>
             </MenuOption>
-            <MenuOption value={options[1]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, b('green')]}>
-                <MAIcon name='edit' size={24} style={[styles.optionIcon, styles.editIcon, b('red')]} />
-                <T style={[styles.optionText]}>{options[1]}</T>
+            <MenuOption value={options[1].value} style={styles.menuOption}>
+              <View style={[styles.menuOptionItem]}>
+                <T style={[styles.optionText]}>{options[1].syntax}</T>
+              </View>
+            </MenuOption>            
+            <MenuOption value={options[2].value} style={styles.menuOption}>
+              <View style={[styles.menuOptionItem]}>
+                <T style={[styles.optionText]}>{options[2].syntax}</T>
               </View>
             </MenuOption>
-            <MenuOption value={options[2]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, b('green')]}>
-                {/* <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive, b('red')]} /> */}
-                <T style={[styles.optionText]}>{options[2]}</T>
+            <MenuOption value={options[3].value} style={styles.menuOption}>
+              <View style={[styles.menuOptionItem]}>
+                {/* <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive]} /> */}
+                <T style={[styles.optionText]}>{this.state.archiveSyntax}</T>
               </View>
             </MenuOption>
-            <MenuOption value={options[3]} style={styles.menuOption}>
-              <View style={[styles.menuOptionItem, b('green')]}>
-                <FAIcon name='trash-o' size={24} style={[styles.optionIcon, styles.trashIcon, b('red')]} />
-                <T style={[styles.optionText]}>{options[3]}</T>
+            <MenuOption value={options[4].value} style={styles.menuOption}>
+              <View style={[styles.menuOptionItem]}>
+                <T style={[styles.optionText]}>{options[4].syntax}</T>
               </View>
             </MenuOption>
           </MenuOptions>

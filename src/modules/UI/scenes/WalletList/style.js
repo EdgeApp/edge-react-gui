@@ -18,7 +18,7 @@ module.exports = StyleSheet.create({
     alignItems: 'stretch'
   },
   totalBalanceBox: { // one
-    flex: 3,
+    height: 111,
     justifyContent: 'center'
   },
   totalBalanceWrap: {
@@ -52,7 +52,7 @@ module.exports = StyleSheet.create({
   },
   // bottom major portion of screen
   walletsBox: { // one
-    flex: 9
+    flex: 1
   },
   walletsBoxHeaderWrap: {
     padding: 12,
@@ -73,6 +73,11 @@ module.exports = StyleSheet.create({
     color: 'white',
     backgroundColor: 'transparent',
     marginLeft: 16
+  },
+  walletsBoxDoneText: {
+    fontSize: 18,
+    color: 'white',
+    backgroundColor: 'transparent',    
   },
   walletsBoxHeaderAddWallet: {
     flexDirection: 'row',
@@ -111,15 +116,14 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   sortableWalletList: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignContent: 'stretch'
   },
   rowContainer: {
-    flex: 1,
-    height: 50,
+    padding: 6,
     paddingLeft: 16,
+    marginRight: 4,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderColor: '#EEE'
@@ -152,12 +156,22 @@ module.exports = StyleSheet.create({
   },
   rowDotsWrap: {
     flexDirection: 'row',
-    width: 44
+    width: 46
+  },
+  rowDragArea: {
+    paddingLeft: 16,
+    justifyContent: 'center',
+    marginRight: 14
+  },
+  rowDragIcon: {
+    position: 'relative',
+    top: 16
   },
   menuTrigger: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 10
+    paddingLeft: 14,
+    paddingRight: 10
   },
   // beginning of options component
   menuOption: {
@@ -167,10 +181,6 @@ module.exports = StyleSheet.create({
   },
   menuOptionItem: {
     flexDirection: 'row'
-  },
-  optionIcon: {
-    color: c.gray1,
-    marginRight: 10
   },
   optionText: {
     color: c.gray1,
@@ -207,7 +217,8 @@ module.exports = StyleSheet.create({
       ? 26
       : 46,
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
+    color: c.gray1
   },
   emptyBottom: {
     flex: 1

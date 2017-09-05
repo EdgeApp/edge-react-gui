@@ -3,6 +3,8 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
+import {colors as c} from '../../../../theme/variables/airbitz.js'
+
 
 module.exports = StyleSheet.create({
   container: {
@@ -151,7 +153,8 @@ module.exports = StyleSheet.create({
   addressInput: {
     height: 26,
     textAlign: 'center',
-    fontSize: 20
+    fontSize: 20,
+    color: c.gray1
   },
   pasteButtonRow: {
     paddingTop: 12
