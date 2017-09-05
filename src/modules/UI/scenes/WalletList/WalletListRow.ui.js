@@ -130,7 +130,7 @@ class FullWalletListRow extends Component {
   renderTokenRow = (metaTokenBalances) => {
     var tokens = []
     for (var property in metaTokenBalances) {
-      if (property !== this.props.data.currencyCode) {
+      if (property !== this.props.data.item.currencyCode) {
         tokens.push(
           <WalletListTokenRow parentId={this.props.data.id}
             currencyCode={property} key={property} balance={metaTokenBalances[property]} active={this.props.active} />)
