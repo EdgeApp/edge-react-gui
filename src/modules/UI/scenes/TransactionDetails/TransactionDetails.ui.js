@@ -60,7 +60,7 @@ class TransactionDetails extends Component {
       }
     }
 
-    let amountFiat = Math.abs(this.props.tx.metadata.amountFiat.toPrecision(2)).toString() || '0'
+    let amountFiat = this.props.tx.metadata.amountFiat || '0'
 
     this.state = {
       tx: this.props.tx,
@@ -529,7 +529,7 @@ class AmountArea extends Component {
           </View>
           <View style={[b(), styles.amountAreaMiddle]}>
             <View style={[b(), styles.amountAreaMiddleTop]}>
-              <T style={[b(), styles.amountAreaMiddleTopText]}>{bns.divf(this.props.info.tx.nativeAmount, this.props.walletDefaultDenomProps.multiplier).toFixed(6)}</T>
+              <T style={[b(), styles.amountAreaMiddleTopText]}>{Math.abs(parseFloat(bns.divf(this.props.info.tx.nativeAmount, this.props.walletDefaultDenomProps.multiplier).toFixed(6)))}</T>
             </View>
             <View style={[b(), styles.amountAreaMiddleBottom]}>
               <T style={[b(), styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</T>

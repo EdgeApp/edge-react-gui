@@ -411,10 +411,10 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, txColorStyle]}>
-                {this.props.displayDenomination.symbol} {UTILS.truncateDecimals(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount), 6)}
+                {this.props.displayDenomination.symbol} {Math.abs(parseFloat(UTILS.truncateDecimals(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount), 6)))}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2) : 0.00)}
+                {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2) : (0.00).toFixed(2))}
               </T>
             </View>
           </View>
