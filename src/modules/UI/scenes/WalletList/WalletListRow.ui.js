@@ -15,7 +15,7 @@ import T from '../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRow.ui'
 import {border as b, cutOffText} from '../../../utils'
-import {selectWallet} from '../../Wallets/action.js'
+import { selectWallet } from '../../Wallets/action.js'
 import sort from '../../../../assets/images/walletlist/sort.png'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -31,10 +31,10 @@ export const findDenominationSymbol = (denoms, value) => {
 
 class SortableWalletListRow extends Component {
 
-  /* _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet(walletId, currencyCode))
+  _onPressSelectWallet = (walletId, currencyCode) => {
+    this.props.dispatch(selectWallet({ walletId, currencyCode }))
     Actions.transactionList({ params: 'walletList' })
-  } */
+  }
 
   render () {
     console.log('rendering walltListRow, this is: ', this)
@@ -62,7 +62,7 @@ class SortableWalletListRow extends Component {
                 ({symbol || ''})</T>
             </View>
             <View style={[styles.rowDragArea, b()]}>
-              <Image 
+              <Image
                 source={sort}
                 style={{height: 15, width: 15}}
               />
@@ -76,7 +76,7 @@ class SortableWalletListRow extends Component {
 
 export const SortableWalletListRowConnect =  connect((state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.currencyCode)
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.currencyCode)    
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.currencyCode)
   return {
     dimensions: state.ui.scenes.dimensions,
     displayDenomination,
@@ -87,7 +87,7 @@ export const SortableWalletListRowConnect =  connect((state, ownProps) => {
 class FullWalletListRow extends Component {
 
   _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet(walletId, currencyCode))
+    this.props.dispatch(selectWallet({ walletId, currencyCode }))
     Actions.transactionList({ params: 'walletList' })
   }
 
@@ -142,8 +142,8 @@ class FullWalletListRow extends Component {
 
 export const FullWalletListRowConnect =  connect((state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)  
-  
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+
   return {
     dimensions: state.ui.scenes.dimensions,
     displayDenomination,

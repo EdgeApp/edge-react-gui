@@ -16,6 +16,13 @@ export const settings = (state = initialState, action) => {
   const { type, data = {} } = action
 
   switch (type) {
+  case ACTION.ADD_USERNAMES: {
+    const { usernames } = data
+    return {
+      ...state,
+      usernames
+    }
+  }
   case ACTION.UPDATE_SETTINGS: {
     const { settings } = data
     return settings

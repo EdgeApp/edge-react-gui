@@ -13,7 +13,10 @@ import {border as b} from '../../../../utils'
 
 class Body extends Component {
   render () {
-    switch (this.props.routes.scene.sceneKey) {
+    const sceneIndex = this.props.routes.scene.index
+    const sceneName = this.props.routes.scene.children[sceneIndex].name
+
+    switch (sceneName) {
     case 'scan':
       return <ExampleFromWalletConnect walletList={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
@@ -49,7 +52,10 @@ export default connect(mapStateToProps)(Body)
 
 class DefaultHeader extends Component {
   _renderTitle = () => {
-    return this.props.routes.scene.title || sprintf(strings.enUS['title_Header'])
+    const sceneIndex = this.props.routes.scene.index
+    const title = this.props.routes.scene.children[sceneIndex].title
+
+    return title || sprintf(strings.enUS['title_Header'])
   }
 
   render () {

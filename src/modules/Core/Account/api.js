@@ -1,4 +1,33 @@
 // Core/Account/api.js
+import * as UTILS from '../../utils'
+
+export const getFirstActiveWalletInfo = (account) => {
+  const walletId = account.activeWalletIds[0]
+  const walletKey = account.allKeys.find(key => {
+    return key.id === walletId
+  })
+  const currencyCode = UTILS.getCurrencyCodeFromWalletType(walletKey.type)
+  return {
+    walletId,
+    currencyCode
+  }
+}
+
+export const getSecondActiveWalletInfo = (account) => {
+  const walletId = account.activeWalletIds[1]
+  const walletKey = account.allKeys.find(key => {
+    return key.id === walletId
+  })
+  const currencyCode = UTILS.getCurrencyCodeFromWalletType(walletKey.type)
+  return {
+    walletId,
+    currencyCode
+  }
+}
+
+export const getWallet = (account, walletId) => {
+  return account.currencyWallets[walletId]
+}
 
 export const logout = account => {
   return account.logout()

@@ -1,6 +1,8 @@
 // UI/Settings
 const PREFIX = 'UI/Settings/'
 
+export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
+
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'
 export const LOAD_SETTINGS = PREFIX + 'LOAD_SETTINGS'
 
@@ -31,6 +33,13 @@ export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
+
+export const addUsernames = (usernames) => {
+  return {
+    type: ADD_USERNAMES,
+    data: { usernames }
+  }
+}
 
 export const updateSettings = settings => {
   return {
