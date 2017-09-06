@@ -280,7 +280,7 @@ class TransactionList extends Component {
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.displayDenomination.symbol} {cryptoAmount || '0'}
+                                {this.props.displayDenomination.symbol} {UTILS.truncateDecimals(cryptoAmount.toString(), 6) || '0'}
                               </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
@@ -414,7 +414,7 @@ class TransactionList extends Component {
                 {this.props.displayDenomination.symbol} {UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount)}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {tx.metadata.amountFiat && this.props.fiatSymbol + ' ' + UTILS.truncateDecimals(tx.metadata.amountFiat.toString(), 2)}
+                {tx.metadata.amountFiat && this.props.fiatSymbol + ' ' + UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2)}
               </T>
             </View>
           </View>

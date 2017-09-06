@@ -354,7 +354,7 @@ class TransactionDetails extends Component {
       feeSyntax = ''
       leftData = { color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income']) }
     } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)
+      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
       leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
     }
     let color = type.color

@@ -14,7 +14,7 @@ import styles from './style'
 import T from '../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRow.ui'
-import {border as b, cutOffText} from '../../../utils'
+import {border as b, cutOffText, truncateDecimals} from '../../../utils'
 import {selectWallet} from '../../Wallets/action.js'
 import sort from '../../../../assets/images/walletlist/sort.png'
 
@@ -51,7 +51,7 @@ class SortableWalletListRow extends Component {
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>{bns.divf(walletData.primaryNativeBalance, multiplier)}</T>
+              <T style={[styles.rowBalanceAmountText]}>{truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}</T>
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
@@ -108,7 +108,7 @@ class FullWalletListRow extends Component {
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
               <T style={[styles.rowBalanceAmountText]}>
-                {bns.divf(walletData.primaryNativeBalance, multiplier)}
+                {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
               </T>
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
