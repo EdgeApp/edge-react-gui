@@ -68,7 +68,7 @@ class TransactionDetails extends Component {
       thumbnailPath: this.props.thumbnailPath,
       category: this.props.tx.metadata.category,
       notes: this.props.tx.metadata.notes,
-      amountFiat: this.props.tx.metadata.amountFiat,
+      amountFiat: Math.abs(this.props.tx.metadata.amountFiat.toPrecision(2)).toString(),
       bizId: 0,
       miscJson: this.props.tx.miscJson || null,
       dateTimeSyntax: dateString + ' ' + timeString,
@@ -694,9 +694,6 @@ class SubCategorySelect extends Component {
   keyExtractor = (item, index) => {
     return index
   }
-}
-SubCategorySelect.propTypes = {
-
 }
 
 export const SubCategorySelectConnect = connect(state => ({
