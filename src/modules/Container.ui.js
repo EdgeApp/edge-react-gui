@@ -125,36 +125,36 @@ class Main extends Component {
           <View style={styles.statusBarHack}>
             <Container onLayout={this._onLayout}>
 
-              <StatusBar backgroundColor='green' barStyle='light-content' />
+              <StatusBar translucent backgroundColor='green' barStyle='light-content' />
 
-                <RouterWithRedux>
-                  <Scene key='root' hideNavBar>
-                    <Scene key='login' initial component={Login} animation={'fade'} duration={600} />
+              <RouterWithRedux>
+                <Scene key='root' hideNavBar>
+                  <Scene key='login' initial component={Login} animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
+                  <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
 
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={600} />
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
 
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='scan' component={Scan} title='Scan' animation={'fade'} duration={600} />
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='scan' component={Scan} title='Scan' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
 
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='request' component={Request} title='Request' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='request' component={Request} title='Request' animation={'fade'} duration={600} />
 
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                      {/* <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} /> */}
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
+                    {/* <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} /> */}
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
 
-                      <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='directory' component={Directory} title='Directory' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='directory' component={Directory} title='Directory' animation={'fade'} duration={600} />
 
-                    </Scene>
                   </Scene>
-                </RouterWithRedux>
+                </Scene>
+              </RouterWithRedux>
 
             </Container>
           </View>

@@ -5,6 +5,7 @@ import { Text } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 
 import { closeSidebar } from '../../SideMenu/action'
+import { logout } from '../../../../Login/action'
 import UserList from './UserList'
 
 import styles from '../style'
@@ -18,6 +19,11 @@ import settings from '../../../../../assets/images/sidenav/settings.png'
 import spend from '../../../../../assets/images/sidenav/spend.png'
 
 class MainComponent extends Component {
+  onLogout = ({ username }) => {
+    console.log('logout')
+    this.props.logout({ username })
+  }
+
   render () {
     return this.props.usersView ? <UserList /> : (
       <View style={{flex: 1}}>
@@ -85,7 +91,7 @@ class MainComponent extends Component {
           </TouchableHighlight>
         </ScrollView>
         <View style={styles.others.container}>
-          <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
+          <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this.onLogout}>
             <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={logoutImage} />
@@ -157,7 +163,7 @@ const mapStateToProps = state => ({
   usersView: state.ui.scenes.controlPanel.usersView
 })
 const mapDispatchToProps = dispatch => ({
-  logout: () => Actions.login(), //dispatch(logout()),
+  logout: ({ username }) => dispatch(logout({ username })),
   dispatch: (props) => dispatch(props)
 })
 

@@ -23,14 +23,19 @@ const HelpButtonConnect = connect()(HelpButton)
 export default class Right extends Component {
 
   render () {
-    switch (this.props.routes.scene.sceneKey) {
+    const children = this.props.routes.scene.children
+    const sceneName = children ?
+      this.props.routes.scene.children[this.props.routes.scene.index].name :
+      null
+
+    switch (sceneName) {
     case 'scan':
       return <HelpButtonConnect />
     case 'walletList':
       return <HelpButtonConnect />
     case 'directory':
       return <HelpButtonConnect />
-    case 'transactions':
+    case 'transactionsList':
       return <HelpButtonConnect />
     case 'transactionDetails':
       return <HelpButtonConnect />

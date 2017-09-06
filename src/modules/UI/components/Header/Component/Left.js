@@ -8,7 +8,14 @@ import styles from '../style'
 
 export default class Left extends Component {
   render () {
-    switch (this.props.routes.scene.sceneKey) {
+    const children = this.props.routes.scene.children
+    const sceneName = children ?
+      this.props.routes.scene.children[this.props.routes.scene.index].name :
+      null
+
+    switch (sceneName) {
+    case 'walletList':
+      return <BackButton />
     case 'directory':
       return <BackButton />
     case 'sendConfirmation':
@@ -16,7 +23,7 @@ export default class Left extends Component {
     case 'createWallet':
       return <BackButton syntax='Cancel' />
     case 'transactionList':
-      return this.props.routes.scene.params === 'walletList' ? <BackButton /> : null
+      return null
     case 'btcSettings':
       return <BackButton syntax='Back' />
     case 'ethSettings':

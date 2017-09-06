@@ -3,6 +3,7 @@ import { Alert, Platform, View, ScrollView, TouchableNativeFeedback, TouchableOp
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import _ from 'lodash'
+import { logout } from '../../../../Login/action'
 
 import styles from '../style'
 const platform = Platform.OS
@@ -12,7 +13,9 @@ import * as CONTEXT_API from '../../../../Core/Context/api.js'
 
 class UserListComponent extends Component {
 
-  _handlePressUserSelect = () => {}
+  _handlePressUserSelect = ({ username }) => {
+    this.props.logout({ username })
+  }
 
   _handleDeleteLocalAccount = (username) => {
     this.props.deleteLocalAccount(username)
@@ -34,7 +37,7 @@ class UserListComponent extends Component {
       if (platform === 'android') {
         return (
           <View key={index} style={styles.userList.row}>
-            <TouchableNativeFeedback onPress={() => this._handlePressUserSelect(username)}
+            <TouchableNativeFeedback onPress={() => this._handlePressUserSelect({ username })}
               background={TouchableNativeFeedback.SelectableBackground()} >
               <Text style={styles.userList.text}>{username}</Text>
             </TouchableNativeFeedback>
@@ -72,6 +75,7 @@ const mapStateToProps = state => ({
   usernames: CORE_SELECTORS.getUsernames(state)
 })
 const mapDispatchToProps = dispatch => ({
+  logout: ({ username }) => { dispatch(logout({ username }))},
   deleteLocalAccount: (username) => { dispatch(CONTEXT_API.deleteLocalAccount(username)) }
 })
 

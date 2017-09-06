@@ -13,8 +13,11 @@ import {border as b} from '../../../../utils'
 
 class Body extends Component {
   render () {
-    const sceneIndex = this.props.routes.scene.index
-    const sceneName = this.props.routes.scene.children[sceneIndex].name
+    const scene = this.props.routes.scene
+    const children = scene.children
+    const sceneName = children ?
+      this.props.routes.scene.children[this.props.routes.scene.index].name :
+      null
 
     switch (sceneName) {
     case 'scan':
@@ -52,8 +55,12 @@ export default connect(mapStateToProps)(Body)
 
 class DefaultHeader extends Component {
   _renderTitle = () => {
-    const sceneIndex = this.props.routes.scene.index
-    const title = this.props.routes.scene.children[sceneIndex].title
+    const scene = this.props.routes.scene
+    const children = scene.children
+    const sceneIndex = scene.index
+    const title = children ?
+      this.props.routes.scene.children[sceneIndex].title :
+      null
 
     return title || sprintf(strings.enUS['title_Header'])
   }

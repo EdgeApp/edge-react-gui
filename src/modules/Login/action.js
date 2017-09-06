@@ -5,7 +5,17 @@ import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
+import * as CORE_SELECTORS from '../Core/selectors'
+import { Actions } from 'react-native-router-flux'
 
+export const logout = ({ username } = { username: '' }) => {
+  (dispatch, getState) => {
+    const state = getState()
+    const account = CORE_SELECTORS.getAccount(state)
+    ACCOUNT_API.logout(account)
+    Actions.login({ username })
+  }
+}
 
 export const initializeAccount = (account) => {
   return (dispatch) => {
