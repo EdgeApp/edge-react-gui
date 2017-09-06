@@ -411,7 +411,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, txColorStyle]}>
-                {this.props.displayDenomination.symbol} {UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount)}
+                {this.props.displayDenomination.symbol} {UTILS.truncateDecimals(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount), 6)}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
                 {tx.metadata.amountFiat && this.props.fiatSymbol + ' ' + UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2)}
