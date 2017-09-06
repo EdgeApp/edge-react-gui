@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Platform, View, ScrollView, TouchableNativeFeedback, TouchableHighlight, Image } from 'react-native'
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+import strings from '../../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 
 import { closeSidebar } from '../../SideMenu/action'
 import UserList from './UserList'
@@ -39,10 +41,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Buy/Sell Digital Currency
+                      {sprintf(strings.enUS['drawer_buy_sell_digital_currency'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      i.e Bitcoin/Ether
+                      {sprintf(strings.enUS['drawer_ie_bitcoin_ether'])}
                     </T>
                   </View>
                 </View>
@@ -54,10 +56,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Spend Bitcoins
+                      {sprintf(strings.enUS['drawer_spend_bitcoin'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      Plugins
+                      {sprintf(strings.enUS['drawer_plugins'])}
                     </T>
                   </View>
                 </View>
@@ -69,10 +71,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Refer Your Friends
+                      {sprintf(strings.enUS['drawer_refer_friends'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      Earn Money
+                      {sprintf(strings.enUS['drawer_earn_money'])}
                     </T>
                   </View>
                 </View>
@@ -84,10 +86,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Directory
+                      {sprintf(strings.enUS['drawer_directory'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      Find Local Business
+                      {sprintf(strings.enUS['drawer_find_local_business'])}
                     </T>
                   </View>
                 </View>
@@ -101,7 +103,7 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.others.textContainer}>
                     <T style={styles.others.text}>
-                      Logout
+                      {sprintf(strings.enUS['drawer_logout'])}
                     </T>
                   </View>
                 </View>
@@ -113,7 +115,7 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.others.textContainer}>
                     <T style={styles.others.text}>
-                      Settings
+                      {sprintf(strings.enUS['drawer_settings'])}
                     </T>
                   </View>
                 </View>
@@ -135,10 +137,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Buy/Sell Digital Currency
+                      {sprintf(strings.enUS['drawer_buy_sell_digital_currency'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      i.e Bitcoin/Ether
+                      {sprintf(strings.enUS['drawer_ie_bitcoin_ether'])}
                     </T>
                   </View>
                 </View>
@@ -150,10 +152,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Spend Bitcoins
+                      {sprintf(strings.enUS['drawer_spend_bitcoin'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      Plugins
+                      {sprintf(strings.enUS['drawer_plugins'])}
                     </T>
                   </View>
                 </View>
@@ -165,10 +167,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Refer Your Friends
+                      {sprintf(strings.enUS['drawer_refer_friends'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      Earn Money
+                      {sprintf(strings.enUS['drawer_earn_money'])}
                     </T>
                   </View>
                 </View>
@@ -180,10 +182,10 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.main.textContainer}>
                     <T style={styles.main.text}>
-                      Directory
+                      {sprintf(strings.enUS['drawer_directory'])}
                     </T>
                     <T style={styles.main.textItalic}>
-                      Find Local Business
+                      {sprintf(strings.enUS['drawer_find_local_business'])}
                     </T>
                   </View>
                 </View>
@@ -197,7 +199,7 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.others.textContainer}>
                     <T style={styles.others.text}>
-                      Logout
+                      {sprintf(strings.enUS['drawer_logout'])}
                     </T>
                   </View>
                 </View>
@@ -209,7 +211,7 @@ class MainComponent extends Component {
                   </View>
                   <View style={styles.others.textContainer}>
                     <T style={styles.others.text}>
-                      Settings
+                      {sprintf(strings.enUS['drawer_settings'])}
                     </T>
                   </View>
                 </View>
@@ -249,10 +251,10 @@ class MainComponent extends Component {
             </View>
             <View style={styles.main.textContainer}>
               <T style={styles.main.text}>
-                Secure Your Account
+                {sprintf(strings.enUS['two_fa_secure_your_account'])}
               </T>
               <T style={styles.main.textItalic}>
-                Enable 2FA / Set Password Recovery
+                {sprintf(strings.enUS['two_fa_enable_2fa'])}
               </T>
             </View>
           </View>
@@ -269,10 +271,10 @@ class MainComponent extends Component {
             </View>
             <View style={styles.main.textContainer}>
               <T style={styles.main.text}>
-                Secure Your Account
+                {sprintf(strings.enUS['two_fa_secure_your_account'])}
               </T>
               <T style={styles.main.textItalic}>
-                Enable 2FA / Set Password Recovery
+                {sprintf(strings.enUS['two_fa_enable_2fa'])}
               </T>
             </View>
           </View>

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { View, TouchableOpacity, Image } from 'react-native'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
@@ -38,7 +40,7 @@ class ControlPanel extends Component {
 
     return exchangeRate === 0
       ? <T style={styles.bitcoin.value}>
-          Exchange Rate loading
+          {sprintf(strings.enUS['drawer_exchange_rate_loading'])}
         </T>
       : <T style={styles.bitcoin.value}>
           <ExchangeRate
