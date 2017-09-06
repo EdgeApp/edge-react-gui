@@ -110,8 +110,7 @@ class FullWalletListRow extends Component {
               <T style={[styles.rowBalanceAmountText]}>
                 {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
               </T>
-              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
-                ({symbol || ''})</T>
+              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode} ({symbol || ''})</T>
             </View>
             <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
           </View>
