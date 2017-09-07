@@ -146,8 +146,8 @@ class WalletList extends Component {
         </View>
 
         <View style={styles.walletsBox}>
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap]} colors={[c.gradient.light, c.gradient.dark]}>
-            <View style={[styles.walletsBoxHeaderTextWrap]}>
+          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
+            <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
@@ -157,16 +157,16 @@ class WalletList extends Component {
             </View>
 
               {this.state.sortableMode ? (
-                <Animated.View style={[{opacity: this.state.sortableListOpacity}]}>
-                  <TouchableOpacity style={[{}]} onPress={() => this.disableSorting()}>
+                <Animated.View style={[{opacity: this.state.sortableListOpacity}, UTILS.border()]}>
+                  <TouchableOpacity style={[]} onPress={() => this.disableSorting()}>
                     <T style={[styles.walletsBoxDoneText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
                   </TouchableOpacity>
                 </Animated.View>
                 ) : (
-                <Animated.View style={[{opacity: this.state.fullListOpacity}]}>
-                  <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 35}]}
+                <Animated.View style={[UTILS.border(), {opacity: this.state.fullListOpacity}]}>
+                  <TouchableOpacity style={[UTILS.border(), styles.walletsBoxHeaderAddWallet, {width: 41}]}
                     onPress={() => Actions.createWallet()}>                  
-                      <Ionicon name='md-add' style={[styles.dropdownIcon]} color='white' />
+                      <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                   </TouchableOpacity>
                 </Animated.View>
               )}

@@ -82,13 +82,12 @@ module.exports = StyleSheet.create({
   walletsBoxHeaderAddWallet: {
     flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingLeft: 8
   },
   dropdownIcon: {
     textAlignVertical: 'center',
     alignSelf: 'center',
-    height: 24,
-    fontSize: 24,
     backgroundColor: 'transparent'
   },
   archiveBoxHeaderWrap: {
