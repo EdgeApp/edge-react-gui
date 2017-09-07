@@ -115,8 +115,7 @@ class WalletList extends Component {
   }
 
   render () {
-    console.log('beginning of walletList render, this.state is: ', this.state)
-    console.log('entering walletList render, this.props.wallets is: ', this.props.wallets)
+    console.log('beginning of walletList render, this is: ', this.state)
     const {wallets} = this.props
     let walletsArray = []
     for (var wallet in wallets) {
@@ -139,7 +138,7 @@ class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                $ {this.tallyUpTotalCrypto()} 
+                {this.props.settings.defaultISOFiat ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat) : ''} {this.tallyUpTotalCrypto()} 
               </T>
             </View>
           </View>
@@ -210,7 +209,6 @@ class WalletList extends Component {
   }
 
   renderActiveRow = (row) => {
-    console.log('executing renderActiveRow, row is: ', row)
     return <SortableWalletListRow data={row} />
   }
 
@@ -282,7 +280,6 @@ class WalletList extends Component {
         return wallets[a].sortIndex - wallets[b].sortIndex
       }
     }) // sort them according to their (previous) sortIndices
-    console.log('inside sortActiveWallets, wallets is: ', wallets, ' , activeOrdered is now: ', activeOrdered)
     return activeOrdered
   }
 
