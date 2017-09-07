@@ -11,6 +11,7 @@ import {
   TextInput
 } from 'react-native'
 import T from '../../components/FormattedText'
+import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import styles from './styles.js'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -176,23 +177,20 @@ const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
   return (
     <View style={styles.buttons}>
 
-      <TouchableOpacity
+      <SecondaryButton
         style={[styles.cancel]}
         disabled={isCreatingWallet}
-        onPress={onCancel}>
-        <T style={styles.buttonText}>{CANCEL_TEXT}</T>
-      </TouchableOpacity>
+        onPressFunction={onCancel} 
+        text={CANCEL_TEXT} />
 
-      <TouchableOpacity
+      <PrimaryButton
         style={[styles.submit]}
         disabled={isCreatingWallet}
-        onPress={onDone}>
-        {
-          isCreatingWallet ?
-          <ActivityIndicator /> :
-          <T style={styles.buttonText}>{DONE_TEXT}</T>
-        }
-      </TouchableOpacity>
+        onPressFunction={onDone}
+        text={DONE_TEXT}
+        processingFlag={isCreatingWallet}
+        processingElement={<ActivityIndicator />}
+      />
 
     </View>
   )
