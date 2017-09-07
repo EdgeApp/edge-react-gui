@@ -35,7 +35,8 @@ class CreateWallet extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      isCreatingWallet: false
+      isCreatingWallet: false,
+      walletInfoValid: false
     }
   }
 
@@ -177,6 +178,7 @@ const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
 
       <TouchableOpacity
         style={[styles.cancel]}
+        disabled={isCreatingWallet}
         onPress={onCancel}>
         <T style={styles.buttonText}>{CANCEL_TEXT}</T>
       </TouchableOpacity>
