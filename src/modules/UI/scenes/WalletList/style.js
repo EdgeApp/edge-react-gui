@@ -4,6 +4,7 @@ import {
   Platform
 } from 'react-native'
 import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
+import platform from '../../../../theme/variables/platform.js'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
@@ -55,12 +56,15 @@ module.exports = StyleSheet.create({
     flex: 1
   },
   walletsBoxHeaderWrap: {
-    padding: 12,
+    paddingLeft: 12,
+    paddingRight: 6,
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 50
   },
-  walletsBoxHeaderTextWrap: {},
+  walletsBoxHeaderTextWrap: {
+    paddingVertical: 12
+  },
   leftArea: {
     flexDirection: 'row'
   },
@@ -74,16 +78,28 @@ module.exports = StyleSheet.create({
     backgroundColor: 'transparent',
     marginLeft: 16
   },
+  donePlusContainer: {
+    minWidth: 48,
+    height: '100%'
+  },
+  walletsBoxDoneTextWrap: {
+    paddingVertical: 12
+  },
   walletsBoxDoneText: {
     fontSize: 18,
     color: 'white',
-    backgroundColor: 'transparent',    
+    backgroundColor: 'transparent',
+    top: 0,
+    left: 0  
   },
   walletsBoxHeaderAddWallet: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingLeft: 8
+    top: 0,
+    left: 0,
+    height: '100%',
+    paddingVertical: 12
   },
   dropdownIcon: {
     textAlignVertical: 'center',
@@ -98,7 +114,9 @@ module.exports = StyleSheet.create({
     justifyContent: 'space-between',
     height: 50
   },
-  archiveBoxHeaderTextWrap: {},
+  archiveBoxHeaderTextWrap: {
+
+  },
   archiveIcon: {
     backgroundColor: 'transparent',
     fontSize: 28
@@ -117,6 +135,17 @@ module.exports = StyleSheet.create({
   sortableWalletList: {
     flexDirection: 'column',
     alignContent: 'stretch'
+  },
+  listsContainer: {
+
+  },
+  sortableList: {
+    position: 'absolute',
+    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 111 - 50,
+  },
+  fullList: {
+    position: 'absolute',
+    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 111 - 50,
   },
   rowContainer: {
     padding: 6,

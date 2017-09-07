@@ -50,14 +50,16 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as UTILS from '../../../utils'
 
 class WalletList extends Component {
-  state: { sortableMode: boolean , sortableListOpacity: number, fullListOpacity: number}
+  state: { sortableMode: boolean , sortableListOpacity: number, fullListOpacity: number, sortableListZIndex: number, fullListZIndex: number}
 
   constructor(props) {
     super(props)
     this.state = {
       sortableMode: false,
       sortableListOpacity: new Animated.Value(0),
-      fullListOpacity: new Animated.Value(1)
+      sortableListZIndex: new Animated.Value(0),
+      fullListOpacity: new Animated.Value(1),
+      fullListZIndex: new Animated.Value(100)
     }
     console.log('end of walletList constructor, this.state is: ', this.state)
   }
@@ -144,7 +146,7 @@ class WalletList extends Component {
           </View>
         </View>
 
-        <View style={styles.walletsBox}>
+        <View style={[styles.walletsBox]}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
@@ -154,21 +156,19 @@ class WalletList extends Component {
                 </T>
               </View>
             </View>
-
-              {this.state.sortableMode ? (
-                <Animated.View style={[{opacity: this.state.sortableListOpacity}, UTILS.border()]}>
-                  <TouchableOpacity style={[]} onPress={() => this.disableSorting()}>
-                    <T style={[styles.walletsBoxDoneText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
-                  </TouchableOpacity>
-                </Animated.View>
-                ) : (
-                <Animated.View style={[UTILS.border(), {opacity: this.state.fullListOpacity}]}>
-                  <TouchableOpacity style={[UTILS.border(), styles.walletsBoxHeaderAddWallet, {width: 41}]}
-                    onPress={() => Actions.createWallet()}>                  
-                      <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
-                  </TouchableOpacity>
-                </Animated.View>
-              )}
+            <View style={[styles.donePlusContainer, UTILS.border()]}>
+              <Animated.View style={[UTILS.border(), {position: 'absolute', opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
+                <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]} onPress={() => this.disableSorting()}>
+                  <T style={[styles.walletsBoxDoneText, UTILS.border()]}>{sprintf(strings.enUS['string_done_cap'])}</T>
+                </TouchableOpacity>
+              </Animated.View>
+              <Animated.View style={[UTILS.border(), {position: 'absolute', opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
+                <TouchableOpacity style={[UTILS.border(), styles.walletsBoxHeaderAddWallet, {width: 41}]}
+                  onPress={() => Actions.createWallet()}>                  
+                    <Ionicon name='md-add' style={[UTILS.border(), styles.dropdownIcon]} size={28} color='white' />
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
           </LinearGradient>
           {Object.keys(wallets).length > 0 ? this.renderActiveSortableList(walletsArray) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
         </View>
@@ -177,9 +177,9 @@ class WalletList extends Component {
   }
 
   renderActiveSortableList = (walletsArray) => {
-    if(this.state.sortableMode) {
-      return (
-        <Animated.View style={[{flex: 1, opacity: this.state.sortableListOpacity}]}>
+    return (
+      <View style={[styles.listsContainer, UTILS.border()]}>
+        <Animated.View style={[{flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
           <SortableListView
             style={{ flex: 1}}
             data={this.props.wallets}
@@ -192,9 +192,7 @@ class WalletList extends Component {
             activeOpacity={0.6}
           />
         </Animated.View>
-      )} else {
-      return (
-        <Animated.View style={[{flex: 1, opacity: this.state.fullListOpacity}]}>
+        <Animated.View style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
           <FlatList
             style={{ flex: 1}}          
             data={walletsArray}
@@ -204,8 +202,8 @@ class WalletList extends Component {
             executeWalletRowOption={this.executeWalletRowOption}
           />
         </Animated.View>
-      )
-    }
+      </View>
+    )
   }
 
   renderActiveRow = (row) => {
@@ -214,44 +212,81 @@ class WalletList extends Component {
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
+    console.log('enabling sorting, this is: ', this)
     let sortableToOpacity = 1
+    let sortableListToZIndex = 100    
     let fullListToOpacity = 0
+    let fullListToZIndex = 0
 
-    Animated.timing(
-      this.state.fullListOpacity,
-      {
-        toValue: fullListToOpacity,
-        timing: 50
-      }
-    ).start(() => this.setState({sortableMode: true}, () => {
+    Animated.parallel([
       Animated.timing(
         this.state.sortableListOpacity,
         {
           toValue: sortableToOpacity,
-          duration: 50
+          timing: 300
         }
-      ).start()
-    }))
-  }
-
-  disableSorting = () => {
-    let sortableToOpacity = 0
-    let fullListToOpacity = 1  
-    Animated.timing(
-      this.state.sortableListOpacity,
-      {
-        toValue: sortableToOpacity,
-        timing: 50
-      }
-    ).start(() => this.setState({sortableMode: false}, () => {
+      ),
+      Animated.timing(
+        this.state.sortableListZIndex,
+        {
+          toValue: sortableListToZIndex,
+          timing: 300
+        }
+      ),
       Animated.timing(
         this.state.fullListOpacity,
         {
           toValue: fullListToOpacity,
-          duration: 50
+          timing: 300
         }
-      ).start()
-    }))  
+      ),
+      Animated.timing(
+        this.state.fullListZIndex,
+        {
+          toValue: fullListToZIndex,
+          timing: 300
+        }
+      )
+    ]).start()
+  }
+
+  disableSorting = () => {
+    console.log('disabling sorting')
+    let sortableToOpacity = 0
+    let sortableListToZIndex = 0
+    let fullListToOpacity = 1
+    let fullListToZIndex = 100
+
+    Animated.parallel([
+      Animated.timing(
+        this.state.sortableListOpacity,
+        {
+          toValue: sortableToOpacity,
+          timing: 300
+        }
+      ),
+      Animated.timing(
+        this.state.sortableListZIndex,
+        {
+          toValue: sortableListToZIndex,
+          timing: 300
+        }
+      ),
+      Animated.timing(
+        this.state.fullListOpacity,
+        {
+          toValue: fullListToOpacity,
+          timing: 300
+        }
+      ),
+      Animated.timing(
+        this.state.fullListZIndex,
+        {
+          toValue: fullListToZIndex,
+          timing: 300
+        }
+      )
+    ]).start()
   }
 
   renderArchivedSortableList = (data, order, label, renderRow) => {
