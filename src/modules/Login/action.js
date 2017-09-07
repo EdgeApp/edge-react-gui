@@ -6,20 +6,36 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 import * as CORE_SELECTORS from '../Core/selectors'
+import * as UI_SELECTORS from '../UI/Settings/selectors'
 import { Actions } from 'react-native-router-flux'
+import { removeExchangeTimer } from '../UI/Settings/action'
 
-export const logout = ({ username } = { username: '' }) => {
-  (dispatch, getState) => {
+export const logout = (username) => {
+  return (dispatch, getState) => {
     const state = getState()
     const account = CORE_SELECTORS.getAccount(state)
+
+    const exchangeTimer = UI_SELECTORS.getExchangeTimer(state)
+    dispatch(removeExchangeTimer(exchangeTimer))
+
+    dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
+
     ACCOUNT_API.logout(account)
-    Actions.login({ username })
+    .then(() => {
+      Actions.login({ username })
+      console.log('account.appid', account.appId)
+      dispatch({
+        type: 'LOGOUT',
+        data: null
+      })
+    })
   }
 }
 
 export const initializeAccount = (account) => {
   return (dispatch) => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
+    dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
     const {
       walletId,
       currencyCode

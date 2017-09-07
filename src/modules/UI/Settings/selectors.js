@@ -6,6 +6,17 @@ export const getSettings = (state: any) => {
   return settings
 }
 
+export const getLoginStatus = (state: any) => {
+  const settings = getSettings(state)
+  const loginStatus = settings.loginStatus
+  return loginStatus
+}
+
+export const getExchangeTimer = (state: any) => {
+  const settings = getSettings(state)
+  const exchangeTimer = settings.exchangeTimer
+  return exchangeTimer
+}
 
 export const getDenominationIndex = (state: any, currencyCode: string) => {
   const settings = getSettings(state)
@@ -14,7 +25,7 @@ export const getDenominationIndex = (state: any, currencyCode: string) => {
   if (currencySettings) {
     denominationIndex = currencySettings.denomination
   }
-  console.log('in getDenominationIndex, settings is: ', settings, ' , currencySettings is: ', currencySettings, ' , currencyCode is: ', currencyCode, ' , denominationIndex is: ', denominationIndex)  
+  console.log('in getDenominationIndex, settings is: ', settings, ' , currencySettings is: ', currencySettings, ' , currencyCode is: ', currencyCode, ' , denominationIndex is: ', denominationIndex)
   return denominationIndex
 }
 

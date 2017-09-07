@@ -25,6 +25,7 @@ import { SettingsOverview } from './UI/scenes/Settings'
 
 import Locale from 'react-native-locale'
 
+import { addExchangeTimer } from  './UI/Settings/action'
 import { updateExchangeRates } from './ExchangeRates/action.js'
 import { setDeviceDimensions, setKeyboardHeight } from './UI/dimensions/action'
 import { addContext } from './Core/Context/action.js'
@@ -110,9 +111,10 @@ class Main extends Component {
       })
       this.props.setLocaleInfo(localeInfo)
       this.setState({ context, loading: false }, () => SplashScreen.hide())
-      setInterval(() => {
+      const exchangeTimer = setInterval(() => {
         this.props.updateExchangeRates()
       }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+      this.props.dispatch(addExchangeTimer(exchangeTimer))
     })
   }
 

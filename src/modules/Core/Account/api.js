@@ -29,7 +29,7 @@ export const getWallet = (account, walletId) => {
   return account.currencyWallets[walletId]
 }
 
-export const logout = account => {
+export const logout = (account) => {
   return account.logout()
 }
 

@@ -2,6 +2,8 @@
 const PREFIX = 'UI/Settings/'
 
 export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
+export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
+export const ADD_EXCHANGE_TIMER = PREFIX + 'ADD_EXCHANGE_TIMER'
 
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'
 export const LOAD_SETTINGS = PREFIX + 'LOAD_SETTINGS'
@@ -34,10 +36,38 @@ export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
+import * as SETTINGS_SELECTORS from './selectors'
+
 export const addUsernames = (usernames) => {
   return {
     type: ADD_USERNAMES,
     data: { usernames }
+  }
+}
+
+export const setLoginStatus = (loginStatus) => {
+  return {
+    type: SET_LOGIN_STATUS,
+    data: { loginStatus }
+  }
+}
+
+export const addExchangeTimer = (exchangeTimer) => {
+  return {
+    type: ADD_EXCHANGE_TIMER,
+    data: { exchangeTimer }
+  }
+}
+
+export const removeExchangeTimer = () => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const exchangeTimer = SETTINGS_SELECTORS.getExchangeTimer(state)
+    clearInterval(exchangeTimer)
+
+    return {
+      type: 'REMOVE_EXCHANGE_TIMER'
+    }
   }
 }
 

@@ -19,9 +19,9 @@ import settings from '../../../../../assets/images/sidenav/settings.png'
 import spend from '../../../../../assets/images/sidenav/spend.png'
 
 class MainComponent extends Component {
-  onLogout = ({ username }) => {
+  onLogout = () => {
     console.log('logout')
-    this.props.logout({ username })
+    this.props.logout()
   }
 
   render () {
@@ -163,7 +163,7 @@ const mapStateToProps = state => ({
   usersView: state.ui.scenes.controlPanel.usersView
 })
 const mapDispatchToProps = dispatch => ({
-  logout: ({ username }) => dispatch(logout({ username })),
+  logout: () => dispatch(logout()),
   dispatch: (props) => dispatch(props)
 })
 

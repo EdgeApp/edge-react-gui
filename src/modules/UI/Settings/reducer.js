@@ -9,7 +9,8 @@ const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,
-  plugins: {arrayPlugins: [], supportedWalletTypes: []}
+  plugins: {arrayPlugins: [], supportedWalletTypes: []},
+  loginStatus: false
 }
 
 export const settings = (state = initialState, action) => {
@@ -21,6 +22,20 @@ export const settings = (state = initialState, action) => {
     return {
       ...state,
       usernames
+    }
+  }
+  case ACTION.SET_LOGIN_STATUS: {
+    const { loginStatus } = data
+    return {
+      ...state,
+      loginStatus
+    }
+  }
+  case ACTION.ADD_EXCHANGE_TIMER: {
+    const { exchangeTimer } = data
+    return {
+      ...state,
+      exchangeTimer
     }
   }
   case ACTION.UPDATE_SETTINGS: {
