@@ -216,6 +216,9 @@ class TransactionList extends Component {
   }
 
   render () {
+    console.log('about to render txList, this is: ', this)
+    let cryptoBalanceString
+    let cryptoAmountString  
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -227,6 +230,7 @@ class TransactionList extends Component {
       newValue.key = i
       newValue.multiplier = this.props.multiplier
       let txDate = new Date(x.date * 1000)
+
       // let time = formatAMPM(txDate)
       // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
       let dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -247,6 +251,14 @@ class TransactionList extends Component {
       }
     } else {
       logo = this.props.uiWallet.symbolImage
+    }
+
+    cryptoAmountString = cryptoAmount ? UTILS.truncateDecimals(cryptoAmount.toString(), 6) : '0'
+
+    if (this.props.displayDenomination.symbol) {
+      cryptoBalanceString = this.props.displayDenomination.symbol + ' ' + cryptoAmountString
+    } else {
+      cryptoBalanceString = cryptoAmountString + ' ' + this.props.selectedCurrencyCode
     }
 
     const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
@@ -274,13 +286,13 @@ class TransactionList extends Component {
                           <View style={styles.balanceShownContainer}>
                             <View style={[styles.iconWrap, b()]}>
                               {logo
-                                ? <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />
+                                ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, b()]} source={{uri: logo}} />
                                 : <T style={[styles.request]}>{this.props.displayDenomination.symbol}</T>
                               }
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.displayDenomination.symbol} {UTILS.truncateDecimals(cryptoAmount.toString(), 6) || '0'}
+                                {cryptoBalanceString}
                               </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
