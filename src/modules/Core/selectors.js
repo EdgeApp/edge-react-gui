@@ -1,6 +1,20 @@
+// Core/selectors.js
+
+export const getCore = (state) => {
+  return state.core
+}
+
+// Context
 export const getContext = (state) => {
-  const context = state.core.context.context
+  const core = getCore(state)
+  const context = core.context.context
   return context
+}
+
+export const getUsernames = (state) => {
+  const context = getContext(state)
+  const usernames = context.usernames
+  return usernames
 }
 
 export const getIO = (state) => {
@@ -9,8 +23,10 @@ export const getIO = (state) => {
   return io
 }
 
+// Account
 export const getAccount = (state) => {
-  const account = state.core.account
+  const core = getCore(state)
+  const account = core.account
   return account
 }
 
@@ -18,21 +34,6 @@ export const getUsername = (state) => {
   const account = getAccount(state)
   const username = account.username
   return username
-}
-
-export const getUsernames = (state) => {
-  const usernames = state.core.context.usernames
-  return usernames
-}
-
-export const getWallets = (state) => {
-  const wallets = Object.values(state.core.wallets.byId)
-  return wallets
-}
-
-export const getWallet = (state, walletId) => {
-  const wallet = state.core.wallets.byId[walletId]
-  return wallet
 }
 
 export const getCurrencyConverter = (state) => {
@@ -53,8 +54,21 @@ export const getFakeExchangeRate = (state, fromCurrencyCode, toCurrencyCode) => 
   return exchangeRate + (Math.random() * 10)
 }
 
+// Wallets
+export const getWallets = (state) => {
+  const core = getCore(state)
+  const wallets =core.wallets.byId
+  return wallets
+}
+
+export const getWallet = (state, walletId) => {
+  const wallets = getWallets(state)
+  const wallet = wallets[walletId]
+  return wallet
+}
+
 export const getBalanceInCrypto = (state, walletId, currencyCode) => {
-  const balanceInCrypto = getWallet(state, walletId).getBalance(currencyCode)
-  console.log('balanceInCrypto', balanceInCrypto)
+  const wallet = getWallet(state, walletId)
+  const balanceInCrypto = wallet.getBalance(currencyCode)
   return balanceInCrypto
 }
