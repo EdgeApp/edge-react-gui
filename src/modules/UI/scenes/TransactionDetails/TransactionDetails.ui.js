@@ -554,7 +554,7 @@ class AmountArea extends Component {
               style={[b(), styles.editableFiat]}
               keyboardType='numeric'
               placeholder={''}
-              value={this.props.fiatAmount}
+              value={truncateDecimals(Math.abs(this.props.fiatAmount).toString(), 2)}
               defaultValue={''}
             />
           </View>
