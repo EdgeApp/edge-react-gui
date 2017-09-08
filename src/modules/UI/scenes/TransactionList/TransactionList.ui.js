@@ -28,6 +28,7 @@ import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import {setContactList} from '../../contacts/action'
 import styles from './style'
+import { colors as c } from '../../../../theme/variables/airbitz.js'
 import { border as b, getFiatSymbol } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -215,6 +216,9 @@ class TransactionList extends Component {
   }
 
   render () {
+    console.log('about to render txList, this is: ', this)
+    let cryptoBalanceString
+    let cryptoAmountString  
     var renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -226,6 +230,7 @@ class TransactionList extends Component {
       newValue.key = i
       newValue.multiplier = this.props.multiplier
       let txDate = new Date(x.date * 1000)
+
       // let time = formatAMPM(txDate)
       // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
       let dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -248,13 +253,21 @@ class TransactionList extends Component {
       logo = this.props.uiWallet.symbolImage
     }
 
+    cryptoAmountString = cryptoAmount ? UTILS.truncateDecimals(cryptoAmount.toString(), 6) : '0'
+
+    if (this.props.displayDenomination.symbol) {
+      cryptoBalanceString = this.props.displayDenomination.symbol + ' ' + cryptoAmountString
+    } else {
+      cryptoBalanceString = cryptoAmountString + ' ' + this.props.selectedCurrencyCode
+    }
+
     const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
         <View style={[styles.container, b()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
-            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={['#3b7adb', '#2b569a']}>
+            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={[c.gradient.light, c.gradient.dark]}>
               {this.state.balanceBoxVisible &&
               <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                 {this.props.updatingBalance ? (
@@ -273,13 +286,13 @@ class TransactionList extends Component {
                           <View style={styles.balanceShownContainer}>
                             <View style={[styles.iconWrap, b()]}>
                               {logo
-                                ? <Image style={{height: 28, width: 28, resizeMode: Image.resizeMode.contain}} source={{uri: logo}} />
+                                ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, b()]} source={{uri: logo}} />
                                 : <T style={[styles.request]}>{this.props.displayDenomination.symbol}</T>
                               }
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
-                                {this.props.displayDenomination.symbol} {(cryptoAmount) || '0'}
+                                {cryptoBalanceString}
                               </T>
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
@@ -351,6 +364,7 @@ class TransactionList extends Component {
     let txColorStyle
     let txName = ''
     let txImage
+    let lastOfDate
 
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here. This should use a style guide
@@ -363,16 +377,13 @@ class TransactionList extends Component {
       txImage = receivedTypeImage
     }
 
-    console.log('tx.metadata: ', tx.metadata)
     if (tx.metadata.name) {
-      console.log('inside of tx.metadata.name conditional, this.props is: ', this.props, ' and tx is: ', tx)
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
           let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
           if (found) console.log('element is: ', element)
           return found
         })
-        console.log('contact is now: ', contact, ' tx is: ', tx)
         if (contact) {
           tx.thumbnailPath = contact.thumbnailPath
           tx.hasThumbnail = contact.hasThumbnail
@@ -380,8 +391,13 @@ class TransactionList extends Component {
       }
     }
 
+    if(completedTxList[tx.key+1]) { // is there a subsequent transaction?
+      lastOfDate = (tx.dateString === completedTxList[tx.key + 1].dateString) ? false : true
+    } else {
+      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
+    }
     return (
-      <View style={styles.singleTransactionWrap}>
+      <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
@@ -389,7 +405,7 @@ class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, b()]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
           <View style={[styles.transactionInfoWrap, b()]}>
             <View style={styles.transactionLeft}>
               {tx.thumbnailPath ? (
@@ -407,10 +423,10 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, txColorStyle]}>
-                {this.props.displayDenomination.symbol} {UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount)}
+                {this.props.displayDenomination.symbol} {Math.abs(parseFloat(UTILS.truncateDecimals(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount), 6)))}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {tx.metadata.amountFiat && this.props.fiatSymbol + ' ' + UTILS.truncateDecimals(tx.metadata.amountFiat.toString(), 2)}
+                {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2) : (0.00).toFixed(2))}
               </T>
             </View>
           </View>

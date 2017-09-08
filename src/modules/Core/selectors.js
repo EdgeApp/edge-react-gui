@@ -1,6 +1,13 @@
+// Core/selectors.js
+
+export const getCore = (state) => {
+  return state.core
+}
+
 // Context
 export const getContext = (state) => {
-  const context = state.core.context.context
+  const core = getCore(state)
+  const context = core.context.context
   return context
 }
 
@@ -18,7 +25,8 @@ export const getIO = (state) => {
 
 // Account
 export const getAccount = (state) => {
-  const account = state.core.account
+  const core = getCore(state)
+  const account = core.account
   return account
 }
 
@@ -48,7 +56,8 @@ export const getFakeExchangeRate = (state, fromCurrencyCode, toCurrencyCode) => 
 
 // Wallets
 export const getWallets = (state) => {
-  const wallets = state.core.wallets.byId
+  const core = getCore(state)
+  const wallets =core.wallets.byId
   return wallets
 }
 

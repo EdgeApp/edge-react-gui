@@ -60,6 +60,8 @@ class TransactionDetails extends Component {
       }
     }
 
+    let amountFiat = this.props.tx.metadata.amountFiat || '0'
+
     this.state = {
       tx: this.props.tx,
       direction,
@@ -68,7 +70,7 @@ class TransactionDetails extends Component {
       thumbnailPath: this.props.thumbnailPath,
       category: this.props.tx.metadata.category,
       notes: this.props.tx.metadata.notes,
-      amountFiat: this.props.tx.metadata.amountFiat,
+      amountFiat: amountFiat,
       bizId: 0,
       miscJson: this.props.tx.miscJson || null,
       dateTimeSyntax: dateString + ' ' + timeString,
@@ -354,7 +356,7 @@ class TransactionDetails extends Component {
       feeSyntax = ''
       leftData = { color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income']) }
     } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.info.tx.networkFee)
+      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
       leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
     }
     let color = type.color
@@ -527,7 +529,7 @@ class AmountArea extends Component {
           </View>
           <View style={[b(), styles.amountAreaMiddle]}>
             <View style={[b(), styles.amountAreaMiddleTop]}>
-              <T style={[b(), styles.amountAreaMiddleTopText]}>{bns.divf(this.props.info.tx.nativeAmount, this.props.walletDefaultDenomProps.multiplier).toFixed(6)}</T>
+              <T style={[b(), styles.amountAreaMiddleTopText]}>{Math.abs(parseFloat(bns.divf(this.props.info.tx.nativeAmount, this.props.walletDefaultDenomProps.multiplier).toFixed(6)))}</T>
             </View>
             <View style={[b(), styles.amountAreaMiddleBottom]}>
               <T style={[b(), styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</T>
@@ -694,9 +696,6 @@ class SubCategorySelect extends Component {
   keyExtractor = (item, index) => {
     return index
   }
-}
-SubCategorySelect.propTypes = {
-
 }
 
 export const SubCategorySelectConnect = connect(state => ({

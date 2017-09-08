@@ -25,7 +25,7 @@ class HeaderUI extends Component {
   _renderLeftButton = () => {
     if (this.props.routes.stackDepth) {
       return (
-        <Icon name='arrow-back' onPress={() => Actions.pop()} />
+        <Icon name='arrow-back' onPress={Actions.settingsOverview} />
       )
     }
   }

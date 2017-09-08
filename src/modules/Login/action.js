@@ -23,7 +23,6 @@ export const initializeAccount = (account) => {
       walletId,
       currencyCode
     } = ACCOUNT_API.getFirstActiveWalletInfo(account)
-    // } = ACCOUNT_API.getSecondActiveWalletInfo(account)
 
     dispatch(WALLET_ACTIONS.selectWallet({ walletId, currencyCode }))
     dispatch(loadSettings())

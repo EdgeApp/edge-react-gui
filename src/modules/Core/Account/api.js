@@ -17,18 +17,6 @@ export const getFirstActiveWalletInfo = (account) => {
   }
 }
 
-export const getSecondActiveWalletInfo = (account) => {
-  const walletId = account.activeWalletIds[1]
-  const walletKey = account.allKeys.find(key => {
-    return key.id === walletId
-  })
-  const currencyCode = UTILS.getCurrencyCodeFromWalletType(walletKey.type)
-  return {
-    walletId,
-    currencyCode
-  }
-}
-
 export const getWallet = (account, walletId) => {
   return account.currencyWallets[walletId]
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, TouchableOpacity, Image } from 'react-native'
-import { Text } from 'native-base'
+import strings from '../../../../locales/default'
+import {sprintf} from 'sprintf-js'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import { connect } from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
@@ -13,6 +14,8 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import Main from './Component/Main'
 import ExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
 import styles from './style'
+import {colors as c} from '../../../../theme/variables/airbitz.js'
+import T from '../../components/FormattedText'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
 
@@ -36,10 +39,10 @@ class ControlPanel extends Component {
     } = this.props
 
     return exchangeRate === 0
-      ? <Text style={styles.bitcoin.value}>
-          Exchange Rate loading
-        </Text>
-      : <Text style={styles.bitcoin.value}>
+      ? <T style={styles.bitcoin.value}>
+          {sprintf(strings.enUS['drawer_exchange_rate_loading'])}
+        </T>
+      : <T style={styles.bitcoin.value}>
           <ExchangeRate
             primaryDisplayAmount={primaryDisplayAmount}
             primaryInfo={primaryInfo}
@@ -48,7 +51,7 @@ class ControlPanel extends Component {
             secondaryInfo={secondaryInfo}
 
             secondaryToPrimaryRatio={exchangeRate} />
-        </Text>
+        </T>
   }
 
   render () {
@@ -65,9 +68,9 @@ class ControlPanel extends Component {
         style={styles.container}
         start={{x: 0, y: 0}}
         end={{x: 1, y: 0}}
-        colors={['#2B5698', '#3B7ADA']}>
+        colors={[c.gradient.light, c.gradient.dark]}>
         <View style={styles.bitcoin.container}>
-          <Text style={styles.bitcoin.icon} />
+          <T style={styles.bitcoin.icon} />
           <ExchangeRate
             primaryDisplayAmount={primaryDisplayAmount}
             primaryInfo={primaryInfo}
@@ -79,9 +82,9 @@ class ControlPanel extends Component {
           <View style={styles.iconImageContainer}>
             <Image style={styles.iconImage} source={person} />
           </View>
-          <Text style={styles.user.name}>
+          <T style={styles.user.name}>
             {this.props.username}
-          </Text>
+          </T>
           <MDIcon style={styles.icon} name={this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} />
         </TouchableOpacity>
         <Main />

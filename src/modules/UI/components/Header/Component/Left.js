@@ -14,22 +14,16 @@ export default class Left extends Component {
       null
 
     switch (sceneName) {
-    case 'walletList':
-      return <BackButton />
-    case 'directory':
-      return <BackButton />
     case 'sendConfirmation':
       return <BackButton syntax='Back' onPressFxn={() => Actions.scan({type: 'reset'})} />
     case 'createWallet':
-      return <BackButton syntax='Cancel' />
-    case 'transactionList':
-      return null
+      return <BackButton syntax='Cancel' onPressFxn={() => Actions.walletList({type: 'reset'})} />
     case 'btcSettings':
-      return <BackButton syntax='Back' />
+      return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
     case 'ethSettings':
-      return <BackButton syntax='Back' />
+      return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
     case 'transactionDetails':
-      return <BackButton syntax='Cancel' />
+      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionsList({type: 'reset'})} />
     default:
       return null
     }
@@ -39,7 +33,6 @@ export default class Left extends Component {
 class BackButton extends Component {
   constructor (props) {
     super(props)
-    this.props.pressFxn = this.props.onPressFxn ? this.props.onPressFxn : Actions.pop
     this.props.syntax = this.props.syntax ? this.props.syntax : sprintf(strings.enUS['back_button_text'])
   }
 

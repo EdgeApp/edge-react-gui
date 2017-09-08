@@ -14,8 +14,8 @@ import styles from './style'
 import T from '../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRow.ui'
-import {border as b, cutOffText} from '../../../utils'
-import { selectWallet } from '../../Wallets/action.js'
+import {border as b, cutOffText, truncateDecimals} from '../../../utils'
+import {selectWallet} from '../../Wallets/action.js'
 import sort from '../../../../assets/images/walletlist/sort.png'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -31,13 +31,7 @@ export const findDenominationSymbol = (denoms, value) => {
 
 class SortableWalletListRow extends Component {
 
-  _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet({ walletId, currencyCode }))
-    Actions.transactionList({ params: 'walletList' })
-  }
-
   render () {
-    console.log('rendering walltListRow, this is: ', this)
     const {data} = this.props
     let walletData = data
     let currencyCode = walletData.currencyCode
@@ -57,7 +51,7 @@ class SortableWalletListRow extends Component {
               <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>{bns.divf(walletData.primaryNativeBalance, multiplier)}</T>
+              <T style={[styles.rowBalanceAmountText]}>{truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}</T>
               <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                 ({symbol || ''})</T>
             </View>
@@ -114,25 +108,24 @@ class FullWalletListRow extends Component {
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
               <T style={[styles.rowBalanceAmountText]}>
-                {bns.divf(walletData.primaryNativeBalance, multiplier)}
+                {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
               </T>
-              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
-                ({symbol || ''})</T>
+              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode} ({symbol || ''})</T>
             </View>
             <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
           </View>
         </TouchableHighlight>
-        {this.renderTokenRow(walletData.nativeBalances, this.props.active)}
+        {this.renderTokenRow(id, walletData.nativeBalances, this.props.active)}
       </Animated.View>
     )
   }
 
-  renderTokenRow = (metaTokenBalances) => {
+  renderTokenRow = (parentId, metaTokenBalances) => {
     var tokens = []
     for (var property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
         tokens.push(
-          <WalletListTokenRow parentId={this.props.data.item.id}
+          <WalletListTokenRow parentId={parentId}
             currencyCode={property} key={property} balance={metaTokenBalances[property]} active={this.props.active} />)
       }
     }

@@ -88,8 +88,7 @@ export default StyleSheet.create({
   },
   currentBalanceBoxBits: {
     color: 'white',
-    fontSize: 40,
-    fontWeight: '400'
+    fontSize: 40
   },
   currentBalanceBoxDollarsWrap: {
     justifyContent: 'flex-start',
@@ -210,6 +209,9 @@ export default StyleSheet.create({
   singleTransactionWrap: {
     flexDirection: 'column',
     flex: 1
+  },
+  bottomDivider: {
+    
   },
   singleDateArea: {
     backgroundColor: c.gray4,

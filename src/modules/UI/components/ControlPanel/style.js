@@ -98,7 +98,7 @@ export default {
     },
     textItalic: {
       marginTop: 3,
-      fontStyle: 'italic',
+      fontFamily: 'SourceSansPro-Bold',
       fontSize: 13,
       color: '#FFF'
     }
