@@ -1,8 +1,10 @@
 // Login/action.js
 
 import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
+import * as ACCOUNT_API from '../Core/Account/api'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
+import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 
 
@@ -10,6 +12,13 @@ export const initializeAccount = account => {
   return dispatch => {
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
     dispatch(loadSettings())
+
+    const {
+      walletId,
+      currencyCode
+    } = ACCOUNT_API.getFirstActiveWalletInfo(account)
+
+    dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
   }
 }
 
