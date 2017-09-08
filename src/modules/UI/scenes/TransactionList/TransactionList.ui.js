@@ -253,6 +253,7 @@ class TransactionList extends Component {
       logo = this.props.uiWallet.symbolImage
     }
 
+    const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
     cryptoAmountString = cryptoAmount ? UTILS.truncateDecimals(cryptoAmount.toString(), 6) : '0'
 
     if (this.props.displayDenomination.symbol) {
@@ -261,7 +262,6 @@ class TransactionList extends Component {
       cryptoBalanceString = cryptoAmountString + ' ' + this.props.selectedCurrencyCode
     }
 
-    const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
     return (
       <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
@@ -396,6 +396,10 @@ class TransactionList extends Component {
     } else {
       lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
     }
+    let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount.replace('-', ''))
+
+    let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
+    console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
@@ -423,7 +427,7 @@ class TransactionList extends Component {
             </View>
             <View style={[styles.transactionRight, b()]}>
               <T style={[styles.transactionBitAmount, txColorStyle]}>
-                {this.props.displayDenomination.symbol} {Math.abs(parseFloat(UTILS.truncateDecimals(UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount), 6)))}
+                {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
                 {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2) : (0.00).toFixed(2))}
