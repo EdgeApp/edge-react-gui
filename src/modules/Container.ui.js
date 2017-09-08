@@ -100,10 +100,6 @@ class Main extends Component {
     .then(context => {
       // Put the context into Redux:
       this.props.addContext(context)
-      CONTEXT_API.getCurrencyPlugins(context)
-      .then(currencyPlugins =>
-        currencyPlugins.forEach(plugin =>
-          this.props.addCurrencyPlugin(plugin)))
 
       CONTEXT_API.listUsernames(context)
       .then(usernames => {

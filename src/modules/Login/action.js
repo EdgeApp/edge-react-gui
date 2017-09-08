@@ -1,13 +1,22 @@
 // Login/action.js
+import * as CONTEXT_API from '../Core/Context/api'
+import * as CORE_SELECTORS from '../Core/selectors'
 import * as ACCOUNT_API from '../Core/Account/api'
 import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
+import { addCurrencyPlugin } from '../UI/Settings/action.js'
 
 export const initializeAccount = (account) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const state = getState()
+    const context = CORE_SELECTORS.getContext(state)
+    CONTEXT_API.getCurrencyPlugins(context)
+    .then(currencyPlugins =>
+      currencyPlugins.forEach(plugin => dispatch(addCurrencyPlugin(plugin))))
+
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
     dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
     const {

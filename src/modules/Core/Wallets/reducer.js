@@ -10,7 +10,7 @@ const byId = (state = initialState, action) => {
     const { currencyWallets } = data
     return {
       ...state,
-      currencyWallets
+      ...currencyWallets
     }
   }
   default:
@@ -18,4 +18,10 @@ const byId = (state = initialState, action) => {
   }
 }
 
-export const wallets = combineReducers({ byId })
+export const wallets = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    state = undefined
+  }
+
+  return combineReducers({ byId })(state, action)
+}
