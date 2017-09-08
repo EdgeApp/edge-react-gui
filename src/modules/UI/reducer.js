@@ -7,7 +7,7 @@ import { settings } from './Settings/reducer.js'
 import locale from './locale/reducer'
 import contacts from './contacts/reducer'
 
-export const ui = combineReducers({
+const uiReducer = combineReducers({
   scenes,
   wallets,
   request,
@@ -15,3 +15,11 @@ export const ui = combineReducers({
   locale,
   contacts
 })
+
+export const ui = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    state = undefined
+  }
+
+  return uiReducer(state, action)
+}

@@ -18,17 +18,6 @@ export const getExchangeTimer = (state: any) => {
   return exchangeTimer
 }
 
-export const getDenominationIndex = (state: any, currencyCode: string) => {
-  const settings = getSettings(state)
-  const currencySettings = settings[currencyCode]
-  let denominationIndex:string
-  if (currencySettings) {
-    denominationIndex = currencySettings.denomination
-  }
-  console.log('in getDenominationIndex, settings is: ', settings, ' , currencySettings is: ', currencySettings, ' , currencyCode is: ', currencyCode, ' , denominationIndex is: ', denominationIndex)
-  return denominationIndex
-}
-
 export const getCurrencySettings = (state: any, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
@@ -42,7 +31,6 @@ export const getDenominations = (state: any, currencyCode: string) => {
 }
 
 export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
-  console.log('in getDisplayDenominationKey, state is: ', state, ' , and currencyCode is: ', currencyCode)
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination

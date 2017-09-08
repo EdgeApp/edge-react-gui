@@ -5,6 +5,7 @@ import { Text } from 'native-base'
 import { Actions } from 'react-native-router-flux'
 
 import { closeSidebar } from '../../SideMenu/action'
+import { logoutRequest } from '../action'
 import UserList from './UserList'
 
 import styles from '../style'
@@ -157,7 +158,7 @@ const mapStateToProps = state => ({
   usersView: state.ui.scenes.controlPanel.usersView
 })
 const mapDispatchToProps = dispatch => ({
-  logout: () => Actions.login(), //dispatch(logout()),
+  logout: () => dispatch(logoutRequest()),
   dispatch: (props) => dispatch(props)
 })
 

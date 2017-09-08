@@ -4,11 +4,19 @@ import { core } from '../modules/Core/reducer.js'
 import { ui } from '../modules/UI/reducer.js'
 import { exchangeRates } from '../modules/ExchangeRates/reducer.js'
 
-const store = combineReducers({
+const appReducer = combineReducers({
   routes,
   core,
   ui,
   exchangeRates
 })
 
-export default store
+export const rootReducer = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    state = { routes: state.routes }
+  }
+
+  return appReducer(state, action)
+}
+
+export default rootReducer

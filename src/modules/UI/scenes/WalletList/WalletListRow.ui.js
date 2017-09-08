@@ -158,8 +158,7 @@ export const WalletListTokenRowConnect = connect((state, ownProps) => {
   let denomination:AbcDenomination = {}
   let multiplier:string = '0'
   if (wallet) {
-    const index:string = SETTINGS_SELECTORS.getDenominationIndex(state, currencyCode)
-    denomination = wallet.allDenominations[currencyCode][index]
+    denomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
     multiplier = denomination.multiplier
   }
 

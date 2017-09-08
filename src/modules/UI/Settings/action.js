@@ -1,8 +1,9 @@
 // UI/Settings
 const PREFIX = 'UI/Settings/'
 
-export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
 export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
+
+export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
 export const ADD_EXCHANGE_TIMER = PREFIX + 'ADD_EXCHANGE_TIMER'
 
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'

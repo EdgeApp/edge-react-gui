@@ -10,7 +10,7 @@ const initialState = {
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,
   plugins: {arrayPlugins: [], supportedWalletTypes: []},
-  loginStatus: false
+  loginStatus: null
 }
 
 export const settings = (state = initialState, action) => {
