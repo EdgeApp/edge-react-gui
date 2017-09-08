@@ -102,7 +102,7 @@ module.exports = StyleSheet.create({
     color: 'white',
     backgroundColor: 'transparent',
     top: 0,
-    left: 0  
+    left: 0
   },
   walletsBoxHeaderAddWallet: {
     flexDirection: 'row',

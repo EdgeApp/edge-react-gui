@@ -23,6 +23,11 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "no-duplicate-imports": 2,
+        "array-callback-return": 2,
+        "no-floating-decimal": 2,
+        "no-var": 2,
+        "no-trailing-spaces": 2,
         "react-native/no-unused-styles": 0,
         "react-native/split-platform-components": 2,
         "react-native/no-inline-styles": 0,

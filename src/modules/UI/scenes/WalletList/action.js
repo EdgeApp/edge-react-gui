@@ -122,7 +122,7 @@ export const updateActiveWalletsOrder = activeWalletIds => {
     .then(response => {
       console.log('response', response)
       dispatch(updateActiveWalletsOrderSuccess(activeWalletIds))
-      for (var k in activeWalletIds) {
+      for (let k in activeWalletIds) {
         dispatch(updateIndividualWalletSortIndex(activeWalletIds[k], k))
       }
     })

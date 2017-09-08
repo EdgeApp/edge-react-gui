@@ -29,7 +29,6 @@ import Permissions from 'react-native-permissions'
 import {setContactList} from '../../contacts/action'
 import styles from './style'
 import { colors as c } from '../../../../theme/variables/airbitz.js'
-import { border as b, getFiatSymbol } from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -218,8 +217,8 @@ class TransactionList extends Component {
   render () {
     console.log('about to render txList, this is: ', this)
     let cryptoBalanceString
-    let cryptoAmountString  
-    var renderableTransactionList = this.props.transactions.sort(function (a, b) {
+    let cryptoAmountString
+    let renderableTransactionList = this.props.transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
@@ -239,12 +238,12 @@ class TransactionList extends Component {
       newValue.time = time
       return newValue
     })
-    var ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+    let ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
     let dataSrc = ds.cloneWithRows(completedTxList)
     let logo
 
     if (this.props.uiWallet.currencyCode !== this.props.selectedCurrencyCode) {
-      for (var metatoken of this.props.uiWallet.metaTokens) {
+      for (let metatoken of this.props.uiWallet.metaTokens) {
         if (metatoken.currencyCode === this.props.selectedCurrencyCode) {
           logo = metatoken.symbolImage
         }
@@ -263,11 +262,11 @@ class TransactionList extends Component {
     }
 
     return (
-      <ScrollView style={[b(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
+      <ScrollView style={[UTILS.border(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
-        <View style={[styles.container, b()]}>
-          <Animated.View style={[{height: this.state.balanceBoxHeight}, b()]}>
-            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, b()]} colors={[c.gradient.light, c.gradient.dark]}>
+        <View style={[styles.container, UTILS.border()]}>
+          <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
+            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
               {this.state.balanceBoxVisible &&
               <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                 {this.props.updatingBalance ? (
@@ -281,34 +280,34 @@ class TransactionList extends Component {
                     </View>
                   </View>
                     ) : (
-                      <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, b()]}>
+                      <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, UTILS.border()]}>
                         {this.state.showBalance ? (
                           <View style={styles.balanceShownContainer}>
-                            <View style={[styles.iconWrap, b()]}>
+                            <View style={[styles.iconWrap, UTILS.border()]}>
                               {logo
-                                ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, b()]} source={{uri: logo}} />
+                                ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, UTILS.border()]} source={{uri: logo}} />
                                 : <T style={[styles.request]}>{this.props.displayDenomination.symbol}</T>
                               }
                             </View>
-                            <View style={[styles.currentBalanceBoxBitsWrap, b()]}>
-                              <T numberOfLines={1} style={[styles.currentBalanceBoxBits, b()]}>
+                            <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
+                              <T numberOfLines={1} style={[styles.currentBalanceBoxBits, UTILS.border()]}>
                                 {cryptoBalanceString}
                               </T>
                             </View>
-                            <View style={[styles.currentBalanceBoxDollarsWrap, b()]}>
-                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, b()]}>
+                            <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
+                              <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>
                                 {this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}
                               </T>
                             </View>
                           </View>
                         ) : (
-                          <View style={[b(), styles.balanceHiddenContainer]}>
+                          <View style={[UTILS.border(), styles.balanceHiddenContainer]}>
                             <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
                           </View>
                         )}
                       </TouchableOpacity>
                     )}
-                <View style={[styles.requestSendRow, b()]}>
+                <View style={[styles.requestSendRow, UTILS.border()]}>
                   <TouchableHighlight underlayColor='rgba(0,0,0,0.25)' onPress={() => Actions.request()} style={[styles.requestBox, styles.button]}>
                     <View style={[styles.requestWrap]}>
                       <Image
@@ -410,22 +409,22 @@ class TransactionList extends Component {
           </View>
         }
         <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
-          <View style={[styles.transactionInfoWrap, b()]}>
+          <View style={[styles.transactionInfoWrap, UTILS.border()]}>
             <View style={styles.transactionLeft}>
               {tx.thumbnailPath ? (
-                <Image style={[styles.transactionLogo, b()]} source={{ uri: tx.thumbnailPath }} />
+                <Image style={[styles.transactionLogo, UTILS.border()]} source={{ uri: tx.thumbnailPath }} />
               ) : (
                 <Image
                   style={styles.transactionLogo}
                   source={txImage}
                 />
               )}
-              <View style={[styles.transactionLeftTextWrap, b()]}>
+              <View style={[styles.transactionLeftTextWrap, UTILS.border()]}>
                 <T style={[styles.transactionPartner]}>{tx.metadata.name || txName}</T>
                 <T style={[styles.transactionTime]}>{tx.time}</T>
               </View>
             </View>
-            <View style={[styles.transactionRight, b()]}>
+            <View style={[styles.transactionRight, UTILS.border()]}>
               <T style={[styles.transactionBitAmount, txColorStyle]}>
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
@@ -450,7 +449,7 @@ TransactionList.propTypes = {
 
 const mapStateToProps = (state) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const fiatSymbol = getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
+  const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -501,13 +500,13 @@ class SearchBar extends Component {
 
   render () {
     return (
-      <View style={[styles.searchContainer, b()]}>
-        <View style={[styles.innerSearch, b()]}>
-          <EvilIcons name='search' style={[styles.searchIcon, b()]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, b()]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
+      <View style={[styles.searchContainer, UTILS.border()]}>
+        <View style={[styles.innerSearch, UTILS.border()]}>
+          <EvilIcons name='search' style={[styles.searchIcon, UTILS.border()]} color='#9C9C9D' size={20} />
+          <TextInput style={[styles.searchInput, UTILS.border()]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
         </View>
         <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-          <TouchableHighlight onPress={this.props.onPress} style={[b(), styles.cancelButton]}>
+          <TouchableHighlight onPress={this.props.onPress} style={[UTILS.border(), styles.cancelButton]}>
             <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf(strings.enUS['string_cancel_cap'])}</Text>
           </TouchableHighlight>
         </Animated.View>

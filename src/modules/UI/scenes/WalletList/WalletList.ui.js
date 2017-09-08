@@ -40,7 +40,7 @@ import {
   deleteWallet,
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder,
-  dispatchWalletRowOption  
+  dispatchWalletRowOption
 } from './action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
@@ -107,7 +107,7 @@ class WalletList extends Component {
       if(!this.props.walletsp[walletId].archived) {
         this.props.dispatch(dispatchWalletRowOption(walletId, 'archive'))
       } else {
-        this.props.dispatch(dispatchWalletRowOption(walletId, 'activate'))        
+        this.props.dispatch(dispatchWalletRowOption(walletId, 'activate'))
       }
       break
     case options[4].value: // 'delete
@@ -120,12 +120,12 @@ class WalletList extends Component {
     console.log('beginning of walletList render, this is: ', this.state)
     const {wallets} = this.props
     let walletsArray = []
-    for (var wallet in wallets) {
+    for (let wallet in wallets) {
       let theWallet = wallets[wallet]
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
-    }    
+    }
     return (
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
@@ -140,7 +140,7 @@ class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultISOFiat ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat) : ''} {this.tallyUpTotalCrypto()} 
+                {this.props.settings.defaultISOFiat ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat) : ''} {this.tallyUpTotalCrypto()}
               </T>
             </View>
           </View>
@@ -164,7 +164,7 @@ class WalletList extends Component {
               </Animated.View>
               <Animated.View style={[styles.plusContainer, UTILS.border(), { opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
                 <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 41}]}
-                  onPress={() => Actions.createWallet()}>                  
+                  onPress={() => Actions.createWallet()}>
                     <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
@@ -194,7 +194,7 @@ class WalletList extends Component {
         </Animated.View>
         <Animated.View style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
           <FlatList
-            style={{ flex: 1}}          
+            style={{ flex: 1}}
             data={walletsArray}
             extraData={this.props.wallets}
             renderItem={(item) => <FullWalletListRow data={item} />}
@@ -214,7 +214,7 @@ class WalletList extends Component {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
     console.log('enabling sorting, this is: ', this)
     let sortableToOpacity = 1
-    let sortableListToZIndex = 100    
+    let sortableListToZIndex = 100
     let fullListToOpacity = 0
     let fullListToZIndex = 0
 
@@ -393,8 +393,8 @@ class WalletList extends Component {
   }
 
   calculateTotalBalance = (values) => {
-    var total = 0
-    for (var currency in values) {
+    let total = 0
+    for (let currency in values) {
       let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
       total += addValue
     }

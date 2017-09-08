@@ -88,7 +88,7 @@ export const formatNumber = (input: string): string => {
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) => {
   return (nativeAmount: string): string => {
-    console.log('inside convertNativeToDenomination, nativeAmount is: ', nativeAmount )    
+    console.log('inside convertNativeToDenomination, nativeAmount is: ', nativeAmount )
     return divf(nativeAmount, nativeToTargetRatio).toString()
   }
 }

@@ -62,7 +62,7 @@ class WalletListRowOptions extends Component {
               <View style={[styles.menuOptionItem]}>
                 <T style={[styles.optionText]}>{options[1].syntax}</T>
               </View>
-            </MenuOption>            
+            </MenuOption>
             <MenuOption value={options[2].value} style={styles.menuOption}>
               <View style={[styles.menuOptionItem]}>
                 <T style={[styles.optionText]}>{options[2].syntax}</T>

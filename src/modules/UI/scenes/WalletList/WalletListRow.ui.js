@@ -56,7 +56,7 @@ class SortableWalletListRow extends Component {
                 ({symbol || ''})</T>
             </View>
             <View style={[styles.rowDragArea, b()]}>
-              <Image 
+              <Image
                 source={sort}
                 style={{height: 15, width: 15}}
               />
@@ -70,7 +70,7 @@ class SortableWalletListRow extends Component {
 
 export const SortableWalletListRowConnect =  connect((state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.currencyCode)
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.currencyCode)    
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.currencyCode)
   return {
     dimensions: state.ui.scenes.dimensions,
     displayDenomination,
@@ -121,8 +121,8 @@ class FullWalletListRow extends Component {
   }
 
   renderTokenRow = (parentId, metaTokenBalances) => {
-    var tokens = []
-    for (var property in metaTokenBalances) {
+    let tokens = []
+    for (let property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
         tokens.push(
           <WalletListTokenRow parentId={parentId}
@@ -135,8 +135,8 @@ class FullWalletListRow extends Component {
 
 export const FullWalletListRowConnect =  connect((state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)  
-  
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+
   return {
     dimensions: state.ui.scenes.dimensions,
     displayDenomination,

@@ -180,7 +180,7 @@ const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
       <SecondaryButton
         style={[styles.cancel]}
         disabled={isCreatingWallet}
-        onPressFunction={onCancel} 
+        onPressFunction={onCancel}
         text={CANCEL_TEXT} />
 
       <PrimaryButton

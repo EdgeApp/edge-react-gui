@@ -33,7 +33,7 @@ class TabBar extends Component {
   }
 
   _onLayout = (event) => {
-    var {x, y, width, height} = event.nativeEvent.layout
+    let {x, y, width, height} = event.nativeEvent.layout
     console.log('TabBar event.nativeEvent is : ', event.nativeEvent)
     console.log('TabBar onLayout occurred', x, y, width, height)
     this.props.dispatch(setTabBarHeight(height))
@@ -51,7 +51,7 @@ class TabBar extends Component {
             >
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
-                source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet}               
+                source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet}
               />
               <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'walletList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_wallets'])}</T>
             </Button>

@@ -71,8 +71,8 @@ class WalletListModalBody extends Component {
   }
 
   renderTokens = (walletId, metaTokenBalances, code) => {
-    var tokens = []
-    for (var property in metaTokenBalances) {
+    let tokens = []
+    for (let property in metaTokenBalances) {
       if (property !== code) {
         tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
       }

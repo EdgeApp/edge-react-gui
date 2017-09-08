@@ -14,7 +14,7 @@ export const getDenominationIndex = (state: any, currencyCode: string) => {
   if (currencySettings) {
     denominationIndex = currencySettings.denomination
   }
-  console.log('in getDenominationIndex, settings is: ', settings, ' , currencySettings is: ', currencySettings, ' , currencyCode is: ', currencyCode, ' , denominationIndex is: ', denominationIndex)  
+  console.log('in getDenominationIndex, settings is: ', settings, ' , currencySettings is: ', currencySettings, ' , currencyCode is: ', currencyCode, ' , denominationIndex is: ', denominationIndex)
   return denominationIndex
 }
 

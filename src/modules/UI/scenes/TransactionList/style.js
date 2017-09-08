@@ -211,7 +211,7 @@ export default StyleSheet.create({
     flex: 1
   },
   bottomDivider: {
-    
+
   },
   singleDateArea: {
     backgroundColor: c.gray4,
