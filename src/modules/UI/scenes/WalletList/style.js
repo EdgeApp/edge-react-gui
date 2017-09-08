@@ -80,7 +80,19 @@ module.exports = StyleSheet.create({
   },
   donePlusContainer: {
     minWidth: 48,
-    height: '100%'
+    height: 50
+  },
+  plusContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50
+  },
+  doneContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 50
   },
   walletsBoxDoneTextWrap: {
     paddingVertical: 12
@@ -141,11 +153,11 @@ module.exports = StyleSheet.create({
   },
   sortableList: {
     position: 'absolute',
-    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 111 - 50,
+    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 130 - 50,
   },
   fullList: {
     position: 'absolute',
-    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 111 - 50,
+    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 130 - 50,
   },
   rowContainer: {
     padding: 6,
