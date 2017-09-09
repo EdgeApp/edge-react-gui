@@ -16,6 +16,7 @@ class Login extends Component {
   render () {
     return !this.props.context.listUsernames ? null : (
       <LoginScreen
+        username={this.props.username}
         accountOptions={{ callbacks: makeAccountCallbacks(this.props.dispatch) }}
         context={this.props.context}
         onLogin={this.onLogin}

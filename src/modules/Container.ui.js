@@ -115,10 +115,6 @@ class Main extends Component {
     })
   }
 
-  getLoginScreen () {
-    <Login username={this.props.username} />
-  }
-
   render () {
     const routes = this.props.routes
     if (!this.props.context) return
@@ -132,7 +128,7 @@ class Main extends Component {
 
               <RouterWithRedux>
                 <Scene key='root' hideNavBar>
-                  <Scene key='login' initial passProps qweqwe={'qweqwe'} username={this.props.username} component={this.getLoginScreen()} animation={'fade'} duration={600} />
+                  <Scene key='login' initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
 
@@ -185,8 +181,7 @@ class Main extends Component {
 
 const mapStateToProps = (state) => ({
   routes: state.routes,
-  context: CORE_SELECTORS.getContext(state),
-  username: CORE_SELECTORS.getNextUsername(state)
+  context: CORE_SELECTORS.getContext(state)
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
