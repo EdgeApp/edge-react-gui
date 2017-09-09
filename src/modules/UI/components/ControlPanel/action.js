@@ -11,7 +11,7 @@ import * as ACCOUNT_API from '../../../Core/Account/api'
 import * as SETTINGS_ACTIONS from '../../Settings/action'
 import { Actions } from 'react-native-router-flux'
 
-export const logoutRequest = () => {
+export const logoutRequest = (username) => {
   return (dispatch, getState) => {
     const state = getState()
     dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
@@ -19,15 +19,16 @@ export const logoutRequest = () => {
     const account = CORE_SELECTORS.getAccount(state)
     ACCOUNT_API.logoutRequest(account)
    .then(() => {
-     dispatch(logout())
-     Actions.login()
+     dispatch(logout(username))
+     Actions.login({ username })
    })
   }
 }
 
-export const logout = () => {
+export const logout = (username) => {
   return {
-    type: LOGOUT
+    type: LOGOUT,
+    data: { username }
   }
 }
 

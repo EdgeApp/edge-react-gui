@@ -3,7 +3,6 @@ const PREFIX = 'UI/Settings/'
 
 export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
 
-export const ADD_USERNAMES = PREFIX + 'ADD_USERNAMES'
 export const ADD_EXCHANGE_TIMER = PREFIX + 'ADD_EXCHANGE_TIMER'
 
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'
@@ -38,13 +37,6 @@ export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
 import * as SETTINGS_SELECTORS from './selectors'
-
-export const addUsernames = (usernames) => {
-  return {
-    type: ADD_USERNAMES,
-    data: { usernames }
-  }
-}
 
 export const setLoginStatus = (loginStatus) => {
   return {

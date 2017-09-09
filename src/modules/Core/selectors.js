@@ -12,9 +12,15 @@ export const getContext = (state) => {
 }
 
 export const getUsernames = (state) => {
-  const context = getContext(state)
-  const usernames = context.usernames
+  const core = getCore(state)
+  const usernames = core.context.usernames
   return usernames
+}
+
+export const getNextUsername = (state) => {
+  const core = getCore(state)
+  const nextUsername = core.context.nextUsername
+  return nextUsername
 }
 
 export const getIO = (state) => {

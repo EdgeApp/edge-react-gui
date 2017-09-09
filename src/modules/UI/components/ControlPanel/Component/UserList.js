@@ -3,7 +3,7 @@ import { Alert, Platform, View, ScrollView, TouchableNativeFeedback, TouchableOp
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import _ from 'lodash'
-import { logout } from '../../../../Login/action'
+import { logoutRequest } from '../action'
 
 import styles from '../style'
 const platform = Platform.OS
@@ -75,7 +75,7 @@ const mapStateToProps = state => ({
   usernames: CORE_SELECTORS.getUsernames(state)
 })
 const mapDispatchToProps = dispatch => ({
-  logout: (username) => { dispatch(logout(username))},
+  logout: (username) => { dispatch(logoutRequest(username))},
   deleteLocalAccount: (username) => { dispatch(CONTEXT_API.deleteLocalAccount(username)) }
 })
 

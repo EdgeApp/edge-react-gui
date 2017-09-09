@@ -32,7 +32,7 @@ import { addContext } from './Core/Context/action.js'
 
 import {setHeaderHeight} from './UI/dimensions/action.js'
 
-import { addCurrencyPlugin, addUsernames } from './UI/Settings/action.js'
+import { addCurrencyPlugin } from './UI/Settings/action.js'
 
 import { makeContext, makeReactNativeIo } from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
@@ -40,6 +40,7 @@ import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
 import * as CORE_SELECTORS from './Core/selectors'
 import * as CONTEXT_API from './Core/Context/api'
+import { addUsernames } from './Core/Context/action'
 
 const currencyPluginFactories = Platform.OS === 'ios' ?
   [ BitcoinCurrencyPluginFactory, EthereumCurrencyPluginFactory ] :
@@ -114,6 +115,10 @@ class Main extends Component {
     })
   }
 
+  getLoginScreen () {
+    <Login username={this.props.username} />
+  }
+
   render () {
     const routes = this.props.routes
     if (!this.props.context) return
@@ -127,7 +132,7 @@ class Main extends Component {
 
               <RouterWithRedux>
                 <Scene key='root' hideNavBar>
-                  <Scene key='login' initial component={Login} animation={'fade'} duration={600} />
+                  <Scene key='login' initial passProps qweqwe={'qweqwe'} username={this.props.username} component={this.getLoginScreen()} animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
 
@@ -180,7 +185,8 @@ class Main extends Component {
 
 const mapStateToProps = (state) => ({
   routes: state.routes,
-  context: CORE_SELECTORS.getContext(state)
+  context: CORE_SELECTORS.getContext(state),
+  username: CORE_SELECTORS.getNextUsername(state)
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
