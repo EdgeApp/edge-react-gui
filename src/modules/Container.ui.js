@@ -43,14 +43,14 @@ import { addCurrencyPlugin } from './UI/Settings/action.js'
 
 import { makeContext, makeReactNativeIo } from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
-import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
+// import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
 
 let currencyPlugins = []
 
 if (Platform.OS === 'ios') {
   currencyPlugins = [
-    BitcoinCurrencyPluginFactory,
+    // BitcoinCurrencyPluginFactory,
     EthereumCurrencyPluginFactory
   ]
 } else if (Platform.OS === 'android') {
