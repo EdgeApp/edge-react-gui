@@ -83,13 +83,13 @@ class WalletListModalBody extends Component {
   renderTokenRowContent = (parentId, currencyCode, balance) => {
     let multiplier = this.props.walletList[parentId].allDenominations[currencyCode][this.props.settings[currencyCode].denomination].multiplier
     let cryptoAmount = bns.divf(balance, multiplier)
-
+    const walletId = parentId
     return (
       <TouchableOpacity style={[styles.tokenRowContainer]}
         key={currencyCode} onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
-          this.props.selectWallet(parentId, currencyCode)
+          this.props.selectWallet({ walletId, currencyCode })
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={[styles.currencyRowContent]}>
@@ -108,14 +108,15 @@ class WalletListModalBody extends Component {
     let multiplier = guiWallet.allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination].multiplier
     let symbol = guiWallet.allDenominations[guiWallet.currencyCode][multiplier].symbol
     let denomAmount = bns.divf(guiWallet.primaryNativeBalance, multiplier)
-
+    const walletId = guiWallet.id
+    const currencyCode = guiWallet.currencyCode
     return (
       <View key={i}>
         <TouchableOpacity style={[styles.rowContainer]}
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet(guiWallet.id, guiWallet.currencyCode)
+            this.props.selectWallet({ walletId, currencyCode })
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>

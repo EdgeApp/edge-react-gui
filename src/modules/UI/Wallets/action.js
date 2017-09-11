@@ -10,8 +10,9 @@ export const SELECT_CURRENCY_CODE = PREFIX + 'SELECT_CURRENCY_CODE'
 
 import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
+import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
-export const selectWallet = (walletId, currencyCode) => {
+export const selectWallet = ({walletId, currencyCode}) => {
   return (dispatch) => {
     dispatch(selectWalletId(walletId))
     dispatch(selectCurrencyCode(currencyCode))
@@ -58,8 +59,18 @@ export const refreshWallet = (walletId) => {
 }
 
 export const upsertWallet = wallet => {
-  return {
-    type: UPSERT_WALLET,
-    data: { wallet }
+  return (dispatch, getState) => {
+    const state = getState()
+    const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
+    if (!loginStatus) {
+      return {
+        type: 'LOGGED_OUT'
+      }
+    }
+
+    return {
+      type: UPSERT_WALLET,
+      data: { wallet }
+    }
   }
 }

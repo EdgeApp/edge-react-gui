@@ -6,6 +6,7 @@ import {
 } from '../../UI/scenes/TransactionList/action.js'
 
 export const makeAccountCallbacks = dispatch => {
+  console.log('making callbacks')
   const callbacks = {
     onDataChanged: () => {
       console.log('onDataChanged')

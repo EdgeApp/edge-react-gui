@@ -3,6 +3,7 @@ import { Alert, Platform, View, ScrollView, TouchableNativeFeedback, TouchableOp
 import { connect } from 'react-redux'
 import { Text, Icon } from 'native-base'
 import _ from 'lodash'
+import { logoutRequest } from '../action'
 
 import styles from '../style'
 const platform = Platform.OS
@@ -12,7 +13,9 @@ import * as CONTEXT_API from '../../../../Core/Context/api.js'
 
 class UserListComponent extends Component {
 
-  _handlePressUserSelect = () => {}
+  _handlePressUserSelect = (username) => {
+    this.props.logout(username)
+  }
 
   _handleDeleteLocalAccount = (username) => {
     this.props.deleteLocalAccount(username)
@@ -72,6 +75,7 @@ const mapStateToProps = state => ({
   usernames: CORE_SELECTORS.getUsernames(state)
 })
 const mapDispatchToProps = dispatch => ({
+  logout: (username) => { dispatch(logoutRequest(username))},
   deleteLocalAccount: (username) => { dispatch(CONTEXT_API.deleteLocalAccount(username)) }
 })
 

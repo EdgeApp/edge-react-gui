@@ -7,7 +7,6 @@ import {ScrollView, View} from 'react-native'
 import T from '../../components/FormattedText'
 import {SettingsItemWithRoute, SettingsItemWithModal, SettingsItemWithSwitch} from './SettingsItems.ui'
 import {PrimaryButton} from '../../components/Buttons'
-import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
@@ -162,7 +161,4 @@ class SettingsOverview extends Component {
   }
 }
 
-const mapStateToProps = state => ({settingsFile: state.core.account.folder.file('settings.json')})
-const mapDispatchToProps = () => ({})
-const SettingsOverviewConnect = connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
-export default SettingsOverviewConnect
+export default SettingsOverview
