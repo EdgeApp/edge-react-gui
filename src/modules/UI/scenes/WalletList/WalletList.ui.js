@@ -1,6 +1,7 @@
 // @flow
 import React, {Component} from 'react'
 import {
+  Dimensions,
   TextInput,
   View,
   TouchableHighlight,
@@ -170,18 +171,25 @@ class WalletList extends Component {
               </Animated.View>
             </View>
           </LinearGradient>
-          {Object.keys(wallets).length > 0 ? this.renderActiveSortableList(walletsArray) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />}
+
+          {
+            Object.keys(wallets).length > 0 ?
+              this.renderActiveSortableList(walletsArray) :
+              <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+          }
+
         </View>
       </View>
     )
   }
 
   renderActiveSortableList = (walletsArray) => {
+    const {width} = Dimensions.get('window')
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
-        <Animated.View style={[{flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
+        <Animated.View testID={'sortableList'} style={[{flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
           <SortableListView
-            style={{ flex: 1}}
+            style={{ flex: 1, width }}
             data={this.props.wallets}
             order={this.sortActiveWallets(this.props.wallets)}
             onRowMoved={this.onActiveRowMoved}
@@ -189,18 +197,16 @@ class WalletList extends Component {
             renderRow={this.renderActiveRow /*, this.onActiveRowMoved*/}
             sortableMode={this.state.sortableMode}
             executeWalletRowOption={this.executeWalletRowOption}
-            activeOpacity={0.6}
-          />
+            activeOpacity={0.6} />
         </Animated.View>
-        <Animated.View style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
+        <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
           <FlatList
-            style={{ flex: 1}}
+            style={{ flex: 1, width }}
             data={walletsArray}
             extraData={this.props.wallets}
             renderItem={(item) => <FullWalletListRow data={item} />}
             sortableMode={this.state.sortableMode}
-            executeWalletRowOption={this.executeWalletRowOption}
-          />
+            executeWalletRowOption={this.executeWalletRowOption} />
         </Animated.View>
       </View>
     )

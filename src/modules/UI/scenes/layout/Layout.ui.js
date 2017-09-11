@@ -19,10 +19,10 @@ export default class Layout extends Component {
         <Header routes={this.props.routes} />
         <SideMenu>
           <DefaultRenderer style={{flex: 1}} navigationState={children[0]} onNavigate={this.props.onNavigate} />
-          <HelpModal style={{flex: 1}} />
-          <ABAlert style={{flex: 1}} />
-          <TransactionAlert style={{flex: 1}} />
         </SideMenu>
+        <HelpModal style={{flex: 1}} />
+        <ABAlert style={{flex: 1}} />
+        <TransactionAlert style={{flex: 1}} />
         <TabBar style={{flex: 1}} />
       </View>
     )

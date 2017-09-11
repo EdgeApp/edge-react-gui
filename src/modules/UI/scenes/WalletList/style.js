@@ -149,13 +149,15 @@ module.exports = StyleSheet.create({
     alignContent: 'stretch'
   },
   listsContainer: {
-
+    flex: 1
   },
   sortableList: {
+    flex: 1,
     position: 'absolute',
     height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 130 - 50,
   },
   fullList: {
+    flex: 1,
     position: 'absolute',
     height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 130 - 50,
   },
