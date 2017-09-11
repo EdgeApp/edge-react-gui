@@ -12,7 +12,7 @@ import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 
-export const selectWallet = ({walletId, currencyCode}) => {
+export const selectWallet = (walletId, currencyCode) => {
   return (dispatch) => {
     dispatch(selectWalletId(walletId))
     dispatch(selectCurrencyCode(currencyCode))

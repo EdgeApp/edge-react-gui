@@ -81,7 +81,7 @@ export const SortableWalletListRowConnect =  connect((state, ownProps) => {
 class FullWalletListRow extends Component {
 
   _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet({ walletId, currencyCode }))
+    this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList({ params: 'walletList' })
   }
 

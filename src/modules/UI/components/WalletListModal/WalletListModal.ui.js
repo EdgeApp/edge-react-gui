@@ -89,7 +89,7 @@ class WalletListModalBody extends Component {
         key={currencyCode} onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
-          this.props.selectWallet({ walletId, currencyCode })
+          this.props.selectWallet(walletId, currencyCode)
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={[styles.currencyRowContent]}>
@@ -116,7 +116,7 @@ class WalletListModalBody extends Component {
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet({ walletId, currencyCode })
+            this.props.selectWallet(walletId, currencyCode)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>

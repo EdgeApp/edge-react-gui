@@ -128,7 +128,7 @@ class Main extends Component {
 
               <RouterWithRedux>
                 <Scene key='root' hideNavBar>
-                  <Scene key='login' initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
+                  <Scene key='login' type={ActionConst.RESET} initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
 
@@ -145,7 +145,6 @@ class Main extends Component {
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                    {/* <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} /> */}
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
 

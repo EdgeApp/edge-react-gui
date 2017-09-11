@@ -3,12 +3,10 @@ import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import * as ACCOUNT_API from '../Core/Account/api'
 import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
-import * as ACCOUNT_API from '../Core/Account/api'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
-import { addCurrencyPlugin } from '../UI/Settings/action.js'
 
 export const initializeAccount = (account) => {
   return (dispatch, getState) => {
@@ -16,7 +14,7 @@ export const initializeAccount = (account) => {
     const context = CORE_SELECTORS.getContext(state)
     CONTEXT_API.getCurrencyPlugins(context)
     .then(currencyPlugins =>
-      currencyPlugins.forEach(plugin => dispatch(addCurrencyPlugin(plugin))))
+      currencyPlugins.forEach(plugin => dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))))
 
     dispatch(ACCOUNT_ACTIONS.addAccount(account))
     dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
@@ -24,16 +22,8 @@ export const initializeAccount = (account) => {
       walletId,
       currencyCode
     } = ACCOUNT_API.getFirstActiveWalletInfo(account)
-
-    dispatch(WALLET_ACTIONS.selectWallet({ walletId, currencyCode }))
-    dispatch(loadSettings())
-
-    const {
-      walletId,
-      currencyCode
-    } = ACCOUNT_API.getFirstActiveWalletInfo(account)
-
     dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+    dispatch(loadSettings())
   }
 }
 

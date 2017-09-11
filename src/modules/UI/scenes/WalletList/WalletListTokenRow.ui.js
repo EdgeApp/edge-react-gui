@@ -16,7 +16,7 @@ import * as UTILS from '../../../utils.js'
 
 class WalletListTokenRow extends Component {
   _onPressSelectWallet = (walletId, currencyCode) => {
-    this.props.dispatch(selectWallet({ walletId, currencyCode }))
+    this.props.dispatch(selectWallet(walletId, currencyCode))
     Actions.transactionList({params: 'walletList'})
   }
 
