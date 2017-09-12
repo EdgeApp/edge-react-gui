@@ -4,7 +4,7 @@ import android.app.Application;
 
 // import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
-import com.cboy.rn.splashscreen.SplashScreenReactPackage;
+//import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.reactlibrary.RNMyFancyLibraryPackage;
 //import com.slowpath.hockeyapp.RNHockeyAppPackage;
@@ -43,7 +43,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SplashScreenReactPackage(),
+//            new SplashScreenReactPackage(),
             new BlurViewPackage(),
             new RNMyFancyLibraryPackage(),
 //            new RNHockeyAppPackage(MainApplication.this),

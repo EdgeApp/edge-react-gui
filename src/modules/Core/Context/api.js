@@ -1,37 +1,34 @@
 // Core/Context/api.js
 
-export const createAccount = (context, ...opts) => {
-  return context.createAccount(...opts)
-}
+export const getCurrencyPlugins = (context) =>
+  context.getCurrencyPlugins()
 
-export const getLocalAccount = (context, username, callbacks) => {
-  return context.getLocalAccount(username, callbacks)
-}
+export const createAccount = (context, ...opts) =>
+  context.createAccount(...opts)
 
-export const deleteLocalAccount = (context, username) => {
-  return context.deleteLocalAccount(username)
-}
+export const getLocalAccount = (context, username, callbacks) =>
+  context.getLocalAccount(username, callbacks)
 
-export const isUsernameAvailable = (context, username) => {
-  return context.usernameAvailable(username)
-}
+export const deleteLocalAccount = (context, username) =>
+  context.deleteLocalAccount(username)
 
-export const loginWithPassword = (context, ...opts) => {
-  return context.loginWithPassword(...opts)
-}
+export const listUsernames = (context) =>
+  context.listUsernames()
 
-export const loginWithPin = (context, ...opts) => {
-  return context.loginWithPin(...opts)
-}
+export const isUsernameAvailable = (context, username) =>
+  context.usernameAvailable(username)
 
-export const hasPassword = (context, username) => {
-  return context.accountHasPassword(username)
-}
+export const loginWithPassword = (context, ...opts) =>
+  context.loginWithPassword(...opts)
 
-export const isPinReLoginEnabled = (context, username) => {
-  return context.pinLoginEnabled(username)
-}
+export const loginWithPin = (context, ...opts) =>
+  context.loginWithPin(...opts)
 
-export const requestOTPReset = (context, username, otpResetToken) => {
-  return context.requestOTPReset(username, otpResetToken)
-}
+export const hasPassword = (context, username) =>
+  context.accountHasPassword(username)
+
+export const isPinReLoginEnabled = (context, username) =>
+  context.pinLoginEnabled(username)
+
+export const requestOTPReset = (context, username, otpResetToken) =>
+  context.requestOTPReset(username, otpResetToken)

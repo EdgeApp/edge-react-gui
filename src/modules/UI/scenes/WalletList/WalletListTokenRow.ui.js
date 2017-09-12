@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import type { AbcDenomination } from 'airbitz-core-js'
+import type {AbcDenomination} from 'airbitz-core-js'
 import {
   View,
   TouchableHighlight
@@ -47,5 +47,5 @@ export default connect((state, ownProps) => {
   const currencyCode:string = ownProps.currencyCode
   const displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
-  return { displayDenomination }
+  return {displayDenomination}
 })(WalletListTokenRow)

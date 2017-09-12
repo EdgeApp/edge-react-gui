@@ -1,8 +1,6 @@
 // Core/selectors.js
 
-export const getCore = (state) => {
-  return state.core
-}
+export const getCore = (state) => state.core
 
 // Context
 export const getContext = (state) => {
@@ -12,9 +10,15 @@ export const getContext = (state) => {
 }
 
 export const getUsernames = (state) => {
-  const context = getContext(state)
-  const usernames = context.usernames
+  const core = getCore(state)
+  const usernames = core.context.usernames
   return usernames
+}
+
+export const getNextUsername = (state) => {
+  const core = getCore(state)
+  const nextUsername = core.context.nextUsername
+  return nextUsername
 }
 
 export const getIO = (state) => {
@@ -69,6 +73,6 @@ export const getWallet = (state, walletId) => {
 
 export const getBalanceInCrypto = (state, walletId, currencyCode) => {
   const wallet = getWallet(state, walletId)
-  const balanceInCrypto = wallet.getBalance(currencyCode)
-  return balanceInCrypto
+  const balance = wallet.getBalance(currencyCode)
+  return balance
 }

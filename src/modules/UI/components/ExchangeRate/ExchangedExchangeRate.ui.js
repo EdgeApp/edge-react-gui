@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import ExchangeRate from './ExchangeRate.ui.js'
 
 export default class ExchangedExchangeRate extends Component {

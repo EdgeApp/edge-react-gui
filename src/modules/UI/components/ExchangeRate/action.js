@@ -32,9 +32,7 @@ const fakeExchangeRate = {
   }
 }
 
-export const updateExchangeRates = () => {
-  return {
-    type: UPDATE_EXCHANGE_RATES,
-    data: fakeExchangeRate
-  }
-}
+export const updateExchangeRates = () => ({
+  type: UPDATE_EXCHANGE_RATES,
+  data: fakeExchangeRate
+})

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import FlipInput from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
 
@@ -125,9 +125,7 @@ export default class ExchangedFlipInput extends Component {
     return primaryDisplayAmount
   }
 
-  getPrimaryNativeToDisplayRatio = () => {
-    return this.props.primaryInfo.displayDenomination.multiplier.toString()
-  }
+  getPrimaryNativeToDisplayRatio = () => this.props.primaryInfo.displayDenomination.multiplier.toString()
 
   getPrimaryDisplayToExchangeRatio = (): string => {
     const exchangeMultiplier = this.props.primaryInfo.exchangeDenomination.multiplier.toString()

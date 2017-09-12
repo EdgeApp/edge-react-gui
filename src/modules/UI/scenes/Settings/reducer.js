@@ -1,21 +1,21 @@
 import * as ACTION from './action.js'
 
 export const settings = (state = {}, action) => {
-  const { type, data = {} } = action
+  const {type, data = {} } = action
 
   switch (type) {
   case ACTION.UPDATE_SETTINGS: {
-    const { settings } = data
+    const {settings} = data
     return settings
   }
 
   case ACTION.LOAD_SETTINGS: {
-    const { settings } = data
+    const {settings} = data
     return settings
   }
 
   case ACTION.SET_AUTO_LOGOUT_TIME: {
-    const { autoLogoutTime } = data
+    const {autoLogoutTime} = data
     return {
       ...state,
       autoLogoutTime
@@ -23,7 +23,7 @@ export const settings = (state = {}, action) => {
   }
 
   case ACTION.SET_DEFAULT_FIAT: {
-    const { defaultFiat } = data
+    const {defaultFiat} = data
     return {
       ...state,
       defaultFiat
@@ -31,7 +31,7 @@ export const settings = (state = {}, action) => {
   }
 
   case ACTION.SET_MERCHANT_MODE: {
-    const { merchantMode } = data
+    const {merchantMode} = data
     return {
       ...state,
       merchantMode
@@ -39,7 +39,7 @@ export const settings = (state = {}, action) => {
   }
 
   case ACTION.SET_BLUETOOTH_MODE: {
-    const { bluetoothMode } = data
+    const {bluetoothMode} = data
     return {
       ...state,
       bluetoothMode
@@ -47,7 +47,7 @@ export const settings = (state = {}, action) => {
   }
 
   case ACTION.SET_BITCOIN_DENOMINATION: {
-    const { denomination } = data
+    const {denomination} = data
     const BTC = state['BTC']
     return {
       ...state,
@@ -59,7 +59,7 @@ export const settings = (state = {}, action) => {
   }
 
   case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
-    const { overrideServer } = data
+    const {overrideServer} = data
     const BTC = state['BTC']
     return {
       ...state,
@@ -71,7 +71,7 @@ export const settings = (state = {}, action) => {
   }
 
   case ACTION.SET_ETHEREUM_DENOMINATION: {
-    const { denomination } = data
+    const {denomination} = data
     const ETH = state['ETH']
     return {
       ...state,

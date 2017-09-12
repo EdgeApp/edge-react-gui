@@ -21,82 +21,66 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
 import Action from 'react-native-router-flux'
-import { openABAlert } from '../../components/ABAlert/action.js'
+import {openABAlert} from '../../components/ABAlert/action.js'
 
-export const getTransactionsRequest = (walletId, currencyCode) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const wallet = CORE_SELECTORS.getWallet(state, walletId)
+export const getTransactionsRequest = (walletId, currencyCode) => (dispatch, getState) => {
+  const state = getState()
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-    WALLET_API.getTransactions(wallet, currencyCode)
+  WALLET_API.getTransactions(wallet, currencyCode)
     .then(transactions => {
       dispatch(updateTransactions(transactions))
     })
+}
+
+export const refreshTransactionsRequest = (walletId) => (dispatch, getState) => {
+  const state = getState()
+  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+
+  if (walletId === selectedWalletId) {
+    return dispatch(getTransactionsRequest(walletId, currencyCode))
   }
 }
 
-export const refreshTransactionsRequest = (walletId) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-    const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+export const newTransactionsRequest = (walletId, transactions) => (dispatch) => {
+  const messageInfo = {
+    title: 'Transaction Received',
+    message: 'You have received a new transaction',
+    buttons: [
+        {text: 'View', onPress: () => Action.transactionDetails(transactions[0])}
+    ]
+  }
+  dispatch(openABAlert(messageInfo))
+}
 
-    if (walletId === selectedWalletId) {
-      return dispatch(getTransactionsRequest(walletId, currencyCode))
-    }
+export const newTransactions = (transactions) => ({
+  type: NEW_TRANSACTIONS,
+  data: {transactions}
+})
+
+export const changedTransactionsRequest = (transactions, walletId) => (dispatch, getState) => {
+  const state = getState()
+  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+
+  if (walletId === selectedWalletId) {
+    return dispatch(changedTransactions(transactions))
   }
 }
 
-export const newTransactionsRequest = (walletId, transactions) => {
-  return (dispatch) => {
-    const messageInfo = {
-      title: 'Transaction Received',
-      message: 'You have received a new transaction',
-      buttons: [
-        { text: 'View', onPress: () => Action.transactionDetails(transactions[0]) }
-      ]
-    }
-    dispatch(openABAlert(messageInfo))
-  }
-}
+export const changedTransactions = (transactions) => ({
+  type: CHANGED_TRANSACTIONS,
+  data: {transactions}
+})
 
-export const newTransactions = (transactions) => {
-  return {
-    type: NEW_TRANSACTIONS,
-    data: { transactions }
-  }
-}
+export const updateTransactions = transactions => ({
+  type: UPDATE_TRANSACTIONS,
+  data: {transactions}
+})
 
-export const changedTransactionsRequest = (transactions, walletId) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-
-    if (walletId === selectedWalletId) {
-      return dispatch(changedTransactions(transactions))
-    }
-  }
-}
-
-export const changedTransactions = (transactions) => {
-  return {
-    type: CHANGED_TRANSACTIONS,
-    data: { transactions }
-  }
-}
-
-export const updateTransactions = transactions => {
-  return {
-    type: UPDATE_TRANSACTIONS,
-    data: { transactions }
-  }
-}
-
-export const updateBalance = () => {
-  return {
-    type: 'noop'
-  }
-}
+export const updateBalance = () => ({
+  type: 'noop'
+})
 
 export function deleteTransactionsList () {
   return {

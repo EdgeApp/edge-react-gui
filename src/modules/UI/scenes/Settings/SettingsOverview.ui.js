@@ -1,19 +1,22 @@
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
-import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {ScrollView, View} from 'react-native'
-import T from '../../components/FormattedText'
-import {SettingsItemWithRoute, SettingsItemWithModal, SettingsItemWithSwitch} from './SettingsItems.ui'
-import {PrimaryButton} from '../../components/Buttons'
 import {connect} from 'react-redux'
+import {Actions} from 'react-native-router-flux'
+
+import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
-import {Actions} from 'react-native-router-flux'
-import s from './style'
+
+import strings from '../../../../locales/default'
+import T from '../../components/FormattedText'
+import {SettingsItemWithModal, SettingsItemWithRoute, SettingsItemWithSwitch} from './SettingsItems.ui'
+import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
+
+import s from './style'
 
 class SettingsOverview extends Component {
   constructor (props) {
@@ -149,20 +152,11 @@ class SettingsOverview extends Component {
     )
   }
 
-  renderSettingsItemWithRoute = (x, i) => {
-    return <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
-  }
+  renderSettingsItemWithRoute = (x, i) => <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
 
-  renderSettingsItemWithSwitch = (x) => {
-    return <SettingsItemWithSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
-  }
+  renderSettingsItemWithSwitch = (x) => <SettingsItemWithSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
 
-  renderSettingsItemWithModal = (x) => {
-    return <SettingsItemWithModal leftText={x.text} key={x.key} modal={x.key} />
-  }
+  renderSettingsItemWithModal = (x) => <SettingsItemWithModal leftText={x.text} key={x.key} modal={x.key} />
 }
 
-const mapStateToProps = state => ({settingsFile: state.core.account.folder.file('settings.json')})
-const mapDispatchToProps = () => ({})
-const SettingsOverviewConnect = connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
-export default SettingsOverviewConnect
+export default connect()(SettingsOverview)

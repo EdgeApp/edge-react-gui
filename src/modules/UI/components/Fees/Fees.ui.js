@@ -1,5 +1,5 @@
-import { View, StyleSheet, Text } from 'react-native'
-import { connect } from 'react-redux'
+import {View, StyleSheet, Text} from 'react-native'
+import {connect} from 'react-redux'
 import React from 'react'
 
 const styles = StyleSheet.create({
@@ -17,8 +17,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const Fees = ({feesInCrypto, feesInFiat}) => {
-  return (
+const Fees = ({feesInCrypto, feesInFiat}) => (
     <View style={styles.view}>
       <Text style={styles.label}>
           (Fee)
@@ -33,6 +32,5 @@ const Fees = ({feesInCrypto, feesInFiat}) => {
       </Text>
     </View>
   )
-}
 
 export default connect()(Fees)

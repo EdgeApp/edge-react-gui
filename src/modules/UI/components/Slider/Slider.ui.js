@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {Text, View} from 'react-native'
+import {connect} from 'react-redux'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
 
@@ -20,7 +20,7 @@ class ABSlider extends Component {
     if (value <= 1) {
       this.props.onSlidingComplete()
     } else {
-      this.setState({ value: 10 })
+      this.setState({value: 10})
     }
   };
 

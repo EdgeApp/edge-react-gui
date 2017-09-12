@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {Text, View} from 'react-native'
+import {connect} from 'react-redux'
 import styles from './style'
-import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
+import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import T from '../../components/FormattedText'
 import {updateRenameWalletInput} from './action'
 import strings from '../../../../locales/default'
@@ -28,7 +28,7 @@ export const options = [
 ]
 
 class WalletListRowOptions extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       archiveSyntax: sprintf(strings.enUS['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized'])

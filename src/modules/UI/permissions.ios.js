@@ -10,9 +10,5 @@ export const request = (request) => {
   }
 }
 
-export const requestCameraPermission = () => {
-  return Permissions.request('camera')
-  .then(permission => {
-    return permission === 'authorized'
-  })
-}
+export const requestCameraPermission = () => Permissions.request('camera')
+  .then(permission => permission === 'authorized')

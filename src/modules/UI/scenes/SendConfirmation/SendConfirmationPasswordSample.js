@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ export default class Password extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={[ styles.text, { fontSize: 14 } ]}>Password:</Text>
+        <Text style={[ styles.text, {fontSize: 14} ]}>Password:</Text>
         <View style={styles.textInputContainer}>
           <TextInput secureTextEntry style={styles.textInput} />
         </View>

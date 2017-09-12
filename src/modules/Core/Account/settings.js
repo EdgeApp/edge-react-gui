@@ -42,9 +42,7 @@ export const setOtpModeRequest = (account, otpMode) => {
   }
 }
 
-export const setOTPRequest = (account, key) => {
-  return account.setupOTPKey(key)
-}
+export const setOTPRequest = (account, key) => account.setupOTPKey(key)
 
 export const setPinModeRequest = (account, pinMode) => {
   if (pinMode === true) {
@@ -56,68 +54,56 @@ export const setPinModeRequest = (account, pinMode) => {
   }
 }
 
-export const setPinRequest = (account, pin) => {
-  return account.changePIN(pin)
-}
+export const setPinRequest = (account, pin) => account.changePIN(pin)
 
 // Account Settings
-export const setAutoLogoutTimeRequest = (account, autoLogoutTimeInSeconds) => {
-  return getSyncedSettings(account)
+export const setAutoLogoutTimeRequest = (account, autoLogoutTimeInSeconds) =>
+  getSyncedSettings(account)
   .then(settings => {
-    const updatedSettings = updateSettings(settings, { autoLogoutTimeInSeconds })
+    const updatedSettings = updateSettings(settings, {autoLogoutTimeInSeconds})
     return setSyncedSettings(account, updatedSettings)
   })
-}
 
-export const setDefaultFiatRequest = (account, defaultFiat) => {
-  return getSyncedSettings(account)
+export const setDefaultFiatRequest = (account, defaultFiat) =>
+  getSyncedSettings(account)
   .then(settings => {
-    const updatedSettings = updateSettings(settings, { defaultFiat })
+    const updatedSettings = updateSettings(settings, {defaultFiat})
     return setSyncedSettings(account, updatedSettings)
   })
-}
 
-export const setMerchantModeRequest = (account, merchantMode) => {
-  return getSyncedSettings(account)
+export const setMerchantModeRequest = (account, merchantMode) =>
+  getSyncedSettings(account)
   .then(settings => {
-    const updatedSettings = updateSettings(settings, { merchantMode })
+    const updatedSettings = updateSettings(settings, {merchantMode})
     return setSyncedSettings(account, updatedSettings)
   })
-}
 
 // Local Settings
-export const setBluetoothModeRequest = (account, bluetoothMode) => {
-  return getLocalSettings(account)
+export const setBluetoothModeRequest = (account, bluetoothMode) =>
+  getLocalSettings(account)
   .then(settings => {
-    const updatedSettings = updateSettings(settings, { bluetoothMode })
+    const updatedSettings = updateSettings(settings, {bluetoothMode})
     return setLocalSettings(account, updatedSettings)
   })
-}
 
 // Currency Settings
-export const setDenominationKeyRequest = (account, currencyCode, denomination) => {
-  return getSyncedSettings(account)
+export const setDenominationKeyRequest = (account, currencyCode, denomination) =>
+  getSyncedSettings(account)
   .then(settings => {
-    const updatedSettings = updateCurrencySettings(settings, currencyCode, { denomination })
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, {denomination})
     return setSyncedSettings(account, updatedSettings)
   })
-}
 
 // Helper Functions
-export const getSyncedSettings = (account) => {
-  return getSyncedSettingsFile(account).getText()
-  .then(text => {
-    return JSON.parse(text)
-  })
+export const getSyncedSettings = (account) =>
+  getSyncedSettingsFile(account).getText()
+  .then(text => JSON.parse(text))
   .catch(e => {
     console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
     return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
-    .then(() => {
-      return SYNCED_ACCOUNT_DEFAULTS
-    })
+    .then(() => SYNCED_ACCOUNT_DEFAULTS)
   })
-}
 
 export const setSyncedSettings = (account, settings) => {
   const text = JSON.stringify(settings)
@@ -158,30 +144,21 @@ export const getSyncedSubcategories = account => {
     console.log('error: ', e)
     // If Categories.json doesn't exist yet, create it, and return it
     return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
-    .then(() => {
-      return SYNCED_SUBCATEGORIES_DEFAULTS
-    })
+    .then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
   })
 }
 
-export const getSyncedSubcategoriesFile = account => {
-  return account.folder.file('Categories.json')
-}
+export const getSyncedSubcategoriesFile = account => account.folder.file('Categories.json')
 
-export const getLocalSettings = account => {
-  return getLocalSettingsFile(account).getText()
-  .then(text => {
-    return JSON.parse(text)
-  })
+export const getLocalSettings = account =>
+  getLocalSettingsFile(account).getText()
+  .then(text => JSON.parse(text))
   .catch(e => {
     console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
     return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
-    .then(() => {
-      return LOCAL_ACCOUNT_DEFAULTS
-    })
+    .then(() => LOCAL_ACCOUNT_DEFAULTS)
   })
-}
 
 export const setLocalSettings = (account, settings) => {
   const text = JSON.stringify(settings)
@@ -197,13 +174,9 @@ export const getCoreSettings = () => {
   return Promise.resolve(coreSettings)
 }
 
-export const getSyncedSettingsFile = account => {
-  return account.folder.file('Settings.json')
-}
+export const getSyncedSettingsFile = account => account.folder.file('Settings.json')
 
-export const getLocalSettingsFile = account => {
-  return account.localFolder.file('Settings.json')
-}
+export const getLocalSettingsFile = account => account.localFolder.file('Settings.json')
 
 export const updateCurrencySettings = (currentSettings, currencyCode, newSettings) => {
   const currencySettings = currentSettings[currencyCode]

@@ -1,11 +1,11 @@
 // @flow
-import React, { Component } from 'react'
-import { View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
+import React, {Component} from 'react'
+import {View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity} from 'react-native'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import styles from './style'
 import {
@@ -18,7 +18,7 @@ import * as Animatable from 'react-native-animatable'
 import {border as b, cutOffText} from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import {updateReceiveAddress} from '../../scenes/Request/action.js'
-import { bns } from 'biggystring'
+import {bns} from 'biggystring'
 
 class WalletListModal extends Component {
   constructor (props) {
@@ -83,13 +83,13 @@ class WalletListModalBody extends Component {
   renderTokenRowContent = (parentId, currencyCode, balance) => {
     let multiplier = this.props.walletList[parentId].allDenominations[currencyCode][this.props.settings[currencyCode].denomination].multiplier
     let cryptoAmount = bns.divf(balance, multiplier)
-
+    const walletId = parentId
     return (
       <TouchableOpacity style={[styles.tokenRowContainer]}
         key={currencyCode} onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
-          this.props.selectWallet(parentId, currencyCode)
+          this.props.selectWallet(walletId, currencyCode)
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={[styles.currencyRowContent]}>
@@ -97,7 +97,7 @@ class WalletListModalBody extends Component {
             <T style={[styles.currencyRowText]}>{currencyCode}</T>
           </View>
           <View style={[styles.currencyRowBalanceTextWrap]}>
-            <T style={[styles.currencyRowText]}>{ cryptoAmount }</T>
+            <T style={[styles.currencyRowText]}>{cryptoAmount}</T>
           </View>
         </View>
       </TouchableOpacity>
@@ -108,14 +108,15 @@ class WalletListModalBody extends Component {
     let multiplier = guiWallet.allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination].multiplier
     let symbol = guiWallet.allDenominations[guiWallet.currencyCode][multiplier].symbol
     let denomAmount = bns.divf(guiWallet.primaryNativeBalance, multiplier)
-
+    const walletId = guiWallet.id
+    const currencyCode = guiWallet.currencyCode
     return (
       <View key={i}>
         <TouchableOpacity style={[styles.rowContainer]}
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet(guiWallet.id, guiWallet.currencyCode)
+            this.props.selectWallet(walletId, currencyCode)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={[styles.currencyRowContent]}>
@@ -123,7 +124,7 @@ class WalletListModalBody extends Component {
               <T style={[styles.currencyRowText]}>{cutOffText(guiWallet.name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>{symbol || ''} { denomAmount }</T>
+              <T style={[styles.currencyRowText]}>{symbol || ''} {denomAmount}</T>
             </View>
           </View>
         </TouchableOpacity>
@@ -137,7 +138,7 @@ class WalletListModalBody extends Component {
     let i = -1
     let rows = []
     for (const n in this.props.walletList) {
-      i++
+      i = i + 1
       const guiWallet = this.props.walletList[n]
       if (typeof guiWallet.id !== 'undefined' && this.props.activeWalletIds.includes(guiWallet.id)) {
         rows.push(this.renderWalletRow(guiWallet, i))
@@ -149,7 +150,7 @@ class WalletListModalBody extends Component {
   render () {
     console.log('rendering dropdown', this.props.selectedWalletId)
     return (
-      <View>{ this.renderWalletRows() }</View>
+      <View>{this.renderWalletRows()}</View>
     )
   }
 }
@@ -159,14 +160,12 @@ WalletListModalBody.propTypes = {
 }
 
 export const WalletListModalBodyConnect = connect(
-  (state) => {
-    return {
-      walletList: state.ui.wallets.byId,
-      activeWalletIds: state.ui.wallets.activeWalletIds,
-      selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
-      settings: state.ui.settings
-    }
-  },
+  (state) => ({
+    walletList: state.ui.wallets.byId,
+    activeWalletIds: state.ui.wallets.activeWalletIds,
+    selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
+    settings: state.ui.settings
+  }),
   dispatch => ({
     selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
     getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),

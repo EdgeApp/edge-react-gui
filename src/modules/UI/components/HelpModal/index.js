@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { View, TouchableOpacity, Image, TouchableWithoutFeedback, WebView } from 'react-native'
-import { Icon } from 'native-base'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {View, TouchableOpacity, Image, TouchableWithoutFeedback, WebView} from 'react-native'
+import {Icon} from 'native-base'
+import {connect} from 'react-redux'
 import Modal from 'react-native-modal'
-import { closeHelpModal } from './actions.js'
+import {closeHelpModal} from './actions.js'
 import logo from '../../../../img/logo2x.png'
 
 class HelpModal extends Component {

@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {
   Header,
   Left,
@@ -8,7 +8,7 @@ import {
   Icon
 } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
-import { Actions } from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux'
 
 import LeftComponent from './Component/Left.js'
 import RightComponent from './Component/Right.js'
@@ -18,14 +18,12 @@ import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 
 class HeaderUI extends Component {
-  _renderTitle = () => {
-    return this.props.routes.scene.title || 'Header'
-  }
+  _renderTitle = () => this.props.routes.scene.title || 'Header'
 
   _renderLeftButton = () => {
     if (this.props.routes.stackDepth) {
       return (
-        <Icon name='arrow-back' onPress={() => Actions.pop()} />
+        <Icon name='arrow-back' onPress={Actions.settingsOverview} />
       )
     }
   }
@@ -51,6 +49,7 @@ class HeaderUI extends Component {
             <RightComponent routes={this.props.routes} />
           </Right>
         </Header>
+        {this.props.children}
       </LinearGradient>
     )
   }

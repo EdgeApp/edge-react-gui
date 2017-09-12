@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import React, {Component} from 'react'
+import {TouchableOpacity} from 'react-native'
+import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import T from '../../../components/FormattedText'
@@ -8,21 +8,22 @@ import styles from '../style'
 
 export default class Left extends Component {
   render () {
-    switch (this.props.routes.scene.sceneKey) {
-    case 'directory':
-      return <BackButton />
+    const children = this.props.routes.scene.children
+    const sceneName = children ?
+      this.props.routes.scene.children[this.props.routes.scene.index].name :
+      null
+
+    switch (sceneName) {
     case 'sendConfirmation':
       return <BackButton syntax='Back' onPressFxn={() => Actions.scan({type: 'reset'})} />
     case 'createWallet':
-      return <BackButton syntax='Cancel' />
-    case 'transactionList':
-      return this.props.routes.scene.params === 'walletList' ? <BackButton /> : null
+      return <BackButton syntax='Cancel' onPressFxn={() => Actions.walletList({type: 'reset'})} />
     case 'btcSettings':
-      return <BackButton syntax='Back' />
+      return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
     case 'ethSettings':
-      return <BackButton syntax='Back' />
+      return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
     case 'transactionDetails':
-      return <BackButton syntax='Cancel' />
+      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionsList({type: 'reset'})} />
     default:
       return null
     }
@@ -32,7 +33,6 @@ export default class Left extends Component {
 class BackButton extends Component {
   constructor (props) {
     super(props)
-    this.props.pressFxn = this.props.onPressFxn ? this.props.onPressFxn : Actions.pop
     this.props.syntax = this.props.syntax ? this.props.syntax : sprintf(strings.enUS['back_button_text'])
   }
 

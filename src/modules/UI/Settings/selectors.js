@@ -6,16 +6,16 @@ export const getSettings = (state: any) => {
   return settings
 }
 
-
-export const getDenominationIndex = (state: any, currencyCode: string) => {
+export const getLoginStatus = (state: any) => {
   const settings = getSettings(state)
-  const currencySettings = settings[currencyCode]
-  let denominationIndex:string
-  if (currencySettings) {
-    denominationIndex = currencySettings.denomination
-  }
-  console.log('in getDenominationIndex, settings is: ', settings, ' , currencySettings is: ', currencySettings, ' , currencyCode is: ', currencyCode, ' , denominationIndex is: ', denominationIndex)
-  return denominationIndex
+  const loginStatus = settings.loginStatus
+  return loginStatus
+}
+
+export const getExchangeTimer = (state: any) => {
+  const settings = getSettings(state)
+  const exchangeTimer = settings.exchangeTimer
+  return exchangeTimer
 }
 
 export const getCurrencySettings = (state: any, currencyCode: string) => {
@@ -31,7 +31,6 @@ export const getDenominations = (state: any, currencyCode: string) => {
 }
 
 export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
-  console.log('in getDisplayDenominationKey, state is: ', state, ' , and currencyCode is: ', currencyCode)
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
@@ -41,17 +40,13 @@ export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
 export const getDisplayDenomination = (state: any, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  const selectedDenomination = denominations.find(denomination => {
-    return denomination.multiplier === selectedDenominationKey
-  })
+  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
   return selectedDenomination
 }
 
 export const getExchangeDenomination = (state: any, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
-  const exchangeDenomination = denominations.find(denomination => {
-    return denomination.name === currencyCode
-  })
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   return exchangeDenomination
 }
 
@@ -84,4 +79,10 @@ export const getSupportedWalletTypes = (state: any) => {
     [plugin.currencyInfo.currencyName]: plugin.currencyInfo.walletTypes[0]
   }), {})
   return supportedWalletTypes
+}
+
+export const getAutoLogoutTimeInSeconds = (state: any) => {
+  const settings = getSettings(state)
+  const autoLogoutTimeInSeconds = settings.autoLogoutTimeInSeconds
+  return autoLogoutTimeInSeconds
 }

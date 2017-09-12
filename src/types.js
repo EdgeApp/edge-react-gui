@@ -3,7 +3,7 @@
  */
 // @flow
 
-import type { AbcDenomination, AbcMetaToken } from 'airbitz-core-types'
+import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 
 export class GUIWallet {
   id: string
