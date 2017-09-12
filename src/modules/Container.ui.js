@@ -1,5 +1,5 @@
 // import HockeyApp from 'react-native-hockeyapp'
-import SplashScreen from 'react-native-splash-screen'
+// import SplashScreen from 'react-native-splash-screen'
 import React, { Component } from 'react'
 import { View, StatusBar, Platform, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
@@ -107,7 +107,8 @@ class Main extends Component {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
-      this.setState({ context, loading: false }, () => SplashScreen.hide())
+      // this.setState({ context, loading: false }, () => SplashScreen.hide())
+      this.setState({ context, loading: false })
       const exchangeTimer = setInterval(() => {
         this.props.updateExchangeRates()
       }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
