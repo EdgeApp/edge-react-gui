@@ -86,3 +86,9 @@ export const getAutoLogoutTimeInSeconds = (state: any) => {
   const autoLogoutTimeInSeconds = settings.autoLogoutTimeInSeconds
   return autoLogoutTimeInSeconds
 }
+
+export const getAutoLogoutTimeInMinutes = (state: any) => {
+  const autoLogoutTimeInSeconds = getAutoLogoutTimeInSeconds(state)
+  const autoLogoutTimeInMinutes = autoLogoutTimeInSeconds / 60
+  return autoLogoutTimeInMinutes
+}

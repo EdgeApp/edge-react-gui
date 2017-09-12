@@ -1,7 +1,7 @@
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
-import {ScrollView, View} from 'react-native'
+import {Picker, ScrollView, View} from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 
@@ -12,15 +12,24 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
-import {SettingsItemWithModal, SettingsItemWithRoute, SettingsItemWithSwitch} from './SettingsItems.ui'
+import RowModal from './components/RowModal.ui'
+import RowRoute from './components/RowRoute.ui'
+import RowSwitch from './components/RowSwitch.ui'
 import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
+
+import StylizedModal from '../../components/Modal/Modal.ui'
+
+import * as SETTINGS_ACTIONS from '../../Settings/action'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors'
+import * as CORE_SELECTORS from '../../../Core/selectors'
 
 import s from './style'
 
 class SettingsOverview extends Component {
   constructor (props) {
     super(props)
+    this.state = {showAutoLogoutSelectorModal: false}
 
     this.settings = [
       {
@@ -116,14 +125,14 @@ class SettingsOverview extends Component {
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
-                {sprintf(strings.enUS['settings_account_title_cap'])}: Airbitz Super Dooper Wallet
+                {sprintf(strings.enUS['settings_account_title_cap'])}: {this.props.username}
               </T>
             </View>
           </View>
         </LinearGradient>
 
         <View>
-          {this.settings.map(this.renderSettingsItemWithRoute)}
+          {this.settings.map(this.renderRowRoute)}
         </View>
 
         <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
@@ -139,24 +148,56 @@ class SettingsOverview extends Component {
         </LinearGradient>
 
         <View>
-          {this.optionModals.map(this.renderSettingsItemWithModal)}
-          {this.securityRoute.map(this.renderSettingsItemWithRoute)}
-          {Object.keys(this.options).map(this.renderSettingsItemWithSwitch)}
-          {this.currencies.map(this.renderSettingsItemWithRoute)}
+          <RowModal onPress={this.showAutoLogoutSelectorModal}
+            leftText={sprintf(strings.enUS['settings_title_auto_logoff'])}
+            modal={this.props.autoLogoutTimeInMinutes || 'Disabled'} />
+
+          {this.securityRoute.map(this.renderRowRoute)}
+          {Object.keys(this.options).map(this.renderRowSwitch)}
+          {this.currencies.map(this.renderRowRoute)}
           <View style={[s.debugArea, b('green')]}>
             <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
           </View>
           <View style={s.emptyBottom} />
         </View>
+        {this.renderAutoLogoutSelectorModal()}
       </ScrollView>
     )
   }
 
-  renderSettingsItemWithRoute = (x, i) => <SettingsItemWithRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
+  showAutoLogoutSelectorModal = () => this.setState({showAutoLogoutSelectorModal: true})
+  renderAutoLogoutSelectorModal = () => {
+    const logoutOptions = [1, 5, 15, 30, 45, 60, 120]
+    const pickerOptions = [
+      <Picker.Item label={'Disable'} value={null} key={'disable'} />,
+      ...logoutOptions.map(option => <Picker.Item label={option.toString()} value={option} key={option} />)
+    ]
 
-  renderSettingsItemWithSwitch = (x) => <SettingsItemWithSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
+    const picker = <Picker
+      selectedValue={this.props.autoLogoutTimeInMinutes}
+      onValueChange={(itemValue) => this.props.setAutoLogoutTimeInMinutes(itemValue)}>
+      {pickerOptions}
+    </Picker>
 
-  renderSettingsItemWithModal = (x) => <SettingsItemWithModal leftText={x.text} key={x.key} modal={x.key} />
+    return <StylizedModal visibilityBoolean={this.state.showAutoLogoutSelectorModal}
+      headerText={'Select time before auto logout'}
+      headerSubtext={'Select time before auto logout'}
+      modalMiddle={picker} />
+  }
+
+  renderRowRoute = (x, i) => <RowRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
+
+  renderRowSwitch = (x) => <RowSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
+
+  renderRowModal = (x) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
 }
 
-export default connect()(SettingsOverview)
+const mapStateToProps = (state) => ({
+  autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
+  username: CORE_SELECTORS.getUsername(state)
+})
+const mapDispatchToProps = (dispatch) => ({
+  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInMinutes(autoLogoutTimeInMinutes))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

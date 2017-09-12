@@ -53,12 +53,12 @@ export const setPINRequest = pin => (dispatch, getState) => {
     .catch(error => { console.error(error) })
 }
 
-export const setAutoLogoutTimeRequest = (autoLogoutTimeInSeconds) => (dispatch, getState) => {
-  dispatch(setAutoLogoutTimeStart(autoLogoutTimeInSeconds))
+export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds) => (dispatch, getState) => {
+  dispatch(setAutoLogoutTimeInSecondsStart(autoLogoutTimeInSeconds))
 
   const {account} = getState().core
-  ACCOUNT_SETTINGS.setAutoLogoutTimeRequest(account, autoLogoutTimeInSeconds)
-    .then(() => dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds)))
+  ACCOUNT_SETTINGS.setAutoLogoutTimeInSecondsRequest(account, autoLogoutTimeInSeconds)
+    .then(() => dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds)))
     .catch(error => { console.error(error) })
 }
 
@@ -130,7 +130,7 @@ const setPINStart = pin => ({
   data: {pin}
 })
 
-const setAutoLogoutTimeStart = autoLogoutTimeInSeconds => ({
+const setAutoLogoutTimeInSecondsStart = autoLogoutTimeInSeconds => ({
   type: SET_AUTO_LOGOUT_TIME_START,
   data: {autoLogoutTimeInSeconds}
 })

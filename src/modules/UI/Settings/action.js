@@ -88,9 +88,14 @@ export const setOTP = otp => ({
   data: {otp}
 })
 
-export const setAutoLogoutTime = autoLogoutTimeInSeconds => ({
+export const setAutoLogoutTimeInSeconds = autoLogoutTimeInSeconds => ({
   type: SET_AUTO_LOGOUT_TIME,
   data: {autoLogoutTimeInSeconds}
+})
+
+export const setAutoLogoutTimeInMinutes = autoLogoutTimeInMinutes => ({
+  type: SET_AUTO_LOGOUT_TIME,
+  data: {autoLogoutTimeInSeconds: autoLogoutTimeInMinutes * 60}
 })
 
 export const setDefaultFiat = defaultFiat => ({
