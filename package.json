@@ -11,7 +11,7 @@
     "android:release-install": "npm run android:clean && npm run android:release && cd android/app/build/outputs/apk && adb install app-release.apk; cd ../",
     "android:logcat": "adb logcat *:S ReactNative:V ReactNativeJS:V",
     "ios:run": "react-native run-ios",
-    "postinstall": "rn-nodeify --hack && rm -rf ./node_modules/bcoin/.babelrc",
+    "postinstall": "rn-nodeify --hack && rm -rf ./node_modules/bcoin/.babelrc ./node_modules/airbitz-currency-bitcoin/node_modules/bcoin/.babelrc",
     "tron": "node_modules/.bin/reactotron",
     "lint": "eslint --parser babel-eslint ./src **/*.js",
     "lint:fix": "npm run lint -- --fix",
