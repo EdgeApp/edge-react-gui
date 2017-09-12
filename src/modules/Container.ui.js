@@ -1,7 +1,7 @@
 // import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, { Component } from 'react'
-import { View, StatusBar, Platform, Keyboard } from 'react-native'
+import { View, StatusBar, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
 import { ActionConst, Scene, Router } from 'react-native-router-flux'
 import { Container, StyleProvider } from 'native-base'
@@ -37,14 +37,12 @@ import * as CONTEXT_API from './Core/Context/api'
 
 import { makeContext, makeReactNativeIo } from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
-import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
+// import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
 
 const currencyPluginFactories = []
-if (Platform.OS === 'ios') {
-  currencyPluginFactories.push(EthereumCurrencyPluginFactory)
-}
-currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
+currencyPluginFactories.push(EthereumCurrencyPluginFactory)
+// currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 
 import {setLocaleInfo} from './UI/locale/action'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
