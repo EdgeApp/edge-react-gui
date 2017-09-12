@@ -9,7 +9,7 @@ import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import T from '../../components/FormattedText'
-import {selectWallet} from '../../Wallets/action.js'
+import { selectWallet } from '../../Wallets/action.js'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils.js'

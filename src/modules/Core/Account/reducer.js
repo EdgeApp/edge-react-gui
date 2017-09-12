@@ -1,6 +1,6 @@
 import * as ACTION from './action.js'
 
-export const account = (state = {}, action) => {
+export const accountReducer = (state = {}, action) => {
   const { type, data = {} } = action
   const { account } = data
 
@@ -10,4 +10,12 @@ export const account = (state = {}, action) => {
   default:
     return state
   }
+}
+
+export const account = (state, action) => {
+  if (action.type === 'LOGOUT') {
+    state = undefined
+  }
+
+  return accountReducer(state, action)
 }

@@ -1,5 +1,9 @@
 // Core/Context/api.js
 
+export const getCurrencyPlugins = (context) => {
+  return context.getCurrencyPlugins()
+}
+
 export const createAccount = (context, ...opts) => {
   return context.createAccount(...opts)
 }
@@ -10,6 +14,10 @@ export const getLocalAccount = (context, username, callbacks) => {
 
 export const deleteLocalAccount = (context, username) => {
   return context.deleteLocalAccount(username)
+}
+
+export const listUsernames = (context) => {
+  return context.listUsernames()
 }
 
 export const isUsernameAvailable = (context, username) => {

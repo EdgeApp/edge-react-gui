@@ -28,7 +28,7 @@ export const options = [
 ]
 
 class WalletListRowOptions extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       archiveSyntax: sprintf(strings.enUS['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized'])

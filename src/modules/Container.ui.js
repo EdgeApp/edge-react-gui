@@ -3,13 +3,15 @@ import SplashScreen from 'react-native-splash-screen'
 import React, { Component } from 'react'
 import { View, StatusBar, Platform, Keyboard } from 'react-native'
 import { connect } from 'react-redux'
-import { Scene, Router } from 'react-native-router-flux'
+import { ActionConst, Scene, Router } from 'react-native-router-flux'
 import { Container, StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
-import LinearGradient from 'react-native-linear-gradient'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
+import Locale from 'react-native-locale'
 
+import Login from './UI/scenes/Login/Login.ui'
+import Layout from './UI/scenes/layout/Layout.ui'
 import TransactionListConnect from './UI/scenes/TransactionList'
 import TransactionDetails from './UI/scenes/TransactionDetails'
 import Directory from './UI/scenes/Directory/Directory.ui'
@@ -22,42 +24,27 @@ import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
 import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
 import { SettingsOverview } from './UI/scenes/Settings'
 
-import { LoginScreen } from 'airbitz-core-js-ui'
-import Locale from 'react-native-locale'
-import SideMenu from './UI/components/SideMenu/SideMenu.ui'
-import Header from './UI/components/Header/Header.ui'
-import TabBar from './UI/components/TabBar/TabBar.ui'
-import HelpModal from './UI/components/HelpModal'
-import ABAlert from './UI/components/ABAlert'
-import TransactionAlert from './UI/components/TransactionAlert'
-
+import { addExchangeTimer } from  './UI/Settings/action'
 import { updateExchangeRates } from './ExchangeRates/action.js'
 import { setDeviceDimensions, setKeyboardHeight } from './UI/dimensions/action'
-import { makeAccountCallbacks } from '../modules/Core/Account/callbacks.js'
-import { initializeAccount } from './Login/action.js'
-import { addContext, addUsernames } from './Core/Context/action.js'
-
+import { addContext } from './Core/Context/action.js'
 import {setHeaderHeight} from './UI/dimensions/action.js'
-
 import { addCurrencyPlugin } from './UI/Settings/action.js'
+import { addUsernames } from './Core/Context/action'
+
+import * as CORE_SELECTORS from './Core/selectors'
+import * as CONTEXT_API from './Core/Context/api'
 
 import { makeContext, makeReactNativeIo } from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
-// import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
+import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
 
-let currencyPlugins = []
-
+const currencyPluginFactories = []
 if (Platform.OS === 'ios') {
-  currencyPlugins = [
-    // BitcoinCurrencyPluginFactory,
-    EthereumCurrencyPluginFactory
-  ]
-} else if (Platform.OS === 'android') {
-  currencyPlugins = [
-    EthereumCurrencyPluginFactory
-  ]
+  currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 }
+currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 
 import {setLocaleInfo} from './UI/locale/action'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -84,8 +71,6 @@ class Main extends Component {
     super(props)
 
     this.state = {
-      loading: true,
-      loginVisible: true,
       context: {}
     }
   }
@@ -101,65 +86,79 @@ class Main extends Component {
     this.keyboardDidHideListener.remove()
   }
 
-  _keyboardDidShow = (event) => {
-    let keyboardHeight = event.endCoordinates.height
-    this.props.setKeyboardHeight(keyboardHeight)
-  }
-
-  _keyboardDidHide = () => {
-    this.props.setKeyboardHeight(0)
-  }
-
-  async makeCoreContext () {
-    const io = await makeReactNativeIo()
-
-    // Tweak the io logging:
-    const abcInfo = io.console.info
-    const abcWarn = io.console.warn
-    const abcError = io.console.error
-    io.console.info = (...rest) => {
-      abcInfo('ABC_CORE', ...rest)
-    }
-    io.console.warn = (...rest) => {
-      abcWarn('ABC_CORE', ...rest)
-    }
-    io.console.error = (...rest) => {
-      abcError('ABC_CORE', ...rest)
-    }
-
-    // Make the core context:
-    const context = makeContext({
-      apiKey: AIRBITZ_API_KEY,
-      plugins: [...currencyPlugins, ...Object.values(EXCHANGE_PLUGINS)],
-      io
-    })
-
-    // Put the context into Redux:
-    this.props.addContext(context)
-    this.props.addUsernames(await context.listUsernames())
-    for (const plugin of await context.getCurrencyPlugins()) {
-      this.props.addCurrencyPlugin(plugin)
-    }
-
-    return context
-  }
-
   componentDidMount () {
     // HockeyApp.start()
     // HockeyApp.checkForUpdate() // optional
-
-    // SETUP REDUX STORE COMPLETELY, denominations
-
-    this.makeCoreContext().then(context => {
-      this.setState({ context, loading: false }, () => SplashScreen.hide())
-
-      this.props.setLocaleInfo(localeInfo)
-      // console.warn('REMOVE BEFORE FLIGHT') XXX -KevinS
-      setInterval(() => {
-        this.props.updateExchangeRates()
-      // }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
-      }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    makeReactNativeIo()
+    .then(io => {
+      // Make the core context:
+      return makeContext({
+        apiKey: AIRBITZ_API_KEY,
+        plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+        io
+      })
     })
+    .then(context => {
+      // Put the context into Redux:
+      this.props.addContext(context)
+
+      CONTEXT_API.listUsernames(context)
+      .then(usernames => {
+        this.props.addUsernames(usernames)
+      })
+      this.props.setLocaleInfo(localeInfo)
+      this.setState({ context, loading: false }, () => SplashScreen.hide())
+      const exchangeTimer = setInterval(() => {
+        this.props.updateExchangeRates()
+      }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+      this.props.dispatch(addExchangeTimer(exchangeTimer))
+    })
+  }
+
+  render () {
+    const routes = this.props.routes
+    if (!this.props.context) return
+    return (
+      <StyleProvider style={getTheme(platform)}>
+        <MenuContext style={{ flex: 1 }}>
+          <View style={styles.statusBarHack}>
+            <Container onLayout={this._onLayout}>
+
+              <StatusBar translucent backgroundColor='green' barStyle='light-content' />
+
+              <RouterWithRedux>
+                <Scene key='root' hideNavBar>
+                  <Scene key='login' type={ActionConst.RESET} initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
+
+                  <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='scan' component={Scan} title='Scan' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='request' component={Request} title='Request' animation={'fade'} duration={600} />
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
+
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='directory' component={Directory} title='Directory' animation={'fade'} duration={600} />
+
+                  </Scene>
+                </Scene>
+              </RouterWithRedux>
+
+            </Container>
+          </View>
+        </MenuContext>
+      </StyleProvider>
+    )
   }
 
   _onLayout = (event) => {
@@ -169,95 +168,29 @@ class Main extends Component {
     this.props.setDeviceDimensions({ width, height, xScale, yScale })
   }
 
-  onLogin = (error = null, account) => {
-    if (error || !account) return
-    this.props.initializeAccount(account)
-    this.setState({ loginVisible: false })
+  _keyboardDidShow = (event) => {
+    let keyboardHeight = event.endCoordinates.height
+    this.props.setKeyboardHeight(keyboardHeight)
   }
 
-  render () {
-    const routes = this.props.routes
-
-    if (this.state.loading) {
-      return (
-        <LinearGradient
-          style={styles.background}
-          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3b7adb', '#2b569a']} />
-      )
-    }
-
-    if (this.state.loginVisible) {
-      return (
-        <LoginScreen
-          accountOptions={{ callbacks: makeAccountCallbacks(this.props.dispatch) }}
-          context={this.state.context}
-          onLogin={this.onLogin}
-        />
-      )
-    }
-
-    return (
-      <StyleProvider style={getTheme(platform)}>
-        <MenuContext style={{ flex: 1 }}>
-          <View style={styles.statusBarHack}>
-            <Container onLayout={this._onLayout}>
-
-              <StatusBar backgroundColor='green' barStyle='light-content' />
-
-              <SideMenu>
-                <Header routes={routes} setHeaderHeight={this.props.setHeaderHeight} />
-
-                <RouterWithRedux>
-
-                  <Scene key='root' hideNavBar>
-                    <Scene key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
-                    <Scene key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={300} />
-
-                    <Scene key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={300} />
-                    <Scene key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
-
-                    <Scene key='scan' component={Scan} title='Scan' animation={'fade'} duration={300} />
-                    <Scene key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={300} />
-
-                    <Scene key='request' component={Request} title='Request' animation={'fade'} duration={300} />
-
-                    <Scene key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={300} />
-                    <Scene key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={300} />
-                    <Scene key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={300} />
-
-                    <Scene key='directory' component={Directory} title='Directory' animation={'fade'} duration={300} />
-                  </Scene>
-
-                </RouterWithRedux>
-
-                <HelpModal />
-                <ABAlert />
-                <TransactionAlert />
-
-              </SideMenu>
-              <TabBar />
-            </Container>
-          </View>
-        </MenuContext>
-      </StyleProvider>
-    )
+  _keyboardDidHide = () => {
+    this.props.setKeyboardHeight(0)
   }
 }
 
 const mapStateToProps = (state) => ({
-  routes: state.routes
+  routes: state.routes,
+  context: CORE_SELECTORS.getContext(state)
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
-  addCurrencyPlugin: (madePlugin) => dispatch(addCurrencyPlugin(madePlugin)),
+  addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),
   setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
   addContext: (context) => dispatch(addContext(context)),
   addUsernames: (usernames) => dispatch(addUsernames(usernames)),
   setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
   setDeviceDimensions: (dimensions) => dispatch(setDeviceDimensions(dimensions)),
-  initializeAccount: (account) => dispatch(initializeAccount(account)),
   setHeaderHeight: (height) => dispatch(setHeaderHeight(height))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Main)

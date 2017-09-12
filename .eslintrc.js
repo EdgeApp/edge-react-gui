@@ -23,6 +23,7 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "space-before-function-paren": 2,
         "no-duplicate-imports": 2,
         "array-callback-return": 2,
         "no-floating-decimal": 2,

@@ -46,9 +46,9 @@ class TabBar extends Component {
           <FooterTab>
 
             <Button
-              onPress={() => Actions.walletList({type: 'reset'})}
-              active={this.props.routes.scene.name === 'walletList'}
-            >
+              onPress={Actions.walletList}
+              // onPress={() => Actions.login()}
+              active={this.props.routes.scene.name === 'walletList'}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet}
@@ -57,9 +57,8 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={() => Actions.request({type: 'reset'})}
-              active={this.props.routes.scene.name === 'request'}
-            >
+              onPress={Actions.request}
+              active={this.props.routes.scene.name === 'request'}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'request' ? receiveSelected : receive}
@@ -68,9 +67,8 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={() => Actions.scan({type: 'reset'})}
-              active={this.props.routes.scene.name === 'scan'}
-            >
+              onPress={Actions.scan}
+              active={this.props.routes.scene.name === 'scan'}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'scan' ? scanSelected : scan}
@@ -79,9 +77,8 @@ class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={() => Actions.transactionList({type: 'reset'})}
-              active={this.props.routes.scene.name === 'transactionList'}
-            >
+              onPress={Actions.transactionList}
+              active={this.props.routes.scene.name === 'transactionList'}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'transactionList' ? exchangeSelected : exchange}
@@ -91,8 +88,7 @@ class TabBar extends Component {
 
             <Button
               onPress={this._handleToggleSideBar}
-              active={this.props.sidemenu}
-            >
+              active={this.props.sidemenu}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.sidemenu ? moreSelected : more}

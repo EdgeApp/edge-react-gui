@@ -6,15 +6,30 @@ export const REMOVE_USERS_SIDEBAR = 'REMOVE_USERS_SIDEBAR'
 
 export const LOGOUT = 'LOGOUT'
 
-export const logoutRequest = () => {
-  return (dispatch) => {
-    dispatch(logout())
+import * as CORE_SELECTORS from '../../../Core/selectors'
+import * as ACCOUNT_API from '../../../Core/Account/api'
+import * as SETTINGS_ACTIONS from '../../Settings/action'
+import { Actions } from 'react-native-router-flux'
+
+export const logoutRequest = (username) => {
+  return (dispatch, getState) => {
+    Actions.login({ username })
+
+    const state = getState()
+    dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
+
+    const account = CORE_SELECTORS.getAccount(state)
+    ACCOUNT_API.logoutRequest(account)
+   .then(() => {
+     dispatch(logout(username))
+   })
   }
 }
 
-export const logout = () => {
+export const logout = (username) => {
   return {
-    type: LOGOUT
+    type: LOGOUT,
+    data: { username }
   }
 }
 

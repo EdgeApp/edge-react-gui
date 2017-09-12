@@ -26,7 +26,7 @@ export const setOTPModeRequest = otpMode => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
@@ -39,7 +39,7 @@ export const setOTPRequest = otp => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setOTP(otp))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
@@ -52,7 +52,7 @@ export const setPINModeRequest = pinMode => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setPINMode(pinMode))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
@@ -65,11 +65,11 @@ export const setPINRequest = pin => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setPIN(pin))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
-export const setAutoLogoutTimeRequest = autoLogoutTimeInSeconds => {
+export const setAutoLogoutTimeRequest = (autoLogoutTimeInSeconds) => {
   return (dispatch, getState) => {
     dispatch(setAutoLogoutTimeStart(autoLogoutTimeInSeconds))
 
@@ -78,11 +78,11 @@ export const setAutoLogoutTimeRequest = autoLogoutTimeInSeconds => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(autoLogoutTimeInSeconds))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
-export const setDefaultFiatRequest = defaultFiat => {
+export const setDefaultFiatRequest = (defaultFiat) => {
   return (dispatch, getState) => {
     dispatch(setDefaultFiatStart(defaultFiat))
 
@@ -91,11 +91,11 @@ export const setDefaultFiatRequest = defaultFiat => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
-export const setMerchantModeRequest = merchantMode => {
+export const setMerchantModeRequest = (merchantMode) => {
   return (dispatch, getState) => {
     dispatch(setMerchantModeStart(merchantMode))
 
@@ -104,11 +104,11 @@ export const setMerchantModeRequest = merchantMode => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
-export const setBluetoothModeRequest = bluetoothMode => {
+export const setBluetoothModeRequest = (bluetoothMode) => {
   return (dispatch, getState) => {
     dispatch(setBluetoothModeStart(bluetoothMode))
 
@@ -117,7 +117,7 @@ export const setBluetoothModeRequest = bluetoothMode => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 
@@ -134,7 +134,7 @@ export const setDenominationKeyRequest = (currencyCode, denominationKey) => {
   }
 }
 
-export const setBitcoinOverrideServerRequest = overrideServer => {
+export const setBitcoinOverrideServerRequest = (overrideServer) => {
   return (dispatch, getState) => {
     dispatch(setBitcoinOverrideServerStart(overrideServer))
 
@@ -143,7 +143,7 @@ export const setBitcoinOverrideServerRequest = overrideServer => {
     .then(() => {
       return dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
     })
-    .catch(e => { console.error(e) })
+    .catch(error => { console.error(error) })
   }
 }
 

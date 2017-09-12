@@ -13,7 +13,13 @@ import {border as b} from '../../../../utils'
 
 class Body extends Component {
   render () {
-    switch (this.props.routes.scene.sceneKey) {
+    const scene = this.props.routes.scene
+    const children = scene.children
+    const sceneName = children ?
+      this.props.routes.scene.children[this.props.routes.scene.index].name :
+      null
+
+    switch (sceneName) {
     case 'scan':
       return <ExampleFromWalletConnect walletList={this.props.walletList}
           toggleFunction='_onPressToggleSelectedWalletModal'
@@ -49,7 +55,14 @@ export default connect(mapStateToProps)(Body)
 
 class DefaultHeader extends Component {
   _renderTitle = () => {
-    return this.props.routes.scene.title || sprintf(strings.enUS['title_Header'])
+    const scene = this.props.routes.scene
+    const children = scene.children
+    const sceneIndex = scene.index
+    const title = children ?
+      this.props.routes.scene.children[sceneIndex].title :
+      null
+
+    return title || sprintf(strings.enUS['title_Header'])
   }
 
   render () {
@@ -92,12 +105,14 @@ class ExampleFromWallet extends Component {
 }
 
 export const ExampleFromWalletConnect = connect(state => ({
-  walletList: state.ui.wallets.byId,
-  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
+  walletList: UI_SELECTORS.getWallets(state),
+
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
+  selectedWalletCurrencyCode: UI_SELECTORS.getSelectedCurrencyCode(state),
+
   activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
   archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
+
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
-  scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
-  selectedWalletCurrencyCode: UI_SELECTORS.getSelectedCurrencyCode(state)
+  scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
 }))(ExampleFromWallet)

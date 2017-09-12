@@ -9,7 +9,7 @@ export const context = (state = initialState, action) => {
 
   switch (type) {
   case ACTION.ADD_CONTEXT: {
-    const context = data.context
+    const { context }  = data
     return {
       ...state,
       context
@@ -17,12 +17,21 @@ export const context = (state = initialState, action) => {
   }
 
   case ACTION.ADD_USERNAMES: {
-    const usernames = data.usernames
+    const { usernames } = data
     return {
       ...state,
       usernames
     }
   }
+
+  case 'LOGOUT': {
+    const { username } = data
+    return {
+      ...state,
+      nextUsername: username
+    }
+  }
+
   default:
     return state
   }
