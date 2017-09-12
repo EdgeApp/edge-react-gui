@@ -14,10 +14,11 @@ class Login extends Component {
   }
 
   render () {
+    const callbacks = makeAccountCallbacks(this.props.dispatch)
     return !this.props.context.listUsernames ? null : (
       <LoginScreen
         username={this.props.username}
-        accountOptions={{ callbacks: makeAccountCallbacks(this.props.dispatch) }}
+        accountOptions={{ callbacks }}
         context={this.props.context}
         onLogin={this.onLogin}
       />

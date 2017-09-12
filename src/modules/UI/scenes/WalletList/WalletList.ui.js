@@ -53,7 +53,7 @@ import * as UTILS from '../../../utils'
 class WalletList extends Component {
   state: { sortableMode: boolean , sortableListOpacity: number, fullListOpacity: number, sortableListZIndex: number, fullListZIndex: number}
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       sortableMode: false,
@@ -362,15 +362,19 @@ class WalletList extends Component {
   }
 
   renderDeleteWalletModal = () => {
-    return <StylizedModal featuredIcon={< DeleteIcon />} headerText='fragment_wallets_delete_wallet' // t(')
-      modalMiddle={< DeleteSubtext />} modalBottom={< DeleteWalletButtonsConnect />}
+    return <StylizedModal featuredIcon={< DeleteIcon />}
+      headerText='fragment_wallets_delete_wallet' // t(')
+      modalMiddle={< DeleteSubtext />}
+      modalBottom={<DeleteWalletButtonsConnect walletId={this.props.walletId} />}
       visibilityBoolean={this.props.deleteWalletModalVisible} />
   }
 
   renderRenameWalletModal = () => {
-    return <StylizedModal featuredIcon={< AddressIcon />} headerText='fragment_wallets_rename_wallet'
-      headerSubtext={this.props.walletName} modalMiddle={< WalletNameInputConnect />}
-      modalBottom={< RenameWalletButtonsConnect />} walletId={this.props.walletId}
+    return <StylizedModal featuredIcon={< AddressIcon />}
+      headerText='fragment_wallets_rename_wallet'
+      headerSubtext={this.props.walletName}
+      modalMiddle={<WalletNameInputConnect />}
+      modalBottom={<RenameWalletButtonsConnect walletId={this.props.walletId} />}
       visibilityBoolean={this.props.renameWalletModalVisible} />
   }
 

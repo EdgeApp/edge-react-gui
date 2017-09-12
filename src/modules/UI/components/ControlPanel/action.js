@@ -13,6 +13,8 @@ import { Actions } from 'react-native-router-flux'
 
 export const logoutRequest = (username) => {
   return (dispatch, getState) => {
+    Actions.login({ username })
+
     const state = getState()
     dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
 
@@ -20,7 +22,6 @@ export const logoutRequest = (username) => {
     ACCOUNT_API.logoutRequest(account)
    .then(() => {
      dispatch(logout(username))
-     Actions.login({ username })
    })
   }
 }

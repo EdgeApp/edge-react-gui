@@ -84,3 +84,9 @@ export const getSupportedWalletTypes = (state: any) => {
   }), {})
   return supportedWalletTypes
 }
+
+export const getAutoLogoutTimeInSeconds = (state: any) => {
+  const settings = getSettings(state)
+  const autoLogoutTimeInSeconds = settings.autoLogoutTimeInSeconds
+  return autoLogoutTimeInSeconds
+}

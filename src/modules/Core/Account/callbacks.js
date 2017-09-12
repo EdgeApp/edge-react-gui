@@ -8,6 +8,10 @@ import {
 export const makeAccountCallbacks = dispatch => {
   console.log('making callbacks')
   const callbacks = {
+    onError: (error) => {
+      console.warn(error)
+    },
+
     onDataChanged: () => {
       console.log('onDataChanged')
     },

@@ -105,12 +105,14 @@ class ExampleFromWallet extends Component {
 }
 
 export const ExampleFromWalletConnect = connect(state => ({
-  walletList: state.ui.wallets.byId,
-  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
+  walletList: UI_SELECTORS.getWallets(state),
+
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
+  selectedWalletCurrencyCode: UI_SELECTORS.getSelectedCurrencyCode(state),
+
   activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
   archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
+
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
-  scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
-  selectedWalletCurrencyCode: UI_SELECTORS.getSelectedCurrencyCode(state)
+  scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
 }))(ExampleFromWallet)
