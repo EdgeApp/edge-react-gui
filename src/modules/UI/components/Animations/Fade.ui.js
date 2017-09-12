@@ -1,5 +1,5 @@
-import { Animated } from 'react-native'
-import React, { Component } from 'react'
+import {Animated} from 'react-native'
+import React, {Component} from 'react'
 
 export default class Fade extends Component {
   constructor (props) {

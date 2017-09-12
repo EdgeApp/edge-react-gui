@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import type { AbcDenomination } from 'airbitz-core-js'
+import type {AbcDenomination} from 'airbitz-core-js'
 import {
   View,
   TouchableHighlight
@@ -9,7 +9,7 @@ import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import T from '../../components/FormattedText'
-import { selectWallet } from '../../Wallets/action.js'
+import {selectWallet} from '../../Wallets/action.js'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils.js'
@@ -47,5 +47,5 @@ export default connect((state, ownProps) => {
   const currencyCode:string = ownProps.currencyCode
   const displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
-  return { displayDenomination }
+  return {displayDenomination}
 })(WalletListTokenRow)

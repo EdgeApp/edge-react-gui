@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import Drawer from 'react-native-drawer'
 
-import { openSidebar, closeSidebar } from './action'
+import {openSidebar, closeSidebar} from './action'
 
 import ControlPanel from '../ControlPanel'
 
@@ -46,7 +46,7 @@ const drawerStyles = {
     shadowOpacity: 0.8,
     shadowRadius: 3
   },
-  main: { paddingLeft: 3 }
+  main: {paddingLeft: 3}
 }
 
 const mapStateToProps = state => ({

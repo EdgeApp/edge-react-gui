@@ -40,17 +40,13 @@ export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
 export const getDisplayDenomination = (state: any, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  const selectedDenomination = denominations.find(denomination => {
-    return denomination.multiplier === selectedDenominationKey
-  })
+  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
   return selectedDenomination
 }
 
 export const getExchangeDenomination = (state: any, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
-  const exchangeDenomination = denominations.find(denomination => {
-    return denomination.name === currencyCode
-  })
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   return exchangeDenomination
 }
 

@@ -1,15 +1,13 @@
 import React from 'react'
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
 
-const ShareButton = ({displayName, onPress, style}) => {
-  return (
+const ShareButton = ({displayName, onPress, style}) => (
     <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style ]}>
       <View style={styles.view}>
         <Text style={styles.text}>{displayName}</Text>
       </View>
     </TouchableOpacity>
   )
-}
 
 const styles = StyleSheet.flatten({
   shareButton: {

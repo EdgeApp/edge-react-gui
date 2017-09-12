@@ -8,8 +8,6 @@ export const openHelpModal = () => {
   }
 }
 
-export const closeHelpModal = () => {
-  return {
-    type: CLOSE_HELP_MODAL
-  }
-}
+export const closeHelpModal = () => ({
+  type: CLOSE_HELP_MODAL
+})

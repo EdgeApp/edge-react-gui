@@ -1,8 +1,8 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import {Text, View} from 'react-native'
 import T from '../FormattedText/'
-import { connect } from 'react-redux'
-import { border as b } from '../../../utils.js'
+import {connect} from 'react-redux'
+import {border as b} from '../../../utils.js'
 
 const styles = {
   view: {
@@ -24,7 +24,7 @@ const RequestStatus = (props) => {
   console.log('inside RequestStatus, props is: ', props)
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
-  const { publicAddress } = props
+  const {publicAddress} = props
   const requestAddress = props.requestAddress
   console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
 

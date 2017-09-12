@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Actions} from 'react-native-router-flux'
 import {
   ActivityIndicator,
   Alert,
@@ -18,7 +18,7 @@ import {sprintf} from 'sprintf-js'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import { updateWalletName, selectWalletType, selectFiat, createWallet } from './action'
+import {updateWalletName, selectWalletType, selectFiat, createWallet} from './action'
 
 // import { MKTextField as TextInput } from 'react-native-material-kit'
 
@@ -41,9 +41,7 @@ class CreateWallet extends Component {
     }
   }
 
-  getSupportedWalletTypes = () => {
-    return Object.keys(this.props.supportedWalletTypes)
-  }
+  getSupportedWalletTypes = () => Object.keys(this.props.supportedWalletTypes)
 
   getSupportedFiats = () => {
     const supportedFiats = [
@@ -73,22 +71,18 @@ class CreateWallet extends Component {
   }
 
   isValidWalletType = () => {
-    const { supportedWalletTypes, selectedWalletType } = this.props
+    const {supportedWalletTypes, selectedWalletType} = this.props
 
-    const isValid = Object.values(supportedWalletTypes).find((walletType) => {
-      return walletType === selectedWalletType
-    })
+    const isValid = Object.values(supportedWalletTypes).find((walletType) => walletType === selectedWalletType)
 
     return isValid
   }
 
   isValidFiat = () => {
     const supportedFiats = this.getSupportedFiats()
-    const { selectedFiat } = this.props
+    const {selectedFiat} = this.props
 
-    const isValid = supportedFiats.find((fiat) => {
-      return fiat === selectedFiat
-    })
+    const isValid = supportedFiats.find((fiat) => fiat === selectedFiat)
 
     return isValid
   }
@@ -97,9 +91,9 @@ class CreateWallet extends Component {
     if (!this.isValidData()) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
-      this.setState({ isCreatingWallet: true })
+      this.setState({isCreatingWallet: true})
       Keyboard.dismiss()
-      const { walletName, selectedWalletType } = this.props
+      const {walletName, selectedWalletType} = this.props
       console.log('walletName', walletName)
       console.log('selectedWalletType', selectedWalletType)
       this.props.createWallet(walletName, selectedWalletType)
@@ -173,8 +167,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)
 
 // //////////////////////////// Buttons ////////////////////////////////////////
 
-const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
-  return (
+const Buttons = ({isCreatingWallet, onDone, onCancel}) => (
     <View style={styles.buttons}>
 
       <SecondaryButton
@@ -194,7 +187,6 @@ const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
 
     </View>
   )
-}
 
 // //////////////////////////// WalletNameInput /////////////////////////////////
 
@@ -260,7 +252,7 @@ class DropdownPicker extends Component {
   }
 
   getMatchingListItems = () => {
-    const { searchTerm } = this.state
+    const {searchTerm} = this.state
     const normalizedSearchTerm = searchTerm.toLowerCase()
     const matchingListItems = this.props.listItems.filter((listItem) => {
       const normalizedListItem = listItem.toLowerCase()
@@ -308,15 +300,13 @@ const DropdownList = props => {
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
   const dataSource = ds.cloneWithRows(props.dataSource)
 
-  const renderRow = (data) => {
-    return (
+  const renderRow = (data) => (
       <TouchableOpacity
-        style={{ backgroundColor: 'white', padding: 10 }}
+        style={{backgroundColor: 'white', padding: 10}}
         onPress={() => props.onPress(data)}>
         <T>{data}</T>
       </TouchableOpacity>
     )
-  }
 
   return (
     <View style={styles.listView}>

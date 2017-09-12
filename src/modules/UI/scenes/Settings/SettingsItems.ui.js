@@ -39,12 +39,15 @@ SettingsItemWithRoute.propTypes = {
 
 class SettingsItemWithModal extends Component {
   _toggleModal = (modalKey) => {
+    // get picker
+    // get callback
+    // open modal w/(picker + callback)
     console.log('toggle modal: ', modalKey)
   }
 
   render () {
     return (
-      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={this._toggleModal(this.props.modal)}>
+      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._toggleModal(this.props.modal)}>
 
         <View style={[s.settingsRowTextRow, b('red')]}>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>

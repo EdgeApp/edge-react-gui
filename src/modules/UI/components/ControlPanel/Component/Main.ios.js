@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { View, ScrollView, TouchableHighlight, Image } from 'react-native'
-import { connect } from 'react-redux'
-import { Text } from 'native-base'
-import { Actions } from 'react-native-router-flux'
+import React, {Component} from 'react'
+import {View, ScrollView, TouchableHighlight, Image} from 'react-native'
+import {connect} from 'react-redux'
+import {Text} from 'native-base'
+import {Actions} from 'react-native-router-flux'
 
-import { closeSidebar } from '../../SideMenu/action'
-import { logoutRequest } from '../action'
+import {closeSidebar} from '../../SideMenu/action'
+import {logoutRequest} from '../action'
 import UserList from './UserList'
 
 import styles from '../style'
@@ -30,7 +30,7 @@ class MainComponent extends Component {
         <ScrollView contentContainerStyle={styles.main.container}>
           {this._render2FAenabling()}
           <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-            <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
+            <View style={[ styles.main.link, styles.main.borderVertical, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={buyAndSell} />
               </View>
@@ -45,7 +45,7 @@ class MainComponent extends Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('transactions')}>
-            <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+            <View style={[ styles.main.link, styles.main.borderBottom, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={spend} />
               </View>
@@ -75,7 +75,7 @@ class MainComponent extends Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-            <View style={[ styles.main.link, styles.main.borderBottom, { flex: 1 } ]}>
+            <View style={[ styles.main.link, styles.main.borderBottom, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={directory} />
               </View>
@@ -104,7 +104,7 @@ class MainComponent extends Component {
             </View>
           </TouchableHighlight>
           <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('settingsOverview')}>
-            <View style={[ styles.others.link, styles.others.borderBottom, { flex: 1 } ]}>
+            <View style={[ styles.others.link, styles.others.borderBottom, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={settings} />
               </View>
@@ -138,10 +138,9 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
-  _render2FAenabling = () => {
-    return (
+  _render2FAenabling = () => (
       <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-        <View style={[ styles.main.link, styles.main.borderVertical, { flex: 1 } ]}>
+        <View style={[ styles.main.link, styles.main.borderVertical, {flex: 1} ]}>
           <View style={styles.iconImageContainer}>
             <Image style={styles.iconImage} source={security} />
           </View>
@@ -156,7 +155,6 @@ class MainComponent extends Component {
         </View>
       </TouchableHighlight>
     )
-  }
 }
 
 const mapStateToProps = state => ({

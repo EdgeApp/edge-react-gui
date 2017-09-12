@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
@@ -14,10 +14,10 @@ import {
   ActivityIndicator,
   TouchableOpacity} from 'react-native'
 import T from '../../components/FormattedText'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import LinearGradient from 'react-native-linear-gradient'
-import { Actions } from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux'
 import {
   transactionsSearchVisible,
   transactionsSearchHidden,
@@ -28,7 +28,7 @@ import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import {setContactList} from '../../contacts/action'
 import styles from './style'
-import { colors as c } from '../../../../theme/variables/airbitz.js'
+import {colors as c} from '../../../../theme/variables/airbitz.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -72,9 +72,7 @@ class TransactionList extends Component {
               // error
             } else {
               console.log('all contacts: ', contacts)
-              contacts.sort((a, b) => {
-                return a.givenName > b.givenName
-              })
+              contacts.sort((a, b) => a.givenName > b.givenName)
               this.props.dispatch(setContactList(contacts))
             }
           })
@@ -238,7 +236,7 @@ class TransactionList extends Component {
       newValue.time = time
       return newValue
     })
-    let ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
+    let ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
     let dataSrc = ds.cloneWithRows(completedTxList)
     let logo
 
@@ -348,7 +346,7 @@ class TransactionList extends Component {
   }
 
   _goToTxDetail = (txId, currencyCode, tx) => {
-    Actions.transactionDetails({ walletId: this.props.selectedWalletId, txId, currencyCode, tx })
+    Actions.transactionDetails({walletId: this.props.selectedWalletId, txId, currencyCode, tx})
   }
 
   isReceivedTransaction (tx) {
@@ -390,7 +388,7 @@ class TransactionList extends Component {
       }
     }
 
-    if(completedTxList[tx.key+1]) { // is there a subsequent transaction?
+    if (completedTxList[tx.key+1]) { // is there a subsequent transaction?
       lastOfDate = (tx.dateString === completedTxList[tx.key + 1].dateString) ? false : true
     } else {
       lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
@@ -412,7 +410,7 @@ class TransactionList extends Component {
           <View style={[styles.transactionInfoWrap, UTILS.border()]}>
             <View style={styles.transactionLeft}>
               {tx.thumbnailPath ? (
-                <Image style={[styles.transactionLogo, UTILS.border()]} source={{ uri: tx.thumbnailPath }} />
+                <Image style={[styles.transactionLogo, UTILS.border()]} source={{uri: tx.thumbnailPath}} />
               ) : (
                 <Image
                   style={styles.transactionLogo}

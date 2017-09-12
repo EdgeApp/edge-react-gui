@@ -1,8 +1,8 @@
 import * as ACTION from './action'
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 
 const renameWalletModalVisible = (state = false, action) => {
-  const { type } = action
+  const {type} = action
   switch (type) {
   case ACTION.OPEN_RENAME_WALLET_MODAL:
     return true
@@ -14,7 +14,7 @@ const renameWalletModalVisible = (state = false, action) => {
 }
 
 const deleteWalletModalVisible = (state = false, action) => {
-  const { type } = action
+  const {type} = action
   switch (type) {
   case ACTION.OPEN_DELETE_WALLET_MODAL:
     return true
@@ -37,8 +37,8 @@ const walletArchivesVisible = (state = false, action) => {
 }
 
 const walletId = (state = '', action) => {
-  const { type, data = {} } = action
-  const { walletId } = data
+  const {type, data = {} } = action
+  const {walletId} = data
   switch (type) {
   case ACTION.OPEN_RENAME_WALLET_MODAL:
     return walletId
@@ -50,8 +50,8 @@ const walletId = (state = '', action) => {
 }
 
 const walletName = (state = '', action) => {
-  const { type, data = {} } = action
-  const { walletName } = data
+  const {type, data = {} } = action
+  const {walletName} = data
   switch (type) {
   case ACTION.OPEN_RENAME_WALLET_MODAL:
     return walletName || 'Wallet Name'
@@ -63,8 +63,8 @@ const walletName = (state = '', action) => {
 }
 
 const renameWalletInput = (state = '', action) => {
-  const { type, data = {} } = action
-  const { renameWalletInput } = data
+  const {type, data = {} } = action
+  const {renameWalletInput} = data
   switch (type) {
   case ACTION.UPDATE_RENAME_WALLET_INPUT:
     return renameWalletInput || ''

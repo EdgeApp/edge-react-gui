@@ -1,5 +1,5 @@
 import * as ACTION from './action'
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 
 const view = (state = false, action) => {
   switch (action.type) {

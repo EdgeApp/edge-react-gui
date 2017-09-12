@@ -1,11 +1,11 @@
 // @flow
-import React, { Component } from 'react'
-import { View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity } from 'react-native'
+import React, {Component} from 'react'
+import {View, TouchableHighlight, LayoutAnimation, ScrollView, TouchableOpacity} from 'react-native'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import T from '../../components/FormattedText'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import styles from './style'
 import {
@@ -18,7 +18,7 @@ import * as Animatable from 'react-native-animatable'
 import {border as b, cutOffText} from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import {updateReceiveAddress} from '../../scenes/Request/action.js'
-import { bns } from 'biggystring'
+import {bns} from 'biggystring'
 
 class WalletListModal extends Component {
   constructor (props) {
@@ -138,7 +138,7 @@ class WalletListModalBody extends Component {
     let i = -1
     let rows = []
     for (const n in this.props.walletList) {
-      i++
+      i = i + 1
       const guiWallet = this.props.walletList[n]
       if (typeof guiWallet.id !== 'undefined' && this.props.activeWalletIds.includes(guiWallet.id)) {
         rows.push(this.renderWalletRow(guiWallet, i))
@@ -160,14 +160,12 @@ WalletListModalBody.propTypes = {
 }
 
 export const WalletListModalBodyConnect = connect(
-  (state) => {
-    return {
-      walletList: state.ui.wallets.byId,
-      activeWalletIds: state.ui.wallets.activeWalletIds,
-      selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
-      settings: state.ui.settings
-    }
-  },
+  (state) => ({
+    walletList: state.ui.wallets.byId,
+    activeWalletIds: state.ui.wallets.activeWalletIds,
+    selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
+    settings: state.ui.settings
+  }),
   dispatch => ({
     selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
     getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),

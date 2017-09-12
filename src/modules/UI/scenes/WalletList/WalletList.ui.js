@@ -29,7 +29,7 @@ import {
   FullWalletListRowConnect as FullWalletListRow,
   SortableWalletListRowConnect as SortableWalletListRow
 } from './WalletListRow.ui'
-import { options } from './WalletListRowOptions.ui.js'
+import {options} from './WalletListRowOptions.ui.js'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
@@ -77,9 +77,7 @@ class WalletList extends Component {
           if (err === 'denied') {
             // error
           } else {
-            contacts.sort((a, b) => {
-              return a.givenName > b.givenName
-            })
+            contacts.sort((a, b) => a.givenName > b.givenName)
             this.props.dispatch(setContactList(contacts))
           }
         })
@@ -105,7 +103,7 @@ class WalletList extends Component {
       this.props.dispatch(dispatchWalletRowOption(walletId, 'addToken'))
       break
     case options[3].value: // 'archive'
-      if(!this.props.walletsp[walletId].archived) {
+      if (!this.props.walletsp[walletId].archived) {
         this.props.dispatch(dispatchWalletRowOption(walletId, 'archive'))
       } else {
         this.props.dispatch(dispatchWalletRowOption(walletId, 'activate'))
@@ -158,12 +156,12 @@ class WalletList extends Component {
               </View>
             </View>
             <View style={[styles.donePlusContainer, UTILS.border()]}>
-              <Animated.View style={[styles.doneContainer,  UTILS.border(), { opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
+              <Animated.View style={[styles.doneContainer,  UTILS.border(), {opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
                 <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]} onPress={() => this.disableSorting()}>
                   <T style={[styles.walletsBoxDoneText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
                 </TouchableOpacity>
               </Animated.View>
-              <Animated.View style={[styles.plusContainer, UTILS.border(), { opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
+              <Animated.View style={[styles.plusContainer, UTILS.border(), {opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
                 <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 41}]}
                   onPress={() => Actions.createWallet()}>
                     <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
@@ -189,7 +187,7 @@ class WalletList extends Component {
       <View style={[styles.listsContainer, UTILS.border()]}>
         <Animated.View testID={'sortableList'} style={[{flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
           <SortableListView
-            style={{ flex: 1, width }}
+            style={{flex: 1, width}}
             data={this.props.wallets}
             order={this.sortActiveWallets(this.props.wallets)}
             onRowMoved={this.onActiveRowMoved}
@@ -201,7 +199,7 @@ class WalletList extends Component {
         </Animated.View>
         <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
           <FlatList
-            style={{ flex: 1, width }}
+            style={{flex: 1, width}}
             data={walletsArray}
             extraData={this.props.wallets}
             renderItem={(item) => <FullWalletListRow data={item} />}
@@ -212,9 +210,7 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveRow = (row) => {
-    return <SortableWalletListRow data={row} />
-  }
+  renderActiveRow = (row) => <SortableWalletListRow data={row} />
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
@@ -311,9 +307,7 @@ class WalletList extends Component {
   }
 
   sortActiveWallets = (wallets) => {
-    let activeOrdered = Object.keys(wallets).filter(key => {
-      return !wallets[key].archived
-    }) // filter out archived wallets
+    let activeOrdered = Object.keys(wallets).filter(key => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => {
       if (wallets[a].sortIndex === wallets[b].sortIndex) {
         return -1
@@ -326,12 +320,8 @@ class WalletList extends Component {
 
   onActiveRowMoved = action => {
     const wallets = this.props.wallets
-    const activeOrderedWallets = Object.keys(wallets).filter(key => {
-      return !wallets[key].archived
-    }) // filter out archived wallets
-    .sort((a, b) => {
-      return wallets[a].sortIndex - wallets[b].sortIndex
-    }) // sort them according to their (previous) sortIndices
+    const activeOrderedWallets = Object.keys(wallets).filter(key => !wallets[key].archived) // filter out archived wallets
+    .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex) // sort them according to their (previous) sortIndices
     const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action) // pass the old order to getNewOrder with the action ( from, to, and  )
 
@@ -341,11 +331,8 @@ class WalletList extends Component {
 
   onArchivedRowMoved = action => {
     const wallets = this.props.wallets
-    const activeOrderedWallets = Object.keys(wallets).filter(key => {
-      return wallets[key].archived
-    }).sort((a, b) => {
-      return wallets[a].sortIndex - wallets[b].sortIndex
-    })
+    const activeOrderedWallets = Object.keys(wallets).filter(key => wallets[key].archived)
+    .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex)
     const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action)
 
@@ -361,22 +348,18 @@ class WalletList extends Component {
     return newOrder
   }
 
-  renderDeleteWalletModal = () => {
-    return <StylizedModal featuredIcon={< DeleteIcon />}
+  renderDeleteWalletModal = () => <StylizedModal featuredIcon={< DeleteIcon />}
       headerText='fragment_wallets_delete_wallet' // t(')
       modalMiddle={< DeleteSubtext />}
       modalBottom={<DeleteWalletButtonsConnect walletId={this.props.walletId} />}
       visibilityBoolean={this.props.deleteWalletModalVisible} />
-  }
 
-  renderRenameWalletModal = () => {
-    return <StylizedModal featuredIcon={< AddressIcon />}
+  renderRenameWalletModal = () => <StylizedModal featuredIcon={< AddressIcon />}
       headerText='fragment_wallets_rename_wallet'
       headerSubtext={this.props.walletName}
       modalMiddle={<WalletNameInputConnect />}
       modalBottom={<RenameWalletButtonsConnect walletId={this.props.walletId} />}
       visibilityBoolean={this.props.renameWalletModalVisible} />
-  }
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
@@ -388,13 +371,11 @@ class WalletList extends Component {
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
         if (nativeBalance && nativeBalance !== '0') {
           const denominations = this.props.settings[balanceProp].denominations
-          const exchangeDenomination = denominations.find(denomination => {
-            return denomination.name === balanceProp
-          })
+          const exchangeDenomination = denominations.find(denomination => denomination.name === balanceProp)
           const nativeToExchangeRatio:string = exchangeDenomination.multiplier
 
           const cryptoAmount:number = parseFloat(UTILS.convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
-          temporaryTotalCrypto[balanceProp] += cryptoAmount
+          temporaryTotalCrypto[balanceProp] = temporaryTotalCrypto[balanceProp] + cryptoAmount
         }
       }
     }
@@ -406,7 +387,7 @@ class WalletList extends Component {
     let total = 0
     for (let currency in values) {
       let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
-      total += addValue
+      total = total + addValue
     }
     return total.toFixed(2)
   }

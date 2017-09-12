@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { View, ScrollView, TouchableNativeFeedback, Image } from 'react-native'
-import { connect } from 'react-redux'
-import { Text } from 'native-base'
-import { Actions } from 'react-native-router-flux'
+import React, {Component} from 'react'
+import {View, ScrollView, TouchableNativeFeedback, Image} from 'react-native'
+import {connect} from 'react-redux'
+import {Text} from 'native-base'
+import {Actions} from 'react-native-router-flux'
 
-import { closeSidebar } from '../../SideMenu/action'
-import { logoutRequest } from '../action'
+import {closeSidebar} from '../../SideMenu/action'
+import {logoutRequest} from '../action'
 import UserList from './UserList'
 
 import styles from '../style'
@@ -133,8 +133,7 @@ class MainComponent extends Component {
     return this.props.dispatch(closeSidebar())
   }
 
-  _render2FAenabling = () => {
-    return (
+  _render2FAenabling = () => (
       <TouchableNativeFeedback onPress={() => console.log('')} background={TouchableNativeFeedback.SelectableBackground()}>
         <View style={[ styles.main.link, styles.main.borderVertical ]}>
           <View style={styles.iconImageContainer}>
@@ -151,7 +150,6 @@ class MainComponent extends Component {
         </View>
       </TouchableNativeFeedback>
     )
-  }
 }
 
 const mapStateToProps = state => ({

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   FlatList,
   View
@@ -48,9 +48,7 @@ class SearchResults extends Component {
     )
   }
 
-  renderRegularRow = (data, onPressFxn) => {
-    return this.props.regularResult(data, onPressFxn)
-  }
+  renderRegularRow = (data, onPressFxn) => this.props.regularResult(data, onPressFxn)
 }
 
 SearchResults.propTypes = {

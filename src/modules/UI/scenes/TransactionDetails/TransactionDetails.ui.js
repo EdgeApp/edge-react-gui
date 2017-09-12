@@ -14,7 +14,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native'
-import { bns } from 'biggystring'
+import {bns} from 'biggystring'
 import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
@@ -38,7 +38,7 @@ import {
 } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import SearchResults from '../../components/SearchResults'
-import { openHelpModal } from '../../components/HelpModal/actions'
+import {openHelpModal} from '../../components/HelpModal/actions'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -234,10 +234,10 @@ class TransactionDetails extends Component {
     } else {
       category = undefined
     }
-    const { txid, name, notes, bizId, miscJson } = this.state
+    const {txid, name, notes, bizId, miscJson} = this.state
     let newAmountFiat = this.state.amountFiat
     amountFiat = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat).toFixed(2)
-    const transactionDetails = { txid, name, category, notes, amountFiat, bizId, miscJson }
+    const transactionDetails = {txid, name, category, notes, amountFiat, bizId, miscJson}
     this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
   }
 
@@ -250,9 +250,7 @@ class TransactionDetails extends Component {
             if (err === 'denied') {
               // error
             } else {
-              contacts.sort((a, b) => {
-                return a.givenName > b.givenName
-              })
+              contacts.sort((a, b) => a.givenName > b.givenName)
               this.props.dispatch(setContactList(contacts))
             }
           })
@@ -354,10 +352,10 @@ class TransactionDetails extends Component {
 
     if (this.state.direction === 'receive') {
       feeSyntax = ''
-      leftData = { color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income']) }
+      leftData = {color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income'])}
     } else {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
-      leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
+      leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
     }
     let color = type.color
     console.log('rendering txDetails, this is: ', this)
@@ -649,18 +647,12 @@ class SubCategorySelect extends Component {
   }
 
   render () {
-    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => {
-      return entry.indexOf(this.props.enteredSubcategory) >= 0
-    })
+    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => entry.indexOf(this.props.enteredSubcategory) >= 0)
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
-      newPotentialSubCategories = categories.map((cat) => {
-        return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
-      })
-      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
-        return this.props.subcategoriesList.indexOf(cat) < 0
-      })
+      newPotentialSubCategories = categories.map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
+      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => this.props.subcategoriesList.indexOf(cat) < 0)
     }
 
     return (
@@ -693,9 +685,7 @@ class SubCategorySelect extends Component {
     )
   }
 
-  keyExtractor = (item, index) => {
-    return index
-  }
+  keyExtractor = (item, index) => index
 }
 
 export const SubCategorySelectConnect = connect(state => ({
@@ -731,9 +721,7 @@ class PayeeIcon extends Component {
 class ContactSearchResults extends Component {
 
   render () {
-    let filteredArray = this.props.contacts.filter((entry) => {
-      return (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0
-    })
+    let filteredArray = this.props.contacts.filter((entry) => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
 
     return (
       <SearchResults
@@ -777,7 +765,5 @@ class ContactSearchResults extends Component {
     )
   }
 
-  keyExtractor = (item, index) => {
-    return index
-  }
+  keyExtractor = (item, index) => index
 }

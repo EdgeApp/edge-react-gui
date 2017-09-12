@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {
   View,
   ScrollView,
   ActivityIndicator
 } from 'react-native'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
@@ -38,14 +38,14 @@ class SendConfirmation extends Component {
       keyboardVisible: false
     }
   }
-  _onFocus = () => this.setState({ keyboardVisible: true })
-  _onBlur = () => this.setState({ keyboardVisible: false })
+  _onFocus = () => this.setState({keyboardVisible: true})
+  _onBlur = () => this.setState({keyboardVisible: false})
 
   componentDidMount () {
     this.props.processURI(this.props.sendConfirmation.parsedURI)
   }
 
-  onAmountsChange = ({ primaryDisplayAmount, secondaryDisplayAmount }) => {
+  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
@@ -110,7 +110,7 @@ class SendConfirmation extends Component {
           </View>
           <View style={[styles.pendingSymbolArea]}>
             {this.props.sendConfirmation.pending &&
-              <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, UTILS.border()]} size={'small'} />
+              <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
             }
           </View>
           <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
@@ -120,7 +120,7 @@ class SendConfirmation extends Component {
   }
 
   signBroadcastAndSave = () => {
-    const { transaction } = this.props
+    const {transaction} = this.props
     this.props.dispatch(updateSpendPending(true))
     this.props.signBroadcastAndSave(transaction)
   }

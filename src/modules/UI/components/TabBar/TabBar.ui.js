@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { Image } from 'react-native'
+import React, {Component} from 'react'
+import {Image} from 'react-native'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
-import { Footer, FooterTab, Button} from 'native-base'
+import {connect} from 'react-redux'
+import {Actions} from 'react-native-router-flux'
+import {Footer, FooterTab, Button} from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
-import { setTabBarHeight } from '../../dimensions/action'
-import { openSidebar, closeSidebar } from '../SideMenu/action'
+import {setTabBarHeight} from '../../dimensions/action'
+import {openSidebar, closeSidebar} from '../SideMenu/action'
 import T from '../FormattedText'
 import wallet from '../../../../assets/images/tabbar/wallets.png'
 import walletSelected from '../../../../assets/images/tabbar/wallets_selected.png'
@@ -41,7 +41,7 @@ class TabBar extends Component {
 
   render () {
     return (
-      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3b7adb', '#2b569a']} style={{ borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid' }} onLayout={this._onLayout} >
+      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3b7adb', '#2b569a']} style={{borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid'}} onLayout={this._onLayout} >
         <Footer>
           <FooterTab>
 
@@ -53,7 +53,7 @@ class TabBar extends Component {
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet}
               />
-              <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'walletList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_wallets'])}</T>
+              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'walletList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_wallets'])}</T>
             </Button>
 
             <Button
@@ -63,7 +63,7 @@ class TabBar extends Component {
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'request' ? receiveSelected : receive}
               />
-              <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'request' && styles.activeButton]}>{sprintf(strings.enUS['drawer_request'])}</T>
+              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'request' && styles.activeButton]}>{sprintf(strings.enUS['drawer_request'])}</T>
             </Button>
 
             <Button
@@ -73,7 +73,7 @@ class TabBar extends Component {
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'scan' ? scanSelected : scan}
               />
-              <T style={[{ marginTop: 3 }, styles.buttonText, this.props.routes.scene.name === 'scan' && styles.activeButton]}>{sprintf(strings.enUS['drawer_scan'])}</T>
+              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'scan' && styles.activeButton]}>{sprintf(strings.enUS['drawer_scan'])}</T>
             </Button>
 
             <Button
@@ -83,7 +83,7 @@ class TabBar extends Component {
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.routes.scene.name === 'transactionList' ? exchangeSelected : exchange}
               />
-              <T style={[{ marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'transactionList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_transactions'])}</T>
+              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'transactionList' && styles.activeButton]}>{sprintf(strings.enUS['drawer_transactions'])}</T>
             </Button>
 
             <Button
@@ -93,7 +93,7 @@ class TabBar extends Component {
                 style={[{width: 25, height: 25, marginTop: 3}]}
                 source={this.props.sidemenu ? moreSelected : more}
               />
-              <T style={[{ marginTop: 5 }, styles.buttonText]}>{sprintf(strings.enUS['drawer_more'])}</T>
+              <T style={[{marginTop: 5}, styles.buttonText]}>{sprintf(strings.enUS['drawer_more'])}</T>
             </Button>
 
           </FooterTab>

@@ -1,11 +1,11 @@
 // import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
-import React, { Component } from 'react'
-import { View, StatusBar, Keyboard } from 'react-native'
-import { connect } from 'react-redux'
-import { ActionConst, Scene, Router } from 'react-native-router-flux'
-import { Container, StyleProvider } from 'native-base'
-import { MenuContext } from 'react-native-menu'
+import React, {Component} from 'react'
+import {View, StatusBar, Keyboard} from 'react-native'
+import {connect} from 'react-redux'
+import {ActionConst, Scene, Router} from 'react-native-router-flux'
+import {Container, StyleProvider} from 'native-base'
+import {MenuContext} from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
@@ -22,23 +22,23 @@ import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import CreateWallet from './UI/scenes/CreateWallet/index.js'
 import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
 import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
-import { SettingsOverview } from './UI/scenes/Settings'
+import {SettingsOverview} from './UI/scenes/Settings'
 
-import { addExchangeTimer } from  './UI/Settings/action'
-import { updateExchangeRates } from './ExchangeRates/action.js'
-import { setDeviceDimensions, setKeyboardHeight } from './UI/dimensions/action'
-import { addContext } from './Core/Context/action.js'
+import {addExchangeTimer} from  './UI/Settings/action'
+import {updateExchangeRates} from './ExchangeRates/action.js'
+import {setDeviceDimensions, setKeyboardHeight} from './UI/dimensions/action'
+import {addContext} from './Core/Context/action.js'
 import {setHeaderHeight} from './UI/dimensions/action.js'
-import { addCurrencyPlugin } from './UI/Settings/action.js'
-import { addUsernames } from './Core/Context/action'
+import {addCurrencyPlugin} from './UI/Settings/action.js'
+import {addUsernames} from './Core/Context/action'
 
 import * as CORE_SELECTORS from './Core/selectors'
 import * as CONTEXT_API from './Core/Context/api'
 
-import { makeContext, makeReactNativeIo } from 'airbitz-core-react-native'
+import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
 // import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
-import { EthereumCurrencyPluginFactory } from 'airbitz-currency-ethereum'
+import {EthereumCurrencyPluginFactory} from 'airbitz-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
@@ -50,7 +50,7 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 import styles from './style.js'
 
 import ENV from '../../env.json'
-import { mapAllFiles } from 'disklet'
+import {mapAllFiles} from 'disklet'
 
 // import { dumpFolder } from '../../debugTools.js'
 export function dumpFolder (folder) {
@@ -88,14 +88,13 @@ class Main extends Component {
     // HockeyApp.start()
     // HockeyApp.checkForUpdate() // optional
     makeReactNativeIo()
-    .then(io => {
+    .then(io =>
       // Make the core context:
-      return makeContext({
-        apiKey: AIRBITZ_API_KEY,
-        plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
-        io
-      })
-    })
+       makeContext({
+         apiKey: AIRBITZ_API_KEY,
+         plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+         io
+       }))
     .then(context => {
       // Put the context into Redux:
       this.props.addContext(context)
@@ -106,7 +105,7 @@ class Main extends Component {
       })
       this.props.setLocaleInfo(localeInfo)
       // this.setState({ context, loading: false }, () => SplashScreen.hide())
-      this.setState({ context, loading: false })
+      this.setState({context, loading: false})
       const exchangeTimer = setInterval(() => {
         this.props.updateExchangeRates()
       }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
@@ -119,7 +118,7 @@ class Main extends Component {
     if (!this.props.context) return
     return (
       <StyleProvider style={getTheme(platform)}>
-        <MenuContext style={{ flex: 1 }}>
+        <MenuContext style={{flex: 1}}>
           <View style={styles.statusBarHack}>
             <Container onLayout={this._onLayout}>
 
@@ -161,10 +160,10 @@ class Main extends Component {
   }
 
   _onLayout = (event) => {
-    const { width, height } = event.nativeEvent.layout
+    const {width, height} = event.nativeEvent.layout
     const xScale = (width / 375).toFixed(2)
     const yScale = (height / 647).toFixed(2)
-    this.props.setDeviceDimensions({ width, height, xScale, yScale })
+    this.props.setDeviceDimensions({width, height, xScale, yScale})
   }
 
   _keyboardDidShow = (event) => {

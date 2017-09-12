@@ -1,16 +1,12 @@
 // @flow
 // import { renameWalletStart } from ''
 
-export const renameWalletRequest = (wallet: any, name: string) => {
-  return wallet.renameWallet(name)
+export const renameWalletRequest = (wallet: any, name: string) => wallet.renameWallet(name)
   .then(() => {
     Promise.resolve(wallet)
   })
-}
 
-export const getTransactions = (wallet: any, currencyCode: string) => {
-  return wallet.getTransactions({ currencyCode })
-}
+export const getTransactions = (wallet: any, currencyCode: string) => wallet.getTransactions({currencyCode})
 
 export const setTransactionDetailsRequest = (wallet: any, currencyCode: string, transactionDetails: any) => {
   console.log('wallet is: ', wallet)
@@ -20,9 +16,7 @@ export const setTransactionDetailsRequest = (wallet: any, currencyCode: string, 
   return wallet.saveTxMetadata(transactionDetails.txid, currencyCode, transactionDetails)
 }
 
-export const getReceiveAddress = (wallet: any, currencyCode: string) => {
-  return wallet.getReceiveAddress(currencyCode)
-}
+export const getReceiveAddress = (wallet: any, currencyCode: string) => wallet.getReceiveAddress(currencyCode)
 
 export const makeSpend = (wallet: any, spendInfo: any) => {
   console.log('spendInfo', spendInfo)
@@ -30,30 +24,21 @@ export const makeSpend = (wallet: any, spendInfo: any) => {
 }
 
 export const getBalance = (wallet: any, currencyCode: string) => {
-  const balance = wallet.getBalance({ currencyCode })
+  const balance = wallet.getBalance({currencyCode})
   return balance
 }
 
-export const enableTokens = (wallet: any, tokens: Array<string>) => {
+export const enableTokens = (wallet: any, tokens: Array<string>) =>
   // XXX need to hook up to Core -paulvp
-  return wallet.enableTokens(tokens)
-}
+   wallet.enableTokens(tokens)
 
-export const parseURI = (wallet: any, uri: string) => {
-  return wallet.parseUri(uri)
-}
+export const parseURI = (wallet: any, uri: string) => wallet.parseUri(uri)
 
-export const signTransaction = (wallet: any, unsignedTransaction: any) => {
-  return wallet.signTx(unsignedTransaction)
-}
+export const signTransaction = (wallet: any, unsignedTransaction: any) => wallet.signTx(unsignedTransaction)
 
-export const broadcastTransaction = (wallet: any, signedTransaction: any) => {
-  return wallet.broadcastTx(signedTransaction)
-}
+export const broadcastTransaction = (wallet: any, signedTransaction: any) => wallet.broadcastTx(signedTransaction)
 
-export const saveTransaction = (wallet: any, signedTransaction: any) => {
-  return wallet.saveTx(signedTransaction)
-}
+export const saveTransaction = (wallet: any, signedTransaction: any) => wallet.saveTx(signedTransaction)
 
 // Documented but not implemented in the core
 // Do not use for Glidera transactions

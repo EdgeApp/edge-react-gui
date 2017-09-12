@@ -1,6 +1,6 @@
 import React from 'react'
-import { Text, View, StyleSheet, TouchableHighlight } from 'react-native'
-import { connect } from 'react-redux'
+import {Text, View, StyleSheet, TouchableHighlight} from 'react-native'
+import {connect} from 'react-redux'
 
 const styles = StyleSheet.create({
   view: {
@@ -23,8 +23,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const KeyboardButton = ({character, onPress, onLongPress}) => {
-  return (
+const KeyboardButton = ({character, onPress, onLongPress}) => (
     <View style={styles.view}>
       <TouchableHighlight
         style={styles.containerStyle}
@@ -36,6 +35,5 @@ const KeyboardButton = ({character, onPress, onLongPress}) => {
       </TouchableHighlight>
     </View>
   )
-}
 
 export default connect()(KeyboardButton)

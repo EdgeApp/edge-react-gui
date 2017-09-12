@@ -1,5 +1,5 @@
-import { updateWalletsRequest } from '../Wallets/action.js'
-import { refreshWallet } from '../../UI/Wallets/action.js'
+import {updateWalletsRequest} from '../Wallets/action.js'
+import {refreshWallet} from '../../UI/Wallets/action.js'
 import {
   newTransactionsRequest,
   refreshTransactionsRequest

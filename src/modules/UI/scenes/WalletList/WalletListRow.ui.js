@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import { bns } from 'biggystring'
+import {bns} from 'biggystring'
 import {
   View,
   TouchableHighlight,
@@ -82,7 +82,7 @@ class FullWalletListRow extends Component {
 
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.dispatch(selectWallet(walletId, currencyCode))
-    Actions.transactionList({ params: 'walletList' })
+    Actions.transactionList({params: 'walletList'})
   }
 
   render () {

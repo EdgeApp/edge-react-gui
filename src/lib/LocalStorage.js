@@ -1,9 +1,11 @@
 let RNFS = require('react-native-fs')
 
 const readJSONDb = (pathToDb, callback) => {
-  RNFS.readFile(RNFS.DocumentDirectoryPath + pathToDb).then(function (text) {
+  RNFS.readFile(RNFS.DocumentDirectoryPath + pathToDb)
+  .then(function (text) {
     return callback(JSON.parse(text))
-  }).catch((err) => {
+  })
+  .catch((err) => {
     console.log('local store load error', err.message)
     return callback([])
   })
@@ -12,12 +14,10 @@ const readJSONDb = (pathToDb, callback) => {
 const isString = val =>
   typeof val === 'string' || val instanceof String
 
-const copy = v => {
-  return {
-    key: v.key,
-    value: v.value
-  }
-}
+const copy = v => ({
+  key: v.key,
+  value: v.value
+})
 
 const defineLocalVariable = (ctx, name, value) => {
   Object.defineProperty(ctx, name, {
@@ -40,9 +40,8 @@ const init = (ctx, data) => {
 
 const writeToDisk = ctx => {
   RNFS.writeFile(RNFS.DocumentDirectoryPath + ctx.pathToDb, JSON.stringify(ctx.list), 'utf8')
-  .then((success) => {
-    return success
-  }).catch(err => {
+  .then((success) => success)
+  .catch(err => {
     throw err
   })
 }
@@ -67,9 +66,7 @@ function LocalStorage (absolutePathToDbFile, callback) {
     })
 
     Object.defineProperty(self, 'length', {
-      get: () => {
-        return self.list.length
-      },
+      get: () => self.list.length,
       configurable: true,
       enumerable: false
     })
@@ -128,7 +125,7 @@ LocalStorage.prototype.removeItem = function (key) {
 
     map.delete(key)
 
-    for (let i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i = i + 1) {
       field = list[i]
 
       if (field.key === key) {

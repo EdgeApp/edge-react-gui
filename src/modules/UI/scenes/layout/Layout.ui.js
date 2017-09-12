@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { AppState, View } from 'react-native'
-import { DefaultRenderer } from 'react-native-router-flux'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {AppState, View} from 'react-native'
+import {DefaultRenderer} from 'react-native-router-flux'
+import {connect} from 'react-redux'
 
-import { logoutRequest } from '../../components/ControlPanel/action'
+import {logoutRequest} from '../../components/ControlPanel/action'
 
 import SideMenu from '../../components/SideMenu/SideMenu.ui'
 import Header from '../../components/Header/Header.ui'
@@ -53,14 +53,14 @@ class Layout extends Component {
   _handleAppStateChange = (nextAppState) => {
     if (this.foregrounded(nextAppState)) {
       console.log('Background -> Foreground')
-      this.setState({ active: true })
+      this.setState({active: true})
 
       this.cancelAutoLogoutTimer()
     }
 
     if (this.backgrounded(nextAppState)) {
       console.log('Foreground -> Background')
-      this.setState({ active: false })
+      this.setState({active: false})
 
       this.beginAutoLogoutTimer()
     }
@@ -76,11 +76,11 @@ class Layout extends Component {
 
   beginAutoLogoutTimer () {
     const timeout = setTimeout(() => this.autoLogout(), (this.props.autoLogoutTimeInSeconds * 1000))
-    this.setState({ timeout })
+    this.setState({timeout})
   }
 
   cancelAutoLogoutTimer () {
-    const { timeout } = this.state
+    const {timeout} = this.state
     clearTimeout(timeout)
   }
 

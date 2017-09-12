@@ -16,8 +16,8 @@ const initialState = {
 }
 
 export const request = (state = initialState, action) => {
-  const { type, data = {} } = action
-  const { receiveAddress, amountSatoshi, amountFiat } = data
+  const {type, data = {} } = action
+  const {receiveAddress, amountSatoshi, amountFiat} = data
   switch (type) {
   case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS:
     return {

@@ -8,29 +8,26 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 
-export const initializeAccount = (account) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const context = CORE_SELECTORS.getContext(state)
-    CONTEXT_API.getCurrencyPlugins(context)
+export const initializeAccount = (account) => (dispatch, getState) => {
+  const state = getState()
+  const context = CORE_SELECTORS.getContext(state)
+  CONTEXT_API.getCurrencyPlugins(context)
     .then(currencyPlugins =>
       currencyPlugins.forEach(plugin => dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))))
 
-    dispatch(ACCOUNT_ACTIONS.addAccount(account))
-    dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-    const {
+  dispatch(ACCOUNT_ACTIONS.addAccount(account))
+  dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
+  const {
       walletId,
       currencyCode
     } = ACCOUNT_API.getFirstActiveWalletInfo(account)
-    dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
-    dispatch(loadSettings())
-  }
+  dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+  dispatch(loadSettings())
 }
 
-const loadSettings = () => {
-  return (dispatch, getState) => {
-    const { account } = getState().core
-    SETTINGS_API.getSyncedSettings(account)
+const loadSettings = () => (dispatch, getState) => {
+  const {account} = getState().core
+  SETTINGS_API.getSyncedSettings(account)
     .then(settings => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, settings)
@@ -55,7 +52,7 @@ const loadSettings = () => {
       dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
     }) */
 
-    SETTINGS_API.getLocalSettings(account)
+  SETTINGS_API.getLocalSettings(account)
     .then(settings => {
       const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
 
@@ -64,7 +61,7 @@ const loadSettings = () => {
       dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
     })
 
-    SETTINGS_API.getCoreSettings(account)
+  SETTINGS_API.getCoreSettings(account)
     .then(settings => {
       const coreDefaults = SETTINGS_API.CORE_DEFAULTS
 
@@ -72,5 +69,4 @@ const loadSettings = () => {
       dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
       dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
     })
-  }
 }

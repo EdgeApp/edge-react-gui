@@ -1,8 +1,6 @@
 // Core/selectors.js
 
-export const getCore = (state) => {
-  return state.core
-}
+export const getCore = (state) => state.core
 
 // Context
 export const getContext = (state) => {
