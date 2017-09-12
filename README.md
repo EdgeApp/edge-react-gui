@@ -16,25 +16,34 @@ Edge is:
 
 ## Getting Started
 
-1. Make sure you have node and npm installed
+### Install nodejs (v 8.4+) and npm (v 5.3+)
 
-  https://nodejs.org/en/download/
+    https://nodejs.org/en/download/
 
-2. Make sure you have React Native CLI installed
+### Install React Native CLI
 
-  `npm install -g react-native-cli`
+    npm install -g react-native-cli
 
-3. Checkout develop & install node_modules
+### Checkout develop branch & install node_modules
 
-  `git checkout develop`
+    cd airbitz-react-gui
+    git checkout develop
+    npm install
 
-  `npm install`
+### iOS CocoaPods Install
 
-4. CocoaPods Install
+    cd ios && pod install
 
-  `cd ios && pod install`
+### Android NDK Setup
 
-5. Run the app in debug mode
+(MacOS) If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle`. 
+If not, download and unzip the NDK from https://developer.android.com/ndk/index.html
+
+Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
+
+    export ANDROID_NDK_HOME=/Users/bob/Library/Android/sdk/ndk-bundle
+
+### Run the app in debug mode
 
   `react-native run-ios` or `react-native run-android`
 
@@ -44,7 +53,7 @@ Edge is:
 
 #### Android
 
-`npm run android:release-install`
+    npm run android:release-install
 
 ---------------------------------------------------
 
