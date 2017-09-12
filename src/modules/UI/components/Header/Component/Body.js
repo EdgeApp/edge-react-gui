@@ -22,23 +22,23 @@ class Body extends Component {
     switch (sceneName) {
     case 'scan':
       return <ExampleFromWalletConnect walletList={this.props.walletList}
-          toggleFunction='_onPressToggleSelectedWalletModal'
-          visibleFlag='selectedWalletListModalVisibility' style={b()} />
+        toggleFunction='_onPressToggleSelectedWalletModal'
+        visibleFlag='selectedWalletListModalVisibility' style={b()} />
 
     case 'request':
       return <ExampleFromWalletConnect wallets={this.props.walletList}
-          toggleFunction='_onPressToggleSelectedWalletModal'
-          visibleFlag='selectedWalletListModalVisibility' />
+        toggleFunction='_onPressToggleSelectedWalletModal'
+        visibleFlag='selectedWalletListModalVisibility' />
 
     case 'transactionList':
       return <ExampleFromWalletConnect wallets={this.props.walletList}
-          toggleFunction='_onPressToggleSelectedWalletModal'
-          visibleFlag='selectedWalletListModalVisibility' />
+        toggleFunction='_onPressToggleSelectedWalletModal'
+        visibleFlag='selectedWalletListModalVisibility' />
 
     case 'sendConfirmation':
       return <ExampleFromWalletConnect wallets={this.props.walletList}
-          toggleFunction='_onPressToggleSelectedWalletModal'
-          visibleFlag='selectedWalletListModalVisibility' />
+        toggleFunction='_onPressToggleSelectedWalletModal'
+        visibleFlag='selectedWalletListModalVisibility' />
 
     default:
       return <DefaultHeader routes={this.props.routes} />
@@ -66,7 +66,7 @@ class DefaultHeader extends Component {
   }
 
   render () {
-    return <Title>{ sprintf('%s', strings.enUS['title_' + this._renderTitle().replace(/ /g, '_')]) }</Title>
+    return <Title>{sprintf('%s', strings.enUS['title_' + this._renderTitle().replace(/ /g, '_')])}</Title>
   }
 }
 
@@ -97,8 +97,8 @@ class ExampleFromWallet extends Component {
             }
           </View>
         </View>
-        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} type='from' /> }
-        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} type='to' /> }
+        {this.props[this.props.visibleFlag] && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} type='from' />}
+        {this.props.scanToWalletListModalVisibility && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} type='to' />}
       </TouchableOpacity>
     )
   }

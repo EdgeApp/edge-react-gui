@@ -349,17 +349,17 @@ class WalletList extends Component {
   }
 
   renderDeleteWalletModal = () => <StylizedModal featuredIcon={< DeleteIcon />}
-      headerText='fragment_wallets_delete_wallet' // t(')
-      modalMiddle={< DeleteSubtext />}
-      modalBottom={<DeleteWalletButtonsConnect walletId={this.props.walletId} />}
-      visibilityBoolean={this.props.deleteWalletModalVisible} />
+    headerText='fragment_wallets_delete_wallet' // t(')
+    modalMiddle={< DeleteSubtext />}
+    modalBottom={<DeleteWalletButtonsConnect walletId={this.props.walletId} />}
+    visibilityBoolean={this.props.deleteWalletModalVisible} />
 
   renderRenameWalletModal = () => <StylizedModal featuredIcon={< AddressIcon />}
-      headerText='fragment_wallets_rename_wallet'
-      headerSubtext={this.props.walletName}
-      modalMiddle={<WalletNameInputConnect />}
-      modalBottom={<RenameWalletButtonsConnect walletId={this.props.walletId} />}
-      visibilityBoolean={this.props.renameWalletModalVisible} />
+    headerText='fragment_wallets_rename_wallet'
+    headerSubtext={this.props.walletName}
+    modalMiddle={<WalletNameInputConnect />}
+    modalBottom={<RenameWalletButtonsConnect walletId={this.props.walletId} />}
+    visibilityBoolean={this.props.renameWalletModalVisible} />
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}

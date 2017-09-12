@@ -97,7 +97,7 @@ class WalletListModalBody extends Component {
             <T style={[styles.currencyRowText]}>{currencyCode}</T>
           </View>
           <View style={[styles.currencyRowBalanceTextWrap]}>
-            <T style={[styles.currencyRowText]}>{ cryptoAmount }</T>
+            <T style={[styles.currencyRowText]}>{cryptoAmount}</T>
           </View>
         </View>
       </TouchableOpacity>
@@ -124,7 +124,7 @@ class WalletListModalBody extends Component {
               <T style={[styles.currencyRowText]}>{cutOffText(guiWallet.name, 34)}</T>
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>{symbol || ''} { denomAmount }</T>
+              <T style={[styles.currencyRowText]}>{symbol || ''} {denomAmount}</T>
             </View>
           </View>
         </TouchableOpacity>
@@ -150,7 +150,7 @@ class WalletListModalBody extends Component {
   render () {
     console.log('rendering dropdown', this.props.selectedWalletId)
     return (
-      <View>{ this.renderWalletRows() }</View>
+      <View>{this.renderWalletRows()}</View>
     )
   }
 }

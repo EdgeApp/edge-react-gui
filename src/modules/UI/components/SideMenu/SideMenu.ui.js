@@ -34,7 +34,7 @@ class SideMenuComponent extends Component {
           }
         })}
       >
-        { this.props.children }
+        {this.props.children}
       </Drawer>
     )
   }

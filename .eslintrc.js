@@ -23,6 +23,16 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "react/jsx-curly-spacing": ["error", {
+          "when": "never",
+          "attributes": {"allowMultiline": false},
+          "children": true
+        }],
+        "react/jsx-no-duplicate-props": ["error", { "ignoreCase": true }],
+        "react/jsx-indent-props": ["error", 'space'|2],
+        "react/self-closing-comp": ["error", {"component": true}],
+        "react/no-typos": "error",
+        "react/no-array-index-key": "error",
         "arrow-body-style": ["error", "as-needed"],
         "block-spacing": ["error", "always"],
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
