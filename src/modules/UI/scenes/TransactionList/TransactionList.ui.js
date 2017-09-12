@@ -265,8 +265,8 @@ class TransactionList extends Component {
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
             <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
-              {this.state.balanceBoxVisible &&
-              <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+              {this.state.balanceBoxVisible
+              && <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                 {this.props.updatingBalance ? (
                   <View style={[styles.currentBalanceWrap]}>
                     <View style={[styles.updatingBalanceWrap]}>
@@ -399,8 +399,8 @@ class TransactionList extends Component {
     console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
     return (
       <View style={[styles.singleTransactionWrap]}>
-        {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
-          <View style={styles.singleDateArea}>
+        {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
+          && <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
               <T style={styles.formattedDate}>{tx.dateString}</T>
             </View>

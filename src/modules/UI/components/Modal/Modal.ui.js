@@ -21,22 +21,22 @@ export default class StylizedModal extends Component {
                 {sprintf(strings.enUS[this.props.headerText])}
               </T>
               {
-                this.props.headerSubtext &&
-                <T style={[styles.modalTopSubtext, b('green')]}>
+                this.props.headerSubtext
+                && <T style={[styles.modalTopSubtext, b('green')]}>
                   {this.props.headerSubtext || ''}
                 </T>
               }
 
             </View>
             {
-              this.props.modalMiddle &&
-              <View style={[styles.modalMiddle, b('brown')]}>
+              this.props.modalMiddle
+              && <View style={[styles.modalMiddle, b('brown')]}>
                 {this.props.modalMiddle}
               </View>
             }
             {
-              this.props.modalBottom &&
-              <View style={[styles.modalBottom, b('green')]}>
+              this.props.modalBottom
+              && <View style={[styles.modalBottom, b('green')]}>
                 {this.props.modalBottom}
               </View>
             }

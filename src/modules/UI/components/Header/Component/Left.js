@@ -9,9 +9,9 @@ import styles from '../style'
 export default class Left extends Component {
   render () {
     const children = this.props.routes.scene.children
-    const sceneName = children ?
-      this.props.routes.scene.children[this.props.routes.scene.index].name :
-      null
+    const sceneName = children
+      ? this.props.routes.scene.children[this.props.routes.scene.index].name
+      : null
 
     switch (sceneName) {
     case 'sendConfirmation':

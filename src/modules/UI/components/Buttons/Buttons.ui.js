@@ -11,10 +11,9 @@ class PrimaryButton extends Component {
     return (
       <TouchableHighlight onPress={this.props.onPressFunction} underlayColor={c.primary} style={[s.primaryButtonWrap, s.stylizedButton, this.props.style]}>
         <View style={s.stylizedButtonTextWrap}>
-          {this.props.processingFlag ?
-            (this.props.processingElement)
-            :
-            (<T style={[s.primaryButton, s.stylizedButtonText]}>
+          {this.props.processingFlag
+            ? (this.props.processingElement)
+            :            (<T style={[s.primaryButton, s.stylizedButtonText]}>
               {this.props.text}
             </T>
             )

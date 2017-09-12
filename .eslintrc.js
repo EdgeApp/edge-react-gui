@@ -23,6 +23,7 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "operator-linebreak": ["error", "before"],
         "react/jsx-curly-spacing": ["error", {
           "when": "never",
           "attributes": {"allowMultiline": false},
