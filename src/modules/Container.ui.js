@@ -37,12 +37,12 @@ import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
-// import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
+import { BitcoinCurrencyPluginFactory } from 'airbitz-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'airbitz-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
-// currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
+currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 
 import {setLocaleInfo} from './UI/locale/action'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
