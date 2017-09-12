@@ -429,7 +429,7 @@ class TransactionList extends Component {
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2) : (0.00).toFixed(2))}
+                {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2)) : (0.00).toFixed(2))}
               </T>
             </View>
           </View>

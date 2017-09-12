@@ -67,6 +67,17 @@ export const getRandomColor = () => {
   return borderColors[Math.floor(Math.random() * borderColors.length)]
 }
 
+export const addFiatTwoDecimals = (input: string) => {
+  console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
+  if (input.length - input.indexOf('.') === 1) {
+    input = input + '0'
+  } else if (!input.includes('.')) {
+    input = input + '.00'
+  }
+
+  return input
+}
+
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean => {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()

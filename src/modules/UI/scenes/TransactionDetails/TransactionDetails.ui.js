@@ -28,7 +28,7 @@ import {connect} from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
-import {border as b, getFiatSymbol, truncateDecimals, formatNumber, getWalletDefaultDenomProps} from '../../../utils'
+import {border as b, getFiatSymbol, truncateDecimals, formatNumber, getWalletDefaultDenomProps, addFiatTwoDecimals} from '../../../utils'
 import {
   setTransactionDetails,
   setNewSubcategory,
@@ -554,7 +554,7 @@ class AmountArea extends Component {
               style={[b(), styles.editableFiat]}
               keyboardType='numeric'
               placeholder={''}
-              value={truncateDecimals(Math.abs(this.props.fiatAmount).toString(), 2)}
+              value={addFiatTwoDecimals(truncateDecimals(Math.abs(this.props.fiatAmount).toString(), 2))}
               defaultValue={''}
             />
           </View>
