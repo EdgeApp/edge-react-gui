@@ -35,11 +35,10 @@ class Request extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps
+      const {coreWallet, currencyCode} = nextProps 
       WALLET_API.getReceiveAddress(coreWallet, currencyCode)
       .then(receiveAddress => {
         const {publicAddress} = receiveAddress
-        console.log('in request->ComponentWillReceiveProps, receiveAddress is: ', receiveAddress, ' , coreWallet is: ', coreWallet, ' , and currencyCode is: ', currencyCode)
         const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
