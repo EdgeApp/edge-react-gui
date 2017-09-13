@@ -9,7 +9,7 @@ export default (store) => (next) => (action) => {
     'REACT_NATIVE_ROUTER_FLUX_PUSH',
     'REACT_NATIVE_ROUTER_FLUX_FOCUS'
   ]
-  return (loginStatus === false) && (!allowedActions.includes(action.type)) ?
-    null :
-    next(action)
+  return (loginStatus === false) && (!allowedActions.includes(action.type))
+    ? null
+    : next(action)
 }

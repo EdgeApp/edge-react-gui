@@ -82,8 +82,8 @@ LocalStorage.prototype.setItem = function (key, value) {
   }
 
   if (value === undefined || value === null) {
-    throw new Error('LocalStorage#setItem(key, value):' +
-      ' setItem should take two arguments')
+    throw new Error('LocalStorage#setItem(key, value):'
+      + ' setItem should take two arguments')
   }
 
   let map = this.map

@@ -1,6 +1,26 @@
 import {StyleSheet} from 'react-native'
+import {colors as c} from '../../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
+  stylizedButtonText: {
+    color: 'white',
+    fontSize: 16
+  },
+  cancelButtonWrap: {
+    backgroundColor: c.gray2,
+    alignSelf: 'flex-start'
+  },
+  cancelButton: {
+    color: '#3c76cd'
+  },
+  doneButtonWrap: {
+    backgroundColor: '#4977BB',
+    alignSelf: 'flex-end',
+    marginLeft: 4
+  },
+  doneButton: {
+    color: '#3c76cd'
+  },
   rowContainer: {
     height: 44,
     borderBottomWidth: 1,

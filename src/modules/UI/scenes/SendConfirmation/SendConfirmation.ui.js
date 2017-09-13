@@ -109,8 +109,8 @@ class SendConfirmation extends Component {
             {/* <Password /> */}
           </View>
           <View style={[styles.pendingSymbolArea]}>
-            {this.props.sendConfirmation.pending &&
-              <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
+            {this.props.sendConfirmation.pending
+              && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
             }
           </View>
           <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />

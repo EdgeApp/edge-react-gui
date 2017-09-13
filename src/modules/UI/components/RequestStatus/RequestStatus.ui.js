@@ -29,8 +29,8 @@ const RequestStatus = (props) => {
   console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
 
   const hasReceivedPartialPayment = () => {
-    const hasReceivedPartialPayment =
-      (hasReceivedPayment() && !isPaymentSufficient())
+    const hasReceivedPartialPayment
+      = (hasReceivedPayment() && !isPaymentSufficient())
 
     return hasReceivedPartialPayment
   }
@@ -42,22 +42,22 @@ const RequestStatus = (props) => {
   }
 
   const isPaymentSufficient = () => {
-    const isPaymentSufficient =
-      amountReceivedInCrypto >= amountRequestedInCrypto
+    const isPaymentSufficient
+      = amountReceivedInCrypto >= amountRequestedInCrypto
 
     return isPaymentSufficient
   }
 
   const getOutstandingDebtInCrypto = () => {
-    const outstandingDebtInCrypto =
-      (amountRequestedInCrypto - amountReceivedInCrypto)
+    const outstandingDebtInCrypto
+      = (amountRequestedInCrypto - amountReceivedInCrypto)
 
     return outstandingDebtInCrypto
   }
 
   const getDisplayRequestStatus = () => {
-    const waitingForPayment =
-      <View style={styles.view}>
+    const waitingForPayment
+      = <View style={styles.view}>
         <Text style={styles.text}>
           Waiting for payment...
         </Text>
@@ -67,8 +67,8 @@ const RequestStatus = (props) => {
         </T>
       </View>
 
-    const partialPaymentReceived =
-      <View style={styles.view}>
+    const partialPaymentReceived
+      = <View style={styles.view}>
         <Text style={styles.text}>
           {amountReceivedInCrypto} received
         </Text>
@@ -82,8 +82,8 @@ const RequestStatus = (props) => {
         </Text>
       </View>
 
-    const displayStatus =
-      hasReceivedPartialPayment()
+    const displayStatus
+      = hasReceivedPartialPayment()
       ? partialPaymentReceived
       : waitingForPayment
 

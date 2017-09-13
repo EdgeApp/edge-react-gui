@@ -79,8 +79,7 @@ function schema (wallet: any): GUIWallet {
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage: string = wallet.currencyInfo.symbolImage
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
-  const denominations: Array<AbcDenomination> =
-    wallet.currencyInfo.denominations
+  const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }

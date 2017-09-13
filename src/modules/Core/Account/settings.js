@@ -57,7 +57,7 @@ export const setPinModeRequest = (account, pinMode) => {
 export const setPinRequest = (account, pin) => account.changePIN(pin)
 
 // Account Settings
-export const setAutoLogoutTimeRequest = (account, autoLogoutTimeInSeconds) =>
+export const setAutoLogoutTimeInSecondsRequest = (account, autoLogoutTimeInSeconds) =>
   getSyncedSettings(account)
   .then(settings => {
     const updatedSettings = updateSettings(settings, {autoLogoutTimeInSeconds})

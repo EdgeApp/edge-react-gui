@@ -33,7 +33,7 @@ const loadSettings = () => (dispatch, getState) => {
       const syncFinal = Object.assign({}, syncDefaults, settings)
 
       // Add all the settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setAutoLogoutTime(syncFinal.autoLogoutTimeInSeconds))
+      dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
 

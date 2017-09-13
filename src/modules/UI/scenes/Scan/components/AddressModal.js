@@ -87,8 +87,8 @@ class AddressModal extends Component {
         zIndex: 1015,
         elevation: 1015}]} />
 
-    const copyMessage =
-      this.state.clipboard
+    const copyMessage
+      = this.state.clipboard
       ? sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
       : null
     const middle = <AddressInput

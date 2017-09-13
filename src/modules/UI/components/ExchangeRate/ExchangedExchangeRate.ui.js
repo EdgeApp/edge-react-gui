@@ -9,11 +9,11 @@ export default class ExchangedExchangeRate extends Component {
       primaryInfo
     } = this.props
     if (!secondaryToPrimaryRatio || Object.keys(primaryInfo).length === 0) { return '0' }
-    const secondaryDisplayAmount =
-      parseFloat(1) *
-      parseFloat(this.props.secondaryToPrimaryRatio) *
-      parseFloat(this.props.primaryInfo.displayDenomination.multiplier) /
-      parseFloat(this.props.primaryInfo.exchangeDenomination.multiplier)
+    const secondaryDisplayAmount
+      = parseFloat(1)
+      * parseFloat(this.props.secondaryToPrimaryRatio)
+      * parseFloat(this.props.primaryInfo.displayDenomination.multiplier)
+      / parseFloat(this.props.primaryInfo.exchangeDenomination.multiplier)
 
     return secondaryDisplayAmount
   }
