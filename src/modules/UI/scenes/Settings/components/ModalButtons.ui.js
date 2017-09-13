@@ -1,14 +1,11 @@
 import React, {Component} from 'react'
-import {
-  View,
-  TouchableHighlight
-} from 'react-native'
+import {TouchableHighlight, View} from 'react-native'
 
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import FormattedText from '../../../components/FormattedText/FormattedText.ui'
 
-import styles from '../style'
+import styles from '../../../components/Modal/style'
 
 export default class ModalButtons extends Component {
   render () {

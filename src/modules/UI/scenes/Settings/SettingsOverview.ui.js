@@ -154,7 +154,7 @@ class SettingsOverview extends Component {
         <View>
           <RowModal onPress={this.showAutoLogoutSelectorModal}
             leftText={sprintf(strings.enUS['settings_title_auto_logoff'])}
-            modal={this.props.autoLogoutTimeInMinutes || disabled} />
+            rightText={this.props.autoLogoutTimeInMinutes || disabled} />
 
           {this.securityRoute.map(this.renderRowRoute)}
           {Object.keys(this.options).map(this.renderRowSwitch)}
@@ -201,7 +201,19 @@ class SettingsOverview extends Component {
       })}
     />
 
+    const icon = <IonIcon name='ios-time-outline' size={24} color='#2A5799'
+      style={[{
+        position: 'relative',
+        top: 12,
+        left: 13,
+        height: 24,
+        width: 24,
+        backgroundColor: 'transparent',
+        zIndex: 1015,
+        elevation: 1015}]} />
+
     return <StylizedModal visibilityBoolean={this.state.showAutoLogoutSelectorModal}
+      featuredIcon={icon}
       headerText={'Select time before auto logout'}
       headerSubtext={'Select time before auto logout'}
       modalMiddle={picker}
