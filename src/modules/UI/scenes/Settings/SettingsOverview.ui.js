@@ -17,19 +17,21 @@ import RowRoute from './components/RowRoute.ui'
 import RowSwitch from './components/RowSwitch.ui'
 import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
-
+import ModalButtons from './components/ModalButtons.ui'
 import StylizedModal from '../../components/Modal/Modal.ui'
 
-import * as SETTINGS_ACTIONS from '../../Settings/action'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as CORE_SELECTORS from '../../../Core/selectors'
-
+import {setAutoLogoutTimeInMinutesRequest} from './action'
 import s from './style'
 
 class SettingsOverview extends Component {
   constructor (props) {
     super(props)
-    this.state = {showAutoLogoutSelectorModal: false}
+    this.state = {
+      showAutoLogoutSelectorModal: false,
+      autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
+    }
 
     this.settings = [
       {
@@ -117,6 +119,8 @@ class SettingsOverview extends Component {
   }
 
   render () {
+    const disabled = sprintf(strings.enUS['string_disable'])
+
     return (
       <ScrollView style={s.container}>
         <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
@@ -150,7 +154,7 @@ class SettingsOverview extends Component {
         <View>
           <RowModal onPress={this.showAutoLogoutSelectorModal}
             leftText={sprintf(strings.enUS['settings_title_auto_logoff'])}
-            modal={this.props.autoLogoutTimeInMinutes || 'Disabled'} />
+            modal={this.props.autoLogoutTimeInMinutes || disabled} />
 
           {this.securityRoute.map(this.renderRowRoute)}
           {Object.keys(this.options).map(this.renderRowSwitch)}
@@ -167,22 +171,41 @@ class SettingsOverview extends Component {
 
   showAutoLogoutSelectorModal = () => this.setState({showAutoLogoutSelectorModal: true})
   renderAutoLogoutSelectorModal = () => {
-    const logoutOptions = [1, 5, 15, 30, 45, 60, 120]
-    const pickerOptions = [
-      <Picker.Item label={'Disable'} value={null} key={'disable'} />,
-      ...logoutOptions.map(option => <Picker.Item label={option.toString()} value={option} key={option} />)
+    const disabled = sprintf(strings.enUS['string_disable'])
+    const logoutOptions = [
+      {label: disabled, value: null},
+      {label: '1', value: 1},
+      {label: '15', value: 15},
+      {label: '30', value: 30},
+      {label: '45', value: 45},
+      {label: '60', value: 60},
+      {label: '120', value: 120}
     ]
+    const pickerOptions = logoutOptions.map(option => <Picker.Item label={option.label} value={option.value} key={option.label} />)
 
     const picker = <Picker
-      selectedValue={this.props.autoLogoutTimeInMinutes}
-      onValueChange={(itemValue) => this.props.setAutoLogoutTimeInMinutes(itemValue)}>
+      selectedValue={this.state.autoLogoutTimeInMinutes}
+      onValueChange={(autoLogoutTimeInMinutes) => this.setState({autoLogoutTimeInMinutes})}>
       {pickerOptions}
     </Picker>
+
+    const modalBottom = <ModalButtons
+      onDone={() => {
+        this.props.setAutoLogoutTimeInMinutes(this.state.autoLogoutTimeInMinutes)
+        this.setState({showAutoLogoutSelectorModal: false})
+      }}
+
+      onCancel={() => this.setState({
+        autoLogoutTimeInMinutes: null,
+        showAutoLogoutSelectorModal: false
+      })}
+    />
 
     return <StylizedModal visibilityBoolean={this.state.showAutoLogoutSelectorModal}
       headerText={'Select time before auto logout'}
       headerSubtext={'Select time before auto logout'}
-      modalMiddle={picker} />
+      modalMiddle={picker}
+      modalBottom={modalBottom}/>
   }
 
   renderRowRoute = (x, i) => <RowRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
@@ -197,7 +220,7 @@ const mapStateToProps = (state) => ({
   username: CORE_SELECTORS.getUsername(state)
 })
 const mapDispatchToProps = (dispatch) => ({
-  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInMinutes(autoLogoutTimeInMinutes))
+  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
