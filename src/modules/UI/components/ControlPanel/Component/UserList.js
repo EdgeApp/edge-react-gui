@@ -67,10 +67,10 @@ class UserListComponent extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   usernames: CORE_SELECTORS.getUsernames(state)
 })
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   logout: (username) => dispatch(logoutRequest(username)),
   deleteLocalAccount: (username) => dispatch(CONTEXT_API.deleteLocalAccount(username))
 })

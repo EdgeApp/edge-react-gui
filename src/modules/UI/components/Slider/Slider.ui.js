@@ -24,7 +24,7 @@ class ABSlider extends Component {
     }
   };
 
-  onValueChange = value => {
+  onValueChange = (value) => {
     this.setState({value})
   }
 

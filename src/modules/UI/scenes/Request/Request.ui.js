@@ -35,9 +35,9 @@ class Request extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps 
+      const {coreWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(coreWallet, currencyCode)
-      .then(receiveAddress => {
+      .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
         const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
         this.setState({
@@ -51,7 +51,7 @@ class Request extends Component {
   componentDidMount () {
     const {coreWallet, currencyCode} = this.props
     WALLET_API.getReceiveAddress(coreWallet, currencyCode)
-    .then(receiveAddress => {
+    .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
       const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
       this.setState({

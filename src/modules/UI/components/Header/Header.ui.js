@@ -55,7 +55,7 @@ class HeaderUI extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   routes: state.routes
 })
 export default connect(mapStateToProps)(HeaderUI)

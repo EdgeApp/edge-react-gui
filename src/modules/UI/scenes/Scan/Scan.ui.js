@@ -194,12 +194,12 @@ const mapStateToProps = (state) => {
     scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),
   updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
-  updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
-  updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
+  updatePublicAddress: (publicAddress) => dispatch(updatePublicAddressRequest(publicAddress)),
+  updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)

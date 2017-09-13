@@ -38,7 +38,7 @@ export default class AutoLogoutModal extends Component {
       {label: '60', value: 60},
       {label: '120', value: 120}
     ]
-    const pickerOptions = logoutOptions.map(option => <Picker.Item label={option.label} value={option.value} key={option.label} />)
+    const pickerOptions = logoutOptions.map((option) => <Picker.Item label={option.label} value={option.value} key={option.label} />)
 
     const picker = <Picker
       selectedValue={this.state.autoLogoutTimeInMinutes}

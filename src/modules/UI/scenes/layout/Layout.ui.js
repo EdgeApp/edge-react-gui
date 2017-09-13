@@ -75,7 +75,8 @@ class Layout extends Component {
   }
 
   beginAutoLogoutTimer () {
-    const timeout = setTimeout(() => this.autoLogout(), (this.props.autoLogoutTimeInSeconds * 1000))
+    const autoLogoutTimeInMilliseconds = (this.props.autoLogoutTimeInSeconds * 1000)
+    const timeout = setTimeout(this.autoLogout, autoLogoutTimeInMilliseconds)
     this.setState({timeout})
   }
 
@@ -94,7 +95,7 @@ class Layout extends Component {
 const mapStateToProps = (state) => ({
   autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
 })
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logoutRequest())
 })
 

@@ -26,12 +26,12 @@ export const updateReceiveAddress = (walletId, currencyCode) => (dispatch, getSt
     .catch(onError)
 }
 
-export const updateInputCurrencySelected = inputCurrencySelected => ({
+export const updateInputCurrencySelected = (inputCurrencySelected) => ({
   type: UPDATE_INPUT_CURRENCY_SELECTED,
   data: {inputCurrencySelected}
 })
 
-export const saveReceiveAddress = receiveAddress => (dispatch, getState) => {
+export const saveReceiveAddress = (receiveAddress) => (dispatch, getState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
@@ -48,7 +48,7 @@ export const saveReceiveAddress = receiveAddress => (dispatch, getState) => {
     .catch(onError)
 }
 
-export const updateReceiveAddressSuccess = receiveAddress => ({
+export const updateReceiveAddressSuccess = (receiveAddress) => ({
   type: UPDATE_RECEIVE_ADDRESS_SUCCESS,
   data: {receiveAddress}
 })

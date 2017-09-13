@@ -48,7 +48,7 @@ WalletListModal.propTypes = {
   currentScene: PropTypes.string,
   dimensions: PropTypes.object
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   walletList: state.ui.wallets.byId,
   dropdownWalletListVisible: state.ui.scenes.walletListModal.walletListModalVisible,
   walletTransferModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
@@ -166,7 +166,7 @@ export const WalletListModalBodyConnect = connect(
     selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
     settings: state.ui.settings
   }),
-  dispatch => ({
+  (dispatch) => ({
     selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
     getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
     disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility()),

@@ -494,7 +494,7 @@ class TransactionDetails extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
   fiatSymbol: UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
@@ -503,7 +503,7 @@ const mapStateToProps = state => ({
   subcategoriesList: state.ui.scenes.transactionDetails.subcategories,
   settings: state.ui.settings
 })
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   setTransactionDetails: (currencyCode, transactionDetails) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) }
 })
 
@@ -633,7 +633,7 @@ class AmountArea extends Component {
     )
   }
 }
-export const AmountAreaConnect = connect(state => ({
+export const AmountAreaConnect = connect((state) => ({
   dimensions: state.ui.scenes.dimensions
 }))(AmountArea)
 
@@ -691,7 +691,7 @@ class SubCategorySelect extends Component {
   keyExtractor = (item, index) => index
 }
 
-export const SubCategorySelectConnect = connect(state => ({
+export const SubCategorySelectConnect = connect((state) => ({
   dimensions: state.ui.scenes.dimensions
 }))(SubCategorySelect)
 

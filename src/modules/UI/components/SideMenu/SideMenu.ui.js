@@ -24,7 +24,7 @@ class SideMenuComponent extends Component {
         onOpen={() => this.props.dispatch(openSidebar())}
         onClose={() => this.props.dispatch(closeSidebar())}
         elevation={2}
-        tweenHandler={ratio => ({
+        tweenHandler={(ratio) => ({
           main: {
             opacity: 1
           },
@@ -49,7 +49,7 @@ const drawerStyles = {
   main: {paddingLeft: 3}
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   view: state.ui.scenes.sideMenu.view
 })
 

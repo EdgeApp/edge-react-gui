@@ -12,8 +12,8 @@ export const initializeAccount = (account) => (dispatch, getState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   CONTEXT_API.getCurrencyPlugins(context)
-    .then(currencyPlugins =>
-      currencyPlugins.forEach(plugin => dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))))
+    .then((currencyPlugins) =>
+      currencyPlugins.forEach((plugin) => dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))))
 
   dispatch(ACCOUNT_ACTIONS.addAccount(account))
   dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
@@ -28,7 +28,7 @@ export const initializeAccount = (account) => (dispatch, getState) => {
 const loadSettings = () => (dispatch, getState) => {
   const {account} = getState().core
   SETTINGS_API.getSyncedSettings(account)
-    .then(settings => {
+    .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, settings)
 
@@ -53,7 +53,7 @@ const loadSettings = () => (dispatch, getState) => {
     }) */
 
   SETTINGS_API.getLocalSettings(account)
-    .then(settings => {
+    .then((settings) => {
       const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
 
       const localFinal = Object.assign({}, localDefaults, settings)
@@ -62,7 +62,7 @@ const loadSettings = () => (dispatch, getState) => {
     })
 
   SETTINGS_API.getCoreSettings(account)
-    .then(settings => {
+    .then((settings) => {
       const coreDefaults = SETTINGS_API.CORE_DEFAULTS
 
       const coreFinal = Object.assign({}, coreDefaults, settings)

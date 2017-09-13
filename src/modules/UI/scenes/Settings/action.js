@@ -17,34 +17,34 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 
-export const setOTPModeRequest = otpMode => (dispatch, getState) => {
+export const setOTPModeRequest = (otpMode) => (dispatch, getState) => {
   dispatch(setOTPModeStart(otpMode))
 
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setOTPModeRequest(account, otpMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
-export const setOTPRequest = otp => (dispatch, getState) => {
+export const setOTPRequest = (otp) => (dispatch, getState) => {
   dispatch(setOTPStart(otp))
 
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setOTPRequest(account, otp)
     .then(() => dispatch(SETTINGS_ACTIONS.setOTP(otp)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
-export const setPINModeRequest = pinMode => (dispatch, getState) => {
+export const setPINModeRequest = (pinMode) => (dispatch, getState) => {
   dispatch(setPINModeStart(pinMode))
 
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setPINMode(pinMode)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 export const setPINRequest = (pin) => (dispatch, getState) => {
@@ -54,7 +54,7 @@ export const setPINRequest = (pin) => (dispatch, getState) => {
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setPINRequest(account, pin)
     .then(() => dispatch(SETTINGS_ACTIONS.setPIN(pin)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 export const setAutoLogoutTimeInMinutesRequest = (autoLogoutTimeInMinutes) => {
@@ -67,7 +67,7 @@ export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds) => (d
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setAutoLogoutTimeInSecondsRequest(account, autoLogoutTimeInSeconds)
     .then(() => dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(autoLogoutTimeInSeconds)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 export const setDefaultFiatRequest = (defaultFiat) => (dispatch, getState) => {
@@ -77,7 +77,7 @@ export const setDefaultFiatRequest = (defaultFiat) => (dispatch, getState) => {
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
     .then(() => dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 export const setMerchantModeRequest = (merchantMode) => (dispatch, getState) => {
@@ -87,7 +87,7 @@ export const setMerchantModeRequest = (merchantMode) => (dispatch, getState) => 
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setMerchantModeRequest(account, merchantMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setMerchantMode(merchantMode)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 export const setBluetoothModeRequest = (bluetoothMode) => (dispatch, getState) => {
@@ -97,7 +97,7 @@ export const setBluetoothModeRequest = (bluetoothMode) => (dispatch, getState) =
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setBluetoothModeRequest(account, bluetoothMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setBluetoothMode(bluetoothMode)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 // Denominations
@@ -119,46 +119,46 @@ export const setBitcoinOverrideServerRequest = (overrideServer) => (dispatch, ge
   const account = CORE_SELECTORS.getAccount(state)
   ACCOUNT_SETTINGS.setBitcoinOverrideServerRequest(account, overrideServer)
     .then(() => dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer)))
-    .catch(error => { console.error(error) })
+    .catch((error) => { console.error(error) })
 }
 
 // Simple Actions
-const setOTPModeStart = otpMode => ({
+const setOTPModeStart = (otpMode) => ({
   type: SET_OTP_MODE_START,
   data: {otpMode}
 })
 
-const setOTPStart = otp => ({
+const setOTPStart = (otp) => ({
   type: SET_OTP_START,
   data: {otp}
 })
 
-const setPINModeStart = pinMode => ({
+const setPINModeStart = (pinMode) => ({
   type: SET_PIN_MODE_START,
   data: {pinMode}
 })
 
-const setPINStart = pin => ({
+const setPINStart = (pin) => ({
   type: SET_PIN_START,
   data: {pin}
 })
 
-const setDefaultFiatStart = defaultFiat => ({
+const setDefaultFiatStart = (defaultFiat) => ({
   type: SET_DEFAULT_FIAT_START,
   data: {defaultFiat}
 })
 
-const setMerchantModeStart = merchantMode => ({
+const setMerchantModeStart = (merchantMode) => ({
   type: SET_MERCHANT_MODE_START,
   data: {merchantMode}
 })
 
-const setBluetoothModeStart = bluetoothMode => ({
+const setBluetoothModeStart = (bluetoothMode) => ({
   type: SET_BLUETOOTH_MODE_START,
   data: {bluetoothMode}
 })
 
-const setBitcoinOverrideServerStart = overrideServer => ({
+const setBitcoinOverrideServerStart = (overrideServer) => ({
   type: SET_BITCOIN_OVERRIDE_SERVER_START,
   data: {overrideServer}
 })

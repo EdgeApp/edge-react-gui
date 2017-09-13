@@ -207,8 +207,8 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => ({
   processURI: (parsedURI) => dispatch(processURI(parsedURI)),
-  updateAmountSatoshi: cryptoAmount => dispatch(updateAmountSatoshiRequest(cryptoAmount)),
-  signBroadcastAndSave: transaction => dispatch(signBroadcastAndSave(transaction)),
+  updateAmountSatoshi: (cryptoAmount) => dispatch(updateAmountSatoshiRequest(cryptoAmount)),
+  signBroadcastAndSave: (transaction) => dispatch(signBroadcastAndSave(transaction)),
   updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),
   useMaxSatoshi: () => dispatch(useMaxSatoshi())
 })

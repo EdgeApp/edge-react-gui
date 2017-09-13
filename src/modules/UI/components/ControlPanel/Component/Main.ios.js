@@ -157,10 +157,10 @@ class MainComponent extends Component {
     )
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   usersView: state.ui.scenes.controlPanel.usersView
 })
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logoutRequest()),
   dispatch: (props) => dispatch(props)
 })
