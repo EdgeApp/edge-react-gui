@@ -23,7 +23,7 @@ export default class Left extends Component {
     case 'ethSettings':
       return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
     case 'transactionDetails':
-      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionsList({type: 'reset'})} />
+      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionList({type: 'reset'})} />
     default:
       return null
     }
