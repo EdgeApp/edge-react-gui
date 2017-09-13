@@ -24,9 +24,9 @@ export default class Right extends Component {
 
   render () {
     const children = this.props.routes.scene.children
-    const sceneName = children ?
-      this.props.routes.scene.children[this.props.routes.scene.index].name :
-      null
+    const sceneName = children
+      ? this.props.routes.scene.children[this.props.routes.scene.index].name
+      : null
 
     switch (sceneName) {
     case 'scan':

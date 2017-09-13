@@ -171,9 +171,9 @@ class WalletList extends Component {
           </LinearGradient>
 
           {
-            Object.keys(wallets).length > 0 ?
-              this.renderActiveSortableList(walletsArray) :
-              <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+            Object.keys(wallets).length > 0
+              ? this.renderActiveSortableList(walletsArray)
+              : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
           }
 
         </View>
@@ -451,7 +451,7 @@ class DeleteSubtext extends Component {
         {(this.props.currentWalletBeingDeleted)
           ? <T style={{fontWeight: 'bold'}}>
             {this.props.currentWalletBeingDeleted}?
-            </T>
+          </T>
           : <T>{sprintf(strings.enUS['fragment_wallets_this_wallet'])}</T>}
       </T>
     )

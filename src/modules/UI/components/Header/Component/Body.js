@@ -15,9 +15,9 @@ class Body extends Component {
   render () {
     const scene = this.props.routes.scene
     const children = scene.children
-    const sceneName = children ?
-      this.props.routes.scene.children[this.props.routes.scene.index].name :
-      null
+    const sceneName = children
+      ? this.props.routes.scene.children[this.props.routes.scene.index].name
+      : null
 
     switch (sceneName) {
     case 'scan':
@@ -58,9 +58,9 @@ class DefaultHeader extends Component {
     const scene = this.props.routes.scene
     const children = scene.children
     const sceneIndex = scene.index
-    const title = children ?
-      this.props.routes.scene.children[sceneIndex].title :
-      null
+    const title = children
+      ? this.props.routes.scene.children[sceneIndex].title
+      : null
 
     return title || sprintf(strings.enUS['title_Header'])
   }
@@ -92,8 +92,8 @@ class ExampleFromWallet extends Component {
         <T style={{color: '#FFF', fontSize: 20}} numberOfLines={1} >{walletNameString}</T>
         <View style={[b(), {height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), {position: 'relative', top: 2}]}>
-            {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible &&
-              <MDIcon name='keyboard-arrow-down' style={{color: '#FFF', fontSize: 25}} />
+            {!this.props.scanToWalletListModalVisibility && !this.props.addressModalVisible
+              && <MDIcon name='keyboard-arrow-down' style={{color: '#FFF', fontSize: 25}} />
             }
           </View>
         </View>

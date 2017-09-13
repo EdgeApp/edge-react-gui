@@ -62,7 +62,7 @@ class Layout extends Component {
       console.log('Foreground -> Background')
       this.setState({active: false})
 
-      this.beginAutoLogoutTimer()
+      if (this.props.autoLogoutTimeInSeconds) this.beginAutoLogoutTimer()
     }
   }
 
@@ -82,6 +82,7 @@ class Layout extends Component {
   cancelAutoLogoutTimer () {
     const {timeout} = this.state
     clearTimeout(timeout)
+    this.setState({timeout: ''})
   }
 
   autoLogout () {

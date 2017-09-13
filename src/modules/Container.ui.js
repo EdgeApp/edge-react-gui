@@ -126,7 +126,7 @@ class Main extends Component {
 
               <RouterWithRedux>
                 <Scene key='root' hideNavBar>
-                  <Scene key='login' type={ActionConst.RESET} initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
+                  <Scene key='login' type={ActionConst.REPLACE} initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
 

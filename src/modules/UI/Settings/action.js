@@ -88,7 +88,7 @@ export const setOTP = otp => ({
   data: {otp}
 })
 
-export const setAutoLogoutTime = autoLogoutTimeInSeconds => ({
+export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds) => ({
   type: SET_AUTO_LOGOUT_TIME,
   data: {autoLogoutTimeInSeconds}
 })

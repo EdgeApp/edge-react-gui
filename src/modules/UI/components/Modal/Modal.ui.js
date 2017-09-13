@@ -3,14 +3,13 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {View} from 'react-native'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
 import styles from './style'
 import Modal from 'react-native-modal'
 import LinearGradient from 'react-native-linear-gradient'
 import T from '../FormattedText'
 import {border as b} from '../../../utils'
 
-class StylizedModal extends Component {
+export default class StylizedModal extends Component {
   render () {
     return (
       <Modal style={[styles.topLevelModal, {marginLeft: 20, marginRight: 20, marginTop: 20}, b('yellow')]}
@@ -18,23 +17,28 @@ class StylizedModal extends Component {
         <View style={[styles.modalBox, b('red')]}>
           <View style={[styles.modalBody, b('purple')]}>
             <View style={[styles.modalTopTextWrap, b('blue')]}>
-              <T style={[styles.modalTopText, b('yellow')]}>{sprintf(strings.enUS[this.props.headerText])}</T>
-              {this.props.headerSubtext &&
-                <T style={[styles.modalTopSubtext, b('green')]}>
+              <T style={[styles.modalTopText, b('yellow')]}>
+                {sprintf(strings.enUS[this.props.headerText])}
+              </T>
+              {
+                this.props.headerSubtext
+                && <T style={[styles.modalTopSubtext, b('green')]}>
                   {this.props.headerSubtext || ''}
                 </T>
               }
 
             </View>
-            {this.props.modalMiddle &&
-              <View style={[styles.modalMiddle, b('brown')]}>
+            {
+              this.props.modalMiddle
+              && <View style={[styles.modalMiddle, b('brown')]}>
                 {this.props.modalMiddle}
               </View>
             }
-            {this.props.modalBottom &&
-            <View style={[styles.modalBottom, b('green')]}>
-              {this.props.modalBottom}
-            </View>
+            {
+              this.props.modalBottom
+              && <View style={[styles.modalBottom, b('green')]}>
+                {this.props.modalBottom}
+              </View>
             }
           </View>
         </View>
@@ -54,5 +58,3 @@ class StylizedModal extends Component {
 StylizedModal.propTypes = {
   visibilityBoolean: PropTypes.bool
 }
-
-export default connect()(StylizedModal)
