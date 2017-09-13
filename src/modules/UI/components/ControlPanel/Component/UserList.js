@@ -3,7 +3,7 @@ import {Alert, Platform, View, ScrollView, TouchableNativeFeedback, TouchableOpa
 import {connect} from 'react-redux'
 import {Text, Icon} from 'native-base'
 import _ from 'lodash'
-import {logoutRequest} from '../action'
+import {logoutRequest} from '../../../../Login/action'
 
 import styles from '../style'
 const platform = Platform.OS

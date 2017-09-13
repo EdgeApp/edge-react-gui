@@ -7,6 +7,9 @@ import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
+export const LOGOUT = 'LOGOUT'
+
+import {Actions} from 'react-native-router-flux'
 
 export const initializeAccount = (account) => (dispatch, getState) => {
   const state = getState()
@@ -70,3 +73,21 @@ const loadSettings = () => (dispatch, getState) => {
       dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
     })
 }
+
+export const logoutRequest = (username) => (dispatch, getState) => {
+  Actions.login({username})
+
+  const state = getState()
+  dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
+
+  const account = CORE_SELECTORS.getAccount(state)
+  ACCOUNT_API.logoutRequest(account)
+   .then(() => {
+     dispatch(logout(username))
+   })
+}
+
+export const logout = (username) => ({
+  type: LOGOUT,
+  data: {username}
+})

@@ -83,6 +83,6 @@ export default class Layout extends Component {
 
   autoLogout () {
     console.log('TIMEOUT')
-    this.props.logout()
+    this.props.autoLogout()
   }
 }

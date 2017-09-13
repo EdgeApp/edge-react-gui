@@ -5,7 +5,7 @@ import {Text} from 'native-base'
 import {Actions} from 'react-native-router-flux'
 
 import {closeSidebar} from '../../SideMenu/action'
-import {logoutRequest} from '../action'
+import {logoutRequest} from '../../../../Login/action'
 import UserList from './UserList'
 
 import styles from '../style'
