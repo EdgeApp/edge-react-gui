@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import {AppState, View} from 'react-native'
 import {DefaultRenderer} from 'react-native-router-flux'
-import {connect} from 'react-redux'
-
-import {logoutRequest} from '../../components/ControlPanel/action'
 
 import SideMenu from '../../components/SideMenu/SideMenu.ui'
 import Header from '../../components/Header/Header.ui'
@@ -12,9 +9,7 @@ import HelpModal from '../../components/HelpModal'
 import ABAlert from '../../components/ABAlert'
 import TransactionAlert from '../../components/TransactionAlert'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-
-class Layout extends Component {
+export default class Layout extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -91,12 +86,3 @@ class Layout extends Component {
     this.props.logout()
   }
 }
-
-const mapStateToProps = (state) => ({
-  autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
-})
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(logoutRequest())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Layout)
