@@ -1,5 +1,4 @@
 import {categories} from './subcategories.js'
-import {dumpFolder} from '../../Container.ui.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -138,9 +137,7 @@ export async function setSyncedSubcategories (account, subcategories) {
   }
 }
 
-export const getSyncedSubcategories = (account) => {
-  dumpFolder(account.folder)
-  return getSyncedSubcategoriesFile(account).getText()
+export const getSyncedSubcategories = (account) => getSyncedSubcategoriesFile(account).getText()
   .then((text) => {
     let categoriesText = JSON.parse(text)
     return categoriesText.categories
@@ -151,7 +148,6 @@ export const getSyncedSubcategories = (account) => {
     return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
     .then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
   })
-}
 
 export const getSyncedSubcategoriesFile = (account) => account.folder.file('Categories.json')
 

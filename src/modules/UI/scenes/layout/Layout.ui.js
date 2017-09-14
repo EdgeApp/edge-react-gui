@@ -14,17 +14,24 @@ export default class Layout extends Component {
     super(props)
     this.state = {
       active: true,
-      timeout: ''
+      timeout: '',
+      exchangeTimer: ''
     }
   }
 
   componentDidMount () {
     console.log('layout constructor')
     AppState.addEventListener('change', this._handleAppStateChange)
+    const exchangeTimer = setInterval(() => {
+      this.props.updateExchangeRates()
+    }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    this.setState({exchangeTimer})
   }
 
   componentWillUnmount () {
     AppState.removeEventListener('change', this._handleAppStateChange)
+    clearTimeout(this.state.exchangeTimer)
+    this.setState({exchangeTimer: ''})
   }
 
   render () {
