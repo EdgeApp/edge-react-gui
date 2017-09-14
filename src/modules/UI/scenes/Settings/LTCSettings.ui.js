@@ -29,7 +29,7 @@ export class LTCSettings extends Component {
         </LinearGradient>
         <RadioRows style={b('green')} onSelect={(denomination) => this.selectDenomination('LTC', denomination)}>
           {
-            this.props.denominations.map(denomination => {
+            this.props.denominations.map((denomination) => {
               const key = denomination.multiplier
               const left = `${denomination.symbol} - ${denomination.name}`
               const right = 'Right'

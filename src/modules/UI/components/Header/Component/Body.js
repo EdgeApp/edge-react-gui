@@ -46,7 +46,7 @@ class Body extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   wallets: state.ui.wallets.byId,
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
@@ -104,7 +104,7 @@ class ExampleFromWallet extends Component {
   }
 }
 
-export const ExampleFromWalletConnect = connect(state => ({
+export const ExampleFromWalletConnect = connect((state) => ({
   walletList: UI_SELECTORS.getWallets(state),
 
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),

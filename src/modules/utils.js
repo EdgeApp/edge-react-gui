@@ -132,7 +132,7 @@ export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: strin
 export const absoluteValue = (input: string): string => input.replace('-', '')
 
 export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) =>
-  array.filter(item => item !== targetItem)
+  array.filter((item) => item !== targetItem)
 
 export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array

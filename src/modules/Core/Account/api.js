@@ -5,7 +5,7 @@ export const logoutRequest = (account) => account.logout()
 
 export const getFirstActiveWalletInfo = (account) => {
   const walletId = account.activeWalletIds[0]
-  const walletKey = account.allKeys.find(key => key.id === walletId)
+  const walletKey = account.allKeys.find((key) => key.id === walletId)
   const currencyCode = UTILS.getCurrencyCodeFromWalletType(walletKey.type)
   return {
     walletId,

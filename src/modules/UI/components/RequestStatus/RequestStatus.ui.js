@@ -98,7 +98,7 @@ const RequestStatus = (props) => {
   )
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   request: state.request
 })
 

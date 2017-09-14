@@ -31,37 +31,37 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 // import { convertDenominationToNative } from '../../../utils.js'
 
-export const updateSpendError = error => ({
+export const updateSpendError = (error) => ({
   type: UPDATE_SPEND_SUFFICIENT_FUNDS,
   data: {error}
 })
 
-export const updateAmountSatoshi = amountSatoshi => ({
+export const updateAmountSatoshi = (amountSatoshi) => ({
   type: UPDATE_AMOUNT_SATOSHI,
   data: {amountSatoshi}
 })
 
-export const updateFee = feeSatoshi => ({
+export const updateFee = (feeSatoshi) => ({
   type: UPDATE_FEE,
   data: {feeSatoshi}
 })
 
-export const updateAmountFiat = amountFiat => ({
+export const updateAmountFiat = (amountFiat) => ({
   type: UPDATE_AMOUNT_FIAT,
   data: {amountFiat}
 })
 
-export const updateFiatPerCrypto = fiatPerCrypto => ({
+export const updateFiatPerCrypto = (fiatPerCrypto) => ({
   type: UPDATE_FIAT_PER_CRYPTO,
   data: {fiatPerCrypto}
 })
 
-export const updateInputCurrencySelected = inputCurrencySelected => ({
+export const updateInputCurrencySelected = (inputCurrencySelected) => ({
   type: UPDATE_INPUT_CURRENCY_SELECTED,
   data: {inputCurrencySelected}
 })
 
-export const updateDraftStatus = draftStatus => ({
+export const updateDraftStatus = (draftStatus) => ({
   type: UPDATE_DRAFT_STATUS,
   data: {draftStatus}
 })
@@ -71,7 +71,7 @@ export const updateTransaction = (transaction) => ({
   data: {transaction}
 })
 
-export const updateSpendPending = pending => ({
+export const updateSpendPending = (pending) => ({
   type: UPDATE_SPEND_PENDING,
   data: {pending}
 })
@@ -82,15 +82,15 @@ export const signBroadcastAndSave = (unsignedTransaction) => (dispatch, getState
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
   WALLET_API.signTransaction(wallet, unsignedTransaction)
-    .then(signedTransaction => WALLET_API.broadcastTransaction(wallet, signedTransaction))
-    .then(signedTransaction => WALLET_API.saveTransaction(wallet, signedTransaction))
+    .then((signedTransaction) => WALLET_API.broadcastTransaction(wallet, signedTransaction))
+    .then((signedTransaction) => WALLET_API.saveTransaction(wallet, signedTransaction))
     .then(() => {
       dispatch(updateSpendPending(false))
       Actions.transactionList({type: 'reset'})
       const successInfo = {title: 'Transaction Sent', message: 'Your transaction has been successfully sent.'}
       dispatch(openABAlert(successInfo))
     })
-    .catch(e => {
+    .catch((e) => {
       console.log('error is: ', e)
       dispatch(updateSpendPending(false))
       const errorInfo = {title: 'Transaction Failure', message: e.message}
@@ -104,12 +104,12 @@ export const updateMaxSatoshiRequest = () => (dispatch, getState) => {
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
   wallet.getMaxSpendable()
-    .then(amountSatoshi => {
+    .then((amountSatoshi) => {
       dispatch(updateMaxSatoshi(amountSatoshi))
     })
 }
 
-export const updateMaxSatoshi = maxSatoshi => ({
+export const updateMaxSatoshi = (maxSatoshi) => ({
   type: UPDATE_MAX_SATOSHI,
   data: {maxSatoshi}
 })
@@ -128,7 +128,7 @@ export const updatePublicAddressRequest = (publicAddress) => (dispatch) => {
   dispatch(updatePublicAddress(publicAddress))
 }
 
-export const updatePublicAddress = publicAddress => ({
+export const updatePublicAddress = (publicAddress) => ({
   type: UPDATE_PUBLIC_ADDRESS,
   data: {publicAddress}
 })
@@ -140,10 +140,10 @@ export const processURI = (parsedURI) => (dispatch, getState) => {
   const spendInfo = makeSpendInfo(parsedURI)
 
   return WALLET_API.makeSpend(wallet, spendInfo)
-    .then(unsignedTransaction => {
+    .then((unsignedTransaction) => {
       dispatch(updateTransaction(unsignedTransaction))
     })
-    .catch(error => {
+    .catch((error) => {
       const {
         nativeAmount,
         currencyCode,
@@ -159,7 +159,7 @@ export const updateParsedURI = (parsedURI) => ({
   type: UPDATE_PARSED_URI,
   data: {parsedURI}
 })
-export const updateLabel = label => ({
+export const updateLabel = (label) => ({
   type: UPDATE_LABEL,
   data: {label}
 })

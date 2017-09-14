@@ -26,7 +26,7 @@ export const getSubcategories = () => (dispatch, getState) => {
   ACCOUNT_SETTINGS.getSyncedSubcategories(account).then((s) => dispatch(setSubcategories(s)))
 }
 
-export const setSubcategories = subcategories => ({
+export const setSubcategories = (subcategories) => ({
   type: SET_TRANSACTION_SUBCATEGORIES,
   data: {subcategories}
 })
@@ -38,16 +38,16 @@ export const setNewSubcategory = (newSubcategory) => (dispatch, getState) => {
   return dispatch(setSubcategoriesRequest(newSubcategories))
 }
 
-export const getSelectedWallet = state => {
+export const getSelectedWallet = (state) => {
   const {selectedWalletId} = state.ui.wallets
   const selectedWallet = state.core.wallets.byId[selectedWalletId]
   return selectedWallet
 }
 
 // is this following function necessary?
-export const setSubcategoriesRequest = subcategories => (dispatch, getState) => {
+export const setSubcategoriesRequest = (subcategories) => (dispatch, getState) => {
   const {account} = getState().core
   ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)
     .then(() => dispatch(setSubcategories(subcategories)))
-    .catch(e => { console.error(e) })
+    .catch((e) => { console.error(e) })
 }

@@ -19,7 +19,7 @@ import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
-import CreateWallet from './UI/scenes/CreateWallet/index.js'
+import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
 import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
 import {SettingsOverview} from './UI/scenes/Settings'
@@ -32,7 +32,6 @@ import {setHeaderHeight} from './UI/dimensions/action.js'
 import {addCurrencyPlugin} from './UI/Settings/action.js'
 import {addUsernames} from './Core/Context/action'
 
-import * as CORE_SELECTORS from './Core/selectors'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
@@ -56,7 +55,7 @@ import {mapAllFiles} from 'disklet'
 // import { dumpFolder } from '../../debugTools.js'
 export function dumpFolder (folder) {
   return mapAllFiles(folder, (file, path) =>
-    file.getText(file).then(text => console.log(`dumpfolder: "${path}": "${text}"`))
+    file.getText(file).then((text) => console.log(`dumpfolder: "${path}": "${text}"`))
   )
 }
 
@@ -89,19 +88,19 @@ class Main extends Component {
     // HockeyApp.start()
     // HockeyApp.checkForUpdate() // optional
     makeReactNativeIo()
-    .then(io =>
+    .then((io) =>
       // Make the core context:
        makeContext({
          apiKey: AIRBITZ_API_KEY,
          plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
          io
        }))
-    .then(context => {
+    .then((context) => {
       // Put the context into Redux:
       this.props.addContext(context)
 
       CONTEXT_API.listUsernames(context)
-      .then(usernames => {
+      .then((usernames) => {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
@@ -116,7 +115,6 @@ class Main extends Component {
 
   render () {
     const routes = this.props.routes
-    if (!this.props.context) return
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
@@ -177,10 +175,7 @@ class Main extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  routes: state.routes,
-  context: CORE_SELECTORS.getContext(state)
-})
+const mapStateToProps = (state) => ({routes: state.routes})
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
   addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),

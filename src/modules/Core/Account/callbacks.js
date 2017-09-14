@@ -5,7 +5,7 @@ import {
   refreshTransactionsRequest
 } from '../../UI/scenes/TransactionList/action.js'
 
-export const makeAccountCallbacks = dispatch => {
+export const makeAccountCallbacks = (dispatch) => {
   console.log('making callbacks')
   const callbacks = {
     onError: (error) => {

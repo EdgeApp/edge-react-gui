@@ -29,7 +29,7 @@ class AddressModal extends Component {
 
   componentDidMount () {
     const coreWallet = this.props.coreWallet
-    Clipboard.getString().then(uri => {
+    Clipboard.getString().then((uri) => {
       try {
         const parsedURI = WALLET_API.parseURI(coreWallet, uri)
         console.log('AddressModal parsedURI', parsedURI)
@@ -112,7 +112,7 @@ class AddressModal extends Component {
     )
   }
 }
-export const AddressModalConnect = connect(state => {
+export const AddressModalConnect = connect((state) => {
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)

@@ -11,10 +11,10 @@ const readJSONDb = (pathToDb, callback) => {
   })
 }
 
-const isString = val =>
+const isString = (val) =>
   typeof val === 'string' || val instanceof String
 
-const copy = v => ({
+const copy = (v) => ({
   key: v.key,
   value: v.value
 })
@@ -32,16 +32,16 @@ const init = (ctx, data) => {
   let def = defineLocalVariable.bind(null, ctx)
   let list = data.map(copy)
   let map = new Map()
-  list.forEach(record => map.set(record.key, record))
+  list.forEach((record) => map.set(record.key, record))
 
   def('map', map)
   def('list', list)
 }
 
-const writeToDisk = ctx => {
+const writeToDisk = (ctx) => {
   RNFS.writeFile(RNFS.DocumentDirectoryPath + ctx.pathToDb, JSON.stringify(ctx.list), 'utf8')
   .then((success) => success)
-  .catch(err => {
+  .catch((err) => {
     throw err
   })
 }

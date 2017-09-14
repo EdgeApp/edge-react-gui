@@ -86,7 +86,7 @@ class WalletListRowOptions extends Component {
   }
 }
 
-export default connect(state => ({
+export default connect((state) => ({
   wallets: state.ui.wallets.byId,
   archives: state.ui.wallets.archives
 }))(WalletListRowOptions)

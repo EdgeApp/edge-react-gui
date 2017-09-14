@@ -40,13 +40,13 @@ export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
 export const getDisplayDenomination = (state: any, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
+  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
   return selectedDenomination
 }
 
 export const getExchangeDenomination = (state: any, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
-  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
+  const exchangeDenomination = denominations.find((denomination) => denomination.name === currencyCode)
   return exchangeDenomination
 }
 
@@ -79,10 +79,14 @@ export const getEthereumPlugin = (state: any) => {
 
 export const getSupportedWalletTypes = (state: any) => {
   const plugins = getPlugins(state).arrayPlugins
-  const supportedWalletTypes = plugins.reduce((walletTypes, plugin) => ({
-    ...walletTypes,
-    [plugin.currencyInfo.currencyName]: plugin.currencyInfo.walletTypes[0]
-  }), {})
+  const supportedWalletTypes = plugins.reduce((walletTypes, plugin) =>
+    [
+      ...walletTypes,
+      {
+        label: plugin.currencyInfo.currencyName,
+        value: plugin.currencyInfo.walletTypes[0]
+      }
+    ], [])
   return supportedWalletTypes
 }
 

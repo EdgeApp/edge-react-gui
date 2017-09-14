@@ -57,7 +57,7 @@ SearchResults.propTypes = {
   usableHeight: PropTypes.number
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   dimensions: state.ui.scenes.dimensions
 })
 

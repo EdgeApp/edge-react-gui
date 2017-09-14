@@ -53,7 +53,7 @@ class HelpModal extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   modal: state.ui.scenes.helpModal,
   routes: state.routes
 })

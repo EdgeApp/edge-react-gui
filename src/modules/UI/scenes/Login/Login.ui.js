@@ -9,8 +9,8 @@ import {Actions} from 'react-native-router-flux'
 class Login extends Component {
   onLogin = (error = null, account) => {
     if (error || !account) return
-    this.props.initializeAccount(account)
     Actions.edge()
+    this.props.initializeAccount(account)
   }
 
   render () {

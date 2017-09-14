@@ -1,2 +1,2 @@
-import ControlPanel from './ControlPanel.ui'
+import ControlPanel from './ControlPanelConnector'
 export default ControlPanel

@@ -103,7 +103,7 @@ class TabBar extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   sidemenu: state.ui.scenes.sideMenu.view,
   routes: state.routes
 })

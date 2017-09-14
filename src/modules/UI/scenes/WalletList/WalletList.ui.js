@@ -307,7 +307,7 @@ class WalletList extends Component {
   }
 
   sortActiveWallets = (wallets) => {
-    let activeOrdered = Object.keys(wallets).filter(key => !wallets[key].archived) // filter out archived wallets
+    let activeOrdered = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => {
       if (wallets[a].sortIndex === wallets[b].sortIndex) {
         return -1
@@ -318,9 +318,9 @@ class WalletList extends Component {
     return activeOrdered
   }
 
-  onActiveRowMoved = action => {
+  onActiveRowMoved = (action) => {
     const wallets = this.props.wallets
-    const activeOrderedWallets = Object.keys(wallets).filter(key => !wallets[key].archived) // filter out archived wallets
+    const activeOrderedWallets = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex) // sort them according to their (previous) sortIndices
     const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action) // pass the old order to getNewOrder with the action ( from, to, and  )
@@ -329,9 +329,9 @@ class WalletList extends Component {
     this.forceUpdate()
   }
 
-  onArchivedRowMoved = action => {
+  onArchivedRowMoved = (action) => {
     const wallets = this.props.wallets
-    const activeOrderedWallets = Object.keys(wallets).filter(key => wallets[key].archived)
+    const activeOrderedWallets = Object.keys(wallets).filter((key) => wallets[key].archived)
     .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex)
     const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action)
@@ -371,7 +371,7 @@ class WalletList extends Component {
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
         if (nativeBalance && nativeBalance !== '0') {
           const denominations = this.props.settings[balanceProp].denominations
-          const exchangeDenomination = denominations.find(denomination => denomination.name === balanceProp)
+          const exchangeDenomination = denominations.find((denomination) => denomination.name === balanceProp)
           const nativeToExchangeRatio:string = exchangeDenomination.multiplier
 
           const cryptoAmount:number = parseFloat(UTILS.convertNativeToExchange(nativeToExchangeRatio)(nativeBalance))
@@ -415,11 +415,11 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  updateActiveWalletsOrder: activeWalletIds => {
+const mapDispatchToProps = (dispatch) => ({
+  updateActiveWalletsOrder: (activeWalletIds) => {
     dispatch(updateActiveWalletsOrder(activeWalletIds))
   },
-  updateArchivedWalletsOrder: archivedWalletIds => {
+  updateArchivedWalletsOrder: (archivedWalletIds) => {
     dispatch(updateArchivedWalletsOrder(archivedWalletIds))
   }
 })
@@ -457,7 +457,7 @@ class DeleteSubtext extends Component {
     )
   }
 }
-export const DeleteSubtextConnect = connect(state => ({
+export const DeleteSubtextConnect = connect((state) => ({
   currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted
 }))(DeleteSubtext)
 
@@ -529,7 +529,7 @@ class WalletNameInput extends Component {
     )
   }
 }
-export const WalletNameInputConnect = connect(state => ({
+export const WalletNameInputConnect = connect((state) => ({
   currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,
   // /currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
   renameWalletVisible: state.ui.scenes.walletList.renameWalletVisible,
@@ -567,7 +567,7 @@ class RenameWalletButtons extends Component {
     )
   }
 }
-export const RenameWalletButtonsConnect = connect(state => ({
+export const RenameWalletButtonsConnect = connect((state) => ({
   currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
   walletId: state.ui.scenes.walletList.walletId,
   renameWalletInput: state.ui.scenes.walletList.renameWalletInput

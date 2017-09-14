@@ -1,20 +1,15 @@
 import React, {Component} from 'react'
 import {AppState, View} from 'react-native'
 import {DefaultRenderer} from 'react-native-router-flux'
-import {connect} from 'react-redux'
 
-import {logoutRequest} from '../../components/ControlPanel/action'
-
-import SideMenu from '../../components/SideMenu/SideMenu.ui'
+import SideMenu from '../../components/SideMenu/SideMenuConnector'
 import Header from '../../components/Header/Header.ui'
 import TabBar from '../../components/TabBar/TabBar.ui'
 import HelpModal from '../../components/HelpModal'
 import ABAlert from '../../components/ABAlert'
 import TransactionAlert from '../../components/TransactionAlert'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-
-class Layout extends Component {
+export default class Layout extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -75,7 +70,8 @@ class Layout extends Component {
   }
 
   beginAutoLogoutTimer () {
-    const timeout = setTimeout(() => this.autoLogout(), (this.props.autoLogoutTimeInSeconds * 1000))
+    const autoLogoutTimeInMilliseconds = (this.props.autoLogoutTimeInSeconds * 1000)
+    const timeout = setTimeout(this.autoLogout, autoLogoutTimeInMilliseconds)
     this.setState({timeout})
   }
 
@@ -87,15 +83,6 @@ class Layout extends Component {
 
   autoLogout () {
     console.log('TIMEOUT')
-    this.props.logout()
+    this.props.autoLogout()
   }
 }
-
-const mapStateToProps = (state) => ({
-  autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
-})
-const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logoutRequest())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Layout)

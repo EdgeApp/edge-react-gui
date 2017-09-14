@@ -100,7 +100,7 @@ function schema (wallet: any): GUIWallet {
   const currencyNames: { [currencyCode: string]: string } = {}
   currencyNames[currencyCode] = wallet.currencyInfo.currencyName
 
-  metaTokens.forEach(metaToken => {
+  metaTokens.forEach((metaToken) => {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
     const balance: string = wallet.getBalance({currencyCode})

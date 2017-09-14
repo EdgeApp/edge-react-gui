@@ -18,7 +18,7 @@ export const selectWallet = (walletId, currencyCode) =>
     dispatch(selectCurrencyCode(currencyCode))
   }
 
-export const selectWalletIdRequest = walletId => (dispatch, getState) => {
+export const selectWalletIdRequest = (walletId) => (dispatch, getState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
 
@@ -27,7 +27,7 @@ export const selectWalletIdRequest = walletId => (dispatch, getState) => {
   }
 }
 
-export const selectWalletId = walletId => ({
+export const selectWalletId = (walletId) => ({
   type: SELECT_WALLET_ID,
   data: {walletId}
 })
@@ -51,7 +51,7 @@ export const refreshWallet = (walletId) => {
   }
 }
 
-export const upsertWallet = wallet => (dispatch, getState) => {
+export const upsertWallet = (wallet) => (dispatch, getState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
