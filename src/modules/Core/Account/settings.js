@@ -95,6 +95,7 @@ export const setDenominationKeyRequest = (account, currencyCode, denomination) =
   })
 
 // Helper Functions
+
 export const getSyncedSettings = (account) =>
   getSyncedSettingsFile(account).getText()
   .then(text => JSON.parse(text))
@@ -117,6 +118,19 @@ export async function setSubcategoriesRequest (account, subcategories) {
   return setSyncedSubcategories(account, subcategories)
 }
 
+export async function setLocalLog (account, log) {
+  const logFile = getLocalLogFile(account)
+  let oldLogs = logFile.getText()
+    .then((txt) => txt)
+  let newLogs = oldLogs + log
+  console.log('in setSyncedLog, account is: ', account, ' , and log is: ', log, ' , logFile is: ', logFile, ' and oldLogs are : ', oldLogs, ' , newLogs is: ', newLogs)
+  try {
+    await logFile.setText(newLogs)
+  } catch (e) {
+    console.log('setLocalLog error: ', e)
+  }
+}
+
 export async function setSyncedSubcategories (account, subcategories) {
   let finalText = {}
   if (!subcategories.categories) {
@@ -132,6 +146,8 @@ export async function setSyncedSubcategories (account, subcategories) {
     console.log('error: ', e)
   }
 }
+
+
 
 export const getSyncedSubcategories = account => {
   dumpFolder(account.folder)
@@ -149,6 +165,10 @@ export const getSyncedSubcategories = account => {
 }
 
 export const getSyncedSubcategoriesFile = account => account.folder.file('Categories.json')
+
+export async function setLocalLogRequest (account, log) {
+  return setLocalLog(account, log)
+}
 
 export const getLocalSettings = account =>
   getLocalSettingsFile(account).getText()
@@ -173,6 +193,8 @@ export const getCoreSettings = () => {
   // return settings object
   return Promise.resolve(coreSettings)
 }
+
+export const getLocalLogFile = account => account.folder.file('Log.txt')
 
 export const getSyncedSettingsFile = account => account.folder.file('Settings.json')
 

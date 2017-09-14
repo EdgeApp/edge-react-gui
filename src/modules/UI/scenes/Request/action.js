@@ -6,6 +6,7 @@ export const SAVE_RECEIVE_ADDRESS = 'SAVE_RECEIVE_ADDRESS'
 export const UPDATE_INPUT_CURRENCY_SELECTED = 'UPDATE_INPUT_CURRENCY_SELECTED'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
@@ -30,6 +31,11 @@ export const updateInputCurrencySelected = inputCurrencySelected => ({
   type: UPDATE_INPUT_CURRENCY_SELECTED,
   data: {inputCurrencySelected}
 })
+
+export const saveToLog = (newLog) => (dispatch, getState) => {
+  console.log('inside of request->action.saveToLog, newLog is: ', newLog)
+  SETTINGS_API.setLocalLog(CORE_SELECTORS.getAccount(getState()) , newLog)
+}
 
 export const saveReceiveAddress = receiveAddress => (dispatch, getState) => {
   const state = getState()

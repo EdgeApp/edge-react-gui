@@ -21,7 +21,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import {saveReceiveAddress} from './action.js'
+import {saveReceiveAddress, saveToLog} from './action.js'
 
 class Request extends Component {
   constructor (props) {
@@ -35,10 +35,13 @@ class Request extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps 
+      const {coreWallet, currencyCode} = nextProps
+      console.log('inside of Request.ui.js->componentWillReceiveProps, nextProps is: ', nextProps)
       WALLET_API.getReceiveAddress(coreWallet, currencyCode)
       .then(receiveAddress => {
         const {publicAddress} = receiveAddress
+        console.log('in request->ComponentWillReceiveProps, receiveAddress is: ', receiveAddress, ' , coreWallet is: ', coreWallet, ' , and currencyCode is: ', currencyCode)
+        this.props.dispatch(saveToLog('testing'))
         const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
