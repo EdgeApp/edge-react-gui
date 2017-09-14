@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { ChangePasswordScreen } from 'airbitz-core-js-ui'
+import React, {Component} from 'react'
+import {ChangePasswordScreen} from 'airbitz-core-js-ui'
 
 export default class ChangePassword extends Component {
   onComplete = () => {
