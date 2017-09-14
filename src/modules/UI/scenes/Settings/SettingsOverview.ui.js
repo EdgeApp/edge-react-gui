@@ -80,10 +80,16 @@ class SettingsOverview extends Component {
         key: 'btcSettings',
         text: 'Bitcoin',
         routeFunction: Actions.btcSettings
-      }, {
+      },
+      {
         key: 'ethSettings',
         text: 'Ethereum',
         routeFunction: Actions.ethSettings
+      },
+      {
+        key: 'ltcSettings',
+        text: 'Litecoin',
+        routeFunction: Actions.ltcSettings
       }
     ]
   }

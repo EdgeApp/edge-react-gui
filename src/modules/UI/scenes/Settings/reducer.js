@@ -58,6 +58,18 @@ export const settings = (state = {}, action) => {
     }
   }
 
+  case ACTION.SET_LITECOIN_DENOMINATION: {
+    const {denomination} = data
+    const LTC = state['LTC']
+    return {
+      ...state,
+      LTC: {
+        ...LTC,
+        denomination
+      }
+    }
+  }
+
   case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
     const {overrideServer} = data
     const BTC = state['BTC']

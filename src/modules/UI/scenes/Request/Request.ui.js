@@ -35,7 +35,7 @@ class Request extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps 
+      const {coreWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(coreWallet, currencyCode)
       .then(receiveAddress => {
         const {publicAddress} = receiveAddress

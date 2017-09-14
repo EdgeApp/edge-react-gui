@@ -67,6 +67,11 @@ export const getBitcoinPlugin = (state: any) => {
   return bitcoinPlugin
 }
 
+export const getLitecoinPlugin = (state: any) => {
+  const litecoinPlugin = getPlugin(state, 'litecoin')
+  return litecoinPlugin
+}
+
 export const getEthereumPlugin = (state: any) => {
   const ethereumPlugin = getPlugin(state, 'ethereum')
   return ethereumPlugin
