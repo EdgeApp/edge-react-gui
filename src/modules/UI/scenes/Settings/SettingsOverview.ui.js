@@ -80,7 +80,18 @@ class SettingsOverview extends Component {
   }
 
   _onPressDummyRouting = () => {
+    console.log('trying this shit')
+    Actions['changePassword']()
+    //this._handleOnPressRouting('edge')
+
+  }
+  /* istead of
+  _onPressDummyRouting () {
     console.log('dummy routing')
+  } */
+
+  _onChangePasswordPress = () => {
+    console.log('LEts change password')
   }
 
   _onPressOpenLogoffTime = () => {

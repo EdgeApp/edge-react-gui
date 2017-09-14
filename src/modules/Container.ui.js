@@ -11,6 +11,8 @@ import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 
 import Login from './UI/scenes/Login/Login.ui'
+import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
+import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
 import Layout from './UI/scenes/layout/Layout.ui'
 import TransactionListConnect from './UI/scenes/TransactionList'
 import TransactionDetails from './UI/scenes/TransactionDetails'
@@ -143,6 +145,8 @@ class Main extends Component {
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='request' component={Request} title='Request' animation={'fade'} duration={600} />
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='changePassword' component={ChangePasswordConnector} title='Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='changePin' component={ChangePinConnector} title='Settings' animation={'fade'} duration={600} />
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
