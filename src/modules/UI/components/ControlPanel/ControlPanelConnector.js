@@ -3,6 +3,7 @@ import ControlPanel from './ControlPanel.ui'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import {openSelectUser, closeSelectUser} from './action'
 
 const mapStateToProps = (state) => {
   let secondaryToPrimaryRatio = 0
@@ -55,5 +56,8 @@ const mapStateToProps = (state) => {
     username: CORE_SELECTORS.getUsername(state)
   }
 }
-
-export default connect(mapStateToProps)(ControlPanel)
+const mapDispatchToProps = (dispatch) => ({
+  openSelectUser: () => dispatch(openSelectUser()),
+  closeSelectUser: () => dispatch(closeSelectUser())
+})
+export default connect(mapStateToProps, mapDispatchToProps)(ControlPanel)

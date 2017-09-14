@@ -5,7 +5,7 @@ import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 
-import UserList from './UserList'
+import UserList from './UserListConnector'
 
 import styles from '../style'
 
@@ -41,7 +41,7 @@ export default class Main extends Component {
           </TouchableHighlight>
           <TouchableHighlight style={styles.others.iosTouchableHighlight}
             underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
-            onPress={() => this._handleOnPressRouting('settingsOverview')}>
+            onPress={this._handleOnPressRouting('settingsOverview')}>
             <View style={[ styles.others.link, styles.others.borderBottom, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={settings} />
@@ -58,7 +58,7 @@ export default class Main extends Component {
     )
   }
 
-  _handleOnPressRouting = (route) => {
+  _handleOnPressRouting = (route) => () => {
     switch (route) {
     case 'settingsOverview':
       return Actions.settingsOverview({type: 'reset'})

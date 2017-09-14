@@ -5,7 +5,7 @@ import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 
-import UserList from './UserList'
+import UserList from './UserListConnector'
 
 import styles from '../style'
 
@@ -39,7 +39,7 @@ export default class Main extends Component {
             </View>
           </TouchableNativeFeedback>
           <TouchableNativeFeedback
-            onPress={() => this._handleOnPressRouting('settingsOverview')}
+            onPress={this._handleOnPressRouting('settingsOverview')}
             background={TouchableNativeFeedback.SelectableBackground()}>
             <View style={styles.others.link}>
               <View style={styles.iconImageContainer}>
@@ -57,7 +57,7 @@ export default class Main extends Component {
     )
   }
 
-  _handleOnPressRouting = (route) => {
+  _handleOnPressRouting = (route) => () => {
     switch (route) {
     case 'settingsOverview':
       return Actions.settingsOverview({type: 'reset'})

@@ -1,6 +1,7 @@
 /* globals describe test expect */
 
 import * as SETTINGS_SELECTORS from '../src/modules/UI/Settings/selectors'
+import * as CORE_SELECTORS from '../src/modules/Core/selectors'
 
 describe('getSupportedWalletTypes', function () {
   describe('when multiple supported wallet types', function () {
@@ -29,6 +30,32 @@ describe('getSupportedWalletTypes', function () {
       ]} } } }
       const expected = []
       const actual = SETTINGS_SELECTORS.getSupportedWalletTypes(state)
+      expect(actual).toEqual(expected)
+    })
+  })
+})
+
+describe('getUsernames', function () {
+  describe('when multiple users', function () {
+    test('[usernames] => [usernames]', function () {
+      const usernames = ['user1', 'user2', 'user3']
+      const state = {core: {context: {usernames: [
+        ...usernames
+      ]} } }
+      const expected = usernames
+      const actual = CORE_SELECTORS.getUsernames(state)
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe('when no users', function () {
+    test('[] => []', function () {
+      const usernames = []
+      const state = {core: {context: {usernames: [
+        ...usernames
+      ]} } }
+      const expected = usernames
+      const actual = CORE_SELECTORS.getUsernames(state)
       expect(actual).toEqual(expected)
     })
   })

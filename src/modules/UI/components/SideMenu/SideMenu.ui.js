@@ -4,6 +4,9 @@ import Drawer from 'react-native-drawer'
 import ControlPanel from '../ControlPanel'
 
 export default class SideMenu extends Component {
+  onOpen = () => this.props.open()
+  onClose = () => this.props.close()
+
   render () {
     return (
       <Drawer
@@ -18,8 +21,8 @@ export default class SideMenu extends Component {
         captureGestures={false}
         negotiatePan
         side='right'
-        onOpen={() => this.props.open()}
-        onClose={() => this.props.close()}
+        onOpen={this.props.open}
+        onClose={this.props.close}
         elevation={2}
         tweenHandler={(ratio) => ({
           main: {

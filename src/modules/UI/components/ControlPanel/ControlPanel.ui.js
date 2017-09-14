@@ -5,9 +5,7 @@ import {sprintf} from 'sprintf-js'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {openSelectUser, closeSelectUser} from './action'
-
-import Main from './Component/Main'
+import Main from './Component/MainConnector'
 import ExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
@@ -18,10 +16,10 @@ import person from '../../../../assets/images/sidenav/accounts.png'
 export default class ControlPanel extends Component {
   _handlePressUserList = () => {
     if (!this.props.usersView) {
-      return this.props.dispatch(openSelectUser())
+      return this.props.openSelectUser()
     }
     if (this.props.usersView) {
-      return this.props.dispatch(closeSelectUser())
+      return this.props.closeSelectUser()
     }
   }
 
