@@ -1,24 +1,21 @@
 import React, {Component} from 'react'
-import {View, ScrollView, TouchableHighlight, Image} from 'react-native'
-import {connect} from 'react-redux'
+import {View, TouchableHighlight, Image} from 'react-native'
 import {Text} from 'native-base'
 import {Actions} from 'react-native-router-flux'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../../locales/default'
 
-import {closeSidebar} from '../../SideMenu/action'
-import {logoutRequest} from '../../../../Login/action'
 import UserList from './UserList'
 
 import styles from '../style'
 
-import buyAndSell from '../../../../../assets/images/sidenav/buysell.png'
-import directory from '../../../../../assets/images/sidenav/directory.png'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
-import refer from '../../../../../assets/images/sidenav/refer.png'
-import security from '../../../../../assets/images/sidenav/security.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
-import spend from '../../../../../assets/images/sidenav/spend.png'
 
-class MainComponent extends Component {
+const LOGOUT_TEXT = sprintf(strings.enUS['settings_button_logout'])
+const SETTINGS_TEXT = sprintf(strings.enUS['settings_title'])
+
+export default class Main extends Component {
   onLogout = () => {
     console.log('logout')
     this.props.logout()
@@ -26,91 +23,32 @@ class MainComponent extends Component {
 
   render () {
     return this.props.usersView ? <UserList /> : (
-      <View style={{flex: 1}}>
-        <ScrollView contentContainerStyle={styles.main.container}>
-          {this._render2FAenabling()}
-          <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-            <View style={[ styles.main.link, styles.main.borderVertical, {flex: 1} ]}>
-              <View style={styles.iconImageContainer}>
-                <Image style={styles.iconImage} source={buyAndSell} />
-              </View>
-              <View style={styles.main.textContainer}>
-                <Text style={styles.main.text}>
-                  Buy/Sell Digital Currency
-                </Text>
-                <Text style={styles.main.textItalic}>
-                  i.e Bitcoin/Ether
-                </Text>
-              </View>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('transactions')}>
-            <View style={[ styles.main.link, styles.main.borderBottom, {flex: 1} ]}>
-              <View style={styles.iconImageContainer}>
-                <Image style={styles.iconImage} source={spend} />
-              </View>
-              <View style={styles.main.textContainer}>
-                <Text style={styles.main.text}>
-                  Spend Bitcoins
-                </Text>
-                <Text style={styles.main.textItalic}>
-                  Plugins
-                </Text>
-              </View>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-            <View style={[styles.main.link, styles.main.borderBottom, {flex: 1}]}>
-              <View style={styles.iconImageContainer}>
-                <Image style={styles.iconImage} source={refer} />
-              </View>
-              <View style={styles.main.textContainer}>
-                <Text style={styles.main.text}>
-                  Refer Your Friends
-                </Text>
-                <Text style={styles.main.textItalic}>
-                  Earn Money
-                </Text>
-              </View>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-            <View style={[ styles.main.link, styles.main.borderBottom, {flex: 1} ]}>
-              <View style={styles.iconImageContainer}>
-                <Image style={styles.iconImage} source={directory} />
-              </View>
-              <View style={styles.main.textContainer}>
-                <Text style={styles.main.text}>
-                  Directory
-                </Text>
-                <Text style={styles.main.textItalic}>
-                  Find Local Business
-                </Text>
-              </View>
-            </View>
-          </TouchableHighlight>
-        </ScrollView>
+      <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={styles.others.container}>
-          <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={this.onLogout}>
+          <TouchableHighlight style={styles.others.iosTouchableHighlight}
+            underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+            onPress={this.onLogout}>
             <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={logoutImage} />
               </View>
               <View style={styles.others.textContainer}>
                 <Text style={styles.others.text}>
-                  Logout
+                  {LOGOUT_TEXT}
                 </Text>
               </View>
             </View>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.others.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => this._handleOnPressRouting('settingsOverview')}>
+          <TouchableHighlight style={styles.others.iosTouchableHighlight}
+            underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+            onPress={() => this._handleOnPressRouting('settingsOverview')}>
             <View style={[ styles.others.link, styles.others.borderBottom, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={settings} />
               </View>
               <View style={styles.others.textContainer}>
                 <Text style={styles.others.text}>
-                  Settings
+                  {SETTINGS_TEXT}
                 </Text>
               </View>
             </View>
@@ -123,46 +61,13 @@ class MainComponent extends Component {
   _handleOnPressRouting = (route) => {
     switch (route) {
     case 'settingsOverview':
-      Actions.settingsOverview({type: 'reset'})
-      break
+      return Actions.settingsOverview({type: 'reset'})
     case 'walletList':
-      Actions.walletList({type: 'reset'})
-      break
+      return Actions.walletList({type: 'reset'})
     case 'transactions':
-      Actions.transactionList({type: 'reset'})
-      break
+      return Actions.transactionList({type: 'reset'})
     default:
-      null
-      break
+      return
     }
-    return this.props.dispatch(closeSidebar())
   }
-
-  _render2FAenabling = () => (
-      <TouchableHighlight style={styles.main.iosTouchableHighlight} underlayColor={styles.main.iosTouchableHighlightUnderlayColor} onPress={() => console.log('')}>
-        <View style={[ styles.main.link, styles.main.borderVertical, {flex: 1} ]}>
-          <View style={styles.iconImageContainer}>
-            <Image style={styles.iconImage} source={security} />
-          </View>
-          <View style={styles.main.textContainer}>
-            <Text style={styles.main.text}>
-              Secure Your Account
-            </Text>
-            <Text style={styles.main.textItalic}>
-              Enable 2FA / Set Password Recovery
-            </Text>
-          </View>
-        </View>
-      </TouchableHighlight>
-    )
 }
-
-const mapStateToProps = (state) => ({
-  usersView: state.ui.scenes.controlPanel.usersView
-})
-const mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(logoutRequest()),
-  dispatch: (props) => dispatch(props)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MainComponent)
