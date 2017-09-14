@@ -143,5 +143,6 @@ export const isGreaterThan = (comparedTo: string) =>
 
 export const getCurrencyCodeFromWalletType = (walletType: string): string => ({
   'wallet:bitcoin': 'BTC',
-  'wallet:ethereum': 'ETH'
+  'wallet:ethereum': 'ETH',
+  'wallet:litecoin44': 'LTC'
 }[walletType])

@@ -1,3 +1,5 @@
+import * as SETTINGS_SELECTORS from './selectors'
+
 // UI/Settings
 const PREFIX = 'UI/Settings/'
 
@@ -30,8 +32,6 @@ export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
-
-import * as SETTINGS_SELECTORS from './selectors'
 
 export const setLoginStatus = (loginStatus) => ({
   type: SET_LOGIN_STATUS,

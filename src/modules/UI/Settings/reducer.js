@@ -127,6 +127,18 @@ export const settings = (state = initialState, action) => {
     }
   }
 
+  case ACTION.SET_LTC_DENOMINATION: {
+    const {denomination} = data
+    const LTC = state['LTC']
+    return {
+      ...state,
+      LTC: {
+        ...LTC,
+        denomination
+      }
+    }
+  }
+
   case ACTION.SET_DENOMINATION_KEY: {
     const currencyCode = data.currencyCode
     const denomination = data.denominationKey
