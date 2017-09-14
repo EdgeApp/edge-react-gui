@@ -22,6 +22,7 @@ import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
 import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
+import LTCSettings from './UI/scenes/Settings/LTCSettings.ui'
 import {SettingsOverview} from './UI/scenes/Settings'
 
 import * as CONTEXT_API from './Core/Context/api'
@@ -131,6 +132,7 @@ export default class Main extends Component {
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ltcSettings' component={LTCSettings} title='LTC Settings' animation={'fade'} duration={600} />
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='directory' component={Directory} title='Directory' animation={'fade'} duration={600} />
 
