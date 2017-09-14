@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {View} from 'react-native'
@@ -9,7 +9,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import s from './style'
 import {border as b} from '../../../utils'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import { setDenominationKeyRequest } from './action'
+import {setDenominationKeyRequest} from './action'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
 
@@ -29,7 +29,7 @@ export class ETHSettings extends Component {
         </LinearGradient>
         <RadioRows style={b('green')} onSelect={(denomination) => this.selectDenomination('ETH', denomination)}>
           {
-            this.props.denominations.map(denomination => {
+            this.props.denominations.map((denomination) => {
               const key = denomination.multiplier
               const left = `${denomination.symbol} - ${denomination.name}`
               const right = 'Right'

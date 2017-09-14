@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import { Text, View, TouchableHighlight } from 'react-native'
+import {Text, View, TouchableHighlight} from 'react-native'
 import T from '../FormattedText'
 import s from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
@@ -11,10 +11,9 @@ class PrimaryButton extends Component {
     return (
       <TouchableHighlight onPress={this.props.onPressFunction} underlayColor={c.primary} style={[s.primaryButtonWrap, s.stylizedButton, this.props.style]}>
         <View style={s.stylizedButtonTextWrap}>
-          {this.props.processingFlag ?
-            (this.props.processingElement)
-            :
-            (<T style={[s.primaryButton, s.stylizedButtonText]}>
+          {this.props.processingFlag
+            ? (this.props.processingElement)
+            :            (<T style={[s.primaryButton, s.stylizedButtonText]}>
               {this.props.text}
             </T>
             )
@@ -63,7 +62,7 @@ class TertiaryButton extends Component {
   render () {
     console.log('tertiaryButon props are: ', this.props)
     return (
-      <TouchableHighlight onPress={this._onPress} underlayColor={c.secondary} style={[ s.stylizedButton, s.tertiaryButtonWrap, { backgroundColor: 'white' } ]}>
+      <TouchableHighlight onPress={this._onPress} underlayColor={c.secondary} style={[ s.stylizedButton, s.tertiaryButtonWrap, {backgroundColor: 'white'} ]}>
         <Text style={s.tertiaryButton} {...this.props}>
           {this.props.text}
         </Text>
@@ -76,4 +75,4 @@ TertiaryButton.propTypes = {
   onPressFunction: PropTypes.func
 }
 
-export { PrimaryButton, SecondaryButton, TertiaryButton }
+export {PrimaryButton, SecondaryButton, TertiaryButton}

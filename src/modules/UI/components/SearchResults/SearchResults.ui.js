@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   FlatList,
   View
@@ -48,9 +48,7 @@ class SearchResults extends Component {
     )
   }
 
-  renderRegularRow = (data, onPressFxn) => {
-    return this.props.regularResult(data, onPressFxn)
-  }
+  renderRegularRow = (data, onPressFxn) => this.props.regularResult(data, onPressFxn)
 }
 
 SearchResults.propTypes = {
@@ -59,7 +57,7 @@ SearchResults.propTypes = {
   usableHeight: PropTypes.number
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   dimensions: state.ui.scenes.dimensions
 })
 

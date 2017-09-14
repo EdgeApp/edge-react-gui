@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {Text, View} from 'react-native'
+import {connect} from 'react-redux'
 import styles from './style'
-import Menu, { MenuOptions, MenuOption, MenuTrigger } from 'react-native-menu'
+import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import T from '../../components/FormattedText'
 import {updateRenameWalletInput} from './action'
 import strings from '../../../../locales/default'
@@ -86,7 +86,7 @@ class WalletListRowOptions extends Component {
   }
 }
 
-export default connect(state => ({
+export default connect((state) => ({
   wallets: state.ui.wallets.byId,
   archives: state.ui.wallets.archives
 }))(WalletListRowOptions)

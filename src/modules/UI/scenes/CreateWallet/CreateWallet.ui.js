@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
+import React, {Component} from 'react'
+import {Actions} from 'react-native-router-flux'
 import {
   ActivityIndicator,
   Alert,
@@ -16,14 +15,8 @@ import styles from './styles.js'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-
-import { updateWalletName, selectWalletType, selectFiat, createWallet } from './action'
-
-// import { MKTextField as TextInput } from 'react-native-material-kit'
-
 const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
-const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type' // sprintf(strings.enUS['fragment_wallets_addwallet_blockchain_hint'])
+const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
 const FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
 
 const DONE_TEXT = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
@@ -32,27 +25,27 @@ const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_va
 
 // //////////////////////////// ROOT ///////////////////////////////////////////
 
-class CreateWallet extends Component {
+export default class CreateWallet extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      supportedWalletTypes: props.supportedWalletTypes,
       isCreatingWallet: false,
-      walletInfoValid: false
+      walletInfoValid: false,
+      walletName: '',
+      selectedWalletType: '',
+      selectedFiat: ''
     }
-  }
-
-  getSupportedWalletTypes = () => {
-    return Object.keys(this.props.supportedWalletTypes)
   }
 
   getSupportedFiats = () => {
     const supportedFiats = [
-      sprintf(strings.enUS['fragment_fiat_usd']),
-      sprintf(strings.enUS['fragment_fiat_eur']),
-      sprintf(strings.enUS['fragment_fiat_gbp']),
-      sprintf(strings.enUS['fragment_fiat_jpy']),
-      sprintf(strings.enUS['fragment_fiat_cnh']),
-      sprintf(strings.enUS['fragment_fiat_mxp'])
+      {label: sprintf(strings.enUS['fragment_fiat_usd']), value: sprintf(strings.enUS['fragment_fiat_usd'])},
+      {label: sprintf(strings.enUS['fragment_fiat_eur']), value: sprintf(strings.enUS['fragment_fiat_eur'])},
+      {label: sprintf(strings.enUS['fragment_fiat_gbp']), value: sprintf(strings.enUS['fragment_fiat_gbp'])},
+      {label: sprintf(strings.enUS['fragment_fiat_jpy']), value: sprintf(strings.enUS['fragment_fiat_jpy'])},
+      {label: sprintf(strings.enUS['fragment_fiat_cnh']), value: sprintf(strings.enUS['fragment_fiat_cnh'])},
+      {label: sprintf(strings.enUS['fragment_fiat_mxp']), value: sprintf(strings.enUS['fragment_fiat_mxp'])}
     ]
 
     return supportedFiats
@@ -67,28 +60,26 @@ class CreateWallet extends Component {
   }
 
   isValidWalletName = () => {
-    const isValid = this.props.walletName
+    const {walletName} = this.state
+    const isValid = walletName.length > 0
 
     return isValid
   }
 
   isValidWalletType = () => {
-    const { supportedWalletTypes, selectedWalletType } = this.props
-
-    const isValid = Object.values(supportedWalletTypes).find((walletType) => {
-      return walletType === selectedWalletType
-    })
+    const {supportedWalletTypes, selectedWalletType} = this.state
+    const isValid = supportedWalletTypes
+      .find((walletType) => walletType.value === selectedWalletType)
 
     return isValid
   }
 
   isValidFiat = () => {
     const supportedFiats = this.getSupportedFiats()
-    const { selectedFiat } = this.props
+    const {selectedFiat} = this.state
 
-    const isValid = supportedFiats.find((fiat) => {
-      return fiat === selectedFiat
-    })
+    const isValid = supportedFiats
+      .find((fiat) => fiat.value === selectedFiat)
 
     return isValid
   }
@@ -97,9 +88,9 @@ class CreateWallet extends Component {
     if (!this.isValidData()) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
-      this.setState({ isCreatingWallet: true })
+      this.setState({isCreatingWallet: true})
       Keyboard.dismiss()
-      const { walletName, selectedWalletType } = this.props
+      const {walletName, selectedWalletType} = this.state
       console.log('walletName', walletName)
       console.log('selectedWalletType', selectedWalletType)
       this.props.createWallet(walletName, selectedWalletType)
@@ -111,17 +102,17 @@ class CreateWallet extends Component {
     Actions.walletList() // redirect to the list of wallets
   }
 
-  handleChangeWalletName = input => {
-    this.props.updateWalletName(input)
+  handleChangeWalletName = (walletName) => {
+    this.setState({walletName})
   }
 
-  handleSelectWalletType = currencyName => {
-    const walletType = this.props.supportedWalletTypes[currencyName] || ''
-    this.props.selectWalletType(walletType)
+  handleSelectWalletType = ({value} = {value: ''}) => {
+    const selectedWalletType = this.props.supportedWalletTypes.find((type) => type.value = value)
+    this.setState({selectedWalletType: selectedWalletType.value})
   }
 
-  handleSelectFiat = fiat => {
-    this.props.selectFiat(fiat)
+  handleSelectFiat = ({value}) => {
+    this.setState({selectedFiat: value})
   }
 
   render () {
@@ -134,7 +125,7 @@ class CreateWallet extends Component {
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
-          listItems={this.getSupportedWalletTypes()}
+          listItems={this.props.supportedWalletTypes || []}
           placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
           onSelect={this.handleSelectWalletType} />
 
@@ -155,26 +146,9 @@ class CreateWallet extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  walletName: state.ui.scenes.createWallet.walletName,
-  selectedWalletType: state.ui.scenes.createWallet.selectedWalletType,
-  selectedFiat: state.ui.scenes.createWallet.selectedFiat,
-  supportedWalletTypes: SETTINGS_SELECTORS.getSupportedWalletTypes(state)
-})
-
-const mapDispatchToProps = (dispatch) => ({
-  updateWalletName: walletName => dispatch(updateWalletName(walletName)),
-  selectWalletType: walletType => dispatch(selectWalletType(walletType)),
-  selectFiat: fiat => dispatch(selectFiat(fiat)),
-  createWallet: (walletName, walletType) => dispatch(createWallet(walletName, walletType))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)
-
 // //////////////////////////// Buttons ////////////////////////////////////////
 
-const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
-  return (
+const Buttons = ({isCreatingWallet, onDone, onCancel}) => (
     <View style={styles.buttons}>
 
       <SecondaryButton
@@ -194,7 +168,6 @@ const Buttons = ({isCreatingWallet, onDone, onCancel}) => {
 
     </View>
   )
-}
 
 // //////////////////////////// WalletNameInput /////////////////////////////////
 
@@ -230,57 +203,21 @@ class DropdownPicker extends Component {
     this.handleSelectListItem(searchTerm)
     this.handleSearchTermChange(searchTerm)
   }
-
-  handleSearchTermChange = (searchTerm) => {
-    this.setState({
-      isListVisible: true,
-      searchTerm
-    })
+  handleSelectListItem = (item) => {
+    this.setState({searchTerm: item.label, isListVisible: false})
+    this.props.onSelect(item)
   }
-
-  handleOnFocus = () => {
-    this.setState({
-      isListVisible: true
-    })
-  }
-
-  handleOnBlur = () => {
-    this.setState({
-      isListVisible: false
-    })
-  }
-
-  handleSelectListItem = (listItem) => {
-    this.setState({
-      searchTerm: listItem,
-      isListVisible: false
-    })
-
-    this.props.onSelect(listItem)
-  }
+  handleSearchTermChange = (searchTerm) => this.setState({isListVisible: true, searchTerm})
+  handleOnFocus = () => this.setState({isListVisible: true})
+  handleOnBlur = () => this.setState({isListVisible: false})
 
   getMatchingListItems = () => {
-    const { searchTerm } = this.state
+    const {searchTerm} = this.state
     const normalizedSearchTerm = searchTerm.toLowerCase()
-    const matchingListItems = this.props.listItems.filter((listItem) => {
-      const normalizedListItem = listItem.toLowerCase()
-
-      return normalizedListItem.includes(normalizedSearchTerm)
-    })
-
-    return matchingListItems
-  }
-
-  displayListIfVisible = () => {
-    const {isListVisible} = this.state
-
-    if (isListVisible) {
-      return (
-        <DropdownList
-          dataSource={this.getMatchingListItems()}
-          onPress={this.handleSelectListItem} />
-      )
-    }
+    return this.props.listItems.filter((listItem) =>
+      listItem.label
+      .toLowerCase()
+      .includes(normalizedSearchTerm))
   }
 
   render () {
@@ -296,7 +233,10 @@ class DropdownPicker extends Component {
           value={this.state.searchTerm}
           placeholder={this.props.placeholder} />
 
-        {this.displayListIfVisible()}
+          {this.state.isListVisible
+            && <DropdownList
+              dataSource={this.getMatchingListItems()}
+              onPress={this.handleSelectListItem} />}
       </View>
     )
   }
@@ -304,29 +244,23 @@ class DropdownPicker extends Component {
 
 // //////////////////////////// DropdownList ///////////////////////////////////
 
-const DropdownList = props => {
+const DropdownList = (props) => {
   const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
   const dataSource = ds.cloneWithRows(props.dataSource)
+  const onPress = (item) => () => props.onPress(item)
+  const renderRow = (item) => <TouchableOpacity
+    style={{backgroundColor: 'white', padding: 10}}
+    onPress={onPress(item)}>
+    <T>{item.label}</T>
+  </TouchableOpacity>
 
-  const renderRow = (data) => {
-    return (
-      <TouchableOpacity
-        style={{ backgroundColor: 'white', padding: 10 }}
-        onPress={() => props.onPress(data)}>
-        <T>{data}</T>
-      </TouchableOpacity>
-    )
-  }
-
-  return (
-    <View style={styles.listView}>
-      <ListView
-        keyboardShouldPersistTaps={'always'}
-        style={styles.listView}
-        dataSource={dataSource}
-        renderRow={renderRow} />
-    </View>
-  )
+  return <View style={styles.listView}>
+    <ListView
+      keyboardShouldPersistTaps={'always'}
+      style={styles.listView}
+      dataSource={dataSource}
+      renderRow={renderRow} />
+  </View>
 }
 
 // //////////////////////////// End ////////////////////////////////////////////

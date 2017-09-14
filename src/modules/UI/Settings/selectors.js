@@ -40,17 +40,13 @@ export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
 export const getDisplayDenomination = (state: any, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  const selectedDenomination = denominations.find(denomination => {
-    return denomination.multiplier === selectedDenominationKey
-  })
+  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
   return selectedDenomination
 }
 
 export const getExchangeDenomination = (state: any, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
-  const exchangeDenomination = denominations.find(denomination => {
-    return denomination.name === currencyCode
-  })
+  const exchangeDenomination = denominations.find((denomination) => denomination.name === currencyCode)
   return exchangeDenomination
 }
 
@@ -71,6 +67,11 @@ export const getBitcoinPlugin = (state: any) => {
   return bitcoinPlugin
 }
 
+export const getLitecoinPlugin = (state: any) => {
+  const litecoinPlugin = getPlugin(state, 'litecoin')
+  return litecoinPlugin
+}
+
 export const getEthereumPlugin = (state: any) => {
   const ethereumPlugin = getPlugin(state, 'ethereum')
   return ethereumPlugin
@@ -78,10 +79,14 @@ export const getEthereumPlugin = (state: any) => {
 
 export const getSupportedWalletTypes = (state: any) => {
   const plugins = getPlugins(state).arrayPlugins
-  const supportedWalletTypes = plugins.reduce((walletTypes, plugin) => ({
-    ...walletTypes,
-    [plugin.currencyInfo.currencyName]: plugin.currencyInfo.walletTypes[0]
-  }), {})
+  const supportedWalletTypes = plugins.reduce((walletTypes, plugin) =>
+    [
+      ...walletTypes,
+      {
+        label: plugin.currencyInfo.currencyName,
+        value: plugin.currencyInfo.walletTypes[0]
+      }
+    ], [])
   return supportedWalletTypes
 }
 
@@ -89,4 +94,10 @@ export const getAutoLogoutTimeInSeconds = (state: any) => {
   const settings = getSettings(state)
   const autoLogoutTimeInSeconds = settings.autoLogoutTimeInSeconds
   return autoLogoutTimeInSeconds
+}
+
+export const getAutoLogoutTimeInMinutes = (state: any) => {
+  const autoLogoutTimeInSeconds = getAutoLogoutTimeInSeconds(state)
+  const autoLogoutTimeInMinutes = autoLogoutTimeInSeconds / 60
+  return autoLogoutTimeInMinutes
 }

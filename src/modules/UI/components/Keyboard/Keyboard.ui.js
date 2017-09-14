@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { TextInput, View, StyleSheet } from 'react-native'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {TextInput, View, StyleSheet} from 'react-native'
+import {connect} from 'react-redux'
 import KeyboardButton from '../KeyboardButton/index.js'
 
 const styles = StyleSheet.create({
@@ -34,10 +34,10 @@ class Keyboard extends Component {
   }
 
   inputDigit = (value) => {
-    const { displayValue } = this.state
+    const {displayValue} = this.state
 
-    const newDisplayValue =
-        displayValue === '0'
+    const newDisplayValue
+        = displayValue === '0'
         ? value
         : this.state.displayValue + value
 
@@ -47,7 +47,7 @@ class Keyboard extends Component {
   }
 
   inputDot = () => {
-    const { displayValue } = this.state
+    const {displayValue} = this.state
 
     if (displayValue.indexOf('.') === -1) {
       this.setState({
@@ -57,8 +57,8 @@ class Keyboard extends Component {
   }
 
   doBackspace = () => {
-    const displayValue =
-        this.state.displayValue.substring(0, this.state.displayValue.length - 1) || '0'
+    const displayValue
+        = this.state.displayValue.substring(0, this.state.displayValue.length - 1) || '0'
 
     this.setState({
       displayValue
@@ -77,11 +77,11 @@ class Keyboard extends Component {
 
   actions = (action, payload) => {
     const operations = {
-      '+': (previousValue) => { return previousValue },
-      '-': (previousValue) => { return previousValue },
-      '*': (previousValue) => { return previousValue },
-      '/': (previousValue) => { return previousValue },
-      '%': (previousValue) => { return previousValue }
+      '+': (previousValue) => previousValue,
+      '-': (previousValue) => previousValue,
+      '*': (previousValue) => previousValue,
+      '/': (previousValue) => previousValue,
+      '%': (previousValue) => previousValue
     }
 
     return operations[action] || payload

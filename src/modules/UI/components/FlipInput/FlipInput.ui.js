@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   Text,
   TextInput,
   TouchableWithoutFeedback,
   View
 } from 'react-native'
-import { styles, top, bottom } from './styles.js'
+import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
 
@@ -62,15 +62,10 @@ export default class FlipInput extends Component {
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
   }
 
-  topDisplayAmount = () => {
-    return this.state.isToggled ? this.state.secondaryDisplayAmount : this.state.primaryDisplayAmount
-  }
-  bottomDisplayAmount = () => {
-    return this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
-  }
+  topDisplayAmount = () => this.state.isToggled ? this.state.secondaryDisplayAmount : this.state.primaryDisplayAmount
+  bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
-  topRow = (denominationInfo, onChangeText) => {
-    return <View style={top.row} key={'top'}>
+  topRow = (denominationInfo, onChangeText) => <View style={top.row} key={'top'}>
       <Text style={top.symbol}>
         {denominationInfo.displayDenomination.symbol}
       </Text>
@@ -87,7 +82,6 @@ export default class FlipInput extends Component {
         {denominationInfo.displayDenomination.name}
       </Text>
     </View>
-  }
 
   bottomRow = (denominationInfo) => {
     const amount = this.bottomDisplayAmount()
@@ -104,8 +98,7 @@ export default class FlipInput extends Component {
     </View></TouchableWithoutFeedback>
   }
 
-  renderRows = (primaryInfo, secondaryInfo, isToggled) => {
-    return (
+  renderRows = (primaryInfo, secondaryInfo, isToggled) => (
       <View style={[styles.rows]}>
         {isToggled
           ? [
@@ -118,11 +111,10 @@ export default class FlipInput extends Component {
           ]}
       </View>
     )
-  }
 
   render () {
-    const { primaryInfo, secondaryInfo } = this.props
-    const { isToggled } = this.state
+    const {primaryInfo, secondaryInfo} = this.props
+    const {isToggled} = this.state
     console.log('this.state', this.state)
     return (
       <View style={[styles.container]}>

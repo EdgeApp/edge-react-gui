@@ -2,8 +2,8 @@
   import {combineReducers} from 'redux'
 
   const transactions = (state = [], action) => {
-    const { type, data = {} } = action
-    const { transactions } = data
+    const {type, data = {} } = action
+    const {transactions} = data
     switch (type) {
     case ACTION.UPDATE_TRANSACTIONS:
       return transactions

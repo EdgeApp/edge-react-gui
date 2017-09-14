@@ -14,35 +14,35 @@ const initialState = {
 }
 
 export const settings = (state = initialState, action) => {
-  const { type, data = {} } = action
+  const {type, data = {} } = action
 
   switch (type) {
   case ACTION.SET_LOGIN_STATUS: {
-    const { loginStatus } = data
+    const {loginStatus} = data
     return {
       ...state,
       loginStatus
     }
   }
   case ACTION.ADD_EXCHANGE_TIMER: {
-    const { exchangeTimer } = data
+    const {exchangeTimer} = data
     return {
       ...state,
       exchangeTimer
     }
   }
   case ACTION.UPDATE_SETTINGS: {
-    const { settings } = data
+    const {settings} = data
     return settings
   }
 
   case ACTION.LOAD_SETTINGS: {
-    const { settings } = data
+    const {settings} = data
     return settings
   }
 
   case ACTION.SET_PIN_MODE: {
-    const { pinMode } = data
+    const {pinMode} = data
     return {
       ...state,
       pinMode
@@ -50,7 +50,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_OTP_MODE: {
-    const { otpMode } = data
+    const {otpMode} = data
     return {
       ...state,
       otpMode
@@ -58,7 +58,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_AUTO_LOGOUT_TIME: {
-    const { autoLogoutTimeInSeconds } = data
+    const {autoLogoutTimeInSeconds} = data
     return {
       ...state,
       autoLogoutTimeInSeconds
@@ -66,7 +66,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_DEFAULT_FIAT: {
-    const { defaultFiat } = data
+    const {defaultFiat} = data
     const defaultISOFiat = 'iso:' + defaultFiat
     return {
       ...state,
@@ -76,7 +76,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_MERCHANT_MODE: {
-    const { merchantMode } = data
+    const {merchantMode} = data
     return {
       ...state,
       merchantMode
@@ -84,7 +84,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_BLUETOOTH_MODE: {
-    const { bluetoothMode } = data
+    const {bluetoothMode} = data
     return {
       ...state,
       bluetoothMode
@@ -92,7 +92,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_BTC_DENOMINATION: {
-    const { denomination } = data
+    const {denomination} = data
     const BTC = state['BTC']
     return {
       ...state,
@@ -104,7 +104,7 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
-    const { overrideServer } = data
+    const {overrideServer} = data
     const BTC = state['BTC']
     return {
       ...state,
@@ -116,12 +116,24 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.SET_ETH_DENOMINATION: {
-    const { denomination } = data
+    const {denomination} = data
     const ETH = state['ETH']
     return {
       ...state,
       ETH: {
         ...ETH,
+        denomination
+      }
+    }
+  }
+
+  case ACTION.SET_LTC_DENOMINATION: {
+    const {denomination} = data
+    const LTC = state['LTC']
+    return {
+      ...state,
+      LTC: {
+        ...LTC,
         denomination
       }
     }
@@ -141,10 +153,10 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.ADD_CURRENCY_PLUGIN: {
-    const { plugins } = state
-    const { supportedWalletTypes } = plugins
-    const { arrayPlugins } = plugins
-    const { pluginName, plugin, walletTypes } = data
+    const {plugins} = state
+    const {supportedWalletTypes} = plugins
+    const {arrayPlugins} = plugins
+    const {pluginName, plugin, walletTypes} = data
     const currencyInfo = plugin.currencyInfo
       // Build up object with all the information for the parent currency, accesible by the currencyCode
     const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]

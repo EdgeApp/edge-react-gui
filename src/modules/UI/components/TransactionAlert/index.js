@@ -1,7 +1,7 @@
-import { Component } from 'react'
-import { Alert } from 'react-native'
-import { connect } from 'react-redux'
-import { closeTransactionAlert } from './action.js'
+import {Component} from 'react'
+import {Alert} from 'react-native'
+import {connect} from 'react-redux'
+import {closeTransactionAlert} from './action.js'
 
 class TransactionAlert extends Component {
   componentWillReceiveProps (nextProps) {
@@ -13,25 +13,19 @@ class TransactionAlert extends Component {
     }
   }
 
-  _openAlert = (props) => {
-    return Alert.alert(
+  _openAlert = (props) => Alert.alert(
       'Transaction Received',
       props.message,
-      [
+    [
         {text: 'Later', onPress: () => this._closeAlert(), style: 'cancel'},
         {text: 'Check Now', onPress: () => this._onPress(props)}
-      ],
-      { onDismiss: () => { this._closeAlert() } }
+    ],
+      {onDismiss: () => { this._closeAlert() }}
     )
-  }
 
-  _closeAlert = () => {
-    return this.props.dispatch(closeTransactionAlert())
-  }
+  _closeAlert = () => this.props.dispatch(closeTransactionAlert())
 
-  _onPress = () => {
-    return this._closeAlert()
-  }
+  _onPress = () => this._closeAlert()
 
   render () {
     return null

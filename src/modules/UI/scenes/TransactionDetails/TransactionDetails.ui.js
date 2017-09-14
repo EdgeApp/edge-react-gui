@@ -14,7 +14,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback
 } from 'react-native'
-import { bns } from 'biggystring'
+
 import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
@@ -28,7 +28,7 @@ import {connect} from 'react-redux'
 import LinearGradient from 'react-native-linear-gradient'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
-import {border as b, getFiatSymbol, truncateDecimals, formatNumber, getWalletDefaultDenomProps} from '../../../utils'
+import * as UTILS from '../../../utils'
 import {
   setTransactionDetails,
   setNewSubcategory,
@@ -38,7 +38,7 @@ import {
 } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import SearchResults from '../../components/SearchResults'
-import { openHelpModal } from '../../components/HelpModal/actions'
+import {openHelpModal} from '../../components/HelpModal/actions'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -116,7 +116,7 @@ class TransactionDetails extends Component {
   onChangeFiat = (input) => {
     let newInput
     console.log('onChangeFiat being executed, input is: ', input)
-    newInput = (isNaN(input) || (input === '')) ? '' : formatNumber(truncateDecimals(input, 2))
+    newInput = (isNaN(input) || (input === '')) ? '' : UTILS.formatNumber(UTILS.truncateDecimals(input, 2))
     console.log('onChangeFiat, now newInput is: ', newInput)
     this.setState({
       amountFiat: newInput
@@ -234,10 +234,10 @@ class TransactionDetails extends Component {
     } else {
       category = undefined
     }
-    const { txid, name, notes, bizId, miscJson } = this.state
+    const {txid, name, notes, bizId, miscJson} = this.state
     let newAmountFiat = this.state.amountFiat
     amountFiat = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat).toFixed(2)
-    const transactionDetails = { txid, name, category, notes, amountFiat, bizId, miscJson }
+    const transactionDetails = {txid, name, category, notes, amountFiat, bizId, miscJson}
     this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
   }
 
@@ -250,9 +250,7 @@ class TransactionDetails extends Component {
             if (err === 'denied') {
               // error
             } else {
-              contacts.sort((a, b) => {
-                return a.givenName > b.givenName
-              })
+              contacts.sort((a, b) => a.givenName > b.givenName)
               this.props.dispatch(setContactList(contacts))
             }
           })
@@ -313,7 +311,7 @@ class TransactionDetails extends Component {
 
   componentWillMount () {
     this.props.dispatch(getSubcategories())
-    this.setState({walletDefaultDenomProps: getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
+    this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
   }
 
   render () {
@@ -354,19 +352,19 @@ class TransactionDetails extends Component {
 
     if (this.state.direction === 'receive') {
       feeSyntax = ''
-      leftData = { color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income']) }
+      leftData = {color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income'])}
     } else {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
-      leftData = { color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense']) }
+      leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
     }
     let color = type.color
     console.log('rendering txDetails, this is: ', this)
     return (
-      <View style={[b()]}>
+      <View style={[UTILS.border()]}>
         <Animated.View
-          style={[b(), {opacity: this.state.payeeOpacity, width: '100%', zIndex: this.state.payeeZIndex, backgroundColor: 'white', position: 'absolute', top: 4, height: this.props.usableHeight}]}
+          style={[{opacity: this.state.payeeOpacity, width: '100%', zIndex: this.state.payeeZIndex, backgroundColor: 'white', position: 'absolute', top: 4, height: this.props.usableHeight}]}
           >
-          <View style={[styles.payeeNameArea, b()]}>
+          <View style={[styles.payeeNameArea]}>
             <View style={[styles.payeeNameWrap]}>
               <TextInput
                 ref={(component) => { this.payeeTextInput = component }}
@@ -375,7 +373,7 @@ class TransactionDetails extends Component {
                 autoCapitalize='words'
                 autoCorrect={false}
                 onChangeText={this.onChangePayee}
-                style={[styles.payeeNameInput, b()]}
+                style={[styles.payeeNameInput]}
                 placeholder='Payee'
                 defaultValue={this.state.name}
                 value={this.state.name}
@@ -387,7 +385,7 @@ class TransactionDetails extends Component {
           <ContactSearchResults
             onChangePayee={this.onSelectPayee}
             contacts={this.props.contacts}
-            style={[{width: '100%'}, b()]}
+            style={[{width: '100%'}]}
             usableHeight={this.props.usableHeight}
             currentPayeeText={this.state.name || ''}
             dimensions={this.props.dimensions}
@@ -397,13 +395,13 @@ class TransactionDetails extends Component {
           />
         </Animated.View>
         <Animated.View
-          style={[b(), {opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: 'white', position: 'absolute', height: this.props.usableHeight}]}
+          style={[{opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: 'white', position: 'absolute', height: this.props.usableHeight}]}
           >
-          <View style={[styles.modalCategoryRow, b()]}>
-            <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: color}]} disabled>
-              <T style={[b(), {color: color}, styles.categoryLeftText]}>{type.syntax}</T>
+          <View style={[styles.modalCategoryRow]}>
+            <TouchableOpacity style={[styles.categoryLeft, {borderColor: color}]} disabled>
+              <T style={[{color: color}, styles.categoryLeftText]}>{type.syntax}</T>
             </TouchableOpacity>
-            <View style={[b(), styles.modalCategoryInputArea]}>
+            <View style={[styles.modalCategoryInputArea]}>
               <TextInput
                 ref={(component) => { this.subcategoryTextInput = component }}
                 blurOnSubmit
@@ -429,21 +427,21 @@ class TransactionDetails extends Component {
             subcategoriesList={this.props.subcategoriesList.sort()}
           />
         </Animated.View>
-        <ScrollView keyboardShouldPersistTaps='handled' style={b()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
-          <View style={[b(), styles.container]}>
+        <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
+          <View style={[styles.container]}>
             <View>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[b(), styles.expandedHeader]} colors={[c.gradient.light, c.gradient.dark]}>
+              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.expandedHeader]} colors={[c.gradient.light, c.gradient.dark]}>
                 <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath || this.props.tx.thumbnailPath} />
               </LinearGradient>
             </View>
-            <View style={[styles.dataArea, b()]}>
-              <View style={[styles.payeeNameArea, b()]}>
-                <View style={[styles.payeeNameWrap, b()]}>
+            <View style={[styles.dataArea]}>
+              <View style={[styles.payeeNameArea]}>
+                <View style={[styles.payeeNameWrap]}>
                   <TextInput
                     autoCapitalize='words'
                     onFocus={this.onFocusPayee}
                     autoCorrect={false}
-                    style={[styles.payeeNameInput, b()]}
+                    style={[styles.payeeNameInput]}
                     placeholder='Payee'
                     defaultValue={this.state.name}
                     value={this.state.name}
@@ -496,16 +494,16 @@ class TransactionDetails extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
-  fiatSymbol: getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
+  fiatSymbol: UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
   usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
   dimensions: state.ui.scenes.dimensions,
   subcategoriesList: state.ui.scenes.transactionDetails.subcategories,
   settings: state.ui.settings
 })
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   setTransactionDetails: (currencyCode, transactionDetails) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) }
 })
 
@@ -521,29 +519,32 @@ class AmountArea extends Component {
 
   render () {
     console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
+    let stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+
+    let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
     return (
-      <View style={[b(), styles.amountAreaContainer]}>
-        <View style={[b(), styles.amountAreaCryptoRow]}>
-          <View style={[b(), styles.amountAreaLeft]}>
-            <T style={[b(), styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.direction + '_past'])}</T>
+      <View style={[styles.amountAreaContainer]}>
+        <View style={[styles.amountAreaCryptoRow]}>
+          <View style={[styles.amountAreaLeft]}>
+            <T style={[styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.direction + '_past'])}</T>
           </View>
-          <View style={[b(), styles.amountAreaMiddle]}>
-            <View style={[b(), styles.amountAreaMiddleTop]}>
-              <T style={[b(), styles.amountAreaMiddleTopText]}>{Math.abs(parseFloat(bns.divf(this.props.info.tx.nativeAmount, this.props.walletDefaultDenomProps.multiplier).toFixed(6)))}</T>
+          <View style={[styles.amountAreaMiddle]}>
+            <View style={[styles.amountAreaMiddleTop]}>
+              <T style={[styles.amountAreaMiddleTopText]}>{amountString}</T>
             </View>
-            <View style={[b(), styles.amountAreaMiddleBottom]}>
-              <T style={[b(), styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</T>
+            <View style={[styles.amountAreaMiddleBottom]}>
+              <T style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</T>
             </View>
           </View>
-          <View style={[b(), styles.amountAreaRight]}>
-            <T style={[b(), styles.amountAreaRightText]}>{this.props.walletDefaultDenomProps.symbol}</T>
+          <View style={[styles.amountAreaRight]}>
+            <T style={[styles.amountAreaRightText]}>{this.props.walletDefaultDenomProps.symbol}</T>
           </View>
         </View>
-        <View style={[b(), styles.editableFiatRow]}>
-          <View style={[b(), styles.editableFiatLeft]}>
-            <T style={[b(), styles.editableFiatLeftText]} />
+        <View style={[styles.editableFiatRow]}>
+          <View style={[styles.editableFiatLeft]}>
+            <T style={[styles.editableFiatLeftText]} />
           </View>
-          <View style={[b(), styles.editableFiatArea]}>
+          <View style={[styles.editableFiatArea]}>
             <T style={styles.fiatSymbol}>{this.props.fiatCurrencySymbol}</T>
             <TextInput
               returnKeyType='done'
@@ -551,10 +552,10 @@ class AmountArea extends Component {
               autoCorrect={false}
               onFocus={this.props.onFocusFiatAmount}
               onChangeText={this.props.onChangeFiatFxn}
-              style={[b(), styles.editableFiat]}
+              style={[styles.editableFiat]}
               keyboardType='numeric'
               placeholder={''}
-              value={truncateDecimals(Math.abs(this.props.fiatAmount).toString(), 2)}
+              value={UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(this.props.fiatAmount).toString(), 2))}
               defaultValue={''}
             />
           </View>
@@ -562,11 +563,11 @@ class AmountArea extends Component {
             <T style={[styles.editableFiatRightText]}>{this.props.fiatCurrencyCode}</T>
           </View>
         </View>
-        <View style={[styles.categoryRow, b()]}>
-          <TouchableOpacity style={[b(), styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
-            <T style={[b(), {color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</T>
+        <View style={[styles.categoryRow]}>
+          <TouchableOpacity style={[styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
+            <T style={[{color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</T>
           </TouchableOpacity>
-          <View style={[b(), styles.categoryInputArea]}>
+          <View style={[styles.categoryInputArea]}>
             <TextInput
               blurOnSubmit
               autoCapitalize='words'
@@ -582,7 +583,7 @@ class AmountArea extends Component {
           </View>
         </View>
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
-          <Picker style={[ b(),
+          <Picker style={[ UTILS.border(),
             {
               backgroundColor: 'white',
               width: this.props.dimensions.deviceDimensions.width,
@@ -620,19 +621,19 @@ class AmountArea extends Component {
             />
           </View>
         </View>
-        <View style={[b(), styles.footerArea]}>
-          <View style={[b(), styles.buttonArea]}>
-            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[b(), styles.saveButton]} onPressFunction={this.props.onPressFxn} />
+        <View style={[styles.footerArea]}>
+          <View style={[styles.buttonArea]}>
+            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
-          <TouchableWithoutFeedback onPress={() => this.props.dispatch(openHelpModal())} style={[b(), styles.advancedTxArea]}>
-            <T style={[b(), styles.advancedTxText]}>{sprintf(strings.enUS['transaction_details_view_advanced_data'])}</T>
+          <TouchableWithoutFeedback onPress={() => this.props.dispatch(openHelpModal())} style={[styles.advancedTxArea]}>
+            <T style={[styles.advancedTxText]}>{sprintf(strings.enUS['transaction_details_view_advanced_data'])}</T>
           </TouchableWithoutFeedback>
         </View>
       </View>
     )
   }
 }
-export const AmountAreaConnect = connect(state => ({
+export const AmountAreaConnect = connect((state) => ({
   dimensions: state.ui.scenes.dimensions
 }))(AmountArea)
 
@@ -649,18 +650,12 @@ class SubCategorySelect extends Component {
   }
 
   render () {
-    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => {
-      return entry.indexOf(this.props.enteredSubcategory) >= 0
-    })
+    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => entry.indexOf(this.props.enteredSubcategory) >= 0)
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
-      newPotentialSubCategories = categories.map((cat) => {
-        return cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory
-      })
-      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => {
-        return this.props.subcategoriesList.indexOf(cat) < 0
-      })
+      newPotentialSubCategories = categories.map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
+      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => this.props.subcategoriesList.indexOf(cat) < 0)
     }
 
     return (
@@ -669,7 +664,7 @@ class SubCategorySelect extends Component {
         onRegularSelectFxn={this.props.onPressFxn}
         regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         usableHeight={this.props.usableHeight}
-        style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
+        style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}]}
         keyExtractor={this.keyExtractor}
         dimensions={this.props.dimensions}
         height={this.props.usableHeight - 51}
@@ -682,8 +677,8 @@ class SubCategorySelect extends Component {
     return (
       <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={c.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
-          <View style={[b(), styles.rowCategoryTextWrap]}>
-            <T style={[b(), styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
+          <View style={[styles.rowCategoryTextWrap]}>
+            <T style={[styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
           </View>
           <View style={[styles.rowPlusWrap]}>
             <T style={[styles.rowPlus]}>+</T>
@@ -693,19 +688,17 @@ class SubCategorySelect extends Component {
     )
   }
 
-  keyExtractor = (item, index) => {
-    return index
-  }
+  keyExtractor = (item, index) => index
 }
 
-export const SubCategorySelectConnect = connect(state => ({
+export const SubCategorySelectConnect = connect((state) => ({
   dimensions: state.ui.scenes.dimensions
 }))(SubCategorySelect)
 
 class PayeeIcon extends Component {
   render () {
     return (
-      <View style={[b(), styles.modalHeaderIconWrapBottom]}>
+      <View style={[styles.modalHeaderIconWrapBottom]}>
         {this.renderIcon()}
       </View>
     )
@@ -731,9 +724,7 @@ class PayeeIcon extends Component {
 class ContactSearchResults extends Component {
 
   render () {
-    let filteredArray = this.props.contacts.filter((entry) => {
-      return (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0
-    })
+    let filteredArray = this.props.contacts.filter((entry) => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
 
     return (
       <SearchResults
@@ -741,8 +732,8 @@ class ContactSearchResults extends Component {
         onRegularSelectFxn={this.props.onSelectPayee}
         regularArray={filteredArray}
         usableHeight={this.props.usableHeight}
-        style={[{width: '100%', backgroundColor: 'white'}, b()]}
-        // style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}, b()]}
+        style={[{width: '100%', backgroundColor: 'white'}]}
+        // style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}]}
         keyExtractor={this.keyExtractor}
         dimensions={this.props.dimensions}
         height={this.props.usableHeight - 32}
@@ -756,10 +747,10 @@ class ContactSearchResults extends Component {
 
     return (
       <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName, data.item.thumbnailPath)} underlayColor={c.gray4} style={[styles.singleContact, b()]}>
-          <View style={[styles.contactInfoWrap, b()]}>
+        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName, data.item.thumbnailPath)} underlayColor={c.gray4} style={[styles.singleContact]}>
+          <View style={[styles.contactInfoWrap]}>
             <View style={styles.contactLeft}>
-              <View style={[styles.contactLogo, b()]} >
+              <View style={[styles.contactLogo]} >
                 {data.item.thumbnailPath ? (
                   <Image source={{uri: data.item.thumbnailPath}} style={{height: 40, width: 40, borderRadius: 20}} />
                 ) : (
@@ -767,7 +758,7 @@ class ContactSearchResults extends Component {
                 )}
 
               </View>
-              <View style={[styles.contactLeftTextWrap, b()]}>
+              <View style={[styles.contactLeftTextWrap]}>
                 <T style={[styles.contactName]}>{fullName}</T>
               </View>
             </View>
@@ -777,7 +768,5 @@ class ContactSearchResults extends Component {
     )
   }
 
-  keyExtractor = (item, index) => {
-    return index
-  }
+  keyExtractor = (item, index) => index
 }

@@ -1,6 +1,6 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { connect } from 'react-redux'
+import {View, StyleSheet} from 'react-native'
+import {connect} from 'react-redux'
 import ShareButton from '../ShareButton/index.js'
 
 const ShareButtons = ({
@@ -8,8 +8,7 @@ const ShareButtons = ({
   shareViaEmail,
   shareViaSMS,
   shareViaShare
-}) => {
-  return (
+}) => (
     <View
       style={styles.view}>
       <ShareButton
@@ -29,7 +28,6 @@ const ShareButtons = ({
         onPress={shareViaShare} />
     </View>
   )
-}
 
 const styles = StyleSheet.create({
   view: {

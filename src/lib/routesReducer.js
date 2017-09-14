@@ -1,4 +1,4 @@
-import { ActionConst } from 'react-native-router-flux'
+import {ActionConst} from 'react-native-router-flux'
 
 const initialState = {
   scene: {},
@@ -8,8 +8,8 @@ const initialState = {
 export default function reducer (state = initialState, action = {}) {
   switch (action.type) {
   case ActionConst.FOCUS: {
-    let stackDepth =
-      parseInt(action.scene.key.replace(action.scene.sceneKey, '').replace('_', ''))
+    let stackDepth
+      = parseInt(action.scene.key.replace(action.scene.sceneKey, '').replace('_', ''))
 
     return {
       ...state,

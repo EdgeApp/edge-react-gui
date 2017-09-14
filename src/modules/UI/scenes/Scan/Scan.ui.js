@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import { sprintf } from 'sprintf-js'
+import {sprintf} from 'sprintf-js'
 import {
   ActivityIndicator,
   Alert,
@@ -10,11 +10,11 @@ import {
 } from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
-import { Actions } from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux'
 import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -22,8 +22,8 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 import styles from './style'
-import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { toggleEnableTorch, toggleAddressModal } from './action'
+import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
+import {toggleEnableTorch, toggleAddressModal} from './action'
 
 import {
   updateParsedURI,
@@ -31,8 +31,8 @@ import {
   updateWalletTransfer
 } from '../SendConfirmation/action.js'
 
-import { toggleWalletListModal } from '../WalletTransferList/action'
-import { AddressModalConnect } from './components/AddressModal.js'
+import {toggleWalletListModal} from '../WalletTransferList/action'
+import {AddressModalConnect} from './components/AddressModal.js'
 
 class Scan extends Component {
   constructor (props) {
@@ -87,7 +87,7 @@ class Scan extends Component {
   }
 
   selectPhotoTapped = () => {
-    const options = { takePhotoButtonTitle: null }
+    const options = {takePhotoButtonTitle: null}
 
     ImagePicker.showImagePicker(options, (response) => {
       if (response.didCancel) {
@@ -101,7 +101,7 @@ class Scan extends Component {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        Actions.sendConfirmation({ type: 'reset' })
+        Actions.sendConfirmation({type: 'reset'})
       }
     })
   }
@@ -194,14 +194,12 @@ const mapStateToProps = (state) => {
     scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
-const mapDispatchToProps = dispatch => {
-  return {
-    toggleEnableTorch: () => dispatch(toggleEnableTorch()),
-    toggleAddressModal: () => dispatch(toggleAddressModal()),
-    toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-    updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
-    updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
-    updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
-  }
-}
+const mapDispatchToProps = (dispatch) => ({
+  toggleEnableTorch: () => dispatch(toggleEnableTorch()),
+  toggleAddressModal: () => dispatch(toggleAddressModal()),
+  toggleWalletListModal: () => dispatch(toggleWalletListModal()),
+  updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
+  updatePublicAddress: (publicAddress) => dispatch(updatePublicAddressRequest(publicAddress)),
+  updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet))
+})
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)

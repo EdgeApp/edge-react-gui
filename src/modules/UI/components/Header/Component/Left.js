@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { Actions } from 'react-native-router-flux'
+import React, {Component} from 'react'
+import {TouchableOpacity} from 'react-native'
+import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import T from '../../../components/FormattedText'
@@ -9,9 +9,9 @@ import styles from '../style'
 export default class Left extends Component {
   render () {
     const children = this.props.routes.scene.children
-    const sceneName = children ?
-      this.props.routes.scene.children[this.props.routes.scene.index].name :
-      null
+    const sceneName = children
+      ? this.props.routes.scene.children[this.props.routes.scene.index].name
+      : null
 
     switch (sceneName) {
     case 'sendConfirmation':
@@ -23,7 +23,7 @@ export default class Left extends Component {
     case 'ethSettings':
       return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
     case 'transactionDetails':
-      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionsList({type: 'reset'})} />
+      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionList({type: 'reset'})} />
     default:
       return null
     }

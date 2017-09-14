@@ -1,8 +1,8 @@
 import * as ACTION from './action.js'
 
 export const accountReducer = (state = {}, action) => {
-  const { type, data = {} } = action
-  const { account } = data
+  const {type, data = {} } = action
+  const {account} = data
 
   switch (type) {
   case ACTION.ADD_ACCOUNT:

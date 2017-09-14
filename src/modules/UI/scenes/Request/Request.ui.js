@@ -12,7 +12,7 @@ import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchan
 import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import { convertDisplayToNative } from '../../../utils.js'
+import {convertDisplayToNative} from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -21,7 +21,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import { saveReceiveAddress } from './action.js'
+import {saveReceiveAddress} from './action.js'
 
 class Request extends Component {
   constructor (props) {
@@ -35,11 +35,10 @@ class Request extends Component {
 
   componentWillReceiveProps (nextProps) {
     if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const { coreWallet, currencyCode } = nextProps
+      const {coreWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(coreWallet, currencyCode)
-      .then(receiveAddress => {
-        const { publicAddress } = receiveAddress
-        console.log('in request->ComponentWillReceiveProps, receiveAddress is: ', receiveAddress, ' , coreWallet is: ', coreWallet, ' , and currencyCode is: ', currencyCode)
+      .then((receiveAddress) => {
+        const {publicAddress} = receiveAddress
         const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
@@ -50,10 +49,10 @@ class Request extends Component {
   }
 
   componentDidMount () {
-    const { coreWallet, currencyCode } = this.props
+    const {coreWallet, currencyCode} = this.props
     WALLET_API.getReceiveAddress(coreWallet, currencyCode)
-    .then(receiveAddress => {
-      const { publicAddress } = receiveAddress
+    .then((receiveAddress) => {
+      const {publicAddress} = receiveAddress
       const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
       this.setState({
         encodedURI,
@@ -62,7 +61,7 @@ class Request extends Component {
     })
   }
 
-  onAmountsChange = ({ primaryDisplayAmount, secondaryDisplayAmount }) => {
+  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
@@ -159,7 +158,8 @@ class Request extends Component {
     .then(() => {
       this.shareMessage()
       console.log('shareViaEmail')
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log('ERROR CODE: ', error.code)
       console.log('ERROR MESSAGE: ', error.message)
     })
@@ -169,7 +169,8 @@ class Request extends Component {
     ContactsWrapper.getContact().then(() => {
       this.shareMessage()
       console.log('shareViaSMS')
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log('ERROR CODE: ', error.code)
       console.log('ERROR MESSAGE: ', error.message)
     })

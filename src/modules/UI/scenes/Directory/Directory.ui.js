@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import { Text, TouchableOpacity } from 'react-native'
-import { Content } from 'native-base'
-import { connect } from 'react-redux'
-import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
+import React, {Component} from 'react'
+import {Text, TouchableOpacity} from 'react-native'
+import {Content} from 'native-base'
+import {connect} from 'react-redux'
+import {openTransactionAlert} from '../../components/TransactionAlert/action.js'
 
 class Directory extends Component {
 
@@ -10,7 +10,7 @@ class Directory extends Component {
     return (
       <Content>
         <TouchableOpacity onPress={() => this.props.dispatch(openTransactionAlert('Changed of message', 1234))}>
-          <Text style={{ color: 'black', fontSize: 50 }}>
+          <Text style={{color: 'black', fontSize: 50}}>
           Directory Page
         </Text>
         </TouchableOpacity>

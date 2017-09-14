@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 import * as ACTION from './action.js'
 
 const exchangeRates = (state = {}, action) => {

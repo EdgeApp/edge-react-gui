@@ -1,16 +1,16 @@
 import React, {Component} from 'react'
-import { connect } from 'react-redux'
-import { LoginScreen } from 'airbitz-core-js-ui'
-import { makeAccountCallbacks } from '../../../Core/Account/callbacks'
+import {connect} from 'react-redux'
+import {LoginScreen} from 'airbitz-core-js-ui'
+import {makeAccountCallbacks} from '../../../Core/Account/callbacks'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import { initializeAccount } from '../../../Login/action'
-import { Actions } from 'react-native-router-flux'
+import {initializeAccount} from '../../../Login/action'
+import {Actions} from 'react-native-router-flux'
 
 class Login extends Component {
   onLogin = (error = null, account) => {
     if (error || !account) return
-    this.props.initializeAccount(account)
     Actions.edge()
+    this.props.initializeAccount(account)
   }
 
   render () {
@@ -18,7 +18,7 @@ class Login extends Component {
     return !this.props.context.listUsernames ? null : (
       <LoginScreen
         username={this.props.username}
-        accountOptions={{ callbacks }}
+        accountOptions={{callbacks}}
         context={this.props.context}
         onLogin={this.onLogin}
       />

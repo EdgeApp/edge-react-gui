@@ -1,13 +1,13 @@
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 import * as ACTION from './action.js'
 
 const initialState = {}
 const byId = (state = initialState, action) => {
-  const { type, data = {} } = action
+  const {type, data = {} } = action
 
   switch (type) {
   case ACTION.UPDATE_WALLETS: {
-    const { currencyWallets } = data
+    const {currencyWallets} = data
     return {
       ...state,
       ...currencyWallets
@@ -23,5 +23,5 @@ export const wallets = (state, action) => {
     state = undefined
   }
 
-  return combineReducers({ byId })(state, action)
+  return combineReducers({byId})(state, action)
 }

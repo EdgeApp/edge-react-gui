@@ -1,11 +1,11 @@
-import { updateWalletsRequest } from '../Wallets/action.js'
-import { refreshWallet } from '../../UI/Wallets/action.js'
+import {updateWalletsRequest} from '../Wallets/action.js'
+import {refreshWallet} from '../../UI/Wallets/action.js'
 import {
   newTransactionsRequest,
   refreshTransactionsRequest
 } from '../../UI/scenes/TransactionList/action.js'
 
-export const makeAccountCallbacks = dispatch => {
+export const makeAccountCallbacks = (dispatch) => {
   console.log('making callbacks')
   const callbacks = {
     onError: (error) => {

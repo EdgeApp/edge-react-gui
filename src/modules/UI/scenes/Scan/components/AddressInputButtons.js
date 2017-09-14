@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   View,
   TouchableHighlight
 } from 'react-native'
 import ModalStyle from '../../../components/Modal/style'
-import { border } from '../../../../utils.js'
+import {border} from '../../../../utils.js'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import T from '../../../components/FormattedText'

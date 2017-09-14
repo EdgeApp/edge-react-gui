@@ -1,3 +1,5 @@
+import * as SETTINGS_SELECTORS from './selectors'
+
 // UI/Settings
 const PREFIX = 'UI/Settings/'
 
@@ -23,12 +25,7 @@ export const SET_MERCHANT_MODE = PREFIX + 'SET_MERCHANT_MODE'
 export const SET_BLUETOOTH_MODE = PREFIX + 'SET_BLUETOOTH_MODE'
 
 // Currency Settings
-export const SET_BTC_DENOMINATION = PREFIX + 'SET_BITCOIN_DENOMINATION'
 export const SET_BITCOIN_OVERRIDE_SERVER = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER'
-export const SET_ETH_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
-export const SET_REP_DENOMINATION = PREFIX + 'SET_REP_DENOMINATION'
-export const SET_WINGS_DENOMINATION = PREFIX + 'SET_WINGS_DENOMINATION'
-export const SET_LUN_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
 
 // Denomination
 export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
@@ -36,119 +33,87 @@ export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
-import * as SETTINGS_SELECTORS from './selectors'
+export const setLoginStatus = (loginStatus) => ({
+  type: SET_LOGIN_STATUS,
+  data: {loginStatus}
+})
 
-export const setLoginStatus = (loginStatus) => {
+export const addExchangeTimer = (exchangeTimer) => ({
+  type: ADD_EXCHANGE_TIMER,
+  data: {exchangeTimer}
+})
+
+export const removeExchangeTimer = () => (dispatch, getState) => {
+  const state = getState()
+  const exchangeTimer = SETTINGS_SELECTORS.getExchangeTimer(state)
+  clearInterval(exchangeTimer)
+
   return {
-    type: SET_LOGIN_STATUS,
-    data: { loginStatus }
+    type: 'REMOVE_EXCHANGE_TIMER'
   }
 }
 
-export const addExchangeTimer = (exchangeTimer) => {
-  return {
-    type: ADD_EXCHANGE_TIMER,
-    data: { exchangeTimer }
-  }
-}
+export const updateSettings = (settings) => ({
+  type: UPDATE_SETTINGS,
+  data: {settings}
+})
 
-export const removeExchangeTimer = () => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const exchangeTimer = SETTINGS_SELECTORS.getExchangeTimer(state)
-    clearInterval(exchangeTimer)
+export const loadSettings = (settings) => ({
+  type: LOAD_SETTINGS,
+  data: {settings}
+})
 
-    return {
-      type: 'REMOVE_EXCHANGE_TIMER'
-    }
-  }
-}
+export const setPINMode = (pinMode) => ({
+  type: SET_PIN_MODE,
+  data: {pinMode}
+})
 
-export const updateSettings = settings => {
-  return {
-    type: UPDATE_SETTINGS,
-    data: { settings }
-  }
-}
+export const setPIN = (pin) => ({
+  type: SET_PIN,
+  data: {pin}
+})
 
-export const loadSettings = settings => {
-  return {
-    type: LOAD_SETTINGS,
-    data: { settings }
-  }
-}
+export const setOTPMode = (otpMode) => ({
+  type: SET_OTP_MODE,
+  data: {otpMode}
+})
 
-export const setPINMode = pinMode => {
-  return {
-    type: SET_PIN_MODE,
-    data: { pinMode }
-  }
-}
+export const setOTP = (otp) => ({
+  type: SET_OTP,
+  data: {otp}
+})
 
-export const setPIN = pin => {
-  return {
-    type: SET_PIN,
-    data: { pin }
-  }
-}
+export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds) => ({
+  type: SET_AUTO_LOGOUT_TIME,
+  data: {autoLogoutTimeInSeconds}
+})
 
-export const setOTPMode = otpMode => {
-  return {
-    type: SET_OTP_MODE,
-    data: { otpMode }
-  }
-}
+export const setDefaultFiat = (defaultFiat) => ({
+  type: SET_DEFAULT_FIAT,
+  data: {defaultFiat}
+})
 
-export const setOTP = otp => {
-  return {
-    type: SET_OTP,
-    data: { otp }
-  }
-}
+export const setMerchantMode = (merchantMode) => ({
+  type: SET_MERCHANT_MODE,
+  data: {merchantMode}
+})
 
-export const setAutoLogoutTime = autoLogoutTimeInSeconds => {
-  return {
-    type: SET_AUTO_LOGOUT_TIME,
-    data: { autoLogoutTimeInSeconds }
-  }
-}
-
-export const setDefaultFiat = defaultFiat => {
-  return {
-    type: SET_DEFAULT_FIAT,
-    data: { defaultFiat }
-  }
-}
-
-export const setMerchantMode = merchantMode => {
-  return {
-    type: SET_MERCHANT_MODE,
-    data: { merchantMode }
-  }
-}
-
-export const setBluetoothMode = bluetoothMode => {
-  return {
-    type: SET_BLUETOOTH_MODE,
-    data: { bluetoothMode }
-  }
-}
+export const setBluetoothMode = (bluetoothMode) => ({
+  type: SET_BLUETOOTH_MODE,
+  data: {bluetoothMode}
+})
 
 // BTC Settings
-export const setBitcoinOverrideServer = overrideServer => {
-  return {
-    type: SET_BITCOIN_OVERRIDE_SERVER,
-    data: { overrideServer }
-  }
-}
+export const setBitcoinOverrideServer = (overrideServer) => ({
+  type: SET_BITCOIN_OVERRIDE_SERVER,
+  data: {overrideServer}
+})
 
 // Denomination
-export const setDenominationKey = (currencyCode, denominationKey) => {
-  return {
-    type: SET_DENOMINATION_KEY,
-    data: { currencyCode, denominationKey }
-  }
-}
+export const setDenominationKey = (currencyCode, denominationKey) => ({
+  type: SET_DENOMINATION_KEY,
+  data: {currencyCode, denominationKey}
+})
 
 // Plugins
 export const addCurrencyPlugin = (plugin) => {
@@ -156,6 +121,6 @@ export const addCurrencyPlugin = (plugin) => {
   const walletTypes = plugin.currencyInfo.walletTypes
   return {
     type: ADD_CURRENCY_PLUGIN,
-    data: { pluginName, plugin, walletTypes }
+    data: {pluginName, plugin, walletTypes}
   }
 }

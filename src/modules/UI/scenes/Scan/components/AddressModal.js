@@ -1,21 +1,21 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
   Alert,
   Clipboard
 } from 'react-native'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import strings from '../../../../../locales/default'
-import { sprintf } from 'sprintf-js'
+import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import { Actions } from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
-import { toggleAddressModal } from '../action'
-import { AddressInput } from './AddressInput.js'
-import { AddressInputButtons } from './AddressInputButtons.js'
+import {toggleAddressModal} from '../action'
+import {AddressInput} from './AddressInput.js'
+import {AddressInputButtons} from './AddressInputButtons.js'
 import * as UI_SELECTORS from '../../../selectors.js'
 import * as CORE_SELECTORS from '../../../../Core/selectors.js'
-import { updateParsedURI } from '../../SendConfirmation/action.js'
+import {updateParsedURI} from '../../SendConfirmation/action.js'
 
 class AddressModal extends Component {
   constructor (props) {
@@ -29,7 +29,7 @@ class AddressModal extends Component {
 
   componentDidMount () {
     const coreWallet = this.props.coreWallet
-    Clipboard.getString().then(uri => {
+    Clipboard.getString().then((uri) => {
       try {
         const parsedURI = WALLET_API.parseURI(coreWallet, uri)
         console.log('AddressModal parsedURI', parsedURI)
@@ -45,7 +45,7 @@ class AddressModal extends Component {
   }
 
   onPasteFromClipboard = () => {
-    this.setState({ uri: this.state.clipboard }, this.onSubmit)
+    this.setState({uri: this.state.clipboard}, this.onSubmit)
   }
 
   onSubmit = () => {
@@ -72,7 +72,7 @@ class AddressModal extends Component {
   }
 
   onChangeText = (uri) => {
-    this.setState({ uri })
+    this.setState({uri})
   }
 
   render () {
@@ -87,8 +87,8 @@ class AddressModal extends Component {
         zIndex: 1015,
         elevation: 1015}]} />
 
-    const copyMessage =
-      this.state.clipboard
+    const copyMessage
+      = this.state.clipboard
       ? sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
       : null
     const middle = <AddressInput
@@ -112,7 +112,7 @@ class AddressModal extends Component {
     )
   }
 }
-export const AddressModalConnect = connect(state => {
+export const AddressModalConnect = connect((state) => {
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)

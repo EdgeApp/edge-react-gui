@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
 import Drawer from 'react-native-drawer'
-
-import { openSidebar, closeSidebar } from './action'
 
 import ControlPanel from '../ControlPanel'
 
-class SideMenuComponent extends Component {
+export default class SideMenu extends Component {
+  onOpen = () => this.props.open()
+  onClose = () => this.props.close()
+
   render () {
     return (
       <Drawer
@@ -21,10 +21,10 @@ class SideMenuComponent extends Component {
         captureGestures={false}
         negotiatePan
         side='right'
-        onOpen={() => this.props.dispatch(openSidebar())}
-        onClose={() => this.props.dispatch(closeSidebar())}
+        onOpen={this.props.open}
+        onClose={this.props.close}
         elevation={2}
-        tweenHandler={ratio => ({
+        tweenHandler={(ratio) => ({
           main: {
             opacity: 1
           },
@@ -34,7 +34,7 @@ class SideMenuComponent extends Component {
           }
         })}
       >
-        { this.props.children }
+        {this.props.children}
       </Drawer>
     )
   }
@@ -46,11 +46,5 @@ const drawerStyles = {
     shadowOpacity: 0.8,
     shadowRadius: 3
   },
-  main: { paddingLeft: 3 }
+  main: {paddingLeft: 3}
 }
-
-const mapStateToProps = state => ({
-  view: state.ui.scenes.sideMenu.view
-})
-
-export default connect(mapStateToProps)(SideMenuComponent)

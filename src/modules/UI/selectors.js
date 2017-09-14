@@ -48,8 +48,6 @@ export const getDenominations = (state, currencyCode) => {
 
 export const getExchangeDenomination = (state, currencyCode) => {
   const wallet = getSelectedWallet(state)
-  const exchangeDenomination = Object.values(wallet.allDenominations[currencyCode]).find(denomination => {
-    return denomination.name === currencyCode
-  })
+  const exchangeDenomination = Object.values(wallet.allDenominations[currencyCode]).find((denomination) => denomination.name === currencyCode)
   return exchangeDenomination
 }

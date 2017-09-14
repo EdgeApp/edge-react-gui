@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import {StyleSheet} from 'react-native'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
 
 export default StyleSheet.create({

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
-import { TouchableOpacity } from 'react-native'
-import { openHelpModal } from '../../HelpModal/actions.js'
-import { connect } from 'react-redux'
+import {TouchableOpacity} from 'react-native'
+import {openHelpModal} from '../../HelpModal/actions.js'
+import {connect} from 'react-redux'
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
 import T from '../../../components/FormattedText'
 import styles from '../style'
@@ -24,9 +24,9 @@ export default class Right extends Component {
 
   render () {
     const children = this.props.routes.scene.children
-    const sceneName = children ?
-      this.props.routes.scene.children[this.props.routes.scene.index].name :
-      null
+    const sceneName = children
+      ? this.props.routes.scene.children[this.props.routes.scene.index].name
+      : null
 
     switch (sceneName) {
     case 'scan':

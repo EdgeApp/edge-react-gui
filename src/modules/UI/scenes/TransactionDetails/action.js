@@ -7,61 +7,47 @@ import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 export const SET_TRANSACTION_SUBCATEGORIES_START = 'SET_TRANSACTION_SUBCATEGORIES_START'
 export const SET_TRANSACTION_SUBCATEGORIES = 'SET_TRANSACTION_SUBCATEGORIES'
 
-export const setTransactionDetails = (currencyCode, transactionDetails) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    const wallet = getSelectedWallet(state)
-    const onSuccess = () => {
-      Actions.transactionList()
-    }
-    const onError = () => {
+export const setTransactionDetails = (currencyCode, transactionDetails) => (dispatch, getState) => {
+  const state = getState()
+  const wallet = getSelectedWallet(state)
+  const onSuccess = () => {
+    Actions.transactionList()
+  }
+  const onError = () => {
 
-    }
-    WALLET_API.setTransactionDetailsRequest(wallet, currencyCode, transactionDetails)
+  }
+  WALLET_API.setTransactionDetailsRequest(wallet, currencyCode, transactionDetails)
       .then(onSuccess)
       .catch(onError)
-  }
 }
 
-export const getSubcategories = () => {
-  return (dispatch, getState) => {
-    const { account } = getState().core
-    ACCOUNT_SETTINGS.getSyncedSubcategories(account).then((s) => {
-      return dispatch(setSubcategories(s))
-    })
-  }
+export const getSubcategories = () => (dispatch, getState) => {
+  const {account} = getState().core
+  ACCOUNT_SETTINGS.getSyncedSubcategories(account).then((s) => dispatch(setSubcategories(s)))
 }
 
-export const setSubcategories = subcategories => {
-  return {
-    type: SET_TRANSACTION_SUBCATEGORIES,
-    data: { subcategories }
-  }
+export const setSubcategories = (subcategories) => ({
+  type: SET_TRANSACTION_SUBCATEGORIES,
+  data: {subcategories}
+})
+
+export const setNewSubcategory = (newSubcategory) => (dispatch, getState) => {
+  const state = getState()
+  let oldSubcats = state.ui.scenes.transactionDetails.subcategories
+  const newSubcategories = [...oldSubcats, newSubcategory]
+  return dispatch(setSubcategoriesRequest(newSubcategories))
 }
 
-export const setNewSubcategory = (newSubcategory) => {
-  return (dispatch, getState) => {
-    const state = getState()
-    let oldSubcats = state.ui.scenes.transactionDetails.subcategories
-    const newSubcategories = [...oldSubcats, newSubcategory]
-    return dispatch(setSubcategoriesRequest(newSubcategories))
-  }
-}
-
-export const getSelectedWallet = state => {
-  const { selectedWalletId } = state.ui.wallets
+export const getSelectedWallet = (state) => {
+  const {selectedWalletId} = state.ui.wallets
   const selectedWallet = state.core.wallets.byId[selectedWalletId]
   return selectedWallet
 }
 
 // is this following function necessary?
-export const setSubcategoriesRequest = subcategories => {
-  return (dispatch, getState) => {
-    const { account } = getState().core
-    ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)
-    .then(() => {
-      return dispatch(setSubcategories(subcategories))
-    })
-    .catch(e => { console.error(e) })
-  }
+export const setSubcategoriesRequest = (subcategories) => (dispatch, getState) => {
+  const {account} = getState().core
+  ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)
+    .then(() => dispatch(setSubcategories(subcategories)))
+    .catch((e) => { console.error(e) })
 }

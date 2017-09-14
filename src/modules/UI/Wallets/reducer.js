@@ -1,13 +1,13 @@
 // @flow
 
-import { combineReducers } from 'redux'
-import { GUIWallet } from '../../../types.js'
-import type { AbcDenomination, AbcMetaToken } from 'airbitz-core-types'
+import {combineReducers} from 'redux'
+import {GUIWallet} from '../../../types.js'
+import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 import * as ACTION from './action'
-import { UPDATE_WALLETS } from '../../Core/Wallets/action.js'
+import {UPDATE_WALLETS} from '../../Core/Wallets/action.js'
 
 export const byId = (state: any = {}, action: any) => {
-  const { type, data = {} } = action
+  const {type, data = {} } = action
   switch (type) {
   case UPDATE_WALLETS: {
     const wallets = action.data.currencyWallets
@@ -46,8 +46,8 @@ export const archivedWalletIds = (state: any = [], action: any) => {
 }
 
 export const selectedWalletId = (state: string = '', action: any) => {
-  const { type, data = {} } = action
-  const { walletId } = data
+  const {type, data = {} } = action
+  const {walletId} = data
 
   switch (type) {
   case ACTION.SELECT_WALLET_ID:
@@ -58,8 +58,8 @@ export const selectedWalletId = (state: string = '', action: any) => {
 }
 
 export const selectedCurrencyCode = (state: string = '', action: any) => {
-  const { type, data = {} } = action
-  const { currencyCode } = data
+  const {type, data = {} } = action
+  const {currencyCode} = data
 
   switch (type) {
   case ACTION.SELECT_CURRENCY_CODE:
@@ -79,35 +79,31 @@ function schema (wallet: any): GUIWallet {
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage: string = wallet.currencyInfo.symbolImage
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
-  const denominations: Array<AbcDenomination> =
-    wallet.currencyInfo.denominations
+  const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }
   } = {}
 
   // Add all parent currency denominations to allDenominations
-  const parentDenominations = denominations.reduce(
-    (denominations, denomination) => {
-      return { ...denominations, [denomination.multiplier]: denomination }
-    },
-    {}
-  )
+  const parentDenominations = denominations.reduce((denominations, denomination) => ({
+    ...denominations, [denomination.multiplier]: denomination
+  }), {})
 
   allDenominations[currencyCode] = parentDenominations
 
   const nativeBalances: { [currencyCode: string]: string } = {}
   // Add parent currency balance to balances
-  nativeBalances[currencyCode] = wallet.getBalance({ currencyCode })
+  nativeBalances[currencyCode] = wallet.getBalance({currencyCode})
 
   // Add parent currency currencyCode
   const currencyNames: { [currencyCode: string]: string } = {}
   currencyNames[currencyCode] = wallet.currencyInfo.currencyName
 
-  metaTokens.forEach(metaToken => {
+  metaTokens.forEach((metaToken) => {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
-    const balance: string = wallet.getBalance({ currencyCode })
+    const balance: string = wallet.getBalance({currencyCode})
     const denominations: Array<AbcDenomination> = metaToken.denominations
 
     // Add token balance to allBalances
@@ -117,9 +113,7 @@ function schema (wallet: any): GUIWallet {
     // Add all token denominations to allDenominations
     const tokenDenominations: {
       [denomination: string]: AbcDenomination
-    } = denominations.reduce((denominations, denomination) => {
-      return { ...denominations, [denomination.multiplier]: denomination }
-    }, {})
+    } = denominations.reduce((denominations, denomination) => ({...denominations, [denomination.multiplier]: denomination}), {})
     allDenominations[currencyCode] = tokenDenominations
   })
 

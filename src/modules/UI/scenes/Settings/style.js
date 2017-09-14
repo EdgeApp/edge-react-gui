@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
 
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
   unlockRow: {
     padding: 12,
     flexDirection: 'row',

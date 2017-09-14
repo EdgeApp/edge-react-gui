@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { Dimensions, View } from 'react-native'
+import React, {Component} from 'react'
+import {Dimensions, View} from 'react-native'
 import QrCode from 'react-native-qrcode'
 
 const windowHeight = Dimensions.get('window').height

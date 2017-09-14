@@ -4,7 +4,7 @@ import {
   StyleSheet,
   TextInput
 } from 'react-native'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 // import styles from './styles.js'
 
 const styles = StyleSheet.create({
@@ -18,8 +18,7 @@ const styles = StyleSheet.create({
   }
 })
 
-const PinInput = ({onPinChange}) => {
-  return (
+const PinInput = ({onPinChange}) => (
     <View style={styles.view}>
       <TextInput
         style={styles.textInput}
@@ -30,6 +29,5 @@ const PinInput = ({onPinChange}) => {
         onChangeText={onPinChange} />
     </View>
   )
-}
 
 export default connect()(PinInput)
