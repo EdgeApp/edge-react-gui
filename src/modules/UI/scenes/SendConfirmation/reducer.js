@@ -1,12 +1,35 @@
+// @flow
 import * as ACTION from './action'
+import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
-const initialState = {
+export type SendConfirmationState = {
+  transaction: AbcTransaction,
+  parsedURI: AbcParsedUri,
+
+  displayAmount: number,
+  publicAddress: string,
+  feeSatoshi: number,
+  label: string,
+
+  inputCurrencySelected: string,
+  maxSatoshi: number,
+  isPinEnabled: boolean,
+  isSliderLocked: boolean,
+  draftStatus: string,
+  isKeyboardVisible: boolean,
+  pending: boolean,
+  mode: any
+}
+
+const initialState: SendConfirmationState = {
   transaction: {
     wallet: {},
     metadata: {},
     txid: '',
     date: 0,
-    blockHeight: '0',
+    currencyCode: '',
+    ourReceiveAddresses: [],
+    blockHeight: 0,
     providerFee: '0',
     networkFee: '0',
     runningBalance: '0',
@@ -34,11 +57,12 @@ const initialState = {
   mode: null
 }
 
-const sendConfirmation = (state = initialState, action) => {
+const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
   const {type, data = {} } = action
   switch (type) {
   case ACTION.UPDATE_TRANSACTION: {
-    const transaction = {...state.transaction, ...data.transaction}
+    let transaction: AbcTransaction
+    transaction = {...state.transaction, ...data.transaction}
     const networkFee = transaction.networkFee
     const providerFee = transaction.providerFee
     return {
