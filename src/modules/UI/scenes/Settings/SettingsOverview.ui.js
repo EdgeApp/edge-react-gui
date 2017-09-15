@@ -10,6 +10,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import LinearGradient from 'react-native-linear-gradient'
 
+import * as Constants from '../../../../constants'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
@@ -34,20 +35,19 @@ class SettingsOverview extends Component {
 
     this.settings = [
       {
-        key: 'changePassword',
+        key: Constants.CHANGE_PASSWORD,
         text: sprintf(strings.enUS['settings_button_change_password']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressChangePasswordRouting
       }, {
-        key: 'changePin',
+        key: Constants.CAHNGE_PIN,
         text: sprintf(strings.enUS['settings_button_pin']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressChangePinRouting
       }, {
-        key: 'passwordRecovery',
+        key: Constants.RECOVER_PASSWORD,
         text: sprintf(strings.enUS['settings_button_change_pass_recovery']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressRecoverPasswordRouting
       }
     ]
-
     this.securityRoute = [
       {
         key: 'setup2Factor',
@@ -93,25 +93,16 @@ class SettingsOverview extends Component {
     ]
   }
 
-  _handleOnPressRouting = (route) => {
-    console.log('in SettingsOverview.ui.js, route is: ', route)
-    let goRoute = Actions[route]
-    goRoute()
+  _onPressChangePasswordRouting = () => {
+    Actions[Constants.CHANGE_PASSWORD]()
   }
 
-  _onPressDummyRouting = () => {
-    console.log('trying this shit')
-    Actions['changePassword']()
-    //this._handleOnPressRouting('edge')
+  _onPressChangePinRouting = () => {
+    Actions[Constants.CAHNGE_PIN]()
 
   }
-  /* istead of
-  _onPressDummyRouting () {
-    console.log('dummy routing')
-  } */
-
-  _onChangePasswordPress = () => {
-    console.log('LEts change password')
+  _onPressRecoverPasswordRouting = () => {
+    Actions[Constants.CHANGE_PASSWORD]()
   }
 
   _onPressOpenLogoffTime = () => {
