@@ -92,7 +92,7 @@ class SendConfirmation extends Component {
 
           <View style={[styles.exchangeRateContainer, UTILS.border()]}>
             <ExchangeRate
-              fiatPerCrypto={this.props.fiatPerCrypto}
+              secondaryDisplayAmount={this.props.fiatPerCrypto}
               primaryInfo={this.props.primaryInfo}
               secondaryInfo={this.props.secondaryInfo} />
           </View>
