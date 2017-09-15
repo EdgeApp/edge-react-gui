@@ -55,10 +55,10 @@ const loadSettings = () => (dispatch, getState) => {
     })
     /* SETTINGS_API.getSyncedSubcategories(account)
     .then(subcategories => {
-      console.log('subcategories have been loaded and are: ', subcategories)
+      // console.log('subcategories have been loaded and are: ', subcategories)
       const syncDefaults = SETTINGS_API.SYNCED_SUBCATEGORY_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, subcategories)
-      console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
+      // console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
       dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
     }) */
 

@@ -157,28 +157,28 @@ class Request extends Component {
     ContactsWrapper.getContact()
     .then(() => {
       this.shareMessage()
-      console.log('shareViaEmail')
+      // console.log('shareViaEmail')
     })
-    .catch((error) => {
-      console.log('ERROR CODE: ', error.code)
-      console.log('ERROR MESSAGE: ', error.message)
+    .catch(() => {
+      // console.log('ERROR CODE: ', error.code)
+      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaSMS = () => {
     ContactsWrapper.getContact().then(() => {
       this.shareMessage()
-      console.log('shareViaSMS')
+      // console.log('shareViaSMS')
     })
-    .catch((error) => {
-      console.log('ERROR CODE: ', error.code)
-      console.log('ERROR MESSAGE: ', error.message)
+    .catch(() => {
+      // console.log('ERROR CODE: ', error.code)
+      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaShare = () => {
     this.shareMessage()
-    console.log('shareViaShare')
+    // console.log('shareViaShare')
   }
 }
 

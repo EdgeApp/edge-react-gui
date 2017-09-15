@@ -79,10 +79,10 @@ class SendConfirmation extends Component {
       fiatPerCrypto
     } = this.props
     const nativeAmount = this.props.transaction.nativeAmount
-    console.log('nativeAmount', nativeAmount)
+    // console.log('nativeAmount', nativeAmount)
     const color = 'white'
 
-    console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
+    // console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
     return (
       <LinearGradient
         style={[styles.view]}

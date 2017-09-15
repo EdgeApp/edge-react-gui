@@ -17,7 +17,7 @@ const SETTINGS_TEXT = sprintf(strings.enUS['settings_title'])
 
 export default class Main extends Component {
   onLogout = () => {
-    console.log('logout')
+    // console.log('logout')
     this.props.logout()
   }
 

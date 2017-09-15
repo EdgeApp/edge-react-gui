@@ -88,7 +88,7 @@ class Keyboard extends Component {
   }
 
   render () {
-    console.log('rendering keyboard')
+    // console.log('rendering keyboard')
 
     return (
       <View style={styles.view}>

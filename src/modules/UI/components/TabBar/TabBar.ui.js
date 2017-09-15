@@ -33,9 +33,9 @@ class TabBar extends Component {
   }
 
   _onLayout = (event) => {
-    let {x, y, width, height} = event.nativeEvent.layout
-    console.log('TabBar event.nativeEvent is : ', event.nativeEvent)
-    console.log('TabBar onLayout occurred', x, y, width, height)
+    let {height} = event.nativeEvent.layout
+    // console.log('TabBar event.nativeEvent is : ', event.nativeEvent)
+    // console.log('TabBar onLayout occurred', x, y, width, height)
     this.props.dispatch(setTabBarHeight(height))
   }
 

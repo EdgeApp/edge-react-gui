@@ -27,7 +27,7 @@ class HelpModal extends Component {
   }
 
   render () {
-    console.log('this.props', this.props)
+    // console.log('this.props', this.props)
     return (
       <TouchableWithoutFeedback onPress={() => this.props.dispatch(closeHelpModal())}>
         <Modal isVisible={this.props.modal} animationIn='bounceIn' animationOut='bounceOut' style={{margin: 0, paddingVertical: 60, paddingHorizontal: 20}}>

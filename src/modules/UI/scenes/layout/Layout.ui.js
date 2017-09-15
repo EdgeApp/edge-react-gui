@@ -20,7 +20,7 @@ export default class Layout extends Component {
   }
 
   componentDidMount () {
-    console.log('layout constructor')
+    // console.log('layout constructor')
     AppState.addEventListener('change', this._handleAppStateChange)
     const exchangeTimer = setInterval(() => {
       this.props.updateExchangeRates()
@@ -54,14 +54,14 @@ export default class Layout extends Component {
 
   _handleAppStateChange = (nextAppState) => {
     if (this.foregrounded(nextAppState)) {
-      console.log('Background -> Foreground')
+      // console.log('Background -> Foreground')
       this.setState({active: true})
 
       this.cancelAutoLogoutTimer()
     }
 
     if (this.backgrounded(nextAppState)) {
-      console.log('Foreground -> Background')
+      // console.log('Foreground -> Background')
       this.setState({active: false})
 
       if (this.props.autoLogoutTimeInSeconds) this.beginAutoLogoutTimer()
@@ -89,7 +89,7 @@ export default class Layout extends Component {
   }
 
   autoLogout () {
-    console.log('TIMEOUT')
+    // console.log('TIMEOUT')
     this.props.autoLogout()
   }
 }

@@ -91,7 +91,7 @@ export const signBroadcastAndSave = (unsignedTransaction) => (dispatch, getState
       dispatch(openABAlert(successInfo))
     })
     .catch((e) => {
-      console.log('error is: ', e)
+      // console.log('error is: ', e)
       dispatch(updateSpendPending(false))
       const errorInfo = {title: 'Transaction Failure', message: e.message}
       dispatch(openABAlert(errorInfo))

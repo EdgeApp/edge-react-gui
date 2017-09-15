@@ -10,12 +10,12 @@ import {border as b} from '../../../utils'
 
 class RadioRows extends Component {
   handlePress (value, option) {
-    console.log('inside of RadioRows->handlePress')
+    // console.log('inside of RadioRows->handlePress')
     this.props.onSelect(value, option) // reference to inherited function
   }
 
   render () {
-    console.log('RadioRows render, this.props is: ', this.props)
+    // console.log('RadioRows render, this.props is: ', this.props)
     return (
       <View style={[{height: 200}]}>
         {this.props.options.map((option) => (

@@ -7,7 +7,7 @@ const readJSONDb = (pathToDb, callback) => {
   })
   .catch((err) => {
     console.log('local store load error', err.message)
-    return callback([])
+    callback([])
   })
 }
 
@@ -111,7 +111,7 @@ LocalStorage.prototype.getItem = function (key) {
       return map.get(key).value
     }
   } catch (e) {
-    console.log(e)
+    // console.log(e)
     return null
   }
 }

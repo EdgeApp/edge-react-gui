@@ -58,14 +58,12 @@ const mapStateToProps = (state) => ({
 export const WalletListModalConnect = connect(mapStateToProps)(WalletListModal)
 
 class WalletListModalBody extends Component {
-  selectFromWallet = (id, currencyCode = null) => {
-    console.log('currencyCode', currencyCode)
+  selectFromWallet = () => {
     LayoutAnimation.easeInEaseOut()
     this.props.disableWalletListModalVisibility()
   }
 
-  selectToWallet = (idx, currencyCode = null) => {
-    console.log('currencyCode', currencyCode)
+  selectToWallet = () => {
     LayoutAnimation.easeInEaseOut()
     this.props.disableWalletListModalVisibility()
   }
@@ -148,7 +146,7 @@ class WalletListModalBody extends Component {
   }
 
   render () {
-    console.log('rendering dropdown', this.props.selectedWalletId)
+    // console.log('rendering dropdown', this.props.selectedWalletId)
     return (
       <View>{this.renderWalletRows()}</View>
     )

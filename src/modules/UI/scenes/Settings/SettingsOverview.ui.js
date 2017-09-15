@@ -94,29 +94,29 @@ class SettingsOverview extends Component {
   }
 
   _handleOnPressRouting = (route) => {
-    console.log('in SettingsOverview.ui.js, route is: ', route)
+    // console.log('in SettingsOverview.ui.js, route is: ', route)
     let goRoute = Actions[route]
     goRoute()
   }
 
   _onPressDummyRouting = () => {
-    console.log('dummy routing')
+    // console.log('dummy routing')
   }
 
   _onPressOpenLogoffTime = () => {
-    console.log('opening auto log off modal')
+    // console.log('opening auto log off modal')
   }
 
   _onPressOpenDefaultCurrency = () => {
-    console.log('opening default currency modal?')
+    // console.log('opening default currency modal?')
   }
 
   _onPressOpenChangeCategories = () => {
-    console.log('open change categories thingy')
+    // console.log('open change categories thingy')
   }
 
-  _onToggleOption = (property) => {
-    console.log('toggling option: ', property)
+  _onToggleOption = () => {
+    // console.log('toggling option: ', property)
   }
 
   _onPressDebug = () => {

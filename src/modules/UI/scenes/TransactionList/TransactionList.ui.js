@@ -71,7 +71,7 @@ class TransactionList extends Component {
             if (err === 'denied') {
               // error
             } else {
-              console.log('all contacts: ', contacts)
+              // console.log('all contacts: ', contacts)
               contacts.sort((a, b) => a.givenName > b.givenName)
               this.props.dispatch(setContactList(contacts))
             }
@@ -83,7 +83,7 @@ class TransactionList extends Component {
 
   _onSearchChange = () => {
     // this.props.dispatch(updateSearchResults(null))
-    console.log('this._onSearchChange executing')
+    // console.log('this._onSearchChange executing')
   }
 
   _onPressSearch = () => {
@@ -95,7 +95,7 @@ class TransactionList extends Component {
   }
 
   loadMoreTransactions = () => {
-    console.log('Transactions.ui->loadMoreTransactions being executed')
+    // console.log('Transactions.ui->loadMoreTransactions being executed')
   }
 
   _onFocus = () => {
@@ -213,7 +213,7 @@ class TransactionList extends Component {
   }
 
   render () {
-    console.log('about to render txList, this is: ', this)
+    // console.log('about to render txList, this is: ', this)
     let cryptoBalanceString
     let cryptoAmountString
     let renderableTransactionList = this.props.transactions.sort(function (a, b) {
@@ -378,7 +378,7 @@ class TransactionList extends Component {
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
           let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
-          if (found) console.log('element is: ', element)
+          // if (found) console.log('element is: ', element)
           return found
         })
         if (contact) {
@@ -396,7 +396,7 @@ class TransactionList extends Component {
     let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount.replace('-', ''))
 
     let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
-    console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
+    // console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))

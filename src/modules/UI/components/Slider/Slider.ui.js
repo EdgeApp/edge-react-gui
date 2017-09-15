@@ -16,7 +16,7 @@ class ABSlider extends Component {
   }
 
   onSlidingComplete = (value) => {
-    console.log('onSlidingComplete')
+    // console.log('onSlidingComplete')
     if (value <= 1) {
       this.props.onSlidingComplete()
     } else {

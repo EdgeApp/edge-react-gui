@@ -21,12 +21,12 @@ const styles = {
 }
 
 const RequestStatus = (props) => {
-  console.log('inside RequestStatus, props is: ', props)
+  // console.log('inside RequestStatus, props is: ', props)
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
-  const {publicAddress} = props
+  // const {publicAddress} = props
   const requestAddress = props.requestAddress
-  console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
+  // console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
 
   const hasReceivedPartialPayment = () => {
     const hasReceivedPartialPayment
@@ -90,7 +90,7 @@ const RequestStatus = (props) => {
     return displayStatus
   }
 
-  console.log('in RequestStatus.ui, this.props is: ', this)
+  // console.log('in RequestStatus.ui, this.props is: ', this)
   return (
     <View style={styles.view}>
       {getDisplayRequestStatus()}

@@ -35,10 +35,10 @@ class SortableWalletListRow extends Component {
     const {data} = this.props
     let walletData = data
     let currencyCode = walletData.currencyCode
-    console.log('still in walletListRow, currencyCode is : ', currencyCode, ' , walletData is : ', walletData, ' , this.props.index is: ', this.props.index)
+    // console.log('still in walletListRow, currencyCode is : ', currencyCode, ' , walletData is : ', walletData, ' , this.props.index is: ', this.props.index)
     let multiplier = this.props.displayDenomination.multiplier
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
-    let symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
+    let symbol = findDenominationSymbol(walletData.denominations, currencyCode)
     return (
       <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
         <TouchableHighlight
@@ -52,7 +52,7 @@ class SortableWalletListRow extends Component {
             </View>
             <View style={[styles.rowBalanceTextWrap]}>
               <T style={[styles.rowBalanceAmountText]}>{truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}</T>
-              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
+              <T style={[styles.rowBalanceDenominationText]}>{currencyCode}
                 ({symbol || ''})</T>
             </View>
             <View style={[styles.rowDragArea, b()]}>

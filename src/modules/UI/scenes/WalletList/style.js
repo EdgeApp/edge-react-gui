@@ -11,7 +11,7 @@ const screenDimensions = {
   width: Dimensions.get('window').width
 }
 
-console.log('screenDimensions is: ', screenDimensions)
+// console.log('screenDimensions is: ', screenDimensions)
 
 module.exports = StyleSheet.create({
   container: {

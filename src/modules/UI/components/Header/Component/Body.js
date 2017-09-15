@@ -72,12 +72,12 @@ class DefaultHeader extends Component {
 
 class ExampleFromWallet extends Component {
   _onPressToggleSelectedWalletModal = () => {
-    console.log('inside onPressScanFromDropdownToggle')
+    // console.log('inside onPressScanFromDropdownToggle')
     this.props.dispatch(toggleSelectedWalletListModal())
   }
 
   _onPressScanToDropdownToggle = () => {
-    console.log('inside onPressScanToDropdownToggle')
+    // console.log('inside onPressScanToDropdownToggle')
     this.props.dispatch(toggleScanToWalletListModal())
   }
 

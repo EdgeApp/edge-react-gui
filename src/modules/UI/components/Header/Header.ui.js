@@ -29,9 +29,9 @@ class HeaderUI extends Component {
   }
 
   _onLayout = (event) => {
-    let {x, y, width, height} = event.nativeEvent.layout
-    console.log('header event.nativeEvent is : ', event.nativeEvent)
-    console.log('header onLayout occurred', x, y, width, height)
+    let {height} = event.nativeEvent.layout
+    // console.log('header event.nativeEvent is : ', event.nativeEvent)
+    // console.log('header onLayout occurred', x, y, width, height)
     this.props.dispatch(setHeaderHeight(height))
   }
 

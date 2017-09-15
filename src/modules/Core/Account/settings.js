@@ -102,12 +102,11 @@ export const setDenominationKeyRequest = (account, currencyCode, denomination) =
 export const getSyncedSettings = (account) =>
   getSyncedSettingsFile(account).getText()
   .then((text) => JSON.parse(text))
-  .catch((e) => {
-    console.log('error: ', e)
+  .catch(() =>
+    // console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
-    .then(() => SYNCED_ACCOUNT_DEFAULTS)
-  })
+     setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    .then(() => SYNCED_ACCOUNT_DEFAULTS))
 
 export const setSyncedSettings = (account, settings) => {
   const text = JSON.stringify(settings)
@@ -142,24 +141,22 @@ export const getSyncedSubcategories = (account) => getSyncedSubcategoriesFile(ac
     let categoriesText = JSON.parse(text)
     return categoriesText.categories
   })
-  .catch((e) => {
-    console.log('error: ', e)
+  .catch(() =>
+    // console.log('error: ', e)
     // If Categories.json doesn't exist yet, create it, and return it
-    return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
-    .then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
-  })
+     setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
+    .then(() => SYNCED_SUBCATEGORIES_DEFAULTS))
 
 export const getSyncedSubcategoriesFile = (account) => account.folder.file('Categories.json')
 
 export const getLocalSettings = (account) =>
   getLocalSettingsFile(account).getText()
   .then((text) => JSON.parse(text))
-  .catch((e) => {
-    console.log('error: ', e)
+  .catch(() =>
+    // console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
-    .then(() => LOCAL_ACCOUNT_DEFAULTS)
-  })
+     setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
+    .then(() => LOCAL_ACCOUNT_DEFAULTS))
 
 export const setLocalSettings = (account, settings) => {
   const text = JSON.stringify(settings)

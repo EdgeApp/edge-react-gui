@@ -46,8 +46,10 @@ import {mapAllFiles} from 'disklet'
 
 // import { dumpFolder } from '../../debugTools.js'
 export function dumpFolder (folder) {
-  return mapAllFiles(folder, (file, path) =>
-    file.getText(file).then((text) => console.log(`dumpfolder: "${path}": "${text}"`))
+  return mapAllFiles(folder, (file) =>
+    file.getText(file).then(() => {
+      // console.log(`dumpfolder: "${path}": "${text}"`)
+    })
   )
 }
 

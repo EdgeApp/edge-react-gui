@@ -62,7 +62,7 @@ class WalletList extends Component {
       fullListOpacity: new Animated.Value(1),
       fullListZIndex: new Animated.Value(100)
     }
-    console.log('end of walletList constructor, this.state is: ', this.state)
+    // console.log('end of walletList constructor, this.state is: ', this.state)
   }
 
   toggleArchiveDropdown = () => {
@@ -86,7 +86,7 @@ class WalletList extends Component {
   }
 
   executeWalletRowOption = (walletId, option) => {
-    console.log('in executeWalletRowOption, option is: ', option)
+    // console.log('in executeWalletRowOption, option is: ', option)
     switch (option) {
     case options[0].value: // 'rename'
       console.log('executing rename')
@@ -116,7 +116,7 @@ class WalletList extends Component {
   }
 
   render () {
-    console.log('beginning of walletList render, this is: ', this.state)
+    // console.log('beginning of walletList render, this is: ', this.state)
     const {wallets} = this.props
     let walletsArray = []
     for (let wallet in wallets) {
@@ -214,7 +214,7 @@ class WalletList extends Component {
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
-    console.log('enabling sorting, this is: ', this)
+    // console.log('enabling sorting, this is: ', this)
     let sortableToOpacity = 1
     let sortableListToZIndex = 100
     let fullListToOpacity = 0
@@ -253,7 +253,7 @@ class WalletList extends Component {
   }
 
   disableSorting = () => {
-    console.log('disabling sorting')
+    // console.log('disabling sorting')
     let sortableToOpacity = 0
     let sortableListToZIndex = 0
     let fullListToOpacity = 1
