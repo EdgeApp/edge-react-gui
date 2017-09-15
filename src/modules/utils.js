@@ -140,9 +140,3 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) =>
 export const isGreaterThan = (comparedTo: string) =>
   // $FlowFixMe
    (amountString: string): boolean => gt(amountString, comparedTo)
-
-export const getCurrencyCodeFromWalletType = (walletType: string): string => ({
-  'wallet:bitcoin': 'BTC',
-  'wallet:ethereum': 'ETH',
-  'wallet:litecoin44': 'LTC'
-}[walletType])
