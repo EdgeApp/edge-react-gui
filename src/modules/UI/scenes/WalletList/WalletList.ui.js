@@ -2,9 +2,7 @@
 import React, {Component} from 'react'
 import {
   Dimensions,
-  TextInput,
   View,
-  TouchableHighlight,
   TouchableOpacity,
   ActivityIndicator,
   Animated,
@@ -15,9 +13,6 @@ import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import {setContactList} from '../../contacts/action'
 import T from '../../components/FormattedText'
-import {connect} from 'react-redux'
-import FAIcon from 'react-native-vector-icons/FontAwesome'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 // $FlowFixMe: suppressing this error since module IS available
@@ -34,26 +29,32 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
   toggleArchiveVisibility,
-  updateRenameWalletInput,
-  closeDeleteWalletModal,
-  closeRenameWalletModal,
-  renameWallet,
-  deleteWallet,
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder,
   dispatchWalletRowOption
 } from './action'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
+
 import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as UTILS from '../../../utils'
 
-class WalletList extends Component {
-  state: { sortableMode: boolean , sortableListOpacity: number, fullListOpacity: number, sortableListZIndex: number, fullListZIndex: number}
+import DeleteWalletSubtext from './components/DeleteWalletSubtextConnector'
+import DeleteWalletButtons from './components/DeleteWalletButtonsConnector'
+import WalletNameInput from './components/WalletNameInputConnector'
+import RenameWalletButtons from './components/RenameWalletButtonsConnector'
+import DeleteIcon from './components/DeleteIcon.ui'
+import RenameIcon from './components/RenameIcon.ui'
 
-  constructor (props) {
+export default class WalletList extends Component {
+  state: {
+    sortableMode: boolean,
+    sortableListOpacity: number,
+    fullListOpacity: number,
+    sortableListZIndex: number,
+    fullListZIndex: number
+  }
+
+  constructor (props: any) {
     super(props)
     this.state = {
       sortableMode: false,
@@ -85,7 +86,7 @@ class WalletList extends Component {
     })
   }
 
-  executeWalletRowOption = (walletId, option) => {
+  executeWalletRowOption = (walletId: string, option: string) => {
     // console.log('in executeWalletRowOption, option is: ', option)
     switch (option) {
     case options[0].value: // 'rename'
@@ -181,7 +182,7 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveSortableList = (walletsArray) => {
+  renderActiveSortableList = (walletsArray: Array<any>) => {
     const {width} = Dimensions.get('window')
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
@@ -210,7 +211,7 @@ class WalletList extends Component {
     )
   }
 
-  renderActiveRow = (row) => <SortableWalletListRow data={row} />
+  renderActiveRow = (row: any) => <SortableWalletListRow data={row} />
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
@@ -291,7 +292,7 @@ class WalletList extends Component {
     ]).start()
   }
 
-  renderArchivedSortableList = (data, order, label, renderRow) => {
+  renderArchivedSortableList = (data: any, order: any, label: any, renderRow: any) => {
     if (order) {
       return (
         <SortableListView
@@ -306,7 +307,7 @@ class WalletList extends Component {
     }
   }
 
-  sortActiveWallets = (wallets) => {
+  sortActiveWallets = (wallets: any) => {
     let activeOrdered = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => {
       if (wallets[a].sortIndex === wallets[b].sortIndex) {
@@ -318,7 +319,7 @@ class WalletList extends Component {
     return activeOrdered
   }
 
-  onActiveRowMoved = (action) => {
+  onActiveRowMoved = (action: any) => {
     const wallets = this.props.wallets
     const activeOrderedWallets = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex) // sort them according to their (previous) sortIndices
@@ -329,7 +330,7 @@ class WalletList extends Component {
     this.forceUpdate()
   }
 
-  onArchivedRowMoved = (action) => {
+  onArchivedRowMoved = (action: any) => {
     const wallets = this.props.wallets
     const activeOrderedWallets = Object.keys(wallets).filter((key) => wallets[key].archived)
     .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex)
@@ -340,7 +341,7 @@ class WalletList extends Component {
     this.forceUpdate()
   }
 
-  getNewOrder = (order, action) => {
+  getNewOrder = (order: any, action: any) => {
     const {to, from} = action
     const newOrder = [].concat(order)
     newOrder.splice(to, 0, newOrder.splice(from, 1)[0])
@@ -348,17 +349,17 @@ class WalletList extends Component {
     return newOrder
   }
 
-  renderDeleteWalletModal = () => <StylizedModal featuredIcon={< DeleteIcon />}
-    headerText='fragment_wallets_delete_wallet' // t(')
-    modalMiddle={< DeleteSubtext />}
-    modalBottom={<DeleteWalletButtonsConnect walletId={this.props.walletId} />}
+  renderDeleteWalletModal = () => <StylizedModal featuredIcon={<DeleteIcon />}
+    headerText='fragment_wallets_delete_wallet'
+    modalMiddle={<DeleteWalletSubtext />}
+    modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
     visibilityBoolean={this.props.deleteWalletModalVisible} />
 
-  renderRenameWalletModal = () => <StylizedModal featuredIcon={< AddressIcon />}
+  renderRenameWalletModal = () => <StylizedModal featuredIcon={<RenameIcon />}
     headerText='fragment_wallets_rename_wallet'
     headerSubtext={this.props.walletName}
-    modalMiddle={<WalletNameInputConnect />}
-    modalBottom={<RenameWalletButtonsConnect walletId={this.props.walletId} />}
+    modalMiddle={<WalletNameInput />}
+    modalBottom={<RenameWalletButtons walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible} />
 
   tallyUpTotalCrypto = () => {
@@ -383,7 +384,7 @@ class WalletList extends Component {
     return totalBalance
   }
 
-  calculateTotalBalance = (values) => {
+  calculateTotalBalance = (values: any) => {
     let total = 0
     for (let currency in values) {
       let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
@@ -391,186 +392,4 @@ class WalletList extends Component {
     }
     return total.toFixed(2)
   }
-
 }
-
-const mapStateToProps = (state) => {
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-
-  return {
-    // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
-    settings,
-    coreWallets: state.core.wallets.byId,
-    wallets: state.ui.wallets.byId,
-    activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
-    archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
-    walletArchivesVisible: state.ui.scenes.walletList.walletArchivesVisible,
-    renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
-    deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
-    walletName: state.ui.scenes.walletList.walletName,
-    walletId: state.ui.scenes.walletList.walletId,
-    walletOrder: state.ui.wallets.walletListOrder,
-    currencyConverter
-  }
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  updateActiveWalletsOrder: (activeWalletIds) => {
-    dispatch(updateActiveWalletsOrder(activeWalletIds))
-  },
-  updateArchivedWalletsOrder: (archivedWalletIds) => {
-    dispatch(updateArchivedWalletsOrder(archivedWalletIds))
-  }
-})
-
-export default connect((mapStateToProps), (mapDispatchToProps))(WalletList)
-
-// //// Beginning of Delete Area ////////
-
-class DeleteIcon extends Component {
-  render () {
-    return <FAIcon name='trash-o' size={24} color={c.primary} style={[{
-      position: 'relative',
-      top: 12,
-      left: 14,
-      height: 24,
-      width: 24,
-      backgroundColor: 'transparent',
-      zIndex: 1015,
-      elevation: 1015
-    }]} />
-  }
-}
-
-class DeleteSubtext extends Component {
-  render () {
-    return (
-      <T style={styles.subHeaderSyntax}>
-        {sprintf(strings.enUS['fragmet_wallets_delete_wallet_first_confirm_message_mobile'])}
-        {(this.props.currentWalletBeingDeleted)
-          ? <T style={{fontWeight: 'bold'}}>
-            {this.props.currentWalletBeingDeleted}?
-          </T>
-          : <T>{sprintf(strings.enUS['fragment_wallets_this_wallet'])}</T>}
-      </T>
-    )
-  }
-}
-export const DeleteSubtextConnect = connect((state) => ({
-  currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted
-}))(DeleteSubtext)
-
-class DeleteWalletButtons extends Component {
-  _onCancelDeleteModal = () => {
-    this.props.dispatch(closeDeleteWalletModal())
-  }
-
-  _onDeleteModalDone = () => {
-    this.props.dispatch(deleteWallet(this.props.walletId))
-  }
-
-  render () {
-    return (
-      <View style={[styles.buttonsWrap]}>
-
-        <TouchableHighlight onPress={this._onCancelDeleteModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
-
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
-          </View>
-
-        </TouchableHighlight>
-
-        <TouchableHighlight onPress={this._onDeleteModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
-
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_delete'])}</T>
-          </View>
-
-        </TouchableHighlight>
-      </View>
-    )
-  }
-}
-export const DeleteWalletButtonsConnect = connect()(DeleteWalletButtons)
-
-// ///////End of Delete Area //////////
-
-// ///// Beginning of Rename Area ////////
-
-class AddressIcon extends Component {
-  render () {
-    return <MAIcon name='edit' size={24} color={c.primary} style={[{
-      position: 'relative',
-      top: 12,
-      left: 14,
-      height: 24,
-      width: 24,
-      backgroundColor: 'transparent'
-    }]} />
-  }
-}
-
-class WalletNameInput extends Component {
-
-  _onNameInputChange = (input) => {
-    // be aware that walletListRowOptions.ui.js also initially dispatches this action
-    this.props.dispatch(updateRenameWalletInput(input))
-  }
-
-  render () {
-    return (
-      <View style={[styles.nameInputWrap]}>
-        <TextInput style={[styles.nameInput]}
-          onChangeText={(input) => this._onNameInputChange(input)}
-          defaultValue={this.props.currentWalletBeingRenamed} autoFocus />
-      </View>
-    )
-  }
-}
-export const WalletNameInputConnect = connect((state) => ({
-  currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,
-  // /currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
-  renameWalletVisible: state.ui.scenes.walletList.renameWalletVisible,
-  renameWalletInput: state.ui.scenes.walletList.renameWalletInput
-}))(WalletNameInput)
-
-class RenameWalletButtons extends Component {
-  _onRenameModalDone = () => {
-    this.props.dispatch(closeRenameWalletModal())
-    this.props.dispatch(renameWallet(this.props.walletId, this.props.renameWalletInput))
-  }
-
-  _onCancelRenameModal = () => {
-    this.props.dispatch(closeRenameWalletModal())
-    this.props.dispatch(updateRenameWalletInput(''))
-  }
-
-  render () {
-    return (
-      <View style={[styles.buttonsWrap]}>
-
-        <TouchableHighlight onPress={this._onCancelRenameModal} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.cancelButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
-          </View>
-        </TouchableHighlight>
-
-        <TouchableHighlight onPress={this._onRenameModalDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <T style={[styles.doneButton, styles.stylizedButtonText]}>{sprintf(strings.enUS['calculator_done'])}</T>
-          </View>
-        </TouchableHighlight>
-
-      </View>
-    )
-  }
-}
-export const RenameWalletButtonsConnect = connect((state) => ({
-  currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
-  walletId: state.ui.scenes.walletList.walletId,
-  renameWalletInput: state.ui.scenes.walletList.renameWalletInput
-}))(RenameWalletButtons)
-
-// ///// End of Rename Area ////////
