@@ -14,16 +14,13 @@ import Login from './UI/scenes/Login/Login.ui'
 import Layout from './UI/scenes/layout/LayoutConnector'
 import TransactionListConnect from './UI/scenes/TransactionList'
 import TransactionDetails from './UI/scenes/TransactionDetails'
-import Directory from './UI/scenes/Directory/Directory.ui'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
 import WalletList from './UI/scenes/WalletList/WalletList.ui'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
-import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
-import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
-import LTCSettings from './UI/scenes/Settings/LTCSettings.ui'
-import {SettingsOverview} from './UI/scenes/Settings'
+import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 
 import * as CONTEXT_API from './Core/Context/api'
 
@@ -132,11 +129,9 @@ export default class Main extends Component {
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ltcSettings' component={LTCSettings} title='LTC Settings' animation={'fade'} duration={600} />
-
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='directory' component={Directory} title='Directory' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ltcSettings' component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
 
                   </Scene>
                 </Scene>

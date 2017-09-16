@@ -748,6 +748,7 @@ const strings = {
   title_BTC_Settings: 'BTC Settings',
   title_ETH_Settings: 'ETH Settings',
   title_LTC_Settings: 'LTC Settings',
+  settings_denominations_title: 'Denominations',
   settings_denomination_title_btc_cap: 'BITCOIN DENOMINATION',
   settings_denomination_title_btc: 'Bitcoin Denomination',
   settings_denomination_title_eth: 'Ethereum Denomination',

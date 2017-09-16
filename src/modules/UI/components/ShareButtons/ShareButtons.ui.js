@@ -1,15 +1,28 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {View, StyleSheet} from 'react-native'
-import {connect} from 'react-redux'
 import ShareButton from '../ShareButton/index.js'
 
-const ShareButtons = ({
-  copyToClipboard,
-  shareViaEmail,
-  shareViaSMS,
-  shareViaShare
-}) => (
-    <View
+const styles = StyleSheet.create({
+  view: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    backgroundColor: '#294F85'
+  },
+  border: {
+    borderRightWidth: 0.4,
+    borderRightColor: '#FFF'
+  }
+})
+
+export default class ShareButtons extends Component {
+  render () {
+    const {copyToClipboard,
+    shareViaEmail,
+    shareViaSMS,
+    shareViaShare} = this.props
+
+    return <View
       style={styles.view}>
       <ShareButton
         style={styles.border}
@@ -27,19 +40,5 @@ const ShareButtons = ({
         displayName='Share'
         onPress={shareViaShare} />
     </View>
-  )
-
-const styles = StyleSheet.create({
-  view: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#294F85'
-  },
-  border: {
-    borderRightWidth: 0.4,
-    borderRightColor: '#FFF'
   }
-})
-
-export default connect()(ShareButtons)
+}

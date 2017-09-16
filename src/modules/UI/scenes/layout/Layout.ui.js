@@ -4,7 +4,7 @@ import {DefaultRenderer} from 'react-native-router-flux'
 
 import SideMenu from '../../components/SideMenu/SideMenuConnector'
 import Header from '../../components/Header/HeaderConnector'
-import TabBar from '../../components/TabBar/TabBar.ui'
+import TabBar from '../../components/TabBar/TabBarConnector'
 import HelpModal from '../../components/HelpModal'
 import ABAlert from '../../components/ABAlert'
 import TransactionAlert from '../../components/TransactionAlert'
@@ -24,7 +24,7 @@ export default class Layout extends Component {
     AppState.addEventListener('change', this._handleAppStateChange)
     const exchangeTimer = setInterval(() => {
       this.props.updateExchangeRates()
-    }, 3000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
     this.setState({exchangeTimer})
   }
 

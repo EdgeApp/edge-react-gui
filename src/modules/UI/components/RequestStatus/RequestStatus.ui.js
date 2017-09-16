@@ -3,6 +3,8 @@ import {Text, View} from 'react-native'
 import T from '../FormattedText/'
 import {connect} from 'react-redux'
 import {border as b} from '../../../utils.js'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../locales/default'
 
 const styles = {
   view: {
@@ -20,13 +22,14 @@ const styles = {
   }
 }
 
+const WAITING_FOR_PAYMENT_TEXT = sprintf(strings.enUS['request_qr_waiting_for_payment'])
+const REMAINING_TEXT = sprintf(strings.enUS['bitcoin_remaining'])
+const RECEIVED_TEXT = sprintf(strings.enUS['bitcoin_received'])
+
 const RequestStatus = (props) => {
-  // console.log('inside RequestStatus, props is: ', props)
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
-  // const {publicAddress} = props
   const requestAddress = props.requestAddress
-  // console.log('inside RequestStatus #2, props is: ', props, ' publicAddress is : ', publicAddress)
 
   const hasReceivedPartialPayment = () => {
     const hasReceivedPartialPayment
@@ -59,7 +62,7 @@ const RequestStatus = (props) => {
     const waitingForPayment
       = <View style={styles.view}>
         <Text style={styles.text}>
-          Waiting for payment...
+          {WAITING_FOR_PAYMENT_TEXT}
         </Text>
 
         <T numberOfLines={1} ellipsizeMode='middle' style={[b(), styles.text]}>
@@ -70,11 +73,11 @@ const RequestStatus = (props) => {
     const partialPaymentReceived
       = <View style={styles.view}>
         <Text style={styles.text}>
-          {amountReceivedInCrypto} received
+          {amountReceivedInCrypto + RECEIVED_TEXT}
         </Text>
 
         <Text style={styles.text}>
-          {getOutstandingDebtInCrypto()} remaining...
+          {getOutstandingDebtInCrypto() + REMAINING_TEXT}
         </Text>
 
         <Text style={styles.text}>
@@ -90,7 +93,6 @@ const RequestStatus = (props) => {
     return displayStatus
   }
 
-  // console.log('in RequestStatus.ui, this.props is: ', this)
   return (
     <View style={styles.view}>
       {getDisplayRequestStatus()}

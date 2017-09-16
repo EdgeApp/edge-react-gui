@@ -1,3 +1,3 @@
-import SearchResults from './SearchResults.ui'
+import SearchResults from './SearchResultsConnector'
 
 export default SearchResults

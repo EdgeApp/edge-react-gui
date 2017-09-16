@@ -1,5 +1,3 @@
-import SettingsOverview from './SettingsOverview.ui.js'
-import {BTCSettings} from './BTCSettings.ui.js'
-import {ETHSettings} from './ETHSettings.ui.js'
+import SettingsOverview from './SettingsOverviewConnector'
 
-export {SettingsOverview, BTCSettings, ETHSettings}
+export {SettingsOverview}

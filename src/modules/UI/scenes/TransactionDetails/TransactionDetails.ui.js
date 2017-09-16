@@ -37,7 +37,7 @@ import {
   // setSubcategoriesRequest
 } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
-import SearchResults from '../../components/SearchResults'
+import SearchResults from '../../components/SearchResults/index'
 import {openHelpModal} from '../../components/HelpModal/actions'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
