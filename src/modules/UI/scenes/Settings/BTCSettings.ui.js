@@ -22,7 +22,7 @@ export class BTCSettings extends Component {
             <View style={s.leftArea}>
               <IonIcon name='logo-bitcoin' style={[s.headerIcon, b('green')]} color='white' size={24} />
               <T style={s.headerText}>
-                {sprintf(strings.enUS['settings_denomination_title_eth'])}
+                {sprintf(strings.enUS['settings_denomination_title_btc'])}
               </T>
             </View>
           </View>

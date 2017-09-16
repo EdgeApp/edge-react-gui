@@ -3,7 +3,7 @@ import {AppState, View} from 'react-native'
 import {DefaultRenderer} from 'react-native-router-flux'
 
 import SideMenu from '../../components/SideMenu/SideMenuConnector'
-import Header from '../../components/Header/Header.ui'
+import Header from '../../components/Header/HeaderConnector'
 import TabBar from '../../components/TabBar/TabBar.ui'
 import HelpModal from '../../components/HelpModal'
 import ABAlert from '../../components/ABAlert'
