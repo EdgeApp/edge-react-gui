@@ -13,7 +13,6 @@ import {
 import T from '../../components/FormattedText'
 // $FlowFixMe
 import LinearGradient from 'react-native-linear-gradient'
-import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 // $FlowFixMe
@@ -23,21 +22,10 @@ import Camera from 'react-native-camera'
 // $FlowFixMe Doesn't know how to find platform specific imports
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from './style'
-import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
-import {toggleEnableTorch, toggleAddressModal} from './action'
 
-import {
-  updateParsedURI
-  // updatePublicAddressRequest,
-  // updateWalletTransfer
-} from '../SendConfirmation/action.js'
-
-import {toggleWalletListModal} from '../WalletTransferList/action'
 import {AddressModalConnect} from './components/AddressModal.js'
 
 type Props = {
@@ -53,7 +41,7 @@ type Props = {
   updateParsedURI(AbcParsedUri): void
 }
 
-class Scan extends Component<any, any, any> {
+export default class Scan extends Component<any, any, any> {
   state: {
     cameraPermission?: boolean
   }
@@ -70,7 +58,7 @@ class Scan extends Component<any, any, any> {
     .then(this.setCameraPermission)
   }
 
-  setCameraPermission = (cameraPermission) => {
+  setCameraPermission = (cameraPermission: boolean) => {
     this.setState({
       cameraPermission
     })
@@ -87,7 +75,7 @@ class Scan extends Component<any, any, any> {
   }
 
   _onToggleWalletListModal = () => {
-    this.props.dispatch(toggleScanToWalletListModal())
+    this.props.toggleScanToWalletListModal()
   }
 
   onBarCodeRead = (scan: {data: any}) => {
@@ -96,7 +84,7 @@ class Scan extends Component<any, any, any> {
     this.parseURI(uri)
   }
 
-  parseURI = (uri) => {
+  parseURI = (uri: string) => {
     try {
       // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
@@ -200,28 +188,3 @@ class Scan extends Component<any, any, any> {
     )
   }
 }
-const mapStateToProps = (state) => {
-  const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const sceneName = state.routes.scene.children
-    ? state.routes.scene.children[state.routes.scene.index].name
-    : null
-
-  return {
-    abcWallet,
-    sceneName,
-    torchEnabled: state.ui.scenes.scan.torchEnabled,
-    walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
-  }
-}
-const mapDispatchToProps = (dispatch) => ({
-  toggleEnableTorch: () => dispatch(toggleEnableTorch()),
-  toggleAddressModal: () => dispatch(toggleAddressModal()),
-  toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-  updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
-  // updatePublicAddress: (publicAddress) => dispatch(updatePublicAddressRequest(publicAddress)),
-  // updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet))
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Scan)
