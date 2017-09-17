@@ -5,7 +5,7 @@
 
 import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 
-export class GUIWallet {
+export class GuiWallet {
   id: string
   type: string
   name: string
@@ -48,4 +48,18 @@ export class GUIWallet {
     this.symbolImage = symbolImage
     this.metaTokens = metaTokens
   }
+}
+
+export type GuiDenomination = {
+  name: string,
+  symbol: string,
+  multiplier: string,
+  precision: number
+}
+
+export type GuiCurrencyInfo = {
+  displayCurrencyCode: string,
+  exchangeCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  exchangeDenomination: GuiDenomination
 }

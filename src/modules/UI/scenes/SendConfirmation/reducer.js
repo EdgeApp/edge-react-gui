@@ -3,8 +3,9 @@ import * as ACTION from './action'
 import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 export type SendConfirmationState = {
-  transaction: AbcTransaction,
-  parsedURI: AbcParsedUri,
+  transaction: AbcTransaction | null,
+  parsedUri: AbcParsedUri,
+  error: Error | null,
 
   displayAmount: number,
   publicAddress: string,
@@ -17,30 +18,16 @@ export type SendConfirmationState = {
   isSliderLocked: boolean,
   draftStatus: string,
   isKeyboardVisible: boolean,
-  pending: boolean,
-  mode: any
+  pending: boolean
 }
 
-const initialState: SendConfirmationState = {
-  transaction: {
-    wallet: {},
-    metadata: {},
-    txid: '',
-    date: 0,
-    currencyCode: '',
-    ourReceiveAddresses: [],
-    blockHeight: 0,
-    providerFee: '0',
-    networkFee: '0',
-    runningBalance: '0',
-    signedTx: '0',
-    otherParams: {},
-    nativeAmount: ''
-  },
-  parsedURI: {
+export const initialState: SendConfirmationState = {
+  transaction: null,
+  parsedUri: {
     publicAddress: '',
     nativeAmount: ''
   },
+  error: null,
 
   displayAmount: 0,
   publicAddress: '',
@@ -53,31 +40,30 @@ const initialState: SendConfirmationState = {
   isSliderLocked: false,
   draftStatus: 'under',
   isKeyboardVisible: false,
-  pending: false,
-  mode: null
+  pending: false
 }
 
 const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
   const {type, data = {} } = action
   switch (type) {
   case ACTION.UPDATE_TRANSACTION: {
-    let transaction: AbcTransaction
-    transaction = {...state.transaction, ...data.transaction}
-    const networkFee = transaction.networkFee
-    const providerFee = transaction.providerFee
-    return {
+    const transaction: AbcTransaction = data.transaction
+    const parsedUri: AbcParsedUri = data.parsedUri
+    const error: Error = data.error
+    const out: SendConfirmationState = {
       ...state,
       transaction,
-      networkFee,
-      providerFee
+      parsedUri,
+      error
     }
+    return out
   }
   case ACTION.UPDATE_PARSED_URI: {
-    const {parsedURI = {} } = data
-    const publicAddress = parsedURI.publicAddress
+    const {parsedUri = {} } = data
+    const publicAddress = parsedUri.publicAddress
     return {
       ...state,
-      parsedURI,
+      parsedUri,
       publicAddress
     }
   }
@@ -88,13 +74,13 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
       displayAmount
     }
   }
-  case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: {
-    const {inputCurrencySelected} = data
-    return {
-      ...state,
-      inputCurrencySelected
-    }
-  }
+  // case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: {
+  //   const {inputCurrencySelected} = data
+  //   return {
+  //     ...state,
+  //     inputCurrencySelected
+  //   }
+  // }
   case ACTION.UPDATE_MAX_SATOSHI: {
     const {maxSatoshi} = data
     return {
@@ -135,13 +121,6 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
     return {
       ...state,
       pending
-    }
-  }
-  case ACTION.UPDATE_SPEND_SUFFICIENT_FUNDS: {
-    const {mode} = data
-    return {
-      ...state,
-      mode
     }
   }
   case ACTION.RESET: {
