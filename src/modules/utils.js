@@ -89,7 +89,13 @@ export const truncateDecimals = (input: string, precision: number): string => {
   return `${integers}.${decimals.slice(0, precision)}`
 }
 
-export const formatNumber = (input: string): string => input === '.' ? '0.' : input
+export const formatNumber = (input: string): string => {
+  let out = input.replace(/^0+/,'')
+  if (out.startsWith('.')) {
+    out = '0' + out
+  }
+  return out
+}
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) =>
