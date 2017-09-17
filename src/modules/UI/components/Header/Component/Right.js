@@ -17,7 +17,7 @@ export default class Right extends Component {
       return <HelpButton />
     case 'directory':
       return <HelpButton />
-    case 'transactionsList':
+    case 'transactionList':
       return <HelpButton />
     case 'transactionDetails':
       return <HelpButton />
