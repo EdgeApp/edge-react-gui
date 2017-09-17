@@ -1,3 +1,3 @@
-import SendConfirmation from './SendConfirmation.ui.js'
+import SendConfirmation from './SendConfirmationConnector'
 
 export default SendConfirmation

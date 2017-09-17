@@ -1,5 +1,3 @@
-// @flow
-
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {
@@ -8,8 +6,6 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native'
-import {connect} from 'react-redux'
-import {bns} from 'biggystring'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
@@ -19,22 +15,10 @@ import ABSlider from '../../components/Slider/index.js'
 // $FlowFixMe
 import LinearGradient from 'react-native-linear-gradient'
 
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils.js'
-import type {GuiWallet, GuiCurrencyInfo, GuiDenomination} from '../../../../types'
+import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
-
-import {
-  signBroadcastAndSave,
-  // updateAmountSatoshiRequest,
-  // updateMaxSatoshiRequest,
-  // useMaxSatoshi,
-  updateSpendPending,
-  processParsedUri
-} from './action.js'
 
 type Props = {
   sendConfirmation: SendConfirmationState,
@@ -50,13 +34,7 @@ type Props = {
   processUri(AbcParsedUri): void
 }
 
-// type SCState = {
-//   primaryNativeAmount: string,
-//   secondaryNativeAmount: string,
-//   keyboardVisible: boolean
-// }
-
-class SendConfirmation extends Component<any, any, any> {
+export default class SendConfirmation extends Component<any, any, any> {
   state: {
     primaryNativeAmount: string,
     secondaryNativeAmount: string,
@@ -162,7 +140,7 @@ class SendConfirmation extends Component<any, any, any> {
 
   signBroadcastAndSave = () => {
     const {transaction} = this.props
-    this.props.dispatch(updateSpendPending(true))
+    this.props.updateSpendPending(true)
     this.props.signBroadcastAndSave(transaction)
   }
 
@@ -182,9 +160,7 @@ class SendConfirmation extends Component<any, any, any> {
     }
   }
 
-  onMaxPress = () => {
-    this.props.useMaxSatoshi()
-  }
+  onMaxPress = () => {}
 
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
@@ -203,74 +179,3 @@ SendConfirmation.propTypes = {
   inpurCurrencyDenom: PropTypes.string,
   fiatCurrencyCode: PropTypes.string
 }
-
-const mapStateToProps = (state) => {
-  let fiatPerCrypto = 0
-  const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  // TODO: Replace this with an ISO currency code lookup table -paulvp
-  const secondaryExchangeDenomination: GuiDenomination = {
-    name: 'Dollars',
-    symbol: '$',
-    multiplier: '100',
-    precision: 2
-  }
-  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: currencyCode,
-    exchangeCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: guiWallet.fiatCurrencyCode,
-    exchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
-  if (guiWallet) {
-    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-    fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-  }
-
-  const nativeAmount = state.ui.scenes.sendConfirmation.parsedUri.nativeAmount
-    ? state.ui.scenes.sendConfirmation.parsedUri.nativeAmount : '0'
-  let errorMsg = null
-  if (state.ui.scenes.sendConfirmation.error) {
-    if (state.ui.scenes.sendConfirmation.parsedUri.nativeAmount) {
-      if (bns.gt(state.ui.scenes.sendConfirmation.parsedUri.nativeAmount, '0')) {
-        errorMsg = state.ui.scenes.sendConfirmation.error.message
-      }
-    }
-  }
-
-  let sliderDisabled = true
-
-  if (state.ui.scenes.sendConfirmation.transaction && !state.ui.scenes.sendConfirmation.error) {
-    sliderDisabled = false
-  }
-
-  return {
-    sendConfirmation: state.ui.scenes.sendConfirmation,
-    abcWallet,
-    nativeAmount,
-    errorMsg,
-    fiatPerCrypto,
-    guiWallet,
-    currencyCode,
-    primaryInfo,
-    sliderDisabled,
-    secondaryInfo
-  }
-}
-const mapDispatchToProps = (dispatch) => ({
-  processParsedUri: (parsedUri) => dispatch(processParsedUri(parsedUri)),
-  // updateAmountSatoshi: (cryptoAmount) => dispatch(updateAmountSatoshiRequest(cryptoAmount)),
-  signBroadcastAndSave: (transaction) => dispatch(signBroadcastAndSave(transaction)),
-  // updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),
-  // useMaxSatoshi: () => dispatch(useMaxSatoshi())
-})
-export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)

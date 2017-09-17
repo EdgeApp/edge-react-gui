@@ -5,25 +5,19 @@ import {
   Share
 } from 'react-native'
 import Alert from './alert'
-import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
 import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import {convertDisplayToNative} from '../../../utils.js'
+import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import {saveReceiveAddress} from './action.js'
-
-class Request extends Component {
+export default class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -65,8 +59,8 @@ class Request extends Component {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
-    const primaryNativeAmount = convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const secondaryNativeAmount = convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
+    const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
+    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
 
     const parsedURI = {
       publicAddress: this.state.publicAddress,
@@ -127,7 +121,7 @@ class Request extends Component {
 
   showResult = (result) => {
     if (result.action === Share.sharedAction) {
-      this.props.dispatch(saveReceiveAddress(this.props.request.receiveAddress))
+      this.props.saveReceiveAddress(this.props.request.receiveAddress)
 
       if (result.activityType) {
         this.setState({
@@ -181,45 +175,3 @@ class Request extends Component {
     // console.log('shareViaShare')
   }
 }
-
-const mapStateToProps = (state) => {
-  let secondaryToPrimaryRatio = 0
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination = {
-    name: 'Dollars',
-    symbol: '$',
-    multiplier: '100',
-    precision: 2
-  }
-  const secondaryDisplayDenomination = secondaryExchangeDenomination
-  const primaryInfo = {
-    displayCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryInfo = {
-    displayCurrencyCode: wallet.fiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
-  if (wallet) {
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-  }
-
-  return {
-    request: state.ui.scenes.request,
-    coreWallet,
-    secondaryToPrimaryRatio,
-    wallet,
-    currencyCode,
-    primaryInfo,
-    secondaryInfo
-  }
-}
-const mapDispatchToProps = () => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(Request)

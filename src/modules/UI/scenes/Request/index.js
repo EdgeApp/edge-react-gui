@@ -1,4 +1,3 @@
-import Request from './Request.ui.js'
+import Request from './RequestConnector'
 
 export default Request
-
