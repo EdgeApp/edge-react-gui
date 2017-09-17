@@ -12,7 +12,7 @@ import Locale from 'react-native-locale'
 
 import Login from './UI/scenes/Login/Login.ui'
 import Layout from './UI/scenes/layout/LayoutConnector'
-import TransactionListConnect from './UI/scenes/TransactionList'
+import TransactionList from './UI/scenes/TransactionList/TransactionListConnector'
 import TransactionDetails from './UI/scenes/TransactionDetails'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
@@ -119,7 +119,7 @@ export default class Main extends Component {
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionList} title='Transactions' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='scan' component={Scan} title='Scan' animation={'fade'} duration={600} />

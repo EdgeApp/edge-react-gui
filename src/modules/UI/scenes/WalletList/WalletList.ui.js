@@ -153,6 +153,7 @@ export default class WalletList extends Component {
 
         <View style={[styles.walletsBox]}>
           <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
+
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
@@ -161,18 +162,25 @@ export default class WalletList extends Component {
                 </T>
               </View>
             </View>
+
             <View style={[styles.donePlusContainer, UTILS.border()]}>
+
               <Animated.View style={[styles.doneContainer,  UTILS.border(), {opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
-                <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]} onPress={() => this.disableSorting()}>
-                  <T style={[styles.walletsBoxDoneText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
+                <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]}
+                  onPress={() => this.disableSorting()}>
+                  <T style={[styles.walletsBoxDoneText]}>
+                    {sprintf(strings.enUS['string_done_cap'])}
+                  </T>
                 </TouchableOpacity>
               </Animated.View>
+
               <Animated.View style={[styles.plusContainer, UTILS.border(), {opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
                 <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 41}]}
                   onPress={() => Actions.createWallet()}>
-                    <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
+                  <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
+
             </View>
           </LinearGradient>
 
@@ -203,9 +211,9 @@ export default class WalletList extends Component {
             executeWalletRowOption={this.executeWalletRowOption}
             activeOpacity={0.6} />
         </Animated.View>
+
         <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
-          <FlatList
-            style={{flex: 1, width}}
+          <FlatList style={{flex: 1, width}}
             data={walletsArray}
             extraData={this.props.wallets}
             renderItem={(item) => <FullWalletListRow data={item} />}

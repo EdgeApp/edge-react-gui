@@ -1,6 +1,10 @@
 import {connect} from 'react-redux'
-import * as UI_SELECTORS from '../../../selectors'
 import WalletSelector from './WalletSelector.ui'
+import * as UI_SELECTORS from '../../../selectors'
+import {
+  toggleSelectedWalletListModal,
+  toggleScanToWalletListModal
+} from '../../WalletListModal/action'
 
 const mapStateToProps = (state) => ({
   walletList: UI_SELECTORS.getWallets(state),
@@ -14,4 +18,9 @@ const mapStateToProps = (state) => ({
   selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
   scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
 })
-export default connect(mapStateToProps)(WalletSelector)
+
+const mapDispatchToProps = (dispatch) => ({
+  toggleSelectedWalletListModal: () => dispatch(toggleSelectedWalletListModal()),
+  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
+})
+export default connect(mapStateToProps, mapDispatchToProps)(WalletSelector)

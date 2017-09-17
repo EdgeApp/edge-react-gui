@@ -2,17 +2,16 @@ import React, {Component} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import T from '../../FormattedText'
-import {toggleSelectedWalletListModal, toggleScanToWalletListModal} from '../../WalletListModal/action'
-import {WalletListModalConnect} from '../../WalletListModal/WalletListModal.ui'
+import WalletListModal from '../../WalletListModal/WalletListModalConnector'
 import {border as b} from '../../../../utils'
 
 export default class WalletSelector extends Component {
   _onPressToggleSelectedWalletModal = () => {
-    this.props.dispatch(toggleSelectedWalletListModal())
+    this.props.toggleSelectedWalletListModal()
   }
 
   _onPressScanToDropdownToggle = () => {
-    this.props.dispatch(toggleScanToWalletListModal())
+    this.props.toggleScanToWalletListModal()
   }
 
   render () {
@@ -29,17 +28,25 @@ export default class WalletSelector extends Component {
             {
               !this.props.scanToWalletListModalVisibility
               && !this.props.addressModalVisible
-              && <MDIcon name='keyboard-arrow-down' style={{color: '#FFF', fontSize: 25}} />
+              && <MDIcon
+                name='keyboard-arrow-down'
+                style={{color: '#FFF', fontSize: 25}} />
             }
           </View>
         </View>
         {
           this.props[this.props.visibleFlag]
-          && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={selectionFunction} type='from' />
+          && <WalletListModal
+            topDisplacement={topDisplacement}
+            selectionFunction={selectionFunction}
+            type='from' />
         }
         {
           this.props.scanToWalletListModalVisibility
-          && <WalletListModalConnect topDisplacement={topDisplacement} selectionFunction={'selectToWallet'} type='to' />
+          && <WalletListModal
+            topDisplacement={topDisplacement}
+            selectionFunction={'selectToWallet'}
+            type='to' />
         }
       </TouchableOpacity>
     )
