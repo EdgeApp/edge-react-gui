@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -9,33 +11,54 @@ import {
   TouchableHighlight
 } from 'react-native'
 import T from '../../components/FormattedText'
+// $FlowFixMe
 import LinearGradient from 'react-native-linear-gradient'
 import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+// $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import {Actions} from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+// $FlowFixMe Doesn't know how to find platform specific imports
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from './style'
 import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
 import {toggleEnableTorch, toggleAddressModal} from './action'
 
 import {
-  updateParsedURI,
-  updatePublicAddressRequest,
-  updateWalletTransfer
+  updateParsedURI
+  // updatePublicAddressRequest,
+  // updateWalletTransfer
 } from '../SendConfirmation/action.js'
 
 import {toggleWalletListModal} from '../WalletTransferList/action'
 import {AddressModalConnect} from './components/AddressModal.js'
 
-class Scan extends Component {
-  constructor (props) {
+type Props = {
+  abcWallet: AbcCurrencyWallet,
+  sceneName: string,
+  torchEnabled: boolean,
+  walletListModalVisible: boolean,
+  scanFromWalletListModalVisibility: any,
+  scanToWalletListModalVisibility: any,
+  toggleEnableTorch(): void,
+  toggleAddressModal():void,
+  toggleWalletListModal(): void,
+  updateParsedURI(AbcParsedUri): void
+}
+
+class Scan extends Component<any, any, any> {
+  state: {
+    cameraPermission?: boolean
+  }
+
+  constructor (props: Props) {
     super(props)
     this.state = {
       cameraPermission: undefined
@@ -67,8 +90,8 @@ class Scan extends Component {
     this.props.dispatch(toggleScanToWalletListModal())
   }
 
-  onBarCodeRead = (scan) => {
-    if (this.props.scene !== 'scan') return
+  onBarCodeRead = (scan: {data: any}) => {
+    if (this.props.sceneName !== 'scan') return
     const uri = scan.data
     this.parseURI(uri)
   }
@@ -76,7 +99,7 @@ class Scan extends Component {
   parseURI = (uri) => {
     try {
       // console.log('uri', uri)
-      const parsedURI = WALLET_API.parseURI(this.props.coreWallet, uri)
+      const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
@@ -179,11 +202,14 @@ class Scan extends Component {
 }
 const mapStateToProps = (state) => {
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const sceneName = state.routes.scene.children
+    ? state.routes.scene.children[state.routes.scene.index].name
+    : null
 
   return {
-    coreWallet,
-    scene: state.routes.scene.name,
+    abcWallet,
+    sceneName,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
@@ -195,7 +221,7 @@ const mapDispatchToProps = (dispatch) => ({
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),
   updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
-  updatePublicAddress: (publicAddress) => dispatch(updatePublicAddressRequest(publicAddress)),
-  updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet))
+  // updatePublicAddress: (publicAddress) => dispatch(updatePublicAddressRequest(publicAddress)),
+  // updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
