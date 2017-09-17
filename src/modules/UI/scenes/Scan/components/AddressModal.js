@@ -3,21 +3,16 @@ import {
   Alert,
   Clipboard
 } from 'react-native'
-import {connect} from 'react-redux'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import {Actions} from 'react-native-router-flux'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
-import {toggleAddressModal} from '../action'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
-import * as UI_SELECTORS from '../../../selectors.js'
-import * as CORE_SELECTORS from '../../../../Core/selectors.js'
-import {updateParsedURI} from '../../SendConfirmation/action.js'
 
-class AddressModal extends Component {
+export default class AddressModal extends Component {
   constructor (props) {
     super(props)
 
@@ -57,8 +52,8 @@ class AddressModal extends Component {
       parsedURI.currencyCode = this.props.currencyCode // remove when Ethereum addresses support indicating currencyCodes
 
       // console.log('AddressModal parsedURI', parsedURI)
-      this.props.dispatch(toggleAddressModal())
-      this.props.dispatch(updateParsedURI(parsedURI))
+      this.props.toggleAddressModal()
+      this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (e) {
       Alert.alert(
@@ -69,7 +64,7 @@ class AddressModal extends Component {
     }
   }
   onCancel = () => {
-    this.props.dispatch(toggleAddressModal())
+    this.props.toggleAddressModal()
   }
 
   onChangeText = (uri) => {
@@ -113,14 +108,3 @@ class AddressModal extends Component {
     )
   }
 }
-export const AddressModalConnect = connect((state) => {
-  const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-
-  return {
-    coreWallet,
-    currencyCode,
-    addressModalVisible: state.ui.scenes.scan.addressModalVisible
-  }
-})(AddressModal)

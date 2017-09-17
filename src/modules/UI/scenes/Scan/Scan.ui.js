@@ -26,7 +26,7 @@ import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from './style'
 
-import {AddressModalConnect} from './components/AddressModal.js'
+import AddressModal from './components/AddressModalConnector'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
@@ -144,7 +144,7 @@ export default class Scan extends Component<any, any, any> {
         {this.renderCamera()}
         <View style={[styles.overlay]}>
 
-          <AddressModalConnect />
+          <AddressModal />
 
           <View style={[styles.overlayTop]}>
             <T style={[styles.overlayTopText]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
