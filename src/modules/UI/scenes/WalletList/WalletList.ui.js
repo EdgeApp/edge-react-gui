@@ -11,7 +11,6 @@ import {
 // $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
-import {setContactList} from '../../contacts/action'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
@@ -20,19 +19,10 @@ import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
-import {
-  FullWalletListRowConnect as FullWalletListRow,
-  SortableWalletListRowConnect as SortableWalletListRow
-} from './WalletListRow.ui'
-import {options} from './WalletListRowOptions.ui.js'
+import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
+import SortableWalletListRow from './components/WalletListRow/SortableWalletListRowConnector'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import {
-  toggleArchiveVisibility,
-  updateActiveWalletsOrder,
-  updateArchivedWalletsOrder,
-  dispatchWalletRowOption
-} from './action'
 
 import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
@@ -44,6 +34,24 @@ import WalletNameInput from './components/WalletNameInputConnector'
 import RenameWalletButtons from './components/RenameWalletButtonsConnector'
 import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
+
+const options = [
+  {
+    value: 'rename',
+    syntax: sprintf(strings.enUS['string_rename'])
+  },{
+    value: 'sort',
+    syntax: sprintf(strings.enUS['fragment_wallets_sort'])
+  },{
+    value: 'addToken',
+    syntax: sprintf(strings.enUS['fragmet_wallets_addtoken_option'])
+  },{
+    value: 'archive'
+  },{
+    value: 'delete',
+    syntax: sprintf(strings.enUS['string_delete'])
+  }
+]
 
 export default class WalletList extends Component {
   state: {
@@ -63,11 +71,6 @@ export default class WalletList extends Component {
       fullListOpacity: new Animated.Value(1),
       fullListZIndex: new Animated.Value(100)
     }
-    // console.log('end of walletList constructor, this.state is: ', this.state)
-  }
-
-  toggleArchiveDropdown = () => {
-    this.props.dispatch(toggleArchiveVisibility())
   }
 
   componentDidMount () {
@@ -79,7 +82,7 @@ export default class WalletList extends Component {
             // error
           } else {
             contacts.sort((a, b) => a.givenName > b.givenName)
-            this.props.dispatch(setContactList(contacts))
+            this.props.setContactList(contacts)
           }
         })
       }
@@ -91,7 +94,7 @@ export default class WalletList extends Component {
     switch (option) {
     case options[0].value: // 'rename'
       console.log('executing rename')
-      this.props.dispatch(dispatchWalletRowOption(walletId, 'rename'))
+      this.props.walletRowOption(walletId, 'rename')
       break
     case options[1].value: // 'sort'
       if (this.state.sortableMode) {
@@ -101,17 +104,17 @@ export default class WalletList extends Component {
       }
       break
     case options[2].value: // 'addToken'
-      this.props.dispatch(dispatchWalletRowOption(walletId, 'addToken'))
+      this.props.walletRowOption(walletId, 'addToken')
       break
     case options[3].value: // 'archive'
       if (!this.props.walletsp[walletId].archived) {
-        this.props.dispatch(dispatchWalletRowOption(walletId, 'archive'))
+        this.props.walletRowOption(walletId, 'archive')
       } else {
-        this.props.dispatch(dispatchWalletRowOption(walletId, 'activate'))
+        this.props.walletRowOption(walletId, 'activate')
       }
       break
     case options[4].value: // 'delete
-      this.props.dispatch(dispatchWalletRowOption(walletId, 'delete'))
+      this.props.walletRowOption(walletId, 'delete')
       break
     }
   }
@@ -140,7 +143,9 @@ export default class WalletList extends Component {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultISOFiat ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat) : ''} {this.tallyUpTotalCrypto()}
+                {this.props.settings.defaultISOFiat
+                  ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat)
+                  : ''} {this.tallyUpTotalCrypto()}
               </T>
             </View>
           </View>
@@ -326,7 +331,7 @@ export default class WalletList extends Component {
     const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action) // pass the old order to getNewOrder with the action ( from, to, and  )
 
-    this.props.dispatch(updateActiveWalletsOrder(newOrder))
+    this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()
   }
 
@@ -337,7 +342,7 @@ export default class WalletList extends Component {
     const order = activeOrderedWallets
     const newOrder = this.getNewOrder(order, action)
 
-    this.props.dispatch(updateArchivedWalletsOrder(newOrder))
+    this.props.updateArchivedWalletsOrder(newOrder)
     this.forceUpdate()
   }
 
@@ -349,13 +354,15 @@ export default class WalletList extends Component {
     return newOrder
   }
 
-  renderDeleteWalletModal = () => <StylizedModal featuredIcon={<DeleteIcon />}
+  renderDeleteWalletModal = () => <StylizedModal
+    featuredIcon={<DeleteIcon />}
     headerText='fragment_wallets_delete_wallet'
     modalMiddle={<DeleteWalletSubtext />}
     modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
     visibilityBoolean={this.props.deleteWalletModalVisible} />
 
-  renderRenameWalletModal = () => <StylizedModal featuredIcon={<RenameIcon />}
+  renderRenameWalletModal = () => <StylizedModal
+    featuredIcon={<RenameIcon />}
     headerText='fragment_wallets_rename_wallet'
     headerSubtext={this.props.walletName}
     modalMiddle={<WalletNameInput />}

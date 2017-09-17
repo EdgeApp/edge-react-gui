@@ -1,3 +1,4 @@
+// UI/selectors
 export const getWallets = (state) => {
   const wallets = state.ui.wallets.byId
   return wallets

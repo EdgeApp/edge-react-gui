@@ -11,9 +11,7 @@ const screenDimensions = {
   width: Dimensions.get('window').width
 }
 
-// console.log('screenDimensions is: ', screenDimensions)
-
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'stretch'

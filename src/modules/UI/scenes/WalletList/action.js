@@ -33,7 +33,7 @@ import * as UI_ACTIONS from '../../Wallets/action.js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
-export const dispatchWalletRowOption = (walletId, option) => {
+export const walletRowOption = (walletId, option) => {
   switch (option) {
   case 'restore':
   case 'activate':

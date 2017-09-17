@@ -3,12 +3,13 @@ import {connect} from 'react-redux'
 import WalletList from './WalletList.ui'
 import {
   updateActiveWalletsOrder,
-  updateArchivedWalletsOrder
+  updateArchivedWalletsOrder,
+  walletRowOption
 } from './action'
+import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-
 const mapStateToProps = (state) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -31,12 +32,10 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  updateActiveWalletsOrder: (activeWalletIds) => {
-    dispatch(updateActiveWalletsOrder(activeWalletIds))
-  },
-  updateArchivedWalletsOrder: (archivedWalletIds) => {
-    dispatch(updateArchivedWalletsOrder(archivedWalletIds))
-  }
+  updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
+  updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
+  setContactList: (contacts) => dispatch(setContactList(contacts)),
+  walletRowOption: (walletId, option) => dispatch(walletRowOption(walletId, option))
 })
 
-export default connect((mapStateToProps), (mapDispatchToProps))(WalletList)
+export default connect(mapStateToProps, mapDispatchToProps)(WalletList)
