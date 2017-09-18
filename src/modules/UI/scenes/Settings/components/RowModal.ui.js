@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {
-  TouchableOpacity,
-  View
-} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import T from '../../../components/FormattedText'
 import s from '../style'
 import {border as b} from '../../../../utils'
@@ -22,7 +19,7 @@ export default class RowModal extends Component {
           </View>
 
           <T style={s.modalRightText}>
-            {this.props.modal}
+            {this.props.rightText}
           </T>
         </View>
 

@@ -1,35 +1,37 @@
 import React, {Component} from 'react'
 import {AppState, View} from 'react-native'
 import {DefaultRenderer} from 'react-native-router-flux'
-import {connect} from 'react-redux'
 
-import {logoutRequest} from '../../components/ControlPanel/action'
-
-import SideMenu from '../../components/SideMenu/SideMenu.ui'
-import Header from '../../components/Header/Header.ui'
-import TabBar from '../../components/TabBar/TabBar.ui'
+import SideMenu from '../../components/SideMenu/SideMenuConnector'
+import Header from '../../components/Header/HeaderConnector'
+import TabBar from '../../components/TabBar/TabBarConnector'
 import HelpModal from '../../components/HelpModal'
 import ABAlert from '../../components/ABAlert'
 import TransactionAlert from '../../components/TransactionAlert'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-
-class Layout extends Component {
+export default class Layout extends Component {
   constructor (props) {
     super(props)
     this.state = {
       active: true,
-      timeout: ''
+      timeout: '',
+      exchangeTimer: ''
     }
   }
 
   componentDidMount () {
-    console.log('layout constructor')
+    // console.log('layout constructor')
     AppState.addEventListener('change', this._handleAppStateChange)
+    const exchangeTimer = setInterval(() => {
+      this.props.updateExchangeRates()
+    }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
+    this.setState({exchangeTimer})
   }
 
   componentWillUnmount () {
     AppState.removeEventListener('change', this._handleAppStateChange)
+    clearTimeout(this.state.exchangeTimer)
+    this.setState({exchangeTimer: ''})
   }
 
   render () {
@@ -52,14 +54,14 @@ class Layout extends Component {
 
   _handleAppStateChange = (nextAppState) => {
     if (this.foregrounded(nextAppState)) {
-      console.log('Background -> Foreground')
+      // console.log('Background -> Foreground')
       this.setState({active: true})
 
       this.cancelAutoLogoutTimer()
     }
 
     if (this.backgrounded(nextAppState)) {
-      console.log('Foreground -> Background')
+      // console.log('Foreground -> Background')
       this.setState({active: false})
 
       if (this.props.autoLogoutTimeInSeconds) this.beginAutoLogoutTimer()
@@ -75,7 +77,8 @@ class Layout extends Component {
   }
 
   beginAutoLogoutTimer () {
-    const timeout = setTimeout(() => this.autoLogout(), (this.props.autoLogoutTimeInSeconds * 1000))
+    const autoLogoutTimeInMilliseconds = (this.props.autoLogoutTimeInSeconds * 1000)
+    const timeout = setTimeout(this.autoLogout, autoLogoutTimeInMilliseconds)
     this.setState({timeout})
   }
 
@@ -86,16 +89,7 @@ class Layout extends Component {
   }
 
   autoLogout () {
-    console.log('TIMEOUT')
-    this.props.logout()
+    // console.log('TIMEOUT')
+    this.props.autoLogout()
   }
 }
-
-const mapStateToProps = (state) => ({
-  autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
-})
-const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logoutRequest())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Layout)

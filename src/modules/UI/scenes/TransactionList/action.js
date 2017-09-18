@@ -28,7 +28,7 @@ export const getTransactionsRequest = (walletId, currencyCode) => (dispatch, get
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
   WALLET_API.getTransactions(wallet, currencyCode)
-    .then(transactions => {
+    .then((transactions) => {
       dispatch(updateTransactions(transactions))
     })
 }
@@ -73,7 +73,7 @@ export const changedTransactions = (transactions) => ({
   data: {transactions}
 })
 
-export const updateTransactions = transactions => ({
+export const updateTransactions = (transactions) => ({
   type: UPDATE_TRANSACTIONS,
   data: {transactions}
 })
@@ -121,7 +121,7 @@ export function toggleTransactionsWalletListModal () {
 }
 
 export function updatingBalance (data) {
-  console.log('inside updatingBalance, data is: ', data)
+  // console.log('inside updatingBalance, data is: ', data)
   let type = [data] + '_UPDATING_BALANCE'
   return {
     type

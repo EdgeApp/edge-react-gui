@@ -19,7 +19,7 @@ export default class ExchangedFlipInput extends Component {
       const primaryDisplayAmount = this.convertPrimaryNativeToDisplay(nativeAmount)
       if (this.state.primaryDisplayAmount === primaryDisplayAmount) { return }
       this.onPrimaryAmountChange(primaryDisplayAmount)
-      console.log('componentWillReceiveProps')
+      // console.log('componentWillReceiveProps')
     }
   }
 
@@ -49,7 +49,7 @@ export default class ExchangedFlipInput extends Component {
   }
 
   onSecondaryAmountChange = (secondaryInput: string) => {
-    console.log('onSecondaryAmountChange')
+    // console.log('onSecondaryAmountChange')
     if (secondaryInput === '') {
       this.setState({
         primaryDisplayAmount: '',

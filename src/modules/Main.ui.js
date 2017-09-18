@@ -11,40 +11,29 @@ import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 
 import Login from './UI/scenes/Login/Login.ui'
-import Layout from './UI/scenes/layout/Layout.ui'
-import TransactionListConnect from './UI/scenes/TransactionList'
+import Layout from './UI/scenes/layout/LayoutConnector'
+import TransactionList from './UI/scenes/TransactionList/TransactionListConnector'
 import TransactionDetails from './UI/scenes/TransactionDetails'
-import Directory from './UI/scenes/Directory/Directory.ui'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
-import Scan from './UI/scenes/Scan/Scan.ui'
-import WalletList from './UI/scenes/WalletList/WalletList.ui'
-import CreateWallet from './UI/scenes/CreateWallet/index.js'
-import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
-import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
-import {SettingsOverview} from './UI/scenes/Settings'
+import Scan from './UI/scenes/Scan/ScanConnector'
+import WalletList from './UI/scenes/WalletList/WalletListConnector'
+import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
+import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 
-import {addExchangeTimer} from  './UI/Settings/action'
-import {updateExchangeRates} from './ExchangeRates/action.js'
-import {setDeviceDimensions, setKeyboardHeight} from './UI/dimensions/action'
-import {addContext} from './Core/Context/action.js'
-import {setHeaderHeight} from './UI/dimensions/action.js'
-import {addCurrencyPlugin} from './UI/Settings/action.js'
-import {addUsernames} from './Core/Context/action'
-
-import * as CORE_SELECTORS from './Core/selectors'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
-import {BitcoinCurrencyPluginFactory} from 'airbitz-currency-bitcoin'
+import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory} from 'airbitz-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'airbitz-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
+currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
 
-import {setLocaleInfo} from './UI/locale/action'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 import styles from './style.js'
@@ -54,8 +43,10 @@ import {mapAllFiles} from 'disklet'
 
 // import { dumpFolder } from '../../debugTools.js'
 export function dumpFolder (folder) {
-  return mapAllFiles(folder, (file, path) =>
-    file.getText(file).then(text => console.log(`dumpfolder: "${path}": "${text}"`))
+  return mapAllFiles(folder, (file) =>
+    file.getText(file).then(() => {
+      // console.log(`dumpfolder: "${path}": "${text}"`)
+    })
   )
 }
 
@@ -64,7 +55,7 @@ const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 
 const RouterWithRedux = connect()(Router)
 
-class Main extends Component {
+export default class Main extends Component {
   constructor (props) {
     super(props)
 
@@ -88,34 +79,29 @@ class Main extends Component {
     // HockeyApp.start()
     // HockeyApp.checkForUpdate() // optional
     makeReactNativeIo()
-    .then(io =>
+    .then((io) =>
       // Make the core context:
        makeContext({
          apiKey: AIRBITZ_API_KEY,
          plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
          io
        }))
-    .then(context => {
+    .then((context) => {
       // Put the context into Redux:
       this.props.addContext(context)
 
       CONTEXT_API.listUsernames(context)
-      .then(usernames => {
+      .then((usernames) => {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
       // this.setState({ context, loading: false }, () => SplashScreen.hide())
       this.setState({context, loading: false})
-      const exchangeTimer = setInterval(() => {
-        this.props.updateExchangeRates()
-      }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
-      this.props.dispatch(addExchangeTimer(exchangeTimer))
     })
   }
 
   render () {
     const routes = this.props.routes
-    if (!this.props.context) return
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
@@ -133,7 +119,7 @@ class Main extends Component {
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionListConnect} title='Transactions' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionList} title='Transactions' animation={'fade'} duration={600} />
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='scan' component={Scan} title='Scan' animation={'fade'} duration={600} />
@@ -143,10 +129,9 @@ class Main extends Component {
 
                     <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
-
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='directory' component={Directory} title='Directory' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
+                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ltcSettings' component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
 
                   </Scene>
                 </Scene>
@@ -175,20 +160,3 @@ class Main extends Component {
     this.props.setKeyboardHeight(0)
   }
 }
-
-const mapStateToProps = (state) => ({
-  routes: state.routes,
-  context: CORE_SELECTORS.getContext(state)
-})
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),
-  setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
-  addContext: (context) => dispatch(addContext(context)),
-  addUsernames: (usernames) => dispatch(addUsernames(usernames)),
-  setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
-  updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setDeviceDimensions: (dimensions) => dispatch(setDeviceDimensions(dimensions)),
-  setHeaderHeight: (height) => dispatch(setHeaderHeight(height))
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Main)

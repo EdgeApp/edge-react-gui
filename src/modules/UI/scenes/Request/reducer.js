@@ -112,7 +112,7 @@ const request = (state = initialState, action) => {
     const {metadata = {} } = receiveAddress
     const amountFiat = data.amountRequestedInFiat
 
-    console.log('update fiat')
+    // console.log('update fiat')
     return {
       ...state,
       receiveAddress: {

@@ -1,5 +1,4 @@
 import {categories} from './subcategories.js'
-import {dumpFolder} from '../../Container.ui.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -7,12 +6,17 @@ export const CORE_DEFAULTS = {
   pinMode: false
 }
 
+
+// TODO:  Remove hardcoded currency defaults
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   merchantMode: false,
   'BTC': {
+    denomination: '100000000'
+  },
+  'LTC': {
     denomination: '100000000'
   },
   'ETH': {
@@ -59,21 +63,21 @@ export const setPinRequest = (account, pin) => account.changePIN(pin)
 // Account Settings
 export const setAutoLogoutTimeInSecondsRequest = (account, autoLogoutTimeInSeconds) =>
   getSyncedSettings(account)
-  .then(settings => {
+  .then((settings) => {
     const updatedSettings = updateSettings(settings, {autoLogoutTimeInSeconds})
     return setSyncedSettings(account, updatedSettings)
   })
 
 export const setDefaultFiatRequest = (account, defaultFiat) =>
   getSyncedSettings(account)
-  .then(settings => {
+  .then((settings) => {
     const updatedSettings = updateSettings(settings, {defaultFiat})
     return setSyncedSettings(account, updatedSettings)
   })
 
 export const setMerchantModeRequest = (account, merchantMode) =>
   getSyncedSettings(account)
-  .then(settings => {
+  .then((settings) => {
     const updatedSettings = updateSettings(settings, {merchantMode})
     return setSyncedSettings(account, updatedSettings)
   })
@@ -81,7 +85,7 @@ export const setMerchantModeRequest = (account, merchantMode) =>
 // Local Settings
 export const setBluetoothModeRequest = (account, bluetoothMode) =>
   getLocalSettings(account)
-  .then(settings => {
+  .then((settings) => {
     const updatedSettings = updateSettings(settings, {bluetoothMode})
     return setLocalSettings(account, updatedSettings)
   })
@@ -89,7 +93,7 @@ export const setBluetoothModeRequest = (account, bluetoothMode) =>
 // Currency Settings
 export const setDenominationKeyRequest = (account, currencyCode, denomination) =>
   getSyncedSettings(account)
-  .then(settings => {
+  .then((settings) => {
     const updatedSettings = updateCurrencySettings(settings, currencyCode, {denomination})
     return setSyncedSettings(account, updatedSettings)
   })
@@ -98,13 +102,12 @@ export const setDenominationKeyRequest = (account, currencyCode, denomination) =
 
 export const getSyncedSettings = (account) =>
   getSyncedSettingsFile(account).getText()
-  .then(text => JSON.parse(text))
-  .catch(e => {
-    console.log('error: ', e)
+  .then((text) => JSON.parse(text))
+  .catch(() =>
+    // console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
-    .then(() => SYNCED_ACCOUNT_DEFAULTS)
-  })
+     setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    .then(() => SYNCED_ACCOUNT_DEFAULTS))
 
 export const setSyncedSettings = (account, settings) => {
   const text = JSON.stringify(settings)
@@ -123,7 +126,6 @@ export async function setLocalLog (account, log) {
   let oldLogs = logFile.getText()
     .then((txt) => txt)
   let newLogs = oldLogs + log
-  console.log('in setSyncedLog, account is: ', account, ' , and log is: ', log, ' , logFile is: ', logFile, ' and oldLogs are : ', oldLogs, ' , newLogs is: ', newLogs)
   try {
     await logFile.setText(newLogs)
   } catch (e) {
@@ -147,38 +149,32 @@ export async function setSyncedSubcategories (account, subcategories) {
   }
 }
 
+export const getSyncedSubcategories = (account) => getSyncedSubcategoriesFile(account).getText()
+  .then((text) => {
 
-
-export const getSyncedSubcategories = account => {
-  dumpFolder(account.folder)
-  return getSyncedSubcategoriesFile(account).getText()
-  .then(text => {
     let categoriesText = JSON.parse(text)
     return categoriesText.categories
   })
-  .catch(e => {
-    console.log('error: ', e)
+  .catch(() =>
+    // console.log('error: ', e)
     // If Categories.json doesn't exist yet, create it, and return it
-    return setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
-    .then(() => SYNCED_SUBCATEGORIES_DEFAULTS)
-  })
-}
+     setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
+    .then(() => SYNCED_SUBCATEGORIES_DEFAULTS))
 
-export const getSyncedSubcategoriesFile = account => account.folder.file('Categories.json')
+export const getSyncedSubcategoriesFile = (account) => account.folder.file('Categories.json')
 
 export async function setLocalLogRequest (account, log) {
   return setLocalLog(account, log)
 }
 
-export const getLocalSettings = account =>
+export const getLocalSettings = (account) =>
   getLocalSettingsFile(account).getText()
-  .then(text => JSON.parse(text))
-  .catch(e => {
-    console.log('error: ', e)
+  .then((text) => JSON.parse(text))
+  .catch(() =>
+    // console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
-    .then(() => LOCAL_ACCOUNT_DEFAULTS)
-  })
+     setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
+    .then(() => LOCAL_ACCOUNT_DEFAULTS))
 
 export const setLocalSettings = (account, settings) => {
   const text = JSON.stringify(settings)
@@ -194,11 +190,11 @@ export const getCoreSettings = () => {
   return Promise.resolve(coreSettings)
 }
 
-export const getLocalLogFile = account => account.folder.file('Log.txt')
+export const getLocalLogFile = (account) => account.folder.file('Log.txt')
 
-export const getSyncedSettingsFile = account => account.folder.file('Settings.json')
+export const getSyncedSettingsFile = (account) => account.folder.file('Settings.json')
 
-export const getLocalSettingsFile = account => account.localFolder.file('Settings.json')
+export const getLocalSettingsFile = (account) => account.localFolder.file('Settings.json')
 
 export const updateCurrencySettings = (currentSettings, currencyCode, newSettings) => {
   const currencySettings = currentSettings[currencyCode]

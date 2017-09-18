@@ -10,14 +10,14 @@ import {border as b} from '../../../../utils'
 
 class Row extends Component {
   render () {
-    const option = this.props.option
+    // const option = this.props.option
     const {
       key,
       left,
       isSelected,
       onPress
     } = this.props
-    console.log('Row render, option: ', option)
+    // console.log('Row render, option: ', option)
 
     return (
       <TouchableOpacity style={[s.rowContainer, b('blue')]}

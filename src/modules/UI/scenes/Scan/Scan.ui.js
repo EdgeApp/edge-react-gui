@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -9,33 +11,42 @@ import {
   TouchableHighlight
 } from 'react-native'
 import T from '../../components/FormattedText'
+// $FlowFixMe
 import LinearGradient from 'react-native-linear-gradient'
-import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+// $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import {Actions} from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+// $FlowFixMe Doesn't know how to find platform specific imports
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from './style'
-import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
-import {toggleEnableTorch, toggleAddressModal} from './action'
 
-import {
-  updateParsedURI,
-  updatePublicAddressRequest,
-  updateWalletTransfer
-} from '../SendConfirmation/action.js'
+import AddressModal from './components/AddressModalConnector'
 
-import {toggleWalletListModal} from '../WalletTransferList/action'
-import {AddressModalConnect} from './components/AddressModal.js'
+type Props = {
+  abcWallet: AbcCurrencyWallet,
+  sceneName: string,
+  torchEnabled: boolean,
+  walletListModalVisible: boolean,
+  scanFromWalletListModalVisibility: any,
+  scanToWalletListModalVisibility: any,
+  toggleEnableTorch(): void,
+  toggleAddressModal():void,
+  toggleWalletListModal(): void,
+  updateParsedURI(AbcParsedUri): void
+}
 
-class Scan extends Component {
-  constructor (props) {
+export default class Scan extends Component<any, any, any> {
+  state: {
+    cameraPermission?: boolean
+  }
+
+  constructor (props: Props) {
     super(props)
     this.state = {
       cameraPermission: undefined
@@ -47,7 +58,7 @@ class Scan extends Component {
     .then(this.setCameraPermission)
   }
 
-  setCameraPermission = (cameraPermission) => {
+  setCameraPermission = (cameraPermission: boolean) => {
     this.setState({
       cameraPermission
     })
@@ -64,25 +75,25 @@ class Scan extends Component {
   }
 
   _onToggleWalletListModal = () => {
-    this.props.dispatch(toggleScanToWalletListModal())
+    this.props.toggleScanToWalletListModal()
   }
 
-  onBarCodeRead = (scan) => {
-    if (this.props.scene !== 'scan') return
+  onBarCodeRead = (scan: {data: any}) => {
+    if (this.props.sceneName !== 'scan') return
     const uri = scan.data
     this.parseURI(uri)
   }
 
-  parseURI = (uri) => {
+  parseURI = (uri: string) => {
     try {
-      console.log('uri', uri)
-      const parsedURI = WALLET_API.parseURI(this.props.coreWallet, uri)
+      // console.log('uri', uri)
+      const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
       Alert.alert('Scanning Error', error.toString())
       // show popup with error message
-      console.log(error)
+      // console.log(error)
     }
   }
 
@@ -90,13 +101,9 @@ class Scan extends Component {
     const options = {takePhotoButtonTitle: null}
 
     ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled photo picker')
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton)
-      } else {
+      if (!response.didCancel
+        && !response.error
+        && !response.customButton) {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
@@ -137,7 +144,7 @@ class Scan extends Component {
         {this.renderCamera()}
         <View style={[styles.overlay]}>
 
-          <AddressModalConnect />
+          <AddressModal />
 
           <View style={[styles.overlayTop]}>
             <T style={[styles.overlayTopText]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
@@ -181,25 +188,3 @@ class Scan extends Component {
     )
   }
 }
-const mapStateToProps = (state) => {
-  const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
-
-  return {
-    coreWallet,
-    scene: state.routes.scene.name,
-    torchEnabled: state.ui.scenes.scan.torchEnabled,
-    walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
-  }
-}
-const mapDispatchToProps = dispatch => ({
-  toggleEnableTorch: () => dispatch(toggleEnableTorch()),
-  toggleAddressModal: () => dispatch(toggleAddressModal()),
-  toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-  updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI)),
-  updatePublicAddress: publicAddress => dispatch(updatePublicAddressRequest(publicAddress)),
-  updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet))
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Scan)

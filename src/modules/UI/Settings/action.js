@@ -1,3 +1,5 @@
+import * as SETTINGS_SELECTORS from './selectors'
+
 // UI/Settings
 const PREFIX = 'UI/Settings/'
 
@@ -23,20 +25,13 @@ export const SET_MERCHANT_MODE = PREFIX + 'SET_MERCHANT_MODE'
 export const SET_BLUETOOTH_MODE = PREFIX + 'SET_BLUETOOTH_MODE'
 
 // Currency Settings
-export const SET_BTC_DENOMINATION = PREFIX + 'SET_BITCOIN_DENOMINATION'
 export const SET_BITCOIN_OVERRIDE_SERVER = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER'
-export const SET_ETH_DENOMINATION = PREFIX + 'SET_ETHEREUM_DENOMINATION'
-export const SET_REP_DENOMINATION = PREFIX + 'SET_REP_DENOMINATION'
-export const SET_WINGS_DENOMINATION = PREFIX + 'SET_WINGS_DENOMINATION'
-export const SET_LUN_DENOMINATION = PREFIX + 'SET_LUNYR_DENOMINATION'
 
 // Denomination
 export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
-
-import * as SETTINGS_SELECTORS from './selectors'
 
 export const setLoginStatus = (loginStatus) => ({
   type: SET_LOGIN_STATUS,
@@ -58,32 +53,32 @@ export const removeExchangeTimer = () => (dispatch, getState) => {
   }
 }
 
-export const updateSettings = settings => ({
+export const updateSettings = (settings) => ({
   type: UPDATE_SETTINGS,
   data: {settings}
 })
 
-export const loadSettings = settings => ({
+export const loadSettings = (settings) => ({
   type: LOAD_SETTINGS,
   data: {settings}
 })
 
-export const setPINMode = pinMode => ({
+export const setPINMode = (pinMode) => ({
   type: SET_PIN_MODE,
   data: {pinMode}
 })
 
-export const setPIN = pin => ({
+export const setPIN = (pin) => ({
   type: SET_PIN,
   data: {pin}
 })
 
-export const setOTPMode = otpMode => ({
+export const setOTPMode = (otpMode) => ({
   type: SET_OTP_MODE,
   data: {otpMode}
 })
 
-export const setOTP = otp => ({
+export const setOTP = (otp) => ({
   type: SET_OTP,
   data: {otp}
 })
@@ -93,23 +88,23 @@ export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds) => ({
   data: {autoLogoutTimeInSeconds}
 })
 
-export const setDefaultFiat = defaultFiat => ({
+export const setDefaultFiat = (defaultFiat) => ({
   type: SET_DEFAULT_FIAT,
   data: {defaultFiat}
 })
 
-export const setMerchantMode = merchantMode => ({
+export const setMerchantMode = (merchantMode) => ({
   type: SET_MERCHANT_MODE,
   data: {merchantMode}
 })
 
-export const setBluetoothMode = bluetoothMode => ({
+export const setBluetoothMode = (bluetoothMode) => ({
   type: SET_BLUETOOTH_MODE,
   data: {bluetoothMode}
 })
 
 // BTC Settings
-export const setBitcoinOverrideServer = overrideServer => ({
+export const setBitcoinOverrideServer = (overrideServer) => ({
   type: SET_BITCOIN_OVERRIDE_SERVER,
   data: {overrideServer}
 })

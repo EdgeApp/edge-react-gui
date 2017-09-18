@@ -1,3 +1,4 @@
+// UI/selectors
 export const getWallets = (state) => {
   const wallets = state.ui.wallets.byId
   return wallets
@@ -48,6 +49,6 @@ export const getDenominations = (state, currencyCode) => {
 
 export const getExchangeDenomination = (state, currencyCode) => {
   const wallet = getSelectedWallet(state)
-  const exchangeDenomination = Object.values(wallet.allDenominations[currencyCode]).find(denomination => denomination.name === currencyCode)
+  const exchangeDenomination = Object.values(wallet.allDenominations[currencyCode]).find((denomination) => denomination.name === currencyCode)
   return exchangeDenomination
 }

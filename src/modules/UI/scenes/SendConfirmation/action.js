@@ -1,8 +1,10 @@
+// @flow
+
 const PREFIX = 'UI/SendConfimation/'
 export const UPDATE_AMOUNT_SATOSHI = PREFIX + 'UPDATE_AMOUNT_SATOSHI'
-export const UPDATE_AMOUNT_FIAT = PREFIX + 'UPDATE_AMOUNT_FIAT'
-export const UPDATE_FIAT_PER_CRYPTO = PREFIX + 'UPDATE_FIAT_PER_CRYPTO'
-export const UPDATE_INPUT_CURRENCY_SELECTED = PREFIX + 'UPDATE_INPUT_CURRENCY_SELECTED'
+// export const UPDATE_AMOUNT_FIAT = PREFIX + 'UPDATE_AMOUNT_FIAT'
+// export const UPDATE_FIAT_PER_CRYPTO = PREFIX + 'UPDATE_FIAT_PER_CRYPTO'
+// export const UPDATE_INPUT_CURRENCY_SELECTED = PREFIX + 'UPDATE_INPUT_CURRENCY_SELECTED'
 export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
 export const UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO = PREFIX + 'UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO'
 export const ENABLE_SLIDER = PREFIX + 'ENABLE_SLIDER'
@@ -11,7 +13,6 @@ export const UPDATE_IS_KEYBOARD_VISIBLE = PREFIX + 'UPDATE_IS_KEYBOARD_VISIBLE'
 export const UPDATE_FEE = PREFIX + 'UPDATE_FEE'
 export const UPDATE_MAX_SATOSHI = PREFIX + 'UPDATE_MAX_SATOSHI'
 export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
-export const UPDATE_SPEND_SUFFICIENT_FUNDS = PREFIX + 'UPDATE_SPEND_SUFFICIENT_FUNDS'
 
 export const UPDATE_WALLET_TRANSFER = PREFIX + 'UPDATE_WALLET_TRANSFER'
 export const UPDATE_PUBLIC_ADDRESS = PREFIX + 'UPDATE_PUBLIC_ADDRESS'
@@ -30,136 +31,133 @@ import * as UI_SELECTORS from '../../../UI/selectors.js'
 // import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 // import { convertDenominationToNative } from '../../../utils.js'
+import type {
+  AbcParsedUri,
+  AbcSpendInfo,
+  AbcTransaction,
+  AbcCurrencyWallet,
+  AbcSpendTarget
+} from 'airbitz-core-types'
 
-export const updateSpendError = error => ({
-  type: UPDATE_SPEND_SUFFICIENT_FUNDS,
-  data: {error}
-})
+// export const updateFee = (feeSatoshi:string) => ({
+//   type: UPDATE_FEE,
+//   data: {feeSatoshi}
+// })
+//
+// export const updateAmountFiat = (amountFiat:number) => ({
+//   type: UPDATE_AMOUNT_FIAT,
+//   data: {amountFiat}
+// })
+//
+// export const updateFiatPerCrypto = (fiatPerCrypto) => ({
+//   type: UPDATE_FIAT_PER_CRYPTO,
+//   data: {fiatPerCrypto}
+// })
+//
+// export const updateInputCurrencySelected = (inputCurrencySelected) => ({
+//   type: UPDATE_INPUT_CURRENCY_SELECTED,
+//   data: {inputCurrencySelected}
+// })
+//
+// export const updateDraftStatus = (draftStatus) => ({
+//   type: UPDATE_DRAFT_STATUS,
+//   data: {draftStatus}
+// })
+//
+export type UpdateTransactionAction = {
+  type: typeof UPDATE_TRANSACTION,
+  data: {
+    transaction?: AbcTransaction | null,
+    error?: Error | null
+  }
+}
 
-export const updateAmountSatoshi = amountSatoshi => ({
+export const updateAmountSatoshi = (amountSatoshi: string) => ({
   type: UPDATE_AMOUNT_SATOSHI,
   data: {amountSatoshi}
 })
 
-export const updateFee = feeSatoshi => ({
-  type: UPDATE_FEE,
-  data: {feeSatoshi}
-})
+export const updateTransactionAction = (
+  parsedUri: AbcParsedUri,
+  transaction: AbcTransaction | null,
+  error: Error | null): UpdateTransactionAction => ({
+    type: UPDATE_TRANSACTION,
+    data: {parsedUri, transaction, error}
+  })
 
-export const updateAmountFiat = amountFiat => ({
-  type: UPDATE_AMOUNT_FIAT,
-  data: {amountFiat}
-})
-
-export const updateFiatPerCrypto = fiatPerCrypto => ({
-  type: UPDATE_FIAT_PER_CRYPTO,
-  data: {fiatPerCrypto}
-})
-
-export const updateInputCurrencySelected = inputCurrencySelected => ({
-  type: UPDATE_INPUT_CURRENCY_SELECTED,
-  data: {inputCurrencySelected}
-})
-
-export const updateDraftStatus = draftStatus => ({
-  type: UPDATE_DRAFT_STATUS,
-  data: {draftStatus}
-})
-
-export const updateTransaction = (transaction) => ({
-  type: UPDATE_TRANSACTION,
-  data: {transaction}
-})
-
-export const updateSpendPending = pending => ({
+export const updateSpendPending = (pending: boolean) => ({
   type: UPDATE_SPEND_PENDING,
   data: {pending}
 })
 
-export const signBroadcastAndSave = (unsignedTransaction) => (dispatch, getState) => {
+export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: any, getState: any) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
-  WALLET_API.signTransaction(wallet, unsignedTransaction)
-    .then(signedTransaction => WALLET_API.broadcastTransaction(wallet, signedTransaction))
-    .then(signedTransaction => WALLET_API.saveTransaction(wallet, signedTransaction))
+  WALLET_API.signTransaction(wallet, abcUnsignedTransaction)
+    .then((abcSignedTransaction: AbcTransaction) => WALLET_API.broadcastTransaction(wallet, abcSignedTransaction))
+    .then((abcSignedTransaction: AbcTransaction) => WALLET_API.saveTransaction(wallet, abcSignedTransaction))
     .then(() => {
       dispatch(updateSpendPending(false))
       Actions.transactionList({type: 'reset'})
       const successInfo = {title: 'Transaction Sent', message: 'Your transaction has been successfully sent.'}
       dispatch(openABAlert(successInfo))
     })
-    .catch(e => {
-      console.log('error is: ', e)
+    .catch((e) => {
+      // console.log('error is: ', e)
       dispatch(updateSpendPending(false))
       const errorInfo = {title: 'Transaction Failure', message: e.message}
       dispatch(openABAlert(errorInfo))
     })
 }
 
-export const updateMaxSatoshiRequest = () => (dispatch, getState) => {
+export const updateMaxSatoshiRequest = () => (dispatch: any, getState: any) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
 
   wallet.getMaxSpendable()
-    .then(amountSatoshi => {
+    .then((amountSatoshi) => {
       dispatch(updateMaxSatoshi(amountSatoshi))
     })
 }
 
-export const updateMaxSatoshi = maxSatoshi => ({
+export const updateMaxSatoshi = (maxSatoshi: string) => ({
   type: UPDATE_MAX_SATOSHI,
   data: {maxSatoshi}
 })
 
-export const useMaxSatoshi = () => (dispatch, getState) => {
+export const useMaxSatoshi = () => (dispatch: any, getState: any) => {
   const state = getState()
   const {maxSatoshi} = state.ui.scenes.sendConfirmation
   dispatch(updateAmountSatoshi(maxSatoshi))
 }
 
-export const updateWalletTransfer = (wallet) => (dispatch) => {
+export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: any) => {
   dispatch(updateLabel(wallet.name))
 }
 
-export const updatePublicAddressRequest = (publicAddress) => (dispatch) => {
-  dispatch(updatePublicAddress(publicAddress))
-}
-
-export const updatePublicAddress = publicAddress => ({
-  type: UPDATE_PUBLIC_ADDRESS,
-  data: {publicAddress}
-})
-
-export const processURI = (parsedURI) => (dispatch, getState) => {
+export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, getState: any) => {
   const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  const spendInfo = makeSpendInfo(parsedURI)
+  const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
 
-  return WALLET_API.makeSpend(wallet, spendInfo)
-    .then(unsignedTransaction => {
-      dispatch(updateTransaction(unsignedTransaction))
-    })
-    .catch(error => {
-      const {
-        nativeAmount,
-        currencyCode,
-        publicAddress
-      } = parsedURI
-      const invalidTransaction = makeInvalidTransaction({nativeAmount, publicAddress, currencyCode})
-      dispatch(updateTransaction(invalidTransaction))
-      return dispatch(updateSpendError(error))
-    })
+  return WALLET_API.makeSpend(abcWallet, spendInfo)
+  .then((abcTransaction: AbcTransaction) => {
+    dispatch(updateTransactionAction(parsedUri, abcTransaction, null))
+  })
+  .catch((error) => {
+    dispatch(updateTransactionAction(parsedUri, null, error))
+  })
 }
 
-export const updateParsedURI = (parsedURI) => ({
+export const updateParsedURI = (parsedUri: AbcParsedUri) => ({
   type: UPDATE_PARSED_URI,
-  data: {parsedURI}
+  data: {parsedUri}
 })
-export const updateLabel = label => ({
+export const updateLabel = (label: string) => ({
   type: UPDATE_LABEL,
   data: {label}
 })
@@ -169,18 +167,16 @@ export const reset = () => ({
   data: {}
 })
 
-const makeSpendInfo = ({nativeAmount = '0', publicAddress = '', currencyCode = '', wallet, metadata = {} }) => {
-  const spendTargets = [{wallet, publicAddress, nativeAmount}]
-  const spendInfo = {
-    currencyCode,
-    metadata,
-    spendTargets
+const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
+  const nativeAmount = parsedUri.nativeAmount ? parsedUri.nativeAmount : '0'
+  const spendTarget:AbcSpendTarget = {
+    publicAddress: parsedUri.publicAddress,
+    nativeAmount
+  }
+  const spendInfo:AbcSpendInfo = {
+    currencyCode: parsedUri.currencyCode,
+    metadata: parsedUri.metadata,
+    spendTargets: [spendTarget]
   }
   return spendInfo
 }
-
-const makeInvalidTransaction = ({currencyCode, nativeAmount, publicAddress}) => ({
-  currencyCode,
-  nativeAmount,
-  publicAddress
-})

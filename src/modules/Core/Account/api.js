@@ -1,12 +1,10 @@
 // Core/Account/api.js
-import * as UTILS from '../../utils'
-
 export const logoutRequest = (account) => account.logout()
 
-export const getFirstActiveWalletInfo = (account) => {
+export const getFirstActiveWalletInfo = (account, currencyCodes) => {
   const walletId = account.activeWalletIds[0]
-  const walletKey = account.allKeys.find(key => key.id === walletId)
-  const currencyCode = UTILS.getCurrencyCodeFromWalletType(walletKey.type)
+  const walletKey = account.allKeys.find((key) => key.id === walletId)
+  const currencyCode = currencyCodes[walletKey.type]
   return {
     walletId,
     currencyCode
