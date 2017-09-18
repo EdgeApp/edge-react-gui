@@ -3,43 +3,31 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import {
-  TextInput,
-  Image,
-  ScrollView,
-  ListView,
-  Text,
-  View,
-  TouchableHighlight,
-  Animated,
   ActivityIndicator,
-  TouchableOpacity} from 'react-native'
+  Animated,
+  Image,
+  ListView,
+  ScrollView,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import T from '../../components/FormattedText'
-import {connect} from 'react-redux'
-import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import LinearGradient from 'react-native-linear-gradient'
 import {Actions} from 'react-native-router-flux'
-import {
-  transactionsSearchVisible,
-  transactionsSearchHidden,
-  getTransactionsRequest
-} from './action'
-import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
-import {setContactList} from '../../contacts/action'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
 
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
+import SearchBar from './components/SearchBar.ui'
 
-class TransactionList extends Component {
+export default class TransactionList extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -58,9 +46,11 @@ class TransactionList extends Component {
   }
 
   componentDidMount () {
+    if (this.props.loading) return
+
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    this.props.dispatch(updateExchangeRates())
+    this.props.updateExchangeRates()
     this.props.getTransactions(walletId, currencyCode)
 
     const permissionStatus = ['authorized', 'undetermined']
@@ -71,9 +61,9 @@ class TransactionList extends Component {
             if (err === 'denied') {
               // error
             } else {
-              console.log('all contacts: ', contacts)
+              // console.log('all contacts: ', contacts)
               contacts.sort((a, b) => a.givenName > b.givenName)
-              this.props.dispatch(setContactList(contacts))
+              this.props.setContactList(contacts)
             }
           })
         }
@@ -83,32 +73,28 @@ class TransactionList extends Component {
 
   _onSearchChange = () => {
     // this.props.dispatch(updateSearchResults(null))
-    console.log('this._onSearchChange executing')
+    // console.log('this._onSearchChange executing')
   }
 
   _onPressSearch = () => {
-    this.props.dispatch(transactionsSearchVisible())
+    this.props.transactionsSearchVisible()
   }
 
   _onSearchExit = () => {
-    this.props.dispatch(transactionsSearchHidden())
+    this.props.transactionsSearchHidden()
   }
 
   loadMoreTransactions = () => {
-    console.log('Transactions.ui->loadMoreTransactions being executed')
+    // console.log('Transactions.ui->loadMoreTransactions being executed')
   }
 
   _onFocus = () => {
-    this.setState({
-      focused: true
-    })
+    this.setState({focused: true})
     this._toggleCancelVisibility()
   }
 
   _onBlur = () => {
-    this.setState({
-      focused: false
-    })
+    this.setState({focused: false})
     this._toggleCancelVisibility()
   }
 
@@ -123,36 +109,11 @@ class TransactionList extends Component {
 
       Animated.parallel([
         Animated.sequence([
-          Animated.timing(
-            this.state.op,
-            {
-              toValue: toOpacity,
-              duration: 200
-            }
-          ),
-          Animated.timing(
-            this.state.animation,
-            {
-              toValue: toWidth,
-              duration: 200
-            }
-          )
+          Animated.timing(this.state.op, {toValue: toOpacity, duration: 200}),
+          Animated.timing(this.state.animation,{toValue: toWidth, duration: 200})
         ]),
-        Animated.sequence([
-          Animated.timing(
-            this.state.balanceBoxHeight,
-            {
-              toValue: toBalanceBoxHeight,
-              duration: 400
-            }
-          ),
-          Animated.timing(
-            this.state.balanceBoxOpacity,
-            {
-              toValue: toBalanceBoxOpacity,
-              duration: 400
-            }
-          )
+        Animated.sequence([Animated.timing(this.state.balanceBoxHeight,{toValue: toBalanceBoxHeight,duration: 400}),
+          Animated.timing(this.state.balanceBoxOpacity,{toValue: toBalanceBoxOpacity, duration: 400})
         ])
       ]).start()
     } else {
@@ -163,57 +124,29 @@ class TransactionList extends Component {
 
       Animated.parallel([
         Animated.sequence([
-          Animated.timing(
-            this.state.animation,
-            {
-              toValue: toWidth,
-              duration: 200
-            }
-          ),
-          Animated.timing(
-            this.state.op,
-            {
-              toValue: toOpacity,
-              duration: 200
-            }
-          )
+          Animated.timing(this.state.animation,{toValue: toWidth, duration: 200}),
+          Animated.timing(this.state.op, {toValue: toOpacity, duration: 200})
         ]),
         Animated.sequence([
           Animated.sequence([
-            Animated.timing(
-              this.state.balanceBoxOpacity,
-              {
-                toValue: toBalanceBoxOpacity,
-                duration: 400
-              }
-            )
+            Animated.timing(this.state.balanceBoxOpacity, {toValue: toBalanceBoxOpacity, duration: 400})
           ]),
-          Animated.timing(
-            this.state.balanceBoxHeight,
-            {
-              toValue: toBalanceBoxHeight,
-              duration: 400
-            }
-          )
+          Animated.timing(this.state.balanceBoxHeight,{toValue: toBalanceBoxHeight, duration: 400})
         ])
       ]).start(() => this.setState({balanceBoxVisible: false}))
     }
   }
 
-  _onCancel = () => {
-    this.setState({
-      width: 0
-    })
-  }
+  _onCancel = () => this.setState({width: 0})
 
-  toggleShowBalance = () => {
-    this.setState({
-      showBalance: !this.state.showBalance
-    })
-  }
+  toggleShowBalance = () => this.setState({showBalance: !this.state.showBalance})
 
   render () {
-    console.log('about to render txList, this is: ', this)
+    if (this.props.loading) {
+      return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
+    }
+
+    // console.log('about to render txList, this is: ', this)
     let cryptoBalanceString
     let cryptoAmountString
     let renderableTransactionList = this.props.transactions.sort(function (a, b) {
@@ -364,7 +297,7 @@ class TransactionList extends Component {
     let lastOfDate
 
     if (this.isSentTransaction(tx)) {
-      // XXX -paulvp Why is this hard coded here. This should use a style guide
+      // XXX -paulvp Why is this hard coded here?
       txColorStyle = styles.accentRed
       txName = strings.enUS['fragment_transaction_list_sent_prefix'] + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
       txImage = sentTypeImage
@@ -378,7 +311,7 @@ class TransactionList extends Component {
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
           let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
-          if (found) console.log('element is: ', element)
+          // if (found) console.log('element is: ', element)
           return found
         })
         if (contact) {
@@ -396,13 +329,15 @@ class TransactionList extends Component {
     let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount.replace('-', ''))
 
     let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
-    console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
+    // console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
           && <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{tx.dateString}</T>
+              <T style={styles.formattedDate}>
+                {tx.dateString}
+              </T>
             </View>
           </View>
         }
@@ -418,8 +353,12 @@ class TransactionList extends Component {
                 />
               )}
               <View style={[styles.transactionLeftTextWrap, UTILS.border()]}>
-                <T style={[styles.transactionPartner]}>{tx.metadata.name || txName}</T>
-                <T style={[styles.transactionTime]}>{tx.time}</T>
+                <T style={[styles.transactionPartner]}>
+                  {tx.metadata.name || txName}
+                </T>
+                <T style={[styles.transactionTime]}>
+                  {tx.time}
+                </T>
               </View>
             </View>
             <View style={[styles.transactionRight, UTILS.border()]}>
@@ -427,7 +366,11 @@ class TransactionList extends Component {
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {this.props.fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2)) : (0.00).toFixed(2))}
+                {this.props.fiatSymbol
+                  + ' '
+                  + tx.metadata.amountFiat
+                    ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2))
+                    : (0.00).toFixed(2)}
               </T>
             </View>
           </View>
@@ -443,72 +386,4 @@ TransactionList.propTypes = {
   contactsList: PropTypes.array,
   balanceInCrypto: PropTypes.string,
   multiplier: PropTypes.string
-}
-
-const mapStateToProps = (state) => {
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-  const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
-  const balanceInCrypto = wallet.nativeBalances[currencyCode]
-  const transactions = UI_SELECTORS.getTransactions(state)
-  const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
-  const denomination = wallet.allDenominations[currencyCode][index]
-  const multiplier = denomination.multiplier
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
-  const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
-  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  return {
-    // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
-    displayDenomination,
-    updatingBalance: false,
-    transactions,
-    searchVisible: state.ui.scenes.transactionList.searchVisible,
-    contactsList: state.ui.scenes.transactionList.contactsList,
-    selectedWalletId,
-    selectedCurrencyCode: currencyCode,
-    isoFiatCurrencyCode,
-    uiWallet: wallet,
-    settings,
-    balanceInCrypto,
-    balanceInFiat,
-    currencyConverter,
-    multiplier,
-    contacts: state.ui.contacts.contactList,
-    fiatSymbol
-  }
-}
-
-const mapDispatchToProps = (dispatch) => ({
-  getTransactions: (walletId, currencyCode) => { dispatch(getTransactionsRequest(walletId, currencyCode)) }
-})
-
-const TransactionListConnect = connect(mapStateToProps, mapDispatchToProps)(TransactionList)
-export default TransactionListConnect
-
-class SearchBar extends Component {
-  constructor (props) {
-    super(props)
-    this.state = this.props.state
-  }
-
-  render () {
-    return (
-      <View style={[styles.searchContainer, UTILS.border()]}>
-        <View style={[styles.innerSearch, UTILS.border()]}>
-          <EvilIcons name='search' style={[styles.searchIcon, UTILS.border()]} color='#9C9C9D' size={20} />
-          <TextInput style={[styles.searchInput, UTILS.border()]} onChangeText={this.props.onSearchChange} onBlur={this.props.onBlur} onFocus={this.props.onFocus} placeholder={sprintf(strings.enUS['string_search'])} />
-        </View>
-        <Animated.View style={{width: this.state.animation, opacity: this.state.op}}>
-          <TouchableHighlight onPress={this.props.onPress} style={[UTILS.border(), styles.cancelButton]}>
-            <Text style={{color: 'white', backgroundColor: 'transparent'}}>{sprintf(strings.enUS['string_cancel_cap'])}</Text>
-          </TouchableHighlight>
-        </Animated.View>
-      </View>
-    )
-  }
 }

@@ -1,10 +1,13 @@
 import React, {Component} from 'react'
 import {Text, View} from 'react-native'
-import {connect} from 'react-redux'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../locales/default'
 
-class ABSlider extends Component {
+const SLIDE_TO_COMPLETE_TEXT = sprintf(strings.enUS['send_confirmation_slide_to_confirm'])
+
+export default class ABSlider extends Component {
   constructor (props) {
     super(props)
 
@@ -16,7 +19,6 @@ class ABSlider extends Component {
   }
 
   onSlidingComplete = (value) => {
-    console.log('onSlidingComplete')
     if (value <= 1) {
       this.props.onSlidingComplete()
     } else {
@@ -45,10 +47,10 @@ class ABSlider extends Component {
           maximumTrackTintColor='transparent'
           thumbTouchSize={{width: 160, height: 160}}
         />
-        <Text style={styles.textOverlay}>Slide To Confirm</Text>
+        <Text style={styles.textOverlay}>
+          {SLIDE_TO_COMPLETE_TEXT}
+        </Text>
       </View>
     )
   }
 }
-
-export default connect()(ABSlider)

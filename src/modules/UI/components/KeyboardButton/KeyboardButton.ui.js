@@ -1,6 +1,5 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {Text, View, StyleSheet, TouchableHighlight} from 'react-native'
-import {connect} from 'react-redux'
 
 const styles = StyleSheet.create({
   view: {
@@ -23,8 +22,10 @@ const styles = StyleSheet.create({
   }
 })
 
-const KeyboardButton = ({character, onPress, onLongPress}) => (
-    <View style={styles.view}>
+export default class KeyboardButton extends Component {
+  render () {
+    const {character, onPress, onLongPress}= this.props
+    return <View style={styles.view}>
       <TouchableHighlight
         style={styles.containerStyle}
         underlayColor='#193441'
@@ -34,6 +35,5 @@ const KeyboardButton = ({character, onPress, onLongPress}) => (
         <Text style={styles.keyboardButton}>{character}</Text>
       </TouchableHighlight>
     </View>
-  )
-
-export default connect()(KeyboardButton)
+  }
+}

@@ -1,45 +1,44 @@
 import React, {Component} from 'react'
 import {
+  ActivityIndicator,
   Clipboard,
   View,
   Share
 } from 'react-native'
 import Alert from './alert'
-import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
 import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import {convertDisplayToNative} from '../../../utils.js'
+import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import LinearGradient from 'react-native-linear-gradient'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
-import {saveReceiveAddress} from './action.js'
 
-class Request extends Component {
+export default class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
       primaryNativeAmount: '',
       secondaryNativeAmount: '',
-      encodedURI: ''
+      encodedURI: '',
+      loading: props.loading
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps
-      WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    if (nextProps.loading) return
+
+    if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
+      const {abcWallet, currencyCode} = nextProps
+      WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+        const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
           publicAddress
@@ -49,11 +48,13 @@ class Request extends Component {
   }
 
   componentDidMount () {
-    const {coreWallet, currencyCode} = this.props
-    WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    const {abcWallet, currencyCode} = this.props
+    if (this.props.loading) return
+
+    WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
-      const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+      const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
       this.setState({
         encodedURI,
         publicAddress
@@ -65,14 +66,14 @@ class Request extends Component {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
-    const primaryNativeAmount = convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const secondaryNativeAmount = convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
+    const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
+    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
 
     const parsedURI = {
       publicAddress: this.state.publicAddress,
       nativeAmount: primaryNativeAmount
     }
-    const encodedURI = this.props.coreWallet.encodeUri(parsedURI)
+    const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
     this.setState({
       primaryNativeAmount,
@@ -82,6 +83,10 @@ class Request extends Component {
   }
 
   render () {
+    if (this.props.loading) {
+      return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
+    }
+
     const color = 'white'
     const {
       secondaryToPrimaryRatio,
@@ -127,7 +132,7 @@ class Request extends Component {
 
   showResult = (result) => {
     if (result.action === Share.sharedAction) {
-      this.props.dispatch(saveReceiveAddress(this.props.request.receiveAddress))
+      this.props.saveReceiveAddress(this.props.request.receiveAddress)
 
       if (result.activityType) {
         this.setState({
@@ -157,69 +162,27 @@ class Request extends Component {
     ContactsWrapper.getContact()
     .then(() => {
       this.shareMessage()
-      console.log('shareViaEmail')
+      // console.log('shareViaEmail')
     })
-    .catch((error) => {
-      console.log('ERROR CODE: ', error.code)
-      console.log('ERROR MESSAGE: ', error.message)
+    .catch(() => {
+      // console.log('ERROR CODE: ', error.code)
+      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaSMS = () => {
     ContactsWrapper.getContact().then(() => {
       this.shareMessage()
-      console.log('shareViaSMS')
+      // console.log('shareViaSMS')
     })
-    .catch((error) => {
-      console.log('ERROR CODE: ', error.code)
-      console.log('ERROR MESSAGE: ', error.message)
+    .catch(() => {
+      // console.log('ERROR CODE: ', error.code)
+      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaShare = () => {
     this.shareMessage()
-    console.log('shareViaShare')
+    // console.log('shareViaShare')
   }
 }
-
-const mapStateToProps = (state) => {
-  let secondaryToPrimaryRatio = 0
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination = {
-    name: 'Dollars',
-    symbol: '$',
-    multiplier: '100',
-    precision: 2
-  }
-  const secondaryDisplayDenomination = secondaryExchangeDenomination
-  const primaryInfo = {
-    displayCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryInfo = {
-    displayCurrencyCode: wallet.fiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
-  if (wallet) {
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-  }
-
-  return {
-    request: state.ui.scenes.request,
-    coreWallet,
-    secondaryToPrimaryRatio,
-    wallet,
-    currencyCode,
-    primaryInfo,
-    secondaryInfo
-  }
-}
-const mapDispatchToProps = () => ({})
-export default connect(mapStateToProps, mapDispatchToProps)(Request)

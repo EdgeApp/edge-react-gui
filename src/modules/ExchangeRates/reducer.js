@@ -1,7 +1,6 @@
 import * as ACTION from './action.js'
 
 const initialState = 0
-
 const exchangeRatesReducer = (state = initialState, action) => {
   const {type} = action
 

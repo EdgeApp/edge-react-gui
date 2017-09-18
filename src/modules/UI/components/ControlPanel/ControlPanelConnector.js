@@ -4,10 +4,11 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import {openSelectUser, closeSelectUser} from './action'
+import {getDenomFromIsoCode} from '../../../utils'
 
 const mapStateToProps = (state) => {
   let secondaryToPrimaryRatio = 0
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const guiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   let primaryDisplayDenomination = {}
   let primaryExchangeDenomination = {}
@@ -17,17 +18,12 @@ const mapStateToProps = (state) => {
   let secondaryInfo = {}
   let secondaryDisplayAmount = '0'
 
-  if (wallet && currencyCode) {
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  if (guiWallet && currencyCode) {
+    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
     primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
     primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-    secondaryExchangeDenomination = {
-      name: 'Dollars',
-      symbol: '$',
-      multiplier: '100',
-      precision: 2
-    }
+    secondaryExchangeDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     secondaryDisplayDenomination = secondaryExchangeDenomination
     primaryInfo = {
       displayCurrencyCode: currencyCode,
@@ -35,7 +31,7 @@ const mapStateToProps = (state) => {
       exchangeDenomination: primaryExchangeDenomination
     }
     secondaryInfo = {
-      displayCurrencyCode: wallet.fiatCurrencyCode,
+      displayCurrencyCode: guiWallet.fiatCurrencyCode,
       displayDenomination: secondaryDisplayDenomination,
       exchangeDenomination: secondaryExchangeDenomination
     }

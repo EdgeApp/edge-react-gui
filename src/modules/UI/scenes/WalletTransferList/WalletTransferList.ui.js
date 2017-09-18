@@ -5,20 +5,18 @@ import {
   View,
   TouchableHighlight
 } from 'react-native'
-import {connect} from 'react-redux'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
-import {toggleWalletListModal} from './action'
 
-class WalletTransferList extends Component {
+export default class WalletTransferList extends Component {
 
   _closeWalletListModal () {
-    this.props.dispatch(toggleWalletListModal())
+    this.props.toggleWalletListModal()
   }
 
   _selectWalletToSendConfirmation () {
-    this.props.dispatch(toggleWalletListModal())
+    this.props.toggleWalletListModal()
     Actions.sendConfirmation()
   }
 
@@ -59,6 +57,3 @@ class WalletTransferList extends Component {
     return {borderColor: color, borderWidth: 2}
   }
 }
-
-const mapStateToProps = (state) => ({walletTransferList: state.ui.scenes.walletTransferList.walletTransferList, walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible})
-export default connect(mapStateToProps)(WalletTransferList)

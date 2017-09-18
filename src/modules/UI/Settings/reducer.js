@@ -9,7 +9,10 @@ const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,
-  plugins: {arrayPlugins: [], supportedWalletTypes: []},
+  plugins: {
+    arrayPlugins: [],
+    supportedWalletTypes: []
+  },
   loginStatus: null
 }
 

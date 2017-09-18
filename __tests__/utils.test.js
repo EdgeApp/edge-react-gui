@@ -381,19 +381,3 @@ describe('isGreaterThan', function () {
     expect(actual).toBe(expected)
   })
 })
-
-describe('getCurrencyCodeFromWalletType', function () {
-  test('wallet:bitcoin => BTC', function () {
-    const input = 'wallet:bitcoin'
-    const expected = 'BTC'
-    const actual = UTILS.getCurrencyCodeFromWalletType(input)
-    expect(actual).toBe(expected)
-  })
-
-  test('wallet:ethereum => ETH', function () {
-    const input = 'wallet:ethereum'
-    const expected = 'ETH'
-    const actual = UTILS.getCurrencyCodeFromWalletType(input)
-    expect(actual).toBe(expected)
-  })
-})

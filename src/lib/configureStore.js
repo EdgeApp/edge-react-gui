@@ -4,14 +4,14 @@ import {createStore, applyMiddleware, compose} from 'redux'
 
 import rootReducer from './rootReducer'
 import thunk from 'redux-thunk'
-import createLogger from 'redux-logger'
+// import createLogger from 'redux-logger'
 import loginStatusChecker from './loginStatusChecker'
 
 let middleware = [loginStatusChecker, thunk]
-let logger = createLogger()
+// let logger = createLogger()
 
 if (__DEV__) {
-  middleware = [...middleware, logger]
+  // middleware = [...middleware, logger]
 
   // Comment line below to reenable logger
   middleware = [...middleware]

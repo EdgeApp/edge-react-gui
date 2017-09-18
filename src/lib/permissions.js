@@ -12,7 +12,7 @@ export async function checkCameraPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }
@@ -29,7 +29,7 @@ export async function requestCameraPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }
@@ -46,7 +46,7 @@ export async function checkReadContactPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }
@@ -63,7 +63,7 @@ export async function requestReadContactPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }

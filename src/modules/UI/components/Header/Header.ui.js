@@ -1,61 +1,45 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {
-  Header,
-  Left,
-  Right,
-  Body,
-  Icon
+  Header as NBHeader,
+  Left as NBLeft,
+  Right as NBRight,
+  Body as NBBody
 } from 'native-base'
 import LinearGradient from 'react-native-linear-gradient'
-import {Actions} from 'react-native-router-flux'
 
-import LeftComponent from './Component/Left.js'
-import RightComponent from './Component/Right.js'
-import BodyComponent from './Component/Body.js'
-import {setHeaderHeight} from '../../dimensions/action'
+import Left from './Component/Left'
+import Right from './Component/Right'
+import Body from './Component/BodyConnector'
+
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 
-class HeaderUI extends Component {
+export default class Header extends Component {
   _renderTitle = () => this.props.routes.scene.title || 'Header'
 
-  _renderLeftButton = () => {
-    if (this.props.routes.stackDepth) {
-      return (
-        <Icon name='arrow-back' onPress={Actions.settingsOverview} />
-      )
-    }
-  }
-
   _onLayout = (event) => {
-    let {x, y, width, height} = event.nativeEvent.layout
-    console.log('header event.nativeEvent is : ', event.nativeEvent)
-    console.log('header onLayout occurred', x, y, width, height)
-    this.props.dispatch(setHeaderHeight(height))
+    this.props.setHeaderHeight(event.nativeEvent.layout.height)
   }
 
   render () {
     return (
-      <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={[c.gradient.light, c.gradient.dark]} style={[styles.headerRoot]} onLayout={this._onLayout}>
-        <Header>
-          <Left style={{flex: 1}}>
-            <LeftComponent routes={this.props.routes} />
-          </Left>
-          <Body style={{flex: 3}}>
-            <BodyComponent routes={this.props.routes} />
-          </Body>
-          <Right style={{flex: 1}}>
-            <RightComponent routes={this.props.routes} />
-          </Right>
-        </Header>
+      <LinearGradient style={[styles.headerRoot]}
+        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+        colors={[c.gradient.light, c.gradient.dark]}
+        onLayout={this._onLayout}>
+        <NBHeader>
+          <NBLeft style={{flex: 1}}>
+            <Left routes={this.props.routes} />
+          </NBLeft>
+          <NBBody style={{flex: 3}}>
+            <Body routes={this.props.routes} />
+          </NBBody>
+          <NBRight style={{flex: 1}}>
+            <Right routes={this.props.routes} />
+          </NBRight>
+        </NBHeader>
         {this.props.children}
       </LinearGradient>
     )
   }
 }
-
-const mapStateToProps = (state) => ({
-  routes: state.routes
-})
-export default connect(mapStateToProps)(HeaderUI)

@@ -2,38 +2,50 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {
   View,
+  Text,
   ScrollView,
   ActivityIndicator
 } from 'react-native'
-import {connect} from 'react-redux'
 import styles from './styles.js'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
+
+// $FlowFixMe
 import LinearGradient from 'react-native-linear-gradient'
 
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils.js'
+import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import type {SendConfirmationState} from './reducer'
 
-import {
-  signBroadcastAndSave,
+type Props = {
+  sendConfirmation: SendConfirmationState,
+  abcWallet: AbcCurrencyWallet,
+  nativeAmount: string,
+  errorMsg: string | null,
+  fiatPerCrypto: number,
+  wallet: GuiWallet,
+  currencyCode: string,
+  primaryInfo: GuiCurrencyInfo,
+  sliderDisabled: boolean,
+  secondaryInfo: GuiCurrencyInfo,
+  processUri(AbcParsedUri): void
+}
 
-  updateAmountSatoshiRequest,
-  updateMaxSatoshiRequest,
-  useMaxSatoshi,
-  updateSpendPending,
+export default class SendConfirmation extends Component<any, any, any> {
+  state: {
+    primaryNativeAmount: string,
+    secondaryNativeAmount: string,
+    keyboardVisible: boolean
+  }
 
-  processURI
-} from './action.js'
-
-class SendConfirmation extends Component {
-  constructor (props) {
+  constructor (props: Props) {
     super(props)
+    const amt = props.sendConfirmation.transaction ? props.sendConfirmation.transaction.nativeAmount : '0'
     this.state = {
-      primaryNativeAmount: props.transaction.nativeAmount,
+      primaryNativeAmount: amt,
       secondaryNativeAmount: '',
       keyboardVisible: false
     }
@@ -42,7 +54,7 @@ class SendConfirmation extends Component {
   _onBlur = () => this.setState({keyboardVisible: false})
 
   componentDidMount () {
-    this.props.processURI(this.props.sendConfirmation.parsedURI)
+    this.props.processParsedUri(this.props.sendConfirmation.parsedUri)
   }
 
   onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}) => {
@@ -54,13 +66,13 @@ class SendConfirmation extends Component {
 
     const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
 
-    const parsedURI = this.props.sendConfirmation.parsedURI
-    parsedURI.metadata = {
+    const parsedUri = this.props.sendConfirmation.parsedUri
+    parsedUri.metadata = {
       amountFiat: secondaryExchangeAmount
     }
-    parsedURI.nativeAmount = primaryNativeAmount
+    parsedUri.nativeAmount = primaryNativeAmount
 
-    this.props.processURI(parsedURI)
+    this.props.processParsedUri(parsedUri)
 
     this.setState({
       primaryNativeAmount,
@@ -76,13 +88,14 @@ class SendConfirmation extends Component {
     const {
       primaryInfo,
       secondaryInfo,
-      fiatPerCrypto
+      fiatPerCrypto,
+      errorMsg,
+      nativeAmount
     } = this.props
-    const nativeAmount = this.props.transaction.nativeAmount
-    console.log('nativeAmount', nativeAmount)
+    // console.log('nativeAmount', nativeAmount)
     const color = 'white'
 
-    console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
+    // console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
     return (
       <LinearGradient
         style={[styles.view]}
@@ -91,10 +104,16 @@ class SendConfirmation extends Component {
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
           <View style={[styles.exchangeRateContainer, UTILS.border()]}>
-            <ExchangeRate
-              fiatPerCrypto={this.props.fiatPerCrypto}
-              primaryInfo={this.props.primaryInfo}
-              secondaryInfo={this.props.secondaryInfo} />
+            {
+              errorMsg
+                ? <Text style={[styles.error]}>
+                  {errorMsg}
+                </Text>
+                :                <ExchangeRate
+                  secondaryDisplayAmount={this.props.fiatPerCrypto}
+                  primaryInfo={this.props.primaryInfo}
+                  secondaryInfo={this.props.secondaryInfo} />
+            }
           </View>
 
           <View style={[styles.main, UTILS.border(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
@@ -113,7 +132,7 @@ class SendConfirmation extends Component {
               && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
             }
           </View>
-          <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={false} />
+          <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={this.props.sliderDisabled} />
         </ScrollView>
       </LinearGradient>
     )
@@ -121,7 +140,7 @@ class SendConfirmation extends Component {
 
   signBroadcastAndSave = () => {
     const {transaction} = this.props
-    this.props.dispatch(updateSpendPending(true))
+    this.props.updateSpendPending(true)
     this.props.signBroadcastAndSave(transaction)
   }
 
@@ -141,9 +160,7 @@ class SendConfirmation extends Component {
     }
   }
 
-  onMaxPress = () => {
-    this.props.useMaxSatoshi()
-  }
+  onMaxPress = () => {}
 
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
@@ -162,54 +179,3 @@ SendConfirmation.propTypes = {
   inpurCurrencyDenom: PropTypes.string,
   fiatCurrencyCode: PropTypes.string
 }
-
-const mapStateToProps = (state) => {
-  let fiatPerCrypto = 0
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination = {
-    name: 'Dollars',
-    symbol: '$',
-    multiplier: '100',
-    precision: 2
-  }
-  const secondaryDisplayDenomination = secondaryExchangeDenomination
-  const primaryInfo = {
-    displayCurrencyCode: currencyCode,
-    exchangeCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryInfo = {
-    displayCurrencyCode: wallet.fiatCurrencyCode,
-    exchangeCurrencyCode: wallet.isoFiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
-  if (wallet) {
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-    fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-  }
-
-  return {
-    sendConfirmation: state.ui.scenes.sendConfirmation,
-    transaction: state.ui.scenes.sendConfirmation.transaction,
-    coreWallet,
-    fiatPerCrypto,
-    wallet,
-    currencyCode,
-    primaryInfo,
-    secondaryInfo
-  }
-}
-const mapDispatchToProps = (dispatch) => ({
-  processURI: (parsedURI) => dispatch(processURI(parsedURI)),
-  updateAmountSatoshi: (cryptoAmount) => dispatch(updateAmountSatoshiRequest(cryptoAmount)),
-  signBroadcastAndSave: (transaction) => dispatch(signBroadcastAndSave(transaction)),
-  updateMaxSatoshi: () => dispatch(updateMaxSatoshiRequest()),
-  useMaxSatoshi: () => dispatch(useMaxSatoshi())
-})
-export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)

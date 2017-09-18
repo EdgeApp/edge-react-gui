@@ -1,24 +1,6 @@
 import React, {Component} from 'react'
-import {sprintf} from 'sprintf-js'
-import strings from '../../../../../locales/default'
-import {TouchableOpacity} from 'react-native'
-import {openHelpModal} from '../../HelpModal/actions.js'
-import {connect} from 'react-redux'
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
-import T from '../../../components/FormattedText'
-import styles from '../style'
-
-class HelpButton extends Component {
-  render () {
-    return (
-      <TouchableOpacity style={styles.sideTextWrap} onPress={() => this.props.dispatch(openHelpModal())}>
-        <T style={[styles.sideText]}>{sprintf(strings.enUS['string_help'])}</T>
-      </TouchableOpacity>
-    )
-  }
-}
-
-const HelpButtonConnect = connect()(HelpButton)
+import HelpButton from './HelpButton.ui'
 
 export default class Right extends Component {
 
@@ -30,21 +12,21 @@ export default class Right extends Component {
 
     switch (sceneName) {
     case 'scan':
-      return <HelpButtonConnect />
+      return <HelpButton />
     case 'walletList':
-      return <HelpButtonConnect />
+      return <HelpButton />
     case 'directory':
-      return <HelpButtonConnect />
-    case 'transactionsList':
-      return <HelpButtonConnect />
+      return <HelpButton />
+    case 'transactionList':
+      return <HelpButton />
     case 'transactionDetails':
-      return <HelpButtonConnect />
+      return <HelpButton />
     case 'request':
-      return <HelpButtonConnect />
+      return <HelpButton />
     case 'sendConfirmation':
       return <SendConfirmationOptions />
     case 'createWallet':
-      return <HelpButtonConnect />
+      return <HelpButton />
     default:
       return null
     }

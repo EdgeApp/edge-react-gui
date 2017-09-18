@@ -1,6 +1,5 @@
 import {View, StyleSheet, Text} from 'react-native'
-import {connect} from 'react-redux'
-import React from 'react'
+import React, {Component} from 'react'
 
 const styles = StyleSheet.create({
   view: {
@@ -11,26 +10,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  feesInFiat: {
+  secondaryFee: {
     alignItems: 'center',
     justifyContent: 'center'
   }
 })
 
-const Fees = ({feesInCrypto, feesInFiat}) => (
-    <View style={styles.view}>
+export default class Fees extends Component {
+  render () {
+    const {primaryFee, secondaryFee} = this.props
+    return <View style={styles.view}>
       <Text style={styles.label}>
-          (Fee)
-        </Text>
+        (Fee)
+      </Text>
 
       <Text style={styles.feesInCrypto}>
-          $ + {feesInCrypto}
+        $ + {primaryFee}
       </Text>
 
       <Text style={styles.feesInFiat}>
-          b + {feesInFiat}
+        b + {secondaryFee}
       </Text>
     </View>
-  )
-
-export default connect()(Fees)
+  }
+}

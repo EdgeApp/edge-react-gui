@@ -14,6 +14,8 @@ import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import styles from './styles.js'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
+import {GuiDenomination} from '../../../../types'
+import {getAllDenomsOfIsoCurrencies} from '../../../utils'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
@@ -39,15 +41,11 @@ export default class CreateWallet extends Component {
   }
 
   getSupportedFiats = () => {
-    const supportedFiats = [
-      {label: sprintf(strings.enUS['fragment_fiat_usd']), value: sprintf(strings.enUS['fragment_fiat_usd'])},
-      {label: sprintf(strings.enUS['fragment_fiat_eur']), value: sprintf(strings.enUS['fragment_fiat_eur'])},
-      {label: sprintf(strings.enUS['fragment_fiat_gbp']), value: sprintf(strings.enUS['fragment_fiat_gbp'])},
-      {label: sprintf(strings.enUS['fragment_fiat_jpy']), value: sprintf(strings.enUS['fragment_fiat_jpy'])},
-      {label: sprintf(strings.enUS['fragment_fiat_cnh']), value: sprintf(strings.enUS['fragment_fiat_cnh'])},
-      {label: sprintf(strings.enUS['fragment_fiat_mxp']), value: sprintf(strings.enUS['fragment_fiat_mxp'])}
-    ]
-
+    const denomArray: Array<GuiDenomination> = getAllDenomsOfIsoCurrencies()
+    const supportedFiats = []
+    for (const denom of denomArray) {
+      supportedFiats.push({label: denom.currencyCode, value: denom.currencyCode})
+    }
     return supportedFiats
   }
 
@@ -91,8 +89,8 @@ export default class CreateWallet extends Component {
       this.setState({isCreatingWallet: true})
       Keyboard.dismiss()
       const {walletName, selectedWalletType} = this.state
-      console.log('walletName', walletName)
-      console.log('selectedWalletType', selectedWalletType)
+      // console.log('walletName', walletName)
+      // console.log('selectedWalletType', selectedWalletType)
       this.props.createWallet(walletName, selectedWalletType)
     }
   }

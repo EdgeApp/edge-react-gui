@@ -33,7 +33,7 @@ import * as UI_ACTIONS from '../../Wallets/action.js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
-export const dispatchWalletRowOption = (walletId, option) => {
+export const walletRowOption = (walletId, option) => {
   switch (option) {
   case 'restore':
   case 'activate':
@@ -114,8 +114,8 @@ export const updateActiveWalletsOrder = (activeWalletIds) => (dispatch, getState
   const {account} = state.core
   dispatch(updateActiveWalletsOrderStart(activeWalletIds))
   ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
-    .then((response) => {
-      console.log('response', response)
+    .then(() => {
+      // console.log('response', response)
       dispatch(updateActiveWalletsOrderSuccess(activeWalletIds))
       for (let k in activeWalletIds) {
         dispatch(updateIndividualWalletSortIndex(activeWalletIds[k], k))

@@ -4,10 +4,9 @@ import {
   View
 } from 'react-native'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
 import style from './styles'
 
-class SearchResults extends Component {
+export default class SearchResults extends Component {
   constructor (props) {
     super(props)
     let completedDataList = this.props.regularArray.map((x, i) => {
@@ -56,9 +55,3 @@ SearchResults.propTypes = {
   regularData: PropTypes.object,
   usableHeight: PropTypes.number
 }
-
-const mapStateToProps = (state) => ({
-  dimensions: state.ui.scenes.dimensions
-})
-
-export default connect(mapStateToProps)(SearchResults)
