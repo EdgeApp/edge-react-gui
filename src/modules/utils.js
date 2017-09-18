@@ -5,6 +5,8 @@ import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination} from 'airbitz-core-types'
 import type {GuiDenomination} from '../types'
 
+const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
+
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
     return str.slice(0, lng) + '...'
@@ -147,13 +149,42 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) =>
 export const isGreaterThan = (comparedTo: string) =>
    (amountString: string): boolean => gt(amountString, comparedTo)
 
-export function getDenomFromIsoCode (isoCode: string): GuiDenomination {
-  const symbol = getSymbolFromCurrency(isoCode)
+const restrictedCurrencyCodes = [
+  'BTC'
+]
+
+export function getDenomFromIsoCode (currencyCode: string): GuiDenomination {
+  if (restrictedCurrencyCodes.findIndex((item) => item === currencyCode) !== -1) {
+    return {
+      name: '',
+      currencyCode: '',
+      symbol: '',
+      precision: 0,
+      multiplier: '0'
+    }
+  }
+  const symbol = getSymbolFromCurrency(currencyCode)
   const denom: GuiDenomination = {
-    name: isoCode,
-    symbol: symbol,
+    name: currencyCode,
+    currencyCode,
+    symbol,
     precision: 2,
     multiplier: '100'
   }
   return denom
+}
+
+export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
+  // Convert map to an array
+  const denomArray = []
+
+  for (const currencyCode in currencySymbolMap) {
+    if (currencySymbolMap.hasOwnProperty(currencyCode)) {
+      const item = getDenomFromIsoCode(currencyCode)
+      if (item.name.length) {
+        denomArray.push(item)
+      }
+    }
+  }
+  return denomArray
 }
