@@ -130,7 +130,7 @@ class Main extends Component {
               <Scene key='root' hideNavBar>
                 <Scene hideNavBar hideTabBar type={ActionConst.RESET}   key={Constants.LOGIN}             component={Login}                   title='login'    animation={'fade'} duration={600} initial username={this.props.username} />
                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector} title='Settings' animation={'fade'} duration={600} />
-                <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CAHNGE_PIN}        component={ChangePinConnector}      title='Settings' animation={'fade'} duration={600} />
+                <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}      title='Settings' animation={'fade'} duration={600} />
                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Settings' animation={'fade'} duration={600} />
 
                 <Scene hideNavBar hideTabBar key={Constants.EDGE} component={Layout} routes={routes} animation={'fade'} duration={600}>

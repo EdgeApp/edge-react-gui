@@ -138,7 +138,6 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
 
 export const isGreaterThan = (comparedTo: string) =>
-  // $FlowFixMe
    (amountString: string): boolean => gt(amountString, comparedTo)
 
 export const getCurrencyCodeFromWalletType = (walletType: string): string => ({

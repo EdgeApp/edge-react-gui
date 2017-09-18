@@ -1,6 +1,6 @@
 export const LOGIN = 'login'
 export const CHANGE_PASSWORD = 'changePassword'
-export const CAHNGE_PIN = 'changePin'
+export const CHANGE_PIN = 'changePin'
 export const RECOVER_PASSWORD = 'passwordRecovery'
 export const EDGE = 'edge'
 export const WALLET_LIST = 'walletList'

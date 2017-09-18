@@ -9,7 +9,7 @@ export default class ChangePassword extends Component {
   render () {
     return (
       <ChangePasswordScreen
-        accountObject={this.props.accountObject}
+        account={this.props.account}
         context={this.props.context}
         onComplete={this.onComplete}
         onCancel={this.onComplete}

@@ -39,7 +39,7 @@ class SettingsOverview extends Component {
         text: sprintf(strings.enUS['settings_button_change_password']),
         routeFunction: this._onPressChangePasswordRouting
       }, {
-        key: Constants.CAHNGE_PIN,
+        key: Constants.CHANGE_PIN,
         text: sprintf(strings.enUS['settings_button_pin']),
         routeFunction: this._onPressChangePinRouting
       }, {
@@ -98,7 +98,7 @@ class SettingsOverview extends Component {
   }
 
   _onPressChangePinRouting = () => {
-    Actions[Constants.CAHNGE_PIN]()
+    Actions[Constants.CHANGE_PIN]()
 
   }
   _onPressRecoverPasswordRouting = () => {

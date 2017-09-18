@@ -9,7 +9,7 @@ export default class PasswordRecovery extends Component {
   render () {
     return (
       <PasswordRecoveryScreen
-        accountObject={this.props.accountObject}
+        account={this.props.account}
         context={this.props.context}
         onComplete={this.onComplete}
         onCancel={this.onComplete}
