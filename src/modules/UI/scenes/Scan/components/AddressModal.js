@@ -28,10 +28,11 @@ class AddressModal extends Component {
   }
 
   componentDidMount () {
-    // const coreWallet = this.props.coreWallet
+    const coreWallet = this.props.coreWallet
     Clipboard.getString().then((uri) => {
       try {
-        // const parsedURI = WALLET_API.parseURI(coreWallet, uri)
+        // Will throw in case uri is invalid
+        WALLET_API.parseURI(coreWallet, uri)
         // console.log('AddressModal parsedURI', parsedURI)
         this.setState({
           clipboard: uri
