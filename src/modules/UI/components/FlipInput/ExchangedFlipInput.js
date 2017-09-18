@@ -3,9 +3,9 @@ import FlipInput from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
 import {bns} from 'biggystring'
 
-function precisionAdjust(props) {
+function precisionAdjust (props) {
   const order = Math.floor(Math.log(props.secondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
-  const exchageRateOrderOfMagnitude = Math.pow(10,order);
+  const exchageRateOrderOfMagnitude = Math.pow(10,order)
   // console.log('exchageRateOrderOfMagnitude: ' + exchageRateOrderOfMagnitude.toString())
 
   // Get the exchange rate in pennies
