@@ -1,6 +1,29 @@
 import React, {Component} from 'react'
 import FlipInput from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
+import {bns} from 'biggystring'
+
+function precisionAdjust(props) {
+  const order = Math.floor(Math.log(props.secondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
+  const exchageRateOrderOfMagnitude = Math.pow(10,order);
+  // console.log('exchageRateOrderOfMagnitude: ' + exchageRateOrderOfMagnitude.toString())
+
+  // Get the exchange rate in pennies
+  const exchangeRateString = bns.mulf(exchageRateOrderOfMagnitude, props.secondaryInfo.exchangeDenomination.multiplier)
+  // console.log('exchangeRateString: ' + exchangeRateString)
+
+  let precisionAdjust = bns.divf(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier)
+  // console.log('precisionAdjust:' + precisionAdjust)
+
+  if (precisionAdjust < 1) {
+    let order = 2 + Math.floor(Math.log(precisionAdjust) / Math.LN10 - 0.000000001) // because float math sucks like that
+    order = Math.abs(order)
+    if (order > 0) {
+      return order
+    }
+  }
+  return 0
+}
 
 export default class ExchangedFlipInput extends Component {
   constructor (props) {
@@ -34,8 +57,14 @@ export default class ExchangedFlipInput extends Component {
         secondaryDisplayAmount: '0'
       })
     } else {
-      const primaryDisplayAmount = UTILS.truncateDecimals(primaryInput, 8)
-      const secondaryDisplayAmount = UTILS.truncateDecimals(this.convertPrimaryDisplayToSecondaryDisplay(primaryDisplayAmount, 8), 2)
+      // Truncate the input value by the denomination of this currency.
+      // ie. If denom multiplier is 100000, then truncate to 5 decimal places
+      const primaryPrecision: number = bns.log10(this.props.primaryInfo.displayDenomination.multiplier)
+      const primaryDisplayAmount = UTILS.truncateDecimals(primaryInput, primaryPrecision)
+
+      const secondaryPrecision = bns.log10(this.props.secondaryInfo.displayDenomination.multiplier)
+      let secondaryDisplayAmount = this.convertPrimaryDisplayToSecondaryDisplay(primaryDisplayAmount)
+      secondaryDisplayAmount = UTILS.truncateDecimals(secondaryDisplayAmount, secondaryPrecision)
 
       this.setState({
         primaryDisplayAmount,
@@ -60,8 +89,23 @@ export default class ExchangedFlipInput extends Component {
         secondaryDisplayAmount: '0'
       })
     } else {
-      const secondaryDisplayAmount = UTILS.truncateDecimals(secondaryInput, 2)
-      const primaryDisplayAmount = UTILS.truncateDecimals(this.convertSecondaryDisplayToPrimaryDisplay(secondaryDisplayAmount, 2), 8)
+      const secondaryPrecision: number = bns.log10(this.props.secondaryInfo.displayDenomination.multiplier)
+      const secondaryDisplayAmount = UTILS.truncateDecimals(secondaryInput, secondaryPrecision)
+
+      let primaryPrecision = bns.log10(this.props.primaryInfo.displayDenomination.multiplier)
+      // Limit the precision of the primaryPrecision by what would be no more
+      // than 0.01 (of whateve fiat currency) accuracy when converting a fiat value into a crypto value.
+      //
+      // Assume secondaryInfo refers to a fiatValue and take the secondaryToPrimaryRatio (exchange rate) and
+      // see how much precision this crypto denomination needs to achieve accuracy to 0.01 units of the current fiat
+      // currency. To do this we need to compare the "exchangeDenomination" of primaryInfo and secondaryInfo since
+      // only those values are relevant to secondaryToPrimaryRatio
+      const precisionAdjustVal = precisionAdjust(this.props)
+      const newPrimaryPrecision = primaryPrecision - precisionAdjustVal
+      primaryPrecision = newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
+
+      let primaryDisplayAmount = this.convertSecondaryDisplayToPrimaryDisplay(secondaryDisplayAmount)
+      primaryDisplayAmount = UTILS.truncateDecimals(primaryDisplayAmount, primaryPrecision)
 
       this.setState({
         primaryDisplayAmount,
