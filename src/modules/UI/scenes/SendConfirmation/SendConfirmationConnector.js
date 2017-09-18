@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import SendConfirmation from './SendConfirmation.ui'
 import {bns} from 'biggystring'
 
+import {getDenomFromIsoCode} from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -22,13 +23,7 @@ const mapStateToProps = (state) => {
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  // TODO: Replace this with an ISO currency code lookup table -paulvp
-  const secondaryExchangeDenomination: GuiDenomination = {
-    name: 'Dollars',
-    symbol: '$',
-    multiplier: '100',
-    precision: 2
-  }
+  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
   const primaryInfo: GuiCurrencyInfo = {
     displayCurrencyCode: currencyCode,

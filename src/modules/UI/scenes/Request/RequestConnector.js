@@ -6,11 +6,12 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 
 import {saveReceiveAddress} from './action.js'
+import {getDenomFromIsoCode} from '../../../utils'
 
 const mapStateToProps = (state) => {
   let secondaryToPrimaryRatio = 0
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
-  if (!wallet) {
+  const guiWallet = UI_SELECTORS.getSelectedWallet(state)
+  if (!guiWallet) {
     return {
       loading: true,
       request: {},
@@ -23,16 +24,11 @@ const mapStateToProps = (state) => {
     }
   }
 
-  const abcWallet = CORE_SELECTORS.getWallet(state, wallet.id)
+  const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination = {
-    name: 'Dollars',
-    symbol: '$',
-    multiplier: '100',
-    precision: 2
-  }
+  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination = secondaryExchangeDenomination
   const primaryInfo = {
     displayCurrencyCode: currencyCode,
@@ -40,12 +36,12 @@ const mapStateToProps = (state) => {
     exchangeDenomination: primaryExchangeDenomination
   }
   const secondaryInfo = {
-    displayCurrencyCode: wallet.fiatCurrencyCode,
+    displayCurrencyCode: guiWallet.fiatCurrencyCode,
     displayDenomination: secondaryDisplayDenomination,
     exchangeDenomination: secondaryExchangeDenomination
   }
-  if (wallet) {
-    const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  if (guiWallet) {
+    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
@@ -54,7 +50,7 @@ const mapStateToProps = (state) => {
     request: state.ui.scenes.request,
     abcWallet,
     secondaryToPrimaryRatio,
-    wallet,
+    wallet: guiWallet,
     currencyCode,
     primaryInfo,
     secondaryInfo

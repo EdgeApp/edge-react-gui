@@ -3,6 +3,7 @@ import borderColors from '../theme/variables/css3Colors'
 import {divf, mulf, gt} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination} from 'airbitz-core-types'
+import type {GuiDenomination} from '../types'
 
 export const cutOffText = (str: string, lng: number) => {
   if (str.length >= lng) {
@@ -144,5 +145,15 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
 
 export const isGreaterThan = (comparedTo: string) =>
-  // $FlowFixMe
    (amountString: string): boolean => gt(amountString, comparedTo)
+
+export function getDenomFromIsoCode (isoCode: string): GuiDenomination {
+  const symbol = getSymbolFromCurrency(isoCode)
+  const denom: GuiDenomination = {
+    name: isoCode,
+    symbol: symbol,
+    precision: 2,
+    multiplier: '100'
+  }
+  return denom
+}
