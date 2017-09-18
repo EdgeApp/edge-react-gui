@@ -27,9 +27,9 @@ export const initializeAccount = (account) => (dispatch, getState) => {
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
       const {
-          walletId,
-          currencyCode
-        } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+        walletId,
+        currencyCode
+      } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
       dispatch(loadSettings())
     })

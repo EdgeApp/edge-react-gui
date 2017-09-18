@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {
+  ActivityIndicator,
   Clipboard,
   View,
   Share
@@ -17,23 +18,27 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
+
 export default class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
       primaryNativeAmount: '',
       secondaryNativeAmount: '',
-      encodedURI: ''
+      encodedURI: '',
+      loading: props.loading
     }
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps
-      WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    if (nextProps.loading) return
+
+    if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
+      const {abcWallet, currencyCode} = nextProps
+      WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+        const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
           publicAddress
@@ -43,11 +48,13 @@ export default class Request extends Component {
   }
 
   componentDidMount () {
-    const {coreWallet, currencyCode} = this.props
-    WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    const {abcWallet, currencyCode} = this.props
+    if (this.props.loading) return
+
+    WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
-      const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+      const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
       this.setState({
         encodedURI,
         publicAddress
@@ -66,7 +73,7 @@ export default class Request extends Component {
       publicAddress: this.state.publicAddress,
       nativeAmount: primaryNativeAmount
     }
-    const encodedURI = this.props.coreWallet.encodeUri(parsedURI)
+    const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
     this.setState({
       primaryNativeAmount,
@@ -76,6 +83,10 @@ export default class Request extends Component {
   }
 
   render () {
+    if (this.props.loading) {
+      return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
+    }
+
     const color = 'white'
     const {
       secondaryToPrimaryRatio,

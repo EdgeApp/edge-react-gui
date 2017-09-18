@@ -14,14 +14,22 @@ import * as UTILS from '../../../utils'
 
 const mapStateToProps = (state) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const wallet = UI_SELECTORS.getSelectedWallet(state)
+
+  if (!wallet) return {
+    loading: true
+  }
+
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const settings = SETTINGS_SELECTORS.getSettings(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
+
+  const settings = SETTINGS_SELECTORS.getSettings(state)
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
+
   const transactions = UI_SELECTORS.getTransactions(state)
+
   const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
   const denomination = wallet.allDenominations[currencyCode][index]
   const multiplier = denomination.multiplier
@@ -30,7 +38,6 @@ const mapStateToProps = (state) => {
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   return {
-    // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
     displayDenomination,
     updatingBalance: false,
     transactions,

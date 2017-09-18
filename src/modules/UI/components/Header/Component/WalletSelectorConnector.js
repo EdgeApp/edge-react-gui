@@ -6,19 +6,28 @@ import {
   toggleScanToWalletListModal
 } from '../../WalletListModal/action'
 
-const mapStateToProps = (state) => ({
-  walletList: UI_SELECTORS.getWallets(state),
+const mapStateToProps = (state) => {
+  const walletList = UI_SELECTORS.getWallets(state)
 
-  selectedWallet: UI_SELECTORS.getSelectedWallet(state),
-  selectedWalletCurrencyCode: UI_SELECTORS.getSelectedCurrencyCode(state),
+  const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
+  const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
 
-  activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
-  archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
+  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
+  const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
 
-  selectedWalletListModalVisibility: state.ui.scenes.scan.selectedWalletListModalVisibility,
-  scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
-})
+  const selectedWalletListModalVisibility = state.ui.scenes.scan.selectedWalletListModalVisibility
+  const scanToWalletListModalVisibility = state.ui.scenes.scan.scanToWalletListModalVisibility
 
+  return {
+    walletList,
+    selectedWallet,
+    selectedWalletCurrencyCode,
+    activeWalletIds,
+    archivedWalletIds,
+    selectedWalletListModalVisibility,
+    scanToWalletListModalVisibility
+  }
+}
 const mapDispatchToProps = (dispatch) => ({
   toggleSelectedWalletListModal: () => dispatch(toggleSelectedWalletListModal()),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),

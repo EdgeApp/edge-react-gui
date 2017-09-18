@@ -3,14 +3,14 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import {
-  Image,
-  ScrollView,
-  ListView,
-  View,
-  TouchableHighlight,
-  Animated,
   ActivityIndicator,
-  TouchableOpacity
+  Animated,
+  Image,
+  ListView,
+  ScrollView,
+  TouchableHighlight,
+  TouchableOpacity,
+  View,
 } from 'react-native'
 import T from '../../components/FormattedText'
 import LinearGradient from 'react-native-linear-gradient'
@@ -46,6 +46,8 @@ export default class TransactionList extends Component {
   }
 
   componentDidMount () {
+    if (this.props.loading) return
+
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
     this.props.updateExchangeRates()
@@ -140,6 +142,10 @@ export default class TransactionList extends Component {
   toggleShowBalance = () => this.setState({showBalance: !this.state.showBalance})
 
   render () {
+    if (this.props.loading) {
+      return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
+    }
+
     // console.log('about to render txList, this is: ', this)
     let cryptoBalanceString
     let cryptoAmountString

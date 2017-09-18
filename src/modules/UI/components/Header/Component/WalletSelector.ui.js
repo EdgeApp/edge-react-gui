@@ -4,6 +4,10 @@ import MDIcon from 'react-native-vector-icons/MaterialIcons'
 import T from '../../FormattedText'
 import WalletListModal from '../../WalletListModal/WalletListModalConnector'
 import {border as b} from '../../../../utils'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../../locales/default'
+
+const LOADING_TEXT = sprintf(strings.enUS['loading'])
 
 export default class WalletSelector extends Component {
   _onPressToggleSelectedWalletModal = () => {
@@ -17,12 +21,16 @@ export default class WalletSelector extends Component {
   render () {
     let topDisplacement = 66
     let selectionFunction = 'selectFromWallet'
-    let walletNameString = this.props.selectedWallet.name + ':' + this.props.selectedWalletCurrencyCode
+    const headerText = this.props.selectedWallet
+      ? this.props.selectedWallet.name + ':' + this.props.selectedWalletCurrencyCode
+      : LOADING_TEXT
 
     return (
       <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(), {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
         <View style={{height: 34, width: 34}} />
-        <T style={{color: '#FFF', fontSize: 20}} numberOfLines={1} >{walletNameString}</T>
+        <T style={{color: '#FFF', fontSize: 20}} numberOfLines={1}>
+          {headerText}
+        </T>
         <View style={[b(), {height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
           <View style={[b(), {position: 'relative', top: 2}]}>
             {

@@ -15,6 +15,7 @@ export const byId = (state: any = {}, action: any) => {
     for (const walletId of Object.keys(wallets)) {
       out[walletId] = schema(wallets[walletId])
     }
+
     return out
   }
 

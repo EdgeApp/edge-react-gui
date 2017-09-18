@@ -10,7 +10,20 @@ import {saveReceiveAddress} from './action.js'
 const mapStateToProps = (state) => {
   let secondaryToPrimaryRatio = 0
   const wallet = UI_SELECTORS.getSelectedWallet(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, wallet.id)
+  if (!wallet) {
+    return {
+      loading: true,
+      request: {},
+      abcWallet: {},
+      secondaryToPrimaryRatio: '',
+      wallet: {},
+      currencyCode: '',
+      primaryInfo: {},
+      secondaryInfo: {}
+    }
+  }
+
+  const abcWallet = CORE_SELECTORS.getWallet(state, wallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
@@ -37,8 +50,9 @@ const mapStateToProps = (state) => {
   }
 
   return {
+    loading: false,
     request: state.ui.scenes.request,
-    coreWallet,
+    abcWallet,
     secondaryToPrimaryRatio,
     wallet,
     currencyCode,
