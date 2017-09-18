@@ -91,8 +91,8 @@ export default class CreateWallet extends Component {
       this.setState({isCreatingWallet: true})
       Keyboard.dismiss()
       const {walletName, selectedWalletType} = this.state
-      console.log('walletName', walletName)
-      console.log('selectedWalletType', selectedWalletType)
+      // console.log('walletName', walletName)
+      // console.log('selectedWalletType', selectedWalletType)
       this.props.createWallet(walletName, selectedWalletType)
     }
   }

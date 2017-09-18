@@ -13,7 +13,7 @@ export const cutOffText = (str: string, lng: number) => {
 }
 
 export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: string) => {
-  console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
+  // console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -22,17 +22,17 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
 }
 
 export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object) => {
-  console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
+  // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
   let allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode = wallet.currencyCode
   let currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
   let denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
-  console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
+  // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
   return denomProperties
 }
 
 export const getFiatSymbol = (code: string) => {
-  console.log('inside utils.getFiatSymbol, code is: ', code)
+  // console.log('inside utils.getFiatSymbol, code is: ', code)
   code = code.replace('iso:', '')
   return getSymbolFromCurrency(code)
 }
@@ -66,7 +66,7 @@ export const border = (color: ?string) => {
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
 
 export const addFiatTwoDecimals = (input: string) => {
-  console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
+  // console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
   if (input.length - input.indexOf('.') === 1) {
     input = input + '0'
   } else if (!input.includes('.')) {
@@ -138,11 +138,4 @@ export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
 
 export const isGreaterThan = (comparedTo: string) =>
-  // $FlowFixMe
    (amountString: string): boolean => gt(amountString, comparedTo)
-
-export const getCurrencyCodeFromWalletType = (walletType: string): string => ({
-  'wallet:bitcoin': 'BTC',
-  'wallet:ethereum': 'ETH',
-  'wallet:litecoin44': 'LTC'
-}[walletType])

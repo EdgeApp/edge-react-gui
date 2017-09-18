@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react'
 import {ScrollView, View} from 'react-native'
-import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
 
 import {sprintf} from 'sprintf-js'
@@ -20,12 +19,9 @@ import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import * as CORE_SELECTORS from '../../../Core/selectors'
-import {setAutoLogoutTimeInMinutesRequest} from './action'
 import s from './style'
 
-class SettingsOverview extends Component {
+export default class SettingsOverview extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -39,7 +35,7 @@ class SettingsOverview extends Component {
         text: sprintf(strings.enUS['settings_button_change_password']),
         routeFunction: this._onPressChangePasswordRouting
       }, {
-        key: Constants.CAHNGE_PIN,
+        key: Constants.CHANGE_PIN,
         text: sprintf(strings.enUS['settings_button_pin']),
         routeFunction: this._onPressChangePinRouting
       }, {
@@ -98,7 +94,7 @@ class SettingsOverview extends Component {
   }
 
   _onPressChangePinRouting = () => {
-    Actions[Constants.CAHNGE_PIN]()
+    Actions[Constants.CHANGE_PIN]()
 
   }
   _onPressRecoverPasswordRouting = () => {
@@ -106,19 +102,19 @@ class SettingsOverview extends Component {
   }
 
   _onPressOpenLogoffTime = () => {
-    console.log('opening auto log off modal')
+    // console.log('opening auto log off modal')
   }
 
   _onPressOpenDefaultCurrency = () => {
-    console.log('opening default currency modal?')
+    // console.log('opening default currency modal?')
   }
 
   _onPressOpenChangeCategories = () => {
-    console.log('open change categories thingy')
+    // console.log('open change categories thingy')
   }
 
-  _onToggleOption = (property) => {
-    console.log('toggling option: ', property)
+  _onToggleOption = () => {
+    // console.log('toggling option: ', property)
   }
 
   _onPressDebug = () => {
@@ -199,13 +195,3 @@ class SettingsOverview extends Component {
 
   renderRowModal = (x) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
 }
-
-const mapStateToProps = (state) => ({
-  autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
-  username: CORE_SELECTORS.getUsername(state)
-})
-const mapDispatchToProps = (dispatch) => ({
-  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

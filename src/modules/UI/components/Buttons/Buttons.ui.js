@@ -7,7 +7,7 @@ import {colors as c} from '../../../../theme/variables/airbitz'
 
 class PrimaryButton extends Component {
   render () {
-    console.log('rendering PrimaryButton, this is: ', this)
+    // console.log('rendering PrimaryButton, this is: ', this)
     return (
       <TouchableHighlight onPress={this.props.onPressFunction} underlayColor={c.primary} style={[s.primaryButtonWrap, s.stylizedButton, this.props.style]}>
         <View style={s.stylizedButtonTextWrap}>
@@ -30,7 +30,7 @@ PrimaryButton.propTypes = {
 
 class SecondaryButton extends Component {
   render () {
-    console.log('rendering SecondaryButton, this is: ', this)
+    // console.log('rendering SecondaryButton, this is: ', this)
     return (
       <TouchableHighlight disabled={this.props.disabled} onPress={this.props.onPressFunction} underlayColor={c.gray1} style={[s.secondaryButtonWrap, s.stylizedButton, this.props.style]}>
         <View style={s.stylizedButtonTextWrap}>
@@ -60,7 +60,7 @@ class TertiaryButton extends Component {
   }
 
   render () {
-    console.log('tertiaryButon props are: ', this.props)
+    // console.log('tertiaryButon props are: ', this.props)
     return (
       <TouchableHighlight onPress={this._onPress} underlayColor={c.secondary} style={[ s.stylizedButton, s.tertiaryButtonWrap, {backgroundColor: 'white'} ]}>
         <Text style={s.tertiaryButton} {...this.props}>

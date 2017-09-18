@@ -1,3 +1,3 @@
-import WalletTransferList from './WalletTransferList.ui.js'
+import WalletTransferList from './WalletTransferListConnector'
 
 export default WalletTransferList

@@ -17,23 +17,13 @@ import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordReco
 import Layout from './UI/scenes/layout/Layout.ui'
 import TransactionListConnect from './UI/scenes/TransactionList'
 import TransactionDetails from './UI/scenes/TransactionDetails'
-import Directory from './UI/scenes/Directory/Directory.ui'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/Scan.ui'
-import WalletList from './UI/scenes/WalletList/WalletList.ui'
+import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
-import BTCSettings from './UI/scenes/Settings/BTCSettings.ui'
-import ETHSettings from './UI/scenes/Settings/ETHSettings.ui'
-import {SettingsOverview} from './UI/scenes/Settings'
-
-import {addExchangeTimer} from  './UI/Settings/action'
-import {updateExchangeRates} from './ExchangeRates/action.js'
-import {setDeviceDimensions, setKeyboardHeight} from './UI/dimensions/action'
-import {addContext} from './Core/Context/action.js'
-import {setHeaderHeight} from './UI/dimensions/action.js'
-import {addCurrencyPlugin} from './UI/Settings/action.js'
-import {addUsernames} from './Core/Context/action'
+import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 
 import * as CONTEXT_API from './Core/Context/api'
 
@@ -47,7 +37,6 @@ currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
 
-import {setLocaleInfo} from './UI/locale/action'
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 import styles from './style.js'
@@ -57,8 +46,10 @@ import {mapAllFiles} from 'disklet'
 
 // import { dumpFolder } from '../../debugTools.js'
 export function dumpFolder (folder) {
-  return mapAllFiles(folder, (file, path) =>
-    file.getText(file).then((text) => console.log(`dumpfolder: "${path}": "${text}"`))
+  return mapAllFiles(folder, (file) =>
+    file.getText(file).then(() => {
+      // console.log(`dumpfolder: "${path}": "${text}"`)
+    })
   )
 }
 
@@ -67,7 +58,7 @@ const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 
 const RouterWithRedux = connect()(Router)
 
-class Main extends Component {
+export default class Main extends Component {
   constructor (props) {
     super(props)
 
@@ -109,10 +100,6 @@ class Main extends Component {
       this.props.setLocaleInfo(localeInfo)
       // this.setState({ context, loading: false }, () => SplashScreen.hide())
       this.setState({context, loading: false})
-      const exchangeTimer = setInterval(() => {
-        this.props.updateExchangeRates()
-      }, 30000) // Dummy dispatch to allow scenes to update in mapStateToProps
-      this.props.dispatch(addExchangeTimer(exchangeTimer))
     })
   }
 
@@ -130,7 +117,7 @@ class Main extends Component {
               <Scene key='root' hideNavBar>
                 <Scene hideNavBar hideTabBar type={ActionConst.RESET}   key={Constants.LOGIN}             component={Login}                   title='login'    animation={'fade'} duration={600} initial username={this.props.username} />
                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector} title='Settings' animation={'fade'} duration={600} />
-                <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CAHNGE_PIN}        component={ChangePinConnector}      title='Settings' animation={'fade'} duration={600} />
+                <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}      title='Settings' animation={'fade'} duration={600} />
                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Settings' animation={'fade'} duration={600} />
 
                 <Scene hideNavBar hideTabBar key={Constants.EDGE} component={Layout} routes={routes} animation={'fade'} duration={600}>
@@ -148,10 +135,9 @@ class Main extends Component {
 
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={BTCSettings} title='BTC Settings' animation={'fade'} duration={600} />
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={ETHSettings} title='ETH Settings' animation={'fade'} duration={600} />
-
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.DIRECTORY} component={Directory} title='Directory' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} title='BTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} title='ETH Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
 
                 </Scene>
               </Scene>
@@ -180,17 +166,3 @@ class Main extends Component {
     this.props.setKeyboardHeight(0)
   }
 }
-
-const mapStateToProps = (state) => ({routes: state.routes})
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),
-  setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
-  addContext: (context) => dispatch(addContext(context)),
-  addUsernames: (usernames) => dispatch(addUsernames(usernames)),
-  setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
-  updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setDeviceDimensions: (dimensions) => dispatch(setDeviceDimensions(dimensions)),
-  setHeaderHeight: (height) => dispatch(setHeaderHeight(height))
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Main)

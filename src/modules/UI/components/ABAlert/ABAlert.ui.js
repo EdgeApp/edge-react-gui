@@ -14,7 +14,7 @@ class ABAlert extends Component {
   }
 
   _openAlert = (props) => {
-    console.log('opening alert, props is: ', props)
+    // console.log('opening alert, props is: ', props)
     if (!props.buttons) {
       props.buttons = [
         {

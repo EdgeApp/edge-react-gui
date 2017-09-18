@@ -30,6 +30,13 @@ const styles = StyleSheet.create({
   },
   slider: {
     backgroundColor: 'transparent'
+  },
+  error: {
+    flex: 1,
+    color: 'red',
+    textAlign: 'left',
+    marginRight: 5,
+    backgroundColor: 'transparent'
   }
 })
 

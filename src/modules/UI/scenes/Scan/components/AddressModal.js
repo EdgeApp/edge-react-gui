@@ -28,18 +28,18 @@ class AddressModal extends Component {
   }
 
   componentDidMount () {
-    const coreWallet = this.props.coreWallet
+    // const coreWallet = this.props.coreWallet
     Clipboard.getString().then((uri) => {
       try {
-        const parsedURI = WALLET_API.parseURI(coreWallet, uri)
-        console.log('AddressModal parsedURI', parsedURI)
+        // const parsedURI = WALLET_API.parseURI(coreWallet, uri)
+        // console.log('AddressModal parsedURI', parsedURI)
         this.setState({
           clipboard: uri
         })
       } catch (e) {
-        console.log('Clipboard does not contain a valid address.')
-        console.log(`Clipboard: ${uri}`)
-        console.log(e)
+        // console.log('Clipboard does not contain a valid address.')
+        // console.log(`Clipboard: ${uri}`)
+        // console.log(e)
       }
     })
   }
@@ -55,7 +55,7 @@ class AddressModal extends Component {
       const parsedURI = WALLET_API.parseURI(coreWallet, uri)
       parsedURI.currencyCode = this.props.currencyCode // remove when Ethereum addresses support indicating currencyCodes
 
-      console.log('AddressModal parsedURI', parsedURI)
+      // console.log('AddressModal parsedURI', parsedURI)
       this.props.dispatch(toggleAddressModal())
       this.props.dispatch(updateParsedURI(parsedURI))
       Actions.sendConfirmation()
@@ -64,7 +64,7 @@ class AddressModal extends Component {
         'Invalid Address',
         'The address you input is not a valid address.'
       )
-      console.log(e)
+      // console.log(e)
     }
   }
   onCancel = () => {

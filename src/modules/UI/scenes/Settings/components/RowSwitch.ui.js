@@ -10,8 +10,8 @@ import s from '../style'
 import {border as b} from '../../../../utils'
 
 export default class RowSwitch extends Component {
-  _onPressToggleSetting = (property) => {
-    console.log('toggline property: ', property)
+  _onPressToggleSetting = () => {
+    // console.log('toggline property: ', property)
   }
 
   render () {

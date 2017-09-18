@@ -37,19 +37,18 @@ export const selectCurrencyCode = (currencyCode) => ({
   data: {currencyCode}
 })
 
-export const refreshWallet = (walletId) => {
-  console.log('refreshWallet')
-  return (dispatch, getState) => {
+export const refreshWallet = (walletId) =>
+  // console.log('refreshWallet')
+  (dispatch, getState) => {
     const state = getState()
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
     if (wallet) {
-      console.log('updating wallet balance', walletId)
+  // console.log('updating wallet balance', walletId)
       return dispatch(upsertWallet(wallet))
     }
-    console.log('wallet doesn\'t exist yet', walletId)
+  // console.log('wallet doesn\'t exist yet', walletId)
   }
-}
 
 export const upsertWallet = (wallet) => (dispatch, getState) => {
   const state = getState()

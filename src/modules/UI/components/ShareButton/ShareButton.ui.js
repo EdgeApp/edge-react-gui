@@ -1,13 +1,5 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
-
-const ShareButton = ({displayName, onPress, style}) => (
-    <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style ]}>
-      <View style={styles.view}>
-        <Text style={styles.text}>{displayName}</Text>
-      </View>
-    </TouchableOpacity>
-  )
 
 const styles = StyleSheet.flatten({
   shareButton: {
@@ -31,4 +23,13 @@ const styles = StyleSheet.flatten({
   }
 })
 
-export default ShareButton
+export default class ShareButton extends Component {
+  render () {
+    const {displayName, onPress, style} = this.props
+    return <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style ]}>
+      <View style={styles.view}>
+        <Text style={styles.text}>{displayName}</Text>
+      </View>
+    </TouchableOpacity>
+  }
+}

@@ -17,7 +17,7 @@ export const updateReceiveAddress = (walletId, currencyCode) => (dispatch, getSt
     dispatch(updateReceiveAddressSuccess(receiveAddress))
   }
   const onError = (error) => {
-    console.log('Core Error', error)
+    // console.log('Core Error', error)
     dispatch(updateReceiveAddressError(error))
   }
 

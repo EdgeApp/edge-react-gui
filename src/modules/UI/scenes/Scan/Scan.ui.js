@@ -75,14 +75,14 @@ class Scan extends Component {
 
   parseURI = (uri) => {
     try {
-      console.log('uri', uri)
+      // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.coreWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
       Alert.alert('Scanning Error', error.toString())
       // show popup with error message
-      console.log(error)
+      // console.log(error)
     }
   }
 
@@ -90,13 +90,9 @@ class Scan extends Component {
     const options = {takePhotoButtonTitle: null}
 
     ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled photo picker')
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton)
-      } else {
+      if (!response.didCancel
+        && !response.error
+        && !response.customButton) {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };

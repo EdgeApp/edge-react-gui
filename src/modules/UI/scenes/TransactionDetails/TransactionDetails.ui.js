@@ -37,7 +37,7 @@ import {
   // setSubcategoriesRequest
 } from './action.js'
 import * as UI_SELECTORS from '../../selectors.js'
-import SearchResults from '../../components/SearchResults'
+import SearchResults from '../../components/SearchResults/index'
 import {openHelpModal} from '../../components/HelpModal/actions'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
@@ -45,7 +45,7 @@ const categories = ['income', 'expense', 'exchange', 'transfer']
 class TransactionDetails extends Component {
   constructor (props) {
     super(props)
-    console.log('inside txDetails constructor, this.props is: ', this.props)
+    // console.log('inside txDetails constructor, this.props is: ', this.props)
     const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
     const dateTime = new Date(this.props.tx.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -115,9 +115,9 @@ class TransactionDetails extends Component {
 
   onChangeFiat = (input) => {
     let newInput
-    console.log('onChangeFiat being executed, input is: ', input)
+    // console.log('onChangeFiat being executed, input is: ', input)
     newInput = (isNaN(input) || (input === '')) ? '' : UTILS.formatNumber(UTILS.truncateDecimals(input, 2))
-    console.log('onChangeFiat, now newInput is: ', newInput)
+    // console.log('onChangeFiat, now newInput is: ', newInput)
     this.setState({
       amountFiat: newInput
     })
@@ -180,7 +180,7 @@ class TransactionDetails extends Component {
       let colonOccurrence = input.indexOf(':')
       if (colonOccurrence) {
         stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
-        console.log('stringArray is: ', stringArray)
+        // console.log('stringArray is: ', stringArray)
         if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) { // if the type is of the 4 options
           this.setState({
             type: stringArray[0].toLowerCase(),
@@ -358,7 +358,7 @@ class TransactionDetails extends Component {
       leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
     }
     let color = type.color
-    console.log('rendering txDetails, this is: ', this)
+    // console.log('rendering txDetails, this is: ', this)
     return (
       <View style={[UTILS.border()]}>
         <Animated.View
@@ -518,7 +518,7 @@ class AmountArea extends Component {
   }
 
   render () {
-    console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
+    // console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
     let stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
 
     let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))

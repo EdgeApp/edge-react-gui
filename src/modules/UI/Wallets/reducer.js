@@ -1,7 +1,7 @@
 // @flow
 
 import {combineReducers} from 'redux'
-import {GUIWallet} from '../../../types.js'
+import {GuiWallet} from '../../../types.js'
 import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 import * as ACTION from './action'
 import {UPDATE_WALLETS} from '../../Core/Wallets/action.js'
@@ -69,7 +69,7 @@ export const selectedCurrencyCode = (state: string = '', action: any) => {
   }
 }
 
-function schema (wallet: any): GUIWallet {
+function schema (wallet: any): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -119,7 +119,7 @@ function schema (wallet: any): GUIWallet {
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
 
-  const newWallet = new GUIWallet(
+  const newWallet = new GuiWallet(
     id,
     type,
     name,

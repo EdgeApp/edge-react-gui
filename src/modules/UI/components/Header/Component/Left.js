@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {TouchableOpacity} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
-import T from '../../../components/FormattedText'
-import styles from '../style'
+import BackButton from './BackButton.ui'
+
+const BACK_TEXT = sprintf(strings.enUS['back_button_text'])
+const CANCEL_TEXT = sprintf(strings.enUS['string_cancel'])
 
 export default class Left extends Component {
   render () {
@@ -14,33 +15,20 @@ export default class Left extends Component {
       : null
 
     switch (sceneName) {
-    case 'sendConfirmation':
-      return <BackButton syntax='Back' onPressFxn={() => Actions.scan({type: 'reset'})} />
     case 'createWallet':
-      return <BackButton syntax='Cancel' onPressFxn={() => Actions.walletList({type: 'reset'})} />
-    case 'btcSettings':
-      return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
-    case 'ethSettings':
-      return <BackButton syntax='Back' onPressFxn={() => Actions.settingsOverview({type: 'reset'})} />
+      return <BackButton label={CANCEL_TEXT} onPress={() => Actions.walletList({type: 'reset'})} />
     case 'transactionDetails':
-      return <BackButton syntax='Cancel' onPressFxn={() => Actions.transactionList({type: 'reset'})} />
+      return <BackButton label={CANCEL_TEXT} onPress={() => Actions.transactionList({type: 'reset'})} />
+    case 'sendConfirmation':
+      return <BackButton label={BACK_TEXT} onPress={() => Actions.scan({type: 'reset'})} />
+    case 'btcSettings':
+      return <BackButton label={BACK_TEXT} onPress={() => Actions.settingsOverview({type: 'reset'})} />
+    case 'ethSettings':
+      return <BackButton label={BACK_TEXT} onPress={() => Actions.settingsOverview({type: 'reset'})} />
+    case 'ltcSettings':
+      return <BackButton label={BACK_TEXT} onPress={() => Actions.settingsOverview({type: 'reset'})} />
     default:
       return null
     }
-  }
-}
-
-class BackButton extends Component {
-  constructor (props) {
-    super(props)
-    this.props.syntax = this.props.syntax ? this.props.syntax : sprintf(strings.enUS['back_button_text'])
-  }
-
-  render () {
-    return (
-      <TouchableOpacity style={styles.sideTextWrap} onPress={this.props.onPressFxn ? this.props.onPressFxn : () => Actions.pop()}>
-        <T style={[styles.sideText]}>{this.props.syntax}</T>
-      </TouchableOpacity>
-    )
   }
 }

@@ -14,18 +14,25 @@ import {Actions} from 'react-native-router-flux'
 export const initializeAccount = (account) => (dispatch, getState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
+  const currencyCodes = {}
   CONTEXT_API.getCurrencyPlugins(context)
-    .then((currencyPlugins) =>
-      currencyPlugins.forEach((plugin) => dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))))
+    .then((currencyPlugins) => {
+      currencyPlugins.forEach((plugin) => {
+        plugin.currencyInfo.walletTypes.forEach((type) => {
+          currencyCodes[type] = plugin.currencyInfo.currencyCode
+        })
+        dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))
+      })
 
-  dispatch(ACCOUNT_ACTIONS.addAccount(account))
-  dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-  const {
-      walletId,
-      currencyCode
-    } = ACCOUNT_API.getFirstActiveWalletInfo(account)
-  dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
-  dispatch(loadSettings())
+      dispatch(ACCOUNT_ACTIONS.addAccount(account))
+      dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
+      const {
+          walletId,
+          currencyCode
+        } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+      dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+      dispatch(loadSettings())
+    })
 }
 
 const loadSettings = () => (dispatch, getState) => {
@@ -48,10 +55,10 @@ const loadSettings = () => (dispatch, getState) => {
     })
     /* SETTINGS_API.getSyncedSubcategories(account)
     .then(subcategories => {
-      console.log('subcategories have been loaded and are: ', subcategories)
+      // console.log('subcategories have been loaded and are: ', subcategories)
       const syncDefaults = SETTINGS_API.SYNCED_SUBCATEGORY_DEFAULTS
       const syncFinal = Object.assign({}, syncDefaults, subcategories)
-      console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
+      // console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
       dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
     }) */
 

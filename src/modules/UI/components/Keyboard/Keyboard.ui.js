@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {TextInput, View, StyleSheet} from 'react-native'
-import {connect} from 'react-redux'
 import KeyboardButton from '../KeyboardButton/index.js'
 
 const styles = StyleSheet.create({
@@ -24,7 +23,7 @@ const styles = StyleSheet.create({
   }
 })
 
-class Keyboard extends Component {
+export default class Keyboard extends Component {
   constructor (props) {
     super(props)
 
@@ -88,7 +87,7 @@ class Keyboard extends Component {
   }
 
   render () {
-    console.log('rendering keyboard')
+    // console.log('rendering keyboard')
 
     return (
       <View style={styles.view}>
@@ -142,5 +141,3 @@ class Keyboard extends Component {
     )
   }
 }
-
-export default connect()(Keyboard)
