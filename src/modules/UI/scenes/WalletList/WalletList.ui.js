@@ -74,7 +74,6 @@ export default class WalletList extends Component {
   }
 
   componentDidMount () {
-    console.log('in WalletList->componentDidMount')
     Permissions.request('contacts').then((response) => {
       if (response === 'authorized') {
         Contacts.getAll((err, contacts) => {
@@ -90,7 +89,6 @@ export default class WalletList extends Component {
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
-    // console.log('in executeWalletRowOption, option is: ', option)
     switch (option) {
     case options[0].value: // 'rename'
       console.log('executing rename')
@@ -119,7 +117,6 @@ export default class WalletList extends Component {
     }
   }
   render () {
-    // console.log('beginning of walletList render, this is: ', this.state)
     const {wallets} = this.props
     let walletsArray = []
     let activeWallets = {}
@@ -237,7 +234,6 @@ export default class WalletList extends Component {
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
-    // console.log('enabling sorting, this is: ', this)
     let sortableToOpacity = 1
     let sortableListToZIndex = 100
     let fullListToOpacity = 0
@@ -276,7 +272,6 @@ export default class WalletList extends Component {
   }
 
   disableSorting = () => {
-    // console.log('disabling sorting')
     let sortableToOpacity = 0
     let sortableListToZIndex = 0
     let fullListToOpacity = 1

@@ -36,7 +36,6 @@ class SortableWalletListRow extends Component {
       name = walletData.name || sprintf(strings.enUS['string_no_name'])
       symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
     }
-    console.log('rendering SortableWalletListRow, walletData is: ', walletData, ' this is: ', this)
     return (
       <TouchableHighlight
         style={[b('green'), styles.rowContainer, {width: this.props.dimensions.deviceDimensions.width, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
