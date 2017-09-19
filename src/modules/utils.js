@@ -188,3 +188,8 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   }
   return denomArray
 }
+
+export const getSupportedFiats = (): Array<> => {
+  const supportedFiatDenominations = getAllDenomsOfIsoCurrencies()
+
+}
