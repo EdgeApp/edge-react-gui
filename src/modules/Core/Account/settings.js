@@ -139,7 +139,6 @@ export async function setSyncedSubcategories (account, subcategories) {
 
 export const getSyncedSubcategories = (account) => getSyncedSubcategoriesFile(account).getText()
   .then((text) => {
-
     let categoriesText = JSON.parse(text)
     return categoriesText.categories
   })

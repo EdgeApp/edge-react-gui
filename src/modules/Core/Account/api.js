@@ -26,12 +26,10 @@ export const deleteWalletRequest = (account, walletId) => account.changeWalletSt
 })
 
 export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
-
   const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
     keyStates[id] = {sortIndex: index}
     return keyStates
   }, {})
-  console.log('newKeyStates are: ', newKeyStates)
   return account.changeWalletStates(newKeyStates)
 }
 
