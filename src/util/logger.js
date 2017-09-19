@@ -1,3 +1,5 @@
+// @flow
+
 import {makeReactNativeFolder} from 'disklet'
 
 const LOGS_FOLDER = 'logs'
@@ -27,7 +29,7 @@ async function write (logString) {
 }
 
 
-export function log (...info) {
+export function log (...info: Array<number | string | null | {}>) {
   write(`${getTime()} | ${info.map((item) => isObject(item) ? JSON.stringify(item) : item).join(' ')}`)
 }
 
