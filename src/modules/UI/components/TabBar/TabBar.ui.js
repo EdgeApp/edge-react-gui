@@ -4,7 +4,7 @@ import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {Actions} from 'react-native-router-flux'
 import {Footer, FooterTab, Button} from 'native-base'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../Gradient/Gradient.ui'
 import {setTabBarHeight} from '../../dimensions/action'
 import {openSidebar, closeSidebar} from '../SideMenu/action'
 import T from '../FormattedText'
@@ -38,9 +38,7 @@ export default class TabBar extends Component {
 
   render () {
     return (
-      <LinearGradient style={{borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid'}}
-        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']} onLayout={this._onLayout} >
+      <Gradient style={{borderWidth: 0.5, borderColor: '#CCCCCC', borderStyle: 'solid'}}>
         <Footer>
           <FooterTab>
 
@@ -101,7 +99,7 @@ export default class TabBar extends Component {
 
           </FooterTab>
         </Footer>
-      </LinearGradient>
+      </Gradient>
     )
   }
 }

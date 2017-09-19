@@ -13,12 +13,11 @@ import {
   View,
 } from 'react-native'
 import T from '../../components/FormattedText'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import styles from './style'
-import {colors as c} from '../../../../theme/variables/airbitz.js'
 import * as UTILS from '../../../utils'
 
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
@@ -197,7 +196,7 @@ export default class TransactionList extends Component {
         <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
-            <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.currentBalanceBox, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
+            <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
               {this.state.balanceBoxVisible
               && <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
                 {this.props.updatingBalance ? (
@@ -260,7 +259,7 @@ export default class TransactionList extends Component {
                 </View>
               </Animated.View>
                 }
-            </LinearGradient>
+            </Gradient>
           </Animated.View>
           <View style={[styles.transactionsWrap]}>
             <ListView

@@ -12,8 +12,7 @@ import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 
-// $FlowFixMe
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
 import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
@@ -97,10 +96,7 @@ export default class SendConfirmation extends Component<any, any, any> {
 
     // console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
     return (
-      <LinearGradient
-        style={[styles.view]}
-        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}>
+      <Gradient style={[styles.view]}>
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
           <View style={[styles.exchangeRateContainer, UTILS.border()]}>
@@ -134,7 +130,7 @@ export default class SendConfirmation extends Component<any, any, any> {
           </View>
           <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={this.props.sliderDisabled} />
         </ScrollView>
-      </LinearGradient>
+      </Gradient>
     )
   }
 
