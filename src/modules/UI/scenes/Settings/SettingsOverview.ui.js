@@ -89,6 +89,10 @@ export default class SettingsOverview extends Component {
     ]
   }
 
+  _onPressDummyRouting = () => {
+    console.log('dummy routing')
+  }
+
   _onPressChangePasswordRouting = () => {
     Actions[Constants.CHANGE_PASSWORD]()
   }
