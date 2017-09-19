@@ -31,9 +31,9 @@
     ]
   },
   "dependencies": {
-    "airbitz-core-types": "git+ssh://git@github.com/Airbitz/airbitz-core-types",
     "airbitz-core-js-ui": "git+ssh://git@github.com/Airbitz/airbitz-core-js-ui.git#react-native",
     "airbitz-core-react-native": "git+ssh://git@github.com/Airbitz/airbitz-core-react-native.git",
+    "airbitz-core-types": "git+ssh://git@github.com/Airbitz/airbitz-core-types",
     "airbitz-currency-bitcoin": "git+ssh://git@github.com/Airbitz/airbitz-currency-bitcoin.git",
     "airbitz-currency-ethereum": "git+ssh://git@github.com/Airbitz/airbitz-currency-ethereum.git",
     "airbitz-exchange-plugins": "git+ssh://git@github.com/Airbitz/airbitz-exchange-plugins.git",
@@ -41,7 +41,7 @@
     "async": "^2.3.0",
     "asyncstorage-down": "^4.0.1",
     "base64-js": "^1.2.0",
-    "biggystring": "^1.0.6",
+    "biggystring": "^1.0.7",
     "browserify-zlib": "^0.1.4",
     "buffer": "^3.6.0",
     "console-browserify": "^1.1.0",

@@ -52,6 +52,7 @@ export class GuiWallet {
 
 export type GuiDenomination = {
   name: string,
+  currencyCode?: string,
   symbol: string,
   multiplier: string,
   precision: number
