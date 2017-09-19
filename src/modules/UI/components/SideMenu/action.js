@@ -1,14 +1,14 @@
-export const OPEN_SIDEBAR = 'OPEN_SIDEBAR'
-export const CLOSE_SIDEBAR = 'CLOSE_SIDEBAR'
+export const OPEN_SIDE_MENU = 'OPEN_SIDE_MENU'
+export const CLOSE_SIDE_MENU = 'CLOSE_SIDE_MENU'
 
-export function openSidebar () {
+export function openSideMenu () {
   return {
-    type: OPEN_SIDEBAR
+    type: OPEN_SIDE_MENU
   }
 }
 
-export function closeSidebar () {
+export function closeSideMenu () {
   return {
-    type: CLOSE_SIDEBAR
+    type: CLOSE_SIDE_MENU
   }
 }
