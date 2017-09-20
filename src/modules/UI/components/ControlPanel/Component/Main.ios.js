@@ -59,7 +59,7 @@ export default class Main extends Component {
   }
 
   _handleOnPressRouting = (route) => () => {
-    this.props.closeSideMenu()
+    this.props.onPressOption()
     switch (route) {
     case 'settingsOverview':
       return Actions.settingsOverview({type: 'reset'})
