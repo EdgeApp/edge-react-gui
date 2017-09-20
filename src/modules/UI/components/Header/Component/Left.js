@@ -5,7 +5,7 @@ import strings from '../../../../../locales/default'
 import BackButton from './BackButton.ui'
 
 const BACK_TEXT = sprintf(strings.enUS['back_button_text'])
-const CANCEL_TEXT = sprintf(strings.enUS['string_cancel'])
+const CANCEL_TEXT = sprintf(strings.enUS['string_cancel_cap'])
 
 export default class Left extends Component {
   render () {
