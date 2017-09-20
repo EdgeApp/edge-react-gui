@@ -1,12 +1,14 @@
 import {connect} from 'react-redux'
-import DefaultFiatSetting from './DefaultFiatSetting.ui.ui'
+import DefaultFiatSetting from './DefaultFiatSetting.ui'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import {setDenominationKeyRequest} from './action'
+import {setDefaultFiatRequest} from './action'
+import * as UTILS from '../../../utils'
 
-const mapStateToProps = (state, ownProps) => ({
-  defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state)
+const mapStateToProps = (state) => ({
+  defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
+  supportedFiats: UTILS.getSupportedFiats()
 })
-const mapDispatchToProps = (dispatch, ownProps) => ({
-  selectDenomination: (denominationKey) => { dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey)) },
+const mapDispatchToProps = (dispatch) => ({
+  setDefaultFiat: (selectedDefaultFiat) => dispatch(setDefaultFiatRequest(selectedDefaultFiat))
 })
-export default connect(mapStateToProps, mapDispatchToProps)(CurrencySettings)
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultFiatSetting)
