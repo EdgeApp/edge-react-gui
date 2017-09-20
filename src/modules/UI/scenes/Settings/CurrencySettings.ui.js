@@ -3,7 +3,7 @@ import {Image, View} from 'react-native'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import T from '../../components/FormattedText'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import s from './style'
 import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
@@ -11,9 +11,7 @@ import RadioRows from './components/RadioRows.ui.js'
 
 export default class CurrencySettings extends Component {
   header () {
-    return <LinearGradient style={[s.headerRow, b('purple')]}
-      start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-      colors={['#3B7ADA', '#2B5698']}>
+    return <Gradient style={[s.headerRow, b('purple')]}>
 
       <View style={[s.headerTextWrap, b('yellow')]}>
         <View style={s.leftArea}>
@@ -25,7 +23,7 @@ export default class CurrencySettings extends Component {
         </View>
       </View>
 
-    </LinearGradient>
+    </Gradient>
   }
 
   selectDenomination = (key) => () => {

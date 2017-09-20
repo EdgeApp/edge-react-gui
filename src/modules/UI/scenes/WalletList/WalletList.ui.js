@@ -14,8 +14,7 @@ import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-// $FlowFixMe: suppressing this error since module IS available
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
@@ -24,7 +23,6 @@ import SortableWalletListRow from './components/WalletListRow/SortableWalletList
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 
-import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
 
@@ -152,7 +150,7 @@ export default class WalletList extends Component {
         </View>
 
         <View style={[styles.walletsBox]}>
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
+          <Gradient style={[styles.walletsBoxHeaderWrap, UTILS.border()]}>
 
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
@@ -182,7 +180,7 @@ export default class WalletList extends Component {
               </Animated.View>
 
             </View>
-          </LinearGradient>
+          </Gradient>
 
           {
             Object.keys(wallets).length > 0
