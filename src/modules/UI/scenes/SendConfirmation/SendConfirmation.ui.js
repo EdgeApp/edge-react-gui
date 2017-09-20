@@ -16,7 +16,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
 import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
-import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
 
 type Props = {
@@ -135,9 +135,9 @@ export default class SendConfirmation extends Component<any, any, any> {
   }
 
   signBroadcastAndSave = () => {
-    const {transaction} = this.props
+    const abcTransaction: AbcTransaction = this.props.sendConfirmation.transaction
     this.props.updateSpendPending(true)
-    this.props.signBroadcastAndSave(transaction)
+    this.props.signBroadcastAndSave(abcTransaction)
   }
 
   getTopSpacer = () => {

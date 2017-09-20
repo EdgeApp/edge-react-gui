@@ -8,7 +8,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import type {GuiWallet, GuiCurrencyInfo, GuiDenomination} from '../../../../types'
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcTransaction} from 'airbitz-core-types'
 
 import {
   signBroadcastAndSave,
@@ -77,7 +77,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   processParsedUri: (parsedUri) => dispatch(processParsedUri(parsedUri)),
   updateSpendPending: (pendind) => dispatch(updateSpendPending(pendind)),
-  signBroadcastAndSave: (transaction) => dispatch(signBroadcastAndSave(transaction))
+  signBroadcastAndSave: (abcTransaction: AbcTransaction) => dispatch(signBroadcastAndSave(abcTransaction))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)
