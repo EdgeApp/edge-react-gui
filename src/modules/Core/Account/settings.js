@@ -99,6 +99,7 @@ export const setDenominationKeyRequest = (account, currencyCode, denomination) =
   })
 
 // Helper Functions
+
 export const getSyncedSettings = (account) =>
   getSyncedSettingsFile(account).getText()
   .then((text) => JSON.parse(text))
