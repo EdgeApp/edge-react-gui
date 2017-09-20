@@ -6,7 +6,8 @@ import * as Constants from '../../../../constants'
 
 export const mapStateToProps = (state) => ({
   context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state)
+  account: CORE_SELECTORS.getAccount(state),
+  showHeader: false
 })
 
 export const mapDispatchToProps = () => ({

@@ -13,6 +13,7 @@ export default class ChangePassword extends Component {
         context={this.props.context}
         onComplete={this.onComplete}
         onCancel={this.onComplete}
+        showHeader={this.props.showHeader}
       />
     )
   }
