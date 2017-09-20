@@ -14,7 +14,7 @@ import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
@@ -95,8 +95,7 @@ export default class Request extends Component {
     } = this.props
     const nativeAmount = this.state.primaryNativeAmount
     return (
-      <LinearGradient style={styles.view} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}>
+      <Gradient style={styles.view}>
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
@@ -121,7 +120,7 @@ export default class Request extends Component {
           <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
         </View>
 
-      </LinearGradient>
+      </Gradient>
     )
   }
 

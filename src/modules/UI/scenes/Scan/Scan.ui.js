@@ -11,8 +11,7 @@ import {
   TouchableHighlight
 } from 'react-native'
 import T from '../../components/FormattedText'
-// $FlowFixMe
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 // $FlowFixMe
@@ -41,7 +40,8 @@ type Props = {
   updateParsedURI(AbcParsedUri): void
 }
 
-export default class Scan extends Component<any, any, any> {
+export default class Scan extends Component<any, any> {
+  static defaultProps: any;
   state: {
     cameraPermission?: boolean
   }
@@ -151,7 +151,7 @@ export default class Scan extends Component<any, any, any> {
           </View>
           <View style={[styles.overlayBlank]} />
 
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#3B7ADA', '#2B5698']} style={[styles.overlayButtonAreaWrap]}>
+          <Gradient style={[styles.overlayButtonAreaWrap]}>
 
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
@@ -181,7 +181,7 @@ export default class Scan extends Component<any, any, any> {
               </View>
             </TouchableHighlight>
 
-          </LinearGradient>
+          </Gradient>
 
         </View>
       </View>

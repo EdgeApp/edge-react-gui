@@ -7,7 +7,7 @@ import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as Constants from '../../../../constants'
 import strings from '../../../../locales/default'
@@ -142,8 +142,7 @@ export default class SettingsOverview extends Component {
 
     return (
       <ScrollView style={s.container}>
-        <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3B7ADA', '#2B5698']}>
+        <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
@@ -152,14 +151,13 @@ export default class SettingsOverview extends Component {
               </T>
             </View>
           </View>
-        </LinearGradient>
+        </Gradient>
 
         <View>
           {this.settings.map(this.renderRowRoute)}
         </View>
 
-        <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3B7ADA', '#2B5698']}>
+        <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
               <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
@@ -168,7 +166,7 @@ export default class SettingsOverview extends Component {
               </T>
             </View>
           </View>
-        </LinearGradient>
+        </Gradient>
 
         <View>
           <RowModal onPress={this.showAutoLogoutModal}

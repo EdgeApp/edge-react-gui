@@ -139,7 +139,6 @@ android {
 dependencies {
     compile project(':react-native-splash-screen')
     compile project(':react-native-blur')
-    compile project(':react-native-secp256k1')
 //    compile project(':react-native-hockeyapp')
     compile project(':react-native-fast-crypto')
     compile project(':react-native-locale')
