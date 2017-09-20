@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default class ExchangeRate extends Component {
+export default class ExchangeRate extends Component<$FlowFixMeProps> {
   render () {
     const cryptoCurrencyCode:string = this.props.primaryInfo.displayDenomination.name
     const fiatSymbol:string = this.props.secondaryInfo.displayDenomination.symbol

@@ -12,7 +12,7 @@ if (!__DEV__) {
   console.log = () => {}
 }
 
-export default class App extends Component {
+export default class App extends Component<{}> {
   render () {
     return (
       <Provider store={store}>

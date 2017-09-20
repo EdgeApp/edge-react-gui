@@ -51,15 +51,13 @@ const options = [
   }
 ]
 
-export default class WalletList extends Component {
-  state: {
-    sortableMode: boolean,
-    sortableListOpacity: number,
-    fullListOpacity: number,
-    sortableListZIndex: number,
-    fullListZIndex: number
-  }
-
+export default class WalletList extends Component<any, {
+  sortableMode: boolean,
+  sortableListOpacity: number,
+  fullListOpacity: number,
+  sortableListZIndex: number,
+  fullListZIndex: number
+}> {
   constructor (props: any) {
     super(props)
     this.state = {

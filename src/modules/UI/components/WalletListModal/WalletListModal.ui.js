@@ -8,7 +8,7 @@ import {border as b} from '../../../utils'
 import WalletListModalBody from './components/WalletListModalBodyConnector'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
 
-export default class WalletListModal extends Component {
+export default class WalletListModal extends Component<any> {
   constructor (props: any) {
     super(props)
     if (!this.props.topDisplacement) {
