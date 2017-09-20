@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {Provider} from 'react-redux'
 import configureStore from './lib/configureStore'
 import Main from './modules/MainConnector'
+import './util/polyfills'
 
 const store: {} = configureStore({})
 
