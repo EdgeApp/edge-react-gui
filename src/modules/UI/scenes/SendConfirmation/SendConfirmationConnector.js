@@ -1,6 +1,7 @@
 // @flow
+
 import {connect} from 'react-redux'
-import SendConfirmation from './SendConfirmation.ui'
+import type {Props, DispatchProps} from './SendConfirmation.ui'
 import {bns} from 'biggystring'
 
 import {getDenomFromIsoCode} from '../../../utils'
@@ -8,7 +9,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import type {GuiWallet, GuiCurrencyInfo, GuiDenomination} from '../../../../types'
-import type {AbcCurrencyWallet, AbcTransaction} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 import {
   signBroadcastAndSave,
@@ -16,7 +17,9 @@ import {
   processParsedUri
 } from './action.js'
 
-const mapStateToProps = (state) => {
+const {SendConfirmation} = require('./SendConfirmation.ui')
+
+const mapStateToProps = (state: any): Props => {
   let fiatPerCrypto = 0
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
@@ -74,9 +77,9 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  processParsedUri: (parsedUri) => dispatch(processParsedUri(parsedUri)),
-  updateSpendPending: (pendind) => dispatch(updateSpendPending(pendind)),
+const mapDispatchToProps = (dispatch: any): DispatchProps => ({
+  processParsedUri: (parsedUri: AbcParsedUri) => dispatch(processParsedUri(parsedUri)),
+  updateSpendPending: (pendind: boolean) => dispatch(updateSpendPending(pendind)),
   signBroadcastAndSave: (abcTransaction: AbcTransaction) => dispatch(signBroadcastAndSave(abcTransaction))
 })
 

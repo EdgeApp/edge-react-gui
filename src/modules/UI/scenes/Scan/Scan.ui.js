@@ -40,7 +40,8 @@ type Props = {
   updateParsedURI(AbcParsedUri): void
 }
 
-export default class Scan extends Component<any, any, any> {
+export default class Scan extends Component<any, any> {
+  static defaultProps: any;
   state: {
     cameraPermission?: boolean
   }
