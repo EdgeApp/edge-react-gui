@@ -18,7 +18,6 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-
 export default class Request extends Component {
   constructor (props) {
     super(props)
@@ -31,8 +30,6 @@ export default class Request extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.loading) return
-
     if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
       const {abcWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
