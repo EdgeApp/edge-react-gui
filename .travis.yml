@@ -50,4 +50,4 @@ matrix:
       xcode_scheme: ios/edge
       script:
         - cd ios
-        - xcodebuild -scheme edge -project edge.xcodeproj archive ONLY_ACTIVE_ARCH=NO | xcpretty
+        - xcodebuild -scheme edge -project edge.xcodeproj archive ONLY_ACTIVE_ARCH=NO
