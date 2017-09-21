@@ -85,8 +85,14 @@ export const isValidInput = (input: string): boolean =>
    !isNaN(+input) || input === '.'
 
 // Used to limit the decimals of a displayAmount
-export const truncateDecimals = (input: string, precision: number): string => {
-  input = (input === '') ? '0' : input
+export const truncateDecimals = (input: string, precision: number, allowBlank: boolean = false): string => {
+  if (input === '') {
+    if (allowBlank) {
+      input = ''
+    } else {
+      input = '0'
+    }
+  }
   if (!input.includes('.')) { return input }
   const [integers, decimals] = input.split('.')
   return `${integers}.${decimals.slice(0, precision)}`
