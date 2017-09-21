@@ -7,7 +7,6 @@ export default class Body extends Component {
   render () {
     const scene = this.props.routes.scene
     const children = scene.children
-    console.log('Allen: Name '+this.props.routes.scene.children[this.props.routes.scene.index].name)
     const sceneName = children
       ? this.props.routes.scene.children[this.props.routes.scene.index].name
       : null
