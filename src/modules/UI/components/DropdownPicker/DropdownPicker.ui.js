@@ -14,17 +14,16 @@ export default class DropdownPicker extends Component {
 
     this.state = {
       searchTerm: '',
-      isListVisible: false,
+      isListVisible: props.startOpen,
       selectedItem: ''
     }
   }
 
-  handleTextInputChange = (searchTerm) => {
-    this.handleSelectListItem(searchTerm)
-    this.handleSearchTermChange(searchTerm)
-  }
   handleSelectListItem = (item) => {
-    this.setState({searchTerm: item.label, isListVisible: false})
+    this.setState({
+      searchTerm: item.label,
+      isListVisible: false
+    })
     this.props.onSelect(item)
   }
   handleSearchTermChange = (searchTerm) => this.setState({isListVisible: true, searchTerm})
@@ -49,7 +48,7 @@ export default class DropdownPicker extends Component {
           onBlur={this.handleOnBlur}
           autoCorrect={false}
           autoCapitalize={'words'}
-          onChangeText={this.handleTextInputChange}
+          onChangeText={this.handleSearchTermChange}
           value={this.state.searchTerm}
           placeholder={this.props.placeholder} />
 

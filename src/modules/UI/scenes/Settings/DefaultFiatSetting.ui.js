@@ -20,27 +20,26 @@ export default class DefaultFiatSetting extends Component {
     }
   }
 
-  onSelectFiat = () => {
-    if (!this.isValidFiat()) {
+  onSelectFiat = (selectedFiat) => {
+    if (!this.isValidFiat(selectedFiat)) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
-      this.setState({isCreatingWallet: true})
-      Keyboard.dismiss()
-      const {
+      this.setState({
+        isCreatingWallet: true,
         selectedFiat
-      } = this.state
+      })
+      Keyboard.dismiss()
       this.props.selectFiat(selectedFiat)
     }
   }
 
-  isValidFiat = () => {
+  isValidFiat = (selectedFiat) => {
     const {
-      selectedFiat,
       supportedFiats
     } = this.state
 
     const isValid = supportedFiats
-      .find((fiat) => fiat.value === selectedFiat)
+      .find((fiat) => fiat.value === selectedFiat.value)
 
     return isValid
   }
@@ -52,6 +51,7 @@ export default class DefaultFiatSetting extends Component {
 
     return <View>
       <DropdownPicker
+        startOpen
         keyboardShouldPersistTaps={'always'}
         listItems={supportedFiats || []}
         placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}

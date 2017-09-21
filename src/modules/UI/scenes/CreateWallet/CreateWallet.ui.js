@@ -13,8 +13,6 @@ import DropdownPicker from '../../components/DropdownPicker/index'
 import styles from './styles.js'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
-import {GuiDenomination} from '../../../../types'
-import {getAllDenomsOfIsoCurrencies} from '../../../utils'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
@@ -38,11 +36,7 @@ export default class CreateWallet extends Component {
   }
 
   getSupportedFiats = () => {
-    const denomArray: Array<GuiDenomination> = getAllDenomsOfIsoCurrencies()
-    const supportedFiats = []
-    for (const denom of denomArray) {
-      supportedFiats.push({label: denom.currencyCode, value: denom.currencyCode})
-    }
+    const {supportedFiats} = this.props
     return supportedFiats
   }
 
@@ -85,10 +79,12 @@ export default class CreateWallet extends Component {
     } else {
       this.setState({isCreatingWallet: true})
       Keyboard.dismiss()
-      const {walletName, selectedWalletType} = this.state
-      // console.log('walletName', walletName)
-      // console.log('selectedWalletType', selectedWalletType)
-      this.props.createWallet(walletName, selectedWalletType)
+      const {
+        walletName,
+        selectedWalletType,
+        selectedFiat
+      } = this.state
+      this.props.createWallet(walletName, selectedWalletType, selectedFiat)
     }
   }
 
