@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 
 const EXCHANGE_RATE_LOADING_TEXT = strings.enUS['drawer_exchange_rate_loading']
 
-export default class ExchangeRate extends Component {
+export default class ExchangeRate extends Component<$FlowFixMeProps> {
   render () {
     const cryptoCurrencyCode:string = this.props.primaryInfo.displayDenomination.name
     const fiatSymbol:string = this.props.secondaryInfo.displayDenomination.symbol

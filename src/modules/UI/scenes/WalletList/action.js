@@ -115,11 +115,7 @@ export const updateActiveWalletsOrder = (activeWalletIds) => (dispatch, getState
   dispatch(updateActiveWalletsOrderStart(activeWalletIds))
   ACCOUNT_API.updateActiveWalletsOrderRequest(account, activeWalletIds)
     .then(() => {
-      // console.log('response', response)
       dispatch(updateActiveWalletsOrderSuccess(activeWalletIds))
-      for (let k in activeWalletIds) {
-        dispatch(updateIndividualWalletSortIndex(activeWalletIds[k], k))
-      }
     })
     .catch((e) => console.log(e))
 }

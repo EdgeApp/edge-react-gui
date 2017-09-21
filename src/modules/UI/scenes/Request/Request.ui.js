@@ -14,10 +14,11 @@ import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
+import {saveToLog} from './action.js'
 
 export default class Request extends Component {
   constructor (props) {
@@ -31,14 +32,13 @@ export default class Request extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.loading) return
-
-    if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
-      const {abcWallet, currencyCode} = nextProps
-      WALLET_API.getReceiveAddress(abcWallet, currencyCode)
+    if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
+      const {coreWallet, currencyCode} = nextProps
+      WALLET_API.getReceiveAddress(coreWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
+        this.props.dispatch(saveToLog('testing'))
+        const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
           publicAddress
@@ -95,8 +95,7 @@ export default class Request extends Component {
     } = this.props
     const nativeAmount = this.state.primaryNativeAmount
     return (
-      <LinearGradient style={styles.view} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}>
+      <Gradient style={styles.view}>
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
@@ -121,7 +120,7 @@ export default class Request extends Component {
           <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
         </View>
 
-      </LinearGradient>
+      </Gradient>
     )
   }
 

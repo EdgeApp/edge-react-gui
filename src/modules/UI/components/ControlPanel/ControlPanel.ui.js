@@ -1,12 +1,11 @@
 import React, {Component} from 'react'
 import {View, TouchableOpacity, Image} from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../Gradient/Gradient.ui'
 
 import Main from './Component/MainConnector'
 import ExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
 import styles from './style'
-import {colors as c} from '../../../../theme/variables/airbitz.js'
 import T from '../../components/FormattedText'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
@@ -52,11 +51,7 @@ export default class ControlPanel extends Component {
     } = this.props
 
     return (
-      <LinearGradient
-        style={styles.container}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 0}}
-        colors={[c.gradient.light, c.gradient.dark]}>
+      <Gradient style={styles.container}>
         <View style={styles.bitcoin.container}>
           <T style={styles.bitcoin.icon} />
           <ExchangeRate
@@ -76,7 +71,7 @@ export default class ControlPanel extends Component {
           <MDIcon style={styles.icon} name={this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} />
         </TouchableOpacity>
         <Main />
-      </LinearGradient>
+      </Gradient>
     )
   }
 }
