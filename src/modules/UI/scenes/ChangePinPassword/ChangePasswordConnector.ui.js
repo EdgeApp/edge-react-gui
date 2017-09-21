@@ -11,7 +11,7 @@ export const mapStateToProps = (state) => ({
 })
 
 export const mapDispatchToProps = () => ({
-  onComplete: () => Actions[Constants.SETTINGS_OVERVIEW]()
+  onComplete: Actions[Constants.SETTINGS_OVERVIEW]
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangePasswordComponent)
