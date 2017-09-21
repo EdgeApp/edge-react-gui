@@ -23,6 +23,8 @@ matrix:
       before_install:
         - nvm install 8
         - node --version
+      install:
+        - npm i        
       android:
         components:
           - build-tools-23.0.1
