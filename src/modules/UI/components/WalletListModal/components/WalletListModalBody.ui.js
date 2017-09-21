@@ -10,7 +10,7 @@ import styles from '../style'
 import * as UTILS from '../../../../utils'
 import {bns} from 'biggystring'
 
-export default class WalletListModalBody extends Component {
+export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   selectFromWallet = () => {
     LayoutAnimation.easeInEaseOut()
     this.props.disableWalletListModalVisibility()

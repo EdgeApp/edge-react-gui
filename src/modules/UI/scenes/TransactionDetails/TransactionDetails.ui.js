@@ -25,7 +25,7 @@ import ContactImage from '../../../../assets/images/contact.png'
 import T from '../../components/FormattedText'
 import {PrimaryButton} from '../../components/Buttons'
 import {connect} from 'react-redux'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
@@ -430,9 +430,9 @@ class TransactionDetails extends Component {
         <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
           <View style={[styles.container]}>
             <View>
-              <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.expandedHeader]} colors={[c.gradient.light, c.gradient.dark]}>
+              <Gradient style={[styles.expandedHeader]}>
                 <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath || this.props.tx.thumbnailPath} />
-              </LinearGradient>
+              </Gradient>
             </View>
             <View style={[styles.dataArea]}>
               <View style={[styles.payeeNameArea]}>

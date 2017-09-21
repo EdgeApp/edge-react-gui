@@ -5,16 +5,45 @@ import {bns} from 'biggystring'
 import {
   View,
   TouchableHighlight,
-  Animated,
+  ActivityIndicator
 } from 'react-native'
+import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
-import styles from '../../style'
-import T from '../../../../components/FormattedText/FormattedText.ui'
+import styles from '../../style.js'
+import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
-import WalletListTokenRow from './WalletListTokenRowConnector'
-import * as UTILS from '../../../../../utils'
+import WalletListTokenRow from './WalletListTokenRowConnector.js'
+import {border as b, cutOffText, truncateDecimals} from '../../../../../utils.js'
+import {selectWallet} from '../../../../Wallets/action.js'
+import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 
-export default class FullWalletListRow extends Component {
+export const findDenominationSymbol = (denoms, value) => {
+  for (const v of denoms) {
+    if (v.name === value) {
+      return v.symbol
+    }
+  }
+}
+
+
+class FullWalletRow extends Component {
+  render () {
+    return (
+      <View>
+        {this.props.data.item.id ? (
+          <FullWalletListRowConnect data={this.props.data} />
+        ) : (
+          <FullListRowEmptyData />
+        )}
+      </View>
+    )
+  }
+}
+
+export default FullWalletRow
+
+class FullWalletListRow extends Component {
+
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.selectWallet(walletId, currencyCode)
     Actions.transactionList({params: 'walletList'})
@@ -30,27 +59,30 @@ export default class FullWalletListRow extends Component {
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = denomination.symbol
     return (
-      <Animated.View style={[{width: this.props.dimensions.deviceDimensions.width}]}>
-        <TouchableHighlight
-          style={[styles.rowContainer]}
-          underlayColor={'#eee'}
-          {...this.props.sortHandlers}
-          onPress={() => this._onPressSelectWallet(id, currencyCode)}>
-          <View style={[styles.rowContent]}>
-            <View style={[styles.rowNameTextWrap]}>
-              <T style={[styles.rowNameText]} numberOfLines={1}>{UTILS.cutOffText(name, 34)}</T>
-            </View>
-            <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.rowBalanceAmountText]}>
-                {UTILS.truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
-              </T>
-              <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode} ({symbol || ''})</T>
-            </View>
-            <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
+      <View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
+          <View>
+            <TouchableHighlight
+              style={[styles.rowContainer]}
+              underlayColor={'#eee'}
+              {...this.props.sortHandlers}
+              onPress={() => this._onPressSelectWallet(id, currencyCode)}
+            >
+              <View style={[styles.rowContent]}>
+                <View style={[styles.rowNameTextWrap]}>
+                  <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
+                </View>
+                <View style={[styles.rowBalanceTextWrap]}>
+                  <T style={[styles.rowBalanceAmountText]}>
+                    {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
+                  </T>
+                  <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode} ({symbol || ''})</T>
+                </View>
+                <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
+              </View>
+            </TouchableHighlight>
+            {this.renderTokenRow(id, walletData.nativeBalances, this.props.active)}
           </View>
-        </TouchableHighlight>
-        {this.renderTokenRow(id, walletData.nativeBalances, this.props.active)}
-      </Animated.View>
+      </View>
     )
   }
 
@@ -64,5 +96,38 @@ export default class FullWalletListRow extends Component {
       }
     }
     return tokens
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
+  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+  return {
+    dimensions: state.ui.scenes.dimensions,
+    displayDenomination,
+    exchangeDenomination
+  }
+}
+const mapDispatchToProps = (dispatch) => ({
+  selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
+})
+
+export const FullWalletListRowConnect =  connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
+
+class FullListRowEmptyData extends Component {
+  render () {
+    return (
+      <TouchableHighlight
+        style={[styles.rowContainer], {height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}}
+        underlayColor={'#eee'}
+        {...this.props.sortHandlers}
+      >
+        <View style={[styles.rowContent]}>
+          <View style={[styles.rowNameTextWrap]}>
+            <ActivityIndicator style={{height: 18, width: 18}}/>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
   }
 }

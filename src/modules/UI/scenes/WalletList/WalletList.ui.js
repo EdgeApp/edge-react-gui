@@ -14,17 +14,15 @@ import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
-// $FlowFixMe: suppressing this error since module IS available
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
-import SortableWalletListRow from './components/WalletListRow/SortableWalletListRowConnector'
+import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 
-import {colors as c} from '../../../../theme/variables/airbitz.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
 
@@ -53,15 +51,13 @@ const options = [
   }
 ]
 
-export default class WalletList extends Component {
-  state: {
-    sortableMode: boolean,
-    sortableListOpacity: number,
-    fullListOpacity: number,
-    sortableListZIndex: number,
-    fullListZIndex: number
-  }
-
+export default class WalletList extends Component<any, {
+  sortableMode: boolean,
+  sortableListOpacity: number,
+  fullListOpacity: number,
+  sortableListZIndex: number,
+  fullListZIndex: number
+}> {
   constructor (props: any) {
     super(props)
     this.state = {
@@ -74,7 +70,6 @@ export default class WalletList extends Component {
   }
 
   componentDidMount () {
-    console.log('in WalletList->componentDidMount')
     Permissions.request('contacts').then((response) => {
       if (response === 'authorized') {
         Contacts.getAll((err, contacts) => {
@@ -90,7 +85,6 @@ export default class WalletList extends Component {
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
-    // console.log('in executeWalletRowOption, option is: ', option)
     switch (option) {
     case options[0].value: // 'rename'
       console.log('executing rename')
@@ -118,17 +112,29 @@ export default class WalletList extends Component {
       break
     }
   }
-
   render () {
-    // console.log('beginning of walletList render, this is: ', this.state)
     const {wallets} = this.props
     let walletsArray = []
+    let activeWallets = {}
     for (let wallet in wallets) {
       let theWallet = wallets[wallet]
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
+      if (this.props.activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
     }
+
+    let activeWalletsArray = this.props.activeWalletIds.map(function (x) {
+      let tempWalletObj = {key: x}
+      return wallets[x] || tempWalletObj
+    })
+
+    let activeWalletsObject = {}
+    this.props.activeWalletIds.forEach(function (x) {
+      let tempWalletObj = wallets[x] ? wallets[x] : {key: null}
+      activeWalletsObject[x] = tempWalletObj
+    })
+
     return (
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
@@ -152,7 +158,7 @@ export default class WalletList extends Component {
         </View>
 
         <View style={[styles.walletsBox]}>
-          <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} style={[styles.walletsBoxHeaderWrap, UTILS.border()]} colors={[c.gradient.light, c.gradient.dark]}>
+          <Gradient style={[styles.walletsBoxHeaderWrap, UTILS.border()]}>
 
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
@@ -182,12 +188,10 @@ export default class WalletList extends Component {
               </Animated.View>
 
             </View>
-          </LinearGradient>
+          </Gradient>
 
           {
-            Object.keys(wallets).length > 0
-              ? this.renderActiveSortableList(walletsArray)
-              : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+            Object.keys(this.props.wallets).length > 0 ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
           }
 
         </View>
@@ -195,26 +199,26 @@ export default class WalletList extends Component {
     )
   }
 
-  renderActiveSortableList = (walletsArray: Array<any>) => {
+  renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
     const {width} = Dimensions.get('window')
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
-        <Animated.View testID={'sortableList'} style={[{flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
+        <Animated.View testID={'sortableList'} style={[UTILS.border(), {flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
           <SortableListView
             style={{flex: 1, width}}
-            data={this.props.wallets}
-            order={this.sortActiveWallets(this.props.wallets)}
+            data={activeWalletsObject}
+            order={this.props.activeWalletIds}
             onRowMoved={this.onActiveRowMoved}
             render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
-            renderRow={this.renderActiveRow /*, this.onActiveRowMoved*/}
-            sortableMode={this.state.sortableMode}
+            renderRow={(row) => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
             executeWalletRowOption={this.executeWalletRowOption}
-            activeOpacity={0.6} />
+            dimensions={this.props.dimensions}
+          />
         </Animated.View>
-
         <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
-          <FlatList style={{flex: 1, width}}
-            data={walletsArray}
+          <FlatList
+            style={{flex: 1, width}}
+            data={activeWalletsArray}
             extraData={this.props.wallets}
             renderItem={(item) => <FullWalletListRow data={item} />}
             sortableMode={this.state.sortableMode}
@@ -224,11 +228,8 @@ export default class WalletList extends Component {
     )
   }
 
-  renderActiveRow = (row: any) => <SortableWalletListRow data={row} />
-
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
-    // console.log('enabling sorting, this is: ', this)
     let sortableToOpacity = 1
     let sortableListToZIndex = 100
     let fullListToOpacity = 0
@@ -267,7 +268,6 @@ export default class WalletList extends Component {
   }
 
   disableSorting = () => {
-    // console.log('disabling sorting')
     let sortableToOpacity = 0
     let sortableListToZIndex = 0
     let fullListToOpacity = 1
@@ -333,11 +333,7 @@ export default class WalletList extends Component {
   }
 
   onActiveRowMoved = (action: any) => {
-    const wallets = this.props.wallets
-    const activeOrderedWallets = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
-    .sort((a, b) => wallets[a].sortIndex - wallets[b].sortIndex) // sort them according to their (previous) sortIndices
-    const order = activeOrderedWallets
-    const newOrder = this.getNewOrder(order, action) // pass the old order to getNewOrder with the action ( from, to, and  )
+    const newOrder = this.getNewOrder(this.props.activeWalletIds, action) // pass the old order to getNewOrder with the action ( from, to, and  )
 
     this.props.updateActiveWalletsOrder(newOrder)
     this.forceUpdate()

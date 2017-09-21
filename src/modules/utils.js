@@ -188,3 +188,20 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   }
   return denomArray
 }
+
+type ExchangeData = {
+  secondaryDisplayAmount: string,
+  cryptoCurrencyCode: string,
+  fiatSymbol: string,
+  fiatExchangeAmount: string,
+  fiatCurrencyCode: string
+}
+
+export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
+  !!(
+    exchangeData.secondaryDisplayAmount
+      && exchangeData.cryptoCurrencyCode
+      && exchangeData.fiatSymbol
+      && exchangeData.fiatExchangeAmount
+      && exchangeData.fiatCurrencyCode
+  )

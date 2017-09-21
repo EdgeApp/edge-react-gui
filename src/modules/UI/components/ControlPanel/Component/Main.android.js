@@ -17,7 +17,7 @@ const SETTINGS_TEXT = sprintf(strings.enUS['settings_title'])
 
 export default class Main extends Component {
   onLogout = () => {
-    // console.log('logout')
+    this.props.onPressOption()
     this.props.logout()
   }
 
@@ -58,6 +58,7 @@ export default class Main extends Component {
   }
 
   _handleOnPressRouting = (route) => () => {
+    this.props.onPressOption()
     switch (route) {
     case 'settingsOverview':
       return Actions.settingsOverview({type: 'reset'})

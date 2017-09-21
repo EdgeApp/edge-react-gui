@@ -5,7 +5,7 @@ import {View} from 'react-native'
 import PropTypes from 'prop-types'
 import styles from './style'
 import Modal from 'react-native-modal'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../Gradient/Gradient.ui'
 import T from '../FormattedText'
 import {border as b} from '../../../utils'
 
@@ -43,13 +43,11 @@ export default class StylizedModal extends Component {
           </View>
         </View>
 
-        <LinearGradient style={[styles.modalHeaderIconWrapBottom]}
-          start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3B7ADA', '#2B5698']}>
+        <Gradient style={[styles.modalHeaderIconWrapBottom]}>
           <View style={styles.modalHeaderIconWrapTop}>
             {this.props.featuredIcon}
           </View>
-        </LinearGradient>
+        </Gradient>
       </Modal>
     )
   }

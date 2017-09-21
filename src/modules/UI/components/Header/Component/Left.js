@@ -1,11 +1,10 @@
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import BackButton from './BackButton.ui'
 
-const BACK_TEXT = sprintf(strings.enUS['back_button_text'])
-const CANCEL_TEXT = sprintf(strings.enUS['string_cancel'])
+const BACK_TEXT = strings.enUS['back_button_text']
+const CANCEL_TEXT = strings.enUS['string_cancel_cap']
 
 export default class Left extends Component {
   render () {
