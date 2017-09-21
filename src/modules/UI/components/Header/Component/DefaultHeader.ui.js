@@ -17,7 +17,6 @@ export default class DefaultHeader extends Component {
   }
 
   render () {
-    console.log('Allen: Title '+ this._renderTitle().replace(/ /g, '_'))
     return <Title>
       {sprintf('%s', strings.enUS['title_' + this._renderTitle().replace(/ /g, '_')])}
     </Title>
