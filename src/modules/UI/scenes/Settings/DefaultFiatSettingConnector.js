@@ -9,6 +9,6 @@ const mapStateToProps = (state) => ({
   supportedFiats: UTILS.getSupportedFiats()
 })
 const mapDispatchToProps = (dispatch) => ({
-  setDefaultFiat: (selectedDefaultFiat) => dispatch(setDefaultFiatRequest(selectedDefaultFiat))
+  selectDefaultFiat: (selectedDefaultFiat) => dispatch(setDefaultFiatRequest(selectedDefaultFiat))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultFiatSetting)
