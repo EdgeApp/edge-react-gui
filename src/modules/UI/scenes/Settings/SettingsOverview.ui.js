@@ -9,6 +9,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
+import * as Constants from '../../../../constants'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
@@ -30,20 +31,19 @@ export default class SettingsOverview extends Component {
 
     this.settings = [
       {
-        key: 'changePassword',
+        key: Constants.CHANGE_PASSWORD,
         text: sprintf(strings.enUS['settings_button_change_password']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressChangePasswordRouting
       }, {
-        key: 'changePin',
+        key: Constants.CHANGE_PIN,
         text: sprintf(strings.enUS['settings_button_pin']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressChangePinRouting
       }, {
-        key: 'passwordRecovery',
+        key: Constants.RECOVER_PASSWORD,
         text: sprintf(strings.enUS['settings_button_change_pass_recovery']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressRecoverPasswordRouting
       }
     ]
-
     this.securityRoute = [
       {
         key: 'setup2Factor',
@@ -89,14 +89,20 @@ export default class SettingsOverview extends Component {
     ]
   }
 
-  _handleOnPressRouting = (route) => {
-    // console.log('in SettingsOverview.ui.js, route is: ', route)
-    let goRoute = Actions[route]
-    goRoute()
+  _onPressDummyRouting = () => {
+    console.log('dummy routing')
   }
 
-  _onPressDummyRouting = () => {
-    // console.log('dummy routing')
+  _onPressChangePasswordRouting = () => {
+    Actions[Constants.CHANGE_PASSWORD]()
+  }
+
+  _onPressChangePinRouting = () => {
+    Actions[Constants.CHANGE_PIN]()
+
+  }
+  _onPressRecoverPasswordRouting = () => {
+    Actions[Constants.CHANGE_PASSWORD]()
   }
 
   _onPressOpenLogoffTime = () => {

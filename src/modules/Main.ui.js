@@ -9,10 +9,14 @@ import {MenuContext} from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
-
+import * as Constants from '../constants'
 import Login from './UI/scenes/Login/Login.ui'
-import Layout from './UI/scenes/layout/LayoutConnector'
-import TransactionList from './UI/scenes/TransactionList/TransactionListConnector'
+import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
+import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
+import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
+import LayoutConnector from './UI/scenes/layout/LayoutConnector'
+import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
+
 import TransactionDetails from './UI/scenes/TransactionDetails'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
@@ -111,31 +115,35 @@ export default class Main extends Component {
               <StatusBar translucent backgroundColor='green' barStyle='light-content' />
 
               <RouterWithRedux>
-                <Scene key='root' hideNavBar>
-                  <Scene key='login' type={ActionConst.REPLACE} initial username={this.props.username} component={Login} animation={'fade'} duration={600} />
+              <Scene key='root' hideNavBar>
+                <Scene hideNavBar hideTabBar type={ActionConst.RESET}   key={Constants.LOGIN}             component={Login}                   title='login'    animation={'fade'} duration={600} initial username={this.props.username} />
 
-                  <Scene hideNavBar hideTabBar key='edge' component={Layout} routes={routes} animation={'fade'} duration={600}>
+                <Scene hideNavBar hideTabBar key={Constants.EDGE} component={LayoutConnector} routes={routes} animation={'fade'} duration={600}>
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector} title='Change Password' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}      title='Change Pin' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='walletList' initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='createWallet' component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionList' component={TransactionList} title='Transactions' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='transactionDetails' component={TransactionDetails} title='Transaction Details' duration={0} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.WALLET_LIST} initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='scan' component={Scan} title='Scan' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='sendConfirmation' component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_LIST} component={TransactionListConnector} title='Transactions' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} title='Transaction Details' duration={0} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='request' component={Request} title='Request' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SCAN} component={Scan} title='Scan' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SEND_CONFIRMATION} component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='settingsOverview' component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.REQUEST} component={Request} title='Request' animation={'fade'} duration={600} />
 
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='btcSettings' component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ethSettings' component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
-                    <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='ltcSettings' component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                  </Scene>
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
+
                 </Scene>
-              </RouterWithRedux>
+              </Scene>
+            </RouterWithRedux>
 
             </Container>
           </View>
