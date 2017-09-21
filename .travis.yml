@@ -25,7 +25,7 @@ matrix:
         - nvm install 8
         - node --version
       install:
-        - travis_retry npm i -dd
+        - travis_retry npm i -d
       android:
         components:
           - build-tools-25.0.0
@@ -45,7 +45,7 @@ matrix:
         - node --version
       install:
         - travis_retry gem install xcpretty
-        - travis_retry npm i -dd
+        - travis_retry npm i -d
       xcode_project: ios/edge.xcworkspace
       xcode_scheme: ios/edge
       script:
