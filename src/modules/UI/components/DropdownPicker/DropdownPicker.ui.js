@@ -43,6 +43,7 @@ export default class DropdownPicker extends Component {
     return (
       <View style={styles.pickerView}>
         <TextInput style={styles.picker}
+          autoFocus={this.props.autoFocus}
           clearButtonMode={'while-editing'}
           onFocus={this.handleOnFocus}
           onBlur={this.handleOnBlur}

@@ -1,7 +1,7 @@
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, Text, View} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 
 import {sprintf} from 'sprintf-js'
@@ -18,6 +18,8 @@ import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
+
 import s from './style'
 
 export default class SettingsOverview extends Component {
@@ -32,19 +34,23 @@ export default class SettingsOverview extends Component {
       {
         key: 'changePassword',
         text: sprintf(strings.enUS['settings_button_change_password']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressDummyRouting,
+        right: <Icon name='arrow-right' size={18} color='#58595C' />
       }, {
         key: 'changePin',
         text: sprintf(strings.enUS['settings_button_pin']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressDummyRouting,
+        right: <Icon name='arrow-right' size={18} color='#58595C' />
       }, {
         key: 'passwordRecovery',
         text: sprintf(strings.enUS['settings_button_change_pass_recovery']),
-        routeFunction: this._onPressDummyRouting
+        routeFunction: this._onPressDummyRouting,
+        right: <Icon name='arrow-right' size={18} color='#58595C' />
       }, {
         key: 'defaultFiatSetting',
-        text: sprintf(strings.enUS['settings_select_currency']),
-        routeFunction: Actions.defaultFiatSetting
+        text: sprintf(strings.enUS['settings_title_currency']),
+        routeFunction: Actions.defaultFiatSetting,
+        right: <Text>{this.props.defaultFiat.replace('iso:', '')}</Text>
       }
     ]
 
@@ -191,7 +197,7 @@ export default class SettingsOverview extends Component {
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
 
-  renderRowRoute = (x, i) => <RowRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
+  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} scene={x.key} routeFunction={x.routeFunction} right={x.right} />
 
   renderRowSwitch = (x) => <RowSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
 

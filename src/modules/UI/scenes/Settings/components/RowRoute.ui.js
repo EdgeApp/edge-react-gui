@@ -5,7 +5,6 @@ import {
   View
 } from 'react-native'
 import T from '../../../components/FormattedText'
-import MAIcon from 'react-native-vector-icons/MaterialIcons'
 import {Actions} from 'react-native-router-flux'
 import s from '../style'
 import {border as b} from '../../../../utils'
@@ -22,9 +21,15 @@ export default class RowRoute extends Component {
 
         <View style={[s.settingsRowTextRow, b('red')]}>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>
-            <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
+            <T style={[s.settingsRowLeftText, b('green')]}>
+              {this.props.leftText}
+            </T>
           </View>
-          <MAIcon name='chevron-right' size={24} style={[s.settingsRowRightArrow, b('blue')]} color='#58595C' />
+          <View style={[s.settingsRowLeftContainer, b('blue')]}>
+            <T style={[s.settingsRowLeftText, b('green')]}>
+              {this.props.right}
+            </T>
+          </View>
         </View>
 
       </TouchableOpacity>
