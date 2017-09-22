@@ -824,7 +824,12 @@ const strings = {
   plugin_wholefoods_discount: '(Up to 10% Off)',
   plugin_walmart_discount: '(Up to 10% Off)',
   plugin_homedepot_discount: '(Up to 15% Off)',
-  in: 'in'
+  in: 'in',
+
+  // New items added before Localization overhaul.- Need Other than English Translation
+  title_Change_Password: 'Change Password',
+  title_Change_Pin: 'Change Pin',
+  title_Password_Recovery: 'Password Recovery'
 }
 
 export default strings
