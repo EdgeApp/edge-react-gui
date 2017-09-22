@@ -205,7 +205,7 @@ export const getSupportedFiats = (): Array<{}> => {
       : ''
 
     return {
-      label: `${entry[0]} - ${entry1}}`,
+      label: `${entry[0]} - ${entry1}`,
       value: entry[0]
     }
   }
