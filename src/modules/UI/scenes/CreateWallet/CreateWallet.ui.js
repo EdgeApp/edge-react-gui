@@ -8,7 +8,7 @@ import {
   TextInput
 } from 'react-native'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
-import DropdownPicker from '../../components/DropdownPicker/index'
+import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 
 import styles from './styles.js'
 import strings from '../../../../locales/default'
