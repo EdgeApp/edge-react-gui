@@ -11,14 +11,14 @@ import * as UI_SELECTORS from '../../../selectors'
 import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
 import {updateReceiveAddress} from '../../../scenes/Request/action.js'
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: {}): {} => ({
   walletList: UI_SELECTORS.getWallets(state),
   activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
   selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
   settings: SETTINGS_SELECTORS.getSettings(state)
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Function): {} => ({
   selectWallet: (walletId, currencyCode) => dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode)),
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility()),

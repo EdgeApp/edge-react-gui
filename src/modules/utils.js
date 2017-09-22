@@ -223,10 +223,8 @@ type ExchangeData = {
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!(
-    exchangeData.secondaryDisplayAmount
-      && exchangeData.cryptoCurrencyCode
-      && exchangeData.fiatSymbol
-      && exchangeData.fiatExchangeAmount
-      && exchangeData.fiatCurrencyCode
-  )
+  !!exchangeData.secondaryDisplayAmount
+    && !!exchangeData.cryptoCurrencyCode
+    && !!exchangeData.fiatSymbol
+    && !!exchangeData.fiatExchangeAmount
+    && !!exchangeData.fiatCurrencyCode
