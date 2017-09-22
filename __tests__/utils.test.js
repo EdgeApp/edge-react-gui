@@ -392,3 +392,93 @@ describe('getSupportedFiats', function () {
     })
   })
 })
+
+describe('isCompleteExchangeData', function () {
+  describe('secondaryDisplayAmount: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        secondaryDisplayAmount: undefined,
+        cryptoCurrencyCode: 'BTC',
+        fiatSymbol: '$',
+        fiatExchangeAmount: '4000',
+        fiatCurrencyCode: 'USD'
+      }
+      const expected = false
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('cryptoCurrencyCode: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        secondaryDisplayAmount: '4000',
+        cryptoCurrencyCode: undefined,
+        fiatSymbol: '$',
+        fiatExchangeAmount: '4000',
+        fiatCurrencyCode: 'USD'
+      }
+      const expected = false
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('fiatSymbol: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        secondaryDisplayAmount: '4000',
+        cryptoCurrencyCode: 'BTC',
+        fiatSymbol: undefined,
+        fiatExchangeAmount: '4000',
+        fiatCurrencyCode: 'USD'
+      }
+      const expected = false
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('fiatExchangeAmount: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        secondaryDisplayAmount: '4000',
+        cryptoCurrencyCode: 'BTC',
+        fiatSymbol: '$',
+        fiatExchangeAmount: undefined,
+        fiatCurrencyCode: 'USD'
+      }
+      const expected = false
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('fiatCurrencyCode: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        secondaryDisplayAmount: '4000',
+        cryptoCurrencyCode: 'BTC',
+        fiatSymbol: '$',
+        fiatExchangeAmount: '4000',
+        fiatCurrencyCode: undefined
+      }
+      const expected = false
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  test('complete => true', function () {
+    const exchangeData = {
+      secondaryDisplayAmount: '4000',
+      cryptoCurrencyCode: 'BTC',
+      fiatSymbol: '$',
+      fiatExchangeAmount: '4000',
+      fiatCurrencyCode: 'USD'
+    }
+    const expected = true
+    const actual = UTILS.isCompleteExchangeData(exchangeData)
+    expect(actual).toBe(expected)
+  })
+})
