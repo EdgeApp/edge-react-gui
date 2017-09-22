@@ -55,6 +55,6 @@ export async function log (...info: Array<number | string | null | {}>) {
 
 export async function readLogs () {
   const fileNames = await logsFolder.listFiles()
-  const files = await Promise.all(fileNames.map((fileName) => logsFolder.file(fileName).getText()))
+  const files = await new Promise.all(fileNames.map((fileName) => (fileName.indexOf('.txt') > -1) ? logsFolder.file(fileName).getText() : ''))
   return files.join('\n\n')
 }
