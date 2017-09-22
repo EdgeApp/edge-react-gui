@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
 import HelpButton from './HelpButton.ui'
+import * as Constants from '../../../../../constants'
 
 export default class Right extends Component {
 
@@ -11,21 +12,19 @@ export default class Right extends Component {
       : null
 
     switch (sceneName) {
-    case 'scan':
+    case Constants.SCAN:
       return <HelpButton />
-    case 'walletList':
+    case Constants.WALLET_LIST:
       return <HelpButton />
-    case 'directory':
+    case Constants.TRANSACTION_LIST:
       return <HelpButton />
-    case 'transactionList':
+    case Constants.TRANSACTION_DETAILS:
       return <HelpButton />
-    case 'transactionDetails':
+    case Constants.REQUEST:
       return <HelpButton />
-    case 'request':
-      return <HelpButton />
-    case 'sendConfirmation':
+    case Constants.SEND_CONFIRMATION:
       return <SendConfirmationOptions />
-    case 'createWallet':
+    case Constants.CREATE_WALLET:
       return <HelpButton />
     default:
       return null

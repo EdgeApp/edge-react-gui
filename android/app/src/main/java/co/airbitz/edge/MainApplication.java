@@ -6,7 +6,6 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.cmcewen.blurview.BlurViewPackage;
-import com.reactlibrary.RNMyFancyLibraryPackage;
 //import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -45,7 +44,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
 //            new SplashScreenReactPackage(),
             new BlurViewPackage(),
-            new RNMyFancyLibraryPackage(),
 //            new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),

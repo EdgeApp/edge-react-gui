@@ -7,8 +7,9 @@ import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
+import * as Constants from '../../../../constants'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
@@ -75,14 +76,20 @@ export default class SettingsOverview extends Component {
     ]
   }
 
-  _handleOnPressRouting = (route) => {
-    // console.log('in SettingsOverview.ui.js, route is: ', route)
-    let goRoute = Actions[route]
-    goRoute()
+  _onPressDummyRouting = () => {
+    console.log('dummy routing')
   }
 
-  _onPressDummyRouting = () => {
-    // console.log('dummy routing')
+  _onPressChangePasswordRouting = () => {
+    Actions[Constants.CHANGE_PASSWORD]()
+  }
+
+  _onPressChangePinRouting = () => {
+    Actions[Constants.CHANGE_PIN]()
+
+  }
+  _onPressRecoverPasswordRouting = () => {
+    Actions[Constants.CHANGE_PASSWORD]()
   }
 
   _onPressOpenLogoffTime = () => {
@@ -122,8 +129,7 @@ export default class SettingsOverview extends Component {
 
     return (
       <ScrollView style={s.container}>
-        <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3B7ADA', '#2B5698']}>
+        <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
@@ -132,32 +138,28 @@ export default class SettingsOverview extends Component {
               </T>
             </View>
           </View>
-        </LinearGradient>
+        </Gradient>
 
-        <View>
-          <RowRoute
-            leftText={strings.enUS['settings_button_change_password']}
-            scene={'changePassword'}
-            routeFunction={this._onPressDummyRouting}
-            right={<Icon name='arrow-right' size={18}
-              color='#58595C' />} />
-          <RowRoute
-            leftText={strings.enUS['settings_button_pin']}
-            scene={'changePassword'}
-            routeFunction={this._onPressDummyRouting}
-            right={<Icon name='arrow-right' size={18}
-              color='#58595C' />} />
-          <RowRoute
-            leftText={strings.enUS['settings_button_change_pass_recovery']}
-            scene={'changePassword'}
-            routeFunction={this._onPressDummyRouting}
-            right={<Icon name='arrow-right' size={18}
-              color='#58595C' />} />
+        <RowRoute
+          leftText={strings.enUS['settings_button_change_password']}
+          scene={'changePassword'}
+          routeFunction={this._onPressChangePasswordRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
+        <RowRoute
+          leftText={strings.enUS['settings_button_pin']}
+          scene={'changePassword'}
+          routeFunction={this._onPressChangePinRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
+        <RowRoute
+          leftText={strings.enUS['settings_button_change_pass_recovery']}
+          scene={'changePassword'}
+          routeFunction={this._onPressRecoverPasswordRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
 
-        </View>
-
-        <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#3B7ADA', '#2B5698']}>
+        <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
               <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
@@ -166,7 +168,7 @@ export default class SettingsOverview extends Component {
               </T>
             </View>
           </View>
-        </LinearGradient>
+        </Gradient>
 
         <View>
           <RowModal onPress={this.showAutoLogoutModal}

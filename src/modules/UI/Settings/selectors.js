@@ -37,6 +37,14 @@ export const getDisplayDenominationKey = (state: any, currencyCode: string) => {
   return selectedDenominationKey
 }
 
+export const getDisplayDenominationFromSettings = (settings: any, currencyCode: string) => {
+  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
+  const selectedDenominationKey = currencySettings.denomination
+  const denominations = currencySettings.denominations
+  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
+  return selectedDenomination
+}
+
 export const getDisplayDenomination = (state: any, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
@@ -65,11 +73,6 @@ export const getPlugin = (state: any, type: string) => {
 export const getBitcoinPlugin = (state: any) => {
   const bitcoinPlugin = getPlugin(state, 'bitcoin')
   return bitcoinPlugin
-}
-
-export const getLitecoinPlugin = (state: any) => {
-  const litecoinPlugin = getPlugin(state, 'litecoin')
-  return litecoinPlugin
 }
 
 export const getEthereumPlugin = (state: any) => {

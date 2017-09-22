@@ -7,7 +7,6 @@ import {
 import DropdownPicker from '../../components/DropdownPicker/index'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
-import styles from './style'
 
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['settings_select_currency'])
 const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_valid'])

@@ -1,5 +1,6 @@
+// @flow
+
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import {
   View,
   Text,
@@ -12,36 +13,40 @@ import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 
-// $FlowFixMe
-import LinearGradient from 'react-native-linear-gradient'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
 import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
-import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
 
-type Props = {
+export type Props = {
   sendConfirmation: SendConfirmationState,
   abcWallet: AbcCurrencyWallet,
   nativeAmount: string,
   errorMsg: string | null,
   fiatPerCrypto: number,
-  wallet: GuiWallet,
+  guiWallet: GuiWallet,
   currencyCode: string,
   primaryInfo: GuiCurrencyInfo,
   sliderDisabled: boolean,
   secondaryInfo: GuiCurrencyInfo,
-  processUri(AbcParsedUri): void
 }
 
-export default class SendConfirmation extends Component<any, any, any> {
-  state: {
-    primaryNativeAmount: string,
-    secondaryNativeAmount: string,
-    keyboardVisible: boolean
-  }
+export type DispatchProps = {
+  processParsedUri: (AbcParsedUri) => void,
+  updateSpendPending: (boolean) => void,
+  signBroadcastAndSave: (AbcTransaction) => void
+}
 
-  constructor (props: Props) {
+export type State = {
+  primaryNativeAmount: string,
+  secondaryNativeAmount: string,
+  keyboardVisible: boolean
+}
+
+export class SendConfirmation extends Component<Props & DispatchProps, State> {
+  constructor (props: Props & DispatchProps) {
     super(props)
     const amt = props.sendConfirmation.transaction ? props.sendConfirmation.transaction.nativeAmount : '0'
     this.state = {
@@ -57,7 +62,7 @@ export default class SendConfirmation extends Component<any, any, any> {
     this.props.processParsedUri(this.props.sendConfirmation.parsedUri)
   }
 
-  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}) => {
+  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
 
@@ -68,7 +73,7 @@ export default class SendConfirmation extends Component<any, any, any> {
 
     const parsedUri = this.props.sendConfirmation.parsedUri
     parsedUri.metadata = {
-      amountFiat: secondaryExchangeAmount
+      amountFiat: parseFloat(secondaryExchangeAmount)
     }
     parsedUri.nativeAmount = primaryNativeAmount
 
@@ -97,10 +102,7 @@ export default class SendConfirmation extends Component<any, any, any> {
 
     // console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
     return (
-      <LinearGradient
-        style={[styles.view]}
-        start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-        colors={['#3b7adb', '#2b569a']}>
+      <Gradient style={[styles.view]}>
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
           <View style={[styles.exchangeRateContainer, UTILS.border()]}>
@@ -134,14 +136,16 @@ export default class SendConfirmation extends Component<any, any, any> {
           </View>
           <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={this.props.sliderDisabled} />
         </ScrollView>
-      </LinearGradient>
+      </Gradient>
     )
   }
 
   signBroadcastAndSave = () => {
-    const {transaction} = this.props
-    this.props.updateSpendPending(true)
-    this.props.signBroadcastAndSave(transaction)
+    const abcTransaction: AbcTransaction | null = this.props.sendConfirmation.transaction
+    if (abcTransaction) {
+      this.props.updateSpendPending(true)
+      this.props.signBroadcastAndSave(abcTransaction)
+    }
   }
 
   getTopSpacer = () => {
@@ -171,11 +175,4 @@ export default class SendConfirmation extends Component<any, any, any> {
     const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier.toString()
     return (UTILS.deriveDisplayToExchangeRatio(exchangeMultiplier)(displayMultiplier)).toString()
   }
-}
-
-SendConfirmation.propTypes = {
-  sendConfirmation: PropTypes.object,
-  fiatPerCrypto: PropTypes.number,
-  inpurCurrencyDenom: PropTypes.string,
-  fiatCurrencyCode: PropTypes.string
 }

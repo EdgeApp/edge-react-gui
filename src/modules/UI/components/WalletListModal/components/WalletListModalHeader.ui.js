@@ -12,7 +12,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import styles from '../style'
 import {border as b} from '../../../../utils'
 
-export default class WalletListModalHeader extends Component {
+export default class WalletListModalHeader extends Component<any> {
   constructor (props: any) {
     super(props)
     this.props.type = 'from'
