@@ -391,11 +391,4 @@ describe('getSupportedFiats', function () {
       ))
     })
   })
-
-  test('each value has iso: prefix', function () {
-    const supportedFiats = UTILS.getSupportedFiats()
-    supportedFiats.forEach((fiat) => {
-      expect(fiat.value.slice(0, 4)).toBe('iso:')
-    })
-  })
 })

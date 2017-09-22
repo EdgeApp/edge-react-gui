@@ -30,30 +30,6 @@ export default class SettingsOverview extends Component {
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
-    this.settings = [
-      {
-        key: 'changePassword',
-        text: sprintf(strings.enUS['settings_button_change_password']),
-        routeFunction: this._onPressDummyRouting,
-        right: <Icon name='arrow-right' size={18} color='#58595C' />
-      }, {
-        key: 'changePin',
-        text: sprintf(strings.enUS['settings_button_pin']),
-        routeFunction: this._onPressDummyRouting,
-        right: <Icon name='arrow-right' size={18} color='#58595C' />
-      }, {
-        key: 'passwordRecovery',
-        text: sprintf(strings.enUS['settings_button_change_pass_recovery']),
-        routeFunction: this._onPressDummyRouting,
-        right: <Icon name='arrow-right' size={18} color='#58595C' />
-      }, {
-        key: 'defaultFiatSetting',
-        text: sprintf(strings.enUS['settings_title_currency']),
-        routeFunction: Actions.defaultFiatSetting,
-        right: <Text>{this.props.defaultFiat.replace('iso:', '')}</Text>
-      }
-    ]
-
     this.securityRoute = [
       {
         key: 'setup2Factor',
@@ -159,7 +135,25 @@ export default class SettingsOverview extends Component {
         </LinearGradient>
 
         <View>
-          {this.settings.map(this.renderRowRoute)}
+          <RowRoute
+            leftText={strings.enUS['settings_button_change_password']}
+            scene={'changePassword'}
+            routeFunction={this._onPressDummyRouting}
+            right={<Icon name='arrow-right' size={18}
+              color='#58595C' />} />
+          <RowRoute
+            leftText={strings.enUS['settings_button_pin']}
+            scene={'changePassword'}
+            routeFunction={this._onPressDummyRouting}
+            right={<Icon name='arrow-right' size={18}
+              color='#58595C' />} />
+          <RowRoute
+            leftText={strings.enUS['settings_button_change_pass_recovery']}
+            scene={'changePassword'}
+            routeFunction={this._onPressDummyRouting}
+            right={<Icon name='arrow-right' size={18}
+              color='#58595C' />} />
+
         </View>
 
         <LinearGradient style={[s.unlockRow]} start={{x: 0, y: 0}} end={{x: 1, y: 0}}
@@ -179,6 +173,11 @@ export default class SettingsOverview extends Component {
             leftText={sprintf(strings.enUS['settings_title_auto_logoff'])}
             rightText={this.props.autoLogoutTimeInMinutes || disabled} />
 
+          <RowRoute
+            leftText={strings.enUS['settings_title_currency']}
+            scene={'changePassword'}
+            routeFunction={Actions.defaultFiatSetting}
+            right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
           {this.securityRoute.map(this.renderRowRoute)}
           {Object.keys(this.options).map(this.renderRowSwitch)}
           {this.currencies.map(this.renderRowRoute)}

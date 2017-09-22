@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {
-  View,
+  KeyboardAvoidingView,
   ListView,
+  TextInput,
   TouchableOpacity,
-  TextInput
+  View,
 } from 'react-native'
 import T from '../../components/FormattedText'
 import styles from './styles.js'
@@ -55,6 +56,7 @@ export default class DropdownPicker extends Component {
 
           {this.state.isListVisible
             && <DropdownList
+              style={this.props.listStyle}
               dataSource={this.getMatchingListItems()}
               onPress={this.handleSelectListItem} />}
       </View>
@@ -74,11 +76,12 @@ const DropdownList = (props) => {
     <T>{item.label}</T>
   </TouchableOpacity>
 
-  return <View style={styles.listView}>
+  return <KeyboardAvoidingView keyboardVerticalOffset={60} contentContainerStyle={props.style} behavior={'height'}>
     <ListView
       keyboardShouldPersistTaps={'always'}
-      style={styles.listView}
+      style={props.style}
       dataSource={dataSource}
       renderRow={renderRow} />
-  </View>
+  </KeyboardAvoidingView>
+
 }

@@ -194,7 +194,7 @@ export const getSupportedFiats = (): Array<{}> => {
   const entries = Object.entries(currencySymbolsFromCurrencyCode)
   const supportedFiats = entries.map((entry) => ({
     label: `${entry[0]} - ${entry[1]}`,
-    value: `iso:${entry[0]}`
+    value: entry[0]
   }))
   return supportedFiats
 }

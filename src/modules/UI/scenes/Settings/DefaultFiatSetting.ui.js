@@ -7,6 +7,7 @@ import {
 import DropdownPicker from '../../components/DropdownPicker/index'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
+import styles from './style'
 
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['settings_select_currency'])
 const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_valid'])
@@ -24,10 +25,7 @@ export default class DefaultFiatSetting extends Component {
     if (!this.isValidFiat(selectedFiat)) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
-      this.setState({
-        isCreatingWallet: true,
-        selectedFiat
-      })
+      this.setState({selectedFiat})
       Keyboard.dismiss()
       this.props.onSelectFiat(selectedFiat)
     }
@@ -45,9 +43,7 @@ export default class DefaultFiatSetting extends Component {
   }
 
   render () {
-    const {
-      supportedFiats
-    } = this.state
+    const {supportedFiats} = this.state
 
     return <View>
       <DropdownPicker

@@ -122,6 +122,7 @@ export default class CreateWallet extends Component {
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
+          listStyle={{maxHeight: 140}}
           listItems={this.getSupportedFiats()}
           placeholder={FIAT_PICKER_PLACEHOLDER}
           onSelect={this.handleSelectFiat} />

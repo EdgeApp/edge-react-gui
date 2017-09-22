@@ -26,7 +26,7 @@ export default class RowRoute extends Component {
             </T>
           </View>
           <View style={[s.settingsRowLeftContainer, b('blue')]}>
-            <T style={[s.settingsRowLeftText, b('green')]}>
+            <T style={[s.routeRowRightText, b('green')]}>
               {this.props.right}
             </T>
           </View>
