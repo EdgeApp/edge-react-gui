@@ -1,4 +1,5 @@
 /* globals describe test expect */
+// @flow
 
 import * as UTILS from '../src/modules/utils.js'
 
@@ -393,6 +394,7 @@ describe('isCompleteExchangeData', function () {
         fiatCurrencyCode: 'USD'
       }
       const expected = false
+      // $FlowFixMe
       const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
       expect(actual).toBe(expected)
     })
@@ -408,6 +410,7 @@ describe('isCompleteExchangeData', function () {
         fiatCurrencyCode: 'USD'
       }
       const expected = false
+      // $FlowFixMe
       const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
       expect(actual).toBe(expected)
     })
@@ -423,6 +426,7 @@ describe('isCompleteExchangeData', function () {
         fiatCurrencyCode: 'USD'
       }
       const expected = false
+      // $FlowFixMe
       const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
       expect(actual).toBe(expected)
     })
@@ -438,6 +442,7 @@ describe('isCompleteExchangeData', function () {
         fiatCurrencyCode: 'USD'
       }
       const expected = false
+      // $FlowFixMe
       const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
       expect(actual).toBe(expected)
     })
@@ -453,6 +458,7 @@ describe('isCompleteExchangeData', function () {
         fiatCurrencyCode: undefined
       }
       const expected = false
+      // $FlowFixMe
       const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
       expect(actual).toBe(expected)
     })
