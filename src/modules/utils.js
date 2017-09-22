@@ -86,6 +86,7 @@ export const isValidInput = (input: string): boolean =>
 
 // Used to limit the decimals of a displayAmount
 export const truncateDecimals = (input: string, precision: number, allowBlank: boolean = false): string => {
+  if (!input) return input
   if (input === '') {
     if (allowBlank) {
       input = ''
