@@ -759,6 +759,8 @@ const strings = {
   settings_options_title_cap: 'Options',
   settings_button_setup_two_factor: 'Setup 2 Factor',
   settings_button_change_pass_recovery: 'Setup / Change Password Recovery',
+  settings_button_send_logs: 'Send logs',
+  settings_modal_send_logs_title: 'Send logs?',
   settings_button_use_touchID: 'Use TouchID',
   send_scan_header_text: 'Scan, to Send, import, or Edge Login',
   fragment_copy_button_syntax: 'Paste',

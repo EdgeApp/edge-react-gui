@@ -49,8 +49,8 @@ async function write (logString) {
 }
 
 
-export function log (...info: Array<number | string | null | {}>) {
-  write(`${getTime()} | ${info.map((item) => isObject(item) ? JSON.stringify(item) : item).join(' ')}`)
+export async function log (...info: Array<number | string | null | {}>) {
+  await write(`${getTime()} | ${info.map((item) => isObject(item) ? JSON.stringify(item) : item).join(' ')}`)
 }
 
 export async function readLogs () {
