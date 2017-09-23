@@ -25,7 +25,7 @@ export const selectFiat = (fiat: string) => ({
   data: {fiat}
 })
 
-export const createWallet = (walletName: string, walletType: string) => (dispatch: any, getState: any) => {
+export const createWallet = (walletName: string, walletType: string/*, isoFiat: string */) => (dispatch: any, getState: any) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const plugins = SETTINGS_SELECTORS.getPlugins(state)

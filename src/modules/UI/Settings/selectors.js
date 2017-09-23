@@ -104,3 +104,9 @@ export const getAutoLogoutTimeInMinutes = (state: any) => {
   const autoLogoutTimeInMinutes = autoLogoutTimeInSeconds / 60
   return autoLogoutTimeInMinutes
 }
+
+export const getDefaultFiat = (state: any) => {
+  const settings = getSettings(state)
+  const defaultFiat = settings.defaultFiat
+  return defaultFiat
+}

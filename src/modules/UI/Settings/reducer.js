@@ -70,11 +70,9 @@ export const settings = (state = initialState, action) => {
 
   case ACTION.SET_DEFAULT_FIAT: {
     const {defaultFiat} = data
-    const defaultISOFiat = 'iso:' + defaultFiat
     return {
       ...state,
-      defaultFiat,
-      defaultISOFiat
+      defaultFiat
     }
   }
 

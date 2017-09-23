@@ -17,6 +17,8 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 
+export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
+
 export const setOTPModeRequest = (otpMode) => (dispatch, getState) => {
   dispatch(setOTPModeStart(otpMode))
 
@@ -75,9 +77,12 @@ export const setDefaultFiatRequest = (defaultFiat) => (dispatch, getState) => {
 
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
-  ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
-    .then(() => dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat)))
-    .catch((error) => { console.error(error) })
+  const onSuccess = () => dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
+  const onError = (error) => console.log(error)
+
+  return ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
+    .then(onSuccess)
+    .catch(onError)
 }
 
 export const setMerchantModeRequest = (merchantMode) => (dispatch, getState) => {
