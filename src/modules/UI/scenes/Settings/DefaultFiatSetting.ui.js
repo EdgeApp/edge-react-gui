@@ -4,7 +4,7 @@ import {
   Keyboard,
   View
 } from 'react-native'
-import DropdownPicker from '../../components/DropdownPicker/index'
+import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
 
