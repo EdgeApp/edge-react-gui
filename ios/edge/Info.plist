@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>99.99.99</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>99999999</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>shitcoin-az-braz.airbitz.co</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>supereth1.airbitz.co</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+			<key>info1.edgesecure.co</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses bluetooth to detect nearby transaction requests.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses your camera to scan QR Codes</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Some description</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not access your calendar.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not access speech recognition.</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Andale Mono.ttf</string>
+		<string>Arial Black.ttf</string>
+		<string>Arial.ttf</string>
+		<string>Comic Sans MS.ttf</string>
+		<string>Courier New.ttf</string>
+		<string>Georgia.ttf</string>
+		<string>Microsoft Sans Serif.ttf</string>
+		<string>Rubik-Black.ttf</string>
+		<string>Rubik-BlackItalic.ttf</string>
+		<string>Rubik-Bold.ttf</string>
+		<string>Rubik-BoldItalic.ttf</string>
+		<string>Rubik-Italic.ttf</string>
+		<string>Rubik-Light.ttf</string>
+		<string>Rubik-LightItalic.ttf</string>
+		<string>Rubik-Medium.ttf</string>
+		<string>Rubik-MediumItalic.ttf</string>
+		<string>Rubik-Regular.ttf</string>
+		<string>SanFrancisco.ttf</string>
+		<string>SanFranciscoBold.ttf</string>
+		<string>SanFranciscoThin.ttf</string>
+		<string>SF-UI-Text-Regular.otf</string>
+		<string>Skia.ttf</string>
+		<string>Times New Roman.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>font.ttf</string>
+		<string>SourceSansPro-Black.ttf</string>
+		<string>SourceSansPro-BlackItalic.ttf</string>
+		<string>SourceSansPro-Bold.ttf</string>
+		<string>SourceSansPro-BoldItalic.ttf</string>
+		<string>SourceSansPro-ExtraLight.ttf</string>
+		<string>SourceSansPro-ExtraLightItalic.ttf</string>
+		<string>SourceSansPro-Italic.ttf</string>
+		<string>SourceSansPro-Light.ttf</string>
+		<string>SourceSansPro-LightItalic.ttf</string>
+		<string>SourceSansPro-Regular.ttf</string>
+		<string>SourceSansPro-Semibold.ttf</string>
+		<string>SourceSansPro-SemiboldItalic.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+</dict>
+</plist>

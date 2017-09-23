@@ -84,24 +84,26 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.airbitz.react"
-        minSdkVersion 16
+        applicationId "co.airbitz.edge"
+        minSdkVersion 19
         targetSdkVersion 25
-        versionCode 99999
+        versionCode 21000000
         versionName "99.99.99"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        renderscriptTargetApi 23
+        renderscriptSupportModeEnabled true
     }
     signingConfigs {
         release {
-            storeFile file(MYAPP_RELEASE_STORE_FILE)
-            storePassword MYAPP_RELEASE_STORE_PASSWORD
-            keyAlias MYAPP_RELEASE_KEY_ALIAS
-            keyPassword MYAPP_RELEASE_KEY_PASSWORD
+            storeFile file("airbitz.keystore")
+            storePassword "password"
+            keyAlias "airbitz"
+            keyPassword "password"
         }
     }
     splits {
@@ -116,7 +118,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-    	    signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -135,17 +137,26 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-material-kit')
+    compile project(':react-native-splash-screen')
+    compile project(':react-native-blur')
+//    compile project(':react-native-hockeyapp')
+    compile project(':react-native-fast-crypto')
+    compile project(':react-native-locale')
+    compile project(':react-native-vector-icons')
     compile project(':react-native-udp')
     compile project(':react-native-tcp')
-    compile project(':react-native-permissions')
+    compile project(':react-native-share')
     compile project(':react-native-randombytes')
-    compile project(':react-native-vector-icons')
+    compile project(':react-native-material-kit')
     compile project(':react-native-linear-gradient')
+    compile project(':react-native-image-picker')
     compile project(':react-native-fs')
     compile project(':react-native-device-info')
+    compile project(':react-native-contacts-wrapper')
+    compile project(':react-native-contacts')
+    compile project(':react-native-camera')
     compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:25.0.1"
+    compile "com.android.support:appcompat-v7:25.3.1"
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 
@@ -155,5 +166,3 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
-
-apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"

@@ -1,3 +1,5 @@
-/* eslint-disable no-unused-vars */
 import './shim.js'
-import App from './src/app'
+import { AppRegistry } from 'react-native'
+import App from './src/app.js'
+
+AppRegistry.registerComponent('edge', () => App)

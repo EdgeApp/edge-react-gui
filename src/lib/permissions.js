@@ -1,10 +1,9 @@
-
 const Permissions = require('react-native-permissions')
 
 export async function checkCameraPermission (callback) {
   try {
-    Permissions.getPermissionStatus('camera')
-      .then(response => {
+    Permissions.check('camera')
+      .then((response) => {
         let granted = false
         if (response === 'authorized') {
           granted = true
@@ -13,15 +12,15 @@ export async function checkCameraPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }
 
 export async function requestCameraPermission (callback) {
   try {
-    Permissions.requestPermission('camera')
-      .then(response => {
+    Permissions.request('camera')
+      .then((response) => {
         let granted = false
         if (response === 'authorized') {
           granted = true
@@ -30,15 +29,15 @@ export async function requestCameraPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }
 
 export async function checkReadContactPermission (callback) {
   try {
-    Permissions.getPermissionStatus('contacts')
-      .then(response => {
+    Permissions.check('contacts')
+      .then((response) => {
         let granted = false
         if (response === 'authorized') {
           granted = true
@@ -47,15 +46,15 @@ export async function checkReadContactPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }
 
 export async function requestReadContactPermission (callback) {
   try {
-    Permissions.requestPermission('contacts')
-      .then(response => {
+    Permissions.request('contacts')
+      .then((response) => {
         let granted = false
         if (response === 'authorized') {
           granted = true
@@ -64,7 +63,7 @@ export async function requestReadContactPermission (callback) {
         callback(null, granted)
       })
   } catch (err) {
-    console.error(err)
+    // console.error(err)
     callback(err, null)
   }
 }

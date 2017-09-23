@@ -1,23 +1,30 @@
-/* eslint-disable global-require */
-/* eslint-disable no-undef */
-import { createStore, applyMiddleware } from 'redux'
+// @flow
+/* global window __DEV__ */
+import {createStore, applyMiddleware, compose} from 'redux'
+
 import rootReducer from './rootReducer'
 import thunk from 'redux-thunk'
+// import createLogger from 'redux-logger'
+import loginStatusChecker from './loginStatusChecker'
 
-let middleware = [thunk]
+let middleware = [loginStatusChecker, thunk]
+// let logger = createLogger()
 
-// if (__DEV__) {
-//   const createLogger = require('redux-logger')
-//   const logger = createLogger({ collapsed: true })
-//   middleware = [...middleware, logger]
-// } else {
+if (__DEV__) {
+  // middleware = [...middleware, logger]
+
+  // Comment line below to reenable logger
   middleware = [...middleware]
-// }
+} else {
+  middleware = [...middleware]
+}
 
-export default function configureStore (initialState) {
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+export default function configureStore (initialState: Object) {
   return createStore(
     rootReducer,
     initialState,
-    applyMiddleware(...middleware)
+    composeEnhancers(applyMiddleware(...middleware))
   )
 }

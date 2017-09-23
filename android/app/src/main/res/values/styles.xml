@@ -1,14 +1,8 @@
 <resources>
-		<color name="black">#000000</color>
-		<color name="white">#FFFFFF</color>
-		<color name="grey">#CCCCCC</color>
-		<color name="blue">#87CEEB</color>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-      <item name="android:windowBackground">@drawable/background_splash</item>
-      <item name="colorControlActivated">@color/blue</item>
     </style>
-
 
 </resources>

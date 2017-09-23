@@ -1,22 +1,24 @@
-import React, { Component } from 'react'
-import { Provider, connect } from 'react-redux'
+// @flow
+/* global __DEV__ */
+import React, {Component} from 'react'
+import {Provider} from 'react-redux'
 import configureStore from './lib/configureStore'
-import { Platform, AppRegistry } from 'react-native'
-import t from './lib/LocaleStrings'
+import Main from './modules/MainConnector'
+import './util/polyfills'
 
-const store = configureStore()
+const store: {} = configureStore({})
 
-import Container from './modules/Container.ui'
+if (!__DEV__) {
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  console.log = () => {}
+}
 
-export default class App extends Component {
+export default class App extends Component<{}> {
   render () {
     return (
       <Provider store={store}>
-        <Container />
+        <Main />
       </Provider>
     )
   }
-
 }
-
-AppRegistry.registerComponent('airbitz_ui', () => App)
