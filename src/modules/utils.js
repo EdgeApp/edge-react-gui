@@ -210,3 +210,7 @@ export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
     && !!exchangeData.fiatSymbol
     && !!exchangeData.fiatExchangeAmount
     && !!exchangeData.fiatCurrencyCode
+
+export const getSupportedFiats = (): Array<> => {
+  const supportedFiatDenominations = getAllDenomsOfIsoCurrencies()
+}
