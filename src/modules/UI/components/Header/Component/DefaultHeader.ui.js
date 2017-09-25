@@ -13,7 +13,7 @@ export default class DefaultHeader extends Component {
       ? this.props.routes.scene.children[sceneIndex].title
       : null
 
-    return title || sprintf(strings.enUS['title_Header'])
+    return title || strings.enUS['title_Header']
   }
 
   render () {
