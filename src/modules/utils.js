@@ -196,6 +196,24 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   return denomArray
 }
 
+export const getSupportedFiats = (): Array<{}> => {
+  const currencySymbolsFromCurrencyCode = currencySymbolMap
+  const entries = Object.entries(currencySymbolsFromCurrencyCode)
+  const objectFromArrayPair = (entry) => {
+    const entry1 = typeof entry[1] === 'string'
+      ? entry[1]
+      : ''
+
+    return {
+      label: `${entry[0]} - ${entry1}`,
+      value: entry[0]
+    }
+  }
+
+  const supportedFiats = entries.map(objectFromArrayPair)
+  return supportedFiats
+}
+
 type ExchangeData = {
   secondaryDisplayAmount: string,
   cryptoCurrencyCode: string,
@@ -210,7 +228,3 @@ export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
     && !!exchangeData.fiatSymbol
     && !!exchangeData.fiatExchangeAmount
     && !!exchangeData.fiatCurrencyCode
-
-export const getSupportedFiats = (): Array<> => {
-  const supportedFiatDenominations = getAllDenomsOfIsoCurrencies()
-}
