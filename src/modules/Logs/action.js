@@ -1,5 +1,5 @@
 import * as LOGS_API from './api'
-import * as LOGGER from '../../../util/logger'
+import * as LOGGER from '../../util/logger'
 
 const PREFIX = 'Core/Logs/'
 
