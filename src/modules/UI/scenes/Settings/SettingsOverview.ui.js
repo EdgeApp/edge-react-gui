@@ -143,19 +143,19 @@ export default class SettingsOverview extends Component {
         <RowRoute
           leftText={strings.enUS['settings_button_change_password']}
           scene={'changePassword'}
-          routeFunction={this._onPressDummyRouting}
+          routeFunction={this._onPressChangePasswordRouting}
           right={<Icon name='arrow-right' size={18}
             color='#58595C' />} />
         <RowRoute
           leftText={strings.enUS['settings_button_pin']}
           scene={'changePassword'}
-          routeFunction={this._onPressDummyRouting}
+          routeFunction={this._onPressChangePinRouting}
           right={<Icon name='arrow-right' size={18}
             color='#58595C' />} />
         <RowRoute
           leftText={strings.enUS['settings_button_change_pass_recovery']}
           scene={'changePassword'}
-          routeFunction={this._onPressDummyRouting}
+          routeFunction={this._onPressRecoverPasswordRouting}
           right={<Icon name='arrow-right' size={18}
             color='#58595C' />} />
 
