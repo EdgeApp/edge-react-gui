@@ -1,7 +1,7 @@
-// import HockeyApp from 'react-native-hockeyapp'
+import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {View, StatusBar, Keyboard} from 'react-native'
+import {View, StatusBar, Keyboard, Platform} from 'react-native'
 import {connect} from 'react-redux'
 import {ActionConst, Scene, Router} from 'react-native-router-flux'
 import {Container, StyleProvider} from 'native-base'
@@ -29,9 +29,9 @@ import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
-import * as EXCHANGE_PLUGINS from 'airbitz-exchange-plugins'
-import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory} from 'airbitz-currency-bitcoin'
-import {EthereumCurrencyPluginFactory} from 'airbitz-currency-ethereum'
+import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
+import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory} from 'edge-currency-bitcoin'
+import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
@@ -55,7 +55,7 @@ export function dumpFolder (folder) {
 }
 
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
-// const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
+const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
 
@@ -69,7 +69,7 @@ export default class Main extends Component {
   }
 
   componentWillMount () {
-    // HockeyApp.configure(HOCKEY_APP_ID, true)
+    HockeyApp.configure(HOCKEY_APP_ID, true)
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
   }
@@ -80,8 +80,8 @@ export default class Main extends Component {
   }
 
   componentDidMount () {
-    // HockeyApp.start()
-    // HockeyApp.checkForUpdate() // optional
+    HockeyApp.start()
+    HockeyApp.checkForUpdate() // optional
     makeReactNativeIo()
     .then((io) =>
       // Make the core context:

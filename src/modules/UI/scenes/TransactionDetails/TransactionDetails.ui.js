@@ -114,12 +114,25 @@ class TransactionDetails extends Component {
   }
 
   onChangeFiat = (input) => {
-    let newInput
+    let newInputStripped, newInputFiltered
+    newInputStripped = input.replace(/[^\d.,]/, '').replace(/\./, 'x')
+    .replace(/\./g, '')
+    .replace(/x/, '.')
+    .replace(/\,/, 'x')
+    .replace(/\,/g, '')
+    .replace(/x/, ',')
     // console.log('onChangeFiat being executed, input is: ', input)
-    newInput = (isNaN(input) || (input === '')) ? '' : UTILS.formatNumber(UTILS.truncateDecimals(input, 2))
+    newInputFiltered = ((isNaN(newInputStripped.replace(',', '.')) && (newInputStripped != ',' && newInputStripped != '.')) || (newInputStripped === '')) ? '' : newInputStripped
     // console.log('onChangeFiat, now newInput is: ', newInput)
     this.setState({
-      amountFiat: newInput
+      amountFiat: newInputFiltered
+    })
+  }
+
+  onBlurFiat = () => {
+    let amountFiat = parseFloat(this.state.amountFiat) ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(this.state.amountFiat.replace(/[^\d.,]/, '')).toString(), 2)) : '0.00'
+    this.setState({
+      amountFiat
     })
   }
 
@@ -457,6 +470,7 @@ class TransactionDetails extends Component {
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
                 onChangeFiatFxn={this.onChangeFiat}
+                onBlurFiatFxn={this.onBlurFiat}
                 info={this.state}
                 onPressFxn={this.onSaveTxDetails}
                 fiatCurrencyCode={this.props.selectedWallet.fiatCurrencyCode}
@@ -555,8 +569,10 @@ class AmountArea extends Component {
               style={[styles.editableFiat]}
               keyboardType='numeric'
               placeholder={''}
-              value={UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(this.props.fiatAmount).toString(), 2))}
+              value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-',''), 2, true)}
               defaultValue={''}
+              onBlur={this.props.onBlurFiatFxn}
+              blurOnSubmit={true}
             />
           </View>
           <View style={[styles.editableFiatRight]}>

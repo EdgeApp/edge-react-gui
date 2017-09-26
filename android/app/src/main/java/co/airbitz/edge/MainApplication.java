@@ -2,11 +2,12 @@ package co.airbitz.edge;
 
 import android.app.Application;
 
-// import com.facebook.react.BuildConfig;
+//import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.cmcewen.blurview.BlurViewPackage;
-//import com.slowpath.hockeyapp.RNHockeyAppPackage;
+import com.slowpath.hockeyapp.RNHockeyAppModule;
+import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.tradle.react.UdpSocketsModule;
@@ -44,7 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
 //            new SplashScreenReactPackage(),
             new BlurViewPackage(),
-//            new RNHockeyAppPackage(MainApplication.this),
+            new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),
             new UdpSocketsModule(),

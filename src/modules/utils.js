@@ -85,8 +85,15 @@ export const isValidInput = (input: string): boolean =>
    !isNaN(+input) || input === '.'
 
 // Used to limit the decimals of a displayAmount
-export const truncateDecimals = (input: string, precision: number): string => {
-  input = (input === '') ? '0' : input
+// TODO every function that calls this function needs to be flowed
+export const truncateDecimals = (input: string, precision: number, allowBlank: boolean = false): string => {
+  if (input === '') {
+    if (allowBlank) {
+      input = ''
+    } else {
+      input = '0'
+    }
+  }
   if (!input.includes('.')) { return input }
   const [integers, decimals] = input.split('.')
   return `${integers}.${decimals.slice(0, precision)}`
@@ -198,10 +205,8 @@ type ExchangeData = {
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!(
-    exchangeData.secondaryDisplayAmount
-      && exchangeData.cryptoCurrencyCode
-      && exchangeData.fiatSymbol
-      && exchangeData.fiatExchangeAmount
-      && exchangeData.fiatCurrencyCode
-  )
+  !!exchangeData.secondaryDisplayAmount
+    && !!exchangeData.cryptoCurrencyCode
+    && !!exchangeData.fiatSymbol
+    && !!exchangeData.fiatExchangeAmount
+    && !!exchangeData.fiatCurrencyCode
