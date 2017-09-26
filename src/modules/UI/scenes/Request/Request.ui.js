@@ -18,8 +18,6 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-import {saveToLog} from './action.js'
-
 export default class Request extends Component {
   constructor (props) {
     super(props)
@@ -32,13 +30,12 @@ export default class Request extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.coreWallet.id !== this.props.coreWallet.id) {
-      const {coreWallet, currencyCode} = nextProps
-      WALLET_API.getReceiveAddress(coreWallet, currencyCode)
+    if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
+      const {abcWallet, currencyCode} = nextProps
+      WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        this.props.dispatch(saveToLog('testing'))
-        const encodedURI = this.props.coreWallet.encodeUri(receiveAddress)
+        const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
         this.setState({
           encodedURI,
           publicAddress
