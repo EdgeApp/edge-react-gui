@@ -36,7 +36,7 @@ Edge is:
 
 ### Android NDK Setup
 
-(MacOS) If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle`. 
+(MacOS) If the NDK is already installed from Android Studio, it should be in `/Users/[user]/Library/Android/sdk/ndk-bundle`.
 If not, download and unzip the NDK from https://developer.android.com/ndk/index.html
 
 Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
@@ -75,3 +75,8 @@ https://github.com/jhen0409/react-native-debugger/releases
 ###### GenyMotion Android Emulator
     ⌘ + m (command + m)
     Select "Debug JS Remotely"
+
+## Contributing
+
+Please follow the coding conventions defined in [Edge Conventions](https://github.com/Airbitz/edge-conventions
+)
