@@ -12,17 +12,14 @@ import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 
 import styles from './styles.js'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
-import {GuiDenomination} from '../../../../types'
-import {getAllDenomsOfIsoCurrencies} from '../../../utils'
 
-const WALLET_NAME_INPUT_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_name_hint'])
+const WALLET_NAME_INPUT_PLACEHOLDER = strings.enUS['fragment_wallets_addwallet_name_hint']
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
-const FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['fragment_wallets_addwallet_fiat_hint'])
+const FIAT_PICKER_PLACEHOLDER = strings.enUS['fragment_wallets_addwallet_fiat_hint']
 
-const DONE_TEXT = sprintf(strings.enUS['fragment_create_wallet_create_wallet'])
-const CANCEL_TEXT = sprintf(strings.enUS['string_cancel_cap'])
-const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_valid'])
+const DONE_TEXT = strings.enUS['fragment_create_wallet_create_wallet']
+const CANCEL_TEXT = strings.enUS['string_cancel_cap']
+const INVALID_DATA_TEXT = strings.enUS['fragment_create_wallet_select_valid']
 
 export default class CreateWallet extends Component {
   constructor (props) {
@@ -38,11 +35,7 @@ export default class CreateWallet extends Component {
   }
 
   getSupportedFiats = () => {
-    const denomArray: Array<GuiDenomination> = getAllDenomsOfIsoCurrencies()
-    const supportedFiats = []
-    for (const denom of denomArray) {
-      supportedFiats.push({label: denom.currencyCode, value: denom.currencyCode})
-    }
+    const {supportedFiats} = this.props
     return supportedFiats
   }
 
@@ -85,10 +78,12 @@ export default class CreateWallet extends Component {
     } else {
       this.setState({isCreatingWallet: true})
       Keyboard.dismiss()
-      const {walletName, selectedWalletType} = this.state
-      // console.log('walletName', walletName)
-      // console.log('selectedWalletType', selectedWalletType)
-      this.props.createWallet(walletName, selectedWalletType)
+      const {
+        walletName,
+        selectedWalletType,
+        selectedFiat
+      } = this.state
+      this.props.createWallet(walletName, selectedWalletType, selectedFiat)
     }
   }
 
@@ -126,6 +121,7 @@ export default class CreateWallet extends Component {
 
         <DropdownPicker
           keyboardShouldPersistTaps={'always'}
+          listStyle={{maxHeight: 140}}
           listItems={this.getSupportedFiats()}
           placeholder={FIAT_PICKER_PLACEHOLDER}
           onSelect={this.handleSelectFiat} />

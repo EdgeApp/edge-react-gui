@@ -23,8 +23,11 @@ const styles = StyleSheet.create({
     height: 50,
     padding: 5
   },
+  fiatPicker: {
+    height: 100
+  },
   listView: {
-    maxHeight: 200
+    maxHeight: 100
   },
   listItem: {
     margin: 0,
