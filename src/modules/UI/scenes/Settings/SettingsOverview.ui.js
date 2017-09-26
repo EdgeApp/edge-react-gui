@@ -4,7 +4,6 @@ import React, {Component} from 'react'
 import {ScrollView, Text, View} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 
-import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -34,18 +33,18 @@ export default class SettingsOverview extends Component {
     this.securityRoute = [
       {
         key: 'setup2Factor',
-        text: sprintf(strings.enUS['settings_button_setup_two_factor']),
+        text: strings.enUS['settings_button_setup_two_factor'],
         routeFunction: this._onPressDummyRouting
       }
     ]
 
     this.options = {
       pinRelogin: {
-        text: sprintf(strings.enUS['settings_title_pin_login']),
+        text: strings.enUS['settings_title_pin_login'],
         key: 'pinRelogin'
       },
       useTouchID: {
-        text: sprintf(strings.enUS['settings_button_use_touchID']),
+        text: strings.enUS['settings_button_use_touchID'],
         key: 'useTouchID'
       }
     }
@@ -53,7 +52,7 @@ export default class SettingsOverview extends Component {
     this.optionModals = [
       {
         key: 'autoLogoff',
-        text: sprintf(strings.enUS['settings_title_auto_logoff'])
+        text: strings.enUS['settings_title_auto_logoff']
       }
     ]
 
@@ -125,7 +124,7 @@ export default class SettingsOverview extends Component {
   }
 
   render () {
-    const disabled = sprintf(strings.enUS['string_disable'])
+    const disabled = strings.enUS['string_disable']
 
     return (
       <ScrollView style={s.container}>
@@ -134,7 +133,7 @@ export default class SettingsOverview extends Component {
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
-                {sprintf(strings.enUS['settings_account_title_cap'])}: {this.props.username}
+                {strings.enUS['settings_account_title_cap']}: {this.props.username}
               </T>
             </View>
           </View>
@@ -164,7 +163,7 @@ export default class SettingsOverview extends Component {
             <View style={s.leftArea}>
               <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
               <T style={s.accountBoxHeaderText}>
-                {sprintf(strings.enUS['settings_options_title_cap'])}
+                {strings.enUS['settings_options_title_cap']}
               </T>
             </View>
           </View>
@@ -172,7 +171,7 @@ export default class SettingsOverview extends Component {
 
         <View>
           <RowModal onPress={this.showAutoLogoutModal}
-            leftText={sprintf(strings.enUS['settings_title_auto_logoff'])}
+            leftText={strings.enUS['settings_title_auto_logoff']}
             rightText={this.props.autoLogoutTimeInMinutes || disabled} />
 
           <RowRoute
@@ -188,7 +187,7 @@ export default class SettingsOverview extends Component {
           {this.currencies.map(this.renderRowRoute)}
 
           <View style={[s.debugArea, b('green')]}>
-            <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
+            <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
           </View>
 
           <View style={s.emptyBottom} />

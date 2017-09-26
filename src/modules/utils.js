@@ -196,7 +196,7 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   return denomArray
 }
 
-export const getSupportedFiats = (): Array<{}> => {
+export const getSupportedFiats = (): Array<{label: string, value: string}> => {
   const currencySymbolsFromCurrencyCode = currencySymbolMap
   const entries = Object.entries(currencySymbolsFromCurrencyCode)
   const objectFromArrayPair = (entry) => {

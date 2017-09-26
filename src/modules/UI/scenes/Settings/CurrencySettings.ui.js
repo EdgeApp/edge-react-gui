@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
 import {Image, View} from 'react-native'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import s from './style'
 import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
+
+const SETTINGS_DENOMIANTION_TEXT = strings.enUS['settings_denominations_title']
 
 export default class CurrencySettings extends Component {
   header () {
@@ -18,7 +19,7 @@ export default class CurrencySettings extends Component {
           <Image style={{height: 25, width: 25, resizeMode: Image.resizeMode.contain}}
             source={{uri: this.props.logo}}/>
           <T style={s.headerText}>
-            {sprintf(strings.enUS['settings_denominations_title'])}
+            {SETTINGS_DENOMIANTION_TEXT}
           </T>
         </View>
       </View>
