@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {Image, View} from 'react-native'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import s from './style'
@@ -11,14 +10,14 @@ import RadioRows from './components/RadioRows.ui.js'
 
 export default class CurrencySettings extends Component {
   header () {
-    return <Gradient style={[s.headerRow, b('purple')]}>
+    return <Gradient style={[s.headerRow, b()]}>
 
-      <View style={[s.headerTextWrap, b('yellow')]}>
+      <View style={[s.headerTextWrap, b()]}>
         <View style={s.leftArea}>
           <Image style={{height: 25, width: 25, resizeMode: Image.resizeMode.contain}}
             source={{uri: this.props.logo}}/>
           <T style={s.headerText}>
-            {sprintf(strings.enUS['settings_denominations_title'])}
+            {strings.enUS['settings_denominations_title']}
           </T>
         </View>
       </View>
@@ -33,11 +32,11 @@ export default class CurrencySettings extends Component {
 
   render () {
     return (
-      <View style={[s.ethereumSettings, b('brown')]}>
+      <View style={[s.ethereumSettings, b()]}>
 
         {this.header()}
 
-        <RadioRows style={b('green')}>
+        <RadioRows style={b()}>
           {
             this.props.denominations.map((denomination) => {
               const key = denomination.multiplier
