@@ -190,6 +190,15 @@ export default class TransactionList extends Component {
     } else {
       cryptoBalanceString = cryptoAmountString + ' ' + this.props.selectedCurrencyCode
     }
+    // beginning of fiat balance
+    let fiatBalanceString
+    let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
+    if (fiatSymbol.length === 0 || fiatSymbol.length > 1) {
+      fiatBalanceString =  (this.props.balanceInFiat ? this.props.balanceInFiat.toFixed(2) : '0.00') + ' ' + this.props.fiatCurrencyCode
+    } else {
+      fiatBalanceString = fiatSymbol + ' ' + (this.props.balanceInFiat ? this.props.balanceInFiat.toFixed(2) : (0.00).toFixed(2)) + ' ' + this.props.fiatCurrencyCode
+    }
+    // end of fiat balance
 
     return (
       <ScrollView style={[UTILS.border(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
@@ -226,7 +235,7 @@ export default class TransactionList extends Component {
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>
-                                {this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}
+                                {fiatBalanceString}
                               </T>
                             </View>
                           </View>
