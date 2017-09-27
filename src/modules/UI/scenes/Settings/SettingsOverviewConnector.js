@@ -7,6 +7,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import {setAutoLogoutTimeInMinutesRequest} from './action'
 
 const mapStateToProps = (state) => ({
+  defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
   autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
   username: CORE_SELECTORS.getUsername(state)
 })

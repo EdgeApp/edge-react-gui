@@ -8,6 +8,8 @@ import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
 
+const SETTINGS_DENOMIANTION_TEXT = strings.enUS['settings_denominations_title']
+
 export default class CurrencySettings extends Component {
   header () {
     return <Gradient style={[s.headerRow, b()]}>
@@ -17,7 +19,7 @@ export default class CurrencySettings extends Component {
           <Image style={{height: 25, width: 25, resizeMode: Image.resizeMode.contain}}
             source={{uri: this.props.logo}}/>
           <T style={s.headerText}>
-            {strings.enUS['settings_denominations_title']}
+            {SETTINGS_DENOMIANTION_TEXT}
           </T>
         </View>
       </View>

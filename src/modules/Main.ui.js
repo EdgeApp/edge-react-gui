@@ -25,7 +25,7 @@ import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
-
+import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
@@ -140,6 +140,7 @@ export default class Main extends Component {
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='defaultFiatSetting'     component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
 
                 </Scene>
               </Scene>

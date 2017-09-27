@@ -477,3 +477,14 @@ describe('isCompleteExchangeData', function () {
     expect(actual).toBe(expected)
   })
 })
+
+describe('getSupportedFiats', function () {
+  test('resolves to array of object {value, label}', function () {
+    const supportedFiats = UTILS.getSupportedFiats()
+    supportedFiats.forEach((fiat) => {
+      expect(fiat).toEqual(expect.objectContaining(
+        {label: expect.any(String), value: expect.any(String)}
+      ))
+    })
+  })
+})

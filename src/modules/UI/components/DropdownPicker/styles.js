@@ -33,6 +33,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     fontSize: 20
   },
+  listStyle: {
+    position: 'absolute',
+    marginBottom: 100,
+    paddingBottom: 100
+  },
   textInput: {
     flex: 1
   },

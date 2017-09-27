@@ -4,23 +4,22 @@ import styles from '../../style'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import T from '../../../../components/FormattedText/FormattedText.ui'
 import strings from '../../../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 
 export const options = [
   {
     value: 'rename',
-    syntax: sprintf(strings.enUS['string_rename'])
+    syntax: strings.enUS['string_rename']
   },{
     value: 'sort',
-    syntax: sprintf(strings.enUS['fragment_wallets_sort'])
+    syntax: strings.enUS['fragment_wallets_sort']
   },{
     value: 'addToken',
-    syntax: sprintf(strings.enUS['fragmet_wallets_addtoken_option'])
-  },{
+    syntax: strings.enUS['fragmet_wallets_addtoken_option']
+  },/*{
     value: 'archive'
-  },{
+  },*/{
     value: 'delete',
-    syntax: sprintf(strings.enUS['string_delete'])
+    syntax: strings.enUS['string_delete']
   }
 ]
 
@@ -28,11 +27,11 @@ export default class WalletListRowOptions extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      archiveSyntax: sprintf(strings.enUS['fragmet_wallets_list_'
+      archiveSyntax: strings.enUS['fragmet_wallets_list_'
       + (this.props.archived
         ? 'restore'
         : 'archive')
-        + '_title_capitalized'])
+        + '_title_capitalized']
     }
   }
 
@@ -85,21 +84,20 @@ export default class WalletListRowOptions extends Component {
               </View>
             </MenuOption>
 
-            <MenuOption style={styles.menuOption}
+            {/*<MenuOption style={styles.menuOption}
               value={options[3].value}>
               <View style={[styles.menuOptionItem]}>
-                {/* <EvilIcons name='archive' size={24} style={[styles.optionIcon, styles.archive]} /> */}
                 <T style={[styles.optionText]}>
                   {this.state.archiveSyntax}
                 </T>
               </View>
-            </MenuOption>
+            </MenuOption>*/}
 
             <MenuOption style={styles.menuOption}
-              value={options[4].value}>
+              value={options[3].value}>
               <View style={[styles.menuOptionItem]}>
                 <T style={[styles.optionText]}>
-                  {options[4].syntax}
+                  {options[3].syntax}
                 </T>
               </View>
             </MenuOption>
