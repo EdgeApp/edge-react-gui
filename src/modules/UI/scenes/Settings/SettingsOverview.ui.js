@@ -1,10 +1,9 @@
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
-import {ScrollView, View} from 'react-native'
+import {ScrollView, Text, View} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 
-import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -19,6 +18,8 @@ import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
+
 import s from './style'
 
 export default class SettingsOverview extends Component {
@@ -29,36 +30,21 @@ export default class SettingsOverview extends Component {
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
-    this.settings = [
-      {
-        key: Constants.CHANGE_PASSWORD,
-        text: sprintf(strings.enUS['settings_button_change_password']),
-        routeFunction: this._onPressChangePasswordRouting
-      }, {
-        key: Constants.CHANGE_PIN,
-        text: sprintf(strings.enUS['settings_button_pin']),
-        routeFunction: this._onPressChangePinRouting
-      }, {
-        key: Constants.RECOVER_PASSWORD,
-        text: sprintf(strings.enUS['settings_button_change_pass_recovery']),
-        routeFunction: this._onPressRecoverPasswordRouting
-      }
-    ]
     this.securityRoute = [
       {
         key: 'setup2Factor',
-        text: sprintf(strings.enUS['settings_button_setup_two_factor']),
+        text: strings.enUS['settings_button_setup_two_factor'],
         routeFunction: this._onPressDummyRouting
       }
     ]
 
     this.options = {
       pinRelogin: {
-        text: sprintf(strings.enUS['settings_title_pin_login']),
+        text: strings.enUS['settings_title_pin_login'],
         key: 'pinRelogin'
       },
       useTouchID: {
-        text: sprintf(strings.enUS['settings_button_use_touchID']),
+        text: strings.enUS['settings_button_use_touchID'],
         key: 'useTouchID'
       }
     }
@@ -66,7 +52,7 @@ export default class SettingsOverview extends Component {
     this.optionModals = [
       {
         key: 'autoLogoff',
-        text: sprintf(strings.enUS['settings_title_auto_logoff'])
+        text: strings.enUS['settings_title_auto_logoff']
       }
     ]
 
@@ -138,7 +124,7 @@ export default class SettingsOverview extends Component {
   }
 
   render () {
-    const disabled = sprintf(strings.enUS['string_disable'])
+    const disabled = strings.enUS['string_disable']
 
     return (
       <ScrollView style={s.container}>
@@ -147,22 +133,37 @@ export default class SettingsOverview extends Component {
             <View style={s.leftArea}>
               <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
               <T style={s.accountBoxHeaderText}>
-                {sprintf(strings.enUS['settings_account_title_cap'])}: {this.props.username}
+                {strings.enUS['settings_account_title_cap']}: {this.props.username}
               </T>
             </View>
           </View>
         </Gradient>
 
-        <View>
-          {this.settings.map(this.renderRowRoute)}
-        </View>
+        <RowRoute
+          leftText={strings.enUS['settings_button_change_password']}
+          scene={'changePassword'}
+          routeFunction={this._onPressChangePasswordRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
+        <RowRoute
+          leftText={strings.enUS['settings_button_pin']}
+          scene={'changePassword'}
+          routeFunction={this._onPressChangePinRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
+        <RowRoute
+          leftText={strings.enUS['settings_button_change_pass_recovery']}
+          scene={'changePassword'}
+          routeFunction={this._onPressRecoverPasswordRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
 
         <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
               <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
               <T style={s.accountBoxHeaderText}>
-                {sprintf(strings.enUS['settings_options_title_cap'])}
+                {strings.enUS['settings_options_title_cap']}
               </T>
             </View>
           </View>
@@ -170,15 +171,25 @@ export default class SettingsOverview extends Component {
 
         <View>
           <RowModal onPress={this.showAutoLogoutModal}
-            leftText={sprintf(strings.enUS['settings_title_auto_logoff'])}
+            leftText={strings.enUS['settings_title_auto_logoff']}
             rightText={this.props.autoLogoutTimeInMinutes || disabled} />
 
+          <RowRoute
+            leftText={strings.enUS['settings_title_currency']}
+            scene={'changePassword'}
+            routeFunction={Actions.defaultFiatSetting}
+            right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
+
           {this.securityRoute.map(this.renderRowRoute)}
+
           {Object.keys(this.options).map(this.renderRowSwitch)}
+
           {this.currencies.map(this.renderRowRoute)}
+
           <View style={[s.debugArea, b('green')]}>
-            <PrimaryButton text={sprintf(strings.enUS['settings_button_debug'])} onPressFunction={this._onPressDebug} />
+            <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
           </View>
+
           <View style={s.emptyBottom} />
         </View>
 
@@ -191,7 +202,7 @@ export default class SettingsOverview extends Component {
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
 
-  renderRowRoute = (x, i) => <RowRoute leftText={x.text} key={i} scene={x.key} routeFunction={x.routeFunction} />
+  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} scene={x.key} routeFunction={x.routeFunction} right={x.right} />
 
   renderRowSwitch = (x) => <RowSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
 
