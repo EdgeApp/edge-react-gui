@@ -134,6 +134,13 @@ export default class WalletList extends Component<any, {
       let tempWalletObj = wallets[x] ? wallets[x] : {key: null}
       activeWalletsObject[x] = tempWalletObj
     })
+    let fiatBalanceString
+    let fiatSymbol = this.props.settings.defaultFiat ? UTILS.getFiatSymbol(this.props.settings.defaultFiat) : ''
+    if (fiatSymbol.length === 0 || fiatSymbol.length > 1) {
+      fiatBalanceString =  this.tallyUpTotalCrypto() + ' ' + this.props.settings.defaultFiat
+    } else {
+      fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + this.props.settings.defaultFiat
+    }
 
     return (
       <View style={styles.container}>
@@ -149,9 +156,7 @@ export default class WalletList extends Component<any, {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultFiat
-                  ? UTILS.getFiatSymbol(this.props.settings.defaultFiat)
-                  : ''} {this.tallyUpTotalCrypto()}
+                {fiatBalanceString}
               </T>
             </View>
           </View>
