@@ -1,7 +1,7 @@
-// import HockeyApp from 'react-native-hockeyapp'
+import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {View, StatusBar, Keyboard} from 'react-native'
+import {View, StatusBar, Keyboard, Platform} from 'react-native'
 import {connect} from 'react-redux'
 import {ActionConst, Scene, Router} from 'react-native-router-flux'
 import {Container, StyleProvider} from 'native-base'
@@ -25,18 +25,19 @@ import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
-
+import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
-import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory} from 'edge-currency-bitcoin'
+import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
+currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -55,7 +56,7 @@ export function dumpFolder (folder) {
 }
 
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
-// const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
+const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
 
@@ -69,7 +70,7 @@ export default class Main extends Component {
   }
 
   componentWillMount () {
-    // HockeyApp.configure(HOCKEY_APP_ID, true)
+    HockeyApp.configure(HOCKEY_APP_ID, true)
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
   }
@@ -80,8 +81,8 @@ export default class Main extends Component {
   }
 
   componentDidMount () {
-    // HockeyApp.start()
-    // HockeyApp.checkForUpdate() // optional
+    HockeyApp.start()
+    HockeyApp.checkForUpdate() // optional
     makeReactNativeIo()
     .then((io) =>
       // Make the core context:
@@ -140,6 +141,7 @@ export default class Main extends Component {
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='defaultFiatSetting'     component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
 
                 </Scene>
               </Scene>

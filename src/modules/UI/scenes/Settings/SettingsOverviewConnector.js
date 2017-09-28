@@ -8,6 +8,7 @@ import {setAutoLogoutTimeInMinutesRequest} from './action'
 import {sendLogs} from '../../../Logs/action'
 
 const mapStateToProps = (state) => ({
+  defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
   autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
   username: CORE_SELECTORS.getUsername(state)
 })

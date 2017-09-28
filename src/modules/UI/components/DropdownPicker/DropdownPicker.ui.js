@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
 import {
-  View,
+  KeyboardAvoidingView,
   ListView,
+  TextInput,
   TouchableOpacity,
-  TextInput
+  View,
 } from 'react-native'
 import T from '../../components/FormattedText'
 import styles from './styles.js'
@@ -14,17 +15,16 @@ export default class DropdownPicker extends Component {
 
     this.state = {
       searchTerm: '',
-      isListVisible: false,
+      isListVisible: props.startOpen,
       selectedItem: ''
     }
   }
 
-  handleTextInputChange = (searchTerm) => {
-    this.handleSelectListItem(searchTerm)
-    this.handleSearchTermChange(searchTerm)
-  }
   handleSelectListItem = (item) => {
-    this.setState({searchTerm: item.label, isListVisible: false})
+    this.setState({
+      searchTerm: item.label,
+      isListVisible: false
+    })
     this.props.onSelect(item)
   }
   handleSearchTermChange = (searchTerm) => this.setState({isListVisible: true, searchTerm})
@@ -44,17 +44,19 @@ export default class DropdownPicker extends Component {
     return (
       <View style={styles.pickerView}>
         <TextInput style={styles.picker}
+          autoFocus={this.props.autoFocus}
           clearButtonMode={'while-editing'}
           onFocus={this.handleOnFocus}
           onBlur={this.handleOnBlur}
           autoCorrect={false}
           autoCapitalize={'words'}
-          onChangeText={this.handleTextInputChange}
+          onChangeText={this.handleSearchTermChange}
           value={this.state.searchTerm}
           placeholder={this.props.placeholder} />
 
           {this.state.isListVisible
             && <DropdownList
+              style={this.props.listStyle}
               dataSource={this.getMatchingListItems()}
               onPress={this.handleSelectListItem} />}
       </View>
@@ -74,11 +76,12 @@ const DropdownList = (props) => {
     <T>{item.label}</T>
   </TouchableOpacity>
 
-  return <View style={styles.listView}>
+  return <KeyboardAvoidingView keyboardVerticalOffset={60} contentContainerStyle={props.style} behavior={'height'}>
     <ListView
       keyboardShouldPersistTaps={'always'}
-      style={styles.listView}
+      style={props.style}
       dataSource={dataSource}
       renderRow={renderRow} />
-  </View>
+  </KeyboardAvoidingView>
+
 }

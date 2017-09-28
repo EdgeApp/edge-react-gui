@@ -149,8 +149,8 @@ export default class WalletList extends Component<any, {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultISOFiat
-                  ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat)
+                {this.props.settings.defaultFiat
+                  ? UTILS.getFiatSymbol(this.props.settings.defaultFiat)
                   : ''} {this.tallyUpTotalCrypto()}
               </T>
             </View>
@@ -398,7 +398,7 @@ export default class WalletList extends Component<any, {
   calculateTotalBalance = (values: any) => {
     let total = 0
     for (let currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
+      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
     return total.toFixed(2)

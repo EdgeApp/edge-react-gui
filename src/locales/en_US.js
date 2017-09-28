@@ -745,6 +745,7 @@ const strings = {
   on_the_web: 'On the Web',
   server_error_bad_pin: 'Invalid PIN',
   title_Settings: 'Settings',
+  title_Default_Fiat: 'Default Fiat',
   title_BTC_Settings: 'BTC Settings',
   title_ETH_Settings: 'ETH Settings',
   title_LTC_Settings: 'LTC Settings',
