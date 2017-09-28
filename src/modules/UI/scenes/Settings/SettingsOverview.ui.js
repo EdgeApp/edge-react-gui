@@ -68,11 +68,6 @@ export default class SettingsOverview extends Component {
         routeFunction: Actions.ethSettings
       },
       {
-        key: 'bchSettings',
-        text: 'BitcoinCash',
-        routeFunction: Actions.ethSettings
-      },
-      {
         key: 'ltcSettings',
         text: 'Litecoin',
         routeFunction: Actions.ltcSettings
