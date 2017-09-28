@@ -110,7 +110,7 @@ export default class Main extends Component {
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
           <View style={styles.statusBarHack}>
-            <Container onLayout={this._onLayout}>
+            <Container>
 
               <StatusBar translucent backgroundColor='green' barStyle='light-content' />
 
@@ -151,13 +151,6 @@ export default class Main extends Component {
         </MenuContext>
       </StyleProvider>
     )
-  }
-
-  _onLayout = (event) => {
-    const {width, height} = event.nativeEvent.layout
-    const xScale = (width / 375).toFixed(2)
-    const yScale = (height / 647).toFixed(2)
-    this.props.setDeviceDimensions({width, height, xScale, yScale})
   }
 
   _keyboardDidShow = (event) => {

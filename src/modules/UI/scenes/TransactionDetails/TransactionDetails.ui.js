@@ -39,6 +39,7 @@ import {
 import * as UI_SELECTORS from '../../selectors.js'
 import SearchResults from '../../components/SearchResults/index'
 import {openHelpModal} from '../../components/HelpModal/actions'
+import platform from '../../../../theme/variables/platform.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -401,7 +402,6 @@ class TransactionDetails extends Component {
             style={[{width: '100%'}]}
             usableHeight={this.props.usableHeight}
             currentPayeeText={this.state.name || ''}
-            dimensions={this.props.dimensions}
             onSelectPayee={this.onSelectPayee}
             blurOnSubmit
             onBlur={this.onBlurPayee}
@@ -436,7 +436,6 @@ class TransactionDetails extends Component {
             onPressFxn={this.onSelectSubCategory}
             enteredSubcategory={this.state.subCategory}
             usableHeight={this.props.usableHeight}
-            deviceDimensions={this.props.dimensions}
             subcategoriesList={this.props.subcategoriesList.sort()}
           />
         </Animated.View>
@@ -487,7 +486,6 @@ class TransactionDetails extends Component {
                 onExitCategories={this.onExitCategories}
                 usableHeight={this.props.usableHeight}
                 onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
-                dimensions={this.props.dimensions}
                 onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                 onFocusNotes={this.onFocusNotes}
                 onBlurNotes={this.onBlurNotes}
@@ -512,8 +510,7 @@ const mapStateToProps = (state) => ({
   selectedWallet: UI_SELECTORS.getSelectedWallet(state),
   fiatSymbol: UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
   contacts: state.ui.contacts.contactList,
-  usableHeight: state.ui.scenes.dimensions.deviceDimensions.height - state.ui.scenes.dimensions.headerHeight - state.ui.scenes.dimensions.tabBarHeight,
-  dimensions: state.ui.scenes.dimensions,
+  usableHeight: platform.usableHeight,
   subcategoriesList: state.ui.scenes.transactionDetails.subcategories,
   settings: state.ui.settings
 })
@@ -602,10 +599,10 @@ class AmountArea extends Component {
           <Picker style={[ UTILS.border(),
             {
               backgroundColor: 'white',
-              width: this.props.dimensions.deviceDimensions.width,
-              height: this.props.dimensions.deviceDimensions.height / 3,
+              width: platform.deviceWidth,
+              height: platform.deviceHeight / 3,
               position: 'absolute',
-              top: this.props.dimensions.deviceDimensions.height - this.props.dimensions.deviceDimensions.height / 3,
+              top: (2/3) * platform.deviceHeight,
               left: -20
             }
           ]}
@@ -649,9 +646,7 @@ class AmountArea extends Component {
     )
   }
 }
-export const AmountAreaConnect = connect((state) => ({
-  dimensions: state.ui.scenes.dimensions
-}))(AmountArea)
+export const AmountAreaConnect = AmountArea
 
 class SubCategorySelect extends Component {
   constructor (props) {
@@ -661,8 +656,7 @@ class SubCategorySelect extends Component {
       filteredSubcategories: this.props.subcategoriesList.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
-    // const dimensions = this.props.dimensions
-    // this.props.usableHight = dimensions.deviceDimensions.height - dimensions.headerHeight - dimensions.tabBarHeight
+    // this.props.usableHight = platform.usableHeight
   }
 
   render () {
@@ -680,11 +674,10 @@ class SubCategorySelect extends Component {
         onRegularSelectFxn={this.props.onPressFxn}
         regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         usableHeight={this.props.usableHeight}
-        style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}]}
+        style={[{width: platform.deviceWidth, height: platform.usableHeight}]}
         keyExtractor={this.keyExtractor}
-        dimensions={this.props.dimensions}
         height={this.props.usableHeight - 51}
-        extraTopSpace={-13}
+        extraTopSpace={0}
       />
     )
   }
@@ -707,9 +700,7 @@ class SubCategorySelect extends Component {
   keyExtractor = (item, index) => index
 }
 
-export const SubCategorySelectConnect = connect((state) => ({
-  dimensions: state.ui.scenes.dimensions
-}))(SubCategorySelect)
+export const SubCategorySelectConnect = SubCategorySelect
 
 class PayeeIcon extends Component {
   render () {
@@ -749,11 +740,9 @@ class ContactSearchResults extends Component {
         regularArray={filteredArray}
         usableHeight={this.props.usableHeight}
         style={[{width: '100%', backgroundColor: 'white'}]}
-        // style={[{width: this.props.dimensions.deviceDimensions.width, height: this.props.usableHeight}]}
         keyExtractor={this.keyExtractor}
-        dimensions={this.props.dimensions}
         height={this.props.usableHeight - 32}
-        extraTopSpace={-32}
+        extraTopSpace={-10}
       />
     )
   }
