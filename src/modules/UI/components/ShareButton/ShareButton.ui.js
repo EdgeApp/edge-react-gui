@@ -1,15 +1,23 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
+import {View, StyleSheet, TouchableOpacity} from 'react-native'
+import FormattedText from '../FormattedText'
 
 const styles = StyleSheet.flatten({
   shareButton: {
     flex: 1,
     backgroundColor: 'transparent',
-    borderColor: 'white',
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
     marginHorizontal: 2,
-    marginVertical: 14
+    paddingVertical: 7    ,
+    flexDirection: 'row'
+  },
+  outerView: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 7,
+    flex: 1,
+    borderColor: 'white'
   },
   view: {
     flexDirection: 'row',
@@ -26,9 +34,11 @@ const styles = StyleSheet.flatten({
 export default class ShareButton extends Component {
   render () {
     const {displayName, onPress, style} = this.props
-    return <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style ]}>
-      <View style={styles.view}>
-        <Text style={styles.text}>{displayName}</Text>
+    return <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style]}>
+      <View style={[styles.outerView]}>
+        <View style={[styles.view]}>
+          <FormattedText style={[styles.text]}>{displayName}</FormattedText>
+        </View>
       </View>
     </TouchableOpacity>
   }
