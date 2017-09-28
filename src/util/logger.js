@@ -1,26 +1,23 @@
 // @flow
 
-import {makeReactNativeFolder} from 'disklet'
+import RNFS from 'react-native-fs'
 
-const LOGS_FOLDER = 'logs'
 const SAVE_TIMEOUT = 1000 * 10 // ms
+
+const path = RNFS.DocumentDirectoryPath + '/logs.txt'
 
 let buffer = ''
 let lastSaving = Date.now()
 
-const root = makeReactNativeFolder()
-const logsFolder = root.folder(LOGS_FOLDER)
-
 const getTime = () => new Date().toISOString()
-
-const getDate = () => getTime().slice(0, 10)
 
 const isObject = (item) => typeof item === 'object' && item !== null
 
-const joinLogs = (...logs) => logs.filter((str) => str !== '').join('\n')
+const normalize = (...info) =>
+  `${getTime()} | ${info.map((item) => isObject(item) ? JSON.stringify(item) : item).join(' ')}`
 
 function saveToBuffer (log) {
-  buffer = joinLogs(buffer, log)
+  buffer = buffer !== '' ? buffer + '\n' + log : log
 }
 
 function readAndClearBuffer () {
@@ -30,31 +27,32 @@ function readAndClearBuffer () {
   return logs
 }
 
-async function read (fileName) {
-  const fileNames = await logsFolder.listFiles()
-  if (fileNames.includes(fileName)) return logsFolder.file(fileName).getText()
+async function writeLog (content) {
+  try {
+    const exists = await RNFS.exists(path)
 
-  return ''
-}
-
-async function write (logString) {
-  if (Date.now() - lastSaving < SAVE_TIMEOUT) return saveToBuffer(logString)
-
-  const bufferedLogs = readAndClearBuffer()
-  const fileName =`${getDate()}.txt`
-  const logs = await read(fileName)
-  const updatedLogs = joinLogs(logs, bufferedLogs, logString)
-
-  logsFolder.file(fileName).setText(updatedLogs)
-}
-
-
-export async function log (...info: Array<number | string | null | {}>) {
-  await write(`${getTime()} | ${info.map((item) => isObject(item) ? JSON.stringify(item) : item).join(' ')}`)
+    if (exists) return await RNFS.appendFile(path, '\n' + content)
+    return await RNFS.writeFile(path, content)
+  } catch (err) {
+    console.log((err && err.message) || err)
+  }
 }
 
 export async function readLogs () {
-  const fileNames = await logsFolder.listFiles()
-  const files = await new Promise.all(fileNames.map((fileName) => (fileName.indexOf('.txt') > -1) ? logsFolder.file(fileName).getText() : ''))
-  return files.join('\n\n')
+  try {
+    return await RNFS.readFile(path)
+  } catch (err) {
+    console.log((err && err.message) || err)
+  }
+}
+
+export async function log (...info: Array<number | string | null | {}>) {
+  const logs = normalize(...info)
+
+  if (Date.now() - lastSaving < SAVE_TIMEOUT) return saveToBuffer(logs)
+
+  const bufferedLogs = readAndClearBuffer()
+
+  await writeLog(bufferedLogs)
+  await writeLog(logs)
 }

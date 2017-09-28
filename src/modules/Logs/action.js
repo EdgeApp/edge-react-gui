@@ -1,9 +1,9 @@
 import * as LOGS_API from './api'
 import * as LOGGER from '../../util/logger'
 
-const PREFIX = 'Core/Logs/'
+const PREFIX = 'Logs/'
 
-export const SEND_LOGS_REQUEST  = PREFIX + 'SEND_LOGS_REQUEST'
+export const SEND_LOGS_REQUEST = PREFIX + 'SEND_LOGS_REQUEST'
 export const SEND_LOGS_SUCCESS = PREFIX + 'SEND_LOGS_SUCCESS'
 export const SEND_LOGS_FAILURE = PREFIX + 'SEND_LOGS_FAILURE'
 
