@@ -6,7 +6,6 @@ export const CORE_DEFAULTS = {
   pinMode: false
 }
 
-
 // TODO:  Remove hardcoded currency defaults
 // Default Account Settings
 export const SYNCED_ACCOUNT_DEFAULTS = {
@@ -14,6 +13,9 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   defaultFiat: 'USD',
   merchantMode: false,
   'BTC': {
+    denomination: '100000000'
+  },
+  'BCH': {
     denomination: '100000000'
   },
   'LTC': {
