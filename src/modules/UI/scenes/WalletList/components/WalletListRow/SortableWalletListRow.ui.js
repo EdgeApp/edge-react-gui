@@ -14,6 +14,8 @@ import T from '../../../../components/FormattedText'
 import {border as b, cutOffText, truncateDecimals} from '../../../../../utils'
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
+import platform from '../../../../../../theme/variables/platform.js'
+
 
 const findDenominationSymbol = (denoms, value) => {
   for (const v of denoms) {
@@ -38,7 +40,7 @@ class SortableWalletListRow extends Component {
     }
     return (
       <TouchableHighlight
-        style={[b('green'), styles.rowContainer, {width: this.props.dimensions.deviceDimensions.width, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
+        style={[b('green'), styles.rowContainer, {width: platform.deviceWidth, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
         underlayColor={'#eee'}
         {...this.props.sortHandlers}
       >

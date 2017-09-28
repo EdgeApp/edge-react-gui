@@ -1,9 +1,11 @@
-import {Dimensions, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
+import platform from '../../../../theme/variables/platform.js'
+
 
 export default StyleSheet.create({
   topLevel: {
     zIndex: 10,
-    width: Dimensions.get('window').width,
+    width: platform.deviceWidth,
     backgroundColor: 'white',
     alignSelf: 'stretch'
   },
@@ -14,7 +16,7 @@ export default StyleSheet.create({
     backgroundColor: '#5c5d5f'
   },
   modalBody: {
-    width: Dimensions.get('window').width,
+    width: platform.deviceWidth,
     zIndex: 4
   },
   rowContainer: {
