@@ -58,6 +58,18 @@ export const settings = (state = {}, action) => {
     }
   }
 
+  case ACTION.SET_BITCOINCASH_DENOMINATION: {
+    const {denomination} = data
+    const BCH = state['BCH']
+    return {
+      ...state,
+      BCH: {
+        ...BCH,
+        denomination
+      }
+    }
+  }
+
   case ACTION.SET_LITECOIN_DENOMINATION: {
     const {denomination} = data
     const LTC = state['LTC']
@@ -89,18 +101,6 @@ export const settings = (state = {}, action) => {
       ...state,
       ETH: {
         ...ETH,
-        denomination
-      }
-    }
-  }
-
-  case ACTION.SET_BITCOINCASH_DENOMINATION: {
-    const {denomination} = data
-    const BCH = state['BCH']
-    return {
-      ...state,
-      BCH: {
-        ...BCH,
         denomination
       }
     }
