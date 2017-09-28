@@ -26,7 +26,7 @@ const styles = StyleSheet.flatten({
   },
   text: {
     fontSize: 17,
-    color: 'rgba(255,255,255,.7)'
+    color: 'rgba(255,255,255,1)'
   }
 })
 
