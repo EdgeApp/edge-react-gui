@@ -8,7 +8,6 @@ const styles = StyleSheet.flatten({
     backgroundColor: 'transparent',
     alignItems: 'stretch',
     justifyContent: 'center',
-    marginHorizontal: 2,
     paddingVertical: 7    ,
     flexDirection: 'row'
   },
@@ -17,26 +16,26 @@ const styles = StyleSheet.flatten({
     justifyContent: 'center',
     paddingVertical: 7,
     flex: 1,
-    borderColor: 'white'
   },
   view: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 1
+    width: '100%',
+    paddingVertical: 2
   },
   text: {
-    fontSize: 16,
+    fontSize: 17,
     color: 'rgba(255,255,255,.7)'
   }
 })
 
 export default class ShareButton extends Component {
   render () {
-    const {displayName, onPress, style} = this.props
-    return <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style]}>
+    const {displayName, onPress, style, border} = this.props
+    return <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style]} activeOpacity={0.2}>
       <View style={[styles.outerView]}>
-        <View style={[styles.view]}>
+        <View style={[styles.view, border]}>
           <FormattedText style={[styles.text]}>{displayName}</FormattedText>
         </View>
       </View>
