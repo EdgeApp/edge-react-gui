@@ -11,9 +11,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: THEME.COLORS.BLUE_ALPHA_BUTTON.UNPRESSED
   },
-  border: {
+  borderRight: {
     borderColor: 'rgba(256, 256, 256, 0.5)',
-    borderRightWidth: 1,
+    borderRightWidth: 0.5,
+  },
+  borderLeft: {
+    borderColor: 'rgba(256, 256, 256, 0.5)',
+    borderLeftWidth: 0.5
   }
 })
 
@@ -28,7 +32,7 @@ export default class ShareButtons extends Component {
       style={[styles.view]}>
       <ShareButton
         displayName={strings.enUS['fragment_request_copy_title']}
-        border={styles.border}
+        border={styles.borderRight}
         onPress={copyToClipboard} />
       {/*<ShareButton
         style={styles.border}
@@ -41,6 +45,7 @@ export default class ShareButtons extends Component {
       <ShareButton
         displayName={strings.enUS['string_share']}
         onPress={shareViaShare}
+        border={styles.borderLeft}
         />
     </View>
   }
