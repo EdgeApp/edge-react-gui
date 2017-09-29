@@ -71,6 +71,11 @@ export default class SettingsOverview extends Component {
         key: 'ltcSettings',
         text: 'Litecoin',
         routeFunction: Actions.ltcSettings
+      },
+      {
+        key: 'bchSettings',
+        text: 'BitcoinCash',
+        routeFunction: Actions.bchSettings
       }
     ]
   }
