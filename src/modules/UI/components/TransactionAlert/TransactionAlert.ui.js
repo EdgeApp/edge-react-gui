@@ -4,13 +4,12 @@ import {Alert} from 'react-native'
 
 type Props = {
   view: boolean,
-  title: string,
   message: string,
-  buttons: Array<{title: string, message: string}>,
+  route: any,
   closeAlert: Function
 }
 
-export default class ABAlert extends Component<Props> {
+export default class TransactionAlert extends Component<Props> {
   componentWillReceiveProps (nextProps: Props) {
     // prevent duplicate alerts
     if (this.props.view === nextProps.view) return
@@ -24,13 +23,16 @@ export default class ABAlert extends Component<Props> {
 
   openAlert = (props: Props) => {
     const defaultButtons = [{
-      text: 'OK',
+      text: 'Later',
       onPress: this.props.closeAlert,
       style: 'cancel'
+    }, {
+      text: 'Check Now',
+      onPress: this.props.closeAlert
     }]
 
     Alert.alert(
-      props.title,
+      'Transaction Received',
       props.message,
       props.buttons || defaultButtons,
       {onDismiss: this.props.closeAlert}
