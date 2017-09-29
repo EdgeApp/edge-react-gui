@@ -1,3 +1,12 @@
+// @flow
+import type {
+  GetState,
+  Dispatch
+} from '../ReduxTypes'
+import {
+  AbcAccount
+} from 'airbitz-core-types'
+
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
@@ -11,7 +20,7 @@ export const LOGOUT = 'LOGOUT'
 
 import {Actions} from 'react-native-router-flux'
 
-export const initializeAccount = (account) => (dispatch, getState) => {
+export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
@@ -35,12 +44,12 @@ export const initializeAccount = (account) => (dispatch, getState) => {
     })
 }
 
-const loadSettings = () => (dispatch, getState) => {
+const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
   const {account} = getState().core
   SETTINGS_API.getSyncedSettings(account)
     .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
-      const syncFinal = Object.assign({}, syncDefaults, settings)
+      const syncFinal = {...syncDefaults, ...settings}
 
       // Add all the settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
@@ -67,7 +76,7 @@ const loadSettings = () => (dispatch, getState) => {
     .then((settings) => {
       const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
 
-      const localFinal = Object.assign({}, localDefaults, settings)
+      const localFinal = {...localDefaults, ...settings}
       // Add all the local settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
     })
@@ -76,13 +85,13 @@ const loadSettings = () => (dispatch, getState) => {
     .then((settings) => {
       const coreDefaults = SETTINGS_API.CORE_DEFAULTS
 
-      const coreFinal = Object.assign({}, coreDefaults, settings)
+      const coreFinal = {...coreDefaults, ...settings}
       dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
       dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
     })
 }
 
-export const logoutRequest = (username) => (dispatch, getState) => {
+export const logoutRequest = (username: string) => (dispatch: Dispatch, getState: GetState) => {
   Actions.login({username})
 
   const state = getState()
@@ -95,7 +104,8 @@ export const logoutRequest = (username) => (dispatch, getState) => {
    })
 }
 
-export const logout = (username) => ({
+export type LogoutAction = { type: 'LOGOUT', data: { username: string } }
+export const logout = (username: string): LogoutAction => ({
   type: LOGOUT,
   data: {username}
 })
