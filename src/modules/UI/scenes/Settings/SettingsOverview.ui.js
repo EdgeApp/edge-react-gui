@@ -17,6 +17,7 @@ import RowSwitch from './components/RowSwitch.ui'
 import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
+import SendLogsModal from './components/SendLogsModal.ui'
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
@@ -27,8 +28,10 @@ export default class SettingsOverview extends Component {
     super(props)
     this.state = {
       showAutoLogoutModal: false,
+      showSendLogsModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
+
 
     this.securityRoute = [
       {
@@ -128,6 +131,15 @@ export default class SettingsOverview extends Component {
     this.setState({showAutoLogoutModal: false})
   }
 
+  onDoneSendLogsModal = (text) => {
+    this.setState({showSendLogsModal: false})
+    this.props.sendLogs(text)
+  }
+
+  onCancelSendLogsModal = () => {
+    this.setState({showSendLogsModal: false})
+  }
+
   render () {
     const disabled = strings.enUS['string_disable']
 
@@ -160,6 +172,12 @@ export default class SettingsOverview extends Component {
           leftText={strings.enUS['settings_button_change_pass_recovery']}
           scene={'changePassword'}
           routeFunction={this._onPressRecoverPasswordRouting}
+          right={<Icon name='arrow-right' size={18}
+            color='#58595C' />} />
+        <RowRoute
+          leftText={strings.enUS['settings_button_send_logs']}
+          scene={'changePassword'}
+          routeFunction={this.showSendLogsModal}
           right={<Icon name='arrow-right' size={18}
             color='#58595C' />} />
 
@@ -201,11 +219,16 @@ export default class SettingsOverview extends Component {
         <AutoLogoutModal showModal={this.state.showAutoLogoutModal}
           onDone={this.onDoneAutoLogoutModal}
           onCancel={this.onCancelAutoLogoutModal} />
+        <SendLogsModal showModal={this.state.showSendLogsModal}
+          onDone={this.onDoneSendLogsModal}
+          onCancel={this.onCancelSendLogsModal} />
       </ScrollView>
     )
   }
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
+
+  showSendLogsModal = () => this.setState({showSendLogsModal: true})
 
   renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} scene={x.key} routeFunction={x.routeFunction} right={x.right} />
 
