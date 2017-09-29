@@ -170,7 +170,7 @@ export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean,
 export const getSyncedSettingsFile = (account: AbcAccount) => {
   // $FlowFixMe folder not found on AbcAccount type
   const folder = account.folder
-  console.log(folder)
+//   console.log(folder)
   return folder.file(SYNCHED_SETTINGS_FILENAME)
 }
 
