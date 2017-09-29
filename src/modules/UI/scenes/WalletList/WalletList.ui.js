@@ -113,7 +113,11 @@ export default class WalletList extends Component<any, {
     }
   }
   render () {
-    const {wallets} = this.props
+    const {
+      wallets,
+      activeWalletIds,
+      settings
+    } = this.props
     let walletsArray = []
     let activeWallets = {}
     for (let wallet in wallets) {
@@ -121,25 +125,25 @@ export default class WalletList extends Component<any, {
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
-      if (this.props.activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
+      if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
     }
 
-    let activeWalletsArray = this.props.activeWalletIds.map(function (x) {
+    let activeWalletsArray = activeWalletIds.map(function (x) {
       let tempWalletObj = {key: x}
       return wallets[x] || tempWalletObj
     })
 
     let activeWalletsObject = {}
-    this.props.activeWalletIds.forEach(function (x) {
+    activeWalletIds.forEach(function (x) {
       let tempWalletObj = wallets[x] ? wallets[x] : {key: null}
       activeWalletsObject[x] = tempWalletObj
     })
     let fiatBalanceString
-    let fiatSymbol = this.props.settings.defaultFiat ? UTILS.getFiatSymbol(this.props.settings.defaultFiat) : ''
-    if (fiatSymbol.length === 0 || fiatSymbol.length > 1) {
-      fiatBalanceString =  this.tallyUpTotalCrypto() + ' ' + this.props.settings.defaultFiat
+    let fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
+    if (fiatSymbol.length !== 1) {
+      fiatBalanceString =  this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
     } else {
-      fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + this.props.settings.defaultFiat
+      fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
     }
 
     return (
@@ -196,7 +200,7 @@ export default class WalletList extends Component<any, {
           </Gradient>
 
           {
-            Object.keys(this.props.wallets).length > 0 ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+            Object.keys(wallets).length > 0 ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
           }
 
         </View>
