@@ -183,6 +183,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
   onChangeFiat = (input: string) => {
     let newInputStripped, newInputFiltered
+    // This next chained statement / expression is to ensure only one decimal place. Remember decimals are commas in some locales
     newInputStripped = input.replace(/[^\d.,]/, '').replace(/\./, 'x')
     .replace(/\./g, '')
     .replace(/x/, '.')
