@@ -1,5 +1,4 @@
 // @flow
-
 import React, {Component} from 'react'
 import {
   View,
@@ -111,7 +110,7 @@ export class SendConfirmation extends Component<Props & DispatchProps, State> {
                 ? <Text style={[styles.error]}>
                   {errorMsg}
                 </Text>
-                :                <ExchangeRate
+                : <ExchangeRate
                   secondaryDisplayAmount={this.props.fiatPerCrypto}
                   primaryInfo={this.props.primaryInfo}
                   secondaryInfo={this.props.secondaryInfo} />
