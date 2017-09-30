@@ -12,11 +12,11 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.BLUE_ALPHA_BUTTON.UNPRESSED
   },
   borderRight: {
-    borderColor: 'rgba(256, 256, 256, 0.5)',
+    borderColor: THEME.COLORS.TRANSPARENT_BUTTON.BORDER,
     borderRightWidth: 0.5,
   },
   borderLeft: {
-    borderColor: 'rgba(256, 256, 256, 0.5)',
+    borderColor: THEME.COLORS.TRANSPARENT_BUTTON.BORDER,
     borderLeftWidth: 0.5
   }
 })
