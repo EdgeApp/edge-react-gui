@@ -353,6 +353,15 @@ export default class TransactionList extends Component {
     let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
     // console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
     let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
+    let fiatAmountString
+    if (tx.metadata.amountFiat) {
+      let absoluteAmountFiat = Math.abs(tx.metadata.amountFiat)
+      let absoluteAmountFiatString = absoluteAmountFiat.toString()
+      let truncatedDecimalsAmountFiat = UTILS.truncateDecimals(absoluteAmountFiatString, 2)
+      fiatAmountString = UTILS.addFiatTwoDecimals(truncatedDecimalsAmountFiat)
+    } else {
+      fiatAmountString = (0.00).toFixed(2)
+    }
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
@@ -389,7 +398,7 @@ export default class TransactionList extends Component {
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {fiatSymbol + ' ' + (tx.metadata.amountFiat ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2)) : (0.00).toFixed(2))}
+                {fiatSymbol + ' ' + fiatAmountString}
               </T>
             </View>
           </View>
