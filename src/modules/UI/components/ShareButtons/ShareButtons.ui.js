@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {View, StyleSheet} from 'react-native'
 import ShareButton from '../ShareButton/index.js'
+import {colors} from '../../../../theme/variables/airbitz.js'
 
 const styles = StyleSheet.create({
   view: {
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
   },
   border: {
     borderRightWidth: 0.4,
-    borderRightColor: '#FFF'
+    borderRightColor: colors.white
   }
 })
 
