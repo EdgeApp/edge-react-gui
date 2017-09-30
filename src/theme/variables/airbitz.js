@@ -42,7 +42,6 @@ export default {
   OPACITY: {
     ACTIVE: 0.3
   },
-
   COLORS: {
     PRIMARY:   '#2a5799',
     SECONDARY: '#4977bb',

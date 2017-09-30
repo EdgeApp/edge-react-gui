@@ -23,6 +23,7 @@ const mapStateToProps = (state) => {
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const fiatCurrencyCode = wallet.fiatCurrencyCode
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
 
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -46,6 +47,7 @@ const mapStateToProps = (state) => {
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
+    fiatCurrencyCode,
     uiWallet: wallet,
     settings,
     balanceInCrypto,
