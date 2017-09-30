@@ -62,5 +62,11 @@ export default {
       LIGHT: '#3b7ada',
       DARK:  '#2b5698'
     },
+    BLUE_ALPHA_BUTTON: {
+      UNPRESSED: 'rgba(42, 87, 153, 0.55)'
+    },
+    TRANSPARENT_BUTTON: {
+      BORDER: 'rgba(256, 256, 256, 0.5)'
+    }
   }
 }
