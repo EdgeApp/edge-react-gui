@@ -141,14 +141,28 @@ export default class TransactionList extends Component {
   toggleShowBalance = () => this.setState({showBalance: !this.state.showBalance})
 
   render () {
-    if (this.props.loading) {
+    const {
+      loading,
+      updatingBalance,
+      transactions,
+      multiplier,
+      uiWallet,
+      selectedCurrencyCode,
+      displayDenomination,
+      balanceInCrypto,
+      fiatSymbol,
+      balanceInFiat,
+      fiatCurrencyCode,
+      isoFiatCurrencyCode
+    } = this.props
+    if (loading) {
       return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
     }
 
     // console.log('about to render txList, this is: ', this)
     let cryptoBalanceString
     let cryptoAmountString
-    let renderableTransactionList = this.props.transactions.sort(function (a, b) {
+    let renderableTransactionList = transactions.sort(function (a, b) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
@@ -157,7 +171,7 @@ export default class TransactionList extends Component {
     let completedTxList = renderableTransactionList.map((x, i) => {
       let newValue = x
       newValue.key = i
-      newValue.multiplier = this.props.multiplier
+      newValue.multiplier = multiplier
       let txDate = new Date(x.date * 1000)
 
       // let time = formatAMPM(txDate)
@@ -172,24 +186,33 @@ export default class TransactionList extends Component {
     let dataSrc = ds.cloneWithRows(completedTxList)
     let logo
 
-    if (this.props.uiWallet.currencyCode !== this.props.selectedCurrencyCode) {
-      for (let metatoken of this.props.uiWallet.metaTokens) {
-        if (metatoken.currencyCode === this.props.selectedCurrencyCode) {
+    if (uiWallet.currencyCode !== selectedCurrencyCode) {
+      for (let metatoken of uiWallet.metaTokens) {
+        if (metatoken.currencyCode === selectedCurrencyCode) {
           logo = metatoken.symbolImage
         }
       }
     } else {
-      logo = this.props.uiWallet.symbolImage
+      logo = uiWallet.symbolImage
     }
 
-    const cryptoAmount:string = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(this.props.balanceInCrypto)
+    const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto)
     cryptoAmountString = cryptoAmount ? UTILS.truncateDecimals(cryptoAmount.toString(), 6) : '0'
 
-    if (this.props.displayDenomination.symbol) {
-      cryptoBalanceString = this.props.displayDenomination.symbol + ' ' + cryptoAmountString
+    if (displayDenomination.symbol) {
+      cryptoBalanceString = displayDenomination.symbol + ' ' + cryptoAmountString
     } else {
-      cryptoBalanceString = cryptoAmountString + ' ' + this.props.selectedCurrencyCode
+      cryptoBalanceString = cryptoAmountString + ' ' + selectedCurrencyCode
     }
+    // beginning of fiat balance
+    let fiatBalanceString
+    let receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
+    if (receivedFiatSymbol.length !== 1) {
+      fiatBalanceString =  (balanceInFiat ? balanceInFiat.toFixed(2) : '0.00') + ' ' + fiatCurrencyCode
+    } else {
+      fiatBalanceString = receivedFiatSymbol + ' ' + (balanceInFiat ? balanceInFiat.toFixed(2) : (0.00).toFixed(2)) + ' ' + fiatCurrencyCode
+    }
+    // end of fiat balance
 
     return (
       <ScrollView style={[UTILS.border(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
@@ -199,11 +222,11 @@ export default class TransactionList extends Component {
             <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
               {this.state.balanceBoxVisible
               && <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
-                {this.props.updatingBalance ? (
+                {updatingBalance ? (
                   <View style={[styles.currentBalanceWrap]}>
                     <View style={[styles.updatingBalanceWrap]}>
                       <ActivityIndicator
-                        animating={this.props.updatingBalance}
+                        animating={updatingBalance}
                         style={[styles.updatingBalance, {height: 40}]}
                         size='small'
                           />
@@ -216,7 +239,7 @@ export default class TransactionList extends Component {
                             <View style={[styles.iconWrap, UTILS.border()]}>
                               {logo
                                 ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, UTILS.border()]} source={{uri: logo}} />
-                                : <T style={[styles.request]}>{this.props.displayDenomination.symbol}</T>
+                                : <T style={[styles.request]}>{displayDenomination.symbol}</T>
                               }
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
@@ -226,7 +249,7 @@ export default class TransactionList extends Component {
                             </View>
                             <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
                               <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>
-                                {this.props.settings.defaultFiat} {this.props.balanceInFiat.toFixed(2)}
+                                {fiatBalanceString}
                               </T>
                             </View>
                           </View>
@@ -329,6 +352,16 @@ export default class TransactionList extends Component {
 
     let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
     // console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
+    let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
+    let fiatAmountString
+    if (tx.metadata.amountFiat) {
+      let absoluteAmountFiat = Math.abs(tx.metadata.amountFiat)
+      let absoluteAmountFiatString = absoluteAmountFiat.toString()
+      let truncatedDecimalsAmountFiat = UTILS.truncateDecimals(absoluteAmountFiatString, 2)
+      fiatAmountString = UTILS.addFiatTwoDecimals(truncatedDecimalsAmountFiat)
+    } else {
+      fiatAmountString = (0.00).toFixed(2)
+    }
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
@@ -365,11 +398,7 @@ export default class TransactionList extends Component {
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>
-                {this.props.fiatSymbol
-                  + ' '
-                  + tx.metadata.amountFiat
-                    ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(tx.metadata.amountFiat).toString(), 2))
-                    : (0.00).toFixed(2)}
+                {fiatSymbol + ' ' + fiatAmountString}
               </T>
             </View>
           </View>
