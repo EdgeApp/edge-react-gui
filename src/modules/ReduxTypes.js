@@ -15,7 +15,7 @@ export type Action =
 export type State = {
   routes: any,
   core: any,
-  gui: any
+  ui: any
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A;

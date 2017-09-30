@@ -1,3 +1,4 @@
+// @flow
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
 export const DELETE_TRANSACTIONS_LIST = PREFIX + 'DELETE_TRANSACTIONS_LIST'
@@ -20,10 +21,19 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-import Action from 'react-native-router-flux'
+import Actions from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action.js'
 
-export const getTransactionsRequest = (walletId, currencyCode) => (dispatch, getState) => {
+import type {
+  Dispatch,
+  GetState
+} from '../../../ReduxTypes'
+
+import type {
+  AbcTransaction
+} from 'airbitz-core-types'
+
+export const getTransactionsRequest = (walletId: string, currencyCode) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
@@ -33,7 +43,7 @@ export const getTransactionsRequest = (walletId, currencyCode) => (dispatch, get
     })
 }
 
-export const refreshTransactionsRequest = (walletId) => (dispatch, getState) => {
+export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -43,23 +53,24 @@ export const refreshTransactionsRequest = (walletId) => (dispatch, getState) => 
   }
 }
 
-export const newTransactionsRequest = (walletId, transactions) => (dispatch) => {
+export const newTransactionsRequest = (walletId: string, transactions: Array<AbcTransaction>) => (dispatch: Dispatch) => {
   const messageInfo = {
     title: 'Transaction Received',
     message: 'You have received a new transaction',
-    buttons: [
-        {text: 'View', onPress: () => Action.transactionDetails(transactions[0])}
-    ]
+    buttons: [{
+      text: 'View',
+      onPress: () => Actions.transactionDetails({transaction: transactions[0]})
+    }]
   }
   dispatch(openABAlert(messageInfo))
 }
 
-export const newTransactions = (transactions) => ({
+export const newTransactions = (transactions: Array<AbcTransaction>) => ({
   type: NEW_TRANSACTIONS,
   data: {transactions}
 })
 
-export const changedTransactionsRequest = (transactions, walletId) => (dispatch, getState) => {
+export const changedTransactionsRequest = (transactions: Array<AbcTransaction>, walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
 
@@ -68,12 +79,12 @@ export const changedTransactionsRequest = (transactions, walletId) => (dispatch,
   }
 }
 
-export const changedTransactions = (transactions) => ({
+export const changedTransactions = (transactions: Array<AbcTransaction>) => ({
   type: CHANGED_TRANSACTIONS,
   data: {transactions}
 })
 
-export const updateTransactions = (transactions) => ({
+export const updateTransactions = (transactions: Array<AbcTransaction>) => ({
   type: UPDATE_TRANSACTIONS,
   data: {transactions}
 })
@@ -100,6 +111,7 @@ export function transactionsSearchHidden () {
   }
 }
 
+// $FlowFixMe
 export function updateContactsList (data) {
   return {
     type: UPDATE_CONTACTS_LIST,
@@ -107,6 +119,7 @@ export function updateContactsList (data) {
   }
 }
 
+// $FlowFixMe
 export function updateSearchResults (data) {
   return {
     type: UPDATE_SEARCH_RESULTS,
@@ -117,13 +130,5 @@ export function updateSearchResults (data) {
 export function toggleTransactionsWalletListModal () {
   return {
     type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
-  }
-}
-
-export function updatingBalance (data) {
-  // console.log('inside updatingBalance, data is: ', data)
-  let type = [data] + '_UPDATING_BALANCE'
-  return {
-    type
   }
 }
