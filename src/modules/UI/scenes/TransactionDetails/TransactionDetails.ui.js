@@ -90,15 +90,40 @@ class TransactionDetails extends Component {
   }
 
   onFocusPayee = () => {
-    this._togglePayeeVisibility()
+    this.enablePayeeVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 62, animated: true})
     this.payeeTextInput.focus()
   }
 
   onBlurPayee = () => {
-    this._togglePayeeVisibility()
+    this.disablePayeeVisibility()
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
+  }
+
+  enablePayeeVisibility = () => {
+    let toOpacity
+    toOpacity = 1
+    this.setState({contactSearchVisibility: true, payeeZIndex: 99999}, () => {
+      Animated.timing(
+        this.state.payeeOpacity,
+        {
+          toValue: toOpacity,
+          easing: Easing.ease,
+          duration: 200,
+          delay: 0,
+          useNativeDriver: true
+        }
+        ).start()
+    })
+  }
+
+  disablePayeeVisibility = () => {
+    this.state.payeeOpacity.setValue(0)
+    this.setState({
+      contactSearchVisibility: false,
+      payeeZIndex: 0
+    })
   }
 
   onChangePayee = (contactName, thumbnailPath) => {
@@ -116,6 +141,7 @@ class TransactionDetails extends Component {
 
   onChangeFiat = (input) => {
     let newInputStripped, newInputFiltered
+    // This next chained statement / expression is to ensure only one decimal place. Remember decimals are commas in some locales
     newInputStripped = input.replace(/[^\d.,]/, '').replace(/\./, 'x')
     .replace(/\./g, '')
     .replace(/x/, '.')
@@ -131,7 +157,17 @@ class TransactionDetails extends Component {
   }
 
   onBlurFiat = () => {
-    let amountFiat = parseFloat(this.state.amountFiat) ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(this.state.amountFiat.replace(/[^\d.,]/, '')).toString(), 2)) : '0.00'
+    // needs badly to be flowed and / or research best practices for converting TextInput to float / fiat
+    // keep in mind that TextField returns a string, and amountFiat will need to be a floating point number
+    let amountFiat
+    if (parseFloat(this.state.amountFiat)) {
+      let amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
+      let absoluteAmountFiatOneDecimal = Math.abs(parseFloat(amountFiatOneDecimal))
+      let stringifiedAbsoluteAmountFiatOneDecimal = absoluteAmountFiatOneDecimal.toString()
+      amountFiat = UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(stringifiedAbsoluteAmountFiatOneDecimal, 2))
+    } else {
+      amountFiat = '0.00'
+    }
     this.setState({
       amountFiat
     })
@@ -170,7 +206,7 @@ class TransactionDetails extends Component {
 
   onEnterSubcategories = () => {
     this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
-    this._toggleSubcategoryVisibility()
+    this.enableSubcategoryVisibility()
     this.subcategoryTextInput.focus()
   }
 
@@ -179,7 +215,7 @@ class TransactionDetails extends Component {
   }
 
   onSubcategoriesKeyboardReturn = () => {
-    this._toggleSubcategoryVisibility()
+    this.disableSubcategoryVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
@@ -214,7 +250,7 @@ class TransactionDetails extends Component {
         })
       }
     }
-    this._toggleSubcategoryVisibility()
+    this.disableSubcategoryVisibility()
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
@@ -231,8 +267,33 @@ class TransactionDetails extends Component {
     this.setState({categorySelectVisibility: false})
   }
 
+  enableSubcategoryVisibility = () => {
+    let toOpacity = 1
+    this.setState({subCategorySelectVisibility: true, subcatZIndex: 99999}, () => {
+      Animated.timing(
+        this.state.subcategoryOpacity,
+        {
+          toValue: toOpacity,
+          easing: Easing.ease,
+          duration: 200,
+          delay: 100,
+          useNativeDriver: true
+        }
+      ).start()
+    }
+    )
+  }
+
+  disableSubcategoryVisibility = () => {
+    this.state.subcategoryOpacity.setValue(0)
+    this.setState({
+      subCategorySelectVisibility: false,
+      subcatZIndex: 0
+    })
+  }
+
   onSelectCategory = (item) => {
-    this.setState({typ: item.itemValue})
+    this.setState({type: item.itemValue})
     this.onExitCategories()
   }
 
@@ -271,60 +332,11 @@ class TransactionDetails extends Component {
         }
       })
     }
-  }
 
-  _togglePayeeVisibility = () => {
-    let toOpacity
-    if (!this.state.contactSearchVisibility) {
-      toOpacity = 1
-      this.setState({contactSearchVisibility: true, payeeZIndex: 99999}, () => {
-        Animated.timing(
-          this.state.payeeOpacity,
-          {
-            toValue: toOpacity,
-            easing: Easing.ease,
-            duration: 300,
-            delay: 300
-          }
-          ).start()
-      }
-      )
-    } else {
-      this.state.payeeOpacity.setValue(0)
-      this.setState({
-        contactSearchVisibility: false,
-        payeeZIndex: 0
-      })
-    }
-  }
-
-  _toggleSubcategoryVisibility = () => {
-    let toOpacity
-    if (!this.state.subCategorySelectVisibility) {
-      toOpacity = 1
-      this.setState({subCategorySelectVisibility: true, subcatZIndex: 99999}, () => {
-        Animated.timing(
-          this.state.subcategoryOpacity,
-          {
-            toValue: toOpacity,
-            easing: Easing.ease,
-            duration: 300,
-            delay: 300
-          }
-        ).start()
-      }
-      )
-    } else {
-      this.state.subcategoryOpacity.setValue(0)
-      this.setState({
-        subCategorySelectVisibility: false,
-        subcatZIndex: 0
-      })
-    }
+    this.props.dispatch(getSubcategories())
   }
 
   componentWillMount () {
-    this.props.dispatch(getSubcategories())
     this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
   }
 
