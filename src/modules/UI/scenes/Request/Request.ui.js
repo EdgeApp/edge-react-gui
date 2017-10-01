@@ -122,7 +122,8 @@ export default class Request extends Component {
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.state.encodedURI)
+    let splitEncodedUriAddress = this.state.encodedURI.split(':')[1].replace('?', '')
+    Clipboard.setString(splitEncodedUriAddress)
     Alert.alert('Request copied to clipboard')
   }
 
