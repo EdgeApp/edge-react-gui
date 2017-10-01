@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptions.js'
+import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import HelpButton from './HelpButton.ui'
 import * as Constants from '../../../../../constants'
 
