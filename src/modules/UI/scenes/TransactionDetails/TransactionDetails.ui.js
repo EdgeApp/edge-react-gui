@@ -558,7 +558,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 color={color}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
-                subcategoriesList={this.props.subcategoriesList}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                 openModalFxn={this.amountAreaOpenModal}
               />
