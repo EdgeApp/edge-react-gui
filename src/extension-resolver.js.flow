@@ -1,0 +1,3 @@
+declare module ImageStub {
+  declare var exports: { [key: string]: string };
+}
