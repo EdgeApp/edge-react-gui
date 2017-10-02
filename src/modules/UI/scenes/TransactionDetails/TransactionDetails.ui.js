@@ -160,9 +160,9 @@ class TransactionDetails extends Component {
     // keep in mind that TextField returns a string, and amountFiat will need to be a floating point number
     let amountFiat
     if (parseFloat(this.state.amountFiat)) {
-      let amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
-      let absoluteAmountFiatOneDecimal = Math.abs(parseFloat(amountFiatOneDecimal))
-      let stringifiedAbsoluteAmountFiatOneDecimal = absoluteAmountFiatOneDecimal.toString()
+      const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
+      const absoluteAmountFiatOneDecimal = Math.abs(parseFloat(amountFiatOneDecimal))
+      const stringifiedAbsoluteAmountFiatOneDecimal = absoluteAmountFiatOneDecimal.toString()
       amountFiat = UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(stringifiedAbsoluteAmountFiatOneDecimal, 2))
     } else {
       amountFiat = '0.00'
@@ -226,7 +226,7 @@ class TransactionDetails extends Component {
         subCategory: ''
       })
     } else {
-      let colonOccurrence = input.indexOf(':')
+      const colonOccurrence = input.indexOf(':')
       if (colonOccurrence) {
         stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
         // console.log('stringArray is: ', stringArray)
@@ -309,7 +309,7 @@ class TransactionDetails extends Component {
       category = undefined
     }
     const {txid, name, notes, bizId, miscJson} = this.state
-    let newAmountFiat = this.state.amountFiat
+    const newAmountFiat = this.state.amountFiat
     amountFiat = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat).toFixed(2)
     const transactionDetails = {txid, name, category, notes, amountFiat, bizId, miscJson}
     this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
@@ -382,7 +382,7 @@ class TransactionDetails extends Component {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
       leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
     }
-    let color = type.color
+    const color = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
     return (
       <View style={[UTILS.border()]}>
@@ -540,9 +540,9 @@ class AmountArea extends Component {
 
   render () {
     // console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
-    let stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+    const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
 
-    let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
+    const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
@@ -741,7 +741,7 @@ class PayeeIcon extends Component {
 class ContactSearchResults extends Component {
 
   render () {
-    let filteredArray = this.props.contacts.filter((entry) => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
+    const filteredArray = this.props.contacts.filter((entry) => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
 
     return (
       <SearchResults
@@ -758,7 +758,7 @@ class ContactSearchResults extends Component {
   }
 
   renderResult = (data, onRegularSelectFxn) => {
-    let fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
+    const fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
 
     return (
       <View style={styles.singleContactWrap}>
