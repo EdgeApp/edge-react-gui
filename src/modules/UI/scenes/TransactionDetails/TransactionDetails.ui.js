@@ -102,8 +102,7 @@ class TransactionDetails extends Component {
   }
 
   enablePayeeVisibility = () => {
-    let toOpacity
-    toOpacity = 1
+    const toOpacity = 1
     this.setState({contactSearchVisibility: true, payeeZIndex: 99999}, () => {
       Animated.timing(
         this.state.payeeOpacity,
@@ -384,7 +383,7 @@ class TransactionDetails extends Component {
       leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
     }
     let color = type.color
-    // console.log('rendering txDetails, this is: ', this)
+    let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
     return (
       <View style={[UTILS.border()]}>
         <Animated.View
@@ -448,7 +447,7 @@ class TransactionDetails extends Component {
             onPressFxn={this.onSelectSubCategory}
             enteredSubcategory={this.state.subCategory}
             usableHeight={this.props.usableHeight}
-            subcategoriesList={this.props.subcategoriesList.sort()}
+            subcategoriesList={sortedSubcategories}
           />
         </Animated.View>
         <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
@@ -507,7 +506,6 @@ class TransactionDetails extends Component {
                 color={color}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
-                subcategoriesList={this.props.subcategoriesList}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
               />
             </View>
