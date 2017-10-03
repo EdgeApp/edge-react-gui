@@ -93,13 +93,13 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   onFocusPayee = () => {
-    this._togglePayeeVisibility()
+    this.enablePayeeVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 62, animated: true})
     this.payeeTextInput.focus()
   }
 
   onBlurPayee = () => {
-    this._togglePayeeVisibility()
+    this.disablePayeeVisibility()
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
@@ -158,7 +158,17 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   onBlurFiat = () => {
-    let amountFiat = parseFloat(this.state.amountFiat) ? UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(Math.abs(this.state.amountFiat.replace(/[^\d.,]/, '')).toString(), 2)) : '0.00'
+    // needs badly to be flowed and / or research best practices for converting TextInput to float / fiat
+    // keep in mind that TextField returns a string, and amountFiat will need to be a floating point number
+    let amountFiat
+    if (parseFloat(this.state.amountFiat)) {
+      const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
+      const absoluteAmountFiatOneDecimal = Math.abs(parseFloat(amountFiatOneDecimal))
+      const stringifiedAbsoluteAmountFiatOneDecimal = absoluteAmountFiatOneDecimal.toString()
+      amountFiat = UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(stringifiedAbsoluteAmountFiatOneDecimal, 2))
+    } else {
+      amountFiat = '0.00'
+    }
     this.setState({
       amountFiat
     })
@@ -197,16 +207,16 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
   onEnterSubcategories = () => {
     this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
-    this._toggleSubcategoryVisibility()
+    this.enableSubcategoryVisibility()
     this.subcategoryTextInput.focus()
   }
 
   onExitSubcategories = () => {
-    // this._toggleSubcategoryVisibility()
+    // this.disableSubcategoryVisibility()
   }
 
   onSubcategoriesKeyboardReturn = () => {
-    this._toggleSubcategoryVisibility()
+    this.disableSubcategoryVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
@@ -217,7 +227,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       this.setState({
         subCategory: ''
       })
-
     } else { // if input *does* exist
       const colonOccurrence = input.indexOf(':')
       if (colonOccurrence) { // if it *does* have a colon in it
@@ -242,7 +251,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
         })
       }
     }
-    this._toggleSubcategoryVisibility()
+    this.disableSubcategoryVisibility()
     Keyboard.dismiss()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
