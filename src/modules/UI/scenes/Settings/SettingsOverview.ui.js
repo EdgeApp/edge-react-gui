@@ -32,7 +32,23 @@ export default class SettingsOverview extends Component {
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
-
+    this.settings = [
+      {
+        key: Constants.CHANGE_PASSWORD,
+        text: strings.enUS['settings_button_change_password'],
+        routeFunction: this._onPressChangePasswordRouting
+      },
+      {
+        key: Constants.CHANGE_PIN,
+        text: strings.enUS['settings_button_pin'],
+        routeFunction: this._onPressChangePinRouting
+      },
+      {
+        key: Constants.RECOVER_PASSWORD,
+        text: strings.enUS['settings_button_change_pass_recovery'],
+        routeFunction: this._onPressRecoverPasswordRouting
+      }
+    ]
     this.securityRoute = [
       {
         key: 'setup2Factor',
@@ -44,11 +60,17 @@ export default class SettingsOverview extends Component {
     this.options = {
       pinRelogin: {
         text: strings.enUS['settings_title_pin_login'],
-        key: 'pinRelogin'
-      },
-      useTouchID: {
+        key: 'pinRelogin',
+        routeFunction: this._onToggleOption,
+        value: false
+      }
+    }
+    if (this.props.supportsTouchId) {
+      this.options.useTouchID =  {
         text: strings.enUS['settings_button_use_touchID'],
-        key: 'useTouchID'
+        key: 'useTouchID',
+        routeFunction: this._onToggleTouchIdOption,
+        value: this.props.touchIdEnabled
       }
     }
 
@@ -111,8 +133,13 @@ export default class SettingsOverview extends Component {
     // console.log('open change categories thingy')
   }
 
-  _onToggleOption = () => {
-    // console.log('toggling option: ', property)
+  _onToggleOption = (property) => {
+    console.log('Allen toggling option: ', property)
+  }
+
+  _onToggleTouchIdOption = (bool) => {
+    this.props.enableTouchId(bool)
+    console.log('Allen toggling _onToggleTouchIdOption: ', bool)
   }
 
   _onPressDebug = () => {
@@ -216,7 +243,8 @@ export default class SettingsOverview extends Component {
           <View style={s.emptyBottom} />
         </View>
 
-        <AutoLogoutModal showModal={this.state.showAutoLogoutModal}
+        <AutoLogoutModal
+          showModal={this.state.showAutoLogoutModal}
           onDone={this.onDoneAutoLogoutModal}
           onCancel={this.onCancelAutoLogoutModal} />
         <SendLogsModal showModal={this.state.showSendLogsModal}
@@ -227,12 +255,28 @@ export default class SettingsOverview extends Component {
   }
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
-
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
 
-  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} scene={x.key} routeFunction={x.routeFunction} right={x.right} />
+  renderRowRoute = (x, i) => (
+    <RowRoute
+      leftText={x.text}
+      key={i}
+      scene={x.key}
+      routeFunction={x.routeFunction}
+      right={x.right}
+    />
+  )
 
-  renderRowSwitch = (x) => <RowSwitch leftText={this.options[x].text} key={this.options[x].key} property={this.options[x].key} />
+  renderRowSwitch = (x) => (
+    <RowSwitch
+      leftText={this.options[x].text}
+      key={this.options[x].key}
+      property={this.options[x].key}
+      onToggle={this.options[x].routeFunction}
+      value={this.options[x].value}
+    />
+  )
 
-  renderRowModal = (x) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
+  renderRowModal = (x) => (<RowModal leftText={x.text} key={x.key}modal={(x.key).toString()} />
+  )
 }
