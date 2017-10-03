@@ -29,17 +29,27 @@ class AmountArea extends Component<Prop, State> {
   }
 
   render () {
-    let feeSyntax, leftData
-    const amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
-    const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
-    const feeStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.networkFee)
-    const feeString = Math.abs(parseFloat(UTILS.truncateDecimals(feeStepOne, 6)))
-    if (this.state.direction === 'receive') {
+    let feeSyntax, leftData, amountStepOne, amountString
+
+    if (this.props.direction === 'receive') {
+      amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+      amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
       feeSyntax = ''
       leftData = {color: colors.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
-    } else {
-      feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
-      leftData = {color: colors.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
+    } else { // send tx
+      if (UTILS.isCryptoParentCurrency(this.props.selectedWallet, this.props.cryptoCurrencyCode)) { // stub, check BTC vs. ETH (parent currency)
+        amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+        const feeStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.networkFee)
+        const amountMinusFee = parseFloat(amountStepOne) - parseFloat(feeStepOne)
+        amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountMinusFee.toString(), 6)))
+        const feeString = Math.abs(parseFloat(UTILS.truncateDecimals(feeStepOne, 6)))
+        feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
+        leftData = {color: colors.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
+      } else { // do not show fee, because token
+        amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
+        feeSyntax = ''
+        leftData = {color: colors.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
+      }
     }
 
     return (

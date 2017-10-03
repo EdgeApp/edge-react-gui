@@ -3,7 +3,7 @@ import borderColors from '../theme/variables/css3Colors'
 import {divf, mulf, gt} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination} from 'airbitz-core-types'
-import type {GuiDenomination} from '../types'
+import type {GuiDenomination, GuiWallet} from '../types'
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
@@ -144,6 +144,8 @@ export const convertExchangeToExchange = (ratio: string) =>
 export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: string) =>
   (displayNativeToDisplayRatio: string): string =>
     divf(exchangeNativeToDisplayRatio, displayNativeToDisplayRatio).toString()
+
+export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
 export const absoluteValue = (input: string): string => input.replace('-', '')
 

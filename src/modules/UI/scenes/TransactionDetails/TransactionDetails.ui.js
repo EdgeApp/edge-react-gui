@@ -343,6 +343,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
   }
 
+
   render () {
     let type
 
@@ -508,6 +509,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 subcategoriesList={this.props.subcategoriesList}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                 openModalFxn={this.amountAreaOpenModal}
+                selectedWallet={this.props.selectedWallet}
               />
             </View>
           </View>
