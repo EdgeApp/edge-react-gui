@@ -7,6 +7,7 @@ import {
     Keyboard,
     TouchableWithoutFeedback
 } from 'react-native'
+import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
 import FormattedText from '../../components/FormattedText'
 import Modal from 'react-native-modal'
@@ -28,22 +29,31 @@ class AmountArea extends Component<Prop, State> {
   }
 
   render () {
-    // console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
-    const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+    let feeSyntax, leftData
+    const amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+    const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
+    const feeStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.networkFee)
+    const feeString = Math.abs(parseFloat(UTILS.truncateDecimals(feeStepOne, 6)))
+    if (this.state.direction === 'receive') {
+      feeSyntax = ''
+      leftData = {color: colors.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
+    } else {
+      feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
+      leftData = {color: colors.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
+    }
 
-    const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <FormattedText style={[styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{strings.enUS['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
+            <FormattedText style={[styles.amountAreaLeftText, {color: leftData.color}]}>{strings.enUS['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
               <FormattedText style={[styles.amountAreaMiddleTopText]}>{(this.props.walletDefaultDenomProps.symbol + ' ') || ''}{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
-              <FormattedText style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleBottomText]}>{feeSyntax}</FormattedText>
             </View>
           </View>
           <View style={[styles.amountAreaRight]}>
