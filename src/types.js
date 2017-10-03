@@ -72,3 +72,16 @@ export type ExchangeData = {
   secondaryDisplaySymbol: string,
   secondaryCurrencyCode: string
 }
+
+export type GuiContact = {
+  hasThumbnail: boolean,
+  emailAddresses: Array<string>,
+  postalAddresses: Array<string>,
+  middleName: string,
+  company: string,
+  jobTitle: string,
+  familyName: string,
+  thumbnailPath: string,
+  recordID: string,
+  givenName: string,
+}

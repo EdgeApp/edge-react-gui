@@ -20,7 +20,7 @@ import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordReco
 import LayoutConnector from './UI/scenes/layout/LayoutConnector'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 
-import TransactionDetails from './UI/scenes/TransactionDetails'
+import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
