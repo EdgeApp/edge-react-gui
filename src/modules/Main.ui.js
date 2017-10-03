@@ -30,13 +30,14 @@ import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
-import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory} from 'edge-currency-bitcoin'
+import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
+currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -138,6 +139,7 @@ export default class Main extends Component {
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='defaultFiatSetting'     component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
