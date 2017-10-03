@@ -1,50 +1,52 @@
+
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import {
   Animated,
   Easing,
-  Image,
   TextInput,
   ScrollView,
   View,
-  TouchableHighlight,
-  Picker,
   TouchableOpacity,
   Keyboard,
-  TouchableWithoutFeedback
 } from 'react-native'
-
-import Modal from 'react-native-modal'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
-import {setContactList} from '../../contacts/action'
-import ReceivedIcon from '../../../../assets/images/transactions/transaction-details-received.png'
-import SentIcon from '../../../../assets/images/transactions/transaction-details-sent.png'
-import ContactImage from '../../../../assets/images/contact.png'
-import T from '../../components/FormattedText'
-import {PrimaryButton} from '../../components/Buttons'
-import {connect} from 'react-redux'
+import ContactSearchResults from './ContactSearchResults.ui.js'
+import FormattedText from '../../components/FormattedText/index'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
-import {
-  setTransactionDetails,
-  setNewSubcategory,
-  getSubcategories
-  // setSubcategories,
-  // setSubcategoriesRequest
-} from './action.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import SearchResults from '../../components/SearchResults/index'
-import {openHelpModal} from '../../components/HelpModal/actions'
+import AmountArea from './AmountArea.ui.js'
+import SubCategorySelect from './SubCategorySelect.ui.js'
+import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
+import type {GuiTransaction, GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-class TransactionDetails extends Component {
-  constructor (props) {
+export type Props = {
+  tx: GuiTransaction,
+  contacts: Array<GuiContact>,
+  fiatSymbol: string,
+  selectedWallet: GuiWallet
+}
+
+export type DispatchProps = {
+  setNewSubcategory: (string, Array<strings>) => void
+}
+
+/*export type State = {
+
+}*/
+
+export class TransactionDetails extends Component<Props & DispatchProps, State> {
+  subcategoryTextInput: ?HTMLButtonElement
+  payeeTextInput: ?HTMLButtonElement
+
+  constructor (props: Props & DispatchProps) {
     super(props)
     // console.log('inside txDetails constructor, this.props is: ', this.props)
     const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
@@ -68,7 +70,7 @@ class TransactionDetails extends Component {
       direction,
       txid: this.props.tx.txid,
       name: this.props.tx.metadata.name, // remove commenting once metaData in Redux
-      thumbnailPath: this.props.thumbnailPath,
+      thumbnailPath: this.props.tx.thumbnailPath,
       category: this.props.tx.metadata.category,
       notes: this.props.tx.metadata.notes,
       amountFiat: amountFiat,
@@ -125,20 +127,20 @@ class TransactionDetails extends Component {
     })
   }
 
-  onChangePayee = (contactName, thumbnailPath) => {
+  onChangePayee = (contactName: string, thumbnailPath: string) => {
     this.setState({
       name: contactName,
       thumbnailPath: thumbnailPath
     })
   }
 
-  onSelectPayee = (name, thumbnail) => {
+  onSelectPayee = (name: string, thumbnail: string) => {
     this.onChangePayee(name, thumbnail)
     this.onBlurPayee()
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
-  onChangeFiat = (input) => {
+  onChangeFiat = (input: string) => {
     let newInputStripped, newInputFiltered
     // This next chained statement / expression is to ensure only one decimal place. Remember decimals are commas in some locales
     newInputStripped = input.replace(/[^\d.,]/, '').replace(/\./, 'x')
@@ -172,19 +174,19 @@ class TransactionDetails extends Component {
     })
   }
 
-  onChangeCategory = (input) => {
+  onChangeCategory = (input: string) => {
     this.setState({
       type: input
     })
   }
 
-  onChangeSubcategory = (input) => {
+  onChangeSubcategory = (input: string) => {
     this.setState({
       subCategory: input
     })
   }
 
-  onChangeNotes = (input) => {
+  onChangeNotes = (input: string) => {
     this.setState({
       notes: input
     })
@@ -218,16 +220,16 @@ class TransactionDetails extends Component {
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
-  onSelectSubCategory = (input) => {
+  onSelectSubCategory = (input: string) => {
     let stringArray
     // check if there is a colon that delineates category and subcategory
     if (!input) {
       this.setState({
         subCategory: ''
       })
-    } else {
+    } else { // if input *does* exist
       const colonOccurrence = input.indexOf(':')
-      if (colonOccurrence) {
+      if (colonOccurrence) { // if it *does* have a colon in it
         stringArray = [input.substring(0, colonOccurrence), input.substring(colonOccurrence + 1, input.length)]
         // console.log('stringArray is: ', stringArray)
         if (categories.indexOf(stringArray[0].toLowerCase()) >= 0) { // if the type is of the 4 options
@@ -235,7 +237,7 @@ class TransactionDetails extends Component {
             type: stringArray[0].toLowerCase(),
             subCategory: stringArray[1]
           })
-          if ((this.props.subcategoriesList.indexOf(input) === -1) && categories.indexOf(stringArray[0] >= 0)) { // if this is a new subcategory and the parent category is an accepted type
+          if ((this.props.subcategoriesList.indexOf(input) === -1) && (categories.indexOf(stringArray[0]) >= 0)) { // if this is a new subcategory and the parent category is an accepted type
             this.addNewSubcategory(input)
           }
         } else {
@@ -245,7 +247,7 @@ class TransactionDetails extends Component {
         }
       } else {
         this.setState({
-          subCategory: stringArray[1]
+          subCategory: ''
         })
       }
     }
@@ -254,8 +256,8 @@ class TransactionDetails extends Component {
     this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true})
   }
 
-  addNewSubcategory = (newSubcategory) => {
-    this.props.dispatch(setNewSubcategory(newSubcategory, this.props.subcategoriesList))
+  addNewSubcategory = (newSubcategory: string) => {
+    this.props.setNewSubcategory(newSubcategory, this.props.subcategoriesList)
   }
 
   onEnterCategories = () => {
@@ -291,13 +293,17 @@ class TransactionDetails extends Component {
     })
   }
 
-  onSelectCategory = (item) => {
-    this.setState({type: item.itemValue})
+  onSelectCategory = (itemValue: any) => {
+    this.setState({type: itemValue})
     this.onExitCategories()
   }
 
   onFocusFiatAmount = () => {
     this.refs._scrollView.scrollTo({x: 0, y: 90, animated: true})
+  }
+
+  amountAreaOpenModal = () => {
+    this.props.openHelpModal()
   }
 
   onSaveTxDetails = () => {
@@ -325,14 +331,14 @@ class TransactionDetails extends Component {
               // error
             } else {
               contacts.sort((a, b) => a.givenName > b.givenName)
-              this.props.dispatch(setContactList(contacts))
+              this.props.setContactList(contacts)
             }
           })
         }
       })
     }
 
-    this.props.dispatch(getSubcategories())
+    this.props.getSubcategories()
   }
 
   componentWillMount () {
@@ -345,22 +351,22 @@ class TransactionDetails extends Component {
     const types = {
       exchange: {
         color: c.accentOrange,
-        syntax: sprintf(strings.enUS['fragment_transaction_exchange']),
+        syntax: strings.enUS['fragment_transaction_exchange'],
         key: 'exchange'
       },
       expense: {
         color: c.accentRed,
-        syntax: sprintf(strings.enUS['fragment_transaction_expense']),
+        syntax: strings.enUS['fragment_transaction_expense'],
         key: 'expense'
       },
       transfer: {
         color: c.primary,
-        syntax: sprintf(strings.enUS['fragment_transaction_transfer']),
+        syntax: strings.enUS['fragment_transaction_transfer'],
         key: 'transfer'
       },
       income: {
         color: c.accentGreen,
-        syntax: sprintf(strings.enUS['fragment_transaction_income']),
+        syntax: strings.enUS['fragment_transaction_income'],
         key: 'income'
       }
     }
@@ -377,17 +383,17 @@ class TransactionDetails extends Component {
 
     if (this.state.direction === 'receive') {
       feeSyntax = ''
-      leftData = {color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income'])}
+      leftData = {color: c.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
     } else {
       feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
-      leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
+      leftData = {color: c.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
     }
     const color = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
     return (
       <View style={[UTILS.border()]}>
         <Animated.View
-          style={[{opacity: this.state.payeeOpacity, width: '100%', zIndex: this.state.payeeZIndex, backgroundColor: 'white', position: 'absolute', top: 4, height: this.props.usableHeight}]}
+          style={[{opacity: this.state.payeeOpacity, width: '100%', zIndex: this.state.payeeZIndex, backgroundColor: 'white', position: 'absolute', top: 4, height: platform.usableHeight}]}
           >
           <View style={[styles.payeeNameArea]}>
             <View style={[styles.payeeNameWrap]}>
@@ -411,7 +417,7 @@ class TransactionDetails extends Component {
             onChangePayee={this.onSelectPayee}
             contacts={this.props.contacts}
             style={[{width: '100%'}]}
-            usableHeight={this.props.usableHeight}
+            usableHeight={platform.usableHeight}
             currentPayeeText={this.state.name || ''}
             onSelectPayee={this.onSelectPayee}
             blurOnSubmit
@@ -419,11 +425,11 @@ class TransactionDetails extends Component {
           />
         </Animated.View>
         <Animated.View
-          style={[{opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: 'white', position: 'absolute', height: this.props.usableHeight}]}
+          style={[{opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: 'white', position: 'absolute', height: platform.usableHeight}]}
           >
           <View style={[styles.modalCategoryRow]}>
             <TouchableOpacity style={[styles.categoryLeft, {borderColor: color}]} disabled>
-              <T style={[{color: color}, styles.categoryLeftText]}>{type.syntax}</T>
+              <FormattedText style={[{color: color}, styles.categoryLeftText]}>{type.syntax}</FormattedText>
             </TouchableOpacity>
             <View style={[styles.modalCategoryInputArea]}>
               <TextInput
@@ -434,7 +440,7 @@ class TransactionDetails extends Component {
                 onChangeText={this.onChangeSubcategory}
                 style={[styles.categoryInput]}
                 defaultValue={this.state.subCategory || ''}
-                placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
+                placeholder={strings.enUS['transaction_details_category_title']}
                 autoCorrect={false}
                 onSubmitEditing={this.onSubcategoriesKeyboardReturn}
                 placeholderTextColor={c.gray2}
@@ -443,10 +449,10 @@ class TransactionDetails extends Component {
               />
             </View>
           </View>
-          <SubCategorySelectConnect
+          <SubCategorySelect
             onPressFxn={this.onSelectSubCategory}
             enteredSubcategory={this.state.subCategory}
-            usableHeight={this.props.usableHeight}
+            usableHeight={platform.usableHeight}
             subcategoriesList={sortedSubcategories}
           />
         </Animated.View>
@@ -465,7 +471,7 @@ class TransactionDetails extends Component {
                     onFocus={this.onFocusPayee}
                     autoCorrect={false}
                     style={[styles.payeeNameInput]}
-                    placeholder='Payee'
+                    placeholder={strings.enUS['transaction_details_payee']}
                     defaultValue={this.state.name}
                     value={this.state.name}
                     placeholderTextColor={c.gray2}
@@ -474,9 +480,9 @@ class TransactionDetails extends Component {
               </View>
               <View style={styles.payeeSeperator} />
               <View style={[styles.dateWrap]}>
-                <T style={[styles.date]}>{this.state.dateTimeSyntax}</T>
+                <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
               </View>
-              <AmountAreaConnect
+              <AmountArea
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
                 onChangeFiatFxn={this.onChangeFiat}
@@ -484,6 +490,7 @@ class TransactionDetails extends Component {
                 info={this.state}
                 onPressFxn={this.onSaveTxDetails}
                 fiatCurrencyCode={this.props.selectedWallet.fiatCurrencyCode}
+                cryptoCurrencyCode={this.props.selectedWallet.currencyCode}
                 fiatCurrencySymbol={this.props.fiatSymbol}
                 fiatAmount={this.state.amountFiat}
                 onEnterSubcategories={this.onEnterSubcategories}
@@ -495,7 +502,7 @@ class TransactionDetails extends Component {
                 selectCategory={this.onSelectCategory}
                 onEnterCategories={this.onEnterCategories}
                 onExitCategories={this.onExitCategories}
-                usableHeight={this.props.usableHeight}
+                usableHeight={platform.usableHeight}
                 onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
                 onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                 onFocusNotes={this.onFocusNotes}
@@ -507,6 +514,7 @@ class TransactionDetails extends Component {
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
+                openModalFxn={this.amountAreaOpenModal}
               />
             </View>
           </View>
@@ -514,274 +522,4 @@ class TransactionDetails extends Component {
       </View>
     )
   }
-}
-
-const mapStateToProps = (state) => ({
-  selectedWallet: UI_SELECTORS.getSelectedWallet(state),
-  fiatSymbol: UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode),
-  contacts: state.ui.contacts.contactList,
-  usableHeight: platform.usableHeight,
-  subcategoriesList: state.ui.scenes.transactionDetails.subcategories,
-  settings: state.ui.settings
-})
-const mapDispatchToProps = (dispatch) => ({
-  setTransactionDetails: (currencyCode, transactionDetails) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) }
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)
-
-class AmountArea extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      color: ''
-    }
-  }
-
-  render () {
-    // console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
-    const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
-
-    const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
-    return (
-      <View style={[styles.amountAreaContainer]}>
-        <View style={[styles.amountAreaCryptoRow]}>
-          <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.direction + '_past'])}</T>
-          </View>
-          <View style={[styles.amountAreaMiddle]}>
-            <View style={[styles.amountAreaMiddleTop]}>
-              <T style={[styles.amountAreaMiddleTopText]}>{amountString}</T>
-            </View>
-            <View style={[styles.amountAreaMiddleBottom]}>
-              <T style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</T>
-            </View>
-          </View>
-          <View style={[styles.amountAreaRight]}>
-            <T style={[styles.amountAreaRightText]}>{this.props.walletDefaultDenomProps.symbol}</T>
-          </View>
-        </View>
-        <View style={[styles.editableFiatRow]}>
-          <View style={[styles.editableFiatLeft]}>
-            <T style={[styles.editableFiatLeftText]} />
-          </View>
-          <View style={[styles.editableFiatArea]}>
-            <T style={styles.fiatSymbol}>{this.props.fiatCurrencySymbol}</T>
-            <TextInput
-              returnKeyType='done'
-              autoCapitalize='none'
-              autoCorrect={false}
-              onFocus={this.props.onFocusFiatAmount}
-              onChangeText={this.props.onChangeFiatFxn}
-              style={[styles.editableFiat]}
-              keyboardType='numeric'
-              placeholder={''}
-              value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-',''), 2, true)}
-              defaultValue={''}
-              onBlur={this.props.onBlurFiatFxn}
-              blurOnSubmit={true}
-            />
-          </View>
-          <View style={[styles.editableFiatRight]}>
-            <T style={[styles.editableFiatRightText]}>{this.props.fiatCurrencyCode}</T>
-          </View>
-        </View>
-        <View style={[styles.categoryRow]}>
-          <TouchableOpacity style={[styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
-            <T style={[{color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</T>
-          </TouchableOpacity>
-          <View style={[styles.categoryInputArea]}>
-            <TextInput
-              blurOnSubmit
-              autoCapitalize='words'
-              placeholderTextColor={c.gray2}
-              onFocus={this.props.onEnterSubcategories}
-              onChangeText={this.props.onChangeSubcategoryFxn}
-              onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
-              style={[styles.categoryInput]}
-              defaultValue={this.props.subCategory || ''}
-              placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
-              autoCorrect={false}
-            />
-          </View>
-        </View>
-        <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
-          <Picker style={[ UTILS.border(),
-            {
-              backgroundColor: 'white',
-              width: platform.deviceWidth,
-              height: platform.deviceHeight / 3,
-              position: 'absolute',
-              top: (2/3) * platform.deviceHeight,
-              left: -20
-            }
-          ]}
-            itemStyle={{fontFamily: 'SourceSansPro-Black', color: c.gray1, fontSize: 30, paddingBottom: 14}}
-            selectedValue={this.props.type.key}
-            onValueChange={(itemValue) => this.props.selectCategory({itemValue})}>
-            {categories.map((x) => (
-              <Picker.Item label={this.props.types[x].syntax} value={x} key={this.props.types[x].key} />
-            ))}
-          </Picker>
-        </Modal>
-        <View style={[styles.notesRow]}>
-          <View style={[styles.notesInputWrap]} >
-            <TextInput
-              onChangeText={this.props.onChangeNotesFxn}
-              multiline
-              numberOfLines={3}
-              defaultValue={this.props.info.notes || ''}
-              style={[styles.notesInput]}
-              placeholderTextColor={c.gray2}
-              placeholder={sprintf(strings.enUS['transaction_details_notes_title'])}
-              autoCapitalize='sentences'
-              autoCorrect={false}
-              onFocus={this.props.onFocusNotes}
-              onBlur={this.props.onBlurNotes}
-              // onSubmitEditing={this.props.onBlurNotes}
-              blurOnSubmit={false}
-              onScroll={() => Keyboard.dismiss()}
-            />
-          </View>
-        </View>
-        <View style={[styles.footerArea]}>
-          <View style={[styles.buttonArea]}>
-            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
-          </View>
-          <TouchableWithoutFeedback onPress={() => this.props.dispatch(openHelpModal())} style={[styles.advancedTxArea]}>
-            <T style={[styles.advancedTxText]}>{sprintf(strings.enUS['transaction_details_view_advanced_data'])}</T>
-          </TouchableWithoutFeedback>
-        </View>
-      </View>
-    )
-  }
-}
-export const AmountAreaConnect = AmountArea
-
-class SubCategorySelect extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      subcategories: this.props.subcategoriesList,
-      filteredSubcategories: this.props.subcategoriesList.sort(),
-      enteredSubcategory: this.props.enteredSubcategory
-    }
-    // this.props.usableHight = platform.usableHeight
-  }
-
-  render () {
-    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => entry.indexOf(this.props.enteredSubcategory) >= 0)
-    let newPotentialSubCategories = []
-    let newPotentialSubCategoriesFiltered = []
-    if (this.props.enteredSubcategory) {
-      newPotentialSubCategories = categories.map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
-      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => this.props.subcategoriesList.indexOf(cat) < 0)
-    }
-
-    return (
-      <SearchResults
-        renderRegularResultFxn={this.renderSubcategory}
-        onRegularSelectFxn={this.props.onPressFxn}
-        regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
-        usableHeight={this.props.usableHeight}
-        style={[{width: platform.deviceWidth, height: platform.usableHeight}]}
-        keyExtractor={this.keyExtractor}
-        height={this.props.usableHeight - 51}
-        extraTopSpace={0}
-      />
-    )
-  }
-
-  renderSubcategory (data, onRegularSelectFxn) {
-    return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={c.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
-        <View style={[styles.rowContent]}>
-          <View style={[styles.rowCategoryTextWrap]}>
-            <T style={[styles.rowCategoryText]} numberOfLines={1}>{data.item}</T>
-          </View>
-          <View style={[styles.rowPlusWrap]}>
-            <T style={[styles.rowPlus]}>+</T>
-          </View>
-        </View>
-      </TouchableHighlight>
-    )
-  }
-
-  keyExtractor = (item, index) => index
-}
-
-export const SubCategorySelectConnect = SubCategorySelect
-
-class PayeeIcon extends Component {
-  render () {
-    return (
-      <View style={[styles.modalHeaderIconWrapBottom]}>
-        {this.renderIcon()}
-      </View>
-    )
-  }
-
-  renderIcon () {
-    if (this.props.thumbnailPath) {
-      return <Image source={{uri: this.props.thumbnailPath}} style={styles.payeeIcon} />
-    } else {
-      if (this.props.direction === 'receive') {
-        return (
-          <Image source={ReceivedIcon} style={styles.payeeIcon} />
-        )
-      } else {
-        return (
-          <Image source={SentIcon} style={styles.payeeIcon} />
-        )
-      }
-    }
-  }
-}
-
-class ContactSearchResults extends Component {
-
-  render () {
-    const filteredArray = this.props.contacts.filter((entry) => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
-
-    return (
-      <SearchResults
-        renderRegularResultFxn={this.renderResult}
-        onRegularSelectFxn={this.props.onSelectPayee}
-        regularArray={filteredArray}
-        usableHeight={this.props.usableHeight}
-        style={[{width: '100%', backgroundColor: 'white'}]}
-        keyExtractor={this.keyExtractor}
-        height={this.props.usableHeight - 32}
-        extraTopSpace={-10}
-      />
-    )
-  }
-
-  renderResult = (data, onRegularSelectFxn) => {
-    const fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
-
-    return (
-      <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName, data.item.thumbnailPath)} underlayColor={c.gray4} style={[styles.singleContact]}>
-          <View style={[styles.contactInfoWrap]}>
-            <View style={styles.contactLeft}>
-              <View style={[styles.contactLogo]} >
-                {data.item.thumbnailPath ? (
-                  <Image source={{uri: data.item.thumbnailPath}} style={{height: 40, width: 40, borderRadius: 20}} />
-                ) : (
-                  <Image source={ContactImage} style={{height: 40, width: 40, borderRadius: 20}} />
-                )}
-
-              </View>
-              <View style={[styles.contactLeftTextWrap]}>
-                <T style={[styles.contactName]}>{fullName}</T>
-              </View>
-            </View>
-          </View>
-        </TouchableHighlight>
-      </View>
-    )
-  }
-
-  keyExtractor = (item, index) => index
 }

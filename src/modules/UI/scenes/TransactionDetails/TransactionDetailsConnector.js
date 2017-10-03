@@ -7,7 +7,8 @@ import type {GuiWallet, GuiContact, GuiTransaction} from '../../../../types'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import {
-    setTransactionDetails
+    setTransactionDetails,
+    getSubcategories
 } from './action.js'
 
 const {TransactionDetails} = require('./TransactionDetails.ui')
@@ -31,7 +32,8 @@ const mapStateToProps = (state: any): Props => {
 }
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  setTransactionDetails: (currencyCode: string, transactionDetails: GuiTransaction) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) }
+  setTransactionDetails: (currencyCode: string, transactionDetails: GuiTransaction) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) },
+  getSubcategories: () => dispatch(getSubcategories())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)

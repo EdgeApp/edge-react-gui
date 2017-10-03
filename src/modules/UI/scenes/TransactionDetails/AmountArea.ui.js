@@ -40,14 +40,14 @@ class AmountArea extends Component<Prop, State> {
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(this.props.walletDefaultDenomProps.symbol + ' ') || ''}{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</FormattedText>
             </View>
           </View>
           <View style={[styles.amountAreaRight]}>
-            <FormattedText style={[styles.amountAreaRightText]}>{this.props.walletDefaultDenomProps.symbol}</FormattedText>
+            <FormattedText style={[styles.amountAreaRightText]}>{this.props.cryptoCurrencyCode}</FormattedText>
           </View>
         </View>
         <View style={[styles.editableFiatRow]}>
