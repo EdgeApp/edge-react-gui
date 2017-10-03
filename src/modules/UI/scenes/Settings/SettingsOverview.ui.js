@@ -174,12 +174,6 @@ export default class SettingsOverview extends Component {
           routeFunction={this._onPressRecoverPasswordRouting}
           right={<Icon name='arrow-right' size={18}
             color='#58595C' />} />
-        <RowRoute
-          leftText={strings.enUS['settings_button_send_logs']}
-          scene={'changePassword'}
-          routeFunction={this.showSendLogsModal}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
 
         <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -208,6 +202,12 @@ export default class SettingsOverview extends Component {
           {Object.keys(this.options).map(this.renderRowSwitch)}
 
           {this.currencies.map(this.renderRowRoute)}
+
+          <RowRoute
+            leftText={strings.enUS['settings_button_send_logs']}
+            scene={'changePassword'}
+            routeFunction={this.showSendLogsModal}
+           />
 
           <View style={[s.debugArea, b('green')]}>
             <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
