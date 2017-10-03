@@ -49,7 +49,7 @@
     "airbitz-core-react-native": "git://github.com/Airbitz/airbitz-core-react-native.git",
     "airbitz-core-types": "git://github.com/Airbitz/airbitz-core-types.git",
     "edge-currency-bitcoin": "^0.3.0",
-    "edge-currency-ethereum": "^0.2.1",
+    "edge-currency-ethereum": "^0.2.2",
     "edge-exchange-plugins": "^0.1.1",
     "assert": "^1.4.1",
     "async": "^2.3.0",
