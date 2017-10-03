@@ -327,6 +327,7 @@ class TransactionDetails extends Component {
     this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
   }
 
+
   render () {
     let leftData, feeSyntax, type
 
@@ -499,6 +500,8 @@ class TransactionDetails extends Component {
                 onFocusFiatAmount={this.onFocusFiatAmount}
                 subcategoriesList={this.props.subcategoriesList}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
+                openModalFxn={this.amountAreaOpenModal}
+                selectedWallet={this.props.selectedWallet}
               />
             </View>
           </View>
