@@ -3,7 +3,7 @@
  */
 // @flow
 
-import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
+import type {AbcDenomination, AbcMetaToken, AbcTransaction} from 'airbitz-core-types'
 
 export class GuiWallet {
   id: string
@@ -63,4 +63,36 @@ export type GuiCurrencyInfo = {
   exchangeCurrencyCode: string,
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination
+}
+
+export type GuiContact = {
+  hasThumbnail: boolean,
+  emailAddresses: Array<string>,
+  postalAddresses: Array<string>,
+  middleName: string,
+  company: string,
+  jobTitle: string,
+  familyName: string,
+  thumbnailPath: string,
+  recordID: string,
+  givenName: string,
+}
+
+export type GuiTransaction = {
+  ...AbcTransaction,
+  key: number,
+  multiplier: string,
+  dateString: string,
+  time: string,
+  metadata: GuiMetadata,
+  thumbnailPath: string,
+  hasThumbnail: boolean,
+  amountSatoshi: number
+}
+
+export type GuiMetadata = {
+  name: string,
+  amountFiat: string,
+  category: string,
+  notes: string
 }

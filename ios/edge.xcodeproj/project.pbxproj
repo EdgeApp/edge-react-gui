@@ -411,7 +411,7 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		B3F818511F82CEA500E3EE22 /* PBXContainerItemProxy */ = {
+		B3F816F91F81D50E00E3EE22 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97E65DB6D2464A14AA289DCA /* BVLinearGradient.xcodeproj */;
 			proxyType = 2;
@@ -923,7 +923,7 @@
 			isa = PBXGroup;
 			children = (
 				6E10912D1EB0512100947A0B /* libBVLinearGradient.a */,
-				B3F818521F82CEA500E3EE22 /* libBVLinearGradient.a */,
+				B3F816FA1F81D50E00E3EE22 /* libBVLinearGradient.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1054,7 +1054,7 @@
 				3BB21E930C5F437EB1EAE492 /* Resources */,
 				1189D14E429D3398A100CB8A /* Pods */,
 				82DAC2543B5A97898904086F /* Frameworks */,
-				B3F8184E1F82CEA400E3EE22 /* Recovered References */,
+				B3F816F61F81D50D00E3EE22 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1071,7 +1071,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B3F8184E1F82CEA400E3EE22 /* Recovered References */ = {
+		B3F816F61F81D50D00E3EE22 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
 				1CF3BA57C1034B9A96CDE4EF /* libRCTCamera.a */,
@@ -1668,11 +1668,11 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		B3F818521F82CEA500E3EE22 /* libBVLinearGradient.a */ = {
+		B3F816FA1F81D50E00E3EE22 /* libBVLinearGradient.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libBVLinearGradient.a;
-			remoteRef = B3F818511F82CEA500E3EE22 /* PBXContainerItemProxy */;
+			remoteRef = B3F816F91F81D50E00E3EE22 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DA6569471F17436100226952 /* libthird-party.a */ = {
