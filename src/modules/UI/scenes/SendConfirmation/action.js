@@ -1,5 +1,4 @@
 // @flow
-
 const PREFIX = 'UI/SendConfimation/'
 export const UPDATE_AMOUNT_SATOSHI = PREFIX + 'UPDATE_AMOUNT_SATOSHI'
 // export const UPDATE_AMOUNT_FIAT = PREFIX + 'UPDATE_AMOUNT_FIAT'
@@ -101,13 +100,19 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     .then(() => {
       dispatch(updateSpendPending(false))
       Actions.transactionList({type: 'reset'})
-      const successInfo = {title: 'Transaction Sent', message: 'Your transaction has been successfully sent.'}
+      const successInfo = {
+        title: 'Transaction Sent',
+        message: 'Your transaction has been successfully sent.'
+      }
       dispatch(openABAlert(successInfo))
     })
     .catch((e) => {
-      // console.log('error is: ', e)
+      // console.log(e)
       dispatch(updateSpendPending(false))
-      const errorInfo = {title: 'Transaction Failure', message: e.message}
+      const errorInfo = {
+        title: 'Transaction Failure',
+        message: e.message
+      }
       dispatch(openABAlert(errorInfo))
     })
 }
