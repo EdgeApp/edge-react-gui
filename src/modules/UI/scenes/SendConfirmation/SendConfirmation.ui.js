@@ -133,7 +133,9 @@ export class SendConfirmation extends Component<Props & DispatchProps, State> {
               && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
             }
           </View>
-          <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={this.props.sliderDisabled} />
+          <ABSlider style={[UTILS.border()]}
+            onSlidingComplete={this.signBroadcastAndSave}
+            sliderDisabled={this.props.sliderDisabled} />
         </ScrollView>
       </Gradient>
     )

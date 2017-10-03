@@ -1,5 +1,4 @@
 // @flow
-
 import {connect} from 'react-redux'
 import type {Props, DispatchProps} from './SendConfirmation.ui'
 import {bns} from 'biggystring'
