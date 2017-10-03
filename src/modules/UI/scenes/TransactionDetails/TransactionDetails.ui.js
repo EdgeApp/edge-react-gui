@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {
   Animated,
   Easing,
@@ -329,27 +328,27 @@ class TransactionDetails extends Component {
 
 
   render () {
-    let leftData, feeSyntax, type
+    let type
 
     const types = {
       exchange: {
         color: c.accentOrange,
-        syntax: sprintf(strings.enUS['fragment_transaction_exchange']),
+        syntax: strings.enUS['fragment_transaction_exchange'],
         key: 'exchange'
       },
       expense: {
         color: c.accentRed,
-        syntax: sprintf(strings.enUS['fragment_transaction_expense']),
+        syntax: strings.enUS['fragment_transaction_expense'],
         key: 'expense'
       },
       transfer: {
         color: c.primary,
-        syntax: sprintf(strings.enUS['fragment_transaction_transfer']),
+        syntax: strings.enUS['fragment_transaction_transfer'],
         key: 'transfer'
       },
       income: {
         color: c.accentGreen,
-        syntax: sprintf(strings.enUS['fragment_transaction_income']),
+        syntax: strings.enUS['fragment_transaction_income'],
         key: 'income'
       }
     }
@@ -364,15 +363,9 @@ class TransactionDetails extends Component {
       type = types[this.state.type]
     }
 
-    if (this.state.direction === 'receive') {
-      feeSyntax = ''
-      leftData = {color: c.accentGreen, syntax: sprintf(strings.enUS['fragment_transaction_income'])}
-    } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
-      leftData = {color: c.accentRed, syntax: sprintf(strings.enUS['fragment_transaction_expense'])}
-    }
-    let color = type.color
-    // console.log('rendering txDetails, this is: ', this)
+    const color = type.color
+    let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
+
     return (
       <View style={[UTILS.border()]}>
         <Animated.View
@@ -424,7 +417,7 @@ class TransactionDetails extends Component {
                 onChangeText={this.onChangeSubcategory}
                 style={[styles.categoryInput]}
                 defaultValue={this.state.subCategory || ''}
-                placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
+                placeholder={strings.enUS['transaction_details_category_title']}
                 autoCorrect={false}
                 onSubmitEditing={this.onSubcategoriesKeyboardReturn}
                 placeholderTextColor={c.gray2}
@@ -438,7 +431,7 @@ class TransactionDetails extends Component {
             enteredSubcategory={this.state.subCategory}
             usableHeight={this.props.usableHeight}
             deviceDimensions={this.props.dimensions}
-            subcategoriesList={this.props.subcategoriesList.sort()}
+            subcategoriesList={sortedSubcategories}
           />
         </Animated.View>
         <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
@@ -492,9 +485,7 @@ class TransactionDetails extends Component {
                 onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                 onFocusNotes={this.onFocusNotes}
                 onBlurNotes={this.onBlurNotes}
-                leftData={leftData}
                 direction={this.state.direction}
-                feeSyntax={feeSyntax}
                 color={color}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
@@ -543,7 +534,7 @@ class AmountArea extends Component {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <T style={[styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{sprintf(strings.enUS['fragment_transaction_' + this.props.direction + '_past'])}</T>
+            <T style={[styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{strings.enUS['fragment_transaction_' + this.props.direction + '_past']}</T>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
@@ -596,7 +587,7 @@ class AmountArea extends Component {
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput]}
               defaultValue={this.props.subCategory || ''}
-              placeholder={sprintf(strings.enUS['transaction_details_category_title'])}
+              placeholder={strings.enUS['transaction_details_category_title']}
               autoCorrect={false}
             />
           </View>
@@ -629,7 +620,7 @@ class AmountArea extends Component {
               defaultValue={this.props.info.notes || ''}
               style={[styles.notesInput]}
               placeholderTextColor={c.gray2}
-              placeholder={sprintf(strings.enUS['transaction_details_notes_title'])}
+              placeholder={strings.enUS['transaction_details_notes_title']}
               autoCapitalize='sentences'
               autoCorrect={false}
               onFocus={this.props.onFocusNotes}
@@ -642,10 +633,10 @@ class AmountArea extends Component {
         </View>
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>
-            <PrimaryButton text={sprintf(strings.enUS['string_save'])} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
+            <PrimaryButton text={strings.enUS['string_save']} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
           <TouchableWithoutFeedback onPress={() => this.props.dispatch(openHelpModal())} style={[styles.advancedTxArea]}>
-            <T style={[styles.advancedTxText]}>{sprintf(strings.enUS['transaction_details_view_advanced_data'])}</T>
+            <T style={[styles.advancedTxText]}>{strings.enUS['transaction_details_view_advanced_data']}</T>
           </TouchableWithoutFeedback>
         </View>
       </View>
