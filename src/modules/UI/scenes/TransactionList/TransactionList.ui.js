@@ -300,8 +300,8 @@ export default class TransactionList extends Component {
     )
   }
 
-  _goToTxDetail = (txId, currencyCode, tx) => {
-    Actions.transactionDetails({walletId: this.props.selectedWalletId, txId, currencyCode, tx})
+  _goToTxDetail = (guiTransaction) => {
+    Actions.transactionDetails({guiTransaction})
   }
 
   isReceivedTransaction (tx) {
@@ -362,6 +362,9 @@ export default class TransactionList extends Component {
     } else {
       fiatAmountString = (0.00).toFixed(2)
     }
+
+    const abcTransaction = {abcTransaction: tx}
+
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
@@ -373,7 +376,7 @@ export default class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(abcTransaction)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
           <View style={[styles.transactionInfoWrap, UTILS.border()]}>
             <View style={styles.transactionLeft}>
               {tx.thumbnailPath ? (

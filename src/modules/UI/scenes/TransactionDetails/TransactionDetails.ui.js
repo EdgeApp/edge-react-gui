@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -28,12 +30,13 @@ import type {AbcDenomination, AbcMetadata} from 'airbitz-core-types'
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
 export type Props = {
-  tx: GuiTransaction,
+  guiTransaction: GuiTransaction,
   contacts: Array<GuiContact>,
   fiatSymbol: string,
   selectedWallet: GuiWallet,
   subcategoriesList: Array<string>,
-  settings: any // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp
+  settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
+  direction: string
 }
 
 export type DispatchProps = {
@@ -45,11 +48,9 @@ export type DispatchProps = {
 }
 
 export type State = {
-  tx: GuiTransaction,
-  direction: string,
-  txid: string,
   name: string, // remove commenting once metaData in Redux
   thumbnailPath: string,
+  // hasThumbnail: boolean,
   category: string,
   notes: string,
   amountFiat: string,
@@ -76,34 +77,33 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   constructor (props: Props & DispatchProps) {
     super(props)
     // console.log('inside txDetails constructor, this.props is: ', this.props)
-    const direction = (props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
-    const dateTime = new Date(props.tx.date * 1000)
+    props.direction = (parseInt(props.guiTransaction.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send'
+    const dateTime = new Date(props.guiTransaction.abcTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
     let type = ''
     let subCategory = ''
-    if (props.tx.metadata && props.tx.metadata.category) {
-      let colonOccurrence = props.tx.metadata.category.indexOf(':')
-      if (colonOccurrence) {
-        type = props.tx.metadata.category.substring(0, colonOccurrence)
+
+    const cat: string = props.guiTransaction.abcTransaction.metadata.category ? props.guiTransaction.abcTransaction.metadata.category : ''
+    if (cat) {
+      let colonOccurrence = cat.indexOf(':')
+      if (cat && colonOccurrence) {
+        type = cat.substring(0, colonOccurrence)
         type = type.charAt(0).toLowerCase() + type.slice(1)
-        subCategory = props.tx.metadata.category.substring(colonOccurrence + 1, props.tx.metadata.category.length)
+        subCategory = cat.substring(colonOccurrence + 1, cat.length)
       }
     }
 
-    let amountFiat = props.tx.metadata.amountFiat || '0'
+    let amountFiat = props.guiTransaction.abcTransaction.metadata.amountFiat ? props.guiTransaction.abcTransaction.metadata.amountFiat.toString() : '0.00'
 
     this.state = {
-      tx: props.tx,
-      direction,
-      txid: props.tx.txid,
-      name: props.tx.metadata.name, // remove commenting once metaData in Redux
-      thumbnailPath: props.tx.thumbnailPath,
-      category: props.tx.metadata.category,
-      notes: props.tx.metadata.notes,
-      amountFiat: amountFiat,
+      name: props.guiTransaction.abcTransaction.metadata.name ? props.guiTransaction.abcTransaction.metadata.name : '', // remove commenting once metaData in Redux
+      thumbnailPath: props.guiTransaction.thumbnailPath,
+      category: cat,
+      notes: props.guiTransaction.abcTransaction.metadata.notes ? props.guiTransaction.abcTransaction.metadata.notes : '',
+      amountFiat,
       bizId: 0,
-      miscJson: props.tx.metadata ? props.tx.metadata.miscJson : null,
+      miscJson: props.guiTransaction.abcTransaction.metadata ? props.guiTransaction.abcTransaction.metadata.miscJson : null,
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
@@ -346,7 +346,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     } else {
       category = undefined
     }
-    const {txid, name, notes, bizId, miscJson} = this.state
+    const {name, notes, bizId, miscJson} = this.state
+    const txid = this.props.guiTransaction.abcTransaction.txid
     let newAmountFiat = this.state.amountFiat
     const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
     const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
@@ -403,7 +404,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     }
 
     if (!this.state.type) {
-      if (this.state.direction === 'receive') {
+      if (this.props.direction === 'receive') {
         type = types.income
       } else {
         type = types.expense
@@ -412,11 +413,11 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       type = types[this.state.type]
     }
 
-    if (this.state.direction === 'receive') {
+    if (this.props.direction === 'receive') {
       feeSyntax = ''
       leftData = {color: c.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
     } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.tx.networkFee)
+      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.guiTransaction.abcTransaction.networkFee)
       leftData = {color: c.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
     }
     const color = type.color
@@ -451,7 +452,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
             style={[{width: '100%'}]}
             usableHeight={platform.usableHeight}
             currentPayeeText={this.state.name || ''}
-            dimensions={this.props.dimensions}
+            dimensions={platform.dimensions}
             onSelectPayee={this.onSelectPayee}
             blurOnSubmit
             onBlur={this.onBlurPayee}
@@ -493,7 +494,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
           <View style={[styles.container]}>
             <View>
               <Gradient style={[styles.expandedHeader]}>
-                <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath || this.props.tx.thumbnailPath} />
+                <PayeeIcon direction={this.props.direction} thumbnailPath={this.state.thumbnailPath || this.props.guiTransaction.thumbnailPath} />
               </Gradient>
             </View>
             <View style={[styles.dataArea]}>
@@ -516,6 +517,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
               </View>
               <AmountArea
+                guiTransaction={this.props.guiTransaction}
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
                 onChangeFiatFxn={this.onChangeFiat}
@@ -537,12 +539,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 onExitCategories={this.onExitCategories}
                 usableHeight={platform.usableHeight}
                 onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
-                dimensions={this.props.dimensions}
+                dimensions={platform.dimensions}
                 onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                 onFocusNotes={this.onFocusNotes}
                 onBlurNotes={this.onBlurNotes}
                 leftData={leftData}
-                direction={this.state.direction}
+                direction={this.props.direction}
                 feeSyntax={feeSyntax}
                 color={color}
                 types={types}

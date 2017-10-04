@@ -78,20 +78,9 @@ export type GuiContact = {
   givenName: string,
 }
 
-export type GuiTransaction = AbcTransaction & {
-  key: number,
-  multiplier: string,
-  dateString: string,
-  time: string,
-  metadata: GuiMetadata,
-  thumbnailPath: string,
-  hasThumbnail: boolean,
-  amountSatoshi: number
-}
-
-export type GuiMetadata = {
-  name: string,
-  amountFiat: string,
-  category: string,
-  notes: string
+export type GuiTransaction =  {
+  multiplier: string, // change to use Kevin's ratio
+  thumbnailPath: string, // calculated or stored? When assigned?
+  hasThumbnail: boolean, // calculated or stored? When assigned?amountSatoshi: number, // unneeded?
+  abcTransaction: AbcTransaction
 }

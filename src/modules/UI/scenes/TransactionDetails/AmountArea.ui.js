@@ -29,7 +29,7 @@ class AmountArea extends Component<Prop, State> {
 
   render () {
     // console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
-    const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.info.tx.nativeAmount.replace('-', ''))
+    const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.guiTransaction.abcTransaction.nativeAmount.replace('-', ''))
 
     const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
     return (
@@ -119,7 +119,7 @@ class AmountArea extends Component<Prop, State> {
               onChangeText={this.props.onChangeNotesFxn}
               multiline
               numberOfLines={3}
-              defaultValue={this.props.info.notes || ''}
+              defaultValue={this.props.guiTransaction.abcTransaction.metadata.notes || ''}
               style={[styles.notesInput]}
               placeholderTextColor={colors.gray2}
               placeholder={strings.enUS['transaction_details_notes_title']}
