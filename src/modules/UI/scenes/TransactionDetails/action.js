@@ -3,11 +3,12 @@ export const SET_TRANSACTION_DETAILS = 'SET_TRANSACTION_DETAILS'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import {Actions} from 'react-native-router-flux'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
+import type {AbcMetadata} from 'airbitz-core-types'
 
 export const SET_TRANSACTION_SUBCATEGORIES_START = 'SET_TRANSACTION_SUBCATEGORIES_START'
 export const SET_TRANSACTION_SUBCATEGORIES = 'SET_TRANSACTION_SUBCATEGORIES'
 
-export const setTransactionDetails = (currencyCode, transactionDetails) => (dispatch, getState) => {
+export const setTransactionDetails = (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => (dispatch, getState) => {
   const state = getState()
   const wallet = getSelectedWallet(state)
   const onSuccess = () => {
@@ -16,7 +17,7 @@ export const setTransactionDetails = (currencyCode, transactionDetails) => (disp
   const onError = () => {
 
   }
-  WALLET_API.setTransactionDetailsRequest(wallet, currencyCode, transactionDetails)
+  WALLET_API.setTransactionDetailsRequest(wallet, txid, currencyCode, abcMetadata)
       .then(onSuccess)
       .catch(onError)
 }

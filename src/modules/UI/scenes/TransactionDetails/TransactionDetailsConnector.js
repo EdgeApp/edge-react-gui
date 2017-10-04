@@ -1,9 +1,8 @@
-
 import {connect} from 'react-redux'
 import type {Props, DispatchProps} from './TransactionDetails.ui'
 import * as UI_SELECTORS from '../../selectors.js'
-import type {GuiWallet, GuiContact, GuiTransaction} from '../../../../types'
-// import type {AbcTransaction} from 'airbitz-core-types'
+import type {GuiWallet, GuiContact} from '../../../../types'
+import type {AbcMetadata} from 'airbitz-core-types'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import {
@@ -32,7 +31,7 @@ const mapStateToProps = (state: any): Props => {
 }
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  setTransactionDetails: (currencyCode: string, transactionDetails: GuiTransaction) => { dispatch(setTransactionDetails(currencyCode, transactionDetails)) },
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => { dispatch(setTransactionDetails(currencyCode, abcMetadata)) },
   getSubcategories: () => dispatch(getSubcategories())
 })
 

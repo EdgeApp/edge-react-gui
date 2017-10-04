@@ -78,8 +78,7 @@ export type GuiContact = {
   givenName: string,
 }
 
-export type GuiTransaction = {
-  ...AbcTransaction,
+export type GuiTransaction = AbcTransaction & {
   key: number,
   multiplier: string,
   dateString: string,

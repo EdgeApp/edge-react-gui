@@ -1,4 +1,3 @@
-
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
@@ -24,7 +23,7 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiTransaction, GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
-
+import type {AbcDenomination, AbcMetadata} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -32,16 +31,43 @@ export type Props = {
   tx: GuiTransaction,
   contacts: Array<GuiContact>,
   fiatSymbol: string,
-  selectedWallet: GuiWallet
+  selectedWallet: GuiWallet,
+  subcategoriesList: Array<string>,
+  settings: any // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp
 }
 
 export type DispatchProps = {
-  setNewSubcategory: (string, Array<strings>) => void
+  setNewSubcategory: (string, Array<strings>) => void,
+  openHelpModal: () => void,
+  setTransactionDetails: (string, string, AbcMetadata) => void,
+  setContactList: (Array<GuiContact>) => void,
+  getSubcategories: () => void
 }
 
-/*export type State = {
-
-}*/
+export type State = {
+  tx: GuiTransaction,
+  direction: string,
+  txid: string,
+  name: string, // remove commenting once metaData in Redux
+  thumbnailPath: string,
+  category: string,
+  notes: string,
+  amountFiat: string,
+  bizId: number,
+  miscJson: any,
+  dateTimeSyntax: string,
+  subCategorySelectVisibility: boolean,
+  categorySelectVisibility: boolean,
+  subCategory: string,
+  contactSearchVisibility: boolean,
+  animation: any, // AnimatedValue
+  payeeOpacity: any, // AnimatedValue
+  subcategoryOpacity: any, // AnimatedValue
+  payeeZIndex: number,
+  subcatZIndex: number,
+  type: string,
+  walletDefaultDenomProps: AbcDenomination
+}
 
 export class TransactionDetails extends Component<Props & DispatchProps, State> {
   subcategoryTextInput: ?HTMLButtonElement
@@ -50,37 +76,38 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   constructor (props: Props & DispatchProps) {
     super(props)
     // console.log('inside txDetails constructor, this.props is: ', this.props)
-    const direction = (this.props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
-    const dateTime = new Date(this.props.tx.date * 1000)
+    const direction = (props.tx.amountSatoshi >= 0) ? 'receive' : 'send'
+    const dateTime = new Date(props.tx.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
-    let type, subCategory
-    if (this.props.tx.metadata.category) {
-      let colonOccurrence = this.props.tx.metadata.category.indexOf(':')
+    let type = ''
+    let subCategory = ''
+    if (props.tx.metadata && props.tx.metadata.category) {
+      let colonOccurrence = props.tx.metadata.category.indexOf(':')
       if (colonOccurrence) {
-        type = this.props.tx.metadata.category.substring(0, colonOccurrence)
+        type = props.tx.metadata.category.substring(0, colonOccurrence)
         type = type.charAt(0).toLowerCase() + type.slice(1)
-        subCategory = this.props.tx.metadata.category.substring(colonOccurrence + 1, this.props.tx.metadata.category.length)
+        subCategory = props.tx.metadata.category.substring(colonOccurrence + 1, props.tx.metadata.category.length)
       }
     }
 
-    let amountFiat = this.props.tx.metadata.amountFiat || '0'
+    let amountFiat = props.tx.metadata.amountFiat || '0'
 
     this.state = {
-      tx: this.props.tx,
+      tx: props.tx,
       direction,
-      txid: this.props.tx.txid,
-      name: this.props.tx.metadata.name, // remove commenting once metaData in Redux
-      thumbnailPath: this.props.tx.thumbnailPath,
-      category: this.props.tx.metadata.category,
-      notes: this.props.tx.metadata.notes,
+      txid: props.tx.txid,
+      name: props.tx.metadata.name, // remove commenting once metaData in Redux
+      thumbnailPath: props.tx.thumbnailPath,
+      category: props.tx.metadata.category,
+      notes: props.tx.metadata.notes,
       amountFiat: amountFiat,
       bizId: 0,
-      miscJson: this.props.tx.miscJson || null,
+      miscJson: props.tx.metadata ? props.tx.metadata.miscJson : null,
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
-      subCategory: subCategory || null,
+      subCategory: subCategory || '',
       contactSearchVisibility: false,
       animation: new Animated.Value(0),
       payeeOpacity: new Animated.Value(0),
@@ -88,14 +115,18 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       payeeZIndex: 0,
       subcatZIndex: 0,
       type: type,
-      walletDefaultDenomProps: {}
+      walletDefaultDenomProps: {
+        name: '',
+        multiplier: '',
+        symbol: ''
+      }
     }
   }
 
   onFocusPayee = () => {
     this.enablePayeeVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 62, animated: true})
-    this.payeeTextInput.focus()
+    this.payeeTextInput ? this.payeeTextInput.focus() : null
   }
 
   onBlurPayee = () => {
@@ -208,7 +239,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   onEnterSubcategories = () => {
     this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
     this.enableSubcategoryVisibility()
-    this.subcategoryTextInput.focus()
+    if (this.subcategoryTextInput) {
+      this.subcategoryTextInput.focus()
+    }
   }
 
   onExitSubcategories = () => {
@@ -307,18 +340,17 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   onSaveTxDetails = () => {
-    let amountFiat
     let category
-    if (this.state.type && this.state.subCategory) {
+    if (this.state.subCategory && this.state.type) {
       category = this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1) + ':' + this.state.subCategory
     } else {
       category = undefined
     }
     const {txid, name, notes, bizId, miscJson} = this.state
     let newAmountFiat = this.state.amountFiat
-    amountFiat = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat).toFixed(2)
-    const transactionDetails = {txid, name, category, notes, amountFiat, bizId, miscJson}
-    this.props.setTransactionDetails(this.props.selectedWallet.currencyCode, transactionDetails)
+    const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
+    const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
+    this.props.setTransactionDetails(txid, this.props.selectedWallet.currencyCode, abcMetadata)
   }
 
   componentDidMount () {
