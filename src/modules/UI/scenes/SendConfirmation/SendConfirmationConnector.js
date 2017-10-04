@@ -54,16 +54,11 @@ const mapStateToProps = (state: State): Props => {
     pending
   } = state.ui.scenes.sendConfirmation
 
-  const nativeAmount = parsedUri.nativeAmount
-    ? parsedUri.nativeAmount : '0'
+  const nativeAmount = parsedUri.nativeAmount || '0'
 
   let errorMsg = null
-  if (error) {
-    if (parsedUri.nativeAmount) {
-      if (bns.gt(parsedUri.nativeAmount, '0')) {
-        errorMsg = error.message
-      }
-    }
+  if (error && parsedUri.nativeAmount && bns.gt(parsedUri.nativeAmount, '0')) {
+    errorMsg = error.message
   }
 
   let sliderDisabled = true
