@@ -9,7 +9,7 @@ import {
   refreshTransactionsRequest
 } from '../../UI/scenes/TransactionList/action.js'
 
-export default (dispatch: Dispatch): AbcAccountCallbacks => {
+const accountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
   const callbacks = {
     onDataChanged: () => console.log('onDataChanged'),
     onLoggedOut: () => console.log('onLoggedOut'),
@@ -86,3 +86,5 @@ export default (dispatch: Dispatch): AbcAccountCallbacks => {
 
   return callbacks
 }
+
+export default accountCallbacks

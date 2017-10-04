@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {LoginScreen} from 'airbitz-core-js-ui'
-import {makeAccountCallbacks} from '../../../Core/Account/callbacks'
+import makeAccountCallbacks from '../../../Core/Account/callbacks'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {initializeAccount} from '../../../Login/action'
 import {Actions} from 'react-native-router-flux'
