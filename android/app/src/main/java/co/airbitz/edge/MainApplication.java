@@ -7,7 +7,6 @@ import com.facebook.react.ReactApplication;
 import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.slowpath.hockeyapp.RNHockeyAppModule;
 import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
