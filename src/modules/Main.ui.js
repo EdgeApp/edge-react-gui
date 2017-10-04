@@ -1,3 +1,6 @@
+// @flow
+import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-core-types'
+
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
@@ -10,7 +13,7 @@ import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 import * as Constants from '../constants'
-import Login from './UI/scenes/Login/Login.ui'
+import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
 import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
@@ -44,28 +47,40 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 import styles from './style.js'
 
 import ENV from '../../env.json'
-import {mapAllFiles} from 'disklet'
-
-// import { dumpFolder } from '../../debugTools.js'
-export function dumpFolder (folder) {
-  return mapAllFiles(folder, (file) =>
-    file.getText(file).then(() => {
-      // console.log(`dumpfolder: "${path}": "${text}"`)
-    })
-  )
-}
 
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
 
-export default class Main extends Component {
-  constructor (props) {
+type Props = {
+  username?: string,
+  routes: any,
+  addExchangeTimer: (number) => void,
+  addCurrencyPlugin: (AbcCurrencyPlugin) => void,
+  setKeyboardHeight: (number) => void,
+  addContext: (AbcContext) => void,
+  addUsernames: (Array<string>) => void,
+  setLocaleInfo: (any) => void,
+  setDeviceDimensions: (any) => void,
+  contextCallbacks: AbcContextCallbacks
+}
+
+type State = {
+  context: ?AbcContext,
+  loading: boolean
+}
+
+export default class Main extends Component<Props, State> {
+  keyboardDidShowListener: any
+  keyboardDidHideListener: any
+
+  constructor (props: Props) {
     super(props)
 
     this.state = {
-      context: {}
+      context: undefined,
+      loading: true
     }
   }
 
@@ -89,6 +104,7 @@ export default class Main extends Component {
        makeContext({
          apiKey: AIRBITZ_API_KEY,
          plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+         callbacks: this.props.contextCallbacks,
          io
        }))
     .then((context) => {
