@@ -5,7 +5,6 @@ import android.app.Application;
 //import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
 import cl.json.RNSharePackage;
-import com.bitgo.randombytes.RandomBytesPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.cmcewen.blurview.BlurViewPackage;
@@ -47,7 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new RNSharePackage(),
             new RandomBytesPackage(),
-            new BlurViewPackage(),
 //            new SplashScreenReactPackage(),
             new BlurViewPackage(),
             new RNHockeyAppPackage(MainApplication.this),
@@ -55,7 +53,6 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new UdpSocketsModule(),
             new TcpSocketsModule(),
-            new RandomBytesPackage(),
             new ReactMaterialKitPackage(),
             new LinearGradientPackage(),
             new ImagePickerPackage(),
