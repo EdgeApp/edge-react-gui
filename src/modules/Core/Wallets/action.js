@@ -1,10 +1,12 @@
 // @flow
+import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {Dispatch, GetState} from '../../ReduxTypes'
+
 export const PREFIX = 'Core/Wallets/'
 export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'
 
 import * as CORE_SELECTORS from '../selectors'
 import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
 
 export const updateWallets = (
   activeWalletIds: Array<string>,
@@ -18,7 +20,7 @@ export const updateWallets = (
     }
   })
 
-export const updateWalletsRequest = () => (dispatch: any, getState: any) => {
+export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
