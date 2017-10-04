@@ -41,10 +41,9 @@ export default (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(refreshWallet(walletId))
     },
 
-    onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>, currencyCode: string) {
+    onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>) {
       const callbackDetails = {
         walletId,
-        currencyCode,
         transactions
       }
       console.log('onTransactionsChanged', callbackDetails)
