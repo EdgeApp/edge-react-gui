@@ -37,10 +37,12 @@ export const getTransactionsRequest = (walletId: string, currencyCode) => (dispa
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-  WALLET_API.getTransactions(wallet, currencyCode)
+  if (wallet) {
+    WALLET_API.getTransactions(wallet, currencyCode)
     .then((transactions) => {
       dispatch(updateTransactions(transactions))
     })
+  }
 }
 
 export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
