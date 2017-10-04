@@ -24,7 +24,7 @@ import requestImage from '../../../../assets/images/transactions/transactions-re
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
-import SearchBar from './components/SearchBar.ui'
+//import SearchBar from './components/SearchBar.ui'
 
 export default class TransactionList extends Component {
   constructor (props) {
@@ -76,7 +76,7 @@ export default class TransactionList extends Component {
   }
 
   _onPressSearch = () => {
-    this.props.transactionsSearchVisible()
+    //this.props.transactionsSearchVisible()
   }
 
   _onSearchExit = () => {
@@ -216,7 +216,7 @@ export default class TransactionList extends Component {
 
     return (
       <ScrollView style={[UTILS.border(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
-        <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
+        {/*<SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} /> */}
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
             <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>

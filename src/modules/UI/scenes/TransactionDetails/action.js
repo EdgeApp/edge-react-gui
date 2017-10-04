@@ -49,5 +49,6 @@ export const setSubcategoriesRequest = (subcategories) => (dispatch, getState) =
   const {account} = getState().core
   ACCOUNT_SETTINGS.setSubcategoriesRequest(account, subcategories)
     .then(() => dispatch(setSubcategories(subcategories)))
+    .then(() => dispatch(getSubcategories()))
     .catch((e) => { console.error(e) })
 }

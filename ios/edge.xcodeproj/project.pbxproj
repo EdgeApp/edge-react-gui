@@ -411,6 +411,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		B3F816F91F81D50E00E3EE22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 97E65DB6D2464A14AA289DCA /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64AA15081EF7F30100718508;
+			remoteInfo = "BVLinearGradient-tvOS";
+		};
 		DA6569461F17436100226952 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -916,6 +923,7 @@
 			isa = PBXGroup;
 			children = (
 				6E10912D1EB0512100947A0B /* libBVLinearGradient.a */,
+				B3F816FA1F81D50E00E3EE22 /* libBVLinearGradient.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1046,6 +1054,7 @@
 				3BB21E930C5F437EB1EAE492 /* Resources */,
 				1189D14E429D3398A100CB8A /* Pods */,
 				82DAC2543B5A97898904086F /* Frameworks */,
+				B3F816F61F81D50D00E3EE22 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1060,6 +1069,31 @@
 				2D02E4901E0B4A5D006451C7 /* edge-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B3F816F61F81D50D00E3EE22 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				1CF3BA57C1034B9A96CDE4EF /* libRCTCamera.a */,
+				E5D6824DDD854B41A4A6D426 /* libRCTContacts.a */,
+				E306F33BD2AA495DB502D784 /* libRCTContactsWrapper.a */,
+				CC800BDD23974A43B61E2048 /* libRNDeviceInfo.a */,
+				D5DF84AD90B142838C4B352E /* libRNFS.a */,
+				4E84456316434B60A88B01FC /* libRNImagePicker.a */,
+				0734A26AC90A43AC89E67657 /* libBVLinearGradient.a */,
+				4DF9D1093281430AA1DA9CCF /* libRCTMaterialKit.a */,
+				3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */,
+				4C53E8767BBE491CAE3B7610 /* libRNRandomBytes.a */,
+				3CDF4EBCBF4A4831AE1B1D68 /* libRNShare.a */,
+				26236CD03CA74A02860A63F8 /* libTcpSockets.a */,
+				F26E8A5C8E81402E91DB24A3 /* libUdpSockets.a */,
+				1E979A2F677B4138AB52E534 /* libRNVectorIcons.a */,
+				151AD25B74474F3FBA9C2417 /* libRCTLocale.a */,
+				D55A245786234924ABF5C5DA /* libRNFastCrypto.a */,
+				7DBCCC28D032465DA7B087B6 /* libRNBlur.a */,
+				DA39136B1FF54882916C37AC /* libSplashScreen.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		DA6569211F17436100226952 /* Products */ = {
@@ -1632,6 +1666,13 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B3F816FA1F81D50E00E3EE22 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = B3F816F91F81D50E00E3EE22 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		DA6569471F17436100226952 /* libthird-party.a */ = {
