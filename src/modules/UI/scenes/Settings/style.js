@@ -1,6 +1,9 @@
 import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
+  listStyle: {
+    height: 100
+  },
   unlockRow: {
     padding: 12,
     flexDirection: 'row',
@@ -53,15 +56,21 @@ export default StyleSheet.create({
   settingsRowLeftContainer: {
     justifyContent: 'center'
   },
+  settingsRowRightContainer: {
+    justifyContent: 'center'
+  },
   settingsRowLeftText: {
     color: '#58595C',
     fontSize: 16
   },
   settingsRowRightArrow: {
-    color: '#58595C',
-    height: 20
+    color: '#58595C'
   },
   modalRightText: {
+    color: '#4977BB',
+    fontWeight: 'bold'
+  },
+  routeRowRightText: {
     color: '#4977BB',
     fontWeight: 'bold'
   },

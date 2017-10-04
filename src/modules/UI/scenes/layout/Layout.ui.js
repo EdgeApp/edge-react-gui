@@ -1,3 +1,4 @@
+// @flow
 import React, {Component} from 'react'
 import {AppState, View} from 'react-native'
 import {DefaultRenderer} from 'react-native-router-flux'
@@ -6,16 +7,31 @@ import SideMenu from '../../components/SideMenu/SideMenuConnector'
 import Header from '../../components/Header/HeaderConnector'
 import TabBar from '../../components/TabBar/TabBarConnector'
 import HelpModal from '../../components/HelpModal'
-import ABAlert from '../../components/ABAlert'
-import TransactionAlert from '../../components/TransactionAlert'
+import ABAlert from '../../components/ABAlert/indexABAlert'
+import TransactionAlert from '../../components/TransactionAlert/indexTransactionAlert'
 
-export default class Layout extends Component {
-  constructor (props) {
+type Props = {
+  navigationState: any,
+  onNavigate: any,
+  routes: any,
+  autoLogoutTimeInSeconds: number,
+  autoLogout: () => void,
+  updateExchangeRates: () => void
+}
+
+type State = {
+  active: boolean,
+  timeout: ?number,
+  exchangeTimer: ?number
+}
+
+export default class Layout extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       active: true,
-      timeout: '',
-      exchangeTimer: ''
+      timeout: undefined,
+      exchangeTimer: undefined
     }
   }
 
@@ -31,7 +47,9 @@ export default class Layout extends Component {
   componentWillUnmount () {
     AppState.removeEventListener('change', this._handleAppStateChange)
     clearTimeout(this.state.exchangeTimer)
-    this.setState({exchangeTimer: ''})
+    this.setState({
+      exchangeTimer: undefined
+    })
   }
 
   render () {
@@ -52,7 +70,7 @@ export default class Layout extends Component {
     )
   }
 
-  _handleAppStateChange = (nextAppState) => {
+  _handleAppStateChange = (nextAppState: 'active' | 'background' | 'inactive') => {
     if (this.foregrounded(nextAppState)) {
       // console.log('Background -> Foreground')
       this.setState({active: true})
@@ -68,11 +86,11 @@ export default class Layout extends Component {
     }
   }
 
-  foregrounded (nextAppState) {
+  foregrounded (nextAppState: 'active' | 'background' | 'inactive') {
     return !this.state.active && nextAppState === 'active'
   }
 
-  backgrounded (nextAppState) {
+  backgrounded (nextAppState: 'active' | 'background' | 'inactive') {
     return this.state.active && nextAppState !== 'active'
   }
 
@@ -85,7 +103,7 @@ export default class Layout extends Component {
   cancelAutoLogoutTimer () {
     const {timeout} = this.state
     clearTimeout(timeout)
-    this.setState({timeout: ''})
+    this.setState({timeout: undefined})
   }
 
   autoLogout () {

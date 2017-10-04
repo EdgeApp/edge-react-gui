@@ -66,7 +66,7 @@ export const getPlugins = (state: any) => {
 
 export const getPlugin = (state: any, type: string) => {
   const plugins = getPlugins(state)
-  const plugin = plugins[type]
+  const plugin = plugins[type.toLowerCase()]
   return plugin
 }
 
@@ -103,4 +103,10 @@ export const getAutoLogoutTimeInMinutes = (state: any) => {
   const autoLogoutTimeInSeconds = getAutoLogoutTimeInSeconds(state)
   const autoLogoutTimeInMinutes = autoLogoutTimeInSeconds / 60
   return autoLogoutTimeInMinutes
+}
+
+export const getDefaultFiat = (state: any) => {
+  const settings = getSettings(state)
+  const defaultFiat = settings.defaultFiat
+  return defaultFiat
 }

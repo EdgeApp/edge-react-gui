@@ -6,13 +6,13 @@ import {
 import T from '../../../components/FormattedText'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import s from './style'
-import {border as b} from '../../../../utils'
+import {colors} from '../../../../../theme/variables/airbitz.js'
+import {border as debugBorder} from '../../../../utils'
 
 class Row extends Component {
   render () {
     // const option = this.props.option
     const {
-      key,
       left,
       isSelected,
       onPress
@@ -20,18 +20,17 @@ class Row extends Component {
     // console.log('Row render, option: ', option)
 
     return (
-      <TouchableOpacity style={[s.rowContainer, b('blue')]}
-        key={key}
+      <TouchableOpacity style={[s.rowContainer, debugBorder()]}
         onPress={onPress}>
 
-        <View style={[s.rowTextRow, b('red')]}>
-          <View style={[s.rowLeftContainer, b('blue')]}>
-            <T style={[s.rowLeftText, b('green')]}>{left}</T>
+        <View style={[s.rowTextRow, debugBorder()]}>
+          <View style={[s.rowLeftContainer, debugBorder()]}>
+            <T style={[s.rowLeftText, debugBorder()]}>{left}</T>
           </View>
           {
             isSelected
-            ? <IonIcon name='ios-radio-button-on' size={24} style={[s.radioButton, b('blue')]} color='#4C78B8' />
-            : <IonIcon name='ios-radio-button-off' size={24} style={[s.radioButton, b('blue')]} color='#58595C' />
+            ? <IonIcon name='ios-radio-button-on' size={24} style={[s.radioButton, debugBorder()]} color={colors.secondary} />
+            : <IonIcon name='ios-radio-button-off' size={24} style={[s.radioButton, debugBorder()]} color={colors.gray1} />
           }
         </View>
 

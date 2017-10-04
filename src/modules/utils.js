@@ -3,7 +3,10 @@ import borderColors from '../theme/variables/css3Colors'
 import {divf, mulf, gt} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination} from 'airbitz-core-types'
-import type {GuiDenomination} from '../types'
+import type {
+  GuiDenomination,
+  ExchangeData
+} from '../types'
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
@@ -196,17 +199,27 @@ export function getAllDenomsOfIsoCurrencies (): Array<GuiDenomination> {
   return denomArray
 }
 
-type ExchangeData = {
-  secondaryDisplayAmount: string,
-  cryptoCurrencyCode: string,
-  fiatSymbol: string,
-  fiatExchangeAmount: string,
-  fiatCurrencyCode: string
+export const getSupportedFiats = (): Array<{label: string, value: string}> => {
+  const currencySymbolsFromCurrencyCode = currencySymbolMap
+  const entries = Object.entries(currencySymbolsFromCurrencyCode)
+  const objectFromArrayPair = (entry) => {
+    const entry1 = typeof entry[1] === 'string'
+      ? entry[1]
+      : ''
+
+    return {
+      label: `${entry[0]} - ${entry1}`,
+      value: entry[0]
+    }
+  }
+
+  const supportedFiats = entries.map(objectFromArrayPair)
+  return supportedFiats
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!exchangeData.secondaryDisplayAmount
-    && !!exchangeData.cryptoCurrencyCode
-    && !!exchangeData.fiatSymbol
-    && !!exchangeData.fiatExchangeAmount
-    && !!exchangeData.fiatCurrencyCode
+  !!exchangeData.primaryDisplayAmount
+  && !!exchangeData.primaryDisplayName
+  && !!exchangeData.secondaryDisplayAmount
+  && !!exchangeData.secondaryDisplaySymbol
+  && !!exchangeData.secondaryCurrencyCode

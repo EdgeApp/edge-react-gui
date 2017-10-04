@@ -70,11 +70,9 @@ export const settings = (state = initialState, action) => {
 
   case ACTION.SET_DEFAULT_FIAT: {
     const {defaultFiat} = data
-    const defaultISOFiat = 'iso:' + defaultFiat
     return {
       ...state,
-      defaultFiat,
-      defaultISOFiat
+      defaultFiat
     }
   }
 
@@ -125,6 +123,18 @@ export const settings = (state = initialState, action) => {
       ...state,
       ETH: {
         ...ETH,
+        denomination
+      }
+    }
+  }
+
+  case ACTION.SET_BCH_DENOMINATION: {
+    const {denomination} = data
+    const BCH = state['BCH']
+    return {
+      ...state,
+      BCH: {
+        ...BCH,
         denomination
       }
     }

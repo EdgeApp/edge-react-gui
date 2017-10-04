@@ -1,6 +1,4 @@
-# airbitz-react-gui
-
-## Edge: powered by Airbitz
+# Edge: powered by Airbitz
 
 Edge is:
 - simple
@@ -26,7 +24,7 @@ Edge is:
 
 ### Checkout develop branch & install node_modules
 
-    cd airbitz-react-gui
+    cd edge-react-gui
     git checkout develop
     npm install
 

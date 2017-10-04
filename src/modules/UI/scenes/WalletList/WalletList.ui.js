@@ -113,7 +113,11 @@ export default class WalletList extends Component<any, {
     }
   }
   render () {
-    const {wallets} = this.props
+    const {
+      wallets,
+      activeWalletIds,
+      settings
+    } = this.props
     let walletsArray = []
     let activeWallets = {}
     for (let wallet in wallets) {
@@ -121,19 +125,26 @@ export default class WalletList extends Component<any, {
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
-      if (this.props.activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
+      if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
     }
 
-    let activeWalletsArray = this.props.activeWalletIds.map(function (x) {
+    let activeWalletsArray = activeWalletIds.map(function (x) {
       let tempWalletObj = {key: x}
       return wallets[x] || tempWalletObj
     })
 
     let activeWalletsObject = {}
-    this.props.activeWalletIds.forEach(function (x) {
+    activeWalletIds.forEach(function (x) {
       let tempWalletObj = wallets[x] ? wallets[x] : {key: null}
       activeWalletsObject[x] = tempWalletObj
     })
+    let fiatBalanceString
+    let fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
+    if (fiatSymbol.length !== 1) {
+      fiatBalanceString =  this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+    } else {
+      fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+    }
 
     return (
       <View style={styles.container}>
@@ -149,9 +160,7 @@ export default class WalletList extends Component<any, {
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
               <T style={[styles.currentBalanceBoxDollars]}>
-                {this.props.settings.defaultISOFiat
-                  ? UTILS.getFiatSymbol(this.props.settings.defaultISOFiat)
-                  : ''} {this.tallyUpTotalCrypto()}
+                {fiatBalanceString}
               </T>
             </View>
           </View>
@@ -191,7 +200,7 @@ export default class WalletList extends Component<any, {
           </Gradient>
 
           {
-            Object.keys(this.props.wallets).length > 0 ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+            Object.keys(wallets).length > 0 ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
           }
 
         </View>
@@ -398,7 +407,7 @@ export default class WalletList extends Component<any, {
   calculateTotalBalance = (values: any) => {
     let total = 0
     for (let currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(currency, this.props.settings.defaultISOFiat, values[currency])
+      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
     return total.toFixed(2)

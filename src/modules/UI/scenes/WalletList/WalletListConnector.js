@@ -15,7 +15,6 @@ const mapStateToProps = (state: any): {} => {
   const settings = SETTINGS_SELECTORS.getSettings(state)
 
   return {
-    // updatingBalance: state.ui.scenes.transactionList.updatingBalance,
     settings,
     coreWallets: state.core.wallets.byId,
     wallets: state.ui.wallets.byId,
