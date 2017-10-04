@@ -4,6 +4,9 @@ import android.app.Application;
 
 //import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
+import cl.json.RNSharePackage;
+import com.bitgo.randombytes.RandomBytesPackage;
+import com.cmcewen.blurview.BlurViewPackage;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.slowpath.hockeyapp.RNHockeyAppModule;
@@ -12,7 +15,6 @@ import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
-import cl.json.RNSharePackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -43,6 +45,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSharePackage(),
+            new RandomBytesPackage(),
+            new BlurViewPackage(),
 //            new SplashScreenReactPackage(),
             new BlurViewPackage(),
             new RNHockeyAppPackage(MainApplication.this),
@@ -50,7 +55,6 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new UdpSocketsModule(),
             new TcpSocketsModule(),
-            new RNSharePackage(),
             new RandomBytesPackage(),
             new ReactMaterialKitPackage(),
             new LinearGradientPackage(),
