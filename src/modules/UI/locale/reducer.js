@@ -4,7 +4,10 @@ import * as ACTION from './action'
 const localeInfo = (state = {}, action) => {
   switch (action.type) {
   case ACTION.SET_LOCALE_INFO:
-    return action.data
+    if (action.data)
+      return action.data
+    else
+      return null
   default:
     return state
   }
