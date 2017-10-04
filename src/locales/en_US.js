@@ -424,6 +424,7 @@ const strings = {
   transaction_details_to: '"To: "',
   transaction_details_from: '"From: "',
   transaction_details_payee_hint: 'Enter Payee',
+  transaction_details_payee: 'Payee',
   transaction_details_recovery_reminder_title: 'Recover Password Reminder',
   transaction_details_recovery_reminder_message: '"We STRONGLY recommend setting up Password Recovery questions and answers. Otherwise you will NOT be able to access your account if your password is forgotten."',
   transaction_details_advanced_txid: '"Transaction ID"',
@@ -819,7 +820,7 @@ const strings = {
 
   // Transaction Details Page
   title_Transaction_Details: 'Transaction Details',
-  fragment_tx_detail_mining_fee: '+ %u (Fee)',
+  fragment_tx_detail_mining_fee: '+ %f (Fee)',
 
   // Not new to react-gui (I don't think), not sure why at end of JSON
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
