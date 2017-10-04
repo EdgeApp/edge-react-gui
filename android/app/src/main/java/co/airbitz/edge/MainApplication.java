@@ -23,6 +23,7 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import io.fixd.rctlocale.RCTLocalePackage;
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -60,7 +61,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNDeviceInfo(),
             new ContactsWrapperPackage(),
             new ReactNativeContacts(),
-            new RCTCameraPackage()
+            new RCTCameraPackage(),
+            new RCTLocalePackage()
       );
     }
   };
