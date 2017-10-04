@@ -64,3 +64,11 @@ export type GuiCurrencyInfo = {
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination
 }
+
+export type ExchangeData = {
+  primaryDisplayAmount: string,
+  primaryDisplayName: string,
+  secondaryDisplayAmount: string,
+  secondaryDisplaySymbol: string,
+  secondaryCurrencyCode: string
+}
