@@ -55,8 +55,8 @@ export const getDenominations = (state: State, currencyCode: string) => {
 
 export const getExchangeDenomination = (state: State, currencyCode: string): GuiDenomination => {
   const wallet = getSelectedWallet(state)
-  for (const key of Object.keys(wallet.allDenominations)) {
-    const denomination = wallet.allDenominations[key]
+  for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
+    const denomination = wallet.allDenominations[currencyCode][key]
     if (denomination.name === currencyCode) return denomination
   }
 
