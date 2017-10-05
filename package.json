@@ -56,7 +56,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^0.4.0",
+    "edge-currency-bitcoin": "git@github.com:Airbitz/edge-currency-bitcoin.git#testingNoCache",
     "edge-currency-ethereum": "^0.2.3",
     "edge-exchange-plugins": "^0.1.1",
     "eslint-plugin-react-native": "^3.0.1",
