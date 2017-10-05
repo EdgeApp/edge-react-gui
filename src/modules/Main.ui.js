@@ -33,6 +33,7 @@ import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
+// $FlowFixMe
 import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 

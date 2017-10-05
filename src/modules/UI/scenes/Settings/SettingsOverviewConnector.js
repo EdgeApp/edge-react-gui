@@ -14,7 +14,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
   setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
-  sendLogs: (text) => dispatch(sendLogs(text)),
+  sendLogs: (text) => dispatch(sendLogs(text))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

@@ -84,7 +84,7 @@ export default class SettingsOverview extends Component {
   }
 
   _onPressDummyRouting = () => {
-    console.log('dummy routing')
+    // console.log('dummy routing')
   }
 
   _onPressChangePasswordRouting = () => {
