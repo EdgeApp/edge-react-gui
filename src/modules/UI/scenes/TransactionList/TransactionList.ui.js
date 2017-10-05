@@ -300,8 +300,9 @@ export default class TransactionList extends Component {
     )
   }
 
-  _goToTxDetail = (guiTransaction) => {
-    Actions.transactionDetails({guiTransaction})
+  _goToTxDetail = (abcTransaction, thumbnailPath) => {
+    console.log('in TransactionList.ui.js->_goToTxDetail')
+    Actions.transactionDetails({abcTransaction, thumbnailPath})
   }
 
   isReceivedTransaction (tx) {
@@ -317,6 +318,7 @@ export default class TransactionList extends Component {
     let txName = ''
     let txImage
     let lastOfDate
+    let thumbnailPath
 
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
@@ -332,13 +334,13 @@ export default class TransactionList extends Component {
     if (tx.metadata.name) {
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
-          let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
+          let fullName = (element.givenName && element.familyName) ? element.givenName + ' ' + element.familyName : element.givenName
+          let found = (element.thumbnailPath && (UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)))
           // if (found) console.log('element is: ', element)
           return found
         })
         if (contact) {
-          tx.thumbnailPath = contact.thumbnailPath
-          tx.hasThumbnail = contact.hasThumbnail
+          thumbnailPath = contact.thumbnailPath
         }
       }
     }
@@ -363,8 +365,6 @@ export default class TransactionList extends Component {
       fiatAmountString = (0.00).toFixed(2)
     }
 
-    const abcTransaction = {abcTransaction: tx}
-
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
@@ -376,11 +376,11 @@ export default class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(abcTransaction)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx, thumbnailPath)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
           <View style={[styles.transactionInfoWrap, UTILS.border()]}>
             <View style={styles.transactionLeft}>
-              {tx.thumbnailPath ? (
-                <Image style={[styles.transactionLogo, UTILS.border()]} source={{uri: tx.thumbnailPath}} />
+              {thumbnailPath ? (
+                <Image style={[styles.transactionLogo, UTILS.border()]} source={{uri: thumbnailPath}} />
               ) : (
                 <Image
                   style={styles.transactionLogo}

@@ -228,3 +228,8 @@ export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
     && !!exchangeData.fiatSymbol
     && !!exchangeData.fiatExchangeAmount
     && !!exchangeData.fiatCurrencyCode
+
+export const unspacedLowercase = (input: string) => {
+  let newInput = input.replace(' ', '').toLowerCase()
+  return newInput
+}

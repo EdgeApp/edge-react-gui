@@ -3,7 +3,7 @@
  */
 // @flow
 
-import type {AbcDenomination, AbcMetaToken, AbcTransaction} from 'airbitz-core-types'
+import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 
 export class GuiWallet {
   id: string
@@ -76,11 +76,4 @@ export type GuiContact = {
   thumbnailPath: string,
   recordID: string,
   givenName: string,
-}
-
-export type GuiTransaction =  {
-  multiplier: string, // change to use Kevin's ratio
-  thumbnailPath: string, // calculated or stored? When assigned?
-  hasThumbnail: boolean, // calculated or stored? When assigned?amountSatoshi: number, // unneeded?
-  abcTransaction: AbcTransaction
 }

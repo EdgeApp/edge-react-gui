@@ -23,20 +23,21 @@ import * as UTILS from '../../../utils'
 import AmountArea from './AmountArea.ui.js'
 import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
-import type {GuiTransaction, GuiContact, GuiWallet} from '../../../../types.js'
+import type {GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcMetadata} from 'airbitz-core-types'
+import type {AbcDenomination, AbcTransaction, AbcMetadata} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
 export type Props = {
-  guiTransaction: GuiTransaction,
+  abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
   fiatSymbol: string,
   selectedWallet: GuiWallet,
   subcategoriesList: Array<string>,
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
-  direction: string
+  direction: string,
+  thumbnailPath: string
 }
 
 export type DispatchProps = {
@@ -77,13 +78,13 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
   constructor (props: Props & DispatchProps) {
     super(props)
-    const dateTime = new Date(props.guiTransaction.abcTransaction.date * 1000)
+    const dateTime = new Date(props.abcTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
     let type = ''
     let subCategory = ''
 
-    const cat: string = props.guiTransaction.abcTransaction.metadata.category ? props.guiTransaction.abcTransaction.metadata.category : ''
+    const cat: string = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
     if (cat) {
       let colonOccurrence = cat.indexOf(':')
       if (cat && colonOccurrence) {
@@ -93,17 +94,17 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       }
     }
 
-    let amountFiat = props.guiTransaction.abcTransaction.metadata.amountFiat ? props.guiTransaction.abcTransaction.metadata.amountFiat.toString() : '0.00'
+    let amountFiat = props.abcTransaction.metadata.amountFiat ? props.abcTransaction.metadata.amountFiat.toString() : '0.00'
 
     this.state = {
-      name: props.guiTransaction.abcTransaction.metadata.name ? props.guiTransaction.abcTransaction.metadata.name : '', // remove commenting once metaData in Redux
-      thumbnailPath: props.guiTransaction.thumbnailPath,
+      name: props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '', // remove commenting once metaData in Redux
+      thumbnailPath: props.thumbnailPath,
       category: cat,
-      notes: props.guiTransaction.abcTransaction.metadata.notes ? props.guiTransaction.abcTransaction.metadata.notes : '',
+      notes: props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : '',
       amountFiat,
       bizId: 0,
-      direction: (parseInt(props.guiTransaction.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',
-      miscJson: props.guiTransaction.abcTransaction.metadata ? props.guiTransaction.abcTransaction.metadata.miscJson : null,
+      direction: (parseInt(props.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',
+      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : null,
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
@@ -347,7 +348,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       category = undefined
     }
     const {name, notes, bizId, miscJson} = this.state
-    const txid = this.props.guiTransaction.abcTransaction.txid
+    const txid = this.props.abcTransaction.txid
     let newAmountFiat = this.state.amountFiat
     const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
     const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
@@ -417,7 +418,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       feeSyntax = ''
       leftData = {color: c.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
     } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.guiTransaction.abcTransaction.networkFee)
+      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.abcTransaction.networkFee)
       leftData = {color: c.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
     }
     const color = type.color
@@ -494,7 +495,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
           <View style={[styles.container]}>
             <View>
               <Gradient style={[styles.expandedHeader]}>
-                <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath || this.props.guiTransaction.thumbnailPath} />
+                <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath} />
               </Gradient>
             </View>
             <View style={[styles.dataArea]}>
@@ -517,7 +518,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
               </View>
               <AmountArea
-                guiTransaction={this.props.guiTransaction}
+                abcTransaction={this.props.abcTransaction}
                 onChangeNotesFxn={this.onChangeNotes}
                 onChangeCategoryFxn={this.onChangeCategory}
                 onChangeFiatFxn={this.onChangeFiat}
