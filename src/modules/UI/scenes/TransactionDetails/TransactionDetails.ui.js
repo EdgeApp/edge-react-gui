@@ -54,6 +54,7 @@ export type State = {
   category: string,
   notes: string,
   amountFiat: string,
+  direction: string,
   bizId: number,
   miscJson: any,
   dateTimeSyntax: string,
@@ -76,8 +77,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
   constructor (props: Props & DispatchProps) {
     super(props)
-    // console.log('inside txDetails constructor, this.props is: ', this.props)
-    props.direction = (parseInt(props.guiTransaction.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send'
     const dateTime = new Date(props.guiTransaction.abcTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
@@ -103,6 +102,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       notes: props.guiTransaction.abcTransaction.metadata.notes ? props.guiTransaction.abcTransaction.metadata.notes : '',
       amountFiat,
       bizId: 0,
+      direction: (parseInt(props.guiTransaction.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',
       miscJson: props.guiTransaction.abcTransaction.metadata ? props.guiTransaction.abcTransaction.metadata.miscJson : null,
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
@@ -404,7 +404,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     }
 
     if (!this.state.type) {
-      if (this.props.direction === 'receive') {
+      if (this.state.direction === 'receive') {
         type = types.income
       } else {
         type = types.expense
@@ -413,7 +413,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       type = types[this.state.type]
     }
 
-    if (this.props.direction === 'receive') {
+    if (this.state.direction === 'receive') {
       feeSyntax = ''
       leftData = {color: c.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
     } else {
@@ -494,7 +494,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
           <View style={[styles.container]}>
             <View>
               <Gradient style={[styles.expandedHeader]}>
-                <PayeeIcon direction={this.props.direction} thumbnailPath={this.state.thumbnailPath || this.props.guiTransaction.thumbnailPath} />
+                <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath || this.props.guiTransaction.thumbnailPath} />
               </Gradient>
             </View>
             <View style={[styles.dataArea]}>
@@ -522,7 +522,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 onChangeCategoryFxn={this.onChangeCategory}
                 onChangeFiatFxn={this.onChangeFiat}
                 onBlurFiatFxn={this.onBlurFiat}
-                info={this.state}
                 onPressFxn={this.onSaveTxDetails}
                 fiatCurrencyCode={this.props.selectedWallet.fiatCurrencyCode}
                 cryptoCurrencyCode={this.props.selectedWallet.currencyCode}
@@ -544,7 +543,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 onFocusNotes={this.onFocusNotes}
                 onBlurNotes={this.onBlurNotes}
                 leftData={leftData}
-                direction={this.props.direction}
+                direction={this.state.direction}
                 feeSyntax={feeSyntax}
                 color={color}
                 types={types}

@@ -31,7 +31,7 @@ const mapStateToProps = (state: any): Props => {
 }
 
 const mapDispatchToProps = (dispatch: any): DispatchProps => ({
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => { dispatch(setTransactionDetails(currencyCode, abcMetadata)) },
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => { dispatch(setTransactionDetails(txid, currencyCode, abcMetadata)) },
   getSubcategories: () => dispatch(getSubcategories())
 })
 
