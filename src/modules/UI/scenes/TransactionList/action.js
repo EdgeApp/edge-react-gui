@@ -31,8 +31,6 @@ import type {
   AbcTransaction
 } from 'airbitz-core-types'
 
-const routerActions = Actions
-
 export const getTransactionsRequest = (walletId: string, currencyCode) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
@@ -61,7 +59,7 @@ export const newTransactionsRequest = (walletId: string, transactions: Array<Abc
     message: 'You have received a new transaction',
     buttons: [{
       text: 'View',
-      onPress: () => routerActions.transactionDetails({transaction: transactions[0]})
+      onPress: () => Actions.transactionDetails({transaction: transactions[0]})
     }]
   }
   dispatch(openABAlert(messageInfo))
