@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
     View,
@@ -15,11 +17,52 @@ import styles from './style'
 import {colors} from '../../../../theme/variables/airbitz'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
-
+import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-class AmountArea extends Component<Prop, State> {
+type Props = {
+  abcTransaction: AbcTransaction,
+  onChangeNotesFxn: (string) => void,
+  onChangeCategoryFxn: (string) => void,
+  onChangeFiatFxn: (string) => void,
+  onBlurFiatFxn: () => void,
+  onPressFxn: () => void,
+  selectCategory: (any) => void,
+  onSelectSubCategory: (string) => void,
+  onEnterCategories: () => void,
+  onExitCategories: () => void,
+  onSubcategoryKeyboardReturn: () => void,
+  onNotesKeyboardReturn: () => void,
+  onFocusNotes: () => void,
+  onBlurNotes: () => void,
+  onFocusFiatAmount: () => void,
+  openModalFxn: () => void,
+  fiatCurrencyCode: string,
+  cryptoCurrencyCode: string,
+  fiatCurrencySymbol: string,
+  fiatAmount: string,
+  onEnterSubcategories: () => void,
+  subCategorySelectVisibility: boolean,
+  categorySelectVisibility: boolean,
+  subCategory: string,
+  types: any,
+  usableHeight: number,
+  dimensions: any,
+  leftData: any,
+  direction: string,
+  feeSyntax: string,
+  color: string,
+  type: any,
+  subcategoriesList: Array<string>,
+  walletDefaultDenomProps: AbcDenomination
+}
+
+type State = {
+
+}
+
+class AmountArea extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -85,7 +128,6 @@ class AmountArea extends Component<Prop, State> {
               autoCapitalize='words'
               placeholderTextColor={colors.gray2}
               onFocus={this.props.onEnterSubcategories}
-              onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput]}
               defaultValue={this.props.subCategory || ''}
