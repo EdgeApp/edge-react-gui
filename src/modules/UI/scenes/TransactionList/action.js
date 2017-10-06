@@ -16,14 +16,12 @@ export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 export const NEW_TRANSACTIONS = PREFIX + 'NEW_TRANSACTIONS'
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 
-// import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
-import Actions from 'react-native-router-flux'
+import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action.js'
-
 import type {
   Dispatch,
   GetState
@@ -37,10 +35,12 @@ export const getTransactionsRequest = (walletId: string, currencyCode) => (dispa
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-  WALLET_API.getTransactions(wallet, currencyCode)
+  if (wallet) {
+    WALLET_API.getTransactions(wallet, currencyCode)
     .then((transactions) => {
       dispatch(updateTransactions(transactions))
     })
+  }
 }
 
 export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -59,7 +59,7 @@ export const newTransactionsRequest = (walletId: string, transactions: Array<Abc
     message: 'You have received a new transaction',
     buttons: [{
       text: 'View',
-      onPress: () => Actions.transactionDetails({transaction: transactions[0]})
+      onPress: () => Actions.transactionDetails({abcTransaction: transactions[0]})
     }]
   }
   dispatch(openABAlert(messageInfo))

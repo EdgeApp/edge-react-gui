@@ -23,13 +23,6 @@ export default StyleSheet.create({
     position: 'relative',
     top: 10
   },
-  payeeIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'transparent',
-    position: 'relative'
-  },
   dataArea: {
     position: 'relative',
     top: 34,

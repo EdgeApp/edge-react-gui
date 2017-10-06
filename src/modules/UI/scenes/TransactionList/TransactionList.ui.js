@@ -24,7 +24,7 @@ import requestImage from '../../../../assets/images/transactions/transactions-re
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
-import SearchBar from './components/SearchBar.ui'
+//import SearchBar from './components/SearchBar.ui'
 
 export default class TransactionList extends Component {
   constructor (props) {
@@ -76,7 +76,7 @@ export default class TransactionList extends Component {
   }
 
   _onPressSearch = () => {
-    this.props.transactionsSearchVisible()
+    //this.props.transactionsSearchVisible()
   }
 
   _onSearchExit = () => {
@@ -216,7 +216,7 @@ export default class TransactionList extends Component {
 
     return (
       <ScrollView style={[UTILS.border(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
-        <SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} />
+        {/*<SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} /> */}
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
             <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
@@ -300,8 +300,9 @@ export default class TransactionList extends Component {
     )
   }
 
-  _goToTxDetail = (txId, currencyCode, tx) => {
-    Actions.transactionDetails({walletId: this.props.selectedWalletId, txId, currencyCode, tx})
+  _goToTxDetail = (abcTransaction, thumbnailPath) => {
+    console.log('in TransactionList.ui.js->_goToTxDetail')
+    Actions.transactionDetails({abcTransaction, thumbnailPath})
   }
 
   isReceivedTransaction (tx) {
@@ -317,6 +318,7 @@ export default class TransactionList extends Component {
     let txName = ''
     let txImage
     let lastOfDate
+    let thumbnailPath
 
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
@@ -332,13 +334,13 @@ export default class TransactionList extends Component {
     if (tx.metadata.name) {
       if (this.props.contacts) {
         let contact = this.props.contacts.find((element) => {
-          let found = (((element.givenName + ' ' + element.familyName) === tx.metadata.name) && element.hasThumbnail)
+          let fullName = (element.givenName && element.familyName) ? element.givenName + ' ' + element.familyName : element.givenName
+          let found = (element.thumbnailPath && (UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)))
           // if (found) console.log('element is: ', element)
           return found
         })
         if (contact) {
-          tx.thumbnailPath = contact.thumbnailPath
-          tx.hasThumbnail = contact.hasThumbnail
+          thumbnailPath = contact.thumbnailPath
         }
       }
     }
@@ -362,6 +364,7 @@ export default class TransactionList extends Component {
     } else {
       fiatAmountString = (0.00).toFixed(2)
     }
+
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
@@ -373,11 +376,11 @@ export default class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx.txid, this.props.selectedCurrencyCode, tx)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
+        <TouchableOpacity onPress={() => this._goToTxDetail(tx, thumbnailPath)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
           <View style={[styles.transactionInfoWrap, UTILS.border()]}>
             <View style={styles.transactionLeft}>
-              {tx.thumbnailPath ? (
-                <Image style={[styles.transactionLogo, UTILS.border()]} source={{uri: tx.thumbnailPath}} />
+              {thumbnailPath ? (
+                <Image style={[styles.transactionLogo, UTILS.border()]} source={{uri: thumbnailPath}} />
               ) : (
                 <Image
                   style={styles.transactionLogo}

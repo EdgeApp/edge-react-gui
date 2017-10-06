@@ -64,3 +64,24 @@ export type GuiCurrencyInfo = {
   displayDenomination: GuiDenomination,
   exchangeDenomination: GuiDenomination
 }
+
+export type GuiContact = {
+  hasThumbnail: boolean,
+  emailAddresses: Array<string>,
+  postalAddresses: Array<string>,
+  middleName: string,
+  company: string,
+  jobTitle: string,
+  familyName: string,
+  thumbnailPath: string,
+  recordID: string,
+  givenName: string,
+}
+
+export type ExchangeData = {
+  primaryDisplayAmount: string,
+  primaryDisplayName: string,
+  secondaryDisplayAmount: string,
+  secondaryDisplaySymbol: string,
+  secondaryCurrencyCode: string
+}

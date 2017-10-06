@@ -73,3 +73,8 @@ https://github.com/jhen0409/react-native-debugger/releases
 ###### GenyMotion Android Emulator
     ⌘ + m (command + m)
     Select "Debug JS Remotely"
+
+## Contributing
+
+Please follow the coding conventions defined in [Edge Conventions](https://github.com/Airbitz/edge-conventions
+)

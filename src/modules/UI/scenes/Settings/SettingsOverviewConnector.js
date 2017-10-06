@@ -19,7 +19,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
   enableTouchId: (arg, account) => enableTouchId(arg, account),
-  sendLogs: (text) => dispatch(sendLogs(text)),
+  sendLogs: (text) => dispatch(sendLogs(text))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

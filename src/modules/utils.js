@@ -3,7 +3,10 @@ import borderColors from '../theme/variables/css3Colors'
 import {divf, mulf, gt} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination} from 'airbitz-core-types'
-import type {GuiDenomination} from '../types'
+import type {
+  GuiDenomination,
+  ExchangeData
+} from '../types'
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
@@ -24,12 +27,12 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
   }
 }
 
-export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object) => {
+export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object): AbcDenomination => {
   // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
   let allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode = wallet.currencyCode
   let currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
+  let denomProperties: AbcDenomination = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
   return denomProperties
 }
@@ -214,17 +217,14 @@ export const getSupportedFiats = (): Array<{label: string, value: string}> => {
   return supportedFiats
 }
 
-type ExchangeData = {
-  secondaryDisplayAmount: string,
-  cryptoCurrencyCode: string,
-  fiatSymbol: string,
-  fiatExchangeAmount: string,
-  fiatCurrencyCode: string
-}
-
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!exchangeData.secondaryDisplayAmount
-    && !!exchangeData.cryptoCurrencyCode
-    && !!exchangeData.fiatSymbol
-    && !!exchangeData.fiatExchangeAmount
-    && !!exchangeData.fiatCurrencyCode
+  !!exchangeData.primaryDisplayAmount
+  && !!exchangeData.primaryDisplayName
+  && !!exchangeData.secondaryDisplayAmount
+  && !!exchangeData.secondaryDisplaySymbol
+  && !!exchangeData.secondaryCurrencyCode
+
+export const unspacedLowercase = (input: string) => {
+  let newInput = input.replace(' ', '').toLowerCase()
+  return newInput
+}

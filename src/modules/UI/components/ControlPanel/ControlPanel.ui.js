@@ -20,27 +20,6 @@ export default class ControlPanel extends Component {
     }
   }
 
-  _getExchangeRate = () => {
-    const {
-      exchangeRate,
-      primaryInfo,
-      primaryDisplayAmount,
-      secondaryInfo,
-      secondaryDisplayAmount
-    } = this.props
-
-    return <T style={styles.bitcoin.value}>
-      <ExchangeRate
-        primaryDisplayAmount={primaryDisplayAmount}
-        primaryInfo={primaryInfo}
-
-        secondaryDisplayAmount={secondaryDisplayAmount}
-        secondaryInfo={secondaryInfo}
-
-        secondaryToPrimaryRatio={exchangeRate} />
-    </T>
-  }
-
   render () {
     const primaryDisplayAmount = '1'
     const {

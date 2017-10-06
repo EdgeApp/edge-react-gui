@@ -2,7 +2,7 @@ const API_PREFIX = 'http://localhost:8087/v1/'
 
 const headers = {
   'Accept': 'application/json',
-  'Content-Type': 'application/json',
+  'Content-Type': 'application/json'
 }
 
 const request = (name, path, method, data) => {
@@ -11,7 +11,7 @@ const request = (name, path, method, data) => {
   return global.fetch(`${API_PREFIX}${path}`, {
     method,
     headers,
-    body: JSON.stringify({data}),
+    body: JSON.stringify({data})
   })
   .then((response) => {
     console.log(`====== ${name} SUCCESS ======`, response)
