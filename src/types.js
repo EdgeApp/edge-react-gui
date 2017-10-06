@@ -65,14 +65,6 @@ export type GuiCurrencyInfo = {
   exchangeDenomination: GuiDenomination
 }
 
-export type ExchangeData = {
-  primaryDisplayAmount: string,
-  primaryDisplayName: string,
-  secondaryDisplayAmount: string,
-  secondaryDisplaySymbol: string,
-  secondaryCurrencyCode: string
-}
-
 export type GuiContact = {
   hasThumbnail: boolean,
   emailAddresses: Array<string>,
@@ -84,4 +76,12 @@ export type GuiContact = {
   thumbnailPath: string,
   recordID: string,
   givenName: string,
+}
+
+export type ExchangeData = {
+  primaryDisplayAmount: string,
+  primaryDisplayName: string,
+  secondaryDisplayAmount: string,
+  secondaryDisplaySymbol: string,
+  secondaryCurrencyCode: string
 }

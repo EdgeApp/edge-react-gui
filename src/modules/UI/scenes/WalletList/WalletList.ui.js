@@ -1,7 +1,6 @@
 // @flow
 import React, {Component} from 'react'
 import {
-  Dimensions,
   View,
   TouchableOpacity,
   ActivityIndicator,
@@ -32,6 +31,8 @@ import WalletNameInput from './components/WalletNameInputConnector'
 import RenameWalletButtons from './components/RenameWalletButtonsConnector'
 import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
+import platform from '../../../../theme/variables/platform.js'
+
 
 const options = [
   {
@@ -209,7 +210,7 @@ export default class WalletList extends Component<any, {
   }
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
-    const {width} = Dimensions.get('window')
+    const {width} = platform.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
         <Animated.View testID={'sortableList'} style={[UTILS.border(), {flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
@@ -249,7 +250,8 @@ export default class WalletList extends Component<any, {
         this.state.sortableListOpacity,
         {
           toValue: sortableToOpacity,
-          timing: 300
+          timing: 300,
+          useNativeDriver: true
         }
       ),
       Animated.timing(
@@ -263,7 +265,8 @@ export default class WalletList extends Component<any, {
         this.state.fullListOpacity,
         {
           toValue: fullListToOpacity,
-          timing: 300
+          timing: 300,
+          useNativeDriver: true
         }
       ),
       Animated.timing(
@@ -287,7 +290,8 @@ export default class WalletList extends Component<any, {
         this.state.sortableListOpacity,
         {
           toValue: sortableToOpacity,
-          timing: 300
+          timing: 300,
+          useNativeDriver: true
         }
       ),
       Animated.timing(
@@ -301,7 +305,8 @@ export default class WalletList extends Component<any, {
         this.state.fullListOpacity,
         {
           toValue: fullListToOpacity,
-          timing: 300
+          timing: 300,
+          useNativeDriver: true
         }
       ),
       Animated.timing(

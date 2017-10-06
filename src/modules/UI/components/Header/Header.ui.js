@@ -16,13 +16,9 @@ import styles from './style'
 export default class Header extends Component {
   _renderTitle = () => this.props.routes.scene.title || 'Header'
 
-  _onLayout = (event) => {
-    this.props.setHeaderHeight(event.nativeEvent.layout.height)
-  }
-
   render () {
     return (
-      <Gradient style={[styles.headerRoot]} onLayout={this._onLayout}>
+      <Gradient style={[styles.headerRoot]}>
         <NBHeader>
           <NBLeft style={{flex: 1}}>
             <Left routes={this.props.routes} />

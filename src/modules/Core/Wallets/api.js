@@ -1,5 +1,6 @@
 // @flow
 // import { renameWalletStart } from ''
+import type {AbcMetadata} from 'airbitz-core-types'
 
 export const renameWalletRequest = (wallet: any, name: string) => wallet.renameWallet(name)
   .then(() => {
@@ -8,12 +9,12 @@ export const renameWalletRequest = (wallet: any, name: string) => wallet.renameW
 
 export const getTransactions = (wallet: any, currencyCode: string) => wallet.getTransactions({currencyCode})
 
-export const setTransactionDetailsRequest = (wallet: any, currencyCode: string, transactionDetails: any) =>
+export const setTransactionDetailsRequest = (wallet: any, txid: string, currencyCode: string, abcMetadata: AbcMetadata) =>
   // console.log('wallet is: ', wallet)
   // console.log('currencyCode is: ', currencyCode)
   // console.log('transactionDetails: ', transactionDetails)
   //  parameters should be txid, currencyCode, and then metaData
-   wallet.saveTxMetadata(transactionDetails.txid, currencyCode, transactionDetails)
+   wallet.saveTxMetadata(txid, currencyCode, abcMetadata)
 
 export const getReceiveAddress = (wallet: any, currencyCode: string) => wallet.getReceiveAddress(currencyCode)
 
