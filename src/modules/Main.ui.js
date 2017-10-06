@@ -4,10 +4,10 @@ import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-c
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {View, StatusBar, Keyboard, Platform} from 'react-native'
+import {Keyboard, Platform} from 'react-native'
 import {connect} from 'react-redux'
 import {ActionConst, Scene, Router} from 'react-native-router-flux'
-import {Container, StyleProvider} from 'native-base'
+import {StyleProvider} from 'native-base'
 import {MenuContext} from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
@@ -29,6 +29,7 @@ import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
+
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
@@ -127,14 +128,9 @@ export default class Main extends Component<Props, State> {
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
-          <View style={styles.statusBarHack}>
-            <Container>
-
-              <StatusBar translucent backgroundColor='green' barStyle='light-content' />
-
-              <RouterWithRedux>
-              <Scene key='root' hideNavBar>
-                <Scene hideNavBar hideTabBar type={ActionConst.RESET} key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
+          <RouterWithRedux style={styles.statusBarHack}>
+            <Scene key='root' hideNavBar>
+              <Scene hideNavBar hideTabBar type={ActionConst.RESET} key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
 
                 <Scene hideNavBar hideTabBar key={Constants.EDGE} component={LayoutConnector} routes={routes} animation={'fade'} duration={600}>
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
@@ -165,8 +161,6 @@ export default class Main extends Component<Props, State> {
               </Scene>
             </RouterWithRedux>
 
-            </Container>
-          </View>
         </MenuContext>
       </StyleProvider>
     )
