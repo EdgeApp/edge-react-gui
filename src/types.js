@@ -77,3 +77,11 @@ export type GuiContact = {
   recordID: string,
   givenName: string,
 }
+
+export type ExchangeData = {
+  primaryDisplayAmount: string,
+  primaryDisplayName: string,
+  secondaryDisplayAmount: string,
+  secondaryDisplaySymbol: string,
+  secondaryCurrencyCode: string
+}

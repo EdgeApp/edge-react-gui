@@ -6,6 +6,9 @@ const fakeExchangeRate = {
   'BTC': {
     value: (1 / 214800000000) * randomSeed
   },
+  'BCH': {
+    value: (1 / 214800000000) * randomSeed
+  },
   'ETH': {
     value: (1 / 231000000000000000000) * randomSeed
   },

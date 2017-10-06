@@ -44,5 +44,13 @@ export default StyleSheet.create({
   },
   radioButton: {
     height: 24
-  }
+  },
+  sendLogsModalInput: {
+    marginBottom:15,
+    borderBottomWidth:1,
+    borderColor:'#CCCCCC',
+    color: '#58595C',
+    height: 50,
+    padding: 5,
+  },
 })

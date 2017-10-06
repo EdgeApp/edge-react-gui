@@ -12,9 +12,9 @@ const SETTINGS_DENOMIANTION_TEXT = strings.enUS['settings_denominations_title']
 
 export default class CurrencySettings extends Component {
   header () {
-    return <Gradient style={[s.headerRow, b('purple')]}>
+    return <Gradient style={[s.headerRow, b()]}>
 
-      <View style={[s.headerTextWrap, b('yellow')]}>
+      <View style={[s.headerTextWrap, b()]}>
         <View style={s.leftArea}>
           <Image style={{height: 25, width: 25, resizeMode: Image.resizeMode.contain}}
             source={{uri: this.props.logo}}/>
@@ -28,17 +28,17 @@ export default class CurrencySettings extends Component {
   }
 
   selectDenomination = (key) => () => {
-    console.log('setDenomination', key)
+    console.log('src/modules/UI/scences/Settings/CurrencySettings.ui.js/selectDenomination', key)
     return this.props.selectDenomination(key)
   }
 
   render () {
     return (
-      <View style={[s.ethereumSettings, b('brown')]}>
+      <View style={[s.ethereumSettings, b()]}>
 
         {this.header()}
 
-        <RadioRows style={b('green')}>
+        <RadioRows style={b()}>
           {
             this.props.denominations.map((denomination) => {
               const key = denomination.multiplier

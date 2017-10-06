@@ -83,8 +83,18 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     const timeString = dateTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
     let type = ''
     let subCategory = ''
+    let cat = ''
+    let name = ''
+    let amountFiat = '0.00'
+    let notes = ''
 
-    const cat: string = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
+    if (props.abcTransaction && props.abcTransaction.metadata) {
+      cat = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
+      name = props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '' // remove commenting once metaData in Redux
+      notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
+      amountFiat = props.abcTransaction.metadata.amountFiat ? props.abcTransaction.metadata.amountFiat.toString() : '0.00'
+    }
+
     if (cat) {
       let colonOccurrence = cat.indexOf(':')
       if (cat && colonOccurrence) {
@@ -94,13 +104,11 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       }
     }
 
-    let amountFiat = props.abcTransaction.metadata.amountFiat ? props.abcTransaction.metadata.amountFiat.toString() : '0.00'
-
     this.state = {
-      name: props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '', // remove commenting once metaData in Redux
+      name,
+      notes,
       thumbnailPath: props.thumbnailPath,
       category: cat,
-      notes: props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : '',
       amountFiat,
       bizId: 0,
       direction: (parseInt(props.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',

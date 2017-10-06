@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
 })
 
 export default class SendConfirmationOptions extends Component {
+
   _handleMenuOptions (key) {
     switch (key) {
     case 'help':

@@ -87,7 +87,7 @@ export default class WalletList extends Component<any, {
   executeWalletRowOption = (walletId: string, option: string) => {
     switch (option) {
     case options[0].value: // 'rename'
-      console.log('executing rename')
+      // console.log('executing rename')
       this.props.walletRowOption(walletId, 'rename')
       break
     case options[1].value: // 'sort'

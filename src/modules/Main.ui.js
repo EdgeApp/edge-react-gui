@@ -1,3 +1,6 @@
+// @flow
+import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-core-types'
+
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
@@ -10,7 +13,7 @@ import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 import * as Constants from '../constants'
-import Login from './UI/scenes/Login/Login.ui'
+import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
 import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
@@ -30,41 +33,55 @@ import * as CONTEXT_API from './Core/Context/api'
 
 import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
-import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory} from 'edge-currency-bitcoin'
+// $FlowFixMe
+import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
 currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
+currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 import styles from './style.js'
 
 import ENV from '../../env.json'
-import {mapAllFiles} from 'disklet'
-
-// import { dumpFolder } from '../../debugTools.js'
-export function dumpFolder (folder) {
-  return mapAllFiles(folder, (file) =>
-    file.getText(file).then(() => {
-      // console.log(`dumpfolder: "${path}": "${text}"`)
-    })
-  )
-}
 
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
 
-export default class Main extends Component {
-  constructor (props) {
+type Props = {
+  username?: string,
+  routes: any,
+  addExchangeTimer: (number) => void,
+  addCurrencyPlugin: (AbcCurrencyPlugin) => void,
+  setKeyboardHeight: (number) => void,
+  addContext: (AbcContext) => void,
+  addUsernames: (Array<string>) => void,
+  setLocaleInfo: (any) => void,
+  setDeviceDimensions: (any) => void,
+  contextCallbacks: AbcContextCallbacks
+}
+
+type State = {
+  context: ?AbcContext,
+  loading: boolean
+}
+
+export default class Main extends Component<Props, State> {
+  keyboardDidShowListener: any
+  keyboardDidHideListener: any
+
+  constructor (props: Props) {
     super(props)
 
     this.state = {
-      context: {}
+      context: undefined,
+      loading: true
     }
   }
 
@@ -88,6 +105,7 @@ export default class Main extends Component {
        makeContext({
          apiKey: AIRBITZ_API_KEY,
          plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+         callbacks: this.props.contextCallbacks,
          io
        }))
     .then((context) => {
@@ -116,31 +134,32 @@ export default class Main extends Component {
 
               <RouterWithRedux>
               <Scene key='root' hideNavBar>
-                <Scene hideNavBar hideTabBar type={ActionConst.RESET}   key={Constants.LOGIN}             component={Login}                   title='login'    animation={'fade'} duration={600} initial username={this.props.username} />
+                <Scene hideNavBar hideTabBar type={ActionConst.RESET} key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
 
                 <Scene hideNavBar hideTabBar key={Constants.EDGE} component={LayoutConnector} routes={routes} animation={'fade'} duration={600}>
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector} title='Change Password' animation={'fade'} duration={600} />
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}      title='Change Pin' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
 
-
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.WALLET_LIST} initial component={WalletList} title='Wallets' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.WALLET_LIST}   component={WalletList}   title='Wallets'       animation={'fade'} duration={600} initial/>
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_LIST} component={TransactionListConnector} title='Transactions' animation={'fade'} duration={600} />
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} title='Transaction Details' duration={0} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_LIST}    component={TransactionListConnector} title='Transactions'        animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_DETAILS} component={TransactionDetails}       title='Transaction Details' animation={'fade'} duration={600} />
 
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SCAN} component={Scan} title='Scan' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SCAN}              component={Scan}             title='Scan'              animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SEND_CONFIRMATION} component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.REQUEST} component={Request} title='Request' animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
 
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'} title='BTC Settings' animation={'fade'} duration={600} />
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'} title='ETH Settings' animation={'fade'} duration={600} />
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'} title='LTC Settings' animation={'fade'} duration={600} />
-                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='defaultFiatSetting'     component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
+
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
 
                 </Scene>
               </Scene>

@@ -66,7 +66,7 @@ export const getPlugins = (state: any) => {
 
 export const getPlugin = (state: any, type: string) => {
   const plugins = getPlugins(state)
-  const plugin = plugins[type]
+  const plugin = plugins[type.toLowerCase()]
   return plugin
 }
 

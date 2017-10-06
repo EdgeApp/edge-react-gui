@@ -5,29 +5,46 @@ import strings from '../../../../locales/default'
 import * as UTILS from '../../../utils'
 
 const styles = StyleSheet.create({
-  view: {
-    backgroundColor: 'transparent'
-  },
-  text: {
-    color: 'white'
-  }
+  view: {backgroundColor: 'transparent'},
+  text: {color: 'white'}
 })
 
 const EXCHANGE_RATE_LOADING_TEXT = strings.enUS['drawer_exchange_rate_loading']
 
-export default class ExchangeRate extends Component<$FlowFixMeProps> {
+type Props = {
+  primaryInfo: Object,
+  primaryDisplayAmount: string,
+  secondaryInfo: Object,
+  secondaryDisplayAmount: string
+}
+
+export default class ExchangeRate extends Component<Props> {
   render () {
-    const cryptoCurrencyCode:string = this.props.primaryInfo.displayDenomination.name
-    const fiatSymbol:string = this.props.secondaryInfo.displayDenomination.symbol
-    const fiatExchangeAmount:string = parseFloat(this.props.secondaryDisplayAmount).toFixed(this.props.secondaryInfo.displayDenomination.precision)
-    const fiatCurrencyCode:string = this.props.secondaryInfo.displayDenomination.currencyCode
-    const {secondaryDisplayAmount} = this.props
+    const {
+      primaryInfo,
+      primaryDisplayAmount,
+      secondaryInfo,
+      secondaryDisplayAmount
+    } = this.props
+
+    const primaryDisplayName :string
+      = primaryInfo.displayDenomination.name
+
+    const secondaryDisplaySymbol :string
+      = secondaryInfo.displayDenomination.symbol
+
+    const formattedSecondaryDisplayAmount :string
+      = parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
+
+    const secondaryCurrencyCode :string
+      = secondaryInfo.displayDenomination.currencyCode
+
     const exchangeData = {
-      secondaryDisplayAmount,
-      cryptoCurrencyCode,
-      fiatSymbol,
-      fiatExchangeAmount,
-      fiatCurrencyCode
+      primaryDisplayAmount: primaryDisplayAmount || '1',
+      primaryDisplayName,
+      secondaryDisplayAmount: formattedSecondaryDisplayAmount,
+      secondaryDisplaySymbol,
+      secondaryCurrencyCode
     }
 
     return (
@@ -38,7 +55,7 @@ export default class ExchangeRate extends Component<$FlowFixMeProps> {
               {EXCHANGE_RATE_LOADING_TEXT}
             </Text>
           : <Text style={styles.text}>
-              1 {cryptoCurrencyCode} = {fiatSymbol} {fiatExchangeAmount} {fiatCurrencyCode}
+              {primaryDisplayAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryDisplayAmount} {secondaryCurrencyCode}
             </Text>
         }
       </View>

@@ -383,101 +383,6 @@ describe('isGreaterThan', function () {
   })
 })
 
-describe('isCompleteExchangeData', function () {
-  describe('secondaryDisplayAmount: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: undefined,
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: '$',
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('cryptoCurrencyCode: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: undefined,
-        fiatSymbol: '$',
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('fiatSymbol: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: undefined,
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('fiatExchangeAmount: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: '$',
-        fiatExchangeAmount: undefined,
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('fiatCurrencyCode: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: '$',
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: undefined
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  test('complete => true', function () {
-    const exchangeData = {
-      secondaryDisplayAmount: '4000',
-      cryptoCurrencyCode: 'BTC',
-      fiatSymbol: '$',
-      fiatExchangeAmount: '4000',
-      fiatCurrencyCode: 'USD'
-    }
-    const expected = true
-    const actual = UTILS.isCompleteExchangeData(exchangeData)
-    expect(actual).toBe(expected)
-  })
-})
-
 describe('getSupportedFiats', function () {
   test('resolves to array of object {value, label}', function () {
     const supportedFiats = UTILS.getSupportedFiats()
@@ -486,5 +391,100 @@ describe('getSupportedFiats', function () {
         {label: expect.any(String), value: expect.any(String)}
       ))
     })
+  })
+})
+
+describe('isCompleteExchangeData', function () {
+  describe('primaryDisplayAmount: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: undefined,
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('primaryDisplayName: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: undefined,
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('secondaryDisplaySymbol: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: undefined,
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('secondaryDisplayAmount: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: undefined,
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('secondaryCurrencyCode: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: undefined
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  test('complete => true', function () {
+    const completeExchangeData = {
+      primaryDisplayAmount: '1',
+      primaryDisplayName: 'BTC',
+      secondaryDisplaySymbol: '$',
+      secondaryDisplayAmount: '4000',
+      secondaryCurrencyCode: 'USD'
+    }
+    const expected = true
+    const actual = UTILS.isCompleteExchangeData(completeExchangeData)
+    expect(actual).toBe(expected)
   })
 })

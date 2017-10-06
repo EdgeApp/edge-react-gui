@@ -1,5 +1,4 @@
 // @flow
-
 import React, {Component} from 'react'
 import {
   View,
@@ -7,15 +6,17 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native'
+
 import styles from './styles.js'
+
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
-
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
+
 import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
 import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
@@ -39,27 +40,79 @@ export type DispatchProps = {
   signBroadcastAndSave: (AbcTransaction) => void
 }
 
-export type State = {
+type State = {
   primaryNativeAmount: string,
   secondaryNativeAmount: string,
   keyboardVisible: boolean
 }
 
-export class SendConfirmation extends Component<Props & DispatchProps, State> {
+export default class SendConfirmation extends Component<Props & DispatchProps, State> {
   constructor (props: Props & DispatchProps) {
     super(props)
     const amt = props.sendConfirmation.transaction ? props.sendConfirmation.transaction.nativeAmount : '0'
+
     this.state = {
       primaryNativeAmount: amt,
       secondaryNativeAmount: '',
-      keyboardVisible: false
+      keyboardVisible: false,
     }
   }
-  _onFocus = () => this.setState({keyboardVisible: true})
-  _onBlur = () => this.setState({keyboardVisible: false})
 
   componentDidMount () {
     this.props.processParsedUri(this.props.sendConfirmation.parsedUri)
+  }
+
+  render () {
+    const {
+      label,
+      publicAddress
+     } = this.props.sendConfirmation
+    const {
+      primaryInfo,
+      secondaryInfo,
+      fiatPerCrypto,
+      errorMsg,
+      nativeAmount
+    } = this.props
+    const color = 'white'
+
+    return (
+      <Gradient style={[styles.view]}>
+        <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
+
+          <View style={[styles.exchangeRateContainer, UTILS.border()]}>
+            {
+              errorMsg
+                ? <Text style={[styles.error]}>
+                  {errorMsg}
+                </Text>
+                : <ExchangeRate
+                  secondaryDisplayAmount={this.props.fiatPerCrypto}
+                  primaryInfo={this.props.primaryInfo}
+                  secondaryInfo={this.props.secondaryInfo} />
+            }
+          </View>
+
+          <View style={[styles.main, UTILS.border(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <ExchangedFlipInput
+              primaryInfo={{...primaryInfo, nativeAmount}}
+              secondaryInfo={secondaryInfo}
+              secondaryToPrimaryRatio={fiatPerCrypto}
+              onAmountsChange={this.onAmountsChange}
+              color={color} />
+            <Recipient label={label} link={''} publicAddress={publicAddress} />
+          </View>
+          <View style={[styles.pendingSymbolArea]}>
+            {this.props.sendConfirmation.pending
+              && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
+            }
+          </View>
+          <ABSlider style={[UTILS.border()]}
+            onSlidingComplete={this.signBroadcastAndSave}
+            sliderDisabled={this.props.sliderDisabled || this.props.sendConfirmation.pending} />
+        </ScrollView>
+      </Gradient>
+    )
   }
 
   onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
@@ -83,61 +136,6 @@ export class SendConfirmation extends Component<Props & DispatchProps, State> {
       primaryNativeAmount,
       secondaryNativeAmount
     })
-  }
-
-  render () {
-    const {
-      label,
-      publicAddress
-     } = this.props.sendConfirmation
-    const {
-      primaryInfo,
-      secondaryInfo,
-      fiatPerCrypto,
-      errorMsg,
-      nativeAmount
-    } = this.props
-    // console.log('nativeAmount', nativeAmount)
-    const color = 'white'
-
-    // console.log('rendering SendConfirmation.ui.js->render, this.props is: ', this.props)
-    return (
-      <Gradient style={[styles.view]}>
-        <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
-
-          <View style={[styles.exchangeRateContainer, UTILS.border()]}>
-            {
-              errorMsg
-                ? <Text style={[styles.error]}>
-                  {errorMsg}
-                </Text>
-                :                <ExchangeRate
-                  secondaryDisplayAmount={this.props.fiatPerCrypto}
-                  primaryInfo={this.props.primaryInfo}
-                  secondaryInfo={this.props.secondaryInfo} />
-            }
-          </View>
-
-          <View style={[styles.main, UTILS.border(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
-            <ExchangedFlipInput
-              primaryInfo={{...primaryInfo, nativeAmount}}
-              secondaryInfo={secondaryInfo}
-              secondaryToPrimaryRatio={fiatPerCrypto}
-              onAmountsChange={this.onAmountsChange}
-              color={color} />
-            {/* <ExchangedFees networkFee={networkFee} providerFee={providerFee} /> */}
-            <Recipient label={label} link={''} publicAddress={publicAddress} />
-            {/* <Password /> */}
-          </View>
-          <View style={[styles.pendingSymbolArea]}>
-            {this.props.sendConfirmation.pending
-              && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
-            }
-          </View>
-          <ABSlider style={[UTILS.border()]} onSlidingComplete={this.signBroadcastAndSave} sliderDisabled={this.props.sliderDisabled} />
-        </ScrollView>
-      </Gradient>
-    )
   }
 
   signBroadcastAndSave = () => {
