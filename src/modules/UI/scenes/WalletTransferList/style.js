@@ -1,9 +1,11 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {StyleSheet} from 'react-native'
+import platform from '../../../../theme/variables/platform.js'
+
 
 const styles = StyleSheet.create({
   container: {
-    bottom: Dimensions.get('window').height / 10,
-    maxHeight: Dimensions.get('window').height * 0.8,
+    bottom: platform.deviceHeight / 10,
+    maxHeight: platform.deviceHeight * 0.8,
     alignItems: 'stretch',
     backgroundColor: 'white'
   },

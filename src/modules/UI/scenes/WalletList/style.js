@@ -1,15 +1,9 @@
 import {
   StyleSheet,
-  Dimensions,
   Platform
 } from 'react-native'
 import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
-
-const screenDimensions = {
-  height: Dimensions.get('window').height,
-  width: Dimensions.get('window').width
-}
 
 export default StyleSheet.create({
   container: {
@@ -152,12 +146,12 @@ export default StyleSheet.create({
   sortableList: {
     flex: 1,
     position: 'absolute',
-    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 130 - 50,
+    height: platform.usableHeight - 130 - 50,
   },
   fullList: {
     flex: 1,
     position: 'absolute',
-    height: screenDimensions.height - platform.footerHeight - platform.toolbarHeight - 130 - 50,
+    height: platform.usableHeight - 130 - 50,
   },
   rowContainer: {
     padding: 6,

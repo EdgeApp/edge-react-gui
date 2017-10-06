@@ -16,6 +16,7 @@ import WalletListTokenRow from './WalletListTokenRowConnector.js'
 import {border as b, cutOffText, truncateDecimals} from '../../../../../utils.js'
 import {selectWallet} from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
+import platform from '../../../../../../theme/variables/platform.js'
 
 export const findDenominationSymbol = (denoms, value) => {
   for (const v of denoms) {
@@ -59,7 +60,7 @@ class FullWalletListRow extends Component {
     let name = walletData.name || sprintf(strings.enUS['string_no_name'])
     let symbol = denomination.symbol
     return (
-      <View style={[{width: this.props.dimensions.deviceDimensions.width}, b()]}>
+      <View style={[{width: platform.deviceWidth}, b()]}>
           <View>
             <TouchableHighlight
               style={[styles.rowContainer]}
@@ -103,7 +104,6 @@ const mapStateToProps = (state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
   return {
-    dimensions: state.ui.scenes.dimensions,
     displayDenomination,
     exchangeDenomination
   }

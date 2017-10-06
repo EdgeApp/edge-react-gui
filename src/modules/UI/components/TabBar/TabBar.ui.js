@@ -5,7 +5,6 @@ import {sprintf} from 'sprintf-js'
 import {Actions} from 'react-native-router-flux'
 import {Footer, FooterTab, Button} from 'native-base'
 import Gradient from '../Gradient/Gradient.ui'
-import {setTabBarHeight} from '../../dimensions/action'
 import {openSideMenu, closeSideMenu} from '../SideMenu/action'
 import T from '../FormattedText'
 import wallet from '../../../../assets/images/tabbar/wallets.png'
@@ -29,11 +28,6 @@ export default class TabBar extends Component {
     if (this.props.sidemenu) {
       this.props.dispatch(closeSideMenu())
     }
-  }
-
-  _onLayout = (event) => {
-    let {height} = event.nativeEvent.layout
-    this.props.dispatch(setTabBarHeight(height))
   }
 
   render () {

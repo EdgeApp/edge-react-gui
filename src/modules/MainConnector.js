@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import Main from './Main.ui'
 
 import {addExchangeTimer} from  './UI/Settings/action'
-import {setDeviceDimensions, setKeyboardHeight} from './UI/dimensions/action'
+import {setKeyboardHeight} from './UI/dimensions/action'
 import {addContext} from './Core/Context/action.js'
 import {addCurrencyPlugin} from './UI/Settings/action.js'
 import {addUsernames} from './Core/Context/action'
@@ -21,7 +21,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   addContext: (context) => dispatch(addContext(context)),
   addUsernames: (usernames) => dispatch(addUsernames(usernames)),
   setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
-  setDeviceDimensions: (dimensions) => dispatch(setDeviceDimensions(dimensions)),
   contextCallbacks: makeContextCallbacks(dispatch)
 })
 
