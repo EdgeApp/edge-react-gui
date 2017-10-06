@@ -32,6 +32,8 @@ export default class SendConfirmationOptions extends Component {
     switch (key) {
     case 'help':
       return this.props.openHelpModal()
+    case 'max':
+      return this.props.sendMaxSpend()
     }
   }
 
@@ -53,7 +55,7 @@ export default class SendConfirmationOptions extends Component {
                 {CHANGE_CURRENCY_TEXT}
               </Text>
             </MenuOption>
-            <MenuOption value={3} style={styles.optionRow}>
+            <MenuOption value='max' style={styles.optionRow}>
               <Text style={[styles.optionText, {color: '#F6A623'}]}>
                 {SEND_MAX_TEXT}
               </Text>

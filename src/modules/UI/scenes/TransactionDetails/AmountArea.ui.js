@@ -54,7 +54,6 @@ type Props = {
   feeSyntax: string,
   color: string,
   type: any,
-  subcategoriesList: Array<string>,
   walletDefaultDenomProps: AbcDenomination
 }
 

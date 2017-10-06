@@ -323,7 +323,7 @@ const strings = {
   send_confirmation_title: 'Send Confirmation',
   send_confirmation_from_title: 'From:',
   send_confirmation_to_title: 'To:',
-  send_confirmation_max_button_title: 'Max',
+  send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_enter_send_pin: 'Enter 4 Digit PIN',
   send_confirmation_enter_send_password: 'Password',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
