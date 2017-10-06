@@ -16,14 +16,12 @@ export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 export const NEW_TRANSACTIONS = PREFIX + 'NEW_TRANSACTIONS'
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 
-// import { openTransactionAlert } from '../../components/TransactionAlert/action.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
 import Actions from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action.js'
-
 import type {
   Dispatch,
   GetState
