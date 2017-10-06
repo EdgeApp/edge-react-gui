@@ -75,6 +75,10 @@ class AmountArea extends Component<Props, State> {
     const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
 
     const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
+    let notes = this.props.abcTransaction.metadata ? this.props.abcTransaction.metadata.notes : ''
+    if (!notes) notes = ''
+
+    const symbol = this.props.walletDefaultDenomProps.symbol || ''
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
@@ -83,7 +87,7 @@ class AmountArea extends Component<Props, State> {
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(this.props.walletDefaultDenomProps.symbol + ' ') || ''}{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(symbol + ' ') || ''}{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</FormattedText>
@@ -161,7 +165,7 @@ class AmountArea extends Component<Props, State> {
               onChangeText={this.props.onChangeNotesFxn}
               multiline
               numberOfLines={3}
-              defaultValue={this.props.abcTransaction.metadata.notes || ''}
+              defaultValue={notes}
               style={[styles.notesInput]}
               placeholderTextColor={colors.gray2}
               placeholder={strings.enUS['transaction_details_notes_title']}
