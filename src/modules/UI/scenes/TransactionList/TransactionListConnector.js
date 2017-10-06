@@ -1,8 +1,8 @@
 import {connect} from 'react-redux'
 import TransactionList from './TransactionList.ui'
 import {
-  transactionsSearchVisible,
-  transactionsSearchHidden,
+  // transactionsSearchVisible,
+  // transactionsSearchHidden,
   getTransactionsRequest
 } from './action'
 import {setContactsList} from '../../contacts/action'
@@ -63,8 +63,8 @@ const mapDispatchToProps = (dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
   setContactsList: (contacts) => dispatch(setContactsList(contacts)),
-  transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
-  transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
+  // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
+  // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

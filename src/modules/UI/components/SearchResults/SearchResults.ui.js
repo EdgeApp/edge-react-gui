@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 import style from './styles'
+import platform from '../../../../theme/variables/platform.js'
 
 export default class SearchResults extends Component {
   constructor (props) {
@@ -27,12 +28,12 @@ export default class SearchResults extends Component {
       return newValue
     })
     if (this.props.dimensions.keyboardHeight) {
-      searchResultsHeight = this.props.height + this.props.dimensions.tabBarHeight - this.props.dimensions.keyboardHeight
+      searchResultsHeight = this.props.height + platform.toolbarHeight - this.props.dimensions.keyboardHeight
     } else {
       searchResultsHeight = this.props.height
     }
     return (
-      <View style={[style.searchResultsContainer, {backgroundColor: 'white', height: searchResultsHeight, width: this.props.dimensions.deviceDimensions.width, top: this.props.dimensions.headerHeight + this.props.extraTopSpace, zIndex: 999}]}>
+      <View style={[style.searchResultsContainer, {backgroundColor: 'white', height: searchResultsHeight, width: platform.deviceWidth, top: platform.toolbarHeight + this.props.extraTopSpace, zIndex: 999}]}>
         <FlatList
           style={[{width: '100%'}]}
           data={completedDataList}

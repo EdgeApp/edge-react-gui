@@ -1,9 +1,9 @@
-import { Platform, Dimensions } from 'react-native';
+import { Platform } from 'react-native';
 import _ from 'lodash';
 
 import variable from './../variables/platform';
 
-const deviceHeight = Dimensions.get('window').height;
+const deviceHeight = variable.deviceHeight
 export default (variables = variable) => {
   const theme = {
     flex: 1,

@@ -1,9 +1,9 @@
 import {
-  Dimensions,
   StyleSheet,
   Platform
 } from 'react-native'
 import {colors as c} from '../../../../theme/variables/airbitz.js'
+import platform from '../../../../theme/variables/platform.js'
 
 
 module.exports = StyleSheet.create({
@@ -120,10 +120,10 @@ module.exports = StyleSheet.create({
     padding: 10
   },
   modalBox: {
-    top: Dimensions.get('window').height / 5,
+    top: platform.deviceHeight / 5,
     borderRadius: 3,
     alignItems: 'stretch',
-    height: (Dimensions.get('window').height) / 4,
+    height: (platform.deviceHeight) / 4,
     backgroundColor: 'white',
     padding: 15,
     flexDirection: 'column',
