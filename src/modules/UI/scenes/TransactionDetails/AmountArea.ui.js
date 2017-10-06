@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
     View,
@@ -15,11 +17,52 @@ import styles from './style'
 import {colors} from '../../../../theme/variables/airbitz'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
-
+import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-class AmountArea extends Component<Prop, State> {
+type Props = {
+  abcTransaction: AbcTransaction,
+  onChangeNotesFxn: (string) => void,
+  onChangeCategoryFxn: (string) => void,
+  onChangeFiatFxn: (string) => void,
+  onBlurFiatFxn: () => void,
+  onPressFxn: () => void,
+  selectCategory: (any) => void,
+  onSelectSubCategory: (string) => void,
+  onEnterCategories: () => void,
+  onExitCategories: () => void,
+  onSubcategoryKeyboardReturn: () => void,
+  onNotesKeyboardReturn: () => void,
+  onFocusNotes: () => void,
+  onBlurNotes: () => void,
+  onFocusFiatAmount: () => void,
+  openModalFxn: () => void,
+  fiatCurrencyCode: string,
+  cryptoCurrencyCode: string,
+  fiatCurrencySymbol: string,
+  fiatAmount: string,
+  onEnterSubcategories: () => void,
+  subCategorySelectVisibility: boolean,
+  categorySelectVisibility: boolean,
+  subCategory: string,
+  types: any,
+  usableHeight: number,
+  dimensions: any,
+  leftData: any,
+  direction: string,
+  feeSyntax: string,
+  color: string,
+  type: any,
+  subcategoriesList: Array<string>,
+  walletDefaultDenomProps: AbcDenomination
+}
+
+type State = {
+
+}
+
+class AmountArea extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -32,6 +75,10 @@ class AmountArea extends Component<Prop, State> {
     const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
 
     const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
+    let notes = this.props.abcTransaction.metadata ? this.props.abcTransaction.metadata.notes : ''
+    if (!notes) notes = ''
+
+    const symbol = this.props.walletDefaultDenomProps.symbol || ''
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
@@ -40,7 +87,7 @@ class AmountArea extends Component<Prop, State> {
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(this.props.walletDefaultDenomProps.symbol + ' ') || ''}{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(symbol + ' ') || ''}{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</FormattedText>
@@ -85,7 +132,6 @@ class AmountArea extends Component<Prop, State> {
               autoCapitalize='words'
               placeholderTextColor={colors.gray2}
               onFocus={this.props.onEnterSubcategories}
-              onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput]}
               defaultValue={this.props.subCategory || ''}
@@ -119,7 +165,7 @@ class AmountArea extends Component<Prop, State> {
               onChangeText={this.props.onChangeNotesFxn}
               multiline
               numberOfLines={3}
-              defaultValue={this.props.abcTransaction.metadata.notes || ''}
+              defaultValue={notes}
               style={[styles.notesInput]}
               placeholderTextColor={colors.gray2}
               placeholder={strings.enUS['transaction_details_notes_title']}
