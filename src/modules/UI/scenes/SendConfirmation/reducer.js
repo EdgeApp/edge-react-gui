@@ -126,6 +126,16 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
   case ACTION.RESET: {
     return initialState
   }
+  case ACTION.UPDATE_NATIVE_AMOUNT: {
+    const {nativeAmount} = data
+    return {
+      ...state,
+      parsedUri: {
+        ...state.parsedUri,
+        nativeAmount
+      }
+    }
+  }
   default:
     return state
   }
