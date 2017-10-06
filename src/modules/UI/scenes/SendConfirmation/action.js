@@ -23,6 +23,8 @@ export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
+export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+
 import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -87,6 +89,11 @@ export const updateTransactionAction = (
 export const updateSpendPending = (pending: boolean) => ({
   type: UPDATE_SPEND_PENDING,
   data: {pending}
+})
+
+export const updateNativeAmount = (nativeAmount: string) => ({
+  type: UPDATE_NATIVE_AMOUNT,
+  data: {nativeAmount}
 })
 
 export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: any, getState: any) => {
@@ -156,6 +163,20 @@ export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, get
   .catch((error) => {
     dispatch(updateTransactionAction(parsedUri, null, error))
   })
+}
+
+export const getMaxSpendable = () => (dispatch: any, getState: any) => {
+  const state = getState()
+
+  const parsedUri: AbcParsedUri = state.ui.scenes.sendConfirmation.parsedUri
+
+  const walletId = UI_SELECTORS.getSelectedWalletId(state)
+  const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
+
+  return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
+    .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
+    .catch((error) => console.log(error))
 }
 
 export const updateParsedURI = (parsedUri: AbcParsedUri) => ({

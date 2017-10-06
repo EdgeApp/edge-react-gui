@@ -22,6 +22,9 @@ export const makeSpend = (wallet: any, spendInfo: any) =>
   // console.log('spendInfo', spendInfo)
    wallet.makeSpend(spendInfo)
 
+export const getMaxSpendable = (wallet: any, spendInfo: any) =>
+   wallet.getMaxSpendable(spendInfo)
+
 export const getBalance = (wallet: any, currencyCode: string) => {
   const balance = wallet.getBalance({currencyCode})
   return balance

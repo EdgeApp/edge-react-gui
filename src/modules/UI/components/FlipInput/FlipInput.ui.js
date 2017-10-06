@@ -9,16 +9,18 @@ import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
 
+const getInitialState = (props) => ({
+  isToggled: false,
+  primaryDisplayAmount: props.primaryDisplayAmount || '',
+  secondaryDisplayAmount: props.secondaryDisplayAmount || '',
+  primaryShouldUpdate: true,
+  secondaryShouldUpdate: true
+})
+
 export default class FlipInput extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      isToggled: false,
-      primaryDisplayAmount: props.primaryDisplayAmount || '',
-      secondaryDisplayAmount: props.secondaryDisplayAmount || '',
-      primaryShouldUpdate: true,
-      secondaryShouldUpdate: true
-    }
+    this.state = getInitialState(props)
   }
   onToggleFlipInput = () => this.setState({
     isToggled: !this.state.isToggled,
@@ -26,6 +28,10 @@ export default class FlipInput extends Component {
   })
 
   componentWillReceiveProps (nextProps) {
+    if (nextProps.primaryDisplayAmount !== this.state.primaryDisplayAmount || nextProps.secondaryDisplayAmount !== this.state.secondaryDisplayAmount) {
+      return this.setState(getInitialState(nextProps))
+    }
+
     if (this.state.primaryShouldUpdate) {
       this.setState({
         primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8),
