@@ -215,7 +215,7 @@ export default class TransactionList extends Component {
     // end of fiat balance
 
     return (
-      <ScrollView style={[UTILS.border(), styles.scrollView]} contentOffset={{x: 0, y: 44}}>
+      <ScrollView style={[UTILS.border(), styles.scrollView]}>
         {/*<SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} /> */}
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
