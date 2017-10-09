@@ -251,7 +251,7 @@ export default class WalletList extends Component<any, {
         {
           toValue: sortableToOpacity,
           timing: 300,
-          useNativeDriver: true
+          useNativeDriver: false
         }
       ),
       Animated.timing(
@@ -266,7 +266,7 @@ export default class WalletList extends Component<any, {
         {
           toValue: fullListToOpacity,
           timing: 300,
-          useNativeDriver: true
+          useNativeDriver: false
         }
       ),
       Animated.timing(
@@ -291,7 +291,7 @@ export default class WalletList extends Component<any, {
         {
           toValue: sortableToOpacity,
           timing: 300,
-          useNativeDriver: true
+          useNativeDriver: false
         }
       ),
       Animated.timing(
@@ -306,7 +306,7 @@ export default class WalletList extends Component<any, {
         {
           toValue: fullListToOpacity,
           timing: 300,
-          useNativeDriver: true
+          useNativeDriver: false
         }
       ),
       Animated.timing(
