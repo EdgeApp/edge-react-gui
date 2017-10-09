@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
   containerStyle: {
@@ -6,20 +7,20 @@ export default StyleSheet.create({
     top: -10,
     left: 0,
     right: 0,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: 0,
     margin: 0
   },
   titleStyle: {
     textAlign: 'center',
-    color: 'grey',
+    color: THEME.COLORS.GRAY_1,
     backgroundColor: 'transparent',
-    fontFamily: 'SourceSansPro-Black'
+    fontFamily: THEME.FONTS.DEFAULT
   },
-  left: {
-    paddingHorizontal: 5
+  alertIcon: {
+    color: THEME.COLORS.ACCENT_RED,
   },
-  right: {
-    paddingHorizontal: 5
+  infoIcon: {
+    color: THEME.COLORS.PRIMARY,
   }
 })

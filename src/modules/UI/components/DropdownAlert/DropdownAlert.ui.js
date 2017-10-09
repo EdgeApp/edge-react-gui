@@ -26,8 +26,8 @@ export default class DropdownAlert extends Component<Props> {
     }
   }
 
-  alertIcon = () => <MCIcon name={'alert-outline'} color={'red'} style={{paddingHorizontal: 10}} />
-  infoIcon = () => <SLIcon name={'question'} color={'blue'} style={{paddingHorizontal: 10}} />
+  alertIcon = () => <MCIcon name={'alert-outline'} style={styles.alertIcon} />
+  infoIcon = () => <SLIcon name={'question'} style={styles.infoIcon} />
 
   render () {
     { /* $FlowExpectedError */ }
