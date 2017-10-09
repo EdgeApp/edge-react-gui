@@ -40,7 +40,7 @@ export default class ExchangedFlipInput extends Component {
     if (nextProps.primaryInfo.nativeAmount) {
       const nativeAmount = UTILS.absoluteValue(nextProps.primaryInfo.nativeAmount)
       const primaryDisplayAmount = this.convertPrimaryNativeToDisplay(nativeAmount)
-      if (this.state.primaryDisplayAmount === primaryDisplayAmount) { return }
+      if (parseFloat(this.state.primaryDisplayAmount) === parseFloat(primaryDisplayAmount)) { return }
       this.onPrimaryAmountChange(primaryDisplayAmount)
       // console.log('componentWillReceiveProps')
     }
