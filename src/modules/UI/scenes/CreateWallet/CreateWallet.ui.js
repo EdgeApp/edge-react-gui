@@ -14,12 +14,12 @@ import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 import styles from './styles.js'
 import strings from '../../../../locales/default'
 
-const WALLET_NAME_INPUT_PLACEHOLDER = strings.enUS['fragment_wallets_addwallet_name_hint']
+const WALLET_NAME_INPUT_PLACEHOLDER  = strings.enUS['fragment_wallets_addwallet_name_hint']
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
-const FIAT_PICKER_PLACEHOLDER = strings.enUS['fragment_wallets_addwallet_fiat_hint']
+const FIAT_PICKER_PLACEHOLDER        = strings.enUS['fragment_wallets_addwallet_fiat_hint']
 
-const DONE_TEXT = strings.enUS['fragment_create_wallet_create_wallet']
-const CANCEL_TEXT = strings.enUS['string_cancel_cap']
+const DONE_TEXT         = strings.enUS['fragment_create_wallet_create_wallet']
+const CANCEL_TEXT       = strings.enUS['string_cancel_cap']
 const INVALID_DATA_TEXT = strings.enUS['fragment_create_wallet_select_valid']
 
 export default class CreateWallet extends Component {
@@ -43,7 +43,7 @@ export default class CreateWallet extends Component {
   isValidData = () => {
     const isValidWalletName = !!this.isValidWalletName()
     const isValidWalletType = !!this.isValidWalletType()
-    const isValidFiat = !!this.isValidFiat()
+    const isValidFiat       = !!this.isValidFiat()
 
     return (isValidWalletName && isValidWalletType && isValidFiat)
   }

@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {Text, View, TouchableHighlight} from 'react-native'
 import T from '../FormattedText'
-import styles from './style'
+import styles, {styles as styleRaw} from './style'
 import strings from '../../../../locales/default'
 
 class PrimaryButton extends Component {
@@ -13,7 +13,7 @@ class PrimaryButton extends Component {
         styles.stylizedButton,
         this.props.style
       ]}
-        underlayColor={styles.primaryUnderlayColor.color}
+        underlayColor={styleRaw.primaryUnderlay.color}
         onPress={this.props.onPressFunction}>
         <View style={styles.stylizedButtonTextWrap}>
           {this.props.processingFlag
@@ -44,7 +44,7 @@ class SecondaryButton extends Component {
       ]}
         onPress={this.props.onPressFunction}
         disabled={this.props.disabled}
-        underlayColor={styles.secondaryUnderlayColor.color}>
+        underlayColor={styleRaw.secondaryUnderlay.color}>
         <View style={styles.stylizedButtonTextWrap}>
           <T style={[styles.secondaryButton, styles.stylizedButtonText]}>
             {this.props.text || CANCEL_TEXT}
@@ -69,7 +69,7 @@ class TertiaryButton extends Component {
         styles.tertiaryButtonWrap
       ]}
         onPress={this.onPress}
-        underlayColor={styles.tertiaryUnderlayColor.color}>
+        underlayColor={styleRaw.tertiaryUnderlay.color}>
         <Text style={styles.tertiaryButton} {...this.props}>
           {this.props.text}
         </Text>
