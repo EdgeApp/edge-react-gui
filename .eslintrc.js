@@ -23,11 +23,6 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
-        "max-lines": ["error", {
-          "max": 510,
-          "skipBlankLines": true,
-          "skipComments": true
-        }],
         "max-len": ["error", {
           "code": 200,
           "ignoreComments": true,
