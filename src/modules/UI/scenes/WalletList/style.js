@@ -5,7 +5,7 @@ import {
 import platform from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch'
@@ -148,6 +148,17 @@ export default StyleSheet.create({
     position: 'absolute',
     height: platform.usableHeight - 130 - 50,
   },
+  sortableWalletListRow: {
+    width: platform.deviceWidth,
+    height: 50,
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.WHITE
+  },
   fullList: {
     flex: 1,
     position: 'absolute',
@@ -158,9 +169,7 @@ export default StyleSheet.create({
     paddingLeft: 16,
     marginRight: 4,
     flexDirection: 'row',
-    backgroundColor: THEME.COLORS.WHITE,
-    borderBottomWidth: 1,
-    borderColor: THEME.COLORS.GRAY_4
+    backgroundColor: THEME.COLORS.WHITE
   },
   rowContent: {
     flex: 1,
@@ -300,9 +309,9 @@ export default StyleSheet.create({
     padding: 16,
     paddingLeft: 30,
     paddingRight: 44,
-    backgroundColor: THEME.COLORS.GRAY_3,
+    backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
-    borderColor: THEME.COLORS.GRAY_4
+    borderColor: THEME.COLORS.GRAY_3
   },
   tokenRowContent: {
     justifyContent: 'space-between',
@@ -318,9 +327,27 @@ export default StyleSheet.create({
   // end of token rows //,,
 
   activeOpacity: {
-    opacity: THEME.OPACITY.ACTION
+    opacity: THEME.OPACITY.ACTIVE
   },
-  underlayColor: {
-    color: THEME.COLORS.WHITE
+  walletRowUnderlay: {
+    color: THEME.COLORS.GRAY_3
+  },
+  tokenRowUnderlay: {
+    color: THEME.COLORS.GRAY_3
+  },
+  emptyRow: {
+    height: 50,
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.GRAY_4
+  },
+  emptyRowUnderlay: {
+    color: THEME.COLORS.GRAY_3
   }
-})
+}
+
+export default StyleSheet.create(styles)

@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
-import styles from '../../style.js'
+import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
@@ -18,8 +18,6 @@ import {selectWallet} from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
 
-import THEME from '../../../../../../theme/variables/airbitz'
-
 export const findDenominationSymbol = (denoms, value) => {
   for (const v of denoms) {
     if (v.name === value) {
@@ -27,7 +25,6 @@ export const findDenominationSymbol = (denoms, value) => {
     }
   }
 }
-
 
 class FullWalletRow extends Component {
   render () {
@@ -66,7 +63,7 @@ class FullWalletListRow extends Component {
           <View>
             <TouchableHighlight
               style={[styles.rowContainer]}
-              underlayColor={THEME.COLORS.GRAY_4}
+              underlayColor={styleRaw.walletRowUnderlay.color}
               {...this.props.sortHandlers}
               onPress={() => this._onPressSelectWallet(id, currencyCode)}
             >
@@ -94,14 +91,17 @@ class FullWalletListRow extends Component {
     for (let property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
         tokens.push(
-          <WalletListTokenRow parentId={parentId}
-            currencyCode={property} key={property} balance={metaTokenBalances[property]} active={this.props.active} />)
+          <WalletListTokenRow
+            sparentId={parentId}
+            currencyCode={property}
+            key={property}
+            balance={metaTokenBalances[property]}
+            active={this.props.active} />)
       }
     }
     return tokens
   }
 }
-
 const mapStateToProps = (state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
@@ -113,26 +113,17 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
 })
-
-export const FullWalletListRowConnect =  connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
+export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 
 class FullListRowEmptyData extends Component {
   render () {
     return (
       <TouchableHighlight
         style={[
-          styles.rowContainer],
-        {
-          height: 50,
-          backgroundColor: THEME.COLORS.WHITE,
-          padding: 16,
-          paddingLeft: 20,
-          paddingRight: 20,
-          justifyContent: 'space-between',
-          borderBottomWidth: 1,
-          borderColor: THEME.COLORS.GRAY_4
-        }}
-        underlayColor={THEME.COLORS.GRAY_4}
+          styles.rowContainer,
+          styles.emptyRow
+        ]}
+        underlayColor={styleRaw.emptyRowUnderlay.color}
         {...this.props.sortHandlers}
       >
         <View style={[styles.rowContent]}>
