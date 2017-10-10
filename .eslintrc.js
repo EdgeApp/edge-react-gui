@@ -23,6 +23,20 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "max-lines": ["error", {
+          "max": 510,
+          "skipBlankLines": true,
+          "skipComments": true
+        }],
+        "max-len": ["error", {
+          "code": 200,
+          "ignoreComments": true,
+          "ignoreTrailingComments": true,
+          "ignoreUrls": true,
+          "ignoreStrings": true,
+          "ignoreTemplateLiterals": true,
+          "ignoreRegExpLiterals": true
+        }],
         "arrow-parens": ["error", "always"],
         "operator-linebreak": ["error", "before"],
         "react/jsx-curly-spacing": ["error", {
