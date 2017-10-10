@@ -18,6 +18,8 @@ import {selectWallet} from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
 
+import THEME from '../../../../../../theme/variables/airbitz'
+
 export const findDenominationSymbol = (denoms, value) => {
   for (const v of denoms) {
     if (v.name === value) {
@@ -64,7 +66,7 @@ class FullWalletListRow extends Component {
           <View>
             <TouchableHighlight
               style={[styles.rowContainer]}
-              underlayColor={'#eee'}
+              underlayColor={THEME.COLORS.GRAY_4}
               {...this.props.sortHandlers}
               onPress={() => this._onPressSelectWallet(id, currencyCode)}
             >
@@ -118,8 +120,19 @@ class FullListRowEmptyData extends Component {
   render () {
     return (
       <TouchableHighlight
-        style={[styles.rowContainer], {height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}}
-        underlayColor={'#eee'}
+        style={[
+          styles.rowContainer],
+        {
+          height: 50,
+          backgroundColor: THEME.COLORS.WHITE,
+          padding: 16,
+          paddingLeft: 20,
+          paddingRight: 20,
+          justifyContent: 'space-between',
+          borderBottomWidth: 1,
+          borderColor: THEME.COLORS.GRAY_4
+        }}
+        underlayColor={THEME.COLORS.GRAY_4}
         {...this.props.sortHandlers}
       >
         <View style={[styles.rowContent]}>

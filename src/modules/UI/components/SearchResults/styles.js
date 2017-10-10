@@ -1,10 +1,12 @@
 import {StyleSheet} from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
   searchResultsContainer: {
     borderTopWidth: 1,
-    borderTopColor: c.gray3,
-    position: 'absolute'
+    borderTopColor: THEME.COLORS.GRAY_3,
+    position: 'absolute',
+    backgroundColor: THEME.COLORS.WHITE,
+    zIndex: 999
   }
 })

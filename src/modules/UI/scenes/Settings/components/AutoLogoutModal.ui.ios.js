@@ -1,12 +1,15 @@
 import React, {Component} from 'react'
 import {Picker} from 'react-native'
 
-import {sprintf} from 'sprintf-js'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import strings from '../../../../../locales/default'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
+
+import styles from './styles'
+
+const DISABLE_TEXT = strings.enUS['string_disable']
 
 export default class AutoLogoutModal extends Component {
   constructor (props) {
@@ -28,9 +31,8 @@ export default class AutoLogoutModal extends Component {
   }
 
   render () {
-    const disabled = sprintf(strings.enUS['string_disable'])
     const logoutOptions = [
-      {label: disabled, value: null},
+      {label: DISABLE_TEXT, value: null},
       {label: '1', value: 1},
       {label: '15', value: 15},
       {label: '30', value: 30},
@@ -38,7 +40,8 @@ export default class AutoLogoutModal extends Component {
       {label: '60', value: 60},
       {label: '120', value: 120}
     ]
-    const pickerOptions = logoutOptions.map((option) => <Picker.Item label={option.label} value={option.value} key={option.label} />)
+    const pickerOptions = logoutOptions.map((option) =>
+      <Picker.Item label={option.label} value={option.value} key={option.label} />)
 
     const picker = <Picker
       selectedValue={this.state.autoLogoutTimeInMinutes}
@@ -50,16 +53,8 @@ export default class AutoLogoutModal extends Component {
       onDone={() => this.onDone(this.state.autoLogoutTimeInMinutes)}
       onCancel={this.onCancel} />
 
-    const icon = <IonIcon name='ios-time-outline' size={24} color='#2A5799'
-      style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
-        backgroundColor: 'transparent',
-        zIndex: 1015,
-        elevation: 1015}]} />
+    const icon = <IonIcon name='ios-time-outline' size={24}
+      style={styles.icon} />
 
     return <StylizedModal visibilityBoolean={this.props.showModal}
       featuredIcon={icon}
