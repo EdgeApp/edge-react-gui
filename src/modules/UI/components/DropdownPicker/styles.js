@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     padding: 20,
-    backgroundColor: THEME.COLORS.GRAY_3
+    backgroundColor: THEME.COLORS.WHITE
   },
   walletNameInputView: {
     height: 50,
@@ -16,13 +16,14 @@ const styles = StyleSheet.create({
     padding: 5
   },
   pickerView: {
-    marginBottom: 15,
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
-    borderColor: THEME.COLORS.GRAY_4
+    marginBottom: 15
   },
   picker: {
+    fontFamily: THEME.FONTS.DEFAULT,
     height: 50,
-    padding: 5
+    padding: 5,
+    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
+    borderColor: THEME.COLORS.GRAY_2
   },
   listView: {
     maxHeight: 200
