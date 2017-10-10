@@ -35,11 +35,16 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
 
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-      const {
-        walletId,
-        currencyCode
-      } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
-      dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+      if (ACCOUNT_API.checkForExistingWallets(account)) {
+        const {
+          walletId,
+          currencyCode
+        } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+        dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+        dispatch(loadSettings())
+        return
+      }
+      // TODO: Allen - create wallets here since there are no existing wallets
       dispatch(loadSettings())
     })
 }

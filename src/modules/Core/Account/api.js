@@ -11,6 +11,13 @@ export const getFirstActiveWalletInfo = (account, currencyCodes) => {
   }
 }
 
+export const checkForExistingWallets = (account) => {
+  if (account.activeWalletIds.length > 0) {
+    return true
+  }
+  return false
+}
+
 export const createWalletRequest = (account, keys, walletType) => account.createWallet(walletType, keys)
 
 export const activateWalletRequest = (account, walletId) => account.changeWalletStates({
