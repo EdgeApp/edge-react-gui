@@ -181,7 +181,12 @@ export default class WalletList extends Component<any, {
 
             <View style={[styles.donePlusContainer, UTILS.border()]}>
 
-              <Animated.View style={[styles.doneContainer,  UTILS.border(), {opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
+              <Animated.View style={[
+                styles.doneContainer,
+                UTILS.border(), {
+                  opacity: this.state.sortableListOpacity,
+                  zIndex: this.state.sortableListZIndex
+                }]}>
                 <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]}
                   onPress={() => this.disableSorting()}>
                   <T style={[styles.walletsBoxDoneText]}>
@@ -201,7 +206,9 @@ export default class WalletList extends Component<any, {
           </Gradient>
 
           {
-            Object.keys(wallets).length > 0 ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject) : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
+            Object.keys(wallets).length > 0
+            ? this.renderActiveSortableList(activeWalletsArray, activeWalletsObject)
+            : <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'} />
           }
 
         </View>
@@ -213,7 +220,15 @@ export default class WalletList extends Component<any, {
     const {width} = platform.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
-        <Animated.View testID={'sortableList'} style={[UTILS.border(), {flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
+        <Animated.View style={[
+          UTILS.border(),
+          {
+            flex: 1,
+            opacity: this.state.sortableListOpacity,
+            zIndex: this.state.sortableListZIndex
+          },
+          styles.sortableList, UTILS.border()
+        ]}>
           <SortableListView
             style={{flex: 1, width}}
             data={activeWalletsObject}
@@ -225,7 +240,13 @@ export default class WalletList extends Component<any, {
             dimensions={this.props.dimensions}
           />
         </Animated.View>
-        <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
+        <Animated.View style={[{
+          flex: 1,
+          opacity: this.state.fullListOpacity,
+          zIndex: this.state.fullListZIndex
+        },
+          styles.fullList
+        ]}>
           <FlatList
             style={{flex: 1, width}}
             data={activeWalletsArray}

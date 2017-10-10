@@ -23,7 +23,9 @@ class SubCategorySelect extends Component {
   }
 
   render () {
-    let filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => entry.indexOf(this.props.enteredSubcategory) >= 0)
+    let filteredSubcats = !this.props.enteredSubcategory
+      ? this.props.subcategoriesList
+      : this.props.subcategoriesList.filter((entry) => entry.indexOf(this.props.enteredSubcategory) >= 0)
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
@@ -47,7 +49,10 @@ class SubCategorySelect extends Component {
 
   renderSubcategory (data, onRegularSelectFxn) {
     return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
+      <TouchableHighlight style={[styles.rowContainer]}
+        delayPressIn={60}
+        underlayColor={colors.gray4}
+        onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
           <View style={[styles.rowCategoryTextWrap]}>
             <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>{data.item}</FormattedText>

@@ -78,7 +78,11 @@ class FullWalletListRow extends Component {
                   </T>
                   <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode} ({symbol || ''})</T>
                 </View>
-                <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
+                <RowOptions
+                  sortableMode={this.props.sortableMode}
+                  executeWalletRowOption={walletData.executeWalletRowOption}
+                  walletKey={id}
+                  archived={walletData.archived} />
               </View>
             </TouchableHighlight>
             {this.renderTokenRow(id, walletData.nativeBalances, this.props.active)}

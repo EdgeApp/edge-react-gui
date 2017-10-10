@@ -114,7 +114,11 @@ export default class Request extends Component {
         </View>
 
         <View style={styles.shareButtonsContainer}>
-          <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
+          <ShareButtons styles={styles.shareButtons}
+            shareViaEmail={this.shareViaEmail}
+            shareViaSMS={this.shareViaSMS}
+            shareViaShare={this.shareViaShare}
+            copyToClipboard={this.copyToClipboard} />
         </View>
 
       </Gradient>

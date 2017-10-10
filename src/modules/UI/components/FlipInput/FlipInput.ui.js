@@ -28,7 +28,10 @@ export default class FlipInput extends Component {
   })
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.primaryDisplayAmount !== this.state.primaryDisplayAmount || nextProps.secondaryDisplayAmount !== this.state.secondaryDisplayAmount) {
+    if (
+      nextProps.primaryDisplayAmount !== this.state.primaryDisplayAmount
+      || nextProps.secondaryDisplayAmount !== this.state.secondaryDisplayAmount
+    ) {
       return this.setState(getInitialState(nextProps))
     }
 

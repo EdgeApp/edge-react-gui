@@ -216,7 +216,6 @@ export default class TransactionList extends Component {
 
     return (
       <ScrollView style={[UTILS.border(), styles.scrollView]}>
-        {/*<SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} /> */}
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
             <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
@@ -238,7 +237,13 @@ export default class TransactionList extends Component {
                           <View style={styles.balanceShownContainer}>
                             <View style={[styles.iconWrap, UTILS.border()]}>
                               {logo
-                                ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, UTILS.border()]} source={{uri: logo}} />
+                                ? <Image style={[{
+                                  height: 28,
+                                  width: 28,
+                                  resizeMode: Image.resizeMode.contain
+                                },
+                                  UTILS.border()
+                                ]} source={{uri: logo}} />
                                 : <T style={[styles.request]}>{displayDenomination.symbol}</T>
                               }
                             </View>
@@ -376,7 +381,13 @@ export default class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx, thumbnailPath)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
+        <TouchableOpacity style={[
+          styles.singleTransaction,
+          {
+            borderBottomWidth: lastOfDate ? 0 : 1
+          }
+        ]}
+          onPress={() => this._goToTxDetail(tx, thumbnailPath)} >
           <View style={[styles.transactionInfoWrap, UTILS.border()]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
