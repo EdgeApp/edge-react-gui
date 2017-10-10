@@ -13,7 +13,8 @@ import {colors} from '../../../../theme/variables/airbitz'
 class ContactSearchResults extends Component {
 
   render () {
-    const filteredArray = this.props.contacts.filter((entry) => (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
+    const filteredArray = this.props.contacts.filter((entry) =>
+      (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)
 
     return (
       <SearchResults
@@ -34,7 +35,9 @@ class ContactSearchResults extends Component {
 
     return (
       <View style={styles.singleContactWrap}>
-        <TouchableHighlight onPress={() => onRegularSelectFxn(fullName, data.item.thumbnailPath)} underlayColor={colors.gray4} style={[styles.singleContact]}>
+        <TouchableHighlight style={[styles.singleContact]}
+          onPress={() => onRegularSelectFxn(fullName, data.item.thumbnailPath)}
+          underlayColor={colors.gray4}>
           <View style={[styles.contactInfoWrap]}>
             <View style={styles.contactLeft}>
               <View style={[styles.contactLogo]} >

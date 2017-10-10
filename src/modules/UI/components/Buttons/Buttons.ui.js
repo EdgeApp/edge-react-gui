@@ -9,14 +9,19 @@ class PrimaryButton extends Component {
   render () {
     // console.log('rendering PrimaryButton, this is: ', this)
     return (
-      <TouchableHighlight onPress={this.props.onPressFunction} underlayColor={c.primary} style={[s.primaryButtonWrap, s.stylizedButton, this.props.style]}>
+      <TouchableHighlight style={[
+        s.primaryButtonWrap,
+        s.stylizedButton,
+        this.props.style
+      ]}
+        onPress={this.props.onPressFunction}
+        underlayColor={c.primary}>
         <View style={s.stylizedButtonTextWrap}>
           {this.props.processingFlag
             ? (this.props.processingElement)
-            :            (<T style={[s.primaryButton, s.stylizedButtonText]}>
+            : <T style={[s.primaryButton, s.stylizedButtonText]}>
               {this.props.text}
             </T>
-            )
           }
         </View>
       </TouchableHighlight>
@@ -32,7 +37,14 @@ class SecondaryButton extends Component {
   render () {
     // console.log('rendering SecondaryButton, this is: ', this)
     return (
-      <TouchableHighlight disabled={this.props.disabled} onPress={this.props.onPressFunction} underlayColor={c.gray1} style={[s.secondaryButtonWrap, s.stylizedButton, this.props.style]}>
+      <TouchableHighlight style={[
+        s.secondaryButtonWrap,
+        s.stylizedButton,
+        this.props.style
+      ]}
+        disabled={this.props.disabled}
+        onPress={this.props.onPressFunction}
+        underlayColor={c.gray1} >
         <View style={s.stylizedButtonTextWrap}>
           <T style={[s.secondaryButton, s.stylizedButtonText]}>
             {this.props.text || 'Cancel'}
@@ -62,7 +74,14 @@ class TertiaryButton extends Component {
   render () {
     // console.log('tertiaryButon props are: ', this.props)
     return (
-      <TouchableHighlight onPress={this._onPress} underlayColor={c.secondary} style={[ s.stylizedButton, s.tertiaryButtonWrap, {backgroundColor: 'white'} ]}>
+      <TouchableHighlight style={[
+        s.stylizedButton,
+        s.tertiaryButtonWrap,
+        {
+          backgroundColor: 'white'
+        }]}
+        onPress={this._onPress}
+        underlayColor={c.secondary}>
         <Text style={s.tertiaryButton} {...this.props}>
           {this.props.text}
         </Text>

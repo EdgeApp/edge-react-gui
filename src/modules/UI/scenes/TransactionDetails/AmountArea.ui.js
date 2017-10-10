@@ -139,7 +139,13 @@ class AmountArea extends Component<Props, State> {
           </View>
         </View>
         <View style={[styles.categoryRow]}>
-          <TouchableOpacity style={[styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.props.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
+          <TouchableOpacity style={[
+            styles.categoryLeft,
+            {
+              borderColor: this.props.color
+            }]}
+            onPress={this.props.onEnterCategories}
+            disabled={this.props.subCategorySelectVisibility}>
             <FormattedText style={[{color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</FormattedText>
           </TouchableOpacity>
           <View style={[styles.categoryInputArea]}>
