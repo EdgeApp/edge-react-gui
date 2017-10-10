@@ -22,9 +22,4 @@ export default StyleSheet.create({
   badgeValue: {
     color: THEME.COLORS.WHITE
   },
-  gradient: {
-    borderWidth: 0.5,
-    borderColor: THEME.COLORS.GRAY_4,
-    borderStyle: 'solid'
-  }
 })
