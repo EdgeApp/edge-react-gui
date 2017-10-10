@@ -1,13 +1,12 @@
 // @flow
 import React, {Component} from 'react'
-import {Text, View, StyleSheet} from 'react-native'
+import {
+  Text,
+  View
+} from 'react-native'
 import strings from '../../../../locales/default'
 import * as UTILS from '../../../utils'
-
-const styles = StyleSheet.create({
-  view: {backgroundColor: 'transparent'},
-  text: {color: 'white'}
-})
+import styles from './styles'
 
 const EXCHANGE_RATE_LOADING_TEXT = strings.enUS['drawer_exchange_rate_loading']
 

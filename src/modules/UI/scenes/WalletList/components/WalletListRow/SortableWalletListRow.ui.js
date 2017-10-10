@@ -16,6 +16,7 @@ import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
 
+import THEME from '../../../../../../theme/variables/airbitz'
 
 const findDenominationSymbol = (denoms, value) => {
   for (const v of denoms) {
@@ -40,10 +41,21 @@ class SortableWalletListRow extends Component {
     }
     return (
       <TouchableHighlight
-        style={[b('green'), styles.rowContainer, {width: platform.deviceWidth, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
-        underlayColor={'#eee'}
-        {...this.props.sortHandlers}
-      >
+        style={[
+          b('green'), styles.rowContainer,
+          {
+            width: platform.deviceWidth,
+            height: 50,
+            backgroundColor: THEME.COLORS.WHITE,
+            padding: 16,
+            paddingLeft: 20,
+            paddingRight: 20,
+            justifyContent: 'space-between',
+            borderBottomWidth: 1,
+            borderColor: THEME.COLORS.WHITE
+          }]}
+        underlayColor={styles.underlayColor.color}
+        {...this.props.sortHandlers}>
           {walletData.currencyCode? (
             <View style={[styles.rowContent]}>
               <View style={[styles.rowNameTextWrap]}>

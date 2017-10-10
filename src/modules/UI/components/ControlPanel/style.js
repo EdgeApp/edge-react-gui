@@ -1,5 +1,6 @@
 import {Platform} from 'react-native'
 const platform = Platform.OS
+import THEME from '../../../../theme/variables/airbitz'
 
 export default {
   iconImageContainer: {
@@ -11,7 +12,7 @@ export default {
   },
   icon: {
     fontSize: 25,
-    color: '#FFF',
+    color: THEME.COLORS.GRAY_4,
     paddingHorizontal: 23
   },
   container: {
@@ -20,28 +21,28 @@ export default {
   },
   bitcoin: {
     container: {
-      backgroundColor: '#7FC343',
+      backgroundColor: THEME.COLORS.ACCENT_GREEN,
       height: 48,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center'
     },
     icon: {
-      color: '#FFF',
+      color: THEME.COLORS.GRAY_4,
       paddingHorizontal: 23,
       fontSize: 26
     },
     value: {
       flex: 1,
       fontSize: 16,
-      color: '#FFF',
+      color: THEME.COLORS.WHITE,
       justifyContent: 'center',
       alignItems: 'center'
     }
   },
   user: {
     container: {
-      backgroundColor: '#2B5698',
+      backgroundColor: THEME.COLORS.PRIMARY,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -49,7 +50,7 @@ export default {
     },
     name: {
       flex: 1,
-      color: '#FFF',
+      color: THEME.COLORS.WHITE,
       fontSize: 16
     }
   },
@@ -85,22 +86,22 @@ export default {
       flex: 1,
       fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
-      backgroundColor: 'transparent',
+      backgroundColor: THEME.COLORS.TRANSPARENT,
       color: '#FFF'
     },
     textContainer: {
       flex: 8,
-      backgroundColor: 'transparent'
+      backgroundColor: THEME.COLORS.TRANSPARENT
     },
     text: {
       fontSize: 15,
-      color: '#FFF'
+      color: THEME.COLORS.WHITE
     },
     textItalic: {
       marginTop: 3,
-      fontFamily: 'SourceSansPro-Bold',
+      fontFamily: THEME.FONTS.DEFAULT,
       fontSize: 13,
-      color: '#FFF'
+      color: THEME.COLORS.WHITE
     }
   },
   others: {
@@ -134,34 +135,34 @@ export default {
       flex: 1,
       fontSize: (platform !== 'ios') ? 26 : 32,
       paddingHorizontal: 23,
-      backgroundColor: 'transparent',
-      color: '#FFF'
+      backgroundColor: THEME.COLORS.TRANSPARENT,
+      color: THEME.COLORS.WHITE
     },
     textContainer: {
       flex: 8,
-      backgroundColor: 'transparent'
+      backgroundColor: THEME.COLORS.TRANSPARENT
     },
     text: {
       fontSize: 15,
-      color: '#FFF'
+      color: THEME.COLORS.WHITE
     },
     textItalic: {
       marginTop: 3,
       fontStyle: 'italic',
       fontSize: 13,
-      color: '#FFF'
+      color: THEME.COLORS.WHITE
     }
   },
   userList: {
     container: {
-      backgroundColor: '#FFF',
+      backgroundColor: THEME.COLORS.WHITE,
       flex: 1
     },
     row: {
       flexDirection: 'row',
       alignItems: 'center',
       borderStyle: 'solid',
-      borderColor: '#efefef',
+      borderColor: THEME.COLORS.GRAY_4,
       borderBottomWidth: 0.5
     },
     text: {

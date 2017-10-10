@@ -13,7 +13,7 @@ import FormattedText from '../../components/FormattedText'
 import Modal from 'react-native-modal'
 import {PrimaryButton} from '../../components/Buttons'
 import styles from './style'
-import {colors} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
@@ -75,7 +75,10 @@ class AmountArea extends Component<Props, State> {
       amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
       amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
       feeSyntax = ''
-      leftData = {color: colors.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
+      leftData = {
+        color: THEME.COLORS.ACCENT_GREEN,
+        syntax: strings.enUS['fragment_transaction_income']
+      }
     } else { // send tx
       if (UTILS.isCryptoParentCurrency(this.props.selectedWallet, this.props.cryptoCurrencyCode)) { // stub, check BTC vs. ETH (parent currency)
         amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
@@ -84,11 +87,15 @@ class AmountArea extends Component<Props, State> {
         amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountMinusFee.toString(), 6)))
         const feeString = Math.abs(parseFloat(UTILS.truncateDecimals(feeStepOne, 6)))
         feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
-        leftData = {color: colors.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
+        leftData = {
+          color: THEME.COLORS.ACCENT_RED,
+          syntax: strings.enUS['fragment_transaction_expense']}
       } else { // do not show fee, because token
         amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
         feeSyntax = ''
-        leftData = {color: colors.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
+        leftData = {
+          color: THEME.COLORS.ACCENT_RED,
+          syntax: strings.enUS['fragment_transaction_expense']}
       }
     }
 
@@ -146,7 +153,7 @@ class AmountArea extends Component<Props, State> {
             <TextInput
               blurOnSubmit
               autoCapitalize='words'
-              placeholderTextColor={colors.gray2}
+              placeholderTextColor={THEME.COLORS.GRAY_}
               onFocus={this.props.onEnterSubcategories}
               onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
@@ -160,7 +167,7 @@ class AmountArea extends Component<Props, State> {
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
           <Picker style={[ UTILS.border(),
             {
-              backgroundColor: 'white',
+              backgroundColor: THEME.COLORS.WHITE,
               width: platform.deviceWidth,
               height: platform.deviceHeight / 3,
               position: 'absolute',
@@ -168,7 +175,7 @@ class AmountArea extends Component<Props, State> {
               left: -20
             }
           ]}
-            itemStyle={{fontFamily: 'SourceSansPro-Black', color: colors.gray1, fontSize: 30, paddingBottom: 14}}
+            itemStyle={{fontFamily: 'SourceSansPro-Black', color: THEME.COLORS.GRAY_1, fontSize: 30, paddingBottom: 14}}
             selectedValue={this.props.type.key}
             onValueChange={(itemValue) => this.props.selectCategory({itemValue})}>
             {categories.map((x) => (
@@ -184,7 +191,7 @@ class AmountArea extends Component<Props, State> {
               numberOfLines={3}
               defaultValue={notes}
               style={[styles.notesInput]}
-              placeholderTextColor={colors.gray2}
+              placeholderTextColor={THEME.COLORS.GRAY_}
               placeholder={strings.enUS['transaction_details_notes_title']}
               autoCapitalize='sentences'
               autoCorrect={false}
