@@ -138,6 +138,8 @@ export const styles = {
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
   },
   addressInput: {
+    borderBottomColor: THEME.COLORS.GRAY_2,
+    borderBottomWidth: 1,
     height: 26,
     textAlign: 'center',
     fontSize: 20,
@@ -186,7 +188,10 @@ export const styles = {
     elevation: 1015
   },
   underlay: {
-    color: THEME.COLORS.SECONDARY
+    color: THEME.COLORS.GRAY_1
+  },
+  doneUnderlay: {
+    color: THEME.COLORS.PRIMARY
   }
 }
 export default StyleSheet.create(styles)
