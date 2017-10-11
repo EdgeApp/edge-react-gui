@@ -17,16 +17,6 @@ export default class AutoLogoutModal extends Component {
     }
   }
 
-  onDone = () => {
-    this.setState({showModal: false})
-    this.props.onDone(this.state.autoLogoutTimeInMinutes)
-  }
-
-  onCancel = () => {
-    this.setState({showModal: false})
-    this.props.onCancel()
-  }
-
   render () {
     const modalBottom = <ModalButtons
       onDone={() => this.onDone(this.state.autoLogoutTimeInMinutes)}
@@ -41,6 +31,16 @@ export default class AutoLogoutModal extends Component {
       headerSubtext={'Select time before auto logout'}
       modalMiddle={<TextInput onSubmitEditing={this.onDone}
         onChangeText={(autoLogoutTimeInMinutes) => this.setState({autoLogoutTimeInMinutes})} />}
-      modalBottom={modalBottom}/>
+      modalBottom={modalBottom} />
+  }
+
+  onDone = () => {
+    this.setState({showModal: false})
+    this.props.onDone(this.state.autoLogoutTimeInMinutes)
+  }
+
+  onCancel = () => {
+    this.setState({showModal: false})
+    this.props.onCancel()
   }
 }
