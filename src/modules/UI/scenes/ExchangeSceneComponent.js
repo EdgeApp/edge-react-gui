@@ -6,8 +6,7 @@ import CryptoExchangeConnector
   from '../../../connectors/components/CryptoExchangeRateConnector'
 import {Button, ScrollView, View} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../styles/indexStyles'
-import CryptoExchangeFlipInputWrapperComponent
-  from '../components/FlipInput/CryptoExchangeFlipInputWrapperComponent'
+import CryptoExchangeFlipConnector from '../../../connectors/components/CryptoExchangeFlipConnector'
 import {PrimaryButton} from '../components/Buttons/index'
 import WalletListModal from '../../UI/components/WalletListModal/WalletListModalConnector'
 
@@ -68,7 +67,7 @@ export default class ExchangeSceneComponent extends Component {
         >
           <CryptoExchangeConnector style={style.exchangeRateBanner} />
           <View style={style.shim} />
-          <CryptoExchangeFlipInputWrapperComponent
+          <CryptoExchangeFlipConnector
             style={style.flipWrapper}
             uiWallet={this.props.fromWallet}
             whichWallet={Constants.FROM}
@@ -78,7 +77,7 @@ export default class ExchangeSceneComponent extends Component {
           <View style={style.shim} />
           <Button title={'swap'} onPress={this.flipThis.bind(this)} />
           <View style={style.shim} />
-          <CryptoExchangeFlipInputWrapperComponent
+          <CryptoExchangeFlipConnector
             style={style.flipWrapper}
             whichWallet={Constants.TO}
             launchWalletSelector={this.launchWalletSelector.bind(this)}
