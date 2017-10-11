@@ -1,35 +1,41 @@
 import React, {Component} from 'react'
 import {TouchableHighlight, View} from 'react-native'
 
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import FormattedText from '../../../components/FormattedText/FormattedText.ui'
 
-import styles from '../../../components/Modal/style'
+import styles, {styles as styleRaw} from '../../../components/Modal/style'
+
+const CANCEL_TEXT = strings.enUS['string_cancel_cap']
+const DONE_TEXT   = strings.enUS['calculator_done']
 
 export default class ModalButtons extends Component {
   render () {
-    const {onDone, onCancel} = this.props
-    return (
-      <View style={[styles.buttonsWrap]}>
+    const {
+      onDone,
+      onCancel
+    } = this.props
 
-        <TouchableHighlight onPress={onCancel} style={[styles.cancelButtonWrap, styles.stylizedButton]}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.cancelButton, styles.stylizedButtonText]}>
-              {sprintf(strings.enUS['string_cancel_cap'])}
-            </FormattedText>
-          </View>
-        </TouchableHighlight>
+    return <View style={[styles.buttonsWrap]}>
+      <TouchableHighlight style={[styles.cancelButtonWrap, styles.stylizedButton]}
+        underlayColor={styleRaw.cancelUnderlay.color}
+        onPress={onCancel}>
+        <View style={styles.stylizedButtonTextWrap}>
+          <FormattedText style={[styles.stylizedButtonText]}>
+            {CANCEL_TEXT}
+          </FormattedText>
+        </View>
+      </TouchableHighlight>
 
-        <TouchableHighlight onPress={onDone} style={[styles.doneButtonWrap, styles.stylizedButton]}>
-          <View style={styles.stylizedButtonTextWrap}>
-            <FormattedText style={[styles.doneButton, styles.stylizedButtonText]}>
-              {sprintf(strings.enUS['calculator_done'])}
-            </FormattedText>
-          </View>
-        </TouchableHighlight>
-
-      </View>
-    )
+      <TouchableHighlight style={[styles.doneButtonWrap, styles.stylizedButton]}
+        underlayColor={styleRaw.doneUnderlay.color}
+        onPress={onDone}>
+        <View style={styles.stylizedButtonTextWrap}>
+          <FormattedText style={[styles.stylizedButtonText]}>
+            {DONE_TEXT}
+          </FormattedText>
+        </View>
+      </TouchableHighlight>
+    </View>
   }
 }
