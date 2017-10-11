@@ -52,10 +52,9 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(refreshWallet(walletId))
     },
 
-    onNewTransactions (walletId: string, transactions: Array<AbcTransaction>, currencyCode: string) {
+    onNewTransactions (walletId: string, transactions: Array<AbcTransaction>) {
       const callbackDetails = {
         walletId,
-        currencyCode,
         transactions
       }
       console.log('onNewTransactions', callbackDetails)
@@ -74,7 +73,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(refreshWallet(walletId))
     },
 
-    onWalletNameChanged (walletId: string, walletName: string) {
+    onWalletNameChanged (walletId: string, walletName: string | null) {
       const callbackDetails = {
         walletId,
         walletName
