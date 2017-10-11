@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {View} from 'react-native'
 import PropTypes from 'prop-types'
 import styles from './style'
@@ -11,6 +10,7 @@ import {border as b} from '../../../utils'
 
 export default class StylizedModal extends Component {
   render () {
+    const {headerText, headerSubtext} = this.props
     return (
       <Modal style={[styles.topLevelModal, {marginLeft: 20, marginRight: 20, marginTop: 20}, b('yellow')]}
         isVisible={this.props.visibilityBoolean}>
@@ -18,12 +18,12 @@ export default class StylizedModal extends Component {
           <View style={[styles.modalBody, b('purple')]}>
             <View style={[styles.modalTopTextWrap, b('blue')]}>
               <T style={[styles.modalTopText, b('yellow')]}>
-                {sprintf(strings.enUS[this.props.headerText])}
+                {strings.enUS[headerText]}
               </T>
               {
                 this.props.headerSubtext
                 && <T style={[styles.modalTopSubtext, b('green')]}>
-                  {this.props.headerSubtext || ''}
+                  {headerSubtext ? strings.enUS[headerSubtext] : ''}
                 </T>
               }
 

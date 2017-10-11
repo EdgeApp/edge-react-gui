@@ -1,3 +1,3 @@
-import Modal from 'Modal.ui'
+import Modal from './Modal.ui'
 
 export default Modal

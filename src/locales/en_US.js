@@ -834,7 +834,11 @@ const strings = {
   // New items added before Localization overhaul.- Need Other than English Translation
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
-  title_Password_Recovery: 'Password Recovery'
+  title_Password_Recovery: 'Password Recovery',
+
+  // help modal
+  help_modal_title: 'Crypto Wallet and Directory',
+  help_version: 'Version'
 }
 
 export default strings
