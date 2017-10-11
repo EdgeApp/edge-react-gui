@@ -1,14 +1,15 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   shareButton: {
     flex: 1,
-    backgroundColor: THEME.COLORS.TRANSPARENT,
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
     alignItems: 'stretch',
     justifyContent: 'center',
-    paddingVertical: 7    ,
-    flexDirection: 'row'
+    paddingVertical: 7,
+    flexDirection: 'row',
+    borderColor: THEME.COLORS.GRAY_4,
   },
   outerView: {
     alignItems: 'center',
@@ -25,6 +26,11 @@ export default StyleSheet.create({
   },
   text: {
     fontSize: 17,
-    color: 'rgba(255,255,255,1)'
+    color: THEME.COLORS.WHITE
+  },
+  underlay: {
+    color: THEME.COLORS.SECONDARY
   }
-})
+}
+
+export default StyleSheet.create(styles)
