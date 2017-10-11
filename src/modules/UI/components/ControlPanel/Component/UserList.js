@@ -1,65 +1,52 @@
 import React, {Component} from 'react'
 import {
   Alert,
-  Platform,
   View,
   ScrollView,
-  TouchableNativeFeedback,
-  TouchableOpacity
+  TouchableHighlight
 } from 'react-native'
-import {Text, Icon} from 'native-base'
+import {
+  Text,
+  Icon
+} from 'native-base'
 import _ from 'lodash'
 
 import styles from '../style'
-const platform = Platform.OS
 
 export default class UserList extends Component {
+  render () {
+    return <ScrollView style={styles.userList.container}>
+      {this.rows()}
+    </ScrollView>
+  }
 
-  _handlePressUserSelect = (username) => () =>
-    this.props.logout(username)
+  rows = () => _.map(this.props.usernames, (username, index) =>
+    <View key={index} style={styles.userList.row}>
+      <TouchableHighlight style={styles.userList.text}
+        underlayColor={styles.underlay.color}
+        onPress={this.handlePressUserSelect(username)}>
+        <Text>
+          {username}
+        </Text>
+      </TouchableHighlight>
 
-  _handleDeleteLocalAccount = (username) => () =>
-    this.props.deleteLocalAccount(username)
+      <TouchableHighlight style={styles.userList.icon}
+        underlayColor={styles.underlay.color}
+        onPress={this.handlePressDeleteLocalAccount(username)}>
+        <Icon name='close' />
+      </TouchableHighlight>
+    </View>
+  )
 
-  _handlePressDeleteLocalAccount = (username) => () =>
+  handlePressUserSelect = (username) => () => this.props.logout(username)
+  handleDeleteLocalAccount = (username) => () => this.props.deleteLocalAccount(username)
+  handlePressDeleteLocalAccount = (username) => () =>
     Alert.alert('Delete Account', 'Delete \''
       + username
       + '\' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days',
-      [{text: 'No', style: 'cancel'}, {text: 'Yes', onPress: () => this._handleDeleteLocalAccount(username)}])
-
-  rows = () => _.map(this.props.usernames, (username, index) => {
-    if (platform === 'android') {
-      return (
-        <View key={index} style={styles.userList.row}>
-          <TouchableNativeFeedback onPress={this._handlePressUserSelect(username)}
-            background={TouchableNativeFeedback.SelectableBackground()} >
-            <Text style={styles.userList.text}>{username}</Text>
-          </TouchableNativeFeedback>
-          <TouchableOpacity style={styles.userList.icon} onPress={this._handlePressDeleteLocalAccount(username)}>
-            <Icon name='close' />
-          </TouchableOpacity>
-        </View>
-      )
-    }
-    if (platform !== 'android') {
-      return (
-        <View key={index} style={styles.userList.row}>
-          <TouchableOpacity style={styles.userList.text} onPress={this._handlePressUserSelect(username)}>
-            <Text>{username}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.userList.icon} onPress={this._handlePressDeleteLocalAccount(username)}>
-            <Icon name='close' />
-          </TouchableOpacity>
-        </View>
-      )
-    }
-  })
-
-  render () {
-    return (
-      <ScrollView style={styles.userList.container}>
-        {this.rows()}
-      </ScrollView>
-    )
-  }
+      [{
+        text: 'No', style: 'cancel'
+      }, {
+        text: 'Yes', onPress: () => this.handleDeleteLocalAccount(username)
+      }])
 }
