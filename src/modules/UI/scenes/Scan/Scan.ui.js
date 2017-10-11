@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {
   ActivityIndicator,
   Alert,
@@ -14,6 +13,7 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import AddressModal from './components/AddressModalConnector'
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import {Actions} from 'react-native-router-flux'
@@ -24,8 +24,6 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from './style'
-
-import AddressModal from './components/AddressModalConnector'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
@@ -39,6 +37,15 @@ type Props = {
   toggleWalletListModal(): void,
   updateParsedURI(AbcParsedUri): void
 }
+
+
+const HEADER_TEXT     = strings.enUS['send_scan_header_text']
+
+const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
+const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
+const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
+const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
+const FLASH_TEXT    = strings.enUS['fragment_send_flash']
 
 export default class Scan extends Component<any, any> {
   static defaultProps: any;
@@ -120,13 +127,14 @@ export default class Scan extends Component<any, any> {
         <Camera
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
-          ref='cameraCapture'
-        />
+          ref='cameraCapture' />
       )
     } else if (this.state.cameraPermission === false) {
       return (
         <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
-          <Text>To scan QR codes, enable camera permission in your system settings</Text>
+          <Text>
+            {DENIED_PERMISSION_TEXT}
+          </Text>
         </View>
       )
     } else {
@@ -147,7 +155,9 @@ export default class Scan extends Component<any, any> {
           <AddressModal />
 
           <View style={[styles.overlayTop]}>
-            <T style={[styles.overlayTopText]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
+            <T style={[styles.overlayTopText]}>
+              {HEADER_TEXT}
+            </T>
           </View>
           <View style={[styles.overlayBlank]} />
 
@@ -156,33 +166,40 @@ export default class Scan extends Component<any, any> {
             <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon]} />
-                <T style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</T>
+                <T style={[styles.transferButtonText, styles.bottomButtonText]}>
+                  {TRANSFER_TEXT}
+                </T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton]} onPress={this._onToggleAddressModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon]} />
-                <T style={[styles.addressButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
+                <T style={[styles.addressButtonText, styles.bottomButtonText]}>
+                  {ADDRESS_TEXT}
+                </T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon]} />
-                <T style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</T>
+                <T style={[styles.bottomButtonText]}>
+                  {PHOTOS_TEXT}
+                </T>
               </View>
             </TouchableHighlight>
 
             <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
                 <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon]} />
-                <T style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</T>
+                <T style={[styles.flashButtonText, styles.bottomButtonText]}>
+                  {FLASH_TEXT}
+                </T>
               </View>
             </TouchableHighlight>
 
           </Gradient>
-
         </View>
       </View>
     )
