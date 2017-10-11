@@ -18,9 +18,7 @@ export default class WalletListModalHeader extends Component<any> {
     this.props.type = 'from'
   }
 
-  _onSearchExit = () => {
-    this.props.disableWalletListModalVisibility()
-  }
+  onSearchExit = this.props.disableWalletListModalVisibility
 
   render () {
     const headerSyntax = (this.props.type === 'from')
@@ -31,13 +29,17 @@ export default class WalletListModalHeader extends Component<any> {
         <View style={[styles.headerContent, b()]}>
 
           <View style={[styles.headerTextWrap, b()]}>
-            <T style={[styles.headerText, {color: THEME.COLORS.WHITE}, b()]}>
+            <T style={[
+              styles.headerText,
+              {color: THEME.COLORS.WHITE},
+              b()
+            ]}>
               {strings.enUS[headerSyntax]}
             </T>
           </View>
 
           <TouchableHighlight style={[styles.modalCloseWrap, b()]}
-            onPress={this._onSearchExit}>
+            onPress={this.onSearchExit}>
             <Ionicon style={[styles.donebutton, b()]}
               name='ios-close'
               size={26}
