@@ -8,7 +8,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
-import * as Constants from '../../../../constants'
+import * as Constants from '../../../../constants/indexConstants'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'

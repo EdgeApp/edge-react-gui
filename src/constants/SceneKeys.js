@@ -15,4 +15,5 @@ export const BTC_SETTINGS = 'btcSettings'
 export const BCH_SETTINGS = 'bchSettings'
 export const ETH_SETTINGS = 'ethSettings'
 export const LTC_SETTINGS = 'ltcSettings'
-export const DIRECTORY= 'directory'
+export const DIRECTORY= 'directory' // TODO Allen: I think this has been removed, If so : remove
+export const EXCHANGE = 'exchange'

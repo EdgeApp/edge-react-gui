@@ -12,7 +12,7 @@ import {MenuContext} from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
-import * as Constants from '../constants'
+import * as Constants from '../constants/indexConstants'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
@@ -24,6 +24,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
+import ExchangeConnector from '../connectors/scene/ExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
@@ -137,7 +138,10 @@ export default class Main extends Component<Props, State> {
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
 
+
+                  <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.EXCHANGE}  component={ExchangeConnector} title='Exchange' animation={'fade'} duration={600} />
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.WALLET_LIST}   component={WalletList}   title='Wallets'       animation={'fade'} duration={600} initial/>
+
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
 
                   <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_LIST}    component={TransactionListConnector} title='Transactions'        animation={'fade'} duration={600} />

@@ -18,6 +18,7 @@ import exchangeSelected from '../../../../assets/images/tabbar/exchange_selected
 import more from '../../../../assets/images/tabbar/more.png'
 import moreSelected from '../../../../assets/images/tabbar/more_selected.png'
 import styles from './styles.js'
+import * as Constants from '../../../../constants/indexConstants'
 
 export default class TabBar extends Component {
 
@@ -70,12 +71,12 @@ export default class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={Actions.transactionList}
-              active={this.props.routes.scene.name === 'transactionList'}>
+              onPress={Actions[Constants.EXCHANGE]}
+              active={this.props.routes.scene.name === Constants.EXCHANGE}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
-                source={this.props.routes.scene.name === 'transactionList' ? exchangeSelected : exchange} />
-              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'transactionList' && styles.activeButton]}>
+                source={this.props.routes.scene.name === Constants.EXCHANGE ? exchangeSelected : exchange} />
+              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === Constants.EXCHANGE && styles.activeButton]}>
                 {sprintf(strings.enUS['drawer_transactions'])}
               </T>
             </Button>

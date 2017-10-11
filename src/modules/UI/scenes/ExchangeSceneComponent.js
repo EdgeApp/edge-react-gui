@@ -1,0 +1,103 @@
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import Gradient from '../../UI/components/Gradient/Gradient.ui'
+import CryptoExchangeConnector
+  from '../../../connectors/components/CryptoExchangeRateConnector'
+import {Button, ScrollView, View} from 'react-native'
+import {CryptoExchangeSceneStyle} from '../../../styles/indexStyles'
+import CryptoExchangeFlipInputWrapperComponent
+  from '../components/FlipInput/CryptoExchangeFlipInputWrapperComponent'
+import {PrimaryButton} from '../components/Buttons/index'
+import WalletListModal from '../../UI/components/WalletListModal/WalletListModalConnector'
+
+
+export default class ExchangeSceneComponent extends Component {
+  componentWillMount () {
+    this.setState({
+      showModal:false
+    })
+    if (this.props.wallets.length > 1) {
+      this.props.selectFromWallet(this.props.intialWalletOne)
+      this.props.selectToWallet(this.props.intialWalletTwo)
+    } else if (this.props.wallets.length > 0) {
+      this.props.selectFromWallet(this.props.intialWalletOne)
+    }
+  }
+  componentWillReceiveProps (nextProps) {
+    if (!nextProps.fromWallet && nextProps.intialWalletOne) {
+      this.props.selectFromWallet(nextProps.intialWalletOne)
+    }
+    if (!nextProps.toWallet && nextProps.intialWalletTwo) {
+      this.props.selectToWallet(nextProps.intialWalletTwo)
+    }
+  }
+  flipThis = () => {
+    this.props.swapFromAndToWallets()
+  }
+
+  launchWalletSelector = (arg) => {
+    console.log('launch selector ' + arg)
+    this.setState({
+      showModal:true
+    })
+  }
+
+  renderDropUp = () => {
+    if (this.state.showModal) {
+      return (
+        <WalletListModal
+          topDisplacement={'33'}
+          selectionFunction={this.selectionFunction}
+          type='from'
+        />
+      )
+    }
+    return null
+  }
+
+  selectionFunction = (arg) => {
+    console.log('SELECTION FUNCTION ' + arg)
+    this.setState({
+      showModal:false
+    })
+  }
+
+  render () {
+    const style = CryptoExchangeSceneStyle
+    return (
+      <Gradient style={[style.scene]}>
+        <ScrollView
+          style={[style.mainScrollView]}
+          keyboardShouldPersistTaps={'always'}
+          contentContainerStyle={style.scrollViewContentContainer}
+        >
+          <CryptoExchangeConnector style={style.exchangeRateBanner} />
+          <View style={style.shim} />
+          <CryptoExchangeFlipInputWrapperComponent
+            style={style.flipWrapper}
+            uiWallet={this.props.fromWallet}
+            whichWallet={'top'}
+            launchWalletSelector={this.launchWalletSelector.bind(this)}
+            fee={this.props.fee}
+          />
+          <View style={style.shim} />
+          <Button title={'swap'} onPress={this.flipThis.bind(this)} />
+          <View style={style.shim} />
+          <CryptoExchangeFlipInputWrapperComponent
+            style={style.flipWrapper}
+            whichWallet={'bottom'}
+            launchWalletSelector={this.launchWalletSelector.bind(this)}
+            uiWallet={this.props.toWallet}
+          />
+          <View style={style.shim} />
+          <PrimaryButton text={'DO THIS'} />
+        </ScrollView>
+        {this.renderDropUp()}
+      </Gradient>
+    )
+  }
+}
+
+ExchangeSceneComponent.propTypes = {
+  exchangeRate: PropTypes.string
+}

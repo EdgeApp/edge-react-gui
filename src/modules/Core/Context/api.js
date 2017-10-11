@@ -32,3 +32,5 @@ export const isPinReLoginEnabled = (context, username) =>
 
 export const requestOTPReset = (context, username, otpResetToken) =>
   context.requestOTPReset(username, otpResetToken)
+
+  // TODO Allen: Function that returns exchange rate.

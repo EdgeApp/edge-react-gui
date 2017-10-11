@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import strings from '../../../../../locales/default'
 import BackButton from './BackButton.ui'
-import * as Constants from '../../../../../constants'
+import * as Constants from '../../../../../constants/indexConstants'
 
 const BACK_TEXT = strings.enUS['back_button_text']
 const CANCEL_TEXT = strings.enUS['string_cancel_cap']
