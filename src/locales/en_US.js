@@ -323,7 +323,7 @@ const strings = {
   send_confirmation_title: 'Send Confirmation',
   send_confirmation_from_title: 'From:',
   send_confirmation_to_title: 'To:',
-  send_confirmation_max_button_title: 'Max',
+  send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_enter_send_pin: 'Enter 4 Digit PIN',
   send_confirmation_enter_send_password: 'Password',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
@@ -820,7 +820,7 @@ const strings = {
 
   // Transaction Details Page
   title_Transaction_Details: 'Transaction Details',
-  fragment_tx_detail_mining_fee: '+ %u (Fee)',
+  fragment_tx_detail_mining_fee: '+ %f (Fee)',
 
   // Not new to react-gui (I don't think), not sure why at end of JSON
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',

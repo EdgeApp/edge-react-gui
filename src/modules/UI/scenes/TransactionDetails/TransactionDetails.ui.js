@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {
   Animated,
   Easing,
@@ -387,8 +386,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
   }
 
+
   render () {
-    let leftData, feeSyntax, type
+    let type
 
     const types = {
       exchange: {
@@ -423,13 +423,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       type = types[this.state.type]
     }
 
-    if (this.state.direction === 'receive') {
-      feeSyntax = ''
-      leftData = {color: c.accentGreen, syntax: strings.enUS['fragment_transaction_income']}
-    } else {
-      feeSyntax = sprintf(strings.enUS['fragmet_tx_detail_mining_fee'], this.props.abcTransaction.networkFee)
-      leftData = {color: c.accentRed, syntax: strings.enUS['fragment_transaction_expense']}
-    }
     const color = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
 
@@ -552,14 +545,13 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                 onFocusNotes={this.onFocusNotes}
                 onBlurNotes={this.onBlurNotes}
-                leftData={leftData}
                 direction={this.state.direction}
-                feeSyntax={feeSyntax}
                 color={color}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                 openModalFxn={this.amountAreaOpenModal}
+                selectedWallet={this.props.selectedWallet}
               />
             </View>
           </View>
