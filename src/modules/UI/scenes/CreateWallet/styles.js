@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
   cancel: {
     flex: 1,
     marginRight: 2,
-    backgroundColor: '#909091',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3

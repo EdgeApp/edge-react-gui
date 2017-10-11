@@ -6,14 +6,27 @@ import s from './style'
 import {colors as c} from '../../../../theme/variables/airbitz'
 
 class PrimaryButton extends Component {
+  constructor (props) {
+    super(props)
+    this.style = [s.primaryButtonWrap, s.stylizedButton]
+
+    if (props.style) {
+      if (Array.isArray(props.style)) {
+        this.style = this.style.concat(props.style)
+      } else {
+        this.style.push(props.style)
+      }
+    }
+  }
+
   render () {
     // console.log('rendering PrimaryButton, this is: ', this)
     return (
-      <TouchableHighlight onPress={this.props.onPressFunction} underlayColor={c.primary} style={[s.primaryButtonWrap, s.stylizedButton, this.props.style]}>
+      <TouchableHighlight {...this.props} onPress={this.props.onPressFunction} underlayColor={c.primary} style={[this.style, this.props.style]}>
         <View style={s.stylizedButtonTextWrap}>
           {this.props.processingFlag
             ? (this.props.processingElement)
-            :            (<T style={[s.primaryButton, s.stylizedButtonText]}>
+            :    (<T style={[s.primaryButton, s.stylizedButtonText]}>
               {this.props.text}
             </T>
             )
@@ -32,8 +45,8 @@ class SecondaryButton extends Component {
   render () {
     // console.log('rendering SecondaryButton, this is: ', this)
     return (
-      <TouchableHighlight disabled={this.props.disabled} onPress={this.props.onPressFunction} underlayColor={c.gray1} style={[s.secondaryButtonWrap, s.stylizedButton, this.props.style]}>
-        <View style={s.stylizedButtonTextWrap}>
+      <TouchableHighlight disabled={this.props.disabled} onPress={this.props.onPressFunction} underlayColor={c.gray1} style={[s.stylizedButton, s.secondaryButtonWrap]}>
+        <View style={s.stylizedButtonTextWrap} {...this.props}>
           <T style={[s.secondaryButton, s.stylizedButtonText]}>
             {this.props.text || 'Cancel'}
           </T>
