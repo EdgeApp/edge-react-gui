@@ -330,10 +330,10 @@ export const styles = {
     opacity: THEME.OPACITY.ACTIVE
   },
   walletRowUnderlay: {
-    color: THEME.COLORS.GRAY_3
+    color: THEME.COLORS.ROW_PRESSED
   },
   tokenRowUnderlay: {
-    color: THEME.COLORS.GRAY_3
+    color: THEME.COLORS.ROW_PRESSED
   },
   emptyRow: {
     height: 50,
@@ -346,7 +346,7 @@ export const styles = {
     borderColor: THEME.COLORS.GRAY_4
   },
   emptyRowUnderlay: {
-    color: THEME.COLORS.GRAY_3
+    color: THEME.COLORS.ROW_PRESSED
   }
 }
 

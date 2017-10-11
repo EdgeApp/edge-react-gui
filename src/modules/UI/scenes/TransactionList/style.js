@@ -1,8 +1,7 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
-
+export const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch'
@@ -121,14 +120,15 @@ export default StyleSheet.create({
     borderRadius: 3
   },
   requestBox: {
-    backgroundColor: THEME.COLORS.PRIMARY,
-    opacity: THEME.OPACITY.LOW,
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 8,
-    marginRight: 1,
-    flexDirection: 'row'
+    marginRight: 2,
+    flexDirection: 'row',
+    borderColor: THEME.COLORS.GRAY_4,
+    // borderWidth: 0.1,
   },
   requestWrap: {
     flexDirection: 'row',
@@ -141,14 +141,16 @@ export default StyleSheet.create({
     marginRight: 10
   },
   sendBox: {
-    backgroundColor: THEME.COLORS.BLACK,
-    opacity: THEME.OPACITY.LOW,
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
+    // opacity: THEME.OPACITY.MID,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginLeft: 1,
+    marginLeft: 2,
     marginRight: 8,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    borderColor: THEME.COLORS.GRAY_4,
+    // borderWidth: 0.1,
   },
   sendWrap: {
     flexDirection: 'row',
@@ -192,15 +194,11 @@ export default StyleSheet.create({
     borderBottomColor: THEME.COLORS.GRAY_3,
     padding: 10,
     paddingRight: 30,
-    paddingLeft: 3,
-    marginLeft: 15
+    paddingLeft: 15,
   },
   singleTransactionWrap: {
     flexDirection: 'column',
-    flex: 1
-  },
-  bottomDivider: {
-
+    flex: 1,
   },
   singleDateArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
@@ -271,5 +269,13 @@ export default StyleSheet.create({
   },
   accentRed: {
     color: THEME.COLORS.ACCENT_RED
+  },
+  underlay: {
+    color: THEME.COLORS.SECONDARY
+  },
+  transactionUnderlay: {
+    color: THEME.COLORS.ROW_PRESSED
   }
-})
+}
+
+export default StyleSheet.create(styles)
