@@ -50,7 +50,7 @@ export const styles = {
     paddingHorizontal: 10
   },
   tertiaryUnderlay: {
-    color: THEME.COLORS.SECONDARY
+    color: THEME.COLORS.GRAY_3
   }
 }
 

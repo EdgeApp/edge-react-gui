@@ -5,24 +5,50 @@ import {
 } from 'react-native'
 import ModalStyle from '../../../components/Modal/style'
 import {border} from '../../../../utils.js'
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 import T from '../../../components/FormattedText'
+import {styles as styleRaw} from '../style'
 
-export class AddressInputButtons extends Component { // this component is for the button area of the Recipient Address Modal
+const CANCEL_TEXT = strings.enUS['string_cancel_cap']
+const DONE_TEXT   = strings.enUS['string_done_cap']
+
+export class AddressInputButtons extends Component {
   render () {
     return (
       <View style={[ModalStyle.buttonsWrap, border('gray')]}>
-        <TouchableHighlight onPress={this.props.onCancel} style={[ModalStyle.cancelButtonWrap, ModalStyle.stylizedButton]}>
+
+        <TouchableHighlight style={[
+          ModalStyle.cancelButtonWrap,
+          ModalStyle.stylizedButton
+        ]}
+          underlayColor={styleRaw.underlay.color}
+          onPress={this.props.onCancel}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
-            <T style={[ModalStyle.cancelButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_cancel_cap'])}</T>
+            <T style={[
+              ModalStyle.cancelButton,
+              ModalStyle.stylizedButtonText
+            ]}>
+              {CANCEL_TEXT}
+            </T>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight onPress={this.props.onSubmit} style={[ModalStyle.doneButtonWrap, ModalStyle.stylizedButton]}>
+
+        <TouchableHighlight style={[
+          ModalStyle.doneButtonWrap,
+          ModalStyle.stylizedButton
+        ]}
+          underlayColor={styleRaw.doneUnderlay.color}
+          onPress={this.props.onSubmit}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
-            <T style={[ModalStyle.doneButton, ModalStyle.stylizedButtonText]}>{sprintf(strings.enUS['string_done_cap'])}</T>
+            <T style={[
+              ModalStyle.doneButton,
+              ModalStyle.stylizedButtonText
+            ]}>
+              {DONE_TEXT}
+            </T>
           </View>
         </TouchableHighlight>
+
       </View>
     )
   }
