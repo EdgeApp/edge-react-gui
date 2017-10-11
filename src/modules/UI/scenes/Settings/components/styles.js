@@ -24,7 +24,7 @@ export const styles = {
   rowContainer: {
     height: 44,
     borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_4,
+    borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,

@@ -16,33 +16,26 @@ class Row extends Component {
       onPress
     } = this.props
 
-    return (
-      <TouchableHighlight style={[styles.rowContainer, debugBorder()]}
-        undelayColor={styleRaw.underlay.color}
-        onPress={onPress}>
+    const icon = isSelected
+      ? <IonIcon style={[styles.radioButton, debugBorder()]}
+        name='ios-radio-button-on' />
+      : <IonIcon style={[styles.radioButton, styles.radioButtonSelected, debugBorder()]}
+        name='ios-radio-button-off' />
 
-        <View style={[styles.rowTextRow, debugBorder()]}>
-          <View style={[styles.rowLeftContainer, debugBorder()]}>
-            <T style={[styles.rowLeftText, debugBorder()]}>{left}</T>
-          </View>
-          {
-            isSelected
-            ? <IonIcon style={[
-              styles.radioButton,
-              debugBorder()
-            ]}
-              name='ios-radio-button-on' />
-            : <IonIcon style={[
-              styles.radioButton,
-              styles.radioButtonSelected,
-              debugBorder()
-            ]}
-              name='ios-radio-button-off' />
-          }
+    return <TouchableHighlight style={[styles.rowContainer, debugBorder()]}
+      underlayColor={styleRaw.underlay.color}
+      onPress={onPress}>
+
+      <View style={[styles.rowTextRow, debugBorder()]}>
+        <View style={[styles.rowLeftContainer, debugBorder()]}>
+          <T style={[styles.rowLeftText, debugBorder()]}>
+            {left}
+          </T>
         </View>
+        {icon}
+      </View>
 
-      </TouchableHighlight>
-    )
+    </TouchableHighlight>
   }
 }
 
