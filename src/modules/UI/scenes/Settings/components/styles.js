@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
     fontSize: 16
@@ -68,5 +68,10 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT,
     zIndex: 1015,
     elevation: 1015
+  },
+  underlay: {
+    color: THEME.COLORS.GRAY_4
   }
-})
+}
+
+export default StyleSheet.create(styles)

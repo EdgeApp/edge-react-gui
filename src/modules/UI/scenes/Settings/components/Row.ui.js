@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {
-  TouchableOpacity,
+  TouchableHighlight,
   View
 } from 'react-native'
 import T from '../../../components/FormattedText'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import styles from './styles'
+import styles, {styles as styleRaw} from './styles'
 import {border as debugBorder} from '../../../../utils'
 
 class Row extends Component {
@@ -17,7 +17,8 @@ class Row extends Component {
     } = this.props
 
     return (
-      <TouchableOpacity style={[styles.rowContainer, debugBorder()]}
+      <TouchableHighlight style={[styles.rowContainer, debugBorder()]}
+        undelayColor={styleRaw.underlay.color}
         onPress={onPress}>
 
         <View style={[styles.rowTextRow, debugBorder()]}>
@@ -40,7 +41,7 @@ class Row extends Component {
           }
         </View>
 
-      </TouchableOpacity>
+      </TouchableHighlight>
     )
   }
 }

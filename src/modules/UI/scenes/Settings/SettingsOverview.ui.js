@@ -110,20 +110,17 @@ export default class SettingsOverview extends Component {
           leftText={CHANGE_PASSWORD_TEXT}
           scene={'changePassword'}
           routeFunction={this.onPressChangePasswordRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
+          right={<Icon name='arrow-right' size={18} color='#58595C' />} />
         <RowRoute
           leftText={CHANGE_PIN_TEXT}
           scene={'changePassword'}
           routeFunction={this.onPressChangePinRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
+          right={<Icon name='arrow-right' size={18} color='#58595C' />} />
         <RowRoute
           leftText={CHANGE_RECOVERY_TEXT}
           scene={'changePassword'}
           routeFunction={this.onPressRecoverPasswordRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
+          right={<Icon name='arrow-right' size={18} color='#58595C' />} />
 
         <Gradient style={[styles.unlockRow]}>
           <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -156,8 +153,7 @@ export default class SettingsOverview extends Component {
           <RowRoute
             leftText={SEND_LOGS_TEXT}
             scene={'changePassword'}
-            routeFunction={this.showSendLogsModal}
-           />
+            routeFunction={this.showSendLogsModal} />
 
           <View style={[styles.debugArea, b('green')]}>
             <PrimaryButton text={DEBUG_TEXT} onPressFunction={this.onPressDebug} />
