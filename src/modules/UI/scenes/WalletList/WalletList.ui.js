@@ -180,18 +180,35 @@ export default class WalletList extends Component<any, {
 
             <View style={[styles.donePlusContainer, UTILS.border()]}>
 
-              <Animated.View style={[styles.doneContainer,  UTILS.border(), {opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
-                <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]}
-                  onPress={() => this.disableSorting()}>
+              <Animated.View style={[
+                styles.doneContainer,
+                UTILS.border(),
+                {
+                  opacity: this.state.sortableListOpacity,
+                  zIndex: this.state.sortableListZIndex
+                }]}>
+                <TouchableOpacity style={[
+                  styles.walletsBoxDoneTextWrap
+                ]}
+                  onPress={this.disableSorting}>
                   <T style={[styles.walletsBoxDoneText]}>
                     {strings.enUS['string_done_cap']}
                   </T>
                 </TouchableOpacity>
               </Animated.View>
 
-              <Animated.View style={[styles.plusContainer, UTILS.border(), {opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
-                <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 41}]}
-                  onPress={() => Actions.createWallet()}>
+              <Animated.View style={[
+                styles.plusContainer,
+                UTILS.border(),
+                {
+                  opacity: this.state.fullListOpacity,
+                  zIndex: this.state.fullListZIndex
+                }]}>
+                <TouchableOpacity style={[
+                  styles.walletsBoxHeaderAddWallet,
+                  {width: 41}
+                ]}
+                  onPress={Actions.createWallet}>
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
