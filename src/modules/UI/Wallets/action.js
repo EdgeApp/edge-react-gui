@@ -11,9 +11,11 @@ export const SELECT_CURRENCY_CODE = PREFIX + 'SELECT_CURRENCY_CODE'
 import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
+import * as Actions from '../../../actions/indexActions'
 
 export const selectWallet = (walletId, currencyCode) =>
   (dispatch) => {
+    dispatch(Actions.selectWalletForExchange(walletId))
     dispatch(selectWalletId(walletId))
     dispatch(selectCurrencyCode(currencyCode))
   }

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import * as Constants from '../../../constants/indexConstants'
 import Gradient from '../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
   from '../../../connectors/components/CryptoExchangeRateConnector'
@@ -13,9 +14,6 @@ import WalletListModal from '../../UI/components/WalletListModal/WalletListModal
 
 export default class ExchangeSceneComponent extends Component {
   componentWillMount () {
-    this.setState({
-      showModal:false
-    })
     if (this.props.wallets.length > 1) {
       this.props.selectFromWallet(this.props.intialWalletOne)
       this.props.selectToWallet(this.props.intialWalletTwo)
@@ -36,14 +34,11 @@ export default class ExchangeSceneComponent extends Component {
   }
 
   launchWalletSelector = (arg) => {
-    console.log('launch selector ' + arg)
-    this.setState({
-      showModal:true
-    })
+    this.props.openModal(arg)
   }
 
   renderDropUp = () => {
-    if (this.state.showModal) {
+    if (this.props.showModal) {
       return (
         <WalletListModal
           topDisplacement={'33'}
@@ -68,7 +63,7 @@ export default class ExchangeSceneComponent extends Component {
       <Gradient style={[style.scene]}>
         <ScrollView
           style={[style.mainScrollView]}
-          keyboardShouldPersistTaps={'always'}
+          keyboardShouldPersistTaps={Constants.ALWAYS}
           contentContainerStyle={style.scrollViewContentContainer}
         >
           <CryptoExchangeConnector style={style.exchangeRateBanner} />
@@ -76,7 +71,7 @@ export default class ExchangeSceneComponent extends Component {
           <CryptoExchangeFlipInputWrapperComponent
             style={style.flipWrapper}
             uiWallet={this.props.fromWallet}
-            whichWallet={'top'}
+            whichWallet={Constants.FROM}
             launchWalletSelector={this.launchWalletSelector.bind(this)}
             fee={this.props.fee}
           />
@@ -85,7 +80,7 @@ export default class ExchangeSceneComponent extends Component {
           <View style={style.shim} />
           <CryptoExchangeFlipInputWrapperComponent
             style={style.flipWrapper}
-            whichWallet={'bottom'}
+            whichWallet={Constants.TO}
             launchWalletSelector={this.launchWalletSelector.bind(this)}
             uiWallet={this.props.toWallet}
           />

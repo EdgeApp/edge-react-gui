@@ -12,12 +12,15 @@ import platform from '../../../../theme/variables/platform.js'
 export default class WalletListModal extends Component<any> {
   constructor (props: any) {
     super(props)
+    console.log(this.props)
     if (!this.props.topDisplacement) {
       this.props.topDisplacement = 68
     }
   }
 
   render () {
+    console.log('Here is the next = do we have ')
+    console.log(this.props.onPress)
     return (
       <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: 38, height: (platform.deviceHeight - platform.toolbarHeight - platform.footerHeight)}]}
         animation='fadeInDown'

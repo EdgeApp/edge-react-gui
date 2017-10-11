@@ -15,7 +15,8 @@ export const mapStateToProps = (state) => {
     intialWalletTwo: wallets.length > 1 ? wallets[1] : null,
     fromWallet: state.cryptoExhange.fromWallet,
     toWallet: state.cryptoExhange.toWallet,
-    fee: state.cryptoExhange.fee
+    fee: state.cryptoExhange.fee,
+    showModal: state.cryptoExhange.walletListModalVisible
   }
 }
 
@@ -23,8 +24,7 @@ export const mapDispatchToProps = (dispatch) => ({
   selectFromWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
   selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
-  changeWalletOne:() => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
-  changeWalletTwo:() => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
+  openModal:(data: string) => dispatch(actions.openWalletSelectorForExchange(Constants.OPEN_WALLET_SELECTOR_MODAL, data))
 })
 export default connect(
   mapStateToProps,

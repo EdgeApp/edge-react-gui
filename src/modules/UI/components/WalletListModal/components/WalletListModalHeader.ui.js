@@ -23,6 +23,8 @@ export default class WalletListModalHeader extends Component<any> {
   }
 
   render () {
+    console.log('render')
+    console.log(this.props)
     const headerSyntax = (this.props.type === 'from')
       ? 'fragment_select_wallet_header_title'
       : 'fragment_send_other_wallet_header_title'
