@@ -13,7 +13,7 @@ const perfTimers = {}
 const perfCounters = {}
 
 // $FlowFixMe: suppressing this error until we can find a workaround
-console.pstart = function (label: string) {
+global.pstart = function (label: string) {
 // $FlowFixMe: suppressing this error until we can find a workaround
   if (typeof perfTimers[label] === 'undefined') {
     perfTimers[label] = Date.now()
@@ -23,7 +23,7 @@ console.pstart = function (label: string) {
 }
 
 // $FlowFixMe: suppressing this error until we can find a workaround
-console.pend = function (label: string) {
+global.pend = function (label: string) {
 // $FlowFixMe: suppressing this error until we can find a workaround
   if (typeof perfTimers[label] === 'number') {
     const elapsed = Date.now() - perfTimers[label]
@@ -35,11 +35,15 @@ console.pend = function (label: string) {
 }
 
 // $FlowFixMe: suppressing this error until we can find a workaround
-console.pcount = function (label: string) {
+global.pcount = function (label: string) {
 // $FlowFixMe: suppressing this error until we can find a workaround
-  perfCounters[label] = perfCounters[label] + 1
-  if (perfCounters[label] % 10 === 0) {
-    console.log('PCOUNT: ' + label + ': ' + perfCounters[label])
+  if (typeof perfCounters[label] === 'undefined') {
+    perfCounters[label] = 1
+  } else {
+    perfCounters[label] = perfCounters[label] + 1
+    if (perfCounters[label] % 10 === 0) {
+      console.log('PCOUNT: ' + label + ': ' + perfCounters[label])
+    }
   }
 }
 
