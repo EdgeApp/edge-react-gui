@@ -38,7 +38,8 @@ export type Props = {
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
-  currencyInfo: AbcCurrencyInfo
+  currencyInfo: AbcCurrencyInfo,
+  currencyCode: string
 }
 
 export type DispatchProps = {
@@ -529,7 +530,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 onBlurFiatFxn={this.onBlurFiat}
                 onPressFxn={this.onSaveTxDetails}
                 fiatCurrencyCode={this.props.selectedWallet.fiatCurrencyCode}
-                cryptoCurrencyCode={this.props.selectedWallet.currencyCode}
+                cryptoCurrencyCode={this.props.currencyCode}
                 fiatCurrencySymbol={this.props.fiatSymbol}
                 fiatAmount={this.state.amountFiat}
                 onEnterSubcategories={this.onEnterSubcategories}
