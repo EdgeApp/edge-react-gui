@@ -70,8 +70,7 @@ export type State = {
   payeeZIndex: number,
   subcatZIndex: number,
   type: string,
-  walletDefaultDenomProps: AbcDenomination,
-  currencyInfo: AbcCurrencyInfo
+  walletDefaultDenomProps: AbcDenomination
 }
 
 export class TransactionDetails extends Component<Props & DispatchProps, State> {
