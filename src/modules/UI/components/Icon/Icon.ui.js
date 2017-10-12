@@ -7,7 +7,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import * as Constants from '../../../../constants/indexConstants'
 
 
-export const Icon = ({style, name, size, type}) => {
+const Icon = ({style, name, size, type}) => {
   switch (type) {
   case Constants.ENTYPO:
     return <Entypo
@@ -35,4 +35,7 @@ export const Icon = ({style, name, size, type}) => {
       name={name}
       size={size}/>
   }
+  return null
 }
+
+export {Icon}

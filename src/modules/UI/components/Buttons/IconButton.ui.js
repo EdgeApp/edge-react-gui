@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {TouchableHighlight} from 'react-native'
-import Icon from '../Icon/Icon.ui'
+import {View,TouchableHighlight} from 'react-native'
+import {Icon} from '../Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
 
 class IconButton extends Component {
@@ -34,6 +34,7 @@ class IconButton extends Component {
       size={iconSize}
       type={this.props.iconType}/>
   }
+
   render () {
     const {
       container,
@@ -50,7 +51,9 @@ class IconButton extends Component {
         onHideUnderlay={this._onHideUnderlay}
         underlayColor={underlayColor}
       >
-      {this.renderIcon(icon,iconPressed,iconSize)}
+      <View>
+        {this.renderIcon(icon,iconPressed,iconSize)}
+      </View>
       </TouchableHighlight>
     )
   }

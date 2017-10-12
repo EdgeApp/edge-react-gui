@@ -27,6 +27,7 @@ const CryptoExchangeSceneStyle = {
   shim: {
     height:20
   },
+
   flipButton: Styles.IconButtonStyle,
   actionButtonContainer: {
     width: '90%',

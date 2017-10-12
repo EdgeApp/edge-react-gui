@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import HelpButton from './HelpButton.ui'
+// import {View} from 'react-native'
 import * as Constants from '../../../../../constants/indexConstants'
+import MenuDropDown from '../../../../../connectors/components/HeaderMenuExchangeConnector'
 
 export default class Right extends Component {
 
@@ -26,6 +28,8 @@ export default class Right extends Component {
       return <SendConfirmationOptions />
     case Constants.CREATE_WALLET:
       return <HelpButton />
+    case Constants.EXCHANGE:
+      return <MenuDropDown />
     default:
       return null
     }

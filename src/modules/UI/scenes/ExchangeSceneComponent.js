@@ -82,7 +82,7 @@ export default class ExchangeSceneComponent extends Component {
           <IconButton
             style={style.flipButton}
             icon={Constants.SWAP_VERT}
-            callback={this.flipThis.bind(this)}
+            onPress={this.flipThis.bind(this)}
           />
           <View style={style.shim} />
           <CryptoExchangeFlipConnector
