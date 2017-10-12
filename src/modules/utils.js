@@ -66,14 +66,6 @@ export const border = (color: ?string) => {
   }
 }
 
-export const isTabletBasedOnRatio = (ratio: number) => {
-  if (ratio > 1.6) {
-    return false
-  } else {
-    return true
-  }
-}
-
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
 
 export const addFiatTwoDecimals = (input: string) => {
