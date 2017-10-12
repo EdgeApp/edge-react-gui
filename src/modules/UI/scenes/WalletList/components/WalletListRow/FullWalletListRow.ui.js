@@ -73,8 +73,8 @@ class FullWalletListRow extends Component {
               <View style={[styles.rowContent]}>
                 <View style={[styles.rowNameTextWrap, b()]}>
                   <T style={[styles.rowNameText, b()]} numberOfLines={1}>
-                  {symbolImageDarkMono &&
-                    <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 2}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
+                  {symbolImageDarkMono
+                    && <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 2}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
                   }  {cutOffText(name, 34)}</T>
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>

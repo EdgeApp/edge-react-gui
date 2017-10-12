@@ -50,8 +50,8 @@ class SortableWalletListRow extends Component {
             <View style={[styles.rowContent]}>
               <View style={[styles.rowNameTextWrap]}>
                 <T style={[styles.rowNameText]} numberOfLines={1}>
-                {symbolImageDarkMono &&
-                  <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 2}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
+                {symbolImageDarkMono
+                  && <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 2}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
                 }  {cutOffText(name, 34)}</T>
               </View>
               <View style={[styles.rowBalanceTextWrap]}>
