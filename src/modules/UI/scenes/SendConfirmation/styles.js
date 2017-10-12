@@ -31,6 +31,14 @@ const styles = StyleSheet.create({
   slider: {
     backgroundColor: 'transparent'
   },
+  sliderWrap: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  sliderStyle: {
+    width: 300
+  },
   error: {
     flex: 1,
     color: 'red',
