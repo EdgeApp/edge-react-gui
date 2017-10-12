@@ -1,6 +1,6 @@
 import {StyleSheet} from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz'
-
+//import {colors as c} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 module.exports = StyleSheet.create({
 
   // buttons
@@ -10,7 +10,7 @@ module.exports = StyleSheet.create({
     alignSelf: 'flex-end'
   },
   stylizedButton: {
-    height: 44,
+    height: THEME.BUTTONS.HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -20,32 +20,32 @@ module.exports = StyleSheet.create({
 
   },
   stylizedButtonText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 16
   },
 
   primaryButtonWrap: {
-    backgroundColor: c.secondary
+    backgroundColor: THEME.COLORS.SECONDARY
   },
   primaryButton: {
-    color: c.gradient.light // not used?
+    color: THEME.COLORS.GRADIENT.LIGHT // not used?
   },
 
   secondaryButtonWrap: {
-    backgroundColor: c.gray2,
+    backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
   secondaryButton: {
-    color: c.gradient.light
+    color: THEME.COLORS.GRADIENT.LIGHT
   },
 
   tertiaryButtonWrap: {
     backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: c.secondary
+    borderColor: THEME.COLORS.SECONDARY
   },
   tertiaryButton: {
-    color: c.secondary,
+    color: THEME.COLORS.SECONDARY,
     paddingHorizontal: 10
   }
 })

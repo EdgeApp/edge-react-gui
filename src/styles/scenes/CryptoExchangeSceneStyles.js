@@ -28,6 +28,10 @@ const CryptoExchangeSceneStyle = {
     height:20
   },
   flipButton: Styles.IconButtonStyle,
+  actionButtonContainer: {
+    width: '90%',
+    height: THEME.BUTTONS.HEIGHT
+  },
   flipWrapper: {
     container: {
       width: '90%',
@@ -72,7 +76,6 @@ const CryptoExchangeSceneStyle = {
     feeText: {
       color: THEME.COLORS.WHITE
     }
-
   }
 }
 

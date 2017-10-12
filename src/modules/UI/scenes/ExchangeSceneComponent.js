@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import strings from '../../../locales/default'
 import * as Constants from '../../../constants/indexConstants'
 import Gradient from '../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
@@ -91,7 +92,9 @@ export default class ExchangeSceneComponent extends Component {
             uiWallet={this.props.toWallet}
           />
           <View style={style.shim} />
-          <PrimaryButton text={'DO THIS'} />
+          <View style={style.actionButtonContainer} >
+            <PrimaryButton text={strings.enUS['string_next']} />
+          </View>
         </ScrollView>
         {this.renderDropUp()}
       </Gradient>

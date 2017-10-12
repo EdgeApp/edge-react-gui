@@ -37,6 +37,9 @@ export const font = {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export default {
+  BUTTONS: {
+    HEIGHT: 44
+  },
   FONTS: {
     DEFAULT: 'SourceSansPro-Black'
   },
