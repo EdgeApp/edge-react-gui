@@ -25,6 +25,6 @@ export default StyleSheet.create({
   },
   text: {
     fontSize: 17,
-    color: 'rgba(255,255,255,1)'
+    color: THEME.COLORS.WHITE
   }
 })
