@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import strings from '../../../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {bns} from 'biggystring'
 import {
   View,
@@ -52,14 +51,14 @@ class FullWalletListRow extends Component {
 
   render () {
     const {data} = this.props
-    let walletData = data.item
-    let currencyCode = walletData.currencyCode
-    let cryptocurrencyName = walletData.currencyNames[currencyCode]
-    let denomination = this.props.displayDenomination
-    let multiplier = denomination.multiplier
-    let id = walletData.id
-    let name = walletData.name || sprintf(strings.enUS['string_no_name'])
-    let symbol = denomination.symbol
+    const walletData = data.item
+    const currencyCode = walletData.currencyCode
+    const cryptocurrencyName = walletData.currencyNames[currencyCode]
+    const denomination = this.props.displayDenomination
+    const multiplier = denomination.multiplier
+    const id = walletData.id
+    const name = walletData.name || strings.enUS['string_no_name']
+    const symbol = denomination.symbol
     return (
       <View style={[{width: platform.deviceWidth}, b()]}>
           <View>

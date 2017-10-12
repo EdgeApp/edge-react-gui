@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import strings from '../../../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {bns} from 'biggystring'
 import {
   View,
@@ -29,20 +28,20 @@ class SortableWalletListRow extends Component {
 
   render () {
     const {data} = this.props
-    let walletData = data
+    const walletData = data
     let multiplier, name, symbol, cryptoCurrencyName
-    
+
     // const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, data.currencyCode)
     if (walletData.currencyCode) { // if wallet is done loading
       let displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, walletData.currencyCode)
       multiplier = displayDenomination.multiplier
-      name = walletData.name || sprintf(strings.enUS['string_no_name'])
+      name = walletData.name || strings.enUS['string_no_name']
       symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
       cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
     }
     return (
       <TouchableHighlight
-        style={[b('green'), styles.rowContainer, {width: platform.deviceWidth, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
+        style={[styles.rowContainer, {width: platform.deviceWidth, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
         underlayColor={'#eee'}
         {...this.props.sortHandlers}
       >
