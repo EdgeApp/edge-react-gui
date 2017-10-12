@@ -29,7 +29,7 @@ class SortableWalletListRow extends Component {
   render () {
     const {data} = this.props
     const walletData = data
-    let multiplier, name, symbol, cryptoCurrencyName
+    let multiplier, name, symbol, cryptoCurrencyName, symbolImageDarkMono
 
     // const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, data.currencyCode)
     if (walletData.currencyCode) { // if wallet is done loading
@@ -38,6 +38,7 @@ class SortableWalletListRow extends Component {
       name = walletData.name || strings.enUS['string_no_name']
       symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
       cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
+      symbolImageDarkMono = walletData.symbolImageDarkMono
     }
     return (
       <TouchableHighlight
@@ -48,12 +49,14 @@ class SortableWalletListRow extends Component {
           {walletData.currencyCode? (
             <View style={[styles.rowContent]}>
               <View style={[styles.rowNameTextWrap]}>
-                <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
+                <T style={[styles.rowNameText]} numberOfLines={1}>
+                {symbolImageDarkMono &&
+                  <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 2}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
+                }  {cutOffText(name, 34)}</T>
               </View>
               <View style={[styles.rowBalanceTextWrap]}>
                 <T style={[styles.rowBalanceAmountText]}>{truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}</T>
-                <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}
-                  ({symbol || ''})</T>
+                <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName} ({symbol || ''})</T>
               </View>
               <View style={[styles.rowDragArea, b()]}>
                 <Image

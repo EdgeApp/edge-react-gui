@@ -1,6 +1,7 @@
 import {
   StyleSheet,
-  Platform
+  Platform,
+  Image
 } from 'react-native'
 import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
@@ -170,6 +171,12 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     marginRight: 5
+  },
+  rowCurrencyLogo: {
+    height: 14,
+    width: 14,
+    resizeMode: Image.resizeMode.contain,
+    alignSelf: 'center'
   },
   rowNameText: {
     fontSize: 18,

@@ -4,7 +4,8 @@ import {bns} from 'biggystring'
 import {
   View,
   TouchableHighlight,
-  ActivityIndicator
+  ActivityIndicator,
+  Image
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
@@ -59,6 +60,7 @@ class FullWalletListRow extends Component {
     const id = walletData.id
     const name = walletData.name || strings.enUS['string_no_name']
     const symbol = denomination.symbol
+    let symbolImageDarkMono = walletData.symbolImageDarkMono
     return (
       <View style={[{width: platform.deviceWidth}, b()]}>
           <View>
@@ -69,8 +71,11 @@ class FullWalletListRow extends Component {
               onPress={() => this._onPressSelectWallet(id, currencyCode)}
             >
               <View style={[styles.rowContent]}>
-                <View style={[styles.rowNameTextWrap]}>
-                  <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
+                <View style={[styles.rowNameTextWrap, b()]}>
+                  <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                  {symbolImageDarkMono &&
+                    <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 2}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
+                  }  {cutOffText(name, 34)}</T>
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>
                   <T style={[styles.rowBalanceAmountText]}>

@@ -179,7 +179,8 @@ export const settings = (state = initialState, action) => {
         currencyName: currencyInfo.currencyName,
         currencyCode: currencyInfo.currencyCode,
         denominations: currencyInfo.denominations,
-        symbolImage: currencyInfo.symbolImage
+        symbolImage: currencyInfo.symbolImage,
+        symbolImageDarkMono: currencyInfo.symbolImageDarkMono
       }
     }
 
@@ -193,7 +194,8 @@ export const settings = (state = initialState, action) => {
           currencyName: metatoken.currencyName,
           currencyCode: metatoken.currencyCode,
           denominations: metatoken.denominations,
-          symbolImage: metatoken.symbolImage
+          symbolImage: metatoken.symbolImage,
+          symbolImageDarkMono: metatoken.symbolImageDarkMono
         }
       }
     }, {})
