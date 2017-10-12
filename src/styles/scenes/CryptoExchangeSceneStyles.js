@@ -45,15 +45,12 @@ const CryptoExchangeSceneStyle = {
     },
     topRow: {
       flex: 1,
-      flexDirection: 'row',
-    },
-    iconContainer:{
-      flex: 1,
-    },
-    walletSelector: {
-      flex: 9,
       flexDirection: 'column',
       justifyContent: 'space-around'
+    },
+    walletSelector: Styles.TextAndIconButtonStyle,
+    iconContainer:{
+
     },
     currencyIcon: {
       backgroundColor: THEME.COLORS.WHITE,

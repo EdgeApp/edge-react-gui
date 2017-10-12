@@ -1,6 +1,8 @@
 import React, {Component} from 'react'
-import {View, Image, Text, Button} from 'react-native'
+import {View, Text} from 'react-native'
 import ExchangedFlipInput from './ExchangedFlipInput'
+import {TextAndIconButton} from '../Buttons'
+import * as Constants from '../../../../constants/indexConstants'
 // import * as UTILS from '../../../utils'
 // import WalletSelector from '../Header/Component/WalletSelectorConnector'
 
@@ -25,7 +27,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
   }
 
   render () {
-    const logo = this.props.uiWallet ? this.props.uiWallet.symbolImage : null
+    // const logo = this.props.uiWallet ? this.props.uiWallet.symbolImage : null
     const style = this.props.style
     if (!this.props.uiWallet) {
       return <View style={style.container} />
@@ -40,16 +42,13 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
     return (
       <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
-          <View style={style.iconContainer}>
-            <Image style={style.currencyIcon} source={{uri: logo}} />
-          </View>
-          <View style={style.walletSelector}>
-            <Button
+            <TextAndIconButton
+              style={style.walletSelector}
               onPress={this.launchSelector}
+              icon={Constants.KEYBOARD_ARROW_DOWN}
               title={this.props.uiWallet.name}
             />
           </View>
-        </View>
         <View style={style.flipInput} >
         <ExchangedFlipInput
           primaryInfo={{...primaryInfo, nativeAmount}}
