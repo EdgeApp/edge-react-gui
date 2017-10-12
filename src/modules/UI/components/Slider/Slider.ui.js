@@ -4,12 +4,14 @@ import {Text, View} from 'react-native'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
 import strings from '../../../../locales/default'
+import * as UTILS from '../../../utils.js'
 
 const SLIDE_TO_COMPLETE_TEXT = strings.enUS['send_confirmation_slide_to_confirm']
 
 type Props = {
   sliderDisabled: boolean,
-  onSlidingComplete: () => {}
+  onSlidingComplete: () => {},
+  parentStyle: any
 }
 
 type State = {
@@ -41,7 +43,7 @@ export default class ABSlider extends Component<Props, State> {
 
   render () {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.parentStyle, UTILS.border()]}>
         <Slider
           disabled={this.props.sliderDisabled}
           onValueChange={this.onValueChange}
