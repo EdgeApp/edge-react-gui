@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
 import {sprintf} from 'sprintf-js'
+import {bns} from 'biggystring'
 import PropTypes from 'prop-types'
 import {
   ActivityIndicator,
@@ -306,7 +307,7 @@ export default class TransactionList extends Component {
   }
 
   isReceivedTransaction (tx) {
-    return UTILS.isGreaterThan('0')(tx.nativeAmount)
+    return bns.gt('0', tx.nativeAmount)
   }
 
   isSentTransaction (tx) {

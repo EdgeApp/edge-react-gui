@@ -1,6 +1,6 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {divf, mulf, gt} from 'biggystring'
+import {divf, mulf} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
@@ -154,9 +154,6 @@ export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) =>
 
 export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
-
-export const isGreaterThan = (comparedTo: string) =>
-   (amountString: string): boolean => gt(amountString, comparedTo)
 
 const restrictedCurrencyCodes = [
   'BTC'
