@@ -1,7 +1,13 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {TouchableHighlight} from 'react-native'
-import FAIcon from 'react-native-vector-icons/MaterialIcons'
+import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+import IonIcon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import Entypo from 'react-native-vector-icons/Entypo'
+
+import * as Constants from '../../../../constants/indexConstants'
 
 class IconButton extends Component {
   componentWillMount () {
@@ -10,7 +16,7 @@ class IconButton extends Component {
     })
   }
   _onPressButton = () => {
-    this.props.callback()
+    this.props.onPress()
   }
   _onShowUnderlay = () => {
     this.setState({
@@ -22,8 +28,51 @@ class IconButton extends Component {
       pressed: false
     })
   }
+  renderIcon = (icon,iconPressed,iconSize) => {
+    switch (this.props.iconType) {
+    case Constants.MATERIAL_ICONS:
+      return (
+        <MaterialIcon
+          style={[icon, this.state.pressed && iconPressed]}
+          name={this.props.icon}
+          size={iconSize}
+        />
+      )
+    case Constants.FONT_AWESOME:
+      return (
+        <FAIcon
+          style={[icon, this.state.pressed && iconPressed]}
+          name={this.props.icon}
+          size={iconSize}
+        />
+      )
+    case Constants.SIMPLE_ICONS:
+      return (
+        <Icon
+          style={[icon, this.state.pressed && iconPressed]}
+          name={this.props.icon}
+          size={iconSize}
+        />
+      )
+    case Constants.ION_ICONS:
+      return (
+        <IonIcon
+          style={[icon, this.state.pressed && iconPressed]}
+          name={this.props.icon}
+          size={iconSize}
+        />
+      )
+    case Constants.ENTYPO:
+      return (
+        <Entypo
+          style={[icon, this.state.pressed && iconPressed]}
+          name={this.props.icon}
+          size={iconSize}
+        />
+      )
+    }
+  }
   render () {
-    console.log(this.props.style)
     const {
       container,
       icon,
@@ -39,11 +88,7 @@ class IconButton extends Component {
         onHideUnderlay={this._onHideUnderlay}
         underlayColor={underlayColor}
       >
-        <FAIcon
-          style={[icon, this.state.pressed && iconPressed]}
-          name={this.props.icon}
-          size={iconSize}
-        />
+      {this.renderIcon(icon,iconPressed,iconSize)}
       </TouchableHighlight>
     )
   }
@@ -52,7 +97,12 @@ class IconButton extends Component {
 IconButton.propTypes = {
   icon: PropTypes.string.isRequired,
   style: PropTypes.object.isRequired,
-  callback: PropTypes.func.isRequired
+  onPress: PropTypes.func.isRequired,
+  iconType: PropTypes.string.isRequired
+}
+
+IconButton.defaultProps = {
+  iconType: Constants.MATERIAL_ICONS
 }
 
 export {IconButton}
