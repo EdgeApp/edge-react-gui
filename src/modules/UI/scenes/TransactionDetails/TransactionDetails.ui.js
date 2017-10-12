@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native'
 import Permissions from 'react-native-permissions'
+import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
@@ -24,7 +25,7 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata} from 'airbitz-core-types'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -36,7 +37,8 @@ export type Props = {
   subcategoriesList: Array<string>,
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
-  thumbnailPath: string
+  thumbnailPath: string,
+  currencyInfo: AbcCurrencyInfo
 }
 
 export type DispatchProps = {
@@ -425,7 +427,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
     const color = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
-
+    const txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
     return (
       <View style={[UTILS.border()]}>
         <Animated.View
@@ -552,6 +554,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                 openModalFxn={this.amountAreaOpenModal}
                 selectedWallet={this.props.selectedWallet}
+                txExplorerUrl={txExplorerLink}
               />
             </View>
           </View>

@@ -5,7 +5,8 @@ import {
     TextInput,
     TouchableOpacity,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Linking
 } from 'react-native'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
@@ -66,6 +67,16 @@ class AmountArea extends Component<Props, State> {
     this.state = {
       color: ''
     }
+  }
+
+  handleClick = () => {
+    Linking.canOpenURL(this.props.txExplorerUrl).then((supported) => {
+      if (supported) {
+        Linking.openURL(this.props.txExplorerUrl)
+      } else {
+        console.log('Do not know how to open URI: ' + this.props.txExplorerUrl)
+      }
+    })
   }
 
   render () {
@@ -200,7 +211,7 @@ class AmountArea extends Component<Props, State> {
           <View style={[styles.buttonArea]}>
             <PrimaryButton text={strings.enUS['string_save']} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
-          <TouchableWithoutFeedback onPress={() => this.props.openModalFxn()} style={[styles.advancedTxArea]}>
+          <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
             <FormattedText style={[styles.advancedTxText]}>{strings.enUS['transaction_details_view_advanced_data']}</FormattedText>
           </TouchableWithoutFeedback>
         </View>
