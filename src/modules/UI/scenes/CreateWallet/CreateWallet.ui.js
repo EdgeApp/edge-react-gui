@@ -83,7 +83,7 @@ export default class CreateWallet extends Component {
         selectedWalletType,
         selectedFiat
       } = this.state
-      this.props.createWallet(walletName, selectedWalletType, selectedFiat)
+      this.props.createCurrencyWallet(walletName, selectedWalletType, 'iso:' + selectedFiat)
     }
   }
 
