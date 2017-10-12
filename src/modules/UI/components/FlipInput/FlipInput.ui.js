@@ -8,7 +8,7 @@ import {
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
-
+import * as Constants from '../../../../constants/indexConstants'
 const getInitialState = (props) => ({
   isToggled: false,
   primaryDisplayAmount: props.primaryDisplayAmount || '',
@@ -125,7 +125,7 @@ export default class FlipInput extends Component {
     return (
       <View style={[styles.container]}>
         <View style={styles.flipButton}>
-          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name='swap-vert' size={36} />
+          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
         </View>
         {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
         <View style={styles.spacer} />

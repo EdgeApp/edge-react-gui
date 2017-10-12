@@ -148,7 +148,7 @@ export default class SettingsOverview extends Component {
         <Gradient style={[s.unlockRow]}>
           <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={s.leftArea}>
-              <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
+              <FAIcon style={[s.userIcon, b('green')]} name={Constants.USER_O} color='white' />
               <T style={s.accountBoxHeaderText}>
                 {strings.enUS['settings_account_title_cap']}: {this.props.username}
               </T>

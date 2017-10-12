@@ -10,6 +10,7 @@ import {
   View,
   TouchableHighlight
 } from 'react-native'
+import * as Constants from '../../../../constants/indexConstants'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -162,7 +163,7 @@ export default class Scan extends Component<any, any> {
 
             <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton]} onPress={this._onToggleAddressModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
               <View style={styles.bottomButtonTextWrap}>
-                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon]} />
+                <FAIcon name={Constants.ADDRESS_BOOK_O} size={18} style={[styles.addressBookIcon]} />
                 <T style={[styles.addressButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
               </View>
             </TouchableHighlight>

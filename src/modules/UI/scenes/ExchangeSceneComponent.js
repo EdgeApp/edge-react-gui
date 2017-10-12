@@ -4,12 +4,14 @@ import * as Constants from '../../../constants/indexConstants'
 import Gradient from '../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
   from '../../../connectors/components/CryptoExchangeRateConnector'
-import {Button, ScrollView, View} from 'react-native'
+import {ScrollView, View} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../styles/indexStyles'
-import CryptoExchangeFlipConnector from '../../../connectors/components/CryptoExchangeFlipConnector'
+import CryptoExchangeFlipConnector
+  from '../../../connectors/components/CryptoExchangeFlipConnector'
 import {PrimaryButton} from '../components/Buttons/index'
-import WalletListModal from '../../UI/components/WalletListModal/WalletListModalConnector'
-
+import WalletListModal
+  from '../../UI/components/WalletListModal/WalletListModalConnector'
+import {IconButton} from '../components/Buttons/IconButton.ui'
 
 export default class ExchangeSceneComponent extends Component {
   componentWillMount () {
@@ -52,12 +54,13 @@ export default class ExchangeSceneComponent extends Component {
   selectionFunction = (arg) => {
     console.log('SELECTION FUNCTION ' + arg)
     this.setState({
-      showModal:false
+      showModal: false
     })
   }
 
   render () {
     const style = CryptoExchangeSceneStyle
+    console.log(style)
     return (
       <Gradient style={[style.scene]}>
         <ScrollView
@@ -75,7 +78,11 @@ export default class ExchangeSceneComponent extends Component {
             fee={this.props.fee}
           />
           <View style={style.shim} />
-          <Button title={'swap'} onPress={this.flipThis.bind(this)} />
+          <IconButton
+            style={style.flipButton}
+            icon={Constants.SWAP_VERT}
+            callback={this.flipThis.bind(this)}
+          />
           <View style={style.shim} />
           <CryptoExchangeFlipConnector
             style={style.flipWrapper}

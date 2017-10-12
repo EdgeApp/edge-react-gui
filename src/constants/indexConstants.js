@@ -1,5 +1,6 @@
 export * from './SceneKeys'
 export * from './ActionConstants'
+export * from './IconConstants'
 export * from '../modules/UI/components/WalletListModal/action'
 
 export const LEFT_TO_RIGHT = 'leftToRight'

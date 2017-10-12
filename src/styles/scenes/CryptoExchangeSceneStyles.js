@@ -3,6 +3,7 @@ import THEME from '../../theme/variables/airbitz'
 import {Image} from 'react-native'
 const CryptoExchangeSceneStyle = {
   scene: Styles.SceneContainer,
+  styleCatch:Styles,
   mainScrollView: {
     flex: 1,
   },
@@ -26,6 +27,7 @@ const CryptoExchangeSceneStyle = {
   shim: {
     height:20
   },
+  flipButton: Styles.IconButtonStyle,
   flipWrapper: {
     container: {
       width: '90%',

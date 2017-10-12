@@ -5,6 +5,7 @@ import {
   View,
   TouchableHighlight
 } from 'react-native'
+import * as Constants from '../../../../constants/indexConstants'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
@@ -32,7 +33,7 @@ export default class WalletTransferList extends Component {
             <Text style={styles.headerText}>Select destination wallet:</Text>
           </View>
           <TouchableHighlight style={[styles.exitIconWrap]} onPress={this._closeWalletListModal.bind(this)}>
-            <FAIcon name='close' size={24} style={[styles.exitIcon]} color='#666666' />
+            <FAIcon name={Constants.CLOSE_ICON} size={24} style={[styles.exitIcon]} color='#666666' />
           </TouchableHighlight>
         </View>
 

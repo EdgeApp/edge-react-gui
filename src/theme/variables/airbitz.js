@@ -59,6 +59,7 @@ export default {
     GRAY_3: '#d8d6d8',
     GRAY_4: '#F7F7F7',
     WHITE:  '#FFFFFF',
+    CLEAR:  'rgba(0, 0, 0, 0)',
 
     GRADIENT: {
       LIGHT: '#3b7ada',

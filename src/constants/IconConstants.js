@@ -1,0 +1,5 @@
+export const SWAP_VERT = 'swap-vert'
+export const ADDRESS_BOOK_O = 'address-book-o'
+export const USER_O = 'user-o'
+export const TRASH_O = 'trash-o'
+export const CLOSE_ICON = 'close'
