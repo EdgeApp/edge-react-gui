@@ -1,10 +1,11 @@
 import {Platform, StyleSheet} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#F6F6F6'
+    backgroundColor: THEME.COLORS.GRAY_4
   },
   walletNameInputView: {
     height: 50,
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
   pickerView: {
     marginBottom: 15,
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
-    borderColor: '#CCCCCC'
+    borderColor: THEME.COLORS.WHITE
   },
   picker: {
     height: 50,
@@ -32,7 +33,7 @@ const styles = StyleSheet.create({
   listItem: {
     margin: 0,
     padding: 5,
-    borderColor: 'grey',
+    borderColor: THEME.COLORS.GRAY_3,
     borderBottomWidth: 1,
     fontSize: 20
   },
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   text: {
-    color: 'white'
+    color: THEME.COLORS.WHITE
   },
   buttons: {
     marginTop: 24,
@@ -50,19 +51,19 @@ const styles = StyleSheet.create({
   submit: {
     flex: 1,
     marginLeft: 2,
-    backgroundColor: '#4977BB',
+    backgroundColor: THEME.COLORS.SECONDARY,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3
   },
   buttonText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 18
   },
   cancel: {
     flex: 1,
     marginRight: 2,
-    backgroundColor: '#909091',
+    backgroundColor: THEME.COLORS.GRAY_2,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 3

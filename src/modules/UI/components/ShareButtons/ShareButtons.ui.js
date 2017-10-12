@@ -9,14 +9,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-    backgroundColor: THEME.COLORS.BLUE_ALPHA_BUTTON.UNPRESSED
+    backgroundColor: THEME.COLORS.PRIMARY,
+    opacity: THEME.OPACITY.MID
   },
   borderRight: {
-    borderColor: THEME.COLORS.TRANSPARENT_BUTTON.BORDER,
+    borderColor: THEME.COLORS.WHITE,
+    opacity: THEME.OPACITY.MID,
     borderRightWidth: 0.5,
   },
   borderLeft: {
-    borderColor: THEME.COLORS.TRANSPARENT_BUTTON.BORDER,
+    borderColor: THEME.COLORS.WHITE,
+    opacity: THEME.OPACITY.MID,
     borderLeftWidth: 0.5
   }
 })
