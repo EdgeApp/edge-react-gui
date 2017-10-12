@@ -21,7 +21,22 @@ import SendLogsModal from './components/SendLogsModal.ui'
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
-import s from './style'
+import styles from './style'
+
+const ACCOUNT_HEADER_TEXT   = strings.enUS['settings_account_title_cap']
+const CHANGE_PASSWORD_TEXT  = strings.enUS['settings_button_change_password']
+const CHANGE_PIN_TEXT       = strings.enUS['settings_button_pin']
+const CHANGE_RECOVERY_TEXT  = strings.enUS['settings_button_change_pass_recovery']
+const OPTIONS_HEADER_TEXT   = strings.enUS['settings_options_title_cap']
+const AUTO_LOGOUT_TEXT      = strings.enUS['settings_title_auto_logoff']
+const SEND_LOGS_TEXT        = strings.enUS['settings_button_send_logs']
+const DEBUG_TEXT            = strings.enUS['settings_button_debug']
+const DEFAULT_CURRENCY_TEXT = strings.enUS['settings_title_currency']
+const DISABLE_TEXT          = strings.enUS['string_disable']
+
+const SETUP_2FA_TEXT    = strings.enUS['settings_button_setup_two_factor']
+const PIN_RE_LOGIN_TEXT = strings.enUS['settings_title_pin_login']
+const TOUCH_ID_TEXT     = strings.enUS['settings_button_use_touchID']
 
 export default class SettingsOverview extends Component {
   constructor (props) {
@@ -32,32 +47,24 @@ export default class SettingsOverview extends Component {
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
-
     this.securityRoute = [
       {
         key: 'setup2Factor',
-        text: strings.enUS['settings_button_setup_two_factor'],
-        routeFunction: this._onPressDummyRouting
+        text: SETUP_2FA_TEXT,
+        routeFunction: this.onPressDummyRouting
       }
     ]
 
     this.options = {
       pinRelogin: {
-        text: strings.enUS['settings_title_pin_login'],
+        text: PIN_RE_LOGIN_TEXT,
         key: 'pinRelogin'
       },
       useTouchID: {
-        text: strings.enUS['settings_button_use_touchID'],
+        text: TOUCH_ID_TEXT,
         key: 'useTouchID'
       }
     }
-
-    this.optionModals = [
-      {
-        key: 'autoLogoff',
-        text: strings.enUS['settings_title_auto_logoff']
-      }
-    ]
 
     this.currencies = [
       {
@@ -83,40 +90,102 @@ export default class SettingsOverview extends Component {
     ]
   }
 
-  _onPressDummyRouting = () => {
+  render () {
+    return (
+      <ScrollView style={styles.container}>
+        <Gradient style={[styles.unlockRow]}>
+          <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+            <View style={styles.leftArea}>
+              <FAIcon style={[styles.userIcon, b('green')]}
+                name='user-o'
+                color='white' />
+              <T style={styles.accountBoxHeaderText}>
+                {`${ACCOUNT_HEADER_TEXT}: ${this.props.username}`}
+              </T>
+            </View>
+          </View>
+        </Gradient>
+
+        <RowRoute
+          leftText={CHANGE_PASSWORD_TEXT}
+          scene={'changePassword'}
+          routeFunction={this.onPressChangePasswordRouting}
+          right={<Icon name='arrow-right' size={18} color='#58595C' />} />
+        <RowRoute
+          leftText={CHANGE_PIN_TEXT}
+          scene={'changePassword'}
+          routeFunction={this.onPressChangePinRouting}
+          right={<Icon name='arrow-right' size={18} color='#58595C' />} />
+        <RowRoute
+          leftText={CHANGE_RECOVERY_TEXT}
+          scene={'changePassword'}
+          routeFunction={this.onPressRecoverPasswordRouting}
+          right={<Icon name='arrow-right' size={18} color='#58595C' />} />
+
+        <Gradient style={[styles.unlockRow]}>
+          <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+            <View style={styles.leftArea}>
+              <IonIcon name='ios-options' style={[styles.userIcon, b('green')]} color='white' />
+              <T style={styles.accountBoxHeaderText}>
+                {OPTIONS_HEADER_TEXT}
+              </T>
+            </View>
+          </View>
+        </Gradient>
+
+        <View>
+          <RowModal onPress={this.showAutoLogoutModal}
+            leftText={AUTO_LOGOUT_TEXT}
+            rightText={this.props.autoLogoutTimeInMinutes || DISABLE_TEXT} />
+
+          <RowRoute
+            leftText={DEFAULT_CURRENCY_TEXT}
+            scene={'changePassword'}
+            routeFunction={Actions.defaultFiatSetting}
+            right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
+
+          {this.securityRoute.map(this.renderRowRoute)}
+
+          {Object.keys(this.options).map(this.renderRowSwitch)}
+
+          {this.currencies.map(this.renderRowRoute)}
+
+          <RowRoute
+            leftText={SEND_LOGS_TEXT}
+            scene={'changePassword'}
+            routeFunction={this.showSendLogsModal} />
+
+          <View style={[styles.debugArea, b('green')]}>
+            <PrimaryButton text={DEBUG_TEXT} onPressFunction={this.onPressDebug} />
+          </View>
+
+          <View style={styles.emptyBottom} />
+        </View>
+
+        <AutoLogoutModal showModal={this.state.showAutoLogoutModal}
+          onDone={this.onDoneAutoLogoutModal}
+          onCancel={this.onCancelAutoLogoutModal} />
+        <SendLogsModal showModal={this.state.showSendLogsModal}
+          onDone={this.onDoneSendLogsModal}
+          onCancel={this.onCancelSendLogsModal} />
+      </ScrollView>
+    )
+  }
+
+  onPressDummyRouting = () => {
     // console.log('dummy routing')
   }
 
-  _onPressChangePasswordRouting = () => {
+  onPressChangePasswordRouting = () => {
     Actions[Constants.CHANGE_PASSWORD]()
   }
 
-  _onPressChangePinRouting = () => {
+  onPressChangePinRouting = () => {
     Actions[Constants.CHANGE_PIN]()
 
   }
-  _onPressRecoverPasswordRouting = () => {
+  onPressRecoverPasswordRouting = () => {
     Actions[Constants.CHANGE_PASSWORD]()
-  }
-
-  _onPressOpenLogoffTime = () => {
-    // console.log('opening auto log off modal')
-  }
-
-  _onPressOpenDefaultCurrency = () => {
-    // console.log('opening default currency modal?')
-  }
-
-  _onPressOpenChangeCategories = () => {
-    // console.log('open change categories thingy')
-  }
-
-  _onToggleOption = () => {
-    // console.log('toggling option: ', property)
-  }
-
-  _onPressDebug = () => {
-    // HockeyApp.generateTestCrash()
   }
 
   onDoneAutoLogoutModal = (autoLogoutTimeInMinutes) => {
@@ -138,92 +207,6 @@ export default class SettingsOverview extends Component {
 
   onCancelSendLogsModal = () => {
     this.setState({showSendLogsModal: false})
-  }
-
-  render () {
-    const disabled = strings.enUS['string_disable']
-
-    return (
-      <ScrollView style={s.container}>
-        <Gradient style={[s.unlockRow]}>
-          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
-            <View style={s.leftArea}>
-              <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
-              <T style={s.accountBoxHeaderText}>
-                {strings.enUS['settings_account_title_cap']}: {this.props.username}
-              </T>
-            </View>
-          </View>
-        </Gradient>
-
-        <RowRoute
-          leftText={strings.enUS['settings_button_change_password']}
-          scene={'changePassword'}
-          routeFunction={this._onPressChangePasswordRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
-        <RowRoute
-          leftText={strings.enUS['settings_button_pin']}
-          scene={'changePassword'}
-          routeFunction={this._onPressChangePinRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
-        <RowRoute
-          leftText={strings.enUS['settings_button_change_pass_recovery']}
-          scene={'changePassword'}
-          routeFunction={this._onPressRecoverPasswordRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
-
-        <Gradient style={[s.unlockRow]}>
-          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
-            <View style={s.leftArea}>
-              <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
-              <T style={s.accountBoxHeaderText}>
-                {strings.enUS['settings_options_title_cap']}
-              </T>
-            </View>
-          </View>
-        </Gradient>
-
-        <View>
-          <RowModal onPress={this.showAutoLogoutModal}
-            leftText={strings.enUS['settings_title_auto_logoff']}
-            rightText={this.props.autoLogoutTimeInMinutes || disabled} />
-
-          <RowRoute
-            leftText={strings.enUS['settings_title_currency']}
-            scene={'changePassword'}
-            routeFunction={Actions.defaultFiatSetting}
-            right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
-
-          {this.securityRoute.map(this.renderRowRoute)}
-
-          {Object.keys(this.options).map(this.renderRowSwitch)}
-
-          {this.currencies.map(this.renderRowRoute)}
-
-          <RowRoute
-            leftText={strings.enUS['settings_button_send_logs']}
-            scene={'changePassword'}
-            routeFunction={this.showSendLogsModal}
-           />
-
-          <View style={[s.debugArea, b('green')]}>
-            <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
-          </View>
-
-          <View style={s.emptyBottom} />
-        </View>
-
-        <AutoLogoutModal showModal={this.state.showAutoLogoutModal}
-          onDone={this.onDoneAutoLogoutModal}
-          onCancel={this.onCancelAutoLogoutModal} />
-        <SendLogsModal showModal={this.state.showSendLogsModal}
-          onDone={this.onDoneSendLogsModal}
-          onCancel={this.onCancelSendLogsModal} />
-      </ScrollView>
-    )
   }
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})

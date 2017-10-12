@@ -9,13 +9,11 @@ import {
   Image,
   ActivityIndicator
 } from 'react-native'
-import styles from '../../style.js'
+import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import {border as b, cutOffText, truncateDecimals} from '../../../../../utils'
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
-import platform from '../../../../../../theme/variables/platform.js'
-
 
 const findDenominationSymbol = (denoms, value) => {
   for (const v of denoms) {
@@ -40,17 +38,24 @@ class SortableWalletListRow extends Component {
     }
     return (
       <TouchableHighlight
-        style={[b('green'), styles.rowContainer, {width: platform.deviceWidth, height: 50, backgroundColor: 'white', padding: 16, paddingLeft: 20, paddingRight: 20, justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#EEE'}]}
-        underlayColor={'#eee'}
-        {...this.props.sortHandlers}
-      >
+        style={[
+          b('green'),
+          styles.rowContainer,
+          styles.sortableWalletListRow
+        ]}
+        underlayColor={styleRaw.walletRowUnderlay.color}
+        {...this.props.sortHandlers}>
           {walletData.currencyCode? (
             <View style={[styles.rowContent]}>
               <View style={[styles.rowNameTextWrap]}>
-                <T style={[styles.rowNameText]} numberOfLines={1}>{cutOffText(name, 34)}</T>
+                <T style={[styles.rowNameText]} numberOfLines={1}>
+                  {cutOffText(name, 34)}
+                </T>
               </View>
               <View style={[styles.rowBalanceTextWrap]}>
-                <T style={[styles.rowBalanceAmountText]}>{truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}</T>
+                <T style={[styles.rowBalanceAmountText]}>
+                  {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
+                </T>
                 <T style={[styles.rowBalanceDenominationText]}>{walletData.currencyCode}
                   ({symbol || ''})</T>
               </View>

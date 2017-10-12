@@ -2,21 +2,25 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {Text, View, TouchableHighlight} from 'react-native'
 import T from '../FormattedText'
-import s from './style'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import styles, {styles as styleRaw} from './style'
+import strings from '../../../../locales/en_US'
 
 class PrimaryButton extends Component {
   render () {
-    // console.log('rendering PrimaryButton, this is: ', this)
     return (
-      <TouchableHighlight onPress={this.props.onPressFunction} underlayColor={c.primary} style={[s.primaryButtonWrap, s.stylizedButton, this.props.style]}>
-        <View style={s.stylizedButtonTextWrap}>
+      <TouchableHighlight style={[
+        styles.primaryButtonWrap,
+        styles.stylizedButton,
+        this.props.style
+      ]}
+        underlayColor={styleRaw.primaryUnderlay.color}
+        onPress={this.props.onPressFunction}>
+        <View style={styles.stylizedButtonTextWrap}>
           {this.props.processingFlag
             ? (this.props.processingElement)
-            :            (<T style={[s.primaryButton, s.stylizedButtonText]}>
+            : <T style={[styles.primaryButton, styles.stylizedButtonText]}>
               {this.props.text}
             </T>
-            )
           }
         </View>
       </TouchableHighlight>
@@ -28,14 +32,22 @@ PrimaryButton.propTypes = {
   onPressFunction: PropTypes.func
 }
 
+const CANCEL_TEXT = strings['string_cancel']
+
 class SecondaryButton extends Component {
   render () {
-    // console.log('rendering SecondaryButton, this is: ', this)
     return (
-      <TouchableHighlight disabled={this.props.disabled} onPress={this.props.onPressFunction} underlayColor={c.gray1} style={[s.secondaryButtonWrap, s.stylizedButton, this.props.style]}>
-        <View style={s.stylizedButtonTextWrap}>
-          <T style={[s.secondaryButton, s.stylizedButtonText]}>
-            {this.props.text || 'Cancel'}
+      <TouchableHighlight style={[
+        styles.secondaryButtonWrap,
+        styles.stylizedButton,
+        this.props.style
+      ]}
+        onPress={this.props.onPressFunction}
+        disabled={this.props.disabled}
+        underlayColor={styleRaw.secondaryUnderlay.color}>
+        <View style={styles.stylizedButtonTextWrap}>
+          <T style={[styles.secondaryButton, styles.stylizedButtonText]}>
+            {this.props.text || CANCEL_TEXT}
           </T>
         </View>
       </TouchableHighlight>
@@ -48,22 +60,17 @@ SecondaryButton.propTypes = {
 }
 
 class TertiaryButton extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      bgColor: 'white'
-    }
-  }
-
-  _onPress = () => {
-    this.props.onPressFunction()
-  }
+  onPress = this.props.onPressFunction
 
   render () {
-    // console.log('tertiaryButon props are: ', this.props)
     return (
-      <TouchableHighlight onPress={this._onPress} underlayColor={c.secondary} style={[ s.stylizedButton, s.tertiaryButtonWrap, {backgroundColor: 'white'} ]}>
-        <Text style={s.tertiaryButton} {...this.props}>
+      <TouchableHighlight style={[
+        styles.stylizedButton,
+        styles.tertiaryButtonWrap
+      ]}
+        onPress={this.onPress}
+        underlayColor={styleRaw.tertiaryUnderlay.color}>
+        <Text style={styles.tertiaryButton} {...this.props}>
           {this.props.text}
         </Text>
       </TouchableHighlight>

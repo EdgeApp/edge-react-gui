@@ -1,15 +1,16 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {
+  StyleSheet,
+  Dimensions
+} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
   width: Dimensions.get('window').width
 }
 
-export default StyleSheet.create({
+export const styles = {
   // modal styles
-  topLevelModal: {
-
-  },
   modalContainer: {
     flex: 1,
     alignItems: 'center',
@@ -28,7 +29,7 @@ export default StyleSheet.create({
     alignItems: 'stretch',
     position: 'absolute',
     // height: (screenDimensions.height) / 3,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: 15,
     paddingTop: 25,
     flexDirection: 'column',
@@ -42,7 +43,7 @@ export default StyleSheet.create({
     left: (screenDimensions.width / 2) - 47,
     top: (screenDimensions.height / 8) - 28,
     borderRadius: 27,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     height: 54,
     width: 54
   },
@@ -51,7 +52,7 @@ export default StyleSheet.create({
     top: 3,
     left: 3,
     borderRadius: 27,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     zIndex: 100,
     elevation: 100,
     height: 48,
@@ -61,7 +62,6 @@ export default StyleSheet.create({
   // beginning of rename wallet modal
   modalBody: {
     position: 'relative',
-
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {
@@ -70,12 +70,12 @@ export default StyleSheet.create({
   },
   modalTopText: {
     textAlign: 'center',
-    color: '#2A5799',
+    color: THEME.COLORS.PRIMARY,
     fontSize: 16
   },
   modalTopSubtext: {
     fontSize: 14,
-    color: '#58595C',
+    color: THEME.COLORS.GRAY_1,
     textAlign: 'center',
     paddingTop: 4
   },
@@ -84,12 +84,6 @@ export default StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center',
     paddingTop: 4
-  },
-  modalMiddleTextWrap: {
-
-  },
-  modalMiddleText: {
-
   },
   modalBottom: {
     height: 50,
@@ -111,26 +105,29 @@ export default StyleSheet.create({
     flex: 1,
     borderRadius: 3
   },
-  stylizedButtonTextWrap: {
-
-  },
   stylizedButtonText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 16
   },
+
   cancelButtonWrap: {
-    backgroundColor: '#909091',
+    backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
-  cancelButton: {
-    color: '#3c76cd'
-  },
+
   doneButtonWrap: {
-    backgroundColor: '#4977BB',
+    backgroundColor: THEME.COLORS.SECONDARY,
     alignSelf: 'flex-end',
     marginLeft: 4
   },
-  doneButton: {
-    color: '#3c76cd'
+
+  cancelUnderlay: {
+    color: THEME.COLORS.GRAY_1
+  },
+
+  doneUnderlay: {
+    color: THEME.COLORS.PRIMARY
   }
-})
+}
+
+export default StyleSheet.create(styles)

@@ -5,11 +5,10 @@ import {
   View
 } from 'react-native'
 import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
 
-const DEFAULT_FIAT_PICKER_PLACEHOLDER = sprintf(strings.enUS['settings_select_currency'])
-const INVALID_DATA_TEXT = sprintf(strings.enUS['fragment_create_wallet_select_valid'])
+const DEFAULT_FIAT_PICKER_PLACEHOLDER = strings.enUS['settings_select_currency']
+const INVALID_DATA_TEXT               = strings.enUS['fragment_create_wallet_select_valid']
 
 export default class DefaultFiatSetting extends Component {
   constructor (props) {
@@ -18,6 +17,20 @@ export default class DefaultFiatSetting extends Component {
       supportedFiats: props.supportedFiats,
       selectedFiat: ''
     }
+  }
+
+  render () {
+    const {supportedFiats} = this.state
+
+    return <View>
+      <DropdownPicker
+        startOpen
+        autoFocus
+        keyboardShouldPersistTaps={'always'}
+        listItems={supportedFiats || []}
+        placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}
+        onSelect={this.onSelectFiat} />
+      </View>
   }
 
   onSelectFiat = ({value: selectedFiat}) => {
@@ -41,17 +54,4 @@ export default class DefaultFiatSetting extends Component {
     return isValid
   }
 
-  render () {
-    const {supportedFiats} = this.state
-
-    return <View>
-      <DropdownPicker
-        startOpen
-        autoFocus
-        keyboardShouldPersistTaps={'always'}
-        listItems={supportedFiats || []}
-        placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}
-        onSelect={this.onSelectFiat} />
-    </View>
-  }
 }

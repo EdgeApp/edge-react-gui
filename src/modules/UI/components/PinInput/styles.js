@@ -1,14 +1,13 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   view: {
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    flex: 1
   },
-  text: {
+  textInput: {
+    flex: 1,
+    textAlign: 'center',
     color: THEME.COLORS.WHITE
   }
 })
-
-
-export default styles
