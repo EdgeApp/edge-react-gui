@@ -50,13 +50,19 @@ const CryptoExchangeSceneStyle = {
     },
     walletSelector: Styles.TextAndIconButtonStyle,
     iconContainer:{
-
-    },
-    currencyIcon: {
+      position:'absolute',
+      top:0,
+      left:0,
+      height:29,
+      width:29,
       backgroundColor: THEME.COLORS.WHITE,
       borderRadius: 15,
-      height: 31,
-      width: 31,
+      alignItems:'center',
+      justifyContent:'space-around'
+    },
+    currencyIcon: {
+      height: 25,
+      width: 25,
       resizeMode: Image.resizeMode.contain
     },
 
