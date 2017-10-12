@@ -1,4 +1,4 @@
-const API_PREFIX = 'http://localhost:8087/v1/'
+const API_PREFIX = 'https://info1.edgesecure.co:8444/v1/'
 
 const headers = {
   'Accept': 'application/json',
