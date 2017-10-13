@@ -377,7 +377,9 @@ export default class WalletList extends Component<any, {
     headerText='fragment_wallets_delete_wallet'
     modalMiddle={<DeleteWalletSubtext />}
     modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
-    visibilityBoolean={this.props.deleteWalletModalVisible} />
+    visibilityBoolean={this.props.deleteWalletModalVisible}
+
+    />
 
   renderRenameWalletModal = () => <StylizedModal
     featuredIcon={<RenameIcon />}

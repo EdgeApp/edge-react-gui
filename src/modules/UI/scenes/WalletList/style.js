@@ -3,10 +3,10 @@ import {
   Platform,
   Image
 } from 'react-native'
-import {colors as c, opacity as activeOpacity} from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
+import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch'
@@ -18,29 +18,29 @@ export default StyleSheet.create({
   totalBalanceWrap: {
     flex: 3,
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   totalBalanceHeader: {
     flex: 2,
     justifyContent: 'flex-end',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   totalBalanceText: {
     fontSize: 18,
-    color: c.primary
+    color: THEME.COLORS.PRIMARY
   },
   currentBalanceBoxDollarsWrap: {
     flex: 3,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxDollars: {
-    color: c.primary,
+    color: THEME.COLORS.PRIMARY,
     fontSize: 44
   },
   currentBalanceBoxBits: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     justifyContent: 'space-around',
     flex: 1
   },
@@ -62,13 +62,13 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   walletIcon: {
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
   },
   walletsBoxHeaderText: {
     fontSize: 18,
-    color: 'white',
-    backgroundColor: 'transparent',
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     marginLeft: 16
   },
   donePlusContainer: {
@@ -92,8 +92,8 @@ export default StyleSheet.create({
   },
   walletsBoxDoneText: {
     fontSize: 18,
-    color: 'white',
-    backgroundColor: 'transparent',
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     top: 0,
     left: 0
   },
@@ -109,12 +109,12 @@ export default StyleSheet.create({
   dropdownIcon: {
     textAlignVertical: 'center',
     alignSelf: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   archiveBoxHeaderWrap: {
     padding: 12,
     borderBottomWidth: 1,
-    borderColor: '#BBB',
+    borderColor: THEME.COLORS.GRAY_2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 50
@@ -123,13 +123,13 @@ export default StyleSheet.create({
 
   },
   archiveIcon: {
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 28
   },
   archiveBoxHeaderText: {
     fontSize: 18,
-    backgroundColor: 'transparent',
-    color: 'white',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE,
     marginLeft: 14
   },
   archiveBoxHeaderDropdown: {
@@ -149,6 +149,17 @@ export default StyleSheet.create({
     position: 'absolute',
     height: platform.usableHeight - 130 - 50,
   },
+  sortableWalletListRow: {
+    width: platform.deviceWidth,
+    height: 50,
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.WHITE
+  },
   fullList: {
     flex: 1,
     position: 'absolute',
@@ -159,9 +170,7 @@ export default StyleSheet.create({
     paddingLeft: 16,
     marginRight: 4,
     flexDirection: 'row',
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderColor: '#EEE'
+    backgroundColor: THEME.COLORS.WHITE
   },
   rowContent: {
     flex: 1,
@@ -180,19 +189,19 @@ export default StyleSheet.create({
   },
   rowNameText: {
     fontSize: 18,
-    color: c.gray1
+    color: THEME.COLORS.GRAY_1
   },
   rowBalanceTextWrap: {
     justifyContent: 'center'
   },
   rowBalanceAmountText: {
     fontSize: 16,
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
   rowBalanceDenominationText: {
     fontSize: 14,
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
   rowDotsWrap: {
@@ -216,7 +225,7 @@ export default StyleSheet.create({
   },
   // beginning of options component
   menuOption: {
-    borderBottomColor: '#D4D4D4',
+    borderBottomColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     justifyContent: 'center'
   },
@@ -224,7 +233,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   optionText: {
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     fontSize: 18
   },
   editIcon: {
@@ -248,7 +257,7 @@ export default StyleSheet.create({
     alignItems: 'stretch',
     marginTop: 0,
     marginBottom: 0,
-    borderBottomColor: '#dddddd',
+    borderBottomColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: (Platform.OS === 'ios')
       ? 1
       : 0
@@ -259,13 +268,13 @@ export default StyleSheet.create({
       : 46,
     textAlign: 'center',
     fontSize: 20,
-    color: c.gray1
+    color: THEME.COLORS.GRAY_1
   },
   emptyBottom: {
     flex: 1
   },
   subHeaderSyntax: {
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     textAlign: 'center',
     fontSize: 14
   },
@@ -284,32 +293,32 @@ export default StyleSheet.create({
   },
   stylizedButtonTextWrap: {},
   stylizedButtonText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 16
   },
   cancelButtonWrap: {
-    backgroundColor: c.gray2,
+    backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
   cancelButton: {
-    color: '#3c76cd'
+    color: THEME.COLORS.SECONDARY
   },
   doneButtonWrap: {
-    backgroundColor: '#4977BB',
+    backgroundColor: THEME.COLORS.PRIMARY,
     alignSelf: 'flex-end',
     marginLeft: 4
   },
   doneButton: {
-    color: '#3c76cd'
+    color: THEME.COLORS.PRIMARY
   },
   // beginning of token rows //
   tokenRowContainer: {
     padding: 16,
     paddingLeft: 30,
     paddingRight: 44,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
-    borderColor: '#EEE'
+    borderColor: THEME.COLORS.GRAY_3
   },
   tokenRowContent: {
     justifyContent: 'space-between',
@@ -320,11 +329,32 @@ export default StyleSheet.create({
   },
   tokenRowText: {
     fontSize: 16,
-    color: c.gray1
+    color: THEME.COLORS.GRAY_1
   },
   // end of token rows //,,
 
   activeOpacity: {
-    opacity: activeOpacity.opacity
+    opacity: THEME.OPACITY.ACTIVE
+  },
+  walletRowUnderlay: {
+    color: THEME.COLORS.GRAY_3
+  },
+  tokenRowUnderlay: {
+    color: THEME.COLORS.GRAY_3
+  },
+  emptyRow: {
+    height: 50,
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: 16,
+    paddingLeft: 20,
+    paddingRight: 20,
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: THEME.COLORS.GRAY_4
+  },
+  emptyRowUnderlay: {
+    color: THEME.COLORS.GRAY_3
   }
-})
+}
+
+export default StyleSheet.create(styles)

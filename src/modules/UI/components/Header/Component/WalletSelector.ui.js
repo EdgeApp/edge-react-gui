@@ -7,6 +7,10 @@ import {border as b} from '../../../../utils'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 
+import THEME from '../../../../../theme/variables/airbitz'
+
+import styles from '../style'
+
 const LOADING_TEXT = sprintf(strings.enUS['loading'])
 
 export default class WalletSelector extends Component {
@@ -28,7 +32,9 @@ export default class WalletSelector extends Component {
     return (
       <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(), {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
         <View style={{height: 34, width: 34}} />
-        <T style={{color: '#FFF', fontSize: 20}} numberOfLines={1}>
+        <T style={{
+          color: THEME.COLORS.WHITE, fontSize: 20
+        }} numberOfLines={1}>
           {headerText}
         </T>
         <View style={[b(), {height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
@@ -38,7 +44,7 @@ export default class WalletSelector extends Component {
               && !this.props.addressModalVisible
               && <MDIcon
                 name='keyboard-arrow-down'
-                style={{color: '#FFF', fontSize: 25}} />
+                style={styles.icon} />
             }
           </View>
         </View>

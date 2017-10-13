@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
   container: {
@@ -6,27 +7,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 30
   },
   slider: {
-    backgroundColor: 'rgba(0,0,0, 0.1)',
+    backgroundColor: THEME.COLORS.WHITE,
+    opacity: THEME.OPACITY.LOW,
     overflow: 'hidden',
     borderRadius: 27,
     height: 55
-  },
-  track: {
-    // backgroundColor: '#355ea0',
   },
   thumb: {
     width: 52,
     height: 52,
     position: 'absolute',
     bottom: -26,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     borderRadius: 100
   },
   textOverlay: {
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 18,
     position: 'absolute',
-    color: '#FFF',
+    color: THEME.COLORS.WHITE,
     alignSelf: 'center',
     top: 17
   }

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
 
@@ -14,7 +14,7 @@ export default StyleSheet.create({
     flex: 1
   },
   searchContainer: {
-    backgroundColor: '#1C4F98',
+    backgroundColor: THEME.COLORS.PRIMARY,
     height: 44,
     paddingTop: 8,
     paddingBottom: 8,
@@ -23,7 +23,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   innerSearch: {
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     height: 28,
     borderRadius: 3,
     flex: 1,
@@ -34,7 +34,7 @@ export default StyleSheet.create({
     paddingRight: 8
   },
   searchIcon: {
-
+    color: THEME.COLORS.GRAY_2
   },
   searchInput: {
     height: 18,
@@ -48,6 +48,10 @@ export default StyleSheet.create({
     paddingLeft: 6,
     paddingRight: 6,
     height: 28
+  },
+  cancelButtonText: {
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
   // end of searchbar stuff
@@ -69,7 +73,7 @@ export default StyleSheet.create({
   currentBalanceWrap: { // one
     flex: 3,
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   balanceShownContainer: {
     justifyContent: 'center',
@@ -78,16 +82,16 @@ export default StyleSheet.create({
   iconWrap: { // two
     flex: 3,
     justifyContent: 'flex-start',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxBitssWrap: { // two
     flex: 4,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxBits: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 40
   },
   currentBalanceBoxDollarsWrap: {
@@ -96,7 +100,7 @@ export default StyleSheet.create({
     paddingTop: 4
   },
   currentBalanceBoxDollars: { // two
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 20
   },
   balanceHiddenContainer: {
@@ -106,7 +110,7 @@ export default StyleSheet.create({
   },
   balanceHiddenText: {
     alignSelf: 'center',
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 36
   },
   requestSendRow: { // two
@@ -117,8 +121,8 @@ export default StyleSheet.create({
     borderRadius: 3
   },
   requestBox: {
-    backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: 0.9,
+    backgroundColor: THEME.COLORS.PRIMARY,
+    opacity: THEME.OPACITY.LOW,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -137,8 +141,8 @@ export default StyleSheet.create({
     marginRight: 10
   },
   sendBox: {
-    backgroundColor: 'rgba(37,69,123, .3)',
-    opacity: 0.9,
+    backgroundColor: THEME.COLORS.BLACK,
+    opacity: THEME.OPACITY.LOW,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -158,12 +162,12 @@ export default StyleSheet.create({
   },
   request: {
     fontSize: 18,
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     marginHorizontal: 12
   },
   send: {
     fontSize: 18,
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     marginHorizontal: 12
   },
 
@@ -178,21 +182,6 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
-  searchBarMagnifyingGlass: {
-
-  },
-  searchBarInput: {
-
-  },
-  searchBarCloseWrap: {
-
-  },
-  searchBarClose: {
-
-  },
-  searchInputWrap: {
-
-  },
 
   transactionsScrollWrap: {
     flex: 1
@@ -200,7 +189,7 @@ export default StyleSheet.create({
   singleTransaction: {
     height: 60,
     borderBottomWidth: 1,
-    borderBottomColor: c.gray3,
+    borderBottomColor: THEME.COLORS.GRAY_3,
     padding: 10,
     paddingRight: 30,
     paddingLeft: 3,
@@ -214,7 +203,7 @@ export default StyleSheet.create({
 
   },
   singleDateArea: {
-    backgroundColor: c.gray4,
+    backgroundColor: THEME.COLORS.GRAY_4,
     flex: 3,
     padding: 8,
     paddingLeft: 15,
@@ -225,18 +214,12 @@ export default StyleSheet.create({
     flex: 1
   },
   formattedDate: {
-    color: c.gray2,
+    color: THEME.COLORS.GRAY_2,
     fontSize: 14
   },
   rightDateSearch: {
     flex: 1,
     alignItems: 'flex-end'
-  },
-  firstDateSearchWrap: {
-
-  },
-  firstDateSearchIcon: {
-
   },
   transactionInfoWrap: {
     flexDirection: 'row',
@@ -258,7 +241,7 @@ export default StyleSheet.create({
   },
   transactionPartner: {
     fontSize: 16,
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     textAlignVertical: 'center'
   },
   transactionBitAmount: {
@@ -271,22 +254,22 @@ export default StyleSheet.create({
   },
   transactionTime: {
     fontSize: 12,
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     textAlignVertical: 'bottom',
     position: 'relative',
     top: 4
   },
   transactionDollarAmount: {
     fontSize: 12,
-    color: c.gray2,
+    color: THEME.COLORS.GRAY_2,
     textAlignVertical: 'center',
     position: 'relative',
     top: 4
   },
   accentGreen: {
-    color: c.accentGreen
+    color: THEME.COLORS.ACCENT_GREEN
   },
   accentRed: {
-    color: c.accentRed
+    color: THEME.COLORS.ACCENT_RED
   }
 })

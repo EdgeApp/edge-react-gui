@@ -2,11 +2,10 @@ import {
   StyleSheet,
   Platform
 } from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz.js'
+import THEME from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
 
-
-module.exports = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row'
@@ -26,11 +25,11 @@ module.exports = StyleSheet.create({
     height: 37,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#58595C',
+    backgroundColor: THEME.COLORS.GRAY_1,
     opacity: 0.95
   },
   overlayTopText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 14
   },
   overlayBlank: {
@@ -47,12 +46,13 @@ module.exports = StyleSheet.create({
   overLayButtonArea: {
     flex: 1,
     justifyContent: 'center',
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     flexDirection: 'row',
     alignItems: 'center'
   },
   bottomButton: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: THEME.COLORS.BLACK,
+    opacity: THEME.OPACITY.LOW,
     borderRadius: 3,
     height: 50,
     marginLeft: 1,
@@ -65,9 +65,9 @@ module.exports = StyleSheet.create({
   },
   bottomButtonText: {
     opacity: 1,
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 14,
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   transferButtonWrap: {
     flex: 1,
@@ -75,7 +75,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   transferArrowIcon: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 22,
     height: 18,
     transform: [{scaleX: 1.2}]
@@ -86,7 +86,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   addressBookIcon: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 16,
     height: 16,
     transform: [{scaleX: -1.0}]
@@ -97,7 +97,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   cameraIcon: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 22,
     height: 18
   },
@@ -107,7 +107,7 @@ module.exports = StyleSheet.create({
     alignItems: 'center'
   },
   flashIcon: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 22,
     height: 18
   },
@@ -124,7 +124,7 @@ module.exports = StyleSheet.create({
     borderRadius: 3,
     alignItems: 'stretch',
     height: (platform.deviceHeight) / 4,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: 15,
     flexDirection: 'column',
     justifyContent: 'flex-start'
@@ -134,7 +134,7 @@ module.exports = StyleSheet.create({
   },
   modalTopText: {
     textAlign: 'center',
-    color: '#3c76cd',
+    color: THEME.COLORS.PRIMARY,
     fontWeight: '500'
   },
   modalMiddle: {
@@ -147,14 +147,14 @@ module.exports = StyleSheet.create({
     marginTop: 8,
     justifyContent: 'flex-end',
     alignItems: 'stretch',
-    borderBottomColor: '#dddddd',
+    borderBottomColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
   },
   addressInput: {
     height: 26,
     textAlign: 'center',
     fontSize: 20,
-    color: c.gray1
+    color: THEME.COLORS.GRAY_1
   },
   pasteButtonRow: {
     paddingTop: 12
@@ -177,7 +177,7 @@ module.exports = StyleSheet.create({
   },
   cancelButton: {
     fontSize: 12,
-    color: '#3c76cd'
+    color: THEME.COLORS.PRIMARY
   },
   doneButtonWrap: {
     flex: 1,
@@ -186,6 +186,15 @@ module.exports = StyleSheet.create({
   },
   doneButton: {
     fontSize: 28,
-    color: '#3c76cd'
-  }
+    color: THEME.COLORS.PRIMARY
+  },
+  icon: {
+    position: 'relative',
+    top: 12,
+    left: 13,
+    height: 24,
+    width: 24,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    zIndex: 1015,
+    elevation: 1015}
 })

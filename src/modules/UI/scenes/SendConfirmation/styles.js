@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   view: {
     flex: 1,
     flexDirection: 'column',
@@ -23,13 +24,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   pendingSymbolArea: {
     height: 12
   },
   slider: {
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   sliderWrap: {
     flex: 1,
@@ -41,11 +42,26 @@ const styles = StyleSheet.create({
   },
   error: {
     flex: 1,
-    color: 'red',
+    color: THEME.COLORS.ACCENT_RED,
     textAlign: 'left',
     marginRight: 5,
-    backgroundColor: 'transparent'
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  trigger: {
+    fontSize: 25,
+    color: THEME.COLORS.WHITE,
+    fontWeight: '700'
+  },
+  optionContainer: {
+    width: 165
+  },
+  optionRow: {
+    paddingVertical: 17
+  },
+  optionText: {
+    fontSize: 16
+  },
+  maxSpend: {
+    color: THEME.COLORS.ACCENT_ORANGE
   }
 })
-
-export default styles

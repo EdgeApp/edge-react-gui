@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import CreateWallet from './CreateWallet.ui'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
-import {createWallet} from './action'
+import {createCurrencyWallet} from './action'
 
 const mapStateToProps = (state) => ({
   supportedWalletTypes: SETTINGS_SELECTORS.getSupportedWalletTypes(state),
@@ -10,7 +10,8 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  createWallet: (walletName, walletType) => dispatch(createWallet(walletName, walletType))
+  createCurrencyWallet: (walletName, walletType, fiatCurrencyCode) =>
+    dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CreateWallet)

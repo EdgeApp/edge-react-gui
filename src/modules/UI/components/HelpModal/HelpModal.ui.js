@@ -10,8 +10,10 @@ import {Icon} from 'native-base'
 import Modal from 'react-native-modal'
 import logo from '../../../../img/logo2x.png'
 
+import styles from './styles'
+
 export default class HelpModal extends Component {
-  _renderWebView = () => {
+  renderWebView = () => {
     const scene = this.props.routes.scene
     const children = scene.children
     const sceneName = children
@@ -40,12 +42,14 @@ export default class HelpModal extends Component {
     // console.log('this.props', this.props)
     return (
       <TouchableWithoutFeedback onPress={this.props.closeModal}>
-        <Modal style={{margin: 0, paddingVertical: 60, paddingHorizontal: 20}}
+        <Modal style={{
+          margin: 0, paddingVertical: 60, paddingHorizontal: 20
+        }}
           isVisible={this.props.modal}
           animationIn='bounceIn'
           animationOut='bounceOut'>
 
-            <View style={{flex: 1, backgroundColor: '#FFF'}}>
+            <View style={{flex: 1}, styles.background}>
               <View style={{flexDirection: 'row'}}>
                 <View style={{width: 40}} />
                 <Image source={logo} style={{flex: 1, height: 48, margin: 15}} resizeMode='contain' />
@@ -58,7 +62,7 @@ export default class HelpModal extends Component {
               </View>
 
               <View style={{flex: 1, paddingHorizontal: 20}}>
-                <WebView source={this._renderWebView()} />
+                <WebView source={this.renderWebView()} />
               </View>
 
             </View>

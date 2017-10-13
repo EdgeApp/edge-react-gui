@@ -1,27 +1,11 @@
 import React, {Component} from 'react'
-import {TextInput, View, StyleSheet} from 'react-native'
+import {
+  TextInput,
+  View
+} from 'react-native'
 import KeyboardButton from '../KeyboardButton/index.js'
 
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    borderColor: 'red',
-    borderWidth: 1
-  },
-  keyboard: {
-    flex: 1,
-    borderColor: 'red',
-    borderWidth: 1
-  },
-  row: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  calculation: {
-    flex: 1,
-    color: 'black'
-  }
-})
+import styles from './styles'
 
 export default class Keyboard extends Component {
   constructor (props) {

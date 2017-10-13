@@ -32,7 +32,7 @@ import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSetting
 
 import * as CONTEXT_API from './Core/Context/api'
 
-import {makeContext, makeReactNativeIo} from 'airbitz-core-react-native'
+import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
 import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
 // $FlowFixMe
 // import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
@@ -73,6 +73,21 @@ type State = {
   loading: boolean
 }
 
+function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
+  const opts = {
+    apiKey: AIRBITZ_API_KEY,
+    callbacks,
+    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)]
+  }
+
+  if (ENV.USE_FAKE_CORE) {
+    const [context] = makeFakeContexts({...opts, localFakeUser: true})
+    return Promise.resolve(context)
+  }
+
+  return makeReactNativeContext(opts)
+}
+
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
@@ -100,15 +115,7 @@ export default class Main extends Component<Props, State> {
   componentDidMount () {
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
-    makeReactNativeIo()
-    .then((io) =>
-      // Make the core context:
-       makeContext({
-         apiKey: AIRBITZ_API_KEY,
-         plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
-         callbacks: this.props.contextCallbacks,
-         io
-       }))
+    makeCoreContext(this.props.contextCallbacks)
     .then((context) => {
       // Put the context into Redux:
       this.props.addContext(context)
