@@ -1,25 +1,22 @@
 import React, {Component} from 'react'
-// import {Text, View} from 'react-native'
-//import styles from '../../style'
-// import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
-// import T from '../../../../components/FormattedText/FormattedText.ui'
+import * as Constants from '../../../../../../constants/indexConstants'
 import strings from '../../../../../../locales/default'
 import MenuDropDown from '../../../../components/MenuDropDown/MenuDropDown.ui'
 import {MenuDropDownStyle} from '../../../../../../styles/indexStyles'
 export const options = [
   {
-    value: 'rename',
+    value: Constants.RENAME_VALUE,
     label: strings.enUS['string_rename']
   },{
-    value: 'sort',
+    value: Constants.SORT_VALUE,
     label: strings.enUS['fragment_wallets_sort']
   },{
-    value: 'addToken',
+    value: Constants.ADD_TOKENS_VALUE,
     label: strings.enUS['fragmet_wallets_addtoken_option']
   },/*{
     value: 'archive'
   },*/{
-    value: 'delete',
+    value: Constants.DELETE_VALUE,
     label: strings.enUS['string_delete']
   }
 ]
@@ -38,7 +35,7 @@ export default class WalletListRowOptions extends Component {
 
   optionAction = (optionKey) => {
     this.props.executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives)
-    if (optionKey === 'Rename') {
+    if (optionKey === Constants.RENAME_VALUE) {
       this.props.updateRenameWalletInput(this.props.wallets[this.props.walletKey].name)
     }
   }

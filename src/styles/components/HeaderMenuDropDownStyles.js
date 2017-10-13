@@ -21,7 +21,6 @@ const MenuDropDownStyle = {
     width: 46
   },
   menuButton: {
-
   },
   menuOption: {
     borderBottomColor: THEME.COLORS.GRAY_3,
@@ -42,7 +41,8 @@ const MenuDropDownStyle = {
     fontSize: 18
   },
   icon : {
-    fontSize :20
+    fontSize :20,
+    color: THEME.COLORS.GRAY_1
   },
   altIconText: {
     fontSize :20

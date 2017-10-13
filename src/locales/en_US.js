@@ -836,6 +836,7 @@ const strings = {
   title_Change_Pin: 'Change Pin',
   title_Password_Recovery: 'Password Recovery',
   title_Exchange: 'Exchange',
+  dropdown_exchange_max_amount: 'Exchange Max Amount'
 }
 
 export default strings

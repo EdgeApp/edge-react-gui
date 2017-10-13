@@ -4,24 +4,27 @@ import LinkedComponent
 import * as Styles from '../../styles/indexStyles'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
+import strings from '../../locales/default'
+import THEME from '../../theme/variables/airbitz'
+
 
 export const mapStateToProps = (state) => {
   const data =[
     {
-      label : 'blue ',
-      value: 'oh yeah'
+      label : strings.enUS['change_mining_fee_title'], // tie into
+      value: Constants.CHANGE_MINING_FEE_VALUE
     },
     {
-      label : 'Bob',
-      value: 'mo Bob'
+      label : strings.enUS['dropdown_exchange_max_amount'],
+      value: Constants.EXCHANGE_MAX_AMOUNT_VALUE
     },
     {
-      label : 'REd',
-      value: 'greem'
+      label : strings.enUS['string_help'],
+      value: Constants.HELP_VALUE
     }
   ]
   return {
-    style: Styles.MenuDropDownStyle,
+    style: {...Styles.MenuDropDownStyle, icon: {...Styles.MenuDropDownStyle.icon, color:THEME.COLORS.WHITE} },
     exchangeRate: state.cryptoExhange.exchangeRate,
     data
   }
