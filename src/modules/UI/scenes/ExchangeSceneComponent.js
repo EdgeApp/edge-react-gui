@@ -1,6 +1,5 @@
 //@flow
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import strings from '../../../locales/default'
 import * as Constants from '../../../constants/indexConstants'
 import Gradient from '../../UI/components/Gradient/Gradient.ui'
@@ -14,7 +13,7 @@ import {PrimaryButton} from '../components/Buttons/index'
 import WalletListModal
   from '../../UI/components/WalletListModal/WalletListModalConnector'
 import {IconButton} from '../components/Buttons/IconButton.ui'
-import type {GuiWallet} from '../../../types'
+import {GuiWallet} from '../../../types'
 type Props ={
   exchangeRate: string,
   wallets: Array<GuiWallet>,
@@ -31,20 +30,7 @@ type Props ={
 
 }
 export default class ExchangeSceneComponent extends Component<Props> {
-  static propTypes = {
-    exchangeRate: PropTypes.string,
-    wallets: PropTypes.array,
-    intialWalletOne: PropTypes.instanceOf.GuiWallet,
-    intialWalletTwo: PropTypes.instanceOf.GuiWallet,
-    fromWallet: PropTypes.instanceOf.GuiWallet,
-    toWallet: PropTypes.instanceOf.GuiWallet,
-    fee: PropTypes.string,
-    showModal: PropTypes.bool,
-    selectFromWallet: PropTypes.func.isRequired,
-    selectToWallet: PropTypes.func.isRequired,
-    swapFromAndToWallets: PropTypes.func.isRequired,
-    openModal: PropTypes.func.isRequired,
-  }
+
   componentWillMount () {
     if (this.props.wallets.length > 1) {
       this.props.selectFromWallet(this.props.intialWalletOne)

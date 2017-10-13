@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import {View, Image, Text} from 'react-native'
 import ExchangedFlipInput from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
@@ -13,19 +12,11 @@ type Props = {
   primaryInfo: GuiCurrencyInfo,
   secondaryInfo: GuiCurrencyInfo,
   fiatPerCrypto: number,
-  nativeAmount: number
+  nativeAmount: string
 }
 
 export default class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
-  static propTypes = {
-    style: PropTypes.object.isRequired,
-    uiWallet: PropTypes.instanceOf.GuiWallet,
-    primaryInfo: PropTypes.instanceOf.GuiCurrencyInfo,
-    secondaryInfo: PropTypes.instanceOf.GuiCurrencyInfo,
-    fiatPerCrypto: PropTypes.number,
-    nativeAmount: PropTypes.number,
-    fee: PropTypes.string
-  }
+
   renderFee (style: any) {
     if (this.props.fee) {
       return (

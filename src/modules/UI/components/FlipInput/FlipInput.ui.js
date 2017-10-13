@@ -1,6 +1,5 @@
 //@flow
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import {
   Text,
   TextInput,
@@ -31,22 +30,14 @@ type State = {
 }
 const getInitialState = (props: Props) => ({
   isToggled: false,
-  primaryDisplayAmount: props.primaryDisplayAmount || '',
-  secondaryDisplayAmount: props.secondaryDisplayAmount || '',
+  primaryDisplayAmount: props.primaryDisplayAmount,
+  secondaryDisplayAmount: props.secondaryDisplayAmount,
   primaryShouldUpdate: true,
   secondaryShouldUpdate: true
 })
 
 export default class FlipInput extends Component<Props,State> {
-  static propTypes = {
-    primaryDisplayAmount: PropTypes.string,
-    secondaryDisplayAmount: PropTypes.string,
-    primaryInfo: PropTypes.instanceOf.GuiCurrencyInfo,
-    secondaryInfo: PropTypes.instanceOf.GuiCurrencyInfo,
-    isValidInput: PropTypes.func.isRequired,
-    onPrimaryAmountChange: PropTypes.func.isRequired,
-    onSecondaryAmountChange: PropTypes.func.isRequired
-  }
+
   static defaultProps = {
     primaryDisplayAmount: '',
     secondaryDisplayAmount: ''
