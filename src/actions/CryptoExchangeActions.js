@@ -15,8 +15,9 @@ export function openWalletSelectorForExchange (type: string, data: string) {
   }
 }
 
-export const selectWalletForExchange = (walletId: string) => (dispatch: any, getState: any) => {
+export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: any, getState: any) => {
   const state = getState()
+  console.log(currencyCode)
   const wallet = state.ui.wallets.byId[walletId]
   switch (state.cryptoExchange.changeWallet) {
   case Constants.TO:
