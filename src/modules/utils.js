@@ -216,6 +216,18 @@ export const getSupportedFiats = (): Array<{label: string, value: string}> => {
   return supportedFiats
 }
 
+/**
+ * Adds the `iso:` prefix to a currency code, if it's missing.
+ * @param {*} currencyCode A currency code we believe to be a fiat value.
+ */
+export function fixFiatCurrencyCode (currencyCode: string) {
+  // These are included in the currency-symbol-map library,
+  // and therefore might sneak into contexts where we expect fiat codes:
+  if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
+
+  return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
+}
+
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
   !!exchangeData.primaryDisplayAmount
   && !!exchangeData.primaryDisplayName

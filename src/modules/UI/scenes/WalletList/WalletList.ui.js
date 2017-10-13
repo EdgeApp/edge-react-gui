@@ -412,7 +412,11 @@ export default class WalletList extends Component<any, {
   calculateTotalBalance = (values: any) => {
     let total = 0
     for (let currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
+      let addValue = this.props.currencyConverter.convertCurrency(
+        currency,
+        UTILS.fixFiatCurrencyCode(this.props.settings.defaultFiat),
+        values[currency]
+      )
       total = total + addValue
     }
     return total.toFixed(2)
