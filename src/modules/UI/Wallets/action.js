@@ -1,3 +1,4 @@
+//@flow
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -12,10 +13,15 @@ import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 import * as Actions from '../../../actions/indexActions'
+import * as Constants from '../../../constants/indexConstants'
 
 export const selectWallet = (walletId, currencyCode) =>
-  (dispatch) => {
-    dispatch(Actions.selectWalletForExchange(walletId))
+  (dispatch, getState) => {
+    const state = getState()
+    if (state.routes.scene.children[0].name === Constants.EXCHANGE) {
+      dispatch(Actions.selectWalletForExchange(walletId))
+      return
+    }
     dispatch(selectWalletId(walletId))
     dispatch(selectCurrencyCode(currencyCode))
   }
