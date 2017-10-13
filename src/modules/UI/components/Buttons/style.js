@@ -1,9 +1,7 @@
 import {StyleSheet} from 'react-native'
-//import {colors as c} from '../../../../theme/variables/airbitz'
 import THEME from '../../../../theme/variables/airbitz'
-module.exports = StyleSheet.create({
 
-  // buttons
+export default StyleSheet.create({
   buttonsWrap: {
     flex: 1,
     flexDirection: 'row',
@@ -16,9 +14,6 @@ module.exports = StyleSheet.create({
     flex: 1,
     borderRadius: 3
   },
-  stylizedButtonTextWrap: {
-
-  },
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
     fontSize: 16
@@ -27,8 +22,11 @@ module.exports = StyleSheet.create({
   primaryButtonWrap: {
     backgroundColor: THEME.COLORS.SECONDARY
   },
+  primaryUnderlayColor: {
+    color: THEME.COLORS.PRIMARY
+  },
   primaryButton: {
-    color: THEME.COLORS.GRADIENT.LIGHT // not used?
+    color: THEME.COLORS.GRADIENT.LIGHT
   },
 
   secondaryButtonWrap: {
@@ -38,14 +36,20 @@ module.exports = StyleSheet.create({
   secondaryButton: {
     color: THEME.COLORS.GRADIENT.LIGHT
   },
+  secondaryUnderlayColor: {
+    color: THEME.COLORS.GRAY_1
+  },
 
   tertiaryButtonWrap: {
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     borderWidth: 1,
     borderColor: THEME.COLORS.SECONDARY
   },
   tertiaryButton: {
     color: THEME.COLORS.SECONDARY,
     paddingHorizontal: 10
+  },
+  tertiaryUnderlayColor: {
+    color: THEME.COLORS.SECONDARY
   }
 })

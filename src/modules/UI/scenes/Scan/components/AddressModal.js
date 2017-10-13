@@ -13,6 +13,8 @@ import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
 
+import styles from '../style'
+
 export default class AddressModal extends Component {
   constructor (props) {
     super(props)
@@ -74,15 +76,7 @@ export default class AddressModal extends Component {
 
   render () {
     const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color='#2A5799'
-      style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
-        backgroundColor: 'transparent',
-        zIndex: 1015,
-        elevation: 1015}]} />
+      style={styles.icon} />
 
     const copyMessage
       = this.state.clipboard

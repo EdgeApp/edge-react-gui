@@ -95,7 +95,10 @@ export default class FlipInput extends Component {
       <Text style={[bottom.symbol]}>
         {denominationInfo.displayDenomination.symbol}
       </Text>
-      <Text style={[bottom.amount, !amount && {color: 'rgba(255, 255, 255, 0.60)'}]}>
+      <Text style={[
+        bottom.amount,
+        !amount && bottom.alert
+      ]}>
         {amount || '0'}
       </Text>
       <Text style={[bottom.currencyCode]}>

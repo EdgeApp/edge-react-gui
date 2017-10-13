@@ -6,6 +6,8 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 
+import styles from './styles'
+
 export default class AutoLogoutModal extends Component {
   constructor (props) {
     super(props)
@@ -30,16 +32,8 @@ export default class AutoLogoutModal extends Component {
       onDone={() => this.onDone(this.state.autoLogoutTimeInMinutes)}
       onCancel={this.onCancel} />
 
-    const icon = <IonIcon name='ios-time-outline' size={24} color='#2A5799'
-      style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
-        backgroundColor: 'transparent',
-        zIndex: 1015,
-        elevation: 1015}]} />
+    const icon = <IonIcon name='ios-time-outline' size={24}
+      style={styles.icon} />
 
     return <StylizedModal visibilityBoolean={this.props.showModal}
       featuredIcon={icon}

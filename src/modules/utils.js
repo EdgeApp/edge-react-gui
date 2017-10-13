@@ -1,8 +1,8 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {divf, mulf, gt} from 'biggystring'
+import {divf, mulf} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type {AbcDenomination} from 'airbitz-core-types'
+import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
@@ -155,9 +155,6 @@ export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) =>
 export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
 
-export const isGreaterThan = (comparedTo: string) =>
-   (amountString: string): boolean => gt(amountString, comparedTo)
-
 const restrictedCurrencyCodes = [
   'BTC'
 ]
@@ -226,4 +223,25 @@ export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
 export const unspacedLowercase = (input: string) => {
   let newInput = input.replace(' ', '').toLowerCase()
   return newInput
+}
+
+export const getCurrencyInfo = (plugins: Array<AbcCurrencyPlugin>, currencyCode: string): AbcCurrencyInfo | void => {
+  for (const plugin of plugins) {
+    const info = plugin.currencyInfo
+    for (const denomination of info.denominations) {
+      if (denomination.name === currencyCode) {
+        return info
+      }
+    }
+
+    for (const token of info.metaTokens) {
+      for (const denomination of token.denominations) {
+        if (denomination.name === currencyCode) {
+          return info
+        }
+      }
+    }
+  }
+
+  return void 0
 }

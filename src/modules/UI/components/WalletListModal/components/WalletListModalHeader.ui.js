@@ -5,12 +5,12 @@ import {
   TouchableHighlight
 } from 'react-native'
 import strings from '../../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import PropTypes from 'prop-types'
 import T from '../../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import styles from '../style'
 import {border as b} from '../../../../utils'
+import THEME from '../../../../../theme/variables/airbitz'
 
 export default class WalletListModalHeader extends Component<any> {
   constructor (props: any) {
@@ -33,8 +33,8 @@ export default class WalletListModalHeader extends Component<any> {
         <View style={[styles.headerContent, b()]}>
 
           <View style={[styles.headerTextWrap, b()]}>
-            <T style={[styles.headerText, {color: 'white'}, b()]}>
-              {sprintf(strings.enUS[headerSyntax])}
+            <T style={[styles.headerText, {color: THEME.COLORS.WHITE}, b()]}>
+              {strings.enUS[headerSyntax]}
             </T>
           </View>
 
@@ -43,7 +43,7 @@ export default class WalletListModalHeader extends Component<any> {
             <Ionicon style={[styles.donebutton, b()]}
               name='ios-close'
               size={26}
-              color='white'
+              color={THEME.COLORS.WHITE}
             />
           </TouchableHighlight>
 

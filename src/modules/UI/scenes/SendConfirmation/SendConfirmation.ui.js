@@ -107,9 +107,12 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
               && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
             }
           </View>
-          <ABSlider style={[UTILS.border()]}
-            onSlidingComplete={this.signBroadcastAndSave}
-            sliderDisabled={this.props.sliderDisabled || this.props.sendConfirmation.pending} />
+          <View style={[styles.sliderWrap]}>
+            <ABSlider
+              parentStyle={styles.sliderStyle}
+              onSlidingComplete={this.signBroadcastAndSave}
+              sliderDisabled={this.props.sliderDisabled || this.props.sendConfirmation.pending} />
+          </View>
         </ScrollView>
       </Gradient>
     )

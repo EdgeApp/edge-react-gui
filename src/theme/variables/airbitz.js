@@ -40,17 +40,33 @@ export default {
   BUTTONS: {
     HEIGHT: 44
   },
+  DEBUG: {
+    COLORS: {
+      HIGHLIGHT: '#f03a47'
+    }
+  },
   FONTS: {
     DEFAULT: 'SourceSansPro-Black'
   },
 
   OPACITY: {
-    ACTIVE: 0.3
+    ACTIVE: 0.3,
+
+    FULL: 1.0,
+    HIGH: 0.8,
+    MID: 0.5,
+    LOW: 0.1,
+    NONE: 0.0
   },
 
   COLORS: {
     PRIMARY:   '#2a5799',
     SECONDARY: '#4977bb',
+
+    GRADIENT: {
+      LIGHT: '#3b7ada',
+      DARK:  '#2b5698'
+    },
 
     ACCENT_GREEN:  '#7fc343',
     ACCENT_ORANGE: '#f7a623',
@@ -64,17 +80,6 @@ export default {
     WHITE:  '#FFFFFF',
     CLEAR:  'rgba(0, 0, 0, 0)',
 
-    GRADIENT: {
-      LIGHT: '#3b7ada',
-      DARK:  '#2b5698'
-    },
-
-    BLUE_ALPHA_BUTTON: {
-      UNPRESSED: 'rgba(42, 87, 153, 0.55)'
-    },
-
-    TRANSPARENT_BUTTON: {
-      BORDER: 'rgba(256, 256, 256, 0.5)'
-    }
+    TRANSPARENT: 'transparent'
   }
 }
