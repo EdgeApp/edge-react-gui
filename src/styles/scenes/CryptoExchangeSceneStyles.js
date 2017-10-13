@@ -79,7 +79,8 @@ const CryptoExchangeSceneStyle = {
     },
     feeText: {
       color: THEME.COLORS.WHITE
-    }
+    },
+    flipInputColor: THEME.COLORS.WHITE
   }
 }
 

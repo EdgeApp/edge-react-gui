@@ -1,3 +1,4 @@
+//@flow
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import strings from '../../../locales/default'
@@ -13,8 +14,37 @@ import {PrimaryButton} from '../components/Buttons/index'
 import WalletListModal
   from '../../UI/components/WalletListModal/WalletListModalConnector'
 import {IconButton} from '../components/Buttons/IconButton.ui'
+import type {GuiWallet} from '../../../types'
+type Props ={
+  exchangeRate: string,
+  wallets: Array<GuiWallet>,
+  intialWalletOne: GuiWallet,
+  intialWalletTwo: GuiWallet,
+  fromWallet: GuiWallet,
+  toWallet: GuiWallet,
+  fee: string,
+  showModal: boolean,
+  selectFromWallet: Function,
+  selectToWallet: Function,
+  swapFromAndToWallets: Function,
+  openModal: Function
 
-export default class ExchangeSceneComponent extends Component {
+}
+export default class ExchangeSceneComponent extends Component<Props> {
+  static propTypes = {
+    exchangeRate: PropTypes.string,
+    wallets: PropTypes.array,
+    intialWalletOne: PropTypes.instanceOf.GuiWallet,
+    intialWalletTwo: PropTypes.instanceOf.GuiWallet,
+    fromWallet: PropTypes.instanceOf.GuiWallet,
+    toWallet: PropTypes.instanceOf.GuiWallet,
+    fee: PropTypes.string,
+    showModal: PropTypes.bool,
+    selectFromWallet: PropTypes.func.isRequired,
+    selectToWallet: PropTypes.func.isRequired,
+    swapFromAndToWallets: PropTypes.func.isRequired,
+    openModal: PropTypes.func.isRequired,
+  }
   componentWillMount () {
     if (this.props.wallets.length > 1) {
       this.props.selectFromWallet(this.props.intialWalletOne)
@@ -23,7 +53,7 @@ export default class ExchangeSceneComponent extends Component {
       this.props.selectFromWallet(this.props.intialWalletOne)
     }
   }
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: Props) {
     if (!nextProps.fromWallet && nextProps.intialWalletOne) {
       this.props.selectFromWallet(nextProps.intialWalletOne)
     }
@@ -35,7 +65,7 @@ export default class ExchangeSceneComponent extends Component {
     this.props.swapFromAndToWallets()
   }
 
-  launchWalletSelector = (arg) => {
+  launchWalletSelector = (arg: string) => {
     this.props.openModal(arg)
   }
 
@@ -44,7 +74,6 @@ export default class ExchangeSceneComponent extends Component {
       return (
         <WalletListModal
           topDisplacement={'33'}
-          selectionFunction={this.selectionFunction}
           type='from'
         />
       )
@@ -52,16 +81,8 @@ export default class ExchangeSceneComponent extends Component {
     return null
   }
 
-  selectionFunction = (arg) => {
-    console.log('SELECTION FUNCTION ' + arg)
-    this.setState({
-      showModal: false
-    })
-  }
-
   render () {
     const style = CryptoExchangeSceneStyle
-    console.log(style)
     return (
       <Gradient style={[style.scene]}>
         <ScrollView
@@ -75,20 +96,20 @@ export default class ExchangeSceneComponent extends Component {
             style={style.flipWrapper}
             uiWallet={this.props.fromWallet}
             whichWallet={Constants.FROM}
-            launchWalletSelector={this.launchWalletSelector.bind(this)}
+            launchWalletSelector={this.launchWalletSelector}
             fee={this.props.fee}
           />
           <View style={style.shim} />
           <IconButton
             style={style.flipButton}
             icon={Constants.SWAP_VERT}
-            onPress={this.flipThis.bind(this)}
+            onPress={this.flipThis}
           />
           <View style={style.shim} />
           <CryptoExchangeFlipConnector
             style={style.flipWrapper}
             whichWallet={Constants.TO}
-            launchWalletSelector={this.launchWalletSelector.bind(this)}
+            launchWalletSelector={this.launchWalletSelector}
             uiWallet={this.props.toWallet}
           />
           <View style={style.shim} />
@@ -100,8 +121,4 @@ export default class ExchangeSceneComponent extends Component {
       </Gradient>
     )
   }
-}
-
-ExchangeSceneComponent.propTypes = {
-  exchangeRate: PropTypes.string
 }

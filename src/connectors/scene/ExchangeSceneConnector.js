@@ -1,26 +1,28 @@
+//@flow
+import {GuiWallet} from '../../types'
 import {connect} from 'react-redux'
 import LinkedComponent from '../../modules/UI/scenes/ExchangeSceneComponent'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 
-export const mapStateToProps = (state) => {
+export const mapStateToProps = (state: any) => {
   const wallets = []
   for (const wallet in state.ui.wallets.byId) {
     wallets.push(state.ui.wallets.byId[wallet])
   }
   return {
-    exchangeRate: state.cryptoExhange.exchangeRate,
+    exchangeRate: state.cryptoExchange.exchangeRate,
     wallets: wallets,
     intialWalletOne: wallets.length > 0 ? wallets[0] : null,
     intialWalletTwo: wallets.length > 1 ? wallets[1] : null,
-    fromWallet: state.cryptoExhange.fromWallet,
-    toWallet: state.cryptoExhange.toWallet,
-    fee: state.cryptoExhange.fee,
-    showModal: state.cryptoExhange.walletListModalVisible
+    fromWallet: state.cryptoExchange.fromWallet,
+    toWallet: state.cryptoExchange.toWallet,
+    fee: state.cryptoExchange.fee,
+    showModal: state.cryptoExchange.walletListModalVisible
   }
 }
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = (dispatch: any) => ({
   selectFromWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
   selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),

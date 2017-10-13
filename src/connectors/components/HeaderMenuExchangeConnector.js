@@ -1,3 +1,4 @@
+//@flow
 import {connect} from 'react-redux'
 import LinkedComponent
   from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
@@ -8,7 +9,7 @@ import strings from '../../locales/default'
 import THEME from '../../theme/variables/airbitz'
 
 
-export const mapStateToProps = (state) => {
+export const mapStateToProps = (state: any) => {
   const data =[
     {
       label : strings.enUS['change_mining_fee_title'], // tie into
@@ -25,15 +26,15 @@ export const mapStateToProps = (state) => {
   ]
   return {
     style: {...Styles.MenuDropDownStyle, icon: {...Styles.MenuDropDownStyle.icon, color:THEME.COLORS.WHITE} },
-    exchangeRate: state.cryptoExhange.exchangeRate,
+    exchangeRate: state.cryptoExchange.exchangeRate,
     data
   }
 }
 
-export const mapDispatchToProps = (dispatch) => ({
+export const mapDispatchToProps = (dispatch: any) => ({
   openMenu: () => dispatch(actions.dispatchAction(Constants.OPEN_EXCHANGE_HEADER_MENU)),
   closeMenu: () => dispatch(actions.dispatchAction(Constants.CLOSE_EXCHANGE_HEADER_MENU)),
-  onSelect: (value) => {
+  onSelect: (value: string) => {
     console.log(value)
   }
   //nextScreen: () => dispatch(actions.nextScreen())

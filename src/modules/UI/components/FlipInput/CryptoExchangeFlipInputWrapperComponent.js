@@ -1,13 +1,32 @@
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {View, Image, Text} from 'react-native'
 import ExchangedFlipInput from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
 import * as Constants from '../../../../constants/indexConstants'
-// import * as UTILS from '../../../utils'
-// import WalletSelector from '../Header/Component/WalletSelectorConnector'
+import {GuiWallet, GuiCurrencyInfo} from '../../../../types'
 
-export default class CryptoExchangeFlipInputWrapperComponent extends Component {
-  renderFee (style) {
+type Props = {
+  style: any,
+  fee: string,
+  uiWallet: GuiWallet,
+  primaryInfo: GuiCurrencyInfo,
+  secondaryInfo: GuiCurrencyInfo,
+  fiatPerCrypto: number,
+  nativeAmount: number
+}
+
+export default class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
+  static propTypes = {
+    style: PropTypes.object.isRequired,
+    uiWallet: PropTypes.instanceOf.GuiWallet,
+    primaryInfo: PropTypes.instanceOf.GuiCurrencyInfo,
+    secondaryInfo: PropTypes.instanceOf.GuiCurrencyInfo,
+    fiatPerCrypto: PropTypes.number,
+    nativeAmount: PropTypes.number,
+    fee: PropTypes.string
+  }
+  renderFee (style: any) {
     if (this.props.fee) {
       return (
         <View style={style.fee}>
@@ -38,7 +57,6 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
       fiatPerCrypto,
       nativeAmount
     } = this.props
-    const color = 'white' // TODO: Update with Kevins color and theme
     return (
       <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
@@ -58,7 +76,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
           secondaryInfo={secondaryInfo}
           secondaryToPrimaryRatio={fiatPerCrypto}
           onAmountsChange={this.onAmountsChange}
-          color={color} />
+          color={style.flipInputColor} />
         </View>
         {this.renderFee(style)}
       </View>

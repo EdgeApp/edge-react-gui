@@ -1,3 +1,5 @@
+//@flow
+import type {GuiWallet, GuiDenomination, GuiCurrencyInfo} from '../../types'
 import {connect} from 'react-redux'
 import LinkedComponent
 from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent'
@@ -6,7 +8,7 @@ import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../../modules/UI/Settings/selectors.js'
 
-export const mapStateToProps = (state, ownProps) => {
+export const mapStateToProps = (state: any, ownProps: any) => {
   const fee = ownProps.fee ? ownProps.fee: null
   let fiatPerCrypto = 0
   const uiWallet: GuiWallet = ownProps.uiWallet
@@ -54,7 +56,7 @@ export const mapStateToProps = (state, ownProps) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch, ownProps) => ({
+export const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
   launchWalletSelector: ownProps.launchWalletSelector
 // nextScreen: () => dispatch(actions.nextScreen())
 })

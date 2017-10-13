@@ -1,9 +1,26 @@
+//@flow
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {View, Text, TouchableHighlight} from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 
-class TextAndIconButton extends Component {
+type Props = {
+  icon: string,
+  style: any,
+  onPress: Function,
+  title: string
+}
+type State = {
+  pressed: boolean
+}
+
+class TextAndIconButton extends Component<Props, State> {
+  static propTypes = {
+    icon: PropTypes.string.isRequired,
+    style: PropTypes.object.isRequired,
+    onPress: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired
+  }
   componentWillMount () {
     this.setState({
       pressed: false
@@ -23,7 +40,6 @@ class TextAndIconButton extends Component {
     })
   }
   render () {
-    console.log(this.props.style)
     const {
       container,
       inner,
@@ -53,13 +69,6 @@ class TextAndIconButton extends Component {
       </TouchableHighlight>
     )
   }
-}
-
-TextAndIconButton.propTypes = {
-  icon: PropTypes.string.isRequired,
-  style: PropTypes.object.isRequired,
-  onPress: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired
 }
 
 export {TextAndIconButton}

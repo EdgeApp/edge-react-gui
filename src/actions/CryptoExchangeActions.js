@@ -1,3 +1,5 @@
+//@flow
+import type {GuiWallet} from '../types'
 import * as Constants from '../constants/indexConstants'
 export function selectToFromWallet (type: string, data: GuiWallet) {
   return {
@@ -13,10 +15,10 @@ export function openWalletSelectorForExchange (type: string, data: string) {
   }
 }
 
-export const selectWalletForExchange = (walletId) => (dispatch, getState) => {
+export const selectWalletForExchange = (walletId: string) => (dispatch: any, getState: any) => {
   const state = getState()
   const wallet = state.ui.wallets.byId[walletId]
-  switch (state.cryptoExhange.changeWallet) {
+  switch (state.cryptoExchange.changeWallet) {
   case Constants.TO:
     return dispatch(
       selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet)

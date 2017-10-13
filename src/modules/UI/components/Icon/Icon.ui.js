@@ -1,3 +1,4 @@
+//@flow
 import React from 'react'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -6,8 +7,14 @@ import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import * as Constants from '../../../../constants/indexConstants'
 
+type Props= {
+  style: any,
+  name: string,
+  size: number,
+  type: string
+}
 
-const Icon = ({style, name, size, type}) => {
+const Icon = ({style, name, size, type}: Props) => {
   switch (type) {
   case Constants.ENTYPO:
     return <Entypo

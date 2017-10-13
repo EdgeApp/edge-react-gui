@@ -1,4 +1,6 @@
+//@flow
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import {Actions} from 'react-native-router-flux'
 import strings from '../../../../../locales/default'
 import BackButton from './BackButton.ui'
@@ -7,14 +9,20 @@ import * as Constants from '../../../../../constants/indexConstants'
 const BACK_TEXT = strings.enUS['back_button_text']
 const CANCEL_TEXT = strings.enUS['string_cancel_cap']
 
-export default class Left extends Component {
+type Props ={
+  routes: any
+}
+export default class Left extends Component<Props> {
+  static propTypes = {
+    routes: PropTypes.object.isRequired
+  }
   render () {
     const children = this.props.routes.scene.children
     const sceneName = children
       ? this.props.routes.scene.children[this.props.routes.scene.index].name
       : null
 
-    const makeBackButton = (labelText, consts) =>
+    const makeBackButton = (labelText: string, consts: string) =>
       <BackButton label={labelText} onPress={() => Actions[consts]({type: 'reset'})} />
 
     switch (sceneName) {

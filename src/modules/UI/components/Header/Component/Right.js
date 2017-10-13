@@ -1,12 +1,19 @@
+//@flow
 import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import SendConfirmationOptions from '../../../scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import HelpButton from './HelpButton.ui'
 // import {View} from 'react-native'
 import * as Constants from '../../../../../constants/indexConstants'
 import MenuDropDown from '../../../../../connectors/components/HeaderMenuExchangeConnector'
 
-export default class Right extends Component {
-
+type Props = {
+  routes: any
+}
+export default class Right extends Component<Props> {
+  static propTypes = {
+    routes: PropTypes.object.isRequired
+  }
   render () {
     const children = this.props.routes.scene.children
     const sceneName = children

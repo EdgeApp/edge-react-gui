@@ -1,3 +1,4 @@
+//@flow
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {View, Text} from 'react-native'
@@ -5,8 +6,29 @@ import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import {Icon} from '../Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
 
-export default class MenuDropDown extends Component {
-  renderMenuOptions (style) {
+type Props = {
+  style: any,
+  data: any,
+  icon: string,
+  iconType: string,
+  text: string,
+  onSelect: Function
+}
+
+export default class MenuDropDown extends Component<Props> {
+  static propTypes = {
+    style: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
+    icon: PropTypes.string,
+    iconType: PropTypes.string,
+    text: PropTypes.string,
+    onSelect: PropTypes.func.isRequired
+  }
+  static defaultProps = {
+    iconType: Constants.ENTYPO,
+    icon: Constants.THREE_DOT_MENU
+  }
+  renderMenuOptions (style: any) {
     const items = this.props.data.map((item) => (
       <MenuOption
         style={style.menuOption}
@@ -41,7 +63,7 @@ export default class MenuDropDown extends Component {
       </View>
     )
   }
-  renderMenuIcon = (style) => {
+  renderMenuIcon = (style: any) => {
     if (this.props.icon) {
       return (
         <Icon
@@ -58,18 +80,4 @@ export default class MenuDropDown extends Component {
       </Text>
     )
   }
-}
-
-MenuDropDown.propTypes = {
-  style: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired,
-  icon: PropTypes.string,
-  iconType: PropTypes.string,
-  text: PropTypes.string,
-  onSelect: PropTypes.func.isRequired
-}
-
-MenuDropDown.defaultProps = {
-  iconType: Constants.ENTYPO,
-  icon: Constants.THREE_DOT_MENU
 }
