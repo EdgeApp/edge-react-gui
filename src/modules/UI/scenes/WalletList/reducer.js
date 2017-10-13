@@ -40,8 +40,10 @@ const walletId = (state = '', action) => {
   const {type, data = {} } = action
   const {walletId} = data
   switch (type) {
+  case ACTION.OPEN_DELETE_WALLET_MODAL:
   case ACTION.OPEN_RENAME_WALLET_MODAL:
     return walletId
+  case ACTION.CLOSE_DELETE_WALLET_MODAL:
   case ACTION.CLOSE_RENAME_WALLET_MODAL:
     return ''
   default:
