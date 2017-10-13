@@ -60,23 +60,24 @@ export default {
   },
 
   COLORS: {
-    PRIMARY:   '#2a5799',
-    SECONDARY: '#4977bb',
+    PRIMARY:   '#0D2145',
+    SECONDARY: '#0E4B75',
 
     GRADIENT: {
-      LIGHT: '#3b7ada',
-      DARK:  '#2b5698'
+      DARK:  '#0D2145',
+      LIGHT: '#0E4B75'
     },
 
-    ACCENT_GREEN:  '#7fc343',
-    ACCENT_ORANGE: '#f7a623',
-    ACCENT_RED:    '#f03a47',
+    ACCENT_GREEN:  '#0073D9',
+    ACCENT_ORANGE: '#F1AA19',
+    ACCENT_RED:    '#E85466',
+    ACCENT_MINT:   '#25292C',
 
-    BLACK:  '#000000',
-    GRAY_1: '#58595c',
-    GRAY_2: '#909091',
-    GRAY_3: '#d8d6d8',
-    GRAY_4: '#F7F7F7',
+    BLACK:  '#25292C',
+    GRAY_1: '#4A5157',
+    GRAY_2: '#87939E',
+    GRAY_3: '#D9E3ED',
+    GRAY_4: '#F4F5F6',
     WHITE:  '#FFFFFF',
     CLEAR:  'rgba(0, 0, 0, 0)',
 

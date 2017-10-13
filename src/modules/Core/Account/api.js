@@ -1,9 +1,18 @@
+// @flow
 // Core/Account/api.js
-export const logoutRequest = (account) => account.logout()
+import {AbcAccount, AbcCreateCurrencyWalletOptions} from 'airbitz-core-types'
 
-export const getFirstActiveWalletInfo = (account, currencyCodes) => {
+export const logoutRequest = (account: AbcAccount) => account.logout()
+
+export const getFirstActiveWalletInfo = (
+  account: AbcAccount,
+  currencyCodes: { [string]: string }
+) => {
   const walletId = account.activeWalletIds[0]
   const walletKey = account.allKeys.find((key) => key.id === walletId)
+  if (!walletKey) {
+    throw new Error('Cannot find a walletInfo for the active wallet')
+  }
   const currencyCode = currencyCodes[walletKey.type]
   return {
     walletId,
@@ -11,23 +20,28 @@ export const getFirstActiveWalletInfo = (account, currencyCodes) => {
   }
 }
 
-export const checkForExistingWallets = (account) => account.activeWalletIds.length > 0
+export const checkForExistingWallets = (account: AbcAccount) =>
+  account.activeWalletIds.length > 0
 
-export const createWalletRequest = (account, keys, walletType) => account.createWallet(walletType, keys)
+export const createCurrencyWalletRequest = (
+  account: AbcAccount,
+  walletType: string,
+  opts: AbcCreateCurrencyWalletOptions
+) => account.createCurrencyWallet(walletType, opts)
 
-export const activateWalletRequest = (account, walletId) => account.changeWalletStates({
-  [walletId]: {archived: false}
-})
+export const activateWalletRequest = (account: AbcAccount, walletId: string) =>
+  account.changeWalletStates({[walletId]: {archived: false} })
 
-export const archiveWalletRequest = (account, walletId) => account.changeWalletStates({
-  [walletId]: {archived: true}
-})
+export const archiveWalletRequest = (account: AbcAccount, walletId: string) =>
+  account.changeWalletStates({[walletId]: {archived: true} })
 
-export const deleteWalletRequest = (account, walletId) => account.changeWalletStates({
-  [walletId]: {deleted: true}
-})
+export const deleteWalletRequest = (account: AbcAccount, walletId: string) =>
+  account.changeWalletStates({[walletId]: {deleted: true} })
 
-export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
+export const updateActiveWalletsOrderRequest = (
+  account: AbcAccount,
+  activeWalletIds: Array<string>
+) => {
   const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
     keyStates[id] = {sortIndex: index}
     return keyStates
@@ -35,7 +49,10 @@ export const updateActiveWalletsOrderRequest = (account, activeWalletIds) => {
   return account.changeWalletStates(newKeyStates)
 }
 
-export const updateArchivedWalletsOrderRequest = (account, archivedWalletIds) => {
+export const updateArchivedWalletsOrderRequest = (
+  account: AbcAccount,
+  archivedWalletIds: Array<string>
+) => {
   const newKeyStates = archivedWalletIds.reduce((keyStates, id, index) => {
     keyStates[id] = {sortIndex: index}
     return keyStates
