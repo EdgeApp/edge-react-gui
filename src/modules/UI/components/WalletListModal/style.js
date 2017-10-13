@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   topLevel: {
     zIndex: 10,
     width: platform.deviceWidth,
@@ -60,9 +60,9 @@ export default StyleSheet.create({
     padding: 16,
     paddingLeft: 30,
     paddingRight: 20,
-    backgroundColor: THEME.COLORS.GRAY_1,
+    backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
-    borderColor: THEME.COLORS.GRAY_4
+    borderColor: THEME.COLORS.GRAY_3
   },
   currencyRowContent: {
     justifyContent: 'space-between',
@@ -74,6 +74,11 @@ export default StyleSheet.create({
   currencyRowText: {
     color: THEME.COLORS.GRAY_1,
     fontSize: 14
+  },
+  underlay: {
+    color: THEME.COLORS.ROW_PRESSED
   }
     // end of token rows //
-})
+}
+
+export default StyleSheet.create(styles)

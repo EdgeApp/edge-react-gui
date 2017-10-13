@@ -3,10 +3,10 @@ import React, {Component} from 'react'
 import {
   View,
   LayoutAnimation,
-  TouchableOpacity
+  TouchableHighlight
 } from 'react-native'
 import T from '../../../components/FormattedText'
-import styles from '../style'
+import styles, {styles as styleRaw} from '../style'
 import * as UTILS from '../../../../utils'
 import {bns} from 'biggystring'
 
@@ -39,26 +39,27 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     let cryptoAmount = bns.divf(balance, multiplier)
     const walletId = parentId
     return (
-      <TouchableOpacity style={[styles.tokenRowContainer]}
+      <TouchableHighlight style={styles.tokenRowContainer}
+        underlayColor={styleRaw.underlay.color}
         key={currencyCode} onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(walletId, currencyCode)
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
-        <View style={[styles.currencyRowContent]}>
-          <View style={[styles.currencyRowNameTextWrap]}>
-            <T style={[styles.currencyRowText]}>
+        <View style={styles.currencyRowContent}>
+          <View style={styles.currencyRowNameTextWrap}>
+            <T style={styles.currencyRowText}>
               {currencyCode}
             </T>
           </View>
-          <View style={[styles.currencyRowBalanceTextWrap]}>
-            <T style={[styles.currencyRowText]}>
+          <View style={styles.currencyRowBalanceTextWrap}>
+            <T style={styles.currencyRowText}>
               {cryptoAmount}
             </T>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     )
   }
 
@@ -76,26 +77,27 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const currencyCode = guiWallet.currencyCode
     return (
       <View key={i}>
-        <TouchableOpacity style={[styles.rowContainer]}
+        <TouchableHighlight style={styles.rowContainer}
+          underlayColor={styleRaw.underlay.color}
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
             this.props.selectWallet(walletId, currencyCode)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
-          <View style={[styles.currencyRowContent]}>
-            <View style={[styles.currencyRowNameTextWrap]}>
-              <T style={[styles.currencyRowText]}>
+          <View style={styles.currencyRowContent}>
+            <View style={styles.currencyRowNameTextWrap}>
+              <T style={styles.currencyRowText}>
                 {UTILS.cutOffText(guiWallet.name, 34)}
               </T>
             </View>
-            <View style={[styles.rowBalanceTextWrap]}>
-              <T style={[styles.currencyRowText]}>
+            <View style={styles.rowBalanceTextWrap}>
+              <T style={styles.currencyRowText}>
                 {symbol || ''} {denomAmount}
               </T>
             </View>
           </View>
-        </TouchableOpacity>
+        </TouchableHighlight>
 
         {this.renderTokens(guiWallet.id, guiWallet.nativeBalances, guiWallet.currencyCode)}
       </View>
