@@ -7,6 +7,7 @@ import {
   Keyboard,
   TextInput
 } from 'react-native'
+import {fixFiatCurrencyCode} from '../../../utils'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 
@@ -83,7 +84,11 @@ export default class CreateWallet extends Component {
         selectedWalletType,
         selectedFiat
       } = this.state
-      this.props.createWallet(walletName, selectedWalletType, selectedFiat)
+      this.props.createCurrencyWallet(
+        walletName,
+        selectedWalletType,
+        fixFiatCurrencyCode(selectedFiat)
+      )
     }
   }
 
