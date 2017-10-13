@@ -325,64 +325,6 @@ describe('getNewArrayWithoutItem', function () {
   })
 })
 
-describe('isGreaterThan', function () {
-  test('5.123 > 5.123 => false', function () {
-    const amountString = '5.123'
-    const comparedTo = '5.123'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('5.123 > 4.123 => true', function () {
-    const amountString = '5.123'
-    const comparedTo = '4.123'
-    const expected = true
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('4.123 > 5.123 => false', function () {
-    const amountString = '4.123'
-    const comparedTo = '5.123'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.123 > 0 => true', function () {
-    const amountString = '1.123'
-    const comparedTo = '0'
-    const expected = true
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.123 > 0.0 => true', function () {
-    const amountString = '1.123'
-    const comparedTo = '0.0'
-    const expected = true
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1.123 > 0 => false', function () {
-    const amountString = '-1.123'
-    const comparedTo = '0'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1.123 > 0.0 => false', function () {
-    const amountString = '-1.123'
-    const comparedTo = '0.0'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-})
-
 describe('getSupportedFiats', function () {
   test('resolves to array of object {value, label}', function () {
     const supportedFiats = UTILS.getSupportedFiats()

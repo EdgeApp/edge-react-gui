@@ -1,9 +1,7 @@
 import {StyleSheet} from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 
-module.exports = StyleSheet.create({
-
-  // buttons
+export const styles = {
   buttonsWrap: {
     flex: 1,
     flexDirection: 'row',
@@ -16,36 +14,44 @@ module.exports = StyleSheet.create({
     flex: 1,
     borderRadius: 3
   },
-  stylizedButtonTextWrap: {
-
-  },
   stylizedButtonText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 16
   },
 
   primaryButtonWrap: {
-    backgroundColor: c.secondary
+    backgroundColor: THEME.COLORS.SECONDARY
+  },
+  primaryUnderlay: {
+    color: THEME.COLORS.PRIMARY
   },
   primaryButton: {
-    color: c.gradient.light // not used?
+    color: THEME.COLORS.GRADIENT.LIGHT
   },
 
   secondaryButtonWrap: {
-    backgroundColor: c.gray2,
+    backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
   secondaryButton: {
-    color: c.gradient.light
+    color: THEME.COLORS.GRADIENT.LIGHT
+  },
+  secondaryUnderlay: {
+    color: THEME.COLORS.GRAY_1
   },
 
   tertiaryButtonWrap: {
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     borderWidth: 1,
-    borderColor: c.secondary
+    borderColor: THEME.COLORS.SECONDARY
   },
   tertiaryButton: {
-    color: c.secondary,
+    color: THEME.COLORS.SECONDARY,
     paddingHorizontal: 10
+  },
+  tertiaryUnderlay: {
+    color: THEME.COLORS.SECONDARY
   }
-})
+}
+
+export default StyleSheet.create(styles)

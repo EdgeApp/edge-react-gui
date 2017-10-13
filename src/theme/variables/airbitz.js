@@ -37,40 +37,57 @@ export const font = {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export default {
+  DEBUG: {
+    COLORS: {
+      HIGHLIGHT: '#f03a47'
+    }
+  },
+
   FONTS: {
     DEFAULT: 'SourceSansPro-Black'
   },
 
   OPACITY: {
-    ACTIVE: 0.3
+    ACTIVE: 0.3,
+
+    FULL: 1.0,
+    HIGH: 0.8,
+    MID: 0.5,
+    LOW: 0.1,
+    NONE: 0.0
+  },
+
+  ALPHA: {
+    FULL: 99,
+    HIGH: 80,
+    MID: 50,
+    LOW: 10,
+    NONE: 0
   },
 
   COLORS: {
-    PRIMARY:   '#2a5799',
-    SECONDARY: '#4977bb',
-
-    ACCENT_GREEN:  '#7fc343',
-    ACCENT_ORANGE: '#f7a623',
-    ACCENT_RED:    '#f03a47',
-
-    BLACK:  '#000000',
-    GRAY_1: '#58595c',
-    GRAY_2: '#909091',
-    GRAY_3: '#d8d6d8',
-    GRAY_4: '#F7F7F7',
-    WHITE:  '#FFFFFF',
+    PRIMARY:   '#0D2145',
+    SECONDARY: '#0E4B75',
 
     GRADIENT: {
-      LIGHT: '#3b7ada',
-      DARK:  '#2b5698'
+      DARK:  '#0D2145',
+      LIGHT: '#0E4B75'
     },
 
-    BLUE_ALPHA_BUTTON: {
-      UNPRESSED: 'rgba(42, 87, 153, 0.55)'
-    },
+    ACCENT_GREEN:  '#0073D9',
+    ACCENT_ORANGE: '#F1AA19',
+    ACCENT_RED:    '#E85466',
+    ACCENT_MINT:   '#25292C',
 
-    TRANSPARENT_BUTTON: {
-      BORDER: 'rgba(256, 256, 256, 0.5)'
-    }
+    BLACK:  '#25292C',
+    GRAY_1: '#4A5157',
+    GRAY_2: '#87939E',
+    GRAY_3: '#D9E3ED',
+    GRAY_4: '#F4F5F6',
+    WHITE:  '#FFFFFF',
+
+    TRANSPARENT: 'transparent',
+
+    ROW_PRESSED: '#D9E3ED', // same as GRAY_3
   }
 }

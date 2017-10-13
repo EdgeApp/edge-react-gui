@@ -1,9 +1,9 @@
 import {StyleSheet} from 'react-native'
-import {colors as c} from '../../../../theme/variables/airbitz.js'
+import THEME from '../../../../theme/variables/airbitz.js'
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#FFF'
+    backgroundColor: THEME.COLORS.WHITE
   },
   text: {
     alignSelf: 'center',
@@ -14,9 +14,12 @@ export default StyleSheet.create({
   },
   buttonText: {
     fontSize: 10,
-    color: c.gray1
+    color: THEME.COLORS.GRAY_1
   },
   activeButton: {
-    color: c.primary
-  }
+    color: THEME.COLORS.PRIMARY
+  },
+  badgeValue: {
+    color: THEME.COLORS.WHITE
+  },
 })

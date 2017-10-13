@@ -1,20 +1,10 @@
 import React, {Component} from 'react'
 import {
   View,
-  StyleSheet,
   TextInput
 } from 'react-native'
 
-const styles = StyleSheet.create({
-  view: {
-    flex: 1
-  },
-  textInput: {
-    flex: 1,
-    textAlign: 'center',
-    color: 'white'
-  }
-})
+import styles from './styles'
 
 export default class PinInput extends Component {
   render () {
