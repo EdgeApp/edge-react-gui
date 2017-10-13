@@ -5,7 +5,7 @@ import {closeDeleteWalletModal, deleteWallet} from '../action'
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch) => ({
   onNegative: () => {},
-  onPositive: () => dispatch(deleteWallet()),
+  onPositive: (walletId) => dispatch(deleteWallet(walletId)),
   onDone: () => dispatch(closeDeleteWalletModal())
 })
 
