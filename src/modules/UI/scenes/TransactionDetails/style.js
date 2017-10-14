@@ -1,8 +1,7 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
-
+export const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch',
@@ -355,4 +354,6 @@ export default StyleSheet.create({
   underlayColor: {
     color: THEME.COLORS.GRAY_4
   }
-})
+}
+
+export default StyleSheet.create(styles)
