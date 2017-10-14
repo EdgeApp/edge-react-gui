@@ -21,7 +21,7 @@ export class AddressInputButtons extends Component {
           ModalStyle.cancelButtonWrap,
           ModalStyle.stylizedButton
         ]}
-          underlayColor={styleRaw.underlay.color}
+          underlayColor={styleRaw.cancelUnderlay.color}
           onPress={this.props.onCancel}>
           <View style={ModalStyle.stylizedButtonTextWrap}>
             <T style={[

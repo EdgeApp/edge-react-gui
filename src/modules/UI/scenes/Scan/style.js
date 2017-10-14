@@ -188,6 +188,9 @@ export const styles = {
     elevation: 1015
   },
   underlay: {
+    color: THEME.COLORS.SECONDARY
+  },
+  cancelUnderlay: {
     color: THEME.COLORS.GRAY_1
   },
   doneUnderlay: {
