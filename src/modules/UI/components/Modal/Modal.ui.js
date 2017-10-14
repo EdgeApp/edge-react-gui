@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {View} from 'react-native'
 import PropTypes from 'prop-types'
 import styles from './style'
@@ -18,7 +17,7 @@ export default class StylizedModal extends Component {
           <View style={[styles.modalBody, b('purple')]}>
             <View style={[styles.modalTopTextWrap, b('blue')]}>
               <T style={[styles.modalTopText, b('yellow')]}>
-                {sprintf(strings.enUS[this.props.headerText])}
+                {strings.enUS[this.props.headerText]}
               </T>
               {
                 this.props.headerSubtext
