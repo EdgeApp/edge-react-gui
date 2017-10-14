@@ -21,6 +21,8 @@ type Props ={
   intialWalletTwo: GuiWallet,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
+  fromCurrencyCode: string,
+  toCurrencyCode: string,
   fee: string,
   showModal: boolean,
   selectFromWallet: Function,
@@ -45,6 +47,10 @@ export default class ExchangeSceneComponent extends Component<Props> {
     }
     if (!nextProps.toWallet && nextProps.intialWalletTwo) {
       this.props.selectToWallet(nextProps.intialWalletTwo)
+    }
+    if (nextProps.fromCurrencyCode != this.props.fromCurrencyCode) {
+      console.log('NEXT PRops')
+      console.log(nextProps.fromCurrencyCode)
     }
   }
   flipThis = () => {
@@ -81,6 +87,7 @@ export default class ExchangeSceneComponent extends Component<Props> {
           <CryptoExchangeFlipConnector
             style={style.flipWrapper}
             uiWallet={this.props.fromWallet}
+            currencyCode={this.props.fromCurrencyCode}
             whichWallet={Constants.FROM}
             launchWalletSelector={this.launchWalletSelector}
             fee={this.props.fee}
@@ -94,9 +101,10 @@ export default class ExchangeSceneComponent extends Component<Props> {
           <View style={style.shim} />
           <CryptoExchangeFlipConnector
             style={style.flipWrapper}
+            uiWallet={this.props.toWallet}
+            currencyCode={this.props.toCurrencyCode}
             whichWallet={Constants.TO}
             launchWalletSelector={this.launchWalletSelector}
-            uiWallet={this.props.toWallet}
           />
           <View style={style.shim} />
           <View style={style.actionButtonContainer} >

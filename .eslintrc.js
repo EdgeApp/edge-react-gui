@@ -49,7 +49,7 @@ module.exports = {
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "jsx-quotes": ["error", "prefer-single"],
         "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
-        "no-plusplus": "error",
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
         "object-curly-spacing": ["error", "never", { "objectsInObjects": true }],
         "operator-assignment": ["error", "never"],
         "keyword-spacing": ["error", {

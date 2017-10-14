@@ -12,7 +12,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
   const fee = ownProps.fee ? ownProps.fee: null
   let fiatPerCrypto = 0
   const uiWallet: GuiWallet = ownProps.uiWallet
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const currencyCode = ownProps.currencyCode
   if (!uiWallet || !currencyCode) {
     return {
       style: ownProps.style,

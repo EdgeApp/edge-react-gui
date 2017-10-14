@@ -17,6 +17,8 @@ export const mapStateToProps = (state: any) => {
     intialWalletTwo: wallets.length > 1 ? wallets[1] : null,
     fromWallet: state.cryptoExchange.fromWallet,
     toWallet: state.cryptoExchange.toWallet,
+    fromCurrencyCode: state.cryptoExchange.fromCurrencyCode,
+    toCurrencyCode: state.cryptoExchange.toCurrencyCode,
     fee: state.cryptoExchange.fee,
     showModal: state.cryptoExchange.walletListModalVisible
   }
