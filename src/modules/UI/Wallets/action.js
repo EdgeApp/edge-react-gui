@@ -15,6 +15,7 @@ import * as SETTINGS_SELECTORS from '../Settings/selectors'
 import * as Actions from '../../../actions/indexActions'
 import * as Constants from '../../../constants/indexConstants'
 import {GuiWallet} from '../../../types'
+import type {AbcCurrencyWallet} from 'airbitz-core-types'
 
 export const selectWallet = (walletId: string, currencyCode: string) =>
   (dispatch: any, getState: any) => {
@@ -59,7 +60,7 @@ export const refreshWallet = (walletId: string) =>
     // console.log('wallet doesn\'t exist yet', walletId)
   }
 
-export const upsertWallet = (wallet: GuiWallet) => (dispatch: any, getState: any) => {
+export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getState: any): ?GuiWallet => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
