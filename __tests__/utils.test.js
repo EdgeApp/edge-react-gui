@@ -138,7 +138,7 @@ describe('truncateDecimals', function () {
   test('1 => 1', function () {
     const input = '1'
     const precision = 8
-    const expected = '1.00000000'
+    const expected = '1'
     const actual = UTILS.truncateDecimals(input, precision)
     expect(actual).toBe(expected)
   })

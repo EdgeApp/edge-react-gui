@@ -1,6 +1,6 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {div, mul, toFixed} from 'biggystring'
+import {div, mul} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
@@ -94,7 +94,9 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
       input = '0'
     }
   }
-  return toFixed(input, precision, precision)
+  if (!input.includes('.')) { return input }
+  const [integers, decimals] = input.split('.')
+  return `${integers}.${decimals.slice(0, precision)}`
 }
 
 export const formatNumber = (input: string): string => {
