@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {
   View,
-  TouchableOpacity
+  TouchableHighlight
 } from 'react-native'
 import FormattedText from '../FormattedText'
 
-import styles from './styles'
+import styles, {styles as styleRaw} from './styles'
 
 export default class ShareButton extends Component {
   render () {
@@ -15,13 +15,18 @@ export default class ShareButton extends Component {
       style,
       border
     } = this.props
-    return <TouchableOpacity style={[styles.shareButton, style]}
-      onPress={onPress} activeOpacity={0.2}>
-      <View style={[styles.outerView]}>
+    return <TouchableHighlight style={[
+      styles.shareButton, style
+    ]}
+      underlayColor={styleRaw.underlay.color}
+      onPress={onPress}>
+      <View style={styles.outerView}>
         <View style={[styles.view, border]}>
-          <FormattedText style={[styles.text]}>{displayName}</FormattedText>
+          <FormattedText style={styles.text}>
+            {displayName}
+          </FormattedText>
         </View>
       </View>
-    </TouchableOpacity>
+    </TouchableHighlight>
   }
 }

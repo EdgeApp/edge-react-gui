@@ -17,7 +17,7 @@ import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import styles from './style'
+import styles, {styles as styleRaw} from './style'
 import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
 import AmountArea from './AmountArea.ui.js'
@@ -401,22 +401,22 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
     const types = {
       exchange: {
-        color: styles.typeExchange.color,
+        color: styleRaw.typeExchange.color,
         syntax: EXCHANGE_TEXT,
         key: 'exchange'
       },
       expense: {
-        color: styles.typeExpense.color,
+        color: styleRaw.typeExpense.color,
         syntax: EXPENSE_TEXT,
         key: 'expense'
       },
       transfer: {
-        color: styles.typeTransfer.color,
+        color: styleRaw.typeTransfer.color,
         syntax: TRANSFER_TEXT,
         key: 'transfer'
       },
       income: {
-        color: styles.typeIncome.color,
+        color: styleRaw.typeIncome.color,
         syntax: INCOME_TEXT,
         key: 'income'
       }

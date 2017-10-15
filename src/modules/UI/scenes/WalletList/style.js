@@ -1,6 +1,7 @@
 import {
   StyleSheet,
-  Platform
+  Platform,
+  Image
 } from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
@@ -179,6 +180,12 @@ export const styles = {
     flex: 1,
     justifyContent: 'center',
     marginRight: 5
+  },
+  rowCurrencyLogo: {
+    height: 14,
+    width: 14,
+    resizeMode: Image.resizeMode.contain,
+    alignSelf: 'center'
   },
   rowNameText: {
     fontSize: 18,

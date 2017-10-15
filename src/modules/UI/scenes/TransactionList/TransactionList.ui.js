@@ -312,12 +312,11 @@ export default class TransactionList extends Component {
   }
 
   _goToTxDetail = (abcTransaction, thumbnailPath) => {
-    console.log('in TransactionList.ui.js->_goToTxDetail')
     Actions.transactionDetails({abcTransaction, thumbnailPath})
   }
 
   isReceivedTransaction (tx) {
-    return bns.gt('0', tx.nativeAmount)
+    return bns.gt(tx.nativeAmount, '0')
   }
 
   isSentTransaction (tx) {
