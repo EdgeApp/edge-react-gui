@@ -36,7 +36,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       = this.props.walletList[parentId]
       .allDenominations[currencyCode][this.props.settings[currencyCode].denomination]
       .multiplier
-    let cryptoAmount = bns.divf(balance, multiplier)
+    let cryptoAmount = bns.div(balance, multiplier, 10, 6)
     const walletId = parentId
     return (
       <TouchableHighlight style={styles.tokenRowContainer}
@@ -72,7 +72,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       = guiWallet
       .allDenominations[guiWallet.currencyCode][multiplier]
       .symbol
-    let denomAmount = bns.divf(guiWallet.primaryNativeBalance, multiplier)
+    let denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, 10, 10)
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
     return (

@@ -78,7 +78,7 @@ class FullWalletListRow extends Component {
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>
                   <T style={[styles.rowBalanceAmountText]}>
-                    {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
+                    {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, 10, 8), 6)}
                   </T>
                   <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} ({symbol || ''})</T>
                 </View>

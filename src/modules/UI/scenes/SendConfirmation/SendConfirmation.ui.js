@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import styles from './styles.js'
-
+import {bns} from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import Recipient from '../../components/Recipient/index.js'
@@ -169,11 +169,11 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-    return (UTILS.convertDisplayToExchange(secondaryDisplayToExchangeRatio)(secondaryDisplayAmount)).toString()
+    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, 10, 10)
   }
   getSecondaryDisplayToExchangeRatio = (): string => {
-    const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier.toString()
-    const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier.toString()
-    return (UTILS.deriveDisplayToExchangeRatio(exchangeMultiplier)(displayMultiplier)).toString()
+    const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier
+    const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier
+    return bns.div(exchangeMultiplier, displayMultiplier, 10 , 6)
   }
 }
