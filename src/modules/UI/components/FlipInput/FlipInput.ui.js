@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   Text,
@@ -9,15 +11,37 @@ import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
 import {bns} from 'biggystring'
+import type {GuiCurrencyInfo} from '../../../../types'
 
-const getInitialState = (props) => ({
+export type FlipInputFieldInfo = GuiCurrencyInfo & {
+  nativeAmount?: string,
+  displayAmount?: string
+}
+
+type State = {
+  isToggled: boolean,
+  primaryDisplayAmount: string,
+  secondaryDisplayAmount: string
+}
+
+type Props = {
+  primaryInfo: FlipInputFieldInfo,
+  secondaryInfo: FlipInputFieldInfo,
+  primaryDisplayAmount: string,
+  secondaryDisplayAmount: string,
+  isValidInput: (string) => boolean,
+  onPrimaryAmountChange: (string) => void,
+  onSecondaryAmountChange: (string) => void
+}
+
+const getInitialState = (props: Props) => ({
   isToggled: false,
   primaryDisplayAmount: props.primaryDisplayAmount || '',
   secondaryDisplayAmount: props.secondaryDisplayAmount || ''
 })
 
-export default class FlipInput extends Component {
-  constructor (props) {
+export default class FlipInput extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = getInitialState(props)
   }
@@ -25,7 +49,7 @@ export default class FlipInput extends Component {
     isToggled: !this.state.isToggled
   })
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: Props) {
     if (!bns.eq(nextProps.primaryDisplayAmount, this.state.primaryDisplayAmount)) {
       this.setState({
         primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8)
@@ -39,7 +63,7 @@ export default class FlipInput extends Component {
     }
   }
 
-  onPrimaryAmountChange = (primaryDisplayAmount) => {
+  onPrimaryAmountChange = (primaryDisplayAmount: string) => {
     if (!this.props.isValidInput(primaryDisplayAmount)) { return }
     const formattedPrimaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(primaryDisplayAmount), 8)
     this.setState({
@@ -47,7 +71,7 @@ export default class FlipInput extends Component {
     }, this.props.onPrimaryAmountChange(formattedPrimaryDisplayAmount))
   }
 
-  onSecondaryAmountChange = (secondaryDisplayAmount) => {
+  onSecondaryAmountChange = (secondaryDisplayAmount: string) => {
     if (!this.props.isValidInput(secondaryDisplayAmount)) { return }
     const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(secondaryDisplayAmount), 2)
     // console.log('BEFORE: this.setState', this.state)
@@ -59,7 +83,7 @@ export default class FlipInput extends Component {
   topDisplayAmount = () => this.state.isToggled ? this.state.secondaryDisplayAmount : this.state.primaryDisplayAmount
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
-  topRow = (denominationInfo, onChangeText) => <View style={top.row} key={'top'}>
+  topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void)) => <View style={top.row} key={'top'}>
       <Text style={top.symbol}>
         {denominationInfo.displayDenomination.symbol}
       </Text>
@@ -77,7 +101,7 @@ export default class FlipInput extends Component {
       </Text>
     </View>
 
-  bottomRow = (denominationInfo) => {
+  bottomRow = (denominationInfo: FlipInputFieldInfo) => {
     const amount = this.bottomDisplayAmount()
     return <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key={'bottom'}><View style={bottom.row}>
       <Text style={[bottom.symbol]}>
@@ -95,7 +119,7 @@ export default class FlipInput extends Component {
     </View></TouchableWithoutFeedback>
   }
 
-  renderRows = (primaryInfo, secondaryInfo, isToggled) => (
+  renderRows = (primaryInfo: FlipInputFieldInfo, secondaryInfo: FlipInputFieldInfo, isToggled: boolean) => (
       <View style={[styles.rows]}>
         {isToggled
           ? [

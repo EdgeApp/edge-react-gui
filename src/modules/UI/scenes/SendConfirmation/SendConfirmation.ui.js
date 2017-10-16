@@ -11,13 +11,14 @@ import styles from './styles.js'
 import {bns} from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
+import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
 
-import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
+import type {GuiWallet} from '../../../../types'
 import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
 
@@ -29,9 +30,9 @@ export type Props = {
   fiatPerCrypto: number,
   guiWallet: GuiWallet,
   currencyCode: string,
-  primaryInfo: GuiCurrencyInfo,
+  primaryInfo: FlipInputFieldInfo,
   sliderDisabled: boolean,
-  secondaryInfo: GuiCurrencyInfo,
+  secondaryInfo: FlipInputFieldInfo,
 }
 
 export type DispatchProps = {

@@ -9,6 +9,7 @@ import T from '../../../components/FormattedText'
 import styles, {styles as styleRaw} from '../style'
 import * as UTILS from '../../../../utils'
 import {bns} from 'biggystring'
+import type {GuiWallet} from '../../../../../types'
 
 export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   selectFromWallet = () => {
@@ -63,7 +64,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     )
   }
 
-  renderWalletRow = (guiWallet: any, i: number) => {
+  renderWalletRow = (guiWallet: GuiWallet, i: number) => {
     let multiplier
       = guiWallet
       .allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination]
