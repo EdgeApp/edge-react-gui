@@ -838,7 +838,8 @@ const strings = {
 
   // help modal
   help_modal_title: 'Crypto Wallet and Directory',
-  help_version: 'Version'
+  help_version: 'Version',
+  help_build: 'Build'
 }
 
 export default strings

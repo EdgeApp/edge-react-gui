@@ -10,13 +10,12 @@ import styles from './style.js'
 import StylizedModal from '../Modal/index.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import helpImage from '../../../../assets/images/modal/help.png'
-import packageJson from '../../../../../package.json'
 import DeviceInfo from 'react-native-device-info'
 
 const HTML = require('../../../../html/enUS/info.html')
 
 const buildNumber = DeviceInfo.getBuildNumber()
-const deviceInfo = packageJson.version + ' ' + buildNumber
+const versionNumber = DeviceInfo.getVersion()
 
 export default class HelpModal extends Component {
 
@@ -31,9 +30,10 @@ export default class HelpModal extends Component {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText='help_modal_title'
-        modalMiddle={<WebView style={{height: 220, width: '100%'}} source={HTML} />}
+        modalMiddle={<WebView style={{justifyContent: 'center', alignItems:'center', height: 200, width: '95%'}} source={HTML} />}
         modalBottom={<View style={[styles.modalBottomContainer]}>
-                        <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {deviceInfo}</Text>
+                        <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {versionNumber}</Text>
+                        <Text style={styles.modalBottomText}>{strings.enUS['help_build']} {buildNumber}</Text>
                     </View>}
         featuredIcon={<Image source={helpImage}  style={styles.modalFeaturedIcon} color={THEME.secondary} size={20} />}
       />

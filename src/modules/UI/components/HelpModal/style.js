@@ -14,7 +14,7 @@ export default StyleSheet.create({
   modalBottomText: {
     fontSize: 14,
     color: THEME.COLORS.GRAY_1,
-    padding: 12
+    padding: 4
   },
   modalMiddleWebView: {
 
