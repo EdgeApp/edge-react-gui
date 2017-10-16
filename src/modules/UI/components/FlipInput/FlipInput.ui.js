@@ -8,13 +8,12 @@ import {
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
+import {bns} from 'biggystring'
 
 const getInitialState = (props) => ({
   isToggled: false,
   primaryDisplayAmount: props.primaryDisplayAmount || '',
-  secondaryDisplayAmount: props.secondaryDisplayAmount || '',
-  primaryShouldUpdate: true,
-  secondaryShouldUpdate: true
+  secondaryDisplayAmount: props.secondaryDisplayAmount || ''
 })
 
 export default class FlipInput extends Component {
@@ -23,25 +22,18 @@ export default class FlipInput extends Component {
     this.state = getInitialState(props)
   }
   onToggleFlipInput = () => this.setState({
-    isToggled: !this.state.isToggled,
-    secondaryShouldUpdate: !this.state.secondaryShouldUpdate
+    isToggled: !this.state.isToggled
   })
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.primaryDisplayAmount !== this.state.primaryDisplayAmount || nextProps.secondaryDisplayAmount !== this.state.secondaryDisplayAmount) {
-      return this.setState(getInitialState(nextProps))
-    }
-
-    if (this.state.primaryShouldUpdate) {
+    if (!bns.eq(nextProps.primaryDisplayAmount, this.state.primaryDisplayAmount)) {
       this.setState({
-        primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8),
-        primaryShouldUpdate: false
+        primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8)
       })
     }
 
-    if (this.state.secondaryShouldUpdate) {
+    if (!bns.eq(nextProps.secondaryDisplayAmount, this.state.secondaryDisplayAmount)) {
       this.setState({
-        primaryShouldUpdate: false,
         secondaryDisplayAmount: UTILS.truncateDecimals(nextProps.secondaryDisplayAmount, 2)
       })
     }
@@ -51,9 +43,7 @@ export default class FlipInput extends Component {
     if (!this.props.isValidInput(primaryDisplayAmount)) { return }
     const formattedPrimaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(primaryDisplayAmount), 8)
     this.setState({
-      primaryDisplayAmount: formattedPrimaryDisplayAmount,
-      primaryShouldUpdate: false,
-      secondaryShouldUpdate: true
+      primaryDisplayAmount: formattedPrimaryDisplayAmount
     }, this.props.onPrimaryAmountChange(formattedPrimaryDisplayAmount))
   }
 
@@ -63,8 +53,6 @@ export default class FlipInput extends Component {
     // console.log('BEFORE: this.setState', this.state)
     this.setState({
       secondaryDisplayAmount: formattedSecondaryDisplayAmount,
-      primaryShouldUpdate: !this.state.primaryShouldUpdate,
-      secondaryShouldUpdate: false
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
   }
 
