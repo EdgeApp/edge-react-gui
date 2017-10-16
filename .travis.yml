@@ -34,6 +34,10 @@ matrix:
           - extra-google-google_play_services
           - extra-google-m2repository
           - addon-google_apis-google-16
+        licenses:
+          - 'android-sdk-preview-license-.+'
+          - 'android-sdk-license-.+'
+          - 'intel-android-extra-license.+'
       script:
         - cd android && ./gradlew assembleDebug && ./gradlew assembleRelease
     - language: objective-c
