@@ -28,15 +28,16 @@ matrix:
         - travis_retry npm i -d
       android:
         components:
-          - build-tools-23.0.1
-          - android-23
+          - build-tools-25.0.0
+          - android-25
           - extra-android-m2repository
           - extra-google-google_play_services
           - extra-google-m2repository
           - addon-google_apis-google-16
         licenses:
-          - 'android-sdk-preview-license-23.0.1'
-          - 'android-sdk-license-23.0.1'
+          - 'android-sdk-preview-license-.+'
+          - 'android-sdk-license-.+'
+          - 'google-gdk-license-.+'
       script:
         - cd android && ./gradlew assembleDebug && ./gradlew assembleRelease
     - language: objective-c
