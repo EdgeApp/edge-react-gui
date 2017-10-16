@@ -14,9 +14,10 @@ export const styles = {
   leftArea: {
     flexDirection: 'row'
   },
-  userIcon: {
+  icon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
+    fontSize: 22,
+    color: THEME.COLORS.WHITE
   },
   accountBoxHeaderText: {
     fontSize: 18,
@@ -30,10 +31,6 @@ export const styles = {
     height: 24,
     fontSize: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-  optionsIcon: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
   },
 
     // //// Beginning of Settings Row ///////
@@ -62,6 +59,7 @@ export const styles = {
     fontSize: 16
   },
   settingsRowRightArrow: {
+    fontSize: 18,
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
