@@ -10,19 +10,11 @@ import {
 } from 'react-native'
 import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
-import {border as b, cutOffText, truncateDecimals} from '../../../../../utils'
+import {border as b, cutOffText, truncateDecimals, findDenominationSymbol} from '../../../../../utils'
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 
-const findDenominationSymbol = (denoms, value) => {
-  for (const v of denoms) {
-    if (v.name === value) {
-      return v.symbol
-    }
-  }
-}
-
-class SortableWalletListRow extends Component {
+class SortableWalletListRow extends Component<Props, State> {
 
   render () {
     const {data} = this.props
