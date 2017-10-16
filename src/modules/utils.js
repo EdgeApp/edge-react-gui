@@ -62,7 +62,7 @@ export const border = (color: ?string) => {
   let borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
-    borderWidth: 1
+    borderWidth: 0
   }
 }
 

@@ -9,13 +9,12 @@ export default StyleSheet.create({
   modalBottomContainer: {
     justifyContent: 'center',
     width: '100%',
-    height: 90,
     alignItems: 'center'
   },
   modalBottomText: {
-    fontSize: 12,
+    fontSize: 14,
     color: THEME.COLORS.GRAY_1,
-    marginBottom: 14
+    padding: 12
   },
   modalMiddleWebView: {
 

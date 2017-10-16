@@ -1,4 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz.js'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
@@ -34,6 +35,28 @@ export default StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
+  modalBoxWithExit: {
+    position: 'relative',
+    bottom: 24
+  },
+  exitRow: {
+    alignItems: 'flex-end',
+    position: 'relative',
+    zIndex: 200
+  },
+  exitButton: {
+    backgroundColor: 'transparent',
+    width: 30,
+    height: 30,
+    alignItems: 'flex-end',
+    position: 'relative',
+    top: 6
+  },
+  exitText: {
+    fontSize: 18,
+    backgroundColor: 'transparent',
+    color: THEME.GRAY_1
+  },
   iconWrapper: {
 
   },
@@ -61,7 +84,6 @@ export default StyleSheet.create({
   // beginning of rename wallet modal
   modalBody: {
     position: 'relative',
-
     justifyContent: 'space-between'
   },
   modalTopTextWrap: {
@@ -70,12 +92,12 @@ export default StyleSheet.create({
   },
   modalTopText: {
     textAlign: 'center',
-    color: '#2A5799',
+    color: THEME.COLORS.PRIMARY,
     fontSize: 16
   },
   modalTopSubtext: {
     fontSize: 14,
-    color: '#58595C',
+    color: THEME.COLORS.GRAY_1,
     textAlign: 'center',
     paddingTop: 4
   },
@@ -95,7 +117,9 @@ export default StyleSheet.create({
     height: 50,
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    position: 'relative',
+    top: 30
   },
 
   // buttons
@@ -119,7 +143,7 @@ export default StyleSheet.create({
     fontSize: 16
   },
   cancelButtonWrap: {
-    backgroundColor: '#909091',
+    backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
   cancelButton: {
@@ -134,3 +158,5 @@ export default StyleSheet.create({
     color: '#3c76cd'
   }
 })
+
+export const exitColor = THEME.GRAY_1

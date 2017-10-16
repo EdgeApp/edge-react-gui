@@ -66,7 +66,7 @@ export default class WalletList extends Component<any, {
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
       fullListOpacity: new Animated.Value(1),
-      fullListZIndex: new Animated.Value(100)
+      fullListZIndex: new Animated.Value(100)  
     }
   }
 
@@ -377,7 +377,9 @@ export default class WalletList extends Component<any, {
     headerText='fragment_wallets_delete_wallet'
     modalMiddle={<DeleteWalletSubtext />}
     modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
-    visibilityBoolean={this.props.deleteWalletModalVisible} />
+    visibilityBoolean={this.props.deleteWalletModalVisible}
+    onExitButtonFxn={this.props.closeDeleteWalletModal}
+    />
 
   renderRenameWalletModal = () => <StylizedModal
     featuredIcon={<RenameIcon />}
@@ -385,7 +387,9 @@ export default class WalletList extends Component<any, {
     headerSubtext={this.props.walletName}
     modalMiddle={<WalletNameInput />}
     modalBottom={<RenameWalletButtons walletId={this.props.walletId} />}
-    visibilityBoolean={this.props.renameWalletModalVisible} />
+    visibilityBoolean={this.props.renameWalletModalVisible}
+    onExitButtonFxn={this.props.closeRenameWalletModal}
+    />
 
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
