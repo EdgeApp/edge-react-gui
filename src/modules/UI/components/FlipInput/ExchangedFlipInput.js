@@ -31,6 +31,7 @@ export default class ExchangedFlipInput extends Component {
     super(props)
 
     this.state = {
+      lastChanged: 0,
       primaryDisplayAmount: '',
       secondaryDisplayAmount: '',
       nativeAmount: props.primaryInfo.nativeAmount
@@ -41,8 +42,20 @@ export default class ExchangedFlipInput extends Component {
     if (nextProps.primaryInfo.nativeAmount) {
       const nativeAmount = bns.abs(nextProps.primaryInfo.nativeAmount)
       const primaryDisplayAmount = this.convertPrimaryNativeToDisplay(nativeAmount)
-      if (parseFloat(this.state.primaryDisplayAmount) === parseFloat(primaryDisplayAmount)) { return }
-      this.onPrimaryAmountChange(primaryDisplayAmount)
+      if (bns.eq(this.state.primaryDisplayAmount, primaryDisplayAmount)) {
+        // Display amount didn't change. Check if exchange rate did.
+        if (this.props.secondaryToPrimaryRatio !== nextProps.secondaryToPrimaryRatio) {
+          if (this.state.lastChanged === 1) {
+            this.onPrimaryAmountChange(this.state.primaryDisplayAmount)
+          } else if (this.state.lastChanged === 2) {
+            this.onSecondaryAmountChange(this.state.secondaryDisplayAmount)
+          }
+        }
+      } else {
+        if (this.state.lastChanged === 0 || this.state.lastChanged === 1) {
+          this.onPrimaryAmountChange(primaryDisplayAmount)
+        }
+      }
       // console.log('componentWillReceiveProps')
     }
   }
@@ -50,6 +63,7 @@ export default class ExchangedFlipInput extends Component {
   onPrimaryAmountChange = (primaryInput: string) => {
     if (primaryInput === '') {
       this.setState({
+        lastChanged: 1,
         primaryDisplayAmount: '',
         secondaryDisplayAmount: ''
       })
@@ -68,6 +82,7 @@ export default class ExchangedFlipInput extends Component {
       secondaryDisplayAmount = UTILS.truncateDecimals(secondaryDisplayAmount, secondaryPrecision)
 
       this.setState({
+        lastChanged: 1,
         primaryDisplayAmount,
         secondaryDisplayAmount
       })
@@ -82,6 +97,7 @@ export default class ExchangedFlipInput extends Component {
     // console.log('onSecondaryAmountChange')
     if (secondaryInput === '') {
       this.setState({
+        lastChanged: 2,
         primaryDisplayAmount: '',
         secondaryDisplayAmount: ''
       })
@@ -109,6 +125,7 @@ export default class ExchangedFlipInput extends Component {
       primaryDisplayAmount = UTILS.truncateDecimals(primaryDisplayAmount, primaryPrecision)
 
       this.setState({
+        lastChanged: 2,
         primaryDisplayAmount,
         secondaryDisplayAmount
       })
@@ -138,13 +155,12 @@ export default class ExchangedFlipInput extends Component {
   }
 
   render () {
-    const secondaryDisplayAmount = this.convertPrimaryDisplayToSecondaryDisplay(this.state.primaryDisplayAmount)
     const primaryInfo = {
       displayAmount: this.state.primaryDisplayAmount,
       ...this.props.primaryInfo
     }
     const secondaryInfo = {
-      displayAmount: secondaryDisplayAmount,
+      displayAmount: this.state.secondaryDisplayAmount,
       ...this.props.secondaryInfo
     }
 
@@ -157,7 +173,7 @@ export default class ExchangedFlipInput extends Component {
         primaryInfo={primaryInfo}
         onPrimaryAmountChange={this.onPrimaryAmountChange}
 
-        secondaryDisplayAmount={secondaryDisplayAmount}
+        secondaryDisplayAmount={this.state.secondaryDisplayAmount}
         secondaryInfo={secondaryInfo}
         onSecondaryAmountChange={this.onSecondaryAmountChange} />
     )
