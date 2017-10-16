@@ -41,7 +41,7 @@ import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 const currencyPluginFactories = []
 currencyPluginFactories.push(EthereumCurrencyPluginFactory)
-// currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
+// currencyPluginFactories.push(BitcoinCurrencyPluginFactory) TODO: When turning back on uncomment out line 51 on './actions'
 // currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
 // currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
 

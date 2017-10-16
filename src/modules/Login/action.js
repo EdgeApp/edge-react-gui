@@ -47,8 +47,8 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
         dispatch(loadSettings())
         return
       }
-      // TODO: Allen - create wallets here since there are no existing wallets
-      dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
+      // TODO: Allen - Turn on when Bitcoin is turned back on
+      //dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
       dispatch(actions.createCurrencyWallet(strings.enUS['string_first_ethereum_wallet_name'], Constants.ETHEREUM_WALLET, Constants.USD_FIAT))
       dispatch(loadSettings())
     })
