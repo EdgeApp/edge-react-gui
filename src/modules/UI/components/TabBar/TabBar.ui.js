@@ -3,7 +3,6 @@ import {Image} from 'react-native'
 import strings from '../../../../locales/default'
 import {Actions} from 'react-native-router-flux'
 import {Footer, FooterTab, Button} from 'native-base'
-import Gradient from '../Gradient/Gradient.ui'
 import {openSideMenu, closeSideMenu} from '../SideMenu/action'
 import T from '../FormattedText'
 import wallet from '../../../../assets/images/tabbar/wallets.png'
@@ -35,52 +34,69 @@ export default class TabBar extends Component {
     }
   }
 
+  isActive = (sceneKey: string) => this.props.routes.scene.children[0].sceneKey === sceneKey
+
   render () {
     return (
-      <Gradient style={styles.gradient}>
         <Footer>
           <FooterTab>
 
             <Button
               onPress={Actions.walletList}
-              active={this.props.routes.scene.name === 'walletList'}>
+              active={this.isActive('walletList')}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
-                source={this.props.routes.scene.name === 'walletList' ? walletSelected : wallet} />
-              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'walletList' && styles.activeButton]}>
+                source={this.isActive('walletList') ? walletSelected : wallet} />
+              <T style={[
+                {marginTop: 3},
+                styles.buttonText,
+                this.isActive('walletList') && styles.activeButton
+              ]}>
                 {WALLETS_TEXT}
               </T>
             </Button>
 
             <Button
               onPress={Actions.request}
-              active={this.props.routes.scene.name === 'request'}>
+              active={this.isActive('request')}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
-                source={this.props.routes.scene.name === 'request' ? receiveSelected : receive} />
-              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'request' && styles.activeButton]}>
+                source={this.isActive('request') ? receiveSelected : receive} />
+              <T style={[
+                {marginTop: 3},
+                styles.buttonText,
+                this.isActive('request') && styles.activeButton
+              ]}>
                 {REQUEST_TEXT}
               </T>
             </Button>
 
             <Button
               onPress={Actions.scan}
-              active={this.props.routes.scene.name === 'scan'}>
+              active={this.isActive('scan')}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
-                source={this.props.routes.scene.name === 'scan' ? scanSelected : scan} />
-              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === 'scan' && styles.activeButton]}>
+                source={this.isActive('scan') ? scanSelected : scan} />
+              <T style={[
+                {marginTop: 3},
+                styles.buttonText,
+                this.isActive('scan') && styles.activeButton
+              ]}>
                 {SCAN_TEXT}
               </T>
             </Button>
 
             <Button
-              onPress={Actions[Constants.EXCHANGE]}
-              active={this.props.routes.scene.name === Constants.EXCHANGE}>
+              onPress={Actions.transactionList}
+              active={this.isActive(Constants.EXCHANGE)}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
-                source={this.props.routes.scene.name === Constants.EXCHANGE ? exchangeSelected : exchange} />
-              <T style={[{marginTop: 3}, styles.buttonText, this.props.routes.scene.name === Constants.EXCHANGE && styles.activeButton]}>
+                source={this.isActive(Constants.EXCHANGE) ? exchangeSelected : exchange} />
+              <T style={[
+                {marginTop: 3},
+                styles.buttonText,
+                this.isActive(Constants.EXCHANGE) && styles.activeButton
+              ]}>
                 {TRANSACTIONS_TEXT}
               </T>
             </Button>
@@ -98,7 +114,6 @@ export default class TabBar extends Component {
 
           </FooterTab>
         </Footer>
-      </Gradient>
     )
   }
 }

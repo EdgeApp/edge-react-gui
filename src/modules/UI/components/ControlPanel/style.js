@@ -1,4 +1,6 @@
-import {Platform} from 'react-native'
+import {
+  Platform,
+} from 'react-native'
 const platform = Platform.OS
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -42,7 +44,7 @@ export default {
   },
   user: {
     container: {
-      backgroundColor: THEME.COLORS.PRIMARY,
+      backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -172,5 +174,8 @@ export default {
     icon: {
       padding: 13
     }
+  },
+  underlay: {
+    color: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`
   }
 }

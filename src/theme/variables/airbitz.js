@@ -59,6 +59,14 @@ export default {
     NONE: 0.0
   },
 
+  ALPHA: {
+    FULL: 99,
+    HIGH: 80,
+    MID: 50,
+    LOW: 10,
+    NONE: 0
+  },
+
   COLORS: {
     PRIMARY:   '#0D2145',
     SECONDARY: '#0E4B75',
@@ -81,6 +89,8 @@ export default {
     WHITE:  '#FFFFFF',
     CLEAR:  'rgba(0, 0, 0, 0)',
 
-    TRANSPARENT: 'transparent'
+    TRANSPARENT: 'transparent',
+
+    ROW_PRESSED: '#D9E3ED', // same as GRAY_3
   }
 }

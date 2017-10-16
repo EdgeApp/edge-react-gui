@@ -1,4 +1,7 @@
-import {StyleSheet, Dimensions} from 'react-native'
+import {
+  StyleSheet,
+  Dimensions
+} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const screenDimensions = {
@@ -6,11 +9,8 @@ const screenDimensions = {
   width: Dimensions.get('window').width
 }
 
-export default StyleSheet.create({
+export const styles = {
   // modal styles
-  topLevelModal: {
-
-  },
   modalContainer: {
     flex: 1,
     alignItems: 'center',
@@ -105,26 +105,29 @@ export default StyleSheet.create({
     flex: 1,
     borderRadius: 3
   },
-  stylizedButtonTextWrap: {
-
-  },
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
     fontSize: 16
   },
+
   cancelButtonWrap: {
     backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
-  cancelButton: {
-    color: THEME.COLORS.PRIMARY
-  },
+
   doneButtonWrap: {
     backgroundColor: THEME.COLORS.SECONDARY,
     alignSelf: 'flex-end',
     marginLeft: 4
   },
-  doneButton: {
+
+  cancelUnderlay: {
+    color: THEME.COLORS.GRAY_1
+  },
+
+  doneUnderlay: {
     color: THEME.COLORS.PRIMARY
   }
-})
+}
+
+export default StyleSheet.create(styles)

@@ -5,7 +5,7 @@ import {
 import THEME from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
 
-export default StyleSheet.create({
+export const styles = {
   container: {
     flex: 1,
     flexDirection: 'row'
@@ -51,8 +51,10 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   bottomButton: {
-    backgroundColor: THEME.COLORS.BLACK,
-    opacity: THEME.OPACITY.LOW,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
     borderRadius: 3,
     height: 50,
     marginLeft: 1,
@@ -69,18 +71,13 @@ export default StyleSheet.create({
     fontSize: 14,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
-  transferButtonWrap: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   transferArrowIcon: {
     color: THEME.COLORS.WHITE,
     fontSize: 22,
     height: 18,
     transform: [{scaleX: 1.2}]
   },
-  addressButtonWrap: {
+  buttonWrap: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
@@ -91,20 +88,10 @@ export default StyleSheet.create({
     height: 16,
     transform: [{scaleX: -1.0}]
   },
-  photosButtonWrap: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   cameraIcon: {
     color: THEME.COLORS.WHITE,
     fontSize: 22,
     height: 18
-  },
-  flashButtonWrap: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   flashIcon: {
     color: THEME.COLORS.WHITE,
@@ -151,6 +138,8 @@ export default StyleSheet.create({
     borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
   },
   addressInput: {
+    borderBottomColor: THEME.COLORS.GRAY_2,
+    borderBottomWidth: 1,
     height: 26,
     textAlign: 'center',
     fontSize: 20,
@@ -196,5 +185,16 @@ export default StyleSheet.create({
     width: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
     zIndex: 1015,
-    elevation: 1015}
-})
+    elevation: 1015
+  },
+  underlay: {
+    color: THEME.COLORS.SECONDARY
+  },
+  cancelUnderlay: {
+    color: THEME.COLORS.GRAY_1
+  },
+  doneUnderlay: {
+    color: THEME.COLORS.PRIMARY
+  }
+}
+export default StyleSheet.create(styles)

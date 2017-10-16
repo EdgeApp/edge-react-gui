@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {
   ActivityIndicator,
   Alert,
@@ -10,11 +9,12 @@ import {
   View,
   TouchableHighlight
 } from 'react-native'
-import * as Constants from '../../../../constants/indexConstants'
+// import * as Constants from '../../../../constants/indexConstants'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import AddressModal from './components/AddressModalConnector'
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import {Actions} from 'react-native-router-flux'
@@ -24,9 +24,7 @@ import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
-import styles from './style'
-
-import AddressModal from './components/AddressModalConnector'
+import styles, {styles as styleRaw} from './style'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
@@ -40,6 +38,14 @@ type Props = {
   toggleWalletListModal(): void,
   updateParsedURI(AbcParsedUri): void
 }
+
+const HEADER_TEXT     = strings.enUS['send_scan_header_text']
+
+const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
+const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
+const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
+const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
+const FLASH_TEXT    = strings.enUS['fragment_send_flash']
 
 export default class Scan extends Component<any, any> {
   static defaultProps: any;
@@ -57,6 +63,89 @@ export default class Scan extends Component<any, any> {
   componentDidMount () {
     PERMISSIONS.request('camera')
     .then(this.setCameraPermission)
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        {this.renderCamera()}
+        <View style={[styles.overlay]}>
+
+          <AddressModal />
+
+          <View style={[styles.overlayTop]}>
+            <T style={[styles.overlayTopText]}>
+              {HEADER_TEXT}
+            </T>
+          </View>
+          <View style={[styles.overlayBlank]} />
+
+          <Gradient style={[styles.overlayButtonAreaWrap]}>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this._onToggleWalletListModal}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <Ionicon style={[styles.transferArrowIcon]}
+                  name='ios-arrow-round-forward'
+                  size={24} />
+                <T style={[styles.transferButtonText, styles.bottomButtonText]}>
+                  {TRANSFER_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this._onToggleAddressModal}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <FAIcon style={[styles.addressBookIcon]}
+                  name='address-book-o'
+                  size={18} />
+                <T style={[styles.addressButtonText, styles.bottomButtonText]}>
+                  {ADDRESS_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this.selectPhotoTapped}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <Ionicon style={[styles.cameraIcon]}
+                  name='ios-camera-outline'
+                  size={24} />
+                <T style={[styles.bottomButtonText]}>
+                  {PHOTOS_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this._onToggleTorch}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <Ionicon style={[styles.flashIcon]}
+                  name='ios-flash-outline'
+                  size={24}  />
+                <T style={[styles.flashButtonText, styles.bottomButtonText]}>
+                  {FLASH_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+          </Gradient>
+        </View>
+      </View>
+    )
   }
 
   setCameraPermission = (cameraPermission: boolean) => {
@@ -115,19 +204,19 @@ export default class Scan extends Component<any, any> {
   }
 
   renderCamera = () => {
-    // if (this.state.cameraPermission === true && this.props.scene === 'scan') {
     if (this.state.cameraPermission === true) {
       return (
         <Camera
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
-          ref='cameraCapture'
-        />
+          ref='cameraCapture' />
       )
     } else if (this.state.cameraPermission === false) {
       return (
         <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
-          <Text>To scan QR codes, enable camera permission in your system settings</Text>
+          <Text>
+            {DENIED_PERMISSION_TEXT}
+          </Text>
         </View>
       )
     } else {
@@ -137,55 +226,5 @@ export default class Scan extends Component<any, any> {
         </View>
       )
     }
-  }
-
-  render () {
-    return (
-      <View style={styles.container}>
-        {this.renderCamera()}
-        <View style={[styles.overlay]}>
-
-          <AddressModal />
-
-          <View style={[styles.overlayTop]}>
-            <T style={[styles.overlayTopText]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
-          </View>
-          <View style={[styles.overlayBlank]} />
-
-          <Gradient style={[styles.overlayButtonAreaWrap]}>
-
-            <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon]} />
-                <T style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton]} onPress={this._onToggleAddressModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <FAIcon name={Constants.ADDRESS_BOOK_O} size={18} style={[styles.addressBookIcon]} />
-                <T style={[styles.addressButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon]} />
-                <T style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon]} />
-                <T style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</T>
-              </View>
-            </TouchableHighlight>
-
-          </Gradient>
-
-        </View>
-      </View>
-    )
   }
 }

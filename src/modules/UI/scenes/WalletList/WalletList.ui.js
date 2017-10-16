@@ -20,7 +20,6 @@ import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
@@ -37,18 +36,18 @@ import platform from '../../../../theme/variables/platform.js'
 const options = [
   {
     value: 'rename',
-    syntax: sprintf(strings.enUS['string_rename'])
+    syntax: strings.enUS['string_rename']
   },{
     value: 'sort',
-    syntax: sprintf(strings.enUS['fragment_wallets_sort'])
+    syntax: strings.enUS['fragment_wallets_sort']
   },{
     value: 'addToken',
-    syntax: sprintf(strings.enUS['fragmet_wallets_addtoken_option'])
+    syntax: strings.enUS['fragmet_wallets_addtoken_option']
   },{
     value: 'archive'
   },{
     value: 'delete',
-    syntax: sprintf(strings.enUS['string_delete'])
+    syntax: strings.enUS['string_delete']
   }
 ]
 
@@ -156,7 +155,7 @@ export default class WalletList extends Component<any, {
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader]}>
               <T style={[styles.totalBalanceText]}>
-                {sprintf(strings.enUS['fragment_wallets_balance_text'])}
+                {strings.enUS['fragment_wallets_balance_text']}
               </T>
             </View>
             <View style={[styles.currentBalanceBoxDollarsWrap]}>
@@ -174,25 +173,42 @@ export default class WalletList extends Component<any, {
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
-                  {sprintf(strings.enUS['fragment_wallets_header'])}
+                  {strings.enUS['fragment_wallets_header']}
                 </T>
               </View>
             </View>
 
             <View style={[styles.donePlusContainer, UTILS.border()]}>
 
-              <Animated.View style={[styles.doneContainer,  UTILS.border(), {opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}]}>
-                <TouchableOpacity style={[styles.walletsBoxDoneTextWrap]}
-                  onPress={() => this.disableSorting()}>
+              <Animated.View style={[
+                styles.doneContainer,
+                UTILS.border(),
+                {
+                  opacity: this.state.sortableListOpacity,
+                  zIndex: this.state.sortableListZIndex
+                }]}>
+                <TouchableOpacity style={[
+                  styles.walletsBoxDoneTextWrap
+                ]}
+                  onPress={this.disableSorting}>
                   <T style={[styles.walletsBoxDoneText]}>
-                    {sprintf(strings.enUS['string_done_cap'])}
+                    {strings.enUS['string_done_cap']}
                   </T>
                 </TouchableOpacity>
               </Animated.View>
 
-              <Animated.View style={[styles.plusContainer, UTILS.border(), {opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}]}>
-                <TouchableOpacity style={[styles.walletsBoxHeaderAddWallet, {width: 41}]}
-                  onPress={() => Actions.createWallet()}>
+              <Animated.View style={[
+                styles.plusContainer,
+                UTILS.border(),
+                {
+                  opacity: this.state.fullListOpacity,
+                  zIndex: this.state.fullListZIndex
+                }]}>
+                <TouchableOpacity style={[
+                  styles.walletsBoxHeaderAddWallet,
+                  {width: 41}
+                ]}
+                  onPress={Actions.createWallet}>
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
@@ -219,7 +235,7 @@ export default class WalletList extends Component<any, {
             data={activeWalletsObject}
             order={this.props.activeWalletIds}
             onRowMoved={this.onActiveRowMoved}
-            render={sprintf(strings.enUS['fragmet_wallets_list_archive_title_capitalized'])}
+            render={strings.enUS['fragmet_wallets_list_archive_title_capitalized']}
             renderRow={(row) => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
             executeWalletRowOption={this.executeWalletRowOption}
             dimensions={this.props.dimensions}
@@ -377,7 +393,9 @@ export default class WalletList extends Component<any, {
     headerText='fragment_wallets_delete_wallet'
     modalMiddle={<DeleteWalletSubtext />}
     modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
-    visibilityBoolean={this.props.deleteWalletModalVisible} />
+    visibilityBoolean={this.props.deleteWalletModalVisible}
+
+    />
 
   renderRenameWalletModal = () => <StylizedModal
     featuredIcon={<RenameIcon />}
@@ -412,11 +430,7 @@ export default class WalletList extends Component<any, {
   calculateTotalBalance = (values: any) => {
     let total = 0
     for (let currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(
-        currency,
-        UTILS.fixFiatCurrencyCode(this.props.settings.defaultFiat),
-        values[currency]
-      )
+      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
     return total.toFixed(2)
