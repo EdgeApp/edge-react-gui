@@ -12,7 +12,7 @@ function precisionAdjust (props) {
   const exchangeRateString = bns.mul(exchageRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
   // console.log('exchangeRateString: ' + exchangeRateString)
 
-  let precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier)
+  let precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, 10, 18)
   // console.log('precisionAdjust:' + precisionAdjust)
 
   if (bns.lt(precisionAdjust, '1')) {
@@ -205,7 +205,7 @@ export default class ExchangedFlipInput extends Component {
   }
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio)
+    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, 10, 10)
   }
 
   convertPrimaryExchangeToSecondaryExchange = (primaryExchangeAmount: string): string => {
