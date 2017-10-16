@@ -3,6 +3,7 @@ export * from './ActionConstants'
 export * from './IconConstants'
 export * from '../modules/UI/components/WalletListModal/action'
 export * from './DropDownValueConstants'
+export * from './WalletAndCurrencyConstants'
 
 export const LEFT_TO_RIGHT = 'leftToRight'
 export const RIGHT_TO_LEFT = 'rightToLeft'
