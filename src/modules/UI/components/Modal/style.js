@@ -1,16 +1,16 @@
-import {StyleSheet, Dimensions} from 'react-native'
-import THEME from '../../../../theme/variables/airbitz.js'
+import {
+  StyleSheet,
+  Dimensions
+} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
 const screenDimensions = {
   height: Dimensions.get('window').height,
   width: Dimensions.get('window').width
 }
 
-export default StyleSheet.create({
+export const styles = {
   // modal styles
-  topLevelModal: {
-
-  },
   modalContainer: {
     flex: 1,
     alignItems: 'center',
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     alignItems: 'stretch',
     position: 'absolute',
     // height: (screenDimensions.height) / 3,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: 15,
     paddingTop: 25,
     flexDirection: 'column',
@@ -65,7 +65,7 @@ export default StyleSheet.create({
     left: (screenDimensions.width / 2) - 47,
     top: (screenDimensions.height / 8) - 28,
     borderRadius: 27,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     height: 54,
     width: 54
   },
@@ -74,7 +74,7 @@ export default StyleSheet.create({
     top: 3,
     left: 3,
     borderRadius: 27,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     zIndex: 100,
     elevation: 100,
     height: 48,
@@ -107,12 +107,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     paddingTop: 4
   },
-  modalMiddleTextWrap: {
-
-  },
-  modalMiddleText: {
-
-  },
   modalBottom: {
     height: 50,
     flexDirection: 'row',
@@ -135,28 +129,31 @@ export default StyleSheet.create({
     flex: 1,
     borderRadius: 3
   },
-  stylizedButtonTextWrap: {
-
-  },
   stylizedButtonText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 16
   },
+
   cancelButtonWrap: {
     backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
-  cancelButton: {
-    color: '#3c76cd'
-  },
+
   doneButtonWrap: {
-    backgroundColor: '#4977BB',
+    backgroundColor: THEME.COLORS.SECONDARY,
     alignSelf: 'flex-end',
     marginLeft: 4
   },
-  doneButton: {
-    color: '#3c76cd'
+
+  cancelUnderlay: {
+    color: THEME.COLORS.GRAY_1
+  },
+
+  doneUnderlay: {
+    color: THEME.COLORS.PRIMARY
   }
-})
+}
 
 export const exitColor = THEME.GRAY_1
+
+export default StyleSheet.create(styles)

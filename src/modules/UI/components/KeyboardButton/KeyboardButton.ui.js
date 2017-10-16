@@ -1,24 +1,33 @@
 import React, {Component} from 'react'
-import {Text, View, StyleSheet, TouchableHighlight} from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableHighlight
+} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    borderColor: 'red',
+    borderColor: THEME.COLORS.ACCENT_RED,
     borderWidth: 1,
     flexDirection: 'column'
   },
   containerStyle: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: THEME.COLORS.WHITE
   },
   keyboardButton: {
     flex: 1,
-    borderColor: 'red',
+    borderColor: THEME.COLORS.ACCENT_RED,
     borderWidth: 1,
-    color: 'grey',
+    color: THEME.COLORS.GRAY_3,
     fontWeight: '100',
     textAlign: 'center'
+  },
+  underlayColor: {
+    color: THEME.COLORS.GRAY_1
   }
 })
 
@@ -28,7 +37,7 @@ export default class KeyboardButton extends Component {
     return <View style={styles.view}>
       <TouchableHighlight
         style={styles.containerStyle}
-        underlayColor='#193441'
+        underlayColor={styles.color}
         onPress={() => { onPress(character) }}
         onLongPress={onLongPress}>
 

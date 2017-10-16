@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
+import {bns} from 'biggystring'
 import PropTypes from 'prop-types'
 import {
   ActivityIndicator,
@@ -17,7 +17,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
-import styles from './style'
+import styles, {styles as styleRaw} from './style'
 import * as UTILS from '../../../utils'
 
 import requestImage from '../../../../assets/images/transactions/transactions-request.png'
@@ -216,7 +216,6 @@ export default class TransactionList extends Component {
 
     return (
       <ScrollView style={[UTILS.border(), styles.scrollView]}>
-        {/*<SearchBar state={this.state} onChangeText={this._onSearchChange} onBlur={this._onBlur} onFocus={this._onFocus} onPress={this._onCancel} /> */}
         <View style={[styles.container, UTILS.border()]}>
           <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
             <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
@@ -228,8 +227,7 @@ export default class TransactionList extends Component {
                       <ActivityIndicator
                         animating={updatingBalance}
                         style={[styles.updatingBalance, {height: 40}]}
-                        size='small'
-                          />
+                        size='small' />
                     </View>
                   </View>
                     ) : (
@@ -239,7 +237,9 @@ export default class TransactionList extends Component {
                             <View style={[styles.iconWrap, UTILS.border()]}>
                               {logo
                                 ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, UTILS.border()]} source={{uri: logo}} />
-                                : <T style={[styles.request]}>{displayDenomination.symbol}</T>
+                                : <T style={[styles.request]}>
+                                    {displayDenomination.symbol}
+                                  </T>
                               }
                             </View>
                             <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
@@ -255,30 +255,41 @@ export default class TransactionList extends Component {
                           </View>
                         ) : (
                           <View style={[UTILS.border(), styles.balanceHiddenContainer]}>
-                            <T style={[styles.balanceHiddenText]}>{sprintf(strings.enUS['string_show_balance'])}</T>
+                            <T style={[styles.balanceHiddenText]}>
+                              {strings.enUS['string_show_balance']}
+                            </T>
                           </View>
                         )}
                       </TouchableOpacity>
                     )}
                 <View style={[styles.requestSendRow, UTILS.border()]}>
-                  <TouchableHighlight underlayColor='rgba(0,0,0,0.25)' onPress={() => Actions.request()} style={[styles.requestBox, styles.button]}>
+
+                  <TouchableHighlight style={[styles.requestBox, styles.button]}
+                    underlayColor={styleRaw.underlay.color}
+                    onPress={Actions.request}>
                     <View style={[styles.requestWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
-                        source={requestImage}
-                          />
-                      <T style={[styles.request]}>{sprintf(strings.enUS['fragment_request_subtitle'])}</T>
+                        source={requestImage}/>
+                      <T style={[styles.request]}>
+                        {strings.enUS['fragment_request_subtitle']}
+                      </T>
                     </View>
                   </TouchableHighlight>
-                  <TouchableHighlight underlayColor='rgba(0,0,0,0.25)' onPress={() => Actions.scan()} style={[styles.sendBox, styles.button]}>
+
+                  <TouchableHighlight style={[styles.sendBox, styles.button]}
+                    underlayColor={styleRaw.underlay.color}
+                    onPress={Actions.scan}>
                     <View style={[styles.sendWrap]}>
                       <Image
                         style={{width: 25, height: 25}}
-                        source={sendImage}
-                          />
-                      <T style={styles.send}>{sprintf(strings.enUS['fragment_send_subtitle'])}</T>
+                        source={sendImage} />
+                      <T style={styles.send}>
+                        {strings.enUS['fragment_send_subtitle']}
+                      </T>
                     </View>
                   </TouchableHighlight>
+
                 </View>
               </Animated.View>
                 }
@@ -301,12 +312,11 @@ export default class TransactionList extends Component {
   }
 
   _goToTxDetail = (abcTransaction, thumbnailPath) => {
-    console.log('in TransactionList.ui.js->_goToTxDetail')
     Actions.transactionDetails({abcTransaction, thumbnailPath})
   }
 
   isReceivedTransaction (tx) {
-    return UTILS.isGreaterThan('0')(tx.nativeAmount)
+    return bns.gt(tx.nativeAmount, '0')
   }
 
   isSentTransaction (tx) {
@@ -376,8 +386,15 @@ export default class TransactionList extends Component {
             </View>
           </View>
         }
-        <TouchableOpacity onPress={() => this._goToTxDetail(tx, thumbnailPath)} style={[styles.singleTransaction, {borderBottomWidth: lastOfDate ? 0 : 1}]}>
+        <TouchableHighlight
+          onPress={() => this._goToTxDetail(tx, thumbnailPath)}
+          underlayColor={styleRaw.transactionUnderlay.color}
+          style={[
+            styles.singleTransaction,
+            {borderBottomWidth: lastOfDate ? 0 : 1}
+          ]}>
           <View style={[styles.transactionInfoWrap, UTILS.border()]}>
+
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
                 <Image style={[styles.transactionLogo, UTILS.border()]} source={{uri: thumbnailPath}} />
@@ -387,6 +404,7 @@ export default class TransactionList extends Component {
                   source={txImage}
                 />
               )}
+
               <View style={[styles.transactionLeftTextWrap, UTILS.border()]}>
                 <T style={[styles.transactionPartner]}>
                   {tx.metadata.name || txName}
@@ -395,7 +413,9 @@ export default class TransactionList extends Component {
                   {tx.time}
                 </T>
               </View>
+
             </View>
+
             <View style={[styles.transactionRight, UTILS.border()]}>
               <T style={[styles.transactionBitAmount, txColorStyle]}>
                 {this.props.displayDenomination.symbol} {amountString}
@@ -404,8 +424,9 @@ export default class TransactionList extends Component {
                 {fiatSymbol + ' ' + fiatAmountString}
               </T>
             </View>
+
           </View>
-        </TouchableOpacity>
+        </TouchableHighlight>
       </View>
     )
   }

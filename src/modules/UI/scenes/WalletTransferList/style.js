@@ -1,13 +1,13 @@
 import {StyleSheet} from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
-
+import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
   container: {
     bottom: platform.deviceHeight / 10,
     maxHeight: platform.deviceHeight * 0.8,
     alignItems: 'stretch',
-    backgroundColor: 'white'
+    backgroundColor: THEME.COLORS.WHITE
   },
   headerRowWrap: {
     height: 50,
@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     paddingLeft: 20,
     paddingRight: 20,
-    backgroundColor: '#dddddd',
-    borderBottomColor: '#666666',
+    backgroundColor: THEME.COLORS.GRAY_3,
+    borderBottomColor: THEME.COLORS.GRAY_1,
     borderBottomWidth: 1
   },
   headerTextWrap: {
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start'
   },
   headerText: {
-    color: '#666666',
+    color: THEME.COLORS.GRAY_1,
     fontSize: 20
   },
   exitIconWrap: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   individualRowWrap: {
     paddingLeft: 20,
     height: 50,
-    borderColor: '#666666',
+    borderColor: THEME.COLORS.GRAY_1,
     borderWidth: 1,
     borderTopWidth: 0,
     justifyContent: 'center',

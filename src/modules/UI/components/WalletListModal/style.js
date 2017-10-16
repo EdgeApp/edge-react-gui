@@ -1,26 +1,26 @@
 import {StyleSheet} from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
+import THEME from '../../../../theme/variables/airbitz'
 
-
-export default StyleSheet.create({
+export const styles = {
   topLevel: {
     zIndex: 10,
     width: platform.deviceWidth,
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     alignSelf: 'stretch'
   },
   modalRoot: {
     paddingTop: 50
   },
   headerContainer: {
-    backgroundColor: '#5c5d5f'
+    backgroundColor: THEME.COLORS.GRAY_1
   },
   modalBody: {
     width: platform.deviceWidth,
     zIndex: 4
   },
   rowContainer: {
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     padding: 16,
     paddingLeft: 20,
     paddingRight: 20,
@@ -37,7 +37,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   headerText: {
-    color: 'white',
+    color: THEME.COLORS.WHITE,
     fontSize: 14
   },
   headerCloseWrap: {
@@ -60,9 +60,9 @@ export default StyleSheet.create({
     padding: 16,
     paddingLeft: 30,
     paddingRight: 20,
-    backgroundColor: '#F6F6F6',
+    backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
-    borderColor: '#EEE'
+    borderColor: THEME.COLORS.GRAY_3
   },
   currencyRowContent: {
     justifyContent: 'space-between',
@@ -72,8 +72,13 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   currencyRowText: {
-    color: '#58595C',
+    color: THEME.COLORS.GRAY_1,
     fontSize: 14
+  },
+  underlay: {
+    color: THEME.COLORS.ROW_PRESSED
   }
     // end of token rows //
-})
+}
+
+export default StyleSheet.create(styles)

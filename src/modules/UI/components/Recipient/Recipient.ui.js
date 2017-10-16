@@ -1,35 +1,22 @@
 import React, {Component} from 'react'
 import {
   View,
-  StyleSheet,
   Text
 } from 'react-native'
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default.js'
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'transparent',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 35,
-    marginHorizontal: 35
-  },
-  text: {
-    color: 'rgba(255,255,255,0.85)',
-    fontSize: 14,
-    marginHorizontal: 5
-  }
-})
+import styles from './styles'
+
+const SENT_TO_TEXT = strings.enUS['send_to_title']
 
 export default class Recipient extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={[ styles.text ]}>
-          {sprintf(strings.enUS['send_to_title'])}
+        <Text style={styles.text}>
+          {SENT_TO_TEXT}
         </Text>
-        <Text style={[ styles.text ]}
+        <Text style={styles.text}
           ellipsizeMode='middle' numberOfLines={1}>
           {this.props.publicAddress}
         </Text>

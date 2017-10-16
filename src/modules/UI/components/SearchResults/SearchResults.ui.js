@@ -33,7 +33,14 @@ export default class SearchResults extends Component {
       searchResultsHeight = this.props.height
     }
     return (
-      <View style={[style.searchResultsContainer, {backgroundColor: 'white', height: searchResultsHeight, width: platform.deviceWidth, top: platform.toolbarHeight + this.props.extraTopSpace, zIndex: 999}]}>
+      <View style={[
+        style.searchResultsContainer,
+        {
+          height: searchResultsHeight,
+          width: platform.deviceWidth,
+          top: platform.toolbarHeight + this.props.extraTopSpace,
+          zIndex: 999
+        }]}>
         <FlatList
           style={[{width: '100%'}]}
           data={completedDataList}

@@ -18,6 +18,7 @@ export class GuiWallet {
   denominations: Array<AbcDenomination>
   allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } }
   symbolImage: string
+  symbolImageDarkMono: string
   metaTokens: Array<AbcMetaToken>
   constructor (
     id: string,
@@ -32,6 +33,7 @@ export class GuiWallet {
     denominations: Array<AbcDenomination>,
     allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
     symbolImage: string,
+    symbolImageDarkMono: string,
     metaTokens: Array<AbcMetaToken>,
   ) {
     this.id = id
@@ -46,6 +48,7 @@ export class GuiWallet {
     this.denominations = denominations
     this.allDenominations = allDenominations
     this.symbolImage = symbolImage
+    this.symbolImageDarkMono = symbolImageDarkMono
     this.metaTokens = metaTokens
   }
 }

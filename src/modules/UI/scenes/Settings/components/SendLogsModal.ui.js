@@ -6,7 +6,9 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 
-import styles from './style'
+import styles from './styles'
+
+import THEME from '../../../../../theme/variables/airbitz'
 
 export default class SendLogsModal extends Component {
   state = {
@@ -46,7 +48,7 @@ export default class SendLogsModal extends Component {
         left: 13,
         height: 24,
         width: 24,
-        backgroundColor: 'transparent',
+        backgroundColor: THEME.COLORS.TRANSPARENT,
         zIndex: 1015,
         elevation: 1015}]} />
 

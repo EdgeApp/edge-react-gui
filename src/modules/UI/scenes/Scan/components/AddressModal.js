@@ -12,6 +12,8 @@ import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
 
+import styles from '../style'
+
 export default class AddressModal extends Component {
   constructor (props) {
     super(props)
@@ -38,6 +40,35 @@ export default class AddressModal extends Component {
         // console.log(e)
       }
     })
+  }
+
+  render () {
+    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
+      style={styles.icon} />
+
+    const copyMessage
+      = this.state.clipboard
+      ? sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
+      : null
+    const middle = <AddressInput
+      copyMessage={copyMessage}
+      onChangeText={this.onChangeText}
+      onSubmit={this.onSubmit}
+      onPaste={this.onPasteFromClipboard} />
+
+    const bottom = <AddressInputButtons
+      onSubmit={this.onSubmit}
+      onCancel={this.onCancel} />
+
+    return (
+      <StylizedModal
+        featuredIcon={icon}
+        headerText='fragment_send_address_dialog_title'
+        modalMiddle={middle}
+        modalBottom={bottom}
+        visibilityBoolean={this.props.addressModalVisible}
+      />
+    )
   }
 
   onPasteFromClipboard = () => {
@@ -69,42 +100,5 @@ export default class AddressModal extends Component {
 
   onChangeText = (uri) => {
     this.setState({uri})
-  }
-
-  render () {
-    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
-      style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
-        backgroundColor: 'transparent',
-        zIndex: 1015,
-        elevation: 1015}]} />
-
-    const copyMessage
-      = this.state.clipboard
-      ? sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
-      : null
-    const middle = <AddressInput
-      copyMessage={copyMessage}
-      onChangeText={this.onChangeText}
-      onSubmit={this.onSubmit}
-      onPaste={this.onPasteFromClipboard} />
-
-    const bottom = <AddressInputButtons
-      onSubmit={this.onSubmit}
-      onCancel={this.onCancel} />
-
-    return (
-      <StylizedModal
-        featuredIcon={icon}
-        headerText='fragment_send_address_dialog_title'
-        modalMiddle={middle}
-        modalBottom={bottom}
-        visibilityBoolean={this.props.addressModalVisible}
-      />
-    )
   }
 }

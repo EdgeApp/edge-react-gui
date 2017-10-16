@@ -12,19 +12,21 @@ import {
   Keyboard,
 } from 'react-native'
 import Permissions from 'react-native-permissions'
+import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import styles from './style'
-import {colors as c} from '../../../../theme/variables/airbitz'
+import styles, {styles as styleRaw} from './style'
+import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
 import AmountArea from './AmountArea.ui.js'
 import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata} from 'airbitz-core-types'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'airbitz-core-types'
+
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -36,7 +38,8 @@ export type Props = {
   subcategoriesList: Array<string>,
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
-  thumbnailPath: string
+  thumbnailPath: string,
+  currencyInfo: AbcCurrencyInfo
 }
 
 export type DispatchProps = {
@@ -70,6 +73,11 @@ export type State = {
   type: string,
   walletDefaultDenomProps: AbcDenomination
 }
+
+const EXCHANGE_TEXT = strings.enUS['fragment_transaction_exchange']
+const EXPENSE_TEXT = strings.enUS['fragment_transaction_expense']
+const TRANSFER_TEXT = strings.enUS['fragment_transaction_transfer']
+const INCOME_TEXT = strings.enUS['fragment_transaction_income']
 
 export class TransactionDetails extends Component<Props & DispatchProps, State> {
   subcategoryTextInput: ?HTMLButtonElement
@@ -392,23 +400,23 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
     const types = {
       exchange: {
-        color: c.accentOrange,
-        syntax: strings.enUS['fragment_transaction_exchange'],
+        color: styleRaw.typeExchange.color,
+        syntax: EXCHANGE_TEXT,
         key: 'exchange'
       },
       expense: {
-        color: c.accentRed,
-        syntax: strings.enUS['fragment_transaction_expense'],
+        color: styleRaw.typeExpense.color,
+        syntax: EXPENSE_TEXT,
         key: 'expense'
       },
       transfer: {
-        color: c.primary,
-        syntax: strings.enUS['fragment_transaction_transfer'],
+        color: styleRaw.typeTransfer.color,
+        syntax: TRANSFER_TEXT,
         key: 'transfer'
       },
       income: {
-        color: c.accentGreen,
-        syntax: strings.enUS['fragment_transaction_income'],
+        color: styleRaw.typeIncome.color,
+        syntax: INCOME_TEXT,
         key: 'income'
       }
     }
@@ -425,12 +433,19 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
     const color = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
-
+    const txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
     return (
       <View style={[UTILS.border()]}>
         <Animated.View
-          style={[{opacity: this.state.payeeOpacity, width: '100%', zIndex: this.state.payeeZIndex, backgroundColor: 'white', position: 'absolute', top: 4, height: platform.usableHeight}]}
-          >
+          style={[{
+            opacity: this.state.payeeOpacity,
+            width: '100%',
+            zIndex: this.state.payeeZIndex,
+            backgroundColor: THEME.COLORS.WHITE,
+            position: 'absolute',
+            top: 4,
+            height: platform.usableHeight
+          }]}>
           <View style={[styles.payeeNameArea]}>
             <View style={[styles.payeeNameWrap]}>
               <TextInput
@@ -444,7 +459,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 placeholder='Payee'
                 defaultValue={this.state.name}
                 value={this.state.name}
-                placeholderTextColor={c.gray2}
+                placeholderTextColor={THEME.COLORS.GRAY_2}
                 returnKeyType={'done'}
               />
             </View>
@@ -462,7 +477,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
           />
         </Animated.View>
         <Animated.View
-          style={[{opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: 'white', position: 'absolute', height: platform.usableHeight}]}
+          style={[{opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: THEME.COLORS.WHITE, position: 'absolute', height: platform.usableHeight}]}
           >
           <View style={[styles.modalCategoryRow]}>
             <TouchableOpacity style={[styles.categoryLeft, {borderColor: color}]} disabled>
@@ -480,7 +495,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 placeholder={strings.enUS['transaction_details_category_title']}
                 autoCorrect={false}
                 onSubmitEditing={this.onSubcategoriesKeyboardReturn}
-                placeholderTextColor={c.gray2}
+                placeholderTextColor={THEME.COLORS.GRAY_2}
                 initialNumToRender={8}
                 returnKeyType={'done'}
               />
@@ -511,7 +526,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                     placeholder={strings.enUS['transaction_details_payee']}
                     defaultValue={this.state.name}
                     value={this.state.name}
-                    placeholderTextColor={c.gray2}
+                    placeholderTextColor={THEME.COLORS.GRAY_2}
                   />
                 </View>
               </View>
@@ -552,6 +567,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                 openModalFxn={this.amountAreaOpenModal}
                 selectedWallet={this.props.selectedWallet}
+                txExplorerUrl={txExplorerLink}
               />
             </View>
           </View>

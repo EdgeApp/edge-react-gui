@@ -1,6 +1,6 @@
 import {connect} from 'react-redux'
 import WalletListRowOptions from './WalletListRowOptions.ui'
-import {updateRenameWalletInput} from './action'
+import {updateRenameWalletInput} from '../../action'
 import UI_SELECTORS from '../../../../selectors'
 
 const mapStateToProps = (state) => ({
