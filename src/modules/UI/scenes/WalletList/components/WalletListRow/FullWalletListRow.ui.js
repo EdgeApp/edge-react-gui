@@ -97,7 +97,7 @@ class FullWalletListRow extends Component {
       if (property !== this.props.data.item.currencyCode) {
         tokens.push(
           <WalletListTokenRow
-            sparentId={parentId}
+            parentId={parentId}
             currencyCode={property}
             key={property}
             balance={metaTokenBalances[property]}

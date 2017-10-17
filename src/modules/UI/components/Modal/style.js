@@ -35,6 +35,28 @@ export const styles = {
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
+  modalBoxWithExit: {
+    position: 'relative',
+    bottom: 24
+  },
+  exitRow: {
+    alignItems: 'flex-end',
+    position: 'relative',
+    zIndex: 200
+  },
+  exitButton: {
+    backgroundColor: 'transparent',
+    width: 30,
+    height: 30,
+    alignItems: 'flex-end',
+    position: 'relative',
+    top: 6
+  },
+  exitText: {
+    fontSize: 18,
+    backgroundColor: 'transparent',
+    color: THEME.GRAY_1
+  },
   iconWrapper: {
 
   },
@@ -89,7 +111,9 @@ export const styles = {
     height: 50,
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    position: 'relative',
+    top: 30
   },
 
   // buttons
@@ -129,5 +153,7 @@ export const styles = {
     color: THEME.COLORS.PRIMARY
   }
 }
+
+export const exitColor = THEME.GRAY_1
 
 export default StyleSheet.create(styles)

@@ -1,73 +1,42 @@
 import React, {Component} from 'react'
 import {
   View,
-  TouchableOpacity,
   Image,
-  TouchableWithoutFeedback,
-  WebView
+  WebView,
+  Text
 } from 'react-native'
-import {Icon} from 'native-base'
-import Modal from 'react-native-modal'
-import logo from '../../../../img/logo2x.png'
+import strings from '../../../../locales/default'
+import styles from './style.js'
+import StylizedModal from '../Modal/index.js'
+import THEME from '../../../../theme/variables/airbitz.js'
+import helpImage from '../../../../assets/images/modal/help.png'
+import DeviceInfo from 'react-native-device-info'
 
-import styles from './styles'
+const HTML = require('../../../../html/enUS/info.html')
+
+const buildNumber = DeviceInfo.getBuildNumber()
+const versionNumber = DeviceInfo.getVersion()
 
 export default class HelpModal extends Component {
-  renderWebView = () => {
-    const scene = this.props.routes.scene
-    const children = scene.children
-    const sceneName = children
-      ? this.props.routes.scene.children[this.props.routes.scene.index].name
-      : null
 
-    switch (sceneName) {
-    case 'scan':
-      return require('../../../../html/enUS/info_send.html')
-    case 'walletList':
-      return require('../../../../html/enUS/info_wallets.html')
-    case 'transactionList':
-      return require('../../../../html/enUS/info_transactions.html')
-    case 'transactionDetails':
-      return require('../../../../html/enUS/transaction_details.html')
-    case 'request':
-      return require('../../../../html/enUS/info_request.html')
-    case 'sendConfirmation':
-      return require('../../../../html/enUS/info_send_confirmation.html')
-    default:
-      return require('../../../../html/enUS/info_disclaimer.html')
-    }
+  _renderWebView = () => {
+    require('../../../../html/enUS/info.html')
   }
 
   render () {
-    // console.log('this.props', this.props)
     return (
-      <TouchableWithoutFeedback onPress={this.props.closeModal}>
-        <Modal style={{
-          margin: 0, paddingVertical: 60, paddingHorizontal: 20
-        }}
-          isVisible={this.props.modal}
-          animationIn='bounceIn'
-          animationOut='bounceOut'>
-
-            <View style={{flex: 1}, styles.background}>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{width: 40}} />
-                <Image source={logo} style={{flex: 1, height: 48, margin: 15}} resizeMode='contain' />
-
-                <View style={{width: 40, alignItems: 'center'}}>
-                  <TouchableOpacity onPress={this.props.closeModal}>
-                    <Icon name='close' style={{marginTop: 5, fontSize: 36}} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-              <View style={{flex: 1, paddingHorizontal: 20}}>
-                <WebView source={this.renderWebView()} />
-              </View>
-
-            </View>
-        </Modal>
-      </TouchableWithoutFeedback>
+      <StylizedModal
+        style={styles.stylizedModal}
+        visibilityBoolean={this.props.modal}
+        onExitButtonFxn={this.props.closeModal}
+        headerText='help_modal_title'
+        modalMiddle={<WebView style={{justifyContent: 'center', alignItems:'center', height: 180, width: '95%'}} source={HTML} />}
+        modalBottom={<View style={[styles.modalBottomContainer]}>
+                        <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {versionNumber}</Text>
+                        <Text style={styles.modalBottomText}>{strings.enUS['help_build']} {buildNumber}</Text>
+                    </View>}
+        featuredIcon={<Image source={helpImage}  style={styles.modalFeaturedIcon} color={THEME.secondary} size={20} />}
+      />
     )
   }
 }

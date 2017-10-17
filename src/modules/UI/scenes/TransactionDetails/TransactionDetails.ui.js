@@ -344,8 +344,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     })
   }
 
-  onSelectCategory = (itemValue: any) => {
-    this.setState({type: itemValue})
+  onSelectCategory = (item: any) => {
+    this.setState({type: item.itemValue})
     this.onExitCategories()
   }
 
@@ -359,7 +359,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
   onSaveTxDetails = () => {
     let category
-    if (this.state.subCategory && this.state.type) {
+    if (this.state.type) {
       category = this.state.type.charAt(0).toUpperCase() + this.state.type.slice(1) + ':' + this.state.subCategory
     } else {
       category = undefined
@@ -432,7 +432,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       type = types[this.state.type]
     }
 
-    const color = type.color
+    const categoryColor = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
     const txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
     return (
@@ -481,8 +481,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
           style={[{opacity: this.state.subcategoryOpacity, width: '100%', zIndex: this.state.subcatZIndex, backgroundColor: THEME.COLORS.WHITE, position: 'absolute', height: platform.usableHeight}]}
           >
           <View style={[styles.modalCategoryRow]}>
-            <TouchableOpacity style={[styles.categoryLeft, {borderColor: color}]} disabled>
-              <FormattedText style={[{color: color}, styles.categoryLeftText]}>{type.syntax}</FormattedText>
+            <TouchableOpacity style={[styles.categoryLeft, {borderColor: categoryColor}]} disabled>
+              <FormattedText style={[{color: categoryColor}, styles.categoryLeftText]}>{type.syntax}</FormattedText>
             </TouchableOpacity>
             <View style={[styles.modalCategoryInputArea]}>
               <TextInput
@@ -562,7 +562,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 onFocusNotes={this.onFocusNotes}
                 onBlurNotes={this.onBlurNotes}
                 direction={this.state.direction}
-                color={color}
+                color={categoryColor}
                 types={types}
                 onFocusFiatAmount={this.onFocusFiatAmount}
                 walletDefaultDenomProps={this.state.walletDefaultDenomProps}
