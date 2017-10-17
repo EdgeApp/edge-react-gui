@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 import T from '../../../components/FormattedText'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import styles, {styleRaw} from './styles'
+import styles, {styles as styleRaw} from './styles'
 import {border as debugBorder} from '../../../../utils'
 
 class Row extends Component {
