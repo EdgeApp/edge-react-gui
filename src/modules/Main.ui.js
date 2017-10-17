@@ -4,7 +4,8 @@ import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-c
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {Keyboard, Platform} from 'react-native'
+import {Keyboard, Platform, StyleSheet, View, Text} from 'react-native'
+import Button from 'react-native-button';
 import {connect} from 'react-redux'
 import SideMenu from './UI/components/SideMenu/SideMenuConnector'
 import ControlPanel from './UI/components/ControlPanel/ControlPanel.ui'
@@ -44,8 +45,8 @@ import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
-import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator';
-
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
+import MenuIcon from '../assets/images/walletlist/sort.png';
 
 import * as CONTEXT_API from './Core/Context/api'
 
@@ -105,6 +106,38 @@ function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   return makeReactNativeContext(opts)
 }
 
+const drawerStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'red',
+  },
+});
+
+class DummyDrawer extends React.Component {
+  static contextTypes = {
+    drawer: React.PropTypes.object,
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>Drawer Content</Text>
+        <Button onPress={Actions.closeDrawer}>Back</Button>
+        <Text>Title: {this.props.title}</Text>
+        <Button onPress={Actions.pop}>Back</Button>
+        <Button onPress={Actions.walletList}>Wallets</Button>
+        <Button onPress={Actions.scan}>Scan QR Code</Button>
+        <Button onPress={Actions.settingsOverview}>Settings</Button>
+      </View >
+    );
+  }
+}
+
+
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
@@ -158,12 +191,12 @@ export default class Main extends Component<Props, State> {
                   {/*<Lightbox>*/}
                     <Stack hideNavBar key='root' titleStyle={{ alignSelf: 'center' }}>
                       <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
-                      {/*<Drawer hideNavBar key='edge' contentComponent={ControlPanel}>*/}
+                      <Drawer hideNavBar key='edge' contentComponent={DummyDrawer} drawerImage={MenuIcon}>
                         {/*
                          Wrapper Scene needed to fix a bug where the tabs would
                          reload as a modal ontop of itself
                          */}
-                        {/*<Scene hideNavBar>*/}
+                        <Scene hideNavBar>
                           <Tabs key='edge' swipeEnabled showLabel={false} tabBarStyle={styles.tabBarStyle} activeBackgroundColor='white' inactiveBackgroundColor='rgba(255, 0, 0, 0.5)'>
                             <Stack key='tab_1' title='Tab #1' tabBarLabel='Wall' inactiveBackgroundColor='#FFF' activeBackgroundColor='#DDD' navigationBarStyle={{ backgroundColor: 'green' }} titleStyle={{ color: 'white', alignSelf: 'center' }}>
                               <Scene key={Constants.WALLET_LIST} component={WalletList} title='Wallets' onRight={() => alert('Right button')} rightTitle='Right'/>
@@ -186,8 +219,8 @@ export default class Main extends Component<Props, State> {
                               <Scene key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
                             </Stack>
                           </Tabs>
-                        {/*</Scene>*/}
-                      {/*</Drawer>*/}
+                        </Scene>
+                      </Drawer>
                     </Stack>
                   {/*</Lightbox>*/}
                 </Modal>
