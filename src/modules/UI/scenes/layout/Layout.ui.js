@@ -8,6 +8,7 @@ import Header from '../../components/Header/HeaderConnector'
 import TabBar from '../../components/TabBar/TabBarConnector'
 import HelpModal from '../../components/HelpModal'
 import ErrorAlert from '../../components/ErrorAlert/ErrorAlertConnector'
+import TransactionAlert from '../../components/TransactionAlert/TransactionAlertConnector'
 
 type Props = {
   navigationState: any,
@@ -65,6 +66,7 @@ export default class Layout extends Component<Props, State> {
         <HelpModal style={{flex: 1}} />
         <TabBar style={{flex: 1}} />
         <ErrorAlert />
+        <TransactionAlert />
       </View>
     )
   }

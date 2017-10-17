@@ -65,7 +65,7 @@ export default class WalletList extends Component<any, {
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
       fullListOpacity: new Animated.Value(1),
-      fullListZIndex: new Animated.Value(100)  
+      fullListZIndex: new Animated.Value(100)
     }
   }
 

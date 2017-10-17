@@ -1,4 +1,5 @@
 // @flow
+
 const PREFIX = 'UI/components/ErrorAlert/'
 export const DISPLAY_ERROR_ALERT = PREFIX + 'DISPLAY_ERROR_ALERT'
 export const DISMISS_ERROR_ALERT = PREFIX + 'DISMISS_ERROR_ALERT'

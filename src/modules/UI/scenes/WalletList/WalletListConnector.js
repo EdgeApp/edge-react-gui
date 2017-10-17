@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   setContactList: (contacts) => dispatch(setContactList(contacts)),
   walletRowOption: (walletId, option) => dispatch(walletRowOption(walletId, option)),
   closeDeleteWalletModal: () => dispatch(closeDeleteWalletModal()),
-  closeRenameWalletModal: () => dispatch(closeRenameWalletModal())  
+  closeRenameWalletModal: () => dispatch(closeRenameWalletModal())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)
