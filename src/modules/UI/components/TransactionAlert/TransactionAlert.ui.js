@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {Text} from 'react-native'
+import {Text, View} from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import {sprintf} from 'sprintf-js'
 
@@ -17,6 +17,7 @@ export type Props = {
   displayAmount: string,
   displaySymbol: string,
   dismissAlert: Function,
+  viewTransaction: Function,
 }
 
 export default class TransactionAlert extends Component<Props> {
@@ -35,22 +36,26 @@ export default class TransactionAlert extends Component<Props> {
   }
 
   render () {
-    const {displayAlert, dismissAlert} = this.props
+    const {displayAlert, dismissAlert, viewTransaction} = this.props
 
-    return <DropdownAlert visible={displayAlert} onClose={dismissAlert}>
-      <AlertContainer style={styles.alertContainer}>
 
-        <AlertHeader style={styles.alertHeader}>
-          {this.checkmarkIcon}
-        </AlertHeader>
+    return <DropdownAlert visible={displayAlert} onClose={dismissAlert} onPress={viewTransaction}>
+      {/* Do not remove <View> */}
+      <View>
 
-        <AlertBody>
-          <Text style={styles.alertHeaderText}>
-            {this.message()}
-          </Text>
-        </AlertBody>
+        <AlertContainer style={styles.alertContainer}>
+          <AlertHeader style={styles.alertHeader}>
+            {this.checkmarkIcon}
+          </AlertHeader>
+          <AlertBody>
+            <Text style={styles.alertHeaderText}>
+              {this.message()}
+            </Text>
+          </AlertBody>
+        </AlertContainer>
 
-      </AlertContainer>
+      </View>
+
     </DropdownAlert>
   }
 }

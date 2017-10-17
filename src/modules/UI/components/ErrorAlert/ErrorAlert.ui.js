@@ -1,14 +1,11 @@
 // @flow
 import React, {Component} from 'react'
-import {
-  Text,
-  View
-} from 'react-native'
+import {Text, View} from 'react-native'
 import SLIcon from 'react-native-vector-icons/SimpleLineIcons'
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import DropdownAlert from '../DropdownAlert/DropdownAlert.ui'
-import {AlertHeader} from '../DropdownAlert/components'
+import {AlertContainer, AlertHeader} from '../DropdownAlert/components'
 import styles from './styles'
 
 type Props = {
@@ -29,14 +26,18 @@ export default class ErrorAlert extends Component<Props> {
     } = this.props
 
     return <DropdownAlert visible={displayAlert} onClose={dismissAlert}>
-      <View style={styles.alertContainer}>
-        <AlertHeader style={styles.alertHeader}>
-          {this.alertIcon()}
-          <Text style={styles.alertHeaderText}>
-            {error}
-          </Text>
-          {this.infoIcon()}
-        </AlertHeader>
+        <View>
+
+        <AlertContainer style={styles.alertContainer}>
+          <AlertHeader style={styles.alertHeader}>
+            {this.alertIcon()}
+            <Text style={styles.alertHeaderText}>
+              {error}
+            </Text>
+            {this.infoIcon()}
+          </AlertHeader>
+        </AlertContainer>
+
       </View>
     </DropdownAlert>
   }

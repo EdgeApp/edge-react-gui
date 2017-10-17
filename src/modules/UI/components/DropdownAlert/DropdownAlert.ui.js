@@ -4,8 +4,9 @@ import RNDropdownAlert from 'react-native-dropdownalert'
 
 type Props = {
   visible: boolean,
-  onClose: () => void,
   children?: Node,
+  onClose: () => void,
+  onPress?: () => void
 }
 
 export default class DropdownAlert extends Component<Props> {
@@ -17,10 +18,11 @@ export default class DropdownAlert extends Component<Props> {
   }
 
   render () {
-    const {children, onClose} = this.props
+    const {children, onClose, onPress} = this.props
 
     // $FlowFixMe
     return <RNDropdownAlert ref={(ref) => this.dropdownAlert = ref}
+      onPress={onPress}
       panResponderEnabled={false}
       updateStatusBar={false}
       startDelta={-10}
