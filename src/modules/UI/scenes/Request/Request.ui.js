@@ -35,7 +35,7 @@ export default class Request extends Component {
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
+        const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(receiveAddress) : ''
         this.setState({
           encodedURI,
           publicAddress
@@ -51,7 +51,7 @@ export default class Request extends Component {
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
-      const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
+      const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(receiveAddress) : ''
       this.setState({
         encodedURI,
         publicAddress

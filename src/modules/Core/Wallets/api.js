@@ -7,27 +7,52 @@ export const renameWalletRequest = (wallet: any, name: string) => wallet.renameW
     Promise.resolve(wallet)
   })
 
-export const getTransactions = (wallet: any, currencyCode: string) => wallet.getTransactions({currencyCode})
+export const getTransactions = (wallet: any, currencyCode: string) => {
+  if (wallet.getTransactions) {
+    return wallet.getTransactions({currencyCode})
+  } else {
+    return Promise.resolve([])
+  }
+}
 
 export const setTransactionDetailsRequest = (wallet: any, txid: string, currencyCode: string, abcMetadata: AbcMetadata) =>
   // console.log('wallet is: ', wallet)
   // console.log('currencyCode is: ', currencyCode)
   // console.log('transactionDetails: ', transactionDetails)
   //  parameters should be txid, currencyCode, and then metaData
-   wallet.saveTxMetadata(txid, currencyCode, abcMetadata)
+   wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata) : Promise.resolve()
 
-export const getReceiveAddress = (wallet: any, currencyCode: string) => wallet.getReceiveAddress(currencyCode)
+export const getReceiveAddress = (wallet: any, currencyCode: string) => {
+  if (wallet.getReceiveAddress) {
+    return wallet.getReceiveAddress(currencyCode)
+  } else {
+    return Promise.resolve('')
+  }
+}
 
-export const makeSpend = (wallet: any, spendInfo: any) =>
+export const makeSpend = (wallet: any, spendInfo: any) => {
   // console.log('spendInfo', spendInfo)
-   wallet.makeSpend(spendInfo)
+  if (wallet.makeSpend) {
+    return wallet.makeSpend(spendInfo)
+  } else {
+    return Promise.resolve({})
+  }
+}
 
-export const getMaxSpendable = (wallet: any, spendInfo: any) =>
-   wallet.getMaxSpendable(spendInfo)
+export const getMaxSpendable = (wallet: any, spendInfo: any) => {
+  if (wallet.getMaxSpendable) {
+    return wallet.getMaxSpendable(spendInfo)
+  } else {
+    return Promise.resolve('0')
+  }
+}
 
 export const getBalance = (wallet: any, currencyCode: string) => {
-  const balance = wallet.getBalance({currencyCode})
-  return balance
+  if (wallet.getBalance) {
+    return wallet.getBalance({currencyCode})
+  } else {
+    return 0
+  }
 }
 
 export const enableTokens = (wallet: any, tokens: Array<string>) =>
