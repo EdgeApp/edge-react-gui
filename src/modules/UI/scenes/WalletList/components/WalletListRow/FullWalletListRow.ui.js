@@ -20,6 +20,8 @@ import platform from '../../../../../../theme/variables/platform.js'
 import type {GuiDenomination} from '../../../../../../types'
 import type {State as ReduxState, Dispatch} from '../../../../../ReduxTypes'
 
+const DIVIDE_PRECISION = 18
+
 export type FullWalletRowProps = {
   data: any, // TODO: Need to type this
   sortableMode: boolean
@@ -92,7 +94,7 @@ class FullWalletListRow extends Component<Props, State> {
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>
                   <T style={[styles.rowBalanceAmountText]}>
-                    {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, 10, 8), 6)}
+                    {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)}
                   </T>
                   <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} ({symbol || ''})</T>
                 </View>

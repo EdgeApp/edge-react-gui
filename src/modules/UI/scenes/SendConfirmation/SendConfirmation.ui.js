@@ -22,6 +22,8 @@ import type {GuiWallet} from '../../../../types'
 import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
 
+const DIVIDE_PRECISION = 18
+
 export type Props = {
   sendConfirmation: SendConfirmationState,
   abcWallet: AbcCurrencyWallet,
@@ -170,11 +172,11 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, 10, 10)
+    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
   }
   getSecondaryDisplayToExchangeRatio = (): string => {
     const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier
     const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier
-    return bns.div(exchangeMultiplier, displayMultiplier, 10 , 6)
+    return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
   }
 }

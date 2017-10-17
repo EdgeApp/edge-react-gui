@@ -11,6 +11,8 @@ import * as UTILS from '../../../../utils'
 import {bns} from 'biggystring'
 import type {GuiWallet} from '../../../../../types'
 
+const DIVIDE_PRECISION = 18
+
 export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   selectFromWallet = () => {
     LayoutAnimation.easeInEaseOut()
@@ -37,7 +39,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       = this.props.walletList[parentId]
       .allDenominations[currencyCode][this.props.settings[currencyCode].denomination]
       .multiplier
-    let cryptoAmount = bns.div(balance, multiplier, 10, 6)
+    let cryptoAmount = bns.div(balance, multiplier, DIVIDE_PRECISION)
     const walletId = parentId
     return (
       <TouchableHighlight style={styles.tokenRowContainer}
@@ -73,7 +75,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       = guiWallet
       .allDenominations[guiWallet.currencyCode][multiplier]
       .symbol
-    let denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, 10, 10)
+    let denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
     return (

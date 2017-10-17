@@ -5,6 +5,8 @@ import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
 
+const DIVIDE_PRECISION = 18
+
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
 export const cutOffText = (str: string, lng: number) => {
@@ -110,7 +112,7 @@ export const formatNumber = (input: string): string => {
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) =>
   (nativeAmount: string): string =>
-    div(nativeAmount, nativeToTargetRatio, 10, 6)
+    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display

@@ -14,6 +14,8 @@ import {border as b, cutOffText, truncateDecimals, findDenominationSymbol} from 
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 
+const DIVIDE_PRECISION = 18
+
 class SortableWalletListRow extends Component<Props, State> {
 
   render () {
@@ -46,7 +48,7 @@ class SortableWalletListRow extends Component<Props, State> {
               </View>
               <View style={[styles.rowBalanceTextWrap]}>
                 <T style={[styles.rowBalanceAmountText]}>
-                  {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, 10, 8), 6)}
+                  {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)}
                 </T>
                 <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}
                   ({symbol || ''})</T>
