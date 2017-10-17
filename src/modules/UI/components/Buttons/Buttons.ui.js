@@ -6,21 +6,35 @@ import styles, {styles as styleRaw} from './style'
 import strings from '../../../../locales/default'
 
 class PrimaryButton extends Component {
+  constructor (props) {
+    super(props)
+    this.style = [styles.primaryButtonWrap, styles.stylizedButton]
+
+    if (props.style) {
+      if (Array.isArray(props.style)) {
+        this.style = this.style.concat(props.style)
+      } else {
+        this.style.push(props.style)
+      }
+    }
+  }
+
   render () {
     return (
-      <TouchableHighlight style={[
-        styles.primaryButtonWrap,
-        styles.stylizedButton,
-        this.props.style
-      ]}
+      <TouchableHighlight {...this.props}
+        onPress={this.props.onPressFunction}
         underlayColor={styleRaw.primaryUnderlay.color}
-        onPress={this.props.onPressFunction}>
+        style={[
+          styles.primaryButtonWrap,
+          styles.stylizedButton,
+          this.props.style]}
+      >
         <View style={styles.stylizedButtonTextWrap}>
           {this.props.processingFlag
             ? (this.props.processingElement)
-            : <T style={[styles.primaryButton, styles.stylizedButtonText]}>
+            :    (<T style={[styles.primaryButton, styles.stylizedButtonText]}>
               {this.props.text}
-            </T>
+            </T>)
           }
         </View>
       </TouchableHighlight>
