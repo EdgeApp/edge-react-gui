@@ -12,7 +12,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onSelectFiat: (selectedDefaultFiat) => {
     dispatch(setDefaultFiatRequest(selectedDefaultFiat))
-    Actions.settingsOverview()
+    Actions.pop()
   }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultFiatSetting)

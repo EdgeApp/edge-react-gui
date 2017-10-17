@@ -30,6 +30,7 @@ const mapStateToProps = (state) => ({
   context: CORE_SELECTORS.getContext(state)
 })
 const mapDispatchToProps = (dispatch) => ({
+  dispatch,
   initializeAccount: (account) => dispatch(initializeAccount(account))
 })
 

@@ -197,7 +197,7 @@ export default class Scan extends Component<any, any> {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        Actions.sendConfirmation({type: 'reset'})
+        Actions.sendConfirmation()
       }
     })
   }
