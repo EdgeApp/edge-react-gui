@@ -8,7 +8,7 @@ import {Keyboard, Platform, StyleSheet, View, Text, StatusBar} from 'react-nativ
 import Button from 'react-native-button';
 import {connect} from 'react-redux'
 import SideMenu from './UI/components/SideMenu/SideMenuConnector'
-import ControlPanel from './UI/components/ControlPanel/ControlPanel.ui'
+import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import THEME from '../theme/variables/airbitz'
 
 import {
@@ -110,37 +110,6 @@ function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   return makeReactNativeContext(opts)
 }
 
-const drawerStyle = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: 'red',
-  },
-});
-
-class DummyDrawer extends React.Component {
-  static contextTypes = {
-    drawer: React.PropTypes.object,
-  }
-
-  render() {
-    return (
-      <View style={drawerStyle.container}>
-        <Text>Drawer Content</Text>
-        <Button onPress={Actions.closeDrawer}>Back</Button>
-        <Text>Title: {this.props.title}</Text>
-        <Button onPress={Actions.pop}>Back</Button>
-        <Button onPress={Actions.walletListTab}>Wallets</Button>
-        <Button onPress={Actions.scanTab}>Scan QR Code</Button>
-        <Button onPress={Actions.settingsOverviewTab}>Settings</Button>
-      </View >
-    );
-  }
-}
-
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any
   keyboardDidHideListener: any
@@ -200,7 +169,7 @@ export default class Main extends Component<Props, State> {
                   {/*<Lightbox>*/}
                     <Stack hideNavBar key='root' titleStyle={{ alignSelf: 'center' }}>
                       <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
-                      <Drawer hideNavBar key='edge' contentComponent={DummyDrawer} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
+                      <Drawer hideNavBar key='edge' contentComponent={ControlPanel} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
                         {/*
                          Wrapper Scene needed to fix a bug where the tabs would
                          reload as a modal ontop of itself
