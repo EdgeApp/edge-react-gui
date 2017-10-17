@@ -16,7 +16,7 @@ export default class CryptoExchageRate extends Component<Props> {
     const style = this.props.style
     return (
       <View style={style.container}>
-          <Text style={style.text}>{'Exchange rate' + this.props.exchangeRate}</Text>
+          <Text style={style.text}>{this.props.exchangeRate}</Text>
       </View>
     )
   }

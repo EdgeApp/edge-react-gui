@@ -36,7 +36,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
 
   }
 
-  getLogo () {
+  getLogo = () => {
     const wallet = this.props.uiWallet ? this.props.uiWallet : null
     if (!wallet) return null
 
@@ -49,6 +49,17 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
       }
     }
     return null
+  }
+
+  renderLogo = (style: any, logo: string) => {
+    if (logo) {
+      return <View style={style.iconContainer}>
+      <Image style={style.currencyIcon} source={{uri: logo}} />
+    </View>
+    }
+    return <View style={style.altIconContainer}>
+    <Text style={style.altCurrencyText}>{this.props.currencyCode}</Text>
+  </View>
   }
 
   render () {
@@ -73,9 +84,8 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
               title={this.props.uiWallet.name}
             />
           </View>
-          <View style={style.iconContainer}>
-            <Image style={style.currencyIcon} source={{uri: logo}} />
-          </View>
+          {this.renderLogo(style,logo)}
+
         <View style={style.flipInput} >
         <ExchangedFlipInput
           primaryInfo={{...primaryInfo, nativeAmount}}

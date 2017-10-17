@@ -6,3 +6,9 @@ export function dispatchAction (type: string) {
     type
   }
 }
+export function dispatchActionString (type: string, data: string) {
+  return {
+    type,
+    data
+  }
+}

@@ -61,12 +61,24 @@ const CryptoExchangeSceneStyle = {
       alignItems:'center',
       justifyContent:'space-around'
     },
+    altIconContainer:{
+      position:'absolute',
+      flexDirection: 'row',
+      top:0,
+      left:5,
+      height:50,
+      width:200,
+      alignItems:'center'
+    },
     currencyIcon: {
       height: 25,
       width: 25,
       resizeMode: Image.resizeMode.contain
     },
-
+    altCurrencyText: {
+      color: THEME.COLORS.WHITE,
+      fontSize: 14
+    },
     flipInput: {
       flex: 2
     },

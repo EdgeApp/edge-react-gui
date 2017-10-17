@@ -48,10 +48,6 @@ export default class ExchangeSceneComponent extends Component<Props> {
     if (!nextProps.toWallet && nextProps.intialWalletTwo) {
       this.props.selectToWallet(nextProps.intialWalletTwo)
     }
-    if (nextProps.fromCurrencyCode != this.props.fromCurrencyCode) {
-      console.log('NEXT PRops')
-      console.log(nextProps.fromCurrencyCode)
-    }
   }
   flipThis = () => {
     this.props.swapFromAndToWallets()

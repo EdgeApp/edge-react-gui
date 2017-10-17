@@ -1,6 +1,6 @@
 import * as Constants from '../constants/indexConstants'
 const initialState = {
-  exchangeRate: '100000',
+  exchangeRate: '',
   fromWallet: null,
   fromCurrencyCode: null,
   toWallet: null,
@@ -22,6 +22,8 @@ export default function (state = initialState, action) {
     return {...state, walletListModalVisible: false}
   case Constants.OPEN_WALLET_SELECTOR_MODAL:
     return {...state, walletListModalVisible: true, changeWallet: action.data}
+  case Constants.UPDATE_CRYPTO_EXCHANGE_RATE:
+    return {...state, exchangeRate: action.data}
   default:
     return state
   }
