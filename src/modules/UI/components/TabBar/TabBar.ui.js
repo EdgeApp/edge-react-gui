@@ -87,7 +87,7 @@ export default class TabBar extends Component {
             </Button>
 
             <Button
-              onPress={Actions.transactionList}
+              onPress={Actions[Constants.EXCHANGE]}
               active={this.isActive(Constants.EXCHANGE)}>
               <Image
                 style={[{width: 25, height: 25, marginTop: 3}]}
