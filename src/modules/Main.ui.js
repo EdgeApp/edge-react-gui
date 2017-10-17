@@ -4,25 +4,19 @@ import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-c
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StyleSheet, View, Text, StatusBar} from 'react-native'
-import Button from 'react-native-button';
+import {Keyboard, Platform, StatusBar} from 'react-native'
 import {connect} from 'react-redux'
-import SideMenu from './UI/components/SideMenu/SideMenuConnector'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
-import THEME from '../theme/variables/airbitz'
 
 import {
   Scene,
   Router,
   Actions,
-  Reducer,
-  ActionConst,
   Overlay,
   Tabs,
   Modal,
   Drawer,
-  Stack,
-  Lightbox
+  Stack
 } from 'react-native-router-flux'
 import {StyleProvider} from 'native-base'
 import {MenuContext} from 'react-native-menu'
@@ -34,7 +28,6 @@ import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
 import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
-import LayoutConnector from './UI/scenes/layout/LayoutConnector'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 
 import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
@@ -46,10 +39,10 @@ import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
+// $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
-import MenuIcon from '../assets/images/walletlist/sort.png';
+import MenuIcon from '../assets/images/walletlist/sort.png'
 import Header from './UI/components/Header/Header.ui'
-import headerStyle from './UI/components/Header/style'
 
 import * as CONTEXT_API from './Core/Context/api'
 
@@ -68,7 +61,6 @@ currencyPluginFactories.push(EthereumCurrencyPluginFactory)
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
 import ENV from '../../env.json'
-import Gradient from './UI/components/Gradient/Gradient.ui'
 
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
@@ -152,23 +144,21 @@ export default class Main extends Component<Props, State> {
     })
   }
 
-  renderWalletListNavBar = () => {
-    return (
+  renderWalletListNavBar = () => (
       <Header/>
     )
-  }
 
   render () {
-    const routes = this.props.routes
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
           <RouterWithRedux>
             <Overlay>
-                <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
+                <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
                   {/*<Lightbox>*/}
-                    <Stack hideNavBar key='root' titleStyle={{ alignSelf: 'center' }}>
+                    <Stack hideNavBar key='root' titleStyle={{alignSelf: 'center'}}>
                       <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
+                      <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
                       <Drawer hideNavBar key='edge' contentComponent={ControlPanel} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
                         {/*
                          Wrapper Scene needed to fix a bug where the tabs would
