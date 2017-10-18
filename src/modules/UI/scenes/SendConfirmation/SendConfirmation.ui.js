@@ -96,7 +96,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
             }
           </View>
 
-          <View style={[styles.main, UTILS.border(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+          <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
             <ExchangedFlipInput
               primaryInfo={{...primaryInfo, nativeAmount}}
               secondaryInfo={secondaryInfo}
