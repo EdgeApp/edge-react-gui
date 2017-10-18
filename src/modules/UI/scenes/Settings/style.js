@@ -1,7 +1,7 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   listStyle: {
     height: 100
   },
@@ -11,15 +11,13 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     height: 50
   },
-  accountBoxHeaderTextWrap: {
-
-  },
   leftArea: {
     flexDirection: 'row'
   },
-  userIcon: {
+  icon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
+    fontSize: 22,
+    color: THEME.COLORS.WHITE
   },
   accountBoxHeaderText: {
     fontSize: 18,
@@ -34,16 +32,12 @@ export default StyleSheet.create({
     fontSize: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
-  optionsIcon: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
-  },
 
     // //// Beginning of Settings Row ///////
   settingsRowContainer: {
     height: 44,
     borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_2,
+    borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -65,6 +59,7 @@ export default StyleSheet.create({
     fontSize: 16
   },
   settingsRowRightArrow: {
+    fontSize: 18,
     color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
@@ -77,7 +72,6 @@ export default StyleSheet.create({
   },
 
     // /////// End of Settings Row /////////
-
   debugArea: {
     padding: 20,
     flex: 1
@@ -111,8 +105,9 @@ export default StyleSheet.create({
   headerIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
+  },
+  underlay: {
+    color: THEME.COLORS.GRAY_4
   }
-
-    // //////// End of Currency Settings//////
-
-})
+}
+export default StyleSheet.create(styles)

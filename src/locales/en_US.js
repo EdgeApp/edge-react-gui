@@ -837,9 +837,14 @@ const strings = {
   title_Password_Recovery: 'Password Recovery',
   title_Exchange: 'Exchange',
   dropdown_exchange_max_amount: 'Exchange Max Amount',
-
+  
   string_first_ethereum_wallet_name: 'My Ethereum Wallet',
-  strings_first_bitcoin_44_wallet_name: 'My Bitcoin Wallet'
+  strings_first_bitcoin_44_wallet_name: 'My Bitcoin Wallet',
+
+  // help modal
+  help_modal_title: 'Crypto Wallet and Directory',
+  help_version: 'Version',
+  help_build: 'Build'
 }
 
 export default strings

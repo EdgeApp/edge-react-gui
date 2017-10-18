@@ -10,19 +10,13 @@ import {
 } from 'react-native'
 import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
-import {border as b, cutOffText, truncateDecimals} from '../../../../../utils'
+import {border as b, cutOffText, truncateDecimals, findDenominationSymbol} from '../../../../../utils'
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 
-const findDenominationSymbol = (denoms, value) => {
-  for (const v of denoms) {
-    if (v.name === value) {
-      return v.symbol
-    }
-  }
-}
+const DIVIDE_PRECISION = 18
 
-class SortableWalletListRow extends Component {
+class SortableWalletListRow extends Component<Props, State> {
 
   render () {
     const {data} = this.props
@@ -54,7 +48,7 @@ class SortableWalletListRow extends Component {
               </View>
               <View style={[styles.rowBalanceTextWrap]}>
                 <T style={[styles.rowBalanceAmountText]}>
-                  {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
+                  {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)}
                 </T>
                 <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}
                   ({symbol || ''})</T>

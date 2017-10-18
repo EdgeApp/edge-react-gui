@@ -9,10 +9,12 @@ import {request} from './Request/reducer.js'
 import {settings} from './Settings/reducer.js'
 import locale from './locale/reducer'
 import contacts from './contacts/reducer'
-import dropdownAlert from './components/DropdownAlert/reducer'
+import errorAlert from './components/ErrorAlert/reducer'
+import transactionAlert from './components/TransactionAlert/reducer'
 
 const uiReducer = combineReducers({
-  dropdownAlert,
+  errorAlert,
+  transactionAlert,
   scenes,
   wallets,
   request,

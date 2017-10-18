@@ -6,21 +6,21 @@ import {combineReducers} from 'redux'
 const displayAlert = (state = false, action = {}) => {
   const {type} = action
   switch (type) {
-  case ACTIONS.DISPLAY_TRANSACTION_ALERT:
+  case ACTIONS.DISPLAY_ERROR_ALERT:
     return true
-  case ACTIONS.DISMISS_TRANSACTION_ALERT:
+  case ACTIONS.DISMISS_ERROR_ALERT:
     return false
   default:
     return state
   }
 }
 
-const abcTransaction = (state = '', action = {}) => {
-  const {type, data: {abcTransaction} = {} } = action
+const message = (state = '', action = {}) => {
+  const {type, data = {} } = action
   switch (type) {
-  case ACTIONS.DISPLAY_TRANSACTION_ALERT:
-    return abcTransaction
-  case ACTIONS.DISMISS_TRANSACTION_ALERT:
+  case ACTIONS.DISPLAY_ERROR_ALERT:
+    return data.message
+  case ACTIONS.DISMISS_ERROR_ALERT:
     return ''
   default:
     return state
@@ -29,5 +29,5 @@ const abcTransaction = (state = '', action = {}) => {
 
 export default combineReducers({
   displayAlert,
-  abcTransaction
+  message
 })
