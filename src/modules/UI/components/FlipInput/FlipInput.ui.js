@@ -85,7 +85,7 @@ export default class FlipInput extends Component<Props, State> {
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
   topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void)) => <View style={top.row} key={'top'}>
-      <Text style={top.symbol}>
+      <Text style={[top.symbol]}>
         {denominationInfo.displayDenomination.symbol}
       </Text>
       <TextInput style={[top.amount]}
@@ -96,7 +96,8 @@ export default class FlipInput extends Component<Props, State> {
         autoCorrect={false}
         keyboardType='numeric'
         selectionColor='white'
-        returnKeyType='done' />
+        returnKeyType='done'
+      />
       <Text style={[top.currencyCode]}>
         {denominationInfo.displayDenomination.name}
       </Text>
