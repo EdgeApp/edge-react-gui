@@ -3,6 +3,8 @@ import type {GuiWallet} from '../types'
 import * as Constants from '../constants/indexConstants'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as actions from './indexActions'
+import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
+import * as WALLET_API from '../modules/Core/Wallets/api.js'
 export function openWalletSelectorForExchange (type: string, data: string) {
   return {
     type,
@@ -15,26 +17,6 @@ export function updateCryptoExchangeRate (type: string, data: string) {
     type,
     data
   }
-}
-
-export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?: string) => (dispatch: any, getState: any) => {
-  const state = getState()
-  const cc = currencyCode || wallet.currencyCode
-  let data = {
-    wallet,
-    currencyCode: cc
-  }
-  type === Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE
-    ? (dispatch(
-        getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
-      ),
-      dispatch(setFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data))
-    )
-    : (dispatch(
-        getCryptoExchangeRate(cc, state.cryptoExchange.fromCurrencyCode)
-      ),
-      dispatch(setToWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE,data))
-    )
 }
 function setToWallet (type: string, data: any) {
   return {
@@ -49,15 +31,95 @@ function setFromWallet (type: string, data: any) {
   }
 }
 
+function setShapeTransaction (type: string, data: AbcTransaction) {
+  return {
+    type,
+    data
+  }
+}
+
+export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) => {
+  const state = getState()
+  if (!state.cryptoExchange.transaction) {
+    console.warn('NO VALID TRANSACTION')
+    // call make spend and display error/
+    return
+  }
+  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, state.cryptoExchange.fromWallet.id)
+  if (srcWallet) {
+    try {
+      const signedTransaction = await WALLET_API.signTransaction(srcWallet, state.cryptoExchange.transaction)
+      const broadcastedTransaction = await WALLET_API.broadcastTransaction(srcWallet, signedTransaction)
+      const savedTransaction = await WALLET_API.saveTransaction(srcWallet, signedTransaction)
+      console.log(broadcastedTransaction)
+      console.log(savedTransaction)
+    } catch (error) {
+      console.log(error.message)
+      console.warn(error)
+    }
+    return
+  }
+}
+
+const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => async (dispatch: any, getState: any) => {
+  const state = getState()
+  const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
+  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+
+  const spendInfo: AbcSpendInfo = {
+    networkFeeOption: 'high',
+    currencyCode: state.cryptoExchange.fromCurrencyCode,
+    nativeAmount: '10000000000000000', // TODO get this from the sate
+    spendTargets: [
+      {
+        destWallet: destWallet,
+        currencyCode: state.cryptoExchange.toCurrencyCode
+      }
+    ]
+  }
+  let abcTransaction = await srcWallet.makeSpend(spendInfo)
+  dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, abcTransaction))
+}
+
+export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?: string) => (dispatch: any, getState: any) => {
+  const state = getState()
+  let hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
+  let hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
+  const cc = currencyCode || wallet.currencyCode
+  let data = {
+    wallet,
+    currencyCode: cc
+  }
+  type === Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE
+    ? (dispatch(
+        getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
+      ),
+      dispatch(setFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
+      hasFrom = wallet
+    )
+    : (dispatch(
+        getCryptoExchangeRate(cc, state.cryptoExchange.fromCurrencyCode)
+      ),
+      dispatch(setToWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE,data)),
+      hasTo = wallet
+    )
+  if (hasFrom && hasTo) {
+    dispatch(getShiftTransaction(hasFrom,hasTo)).catch((e) => {
+      console.log(e)
+      dispatch(actions.dispatchAction(Constants.INVALIDATE_SHIFT_TRANSACTION))
+    })
+  }
+}
+
 export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: string) => (dispatch: any, getState: any) => {
 
   if (fromCurrencyCode === toCurrencyCode) {
-    dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_EXCHANGE_RATE,'1: '+fromCurrencyCode + ' = 1 '+ toCurrencyCode))
+    dispatch(actions.dispatchActionNumber(Constants.UPDATE_CRYPTO_EXCHANGE_RATE,1))
     return
   }
 
   if (!fromCurrencyCode || !toCurrencyCode) {
-    dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_EXCHANGE_RATE,'pending....'))
+    dispatch(actions.dispatchActionNumber(Constants.UPDATE_CRYPTO_EXCHANGE_RATE,1))
     return
   }
 
@@ -66,8 +128,7 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
   context
   .getExchangeSwapRate(fromCurrencyCode, toCurrencyCode)
   .then((response) => {
-    const cryptoExchangeString = '1 '+fromCurrencyCode + ' = '+ response +' '+ toCurrencyCode
-    dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_EXCHANGE_RATE, cryptoExchangeString))
+    dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_EXCHANGE_RATE, response))
     return response
   })
   .catch((e) => {

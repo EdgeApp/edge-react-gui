@@ -12,3 +12,10 @@ export function dispatchActionString (type: string, data: string) {
     data
   }
 }
+
+export function dispatchActionNumber (type: string, data: number) {
+  return {
+    type,
+    data
+  }
+}

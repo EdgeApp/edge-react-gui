@@ -1,13 +1,14 @@
 import * as Constants from '../constants/indexConstants'
 const initialState = {
-  exchangeRate: '',
+  exchangeRate: 1,
   fromWallet: null,
   fromCurrencyCode: null,
   toWallet: null,
   toCurrencyCode: null,
-  fee: 'Fee to Be charged..... ',
+  fee: '',
   walletListModalVisible: false,
-  changeWallet: Constants.NONE
+  changeWallet: Constants.NONE,
+  transaction: null
 }
 
 export default function (state = initialState, action) {
@@ -24,6 +25,10 @@ export default function (state = initialState, action) {
     return {...state, walletListModalVisible: true, changeWallet: action.data}
   case Constants.UPDATE_CRYPTO_EXCHANGE_RATE:
     return {...state, exchangeRate: action.data}
+  case Constants.UPDATE_SHIFT_TRANSACTION:
+    return {...state, transaction: action.data, fee: action.data.networkFee}
+  case Constants.INVALIDATE_SHIFT_TRANSACTION:
+    return {...state, transaction: null}
   default:
     return state
   }

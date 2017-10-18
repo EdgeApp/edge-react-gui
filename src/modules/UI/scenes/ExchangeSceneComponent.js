@@ -14,8 +14,9 @@ import WalletListModal
   from '../../UI/components/WalletListModal/WalletListModalConnector'
 import {IconButton} from '../components/Buttons/IconButton.ui'
 import {GuiWallet} from '../../../types'
+
 type Props ={
-  exchangeRate: string,
+  exchangeRate: number,
   wallets: Array<GuiWallet>,
   intialWalletOne: GuiWallet,
   intialWalletTwo: GuiWallet,
@@ -23,12 +24,15 @@ type Props ={
   toWallet: GuiWallet,
   fromCurrencyCode: string,
   toCurrencyCode: string,
+  fromAmountNative: string,
+  toAmountNative: number,
   fee: string,
   showModal: boolean,
   selectFromWallet: Function,
   selectToWallet: Function,
   swapFromAndToWallets: Function,
-  openModal: Function
+  openModal: Function,
+  shift: Function
 
 }
 export default class ExchangeSceneComponent extends Component<Props> {
@@ -68,6 +72,12 @@ export default class ExchangeSceneComponent extends Component<Props> {
     }
     return null
   }
+  shift = () => {
+    this.props.shift()
+  }
+
+
+
 
   render () {
     const style = CryptoExchangeSceneStyle
@@ -104,7 +114,7 @@ export default class ExchangeSceneComponent extends Component<Props> {
           />
           <View style={style.shim} />
           <View style={style.actionButtonContainer} >
-            <PrimaryButton text={strings.enUS['string_next']} />
+            <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.shift.bind(this)} />
           </View>
         </ScrollView>
         {this.renderDropUp()}
