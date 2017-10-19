@@ -3,8 +3,11 @@ import Header from './Header.ui'
 
 const mapStateToProps = (state) => ({
   routes: state.routes,
-  stackDepth: state.routes.stackDepth,
-  sceneTitle: state.routes.scene.title
+  wallets: state.ui.wallets.byId,
+  selectedWalletListModalVisibility: state.ui.scenes.scan
+    .selectedWalletListModalVisibility,
+  scanToWalletListModalVisibility: state.ui.scenes.scan
+    .scanToWalletListModalVisibility
 })
 
 export default connect(mapStateToProps)(Header)

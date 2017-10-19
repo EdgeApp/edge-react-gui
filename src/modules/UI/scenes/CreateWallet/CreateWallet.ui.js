@@ -94,7 +94,7 @@ export default class CreateWallet extends Component {
 
   onCancel = () => {
     Keyboard.dismiss()
-    Actions.walletList() // redirect to the list of wallets
+    Actions.pop() // redirect to the list of wallets
   }
 
   handleChangeWalletName = (walletName) => {
