@@ -40,6 +40,8 @@ import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
+import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
+
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
@@ -199,7 +201,6 @@ export default class Main extends Component<Props, State> {
                 <Stack hideNavBar key='root' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} backButtonTintColor='white' titleStyle={{color: THEME.COLORS.WHITE, alignSelf: 'center'}}>
                   <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
                   <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
-                  <Scene key={Constants.SEND_CONFIRMATION} component={SendConfirmation} back clone title='Send Confirmation' animation={'fade'} duration={600} />
                   <Drawer hideNavBar key='edge' contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/*
                      Wrapper Scene needed to fix a bug where the tabs would
@@ -207,7 +208,7 @@ export default class Main extends Component<Props, State> {
                      */}
                     <Scene hideNavBar>
                       {/*<Gradient>*/}
-                      <Tabs key='edge' swipeEnabled={false} navTransparent={true} showLabel={true}>
+                      <Tabs key='edge' swipeEnabled={true} navTransparent={true} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
                           <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
@@ -220,7 +221,7 @@ export default class Main extends Component<Props, State> {
                         <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={Request} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
-                        <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} onLeft={Actions.pop} leftTitle='Back' title='Send Confirmation' animation={'fade'} duration={600} />
+                        <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />
                       </Stack>
                       <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
                         <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
