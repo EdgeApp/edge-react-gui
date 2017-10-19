@@ -1,7 +1,7 @@
 //@flow
 import {GuiWallet} from '../../types'
 import {connect} from 'react-redux'
-import LinkedComponent from '../../modules/UI/scenes/ExchangeSceneComponent'
+import LinkedComponent from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 
@@ -25,7 +25,8 @@ export const mapStateToProps = (state: any) => {
     fromAmountNative,
     toAmountNative,
     fee: state.cryptoExchange.fee,
-    showModal: state.cryptoExchange.walletListModalVisible
+    showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
+    showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
   }
 }
 
@@ -34,10 +35,7 @@ export const mapDispatchToProps = (dispatch: any) => ({
   selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
   openModal:(data: string) => dispatch(actions.openWalletSelectorForExchange(Constants.OPEN_WALLET_SELECTOR_MODAL, data)),
-  shift: () => dispatch(actions.shiftCryptoCurrency()).catch((e) => {
-    console.log(e)
-    console.warn(e)
-  })
+  shift: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL))
 })
 export default connect(
   mapStateToProps,

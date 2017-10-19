@@ -1,19 +1,19 @@
 //@flow
 import React, {Component} from 'react'
-import strings from '../../../locales/default'
-import * as Constants from '../../../constants/indexConstants'
-import Gradient from '../../UI/components/Gradient/Gradient.ui'
+import strings from '../../../../locales/default'
+import * as Constants from '../../../../constants/indexConstants'
+import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
-  from '../../../connectors/components/CryptoExchangeRateConnector'
+  from '../../../../connectors/components/CryptoExchangeRateConnector'
 import {ScrollView, View} from 'react-native'
-import {CryptoExchangeSceneStyle} from '../../../styles/indexStyles'
+import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
 import CryptoExchangeFlipConnector
-  from '../../../connectors/components/CryptoExchangeFlipConnector'
-import {PrimaryButton} from '../components/Buttons/index'
+  from '../../../../connectors/components/CryptoExchangeFlipConnector'
+import {PrimaryButton} from '../../components/Buttons/index'
 import WalletListModal
-  from '../../UI/components/WalletListModal/WalletListModalConnector'
-import {IconButton} from '../components/Buttons/IconButton.ui'
-import {GuiWallet} from '../../../types'
+  from '../../../UI/components/WalletListModal/WalletListModalConnector'
+import {IconButton} from '../../components/Buttons/IconButton.ui'
+import {GuiWallet} from '../../../../types'
 
 type Props ={
   exchangeRate: number,
@@ -27,7 +27,8 @@ type Props ={
   fromAmountNative: string,
   toAmountNative: number,
   fee: string,
-  showModal: boolean,
+  showWalletSelectModal: boolean,
+  showConfirmShiftModal: boolean,
   selectFromWallet: Function,
   selectToWallet: Function,
   swapFromAndToWallets: Function,
@@ -35,7 +36,7 @@ type Props ={
   shift: Function
 
 }
-export default class ExchangeSceneComponent extends Component<Props> {
+export default class CryptoExchangeSceneComponent extends Component<Props> {
 
   componentWillMount () {
     if (this.props.wallets.length > 1) {
@@ -62,7 +63,7 @@ export default class ExchangeSceneComponent extends Component<Props> {
   }
 
   renderDropUp = () => {
-    if (this.props.showModal) {
+    if (this.props.showWalletSelectModal) {
       return (
         <WalletListModal
           topDisplacement={'33'}
@@ -72,12 +73,21 @@ export default class ExchangeSceneComponent extends Component<Props> {
     }
     return null
   }
+  renderConfirmation = () => {
+    if (this.props.showConfirmShiftModal) {
+      return (
+        <WalletListModal
+          topDisplacement={'33'}
+          type='from'
+        />
+      )
+    }
+    return null
+  }
+
   shift = () => {
     this.props.shift()
   }
-
-
-
 
   render () {
     const style = CryptoExchangeSceneStyle
