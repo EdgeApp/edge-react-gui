@@ -5,6 +5,7 @@ import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as actions from './indexActions'
 import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
+import {bns} from 'biggystring'
 export function openWalletSelectorForExchange (type: string, data: string) {
   return {
     type,
@@ -38,6 +39,29 @@ function setShapeTransaction (type: string, data: AbcTransaction) {
   }
 }
 
+export const setNativeAmount = (data: {primaryNativeAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
+  const state = getState()
+  const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
+  const toWallet: GuiWallet = state.cryptoExchange.fromWallet
+  const  {
+    whichWallet,
+    primaryNativeAmount
+  } = data
+
+  if (whichWallet === Constants.FROM) {
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, primaryNativeAmount))
+    const newToNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, newToNative))
+  } else {
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, primaryNativeAmount))
+    const newFromNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.reverseExchange).toFixed(8))
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, newFromNative))
+  }
+  // make spend
+  dispatch(getShiftTransaction(fromWallet, toWallet))
+}
+
+
 export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) => {
   const state = getState()
   if (!state.cryptoExchange.transaction) {
@@ -70,7 +94,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   const spendInfo: AbcSpendInfo = {
     networkFeeOption: 'high',
     currencyCode: state.cryptoExchange.fromCurrencyCode,
-    nativeAmount: '10000000000000000', // TODO get this from the sate
+    nativeAmount: state.cryptoExchange.fromNativeAmount,
     spendTargets: [
       {
         destWallet: destWallet,
@@ -130,6 +154,17 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
   .getExchangeSwapRate(fromCurrencyCode, toCurrencyCode)
   .then((response) => {
     dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_EXCHANGE_RATE, response))
+    return response
+  })
+  .catch((e) => {
+    console.log('getCryptoExchangeRate ERROR')
+    console.log(e)
+  })
+
+  context
+  .getExchangeSwapRate(toCurrencyCode, fromCurrencyCode)
+  .then((response) => {
+    dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE, response))
     return response
   })
   .catch((e) => {

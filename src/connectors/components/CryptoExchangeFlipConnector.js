@@ -3,20 +3,23 @@ import type {GuiWallet, GuiDenomination, GuiCurrencyInfo} from '../../types'
 import {connect} from 'react-redux'
 import LinkedComponent
 from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent'
+import * as Constants from '../../constants/indexConstants'
 import * as UTILS from '../../modules/utils'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../../modules/UI/Settings/selectors.js'
+import * as actions from '../../actions/indexActions'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 export const mapStateToProps = (state: any, ownProps: any) => {
   const fee = ownProps.fee ? ownProps.fee: null
   let fiatPerCrypto = 0
   const uiWallet: GuiWallet = ownProps.uiWallet
   const currencyCode = ownProps.currencyCode
+  const whichWallet = ownProps.whichWallet
   if (!uiWallet || !currencyCode) {
     return {
       style: ownProps.style,
-      whichWallet: ownProps.whichWallet,
+      whichWallet,
       fee
     }
   }
@@ -42,15 +45,11 @@ export const mapStateToProps = (state: any, ownProps: any) => {
     const isoFiatCurrencyCode = uiWallet.isoFiatCurrencyCode
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
-
-  /* const {
-    parsedUri
-  } = state.ui.scenes.sendConfirmation */
-  const nativeAmount =  '100000000000000000' //..parsedUri.nativeAmount || '0'
+  const nativeAmount =  ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromNativeAmount : state.cryptoExchange.toNativeAmount
 
   return {
     style: ownProps.style,
-    whichWallet: ownProps.whichWallet,
+    whichWallet,
     abcWallet,
     uiWallet,
     primaryInfo,
@@ -62,8 +61,8 @@ export const mapStateToProps = (state: any, ownProps: any) => {
 }
 
 export const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
-  launchWalletSelector: ownProps.launchWalletSelector
-// nextScreen: () => dispatch(actions.nextScreen())
+  launchWalletSelector: ownProps.launchWalletSelector,
+  setNativeAmount: (data: {primaryNativeAmount: string, whichWallet: string}) => dispatch(actions.setNativeAmount(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

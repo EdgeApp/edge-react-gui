@@ -6,12 +6,13 @@ import * as Constants from '../../../../constants/indexConstants'
 import type {FlipInputFieldInfo} from '../FlipInput/FlipInput.ui'
 import {GuiWallet} from '../../../../types'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
-
+import * as UTILS from '../../../utils'
 
 type Props = {
   style: any,
   fee: string,
   uiWallet: GuiWallet,
+  whichWallet: string,
   abcWallet: AbcCurrencyWallet,
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
@@ -36,7 +37,15 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
     this.props.launchWalletSelector(this.props.whichWallet)
   }
 
-  onAmountsChange = () => {
+  onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
+    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
+    const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
+    const {whichWallet} = this.props
+    const data = {
+      primaryNativeAmount,
+      whichWallet
+    }
+    this.props.setNativeAmount(data)
 
   }
 
