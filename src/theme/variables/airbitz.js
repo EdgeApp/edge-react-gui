@@ -1,9 +1,3 @@
-/*
-    The purpose of this file is to document common variables and colors for Airbitz,
-    making it easier to reference those colors
-    Author: Kylan Hurt (kylan@airbitz.co)
-    Created: 2017-07-28
-*/
 // @flow
 
 export const colors = {
@@ -77,7 +71,7 @@ export default {
     ACCENT_GREEN:  '#0073D9',
     ACCENT_ORANGE: '#F1AA19',
     ACCENT_RED:    '#E85466',
-    ACCENT_MINT:   '#25292C',
+    ACCENT_MINT:   '#66EDA8',
 
     BLACK:  '#25292C',
     GRAY_1: '#4A5157',

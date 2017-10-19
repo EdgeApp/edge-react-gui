@@ -1,9 +1,11 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {divf, mulf} from 'biggystring'
+import {div, mul} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
+
+const DIVIDE_PRECISION = 18
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
@@ -110,7 +112,7 @@ export const formatNumber = (input: string): string => {
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) =>
   (nativeAmount: string): string =>
-    divf(nativeAmount, nativeToTargetRatio).toString()
+    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -122,32 +124,9 @@ export const convertNativeToExchange = convertNativeToDenomination
 // Used to convert amounts from display to core inputs
 export const convertDisplayToNative = (nativeToDisplayRatio: string) =>
   (displayAmount: string): string =>
-    !displayAmount ? '' : mulf(parseFloat(displayAmount), nativeToDisplayRatio)
-
-// Used to convert exchange output to amounts ready for display
-export const convertExchangeToDisplay = (displayToExchangeRatio: string) =>
-  (exchangeAmount: string): string =>
-    (parseFloat(exchangeAmount) * parseFloat(displayToExchangeRatio)).toString()
-
-// Used to convert amounts from display to exchange inputs
-export const convertDisplayToExchange = (displayToExchangeRatio: string) =>
-  (displayAmount: string): string =>
-    (parseFloat(displayAmount) / parseFloat(displayToExchangeRatio)).toString()
-
-// Used to convert amounts in their respective exchange denominations
-export const convertExchangeToExchange = (ratio: string) =>
-  (exchangeAmount: string): string =>
-    (parseFloat(exchangeAmount) * parseFloat(ratio)).toString()
-
-// Used to get the ratio used for converting a displayAmount into a
-// exchangeAmount when using the currency exchange
-export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: string) =>
-  (displayNativeToDisplayRatio: string): string =>
-    divf(exchangeNativeToDisplayRatio, displayNativeToDisplayRatio).toString()
+    !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
 
 export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
-
-export const absoluteValue = (input: string): string => input.replace('-', '')
 
 export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) =>
   array.filter((item) => item !== targetItem)

@@ -8,18 +8,21 @@ import {
 } from 'react-native'
 
 import styles from './styles.js'
-
+import {bns} from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
+import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
 
-import type {GuiWallet, GuiCurrencyInfo} from '../../../../types'
+import type {GuiWallet} from '../../../../types'
 import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
+
+const DIVIDE_PRECISION = 18
 
 export type Props = {
   sendConfirmation: SendConfirmationState,
@@ -29,9 +32,9 @@ export type Props = {
   fiatPerCrypto: number,
   guiWallet: GuiWallet,
   currencyCode: string,
-  primaryInfo: GuiCurrencyInfo,
+  primaryInfo: FlipInputFieldInfo,
   sliderDisabled: boolean,
-  secondaryInfo: GuiCurrencyInfo,
+  secondaryInfo: FlipInputFieldInfo,
 }
 
 export type DispatchProps = {
@@ -93,7 +96,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
             }
           </View>
 
-          <View style={[styles.main, UTILS.border(), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+          <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
             <ExchangedFlipInput
               primaryInfo={{...primaryInfo, nativeAmount}}
               secondaryInfo={secondaryInfo}
@@ -169,11 +172,11 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-    return (UTILS.convertDisplayToExchange(secondaryDisplayToExchangeRatio)(secondaryDisplayAmount)).toString()
+    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
   }
   getSecondaryDisplayToExchangeRatio = (): string => {
-    const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier.toString()
-    const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier.toString()
-    return (UTILS.deriveDisplayToExchangeRatio(exchangeMultiplier)(displayMultiplier)).toString()
+    const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier
+    const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier
+    return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
   }
 }
