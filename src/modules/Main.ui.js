@@ -209,12 +209,12 @@ export default class Main extends Component<Props, State> {
                         <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
                           <Scene key='walletList_notused' component={WalletList} title='Wallets' />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
+                          <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
                         <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
                           <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Settings' hideDrawerButton={true} >
