@@ -51,6 +51,7 @@ export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) =
       const signedTransaction = await WALLET_API.signTransaction(srcWallet, state.cryptoExchange.transaction)
       const broadcastedTransaction = await WALLET_API.broadcastTransaction(srcWallet, signedTransaction)
       const savedTransaction = await WALLET_API.saveTransaction(srcWallet, signedTransaction)
+      dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
       console.log(savedTransaction)
     } catch (error) {

@@ -33,6 +33,22 @@ const CryptoExchangeSceneStyle = {
     width: '90%',
     height: THEME.BUTTONS.HEIGHT
   },
+  confirmModal: {
+    middle: {
+      width:'100%',
+      height:'100%',
+      backgroundColor: THEME.COLORS.ACCENT_GREEN
+    },
+    bottom: {
+      width:'100%',
+      height:'100%',
+      backgroundColor: THEME.COLORS.ACCENT_ORANGE
+    },
+    icon:{
+      backgroundColor: THEME.COLORS.TRANSPARENT
+    },
+    iconSize: 36
+  },
   flipWrapper: {
     container: {
       width: '90%',

@@ -7,6 +7,7 @@ const initialState = {
   toCurrencyCode: null,
   fee: '',
   walletListModalVisible: false,
+  confirmTransactionModalVisible: false,
   changeWallet: Constants.NONE,
   transaction: null
 }
@@ -29,6 +30,12 @@ export default function (state = initialState, action) {
     return {...state, transaction: action.data, fee: action.data.networkFee}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
     return {...state, transaction: null}
+  case Constants.SHIFT_COMPLETE:
+    return {...state, transaction: null, confirmTransactionModalVisible: false}
+  case Constants.CLOSE_CRYPTO_EXC_CONF_MODAL:
+    return {...state, confirmTransactionModalVisible: false}
+  case Constants.OPEN_CRYPTO_EXC_CONF_MODAL:
+    return {...state, confirmTransactionModalVisible: true}
   default:
     return state
   }

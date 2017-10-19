@@ -35,7 +35,10 @@ export const mapDispatchToProps = (dispatch: any) => ({
   selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
   openModal:(data: string) => dispatch(actions.openWalletSelectorForExchange(Constants.OPEN_WALLET_SELECTOR_MODAL, data)),
-  shift: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL))
+  shift: () => dispatch(actions.shiftCryptoCurrency()),
+  closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
+  openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL))
+
 })
 export default connect(
   mapStateToProps,

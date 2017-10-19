@@ -12,6 +12,7 @@ import CryptoExchangeFlipConnector
 import {PrimaryButton} from '../../components/Buttons/index'
 import WalletListModal
   from '../../../UI/components/WalletListModal/WalletListModalConnector'
+import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
 import {IconButton} from '../../components/Buttons/IconButton.ui'
 import {GuiWallet} from '../../../../types'
 
@@ -33,7 +34,9 @@ type Props ={
   selectToWallet: Function,
   swapFromAndToWallets: Function,
   openModal: Function,
-  shift: Function
+  shift: Function,
+  openConfirmation: Function,
+  closeConfirmation: Function
 
 }
 export default class CryptoExchangeSceneComponent extends Component<Props> {
@@ -73,20 +76,17 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
     }
     return null
   }
-  renderConfirmation = () => {
+  renderConfirmation = (style: any) => {
     if (this.props.showConfirmShiftModal) {
       return (
-        <WalletListModal
-          topDisplacement={'33'}
-          type='from'
+        <CryptoExchangeConfirmTransactionModalComponent
+          style={style}
+          closeFunction={this.props.closeConfirmation}
+          confirmFunction={this.props.shift}
         />
       )
     }
     return null
-  }
-
-  shift = () => {
-    this.props.shift()
   }
 
   render () {
@@ -124,10 +124,11 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
           />
           <View style={style.shim} />
           <View style={style.actionButtonContainer} >
-            <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.shift.bind(this)} />
+            <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.props.openConfirmation} />
           </View>
         </ScrollView>
         {this.renderDropUp()}
+        {this.renderConfirmation(style.confirmModal)}
       </Gradient>
     )
   }
