@@ -4,7 +4,7 @@ import RNFS from 'react-native-fs'
 import ENV from '../../env.json'
 
 const SAVE_TIMEOUT = 1000 * 10 // ms
-const LOCAL_SERVER_TIMEOUT = 1000 // ms
+const LOG_SERVER_TIMEOUT = 1000 // ms
 
 const path = RNFS.DocumentDirectoryPath + '/logs.txt'
 
@@ -73,7 +73,7 @@ export async function log (...info: Array<number | string | null | {}>) {
 }
 
 async function request (data: string) {
-  return global.fetch(`${ENV.LOCAL_SERVER.host}:${ENV.LOCAL_SERVER.port}/log`, {
+  return global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
     method: 'POST',
     headers : {
       'Accept': 'application/json',
@@ -84,7 +84,7 @@ async function request (data: string) {
 }
 
 async function sendToServer (logs: string) {
-  if (Date.now() - lastSavingLocalServer < LOCAL_SERVER_TIMEOUT) {
+  if (Date.now() - lastSavingLocalServer < LOG_SERVER_TIMEOUT) {
     logs !== '' && saveToLocalServerBuffer(logs)
     setTimeout(() => sendToServer(''), Date.now() - lastSavingLocalServer)
     return

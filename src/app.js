@@ -20,7 +20,7 @@ if (!__DEV__) {
   console.log = log
 }
 
-if (ENV.LOCAL_SERVER) {
+if (ENV.LOG_SERVER) {
   let originalLog = console.log
   // $FlowFixMe: suppressing this error until we can find a workaround
   console.log = function () {
