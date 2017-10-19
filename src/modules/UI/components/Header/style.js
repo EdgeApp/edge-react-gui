@@ -10,15 +10,15 @@ export default StyleSheet.create({
     paddingBottom: 3
   },
   sideText: {
-    color: THEME.COLORS.PRIMARY,
+    color: THEME.COLORS.WHITE,
     fontSize: 18
   },
   icon: {
-    color: THEME.COLORS.PRIMARY,
+    color: THEME.COLORS.WHITE,
     fontSize: 25
   },
   default: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    color: THEME.COLORS.PRIMARY
+    color: THEME.COLORS.WHITE
   }
 })

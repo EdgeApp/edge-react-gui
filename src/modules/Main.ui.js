@@ -7,6 +7,7 @@ import React, {Component} from 'react'
 import {Keyboard, Platform, StatusBar} from 'react-native'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
+import THEME from '../theme/variables/airbitz'
 
 import {
   Scene,
@@ -146,7 +147,7 @@ export default class Main extends Component<Props, State> {
 
   renderWalletListNavBar = () => (
       <Header/>
-    )
+  )
 
   render () {
     return (
@@ -154,97 +155,55 @@ export default class Main extends Component<Props, State> {
         <MenuContext style={{flex: 1}}>
           <RouterWithRedux>
             <Overlay>
-                <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
-                  {/*<Lightbox>*/}
-                    <Stack hideNavBar key='root' titleStyle={{alignSelf: 'center'}}>
-                      <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
-                      <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
-                      <Drawer hideNavBar key='edge' contentComponent={ControlPanel} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
-                        {/*
-                         Wrapper Scene needed to fix a bug where the tabs would
-                         reload as a modal ontop of itself
-                         */}
-                        <Scene hideNavBar>
-                          {/*<Gradient>*/}
-                          <Tabs key='edge' swipeEnabled navTransparent={true} showLabel={false}>
-                            <Stack key='walletListTab' title='Tab #1' tabBarLabel='Wall'>
-                              <Scene key={Constants.WALLET_LIST} component={WalletList} title='Wallets' />
-                              <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
-                              <Scene key={Constants.TRANSACTION_LIST} renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} title='Transactions' back/>
-                            </Stack>
-                            <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} component={Request} title='Request' animation={'fade'} duration={600} />
-                            <Stack key='scanTab' title='Tab #2' tabBarLabel='Send'>
-                              <Scene key={Constants.SCAN} renderTitle={this.renderWalletListNavBar} component={Scan} title='Scan' animation={'fade'} duration={600} />
-                              <Scene key={Constants.SEND_CONFIRMATION} component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
-                            </Stack>
-                          </Tabs>
-                          <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
-                            <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
-                            <Scene key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
-                            <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
-                            <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
-                            <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
-                            <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
-                            <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
-                            <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
-                            <Scene key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
-                          </Stack>
-                          {/*</Gradient>*/}
-                        </Scene>
-                      </Drawer>
-                    </Stack>
-                  {/*</Lightbox>*/}
-                </Modal>
+              <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
+                {/*<Lightbox>*/}
+                <Stack hideNavBar key='root' navigationBarStyle={{ backgroundColor: THEME.COLORS.PRIMARY }} backButtonTintColor='white' titleStyle={{ color: THEME.COLORS.WHITE, alignSelf: 'center' }}>
+                  <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
+                  <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
+                  <Drawer hideNavBar key='edge' contentComponent={ControlPanel} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
+                    {/*
+                     Wrapper Scene needed to fix a bug where the tabs would
+                     reload as a modal ontop of itself
+                     */}
+                    <Scene hideNavBar>
+                      {/*<Gradient>*/}
+                      <Tabs key='edge' swipeEnabled navTransparent={true} showLabel={true}>
+                        <Stack key='walletListTab' title='Wallets' tabBarLabel='Wallets'>
+                          <Scene key={Constants.WALLET_LIST} component={WalletList} title='Wallets' />
+                          <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
+                          <Scene key={Constants.TRANSACTION_LIST} renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} title='Transactions' back/>
+                        </Stack>
+                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Request' title='Request' animation={'fade'} duration={600} />
+                        <Stack key='scanTab' title='Send' tabBarLabel='Send' >
+                          <Scene key={Constants.SCAN} renderTitle={this.renderWalletListNavBar} component={Scan} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key={Constants.SEND_CONFIRMATION} component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
+                        </Stack>
+                        <Scene key='exchangeTab' renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                        <Scene key='helpTab' renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Help' title='Help' animation={'fade'} duration={600} />
+                      </Tabs>
+                      <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
+                        <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
+                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
+                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
+                        <Scene key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
+                      </Stack>
+                      {/*</Gradient>*/}
+                    </Scene>
+                  </Drawer>
+                </Stack>
+                {/*</Lightbox>*/}
+              </Modal>
             </Overlay>
           </RouterWithRedux>
         </MenuContext>
       </StyleProvider>
     )
   }
-
-
-  // render () {
-  //   const routes = this.props.routes
-  //   return (
-  //     <StyleProvider style={getTheme(platform)}>
-  //       <MenuContext style={{flex: 1}}>
-  //         <RouterWithRedux style={styles.statusBarHack}>
-  //           <Scene key='root' hideNavBar>
-  //             <Scene hideNavBar hideTabBar type={ActionConst.RESET} key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
-  //
-  //               <Scene hideNavBar hideTabBar key={Constants.EDGE} component={LayoutConnector} routes={routes} animation={'fade'} duration={600}>
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.WALLET_LIST}   component={WalletList}   title='Wallets'       animation={'fade'} duration={600} initial/>
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_LIST}    component={TransactionListConnector} title='Transactions'        animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.TRANSACTION_DETAILS} component={TransactionDetails}       title='Transaction Details' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SCAN}              component={Scan}             title='Scan'              animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SEND_CONFIRMATION} component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.REQUEST} component={Request} title='Request' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
-  //
-  //                 <Scene hideNavBar hideTabBar type={ActionConst.REPLACE} key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
-  //
-  //               </Scene>
-  //             </Scene>
-  //           </RouterWithRedux>
-  //
-  //       </MenuContext>
-  //     </StyleProvider>
-  //   )
-  // }
 
   _keyboardDidShow = (event) => {
     let keyboardHeight = event.endCoordinates.height

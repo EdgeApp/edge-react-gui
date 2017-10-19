@@ -33,7 +33,7 @@ export default class WalletSelector extends Component {
       <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(), {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
         <View style={{height: 34, width: 34}} />
         <T style={{
-          color: THEME.COLORS.PRIMARY, fontSize: 20
+          color: THEME.COLORS.WHITE, fontSize: 20
         }} numberOfLines={1}>
           {headerText}
         </T>
