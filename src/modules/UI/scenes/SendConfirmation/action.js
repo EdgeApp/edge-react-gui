@@ -1,5 +1,4 @@
 // @flow
-
 const PREFIX = 'UI/SendConfimation/'
 export const UPDATE_AMOUNT_SATOSHI = PREFIX + 'UPDATE_AMOUNT_SATOSHI'
 // export const UPDATE_AMOUNT_FIAT = PREFIX + 'UPDATE_AMOUNT_FIAT'
@@ -23,6 +22,8 @@ export const UPDATE_CRYPTO_AMOUNT_REQUEST = PREFIX + 'UPDATE_CRYPTO_AMOUNT_REQUE
 export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
+
+export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
 
 import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action'
@@ -90,6 +91,11 @@ export const updateSpendPending = (pending: boolean) => ({
   data: {pending}
 })
 
+export const updateNativeAmount = (nativeAmount: string) => ({
+  type: UPDATE_NATIVE_AMOUNT,
+  data: {nativeAmount}
+})
+
 export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: any, getState: any) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -101,13 +107,19 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     .then(() => {
       dispatch(updateSpendPending(false))
       Actions.transactionList({type: 'reset'})
-      const successInfo = {title: 'Transaction Sent', message: 'Your transaction has been successfully sent.'}
+      const successInfo = {
+        title: 'Transaction Sent',
+        message: 'Your transaction has been successfully sent.'
+      }
       dispatch(openABAlert(successInfo))
     })
     .catch((e) => {
-      // console.log('error is: ', e)
+      // console.log(e)
       dispatch(updateSpendPending(false))
-      const errorInfo = {title: 'Transaction Failure', message: e.message}
+      const errorInfo = {
+        title: 'Transaction Failure',
+        message: e.message
+      }
       dispatch(openABAlert(errorInfo))
     })
 }
@@ -151,6 +163,20 @@ export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, get
   .catch((error) => {
     dispatch(updateTransactionAction(parsedUri, null, error))
   })
+}
+
+export const getMaxSpendable = () => (dispatch: any, getState: any) => {
+  const state = getState()
+
+  const parsedUri: AbcParsedUri = state.ui.scenes.sendConfirmation.parsedUri
+
+  const walletId = UI_SELECTORS.getSelectedWalletId(state)
+  const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
+
+  return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
+    .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
+    .catch((error) => console.log(error))
 }
 
 export const updateParsedURI = (parsedUri: AbcParsedUri) => ({

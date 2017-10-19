@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
-import {View} from 'react-native'
+import {
+  View
+} from 'react-native'
 
-class RadioRows extends Component {
+export default class RadioRows extends Component {
   render () {
     return (
       <View style={[{height: 200}]}>
@@ -10,5 +12,3 @@ class RadioRows extends Component {
     )
   }
 }
-
-export default RadioRows

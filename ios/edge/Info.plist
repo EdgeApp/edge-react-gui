@@ -50,6 +50,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NFCReaderUsageDescription</key>
+	<string>$(PRODUCT_NAME) does not use NFC.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses photos to retrieve QR Code images.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
@@ -112,6 +114,7 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Feather.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

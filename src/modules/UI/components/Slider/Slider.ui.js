@@ -1,14 +1,25 @@
+// @flow
 import React, {Component} from 'react'
 import {Text, View} from 'react-native'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
+import * as UTILS from '../../../utils.js'
 
-const SLIDE_TO_COMPLETE_TEXT = sprintf(strings.enUS['send_confirmation_slide_to_confirm'])
+const SLIDE_TO_COMPLETE_TEXT = strings.enUS['send_confirmation_slide_to_confirm']
 
-export default class ABSlider extends Component {
-  constructor (props) {
+type Props = {
+  sliderDisabled: boolean,
+  onSlidingComplete: () => {},
+  parentStyle: any
+}
+
+type State = {
+  value: number
+}
+
+export default class ABSlider extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
 
     this.state = {
@@ -18,7 +29,7 @@ export default class ABSlider extends Component {
     }
   }
 
-  onSlidingComplete = (value) => {
+  onSlidingComplete = (value: number) => {
     if (value <= 1) {
       this.props.onSlidingComplete()
     } else {
@@ -26,13 +37,13 @@ export default class ABSlider extends Component {
     }
   };
 
-  onValueChange = (value) => {
+  onValueChange = (value: number) => {
     this.setState({value})
   }
 
   render () {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.parentStyle, UTILS.border()]}>
         <Slider
           disabled={this.props.sliderDisabled}
           onValueChange={this.onValueChange}

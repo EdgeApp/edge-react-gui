@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 import T from '../../../components/FormattedText/FormattedText.ui'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-import s from '../style'
+import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
 
 export default class RowRadio extends Component {
@@ -18,24 +18,28 @@ export default class RowRadio extends Component {
       onPress
     } = this.props
     // console.log('Row render, option: ', option)
+    const icon = isSelected
+    ? <IonIcon style={[styles.radioButton, b('blue')]}
+      name='ios-radio-button-on'
+      size={24}
+      color='#4C78B8' />
+    : <IonIcon style={[styles.radioButton, b('blue')]}
+      name='ios-radio-button-off'
+      size={24}
+      color='#58595C' />
 
-    return (
-      <TouchableOpacity style={[s.rowContainer, b('blue')]}
-        key={key}
-        onPress={onPress}>
+    return <TouchableOpacity style={[styles.rowContainer, b('blue')]}
+      underlayColor={styleRaw.underlay.color}
+      key={key}
+      onPress={onPress}>
 
-        <View style={[s.rowTextRow, b('red')]}>
-          <View style={[s.rowLeftContainer, b('blue')]}>
-            <T style={[s.rowLeftText, b('green')]}>{left}</T>
-          </View>
-          {
-            isSelected
-            ? <IonIcon name='ios-radio-button-on' size={24} style={[s.radioButton, b('blue')]} color='#4C78B8' />
-            : <IonIcon name='ios-radio-button-off' size={24} style={[s.radioButton, b('blue')]} color='#58595C' />
-          }
+      <View style={[styles.rowTextRow, b('red')]}>
+        <View style={[styles.rowLeftContainer, b('blue')]}>
+          <T style={[styles.rowLeftText, b('green')]}>{left}</T>
         </View>
+        {icon}
+      </View>
 
-      </TouchableOpacity>
-    )
+    </TouchableOpacity>
   }
 }

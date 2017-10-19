@@ -1,35 +1,32 @@
 import React, {Component} from 'react'
-import {View, StyleSheet, TouchableOpacity, Text} from 'react-native'
+import {
+  View,
+  TouchableHighlight
+} from 'react-native'
+import FormattedText from '../FormattedText'
 
-const styles = StyleSheet.flatten({
-  shareButton: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    borderColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginHorizontal: 2,
-    marginVertical: 14
-  },
-  view: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 1
-  },
-  text: {
-    fontSize: 16,
-    color: 'rgba(255,255,255,.7)'
-  }
-})
+import styles, {styles as styleRaw} from './styles'
 
 export default class ShareButton extends Component {
   render () {
-    const {displayName, onPress, style} = this.props
-    return <TouchableOpacity onPress={onPress} style={[ styles.shareButton, style ]}>
-      <View style={styles.view}>
-        <Text style={styles.text}>{displayName}</Text>
+    const {
+      displayName,
+      onPress,
+      style,
+      border
+    } = this.props
+    return <TouchableHighlight style={[
+      styles.shareButton, style
+    ]}
+      underlayColor={styleRaw.underlay.color}
+      onPress={onPress}>
+      <View style={styles.outerView}>
+        <View style={[styles.view, border]}>
+          <FormattedText style={styles.text}>
+            {displayName}
+          </FormattedText>
+        </View>
       </View>
-    </TouchableOpacity>
+    </TouchableHighlight>
   }
 }

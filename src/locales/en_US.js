@@ -323,7 +323,7 @@ const strings = {
   send_confirmation_title: 'Send Confirmation',
   send_confirmation_from_title: 'From:',
   send_confirmation_to_title: 'To:',
-  send_confirmation_max_button_title: 'Max',
+  send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_enter_send_pin: 'Enter 4 Digit PIN',
   send_confirmation_enter_send_password: 'Password',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
@@ -424,6 +424,7 @@ const strings = {
   transaction_details_to: '"To: "',
   transaction_details_from: '"From: "',
   transaction_details_payee_hint: 'Enter Payee',
+  transaction_details_payee: 'Payee',
   transaction_details_recovery_reminder_title: 'Recover Password Reminder',
   transaction_details_recovery_reminder_message: '"We STRONGLY recommend setting up Password Recovery questions and answers. Otherwise you will NOT be able to access your account if your password is forgotten."',
   transaction_details_advanced_txid: '"Transaction ID"',
@@ -747,11 +748,13 @@ const strings = {
   title_Settings: 'Settings',
   title_Default_Fiat: 'Default Fiat',
   title_BTC_Settings: 'BTC Settings',
+  title_BCH_Settings: 'BCH Settings',
   title_ETH_Settings: 'ETH Settings',
   title_LTC_Settings: 'LTC Settings',
   settings_denominations_title: 'Denominations',
   settings_denomination_title_btc_cap: 'BITCOIN DENOMINATION',
   settings_denomination_title_btc: 'Bitcoin Denomination',
+  settings_denomination_title_bch: 'Bitcoin Cash Denomination',
   settings_denomination_title_eth: 'Ethereum Denomination',
   settings_denomination_title_ltc: 'Litecoin Denomination',
   settings_denomination_buttons_ethereum: 'Ethereum = (1 Ethereum)',
@@ -760,6 +763,8 @@ const strings = {
   settings_options_title_cap: 'Options',
   settings_button_setup_two_factor: 'Setup 2 Factor',
   settings_button_change_pass_recovery: 'Setup / Change Password Recovery',
+  settings_button_send_logs: 'Send logs',
+  settings_modal_send_logs_title: 'Send logs?',
   settings_button_use_touchID: 'Use TouchID',
   send_scan_header_text: 'Scan, to Send, import, or Edge Login',
   fragment_copy_button_syntax: 'Paste',
@@ -782,6 +787,7 @@ const strings = {
   fragment_create_wallet_create_wallet: 'Create Wallet',
   fragment_create_wallet_select_valid: 'Please select valid data',
   fragment_blockchain_btc: 'Bitcoin',
+  fragment_blockchain_bch: 'BitcoinCash',
   fragment_blockchain_eth: 'Ethereum',
   fragment_blockchain_ltc: 'Litecoin',
   fragment_fiat_usd: 'US Dollar',
@@ -814,7 +820,7 @@ const strings = {
 
   // Transaction Details Page
   title_Transaction_Details: 'Transaction Details',
-  fragment_tx_detail_mining_fee: '+ %u (Fee)',
+  fragment_tx_detail_mining_fee: '+ %f (Fee)',
 
   // Not new to react-gui (I don't think), not sure why at end of JSON
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
@@ -828,7 +834,12 @@ const strings = {
   // New items added before Localization overhaul.- Need Other than English Translation
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
-  title_Password_Recovery: 'Password Recovery'
+  title_Password_Recovery: 'Password Recovery',
+
+  // help modal
+  help_modal_title: 'Crypto Wallet and Directory',
+  help_version: 'Version',
+  help_build: 'Build'
 }
 
 export default strings

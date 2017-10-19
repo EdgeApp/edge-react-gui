@@ -1,14 +1,13 @@
 import {StyleSheet} from 'react-native'
-import {colors as c, font} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
-
+export const styles = {
   container: {
     flex: 1,
     alignItems: 'stretch',
     flexDirection: 'column',
     zIndex: 1,
-    backgroundColor: 'white'
+    backgroundColor: THEME.COLORS.WHITE
   },
   expandedHeader: {
     height: 32,
@@ -17,18 +16,11 @@ export default StyleSheet.create({
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 24,
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     height: 48,
     width: 48,
     position: 'relative',
     top: 10
-  },
-  payeeIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'transparent',
-    position: 'relative'
   },
   dataArea: {
     position: 'relative',
@@ -45,12 +37,12 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
   payeeNameInput: {
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     fontSize: 17,
     height: 24,
     textAlign: 'center',
     width: '100%',
-    fontFamily: font.default
+    fontFamily: THEME.FONTS.DEFAULT
   },
   payeeSeperator: {
     borderBottomWidth: 1,
@@ -65,7 +57,7 @@ export default StyleSheet.create({
     flexDirection: 'column'
   },
   date: {
-    color: c.gray2,
+    color: THEME.COLORS.GRAY_2,
     fontSize: 14
   },
   amountAreaContainer: {
@@ -99,12 +91,12 @@ export default StyleSheet.create({
   },
   amountAreaMiddleTopText: {
     fontSize: 26,
-    color: c.gray1
+    color: THEME.COLORS.GRAY_1
   },
   amountAreaMiddleBottom: {},
   amountAreaMiddleBottomText: {
     fontSize: 14,
-    color: c.gray2
+    color: THEME.COLORS.GRAY_2
   },
   amountAreaRight: {
     flex: 1,
@@ -112,7 +104,7 @@ export default StyleSheet.create({
     alignItems: 'flex-end'
   },
   amountAreaRightText: {
-    color: c.gray2,
+    color: THEME.COLORS.GRAY_2,
     fontSize: 14
   },
   editableFiatRow: {
@@ -132,15 +124,15 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   fiatSymbol: {
-    color: c.gray2
+    color: THEME.COLORS.GRAY_2
   },
   editableFiat: {
-    color: c.gray1,
+    color: THEME.COLORS.GRAY_1,
     fontSize: 17,
     textAlign: 'center',
     height: 26,
     flex: 1,
-    fontFamily: font.default
+    fontFamily: THEME.FONTS.DEFAULT
   },
   editableFiatRight: {
     flex: 1,
@@ -148,7 +140,7 @@ export default StyleSheet.create({
     alignItems: 'flex-end'
   },
   editableFiatRightText: {
-    color: c.gray2,
+    color: THEME.COLORS.GRAY_2,
     fontSize: 14
   },
   categoryRow: {
@@ -202,8 +194,8 @@ export default StyleSheet.create({
     height: 22,
     fontSize: 13,
     flex: 1,
-    color: c.gray2,
-    fontFamily: font.default
+    color: THEME.COLORS.GRAY_2,
+    fontFamily: THEME.FONTS.DEFAULT
   },
   notesRow: {
     paddingBottom: 20,
@@ -219,12 +211,12 @@ export default StyleSheet.create({
     padding: 3
   },
   notesInput: {
-    color: c.gray2,
+    color: THEME.COLORS.GRAY_2,
     fontSize: 12,
-    fontFamily: font.default
+    fontFamily: THEME.FONTS.DEFAULT
   },
   footerArea: {
-    backgroundColor: c.gray4,
+    backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
     height: 500,
     paddingLeft: 15,
@@ -244,7 +236,7 @@ export default StyleSheet.create({
     height: 50
   },
   advancedTxText: {
-    color: c.secondary,
+    color: THEME.COLORS.SECONDARY,
     fontSize: 14,
     paddingTop: 12,
     paddingBottom: 12,
@@ -257,7 +249,7 @@ export default StyleSheet.create({
     paddingRight: 15,
     marginTop: 15,
     borderTopWidth: 1,
-    borderTopColor: c.gray3
+    borderTopColor: THEME.COLORS.GRAY_3
   },
   rowContainer: {
     flex: 1,
@@ -265,7 +257,7 @@ export default StyleSheet.create({
     paddingLeft: 16,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: 'white',
+    backgroundColor: THEME.COLORS.WHITE,
     borderBottomWidth: 1,
     borderColor: '#EEE'
   },
@@ -292,6 +284,10 @@ export default StyleSheet.create({
   },
 
   // beginning of contact search results
+  searchResults: {
+    width: '100%',
+    backgroundColor: THEME.COLORS.WHITE
+  },
   singleContact: {
     height: 60,
     borderBottomWidth: 1,
@@ -341,5 +337,23 @@ export default StyleSheet.create({
     fontSize: 16,
     color: '#000000',
     textAlignVertical: 'center'
+  },
+
+  typeExchange: {
+    color: THEME.COLORS.ACCENT_ORANGE
+  },
+  typeExpense: {
+    color: THEME.COLORS.ACCENT_RED
+  },
+  typeTransfer: {
+    color: THEME.COLORS.ACCENT_PRIMARY
+  },
+  typeIncome: {
+    color: THEME.COLORS.ACCENT_GREEN
+  },
+  underlayColor: {
+    color: THEME.COLORS.GRAY_4
   }
-})
+}
+
+export default StyleSheet.create(styles)

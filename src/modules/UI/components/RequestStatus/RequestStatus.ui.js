@@ -3,28 +3,13 @@ import {Text, View} from 'react-native'
 import T from '../FormattedText/'
 import {connect} from 'react-redux'
 import {border as b} from '../../../utils.js'
-import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
 
-const styles = {
-  view: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent'
-  },
-  text: {
-    color: 'white',
-    margin: 10
-  },
-  alert: {
-    color: 'red'
-  }
-}
+import styles from './styles'
 
-const WAITING_FOR_PAYMENT_TEXT = sprintf(strings.enUS['request_qr_waiting_for_payment'])
-const REMAINING_TEXT = sprintf(strings.enUS['bitcoin_remaining'])
-const RECEIVED_TEXT = sprintf(strings.enUS['bitcoin_received'])
+const WAITING_FOR_PAYMENT_TEXT = strings.enUS['request_qr_waiting_for_payment']
+const REMAINING_TEXT           = strings.enUS['bitcoin_remaining']
+const RECEIVED_TEXT            = strings.enUS['bitcoin_received']
 
 const RequestStatus = (props) => {
   const amountRequestedInCrypto = props.amountSatoshi

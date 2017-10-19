@@ -2,16 +2,17 @@ package co.airbitz.edge;
 
 import android.app.Application;
 
-// import com.facebook.react.BuildConfig;
+//import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
-//import com.cboy.rn.splashscreen.SplashScreenReactPackage;
+import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
-//import com.slowpath.hockeyapp.RNHockeyAppPackage;
+//import com.cboy.rn.splashscreen.SplashScreenReactPackage;
+import com.slowpath.hockeyapp.RNHockeyAppModule;
+import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.tradle.react.UdpSocketsModule;
 import com.peel.react.TcpSocketsModule;
-import cl.json.RNSharePackage;
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -21,6 +22,7 @@ import com.learnium.RNDeviceInfo.RNDeviceInfo;
 import com.lynxit.contactswrapper.ContactsWrapperPackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
+import io.fixd.rctlocale.RCTLocalePackage;
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -42,15 +44,15 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNSharePackage(),
+            new RandomBytesPackage(),
 //            new SplashScreenReactPackage(),
             new BlurViewPackage(),
-//            new RNHockeyAppPackage(MainApplication.this),
+            new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),
             new VectorIconsPackage(),
             new UdpSocketsModule(),
             new TcpSocketsModule(),
-            new RNSharePackage(),
-            new RandomBytesPackage(),
             new ReactMaterialKitPackage(),
             new LinearGradientPackage(),
             new ImagePickerPackage(),
@@ -58,7 +60,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNDeviceInfo(),
             new ContactsWrapperPackage(),
             new ReactNativeContacts(),
-            new RCTCameraPackage()
+            new RCTCameraPackage(),
+            new RCTLocalePackage()
       );
     }
   };

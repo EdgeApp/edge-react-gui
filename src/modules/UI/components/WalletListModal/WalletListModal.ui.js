@@ -7,6 +7,7 @@ import * as Animatable from 'react-native-animatable'
 import {border as b} from '../../../utils'
 import WalletListModalBody from './components/WalletListModalBodyConnector'
 import WalletListModalHeader from './components/WalletListModalHeaderConnector'
+import platform from '../../../../theme/variables/platform.js'
 
 export default class WalletListModal extends Component<any> {
   constructor (props: any) {
@@ -18,7 +19,7 @@ export default class WalletListModal extends Component<any> {
 
   render () {
     return (
-      <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: 38, height: (this.props.dimensions.deviceDimensions.height - this.props.dimensions.headerHeight - this.props.dimensions.tabBarHeight)}]}
+      <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: 38, height: (platform.deviceHeight - platform.toolbarHeight - platform.footerHeight)}]}
         animation='fadeInDown'
         duration={100} >
         <ScrollView>
@@ -33,6 +34,5 @@ export default class WalletListModal extends Component<any> {
 
 WalletListModal.propTypes = {
   dropdownWalletListVisible: PropTypes.bool,
-  currentScene: PropTypes.string,
-  dimensions: PropTypes.object
+  currentScene: PropTypes.string
 }

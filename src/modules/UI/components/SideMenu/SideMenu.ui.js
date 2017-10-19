@@ -1,11 +1,26 @@
 import React, {Component} from 'react'
 import Drawer from 'react-native-drawer'
-
 import ControlPanel from '../ControlPanel'
+import THEME from '../../../../theme/variables/airbitz'
 
 export default class SideMenu extends Component {
-  onOpen = () => this.props.open()
-  onClose = () => this.props.close()
+  onOpen = this.props.open
+  onClose = this.props.close
+
+  tweenHandler = (ratio) => ({
+    drawer: {
+      shadowColor: THEME.COLORS.BLACK,
+      shadowOpacity: ratio,
+      shadowRadius: 7
+    },
+    main: {
+      opacity: 1
+    },
+    mainOverlay: {
+      opacity: ratio / 2,
+      backgroundColor: THEME.COLORS.WHITE
+    }
+  })
 
   render () {
     return (
@@ -24,16 +39,7 @@ export default class SideMenu extends Component {
         onOpen={this.props.open}
         onClose={this.props.close}
         elevation={2}
-        tweenHandler={(ratio) => ({
-          main: {
-            opacity: 1
-          },
-          mainOverlay: {
-            opacity: ratio / 2,
-            backgroundColor: '#FFF'
-          }
-        })}
-      >
+        tweenHandler={this.tweenHandler}>
         {this.props.children}
       </Drawer>
     )
@@ -42,9 +48,11 @@ export default class SideMenu extends Component {
 
 const drawerStyles = {
   drawer: {
-    shadowColor: '#000000',
-    shadowOpacity: 0.8,
+    shadowColor: THEME.COLORS.BLACK,
+    shadowOpacity: THEME.OPACITY.MID,
     shadowRadius: 3
   },
-  main: {paddingLeft: 3}
+  main: {
+    paddingLeft: 3
+  }
 }

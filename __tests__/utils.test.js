@@ -126,76 +126,6 @@ describe('convertDisplayToNative', function () {
   })
 })
 
-describe('convertExchangeToDisplay', function () {
-  test('1 => 1', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1'
-    const expected = '100000000'
-    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.00000000 => 1', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1.00000000'
-    const expected = '100000000'
-    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.123456789 => 1.123456789', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1.12345678'
-    const expected = '112345678'
-    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('convertExchangeToExchange', function () {
-  test('1 => 1000', function () {
-    const ratio = '1000.00000000'
-    const exchangeAmount = '1'
-    const expected = '1000'
-    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1000 => 1000', function () {
-    const ratio = '1.00000000'
-    const exchangeAmount = '1000'
-    const expected = '1000'
-    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1000 => 1', function () {
-    const ratio = '.00100000'
-    const exchangeAmount = '1000'
-    const expected = '1'
-    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('deriveDisplayToExchangeRatio', function () {
-  test('1 / 1', function () {
-    const exchangeNativeToExchangeRatio = '100000000'
-    const displayNativeToDisplayRatio = '100000000'
-    const expected = '1'
-    const actual = UTILS.deriveDisplayToExchangeRatio(exchangeNativeToExchangeRatio)(displayNativeToDisplayRatio)
-    expect(actual).toBe(expected)
-  })
-
-  test('1000 / 10', function () {
-    const exchangeNativeToExchangeRatio = '1000'
-    const displayNativeToDisplayRatio = '10'
-    const expected = '100'
-    const actual = UTILS.deriveDisplayToExchangeRatio(exchangeNativeToExchangeRatio)(displayNativeToDisplayRatio)
-    expect(actual).toBe(expected)
-  })
-})
-
 describe('truncateDecimals', function () {
   test('1 => 1', function () {
     const input = '1'
@@ -234,29 +164,6 @@ describe('truncateDecimals', function () {
     const precision = 1
     const expected = '1.1'
     const actual = UTILS.truncateDecimals(input, precision)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('absoluteValue', function () {
-  test('1 => 1', function () {
-    const input = '1'
-    const expected = '1'
-    const actual = UTILS.absoluteValue(input)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1 => 1', function () {
-    const input = '-1'
-    const expected = '1'
-    const actual = UTILS.absoluteValue(input)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1.0 => 1.0', function () {
-    const input = '-1.0'
-    const expected = '1.0'
-    const actual = UTILS.absoluteValue(input)
     expect(actual).toBe(expected)
   })
 })
@@ -325,159 +232,6 @@ describe('getNewArrayWithoutItem', function () {
   })
 })
 
-describe('isGreaterThan', function () {
-  test('5.123 > 5.123 => false', function () {
-    const amountString = '5.123'
-    const comparedTo = '5.123'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('5.123 > 4.123 => true', function () {
-    const amountString = '5.123'
-    const comparedTo = '4.123'
-    const expected = true
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('4.123 > 5.123 => false', function () {
-    const amountString = '4.123'
-    const comparedTo = '5.123'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.123 > 0 => true', function () {
-    const amountString = '1.123'
-    const comparedTo = '0'
-    const expected = true
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.123 > 0.0 => true', function () {
-    const amountString = '1.123'
-    const comparedTo = '0.0'
-    const expected = true
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1.123 > 0 => false', function () {
-    const amountString = '-1.123'
-    const comparedTo = '0'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1.123 > 0.0 => false', function () {
-    const amountString = '-1.123'
-    const comparedTo = '0.0'
-    const expected = false
-    const actual = UTILS.isGreaterThan(comparedTo)(amountString)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('isCompleteExchangeData', function () {
-  describe('secondaryDisplayAmount: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: undefined,
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: '$',
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('cryptoCurrencyCode: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: undefined,
-        fiatSymbol: '$',
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('fiatSymbol: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: undefined,
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('fiatExchangeAmount: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: '$',
-        fiatExchangeAmount: undefined,
-        fiatCurrencyCode: 'USD'
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  describe('fiatCurrencyCode: undefined', function () {
-    test('incomplete => false', function () {
-      const incompleteExchangeData = {
-        secondaryDisplayAmount: '4000',
-        cryptoCurrencyCode: 'BTC',
-        fiatSymbol: '$',
-        fiatExchangeAmount: '4000',
-        fiatCurrencyCode: undefined
-      }
-      const expected = false
-      // $FlowFixMe
-      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
-      expect(actual).toBe(expected)
-    })
-  })
-
-  test('complete => true', function () {
-    const exchangeData = {
-      secondaryDisplayAmount: '4000',
-      cryptoCurrencyCode: 'BTC',
-      fiatSymbol: '$',
-      fiatExchangeAmount: '4000',
-      fiatCurrencyCode: 'USD'
-    }
-    const expected = true
-    const actual = UTILS.isCompleteExchangeData(exchangeData)
-    expect(actual).toBe(expected)
-  })
-})
-
 describe('getSupportedFiats', function () {
   test('resolves to array of object {value, label}', function () {
     const supportedFiats = UTILS.getSupportedFiats()
@@ -486,5 +240,100 @@ describe('getSupportedFiats', function () {
         {label: expect.any(String), value: expect.any(String)}
       ))
     })
+  })
+})
+
+describe('isCompleteExchangeData', function () {
+  describe('primaryDisplayAmount: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: undefined,
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('primaryDisplayName: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: undefined,
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('secondaryDisplaySymbol: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: undefined,
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('secondaryDisplayAmount: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: undefined,
+        secondaryCurrencyCode: 'USD'
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  describe('secondaryCurrencyCode: undefined', function () {
+    test('incomplete => false', function () {
+      const incompleteExchangeData = {
+        primaryDisplayAmount: '1',
+        primaryDisplayName: 'BTC',
+        secondaryDisplaySymbol: '$',
+        secondaryDisplayAmount: '4000',
+        secondaryCurrencyCode: undefined
+      }
+      const expected = false
+      // $FlowExpectedError
+      const actual = UTILS.isCompleteExchangeData(incompleteExchangeData)
+      expect(actual).toBe(expected)
+    })
+  })
+
+  test('complete => true', function () {
+    const completeExchangeData = {
+      primaryDisplayAmount: '1',
+      primaryDisplayName: 'BTC',
+      secondaryDisplaySymbol: '$',
+      secondaryDisplayAmount: '4000',
+      secondaryCurrencyCode: 'USD'
+    }
+    const expected = true
+    const actual = UTILS.isCompleteExchangeData(completeExchangeData)
+    expect(actual).toBe(expected)
   })
 })

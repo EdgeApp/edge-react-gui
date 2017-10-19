@@ -23,6 +23,15 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "max-len": ["error", {
+          "code": 200,
+          "ignoreComments": true,
+          "ignoreTrailingComments": true,
+          "ignoreUrls": true,
+          "ignoreStrings": true,
+          "ignoreTemplateLiterals": true,
+          "ignoreRegExpLiterals": true
+        }],
         "arrow-parens": ["error", "always"],
         "operator-linebreak": ["error", "before"],
         "react/jsx-curly-spacing": ["error", {
@@ -78,7 +87,6 @@ module.exports = {
         "react-native/no-unused-styles": 0,
         "react-native/split-platform-components": 2,
         "react-native/no-inline-styles": 0,
-        "react-native/no-color-literals": 0,
         "flowtype/no-types-missing-file-annotation": 0
     }
 };

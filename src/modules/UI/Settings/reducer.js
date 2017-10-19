@@ -128,6 +128,18 @@ export const settings = (state = initialState, action) => {
     }
   }
 
+  case ACTION.SET_BCH_DENOMINATION: {
+    const {denomination} = data
+    const BCH = state['BCH']
+    return {
+      ...state,
+      BCH: {
+        ...BCH,
+        denomination
+      }
+    }
+  }
+
   case ACTION.SET_LTC_DENOMINATION: {
     const {denomination} = data
     const LTC = state['LTC']
@@ -167,7 +179,8 @@ export const settings = (state = initialState, action) => {
         currencyName: currencyInfo.currencyName,
         currencyCode: currencyInfo.currencyCode,
         denominations: currencyInfo.denominations,
-        symbolImage: currencyInfo.symbolImage
+        symbolImage: currencyInfo.symbolImage,
+        symbolImageDarkMono: currencyInfo.symbolImageDarkMono
       }
     }
 
@@ -181,7 +194,8 @@ export const settings = (state = initialState, action) => {
           currencyName: metatoken.currencyName,
           currencyCode: metatoken.currencyCode,
           denominations: metatoken.denominations,
-          symbolImage: metatoken.symbolImage
+          symbolImage: metatoken.symbolImage,
+          symbolImageDarkMono: metatoken.symbolImageDarkMono
         }
       }
     }, {})

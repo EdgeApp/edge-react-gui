@@ -1,9 +1,11 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {divf, mulf, gt} from 'biggystring'
+import {div, mul} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type {AbcDenomination} from 'airbitz-core-types'
-import type {GuiDenomination} from '../types'
+import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
+import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
+
+const DIVIDE_PRECISION = 18
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
@@ -24,12 +26,12 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
   }
 }
 
-export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object) => {
+export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object): AbcDenomination => {
   // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
   let allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode = wallet.currencyCode
   let currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
+  let denomProperties: AbcDenomination = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
   return denomProperties
 }
@@ -110,7 +112,7 @@ export const formatNumber = (input: string): string => {
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) =>
   (nativeAmount: string): string =>
-    divf(nativeAmount, nativeToTargetRatio).toString()
+    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -122,39 +124,15 @@ export const convertNativeToExchange = convertNativeToDenomination
 // Used to convert amounts from display to core inputs
 export const convertDisplayToNative = (nativeToDisplayRatio: string) =>
   (displayAmount: string): string =>
-    !displayAmount ? '' : mulf(parseFloat(displayAmount), nativeToDisplayRatio)
+    !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
 
-// Used to convert exchange output to amounts ready for display
-export const convertExchangeToDisplay = (displayToExchangeRatio: string) =>
-  (exchangeAmount: string): string =>
-    (parseFloat(exchangeAmount) * parseFloat(displayToExchangeRatio)).toString()
-
-// Used to convert amounts from display to exchange inputs
-export const convertDisplayToExchange = (displayToExchangeRatio: string) =>
-  (displayAmount: string): string =>
-    (parseFloat(displayAmount) / parseFloat(displayToExchangeRatio)).toString()
-
-// Used to convert amounts in their respective exchange denominations
-export const convertExchangeToExchange = (ratio: string) =>
-  (exchangeAmount: string): string =>
-    (parseFloat(exchangeAmount) * parseFloat(ratio)).toString()
-
-// Used to get the ratio used for converting a displayAmount into a
-// exchangeAmount when using the currency exchange
-export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: string) =>
-  (displayNativeToDisplayRatio: string): string =>
-    divf(exchangeNativeToDisplayRatio, displayNativeToDisplayRatio).toString()
-
-export const absoluteValue = (input: string): string => input.replace('-', '')
+export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
 export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) =>
   array.filter((item) => item !== targetItem)
 
 export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
-
-export const isGreaterThan = (comparedTo: string) =>
-   (amountString: string): boolean => gt(amountString, comparedTo)
 
 const restrictedCurrencyCodes = [
   'BTC'
@@ -214,17 +192,47 @@ export const getSupportedFiats = (): Array<{label: string, value: string}> => {
   return supportedFiats
 }
 
-type ExchangeData = {
-  secondaryDisplayAmount: string,
-  cryptoCurrencyCode: string,
-  fiatSymbol: string,
-  fiatExchangeAmount: string,
-  fiatCurrencyCode: string
+/**
+ * Adds the `iso:` prefix to a currency code, if it's missing.
+ * @param {*} currencyCode A currency code we believe to be a fiat value.
+ */
+export function fixFiatCurrencyCode (currencyCode: string) {
+  // These are included in the currency-symbol-map library,
+  // and therefore might sneak into contexts where we expect fiat codes:
+  if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
+
+  return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!exchangeData.secondaryDisplayAmount
-    && !!exchangeData.cryptoCurrencyCode
-    && !!exchangeData.fiatSymbol
-    && !!exchangeData.fiatExchangeAmount
-    && !!exchangeData.fiatCurrencyCode
+  !!exchangeData.primaryDisplayAmount
+  && !!exchangeData.primaryDisplayName
+  && !!exchangeData.secondaryDisplayAmount
+  && !!exchangeData.secondaryDisplaySymbol
+  && !!exchangeData.secondaryCurrencyCode
+
+export const unspacedLowercase = (input: string) => {
+  let newInput = input.replace(' ', '').toLowerCase()
+  return newInput
+}
+
+export const getCurrencyInfo = (plugins: Array<AbcCurrencyPlugin>, currencyCode: string): AbcCurrencyInfo | void => {
+  for (const plugin of plugins) {
+    const info = plugin.currencyInfo
+    for (const denomination of info.denominations) {
+      if (denomination.name === currencyCode) {
+        return info
+      }
+    }
+
+    for (const token of info.metaTokens) {
+      for (const denomination of token.denominations) {
+        if (denomination.name === currencyCode) {
+          return info
+        }
+      }
+    }
+  }
+
+  return void 0
+}

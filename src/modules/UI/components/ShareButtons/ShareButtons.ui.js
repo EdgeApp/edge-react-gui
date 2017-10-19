@@ -1,44 +1,39 @@
 import React, {Component} from 'react'
-import {View, StyleSheet} from 'react-native'
-import ShareButton from '../ShareButton/index.js'
+import {
+  View
+} from 'react-native'
+import ShareButton from '../ShareButton'
+import strings from '../../../../locales/default.js'
 
-const styles = StyleSheet.create({
-  view: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    backgroundColor: '#294F85'
-  },
-  border: {
-    borderRightWidth: 0.4,
-    borderRightColor: '#FFF'
-  }
-})
+import styles from './styles.js'
+
+const COPY_TEXT = strings.enUS['fragment_request_copy_title']
+const SHARE_TEXT = strings.enUS['string_share']
 
 export default class ShareButtons extends Component {
   render () {
     const {copyToClipboard,
-    shareViaEmail,
-    shareViaSMS,
+    // shareViaEmail,
+    // shareViaSMS,
     shareViaShare} = this.props
 
-    return <View
-      style={styles.view}>
+    return <View style={styles.view}>
       <ShareButton
-        style={styles.border}
-        displayName='Copy'
+        displayName={COPY_TEXT}
+        border={styles.borderRight}
         onPress={copyToClipboard} />
-      <ShareButton
+      {/*<ShareButton
         style={styles.border}
         displayName='Email'
         onPress={shareViaEmail} />
       <ShareButton
         style={styles.border}
         displayName='SMS'
-        onPress={shareViaSMS} />
+        onPress={shareViaSMS} />*/}
       <ShareButton
-        displayName='Share'
-        onPress={shareViaShare} />
+        displayName={SHARE_TEXT}
+        onPress={shareViaShare}
+        border={styles.borderLeft} />
     </View>
   }
 }

@@ -1,16 +1,9 @@
 import React, {Component} from 'react'
-import {Dimensions, View} from 'react-native'
+import {View} from 'react-native'
 import QrCode from 'react-native-qrcode'
+import platform from '../../../../theme/variables/platform.js'
 
-const windowHeight = Dimensions.get('window').height
-
-const styles = {
-  qrCodeBorder: {
-    backgroundColor: 'white',
-    borderRadius: 4,
-    padding: 10
-  }
-}
+import styles from './styles'
 
 export default class QRCode extends Component {
   render () {
@@ -19,9 +12,9 @@ export default class QRCode extends Component {
         <QrCode
           style={styles.qrCode}
           value={this.props.value}
-          bgColor={'black'}
-          fgColor={'white'}
-          size={windowHeight / 4} />
+          bgColor={styles.qrCodeBackground.color}
+          fgColor={styles.qrCodeForeground.color}
+          size={platform.deviceHeight / 4} />
       </View>
     )
   }

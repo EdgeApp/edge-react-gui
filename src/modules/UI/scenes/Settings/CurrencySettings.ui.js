@@ -3,7 +3,7 @@ import {Image, View} from 'react-native'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import s from './style'
+import styles from './style'
 import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
@@ -12,13 +12,13 @@ const SETTINGS_DENOMIANTION_TEXT = strings.enUS['settings_denominations_title']
 
 export default class CurrencySettings extends Component {
   header () {
-    return <Gradient style={[s.headerRow, b('purple')]}>
+    return <Gradient style={[styles.headerRow, b()]}>
 
-      <View style={[s.headerTextWrap, b('yellow')]}>
-        <View style={s.leftArea}>
+      <View style={[styles.headerTextWrap, b()]}>
+        <View style={styles.leftArea}>
           <Image style={{height: 25, width: 25, resizeMode: Image.resizeMode.contain}}
             source={{uri: this.props.logo}}/>
-          <T style={s.headerText}>
+          <T style={styles.headerText}>
             {SETTINGS_DENOMIANTION_TEXT}
           </T>
         </View>
@@ -28,17 +28,17 @@ export default class CurrencySettings extends Component {
   }
 
   selectDenomination = (key) => () => {
-    console.log('setDenomination', key)
+    console.log('src/modules/UI/scences/Settings/CurrencySettings.ui.js/selectDenomination', key)
     return this.props.selectDenomination(key)
   }
 
   render () {
     return (
-      <View style={[s.ethereumSettings, b('brown')]}>
+      <View style={[styles.ethereumSettings, b()]}>
 
         {this.header()}
 
-        <RadioRows style={b('green')}>
+        <RadioRows style={b()}>
           {
             this.props.denominations.map((denomination) => {
               const key = denomination.multiplier

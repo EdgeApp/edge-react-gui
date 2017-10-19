@@ -44,23 +44,23 @@ export const refreshWallet = (walletId) =>
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
     if (wallet) {
-  // console.log('updating wallet balance', walletId)
+      // console.log('updating wallet balance', walletId)
       return dispatch(upsertWallet(wallet))
     }
-  // console.log('wallet doesn\'t exist yet', walletId)
+    // console.log('wallet doesn\'t exist yet', walletId)
   }
 
 export const upsertWallet = (wallet) => (dispatch, getState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
-    return {
+    dispatch({
       type: 'LOGGED_OUT'
-    }
+    })
   }
 
-  return {
+  dispatch({
     type: UPSERT_WALLET,
     data: {wallet}
-  }
+  })
 }

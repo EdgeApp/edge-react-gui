@@ -1,8 +1,8 @@
 import {connect} from 'react-redux'
 import TransactionList from './TransactionList.ui'
 import {
-  transactionsSearchVisible,
-  transactionsSearchHidden,
+  // transactionsSearchVisible,
+  // transactionsSearchHidden,
   getTransactionsRequest
 } from './action'
 import {setContactsList} from '../../contacts/action'
@@ -23,6 +23,7 @@ const mapStateToProps = (state) => {
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
+  const fiatCurrencyCode = wallet.fiatCurrencyCode
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
 
   const settings = SETTINGS_SELECTORS.getSettings(state)
@@ -46,6 +47,7 @@ const mapStateToProps = (state) => {
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
+    fiatCurrencyCode,
     uiWallet: wallet,
     settings,
     balanceInCrypto,
@@ -61,8 +63,8 @@ const mapDispatchToProps = (dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
   setContactsList: (contacts) => dispatch(setContactsList(contacts)),
-  transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
-  transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
+  // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
+  // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)
