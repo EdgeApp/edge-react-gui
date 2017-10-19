@@ -7,7 +7,7 @@ import * as UTILS from '../../modules/utils'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import * as UI_SELECTORS from '../../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../../modules/UI/Settings/selectors.js'
-
+import type {AbcCurrencyWallet} from 'airbitz-core-types'
 export const mapStateToProps = (state: any, ownProps: any) => {
   const fee = ownProps.fee ? ownProps.fee: null
   let fiatPerCrypto = 0
@@ -20,6 +20,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
       fee
     }
   }
+  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, uiWallet.id)
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode, uiWallet)
   const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(uiWallet.fiatCurrencyCode)
@@ -42,11 +43,15 @@ export const mapStateToProps = (state: any, ownProps: any) => {
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
-  const nativeAmount =  '0'//parsedUri.nativeAmount || '0'
+  /* const {
+    parsedUri
+  } = state.ui.scenes.sendConfirmation */
+  const nativeAmount =  '100000000000000000' //..parsedUri.nativeAmount || '0'
 
   return {
     style: ownProps.style,
     whichWallet: ownProps.whichWallet,
+    abcWallet,
     uiWallet,
     primaryInfo,
     secondaryInfo,

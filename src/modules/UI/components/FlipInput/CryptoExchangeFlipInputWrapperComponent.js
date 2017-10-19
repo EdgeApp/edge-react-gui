@@ -3,14 +3,18 @@ import {View, Image, Text} from 'react-native'
 import ExchangedFlipInput from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
 import * as Constants from '../../../../constants/indexConstants'
-import {GuiWallet, GuiCurrencyInfo} from '../../../../types'
+import type {FlipInputFieldInfo} from '../FlipInput/FlipInput.ui'
+import {GuiWallet} from '../../../../types'
+import type {AbcCurrencyWallet} from 'airbitz-core-types'
+
 
 type Props = {
   style: any,
   fee: string,
   uiWallet: GuiWallet,
-  primaryInfo: GuiCurrencyInfo,
-  secondaryInfo: GuiCurrencyInfo,
+  abcWallet: AbcCurrencyWallet,
+  primaryInfo: FlipInputFieldInfo,
+  secondaryInfo: FlipInputFieldInfo,
   fiatPerCrypto: number,
   nativeAmount: string
 }
@@ -74,6 +78,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
       fiatPerCrypto,
       nativeAmount
     } = this.props
+    // todo set color variable
     return (
       <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
