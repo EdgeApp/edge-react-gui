@@ -1,10 +1,13 @@
 // @flow
 /* global __DEV__ */
+
 import React, {Component} from 'react'
 import {Provider} from 'react-redux'
 import configureStore from './lib/configureStore'
 import Main from './modules/MainConnector'
-import {log} from './util/logger'
+import {log, logToServer} from './util/logger'
+import ENV from '../env.json'
+
 import './util/polyfills'
 
 const store: {} = configureStore({})
@@ -15,6 +18,15 @@ const perfCounters = {}
 if (!__DEV__) {
   // $FlowFixMe: suppressing this error until we can find a workaround
   console.log = log
+}
+
+if (ENV.LOG_SERVER) {
+  let originalLog = console.log
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  console.log = function () {
+    logToServer(arguments)
+    originalLog.apply(this, arguments)
+  }
 }
 
 const clog = console.log
