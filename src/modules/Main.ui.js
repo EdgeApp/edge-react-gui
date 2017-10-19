@@ -200,7 +200,7 @@ export default class Main extends Component<Props, State> {
                   <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
                   <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
                   <Scene key={Constants.SEND_CONFIRMATION} component={SendConfirmation} back clone title='Send Confirmation' animation={'fade'} duration={600} />
-                  <Drawer hideNavBar key='edge' contentComponent={ControlPanel} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
+                  <Drawer hideNavBar key='edge' contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/*
                      Wrapper Scene needed to fix a bug where the tabs would
                      reload as a modal ontop of itself
@@ -209,18 +209,18 @@ export default class Main extends Component<Props, State> {
                       {/*<Gradient>*/}
                       <Tabs key='edge' swipeEnabled={false} navTransparent={true} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
-                          <Scene key='walletList_notused' component={WalletList} title='Wallets' />
+                          <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
-                          <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
+                          <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' animation={'fade'} duration={600} />
+                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={Request} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
-                      <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Settings' hideDrawerButton={true} >
-                        <Scene key='dummy' component={SendConfirmation} onLeft={Actions.pop} leftTitle='Back' title='Send Confirmation' animation={'fade'} duration={600} />
+                      <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
+                        <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} onLeft={Actions.pop} leftTitle='Back' title='Send Confirmation' animation={'fade'} duration={600} />
                       </Stack>
                       <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
                         <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
