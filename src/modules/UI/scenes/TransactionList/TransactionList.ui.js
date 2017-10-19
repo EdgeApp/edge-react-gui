@@ -196,8 +196,8 @@ export default class TransactionList extends Component {
       logo = uiWallet.symbolImage
     }
 
-    const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto)
-    cryptoAmountString = cryptoAmount ? bns.toFixed(cryptoAmount, 0, 6) : '0'
+    const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
+    cryptoAmountString = cryptoAmount ? UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
 
     if (displayDenomination.symbol) {
       cryptoBalanceString = displayDenomination.symbol + ' ' + cryptoAmountString
@@ -362,7 +362,7 @@ export default class TransactionList extends Component {
     }
     let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
-    let amountString = parseFloat(UTILS.truncateDecimals(stepOne, 6))
+    let amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
     let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
     let fiatAmountString
     if (tx.metadata.amountFiat) {

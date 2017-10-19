@@ -1,6 +1,6 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {div, mul} from 'biggystring'
+import {div, mul, gte, eq} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
@@ -107,6 +107,19 @@ export const formatNumber = (input: string): string => {
     out = '0' + out
   }
   return out
+}
+
+export const decimalOrZero = (input: string, decimalPlaces: number): string => {
+  if (gte(input, '1')) { // do nothing to numbers greater than one
+    return input
+  } else {
+    let truncatedToDecimals = parseFloat(input).toFixed(decimalPlaces)
+    if (eq(truncatedToDecimals, '0')) { // cut off to number of decimal places equivalent to zero?
+      return '0' // then return zero
+    } else { // if not equivalent to zero
+      return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
+    }
+  }
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)

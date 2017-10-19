@@ -13,7 +13,7 @@ import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
-import {border as b, cutOffText, truncateDecimals} from '../../../../../utils.js'
+import {border as b, cutOffText, truncateDecimals, decimalOrZero} from '../../../../../utils.js'
 import {selectWallet} from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
@@ -76,6 +76,8 @@ class FullWalletListRow extends Component<Props, State> {
     const name = walletData.name || strings.enUS['string_no_name']
     const symbol = denomination.symbol
     let symbolImageDarkMono = walletData.symbolImageDarkMono
+    let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
+    let finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return (
       <View style={[{width: platform.deviceWidth}, b()]}>
           <View>
@@ -94,7 +96,7 @@ class FullWalletListRow extends Component<Props, State> {
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>
                   <T style={[styles.rowBalanceAmountText]}>
-                    {truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)}
+                    {finalCryptoAmount}
                   </T>
                   <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} ({symbol || ''})</T>
                 </View>
