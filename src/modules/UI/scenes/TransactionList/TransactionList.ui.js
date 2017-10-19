@@ -197,7 +197,7 @@ export default class TransactionList extends Component {
     }
 
     const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto)
-    cryptoAmountString = cryptoAmount ? UTILS.truncateDecimals(cryptoAmount.toString(), 6) : '0'
+    cryptoAmountString = cryptoAmount ? bns.toFixed(cryptoAmount, 0, 6) : '0'
 
     if (displayDenomination.symbol) {
       cryptoBalanceString = displayDenomination.symbol + ' ' + cryptoAmountString
@@ -360,17 +360,16 @@ export default class TransactionList extends Component {
     } else {
       lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
     }
-    let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount.replace('-', ''))
+    let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
-    let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
-    // console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
+    let amountString = parseFloat(UTILS.truncateDecimals(stepOne, 6))
     let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
     let fiatAmountString
     if (tx.metadata.amountFiat) {
-      let absoluteAmountFiat = Math.abs(tx.metadata.amountFiat)
+      let fixedAmountFiat = tx.metadata.amountFiat.toFixed(2)
+      let absoluteAmountFiat = Math.abs(fixedAmountFiat)
       let absoluteAmountFiatString = absoluteAmountFiat.toString()
-      let truncatedDecimalsAmountFiat = UTILS.truncateDecimals(absoluteAmountFiatString, 2)
-      fiatAmountString = UTILS.addFiatTwoDecimals(truncatedDecimalsAmountFiat)
+      fiatAmountString = UTILS.addFiatTwoDecimals(absoluteAmountFiatString)
     } else {
       fiatAmountString = (0.00).toFixed(2)
     }

@@ -99,7 +99,13 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       cat = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
       name = props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '' // remove commenting once metaData in Redux
       notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
-      amountFiat = props.abcTransaction.metadata.amountFiat ? props.abcTransaction.metadata.amountFiat.toString() : '0.00'
+      if (props.abcTransaction.metadata.amountFiat) {
+        let initial = props.abcTransaction.metadata.amountFiat
+        let absoluteInitial = Math.abs(initial)
+        let absoluteInitialFixed = absoluteInitial.toFixed(2)
+        let absoluteInitialFixedString = absoluteInitialFixed.toString()
+        amountFiat = UTILS.addFiatTwoDecimals(absoluteInitialFixedString)
+      }
     }
 
     if (cat) {
