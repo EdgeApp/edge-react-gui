@@ -4,7 +4,7 @@ import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-c
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image} from 'react-native'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import THEME from '../theme/variables/airbitz'
@@ -44,6 +44,14 @@ import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSetting
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import MenuIcon from '../assets/images/walletlist/sort.png'
 import Header from './UI/components/Header/Header.ui'
+import walletIcon from '../assets/images/tabbar/wallets.png'
+import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
+import receiveIcon from '../assets/images/tabbar/receive.png'
+import receiveIconSelected from '../assets/images/tabbar/receive_selected.png'
+import scanIcon from '../assets/images/tabbar/scan.png'
+import scanIconSelected from '../assets/images/tabbar/scan_selected.png'
+import exchangeIcon from '../assets/images/tabbar/exchange.png'
+import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
 
 import * as CONTEXT_API from './Core/Context/api'
 
@@ -87,6 +95,20 @@ type State = {
 }
 
 StatusBar.setBarStyle('light-content', true)
+
+const tabBarIconFiles: {[tabName: string]: string} = {}
+tabBarIconFiles[Constants.WALLET_LIST] = walletIcon
+tabBarIconFiles[Constants.REQUEST] = receiveIcon
+tabBarIconFiles[Constants.SCAN] = scanIcon
+tabBarIconFiles[Constants.TRANSACTION_LIST] = exchangeIcon
+tabBarIconFiles[Constants.EXCHANGE] = exchangeIcon
+
+const tabBarIconFilesSelected: {[tabName: string]: string} = {}
+tabBarIconFilesSelected[Constants.WALLET_LIST] = walletIconSelected
+tabBarIconFilesSelected[Constants.REQUEST] = receiveIconSelected
+tabBarIconFilesSelected[Constants.SCAN] = scanIconSelected
+tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
+tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   const opts = {
@@ -145,6 +167,21 @@ export default class Main extends Component<Props, State> {
     })
   }
 
+  icon = (tabName: string) => (props: {focused: boolean}) => {
+    if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
+      throw new Error('Invalid tabbar name')
+    }
+    let imageFile
+    if (props.focused) {
+      imageFile = tabBarIconFilesSelected[tabName]
+    } else {
+      imageFile = tabBarIconFiles[tabName]
+    }
+    return (
+      <Image source={imageFile}/>
+    )
+  }
+
   renderWalletListNavBar = () => (
       <Header/>
   )
@@ -157,9 +194,10 @@ export default class Main extends Component<Props, State> {
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
                 {/*<Lightbox>*/}
-                <Stack hideNavBar key='root' navigationBarStyle={{ backgroundColor: THEME.COLORS.PRIMARY }} backButtonTintColor='white' titleStyle={{ color: THEME.COLORS.WHITE, alignSelf: 'center' }}>
+                <Stack hideNavBar key='root' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} backButtonTintColor='white' titleStyle={{color: THEME.COLORS.WHITE, alignSelf: 'center'}}>
                   <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
                   <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
+                  <Scene key={Constants.SEND_CONFIRMATION} component={SendConfirmation} back clone title='Send Confirmation' animation={'fade'} duration={600} />
                   <Drawer hideNavBar key='edge' contentComponent={ControlPanel} drawerImage={MenuIcon} hideDrawerButton={false} drawerPosition='right'>
                     {/*
                      Wrapper Scene needed to fix a bug where the tabs would
@@ -167,20 +205,21 @@ export default class Main extends Component<Props, State> {
                      */}
                     <Scene hideNavBar>
                       {/*<Gradient>*/}
-                      <Tabs key='edge' swipeEnabled navTransparent={true} showLabel={true}>
-                        <Stack key='walletListTab' title='Wallets' tabBarLabel='Wallets'>
-                          <Scene key={Constants.WALLET_LIST} component={WalletList} title='Wallets' />
+                      <Tabs key='edge' swipeEnabled={false} navTransparent={true} showLabel={true}>
+                        <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
+                          <Scene key='walletList_notused' component={WalletList} title='Wallets' />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
-                          <Scene key={Constants.TRANSACTION_LIST} renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} title='Transactions' back/>
                         </Stack>
-                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Request' title='Request' animation={'fade'} duration={600} />
-                        <Stack key='scanTab' title='Send' tabBarLabel='Send' >
-                          <Scene key={Constants.SCAN} renderTitle={this.renderWalletListNavBar} component={Scan} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
-                          <Scene key={Constants.SEND_CONFIRMATION} component={SendConfirmation} title='Send Confirmation' animation={'fade'} duration={600} />
+                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' animation={'fade'} duration={600} />
+                        <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key='exchangeTab' renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
-                        <Scene key='helpTab' renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Help' title='Help' animation={'fade'} duration={600} />
+                        <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
+                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={Request} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
+                      <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Settings' hideDrawerButton={true} >
+                        <Scene key='dummy' component={SendConfirmation} onLeft={Actions.pop} leftTitle='Back' title='Send Confirmation' animation={'fade'} duration={600} />
+                      </Stack>
                       <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
                         <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
                         <Scene key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
