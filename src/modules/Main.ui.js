@@ -42,6 +42,8 @@ import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
+import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
+import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import MenuIcon from '../assets/images/walletlist/sort.png'
 import Header from './UI/components/Header/Header.ui'
 import walletIcon from '../assets/images/tabbar/wallets.png'
@@ -239,6 +241,10 @@ export default class Main extends Component<Props, State> {
               </Modal>
             </Overlay>
           </RouterWithRedux>
+
+          <ErrorAlert/>
+          <TransactionAlert/>
+
         </MenuContext>
       </StyleProvider>
     )
