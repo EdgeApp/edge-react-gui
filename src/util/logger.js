@@ -73,7 +73,7 @@ export async function log (...info: Array<number | string | null | {}>) {
 }
 
 async function request (data: string) {
-  return global.fetch(`http://${ENV.LOCAL_SERVER.host}:${ENV.LOCAL_SERVER.port}/log`, {
+  return global.fetch(`${ENV.LOCAL_SERVER.host}:${ENV.LOCAL_SERVER.port}/log`, {
     method: 'POST',
     headers : {
       'Accept': 'application/json',
