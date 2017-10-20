@@ -197,15 +197,20 @@ export default class Scan extends Component<any, any> {
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        Actions.sendConfirmation({type: 'reset'})
+        Actions.sendConfirmation()
       }
     })
   }
 
   renderCamera = () => {
     if (this.state.cameraPermission === true) {
+      const flashMode = this.props.torchEnabled
+        ? Camera.constants.FlashMode.on
+        : Camera.constants.FlashMode.off
+
       return (
         <Camera
+          flashMode={flashMode}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture' />

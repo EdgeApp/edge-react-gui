@@ -84,7 +84,7 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         applicationId "co.airbitz.edge"
@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-sound')
     compile project(':react-native-share')
     compile project(':react-native-randombytes')
     compile project(':react-native-blur')

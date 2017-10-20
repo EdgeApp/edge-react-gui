@@ -36,6 +36,6 @@ export const createCurrencyWallet = (
     name: walletName,
     fiatCurrencyCode
   }).then(() => {
-    Actions.walletList({type: 'reset'})
+    Actions.pop()
   })
 }

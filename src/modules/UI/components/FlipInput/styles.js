@@ -11,7 +11,8 @@ export const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    margin: 20,
+    marginVertical: 20,
+    marginHorizontal: 14,
     alignSelf: 'stretch',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row'
@@ -49,25 +50,25 @@ export const top = StyleSheet.create({
     borderBottomWidth: 1
   },
   symbol: {
-    flex: 1,
+    flex: 3,
     fontSize: 17,
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
-    flex: 4,
+    flex: 6,
     fontSize: 40,
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currencyCode: {
-    flex: 1,
+    flex: 3,
     fontSize: 17,
+    lineHeight: 20,
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
-    marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
   }
 })
@@ -96,7 +97,6 @@ export const bottom = StyleSheet.create({
     flex: 1,
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
-    marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   alert: {

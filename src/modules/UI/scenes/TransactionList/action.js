@@ -1,5 +1,7 @@
 // @flow
 
+import * as UTILS from '../../../utils'
+
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
 export const DELETE_TRANSACTIONS_LIST = PREFIX + 'DELETE_TRANSACTIONS_LIST'
@@ -54,8 +56,11 @@ export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispa
   }
 }
 
-export const newTransactionsRequest = (walletId: string, transactions: Array<AbcTransaction>) => (dispatch: Dispatch) => {
-  dispatch(displayTransactionAlert(transactions[0]))
+export const newTransactionsRequest = (walletId: string, abcTransactions: Array<AbcTransaction>) => (dispatch: Dispatch) => {
+  const abcTransaction: abcTransaction = abcTransactions[0]
+  if (!UTILS.isReceivedTransaction(abcTransaction)) return
+
+  dispatch(displayTransactionAlert(abcTransaction))
 }
 
 export const newTransactions = (transactions: Array<AbcTransaction>) => ({

@@ -16,5 +16,9 @@ export default StyleSheet.create({
   icon: {
     color: THEME.COLORS.WHITE,
     fontSize: 25
+  },
+  default: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE
   }
 })
