@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import {Provider} from 'react-redux'
 import configureStore from './lib/configureStore'
 import Main from './modules/MainConnector'
-import {log, logToServer} from './util/logger'
+import {logToServer} from './util/logger'
 import ENV from '../env.json'
 
 import './util/polyfills'
@@ -16,16 +16,17 @@ const perfTimers = {}
 const perfCounters = {}
 
 if (!__DEV__) {
+  // TODO: Fix logger to append data vs read/modify/write
   // $FlowFixMe: suppressing this error until we can find a workaround
-  console.log = log
+  // console.log = log
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  console.log = () => {}
 }
 
 if (ENV.LOG_SERVER) {
-  let originalLog = console.log
   // $FlowFixMe: suppressing this error until we can find a workaround
   console.log = function () {
     logToServer(arguments)
-    originalLog.apply(this, arguments)
   }
 }
 
