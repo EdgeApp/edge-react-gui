@@ -337,3 +337,63 @@ describe('isCompleteExchangeData', function () {
     expect(actual).toBe(expected)
   })
 })
+
+describe('addressFromURI', function () {
+  describe('bitcoin', function () {
+    describe('URI has prefix', function () {
+      test('bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu => 12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu', function () {
+        const uri = 'bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu'
+        const expected = '12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu'
+        const actual = UTILS.addressFromURI(uri)
+        expect(actual).toBe(expected)
+      })
+    })
+
+    describe('uri has prefix, amount', function () {
+      test('bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2 => 12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu', function () {
+        const uri = 'bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2'
+        const expected = '12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu'
+        const actual = UTILS.addressFromURI(uri)
+        expect(actual).toBe(expected)
+      })
+    })
+
+    describe('uri has prefix, amount, params', function () {
+      test('bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2&message=Payment&label=Satoshi&extra=other-param => 12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu', function () {
+        const uri = 'bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2&message=Payment&label=Satoshi&extra=other-param'
+        const expected = '12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu'
+        const actual = UTILS.addressFromURI(uri)
+        expect(actual).toBe(expected)
+      })
+    })
+  })
+
+  describe('ethereum', function () {
+    describe('URI has prefix', function () {
+      test('ethereum: 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe =>  0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', function () {
+        const uri = 'ethereum: 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+        const expected = ' 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+        const actual = UTILS.addressFromURI(uri)
+        expect(actual).toBe(expected)
+      })
+    })
+
+    describe('uri has prefix, amount', function () {
+      test('ethereum: 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe?amount=1.2 =>  0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', function () {
+        const uri = 'ethereum: 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe?amount=1.2'
+        const expected = ' 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+        const actual = UTILS.addressFromURI(uri)
+        expect(actual).toBe(expected)
+      })
+    })
+
+    describe('uri has prefix, amount, params', function () {
+      test('ethereum: 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe?amount=1.2&message=Payment&label=Satoshi&extra=other-param =>  0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', function () {
+        const uri = 'ethereum: 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe?amount=1.2&message=Payment&label=Satoshi&extra=other-param'
+        const expected = ' 0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+        const actual = UTILS.addressFromURI(uri)
+        expect(actual).toBe(expected)
+      })
+    })
+  })
+})

@@ -122,7 +122,8 @@ export default class Request extends Component {
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.state.encodedURI)
+    const address = UTILS.addressFromURI(this.state.encodedURI)
+    Clipboard.setString(address)
     Alert.alert('Request copied to clipboard')
   }
 

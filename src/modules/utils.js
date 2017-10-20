@@ -241,3 +241,10 @@ export const isReceivedTransaction = (abcTransaction: AbcTransaction): boolean =
   gte(abcTransaction.nativeAmount, '0')
 export const isSentTransaction = (abcTransaction: AbcTransaction): boolean =>
   !isReceivedTransaction(abcTransaction)
+
+export const addressFromURI = (uri: string) => {
+  const uriWithoutProtocol = uri.split(':')
+  const uriWithoutParams = uriWithoutProtocol[uriWithoutProtocol.length - 1].split('?')
+  const address = uriWithoutParams[0]
+  return address
+}
