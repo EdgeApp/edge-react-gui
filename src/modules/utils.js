@@ -1,6 +1,6 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {div, mul, gte, eq} from 'biggystring'
+import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
@@ -72,10 +72,10 @@ export const getRandomColor = () => borderColors[Math.floor(Math.random() * bord
 
 export const addFiatTwoDecimals = (input: string) => {
   // console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
-  if (input.length - input.indexOf('.') === 1) {
-    input = input + '0'
-  } else if (!input.includes('.')) {
-    input = input + '.00'
+  if (input.length - input.indexOf('.') === 2) { // if there is only one decimal place
+    input = input + '0' // then add a trailing zero
+  } else if (!input.includes('.')) { // if there are no decimal places
+    input = input + '.00' // then add two decimal places
   }
 
   return input
@@ -113,7 +113,7 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) { // do nothing to numbers greater than one
     return input
   } else {
-    let truncatedToDecimals = parseFloat(input).toFixed(decimalPlaces)
+    let truncatedToDecimals = toFixed(input, decimalPlaces)
     if (eq(truncatedToDecimals, '0')) { // cut off to number of decimal places equivalent to zero?
       return '0' // then return zero
     } else { // if not equivalent to zero

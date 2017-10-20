@@ -103,8 +103,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
         let initial = props.abcTransaction.metadata.amountFiat
         let absoluteInitial = Math.abs(initial)
         let absoluteInitialFixed = absoluteInitial.toFixed(2)
-        let absoluteInitialFixedString = absoluteInitialFixed.toString()
-        amountFiat = UTILS.addFiatTwoDecimals(absoluteInitialFixedString)
+        amountFiat = UTILS.addFiatTwoDecimals(absoluteInitialFixed)
       }
     }
 

@@ -367,9 +367,8 @@ export default class TransactionList extends Component {
     let fiatAmountString
     if (tx.metadata.amountFiat) {
       let fixedAmountFiat = tx.metadata.amountFiat.toFixed(2)
-      let absoluteAmountFiat = Math.abs(fixedAmountFiat)
-      let absoluteAmountFiatString = absoluteAmountFiat.toString()
-      fiatAmountString = UTILS.addFiatTwoDecimals(absoluteAmountFiatString)
+      let absoluteAmountFiat = bns.abs(fixedAmountFiat)
+      fiatAmountString = UTILS.addFiatTwoDecimals(absoluteAmountFiat)
     } else {
       fiatAmountString = (0.00).toFixed(2)
     }
