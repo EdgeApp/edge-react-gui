@@ -18,16 +18,15 @@ const perfCounters = {}
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
   // $FlowFixMe: suppressing this error until we can find a workaround
-  console.log = () => {}
   // console.log = log
+  // $FlowFixMe: suppressing this error until we can find a workaround
+  console.log = () => {}
 }
 
 if (ENV.LOG_SERVER) {
-  let originalLog = console.log
   // $FlowFixMe: suppressing this error until we can find a workaround
   console.log = function () {
     logToServer(arguments)
-    originalLog.apply(this, arguments)
   }
 }
 
