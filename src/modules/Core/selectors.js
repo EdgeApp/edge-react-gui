@@ -59,7 +59,7 @@ export const getFakeExchangeRate = (state, fromCurrencyCode, toCurrencyCode) => 
 }
 
 // Wallets
-export const getWallets = (state) => {
+export const getWallets = (state): AbcCurrencyWallet => {
   const core = getCore(state)
   const wallets =core.wallets.byId
   return wallets

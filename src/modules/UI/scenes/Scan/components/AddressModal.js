@@ -1,3 +1,4 @@
+// @flow
 import React, {Component} from 'react'
 import {
   Alert,
@@ -11,17 +12,31 @@ import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from '../style'
 
-export default class AddressModal extends Component {
-  constructor (props) {
-    super(props)
+type Props = {
+  coreWallet: AbcCurrencyWallet,
+  currencyCode: string,
+  addressModalVisible: boolean,
+  toggleAddressModal():void,
+  updateParsedURI(AbcParsedUri):void,
+  loginWithEdge(string): void
+}
+type State = {
+  uri: string,
+  clipboard: string
+}
 
-    this.state = {
-      uri: '',
-      clipboard: ''
-    }
+export default class AddressModal extends Component<Props,State> {
+  componentWillMount () {
+    this.setState(
+      {
+        uri: '',
+        clipboard: ''
+      }
+    )
   }
 
   componentDidMount () {
@@ -77,6 +92,13 @@ export default class AddressModal extends Component {
 
   onSubmit = () => {
     const uri = this.state.uri
+    // We want to check to see if the url is an edge login.
+
+    if (/^airbitz:\/\/edge\//.test(uri)) {
+      this.props.loginWithEdge(uri)
+      return
+    }
+
     const coreWallet = this.props.coreWallet
     try {
       const parsedURI = WALLET_API.parseURI(coreWallet, uri)
@@ -98,7 +120,7 @@ export default class AddressModal extends Component {
     this.props.toggleAddressModal()
   }
 
-  onChangeText = (uri) => {
+  onChangeText = (uri: string) => {
     this.setState({uri})
   }
 }

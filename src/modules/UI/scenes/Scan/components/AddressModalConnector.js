@@ -1,14 +1,17 @@
+// @flow
 import {connect} from 'react-redux'
 import AddressModal from './AddressModal'
 import {toggleAddressModal} from '../action'
 import * as UI_SELECTORS from '../../../selectors.js'
 import * as CORE_SELECTORS from '../../../../Core/selectors.js'
 import {updateParsedURI} from '../../SendConfirmation/action.js'
+import {loginWithEdge} from '../../../../../actions/indexActions'
+import type {AbcParsedUri, AbcCurrencyWallet} from 'airbitz-core-types'
 
-const mapStateToProps = (state) => {
-  const walletId = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+const mapStateToProps = (state: any) => {
+  const walletId:string = UI_SELECTORS.getSelectedWalletId(state)
+  const coreWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const currencyCode:string = UI_SELECTORS.getSelectedCurrencyCode(state)
 
   return {
     coreWallet,
@@ -17,9 +20,10 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: any) => ({
   toggleAddressModal: () => dispatch(toggleAddressModal()),
-  updateParsedURI: (parsedURI) => dispatch(updateParsedURI(parsedURI))
+  updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
+  loginWithEdge: (url: string) => dispatch(loginWithEdge(url))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddressModal)

@@ -35,7 +35,8 @@ type Props = {
   toggleEnableTorch(): void,
   toggleAddressModal():void,
   toggleWalletListModal(): void,
-  updateParsedURI(AbcParsedUri): void
+  updateParsedURI(AbcParsedUri): void,
+  loginWithEdge(string): void
 }
 
 const HEADER_TEXT     = strings.enUS['send_scan_header_text']
@@ -175,6 +176,10 @@ export default class Scan extends Component<any, any> {
 
   parseURI = (uri: string) => {
     try {
+      if (/^airbitz:\/\/edge\//.test(uri)) {
+        this.props.loginWithEdge(uri)
+        return
+      }
       // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
@@ -196,7 +201,10 @@ export default class Scan extends Component<any, any> {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
+        /* if (/^airbitz:\/\/edge\//.test(uri)) {
+          console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
+          return
+        }*/
         Actions.sendConfirmation()
       }
     })
