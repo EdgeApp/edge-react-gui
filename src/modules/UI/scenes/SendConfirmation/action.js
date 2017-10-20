@@ -108,6 +108,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
       dispatch(updateSpendPending(false))
       Actions.transactionList({type: 'reset'})
       const successInfo = {
+        success: true,
         title: 'Transaction Sent',
         message: 'Your transaction has been successfully sent.'
       }
@@ -117,6 +118,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
       // console.log(e)
       dispatch(updateSpendPending(false))
       const errorInfo = {
+        success: false,
         title: 'Transaction Failure',
         message: e.message
       }
