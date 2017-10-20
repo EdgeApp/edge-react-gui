@@ -12,7 +12,7 @@ export const setTransactionDetails = (txid: string, currencyCode: string, abcMet
   const state = getState()
   const wallet = getSelectedWallet(state)
   const onSuccess = () => {
-    Actions.transactionList()
+    Actions.pop()
   }
   const onError = () => {
 

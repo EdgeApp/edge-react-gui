@@ -106,7 +106,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.saveTransaction(wallet, abcSignedTransaction))
     .then(() => {
       dispatch(updateSpendPending(false))
-      Actions.transactionList({type: 'reset'})
+      Actions.pop()
       const successInfo = {
         title: 'Transaction Sent',
         message: 'Your transaction has been successfully sent.'

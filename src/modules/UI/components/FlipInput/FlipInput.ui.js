@@ -144,6 +144,9 @@ export default class FlipInput extends Component<Props, State> {
         <View style={styles.flipButton}>
           <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
         </View>
+        <View style={[styles.flipButton]}>
+          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} />
+        </View>
         {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
         <View style={styles.spacer} />
       </View>

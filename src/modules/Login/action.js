@@ -102,7 +102,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
 }
 
 export const logoutRequest = (username: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.login({username})
+  Actions.replace('login', {username})
 
   const state = getState()
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
