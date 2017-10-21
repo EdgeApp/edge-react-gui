@@ -5,6 +5,7 @@ import {
 } from 'react-native'
 import {TertiaryButton} from '../../../components/Buttons'
 import styles from '../style.js'
+import strings from '../../../../../locales/default'
 
 export class AddressInput extends Component { // this component is for the input area of the Recipient Address Modal
   render () {
@@ -16,7 +17,7 @@ export class AddressInput extends Component { // this component is for the input
             onChangeText={this.props.onChangeText}
             autoCapitalize={'none'}
             autoFocus
-            placeholder={this.props.copyMessage}
+            placeholder={strings.enUS.fragment_send_send_to_hint}
             returnKeyType={'done'}
             autoCorrect={false}
             onSubmitEditing={this.props.onSubmit}
