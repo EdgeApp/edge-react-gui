@@ -402,7 +402,7 @@ export default class WalletList extends Component<any, {
     headerText='fragment_wallets_rename_wallet'
     headerSubtext={this.props.walletName}
     modalMiddle={<WalletNameInput />}
-    modalBottom={<RenameWalletButtons walletId={this.props.walletId} />}
+    modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}
     />
