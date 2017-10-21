@@ -12,6 +12,7 @@ import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
 import {bns} from 'biggystring'
 import type {GuiCurrencyInfo} from '../../../../types'
+import * as Constants from '../../../../constants/indexConstants'
 
 export type FlipInputFieldInfo = GuiCurrencyInfo & {
   nativeAmount?: string,
@@ -140,8 +141,8 @@ export default class FlipInput extends Component<Props, State> {
     // console.log('this.state', this.state)
     return (
       <View style={[styles.container]}>
-        <View style={[styles.flipButton]}>
-          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name='swap-vert' size={36} />
+        <View style={styles.flipButton}>
+          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
         </View>
         {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
         <View style={styles.spacer} />

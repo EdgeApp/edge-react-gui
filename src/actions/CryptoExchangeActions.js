@@ -6,32 +6,12 @@ import * as actions from './indexActions'
 import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import {bns} from 'biggystring'
-export function openWalletSelectorForExchange (type: string, data: string) {
+function setWallet (type: string, data: any) {
   return {
     type,
     data
   }
 }
-
-export function updateCryptoExchangeRate (type: string, data: string) {
-  return {
-    type,
-    data
-  }
-}
-function setToWallet (type: string, data: any) {
-  return {
-    type,
-    data
-  }
-}
-function setFromWallet (type: string, data: any) {
-  return {
-    type,
-    data
-  }
-}
-
 function setShapeTransaction (type: string, data: AbcTransaction) {
   return {
     type,
@@ -119,13 +99,13 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?
     ? (dispatch(
         getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
       ),
-      dispatch(setFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
+      dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
       hasFrom = wallet
     )
     : (dispatch(
         getCryptoExchangeRate(cc, state.cryptoExchange.fromCurrencyCode)
       ),
-      dispatch(setToWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE,data)),
+      dispatch(setWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE,data)),
       hasTo = wallet
     )
   if (hasFrom && hasTo) {

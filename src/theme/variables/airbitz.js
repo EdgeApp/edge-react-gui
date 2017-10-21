@@ -31,12 +31,14 @@ export const font = {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export default {
+  BUTTONS: {
+    HEIGHT: 44
+  },
   DEBUG: {
     COLORS: {
       HIGHLIGHT: '#f03a47'
     }
   },
-
   FONTS: {
     DEFAULT: 'SourceSansPro-Black'
   },
@@ -79,6 +81,7 @@ export default {
     GRAY_3: '#D9E3ED',
     GRAY_4: '#F4F5F6',
     WHITE:  '#FFFFFF',
+    CLEAR:  'rgba(0, 0, 0, 0)',
 
     TRANSPARENT: 'transparent',
 

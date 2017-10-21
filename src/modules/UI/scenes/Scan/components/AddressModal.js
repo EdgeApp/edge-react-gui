@@ -4,6 +4,7 @@ import {
   Alert,
   Clipboard
 } from 'react-native'
+import * as Constants from '../../../../../constants/indexConstants'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -58,7 +59,7 @@ export default class AddressModal extends Component<Props,State> {
   }
 
   render () {
-    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
+    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color='#2A5799'
       style={styles.icon} />
 
     const copyMessage

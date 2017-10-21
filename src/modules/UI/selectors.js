@@ -2,7 +2,8 @@
 // @flow
 import type {State} from '../ReduxTypes'
 import type {
-  GuiDenomination
+  GuiDenomination,
+  GuiWallet
 } from '../../types'
 
 export const getWallets = (state: State) => {
@@ -53,8 +54,11 @@ export const getDenominations = (state: State, currencyCode: string) => {
   return denominations
 }
 
-export const getExchangeDenomination = (state: State, currencyCode: string): GuiDenomination => {
-  const wallet = getSelectedWallet(state)
+export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
+  let wallet = getSelectedWallet(state)
+  if (specificWallet) {
+    wallet = getWallet(state, specificWallet.id)
+  }
   for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
     const denomination = wallet.allDenominations[currencyCode][key]
     if (denomination.name === currencyCode) return denomination

@@ -15,6 +15,9 @@ import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
+import * as actions from '../../actions/indexActions'
+import * as Constants from '../../constants/indexConstants'
+import strings from '../../locales/default'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 export const LOGOUT = 'LOGOUT'
 
@@ -44,7 +47,9 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
         dispatch(loadSettings())
         return
       }
-      // TODO: Allen - create wallets here since there are no existing wallets
+      // TODO: Allen - Turn on when Bitcoin is turned back on
+      //dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
+      dispatch(actions.createCurrencyWallet(strings.enUS['string_first_ethereum_wallet_name'], Constants.ETHEREUM_WALLET, Constants.USD_FIAT))
       dispatch(loadSettings())
     })
 }

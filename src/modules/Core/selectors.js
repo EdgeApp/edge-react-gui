@@ -1,5 +1,5 @@
 // Core/selectors.js
-
+import type {AbcWallet} from 'airbitz-core-types'
 export const getCore = (state) => state.core
 
 // Context
@@ -65,7 +65,7 @@ export const getWallets = (state): AbcCurrencyWallet => {
   return wallets
 }
 
-export const getWallet = (state, walletId) => {
+export const getWallet = (state, walletId): AbcWallet => {
   const wallets = getWallets(state)
   const wallet = wallets[walletId]
   return wallet
