@@ -49,7 +49,7 @@ module.exports = {
         "jsx-quotes": ["error", "prefer-single"],
         "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
         "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-        "object-curly-spacing": ["error", "never", { "objectsInObjects": true }],
+        // "object-curly-spacing": ["error", "never", { "objectsInObjects": true }],
         "operator-assignment": ["error", "never"],
         "keyword-spacing": ["error", {
           "before": true,

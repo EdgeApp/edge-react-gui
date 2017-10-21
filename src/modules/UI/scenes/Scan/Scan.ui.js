@@ -24,6 +24,7 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles, {styles as styleRaw} from './style'
+import ABAlert from '../../components/ABAlert/indexABAlert'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
@@ -147,6 +148,7 @@ export default class Scan extends Component<any, any> {
 
           </Gradient>
         </View>
+        <ABAlert />
       </View>
     )
   }

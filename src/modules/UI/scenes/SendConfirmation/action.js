@@ -27,6 +27,7 @@ export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
 
 import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action'
+import * as Constants from '../../../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 // import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -112,7 +113,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
         title: 'Transaction Sent',
         message: 'Your transaction has been successfully sent.'
       }
-      dispatch(openABAlert(successInfo))
+      dispatch(openABAlert(Constants.OPEN_AB_ALERT, successInfo))
     })
     .catch((e) => {
       // console.log(e)
@@ -122,7 +123,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
         title: 'Transaction Failure',
         message: e.message
       }
-      dispatch(openABAlert(errorInfo))
+      dispatch(openABAlert(Constants.OPEN_AB_ALERT, errorInfo))
     })
 }
 
