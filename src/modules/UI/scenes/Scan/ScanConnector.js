@@ -26,6 +26,7 @@ const mapStateToProps = (state) => {
     abcWallet,
     sceneName,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
+    scanEnabled: state.ui.scenes.scan.scanEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
     scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility

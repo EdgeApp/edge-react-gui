@@ -29,6 +29,7 @@ type Props = {
   abcWallet: AbcCurrencyWallet,
   sceneName: string,
   torchEnabled: boolean,
+  scanEnabled: boolean,
   walletListModalVisible: boolean,
   scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
@@ -168,7 +169,7 @@ export default class Scan extends Component<any, any> {
   }
 
   onBarCodeRead = (scan: {data: any}) => {
-    if (this.props.sceneName !== 'scan') return
+    if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
   }

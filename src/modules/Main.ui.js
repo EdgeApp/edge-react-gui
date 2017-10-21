@@ -91,6 +91,8 @@ type Props = {
   addUsernames: (Array<string>) => void,
   setLocaleInfo: (any) => void,
   setDeviceDimensions: (any) => void,
+  dispatchEnableScan: () => void,
+  dispatchDisableScan: () => void,
   contextCallbacks: AbcContextCallbacks
 }
 
@@ -217,7 +219,7 @@ export default class Main extends Component<Props, State> {
                         </Stack>
                         <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                         </Stack>
                         <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
