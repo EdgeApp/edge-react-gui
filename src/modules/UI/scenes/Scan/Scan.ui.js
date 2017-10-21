@@ -29,9 +29,12 @@ type Props = {
   abcWallet: AbcCurrencyWallet,
   sceneName: string,
   torchEnabled: boolean,
+  scanEnabled: boolean,
   walletListModalVisible: boolean,
   scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
+  dispatchEnableScan(): void,
+  dispatchDisableScan(): void,
   toggleEnableTorch(): void,
   toggleAddressModal():void,
   toggleWalletListModal(): void,
@@ -168,7 +171,7 @@ export default class Scan extends Component<any, any> {
   }
 
   onBarCodeRead = (scan: {data: any}) => {
-    if (this.props.sceneName !== 'scan') return
+    if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
   }
@@ -180,9 +183,14 @@ export default class Scan extends Component<any, any> {
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
-      Alert.alert('Scanning Error', error.toString())
-      // show popup with error message
-      // console.log(error)
+      this.props.dispatchDisableScan()
+      Alert.alert(
+        strings.enUS['fragment_send_send_bitcoin_unscannable'],
+        error.toString(),
+        [
+          {text: strings.enUS['string_ok'], onPress: () => this.props.dispatchEnableScan()},
+        ]
+      )
     }
   }
 

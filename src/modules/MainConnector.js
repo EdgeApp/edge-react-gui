@@ -10,11 +10,18 @@ import {addContext} from './Core/Context/action.js'
 import {addCurrencyPlugin} from './UI/Settings/action.js'
 import {addUsernames} from './Core/Context/action'
 import {setLocaleInfo} from './UI/locale/action'
+import {enableScan, disableScan} from './UI/scenes/Scan/action'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
 const mapStateToProps = (state: State) => ({routes: state.routes})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  dispatchEnableScan: () => {
+    return dispatch(enableScan())
+  },
+  dispatchDisableScan: () => {
+    return dispatch(disableScan())
+  },
   addExchangeTimer: () => dispatch(addExchangeTimer()),
   addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),
   setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
