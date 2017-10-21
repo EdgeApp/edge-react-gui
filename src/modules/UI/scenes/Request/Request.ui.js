@@ -15,6 +15,7 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import {bns} from 'biggystring'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
@@ -35,7 +36,8 @@ export default class Request extends Component {
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(receiveAddress) : ''
+        const abcEncodeUri: AbcEncodeUri = {publicAddress}
+        const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
           encodedURI,
           publicAddress
@@ -51,7 +53,8 @@ export default class Request extends Component {
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
-      const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(receiveAddress) : ''
+      const abcEncodeUri: AbcEncodeUri = {publicAddress}
+      const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
       this.setState({
         encodedURI,
         publicAddress
@@ -68,7 +71,7 @@ export default class Request extends Component {
 
     const parsedURI = {
       publicAddress: this.state.publicAddress,
-      nativeAmount: primaryNativeAmount
+      nativeAmount: bns.gt(primaryNativeAmount, '0') ? primaryNativeAmount : null
     }
     const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
