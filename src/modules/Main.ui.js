@@ -30,6 +30,7 @@ import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswor
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
 import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
+import HelpButton from './UI/components/Header/Component/HelpButton.ui'
 
 import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
 import Request from './UI/scenes/Request/index'
@@ -45,6 +46,7 @@ import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmati
 
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
+import HelpModal from './UI/components/HelpModal'
 import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
 import MenuIcon from '../assets/images/walletlist/sort.png'
@@ -213,13 +215,13 @@ export default class Main extends Component<Props, State> {
                       {/*<Gradient>*/}
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
-                          <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} />
+                          <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
                           <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
+                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                         </Stack>
                         <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
@@ -246,6 +248,7 @@ export default class Main extends Component<Props, State> {
             </Overlay>
           </RouterWithRedux>
 
+          <HelpModal style={{flex: 1}} />
           <ErrorAlert/>
           <TransactionAlert/>
 
