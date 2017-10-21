@@ -324,11 +324,8 @@ export default class TransactionList extends Component {
   }
 
   renderTx = (tx, completedTxList) => {
-    let txColorStyle
+    let txColorStyle, txImage, lastOfDate, thumbnailPath, pendingTimeStyle, pendingTimeSyntax
     let txName = ''
-    let txImage
-    let lastOfDate
-    let thumbnailPath
 
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
@@ -375,6 +372,14 @@ export default class TransactionList extends Component {
       fiatAmountString = (0.00).toFixed(2)
     }
 
+    if (tx.blockHeight === -1) {
+      pendingTimeStyle = styles.transactionPending
+      pendingTimeSyntax = strings.enUS['fragment_wallet_unconfirmed']
+    } else {
+      pendingTimeStyle = styles.transactionTime
+      pendingTimeSyntax = tx.time
+    }
+
     return (
       <View style={[styles.singleTransactionWrap]}>
         {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
@@ -409,8 +414,8 @@ export default class TransactionList extends Component {
                 <T style={[styles.transactionPartner]}>
                   {tx.metadata.name || txName}
                 </T>
-                <T style={[styles.transactionTime]}>
-                  {tx.time}
+                <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>
+                  {pendingTimeSyntax}
                 </T>
               </View>
 
