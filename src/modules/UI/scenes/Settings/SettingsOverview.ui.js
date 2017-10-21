@@ -8,7 +8,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
-import * as Constants from '../../../../constants'
+import * as Constants from '../../../../constants/indexConstants'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
@@ -148,7 +148,7 @@ export default class SettingsOverview extends Component {
         <Gradient style={[styles.unlockRow]}>
           <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
             <View style={styles.leftArea}>
-              <FAIcon style={[styles.icon, b('green')]} name='user-o' />
+              <FAIcon style={[styles.icon, b('green')]} name={Constants.USER_O} />
               <T style={styles.accountBoxHeaderText}>
                 {strings.enUS['settings_account_title_cap']}: {this.props.username}
               </T>

@@ -835,6 +835,11 @@ const strings = {
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
   title_Password_Recovery: 'Password Recovery',
+  title_Exchange: 'Exchange',
+  dropdown_exchange_max_amount: 'Exchange Max Amount',
+  
+  string_first_ethereum_wallet_name: 'My Ethereum Wallet',
+  strings_first_bitcoin_44_wallet_name: 'My Bitcoin Wallet',
 
   // help modal
   help_modal_title: 'Crypto Wallet and Directory',

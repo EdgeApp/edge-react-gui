@@ -24,7 +24,7 @@ import {MenuContext} from 'react-native-menu'
 import getTheme from '../theme/components'
 import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
-import * as Constants from '../constants'
+import * as Constants from '../constants/indexConstants'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
@@ -35,6 +35,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import Request from './UI/scenes/Request/index'
 import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
+import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
 import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
@@ -218,7 +219,7 @@ export default class Main extends Component<Props, State> {
                         <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
                           <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={Request} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />

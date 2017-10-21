@@ -8,7 +8,7 @@ export const styles = {
     alignSelf: 'flex-end'
   },
   stylizedButton: {
-    height: 44,
+    height: THEME.BUTTONS.HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
