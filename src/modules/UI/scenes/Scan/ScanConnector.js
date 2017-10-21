@@ -6,9 +6,9 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
-import {toggleEnableTorch, toggleAddressModal} from './action'
 import {loginWithEdge} from '../../../../actions/indexActions'
 import type {AbcParsedUri, AbcCurrencyWallet} from 'airbitz-core-types'
+import {toggleEnableTorch, toggleAddressModal, disableScan, enableScan} from './action'
 import {
   updateParsedURI,
   updateWalletTransfer
@@ -27,6 +27,7 @@ const mapStateToProps = (state: any) => {
     abcWallet,
     sceneName,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
+    scanEnabled: state.ui.scenes.scan.scanEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
     scanFromWalletListModalVisibility: state.ui.scenes.scan.scanFromWalletListModalVisibility,
     scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility
@@ -34,6 +35,8 @@ const mapStateToProps = (state: any) => {
 }
 
 const mapDispatchToProps = (dispatch: any) => ({
+  dispatchEnableScan: () => dispatch(enableScan()),
+  dispatchDisableScan: () => dispatch(disableScan()),
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),

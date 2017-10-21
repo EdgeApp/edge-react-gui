@@ -29,6 +29,17 @@ const recipientAddress = (state = '', action) => {
   }
 }
 
+const scanEnabled = (state = false, action) => {
+  switch (action.type) {
+  case ACTION.ENABLE_SCAN:
+    return true
+  case ACTION.DISABLE_SCAN:
+    return false
+  default:
+    return state
+  }
+}
+
 const selectedWalletListModalVisibility = (state = false, action) => {
   switch (action.type) {
   case WALLET_LIST_MODAL_ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL :
@@ -71,6 +82,7 @@ const scan = combineReducers({
   torchEnabled,
   addressModalVisible,
   recipientAddress,
+  scanEnabled,
   selectedWalletListModalVisibility,
   scanToWalletListModalVisibility
 })
