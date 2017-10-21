@@ -25,8 +25,8 @@ export default class AddressModal extends Component {
     }
   }
 
-  componentDidMount () {
-    const coreWallet = this.props.coreWallet
+  _setClipboard (props: Props) {
+    const coreWallet = props.coreWallet
     Clipboard.getString().then((uri) => {
       try {
         // Will throw in case uri is invalid
@@ -41,6 +41,14 @@ export default class AddressModal extends Component {
         // console.log(e)
       }
     })
+  }
+
+  componentDidMount () {
+    this._setClipboard(this.props)
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    this._setClipboard(nextProps)
   }
 
   render () {
