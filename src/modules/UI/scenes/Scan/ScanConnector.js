@@ -5,7 +5,7 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
-import {toggleEnableTorch, toggleAddressModal} from './action'
+import {toggleEnableTorch, toggleAddressModal, disableScan, enableScan} from './action'
 
 import {
   updateParsedURI,
@@ -34,6 +34,12 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
+  dispatchEnableScan: () => {
+    return dispatch(enableScan())
+  },
+  dispatchDisableScan: () => {
+    return dispatch(disableScan())
+  },
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),
