@@ -25,6 +25,7 @@ export default class Request extends Component {
     this.state = {
       primaryNativeAmount: '',
       secondaryNativeAmount: '',
+      publicAddress: '',
       encodedURI: '',
       loading: props.loading
     }
@@ -125,7 +126,7 @@ export default class Request extends Component {
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.state.encodedURI)
+    Clipboard.setString(this.state.publicAddress)
     Alert.alert('Request copied to clipboard')
   }
 
