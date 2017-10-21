@@ -4,7 +4,7 @@ import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-c
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, AppState} from 'react-native'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import THEME from '../theme/variables/airbitz'
@@ -74,6 +74,8 @@ currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
+const EXCHANGE_RATE_TIMER_MS = 30000
+
 import ENV from '../../env.json'
 
 const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
@@ -84,6 +86,7 @@ const RouterWithRedux = connect()(Router)
 type Props = {
   username?: string,
   routes: any,
+  autoLogoutTimeInSeconds: number,
   addExchangeTimer: (number) => void,
   addCurrencyPlugin: (AbcCurrencyPlugin) => void,
   setKeyboardHeight: (number) => void,
@@ -91,12 +94,17 @@ type Props = {
   addUsernames: (Array<string>) => void,
   setLocaleInfo: (any) => void,
   setDeviceDimensions: (any) => void,
+  autoLogout: () => void,
+  updateExchangeRates: () => void,
   contextCallbacks: AbcContextCallbacks
 }
 
 type State = {
   context: ?AbcContext,
-  loading: boolean
+  loading: boolean,
+  mainActive: boolean,
+  timeout: ?number,
+  exchangeTimer: any
 }
 
 StatusBar.setBarStyle('light-content', true)
@@ -138,6 +146,9 @@ export default class Main extends Component<Props, State> {
     super(props)
 
     this.state = {
+      mainActive: true,
+      timeout: undefined,
+      exchangeTimer: undefined,
       context: undefined,
       loading: true
     }
@@ -150,11 +161,22 @@ export default class Main extends Component<Props, State> {
   }
 
   componentWillUnmount () {
+    AppState.removeEventListener('change', this._handleAppStateChange)
+    clearTimeout(this.state.exchangeTimer)
+    this.setState({
+      exchangeTimer: undefined
+    })
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
 
   componentDidMount () {
+    AppState.addEventListener('change', this._handleAppStateChange)
+    const exchangeTimer = setInterval(() => {
+      this.props.updateExchangeRates()
+    }, EXCHANGE_RATE_TIMER_MS) // Dummy dispatch to allow scenes to update in mapStateToProps
+    this.setState({exchangeTimer})
+
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
     makeCoreContext(this.props.contextCallbacks)
@@ -259,5 +281,47 @@ export default class Main extends Component<Props, State> {
 
   _keyboardDidHide = () => {
     this.props.setKeyboardHeight(0)
+  }
+
+  _handleAppStateChange = (nextAppState: 'active' | 'background' | 'inactive') => {
+    if (this.foregrounded(nextAppState)) {
+      // console.log('Background -> Foreground')
+      // this.setState({mainActive: true})
+      //
+      // this.cancelAutoLogoutTimer()
+    }
+
+    if (this.backgrounded(nextAppState)) {
+      // Todo: Figure out why setState() inside _handleAppStateChange crashes app upon foreground
+      // console.log('Foreground -> Background')
+      // this.setState({mainActive: false})
+      //
+      // if (this.props.autoLogoutTimeInSeconds) this.beginAutoLogoutTimer()
+    }
+  }
+
+  foregrounded (nextAppState: 'active' | 'background' | 'inactive') {
+    return !this.state.mainActive && nextAppState === 'active'
+  }
+
+  backgrounded (nextAppState: 'active' | 'background' | 'inactive') {
+    return this.state.mainActive && nextAppState !== 'active'
+  }
+
+  beginAutoLogoutTimer () {
+    const autoLogoutTimeInMilliseconds = (this.props.autoLogoutTimeInSeconds * 1000)
+    const timeout = setTimeout(this.autoLogout, autoLogoutTimeInMilliseconds)
+    this.setState({timeout})
+  }
+
+  cancelAutoLogoutTimer () {
+    const {timeout} = this.state
+    clearTimeout(timeout)
+    this.setState({timeout: undefined})
+  }
+
+  autoLogout () {
+    // console.log('TIMEOUT')
+    this.props.autoLogout()
   }
 }

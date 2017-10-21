@@ -1,6 +1,10 @@
 // @flow
 import type {State, Dispatch} from './ReduxTypes'
 
+import * as SETTINGS_SELECTORS from './UI/Settings/selectors'
+import {logoutRequest} from './Login/action'
+import {updateExchangeRates} from './ExchangeRates/action'
+
 import {connect} from 'react-redux'
 import Main from './Main.ui'
 
@@ -13,7 +17,10 @@ import {setLocaleInfo} from './UI/locale/action'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
-const mapStateToProps = (state: State) => ({routes: state.routes})
+const mapStateToProps = (state: State) => ({
+  routes: state.routes,
+  autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
+})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   addExchangeTimer: () => dispatch(addExchangeTimer()),
   addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),
@@ -21,6 +28,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   addContext: (context) => dispatch(addContext(context)),
   addUsernames: (usernames) => dispatch(addUsernames(usernames)),
   setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
+  autoLogout: () => dispatch(logoutRequest(null)),
+  updateExchangeRates: () => { dispatch(updateExchangeRates()) },
   contextCallbacks: makeContextCallbacks(dispatch)
 })
 
