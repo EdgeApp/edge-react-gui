@@ -16,6 +16,8 @@ import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {bns} from 'biggystring'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../locales/default'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
@@ -147,10 +149,10 @@ export default class Request extends Component {
   }
 
   shareMessage = () => {
+    const APP_NAME = 'Edge Wallet'
     Share.share({
       message: this.state.encodedURI,
-      url: 'https://airbitz.co', // will need to refactor for white labeling
-      title: 'Share Airbitz Request'
+      title: sprintf(strings.enUS['request_qr_email_title'], APP_NAME)
     }, {dialogTitle: 'Share Airbitz Request'})
     .then(this.showResult)
     .catch((error) => this.setState({
