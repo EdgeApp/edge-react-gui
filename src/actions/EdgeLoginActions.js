@@ -2,7 +2,7 @@
 import * as actions from './indexActions'
 import type { AbcLobby } from 'airbitz-core-types'
 import * as Constants from '../constants/indexConstants'
-
+import {Actions} from 'react-native-router-flux'
 export function storeLobby (type: string, data: AbcLobby) {
   return {
     type,
@@ -15,48 +15,22 @@ export const loginWithEdge = (url: string) => async (
   getState: any
 ) => {
   const splitArray = url.split('edge/')
-  console.log(splitArray[1])
   const state = getState()
   const account = state.core.account
   const lobby: AbcLobby = await account.fetchLobby(splitArray[1]).catch((e) => {
-    dispatch(
-      actions.openABAlert(Constants.OPEN_AB_ALERT, {
-        title: 'Error',
-        meassage: e.message,
-        buttons: [
-          {
-            text: 'TRY AGAIN ',
-            onPress: dispatch(actions.dispatchAction(Constants.CLOSE_AB_ALERT)),
-            style: 'ok'
-          }
-        ]
-      })
-    )
+    dispatch(actions.dispatchActionString(Constants.SET_LOBBY_ERROR,e.message))
+    return
   })
-  dispatch(storeLobby(Constants.SAVE_ABC_LOBBY,lobby))
-  dispatch(
-    actions.openABAlert(Constants.OPEN_AB_ALERT, {
-      title: 'Title',
-      message: 'MEssage',
-      buttons: [
-        {
-          text: 'Close',
-          onPress: dispatch(actions.dispatchAction(Constants.CLOSE_AB_ALERT)),
-          style: 'cancel'
-        },
-        {
-          text: 'OK',
-          onPress: dispatch(actions.lobbyLogin()),
-          style: 'ok'
-        }
-      ]
-    })
-  )
+  if (lobby) {
+    dispatch(storeLobby(Constants.SAVE_ABC_LOBBY,lobby))
+  }
 }
 
 export const lobbyLogin = () => async (dispatch: any, getState: any) => {
   const state = getState()
-  await state.core.edgeLogin.loginRequest.approve()
+  dispatch(actions.dispatchAction(Constants.PROCESS_ABC_LOGIN))
+  await state.core.edgeLogin.lobby.loginRequest.approve()
   dispatch(actions.dispatchAction(Constants.INVALIDATE_ABC_LOBBY))
+  Actions.pop()
 }
 

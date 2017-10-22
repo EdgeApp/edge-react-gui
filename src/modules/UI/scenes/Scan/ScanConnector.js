@@ -1,7 +1,7 @@
 // @flow
 import {connect} from 'react-redux'
 import Scan from './Scan.ui'
-
+import * as Constants from '../../../../constants/indexConstants'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
@@ -13,6 +13,7 @@ import {
   updateParsedURI,
   updateWalletTransfer
 } from '../SendConfirmation/action.js'
+import {Actions} from 'react-native-router-flux'
 
 import {toggleWalletListModal} from '../WalletTransferList/action'
 
@@ -43,7 +44,10 @@ const mapDispatchToProps = (dispatch: any) => ({
   updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
   updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet)),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
-  loginWithEdge: (url: string) => dispatch(loginWithEdge(url))
+  loginWithEdge: (url: string) => {
+    Actions[Constants.EDGE_LOGIN](),
+    dispatch(loginWithEdge(url))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)

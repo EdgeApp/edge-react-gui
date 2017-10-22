@@ -21,3 +21,5 @@ export const CLOSE_AB_ALERT = 'CLOSE_AB_ALERT'
 // edgelogin
 export const SAVE_ABC_LOBBY = 'saveAbcLobby'
 export const INVALIDATE_ABC_LOBBY = 'invalidateAbcLobby'
+export const SET_LOBBY_ERROR = 'setLobbyError'
+export const PROCESS_ABC_LOGIN = 'setLobbyError'
