@@ -372,7 +372,7 @@ export default class TransactionList extends Component {
       fiatAmountString = (0.00).toFixed(2)
     }
 
-    if (tx.blockHeight === -1) {
+    if (tx.blockHeight <= 0) {
       pendingTimeStyle = styles.transactionPending
       pendingTimeSyntax = strings.enUS['fragment_wallet_unconfirmed']
     } else {
