@@ -1,4 +1,4 @@
-package co.airbitz.edge;
+package co.edgesecure.wallet;
 
 import android.os.Bundle;
 

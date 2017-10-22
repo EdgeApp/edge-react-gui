@@ -2169,7 +2169,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = edge;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2215,7 +2215,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = edge;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2268,7 +2268,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -2322,7 +2322,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;

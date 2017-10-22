@@ -87,7 +87,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "co.airbitz.edge"
+        applicationId "co.edgesecure.wallet"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 21000000
