@@ -13,6 +13,20 @@ import type {GuiWallet} from '../../../../../types'
 
 const DIVIDE_PRECISION = 18
 
+/* type Props = {
+  type: string,
+  walletList: Array<void>,
+  settings: Array<void>,
+  activeWalletIds: Array<void>,
+  selectedWalletId: Array<void>,
+  disableWalletListModalVisibility(): void,
+  toggleSelectedWalletListModal(): void,
+  toggleScanToWalletListModal(): void,
+  getTransactions(string, string): void,
+  selectWallet(string, string, string): void,
+  updateReceiveAddress(string, string): void
+} */
+
 export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   selectFromWallet = () => {
     LayoutAnimation.easeInEaseOut()
@@ -45,7 +59,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       <TouchableHighlight style={styles.tokenRowContainer}
         underlayColor={styleRaw.underlay.color}
         key={currencyCode} onPress={() => {
-          this.props.getTransactions(parentId, currencyCode)
+          this.props.getTransactions(parentId, currencyCode, this.props.type)
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(walletId, currencyCode)
           this.props.updateReceiveAddress(parentId, currencyCode)
@@ -85,7 +99,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet(walletId, currencyCode)
+            this.props.selectWallet(walletId, currencyCode, this.props.type)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={styles.currencyRowContent}>
