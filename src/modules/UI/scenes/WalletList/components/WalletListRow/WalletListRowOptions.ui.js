@@ -34,10 +34,7 @@ export default class WalletListRowOptions extends Component {
   }
 
   optionAction = (optionKey) => {
-    this.props.executeWalletRowOption(this.props.walletKey, optionKey, this.props.wallets, this.props.archives)
-    if (optionKey === Constants.RENAME_VALUE) {
-      this.props.updateRenameWalletInput(this.props.wallets[this.props.walletKey].name)
-    }
+    this.props.executeWalletRowOption(this.props.walletKey, optionKey)
   }
 
   render () {

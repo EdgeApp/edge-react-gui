@@ -301,7 +301,7 @@ const strings = {
   fragment_send_incorrect_password_title: 'Incorrect Password',
   fragment_send_no_satoshi_title: 'Enter an amount',
   fragment_send_no_satoshi_message: 'Please enter an amount to send',
-  fragment_send_send_to_hint: 'Bitcoin Address or Private Key',
+  fragment_send_send_to_hint: 'Public Address or Private Key',
   fragment_send_failure_title: 'Send failure',
   fragment_send_send_bitcoin_invalid: 'Invalid bitcoin address',
   fragment_send_send_bitcoin_unscannable: 'Unable to scan QR code',
