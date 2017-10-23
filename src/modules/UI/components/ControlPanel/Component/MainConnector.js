@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
   onPressOption: () => dispatch(closeSideMenu()),
-  logout:        () => dispatch(logoutRequest())
+  logout:        () => dispatch(logoutRequest(null))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
