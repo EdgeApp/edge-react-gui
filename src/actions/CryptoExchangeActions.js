@@ -29,12 +29,12 @@ export const setNativeAmount = (data: {primaryNativeAmount: string, whichWallet:
   } = data
 
   if (whichWallet === Constants.FROM) {
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, primaryNativeAmount))
-    const newToNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    let newToNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    newToNative = bns.toFixed(newToNative, 0, 0)
     dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, newToNative))
   } else {
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, primaryNativeAmount))
-    const newFromNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.reverseExchange).toFixed(8))
+    let newFromNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.reverseExchange).toFixed(8))
+    newFromNative = bns.toFixed(newFromNative, 0, 0)
     dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, newFromNative))
   }
   // make spend
