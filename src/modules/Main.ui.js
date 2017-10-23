@@ -236,7 +236,7 @@ export default class Main extends Component<Props, State> {
                      */}
                     <Scene hideNavBar>
                       {/*<Gradient>*/}
-                      <Tabs key='edge' swipeEnabled={true} navTransparent={true} showLabel={true}>
+                      <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
                           <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
@@ -252,7 +252,7 @@ export default class Main extends Component<Props, State> {
                             animation={'fade'}
                             duration={200} />
                         </Stack>
-                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderTitle={this.renderWalletListNavBar} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />
