@@ -101,9 +101,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       name = props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '' // remove commenting once metaData in Redux
       notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
       if (props.abcTransaction.metadata.amountFiat) {
-        let initial = props.abcTransaction.metadata.amountFiat
-        let absoluteInitial = bns.abs(initial.toString())
-        amountFiat = bns.toFixed(absoluteInitial, 2, 2)
+        let initial = props.abcTransaction.metadata.amountFiat.toFixed(2)
+        amountFiat = bns.abs(initial)
+        amountFiat = bns.toFixed(amountFiat, 2, 2)
       }
     }
 
