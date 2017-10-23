@@ -366,11 +366,10 @@ export default class TransactionList extends Component {
     let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
     let fiatAmountString
     if (tx.metadata.amountFiat) {
-      let fixedAmountFiat = tx.metadata.amountFiat.toFixed(2)
-      let absoluteAmountFiat = bns.abs(fixedAmountFiat)
-      fiatAmountString = UTILS.addFiatTwoDecimals(absoluteAmountFiat)
+      let fixedAmountFiat = bns.abs(tx.metadata.amountFiat.toString())
+      fiatAmountString = bns.toFixed(fixedAmountFiat, 2, 2)
     } else {
-      fiatAmountString = (0.00).toFixed(2)
+      fiatAmountString = bns.toFixed('0.00', 2, 2)
     }
 
     return (

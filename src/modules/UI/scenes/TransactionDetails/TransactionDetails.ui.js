@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native'
 import Permissions from 'react-native-permissions'
+import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
@@ -101,9 +102,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
       if (props.abcTransaction.metadata.amountFiat) {
         let initial = props.abcTransaction.metadata.amountFiat
-        let absoluteInitial = Math.abs(initial)
-        let absoluteInitialFixed = absoluteInitial.toFixed(2)
-        amountFiat = UTILS.addFiatTwoDecimals(absoluteInitialFixed)
+        let absoluteInitial = bns.abs(initial.toString())
+        amountFiat = bns.toFixed(absoluteInitial, 2, 2)
       }
     }
 
@@ -216,9 +216,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     let amountFiat
     if (parseFloat(this.state.amountFiat)) {
       const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
-      const absoluteAmountFiatOneDecimal = Math.abs(parseFloat(amountFiatOneDecimal))
-      const stringifiedAbsoluteAmountFiatOneDecimal = absoluteAmountFiatOneDecimal.toString()
-      amountFiat = UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(stringifiedAbsoluteAmountFiatOneDecimal, 2))
+      const absoluteAmountFiatOneDecimal = bns.abs(amountFiatOneDecimal)
+      amountFiat = bns.toFixed(absoluteAmountFiatOneDecimal, 2, 2)
     } else {
       amountFiat = '0.00'
     }

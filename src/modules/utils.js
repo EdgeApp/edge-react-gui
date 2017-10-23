@@ -70,17 +70,6 @@ export const border = (color: ?string) => {
 
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
 
-export const addFiatTwoDecimals = (input: string) => {
-  // console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
-  if (input.length - input.indexOf('.') === 2) { // if there is only one decimal place
-    input = input + '0' // then add a trailing zero
-  } else if (!input.includes('.')) { // if there are no decimal places
-    input = input + '.00' // then add two decimal places
-  }
-
-  return input
-}
-
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
