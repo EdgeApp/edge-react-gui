@@ -196,8 +196,8 @@ export default class TransactionList extends Component {
       logo = uiWallet.symbolImage
     }
 
-    const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto)
-    cryptoAmountString = cryptoAmount ? UTILS.truncateDecimals(cryptoAmount.toString(), 6) : '0'
+    const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
+    cryptoAmountString = cryptoAmount ? UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
 
     if (displayDenomination.symbol) {
       cryptoBalanceString = displayDenomination.symbol + ' ' + cryptoAmountString
@@ -357,19 +357,16 @@ export default class TransactionList extends Component {
     } else {
       lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
     }
-    let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(tx.nativeAmount.replace('-', ''))
+    let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
-    let amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
-    // console.log('rendering tx, tx.nativeAmount is: ', tx.nativeAmount, ' stepOne is: ' , stepOne, ' , amountString is: ', amountString)
+    let amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
     let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
     let fiatAmountString
     if (tx.metadata.amountFiat) {
-      let absoluteAmountFiat = Math.abs(tx.metadata.amountFiat)
-      let absoluteAmountFiatString = absoluteAmountFiat.toString()
-      let truncatedDecimalsAmountFiat = UTILS.truncateDecimals(absoluteAmountFiatString, 2)
-      fiatAmountString = UTILS.addFiatTwoDecimals(truncatedDecimalsAmountFiat)
+      fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
+      fiatAmountString = bns.toFixed(fiatAmountString, 2, 2)
     } else {
-      fiatAmountString = (0.00).toFixed(2)
+      fiatAmountString = '0.00'
     }
 
     if (tx.blockHeight <= 0) {

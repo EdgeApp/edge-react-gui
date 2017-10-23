@@ -8,6 +8,7 @@ import {
     TouchableWithoutFeedback,
     Linking
 } from 'react-native'
+import {abs, sub} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
 import FormattedText from '../../components/FormattedText'
@@ -80,11 +81,12 @@ class AmountArea extends Component<Props, State> {
   }
 
   render () {
-    let feeSyntax, leftData, amountStepOne, amountString
+    let feeSyntax, leftData, convertedAmount, amountString, absoluteAmount
+    absoluteAmount = abs(this.props.abcTransaction.nativeAmount)
 
     if (this.props.direction === 'receive') {
-      amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
-      amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
+      convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
+      amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
       feeSyntax = ''
       leftData = {
         color: THEME.COLORS.ACCENT_GREEN,
@@ -92,17 +94,18 @@ class AmountArea extends Component<Props, State> {
       }
     } else { // send tx
       if (UTILS.isCryptoParentCurrency(this.props.selectedWallet, this.props.cryptoCurrencyCode)) { // stub, check BTC vs. ETH (parent currency)
-        amountStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
-        const feeStepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.networkFee)
-        const amountMinusFee = parseFloat(amountStepOne) - parseFloat(feeStepOne)
-        amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountMinusFee.toString(), 6)))
-        const feeString = Math.abs(parseFloat(UTILS.truncateDecimals(feeStepOne, 6)))
+        convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
+        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.networkFee) // convert fee to correct denomination
+        const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
+        const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
+        amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
+        const feeString = abs(UTILS.truncateDecimals(convertedFee, 6)) // fee should never be negative
         feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
         leftData = {
           color: THEME.COLORS.ACCENT_RED,
           syntax: strings.enUS['fragment_transaction_expense']}
       } else { // do not show fee, because token
-        amountString = Math.abs(parseFloat(UTILS.truncateDecimals(amountStepOne, 6)))
+        amountString = absoluteAmount
         feeSyntax = ''
         leftData = {
           color: THEME.COLORS.ACCENT_RED,

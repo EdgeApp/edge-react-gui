@@ -12,6 +12,7 @@ import {
   Keyboard,
 } from 'react-native'
 import Permissions from 'react-native-permissions'
+import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
@@ -99,7 +100,11 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       cat = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
       name = props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '' // remove commenting once metaData in Redux
       notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
-      amountFiat = props.abcTransaction.metadata.amountFiat ? props.abcTransaction.metadata.amountFiat.toString() : '0.00'
+      if (props.abcTransaction.metadata.amountFiat) {
+        let initial = props.abcTransaction.metadata.amountFiat.toFixed(2)
+        amountFiat = bns.abs(initial)
+        amountFiat = bns.toFixed(amountFiat, 2, 2)
+      }
     }
 
     if (cat) {
@@ -211,9 +216,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     let amountFiat
     if (parseFloat(this.state.amountFiat)) {
       const amountFiatOneDecimal = this.state.amountFiat.toString().replace(/[^\d.,]/, '')
-      const absoluteAmountFiatOneDecimal = Math.abs(parseFloat(amountFiatOneDecimal))
-      const stringifiedAbsoluteAmountFiatOneDecimal = absoluteAmountFiatOneDecimal.toString()
-      amountFiat = UTILS.addFiatTwoDecimals(UTILS.truncateDecimals(stringifiedAbsoluteAmountFiatOneDecimal, 2))
+      const absoluteAmountFiatOneDecimal = bns.abs(amountFiatOneDecimal)
+      amountFiat = bns.toFixed(absoluteAmountFiatOneDecimal, 2, 2)
     } else {
       amountFiat = '0.00'
     }

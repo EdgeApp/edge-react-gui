@@ -1,6 +1,6 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {div, mul, gte} from 'biggystring'
+import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
@@ -70,17 +70,6 @@ export const border = (color: ?string) => {
 
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
 
-export const addFiatTwoDecimals = (input: string) => {
-  // console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
-  if (input.length - input.indexOf('.') === 1) {
-    input = input + '0'
-  } else if (!input.includes('.')) {
-    input = input + '.00'
-  }
-
-  return input
-}
-
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
@@ -107,6 +96,19 @@ export const formatNumber = (input: string): string => {
     out = '0' + out
   }
   return out
+}
+
+export const decimalOrZero = (input: string, decimalPlaces: number): string => {
+  if (gte(input, '1')) { // do nothing to numbers greater than one
+    return input
+  } else {
+    let truncatedToDecimals = toFixed(input, decimalPlaces, decimalPlaces)
+    if (eq(truncatedToDecimals, '0')) { // cut off to number of decimal places equivalent to zero?
+      return '0' // then return zero
+    } else { // if not equivalent to zero
+      return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
+    }
+  }
 }
 
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
