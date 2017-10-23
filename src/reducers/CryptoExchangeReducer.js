@@ -18,11 +18,29 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
   case Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE:
-    return {...state, fromWallet: action.data.wallet,fromCurrencyCode:action.data.currencyCode, changeWallet: Constants.NONE}
+    return {...state,
+      fromWallet: action.data.wallet,
+      fromCurrencyCode:action.data.currencyCode,
+      changeWallet: Constants.NONE,
+      fromNativeAmount: '0',
+      toNativeAmount:'0'}
   case Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE:
-    return {...state, toWallet: action.data.wallet,toCurrencyCode:action.data.currencyCode, changeWallet: Constants.NONE}
+    return {...state,
+      toWallet: action.data.wallet,
+      toCurrencyCode:action.data.currencyCode,
+      changeWallet: Constants.NONE,
+      fromNativeAmount: '0',
+      toNativeAmount:'0'
+    }
   case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
-    return {...state, toWallet: state.fromWallet, fromWallet: state.toWallet}
+    return {...state,
+      toWallet: state.fromWallet,
+      fromWallet: state.toWallet,
+      toCurrencyCode: state.toCurrencyCode,
+      fromCurrencyCode: state.fromCurrencyCode,
+      toNativeAmount: state.toNativeAmount,
+      fromNativeAmount: state.fromNativeAmount
+    }
   case Constants.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
     return {...state, walletListModalVisible: false}
   case Constants.OPEN_WALLET_SELECTOR_MODAL:

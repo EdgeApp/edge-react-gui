@@ -62,6 +62,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
 
 export const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
   launchWalletSelector: ownProps.launchWalletSelector,
+  //setNativeAmount: (data) => ownProps.changeNativeAmount(data)
   setNativeAmount: (data: {primaryNativeAmount: string, whichWallet: string}) => dispatch(actions.setNativeAmount(data))
 })
 

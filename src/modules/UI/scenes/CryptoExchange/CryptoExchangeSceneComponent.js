@@ -57,6 +57,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
       this.props.selectToWallet(nextProps.intialWalletTwo)
     }
   }
+
   flipThis = () => {
     this.props.swapFromAndToWallets()
   }

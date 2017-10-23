@@ -21,24 +21,28 @@ function setShapeTransaction (type: string, data: AbcTransaction) {
 
 export const setNativeAmount = (data: {primaryNativeAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
   const state = getState()
-  const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
-  const toWallet: GuiWallet = state.cryptoExchange.fromWallet
+  // const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
+  // const toWallet: GuiWallet = state.cryptoExchange.fromWallet
   const  {
     whichWallet,
     primaryNativeAmount
   } = data
 
   if (whichWallet === Constants.FROM) {
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, primaryNativeAmount))
     let newToNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.exchangeRate).toFixed(8))
-    newToNative = bns.toFixed(newToNative, 0, 0)
+    //newToNative = bns.toFixed(newToNative, 0, 0)
     dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, newToNative))
+
   } else {
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, primaryNativeAmount))
     let newFromNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.reverseExchange).toFixed(8))
     newFromNative = bns.toFixed(newFromNative, 0, 0)
     dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, newFromNative))
+
   }
   // make spend
-  dispatch(getShiftTransaction(fromWallet, toWallet))
+  //dispatch(getShiftTransaction(fromWallet, toWallet))
 }
 
 
@@ -108,7 +112,7 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?
       hasFrom = wallet
     )
     : (dispatch(
-        getCryptoExchangeRate(cc, state.cryptoExchange.fromCurrencyCode)
+        getCryptoExchangeRate(state.cryptoExchange.fromCurrencyCode, cc)
       ),
       dispatch(setWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE,data)),
       hasTo = wallet
@@ -139,10 +143,10 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
   .getExchangeSwapRate(fromCurrencyCode, toCurrencyCode)
   .then((response) => {
     dispatch(actions.dispatchActionString(Constants.UPDATE_CRYPTO_EXCHANGE_RATE, response))
+    //
     return response
   })
   .catch((e) => {
-    console.log('getCryptoExchangeRate ERROR')
     console.log(e)
   })
 
@@ -153,7 +157,6 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
     return response
   })
   .catch((e) => {
-    console.log('getCryptoExchangeRate ERROR')
     console.log(e)
   })
 }

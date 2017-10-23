@@ -45,7 +45,12 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
       primaryNativeAmount,
       whichWallet
     }
-    this.props.setNativeAmount(data)
+    console.log(this.props.whichWallet+' '+ this.props.nativeAmount+' - '+primaryNativeAmount)
+    if (primaryNativeAmount != this.props.nativeAmount) {
+      console.log(this.props.whichWallet+' !==== Calling ')
+      this.props.setNativeAmount(data)
+    }
+
 
   }
 
