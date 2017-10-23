@@ -30,7 +30,7 @@ export default class HelpModal extends Component {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText='help_modal_title'
-        modalMiddle={<WebView style={{justifyContent: 'center', alignItems:'center', height: 180, width: '95%'}} source={HTML} />}
+        modalMiddle={<WebView scalesPageToFit={false} style={{justifyContent: 'center', alignItems:'center', height: 180, flex: 1}} source={HTML} />}
         modalBottom={<View style={[styles.modalBottomContainer]}>
                         <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {versionNumber}</Text>
                         <Text style={styles.modalBottomText}>{strings.enUS['help_build']} {buildNumber}</Text>
