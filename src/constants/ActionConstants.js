@@ -1,3 +1,4 @@
+//Crypto Exchagnge
 export const SELECT_FROM_WALLET_CRYPTO_EXCHANGE = 'selectFromWalletCryptoExchange_ALLENROCKS'
 export const SELECT_TO_WALLET_CRYPTO_EXCHANGE = 'selectToWalletCryptoExchange'
 export const SWAP_FROM_TO_CRYPTO_WALLETS = 'swapFromToCryptoWallets'
@@ -12,3 +13,13 @@ export const OPEN_CRYPTO_EXC_CONF_MODAL = 'openCryptoExecConfModal'
 export const CLOSE_CRYPTO_EXC_CONF_MODAL = 'closeCryptoExecConfModal'
 export const SET_CRYPTO_FROM_NATIVE_AMOUNT = 'setCryptoFromNativeAmount'
 export const SET_CRYPTO_TO_NATIVE_AMOUNT = 'setCryptoToNativeAmount'
+
+// Alert
+export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
+export const CLOSE_AB_ALERT = 'CLOSE_AB_ALERT'
+
+// edgelogin
+export const SAVE_ABC_LOBBY = 'saveAbcLobby'
+export const INVALIDATE_ABC_LOBBY = 'invalidateAbcLobby'
+export const SET_LOBBY_ERROR = 'setLobbyError'
+export const PROCESS_ABC_LOGIN = 'setLobbyError'
