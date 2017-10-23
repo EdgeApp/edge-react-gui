@@ -81,7 +81,7 @@ const EXCHANGE_RATE_TIMER_MS = 30000
 
 import ENV from '../../env.json'
 
-const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
+const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
@@ -132,7 +132,8 @@ function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   const opts = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,
-    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)]
+    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+    shapeshiftKey: SHAPESHIFT_API_KEY
   }
 
   if (ENV.USE_FAKE_CORE) {

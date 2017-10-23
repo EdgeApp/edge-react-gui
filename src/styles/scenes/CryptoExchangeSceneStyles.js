@@ -72,7 +72,7 @@ const CryptoExchangeSceneStyle = {
       left:0,
       height:29,
       width:29,
-      backgroundColor: THEME.COLORS.WHITE,
+      backgroundColor: THEME.COLORS.TRANSPARENT,
       borderRadius: 15,
       alignItems:'center',
       justifyContent:'space-around'
