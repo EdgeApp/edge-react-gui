@@ -236,7 +236,7 @@ export default class Main extends Component<Props, State> {
                      */}
                     <Scene hideNavBar>
                       {/*<Gradient>*/}
-                      <Tabs key='edge' swipeEnabled={true} navTransparent={true} showLabel={true}>
+                      <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
                           <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
