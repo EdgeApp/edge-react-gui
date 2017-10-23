@@ -1,5 +1,5 @@
 // @flow
-import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-core-types'
+import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, AbcContextOptions} from 'airbitz-core-types'
 
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
@@ -64,7 +64,7 @@ import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
-import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
+import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 // $FlowFixMe
 import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
@@ -129,10 +129,11 @@ tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
 tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
-  const opts = {
+  const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
+    shapeshiftKey: ENV.SHAPESHIFT_API_KEY,
     callbacks,
-    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)]
+    plugins: [...currencyPluginFactories, shapeshiftPlugin, coinbasePlugin]
   }
 
   if (ENV.USE_FAKE_CORE) {
