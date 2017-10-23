@@ -211,6 +211,7 @@ export default class Scan extends Component<any, any> {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        // TODO: make edgelogin work with image picker -paulvp
         /* if (/^airbitz:\/\/edge\//.test(uri)) {
           console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
           return
