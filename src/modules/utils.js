@@ -102,7 +102,7 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) { // do nothing to numbers greater than one
     return input
   } else {
-    let truncatedToDecimals = toFixed(input, decimalPlaces)
+    let truncatedToDecimals = toFixed(input, decimalPlaces, decimalPlaces)
     if (eq(truncatedToDecimals, '0')) { // cut off to number of decimal places equivalent to zero?
       return '0' // then return zero
     } else { // if not equivalent to zero
