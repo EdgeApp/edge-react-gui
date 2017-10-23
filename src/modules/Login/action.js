@@ -101,8 +101,8 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     })
 }
 
-export const logoutRequest = (username: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.replace('login', {username})
+export const logoutRequest = (username: string | null) => (dispatch: Dispatch, getState: GetState) => {
+  Actions.popTo(Constants.LOGIN, {username})
 
   const state = getState()
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
@@ -114,8 +114,8 @@ export const logoutRequest = (username: string) => (dispatch: Dispatch, getState
    })
 }
 
-export type LogoutAction = { type: 'LOGOUT', data: { username: string } }
-export const logout = (username: string): LogoutAction => ({
+export type LogoutAction = { type: 'LOGOUT', data: { username: string | null } }
+export const logout = (username: string | null): LogoutAction => ({
   type: LOGOUT,
   data: {username}
 })

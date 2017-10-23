@@ -12,24 +12,11 @@ export const SELECT_CURRENCY_CODE = PREFIX + 'SELECT_CURRENCY_CODE'
 import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
-import * as Actions from '../../../actions/indexActions'
-import * as Constants from '../../../constants/indexConstants'
 import {GuiWallet} from '../../../types'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 
 export const selectWallet = (walletId: string, currencyCode: string) =>
-  (dispatch: any, getState: any) => {
-    const state = getState()
-
-    const sceneName = state.routes.scene.children
-      ? state.routes.scene.children[0].name
-      : null
-
-    if (sceneName === Constants.EXCHANGE) {
-      dispatch(Actions.selectWalletForExchange(walletId,currencyCode))
-      return
-    }
-
+  (dispatch: any) => {
     dispatch(selectWalletId(walletId))
     dispatch(selectCurrencyCode(currencyCode))
   }
