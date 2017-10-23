@@ -7,7 +7,8 @@ export default StyleSheet.create({
   },
   sideTextWrap: {
     paddingTop: 3,
-    paddingBottom: 3
+    paddingBottom: 3,
+    paddingLeft: 10
   },
   sideText: {
     color: THEME.COLORS.WHITE,

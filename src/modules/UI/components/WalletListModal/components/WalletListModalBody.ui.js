@@ -13,6 +13,20 @@ import type {GuiWallet} from '../../../../../types'
 
 const DIVIDE_PRECISION = 18
 
+/* type Props = {
+  type: string,
+  walletList: Array<void>,
+  settings: Array<void>,
+  activeWalletIds: Array<void>,
+  selectedWalletId: Array<void>,
+  disableWalletListModalVisibility(): void,
+  toggleSelectedWalletListModal(): void,
+  toggleScanToWalletListModal(): void,
+  getTransactions(string, string): void,
+  selectWallet(string, string, string): void,
+  updateReceiveAddress(string, string): void
+} */
+
 export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   selectFromWallet = () => {
     LayoutAnimation.easeInEaseOut()
@@ -45,7 +59,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       <TouchableHighlight style={styles.tokenRowContainer}
         underlayColor={styleRaw.underlay.color}
         key={currencyCode} onPress={() => {
-          this.props.getTransactions(parentId, currencyCode)
+          this.props.getTransactions(parentId, currencyCode, this.props.type)
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(walletId, currencyCode)
           this.props.updateReceiveAddress(parentId, currencyCode)
@@ -66,7 +80,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     )
   }
 
-  renderWalletRow = (guiWallet: GuiWallet, i: number) => {
+  renderWalletRow = (guiWallet: GuiWallet) => {
     let multiplier
       = guiWallet
       .allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination]
@@ -79,13 +93,13 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
     return (
-      <View key={i}>
+      <View key={guiWallet.id}>
         <TouchableHighlight style={styles.rowContainer}
           underlayColor={styleRaw.underlay.color}
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet(walletId, currencyCode)
+            this.props.selectWallet(walletId, currencyCode, this.props.type)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={styles.currencyRowContent}>
@@ -108,16 +122,10 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   }
 
   renderWalletRows () {
-    let i = -1
-    let rows = []
-    for (const n in this.props.walletList) {
-      i = i + 1
-      const guiWallet = this.props.walletList[n]
-      if (typeof guiWallet.id !== 'undefined' && this.props.activeWalletIds.includes(guiWallet.id)) {
-        rows.push(this.renderWalletRow(guiWallet, i))
-      }
-    }
-    return rows
+    return this.props.activeWalletIds
+      .map((id) => this.props.walletList[id])
+      .filter(({id}) => id !== 'undefined')
+      .map(this.renderWalletRow)
   }
 
   render () {

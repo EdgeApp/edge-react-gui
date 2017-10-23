@@ -24,18 +24,23 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles, {styles as styleRaw} from './style'
+import ABAlert from '../../components/ABAlert/indexABAlert'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
   sceneName: string,
   torchEnabled: boolean,
+  scanEnabled: boolean,
   walletListModalVisible: boolean,
   scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
+  dispatchEnableScan(): void,
+  dispatchDisableScan(): void,
   toggleEnableTorch(): void,
   toggleAddressModal():void,
   toggleWalletListModal(): void,
-  updateParsedURI(AbcParsedUri): void
+  updateParsedURI(AbcParsedUri): void,
+  loginWithEdge(string): void
 }
 
 const HEADER_TEXT     = strings.enUS['send_scan_header_text']
@@ -143,6 +148,7 @@ export default class Scan extends Component<any, any> {
 
           </Gradient>
         </View>
+        <ABAlert />
       </View>
     )
   }
@@ -168,21 +174,30 @@ export default class Scan extends Component<any, any> {
   }
 
   onBarCodeRead = (scan: {data: any}) => {
-    if (this.props.sceneName !== 'scan') return
+    if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
   }
 
   parseURI = (uri: string) => {
     try {
+      if (/^airbitz:\/\/edge\//.test(uri)) {
+        this.props.loginWithEdge(uri)
+        return
+      }
       // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
-      Alert.alert('Scanning Error', error.toString())
-      // show popup with error message
-      // console.log(error)
+      this.props.dispatchDisableScan()
+      Alert.alert(
+        strings.enUS['fragment_send_send_bitcoin_unscannable'],
+        error.toString(),
+        [
+          {text: strings.enUS['string_ok'], onPress: () => this.props.dispatchEnableScan()},
+        ]
+      )
     }
   }
 
@@ -196,7 +211,11 @@ export default class Scan extends Component<any, any> {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
+        // TODO: make edgelogin work with image picker -paulvp
+        /* if (/^airbitz:\/\/edge\//.test(uri)) {
+          console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
+          return
+        }*/
         Actions.sendConfirmation()
       }
     })

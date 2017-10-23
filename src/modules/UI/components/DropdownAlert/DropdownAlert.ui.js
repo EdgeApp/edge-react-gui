@@ -25,8 +25,7 @@ export default class DropdownAlert extends Component<Props> {
       onPress={onPress}
       panResponderEnabled={false}
       updateStatusBar={false}
-      startDelta={-10}
-      endDelta={44}
+      endDelta={20}
       onClose={onClose}>
       {children}
     </RNDropdownAlert>

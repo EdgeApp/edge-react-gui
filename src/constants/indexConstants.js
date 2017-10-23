@@ -11,3 +11,6 @@ export const NONE ='none'
 export const FROM ='from'
 export const TO ='to'
 export const ALWAYS ='always'
+
+
+export const CRYPTO_EXCHANGE ='cryptoExchange'

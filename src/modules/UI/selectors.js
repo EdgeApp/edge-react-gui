@@ -6,7 +6,7 @@ import type {
   GuiWallet
 } from '../../types'
 
-export const getWallets = (state: State) => {
+export const getWallets = (state: State)  => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
   return wallets
 }
@@ -17,12 +17,12 @@ export const getWallet = (state: State, walletId: string) => {
   return wallet
 }
 
-export const getSelectedWalletId = (state: State) => {
+export const getSelectedWalletId = (state: State): string  => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId
 }
 
-export const getSelectedCurrencyCode = (state: State) => {
+export const getSelectedCurrencyCode = (state: State): string => {
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   return selectedCurrencyCode
 }
