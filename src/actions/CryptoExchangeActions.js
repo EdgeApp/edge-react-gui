@@ -82,8 +82,13 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
       }
     ]
   }
-  let abcTransaction = await srcWallet.makeSpend(spendInfo)
-  dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, abcTransaction))
+  const srcCurrencyCode = spendInfo.currencyCode
+  const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
+
+  if (srcCurrencyCode !== destCurrencyCode) {
+    let abcTransaction = await srcWallet.makeSpend(spendInfo)
+    dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, abcTransaction))
+  }
 }
 
 export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?: string) => (dispatch: any, getState: any) => {
