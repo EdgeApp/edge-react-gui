@@ -4,12 +4,8 @@ import android.app.Application;
 
 //import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
-<<<<<<< HEAD:android/app/src/main/java/co/airbitz/edge/MainApplication.java
-import co.airbitz.core-js-ui.AbcCoreJsUiPackage;
-||||||| merged common ancestors
-=======
+import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
->>>>>>> master:android/app/src/main/java/co/edgesecure/wallet/MainApplication.java
 import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
