@@ -197,6 +197,7 @@ export const styles = {
     paddingLeft: 15,
   },
   singleTransactionWrap: {
+    backgroundColor: THEME.COLORS.WHITE,
     flexDirection: 'column',
     flex: 1,
   },
