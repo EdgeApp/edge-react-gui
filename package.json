@@ -57,7 +57,7 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-currency-bitcoin": "^0.7.2",
-    "edge-currency-ethereum": "^0.3.4",
+    "edge-currency-ethereum": "^0.3.5",
     "edge-exchange-plugins": "^0.1.1",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",

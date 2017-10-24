@@ -4,6 +4,7 @@ import android.app.Application;
 
 //import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
+import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new AbcCoreJsUiPackage(),
             new RNSoundPackage(),
             new RNSharePackage(),
             new RandomBytesPackage(),

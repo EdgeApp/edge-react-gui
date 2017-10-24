@@ -64,7 +64,7 @@ import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
-import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
+import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
 // $FlowFixMe
 import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
@@ -81,7 +81,7 @@ const EXCHANGE_RATE_TIMER_MS = 30000
 
 import ENV from '../../env.json'
 
-const AIRBITZ_API_KEY = ENV.AIRBITZ_API_KEY
+const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
@@ -133,7 +133,8 @@ function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
     apiKey: AIRBITZ_API_KEY,
     shapeshiftKey: ENV.SHAPESHIFT_API_KEY,
     callbacks,
-    plugins: [...currencyPluginFactories, shapeshiftPlugin, coinbasePlugin]
+    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+    shapeshiftKey: SHAPESHIFT_API_KEY
   }
 
   if (ENV.USE_FAKE_CORE) {
