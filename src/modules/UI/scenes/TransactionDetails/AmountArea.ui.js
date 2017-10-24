@@ -189,7 +189,7 @@ class AmountArea extends Component<Props, State> {
               left: -20
             }
           ]}
-            itemStyle={{fontFamily: 'SourceSansPro-Black', color: THEME.COLORS.GRAY_1, fontSize: 30, paddingBottom: 14}}
+            itemStyle={{fontFamily: 'SourceSansPro-Black', color: THEME.COLORS.GRAY_1, fontSize: 22, paddingBottom: 14}}
             selectedValue={this.props.type.key}
             onValueChange={(itemValue) => this.props.selectCategory({itemValue})}>
             {categories.map((x) => (
