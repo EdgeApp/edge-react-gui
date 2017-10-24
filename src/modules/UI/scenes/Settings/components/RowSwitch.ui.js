@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {
   Switch,
-  TouchableOpacity,
+  TouchableHighlight,
   View
 } from 'react-native'
 import T from '../../../components/FormattedText'
-import s from '../style'
+import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
 
 export default class RowSwitch extends Component {
@@ -24,17 +24,23 @@ export default class RowSwitch extends Component {
   }
 
   render () {
-    return (
-      <TouchableOpacity style={[s.settingsRowContainer]} disabled={false} onPress={() => this._onPressToggleSetting(this.props.property)}>
-        <View style={[s.settingsRowTextRow, b('red')]}>
-          <View style={[s.settingsRowLeftContainer, b('blue')]}>
-            <T style={[s.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
-          </View>
-          <Switch onValueChange={this._onPressToggleSetting} value={this.state.value} />
-        </View>
+    return <TouchableHighlight style={[styles.settingsRowContainer]}
+      underlayColor={styleRaw.underlay.color}
+      disabled={false}
+      onPress={() => this._onPressToggleSetting(this.props.property)}>
 
-      </TouchableOpacity>
-    )
+      <View style={[styles.settingsRowTextRow, b('red')]}>
+        <View style={[styles.settingsRowLeftContainer, b('blue')]}>
+          <T style={[styles.settingsRowLeftText, b('green')]}>
+            {this.props.leftText}
+          </T>
+        </View>
+        <Switch
+          onValueChange={() => this._onPressToggleSetting(this.props.property)}
+          value={false} />
+      </View>
+
+    </TouchableHighlight>
   }
 }
 // make sure onToggle becomes required

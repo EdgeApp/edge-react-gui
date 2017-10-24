@@ -6,8 +6,9 @@ import rootReducer from './rootReducer'
 import thunk from 'redux-thunk'
 // import createLogger from 'redux-logger'
 import loginStatusChecker from './loginStatusChecker'
+import soundsMiddleware from './soundsMiddleware'
 
-let middleware = [loginStatusChecker, thunk]
+let middleware = [loginStatusChecker, thunk, soundsMiddleware]
 // let logger = createLogger()
 
 if (__DEV__) {

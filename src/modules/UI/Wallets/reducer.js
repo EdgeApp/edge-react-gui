@@ -79,6 +79,7 @@ function schema (wallet: any): GuiWallet {
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage: string = wallet.currencyInfo.symbolImage
+  const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
 
@@ -133,6 +134,7 @@ function schema (wallet: any): GuiWallet {
     denominations,
     allDenominations,
     symbolImage,
+    symbolImageDarkMono,
     metaTokens
   )
 

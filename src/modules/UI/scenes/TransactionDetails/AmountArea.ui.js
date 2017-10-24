@@ -1,5 +1,3 @@
-// @flow
-
 import React, {Component} from 'react'
 import {
     View,
@@ -7,14 +5,17 @@ import {
     TextInput,
     TouchableOpacity,
     Keyboard,
-    TouchableWithoutFeedback
+    TouchableWithoutFeedback,
+    Linking
 } from 'react-native'
+import {abs, sub} from 'biggystring'
+import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
 import FormattedText from '../../components/FormattedText'
 import Modal from 'react-native-modal'
 import {PrimaryButton} from '../../components/Buttons'
 import styles from './style'
-import {colors} from '../../../../theme/variables/airbitz'
+import THEME from '../../../../theme/variables/airbitz'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
@@ -69,27 +70,64 @@ class AmountArea extends Component<Props, State> {
     }
   }
 
-  render () {
-    // console.log('rendering amountArea, this.props is: ', this.props, ' , and this.state is: ', this.state)
-    const stepOne = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.nativeAmount.replace('-', ''))
+  handleClick = () => {
+    Linking.canOpenURL(this.props.txExplorerUrl).then((supported) => {
+      if (supported) {
+        Linking.openURL(this.props.txExplorerUrl)
+      } else {
+        console.log('Do not know how to open URI: ' + this.props.txExplorerUrl)
+      }
+    })
+  }
 
-    const amountString = Math.abs(parseFloat(UTILS.truncateDecimals(stepOne, 6)))
+  render () {
+    let feeSyntax, leftData, convertedAmount, amountString, absoluteAmount
+    absoluteAmount = abs(this.props.abcTransaction.nativeAmount)
+
+    if (this.props.direction === 'receive') {
+      convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
+      amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(convertedAmount, 6), 6) // limit to 6 decimals, check if infinitesimal, and remove unnecessary trailing zeroes
+      feeSyntax = ''
+      leftData = {
+        color: THEME.COLORS.ACCENT_GREEN,
+        syntax: strings.enUS['fragment_transaction_income']
+      }
+    } else { // send tx
+      if (UTILS.isCryptoParentCurrency(this.props.selectedWallet, this.props.cryptoCurrencyCode)) { // stub, check BTC vs. ETH (parent currency)
+        convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
+        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.networkFee) // convert fee to correct denomination
+        const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
+        const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
+        amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
+        const feeString = abs(UTILS.truncateDecimals(convertedFee, 6)) // fee should never be negative
+        feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
+        leftData = {
+          color: THEME.COLORS.ACCENT_RED,
+          syntax: strings.enUS['fragment_transaction_expense']}
+      } else { // do not show fee, because token
+        amountString = absoluteAmount
+        feeSyntax = ''
+        leftData = {
+          color: THEME.COLORS.ACCENT_RED,
+          syntax: strings.enUS['fragment_transaction_expense']}
+      }
+    }
+
     let notes = this.props.abcTransaction.metadata ? this.props.abcTransaction.metadata.notes : ''
     if (!notes) notes = ''
 
-    const symbol = this.props.walletDefaultDenomProps.symbol || ''
     return (
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <FormattedText style={[styles.amountAreaLeftText, {color: this.props.leftData.color}]}>{strings.enUS['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
+            <FormattedText style={[styles.amountAreaLeftText, {color: leftData.color}]}>{strings.enUS['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(symbol + ' ') || ''}{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(this.props.walletDefaultDenomProps.symbol + ' ') || ''}{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
-              <FormattedText style={[styles.amountAreaMiddleBottomText]}>{this.props.feeSyntax}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleBottomText]}>{feeSyntax}</FormattedText>
             </View>
           </View>
           <View style={[styles.amountAreaRight]}>
@@ -129,8 +167,9 @@ class AmountArea extends Component<Props, State> {
             <TextInput
               blurOnSubmit
               autoCapitalize='words'
-              placeholderTextColor={colors.gray2}
+              placeholderTextColor={THEME.COLORS.GRAY_}
               onFocus={this.props.onEnterSubcategories}
+              onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput]}
               defaultValue={this.props.subCategory || ''}
@@ -142,7 +181,7 @@ class AmountArea extends Component<Props, State> {
         <Modal isVisible={this.props.categorySelectVisibility} animationIn='slideInUp' animationOut='slideOutDown' backdropColor='black' backdropOpacity={0.6}>
           <Picker style={[ UTILS.border(),
             {
-              backgroundColor: 'white',
+              backgroundColor: THEME.COLORS.WHITE,
               width: platform.deviceWidth,
               height: platform.deviceHeight / 3,
               position: 'absolute',
@@ -150,7 +189,7 @@ class AmountArea extends Component<Props, State> {
               left: -20
             }
           ]}
-            itemStyle={{fontFamily: 'SourceSansPro-Black', color: colors.gray1, fontSize: 30, paddingBottom: 14}}
+            itemStyle={{fontFamily: 'SourceSansPro-Black', color: THEME.COLORS.GRAY_1, fontSize: 30, paddingBottom: 14}}
             selectedValue={this.props.type.key}
             onValueChange={(itemValue) => this.props.selectCategory({itemValue})}>
             {categories.map((x) => (
@@ -166,7 +205,7 @@ class AmountArea extends Component<Props, State> {
               numberOfLines={3}
               defaultValue={notes}
               style={[styles.notesInput]}
-              placeholderTextColor={colors.gray2}
+              placeholderTextColor={THEME.COLORS.GRAY_}
               placeholder={strings.enUS['transaction_details_notes_title']}
               autoCapitalize='sentences'
               autoCorrect={false}
@@ -182,7 +221,7 @@ class AmountArea extends Component<Props, State> {
           <View style={[styles.buttonArea]}>
             <PrimaryButton text={strings.enUS['string_save']} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
-          <TouchableWithoutFeedback onPress={() => this.props.openModalFxn()} style={[styles.advancedTxArea]}>
+          <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
             <FormattedText style={[styles.advancedTxText]}>{strings.enUS['transaction_details_view_advanced_data']}</FormattedText>
           </TouchableWithoutFeedback>
         </View>

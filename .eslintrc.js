@@ -23,6 +23,15 @@ module.exports = {
         "flowtype"
     ],
     "rules": {
+        "max-len": ["error", {
+          "code": 200,
+          "ignoreComments": true,
+          "ignoreTrailingComments": true,
+          "ignoreUrls": true,
+          "ignoreStrings": true,
+          "ignoreTemplateLiterals": true,
+          "ignoreRegExpLiterals": true
+        }],
         "arrow-parens": ["error", "always"],
         "operator-linebreak": ["error", "before"],
         "react/jsx-curly-spacing": ["error", {
@@ -35,13 +44,12 @@ module.exports = {
         "react/self-closing-comp": ["error", {"component": true}],
         "react/no-typos": "error",
         "react/no-array-index-key": "error",
-        "arrow-body-style": ["error", "as-needed"],
         "block-spacing": ["error", "always"],
         "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
         "jsx-quotes": ["error", "prefer-single"],
         "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
-        "no-plusplus": "error",
-        "object-curly-spacing": ["error", "never", { "objectsInObjects": true }],
+        "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
+        // "object-curly-spacing": ["error", "never", { "objectsInObjects": true }],
         "operator-assignment": ["error", "never"],
         "keyword-spacing": ["error", {
           "before": true,
@@ -78,7 +86,6 @@ module.exports = {
         "react-native/no-unused-styles": 0,
         "react-native/split-platform-components": 2,
         "react-native/no-inline-styles": 0,
-        "react-native/no-color-literals": 0,
         "flowtype/no-types-missing-file-annotation": 0
     }
 };

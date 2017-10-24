@@ -1,12 +1,11 @@
 // @flow
 import borderColors from '../theme/variables/css3Colors'
-import {divf, mulf, gt} from 'biggystring'
+import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type {AbcDenomination} from 'airbitz-core-types'
-import type {
-  GuiDenomination,
-  ExchangeData
-} from '../types'
+import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction} from 'airbitz-core-types'
+import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
+
+const DIVIDE_PRECISION = 18
 
 const currencySymbolMap = require('currency-symbol-map').currencySymbolMap
 
@@ -71,17 +70,6 @@ export const border = (color: ?string) => {
 
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
 
-export const addFiatTwoDecimals = (input: string) => {
-  // console.log('input is: ', input , ' , input.length is: ', input.length, ' , input.indexOf is: ' , input.indexOf('.'), ' , and input.includes() is: ', input.includes('.'))
-  if (input.length - input.indexOf('.') === 1) {
-    input = input + '0'
-  } else if (!input.includes('.')) {
-    input = input + '.00'
-  }
-
-  return input
-}
-
 // Used to reject non-numeric (expect '.') values in the FlipInput
 export const isValidInput = (input: string): boolean =>
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Arithmetic_Operators#Unary_plus_()
@@ -110,10 +98,23 @@ export const formatNumber = (input: string): string => {
   return out
 }
 
+export const decimalOrZero = (input: string, decimalPlaces: number): string => {
+  if (gte(input, '1')) { // do nothing to numbers greater than one
+    return input
+  } else {
+    let truncatedToDecimals = toFixed(input, decimalPlaces, decimalPlaces)
+    if (eq(truncatedToDecimals, '0')) { // cut off to number of decimal places equivalent to zero?
+      return '0' // then return zero
+    } else { // if not equivalent to zero
+      return truncatedToDecimals.replace(/0+$/, '') // then return the truncation
+    }
+  }
+}
+
 // Used to convert outputs from core into other denominations (exchangeDenomination, displayDenomination)
 export const convertNativeToDenomination = (nativeToTargetRatio: string) =>
   (nativeAmount: string): string =>
-    divf(nativeAmount, nativeToTargetRatio).toString()
+    div(nativeAmount, nativeToTargetRatio, DIVIDE_PRECISION)
 
 // Alias for convertNativeToDenomination
 // Used to convert outputs from core to amounts ready for display
@@ -125,39 +126,15 @@ export const convertNativeToExchange = convertNativeToDenomination
 // Used to convert amounts from display to core inputs
 export const convertDisplayToNative = (nativeToDisplayRatio: string) =>
   (displayAmount: string): string =>
-    !displayAmount ? '' : mulf(parseFloat(displayAmount), nativeToDisplayRatio)
+    !displayAmount ? '' : mul(displayAmount, nativeToDisplayRatio)
 
-// Used to convert exchange output to amounts ready for display
-export const convertExchangeToDisplay = (displayToExchangeRatio: string) =>
-  (exchangeAmount: string): string =>
-    (parseFloat(exchangeAmount) * parseFloat(displayToExchangeRatio)).toString()
-
-// Used to convert amounts from display to exchange inputs
-export const convertDisplayToExchange = (displayToExchangeRatio: string) =>
-  (displayAmount: string): string =>
-    (parseFloat(displayAmount) / parseFloat(displayToExchangeRatio)).toString()
-
-// Used to convert amounts in their respective exchange denominations
-export const convertExchangeToExchange = (ratio: string) =>
-  (exchangeAmount: string): string =>
-    (parseFloat(exchangeAmount) * parseFloat(ratio)).toString()
-
-// Used to get the ratio used for converting a displayAmount into a
-// exchangeAmount when using the currency exchange
-export const deriveDisplayToExchangeRatio = (exchangeNativeToDisplayRatio: string) =>
-  (displayNativeToDisplayRatio: string): string =>
-    divf(exchangeNativeToDisplayRatio, displayNativeToDisplayRatio).toString()
-
-export const absoluteValue = (input: string): string => input.replace('-', '')
+export const isCryptoParentCurrency = (wallet: GuiWallet, currencyCode: string) => currencyCode === wallet.currencyCode
 
 export const getNewArrayWithoutItem = (array: Array<any>, targetItem: any) =>
   array.filter((item) => item !== targetItem)
 
 export const getNewArrayWithItem = (array: Array<any>, item: any) =>
   !array.includes(item) ? [...array, item] : array
-
-export const isGreaterThan = (comparedTo: string) =>
-   (amountString: string): boolean => gt(amountString, comparedTo)
 
 const restrictedCurrencyCodes = [
   'BTC'
@@ -217,6 +194,18 @@ export const getSupportedFiats = (): Array<{label: string, value: string}> => {
   return supportedFiats
 }
 
+/**
+ * Adds the `iso:` prefix to a currency code, if it's missing.
+ * @param {*} currencyCode A currency code we believe to be a fiat value.
+ */
+export function fixFiatCurrencyCode (currencyCode: string) {
+  // These are included in the currency-symbol-map library,
+  // and therefore might sneak into contexts where we expect fiat codes:
+  if (currencyCode === 'BTC' || currencyCode === 'ETH') return currencyCode
+
+  return /^iso:/.test(currencyCode) ? currencyCode : 'iso:' + currencyCode
+}
+
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
   !!exchangeData.primaryDisplayAmount
   && !!exchangeData.primaryDisplayName
@@ -228,3 +217,29 @@ export const unspacedLowercase = (input: string) => {
   let newInput = input.replace(' ', '').toLowerCase()
   return newInput
 }
+
+export const getCurrencyInfo = (plugins: Array<AbcCurrencyPlugin>, currencyCode: string): AbcCurrencyInfo | void => {
+  for (const plugin of plugins) {
+    const info = plugin.currencyInfo
+    for (const denomination of info.denominations) {
+      if (denomination.name === currencyCode) {
+        return info
+      }
+    }
+
+    for (const token of info.metaTokens) {
+      for (const denomination of token.denominations) {
+        if (denomination.name === currencyCode) {
+          return info
+        }
+      }
+    }
+  }
+
+  return void 0
+}
+
+export const isReceivedTransaction = (abcTransaction: AbcTransaction): boolean =>
+  gte(abcTransaction.nativeAmount, '0')
+export const isSentTransaction = (abcTransaction: AbcTransaction): boolean =>
+  !isReceivedTransaction(abcTransaction)

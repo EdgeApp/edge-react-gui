@@ -2,11 +2,11 @@
 import type {AbcContextCallbacks} from 'airbitz-core-types'
 import type {Dispatch} from '../../ReduxTypes'
 
-import {Alert} from 'react-native'
+import {displayErrorAlert} from '../../UI/components/ErrorAlert/actions'
 
-export default (dispatch: Dispatch): AbcContextCallbacks => ({ // eslint-disable-line no-unused-vars
+export default (dispatch: Dispatch): AbcContextCallbacks => ({
   onError: (error: Error) => {
-    Alert.alert(error.message)
     console.log(error)
+    dispatch(displayErrorAlert(error.message))
   }
 })

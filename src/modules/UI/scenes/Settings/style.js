@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native'
+import THEME from '../../../../theme/variables/airbitz'
 
-export default StyleSheet.create({
+export const styles = {
   listStyle: {
     height: 100
   },
@@ -10,20 +11,18 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     height: 50
   },
-  accountBoxHeaderTextWrap: {
-
-  },
   leftArea: {
     flexDirection: 'row'
   },
-  userIcon: {
-    backgroundColor: 'transparent',
-    fontSize: 22
+  icon: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontSize: 22,
+    color: THEME.COLORS.WHITE
   },
   accountBoxHeaderText: {
     fontSize: 18,
-    color: 'white',
-    backgroundColor: 'transparent',
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     marginLeft: 16
   },
   dropdownIcon: {
@@ -31,18 +30,14 @@ export default StyleSheet.create({
     alignSelf: 'center',
     height: 24,
     fontSize: 24,
-    backgroundColor: 'transparent'
-  },
-  optionsIcon: {
-    backgroundColor: 'transparent',
-    fontSize: 22
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
     // //// Beginning of Settings Row ///////
   settingsRowContainer: {
     height: 44,
     borderBottomWidth: 1,
-    borderBottomColor: '#CCCCCC',
+    borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 15,
@@ -60,23 +55,23 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   settingsRowLeftText: {
-    color: '#58595C',
+    color: THEME.COLORS.GRAY_1,
     fontSize: 16
   },
   settingsRowRightArrow: {
-    color: '#58595C'
+    fontSize: 18,
+    color: THEME.COLORS.GRAY_1
   },
   modalRightText: {
-    color: '#4977BB',
+    color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold'
   },
   routeRowRightText: {
-    color: '#4977BB',
+    color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold'
   },
 
     // /////// End of Settings Row /////////
-
   debugArea: {
     padding: 20,
     flex: 1
@@ -103,15 +98,16 @@ export default StyleSheet.create({
   },
   headerText: {
     fontSize: 18,
-    color: 'white',
-    backgroundColor: 'transparent',
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     marginLeft: 16
   },
   headerIcon: {
-    backgroundColor: 'transparent',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
+  },
+  underlay: {
+    color: THEME.COLORS.GRAY_4
   }
-
-    // //////// End of Currency Settings//////
-
-})
+}
+export default StyleSheet.create(styles)

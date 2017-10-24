@@ -1,8 +1,9 @@
 import {connect} from 'react-redux'
 import type {Props, DispatchProps} from './TransactionDetails.ui'
 import * as UI_SELECTORS from '../../selectors.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import type {GuiWallet, GuiContact} from '../../../../types'
-import type {AbcMetadata} from 'airbitz-core-types'
+import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
 import platform from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import {
@@ -12,13 +13,15 @@ import {
 
 const {TransactionDetails} = require('./TransactionDetails.ui')
 
-const mapStateToProps = (state: any): Props => {
+const mapStateToProps = (state: any, ownProps: any): Props => {
   const selectedWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const fiatSymbol: string = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const contacts: Array<GuiContact> = state.ui.contacts.contactList
   const usableHeight: number = platform.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
   const settings: any = state.ui.settings
+  const plugins: Array<AbcCurrencyPlugin> = SETTINGS_SELECTORS.getPlugins(state)
+  const currencyInfo: AbcCurrencyInfo = UTILS.getCurrencyInfo(plugins.arrayPlugins, ownProps.abcTransaction.currencyCode)
 
   return {
     selectedWallet,
@@ -26,7 +29,8 @@ const mapStateToProps = (state: any): Props => {
     contacts,
     usableHeight,
     subcategoriesList,
-    settings
+    settings,
+    currencyInfo
   }
 }
 

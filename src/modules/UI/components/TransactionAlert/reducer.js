@@ -1,41 +1,33 @@
-import * as ACTION from './action'
+// @flow
+
+import * as ACTIONS from './actions'
 import {combineReducers} from 'redux'
 
-const view = (state = '', action) => {
-  switch (action.type) {
-  case ACTION.OPEN_TRANSACTION_ALERT :
+const displayAlert = (state = false, action = {}) => {
+  const {type} = action
+  switch (type) {
+  case ACTIONS.DISPLAY_TRANSACTION_ALERT:
     return true
-  case ACTION.CLOSE_TRANSACTION_ALERT :
+  case ACTIONS.DISMISS_TRANSACTION_ALERT:
     return false
   default:
     return state
   }
 }
 
-const message = (state = '', action) => {
-  switch (action.type) {
-  case ACTION.OPEN_TRANSACTION_ALERT :
-    return action.data.message
-  case ACTION.CLOSE_TRANSACTION_ALERT :
+const abcTransaction = (state = '', action = {}) => {
+  const {type, data: {abcTransaction} = {} } = action
+  switch (type) {
+  case ACTIONS.DISPLAY_TRANSACTION_ALERT:
+    return abcTransaction
+  case ACTIONS.DISMISS_TRANSACTION_ALERT:
     return ''
   default:
     return state
   }
 }
 
-// const route = (state = {}, action) => {
-//   switch (action.type) {
-//     case ACTION.OPEN_TRANSACTION_ALERT :
-//       return action.data.route
-//     case ACTION.CLOSE_TRANSACTION_ALERT :
-//       return null
-//     default:
-//       return state
-//   }
-// }
-
 export default combineReducers({
-  view,
-  message
-  // route
+  displayAlert,
+  abcTransaction
 })

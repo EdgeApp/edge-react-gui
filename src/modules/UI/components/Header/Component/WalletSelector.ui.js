@@ -1,3 +1,4 @@
+// @flow
 import React, {Component} from 'react'
 import {TouchableOpacity, View} from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
@@ -7,9 +8,31 @@ import {border as b} from '../../../../utils'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../../locales/default'
 
+import THEME from '../../../../../theme/variables/airbitz'
+import * as Constants from '../../../../../constants/indexConstants'
+import styles from '../style'
+import type {
+  GuiWallet
+} from '../../../../../types'
+
 const LOADING_TEXT = sprintf(strings.enUS['loading'])
 
-export default class WalletSelector extends Component {
+type Props = {
+  walletList: any,
+  selectedWallet: GuiWallet,
+  selectedWalletCurrencyCode: string,
+  activeWalletIds: Array<string>,
+  archivedWalletIds: Array<string>,
+  toggleFunction: string,
+  visibleFlag: string,
+  scanToWalletListModalVisibility: boolean,
+  selectedWalletListModalVisibility: boolean,
+  addressModalVisible: boolean,
+  toggleSelectedWalletListModal(): void,
+  toggleScanToWalletListModal():void
+}
+
+export default class WalletSelector extends Component<Props> {
   _onPressToggleSelectedWalletModal = () => {
     this.props.toggleSelectedWalletListModal()
   }
@@ -18,17 +41,22 @@ export default class WalletSelector extends Component {
     this.props.toggleScanToWalletListModal()
   }
 
+  choseFunction () {
+    return this.props.toggleFunction === '_onPressToggleSelectedWalletModal' ? this._onPressToggleSelectedWalletModal : this._onPressScanToDropdownToggle
+  }
+
   render () {
     let topDisplacement = 66
-    let selectionFunction = 'selectFromWallet'
     const headerText = this.props.selectedWallet
       ? this.props.selectedWallet.name + ':' + this.props.selectedWalletCurrencyCode
       : LOADING_TEXT
 
     return (
-      <TouchableOpacity onPress={this[this.props.toggleFunction]} style={[b(), {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
+      <TouchableOpacity onPress={this.choseFunction()} style={[b(), {flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}]}>
         <View style={{height: 34, width: 34}} />
-        <T style={{color: '#FFF', fontSize: 20}} numberOfLines={1}>
+        <T style={{
+          color: THEME.COLORS.WHITE, fontSize: 20
+        }} numberOfLines={1}>
           {headerText}
         </T>
         <View style={[b(), {height: 34, width: 34, justifyContent: 'center', alignItems: 'center'}]}>
@@ -38,7 +66,7 @@ export default class WalletSelector extends Component {
               && !this.props.addressModalVisible
               && <MDIcon
                 name='keyboard-arrow-down'
-                style={{color: '#FFF', fontSize: 25}} />
+                style={styles.icon} />
             }
           </View>
         </View>
@@ -46,15 +74,13 @@ export default class WalletSelector extends Component {
           this.props[this.props.visibleFlag]
           && <WalletListModal
             topDisplacement={topDisplacement}
-            selectionFunction={selectionFunction}
-            type='from' />
+            type={Constants.FROM} />
         }
         {
           this.props.scanToWalletListModalVisibility
           && <WalletListModal
             topDisplacement={topDisplacement}
-            selectionFunction={'selectToWallet'}
-            type='to' />
+            type={Constants.TO} />
         }
       </TouchableOpacity>
     )

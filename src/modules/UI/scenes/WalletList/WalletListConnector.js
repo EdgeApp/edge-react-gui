@@ -4,7 +4,9 @@ import WalletList from './WalletList.ui'
 import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder,
-  walletRowOption
+  walletRowOption,
+  closeDeleteWalletModal,
+  closeRenameWalletModal
 } from './action'
 import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -35,7 +37,9 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   setContactList: (contacts) => dispatch(setContactList(contacts)),
-  walletRowOption: (walletId, option) => dispatch(walletRowOption(walletId, option))
+  walletRowOption: (walletId, option) => dispatch(walletRowOption(walletId, option)),
+  closeDeleteWalletModal: () => dispatch(closeDeleteWalletModal()),
+  closeRenameWalletModal: () => dispatch(closeRenameWalletModal())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)

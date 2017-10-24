@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		009458D283FE4A8BAB096CFB /* libReactNativePermissions.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -69,6 +68,9 @@
 		9054AE0B96DA43BE8F84812E /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 182DA17E6C5B447AB76E288E /* SimpleLineIcons.ttf */; };
 		93D657C1D1194E61B95E8E49 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E33C434CF774FE18A0B35D4 /* Entypo.ttf */; };
 		98A28FD8CA854DA0A8B7578E /* SourceSansPro-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5D0C6583E96C41568C4277CE /* SourceSansPro-Bold.ttf */; };
+		98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 98AF3B031F99F7D10083E087 /* audio_sent.mp3 */; };
+		98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */; };
+		98C72D521F99E7AC00A92AE0 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 980AF5C91F9907460014FACB /* libRNSound.a */; };
 		A2ADFD2DC2AA4A6D96A8FD2E /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CF3BA57C1034B9A96CDE4EF /* libRCTCamera.a */; };
 		AB99B56D46BE4362B90C6E93 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1291273B8A2A4EAD88219964 /* EvilIcons.ttf */; };
 		ADD88E959D4D4C081C9772BE /* libPods-edgeTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC4953BA4D10502BB6B224F5 /* libPods-edgeTests.a */; };
@@ -420,6 +422,13 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
+		980AF5C81F9907460014FACB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 980AF5931F9907460014FACB /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
+			remoteInfo = RNSound;
+		};
 		DA6569461F17436100226952 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -569,7 +578,10 @@
 		8AE61E1C4DDF4FFD823E9883 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/native-base/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		8F122DBFD0A1C221ABF49661 /* Pods-edgeTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edgeTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-edgeTests/Pods-edgeTests.release.xcconfig"; sourceTree = "<group>"; };
 		97E65DB6D2464A14AA289DCA /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
+		980AF5931F9907460014FACB /* RNSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		98A4A26A585B4A0993EB30FE /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/native-base/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		98AF3B031F99F7D10083E087 /* audio_sent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio_sent.mp3; path = ../android/app/src/main/res/raw/audio_sent.mp3; sourceTree = "<group>"; };
+		98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = audio_received.mp3; path = ../android/app/src/main/res/raw/audio_received.mp3; sourceTree = "<group>"; };
 		9A4EAE0CED4F4DBE9099BE5B /* Roboto.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto.ttf; path = "../node_modules/native-base/Fonts/Roboto.ttf"; sourceTree = "<group>"; };
 		9FAF874E8B104A9B88AD9E6C /* RNRandomBytes.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRandomBytes.xcodeproj; path = "../node_modules/react-native-randombytes/RNRandomBytes.xcodeproj"; sourceTree = "<group>"; };
 		A0587BF5EC0B93837E5E83BE /* Pods-edge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-edge.release.xcconfig"; path = "Pods/Target Support Files/Pods-edge/Pods-edge.release.xcconfig"; sourceTree = "<group>"; };
@@ -618,6 +630,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98C72D521F99E7AC00A92AE0 /* libRNSound.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -803,6 +816,8 @@
 		3BB21E930C5F437EB1EAE492 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				98AF3B3A1F99F7D10083E087 /* audio_received.mp3 */,
+				98AF3B031F99F7D10083E087 /* audio_sent.mp3 */,
 				BC960AB014EF4BF1AA8168B3 /* MaterialCommunityIcons.ttf */,
 				0B2C1EBCE00B4AB2B3795968 /* font.ttf */,
 				5DB5F067BAB54454803A6B66 /* SourceSansPro-BlackItalic.ttf */,
@@ -1012,6 +1027,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				980AF5931F9907460014FACB /* RNSound.xcodeproj */,
 				255BC1B71F1EC87C008C57CC /* Secp256k1.framework */,
 				FDD9C0D21F1C46ED004372CA /* RNHockeyApp.h */,
 				FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */,
@@ -1069,6 +1085,7 @@
 				3BB21E930C5F437EB1EAE492 /* Resources */,
 				1189D14E429D3398A100CB8A /* Pods */,
 				82DAC2543B5A97898904086F /* Frameworks */,
+				DA600D001F8F1D57001F3096 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1083,6 +1100,40 @@
 				2D02E4901E0B4A5D006451C7 /* edge-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		980AF5941F9907460014FACB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				980AF5C91F9907460014FACB /* libRNSound.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DA600D001F8F1D57001F3096 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				1CF3BA57C1034B9A96CDE4EF /* libRCTCamera.a */,
+				E5D6824DDD854B41A4A6D426 /* libRCTContacts.a */,
+				E306F33BD2AA495DB502D784 /* libRCTContactsWrapper.a */,
+				CC800BDD23974A43B61E2048 /* libRNDeviceInfo.a */,
+				D5DF84AD90B142838C4B352E /* libRNFS.a */,
+				4E84456316434B60A88B01FC /* libRNImagePicker.a */,
+				0734A26AC90A43AC89E67657 /* libBVLinearGradient.a */,
+				4DF9D1093281430AA1DA9CCF /* libRCTMaterialKit.a */,
+				3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */,
+				26236CD03CA74A02860A63F8 /* libTcpSockets.a */,
+				F26E8A5C8E81402E91DB24A3 /* libUdpSockets.a */,
+				1E979A2F677B4138AB52E534 /* libRNVectorIcons.a */,
+				151AD25B74474F3FBA9C2417 /* libRCTLocale.a */,
+				D55A245786234924ABF5C5DA /* libRNFastCrypto.a */,
+				DA39136B1FF54882916C37AC /* libSplashScreen.a */,
+				AB28BA3C148A43EC807D05AB /* libRNBlur.a */,
+				C97FCA27CAF047368D3B0458 /* libRNRandomBytes.a */,
+				E938232DFFFF4A8283C2F074 /* libRNShare.a */,
+				3359707856FB42188A179E0E /* libAbcCoreJsUi.a */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		DA6569211F17436100226952 /* Products */ = {
@@ -1339,6 +1390,10 @@
 				{
 					ProductGroup = 5A815B671F84B4AA003D8190 /* Products */;
 					ProjectRef = 24A1BC4D1FC647CC8F52B48A /* RNShare.xcodeproj */;
+				},
+				{
+					ProductGroup = 980AF5941F9907460014FACB /* Products */;
+					ProjectRef = 980AF5931F9907460014FACB /* RNSound.xcodeproj */;
 				},
 				{
 					ProductGroup = 6E10911C1EB0512100947A0B /* Products */;
@@ -1676,6 +1731,13 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		980AF5C91F9907460014FACB /* libRNSound.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNSound.a;
+			remoteRef = 980AF5C81F9907460014FACB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DA6569471F17436100226952 /* libthird-party.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1784,12 +1846,14 @@
 				8E503D0B1DA74158AA730B37 /* MaterialIcons.ttf in Resources */,
 				79D627E0AF47498FB03B5D40 /* Octicons.ttf in Resources */,
 				B524052E4B614E5DB1524555 /* Roboto_medium.ttf in Resources */,
+				98AF3B3C1F99F7D20083E087 /* audio_received.mp3 in Resources */,
 				049D53B0E7A04E8E9FB81225 /* Roboto.ttf in Resources */,
 				5753E201C6234F3D898201B7 /* rubicon-icon-font.ttf in Resources */,
 				9054AE0B96DA43BE8F84812E /* SimpleLineIcons.ttf in Resources */,
 				1DADC5E648C2487D9786E11A /* Zocial.ttf in Resources */,
 				C598D213BA5B4A13B2C02A44 /* Entypo.ttf in Resources */,
 				AB99B56D46BE4362B90C6E93 /* EvilIcons.ttf in Resources */,
+				98AF3B3B1F99F7D20083E087 /* audio_sent.mp3 in Resources */,
 				DA4A13F911E04BB99D3B3B8E /* FontAwesome.ttf in Resources */,
 				4739EE2C3B5B44ED8FFE1DBC /* Foundation.ttf in Resources */,
 				C0B8DCFF972C447AA62321BF /* Ionicons.ttf in Resources */,
@@ -2141,7 +2205,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = edge;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2188,7 +2252,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = edge;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2243,7 +2307,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
@@ -2299,7 +2363,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = co.airbitz.edge;
+				PRODUCT_BUNDLE_IDENTIFIER = co.edgesecure.wallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;

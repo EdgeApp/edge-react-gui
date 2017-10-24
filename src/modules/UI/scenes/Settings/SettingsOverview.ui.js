@@ -8,7 +8,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
-import * as Constants from '../../../../constants'
+import * as Constants from '../../../../constants/indexConstants'
 import strings from '../../../../locales/default'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
@@ -21,7 +21,7 @@ import SendLogsModal from './components/SendLogsModal.ui'
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
-import s from './style'
+import styles from './style'
 
 export default class SettingsOverview extends Component {
   constructor (props) {
@@ -171,12 +171,12 @@ export default class SettingsOverview extends Component {
     const disabled = strings.enUS['string_disable']
 
     return (
-      <ScrollView style={s.container}>
-        <Gradient style={[s.unlockRow]}>
-          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
-            <View style={s.leftArea}>
-              <FAIcon style={[s.userIcon, b('green')]} name='user-o' color='white' />
-              <T style={s.accountBoxHeaderText}>
+      <ScrollView style={styles.container}>
+        <Gradient style={[styles.unlockRow]}>
+          <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+            <View style={styles.leftArea}>
+              <FAIcon style={[styles.icon, b('green')]} name={Constants.USER_O} />
+              <T style={styles.accountBoxHeaderText}>
                 {strings.enUS['settings_account_title_cap']}: {this.props.username}
               </T>
             </View>
@@ -187,26 +187,23 @@ export default class SettingsOverview extends Component {
           leftText={strings.enUS['settings_button_change_password']}
           scene={'changePassword'}
           routeFunction={this._onPressChangePasswordRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
+          right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
         <RowRoute
           leftText={strings.enUS['settings_button_pin']}
           scene={'changePassword'}
           routeFunction={this._onPressChangePinRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
+          right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
         <RowRoute
           leftText={strings.enUS['settings_button_change_pass_recovery']}
           scene={'changePassword'}
           routeFunction={this._onPressRecoverPasswordRouting}
-          right={<Icon name='arrow-right' size={18}
-            color='#58595C' />} />
+          right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
-        <Gradient style={[s.unlockRow]}>
-          <View style={[s.accountBoxHeaderTextWrap, b('yellow')]}>
-            <View style={s.leftArea}>
-              <IonIcon name='ios-options' style={[s.userIcon, b('green')]} color='white' />
-              <T style={s.accountBoxHeaderText}>
+        <Gradient style={[styles.unlockRow]}>
+          <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+            <View style={styles.leftArea}>
+              <IonIcon name='ios-options' style={[styles.icon, b('green')]} />
+              <T style={styles.accountBoxHeaderText}>
                 {strings.enUS['settings_options_title_cap']}
               </T>
             </View>
@@ -233,14 +230,13 @@ export default class SettingsOverview extends Component {
           <RowRoute
             leftText={strings.enUS['settings_button_send_logs']}
             scene={'changePassword'}
-            routeFunction={this.showSendLogsModal}
-           />
+            routeFunction={this.showSendLogsModal} />
 
-          <View style={[s.debugArea, b('green')]}>
+          <View style={[styles.debugArea, b('green')]}>
             <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
           </View>
 
-          <View style={s.emptyBottom} />
+          <View style={styles.emptyBottom} />
         </View>
 
         <AutoLogoutModal
@@ -256,17 +252,7 @@ export default class SettingsOverview extends Component {
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
-
-  renderRowRoute = (x, i) => (
-    <RowRoute
-      leftText={x.text}
-      key={i}
-      scene={x.key}
-      routeFunction={x.routeFunction}
-      right={x.right}
-    />
-  )
-
+  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} scene={x.key} routeFunction={x.routeFunction} right={x.right} />
   renderRowSwitch = (x) => (
     <RowSwitch
       leftText={this.options[x].text}
@@ -276,7 +262,5 @@ export default class SettingsOverview extends Component {
       value={this.options[x].value}
     />
   )
-
-  renderRowModal = (x) => (<RowModal leftText={x.text} key={x.key}modal={(x.key).toString()} />
-  )
+  renderRowModal = (x) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
 }

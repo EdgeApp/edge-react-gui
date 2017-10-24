@@ -2,7 +2,6 @@
 
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
-import {sprintf} from 'sprintf-js'
 import {
   ActivityIndicator,
   Alert,
@@ -14,6 +13,7 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import AddressModal from './components/AddressModalConnector'
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import {Actions} from 'react-native-router-flux'
@@ -23,22 +23,33 @@ import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
-import styles from './style'
-
-import AddressModal from './components/AddressModalConnector'
+import styles, {styles as styleRaw} from './style'
+import ABAlert from '../../components/ABAlert/indexABAlert'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
   sceneName: string,
   torchEnabled: boolean,
+  scanEnabled: boolean,
   walletListModalVisible: boolean,
   scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
+  dispatchEnableScan(): void,
+  dispatchDisableScan(): void,
   toggleEnableTorch(): void,
   toggleAddressModal():void,
   toggleWalletListModal(): void,
-  updateParsedURI(AbcParsedUri): void
+  updateParsedURI(AbcParsedUri): void,
+  loginWithEdge(string): void
 }
+
+const HEADER_TEXT     = strings.enUS['send_scan_header_text']
+
+const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
+const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
+const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
+const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
+const FLASH_TEXT    = strings.enUS['fragment_send_flash']
 
 export default class Scan extends Component<any, any> {
   static defaultProps: any;
@@ -56,6 +67,90 @@ export default class Scan extends Component<any, any> {
   componentDidMount () {
     PERMISSIONS.request('camera')
     .then(this.setCameraPermission)
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        {this.renderCamera()}
+        <View style={[styles.overlay]}>
+
+          <AddressModal />
+
+          <View style={[styles.overlayTop]}>
+            <T style={[styles.overlayTopText]}>
+              {HEADER_TEXT}
+            </T>
+          </View>
+          <View style={[styles.overlayBlank]} />
+
+          <Gradient style={[styles.overlayButtonAreaWrap]}>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this._onToggleWalletListModal}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <Ionicon style={[styles.transferArrowIcon]}
+                  name='ios-arrow-round-forward'
+                  size={24} />
+                <T style={[styles.transferButtonText, styles.bottomButtonText]}>
+                  {TRANSFER_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this._onToggleAddressModal}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <FAIcon style={[styles.addressBookIcon]}
+                  name='address-book-o'
+                  size={18} />
+                <T style={[styles.addressButtonText, styles.bottomButtonText]}>
+                  {ADDRESS_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this.selectPhotoTapped}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <Ionicon style={[styles.cameraIcon]}
+                  name='ios-camera-outline'
+                  size={24} />
+                <T style={[styles.bottomButtonText]}>
+                  {PHOTOS_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+            <TouchableHighlight style={styles.bottomButton}
+              onPress={this._onToggleTorch}
+              underlayColor={styleRaw.underlay.color}>
+              <View style={styles.bottomButtonTextWrap}>
+
+                <Ionicon style={[styles.flashIcon]}
+                  name='ios-flash-outline'
+                  size={24}  />
+                <T style={[styles.flashButtonText, styles.bottomButtonText]}>
+                  {FLASH_TEXT}
+                </T>
+
+              </View>
+            </TouchableHighlight>
+
+          </Gradient>
+        </View>
+        <ABAlert />
+      </View>
+    )
   }
 
   setCameraPermission = (cameraPermission: boolean) => {
@@ -79,21 +174,30 @@ export default class Scan extends Component<any, any> {
   }
 
   onBarCodeRead = (scan: {data: any}) => {
-    if (this.props.sceneName !== 'scan') return
+    if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
   }
 
   parseURI = (uri: string) => {
     try {
+      if (/^airbitz:\/\/edge\//.test(uri)) {
+        this.props.loginWithEdge(uri)
+        return
+      }
       // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
-      Alert.alert('Scanning Error', error.toString())
-      // show popup with error message
-      // console.log(error)
+      this.props.dispatchDisableScan()
+      Alert.alert(
+        strings.enUS['fragment_send_send_bitcoin_unscannable'],
+        error.toString(),
+        [
+          {text: strings.enUS['string_ok'], onPress: () => this.props.dispatchEnableScan()},
+        ]
+      )
     }
   }
 
@@ -107,26 +211,35 @@ export default class Scan extends Component<any, any> {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-        Actions.sendConfirmation({type: 'reset'})
+        // TODO: make edgelogin work with image picker -paulvp
+        /* if (/^airbitz:\/\/edge\//.test(uri)) {
+          console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
+          return
+        }*/
+        Actions.sendConfirmation()
       }
     })
   }
 
   renderCamera = () => {
-    // if (this.state.cameraPermission === true && this.props.scene === 'scan') {
     if (this.state.cameraPermission === true) {
+      const flashMode = this.props.torchEnabled
+        ? Camera.constants.FlashMode.on
+        : Camera.constants.FlashMode.off
+
       return (
         <Camera
+          flashMode={flashMode}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
-          ref='cameraCapture'
-        />
+          ref='cameraCapture' />
       )
     } else if (this.state.cameraPermission === false) {
       return (
         <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
-          <Text>To scan QR codes, enable camera permission in your system settings</Text>
+          <Text>
+            {DENIED_PERMISSION_TEXT}
+          </Text>
         </View>
       )
     } else {
@@ -136,55 +249,5 @@ export default class Scan extends Component<any, any> {
         </View>
       )
     }
-  }
-
-  render () {
-    return (
-      <View style={styles.container}>
-        {this.renderCamera()}
-        <View style={[styles.overlay]}>
-
-          <AddressModal />
-
-          <View style={[styles.overlayTop]}>
-            <T style={[styles.overlayTopText]}>{sprintf(strings.enUS['send_scan_header_text'])}</T>
-          </View>
-          <View style={[styles.overlayBlank]} />
-
-          <Gradient style={[styles.overlayButtonAreaWrap]}>
-
-            <TouchableHighlight style={[styles.transferButtonWrap, styles.bottomButton]} onPress={this._onToggleWalletListModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-arrow-round-forward' size={24} style={[styles.transferArrowIcon]} />
-                <T style={[styles.transferButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_transfer'])}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.addressButtonWrap, styles.bottomButton]} onPress={this._onToggleAddressModal} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <FAIcon name='address-book-o' size={18} style={[styles.addressBookIcon]} />
-                <T style={[styles.addressButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_address'])}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.photosButtonWrap, styles.bottomButton]} onPress={this.selectPhotoTapped} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-camera-outline' size={24} style={[styles.cameraIcon]} />
-                <T style={[styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_photos'])}</T>
-              </View>
-            </TouchableHighlight>
-
-            <TouchableHighlight style={[styles.flashButtonWrap, styles.bottomButton]} onPress={this._onToggleTorch} activeOpacity={0.3} underlayColor={'#FFFFFF'}>
-              <View style={styles.bottomButtonTextWrap}>
-                <Ionicon name='ios-flash-outline' size={24} style={[styles.flashIcon]} />
-                <T style={[styles.flashButtonText, styles.bottomButtonText]}>{sprintf(strings.enUS['fragment_send_flash'])}</T>
-              </View>
-            </TouchableHighlight>
-
-          </Gradient>
-
-        </View>
-      </View>
-    )
   }
 }

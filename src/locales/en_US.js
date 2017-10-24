@@ -301,7 +301,7 @@ const strings = {
   fragment_send_incorrect_password_title: 'Incorrect Password',
   fragment_send_no_satoshi_title: 'Enter an amount',
   fragment_send_no_satoshi_message: 'Please enter an amount to send',
-  fragment_send_send_to_hint: 'Bitcoin Address or Private Key',
+  fragment_send_send_to_hint: 'Public Address or Private Key',
   fragment_send_failure_title: 'Send failure',
   fragment_send_send_bitcoin_invalid: 'Invalid bitcoin address',
   fragment_send_send_bitcoin_unscannable: 'Unable to scan QR code',
@@ -820,7 +820,7 @@ const strings = {
 
   // Transaction Details Page
   title_Transaction_Details: 'Transaction Details',
-  fragment_tx_detail_mining_fee: '+ %u (Fee)',
+  fragment_tx_detail_mining_fee: '+ %f (Fee)',
 
   // Not new to react-gui (I don't think), not sure why at end of JSON
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
@@ -834,7 +834,17 @@ const strings = {
   // New items added before Localization overhaul.- Need Other than English Translation
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
-  title_Password_Recovery: 'Password Recovery'
+  title_Password_Recovery: 'Password Recovery',
+  title_Exchange: 'Exchange',
+  dropdown_exchange_max_amount: 'Exchange Max Amount',
+
+  string_first_ethereum_wallet_name: 'My Ethereum Wallet',
+  strings_first_bitcoin_44_wallet_name: 'My Bitcoin Wallet',
+
+  // help modal
+  help_modal_title: 'Crypto Wallet and Directory',
+  help_version: 'Version',
+  help_build: 'Build'
 }
 
 export default strings

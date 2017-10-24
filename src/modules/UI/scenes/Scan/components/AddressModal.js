@@ -1,8 +1,10 @@
+// @flow
 import React, {Component} from 'react'
 import {
   Alert,
   Clipboard
 } from 'react-native'
+import * as Constants from '../../../../../constants/indexConstants'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -11,19 +13,35 @@ import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
-export default class AddressModal extends Component {
-  constructor (props) {
-    super(props)
+import styles from '../style'
 
-    this.state = {
-      uri: '',
-      clipboard: ''
-    }
+type Props = {
+  coreWallet: AbcCurrencyWallet,
+  currencyCode: string,
+  addressModalVisible: boolean,
+  toggleAddressModal():void,
+  updateParsedURI(AbcParsedUri):void,
+  loginWithEdge(string): void
+}
+type State = {
+  uri: string,
+  clipboard: string
+}
+
+export default class AddressModal extends Component<Props,State> {
+  componentWillMount () {
+    this.setState(
+      {
+        uri: '',
+        clipboard: ''
+      }
+    )
   }
 
-  componentDidMount () {
-    const coreWallet = this.props.coreWallet
+  _setClipboard (props: Props) {
+    const coreWallet = props.coreWallet
     Clipboard.getString().then((uri) => {
       try {
         // Will throw in case uri is invalid
@@ -40,48 +58,17 @@ export default class AddressModal extends Component {
     })
   }
 
-  onPasteFromClipboard = () => {
-    this.setState({uri: this.state.clipboard}, this.onSubmit)
+  componentDidMount () {
+    this._setClipboard(this.props)
   }
 
-  onSubmit = () => {
-    const uri = this.state.uri
-    const coreWallet = this.props.coreWallet
-    try {
-      const parsedURI = WALLET_API.parseURI(coreWallet, uri)
-      parsedURI.currencyCode = this.props.currencyCode // remove when Ethereum addresses support indicating currencyCodes
-
-      // console.log('AddressModal parsedURI', parsedURI)
-      this.props.toggleAddressModal()
-      this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation()
-    } catch (e) {
-      Alert.alert(
-        'Invalid Address',
-        'The address you input is not a valid address.'
-      )
-      // console.log(e)
-    }
-  }
-  onCancel = () => {
-    this.props.toggleAddressModal()
-  }
-
-  onChangeText = (uri) => {
-    this.setState({uri})
+  componentWillReceiveProps (nextProps: Props) {
+    this._setClipboard(nextProps)
   }
 
   render () {
-    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
-      style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
-        backgroundColor: 'transparent',
-        zIndex: 1015,
-        elevation: 1015}]} />
+    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color='#2A5799'
+      style={styles.icon} />
 
     const copyMessage
       = this.state.clipboard
@@ -106,5 +93,43 @@ export default class AddressModal extends Component {
         visibilityBoolean={this.props.addressModalVisible}
       />
     )
+  }
+
+  onPasteFromClipboard = () => {
+    this.setState({uri: this.state.clipboard}, this.onSubmit)
+  }
+
+  onSubmit = () => {
+    const uri = this.state.uri
+    // We want to check to see if the url is an edge login.
+
+    if (/^airbitz:\/\/edge\//.test(uri)) {
+      this.props.loginWithEdge(uri)
+      return
+    }
+
+    const coreWallet = this.props.coreWallet
+    try {
+      const parsedURI = WALLET_API.parseURI(coreWallet, uri)
+      parsedURI.currencyCode = this.props.currencyCode // remove when Ethereum addresses support indicating currencyCodes
+
+      // console.log('AddressModal parsedURI', parsedURI)
+      this.props.toggleAddressModal()
+      this.props.updateParsedURI(parsedURI)
+      Actions.sendConfirmation()
+    } catch (e) {
+      Alert.alert(
+        'Invalid Address',
+        'The address you input is not a valid address.'
+      )
+      // console.log(e)
+    }
+  }
+  onCancel = () => {
+    this.props.toggleAddressModal()
+  }
+
+  onChangeText = (uri: string) => {
+    this.setState({uri})
   }
 }

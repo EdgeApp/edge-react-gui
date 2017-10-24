@@ -1,10 +1,15 @@
-package co.airbitz.edge;
+package co.edgesecure.wallet;
 
 import android.app.Application;
 
 //import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD:android/app/src/main/java/co/airbitz/edge/MainApplication.java
 import co.airbitz.core-js-ui.AbcCoreJsUiPackage;
+||||||| merged common ancestors
+=======
+import com.zmxv.RNSound.RNSoundPackage;
+>>>>>>> master:android/app/src/main/java/co/edgesecure/wallet/MainApplication.java
 import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
 //import com.cboy.rn.splashscreen.SplashScreenReactPackage;
@@ -46,6 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new AbcCoreJsUiPackage(),
+            new RNSoundPackage(),
             new RNSharePackage(),
             new RandomBytesPackage(),
 //            new SplashScreenReactPackage(),

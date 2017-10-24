@@ -15,6 +15,9 @@ import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
+import * as actions from '../../actions/indexActions'
+import * as Constants from '../../constants/indexConstants'
+import strings from '../../locales/default'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 export const LOGOUT = 'LOGOUT'
 
@@ -35,11 +38,18 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
 
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-      const {
-        walletId,
-        currencyCode
-      } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
-      dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+      if (ACCOUNT_API.checkForExistingWallets(account)) {
+        const {
+          walletId,
+          currencyCode
+        } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+        dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+        dispatch(loadSettings())
+        return
+      }
+      // TODO: Allen - Turn on when Bitcoin is turned back on
+      //dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
+      dispatch(actions.createCurrencyWallet(strings.enUS['string_first_ethereum_wallet_name'], Constants.ETHEREUM_WALLET, Constants.USD_FIAT))
       dispatch(loadSettings())
     })
 }
@@ -91,8 +101,8 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     })
 }
 
-export const logoutRequest = (username: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.login({username})
+export const logoutRequest = (username: string | null) => (dispatch: Dispatch, getState: GetState) => {
+  Actions.popTo(Constants.LOGIN, {username})
 
   const state = getState()
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
@@ -104,8 +114,8 @@ export const logoutRequest = (username: string) => (dispatch: Dispatch, getState
    })
 }
 
-export type LogoutAction = { type: 'LOGOUT', data: { username: string } }
-export const logout = (username: string): LogoutAction => ({
+export type LogoutAction = { type: 'LOGOUT', data: { username: string | null } }
+export const logout = (username: string | null): LogoutAction => ({
   type: LOGOUT,
   data: {username}
 })
