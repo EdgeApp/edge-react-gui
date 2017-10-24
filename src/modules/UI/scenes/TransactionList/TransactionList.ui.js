@@ -345,6 +345,7 @@ export default class TransactionList extends Component<Props, State> {
               onEndReachedThreshold={60}
               enableEmptySections
               initialIterator={-1}
+              removeClippedSubviews={false}
               />
           </View>
         </View>
