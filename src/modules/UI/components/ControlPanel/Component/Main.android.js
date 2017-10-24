@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {View, TouchableNativeFeedback, Image} from 'react-native'
 import {Text} from 'native-base'
@@ -15,7 +17,13 @@ import settings from '../../../../../assets/images/sidenav/settings.png'
 const LOGOUT_TEXT = sprintf(strings.enUS['settings_button_logout'])
 const SETTINGS_TEXT = sprintf(strings.enUS['settings_title'])
 
-export default class Main extends Component {
+type Props ={
+  logout: () => void,
+  onPressOption: () => void
+}
+type State = {}
+
+export default class Main extends Component<Props, State> {
   onLogout = () => {
     this.props.onPressOption()
     this.props.logout()
