@@ -838,8 +838,8 @@ const strings = {
   title_Exchange: 'Exchange',
   dropdown_exchange_max_amount: 'Exchange Max Amount',
 
-  string_first_ethereum_wallet_name: 'My Ethereum Wallet',
-  strings_first_bitcoin_44_wallet_name: 'My Bitcoin Wallet',
+  string_first_ethereum_wallet_name: 'My Ether',
+  strings_first_bitcoin_44_wallet_name: 'My Bitcoin',
 
   // help modal
   help_modal_title: 'Crypto Wallet and Directory',
