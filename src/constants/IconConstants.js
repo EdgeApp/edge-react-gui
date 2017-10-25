@@ -1,5 +1,3 @@
-export const MATERIAL_ICONS = 'material'
-export const FONT_AWESOME = 'fontAwesome'
 export const SIMPLE_ICONS = 'simpleIcons'
 
 // Entypp

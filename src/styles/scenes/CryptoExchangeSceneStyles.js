@@ -85,7 +85,6 @@ const CryptoExchangeSceneStyle = {
     icon:{
       position:'relative',
       alignItems:'center',
-      justifyContemt:'sapce-around',
       backgroundColor: THEME.COLORS.TRANSPARENT
     },
     iconSize: 48
