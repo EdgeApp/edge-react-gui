@@ -1,6 +1,5 @@
 //@flow
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import {View, Text} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import {Icon} from '../Icon/Icon.ui'
@@ -16,14 +15,6 @@ type Props = {
 }
 
 export default class MenuDropDown extends Component<Props> {
-  static propTypes = {
-    style: PropTypes.object.isRequired,
-    data: PropTypes.array.isRequired,
-    icon: PropTypes.string,
-    iconType: PropTypes.string,
-    text: PropTypes.string,
-    onSelect: PropTypes.func.isRequired
-  }
   static defaultProps = {
     iconType: Constants.ENTYPO,
     icon: Constants.THREE_DOT_MENU
@@ -46,6 +37,10 @@ export default class MenuDropDown extends Component<Props> {
   }
 
   render () {
+    let optionsStyle = {}
+    if (this.props.rightSide) {
+      optionsStyle = {left:'1%'}
+    }
     const style = this.props.style
     return (
       <View style={[style.container]}>
@@ -56,7 +51,7 @@ export default class MenuDropDown extends Component<Props> {
           <MenuTrigger style={[style.menuTrigger]}>
             {this.renderMenuIcon(style)}
           </MenuTrigger>
-          <MenuOptions>
+          <MenuOptions optionsContainerStyle={optionsStyle}>
             {this.renderMenuOptions(style)}
           </MenuOptions>
         </Menu>

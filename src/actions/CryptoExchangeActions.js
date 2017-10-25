@@ -23,12 +23,20 @@ function setShapeTransaction (type: string, data: AbcTransaction) {
   }
 }
 
-/* type nativeAmountObjectType = {
-  primaryDisplayAmount: string,
-  primaryNativeAmount: string,
-  whichWallet: string
-} */
+export const exchangeMax = () => (dispatch: any, getState: any) => {
+  const state = getState()
+  const fromWallet:GuiWallet = state.cryptoExchange.fromWallet
+  const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
+  const maxAmountNative = fromWallet.nativeBalances[fromCurrencyCode]
+  const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
+  const ratio = primaryInfo.displayDenomination.multiplier.toString()
+  const maxDisplayAmount = UTILS.convertNativeToDenomination(ratio)(maxAmountNative)
+  // get display Amount then pass to the previous.
+  dispatch(actions.setNativeAmount({primaryNativeAmount:maxAmountNative, primaryDisplayAmount:maxDisplayAmount, whichWallet:Constants.FROM}))
+  console.log('stop')
+}
 export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDisplayAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
+  console.log('stop')
   const state = getState()
   const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet = state.cryptoExchange.fromWallet
