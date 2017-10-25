@@ -131,7 +131,6 @@ tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
-    shapeshiftKey: ENV.SHAPESHIFT_API_KEY,
     callbacks,
     plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
     shapeshiftKey: SHAPESHIFT_API_KEY

@@ -1,11 +1,15 @@
 // @flow
-import type {GuiWallet} from '../types'
+import type {GuiWallet,GuiDenomination, GuiCurrencyInfo} from '../types'
 import * as Constants from '../constants/indexConstants'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
+import * as UI_SELECTORS from '../modules/UI/selectors'
+import * as UTILS from '../modules/utils'
+import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as actions from './indexActions'
 import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import {bns} from 'biggystring'
+
 function setWallet (type: string, data: any) {
   return {
     type,
@@ -19,30 +23,47 @@ function setShapeTransaction (type: string, data: AbcTransaction) {
   }
 }
 
-export const setNativeAmount = (data: {primaryNativeAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
+/* type nativeAmountObjectType = {
+  primaryDisplayAmount: string,
+  primaryNativeAmount: string,
+  whichWallet: string
+} */
+export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDisplayAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
   const state = getState()
-  // const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
-  // const toWallet: GuiWallet = state.cryptoExchange.fromWallet
+  const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
+  const toWallet: GuiWallet = state.cryptoExchange.fromWallet
   const  {
     whichWallet,
-    primaryNativeAmount
+    primaryNativeAmount,
+    primaryDisplayAmount
   } = data
 
   if (whichWallet === Constants.FROM) {
     dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, primaryNativeAmount))
-    let newToNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.exchangeRate).toFixed(8))
-    //newToNative = bns.toFixed(newToNative, 0, 0)
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, newToNative))
-
+    const exchangedAmount = bns.mul(Number(primaryDisplayAmount).toFixed(20) ,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    const primaryInfo = state.cryptoExchange.toWalletPrimaryInfo
+    const primaryNativeToWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
+    let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeToWalletDenominationRatio)(exchangedAmount)
+    newNativeAmount = bns.toFixed(newNativeAmount, 0, 0)
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, newNativeAmount))
   } else {
     dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, primaryNativeAmount))
-    let newFromNative = bns.mul(primaryNativeAmount,Number(state.cryptoExchange.reverseExchange).toFixed(8))
-    newFromNative = bns.toFixed(newFromNative, 0, 0)
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, newFromNative))
+    const exchangedAmount = bns.mul(Number(primaryDisplayAmount).toFixed(20) ,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
+    const primaryNativeFromWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
+    let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeFromWalletDenominationRatio)(exchangedAmount)
+    newNativeAmount = bns.toFixed(newNativeAmount, 0, 0)
+    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, newNativeAmount))
 
   }
   // make spend
-  //dispatch(getShiftTransaction(fromWallet, toWallet))
+  if (fromWallet && toWallet) {
+    dispatch(getShiftTransaction(fromWallet, toWallet)).catch((e) => {
+      console.log(' ERROR getting shidt transaction. ')
+      console.log(e)
+    })
+  }
+
 }
 
 
@@ -88,7 +109,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   }
   const srcCurrencyCode = spendInfo.currencyCode
   const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
-
+  console.log('stop for breakpoint')
   if (srcCurrencyCode !== destCurrencyCode) {
     let abcTransaction = await srcWallet.makeSpend(spendInfo)
     dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, abcTransaction))
@@ -100,17 +121,28 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?
   let hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
   let hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
   const cc = currencyCode || wallet.currencyCode
+
+  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, cc)
+  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, cc, wallet)
+  const primaryInfo: GuiCurrencyInfo = {
+    displayCurrencyCode: cc,
+    exchangeCurrencyCode: cc,
+    displayDenomination: primaryDisplayDenomination,
+    exchangeDenomination: primaryExchangeDenomination
+  }
+
   let data = {
     wallet,
-    currencyCode: cc
+    currencyCode: cc,
+    primaryInfo
   }
   type === Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE
     ? (dispatch(
-        getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
-      ),
-      dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
-      hasFrom = wallet
-    )
+          getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
+        ),
+        dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
+        hasFrom = wallet
+      )
     : (dispatch(
         getCryptoExchangeRate(state.cryptoExchange.fromCurrencyCode, cc)
       ),

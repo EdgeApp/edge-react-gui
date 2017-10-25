@@ -8,6 +8,8 @@ const initialState = {
   toCurrencyCode: null,
   toNativeAmount: '0',
   fromNativeAmount: '0',
+  toWalletPrimaryInfo: null,
+  fromWalletPrimaryInfo: null,
   fee: '',
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
@@ -20,7 +22,8 @@ export default function (state = initialState, action) {
   case Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE:
     return {...state,
       fromWallet: action.data.wallet,
-      fromCurrencyCode:action.data.currencyCode,
+      fromWalletPrimaryInfo: action.data.primaryInfo,
+      fromCurrencyCode: action.data.currencyCode,
       changeWallet: Constants.NONE,
       fromNativeAmount: '0',
       toNativeAmount:'0'}
@@ -28,6 +31,7 @@ export default function (state = initialState, action) {
     return {...state,
       toWallet: action.data.wallet,
       toCurrencyCode:action.data.currencyCode,
+      toWalletPrimaryInfo:action.data.primaryInfo,
       changeWallet: Constants.NONE,
       fromNativeAmount: '0',
       toNativeAmount:'0'
@@ -67,3 +71,4 @@ export default function (state = initialState, action) {
     return state
   }
 }
+

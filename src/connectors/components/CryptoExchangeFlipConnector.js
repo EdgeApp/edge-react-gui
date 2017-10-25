@@ -6,8 +6,6 @@ from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperCompon
 import * as Constants from '../../constants/indexConstants'
 import * as UTILS from '../../modules/utils'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
-import * as UI_SELECTORS from '../../modules/UI/selectors'
-import * as SETTINGS_SELECTORS from '../../modules/UI/Settings/selectors.js'
 import * as actions from '../../actions/indexActions'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 export const mapStateToProps = (state: any, ownProps: any) => {
@@ -24,17 +22,10 @@ export const mapStateToProps = (state: any, ownProps: any) => {
     }
   }
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, uiWallet.id)
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode, uiWallet)
   const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(uiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
 
-  const primaryInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: currencyCode,
-    exchangeCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeDenomination: primaryExchangeDenomination
-  }
+  const primaryInfo: GuiCurrencyInfo = ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromWalletPrimaryInfo : state.cryptoExchange.toWalletPrimaryInfo
   const secondaryInfo: GuiCurrencyInfo = {
     displayCurrencyCode: uiWallet.fiatCurrencyCode,
     exchangeCurrencyCode: uiWallet.isoFiatCurrencyCode,
@@ -63,7 +54,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
 export const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
   launchWalletSelector: ownProps.launchWalletSelector,
   //setNativeAmount: (data) => ownProps.changeNativeAmount(data)
-  setNativeAmount: (data: {primaryNativeAmount: string, whichWallet: string}) => dispatch(actions.setNativeAmount(data))
+  setNativeAmount: (data: {primaryNativeAmount: string, primaryDisplayAmount: string, whichWallet: string}) => dispatch(actions.setNativeAmount(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)
