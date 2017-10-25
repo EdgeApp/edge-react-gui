@@ -24,7 +24,11 @@ type Props ={
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
   fromCurrencyCode: string,
+  fromCurrencyIcon: string,
+  toCurrencyIcon: string,
   toCurrencyCode: string,
+  toDisplayAmount: string,
+  fromDisplayAmount: string,
   fromAmountNative: string,
   toAmountNative: number,
   fee: string,
@@ -83,6 +87,13 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
         <CryptoExchangeConfirmTransactionModalComponent
           style={style}
           closeFunction={this.props.closeConfirmation}
+          fromCurrencyIcon={this.props.fromCurrencyIcon}
+          fromCurrencyAmount={this.props.fromDisplayAmount}
+          fromCurrencyCode={this.props.fromCurrencyCode}
+          toCurrencyIcon={this.props.toCurrencyIcon}
+          toCurrencyAmount={this.props.toDisplayAmount}
+          toCurrencyCode={this.props.toCurrencyCode}
+          fee={this.props.fee}
           confirmFunction={this.props.shift}
         />
       )

@@ -37,12 +37,13 @@ export const mapStateToProps = (state: any, ownProps: any) => {
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
   const nativeAmount =  ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromNativeAmount : state.cryptoExchange.toNativeAmount
-
+  const currencyLogo = ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromCurrencyIcon : state.cryptoExchange.toCurrencyIcon
   return {
     style: ownProps.style,
     whichWallet,
     abcWallet,
     uiWallet,
+    currencyLogo,
     primaryInfo,
     secondaryInfo,
     fiatPerCrypto,

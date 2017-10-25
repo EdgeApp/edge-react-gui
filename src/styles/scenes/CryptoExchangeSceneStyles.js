@@ -35,19 +35,60 @@ const CryptoExchangeSceneStyle = {
   },
   confirmModal: {
     middle: {
-      width:'100%',
-      height:'100%',
-      backgroundColor: THEME.COLORS.ACCENT_GREEN
+      container: {
+        width:'100%',
+      },
+      currencyIcon: {
+        height: 25,
+        width: 25,
+        resizeMode: Image.resizeMode.contain
+      },
+      altCurrencyText: {
+        color: THEME.COLORS.PRIMARY,
+        fontSize: 14
+      },
+      top: {
+        flex: 4,
+        flexDirection : 'row',
+      },
+      topRight:{
+        flex: 8
+      },
+      topLeft:{
+        flex: 2,
+        flexDirection: 'column',
+        alignItems: 'center'
+      },
+      shim:{
+        height: 10,
+        backgroundColor: THEME.COLORS.WHITE
+      },
+      bottom: {
+        flex: 4,
+        flexDirection : 'row',
+      },
+      bottomRight:{
+        flex: 8
+      },
+      bottomLeft:{
+        flex: 2,
+        flexDirection: 'column',
+        alignItems: 'center',
+      },
+      text: {
+        color: THEME.COLORS.GRAY_1
+      }
     },
     bottom: {
       width:'100%',
-      height:'100%',
-      backgroundColor: THEME.COLORS.ACCENT_ORANGE
     },
     icon:{
+      position:'relative',
+      alignItems:'center',
+      justifyContemt:'sapce-around',
       backgroundColor: THEME.COLORS.TRANSPARENT
     },
-    iconSize: 36
+    iconSize: 48
   },
   flipWrapper: {
     container: {

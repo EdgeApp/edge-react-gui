@@ -104,7 +104,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
               title={this.props.uiWallet.name}
             />
           </View>
-          {this.renderLogo(style,logo)}
+          {this.renderLogo(style, this.props.currencyLogo)}
 
         <View style={style.flipInput} >
         <ExchangedFlipInput

@@ -16,6 +16,12 @@ function setWallet (type: string, data: any) {
     data
   }
 }
+function setCryptoNativeDisplayAmount (type: string, data: {native: string, display: string}) {
+  return {
+    type,
+    data
+  }
+}
 function setShapeTransaction (type: string, data: AbcTransaction) {
   return {
     type,
@@ -47,21 +53,21 @@ export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDispl
   } = data
 
   if (whichWallet === Constants.FROM) {
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, primaryNativeAmount))
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: primaryDisplayAmount}))
     const exchangedAmount = bns.mul(Number(primaryDisplayAmount).toFixed(20) ,Number(state.cryptoExchange.exchangeRate).toFixed(8))
     const primaryInfo = state.cryptoExchange.toWalletPrimaryInfo
     const primaryNativeToWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
     let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeToWalletDenominationRatio)(exchangedAmount)
     newNativeAmount = bns.toFixed(newNativeAmount, 0, 0)
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, newNativeAmount))
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: newNativeAmount, display: exchangedAmount}))
   } else {
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, primaryNativeAmount))
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: primaryDisplayAmount}))
     const exchangedAmount = bns.mul(Number(primaryDisplayAmount).toFixed(20) ,Number(state.cryptoExchange.exchangeRate).toFixed(8))
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     const primaryNativeFromWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
     let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeFromWalletDenominationRatio)(exchangedAmount)
     newNativeAmount = bns.toFixed(newNativeAmount, 0, 0)
-    dispatch(actions.dispatchActionString(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, newNativeAmount))
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: newNativeAmount, display: exchangedAmount}))
 
   }
   // make spend
