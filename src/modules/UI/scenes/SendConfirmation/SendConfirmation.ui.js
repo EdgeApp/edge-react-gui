@@ -68,7 +68,8 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
   }
 
   render () {
-    let networkFee, cryptoFeeDenomination, cryptoFeeAmount, cryptoFeeString, fiatFeeSymbol, fiatFeeAmount, fiatFeeAmountPretty, fiatFeeAmountString, fiatFeeString, networkFeeSyntax
+    let networkFee, cryptoFeeDenomination, cryptoFeeAmount, cryptoFeeString, fiatFeeSymbol, fiatFeeAmount
+    let fiatFeeAmountPretty, cryptoFeeExchangeAmount, fiatFeeAmountString, fiatFeeString, networkFeeSyntax
     const {
       label,
       publicAddress,
@@ -86,13 +87,14 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
     } = this.props
     const color = 'white'
 
-    if (transaction && transaction.networkFee) {
+    if (transaction && bns.gt(transaction.networkFee, '0')) {
       networkFee = transaction.networkFee
       cryptoFeeDenomination = primaryInfo.displayDenomination.symbol
       cryptoFeeAmount = this.convertPrimaryNativeToDisplay(networkFee)
       cryptoFeeString = `${cryptoFeeDenomination} ${cryptoFeeAmount}`
       fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
-      fiatFeeAmount = currencyConverter.convertCurrency(currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeAmount)
+      cryptoFeeExchangeAmount = UTILS.convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)(transaction.networkFee)
+      fiatFeeAmount = currencyConverter.convertCurrency(currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
       fiatFeeAmountString = fiatFeeAmount.toFixed(2)
       fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
       fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
