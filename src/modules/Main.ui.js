@@ -2,7 +2,6 @@
 import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-core-types'
 
 import HockeyApp from 'react-native-hockeyapp'
-// import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
 import {Keyboard, Platform, StatusBar, Image, AppState} from 'react-native'
 import {connect} from 'react-redux'
@@ -195,7 +194,6 @@ export default class Main extends Component<Props, State> {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
-      // this.setState({ context, loading: false }, () => SplashScreen.hide())
       this.setState({context, loading: false})
     })
   }
