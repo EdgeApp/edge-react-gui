@@ -85,6 +85,16 @@ export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDispl
     dispatch(getShiftTransaction(fromWallet, toWallet)).catch((e) => {
       console.log(' ERROR getting shidt transaction. ')
       console.log(e)
+      if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
+        dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
+        return
+      }
+      if (e.message === Constants.DUST) {
+        dispatch(actions.dispatchAction(Constants.RECEIVED_DUST_ERROR))
+        return
+      }
+      console.warn('creating shift transaction failed' , e)
+
     })
   }
 
@@ -121,7 +131,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
   const spendInfo: AbcSpendInfo = {
-    networkFeeOption: 'high',
+    networkFeeOption: Constants.STANDARD_FEE,
     currencyCode: state.cryptoExchange.fromCurrencyCode,
     nativeAmount: state.cryptoExchange.fromNativeAmount,
     spendTargets: [

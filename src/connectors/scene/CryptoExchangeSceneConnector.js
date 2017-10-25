@@ -31,6 +31,7 @@ export const mapStateToProps = (state: any) => {
     fee: state.cryptoExchange.fee,
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
+    showNextButton: state.cryptoExchange.transaction
   }
 }
 

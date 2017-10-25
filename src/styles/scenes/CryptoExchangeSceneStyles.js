@@ -20,8 +20,20 @@ const CryptoExchangeSceneStyle = {
       height: 26,
       backgroundColor: THEME.COLORS.PRIMARY
     },
+    containerError: {
+      display:'flex',
+      width:'100%',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'space-around',
+      height: 26,
+      backgroundColor: THEME.COLORS.GRAY_4
+    },
     text: {
       color: THEME.COLORS.WHITE
+    },
+    textError: {
+      color: THEME.COLORS.PRIMARY
     }
   },
   shim: {

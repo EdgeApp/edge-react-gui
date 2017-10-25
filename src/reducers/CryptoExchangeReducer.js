@@ -17,6 +17,7 @@ const initialState = {
   toWalletPrimaryInfo: null,
   toCurrencyIcon: null,
 
+  insufficientError: false,
   fee: '',
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
@@ -90,9 +91,9 @@ export default function (state = initialState, action) {
   case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE:
     return {...state, reverseExchange: action.data}
   case Constants.UPDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: action.data, fee: action.data.networkFee}
+    return {...state, transaction: action.data, fee: action.data.networkFee, insufficientError: false}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: null}
+    return {...state, transaction: null, insufficientError: false}
   case Constants.SHIFT_COMPLETE:
     return {...state, transaction: null, confirmTransactionModalVisible: false}
   case Constants.CLOSE_CRYPTO_EXC_CONF_MODAL:
@@ -103,6 +104,8 @@ export default function (state = initialState, action) {
     return {...state, toNativeAmount: action.data.native, toDisplayAmount:action.data.display }
   case Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT:
     return {...state, fromNativeAmount: action.data.native, fromDisplayAmount:action.data.display}
+  case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR :
+    return {...state, transaction: null, insufficientError: true}
   default:
     return state
   }

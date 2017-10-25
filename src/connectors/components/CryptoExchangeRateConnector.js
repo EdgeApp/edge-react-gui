@@ -8,11 +8,13 @@ export const mapStateToProps = (state: any, ownProps: any) => {
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
   const exchangeRate = state.cryptoExchange.exchangeRate
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode
-  const exchangeRateString = '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
+  const insufficient = state.cryptoExchange.insufficientError
+  const exchangeRateString = insufficient ? 'insufficient funds' : '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
 
   return {
     style: ownProps.style,
-    exchangeRate: exchangeRateString
+    exchangeRate: exchangeRateString,
+    insufficient
   }
 }
 
