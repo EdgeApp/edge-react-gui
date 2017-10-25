@@ -172,11 +172,11 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?
   }
   type === Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE
     ? (dispatch(
-          getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
-        ),
-        dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
-        hasFrom = wallet
-      )
+        getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)
+      ),
+      dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
+      hasFrom = wallet
+    )
     : (dispatch(
         getCryptoExchangeRate(state.cryptoExchange.fromCurrencyCode, cc)
       ),
