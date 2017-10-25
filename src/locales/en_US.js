@@ -327,6 +327,7 @@ const strings = {
   send_confirmation_enter_send_pin: 'Enter 4 Digit PIN',
   send_confirmation_enter_send_password: 'Password',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_fee_line: 'Fee: + %s (%s)',
   fragment_send_confirmation_send_error_title: 'Error during send',
   fragment_send_confirmation_insufficient_funds_message: 'You do not have enough funds to send this transaction.',
   fragment_send_confirmation_insufficient_funds: 'Insufficient funds',

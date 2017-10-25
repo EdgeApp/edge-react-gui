@@ -161,6 +161,7 @@ export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, get
 
   return WALLET_API.makeSpend(abcWallet, spendInfo)
   .then((abcTransaction: AbcTransaction) => {
+    console.log('abcTransaction from makeSpend is: ', abcTransaction)
     dispatch(updateTransactionAction(parsedUri, abcTransaction, null))
   })
   .catch((error) => {

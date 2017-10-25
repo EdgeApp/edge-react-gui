@@ -2,11 +2,12 @@
 import React, {Component} from 'react'
 import {
   View,
-  Text,
   ScrollView,
   ActivityIndicator
 } from 'react-native'
-
+import Text from '../../components/FormattedText'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../locales/default'
 import styles from './styles.js'
 import {bns} from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
@@ -18,7 +19,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
 
-import type {GuiWallet} from '../../../../types'
+import type {GuiWallet, CurrencyConverter} from '../../../../types'
 import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
 import type {SendConfirmationState} from './reducer'
 
@@ -35,6 +36,7 @@ export type Props = {
   primaryInfo: FlipInputFieldInfo,
   sliderDisabled: boolean,
   secondaryInfo: FlipInputFieldInfo,
+  currencyConverter: CurrencyConverter
 }
 
 export type DispatchProps = {
@@ -66,18 +68,39 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
   }
 
   render () {
+    let networkFee, cryptoFeeDenomination, cryptoFeeAmount, cryptoFeeString, fiatFeeSymbol, fiatFeeAmount, fiatFeeAmountPretty, fiatFeeAmountString, fiatFeeString, networkFeeSyntax
     const {
       label,
-      publicAddress
+      publicAddress,
+      transaction
+
      } = this.props.sendConfirmation
     const {
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto,
       errorMsg,
-      nativeAmount
+      nativeAmount,
+      currencyConverter,
+      currencyCode
     } = this.props
     const color = 'white'
+
+    if (transaction && transaction.networkFee) {
+      networkFee = transaction.networkFee
+      cryptoFeeDenomination = primaryInfo.displayDenomination.symbol
+      cryptoFeeAmount = this.convertPrimaryNativeToDisplay(networkFee)
+      cryptoFeeString = `${cryptoFeeDenomination} ${cryptoFeeAmount}`
+      fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+      fiatFeeAmount = currencyConverter.convertCurrency(currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeAmount)
+      fiatFeeAmountString = fiatFeeAmount.toFixed(2)
+      fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
+      fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
+      networkFeeSyntax = sprintf(strings.enUS['send_confirmation_fee_line'], cryptoFeeString, fiatFeeString)
+    } else {
+      networkFeeSyntax = ''
+    }
+
 
     return (
       <Gradient style={[styles.view]}>
@@ -103,7 +126,10 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
               secondaryToPrimaryRatio={fiatPerCrypto}
               onAmountsChange={this.onAmountsChange}
               color={color} />
-            <Recipient label={label} link={''} publicAddress={publicAddress} />
+            <View style={[styles.feeArea]}>
+              <Text style={[styles.feeAreaText]}>{networkFeeSyntax}</Text>
+            </View>
+            <Recipient label={label} link={''} publicAddress={publicAddress}  style={styles.recipient} />
           </View>
           <View style={[styles.pendingSymbolArea]}>
             {this.props.sendConfirmation.pending
@@ -169,6 +195,15 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
   }
 
   onMaxPress = () => {}
+
+  convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
+    if (!primaryNativeAmount) { return '' }
+    const primaryNativeToDisplayRatio = this.getPrimaryNativeToDisplayRatio()
+    const primaryDisplayAmount = UTILS.convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
+    return primaryDisplayAmount
+  }
+
+  getPrimaryNativeToDisplayRatio = () => this.props.primaryInfo.displayDenomination.multiplier
 
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
     const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()

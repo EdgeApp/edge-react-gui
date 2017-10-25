@@ -24,6 +24,7 @@ import {
 const mapStateToProps = (state: State): Props => {
   const sendConfirmation = UI_SELECTORS.getSceneState(state, 'sendConfirmation')
   let fiatPerCrypto = 0
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -78,7 +79,8 @@ const mapStateToProps = (state: State): Props => {
     currencyCode,
     primaryInfo,
     sliderDisabled,
-    secondaryInfo
+    secondaryInfo,
+    currencyConverter
   }
 }
 
