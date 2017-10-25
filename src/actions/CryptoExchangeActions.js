@@ -29,23 +29,33 @@ function setShapeTransaction (type: string, data: AbcTransaction) {
   }
 }
 
-export const exchangeMax = () => (dispatch: any, getState: any) => {
+export const exchangeMax = () => async (dispatch: any, getState: any) => {
   const state = getState()
-  const fromWallet:GuiWallet = state.cryptoExchange.fromWallet
-  const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
-  const maxAmountNative = fromWallet.nativeBalances[fromCurrencyCode]
+  const fromWallet = state.cryptoExchange.fromWallet
+  const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const receiveAddress = await wallet.getReceiveAddress()
+  const currencyCode = state.cryptoExchange.fromCurrencyCode
   const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-  const ratio = primaryInfo.displayDenomination.multiplier.toString()
-  const maxDisplayAmount = UTILS.convertNativeToDenomination(ratio)(maxAmountNative)
-  // get display Amount then pass to the previous.
-  dispatch(actions.setNativeAmount({primaryNativeAmount:maxAmountNative, primaryDisplayAmount:maxDisplayAmount, whichWallet:Constants.FROM}))
-  console.log('stop')
+  const primaryRatio = primaryInfo.displayDenomination.multiplier.toString()
+
+  const abcSpendInfo: AbcSpendInfo = {
+    networkFeeOption: Constants.STANDARD_FEE,
+    currencyCode,
+    spendTargets: [
+      {
+        publicAddress: receiveAddress.publicAddress,
+      }
+    ]
+  }
+  const maxAmountNative = await wallet.getMaxSpendable(abcSpendInfo)
+  const displayAmount = UTILS.convertNativeToDenomination(primaryRatio)(maxAmountNative)
+  dispatch(actions.setNativeAmount({primaryNativeAmount:maxAmountNative, primaryDisplayAmount:displayAmount, whichWallet:Constants.FROM}))
 }
 export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDisplayAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
   console.log('stop')
   const state = getState()
   const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
-  const toWallet: GuiWallet = state.cryptoExchange.fromWallet
+  const toWallet: GuiWallet = state.cryptoExchange.toWallet
   const  {
     whichWallet,
     primaryNativeAmount,
