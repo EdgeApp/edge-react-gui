@@ -19,7 +19,7 @@ const initialState = {
   toCurrencyIcon: null,
 
   insufficientError: false,
-  fee: strings.enUS['string_fee']+ ' ' + strings.enUS['string_TBD'] +'. '+ strings.enUS['settings_title'] + ' ' + strings.enUS['string_TBD'] + ': ' + Constants.STANDARD_FEE,
+  fee: '',
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
@@ -107,7 +107,7 @@ export default function (state = initialState, action) {
     return {...state, reverseExchange: action.data}
   case Constants.UPDATE_SHIFT_TRANSACTION:
     return {...state, transaction: action.data.abcTransaction,
-      fee: action.data.networkFee ? strings.enUS['string_fee']+' ' +action.data.networkFee+ ' '+ state.fromCurrencyCode+'. '+strings.enUS['settings_title']+' '+ state.feeSetting : strings.enUS['string_fee']+ ' '+strings.enUS['string_TBD']+'. '+strings.enUS['settings_title']+' '+ state.feeSetting,
+      fee: action.data.networkFee ? strings.enUS['string_fee'] + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
       insufficientError: false}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
     return {...state, transaction: null, insufficientError: false}
