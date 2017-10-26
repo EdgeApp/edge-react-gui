@@ -13,8 +13,8 @@ type Props = {
   style: any,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
-  fromCurrencyIcon?: string,
-  toCurrencyIcon?: string,
+  fromCurrencyIconDark?: string,
+  toCurrencyIconDark?: string,
   currencyCode?: string,
   toCurrencyAmount?: string,
   fromCurrencyAmount?: string,
@@ -57,7 +57,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     return <View style={container}>
       <View style={top} >
         <View style={topLeft} >
-          {this.renderLogo(style, this.props.fromCurrencyIcon)}
+          {this.renderLogo(style, this.props.fromCurrencyIconDark)}
         </View>
         <View style={topRight} >
           <Text style={text}>
@@ -68,7 +68,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
       <View style={shim} />
       <View style={bottom} >
       <View style={bottomLeft} >
-        {this.renderLogo(style,this.props.toCurrencyIcon)}
+        {this.renderLogo(style,this.props.toCurrencyIconDark)}
       </View>
       <View style={bottomRight} >
         <Text style={text}>
