@@ -46,9 +46,31 @@ function getLogo (wallet, currencyCode) {
   }
   return null
 } */
+function deepCopyState (state) {
+  const deepCopy = JSON.parse(JSON.stringify(state))
+  deepCopy.toWallet = state.fromWallet
+  deepCopy.toCurrencyCode = state.fromCurrencyCode
+  deepCopy.toNativeAmount = state.fromNativeAmount
+  deepCopy.toDisplayAmount = state.fromDisplayAmount
+  deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
+  deepCopy.toCurrencyIcon = state.fromCurrencyIcon
+  deepCopy.fromWallet = state.toWallet
+  deepCopy.fromCurrencyCode = state.toCurrencyCode
+  deepCopy.fromNativeAmount = state.toNativeAmount
+  deepCopy.fromDisplayAmount = state.toDisplayAmount
+  deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
+  deepCopy.fromCurrencyIcon = state.toCurrencyIcon
+  deepCopy.exchangeRate = state.reverseExchange
+  deepCopy.reverseExchange = state.exchangeRate
+  deepCopy.insufficientError = false
+  return deepCopy
+}
 
 export default function (state = initialState, action) {
+
   switch (action.type) {
+  case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
+    return deepCopyState(state)
   case Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE:
     return {...state,
       fromWallet: action.data.wallet,
@@ -72,15 +94,6 @@ export default function (state = initialState, action) {
       toNativeAmount:'0',
       fromDisplayAmount: '0',
       toDisplayAmount: '0'
-    }
-  case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
-    return {...state,
-      toWallet: state.fromWallet,
-      fromWallet: state.toWallet,
-      toCurrencyCode: state.toCurrencyCode,
-      fromCurrencyCode: state.fromCurrencyCode,
-      toNativeAmount: state.toNativeAmount,
-      fromNativeAmount: state.fromNativeAmount
     }
   case Constants.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
     return {...state, walletListModalVisible: false}
