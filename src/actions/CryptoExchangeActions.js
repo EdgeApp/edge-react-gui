@@ -22,7 +22,11 @@ function setCryptoNativeDisplayAmount (type: string, data: {native: string, disp
     data
   }
 }
-function setShapeTransaction (type: string, data: AbcTransaction) {
+function setShapeTransaction (type: string, data: {
+  abcTransaction: AbcTransaction,
+  networkFee: string,
+  dispalyAmount: string
+}) {
   return {
     type,
     data
@@ -146,7 +150,19 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   console.log('stop for breakpoint')
   if (srcCurrencyCode !== destCurrencyCode) {
     let abcTransaction = await srcWallet.makeSpend(spendInfo)
-    dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, abcTransaction))
+    const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
+    const ratio = primaryInfo.displayDenomination.multiplier.toString()
+    let networkFee = UTILS.convertNativeToDenomination(ratio)(abcTransaction.networkFee)
+    let dispalyAmount = UTILS.convertNativeToDenomination(ratio)(abcTransaction.nativeAmount)
+    dispalyAmount = bns.toFixed(dispalyAmount, 0, 0)
+    // currecy code
+    // network fee
+    const returnObject = {
+      abcTransaction,
+      networkFee,
+      dispalyAmount
+    }
+    dispatch(setShapeTransaction(Constants.UPDATE_SHIFT_TRANSACTION, returnObject))
   }
 }
 

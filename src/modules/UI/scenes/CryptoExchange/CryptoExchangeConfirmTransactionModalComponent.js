@@ -7,9 +7,12 @@ import {Icon} from '../../components/Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
+import {GuiWallet} from '../../../../types'
 
 type Props = {
   style: any,
+  fromWallet: GuiWallet,
+  toWallet: GuiWallet,
   fromCurrencyIcon?: string,
   toCurrencyIcon?: string,
   currencyCode?: string,
@@ -48,6 +51,10 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     const fromCurrencyAmount = this.props.fromCurrencyAmount ? this.props.fromCurrencyAmount : ''
     const fromCurrencyCode = this.props.fromCurrencyCode ? this.props.fromCurrencyCode : ''
     const fee = this.props.fee ? this.props.fee : ''
+    const {
+      fromWallet,
+      toWalllet
+    } = this.props
     return <View style={container}>
       <View style={top} >
         <View style={topLeft} >
@@ -55,7 +62,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
         </View>
         <View style={topRight} >
           <Text style={text}>
-            {sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount,fromCurrencyCode ,fee)}
+            {sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount,fromCurrencyCode ,fee, fromWallet.name)}
           </Text>
         </View>
       </View>
@@ -66,7 +73,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
       </View>
       <View style={bottomRight} >
         <Text style={text}>
-          {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode)}
+          {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode, toWalllet.name)}
         </Text>
       </View>
       <View style={shim} />

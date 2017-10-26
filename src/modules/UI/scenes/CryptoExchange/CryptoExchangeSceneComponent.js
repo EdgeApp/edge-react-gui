@@ -93,6 +93,8 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
       return (
         <CryptoExchangeConfirmTransactionModalComponent
           style={style}
+          fromWallet={this.props.fromWallet}
+          toWallet={this.props.toWallet}
           closeFunction={this.props.closeConfirmation}
           fromCurrencyIcon={this.props.fromCurrencyIcon}
           fromCurrencyAmount={this.props.fromDisplayAmount}
