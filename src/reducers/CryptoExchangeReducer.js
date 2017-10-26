@@ -18,7 +18,8 @@ const initialState = {
   toCurrencyIcon: null,
 
   insufficientError: false,
-  fee: '',
+  fee: 'Fee: TBD: Settings: '+ Constants.STANDARD_FEE,
+  feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
   changeWallet: Constants.NONE,
@@ -91,7 +92,9 @@ export default function (state = initialState, action) {
   case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE:
     return {...state, reverseExchange: action.data}
   case Constants.UPDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: action.data, fee: action.data.networkFee, insufficientError: false}
+    return {...state, transaction: action.data,
+      fee: action.data.networkFee ? 'Fee: '+action.data.networkFee+ ' '+ state.fromCurrencyCode+' Setting: '+ state.feeSetting : 'Fee: TBD. Setting: '+ state.feeSetting,
+      insufficientError: false}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
     return {...state, transaction: null, insufficientError: false}
   case Constants.SHIFT_COMPLETE:

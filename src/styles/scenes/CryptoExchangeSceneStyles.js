@@ -113,7 +113,7 @@ const CryptoExchangeSceneStyle = {
       backgroundColor: THEME.COLORS.SECONDARY
     },
     topRow: {
-      flex: 1,
+      height:34,
       flexDirection: 'column',
       justifyContent: 'space-around'
     },
@@ -148,14 +148,14 @@ const CryptoExchangeSceneStyle = {
       fontSize: 14
     },
     flipInput: {
-      flex: 2
+      //flex: 2
+      height: 110
     },
     fee: {
-      flex: 1,
+      height: 36,
       flexDirection: 'column',
       alignItems: 'center',
-      justifyContent: 'space-around'
-
+      justifyContent: 'space-around',
     },
     feeText: {
       color: THEME.COLORS.WHITE
