@@ -46,9 +46,9 @@ type Props = {
 const HEADER_TEXT     = strings.enUS['send_scan_header_text']
 
 const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
-const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
+// const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
 const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
-const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
+// const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
 const FLASH_TEXT    = strings.enUS['fragment_send_flash']
 
 export default class Scan extends Component<any, any> {
@@ -86,7 +86,7 @@ export default class Scan extends Component<any, any> {
 
           <Gradient style={[styles.overlayButtonAreaWrap]}>
 
-            <TouchableHighlight style={styles.bottomButton}
+            {/* <TouchableHighlight style={styles.bottomButton}
               onPress={this._onToggleWalletListModal}
               underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
@@ -99,7 +99,7 @@ export default class Scan extends Component<any, any> {
                 </T>
 
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
 
             <TouchableHighlight style={styles.bottomButton}
               onPress={this._onToggleAddressModal}
@@ -116,7 +116,7 @@ export default class Scan extends Component<any, any> {
               </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.bottomButton}
+            {/* <TouchableHighlight style={styles.bottomButton}
               onPress={this.selectPhotoTapped}
               underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
@@ -129,7 +129,7 @@ export default class Scan extends Component<any, any> {
                 </T>
 
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
 
             <TouchableHighlight style={styles.bottomButton}
               onPress={this._onToggleTorch}
