@@ -12,6 +12,7 @@ type Props = {
   style: any,
   fee: string,
   uiWallet: GuiWallet,
+  currencyCode: string,
   whichWallet: string,
   abcWallet: AbcCurrencyWallet,
   primaryInfo: FlipInputFieldInfo,
@@ -76,7 +77,8 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
       primaryInfo,
       secondaryInfo,
       fiatPerCrypto,
-      nativeAmount
+      nativeAmount,
+      currencyCode
     } = this.props
     return (
       <View style={[style.containerNoFee, this.props.fee && style.container]}>
@@ -85,7 +87,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
               style={style.walletSelector}
               onPress={this.launchSelector}
               icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={this.props.uiWallet.name}
+              title={this.props.uiWallet.name+':'+currencyCode}
             />
           </View>
           {this.renderLogo(style, this.props.currencyLogo)}

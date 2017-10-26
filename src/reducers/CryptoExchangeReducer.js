@@ -1,4 +1,5 @@
 import * as Constants from '../constants/indexConstants'
+import strings from '../locales/default'
 const initialState = {
   exchangeRate: 1,
   reverseExchange: 1,
@@ -18,7 +19,8 @@ const initialState = {
   toCurrencyIcon: null,
 
   insufficientError: false,
-  fee: '',
+  fee: strings.enUS['string_fee']+ ' ' + strings.enUS['string_TBD'] +'. '+ strings.enUS['settings_title'] + ' ' + strings.enUS['string_TBD'] + ': ' + Constants.STANDARD_FEE,
+  feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
   changeWallet: Constants.NONE,
@@ -104,7 +106,9 @@ export default function (state = initialState, action) {
   case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE:
     return {...state, reverseExchange: action.data}
   case Constants.UPDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: action.data, fee: action.data.networkFee, insufficientError: false}
+    return {...state, transaction: action.data.abcTransaction,
+      fee: action.data.networkFee ? strings.enUS['string_fee']+' ' +action.data.networkFee+ ' '+ state.fromCurrencyCode+'. '+strings.enUS['settings_title']+' '+ state.feeSetting : strings.enUS['string_fee']+ ' '+strings.enUS['string_TBD']+'. '+strings.enUS['settings_title']+' '+ state.feeSetting,
+      insufficientError: false}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
     return {...state, transaction: null, insufficientError: false}
   case Constants.SHIFT_COMPLETE:

@@ -11,19 +11,17 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import styles from '../style'
 import {border as b} from '../../../../utils'
 import THEME from '../../../../../theme/variables/airbitz'
+import * as Constants from '../../../../../constants/indexConstants'
 
 export default class WalletListModalHeader extends Component<any> {
-  constructor (props: any) {
-    super(props)
-    this.props.type = 'from'
-  }
 
   onSearchExit = this.props.disableWalletListModalVisibility
 
   render () {
-    const headerSyntax = (this.props.type === 'from')
+    const whichMessage = (this.whichWallet === Constants.FROM) ? 'fragment_excahnge_wallet_from_header_title' : 'fragment_excahnge_wallet_to_header_title'
+    const headerSyntax = (this.props.type === Constants.FROM)
       ? 'fragment_select_wallet_header_title'
-      : 'fragment_send_other_wallet_header_title'
+      : (this.props.type === Constants.CRYPTO_EXCHANGE) ? whichMessage :'fragment_send_other_wallet_header_title'
     return (
       <View style={[styles.rowContainer, styles.headerContainer]}>
         <View style={[styles.headerContent, b()]}>
