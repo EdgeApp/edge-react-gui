@@ -67,23 +67,15 @@ export default class ExchangedFlipInput extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.primaryInfo.nativeAmount) {
-      const nativeAmount:string = bns.abs(nextProps.primaryInfo.nativeAmount)
-      const primaryDisplayAmount:string = this.convertPrimaryNativeToDisplay(nativeAmount)
-      if (bns.eq(this.state.primaryDisplayAmount, primaryDisplayAmount)) {
-        // Display amount didn't change. Check if exchange rate did.
-        if (this.props.secondaryToPrimaryRatio !== nextProps.secondaryToPrimaryRatio) {
-          if (this.state.lastChanged === LC_PRIMARY) {
-            this.onPrimaryAmountChange(this.state.primaryDisplayAmount)
-          } else if (this.state.lastChanged === LC_SECONDARY) {
-            this.onSecondaryAmountChange(this.state.secondaryDisplayAmount)
-          }
-        }
-      } else {
-        if (this.state.lastChanged === LC_UNDEFINED || this.state.lastChanged === LC_PRIMARY) {
+      const primaryNativeAmount: string = bns.abs(nextProps.primaryInfo.nativeAmount)
+      const primaryDisplayAmount = this.convertPrimaryNativeToDisplay(primaryNativeAmount)
+      if (this.state.lastChanged === LC_UNDEFINED) {
+        this.onPrimaryAmountChange(primaryDisplayAmount)
+      } else if (this.state.lastChanged === LC_PRIMARY) {
+        if (!bns.eq(this.state.primaryDisplayAmount, primaryDisplayAmount)) {
           this.onPrimaryAmountChange(primaryDisplayAmount)
         }
       }
-      // console.log('componentWillReceiveProps')
     }
   }
 
