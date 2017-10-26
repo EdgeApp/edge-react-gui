@@ -21,10 +21,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:  THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
+    marginRight: 10,
     justifyContent: 'space-around'
   },
   flipIcon: {
-    color: THEME.COLORS.GRAY_3
+    color: THEME.COLORS.GRAY_3,
   },
   spacer: {
     flex: 1,
@@ -51,9 +52,9 @@ export const top = StyleSheet.create({
   },
   symbol: {
     flex: 3,
-    fontSize: 17,
+    fontSize: 30,
     color: THEME.COLORS.WHITE,
-    textAlign: 'center',
+    textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
@@ -82,19 +83,22 @@ export const bottom = StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   symbol: {
-    flex: 1,
+    flex: 3,
+    fontSize: 16,
     color: THEME.COLORS.WHITE,
-    textAlign: 'center',
+    textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
-    flex: 4,
+    flex: 6,
+    fontSize: 18,
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currencyCode: {
-    flex: 1,
+    flex: 3,
+    fontSize: 10,
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
     backgroundColor: THEME.COLORS.TRANSPARENT
