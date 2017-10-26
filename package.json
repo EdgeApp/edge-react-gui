@@ -32,7 +32,7 @@
     "lint:fix": "npm run lint -- --fix",
     "flow:0": "flow; exit 0",
     "flow": "flow",
-    "test": "npm run lint && npm run flow && jest",
+    "test": "npm run lint && jest",
     "watch": "npm test -- --watch",
     "precommit": "npm test"
   },
