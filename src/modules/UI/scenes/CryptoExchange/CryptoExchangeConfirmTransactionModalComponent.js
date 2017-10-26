@@ -22,7 +22,6 @@ type Props = {
   fromCurrencyCode?: string,
   closeFunction(): void,
   confirmFunction(): void
-
 }
 export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props> {
   renderBottom = (style: any) => {
@@ -53,7 +52,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     const fee = this.props.fee ? this.props.fee : ''
     const {
       fromWallet,
-      toWalllet
+      toWallet
     } = this.props
     return <View style={container}>
       <View style={top} >
@@ -73,7 +72,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
       </View>
       <View style={bottomRight} >
         <Text style={text}>
-          {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode, toWalllet.name)}
+          {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode, toWallet.name)}
         </Text>
       </View>
       <View style={shim} />
