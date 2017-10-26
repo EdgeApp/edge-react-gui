@@ -25,8 +25,6 @@ export default class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      primaryNativeAmount: '',
-      secondaryNativeAmount: '',
       publicAddress: '',
       encodedURI: '',
       loading: props.loading
@@ -65,12 +63,9 @@ export default class Request extends Component {
     })
   }
 
-  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}) => {
+  onAmountsChange = ({primaryDisplayAmount}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
-    const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
-
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
 
     const parsedURI = {
       publicAddress: this.state.publicAddress,
@@ -79,8 +74,6 @@ export default class Request extends Component {
     const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
     this.setState({
-      primaryNativeAmount,
-      secondaryNativeAmount,
       encodedURI
     })
   }
@@ -96,7 +89,6 @@ export default class Request extends Component {
       primaryInfo,
       secondaryInfo
     } = this.props
-    const nativeAmount = this.state.primaryNativeAmount
     return (
       <Gradient style={styles.view}>
 
@@ -109,7 +101,7 @@ export default class Request extends Component {
 
         <View style={styles.main}>
           <ExchangedFlipInput
-            primaryInfo={{...primaryInfo, nativeAmount}}
+            primaryInfo={primaryInfo}
             secondaryInfo={secondaryInfo}
             secondaryToPrimaryRatio={secondaryToPrimaryRatio}
             onAmountsChange={this.onAmountsChange}
