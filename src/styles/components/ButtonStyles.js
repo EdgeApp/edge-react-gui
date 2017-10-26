@@ -24,23 +24,30 @@ const TextAndIconButtonStyle = {
     alignItems:'center',
   },
   inner:{
+    width:'80%',
+    position:'relative',
     flexDirection: 'row',
-    alignItems:'center',
+    justifyContent:'space-around',
+    alignItems:'center'
   },
   text: {
+    flexDirection:'row',
     color: THEME.COLORS.WHITE,
-    fontSize: 20
+    fontSize: 20,
+    alignItems: 'center'
   },
   textPressed: {
     color: THEME.COLORS.GRAY_2,
     fontSize: 20
   },
   icon: {
-    position:'relative',
-    top:2,
-    color: THEME.COLORS.WHITE
+    position:'absolute',
+    top:20,
+    color: THEME.COLORS.WHITE,
   },
   iconPressed: {
+    position:'absolute',
+    top:20,
     color: THEME.COLORS.GRAY_2
   },
   iconSize: 25,

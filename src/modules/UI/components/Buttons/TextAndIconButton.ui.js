@@ -59,12 +59,14 @@ class TextAndIconButton extends Component<Props, State> {
         underlayColor={underlayColor}
       >
       <View style={inner} >
-        <Text style={[text, this.state.pressed && textPressed]} >{this.props.title}</Text>
-        <FAIcon
+        <Text style={[text, this.state.pressed && textPressed]} ellipsizeMode={'middle'} numberOfLines={1} >
+        {this.props.title
+        }<FAIcon
           style={[icon, this.state.pressed && iconPressed]}
           name={this.props.icon}
           size={iconSize}
         />
+         </Text>
       </View>
       </TouchableHighlight>
     )
