@@ -44,7 +44,11 @@ type Props ={
   closeConfirmation: Function
 
 }
-export default class CryptoExchangeSceneComponent extends Component<Props> {
+
+type State = {
+  whichWallet: string
+}
+export default class CryptoExchangeSceneComponent extends Component<Props, State> {
 
   componentWillMount () {
     if (this.props.wallets.length > 1) {
@@ -53,6 +57,10 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
     } else if (this.props.wallets.length > 0) {
       this.props.selectFromWallet(this.props.intialWalletOne)
     }
+    this.setState({
+      whichWallet: Constants.FROM
+    })
+
   }
   componentWillReceiveProps (nextProps: Props) {
     if (!nextProps.fromWallet && nextProps.intialWalletOne) {
@@ -75,6 +83,9 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
 
   launchWalletSelector = (arg: string) => {
     this.props.openModal(arg)
+    this.setState({
+      whichWallet: arg
+    })
   }
 
   renderDropUp = () => {
@@ -83,6 +94,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
         <WalletListModal
           topDisplacement={33}
           type={Constants.CRYPTO_EXCHANGE}
+          whichWallet={this.state.whichWallet}
         />
       )
     }

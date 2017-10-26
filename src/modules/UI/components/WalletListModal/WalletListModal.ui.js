@@ -11,6 +11,7 @@ import platform from '../../../../theme/variables/platform.js'
 type Props = {
   topDisplacement: number,
   type: string,
+  whichWallet?: string,
   dropdownWalletListVisible: boolean,
   currentScene: string,
 }
@@ -21,7 +22,7 @@ export default class WalletListModal extends Component<Props> {
         animation='fadeInDown'
         duration={100} >
         <ScrollView>
-          <WalletListModalHeader type={this.props.type} />
+          <WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />
           <WalletListModalBody style={{flex: 1}}
             type={this.props.type}/>
         </ScrollView>
