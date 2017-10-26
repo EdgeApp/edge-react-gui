@@ -1,5 +1,11 @@
 // @flow
-import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, AbcContextOptions} from 'airbitz-core-types'
+import type {
+  AbcContext,
+  AbcContextCallbacks,
+  AbcCorePlugin,
+  AbcCurrencyPlugin,
+  AbcContextOptions
+} from 'airbitz-core-types'
 
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
@@ -65,16 +71,19 @@ import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
-import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
+import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 // $FlowFixMe
 import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
-const currencyPluginFactories = []
-currencyPluginFactories.push(EthereumCurrencyPluginFactory)
-currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
-currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
-currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
+const pluginFactories: Array<AbcCorePlugin> = [
+  coinbasePlugin,
+  shapeshiftPlugin
+]
+pluginFactories.push((EthereumCurrencyPluginFactory: any))
+pluginFactories.push(BitcoinCurrencyPluginFactory)
+pluginFactories.push(LitecoinCurrencyPluginFactory)
+pluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -133,7 +142,7 @@ function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,
-    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+    plugins: pluginFactories,
     shapeshiftKey: SHAPESHIFT_API_KEY
   }
 
