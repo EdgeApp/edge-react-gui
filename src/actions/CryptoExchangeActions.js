@@ -9,6 +9,14 @@ import * as actions from './indexActions'
 import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import {bns} from 'biggystring'
+import type {FlipInputFieldInfo} from '../modules/UI/components/FlipInput/FlipInput.ui'
+
+const DIVIDE_PRECISION = 18
+
+export type SetNativeAmountInfo = {
+  whichWallet: string,
+  primaryNativeAmount: string
+}
 
 function setWallet (type: string, data: any) {
   return {
@@ -40,7 +48,6 @@ export const exchangeMax = () => async (dispatch: any, getState: any) => {
   const receiveAddress = await wallet.getReceiveAddress()
   const currencyCode = state.cryptoExchange.fromCurrencyCode
   const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-  const primaryRatio = primaryInfo.displayDenomination.multiplier.toString()
 
   const abcSpendInfo: AbcSpendInfo = {
     networkFeeOption: Constants.STANDARD_FEE,
@@ -52,38 +59,53 @@ export const exchangeMax = () => async (dispatch: any, getState: any) => {
     ]
   }
   const maxAmountNative = await wallet.getMaxSpendable(abcSpendInfo)
-  const displayAmount = UTILS.convertNativeToDenomination(primaryRatio)(maxAmountNative)
-  dispatch(actions.setNativeAmount({primaryNativeAmount:maxAmountNative, primaryDisplayAmount:displayAmount, whichWallet:Constants.FROM}))
+
+  const setNativeAmountInfo: SetNativeAmountInfo = {
+    whichWallet: Constants.FROM,
+    primaryNativeAmount: maxAmountNative,
+    fromPrimaryInfo: primaryInfo,
+    toPrimaryInfo: state.cryptoExchange.toWalletPrimaryInfo
+  }
+  dispatch(actions.setNativeAmount(setNativeAmountInfo))
 }
-export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDisplayAmount: string, whichWallet: string}) => (dispatch: any, getState: any) => {
+
+export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, getState: any) => {
   console.log('stop')
   const state = getState()
   const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet = state.cryptoExchange.toWallet
   const  {
     whichWallet,
-    primaryNativeAmount,
-    primaryDisplayAmount
-  } = data
+    primaryNativeAmount
+  } = info
+
+  const toPrimaryInfo: FlipInputFieldInfo = state.cryptoExchange.toWalletPrimaryInfo
+  const fromPrimaryInfo: FlipInputFieldInfo = state.cryptoExchange.fromWalletPrimaryInfo
 
   if (whichWallet === Constants.FROM) {
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: primaryDisplayAmount}))
-    const exchangedAmount = bns.mul(primaryDisplayAmount, state.cryptoExchange.exchangeRate.toFixed(3))
-    const primaryInfo = state.cryptoExchange.toWalletPrimaryInfo
-    const primaryNativeToWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
-    let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeToWalletDenominationRatio)(exchangedAmount)
-    newNativeAmount = bns.toFixed(newNativeAmount, 0, 0)
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: newNativeAmount, display: exchangedAmount}))
-  } else {
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: primaryDisplayAmount}))
-    const exchangedAmount = bns.mul(primaryDisplayAmount, state.cryptoExchange.exchangeRate.toFixed(3))
-    const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-    const primaryNativeFromWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
-    let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeFromWalletDenominationRatio)(exchangedAmount)
-    newNativeAmount = bns.toFixed(newNativeAmount, 0, 0)
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: newNativeAmount, display: exchangedAmount}))
+    const fromDisplayAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+    const fromExchangeAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
+    const toExchangeAmount = bns.mul(fromExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
+
+    const toNativeAmount = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
+    const toDisplayAmount = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier)
+
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: fromDisplayAmount}))
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
+  } else {
+    const toDisplayAmount = bns.div(primaryNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+    const toExchangeAmount = bns.div(primaryNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+
+    const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
+
+    const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
+    const fromDisplayAmount = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier)
+
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: toDisplayAmount}))
+    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount}))
   }
+
   // make spend
   if (fromWallet && toWallet) {
     dispatch(getShiftTransaction(fromWallet, toWallet)).catch((e) => {
@@ -98,12 +120,9 @@ export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDispl
         return
       }
       console.warn('creating shift transaction failed' , e)
-
     })
   }
-
 }
-
 
 export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) => {
   const state = getState()
