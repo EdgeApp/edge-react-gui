@@ -68,7 +68,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
   }
 
   render () {
-    let networkFee, cryptoFeeDenomination, cryptoFeeAmount, cryptoFeeString, fiatFeeSymbol, fiatFeeAmount
+    let networkFee, cryptoFeeSymbol, cryptoFeeAmount, cryptoFeeString, fiatFeeSymbol, fiatFeeAmount
     let fiatFeeAmountPretty, cryptoFeeExchangeAmount, fiatFeeAmountString, fiatFeeString, networkFeeSyntax
     const {
       label,
@@ -89,9 +89,9 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
     if (transaction && bns.gt(transaction.networkFee, '0')) {
       networkFee = transaction.networkFee
-      cryptoFeeDenomination = primaryInfo.displayDenomination.symbol
+      cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
       cryptoFeeAmount = this.convertPrimaryNativeToDisplay(networkFee)
-      cryptoFeeString = `${cryptoFeeDenomination} ${cryptoFeeAmount}`
+      cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
       fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
       cryptoFeeExchangeAmount = UTILS.convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)(transaction.networkFee)
       fiatFeeAmount = currencyConverter.convertCurrency(currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
@@ -200,7 +200,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
     if (!primaryNativeAmount) { return '' }
-    const primaryNativeToDisplayRatio = this.getPrimaryNativeToDisplayRatio()
+    const primaryNativeToDisplayRatio = this.props.primaryInfo.exchangeDenomination.multiplier
     const primaryDisplayAmount = UTILS.convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
     return primaryDisplayAmount
   }
