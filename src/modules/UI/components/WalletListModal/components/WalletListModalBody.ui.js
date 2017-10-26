@@ -59,9 +59,9 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       <TouchableHighlight style={styles.tokenRowContainer}
         underlayColor={styleRaw.underlay.color}
         key={currencyCode} onPress={() => {
-          this.props.getTransactions(parentId, currencyCode, this.props.type)
+          this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
-          this.props.selectWallet(walletId, currencyCode)
+          this.props.selectWallet(walletId, currencyCode, this.props.type)
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={styles.currencyRowContent}>

@@ -5,7 +5,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
   from '../../../../connectors/components/CryptoExchangeRateConnector'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
 import CryptoExchangeFlipConnector
   from '../../../../connectors/components/CryptoExchangeFlipConnector'
@@ -15,6 +15,7 @@ import WalletListModal
 import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
 import {IconButton} from '../../components/Buttons/IconButton.ui'
 import {GuiWallet} from '../../../../types'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 type Props ={
   exchangeRate: number,
@@ -25,7 +26,9 @@ type Props ={
   toWallet: GuiWallet,
   fromCurrencyCode: string,
   fromCurrencyIcon: string,
+  fromCurrencyIconDark: string,
   toCurrencyIcon: string,
+  toCurrencyIconDark: string,
   toCurrencyCode: string,
   toDisplayAmount: string,
   fromDisplayAmount: string,
@@ -108,10 +111,10 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
           fromWallet={this.props.fromWallet}
           toWallet={this.props.toWallet}
           closeFunction={this.props.closeConfirmation}
-          fromCurrencyIcon={this.props.fromCurrencyIcon}
+          fromCurrencyIconDark={this.props.fromCurrencyIconDark}
           fromCurrencyAmount={this.props.fromDisplayAmount}
           fromCurrencyCode={this.props.fromCurrencyCode}
-          toCurrencyIcon={this.props.toCurrencyIcon}
+          toCurrencyIconDark={this.props.toCurrencyIconDark}
           toCurrencyAmount={this.props.toDisplayAmount}
           toCurrencyCode={this.props.toCurrencyCode}
           fee={this.props.fee}
@@ -126,7 +129,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
     const style = CryptoExchangeSceneStyle
     return (
       <Gradient style={[style.scene]}>
-        <ScrollView
+        <KeyboardAwareScrollView
           style={[style.mainScrollView]}
           keyboardShouldPersistTaps={Constants.ALWAYS}
           contentContainerStyle={style.scrollViewContentContainer}
@@ -159,7 +162,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
           <View style={style.actionButtonContainer} >
             {this.renderButton()}
           </View>
-        </ScrollView>
+        </KeyboardAwareScrollView>
         {this.renderDropUp()}
         {this.renderConfirmation(style.confirmModal)}
       </Gradient>

@@ -68,7 +68,7 @@ export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDispl
 
   if (whichWallet === Constants.FROM) {
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: primaryDisplayAmount}))
-    const exchangedAmount = bns.mul(Number(primaryDisplayAmount).toFixed(20) ,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    const exchangedAmount = bns.mul(primaryDisplayAmount, state.cryptoExchange.exchangeRate.toFixed(3))
     const primaryInfo = state.cryptoExchange.toWalletPrimaryInfo
     const primaryNativeToWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
     let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeToWalletDenominationRatio)(exchangedAmount)
@@ -76,7 +76,7 @@ export const setNativeAmount = (data: {primaryNativeAmount: string, primaryDispl
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: newNativeAmount, display: exchangedAmount}))
   } else {
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: primaryDisplayAmount}))
-    const exchangedAmount = bns.mul(Number(primaryDisplayAmount).toFixed(20) ,Number(state.cryptoExchange.exchangeRate).toFixed(8))
+    const exchangedAmount = bns.mul(primaryDisplayAmount, state.cryptoExchange.exchangeRate.toFixed(3))
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     const primaryNativeFromWalletDenominationRatio = primaryInfo.displayDenomination.multiplier.toString()
     let newNativeAmount = UTILS.convertDisplayToNative(primaryNativeFromWalletDenominationRatio)(exchangedAmount)

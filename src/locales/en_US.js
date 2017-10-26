@@ -849,13 +849,13 @@ const strings = {
 
   //Exchange
   title_confirm_excahnge: 'Confirm exchange',
-  string_from_exchange_info: 'Your are about to exchange \n %1$s %2$s (Fee: %3$s) from \n %4$s',
-  string_to_exchange_info: 'and deposit %1$s %2$s to \n %3$s',
+  string_from_exchange_info: 'Your are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
+  string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
   string_fee: 'Fee: ',
   string_TBD: 'TBD',
   fragment_excahnge_wallet_from_header_title: 'Choose a wallet to exchange funds from:',
   fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
-
+  string_confirm: 'Confirm'
 }
 
 export default strings
