@@ -88,3 +88,7 @@ export type ExchangeData = {
   secondaryDisplaySymbol: string,
   secondaryCurrencyCode: string
 }
+
+export type CurrencyConverter = {
+  convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
+}
