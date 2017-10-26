@@ -26,7 +26,7 @@ type Props = {
 export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props> {
   renderBottom = (style: any) => {
     return <View style={style.bottom}>
-    <PrimaryButton onPressFunction={this.props.confirmFunction} text={strings.enUS['string_continue']}/>
+    <PrimaryButton onPressFunction={this.props.confirmFunction} text={strings.enUS['string_confirm']}/>
      </View>
   }
   renderLogo = (style: any, logo?: string) => {
@@ -61,7 +61,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
         </View>
         <View style={topRight} >
           <Text style={text}>
-            {sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount,fromCurrencyCode ,fee, fromWallet.name)}
+            {sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount, fromCurrencyCode, fee, fromWallet.name)}
           </Text>
         </View>
       </View>
