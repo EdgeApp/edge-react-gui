@@ -40,12 +40,19 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
   onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const {whichWallet} = this.props
-    const data = {
-      primaryNativeAmount,
-      whichWallet
+
+    if (primaryNativeAmount != this.props.nativeAmount) {
+      const {whichWallet, primaryInfo} = this.props
+      const data = {
+        primaryNativeAmount,
+        primaryDisplayAmount,
+        whichWallet,
+        primaryInfo
+      }
+      console.log(this.props.whichWallet+' !==== Calling ')
+      this.props.setNativeAmount(data)
     }
-    this.props.setNativeAmount(data)
+
 
   }
 
@@ -97,7 +104,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
               title={this.props.uiWallet.name}
             />
           </View>
-          {this.renderLogo(style,logo)}
+          {this.renderLogo(style, this.props.currencyLogo)}
 
         <View style={style.flipInput} >
         <ExchangedFlipInput

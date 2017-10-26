@@ -7,10 +7,15 @@ type Props = {
 }
 export default class CryptoExchageRate extends Component<Props> {
   render () {
-    const style = this.props.style
+    const {
+      container,
+      containerError,
+      text,
+      textError
+    } = this.props.style
     return (
-      <View style={style.container}>
-          <Text style={style.text}>{this.props.exchangeRate}</Text>
+      <View style={[container, this.props.insufficient && containerError]}>
+          <Text style={[text,this.props.insufficient && textError ]}>{this.props.exchangeRate}</Text>
       </View>
     )
   }

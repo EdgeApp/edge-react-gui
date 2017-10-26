@@ -27,15 +27,28 @@ export const mapStateToProps = (state: any) => {
   return {
     style: {...Styles.MenuDropDownStyle, icon: {...Styles.MenuDropDownStyle.icon, color:THEME.COLORS.WHITE} },
     exchangeRate: state.cryptoExchange.exchangeRate,
-    data
+    data,
+    rightSide: true
   }
 }
 
 export const mapDispatchToProps = (dispatch: any) => ({
-  openMenu: () => dispatch(actions.dispatchAction(Constants.OPEN_EXCHANGE_HEADER_MENU)),
-  closeMenu: () => dispatch(actions.dispatchAction(Constants.CLOSE_EXCHANGE_HEADER_MENU)),
   onSelect: (value: string) => {
     console.log(value)
+    switch (value) {
+    case Constants.HELP_VALUE:
+      console.log('HELP MENU CLICK ')
+      break
+
+    case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
+      console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
+      dispatch(actions.exchangeMax())
+      break
+
+    case Constants.CHANGE_MINING_FEE_VALUE:
+      console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
+      break
+    }
   }
   //nextScreen: () => dispatch(actions.nextScreen())
 })

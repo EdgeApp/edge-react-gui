@@ -844,7 +844,12 @@ const strings = {
   // help modal
   help_modal_title: 'Crypto Wallet and Directory',
   help_version: 'Version',
-  help_build: 'Build'
+  help_build: 'Build',
+
+  //Exchange
+  title_confirm_excahnge: 'Confirm exchange',
+  string_from_exchange_info: 'Your are about to exchange \n %1$s %2$s (Fee: %3$s) from \n MyBTCFeelance',
+  string_to_exchange_info: 'and deposit %1$s %2$s to \nMyBTCFeelance',
 }
 
 export default strings

@@ -24,10 +24,15 @@ type Props ={
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
   fromCurrencyCode: string,
+  fromCurrencyIcon: string,
+  toCurrencyIcon: string,
   toCurrencyCode: string,
+  toDisplayAmount: string,
+  fromDisplayAmount: string,
   fromAmountNative: string,
   toAmountNative: number,
   fee: string,
+  showNextButton?: string,
   showWalletSelectModal: boolean,
   showConfirmShiftModal: boolean,
   selectFromWallet: Function,
@@ -57,6 +62,13 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
       this.props.selectToWallet(nextProps.intialWalletTwo)
     }
   }
+  renderButton = () => {
+    if (this.props.showNextButton) {
+      return <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.props.openConfirmation} />
+    }
+    return null
+  }
+
   flipThis = () => {
     this.props.swapFromAndToWallets()
   }
@@ -82,6 +94,13 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
         <CryptoExchangeConfirmTransactionModalComponent
           style={style}
           closeFunction={this.props.closeConfirmation}
+          fromCurrencyIcon={this.props.fromCurrencyIcon}
+          fromCurrencyAmount={this.props.fromDisplayAmount}
+          fromCurrencyCode={this.props.fromCurrencyCode}
+          toCurrencyIcon={this.props.toCurrencyIcon}
+          toCurrencyAmount={this.props.toDisplayAmount}
+          toCurrencyCode={this.props.toCurrencyCode}
+          fee={this.props.fee}
           confirmFunction={this.props.shift}
         />
       )
@@ -124,7 +143,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props> {
           />
           <View style={style.shim} />
           <View style={style.actionButtonContainer} >
-            <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.props.openConfirmation} />
+            {this.renderButton()}
           </View>
         </ScrollView>
         {this.renderDropUp()}

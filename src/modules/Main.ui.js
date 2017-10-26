@@ -1,5 +1,5 @@
 // @flow
-import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin} from 'airbitz-core-types'
+import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, AbcContextOptions} from 'airbitz-core-types'
 
 import HockeyApp from 'react-native-hockeyapp'
 // import SplashScreen from 'react-native-splash-screen'
@@ -32,6 +32,7 @@ import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector
 import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import HelpButton from './UI/components/Header/Component/HelpButton.ui'
+import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 
 import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
 import Request from './UI/scenes/Request/index'
@@ -129,7 +130,7 @@ tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
 tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
-  const opts = {
+  const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,
     plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
@@ -253,7 +254,7 @@ export default class Main extends Component<Props, State> {
                             animation={'fade'}
                             duration={200} />
                         </Stack>
-                        <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                    <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />

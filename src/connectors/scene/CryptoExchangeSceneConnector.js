@@ -22,11 +22,16 @@ export const mapStateToProps = (state: any) => {
     toWallet: state.cryptoExchange.toWallet,
     fromCurrencyCode: state.cryptoExchange.fromCurrencyCode,
     toCurrencyCode: state.cryptoExchange.toCurrencyCode,
+    fromDisplayAmount: state.cryptoExchange.fromDisplayAmount,
+    toDisplayAmount: state.cryptoExchange.toDisplayAmount,
     fromAmountNative,
     toAmountNative,
+    fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon,
+    toCurrencyIcon: state.cryptoExchange.toCurrencyIcon,
     fee: state.cryptoExchange.fee,
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
+    showNextButton: state.cryptoExchange.transaction
   }
 }
 
