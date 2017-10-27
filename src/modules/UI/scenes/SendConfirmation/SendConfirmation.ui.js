@@ -106,6 +106,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
     return (
       <Gradient style={[styles.view]}>
+        <Gradient style={{height: 66, width: '100%'}} />
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
           <View style={[styles.exchangeRateContainer, UTILS.border()]}>
