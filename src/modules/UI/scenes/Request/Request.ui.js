@@ -44,6 +44,7 @@ export default class Request extends Component {
           publicAddress
         })
       })
+      .catch((e) => console.log(e))
     }
   }
 
@@ -61,6 +62,7 @@ export default class Request extends Component {
         publicAddress
       })
     })
+    .catch((e) => console.log(e))
   }
 
   onAmountsChange = ({primaryDisplayAmount}) => {
