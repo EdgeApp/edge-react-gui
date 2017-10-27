@@ -856,7 +856,9 @@ const strings = {
   string_TBD: 'TBD',
   fragment_excahnge_wallet_from_header_title: 'Choose a wallet to exchange funds from:',
   fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
-  string_confirm: 'Confirm'
+  string_confirm: 'Confirm',
+  exchange_succeeded: 'Exchange Succeeded',
+  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes'
 }
 
 export default strings

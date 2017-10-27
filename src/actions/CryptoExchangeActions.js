@@ -1,4 +1,5 @@
 // @flow
+import {Alert} from 'react-native'
 import type {GuiWallet,GuiDenomination, GuiCurrencyInfo} from '../types'
 import * as Constants from '../constants/indexConstants'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
@@ -10,6 +11,7 @@ import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import {bns} from 'biggystring'
 import type {FlipInputFieldInfo} from '../modules/UI/components/FlipInput/FlipInput.ui'
+import strings from '../locales/default'
 
 const DIVIDE_PRECISION = 18
 
@@ -140,6 +142,9 @@ export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) =
       dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
       console.log(savedTransaction)
+      setTimeout(() => {
+        Alert.alert(strings.enUS['exchange_succeeded'], strings.enUS['exchanges_may_take_minutes'])
+      },1)
     } catch (error) {
       console.log(error.message)
       console.warn(error)
