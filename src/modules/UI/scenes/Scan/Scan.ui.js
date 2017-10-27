@@ -22,6 +22,7 @@ import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import * as UTILS from '../../../utils.js'
 
 import styles, {styles as styleRaw} from './style'
 import ABAlert from '../../components/ABAlert/indexABAlert'
@@ -45,7 +46,7 @@ type Props = {
 
 const HEADER_TEXT     = strings.enUS['send_scan_header_text']
 
-const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
+const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
 // const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
 const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
 // const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
@@ -72,8 +73,9 @@ export default class Scan extends Component<any, any> {
   render () {
     return (
       <View style={styles.container}>
+        <Gradient style={{height: 66, width: '100%'}} />
         {this.renderCamera()}
-        <View style={[styles.overlay]}>
+        <View style={[styles.overlay, UTILS.border()]}>
 
           <AddressModal />
 
@@ -236,15 +238,15 @@ export default class Scan extends Component<any, any> {
       )
     } else if (this.state.cameraPermission === false) {
       return (
-        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
-          <Text>
+        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}, UTILS.border()]}>
+          <Text style={[UTILS.border(), {alignSelf: 'center'}]}>
             {DENIED_PERMISSION_TEXT}
           </Text>
         </View>
       )
     } else {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
           <ActivityIndicator size='large' style={{flex: 1, alignSelf: 'center'}} />
         </View>
       )

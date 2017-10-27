@@ -150,7 +150,7 @@ export default class WalletList extends Component<any, {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
-
+        <Gradient style={{height: 66, width: '100%'}} />
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader]}>
