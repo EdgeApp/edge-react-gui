@@ -28,7 +28,7 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
   CONTEXT_API.getCurrencyPlugins(context)
-    .then((currencyPlugins) => {
+    .then(async (currencyPlugins) => {
       currencyPlugins.forEach((plugin) => {
         plugin.currencyInfo.walletTypes.forEach((type) => {
           currencyCodes[type] = plugin.currencyInfo.currencyCode
@@ -48,7 +48,7 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
         return
       }
       // TODO: Allen - Turn on when Bitcoin is turned back on
-      dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
+      await dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
       dispatch(actions.createCurrencyWallet(strings.enUS['string_first_ethereum_wallet_name'], Constants.ETHEREUM_WALLET, Constants.USD_FIAT, false))
       dispatch(loadSettings())
     })
