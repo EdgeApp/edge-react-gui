@@ -73,7 +73,6 @@ export default class Scan extends Component<any, any> {
   render () {
     return (
       <View style={styles.container}>
-        <Gradient style={{height: 66, width: '100%'}} />
         {this.renderCamera()}
         <View style={[styles.overlay, UTILS.border()]}>
 
@@ -239,7 +238,7 @@ export default class Scan extends Component<any, any> {
     } else if (this.state.cameraPermission === false) {
       return (
         <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}, UTILS.border()]}>
-          <Text style={[UTILS.border(), {alignSelf: 'center'}]}>
+          <Text>
             {DENIED_PERMISSION_TEXT}
           </Text>
         </View>

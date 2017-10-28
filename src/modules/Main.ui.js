@@ -238,7 +238,7 @@ export default class Main extends Component<Props, State> {
                 {/*<Lightbox>*/}
                 <Stack hideNavBar key='root' navigationBarStyle={{backgroundColor: THEME.COLORS.TRANSPARENT}} backButtonTintColor='white' titleStyle={{color: THEME.COLORS.WHITE, alignSelf: 'center'}}>
                   <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
-                  <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
+                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
                   <Drawer hideNavBar key='edge' contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/*
                      Wrapper Scene needed to fix a bug where the tabs would
@@ -250,11 +250,11 @@ export default class Main extends Component<Props, State> {
                         <Stack key={Constants.WALLET_LIST} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'transparent'} tabBarLabel='Wallets'>
                           <Scene key='walletList_notused' component={WalletList} navTransparent={true} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' navTransparent={true} animation={'fade'} duration={600} />
-                          <Scene key={Constants.TRANSACTION_LIST} tintColor={styles.backButtonColor} navTransparent={true}  icon={this.icon(Constants.TRANSACTION_LIST)}renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
+                          <Scene key={Constants.TRANSACTION_LIST} tintColor={styles.backButtonColor} navTransparent={true} icon={this.icon(Constants.TRANSACTION_LIST)}renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
                         <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} navTransparent={true} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
-                        <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} navTransparent={true} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} navTransparent={true} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                        <Stack key={Constants.SCAN} title='Send' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                           <Scene key={Constants.EDGE_LOGIN}
                             renderTitle={'Edge Login'}
                             component={EdgeLoginSceneConnector}
