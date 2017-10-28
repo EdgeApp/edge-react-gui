@@ -225,14 +225,14 @@ export default class Main extends Component<Props, State> {
   }
 
   renderWalletListNavBar = () => (
-      <Header/>
+    <Header/>
   )
 
   render () {
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
-          <RouterWithRedux>
+          <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
                 {/*<Lightbox>*/}
@@ -345,5 +345,16 @@ export default class Main extends Component<Props, State> {
   autoLogout () {
     // console.log('TIMEOUT')
     this.props.autoLogout()
+  }
+
+  isCurrentScene = (sceneKey: string) => {
+    return Actions.currentScene === sceneKey
+  }
+
+  handleBack = () => {
+    if (!this.isCurrentScene('walletList_notused')) {
+      Actions.pop()
+    }
+    return true
   }
 }
