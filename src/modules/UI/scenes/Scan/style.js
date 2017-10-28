@@ -26,9 +26,7 @@ export const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.GRAY_1,
-    opacity: 0.95,
-    position: 'relative',
-    top: 66
+    opacity: 0.95
   },
   overlayTopText: {
     color: THEME.COLORS.WHITE,
