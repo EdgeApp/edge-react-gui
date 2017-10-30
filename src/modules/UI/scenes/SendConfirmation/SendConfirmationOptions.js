@@ -14,6 +14,8 @@ import styles from './styles'
 export default class SendConfirmationOptions extends Component {
   handleMenuOptions (key) {
     switch (key) {
+    case 'fee':
+      return this.props.changeMiningFee()
     case 'help':
       return this.props.openHelpModal()
     case 'max':
@@ -31,7 +33,7 @@ export default class SendConfirmationOptions extends Component {
             </Text>
           </MenuTrigger>
           <MenuOptions optionsContainerStyle={styles.optionContainer}>
-            <MenuOption value={1} style={styles.optionRow}>
+            <MenuOption value='fee' style={styles.optionRow}>
               <Text style={styles.optionText}>
                 {CHANGE_MINING_FEE_TEXT}
               </Text>

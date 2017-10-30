@@ -123,6 +123,8 @@ export default function (state = initialState, action) {
     return {...state, fromNativeAmount: action.data.native, fromDisplayAmount:action.data.display}
   case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR :
     return {...state, transaction: null, insufficientError: true}
+  case Constants.CHANGE_EXCHANGE_FEE :
+    return {...state, fee: action.fee,  feeSetting: action.feeSetting}
   default:
     return state
   }

@@ -45,6 +45,7 @@ import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
+import ChangeMiningFee from './UI/scenes/ChangeMiningFee/ChangeMiningFeeConnector.ui'
 
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
@@ -258,6 +259,16 @@ export default class Main extends Component<Props, State> {
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />
+                        <Scene
+                          key={Constants.CHANGE_MINING_FEE}
+                          component={ChangeMiningFee}
+                          onLeft={Actions.pop}
+                          leftTitle='Back'
+                          renderRightButton={() => <HelpButton/>}
+                          title='Change Mining Fee'
+                          animation='fade'
+                          duration={600}
+                        />
                       </Stack>
                       <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
                         <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
