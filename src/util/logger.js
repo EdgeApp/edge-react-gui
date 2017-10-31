@@ -4,7 +4,7 @@ import RNFS from 'react-native-fs'
 import ENV from '../../env.json'
 
 const SAVE_TIMEOUT = 1000 * 10 // ms
-const LOG_SERVER_TIMEOUT = 1000 // ms
+// const LOG_SERVER_TIMEOUT = 1000 // ms
 
 const path = RNFS.DocumentDirectoryPath + '/logs.txt'
 
