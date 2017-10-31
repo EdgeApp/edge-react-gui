@@ -19,6 +19,10 @@ const EdgeLoginScreen = {
     justifyContent: 'space-around'
 
   },
+  image: {
+    width: 70,
+    height: 70
+  },
   headerTextRow: {
     flex: 3,
     alignItems: 'center',
