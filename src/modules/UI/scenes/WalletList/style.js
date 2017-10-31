@@ -35,6 +35,12 @@ export const styles = {
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
+  hiddenBalanceBoxDollarsWrap: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
   currentBalanceBoxDollars: {
     color: THEME.COLORS.PRIMARY,
     fontSize: 44
