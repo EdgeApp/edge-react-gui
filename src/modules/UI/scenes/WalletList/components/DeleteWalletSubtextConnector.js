@@ -1,6 +1,12 @@
 import {connect} from 'react-redux'
 import DeleteWalletSubtext from './DeleteWalletSubtext.ui'
 
-export default connect((state) => ({
-  currentWalletBeingDeleted: state.ui.scenes.walletList.currentWalletBeingDeleted
-}))(DeleteWalletSubtext)
+import { getWalletName } from '../../../../Core/selectors'
+
+export default connect((state) => {
+  const { walletId } = state.ui.scenes.walletList
+
+  return {
+    currentWalletBeingDeleted: getWalletName(state, walletId)
+  }
+})(DeleteWalletSubtext)
