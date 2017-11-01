@@ -41,8 +41,7 @@ export type Props = {
   thumbnailPath: string,
   currencyInfo: AbcCurrencyInfo,
   currencyCode: string,
-  wallets: Array<GuiWallet>,
-  selectedWallet: GuiWallet
+  wallets: Array<GuiWallet>
 }
 
 export type DispatchProps = {
@@ -101,7 +100,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     if (props.abcTransaction.wallet) {
       this.guiWallet = props.wallets[props.abcTransaction.wallet.id]
     } else {
-      this.guiWallet = this.props.selectedWallet
+      throw 'No wallet on transaction object'
     }
 
     if (props.abcTransaction && props.abcTransaction.metadata) {
