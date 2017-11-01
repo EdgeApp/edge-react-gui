@@ -31,7 +31,7 @@ export default class HelpModal extends Component {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText='help_modal_title'
-        modalMiddle={<WebView ref={(ref) => { this.webview = ref }}scalesPageToFit={false} style={{justifyContent: 'center', alignItems:'center', height: 240, flex: 1}} source={HTML}
+        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={false} style={{justifyContent: 'center', alignItems:'center', height: 240, flex: 1}} source={HTML}
           onNavigationStateChange={(event) => {
             if (!event.url.includes('assets/src/html/enUS/info.html')) {
               console.log('event is: ', event)
