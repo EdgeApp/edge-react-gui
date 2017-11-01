@@ -34,7 +34,6 @@ const categories = ['income', 'expense', 'exchange', 'transfer']
 export type Props = {
   abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
-  fiatSymbol: string,
   subcategoriesList: Array<string>,
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
@@ -85,6 +84,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   subcategoryTextInput: ?HTMLButtonElement
   payeeTextInput: ?HTMLButtonElement
   guiWallet: GuiWallet
+  fiatSymbol: string
 
   constructor (props: Props & DispatchProps) {
     super(props)
@@ -99,6 +99,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     let notes = ''
     if (props.abcTransaction.wallet) {
       this.guiWallet = props.wallets[props.abcTransaction.wallet.id]
+      this.fiatSymbol = UTILS.getFiatSymbol(this.guiWallet.fiatCurrencyCode)
     } else {
       throw 'No wallet on transaction object'
     }
@@ -561,7 +562,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   onPressFxn={this.onSaveTxDetails}
                   fiatCurrencyCode={this.guiWallet.fiatCurrencyCode}
                   cryptoCurrencyCode={this.props.abcTransaction.currencyCode}
-                  fiatCurrencySymbol={this.props.fiatSymbol}
+                  fiatCurrencySymbol={this.fiatSymbol}
                   fiatAmount={this.state.amountFiat}
                   onEnterSubcategories={this.onEnterSubcategories}
                   subCategorySelectVisibility={this.state.subCategorySelectVisibility}
