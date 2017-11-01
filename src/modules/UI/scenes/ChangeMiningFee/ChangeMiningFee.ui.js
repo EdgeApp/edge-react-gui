@@ -3,14 +3,15 @@ import {View, Text, TextInput} from 'react-native'
 
 import RadioButton from './components/RadioButton.ui'
 import * as FEE from '../../../../constants/FeeConstants'
+import strings from '../../../../locales/default'
 
 import style from './style'
 
 const feeOptions = [
-  { value: FEE.LOW_FEE, label: 'Low' },
-  { value: FEE.STANDARD_FEE, label: 'Standart' },
-  { value: FEE.HIGH_FEE, label: 'High' },
-  { value: FEE.CUSTOM_FEE, label: 'Custom (Advanced)' },
+  { value: FEE.LOW_FEE, label: 'mining_fee_low_label_choice' },
+  { value: FEE.STANDARD_FEE, label: 'mining_fee_standard_label_choice' },
+  { value: FEE.HIGH_FEE, label: 'mining_fee_high_label_choice' },
+  { value: FEE.CUSTOM_FEE, label: 'mining_fee_custom_label_choice' },
 ]
 
 export default class ChangeMiningFee extends Component {
@@ -28,8 +29,8 @@ export default class ChangeMiningFee extends Component {
     }
   }
 
-  hendlePress = (feeSetting) => this.setState({ feeSetting, fee: '' });
-  hendleChange = (fee) => this.setState({ fee });
+  handlePress = (feeSetting) => this.setState({ feeSetting, fee: '' });
+  handleChange = (fee) => this.setState({ fee });
 
   render () {
     const { feeSetting, fee } = this.state
@@ -37,15 +38,15 @@ export default class ChangeMiningFee extends Component {
     return (
       <View style={style.wrapper}>
         <Text style={style.header} >
-          Warning: Low Fees may cause long delays in transaction confirmation
+          {strings.enUS['change_mining_fee_body']}
         </Text>
         <View>
           {feeOptions.map(({ value, label }) => (
             <RadioButton
               key={value}
               value={value}
-              label={label}
-              onPress={this.hendlePress}
+              label={strings.enUS[label]}
+              onPress={this.handlePress}
               isSelected={value === feeSetting}
             />
           ))}
@@ -57,7 +58,7 @@ export default class ChangeMiningFee extends Component {
               value={fee}
               keyboardType='numeric'
               placeholder='Satoshi per byte'
-              onChangeText={this.hendleChange}
+              onChangeText={this.handleChange}
               returnKeyType='done'
             />
           </View>

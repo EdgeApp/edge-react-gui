@@ -5,7 +5,7 @@ import T from '../../../components/FormattedText'
 import style from '../style'
 
 export default class RadioButton extends Component {
-  hendlePress = () => this.props.onPress(this.props.value)
+  handlePress = () => this.props.onPress(this.props.value)
 
   renderIcon () {
     const { isSelected } = this.props
@@ -17,7 +17,7 @@ export default class RadioButton extends Component {
 
   render () {
     return (
-      <TouchableWithoutFeedback onPress={this.hendlePress}>
+      <TouchableWithoutFeedback onPress={this.handlePress}>
         <View style={style.column}>
           {this.renderIcon()}
           <View>
