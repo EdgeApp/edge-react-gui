@@ -81,7 +81,7 @@ class AmountArea extends Component<Props, State> {
   }
 
   render () {
-    let feeSyntax, leftData, convertedAmount, amountString, absoluteAmount
+    let feeSyntax, leftData, convertedAmount, amountString, absoluteAmount, symbolString
     absoluteAmount = abs(this.props.abcTransaction.nativeAmount)
 
     if (this.props.direction === 'receive') {
@@ -93,7 +93,7 @@ class AmountArea extends Component<Props, State> {
         syntax: strings.enUS['fragment_transaction_income']
       }
     } else { // send tx
-      if (UTILS.isCryptoParentCurrency(this.props.selectedWallet, this.props.cryptoCurrencyCode)) { // stub, check BTC vs. ETH (parent currency)
+      if (this.props.abcTransaction.networkFee) { // stub, check BTC vs. ETH (parent currency)
         convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
         const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.networkFee) // convert fee to correct denomination
         const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
@@ -114,6 +114,12 @@ class AmountArea extends Component<Props, State> {
     }
 
     let notes = this.props.abcTransaction.metadata ? this.props.abcTransaction.metadata.notes : ''
+    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.abcTransaction.currencyCode)) { // if it is the parent crypto
+      symbolString = this.props.walletDefaultDenomProps.symbol ? (this.props.walletDefaultDenomProps.symbol + ' ') : ''
+    } else {
+      symbolString = ''
+    }
+
     if (!notes) notes = ''
 
     return (
@@ -124,7 +130,7 @@ class AmountArea extends Component<Props, State> {
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{(this.props.walletDefaultDenomProps.symbol + ' ') || ''}{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>{symbolString}{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{feeSyntax}</FormattedText>

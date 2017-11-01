@@ -34,13 +34,13 @@ const categories = ['income', 'expense', 'exchange', 'transfer']
 export type Props = {
   abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
-  fiatSymbol: string,
-  selectedWallet: GuiWallet,
   subcategoriesList: Array<string>,
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
-  currencyInfo: AbcCurrencyInfo
+  currencyInfo: AbcCurrencyInfo,
+  currencyCode: string,
+  wallets: Array<GuiWallet>
 }
 
 export type DispatchProps = {
@@ -83,6 +83,8 @@ const INCOME_TEXT = strings.enUS['fragment_transaction_income']
 export class TransactionDetails extends Component<Props & DispatchProps, State> {
   subcategoryTextInput: ?HTMLButtonElement
   payeeTextInput: ?HTMLButtonElement
+  guiWallet: GuiWallet
+  fiatSymbol: string
 
   constructor (props: Props & DispatchProps) {
     super(props)
@@ -95,6 +97,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     let name = ''
     let amountFiat = '0.00'
     let notes = ''
+    if (props.abcTransaction.wallet) {
+      this.guiWallet = props.wallets[props.abcTransaction.wallet.id]
+      this.fiatSymbol = UTILS.getFiatSymbol(this.guiWallet.fiatCurrencyCode)
+    } else {
+      throw 'No wallet on transaction object'
+    }
 
     if (props.abcTransaction && props.abcTransaction.metadata) {
       cat = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
@@ -372,7 +380,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     let newAmountFiat = this.state.amountFiat
     const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
     const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
-    this.props.setTransactionDetails(txid, this.props.selectedWallet.currencyCode, abcMetadata)
+    this.props.setTransactionDetails(txid, this.guiWallet.currencyCode, abcMetadata)
   }
 
   componentDidMount () {
@@ -395,7 +403,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   componentWillMount () {
-    this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.props.selectedWallet, this.props.settings)})
+    // check if metaToken, is not then do not set walletDefaultProps to anything other than initial blank values
+    if (UTILS.isCryptoParentCurrency(this.guiWallet, this.props.abcTransaction.currencyCode)) {
+      this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings)})
+    } else {
+      this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings, this.props.abcTransaction.currencyCode)})
+    }
   }
 
 
@@ -547,9 +560,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   onChangeFiatFxn={this.onChangeFiat}
                   onBlurFiatFxn={this.onBlurFiat}
                   onPressFxn={this.onSaveTxDetails}
-                  fiatCurrencyCode={this.props.selectedWallet.fiatCurrencyCode}
-                  cryptoCurrencyCode={this.props.selectedWallet.currencyCode}
-                  fiatCurrencySymbol={this.props.fiatSymbol}
+                  fiatCurrencyCode={this.guiWallet.fiatCurrencyCode}
+                  cryptoCurrencyCode={this.props.abcTransaction.currencyCode}
+                  fiatCurrencySymbol={this.fiatSymbol}
                   fiatAmount={this.state.amountFiat}
                   onEnterSubcategories={this.onEnterSubcategories}
                   subCategorySelectVisibility={this.state.subCategorySelectVisibility}
@@ -572,8 +585,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   onFocusFiatAmount={this.onFocusFiatAmount}
                   walletDefaultDenomProps={this.state.walletDefaultDenomProps}
                   openModalFxn={this.amountAreaOpenModal}
-                  selectedWallet={this.props.selectedWallet}
                   txExplorerUrl={txExplorerLink}
+                  guiWallet={this.guiWallet}
                 />
               </View>
             </View>
