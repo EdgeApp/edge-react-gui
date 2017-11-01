@@ -8,7 +8,7 @@ const mapStateToProps = (state) => ({
   autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
 })
 const mapDispatchToProps = (dispatch) => ({
-  autoLogout: () => dispatch(logoutRequest()),
+  autoLogout: () => dispatch(logoutRequest(null)),
   updateExchangeRates: () => { dispatch(updateExchangeRates()) }
 })
 

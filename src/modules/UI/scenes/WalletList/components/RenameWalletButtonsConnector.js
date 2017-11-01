@@ -1,21 +1,20 @@
+// @flow
 import {connect} from 'react-redux'
-import RenameWalletButtons from './RenameWalletButtons.ui'
+import RenameWalletButtons, {type StateToProps, type DispatchProps} from './RenameWalletButtons.ui'
+import type {State, Dispatch} from '../../../../ReduxTypes'
 import {
-  updateRenameWalletInput,
   closeRenameWalletModal,
   renameWallet
 } from '../action'
 
-const mapStateToProps = (state) => ({
-  currentWalletBeingRenamed: state.ui.wallets.byId[state.ui.wallets.selectedWalletId],
+const mapStateToProps = (state: State): StateToProps => ({
   walletId: state.ui.scenes.walletList.walletId,
   renameWalletInput: state.ui.scenes.walletList.renameWalletInput
 })
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onNegative: () => {},
   onPositive: (walletId, walletName) => dispatch(renameWallet(walletId, walletName)),
   onDone: () => dispatch(closeRenameWalletModal()),
-  updateRenameWalletInput: (input) => updateRenameWalletInput(input)
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RenameWalletButtons)

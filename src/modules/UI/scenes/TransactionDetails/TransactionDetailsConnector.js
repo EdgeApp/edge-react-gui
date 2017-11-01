@@ -15,6 +15,7 @@ const {TransactionDetails} = require('./TransactionDetails.ui')
 
 const mapStateToProps = (state: any, ownProps: any): Props => {
   const selectedWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
+  const wallets: Array<GuiWallet> = state.ui.wallets.byId
   const fiatSymbol: string = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
   const contacts: Array<GuiContact> = state.ui.contacts.contactList
   const usableHeight: number = platform.usableHeight
@@ -32,7 +33,8 @@ const mapStateToProps = (state: any, ownProps: any): Props => {
     subcategoriesList,
     settings,
     currencyInfo,
-    currencyCode
+    currencyCode,
+    wallets
   }
 }
 

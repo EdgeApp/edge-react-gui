@@ -2,7 +2,7 @@ import {connect} from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {Actions} from 'react-native-router-flux'
 import ChangePinComponent from './ChangePinComponent.ui'
-import * as Constants from '../../../../constants'
+import * as Constants from '../../../../constants/indexConstants'
 
 export const mapStateToProps = (state) => ({
   context: CORE_SELECTORS.getContext(state),

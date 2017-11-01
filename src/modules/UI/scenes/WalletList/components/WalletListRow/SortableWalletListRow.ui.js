@@ -10,24 +10,18 @@ import {
 } from 'react-native'
 import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
-import {border as b, cutOffText, truncateDecimals} from '../../../../../utils'
+import {border as b, cutOffText, truncateDecimals, findDenominationSymbol, decimalOrZero} from '../../../../../utils'
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 
-const findDenominationSymbol = (denoms, value) => {
-  for (const v of denoms) {
-    if (v.name === value) {
-      return v.symbol
-    }
-  }
-}
+const DIVIDE_PRECISION = 18
 
-class SortableWalletListRow extends Component {
+class SortableWalletListRow extends Component<Props, State> {
 
   render () {
     const {data} = this.props
     const walletData = data
-    let multiplier, name, symbol, cryptoCurrencyName, symbolImageDarkMono
+    let multiplier, name, symbol, cryptoCurrencyName, symbolImageDarkMono, preliminaryCryptoAmount, finalCryptoAmount
 
     // const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, data.currencyCode)
     if (walletData.currencyCode) { // if wallet is done loading
@@ -37,6 +31,8 @@ class SortableWalletListRow extends Component {
       symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
       cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
       symbolImageDarkMono = walletData.symbolImageDarkMono
+      preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
+      finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // make it show zero if infinitesimal number
     }
     return (
       <TouchableHighlight
@@ -54,7 +50,7 @@ class SortableWalletListRow extends Component {
               </View>
               <View style={[styles.rowBalanceTextWrap]}>
                 <T style={[styles.rowBalanceAmountText]}>
-                  {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
+                  {finalCryptoAmount}
                 </T>
                 <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}
                   ({symbol || ''})</T>

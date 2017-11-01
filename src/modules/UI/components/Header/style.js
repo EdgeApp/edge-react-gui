@@ -7,7 +7,8 @@ export default StyleSheet.create({
   },
   sideTextWrap: {
     paddingTop: 3,
-    paddingBottom: 3
+    paddingBottom: 3,
+    paddingLeft: 10
   },
   sideText: {
     color: THEME.COLORS.WHITE,
@@ -16,5 +17,9 @@ export default StyleSheet.create({
   icon: {
     color: THEME.COLORS.WHITE,
     fontSize: 25
+  },
+  default: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE
   }
 })

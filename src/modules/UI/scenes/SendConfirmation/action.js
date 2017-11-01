@@ -27,6 +27,7 @@ export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
 
 import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action'
+import * as Constants from '../../../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 // import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -106,21 +107,23 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.saveTransaction(wallet, abcSignedTransaction))
     .then(() => {
       dispatch(updateSpendPending(false))
-      Actions.transactionList({type: 'reset'})
+      Actions.pop()
       const successInfo = {
+        success: true,
         title: 'Transaction Sent',
         message: 'Your transaction has been successfully sent.'
       }
-      dispatch(openABAlert(successInfo))
+      dispatch(openABAlert(Constants.OPEN_AB_ALERT, successInfo))
     })
     .catch((e) => {
       // console.log(e)
       dispatch(updateSpendPending(false))
       const errorInfo = {
+        success: false,
         title: 'Transaction Failure',
         message: e.message
       }
-      dispatch(openABAlert(errorInfo))
+      dispatch(openABAlert(Constants.OPEN_AB_ALERT, errorInfo))
     })
 }
 

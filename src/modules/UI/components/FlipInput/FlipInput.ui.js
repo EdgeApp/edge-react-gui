@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   Text,
@@ -8,71 +10,82 @@ import {
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
+import {bns} from 'biggystring'
+import type {GuiCurrencyInfo} from '../../../../types'
+import * as Constants from '../../../../constants/indexConstants'
 
-const getInitialState = (props) => ({
+export type FlipInputFieldInfo = GuiCurrencyInfo & {
+  nativeAmount?: string,
+  displayAmount?: string
+}
+
+type State = {
+  isToggled: boolean,
+  primaryDisplayAmount: string,
+  secondaryDisplayAmount: string
+}
+
+type Props = {
+  primaryInfo: FlipInputFieldInfo,
+  secondaryInfo: FlipInputFieldInfo,
+  primaryDisplayAmount: string,
+  secondaryDisplayAmount: string,
+  isValidInput: (string) => boolean,
+  onPrimaryAmountChange: (string) => void,
+  onSecondaryAmountChange: (string) => void
+}
+
+const getInitialState = (props: Props) => ({
   isToggled: false,
   primaryDisplayAmount: props.primaryDisplayAmount || '',
-  secondaryDisplayAmount: props.secondaryDisplayAmount || '',
-  primaryShouldUpdate: true,
-  secondaryShouldUpdate: true
+  secondaryDisplayAmount: props.secondaryDisplayAmount || ''
 })
 
-export default class FlipInput extends Component {
-  constructor (props) {
+export default class FlipInput extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = getInitialState(props)
   }
   onToggleFlipInput = () => this.setState({
-    isToggled: !this.state.isToggled,
-    secondaryShouldUpdate: !this.state.secondaryShouldUpdate
+    isToggled: !this.state.isToggled
   })
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.primaryDisplayAmount !== this.state.primaryDisplayAmount || nextProps.secondaryDisplayAmount !== this.state.secondaryDisplayAmount) {
-      return this.setState(getInitialState(nextProps))
-    }
-
-    if (this.state.primaryShouldUpdate) {
+  componentWillReceiveProps (nextProps: Props) {
+    if (!bns.eq(nextProps.primaryDisplayAmount, this.state.primaryDisplayAmount)) {
       this.setState({
-        primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8),
-        primaryShouldUpdate: false
+        primaryDisplayAmount: UTILS.truncateDecimals(nextProps.primaryDisplayAmount, 8)
       })
     }
 
-    if (this.state.secondaryShouldUpdate) {
+    if (!bns.eq(nextProps.secondaryDisplayAmount, this.state.secondaryDisplayAmount)) {
       this.setState({
-        primaryShouldUpdate: false,
         secondaryDisplayAmount: UTILS.truncateDecimals(nextProps.secondaryDisplayAmount, 2)
       })
     }
   }
 
-  onPrimaryAmountChange = (primaryDisplayAmount) => {
+  onPrimaryAmountChange = (primaryDisplayAmount: string) => {
     if (!this.props.isValidInput(primaryDisplayAmount)) { return }
     const formattedPrimaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(primaryDisplayAmount), 8)
     this.setState({
-      primaryDisplayAmount: formattedPrimaryDisplayAmount,
-      primaryShouldUpdate: false,
-      secondaryShouldUpdate: true
+      primaryDisplayAmount: formattedPrimaryDisplayAmount
     }, this.props.onPrimaryAmountChange(formattedPrimaryDisplayAmount))
   }
 
-  onSecondaryAmountChange = (secondaryDisplayAmount) => {
+  onSecondaryAmountChange = (secondaryDisplayAmount: string) => {
     if (!this.props.isValidInput(secondaryDisplayAmount)) { return }
     const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(secondaryDisplayAmount), 2)
     // console.log('BEFORE: this.setState', this.state)
     this.setState({
       secondaryDisplayAmount: formattedSecondaryDisplayAmount,
-      primaryShouldUpdate: !this.state.primaryShouldUpdate,
-      secondaryShouldUpdate: false
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
   }
 
   topDisplayAmount = () => this.state.isToggled ? this.state.secondaryDisplayAmount : this.state.primaryDisplayAmount
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
-  topRow = (denominationInfo, onChangeText) => <View style={top.row} key={'top'}>
-      <Text style={top.symbol}>
+  topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void)) => <View style={top.row} key={'top'}>
+      <Text style={[top.symbol]}>
         {denominationInfo.displayDenomination.symbol}
       </Text>
       <TextInput style={[top.amount]}
@@ -83,13 +96,14 @@ export default class FlipInput extends Component {
         autoCorrect={false}
         keyboardType='numeric'
         selectionColor='white'
-        returnKeyType='done' />
+        returnKeyType='done'
+      />
       <Text style={[top.currencyCode]}>
         {denominationInfo.displayDenomination.name}
       </Text>
     </View>
 
-  bottomRow = (denominationInfo) => {
+  bottomRow = (denominationInfo: FlipInputFieldInfo) => {
     const amount = this.bottomDisplayAmount()
     return <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key={'bottom'}><View style={bottom.row}>
       <Text style={[bottom.symbol]}>
@@ -107,7 +121,7 @@ export default class FlipInput extends Component {
     </View></TouchableWithoutFeedback>
   }
 
-  renderRows = (primaryInfo, secondaryInfo, isToggled) => (
+  renderRows = (primaryInfo: FlipInputFieldInfo, secondaryInfo: FlipInputFieldInfo, isToggled: boolean) => (
       <View style={[styles.rows]}>
         {isToggled
           ? [
@@ -128,7 +142,7 @@ export default class FlipInput extends Component {
     return (
       <View style={[styles.container]}>
         <View style={styles.flipButton}>
-          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name='swap-vert' size={36} />
+          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
         </View>
         {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
         <View style={styles.spacer} />

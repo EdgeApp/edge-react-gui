@@ -22,28 +22,34 @@ import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import * as UTILS from '../../../utils.js'
 
 import styles, {styles as styleRaw} from './style'
+import ABAlert from '../../components/ABAlert/indexABAlert'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
   sceneName: string,
   torchEnabled: boolean,
+  scanEnabled: boolean,
   walletListModalVisible: boolean,
   scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
+  dispatchEnableScan(): void,
+  dispatchDisableScan(): void,
   toggleEnableTorch(): void,
   toggleAddressModal():void,
   toggleWalletListModal(): void,
-  updateParsedURI(AbcParsedUri): void
+  updateParsedURI(AbcParsedUri): void,
+  loginWithEdge(string): void
 }
 
 const HEADER_TEXT     = strings.enUS['send_scan_header_text']
 
-const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
-const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
+const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
+// const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
 const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
-const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
+// const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
 const FLASH_TEXT    = strings.enUS['fragment_send_flash']
 
 export default class Scan extends Component<any, any> {
@@ -68,7 +74,7 @@ export default class Scan extends Component<any, any> {
     return (
       <View style={styles.container}>
         {this.renderCamera()}
-        <View style={[styles.overlay]}>
+        <View style={[styles.overlay, UTILS.border()]}>
 
           <AddressModal />
 
@@ -81,7 +87,7 @@ export default class Scan extends Component<any, any> {
 
           <Gradient style={[styles.overlayButtonAreaWrap]}>
 
-            <TouchableHighlight style={styles.bottomButton}
+            {/* <TouchableHighlight style={styles.bottomButton}
               onPress={this._onToggleWalletListModal}
               underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
@@ -94,7 +100,7 @@ export default class Scan extends Component<any, any> {
                 </T>
 
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
 
             <TouchableHighlight style={styles.bottomButton}
               onPress={this._onToggleAddressModal}
@@ -111,7 +117,7 @@ export default class Scan extends Component<any, any> {
               </View>
             </TouchableHighlight>
 
-            <TouchableHighlight style={styles.bottomButton}
+            {/* <TouchableHighlight style={styles.bottomButton}
               onPress={this.selectPhotoTapped}
               underlayColor={styleRaw.underlay.color}>
               <View style={styles.bottomButtonTextWrap}>
@@ -124,7 +130,7 @@ export default class Scan extends Component<any, any> {
                 </T>
 
               </View>
-            </TouchableHighlight>
+            </TouchableHighlight> */}
 
             <TouchableHighlight style={styles.bottomButton}
               onPress={this._onToggleTorch}
@@ -143,6 +149,7 @@ export default class Scan extends Component<any, any> {
 
           </Gradient>
         </View>
+        <ABAlert />
       </View>
     )
   }
@@ -168,21 +175,30 @@ export default class Scan extends Component<any, any> {
   }
 
   onBarCodeRead = (scan: {data: any}) => {
-    if (this.props.sceneName !== 'scan') return
+    if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
   }
 
   parseURI = (uri: string) => {
     try {
+      if (/^airbitz:\/\/edge\//.test(uri)) {
+        this.props.loginWithEdge(uri)
+        return
+      }
       // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (error) {
-      Alert.alert('Scanning Error', error.toString())
-      // show popup with error message
-      // console.log(error)
+      this.props.dispatchDisableScan()
+      Alert.alert(
+        strings.enUS['fragment_send_send_bitcoin_unscannable'],
+        error.toString(),
+        [
+          {text: strings.enUS['string_ok'], onPress: () => this.props.dispatchEnableScan()},
+        ]
+      )
     }
   }
 
@@ -196,23 +212,32 @@ export default class Scan extends Component<any, any> {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-        Actions.sendConfirmation({type: 'reset'})
+        // TODO: make edgelogin work with image picker -paulvp
+        /* if (/^airbitz:\/\/edge\//.test(uri)) {
+          console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
+          return
+        }*/
+        Actions.sendConfirmation()
       }
     })
   }
 
   renderCamera = () => {
     if (this.state.cameraPermission === true) {
+      const flashMode = this.props.torchEnabled
+        ? Camera.constants.FlashMode.on
+        : Camera.constants.FlashMode.off
+
       return (
         <Camera
+          flashMode={flashMode}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture' />
       )
     } else if (this.state.cameraPermission === false) {
       return (
-        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
+        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}, UTILS.border()]}>
           <Text>
             {DENIED_PERMISSION_TEXT}
           </Text>
@@ -220,7 +245,7 @@ export default class Scan extends Component<any, any> {
       )
     } else {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
           <ActivityIndicator size='large' style={{flex: 1, alignSelf: 'center'}} />
         </View>
       )

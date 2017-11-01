@@ -65,7 +65,7 @@ export default class WalletList extends Component<any, {
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
       fullListOpacity: new Animated.Value(1),
-      fullListZIndex: new Animated.Value(100)  
+      fullListZIndex: new Animated.Value(100)
     }
   }
 
@@ -150,7 +150,7 @@ export default class WalletList extends Component<any, {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
-
+        <Gradient style={{height: 66, width: '100%'}} />
         <View style={[styles.totalBalanceBox]}>
           <View style={[styles.totalBalanceWrap]}>
             <View style={[styles.totalBalanceHeader]}>
@@ -402,7 +402,7 @@ export default class WalletList extends Component<any, {
     headerText='fragment_wallets_rename_wallet'
     headerSubtext={this.props.walletName}
     modalMiddle={<WalletNameInput />}
-    modalBottom={<RenameWalletButtons walletId={this.props.walletId} />}
+    modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}
     />

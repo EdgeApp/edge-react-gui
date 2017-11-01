@@ -1,8 +1,10 @@
+// @flow
 import React, {Component} from 'react'
 import {
   Alert,
   Clipboard
 } from 'react-native'
+import * as Constants from '../../../../../constants/indexConstants'
 import strings from '../../../../../locales/default'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -11,21 +13,35 @@ import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
 
 import styles from '../style'
 
-export default class AddressModal extends Component {
-  constructor (props) {
-    super(props)
+type Props = {
+  coreWallet: AbcCurrencyWallet,
+  currencyCode: string,
+  addressModalVisible: boolean,
+  toggleAddressModal():void,
+  updateParsedURI(AbcParsedUri):void,
+  loginWithEdge(string): void
+}
+type State = {
+  uri: string,
+  clipboard: string
+}
 
-    this.state = {
-      uri: '',
-      clipboard: ''
-    }
+export default class AddressModal extends Component<Props,State> {
+  componentWillMount () {
+    this.setState(
+      {
+        uri: '',
+        clipboard: ''
+      }
+    )
   }
 
-  componentDidMount () {
-    const coreWallet = this.props.coreWallet
+  _setClipboard (props: Props) {
+    const coreWallet = props.coreWallet
     Clipboard.getString().then((uri) => {
       try {
         // Will throw in case uri is invalid
@@ -42,8 +58,16 @@ export default class AddressModal extends Component {
     })
   }
 
+  componentDidMount () {
+    this._setClipboard(this.props)
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    this._setClipboard(nextProps)
+  }
+
   render () {
-    const icon = <FAIcon name='address-book-o' size={24} color='#2A5799'
+    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color='#2A5799'
       style={styles.icon} />
 
     const copyMessage
@@ -77,6 +101,13 @@ export default class AddressModal extends Component {
 
   onSubmit = () => {
     const uri = this.state.uri
+    // We want to check to see if the url is an edge login.
+
+    if (/^airbitz:\/\/edge\//.test(uri)) {
+      this.props.loginWithEdge(uri)
+      return
+    }
+
     const coreWallet = this.props.coreWallet
     try {
       const parsedURI = WALLET_API.parseURI(coreWallet, uri)
@@ -98,7 +129,7 @@ export default class AddressModal extends Component {
     this.props.toggleAddressModal()
   }
 
-  onChangeText = (uri) => {
+  onChangeText = (uri: string) => {
     this.setState({uri})
   }
 }

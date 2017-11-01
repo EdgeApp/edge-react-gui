@@ -27,7 +27,8 @@ export const selectFiat = (fiat: string) => ({
 export const createCurrencyWallet = (
   walletName: string,
   walletType: string,
-  fiatCurrencyCode: string
+  fiatCurrencyCode: string,
+  popScene: boolean = true
 ) => (dispatch: any, getState: any) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
@@ -36,6 +37,8 @@ export const createCurrencyWallet = (
     name: walletName,
     fiatCurrencyCode
   }).then(() => {
-    Actions.walletList({type: 'reset'})
+    if (popScene) {
+      Actions.pop()
+    }
   })
 }

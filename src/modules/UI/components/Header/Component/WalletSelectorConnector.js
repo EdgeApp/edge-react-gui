@@ -6,7 +6,8 @@ import {
   toggleScanToWalletListModal
 } from '../../WalletListModal/action'
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
+
   const walletList = UI_SELECTORS.getWallets(state)
 
   const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
@@ -24,8 +25,10 @@ const mapStateToProps = (state) => {
     selectedWalletCurrencyCode,
     activeWalletIds,
     archivedWalletIds,
+    toggleFunction: ownProps.toggleFunction,
+    visibleFlag: ownProps.visibleFlag,
+    scanToWalletListModalVisibility,
     selectedWalletListModalVisibility,
-    scanToWalletListModalVisibility
   }
 }
 const mapDispatchToProps = (dispatch) => ({

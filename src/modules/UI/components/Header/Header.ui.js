@@ -1,37 +1,14 @@
+// @ flow
 import React, {Component} from 'react'
-import {
-  Header as NBHeader,
-  Left as NBLeft,
-  Right as NBRight,
-  Body as NBBody
-} from 'native-base'
-import Gradient from '../Gradient/Gradient.ui'
+import {border as b} from '../../../utils'
+import WalletSelector from './Component/WalletSelectorConnector'
 
-import Left from './Component/Left'
-import Right from './Component/Right'
-import Body from './Component/BodyConnector'
+type Props ={}
 
-import styles from './style'
-
-export default class Header extends Component {
-  _renderTitle = () => this.props.routes.scene.title || 'Header'
-
+export default class Header extends Component<Props> {
   render () {
     return (
-      <Gradient style={[styles.headerRoot]}>
-        <NBHeader>
-          <NBLeft style={{flex: 1}}>
-            <Left routes={this.props.routes} />
-          </NBLeft>
-          <NBBody style={{flex: 3}}>
-            <Body routes={this.props.routes} />
-          </NBBody>
-          <NBRight style={{flex: 1}}>
-            <Right routes={this.props.routes} />
-          </NBRight>
-        </NBHeader>
-        {this.props.children}
-      </Gradient>
+      <WalletSelector toggleFunction='_onPressToggleSelectedWalletModal' visibleFlag='selectedWalletListModalVisibility' style={b()} />
     )
   }
 }

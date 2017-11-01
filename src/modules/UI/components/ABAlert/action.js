@@ -1,11 +1,8 @@
-export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
-export const CLOSE_AB_ALERT = 'CLOSE_AB_ALERT'
-
-export const openABAlert = (syntax) => ({
-  type: OPEN_AB_ALERT,
-  data: {syntax}
-})
-
-export const closeABAlert = () => ({
-  type: CLOSE_AB_ALERT
-})
+// @flow
+// TODO revisit as there is no reason for this to exist OR it should have an action constant coded into it
+export function openABAlert (type: string, data: any) {
+  return {
+    type,
+    data
+  }
+}

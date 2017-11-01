@@ -13,20 +13,36 @@ import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
-import {border as b, cutOffText, truncateDecimals} from '../../../../../utils.js'
+import {border as b, cutOffText, truncateDecimals, decimalOrZero} from '../../../../../utils.js'
 import {selectWallet} from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
+import type {GuiDenomination} from '../../../../../../types'
+import type {State as ReduxState, Dispatch} from '../../../../../ReduxTypes'
 
-export const findDenominationSymbol = (denoms, value) => {
-  for (const v of denoms) {
-    if (v.name === value) {
-      return v.symbol
-    }
-  }
+const DIVIDE_PRECISION = 18
+
+export type FullWalletRowProps = {
+  data: any, // TODO: Need to type this
+  sortableMode: boolean
 }
 
-class FullWalletRow extends Component {
+type InternalProps = {
+  displayDenomination: GuiDenomination,
+  exchangeDenomination: GuiDenomination
+}
+
+type DispatchProps = {
+  selectWallet: (walletId: string, currencyCode: string) => any
+}
+
+type Props = FullWalletRowProps & InternalProps & DispatchProps
+
+type State = {
+
+}
+
+class FullWalletRow extends Component<Props, State> {
   render () {
     return (
       <View>
@@ -42,9 +58,9 @@ class FullWalletRow extends Component {
 
 export default FullWalletRow
 
-class FullWalletListRow extends Component {
+class FullWalletListRow extends Component<Props, State> {
 
-  _onPressSelectWallet = (walletId, currencyCode) => {
+  _onPressSelectWallet = (walletId: string, currencyCode: string) => {
     this.props.selectWallet(walletId, currencyCode)
     Actions.transactionList({params: 'walletList'})
   }
@@ -60,6 +76,8 @@ class FullWalletListRow extends Component {
     const name = walletData.name || strings.enUS['string_no_name']
     const symbol = denomination.symbol
     let symbolImageDarkMono = walletData.symbolImageDarkMono
+    let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
+    let finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
     return (
       <View style={[{width: platform.deviceWidth}, b()]}>
           <View>
@@ -78,7 +96,7 @@ class FullWalletListRow extends Component {
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>
                   <T style={[styles.rowBalanceAmountText]}>
-                    {truncateDecimals(bns.divf(walletData.primaryNativeBalance, multiplier).toString(), 6)}
+                    {finalCryptoAmount}
                   </T>
                   <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} ({symbol || ''})</T>
                 </View>
@@ -91,7 +109,7 @@ class FullWalletListRow extends Component {
     )
   }
 
-  renderTokenRow = (parentId, metaTokenBalances) => {
+  renderTokenRow = (parentId: string, metaTokenBalances: { [currencyCode: string]: string }) => {
     let tokens = []
     for (let property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
@@ -107,7 +125,7 @@ class FullWalletListRow extends Component {
     return tokens
   }
 }
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
   return {
@@ -115,12 +133,12 @@ const mapStateToProps = (state, ownProps) => {
     exchangeDenomination
   }
 }
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
 })
 export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 
-class FullListRowEmptyData extends Component {
+class FullListRowEmptyData extends Component<any, State> {
   render () {
     return (
       <TouchableHighlight

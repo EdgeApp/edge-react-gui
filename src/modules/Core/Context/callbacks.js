@@ -2,11 +2,11 @@
 import type {AbcContextCallbacks} from 'airbitz-core-types'
 import type {Dispatch} from '../../ReduxTypes'
 
-import {displayDropdownAlert} from '../../UI/components/DropdownAlert/actions'
+import {displayErrorAlert} from '../../UI/components/ErrorAlert/actions'
 
 export default (dispatch: Dispatch): AbcContextCallbacks => ({
   onError: (error: Error) => {
     console.log(error)
-    dispatch(displayDropdownAlert({title: error.message}))
+    dispatch(displayErrorAlert(error.message))
   }
 })

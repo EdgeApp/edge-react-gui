@@ -15,6 +15,9 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import {bns} from 'biggystring'
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../locales/default'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 
@@ -22,8 +25,7 @@ export default class Request extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      primaryNativeAmount: '',
-      secondaryNativeAmount: '',
+      publicAddress: '',
       encodedURI: '',
       loading: props.loading
     }
@@ -35,12 +37,14 @@ export default class Request extends Component {
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
-        const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
+        const abcEncodeUri: AbcEncodeUri = {publicAddress}
+        const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
           encodedURI,
           publicAddress
         })
       })
+      .catch((e) => console.log(e))
     }
   }
 
@@ -51,30 +55,27 @@ export default class Request extends Component {
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
-      const encodedURI = this.props.abcWallet.encodeUri(receiveAddress)
+      const abcEncodeUri: AbcEncodeUri = {publicAddress}
+      const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
       this.setState({
         encodedURI,
         publicAddress
       })
     })
+    .catch((e) => console.log(e))
   }
 
-  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}) => {
+  onAmountsChange = ({primaryDisplayAmount}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
-    const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
-
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
 
     const parsedURI = {
       publicAddress: this.state.publicAddress,
-      nativeAmount: primaryNativeAmount
+      nativeAmount: bns.gt(primaryNativeAmount, '0') ? primaryNativeAmount : null
     }
     const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
     this.setState({
-      primaryNativeAmount,
-      secondaryNativeAmount,
       encodedURI
     })
   }
@@ -90,9 +91,9 @@ export default class Request extends Component {
       primaryInfo,
       secondaryInfo
     } = this.props
-    const nativeAmount = this.state.primaryNativeAmount
     return (
       <Gradient style={styles.view}>
+        <Gradient style={{height: 66, width: '100%'}} />
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
@@ -103,7 +104,7 @@ export default class Request extends Component {
 
         <View style={styles.main}>
           <ExchangedFlipInput
-            primaryInfo={{...primaryInfo, nativeAmount}}
+            primaryInfo={primaryInfo}
             secondaryInfo={secondaryInfo}
             secondaryToPrimaryRatio={secondaryToPrimaryRatio}
             onAmountsChange={this.onAmountsChange}
@@ -122,7 +123,7 @@ export default class Request extends Component {
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.state.encodedURI)
+    Clipboard.setString(this.state.publicAddress)
     Alert.alert('Request copied to clipboard')
   }
 
@@ -143,10 +144,10 @@ export default class Request extends Component {
   }
 
   shareMessage = () => {
+    const APP_NAME = 'Edge Wallet'
     Share.share({
       message: this.state.encodedURI,
-      url: 'https://airbitz.co', // will need to refactor for white labeling
-      title: 'Share Airbitz Request'
+      title: sprintf(strings.enUS['request_qr_email_title'], APP_NAME)
     }, {dialogTitle: 'Share Airbitz Request'})
     .then(this.showResult)
     .catch((error) => this.setState({

@@ -10,7 +10,18 @@ import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
 
 export default class RowSwitch extends Component {
-  _onPressToggleSetting = () => {}
+  componentWillMount () {
+    this.setState({
+      value: this.props.value
+    })
+  }
+  _onPressToggleSetting = () => {
+    const newValue = !this.state.value
+    this.setState({
+      value: newValue
+    })
+    this.props.onToggle(newValue)
+  }
 
   render () {
     return <TouchableHighlight style={[styles.settingsRowContainer]}
@@ -32,7 +43,13 @@ export default class RowSwitch extends Component {
     </TouchableHighlight>
   }
 }
+// make sure onToggle becomes required
 RowSwitch.propTypes = {
+  value: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
   leftText: PropTypes.string,
   property: PropTypes.string
+}
+RowSwitch.defaultProps ={
+  value: false
 }

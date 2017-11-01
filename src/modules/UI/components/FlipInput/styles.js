@@ -11,7 +11,8 @@ export const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    margin: 20,
+    marginVertical: 20,
+    marginHorizontal: 14,
     alignSelf: 'stretch',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row'
@@ -20,10 +21,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:  THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
+    marginRight: 10,
     justifyContent: 'space-around'
   },
   flipIcon: {
-    color: THEME.COLORS.GRAY_3
+    color: THEME.COLORS.GRAY_3,
   },
   spacer: {
     flex: 1,
@@ -49,25 +51,25 @@ export const top = StyleSheet.create({
     borderBottomWidth: 1
   },
   symbol: {
-    flex: 1,
-    fontSize: 17,
+    flex: 3,
+    fontSize: 30,
     color: THEME.COLORS.WHITE,
-    textAlign: 'center',
+    textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
-    flex: 4,
-    fontSize: 40,
+    flex: 6,
+    fontSize: 32,
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currencyCode: {
-    flex: 1,
+    flex: 3,
     fontSize: 17,
+    lineHeight: 20,
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
-    marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
   }
 })
@@ -81,22 +83,24 @@ export const bottom = StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   symbol: {
-    flex: 1,
+    flex: 3,
+    fontSize: 16,
     color: THEME.COLORS.WHITE,
-    textAlign: 'center',
+    textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
-    flex: 4,
+    flex: 6,
+    fontSize: 18,
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currencyCode: {
-    flex: 1,
+    flex: 3,
+    fontSize: 10,
     color: THEME.COLORS.WHITE,
     textAlign: 'right',
-    marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   alert: {

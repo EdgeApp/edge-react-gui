@@ -26,6 +26,15 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
+  feeArea: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  feeAreaText: {
+    fontSize: 16,
+    color: 'white'
+  },
   pendingSymbolArea: {
     height: 12
   },

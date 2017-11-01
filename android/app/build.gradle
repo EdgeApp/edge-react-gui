@@ -83,11 +83,11 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
-        applicationId "co.airbitz.edge"
+        applicationId "co.edgesecure.wallet"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 21000000
@@ -137,6 +137,8 @@ android {
 }
 
 dependencies {
+    compile project(':airbitz-core-js-ui')
+    compile project(':react-native-sound')
     compile project(':react-native-share')
     compile project(':react-native-randombytes')
     compile project(':react-native-blur')

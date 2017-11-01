@@ -204,10 +204,7 @@ export const styles = {
     color: THEME.COLORS.GRAY_1,
     textAlign: 'right'
   },
-  rowDotsWrap: {
-    flexDirection: 'row',
-    width: 46
-  },
+
   rowDragArea: {
     paddingLeft: 16,
     justifyContent: 'center',
@@ -217,25 +214,7 @@ export const styles = {
     position: 'relative',
     top: 16
   },
-  menuTrigger: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingLeft: 14,
-    paddingRight: 10
-  },
   // beginning of options component
-  menuOption: {
-    borderBottomColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: 1,
-    justifyContent: 'center'
-  },
-  menuOptionItem: {
-    flexDirection: 'row'
-  },
-  optionText: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: 18
-  },
   editIcon: {
     justifyContent: 'center',
     alignItems: 'center',

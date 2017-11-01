@@ -7,10 +7,8 @@ import SideMenu from '../../components/SideMenu/SideMenuConnector'
 import Header from '../../components/Header/HeaderConnector'
 import TabBar from '../../components/TabBar/TabBarConnector'
 import HelpModal from '../../components/HelpModal'
-import ABAlert from '../../components/ABAlert/indexABAlert'
-import TransactionAlert from '../../components/TransactionAlert/indexTransactionAlert'
-
-import DropdownAlertConnector from '../../components/DropdownAlert/DropdownAlertConnector'
+import ErrorAlert from '../../components/ErrorAlert/ErrorAlertConnector'
+import TransactionAlert from '../../components/TransactionAlert/TransactionAlertConnector'
 
 type Props = {
   navigationState: any,
@@ -66,11 +64,9 @@ export default class Layout extends Component<Props, State> {
           <DefaultRenderer style={{flex: 1}} navigationState={children[0]} onNavigate={this.props.onNavigate} />
         </SideMenu>
         <HelpModal style={{flex: 1}} />
-        <ABAlert style={{flex: 1}} />
-        <TransactionAlert style={{flex: 1}} />
         <TabBar style={{flex: 1}} />
-
-        <DropdownAlertConnector />
+        <ErrorAlert />
+        <TransactionAlert />
       </View>
     )
   }

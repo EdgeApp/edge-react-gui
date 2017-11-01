@@ -1,9 +1,10 @@
 // @flow
 import {connect} from 'react-redux'
 import SendConfirmation, {type Props, type DispatchProps} from './SendConfirmation.ui'
+import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
 
 import type {State, Dispatch} from '../../../ReduxTypes'
-import type {GuiWallet, GuiCurrencyInfo, GuiDenomination} from '../../../../types'
+import type {GuiWallet, GuiDenomination} from '../../../../types'
 import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 import {bns} from 'biggystring'
@@ -23,6 +24,7 @@ import {
 const mapStateToProps = (state: State): Props => {
   const sendConfirmation = UI_SELECTORS.getSceneState(state, 'sendConfirmation')
   let fiatPerCrypto = 0
+  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -30,13 +32,13 @@ const mapStateToProps = (state: State): Props => {
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryInfo: GuiCurrencyInfo = {
+  const primaryInfo: FlipInputFieldInfo = {
     displayCurrencyCode: currencyCode,
     exchangeCurrencyCode: currencyCode,
     displayDenomination: primaryDisplayDenomination,
     exchangeDenomination: primaryExchangeDenomination
   }
-  const secondaryInfo: GuiCurrencyInfo = {
+  const secondaryInfo: FlipInputFieldInfo = {
     displayCurrencyCode: guiWallet.fiatCurrencyCode,
     exchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
     displayDenomination: secondaryDisplayDenomination,
@@ -77,7 +79,8 @@ const mapStateToProps = (state: State): Props => {
     currencyCode,
     primaryInfo,
     sliderDisabled,
-    secondaryInfo
+    secondaryInfo,
+    currencyConverter
   }
 }
 

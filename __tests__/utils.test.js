@@ -126,76 +126,6 @@ describe('convertDisplayToNative', function () {
   })
 })
 
-describe('convertExchangeToDisplay', function () {
-  test('1 => 1', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1'
-    const expected = '100000000'
-    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.00000000 => 1', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1.00000000'
-    const expected = '100000000'
-    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1.123456789 => 1.123456789', function () {
-    const nativeToDisplayRatio = '100000000'
-    const displayAmount = '1.12345678'
-    const expected = '112345678'
-    const actual = UTILS.convertDisplayToNative(nativeToDisplayRatio)(displayAmount)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('convertExchangeToExchange', function () {
-  test('1 => 1000', function () {
-    const ratio = '1000.00000000'
-    const exchangeAmount = '1'
-    const expected = '1000'
-    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1000 => 1000', function () {
-    const ratio = '1.00000000'
-    const exchangeAmount = '1000'
-    const expected = '1000'
-    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
-    expect(actual).toBe(expected)
-  })
-
-  test('1000 => 1', function () {
-    const ratio = '.00100000'
-    const exchangeAmount = '1000'
-    const expected = '1'
-    const actual = UTILS.convertExchangeToExchange(ratio)(exchangeAmount)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('deriveDisplayToExchangeRatio', function () {
-  test('1 / 1', function () {
-    const exchangeNativeToExchangeRatio = '100000000'
-    const displayNativeToDisplayRatio = '100000000'
-    const expected = '1'
-    const actual = UTILS.deriveDisplayToExchangeRatio(exchangeNativeToExchangeRatio)(displayNativeToDisplayRatio)
-    expect(actual).toBe(expected)
-  })
-
-  test('1000 / 10', function () {
-    const exchangeNativeToExchangeRatio = '1000'
-    const displayNativeToDisplayRatio = '10'
-    const expected = '100'
-    const actual = UTILS.deriveDisplayToExchangeRatio(exchangeNativeToExchangeRatio)(displayNativeToDisplayRatio)
-    expect(actual).toBe(expected)
-  })
-})
-
 describe('truncateDecimals', function () {
   test('1 => 1', function () {
     const input = '1'
@@ -234,29 +164,6 @@ describe('truncateDecimals', function () {
     const precision = 1
     const expected = '1.1'
     const actual = UTILS.truncateDecimals(input, precision)
-    expect(actual).toBe(expected)
-  })
-})
-
-describe('absoluteValue', function () {
-  test('1 => 1', function () {
-    const input = '1'
-    const expected = '1'
-    const actual = UTILS.absoluteValue(input)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1 => 1', function () {
-    const input = '-1'
-    const expected = '1'
-    const actual = UTILS.absoluteValue(input)
-    expect(actual).toBe(expected)
-  })
-
-  test('-1.0 => 1.0', function () {
-    const input = '-1.0'
-    const expected = '1.0'
-    const actual = UTILS.absoluteValue(input)
     expect(actual).toBe(expected)
   })
 })

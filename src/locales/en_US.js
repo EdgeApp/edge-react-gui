@@ -301,7 +301,7 @@ const strings = {
   fragment_send_incorrect_password_title: 'Incorrect Password',
   fragment_send_no_satoshi_title: 'Enter an amount',
   fragment_send_no_satoshi_message: 'Please enter an amount to send',
-  fragment_send_send_to_hint: 'Bitcoin Address or Private Key',
+  fragment_send_send_to_hint: 'Public Address or Private Key',
   fragment_send_failure_title: 'Send failure',
   fragment_send_send_bitcoin_invalid: 'Invalid bitcoin address',
   fragment_send_send_bitcoin_unscannable: 'Unable to scan QR code',
@@ -317,6 +317,7 @@ const strings = {
   fragment_send_other_wallet_header_title: 'Choose a wallet to transfer funds to:',
   fragment_send_create_wallet_to_transfer: 'Create a new wallet to transfer funds to',
 
+
   fragment_send_import_or_send_title: 'Bitcoin Private Key with Public Address',
   fragment_send_import_or_send_import_funds: 'Import Funds',
   fragment_send_import_or_send_send_funds: 'Send Funds',
@@ -327,6 +328,7 @@ const strings = {
   send_confirmation_enter_send_pin: 'Enter 4 Digit PIN',
   send_confirmation_enter_send_password: 'Password',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_fee_line: 'Fee: + %s (%s)',
   fragment_send_confirmation_send_error_title: 'Error during send',
   fragment_send_confirmation_insufficient_funds_message: 'You do not have enough funds to send this transaction.',
   fragment_send_confirmation_insufficient_funds: 'Insufficient funds',
@@ -835,11 +837,28 @@ const strings = {
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
   title_Password_Recovery: 'Password Recovery',
+  title_Exchange: 'Exchange',
+  dropdown_exchange_max_amount: 'Exchange Max Amount',
+
+  string_first_ethereum_wallet_name: 'My Ether',
+  strings_first_bitcoin_44_wallet_name: 'My Bitcoin',
 
   // help modal
   help_modal_title: 'Crypto Wallet and Directory',
   help_version: 'Version',
-  help_build: 'Build'
+  help_build: 'Build',
+
+  //Exchange
+  title_confirm_excahnge: 'Confirm exchange',
+  string_from_exchange_info: 'Your are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
+  string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
+  string_fee: 'Fee: ',
+  string_TBD: 'TBD',
+  fragment_excahnge_wallet_from_header_title: 'Choose a wallet to exchange funds from:',
+  fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
+  string_confirm: 'Confirm',
+  exchange_succeeded: 'Exchange Succeeded',
+  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes'
 }
 
 export default strings
