@@ -8,6 +8,7 @@ import type {
 } from 'airbitz-core-types'
 
 import HockeyApp from 'react-native-hockeyapp'
+import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
 import {Keyboard, Platform, StatusBar, Image, AppState} from 'react-native'
 import {connect} from 'react-redux'
@@ -116,7 +117,6 @@ type Props = {
 
 type State = {
   context: ?AbcContext,
-  loading: boolean,
   mainActive: boolean,
   timeout: ?number,
   exchangeTimer: any
@@ -166,7 +166,6 @@ export default class Main extends Component<Props, State> {
       timeout: undefined,
       exchangeTimer: undefined,
       context: undefined,
-      loading: true
     }
   }
 
@@ -192,7 +191,6 @@ export default class Main extends Component<Props, State> {
       this.props.updateExchangeRates()
     }, EXCHANGE_RATE_TIMER_MS) // Dummy dispatch to allow scenes to update in mapStateToProps
     this.setState({exchangeTimer})
-
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
     makeCoreContext(this.props.contextCallbacks)
@@ -205,7 +203,7 @@ export default class Main extends Component<Props, State> {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
-      this.setState({context, loading: false})
+      SplashScreen.hide()
     })
   }
 
