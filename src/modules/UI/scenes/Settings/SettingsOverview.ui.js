@@ -42,12 +42,12 @@ export default class SettingsOverview extends Component {
         key: Constants.CHANGE_PIN,
         text: strings.enUS['settings_button_pin'],
         routeFunction: this._onPressChangePinRouting
-      },
+      }/* ,
       {
         key: Constants.RECOVER_PASSWORD,
         text: strings.enUS['settings_button_change_pass_recovery'],
         routeFunction: this._onPressRecoverPasswordRouting
-      }
+      } */
     ]
     this.securityRoute = [
       {
@@ -83,22 +83,18 @@ export default class SettingsOverview extends Component {
 
     this.currencies = [
       {
-        key: 'btcSettings',
         text: 'Bitcoin',
         routeFunction: Actions.btcSettings
       },
       {
-        key: 'ethSettings',
         text: 'Ethereum',
         routeFunction: Actions.ethSettings
       },
       {
-        key: 'ltcSettings',
         text: 'Litecoin',
         routeFunction: Actions.ltcSettings
       },
       {
-        key: 'bchSettings',
         text: 'BitcoinCash',
         routeFunction: Actions.bchSettings
       }
@@ -185,18 +181,11 @@ export default class SettingsOverview extends Component {
 
         <RowRoute
           leftText={strings.enUS['settings_button_change_password']}
-          scene={'changePassword'}
           routeFunction={this._onPressChangePasswordRouting}
           right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
         <RowRoute
           leftText={strings.enUS['settings_button_pin']}
-          scene={'changePassword'}
           routeFunction={this._onPressChangePinRouting}
-          right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
-        <RowRoute
-          leftText={strings.enUS['settings_button_change_pass_recovery']}
-          scene={'changePassword'}
-          routeFunction={this._onPressRecoverPasswordRouting}
           right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
         <Gradient style={[styles.unlockRow]}>
@@ -217,7 +206,6 @@ export default class SettingsOverview extends Component {
 
           <RowRoute
             leftText={strings.enUS['settings_title_currency']}
-            scene={'changePassword'}
             routeFunction={Actions.defaultFiatSetting}
             right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
 
@@ -252,7 +240,7 @@ export default class SettingsOverview extends Component {
 
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
-  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} scene={x.key} routeFunction={x.routeFunction} right={x.right} />
+  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
   renderRowSwitch = (x) => (
     <RowSwitch
       leftText={this.options[x].text}

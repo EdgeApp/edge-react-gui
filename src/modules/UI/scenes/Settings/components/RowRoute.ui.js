@@ -1,19 +1,20 @@
+// @flow
+
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import {
   TouchableHighlight,
   View
 } from 'react-native'
 import T from '../../../components/FormattedText'
-import {Actions} from 'react-native-router-flux'
 import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
 
-export default class RowRoute extends Component {
-  _handleOnPressRouting (route) {
-    Actions[route]()
-  }
-
+type Props = {
+    leftText: string,
+    right: string,
+    routeFunction(): void
+}
+export default class RowRoute extends Component<Props> {
   render () {
     return (
       <TouchableHighlight style={[styles.settingsRowContainer]}
@@ -38,7 +39,4 @@ export default class RowRoute extends Component {
     )
   }
 }
-RowRoute.propTypes = {
-  scene: PropTypes.string,
-  leftText: PropTypes.string
-}
+
