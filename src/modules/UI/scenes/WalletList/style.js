@@ -188,8 +188,8 @@ export const styles = {
     marginRight: 5
   },
   rowCurrencyLogo: {
-    height: 14,
-    width: 14,
+    height: 22,
+    width: 22,
     resizeMode: Image.resizeMode.contain,
     alignSelf: 'center'
   },
