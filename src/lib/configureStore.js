@@ -20,7 +20,10 @@ if (__DEV__) {
   middleware = [...middleware]
 }
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({name: 'ui'}) || compose
+const composeEnhancers
+  = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui' })
+    : compose
 
 export default function configureStore (initialState: Object) {
   return createStore(
