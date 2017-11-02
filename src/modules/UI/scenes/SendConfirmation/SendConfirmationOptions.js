@@ -3,6 +3,8 @@ import {Text, View} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
+import {border} from '../../../utils'
+
 
 const CHANGE_MINING_FEE_TEXT = sprintf(strings.enUS['change_mining_fee_title'])
 const CHANGE_CURRENCY_TEXT = 'Change Currency'
@@ -25,8 +27,8 @@ export default class SendConfirmationOptions extends Component {
     return (
       <View>
         <Menu onSelect={(value) => this.handleMenuOptions(value)}>
-          <MenuTrigger>
-            <Text style={styles.trigger}>
+          <MenuTrigger style={[border(), styles.menuTrigger]} >
+            <Text style={[styles.trigger, border()]} >
               &#8942;
             </Text>
           </MenuTrigger>
