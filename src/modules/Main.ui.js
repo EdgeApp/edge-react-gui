@@ -87,8 +87,6 @@ pluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-const EXCHANGE_RATE_TIMER_MS = 30000
-
 import ENV from '../../env.json'
 
 const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
@@ -108,7 +106,6 @@ type Props = {
   setLocaleInfo: (any) => void,
   setDeviceDimensions: (any) => void,
   autoLogout: () => void,
-  updateExchangeRates: () => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   contextCallbacks: AbcContextCallbacks
@@ -118,8 +115,7 @@ type State = {
   context: ?AbcContext,
   loading: boolean,
   mainActive: boolean,
-  timeout: ?number,
-  exchangeTimer: any
+  timeout: ?number
 }
 
 StatusBar.setBarStyle('light-content', true)
@@ -164,7 +160,6 @@ export default class Main extends Component<Props, State> {
     this.state = {
       mainActive: true,
       timeout: undefined,
-      exchangeTimer: undefined,
       context: undefined,
       loading: true
     }
@@ -178,20 +173,12 @@ export default class Main extends Component<Props, State> {
 
   componentWillUnmount () {
     AppState.removeEventListener('change', this._handleAppStateChange)
-    clearTimeout(this.state.exchangeTimer)
-    this.setState({
-      exchangeTimer: undefined
-    })
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
 
   componentDidMount () {
     AppState.addEventListener('change', this._handleAppStateChange)
-    const exchangeTimer = setInterval(() => {
-      this.props.updateExchangeRates()
-    }, EXCHANGE_RATE_TIMER_MS) // Dummy dispatch to allow scenes to update in mapStateToProps
-    this.setState({exchangeTimer})
 
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
