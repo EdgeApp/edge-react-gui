@@ -167,74 +167,77 @@ export default class SettingsOverview extends Component {
     const disabled = strings.enUS['string_disable']
 
     return (
-      <ScrollView style={styles.container}>
-        <Gradient style={[styles.unlockRow]}>
-          <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
-            <View style={styles.leftArea}>
-              <FAIcon style={[styles.icon, b('green')]} name={Constants.USER_O} />
-              <T style={styles.accountBoxHeaderText}>
-                {strings.enUS['settings_account_title_cap']}: {this.props.username}
-              </T>
+      <View>
+      <Gradient style={styles.gradient} />
+        <ScrollView style={styles.container}>
+          <Gradient style={[styles.unlockRow]}>
+            <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+              <View style={styles.leftArea}>
+                <FAIcon style={[styles.icon, b('green')]} name={Constants.USER_O} />
+                <T style={styles.accountBoxHeaderText}>
+                  {strings.enUS['settings_account_title_cap']}: {this.props.username}
+                </T>
+              </View>
             </View>
-          </View>
-        </Gradient>
-
-        <RowRoute
-          leftText={strings.enUS['settings_button_change_password']}
-          routeFunction={this._onPressChangePasswordRouting}
-          right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
-        <RowRoute
-          leftText={strings.enUS['settings_button_pin']}
-          routeFunction={this._onPressChangePinRouting}
-          right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
-
-        <Gradient style={[styles.unlockRow]}>
-          <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
-            <View style={styles.leftArea}>
-              <IonIcon name='ios-options' style={[styles.icon, b('green')]} />
-              <T style={styles.accountBoxHeaderText}>
-                {strings.enUS['settings_options_title_cap']}
-              </T>
-            </View>
-          </View>
-        </Gradient>
-
-        <View>
-          <RowModal onPress={this.showAutoLogoutModal}
-            leftText={strings.enUS['settings_title_auto_logoff']}
-            rightText={this.props.autoLogoutTimeInMinutes || disabled} />
+          </Gradient>
 
           <RowRoute
-            leftText={strings.enUS['settings_title_currency']}
-            routeFunction={Actions.defaultFiatSetting}
-            right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
-
-          {this.securityRoute.map(this.renderRowRoute)}
-
-          {Object.keys(this.options).map(this.renderRowSwitch)}
-
-          {this.currencies.map(this.renderRowRoute)}
-
+            leftText={strings.enUS['settings_button_change_password']}
+            routeFunction={this._onPressChangePasswordRouting}
+            right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
           <RowRoute
-            leftText={strings.enUS['settings_button_send_logs']}
-            scene={'changePassword'}
-            routeFunction={this.showSendLogsModal} />
+            leftText={strings.enUS['settings_button_pin']}
+            routeFunction={this._onPressChangePinRouting}
+            right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
-          <View style={[styles.debugArea, b('green')]}>
-            <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
+          <Gradient style={[styles.unlockRow]}>
+            <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
+              <View style={styles.leftArea}>
+                <IonIcon name='ios-options' style={[styles.icon, b('green')]} />
+                <T style={styles.accountBoxHeaderText}>
+                  {strings.enUS['settings_options_title_cap']}
+                </T>
+              </View>
+            </View>
+          </Gradient>
+
+          <View>
+            <RowModal onPress={this.showAutoLogoutModal}
+              leftText={strings.enUS['settings_title_auto_logoff']}
+              rightText={this.props.autoLogoutTimeInMinutes || disabled} />
+
+            <RowRoute
+              leftText={strings.enUS['settings_title_currency']}
+              routeFunction={Actions.defaultFiatSetting}
+              right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
+
+            {this.securityRoute.map(this.renderRowRoute)}
+
+            {Object.keys(this.options).map(this.renderRowSwitch)}
+
+            {this.currencies.map(this.renderRowRoute)}
+
+            <RowRoute
+              leftText={strings.enUS['settings_button_send_logs']}
+              scene={'changePassword'}
+              routeFunction={this.showSendLogsModal} />
+
+            <View style={[styles.debugArea, b('green')]}>
+              <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
+            </View>
+
+            <View style={styles.emptyBottom} />
           </View>
 
-          <View style={styles.emptyBottom} />
-        </View>
-
-        <AutoLogoutModal
-          showModal={this.state.showAutoLogoutModal}
-          onDone={this.onDoneAutoLogoutModal}
-          onCancel={this.onCancelAutoLogoutModal} />
-        <SendLogsModal showModal={this.state.showSendLogsModal}
-          onDone={this.onDoneSendLogsModal}
-          onCancel={this.onCancelSendLogsModal} />
-      </ScrollView>
+          <AutoLogoutModal
+            showModal={this.state.showAutoLogoutModal}
+            onDone={this.onDoneAutoLogoutModal}
+            onCancel={this.onCancelAutoLogoutModal} />
+          <SendLogsModal showModal={this.state.showSendLogsModal}
+            onDone={this.onDoneSendLogsModal}
+            onCancel={this.onCancelSendLogsModal} />
+        </ScrollView>
+      </View>
     )
   }
 
