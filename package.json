@@ -93,7 +93,7 @@
     "react-native-modal": "^2.2.0",
     "react-native-permissions": "^1.0.0",
     "react-native-qrcode": "^0.2.3",
-    "react-native-router-flux": "^4.0.0-beta.22",
+    "react-native-router-flux": "git://github.com/Airbitz/react-native-router-flux#fixed-react-navigation-beta-15",
     "react-native-share": "^1.0.21",
     "react-native-slider": "^0.9.1",
     "react-native-sortable-listview": "0.2.2",
