@@ -35,25 +35,27 @@ export default class CurrencySettings extends Component {
   render () {
     return (
       <View style={[styles.ethereumSettings, b()]}>
+        <Gradient style={styles.gradient} />
+        <View style={styles.container}>
+          {this.header()}
 
-        {this.header()}
-
-        <RadioRows style={b()}>
-          {
-            this.props.denominations.map((denomination) => {
-              const key = denomination.multiplier
-              const left = `${denomination.symbol} - ${denomination.name}`
-              const right = 'Right'
-              const isSelected = key === this.props.selectedDenominationKey
-              const onPress = this.selectDenomination(key)
-              return <Row key={denomination.multiplier}
-                denomination={denomination}
-                left={left} right={right}
-                isSelected={isSelected}
-                onPress={onPress} />
-            })
-          }
-        </RadioRows>
+          <RadioRows style={b()}>
+            {
+              this.props.denominations.map((denomination) => {
+                const key = denomination.multiplier
+                const left = `${denomination.symbol} - ${denomination.name}`
+                const right = 'Right'
+                const isSelected = key === this.props.selectedDenominationKey
+                const onPress = this.selectDenomination(key)
+                return <Row key={denomination.multiplier}
+                  denomination={denomination}
+                  left={left} right={right}
+                  isSelected={isSelected}
+                  onPress={onPress} />
+              })
+            }
+          </RadioRows>
+          </View>
       </View>
     )
   }

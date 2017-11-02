@@ -269,13 +269,13 @@ export default class Main extends Component<Props, State> {
                       </Stack>
                       <Stack key='settingsOverviewTab' title='Settings' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} hideDrawerButton={true} >
                         <Scene key={Constants.SETTINGS_OVERVIEW} tintColor={styles.backButtonColor} navTransparent={true} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
-                        <Scene key={Constants.CHANGE_PASSWORD}   tintColor={styles.backButtonColor} navTransparent={true} component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PASSWORD} tintColor={styles.backButtonColor} navTransparent={true} component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
                         <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
                         <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
-                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
                         <Scene key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
                       </Stack>
                       {/*</Gradient>*/}
