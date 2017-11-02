@@ -71,6 +71,11 @@ export const getWallet = (state, walletId): AbcWallet => {
   return wallet
 }
 
+export const getWalletName = (state, walletId): AbcWallet => {
+  const wallet = getWallet(state, walletId)
+  return wallet && wallet.name
+}
+
 export const getBalanceInCrypto = (state, walletId, currencyCode) => {
   const wallet = getWallet(state, walletId)
   const balance = wallet.getBalance(currencyCode)
