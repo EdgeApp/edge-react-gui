@@ -2,10 +2,19 @@ import {Platform, StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
-  view: {
+  scene: {
     flex: 1,
-    padding: 20,
     backgroundColor: THEME.COLORS.GRAY_4
+  },
+  gradient: {
+    height: 66,
+    width: '100%',
+    position: 'absolute'
+  },
+  view: {
+    position: 'relative',
+    top: 66,
+    padding: 20
   },
   walletNameInputView: {
     height: 50,

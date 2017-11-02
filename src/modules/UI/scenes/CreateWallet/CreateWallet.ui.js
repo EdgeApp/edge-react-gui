@@ -13,6 +13,7 @@ import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 
 import styles from './styles.js'
 import strings from '../../../../locales/default'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
 const WALLET_NAME_INPUT_PLACEHOLDER  = strings.enUS['fragment_wallets_addwallet_name_hint']
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
@@ -112,31 +113,33 @@ export default class CreateWallet extends Component {
 
   render () {
     return (
-      <View style={styles.view}>
+      <View style={styles.scene}>
+        <Gradient style={styles.gradient} />
+        <View style={styles.view}>
+          <WalletNameInput
+            placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
+            onChangeText={this.handleChangeWalletName} />
 
-        <WalletNameInput
-          placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
-          onChangeText={this.handleChangeWalletName} />
+          <DropdownPicker
+            keyboardShouldPersistTaps={'always'}
+            listItems={this.props.supportedWalletTypes || []}
+            placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
+            onSelect={this.handleSelectWalletType} />
 
-        <DropdownPicker
-          keyboardShouldPersistTaps={'always'}
-          listItems={this.props.supportedWalletTypes || []}
-          placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
-          onSelect={this.handleSelectWalletType} />
+          <DropdownPicker
+            keyboardShouldPersistTaps={'always'}
+            listStyle={{maxHeight: 140}}
+            listItems={this.getSupportedFiats()}
+            placeholder={FIAT_PICKER_PLACEHOLDER}
+            onSelect={this.handleSelectFiat} />
 
-        <DropdownPicker
-          keyboardShouldPersistTaps={'always'}
-          listStyle={{maxHeight: 140}}
-          listItems={this.getSupportedFiats()}
-          placeholder={FIAT_PICKER_PLACEHOLDER}
-          onSelect={this.handleSelectFiat} />
+          <Buttons
+            style={styles.buttons}
+            isCreatingWallet={this.state.isCreatingWallet}
+            onDone={this.onSubmit}
+            onCancel={this.onCancel} />
 
-        <Buttons
-          style={styles.buttons}
-          isCreatingWallet={this.state.isCreatingWallet}
-          onDone={this.onSubmit}
-          onCancel={this.onCancel} />
-
+        </View>
       </View>
     )
   }
