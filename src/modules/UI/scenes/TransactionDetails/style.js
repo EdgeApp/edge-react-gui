@@ -14,6 +14,11 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'center'
   },
+  headerGradient: {
+    height: 66,
+    width: '100%',
+    position: 'absolute'
+  },
   modalHeaderIconWrapBottom: {
     borderRadius: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
