@@ -96,6 +96,7 @@
     "react-native-router-flux": "git://github.com/Airbitz/react-native-router-flux#fixed-react-navigation-beta-15",
     "react-native-share": "^1.0.21",
     "react-native-slider": "^0.9.1",
+    "react-native-smart-splash-screen": "^2.3.5",
     "react-native-sortable-listview": "0.2.2",
     "react-native-sound": "^0.10.4",
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git",
