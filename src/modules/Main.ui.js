@@ -254,7 +254,7 @@ export default class Main extends Component<Props, State> {
                         </Stack>
                         <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} navTransparent={true} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tintColor={styles.backButtonColor} navTransparent={true} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                           <Scene key={Constants.EDGE_LOGIN}
                             renderTitle={'Edge Login'}
                             component={EdgeLoginSceneConnector}
