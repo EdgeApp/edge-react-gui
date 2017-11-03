@@ -270,8 +270,8 @@ export default class Main extends Component<Props, State> {
                       <Stack key='settingsOverviewTab' title='Settings' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} hideDrawerButton={true} >
                         <Scene key={Constants.SETTINGS_OVERVIEW} tintColor={styles.backButtonColor} navTransparent={true} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
                         <Scene key={Constants.CHANGE_PASSWORD} tintColor={styles.backButtonColor} navTransparent={true} component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
-                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
-                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' tintColor={styles.backButtonColor} animation={'fade'} duration={600} />
+                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' tintColor={styles.backButtonColor} animation={'fade'} duration={600} />
                         <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
                         <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
                         <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
