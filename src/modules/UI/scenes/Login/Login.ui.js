@@ -7,10 +7,21 @@ import {initializeAccount} from '../../../Login/action'
 import {Actions} from 'react-native-router-flux'
 
 class Login extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {key: 0}
+  }
+
   onLogin = (error = null, account) => {
     if (error || !account) return
     Actions.edge()
     this.props.initializeAccount(account)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    // If we have logged out, destroy and recreate the login screen:
+    if (this.props.account && nextProps.account !== this.props.account)
+      this.setState({key: this.state.key + 1})
   }
 
   render () {
@@ -21,13 +32,15 @@ class Login extends Component {
         accountOptions={{callbacks}}
         context={this.props.context}
         onLogin={this.onLogin}
+        key={this.state.key.toString()}
       />
     )
   }
 }
 
 const mapStateToProps = (state) => ({
-  context: CORE_SELECTORS.getContext(state)
+  context: CORE_SELECTORS.getContext(state),
+  account: CORE_SELECTORS.getAccount(state)
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
