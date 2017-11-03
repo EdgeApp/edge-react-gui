@@ -74,7 +74,7 @@ function deepCopyState (state) {
   return deepCopy
 }
 
-export default function (state = initialState, action) {
+function cryptoExchangerReducer (state = initialState, action) {
 
   switch (action.type) {
   case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
@@ -136,3 +136,11 @@ export default function (state = initialState, action) {
   }
 }
 
+// Nuke the state on logout:
+export default (state: $PropertyType<State, 'ui'>, action: any) => {
+  if (action.type === 'LOGOUT') {
+    return cryptoExchangerReducer(undefined, ({type: 'DUMMY_ACTION_PLEASE_IGNORE'}: any))
+  }
+
+  return cryptoExchangerReducer(state, action)
+}
