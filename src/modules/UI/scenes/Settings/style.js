@@ -12,6 +12,7 @@ export const styles = {
   },
   container: {
     position: 'relative',
+    height:'100%',
     top: 66
   },
   listStyle: {
