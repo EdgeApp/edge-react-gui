@@ -56,6 +56,10 @@ export default StyleSheet.create({
     marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
+  menuTrigger: {
+    paddingHorizontal: 8,
+    paddingVertical: 4
+  },
   trigger: {
     fontSize: 25,
     color: THEME.COLORS.WHITE,

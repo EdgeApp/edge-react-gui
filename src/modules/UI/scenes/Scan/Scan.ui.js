@@ -72,84 +72,87 @@ export default class Scan extends Component<any, any> {
 
   render () {
     return (
-      <View style={styles.container}>
-        {this.renderCamera()}
-        <View style={[styles.overlay, UTILS.border()]}>
+      <View style={{flex: 1}}>
+        <Gradient style={styles.gradient} />
+        <View style={styles.container}>
+            {this.renderCamera()}
+            <View style={[styles.overlay, UTILS.border()]}>
 
-          <AddressModal />
+              <AddressModal />
 
-          <View style={[styles.overlayTop]}>
-            <T style={[styles.overlayTopText]}>
-              {HEADER_TEXT}
-            </T>
-          </View>
-          <View style={[styles.overlayBlank]} />
-
-          <Gradient style={[styles.overlayButtonAreaWrap]}>
-
-            {/* <TouchableHighlight style={styles.bottomButton}
-              onPress={this._onToggleWalletListModal}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
-
-                <Ionicon style={[styles.transferArrowIcon]}
-                  name='ios-arrow-round-forward'
-                  size={24} />
-                <T style={[styles.transferButtonText, styles.bottomButtonText]}>
-                  {TRANSFER_TEXT}
+              <View style={[styles.overlayTop]}>
+                <T style={[styles.overlayTopText]}>
+                  {HEADER_TEXT}
                 </T>
-
               </View>
-            </TouchableHighlight> */}
+              <View style={[styles.overlayBlank]} />
 
-            <TouchableHighlight style={styles.bottomButton}
-              onPress={this._onToggleAddressModal}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
+              <Gradient style={[styles.overlayButtonAreaWrap]}>
 
-                <FAIcon style={[styles.addressBookIcon]}
-                  name='address-book-o'
-                  size={18} />
-                <T style={[styles.addressButtonText, styles.bottomButtonText]}>
-                  {ADDRESS_TEXT}
-                </T>
+                {/* <TouchableHighlight style={styles.bottomButton}
+                  onPress={this._onToggleWalletListModal}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
 
-              </View>
-            </TouchableHighlight>
+                    <Ionicon style={[styles.transferArrowIcon]}
+                      name='ios-arrow-round-forward'
+                      size={24} />
+                    <T style={[styles.transferButtonText, styles.bottomButtonText]}>
+                      {TRANSFER_TEXT}
+                    </T>
 
-            {/* <TouchableHighlight style={styles.bottomButton}
-              onPress={this.selectPhotoTapped}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
+                  </View>
+                </TouchableHighlight> */}
 
-                <Ionicon style={[styles.cameraIcon]}
-                  name='ios-camera-outline'
-                  size={24} />
-                <T style={[styles.bottomButtonText]}>
-                  {PHOTOS_TEXT}
-                </T>
+                <TouchableHighlight style={styles.bottomButton}
+                  onPress={this._onToggleAddressModal}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
 
-              </View>
-            </TouchableHighlight> */}
+                    <FAIcon style={[styles.addressBookIcon]}
+                      name='address-book-o'
+                      size={18} />
+                    <T style={[styles.addressButtonText, styles.bottomButtonText]}>
+                      {ADDRESS_TEXT}
+                    </T>
 
-            <TouchableHighlight style={styles.bottomButton}
-              onPress={this._onToggleTorch}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
+                  </View>
+                </TouchableHighlight>
 
-                <Ionicon style={[styles.flashIcon]}
-                  name='ios-flash-outline'
-                  size={24}  />
-                <T style={[styles.flashButtonText, styles.bottomButtonText]}>
-                  {FLASH_TEXT}
-                </T>
+                {/* <TouchableHighlight style={styles.bottomButton}
+                  onPress={this.selectPhotoTapped}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
 
-              </View>
-            </TouchableHighlight>
+                    <Ionicon style={[styles.cameraIcon]}
+                      name='ios-camera-outline'
+                      size={24} />
+                    <T style={[styles.bottomButtonText]}>
+                      {PHOTOS_TEXT}
+                    </T>
 
-          </Gradient>
+                  </View>
+                </TouchableHighlight> */}
+
+                <TouchableHighlight style={styles.bottomButton}
+                  onPress={this._onToggleTorch}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
+
+                    <Ionicon style={[styles.flashIcon]}
+                      name='ios-flash-outline'
+                      size={24}  />
+                    <T style={[styles.flashButtonText, styles.bottomButtonText]}>
+                      {FLASH_TEXT}
+                    </T>
+
+                  </View>
+                </TouchableHighlight>
+
+              </Gradient>
+            </View>
+          <ABAlert />
         </View>
-        <ABAlert />
       </View>
     )
   }

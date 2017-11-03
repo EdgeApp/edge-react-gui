@@ -236,12 +236,12 @@ export default class Main extends Component<Props, State> {
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'transparent'} tabBarLabel='Wallets'>
                           <Scene key='walletList_notused' component={WalletList} navTransparent={true} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
-                          <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' navTransparent={true} animation={'fade'} duration={600} />
+                          <Scene key={Constants.CREATE_WALLET} component={CreateWallet} tintColor={styles.backButtonColor} title='Create Wallet' navTransparent={true} animation={'fade'} duration={600} />
                           <Scene key={Constants.TRANSACTION_LIST} tintColor={styles.backButtonColor} navTransparent={true} icon={this.icon(Constants.TRANSACTION_LIST)}renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
                         <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} navTransparent={true} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tintColor={styles.backButtonColor} navTransparent={true} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                           <Scene key={Constants.EDGE_LOGIN}
                             renderTitle={'Edge Login'}
                             component={EdgeLoginSceneConnector}
@@ -255,14 +255,14 @@ export default class Main extends Component<Props, State> {
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />
                       </Stack>
                       <Stack key='settingsOverviewTab' title='Settings' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} hideDrawerButton={true} >
-                        <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
-                        <Scene key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
-                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
-                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
-                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.SETTINGS_OVERVIEW} tintColor={styles.backButtonColor} navTransparent={true} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PASSWORD} tintColor={styles.backButtonColor} navTransparent={true} component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}       navTransparent={true}  title='Change Pin' tintColor={styles.backButtonColor} animation={'fade'} duration={600} />
+                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' tintColor={styles.backButtonColor} animation={'fade'} duration={600} />
+                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
                         <Scene key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
                       </Stack>
                       {/*</Gradient>*/}

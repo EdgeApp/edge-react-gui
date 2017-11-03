@@ -7,8 +7,15 @@ import platform from '../../../../theme/variables/platform.js'
 
 export const styles = {
   container: {
-    flex: 1,
-    flexDirection: 'row'
+    height: platform.deviceHeight - 66 - platform.footerHeight,
+    flexDirection: 'row',
+    position: 'relative',
+    top: 66
+  },
+  gradient: {
+    height: 66,
+    width: '100%',
+    position: 'absolute'
   },
   preview: {
     flex: 1,

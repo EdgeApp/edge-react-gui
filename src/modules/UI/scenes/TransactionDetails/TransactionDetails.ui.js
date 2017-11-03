@@ -453,7 +453,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     const txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
     return (
       <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
-        <Gradient style={{height: 66, width: '100%', position: 'absolute'}} />
+        <Gradient style={styles.headerGradient} />
         <View style={{position: 'relative', top: 66}}>
           <Animated.View
             style={[{
