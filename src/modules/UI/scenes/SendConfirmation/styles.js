@@ -47,7 +47,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   sliderStyle: {
-    width: 300
+    width: 270
   },
   error: {
     flex: 1,
