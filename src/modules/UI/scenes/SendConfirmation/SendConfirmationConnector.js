@@ -57,6 +57,7 @@ const mapStateToProps = (state: State): Props => {
   } = state.ui.scenes.sendConfirmation
 
   const nativeAmount = parsedUri.nativeAmount || '0'
+  parsedUri.currencyCode = currencyCode
 
   let errorMsg = null
   if (error && parsedUri.nativeAmount && bns.gt(parsedUri.nativeAmount, '0')) {
