@@ -24,40 +24,37 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     },
 
     onAddressesChecked (walletId: string, progressRatio: number) {
-      const callbackDetails = {
-        walletId,
-        progressRatio
-      }
-      if (progressRatio === 1) console.log('onAddressesChecked', callbackDetails)
+      if (progressRatio === 1) console.log('onAddressesChecked: ' + walletId + ' ratio:' + progressRatio)
     },
 
     onBalanceChanged (walletId: string, currencyCode: string, balance: string) {
-      const callbackDetails = {
-        walletId,
-        currencyCode,
-        balance
-      }
-      console.log('onBalanceChanged', callbackDetails)
+      console.log('onBalanceChanged: ' + walletId + ' ' + currencyCode + ' ' + balance)
       dispatch(refreshWallet(walletId))
     },
 
     onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>) {
-      const callbackDetails = {
-        walletId,
-        transactions
+      if (transactions && transactions.length) {
+        console.log('onTransactionsChanged length=' + transactions.length.toString())
+        for (const tx of transactions) {
+          console.log('walletId:' + walletId + ' txid:' + tx.txid)
+        }
+      } else {
+        console.log('onTransactionsChanged: No transactions')
       }
-      console.log('onTransactionsChanged', callbackDetails)
       // $FlowFixMe
       dispatch(refreshTransactionsRequest(walletId))
       dispatch(refreshWallet(walletId))
     },
 
     onNewTransactions (walletId: string, transactions: Array<AbcTransaction>) {
-      const callbackDetails = {
-        walletId,
-        transactions
+      if (transactions && transactions.length) {
+        console.log('onNewTransactions length=' + transactions.length.toString())
+        for (const tx of transactions) {
+          console.log('walletId:' + walletId + ' txid:' + tx.txid)
+        }
+      } else {
+        console.log('onNewTransactions: No transactions')
       }
-      console.log('onNewTransactions', callbackDetails)
       dispatch(newTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
       // $FlowFixMe
@@ -65,20 +62,12 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     },
 
     onBlockHeightChanged (walletId: string, blockHeight: number) {
-      const callbackDetails = {
-        walletId,
-        blockHeight
-      }
-      console.log('onBlockHeightChanged', callbackDetails)
+      console.log('onBlockHeightChanged: ' + walletId + ' height:' + blockHeight)
       dispatch(refreshWallet(walletId))
     },
 
     onWalletNameChanged (walletId: string, walletName: string | null) {
-      const callbackDetails = {
-        walletId,
-        walletName
-      }
-      console.log('onWalletNameChanged', callbackDetails)
+      console.log('onWalletNameChanged:' + walletId + ' newname:' + (walletName ? walletName : ''))
       dispatch(refreshWallet(walletId))
     }
   }
