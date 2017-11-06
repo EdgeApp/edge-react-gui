@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+    </dependencies>
+    <objects>
+        <view contentMode="scaleAspectFill" id="iN0-l3-epB">
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="splash.png" translatesAutoresizingMaskIntoConstraints="NO" id="ZkI-RL-69Z">
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="ZkI-RL-69Z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7dE-9J-TdO"/>
+                <constraint firstAttribute="trailing" secondItem="ZkI-RL-69Z" secondAttribute="trailing" id="KFm-od-sbN"/>
+                <constraint firstAttribute="bottom" secondItem="ZkI-RL-69Z" secondAttribute="bottom" id="afY-hI-KgI"/>
+                <constraint firstItem="ZkI-RL-69Z" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="eMX-qT-GeJ"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="splash.png"/>
+    </resources>
+</document>

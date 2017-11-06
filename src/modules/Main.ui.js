@@ -1,8 +1,14 @@
 // @flow
-import type {AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, AbcContextOptions} from 'airbitz-core-types'
+import type {
+  AbcContext,
+  AbcContextCallbacks,
+  AbcCorePlugin,
+  AbcCurrencyPlugin,
+  AbcContextOptions
+} from 'airbitz-core-types'
+import SplashScreen from 'react-native-smart-splash-screen'
 
 import HockeyApp from 'react-native-hockeyapp'
-// import SplashScreen from 'react-native-splash-screen'
 import React, {Component} from 'react'
 import {Keyboard, Platform, StatusBar, Image, AppState} from 'react-native'
 import {connect} from 'react-redux'
@@ -62,24 +68,26 @@ import scanIcon from '../assets/images/tabbar/scan.png'
 import scanIconSelected from '../assets/images/tabbar/scan_selected.png'
 import exchangeIcon from '../assets/images/tabbar/exchange.png'
 import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
+import styles from './style.js'
 
 import * as CONTEXT_API from './Core/Context/api'
 
 import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
-import * as EXCHANGE_PLUGINS from 'edge-exchange-plugins'
+import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 // $FlowFixMe
 import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
-const currencyPluginFactories = []
-currencyPluginFactories.push(EthereumCurrencyPluginFactory)
-currencyPluginFactories.push(BitcoinCurrencyPluginFactory)
-currencyPluginFactories.push(LitecoinCurrencyPluginFactory)
-currencyPluginFactories.push(BitcoincashCurrencyPluginFactory)
+const pluginFactories: Array<AbcCorePlugin> = [
+  coinbasePlugin,
+  shapeshiftPlugin
+]
+pluginFactories.push((EthereumCurrencyPluginFactory: any))
+pluginFactories.push(BitcoinCurrencyPluginFactory)
+pluginFactories.push(LitecoinCurrencyPluginFactory)
+pluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-
-const EXCHANGE_RATE_TIMER_MS = 30000
 
 import ENV from '../../env.json'
 
@@ -100,7 +108,6 @@ type Props = {
   setLocaleInfo: (any) => void,
   setDeviceDimensions: (any) => void,
   autoLogout: () => void,
-  updateExchangeRates: () => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   contextCallbacks: AbcContextCallbacks
@@ -108,10 +115,8 @@ type Props = {
 
 type State = {
   context: ?AbcContext,
-  loading: boolean,
   mainActive: boolean,
-  timeout: ?number,
-  exchangeTimer: any
+  timeout: ?number
 }
 
 StatusBar.setBarStyle('light-content', true)
@@ -134,7 +139,7 @@ function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
   const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,
-    plugins: [...currencyPluginFactories, ...Object.values(EXCHANGE_PLUGINS)],
+    plugins: pluginFactories,
     shapeshiftKey: SHAPESHIFT_API_KEY
   }
 
@@ -156,9 +161,7 @@ export default class Main extends Component<Props, State> {
     this.state = {
       mainActive: true,
       timeout: undefined,
-      exchangeTimer: undefined,
       context: undefined,
-      loading: true
     }
   }
 
@@ -170,20 +173,12 @@ export default class Main extends Component<Props, State> {
 
   componentWillUnmount () {
     AppState.removeEventListener('change', this._handleAppStateChange)
-    clearTimeout(this.state.exchangeTimer)
-    this.setState({
-      exchangeTimer: undefined
-    })
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
 
   componentDidMount () {
     AppState.addEventListener('change', this._handleAppStateChange)
-    const exchangeTimer = setInterval(() => {
-      this.props.updateExchangeRates()
-    }, EXCHANGE_RATE_TIMER_MS) // Dummy dispatch to allow scenes to update in mapStateToProps
-    this.setState({exchangeTimer})
 
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
@@ -197,8 +192,11 @@ export default class Main extends Component<Props, State> {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
-      // this.setState({ context, loading: false }, () => SplashScreen.hide())
-      this.setState({context, loading: false})
+      SplashScreen.close({
+        animationType: SplashScreen.animationType.fade,
+        duration: 850,
+        delay: 500,
+      })
     })
   }
 
@@ -218,20 +216,20 @@ export default class Main extends Component<Props, State> {
   }
 
   renderWalletListNavBar = () => (
-      <Header/>
+    <Header/>
   )
 
   render () {
     return (
       <StyleProvider style={getTheme(platform)}>
         <MenuContext style={{flex: 1}}>
-          <RouterWithRedux>
+          <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
                 {/*<Lightbox>*/}
-                <Stack hideNavBar key='root' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} backButtonTintColor='white' titleStyle={{color: THEME.COLORS.WHITE, alignSelf: 'center'}}>
+                <Stack hideNavBar key='root' navigationBarStyle={{backgroundColor: THEME.COLORS.TRANSPARENT}} backButtonTintColor='white' titleStyle={{color: THEME.COLORS.WHITE, alignSelf: 'center'}}>
                   <Scene key={Constants.LOGIN} component={LoginConnector} title='login' animation={'fade'} duration={600} initial username={this.props.username} />
-                  <Scene key={Constants.TRANSACTION_DETAILS} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
+                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} component={TransactionDetails} back clone title='Transaction Details' animation={'fade'} duration={600} />
                   <Drawer hideNavBar key='edge' contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/*
                      Wrapper Scene needed to fix a bug where the tabs would
@@ -240,14 +238,14 @@ export default class Main extends Component<Props, State> {
                     <Scene hideNavBar>
                       {/*<Gradient>*/}
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
-                        <Stack key={Constants.WALLET_LIST} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'blue'} tabBarLabel='Wallets'>
-                          <Scene key='walletList_notused' component={WalletList} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
-                          <Scene key={Constants.CREATE_WALLET} component={CreateWallet} title='Create Wallet' animation={'fade'} duration={600} />
-                          <Scene key={Constants.TRANSACTION_LIST} icon={this.icon(Constants.TRANSACTION_LIST)} activeTintColor='blue' renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
+                        <Stack key={Constants.WALLET_LIST} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'transparent'} tabBarLabel='Wallets'>
+                          <Scene key='walletList_notused' component={WalletList} navTransparent={true} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
+                          <Scene key={Constants.CREATE_WALLET} component={CreateWallet} tintColor={styles.backButtonColor} title='Create Wallet' navTransparent={true} animation={'fade'} duration={600} />
+                          <Scene key={Constants.TRANSACTION_LIST} tintColor={styles.backButtonColor} navTransparent={true} icon={this.icon(Constants.TRANSACTION_LIST)}renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
-                        <Stack key={Constants.SCAN} title='Send' icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} navTransparent={true} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
+                        <Stack key={Constants.SCAN} title='Send' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tintColor={styles.backButtonColor} navTransparent={true} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                           <Scene key={Constants.EDGE_LOGIN}
                             renderTitle={'Edge Login'}
                             component={EdgeLoginSceneConnector}
@@ -255,9 +253,9 @@ export default class Main extends Component<Props, State> {
                             animation={'fade'}
                             duration={200} />
                         </Stack>
-                    <Scene key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                        <Scene key={Constants.EXCHANGE} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                       </Tabs>
-                      <Stack key={Constants.SEND_CONFIRMATION} hideTabBar title='Send Confirmation' >
+                      <Stack key={Constants.SEND_CONFIRMATION} navTransparent={true} hideTabBar title='Send Confirmation' >
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />
                         <Scene
                           key={Constants.CHANGE_MINING_FEE}
@@ -270,15 +268,15 @@ export default class Main extends Component<Props, State> {
                           duration={600}
                         />
                       </Stack>
-                      <Stack key='settingsOverviewTab' title='Settings' hideDrawerButton={true} >
-                        <Scene key={Constants.SETTINGS_OVERVIEW} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
-                        <Scene key={Constants.CHANGE_PASSWORD}   component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
-                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}        title='Change Pin' animation={'fade'} duration={600} />
-                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' animation={'fade'} duration={600} />
-                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
-                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
+                      <Stack key='settingsOverviewTab' title='Settings' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} hideDrawerButton={true} >
+                        <Scene key={Constants.SETTINGS_OVERVIEW} tintColor={styles.backButtonColor} navTransparent={true} component={SettingsOverview} title='Settings' onLeft={Actions.pop} leftTitle='Back' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PASSWORD} tintColor={styles.backButtonColor} navTransparent={true} component={ChangePasswordConnector}   title='Change Password' animation={'fade'} duration={600} />
+                        <Scene key={Constants.CHANGE_PIN}        component={ChangePinConnector}       navTransparent={true}  title='Change Pin' tintColor={styles.backButtonColor} animation={'fade'} duration={600} />
+                        <Scene key={Constants.RECOVER_PASSWORD}  component={PasswordRecoveryConnector} title='Password Recovery' tintColor={styles.backButtonColor} animation={'fade'} duration={600} />
+                        <Scene key={Constants.BTC_SETTINGS} component={CurrencySettings} currencyCode={'BTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoin'}     title='BTC Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.BCH_SETTINGS} component={CurrencySettings} currencyCode={'BCH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'bitcoinCash'} title='BCH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.ETH_SETTINGS} component={CurrencySettings} currencyCode={'ETH'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'ethereum'}    title='ETH Settings' animation={'fade'} duration={600} />
+                        <Scene key={Constants.LTC_SETTINGS} component={CurrencySettings} currencyCode={'LTC'} tintColor={styles.backButtonColor} navTransparent={true} pluginName={'litecoin'}    title='LTC Settings' animation={'fade'} duration={600} />
                         <Scene key='defaultFiatSetting' component={DefaultFiatSettingConnector} title='Default Fiat' animation={'fade'} duration={600} />
                       </Stack>
                       {/*</Gradient>*/}
@@ -348,5 +346,16 @@ export default class Main extends Component<Props, State> {
   autoLogout () {
     // console.log('TIMEOUT')
     this.props.autoLogout()
+  }
+
+  isCurrentScene = (sceneKey: string) => {
+    return Actions.currentScene === sceneKey
+  }
+
+  handleBack = () => {
+    if (!this.isCurrentScene('walletList_notused')) {
+      Actions.pop()
+    }
+    return true
   }
 }

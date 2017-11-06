@@ -4,14 +4,12 @@ import RNFS from 'react-native-fs'
 import ENV from '../../env.json'
 
 const SAVE_TIMEOUT = 1000 * 10 // ms
-const LOG_SERVER_TIMEOUT = 1000 // ms
+// const LOG_SERVER_TIMEOUT = 1000 // ms
 
 const path = RNFS.DocumentDirectoryPath + '/logs.txt'
 
 let buffer = ''
-let localServerBuffer = ''
 let lastSaving = Date.now()
-let lastSavingLocalServer = Date.now()
 
 const getTime = () => new Date().toISOString()
 
@@ -24,21 +22,10 @@ function saveToBuffer (log: string) {
   buffer = buffer !== '' ? buffer + '\n' + log : log
 }
 
-function saveToLocalServerBuffer (log: string) {
-  localServerBuffer = localServerBuffer !== '' ? localServerBuffer + '\n' + log : log
-}
-
 function readAndClearBuffer () {
   const logs = buffer
   buffer = ''
   lastSaving = Date.now()
-  return logs
-}
-
-function readAndClearLocalServerBuffer () {
-  const logs = localServerBuffer
-  localServerBuffer = ''
-  lastSavingLocalServer = Date.now()
   return logs
 }
 
@@ -83,31 +70,6 @@ async function request (data: string) {
   })
 }
 
-async function sendToServer (logs: string) {
-  if (Date.now() - lastSavingLocalServer < LOG_SERVER_TIMEOUT) {
-    logs !== '' && saveToLocalServerBuffer(logs)
-    setTimeout(() => sendToServer(''), Date.now() - lastSavingLocalServer)
-    return
-  }
-  const bufferedLogs = readAndClearLocalServerBuffer()
-  if (bufferedLogs !== '') {
-    try {
-      await request(bufferedLogs)
-    } catch (e) {
-      saveToLocalServerBuffer(bufferedLogs)
-      saveToLocalServerBuffer(logs)
-      return
-    }
-  }
-  if (logs !== '') {
-    try {
-      await request(logs)
-    } catch (e) {
-      saveToLocalServerBuffer(logs)
-    }
-  }
-}
-
 export async function logToServer (...info: Array<any>) {
   let args = info[0]
   let logs = ''
@@ -118,6 +80,5 @@ export async function logToServer (...info: Array<any>) {
       logs = logs + (' ' + item)
     }
   }
-
-  await sendToServer(logs)
+  request(logs)
 }

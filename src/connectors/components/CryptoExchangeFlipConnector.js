@@ -8,6 +8,7 @@ import * as UTILS from '../../modules/utils'
 import * as CORE_SELECTORS from '../../modules/Core/selectors'
 import * as actions from '../../actions/indexActions'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {SetNativeAmountInfo} from '../../actions/CryptoExchangeActions'
 export const mapStateToProps = (state: any, ownProps: any) => {
   const fee = ownProps.fee ? ownProps.fee: null
   let fiatPerCrypto = 0
@@ -55,7 +56,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
 export const mapDispatchToProps = (dispatch: any, ownProps: any) => ({
   launchWalletSelector: (data: string) => ownProps.launchWalletSelector(data),
   //setNativeAmount: (data) => ownProps.changeNativeAmount(data)
-  setNativeAmount: (data: {primaryNativeAmount: string, primaryDisplayAmount: string, whichWallet: string}) => dispatch(actions.setNativeAmount(data))
+  setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

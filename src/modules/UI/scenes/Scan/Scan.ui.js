@@ -22,6 +22,7 @@ import Camera from 'react-native-camera'
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import * as UTILS from '../../../utils.js'
 
 import styles, {styles as styleRaw} from './style'
 import ABAlert from '../../components/ABAlert/indexABAlert'
@@ -45,10 +46,10 @@ type Props = {
 
 const HEADER_TEXT     = strings.enUS['send_scan_header_text']
 
-const DENIED_PERMISSION_TEXT = 'To scan QR codes, enable camera permission in your system settings'
-const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
+const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
+// const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
 const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
-const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
+// const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
 const FLASH_TEXT    = strings.enUS['fragment_send_flash']
 
 export default class Scan extends Component<any, any> {
@@ -71,84 +72,87 @@ export default class Scan extends Component<any, any> {
 
   render () {
     return (
-      <View style={styles.container}>
-        {this.renderCamera()}
-        <View style={[styles.overlay]}>
+      <View style={{flex: 1}}>
+        <Gradient style={styles.gradient} />
+        <View style={styles.container}>
+            {this.renderCamera()}
+            <View style={[styles.overlay, UTILS.border()]}>
 
-          <AddressModal />
+              <AddressModal />
 
-          <View style={[styles.overlayTop]}>
-            <T style={[styles.overlayTopText]}>
-              {HEADER_TEXT}
-            </T>
-          </View>
-          <View style={[styles.overlayBlank]} />
-
-          <Gradient style={[styles.overlayButtonAreaWrap]}>
-
-            <TouchableHighlight style={styles.bottomButton}
-              onPress={this._onToggleWalletListModal}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
-
-                <Ionicon style={[styles.transferArrowIcon]}
-                  name='ios-arrow-round-forward'
-                  size={24} />
-                <T style={[styles.transferButtonText, styles.bottomButtonText]}>
-                  {TRANSFER_TEXT}
+              <View style={[styles.overlayTop]}>
+                <T style={[styles.overlayTopText]}>
+                  {HEADER_TEXT}
                 </T>
-
               </View>
-            </TouchableHighlight>
+              <View style={[styles.overlayBlank]} />
 
-            <TouchableHighlight style={styles.bottomButton}
-              onPress={this._onToggleAddressModal}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
+              <Gradient style={[styles.overlayButtonAreaWrap]}>
 
-                <FAIcon style={[styles.addressBookIcon]}
-                  name='address-book-o'
-                  size={18} />
-                <T style={[styles.addressButtonText, styles.bottomButtonText]}>
-                  {ADDRESS_TEXT}
-                </T>
+                {/* <TouchableHighlight style={styles.bottomButton}
+                  onPress={this._onToggleWalletListModal}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
 
-              </View>
-            </TouchableHighlight>
+                    <Ionicon style={[styles.transferArrowIcon]}
+                      name='ios-arrow-round-forward'
+                      size={24} />
+                    <T style={[styles.transferButtonText, styles.bottomButtonText]}>
+                      {TRANSFER_TEXT}
+                    </T>
 
-            <TouchableHighlight style={styles.bottomButton}
-              onPress={this.selectPhotoTapped}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
+                  </View>
+                </TouchableHighlight> */}
 
-                <Ionicon style={[styles.cameraIcon]}
-                  name='ios-camera-outline'
-                  size={24} />
-                <T style={[styles.bottomButtonText]}>
-                  {PHOTOS_TEXT}
-                </T>
+                <TouchableHighlight style={styles.bottomButton}
+                  onPress={this._onToggleAddressModal}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
 
-              </View>
-            </TouchableHighlight>
+                    <FAIcon style={[styles.addressBookIcon]}
+                      name='address-book-o'
+                      size={18} />
+                    <T style={[styles.addressButtonText, styles.bottomButtonText]}>
+                      {ADDRESS_TEXT}
+                    </T>
 
-            <TouchableHighlight style={styles.bottomButton}
-              onPress={this._onToggleTorch}
-              underlayColor={styleRaw.underlay.color}>
-              <View style={styles.bottomButtonTextWrap}>
+                  </View>
+                </TouchableHighlight>
 
-                <Ionicon style={[styles.flashIcon]}
-                  name='ios-flash-outline'
-                  size={24}  />
-                <T style={[styles.flashButtonText, styles.bottomButtonText]}>
-                  {FLASH_TEXT}
-                </T>
+                {/* <TouchableHighlight style={styles.bottomButton}
+                  onPress={this.selectPhotoTapped}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
 
-              </View>
-            </TouchableHighlight>
+                    <Ionicon style={[styles.cameraIcon]}
+                      name='ios-camera-outline'
+                      size={24} />
+                    <T style={[styles.bottomButtonText]}>
+                      {PHOTOS_TEXT}
+                    </T>
 
-          </Gradient>
+                  </View>
+                </TouchableHighlight> */}
+
+                <TouchableHighlight style={styles.bottomButton}
+                  onPress={this._onToggleTorch}
+                  underlayColor={styleRaw.underlay.color}>
+                  <View style={styles.bottomButtonTextWrap}>
+
+                    <Ionicon style={[styles.flashIcon]}
+                      name='ios-flash-outline'
+                      size={24}  />
+                    <T style={[styles.flashButtonText, styles.bottomButtonText]}>
+                      {FLASH_TEXT}
+                    </T>
+
+                  </View>
+                </TouchableHighlight>
+
+              </Gradient>
+            </View>
+          <ABAlert />
         </View>
-        <ABAlert />
       </View>
     )
   }
@@ -236,7 +240,7 @@ export default class Scan extends Component<any, any> {
       )
     } else if (this.state.cameraPermission === false) {
       return (
-        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}]}>
+        <View style={[styles.preview, {justifyContent: 'center', alignItems: 'center'}, UTILS.border()]}>
           <Text>
             {DENIED_PERMISSION_TEXT}
           </Text>
@@ -244,7 +248,7 @@ export default class Scan extends Component<any, any> {
       )
     } else {
       return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={[{flex: 1, justifyContent: 'center', alignItems: 'center'}]}>
           <ActivityIndicator size='large' style={{flex: 1, alignSelf: 'center'}} />
         </View>
       )

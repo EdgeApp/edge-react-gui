@@ -3,7 +3,6 @@ import type {State, Dispatch} from './ReduxTypes'
 
 import * as SETTINGS_SELECTORS from './UI/Settings/selectors'
 import {logoutRequest} from './Login/action'
-import {updateExchangeRates} from './ExchangeRates/action'
 
 import {connect} from 'react-redux'
 import Main from './Main.ui'
@@ -36,7 +35,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   addUsernames: (usernames) => dispatch(addUsernames(usernames)),
   setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
   autoLogout: () => dispatch(logoutRequest(null)),
-  updateExchangeRates: () => { dispatch(updateExchangeRates()) },
   contextCallbacks: makeContextCallbacks(dispatch)
 })
 

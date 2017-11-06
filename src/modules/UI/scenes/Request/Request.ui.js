@@ -44,6 +44,7 @@ export default class Request extends Component {
           publicAddress
         })
       })
+      .catch((e) => console.log(e))
     }
   }
 
@@ -61,6 +62,7 @@ export default class Request extends Component {
         publicAddress
       })
     })
+    .catch((e) => console.log(e))
   }
 
   onAmountsChange = ({primaryDisplayAmount}) => {
@@ -91,6 +93,7 @@ export default class Request extends Component {
     } = this.props
     return (
       <Gradient style={styles.view}>
+        <Gradient style={{height: 66, width: '100%'}} />
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate

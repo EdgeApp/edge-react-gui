@@ -3,7 +3,7 @@ package co.edgesecure.wallet;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;
-//import com.cboy.rn.splashscreen.SplashScreen;
+import com.reactnativecomponent.splashscreen.RCTSplashScreen;
 
 public class MainActivity extends ReactActivity {
 
@@ -16,7 +16,7 @@ public class MainActivity extends ReactActivity {
         return "edge";
     }
     protected void onCreate(Bundle savedInstanceState) {
-//        SplashScreen.show(this);  // here
+        RCTSplashScreen.openSplashScreen(this);
         super.onCreate(savedInstanceState);
     }
 }

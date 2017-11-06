@@ -3,7 +3,8 @@ import {
   View,
   Image,
   WebView,
-  Text
+  Text,
+  Linking
 } from 'react-native'
 import strings from '../../../../locales/default'
 import styles from './style.js'
@@ -30,7 +31,14 @@ export default class HelpModal extends Component {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText='help_modal_title'
-        modalMiddle={<WebView scalesPageToFit={false} style={{justifyContent: 'center', alignItems:'center', height: 240, flex: 1}} source={HTML} />}
+        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={false} style={{justifyContent: 'center', alignItems:'center', height: 240, flex: 1}} source={HTML}
+          onNavigationStateChange={(event) => {
+            if (!event.url.includes('assets/src/html/enUS/info.html')) {
+              console.log('event is: ', event)
+              this.webview.stopLoading()
+              Linking.openURL(event.url)
+            }
+          }} />}
         modalBottom={<View style={[styles.modalBottomContainer]}>
                         <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {versionNumber}</Text>
                         <Text style={styles.modalBottomText}>{strings.enUS['help_build']} {buildNumber}</Text>

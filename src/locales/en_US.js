@@ -328,6 +328,7 @@ const strings = {
   send_confirmation_enter_send_pin: 'Enter 4 Digit PIN',
   send_confirmation_enter_send_password: 'Password',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
+  send_confirmation_fee_line: 'Fee: + %s (%s)',
   fragment_send_confirmation_send_error_title: 'Error during send',
   fragment_send_confirmation_insufficient_funds_message: 'You do not have enough funds to send this transaction.',
   fragment_send_confirmation_insufficient_funds: 'Insufficient funds',
@@ -684,7 +685,7 @@ const strings = {
   error_disabling_recovery: 'Error disabling recovery',
   recovery_disabled: 'Recovery Disabled',
   edge_login: 'Edge Login',
-  edge_description: 'This application would like to access the following repositories linked to your Airbitz account. It will not have access to any other accounts or wallets.',
+  edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   bitid_identity: 'BitID Identity',
   provide_an_identity_token: 'Provide an Identity Token',
   invalid_edge_login_request: 'Invalid Edge Login Request',
@@ -853,13 +854,15 @@ const strings = {
 
   //Exchange
   title_confirm_excahnge: 'Confirm exchange',
-  string_from_exchange_info: 'Your are about to exchange \n %1$s %2$s (Fee: %3$s) from \n %4$s',
-  string_to_exchange_info: 'and deposit %1$s %2$s to \n %3$s',
+  string_from_exchange_info: 'Your are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
+  string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
   string_fee: 'Fee: ',
   string_TBD: 'TBD',
   fragment_excahnge_wallet_from_header_title: 'Choose a wallet to exchange funds from:',
   fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
-
+  string_confirm: 'Confirm',
+  exchange_succeeded: 'Exchange Succeeded',
+  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes'
 }
 
 export default strings

@@ -10,6 +10,7 @@ const initialState = {
   fromDisplayAmount: '0',
   fromWalletPrimaryInfo: null,
   fromCurrencyIcon: null,
+  fromCurrencyIconDark: null,
 
   toWallet: null,
   toCurrencyCode: null,
@@ -17,6 +18,7 @@ const initialState = {
   toDisplayAmount: '0',
   toWalletPrimaryInfo: null,
   toCurrencyIcon: null,
+  toCurrencyIconDark: null,
 
   insufficientError: false,
   fee: '',
@@ -38,7 +40,8 @@ function getLogo (wallet, currencyCode) {
   return null
 
 }
-/* function getLogoDark (wallet, currencyCode) {
+
+function getLogoDark (wallet, currencyCode) {
   if (currencyCode === wallet.currencyCode) return wallet.symbolImageDarkMono
   for (let i =0; i< wallet.metaTokens.length; i++) {
     const obj = wallet.metaTokens[i]
@@ -47,7 +50,8 @@ function getLogo (wallet, currencyCode) {
     }
   }
   return null
-} */
+}
+
 function deepCopyState (state) {
   const deepCopy = JSON.parse(JSON.stringify(state))
   deepCopy.toWallet = state.fromWallet
@@ -56,19 +60,21 @@ function deepCopyState (state) {
   deepCopy.toDisplayAmount = state.fromDisplayAmount
   deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
   deepCopy.toCurrencyIcon = state.fromCurrencyIcon
+  deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
   deepCopy.fromWallet = state.toWallet
   deepCopy.fromCurrencyCode = state.toCurrencyCode
   deepCopy.fromNativeAmount = state.toNativeAmount
   deepCopy.fromDisplayAmount = state.toDisplayAmount
   deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
+  deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
   deepCopy.exchangeRate = state.reverseExchange
   deepCopy.reverseExchange = state.exchangeRate
   deepCopy.insufficientError = false
   return deepCopy
 }
 
-export default function (state = initialState, action) {
+function cryptoExchangerReducer (state = initialState, action) {
 
   switch (action.type) {
   case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
@@ -79,6 +85,7 @@ export default function (state = initialState, action) {
       fromWalletPrimaryInfo: action.data.primaryInfo,
       fromCurrencyCode: action.data.currencyCode,
       fromCurrencyIcon: getLogo(action.data.wallet,action.data.currencyCode),
+      fromCurrencyIconDark: getLogoDark(action.data.wallet,action.data.currencyCode),
       changeWallet: Constants.NONE,
       fromNativeAmount: '0',
       toNativeAmount:'0',
@@ -91,6 +98,7 @@ export default function (state = initialState, action) {
       toCurrencyCode:action.data.currencyCode,
       toWalletPrimaryInfo:action.data.primaryInfo,
       toCurrencyIcon: getLogo(action.data.wallet,action.data.currencyCode),
+      toCurrencyIconDark: getLogoDark(action.data.wallet,action.data.currencyCode),
       changeWallet: Constants.NONE,
       fromNativeAmount: '0',
       toNativeAmount:'0',
@@ -130,3 +138,11 @@ export default function (state = initialState, action) {
   }
 }
 
+// Nuke the state on logout:
+export default (state: $PropertyType<State, 'ui'>, action: any) => {
+  if (action.type === 'LOGOUT') {
+    return cryptoExchangerReducer(undefined, ({type: 'DUMMY_ACTION_PLEASE_IGNORE'}: any))
+  }
+
+  return cryptoExchangerReducer(state, action)
+}

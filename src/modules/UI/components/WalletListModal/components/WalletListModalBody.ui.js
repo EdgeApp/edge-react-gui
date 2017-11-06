@@ -59,9 +59,9 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       <TouchableHighlight style={styles.tokenRowContainer}
         underlayColor={styleRaw.underlay.color}
         key={currencyCode} onPress={() => {
-          this.props.getTransactions(parentId, currencyCode, this.props.type)
+          this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
-          this.props.selectWallet(walletId, currencyCode)
+          this.props.selectWallet(walletId, currencyCode, this.props.type)
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={styles.currencyRowContent}>
@@ -122,10 +122,14 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   }
 
   renderWalletRows () {
-    return this.props.activeWalletIds
-      .map((id) => this.props.walletList[id])
-      .filter(({id}) => id !== 'undefined')
-      .map(this.renderWalletRow)
+    const guiWallets: Array<GuiWallet> = []
+    for (const id of this.props.activeWalletIds) {
+      if (typeof this.props.walletList[id] !== 'undefined') {
+        guiWallets.push(this.props.walletList[id])
+      }
+    }
+
+    return guiWallets.map(this.renderWalletRow)
   }
 
   render () {

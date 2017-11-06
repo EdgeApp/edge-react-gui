@@ -1,12 +1,13 @@
 import React, {Component} from 'react'
 import {View, Image, Text} from 'react-native'
-import ExchangedFlipInput from './ExchangedFlipInput'
+import ExchangedFlipInput, {type FlipInputAmountsChanged} from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
 import * as Constants from '../../../../constants/indexConstants'
 import type {FlipInputFieldInfo} from '../FlipInput/FlipInput.ui'
 import {GuiWallet} from '../../../../types'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 import * as UTILS from '../../../utils'
+import type {SetNativeAmountInfo} from '../../../../actions/CryptoExchangeActions'
 
 type Props = {
   style: any,
@@ -38,23 +39,19 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
     this.props.launchWalletSelector(this.props.whichWallet)
   }
 
-  onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
-    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
+  onAmountsChange = ({primaryDisplayAmount}: FlipInputAmountsChanged) => {
+    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
 
     if (primaryNativeAmount != this.props.nativeAmount) {
-      const {whichWallet, primaryInfo} = this.props
-      const data = {
-        primaryNativeAmount,
-        primaryDisplayAmount,
+      const {whichWallet} = this.props
+      const data: SetNativeAmountInfo = {
         whichWallet,
-        primaryInfo
+        primaryNativeAmount
       }
       console.log(this.props.whichWallet+' !==== Calling ')
       this.props.setNativeAmount(data)
     }
-
-
   }
 
   renderLogo = (style: any, logo: string) => {

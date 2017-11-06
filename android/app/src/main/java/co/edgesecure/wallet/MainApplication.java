@@ -2,13 +2,12 @@ package co.edgesecure.wallet;
 
 import android.app.Application;
 
-//import com.facebook.react.BuildConfig;
 import com.facebook.react.ReactApplication;
+import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import cl.json.RNSharePackage;
 import com.cmcewen.blurview.BlurViewPackage;
-//import com.cboy.rn.splashscreen.SplashScreenReactPackage;
 import com.slowpath.hockeyapp.RNHockeyAppModule;
 import com.slowpath.hockeyapp.RNHockeyAppPackage;
 import co.airbitz.fastcrypto.RNFastCryptoPackage;
@@ -45,12 +44,12 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+            new MainReactPackage(),
+            new RCTSplashScreenPackage(),
             new AbcCoreJsUiPackage(),
             new RNSoundPackage(),
             new RNSharePackage(),
             new RandomBytesPackage(),
-//            new SplashScreenReactPackage(),
             new BlurViewPackage(),
             new RNHockeyAppPackage(MainApplication.this),
             new RNFastCryptoPackage(),

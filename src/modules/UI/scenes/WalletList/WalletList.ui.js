@@ -51,12 +51,15 @@ const options = [
   }
 ]
 
+const SHOW_BALANCE_TEXT = strings.enUS['string_show_balance']
+
 export default class WalletList extends Component<any, {
   sortableMode: boolean,
   sortableListOpacity: number,
   fullListOpacity: number,
   sortableListZIndex: number,
-  fullListZIndex: number
+  fullListZIndex: number,
+  balanceBoxVisible: boolean
 }> {
   constructor (props: any) {
     super(props)
@@ -65,7 +68,8 @@ export default class WalletList extends Component<any, {
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
       fullListOpacity: new Animated.Value(1),
-      fullListZIndex: new Animated.Value(100)
+      fullListZIndex: new Animated.Value(100),
+      balanceBoxVisible: true
     }
   }
 
@@ -150,21 +154,13 @@ export default class WalletList extends Component<any, {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
+        <Gradient style={{height: 66, width: '100%'}} />
 
-        <View style={[styles.totalBalanceBox]}>
-          <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader]}>
-              <T style={[styles.totalBalanceText]}>
-                {strings.enUS['fragment_wallets_balance_text']}
-              </T>
-            </View>
-            <View style={[styles.currentBalanceBoxDollarsWrap]}>
-              <T style={[styles.currentBalanceBoxDollars]}>
-                {fiatBalanceString}
-              </T>
-            </View>
-          </View>
-        </View>
+        <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
+          {this.state.balanceBoxVisible
+          ? this.balanceBox(fiatBalanceString)
+          : this.hiddenBalanceBox()}
+        </TouchableOpacity>
 
         <View style={[styles.walletsBox]}>
           <Gradient style={[styles.walletsBoxHeaderWrap, UTILS.border()]}>
@@ -436,5 +432,35 @@ export default class WalletList extends Component<any, {
       total = total + addValue
     }
     return total.toFixed(2)
+  }
+
+  handleOnBalanceBoxPress = () => this.setState({balanceBoxVisible: !this.state.balanceBoxVisible})
+  balanceBox (fiatBalanceString: string) {
+    return <View style={[styles.totalBalanceBox]}>
+      <View style={[styles.totalBalanceWrap]}>
+        <View style={[styles.totalBalanceHeader]}>
+          <T style={[styles.totalBalanceText]}>
+            {strings.enUS['fragment_wallets_balance_text']}
+          </T>
+        </View>
+        <View style={[styles.currentBalanceBoxDollarsWrap]}>
+          <T style={[styles.currentBalanceBoxDollars]}>
+            {fiatBalanceString}
+          </T>
+        </View>
+      </View>
+    </View>
+  }
+
+  hiddenBalanceBox () {
+    return <View style={[styles.totalBalanceBox]}>
+      <View style={[styles.totalBalanceWrap]}>
+        <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
+          <T style={[styles.currentBalanceBoxDollars]}>
+            {SHOW_BALANCE_TEXT}
+          </T>
+        </View>
+      </View>
+    </View>
   }
 }

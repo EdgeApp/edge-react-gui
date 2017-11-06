@@ -26,10 +26,15 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
   }
 }
 
-export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object): AbcDenomination => {
+export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): AbcDenomination => {
   // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
   let allWalletDenoms = wallet.allDenominations
-  let walletCurrencyCode = wallet.currencyCode
+  let walletCurrencyCode
+  if (currencyCode) { // if metaToken
+    walletCurrencyCode = currencyCode
+  } else { //if not a metaToken
+    walletCurrencyCode = wallet.currencyCode
+  }
   let currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
   let denomProperties: AbcDenomination = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)

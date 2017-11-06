@@ -26,6 +26,15 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
+  feeArea: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  feeAreaText: {
+    fontSize: 16,
+    color: 'white'
+  },
   pendingSymbolArea: {
     height: 12
   },
@@ -38,7 +47,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   sliderStyle: {
-    width: 300
+    width: 270
   },
   error: {
     flex: 1,
@@ -46,6 +55,10 @@ export default StyleSheet.create({
     textAlign: 'left',
     marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  menuTrigger: {
+    paddingHorizontal: 8,
+    paddingVertical: 4
   },
   trigger: {
     fontSize: 25,

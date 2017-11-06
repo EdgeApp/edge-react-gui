@@ -13,8 +13,8 @@ type Props = {
   style: any,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
-  fromCurrencyIcon?: string,
-  toCurrencyIcon?: string,
+  fromCurrencyIconDark?: string,
+  toCurrencyIconDark?: string,
   currencyCode?: string,
   toCurrencyAmount?: string,
   fromCurrencyAmount?: string,
@@ -22,12 +22,11 @@ type Props = {
   fromCurrencyCode?: string,
   closeFunction(): void,
   confirmFunction(): void
-
 }
 export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props> {
   renderBottom = (style: any) => {
     return <View style={style.bottom}>
-    <PrimaryButton onPressFunction={this.props.confirmFunction} text={strings.enUS['string_continue']}/>
+    <PrimaryButton onPressFunction={this.props.confirmFunction} text={strings.enUS['string_confirm']}/>
      </View>
   }
   renderLogo = (style: any, logo?: string) => {
@@ -53,27 +52,27 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     const fee = this.props.fee ? this.props.fee : ''
     const {
       fromWallet,
-      toWalllet
+      toWallet
     } = this.props
     return <View style={container}>
       <View style={top} >
         <View style={topLeft} >
-          {this.renderLogo(style, this.props.fromCurrencyIcon)}
+          {this.renderLogo(style, this.props.fromCurrencyIconDark)}
         </View>
         <View style={topRight} >
           <Text style={text}>
-            {sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount,fromCurrencyCode ,fee, fromWallet.name)}
+            {sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount, fromCurrencyCode, fee, fromWallet.name)}
           </Text>
         </View>
       </View>
       <View style={shim} />
       <View style={bottom} >
       <View style={bottomLeft} >
-        {this.renderLogo(style,this.props.toCurrencyIcon)}
+        {this.renderLogo(style,this.props.toCurrencyIconDark)}
       </View>
       <View style={bottomRight} >
         <Text style={text}>
-          {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode, toWalllet.name)}
+          {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode, toWallet.name)}
         </Text>
       </View>
       <View style={shim} />
