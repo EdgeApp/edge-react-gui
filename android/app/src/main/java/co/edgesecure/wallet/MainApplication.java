@@ -3,6 +3,7 @@ package co.edgesecure.wallet;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.cubicphuse.RCTTorch.RCTTorchPackage;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
@@ -45,6 +46,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RCTTorchPackage(),
             new RCTSplashScreenPackage(),
             new AbcCoreJsUiPackage(),
             new RNSoundPackage(),

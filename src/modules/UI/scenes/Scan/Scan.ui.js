@@ -18,6 +18,7 @@ import AddressModal from './components/AddressModalConnector'
 import ImagePicker from 'react-native-image-picker'
 import {Actions} from 'react-native-router-flux'
 import Camera from 'react-native-camera'
+import Torch from 'react-native-torch'
 // $FlowFixMe Doesn't know how to find platform specific imports
 import * as PERMISSIONS from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -68,6 +69,13 @@ export default class Scan extends Component<any, any> {
   componentDidMount () {
     PERMISSIONS.request('camera')
     .then(this.setCameraPermission)
+    Torch.switchState(this.props.torchEnabled)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.torchEnabled !== this.props.torchEnabled) {
+      Torch.switchState(nextProps.torchEnabled)
+    }
   }
 
   render () {
@@ -227,16 +235,12 @@ export default class Scan extends Component<any, any> {
 
   renderCamera = () => {
     if (this.state.cameraPermission === true) {
-      const flashMode = this.props.torchEnabled
-        ? Camera.constants.FlashMode.on
-        : Camera.constants.FlashMode.off
 
       return (
         <Camera
-          flashMode={flashMode}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
-          ref='cameraCapture' />
+        />
       )
     } else if (this.state.cameraPermission === false) {
       return (

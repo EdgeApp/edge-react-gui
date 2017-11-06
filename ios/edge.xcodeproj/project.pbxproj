@@ -45,6 +45,7 @@
 		409217C1E0564E669BF105DF /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 532AA7D1068248558C022CEF /* Octicons.ttf */; };
 		4739EE2C3B5B44ED8FFE1DBC /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E23DFF92A0149B1816FA4F2 /* Foundation.ttf */; };
 		4ABE02B5107546149A36E4F4 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E979A2F677B4138AB52E534 /* libRNVectorIcons.a */; };
+		4D38390FFF8A4A28950E9204 /* libRCTTorch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7977D7E468824D2A900C2FC0 /* libRCTTorch.a */; };
 		4F6F709FE3294C3381342C27 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0734A26AC90A43AC89E67657 /* libBVLinearGradient.a */; };
 		4F81D22B9DB543B0AE7F2FFD /* SourceSansPro-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DB5F067BAB54454803A6B66 /* SourceSansPro-BlackItalic.ttf */; };
 		52C52276F2F94D9BB9320EBA /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC960AB014EF4BF1AA8168B3 /* MaterialCommunityIcons.ttf */; };
@@ -430,6 +431,13 @@
 			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
 			remoteInfo = RNSound;
 		};
+		988EF5281FB0915E00F4AAC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D7C2E517BB1D43F099D8A140 /* RCTTorch.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5891D81BA9A9FC002B4DB2;
+			remoteInfo = RCTTorch;
+		};
 		DA6569461F17436100226952 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -578,6 +586,7 @@
 		6A599ED42678408CB213F9CB /* SourceSansPro-Semibold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Semibold.ttf"; path = "../src/assets/fonts/SourceSansPro-Semibold.ttf"; sourceTree = "<group>"; };
 		6F375984341A4E6F997CF0A2 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		7977D7E468824D2A900C2FC0 /* libRCTTorch.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTTorch.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		842BCA6BE88D4CCDAAC176C5 /* SourceSansPro-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-BoldItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-BoldItalic.ttf"; sourceTree = "<group>"; };
 		892B05950477468DB932A014 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
@@ -609,6 +618,7 @@
 		D508A63DA69244B691ABB3A5 /* AbcCoreJsUi.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AbcCoreJsUi.xcodeproj; path = "../node_modules/airbitz-core-js-ui/ios/AbcCoreJsUi.xcodeproj"; sourceTree = "<group>"; };
 		D55A245786234924ABF5C5DA /* libRNFastCrypto.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFastCrypto.a; sourceTree = "<group>"; };
 		D5DF84AD90B142838C4B352E /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
+		D7C2E517BB1D43F099D8A140 /* RCTTorch.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTTorch.xcodeproj; path = "../node_modules/react-native-torch/ios/RCTTorch.xcodeproj"; sourceTree = "<group>"; };
 		DA39136B1FF54882916C37AC /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
 		E306F33BD2AA495DB502D784 /* libRCTContactsWrapper.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContactsWrapper.a; sourceTree = "<group>"; };
 		E5D6824DDD854B41A4A6D426 /* libRCTContacts.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContacts.a; sourceTree = "<group>"; };
@@ -671,6 +681,7 @@
 				8B47B4F58613478BA6774CC9 /* libRNRandomBytes.a in Frameworks */,
 				63BDB00177514EDCBF39D1D5 /* libRNShare.a in Frameworks */,
 				7889781B11C945A7A235E1B8 /* libAbcCoreJsUi.a in Frameworks */,
+				4D38390FFF8A4A28950E9204 /* libRCTTorch.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1068,6 +1079,7 @@
 				9FAF874E8B104A9B88AD9E6C /* RNRandomBytes.xcodeproj */,
 				24A1BC4D1FC647CC8F52B48A /* RNShare.xcodeproj */,
 				D508A63DA69244B691ABB3A5 /* AbcCoreJsUi.xcodeproj */,
+				D7C2E517BB1D43F099D8A140 /* RCTTorch.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1117,6 +1129,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		988EF5251FB0915E00F4AAC6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				988EF5291FB0915E00F4AAC6 /* libRCTTorch.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DA600D001F8F1D57001F3096 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -1140,6 +1160,7 @@
 				C97FCA27CAF047368D3B0458 /* libRNRandomBytes.a */,
 				E938232DFFFF4A8283C2F074 /* libRNShare.a */,
 				3359707856FB42188A179E0E /* libAbcCoreJsUi.a */,
+				7977D7E468824D2A900C2FC0 /* libRCTTorch.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1382,6 +1403,10 @@
 				{
 					ProductGroup = 832341B11AAA6A8300B99B32 /* Products */;
 					ProjectRef = 832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */;
+				},
+				{
+					ProductGroup = 988EF5251FB0915E00F4AAC6 /* Products */;
+					ProjectRef = D7C2E517BB1D43F099D8A140 /* RCTTorch.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302E01ABCB9EE00DB3ED1 /* Products */;
@@ -1774,6 +1799,13 @@
 			remoteRef = 980AF5C81F9907460014FACB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		988EF5291FB0915E00F4AAC6 /* libRCTTorch.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTTorch.a;
+			remoteRef = 988EF5281FB0915E00F4AAC6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DA6569471F17436100226952 /* libthird-party.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2128,12 +2160,14 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-torch/ios",
 				);
 				INFOPLIST_FILE = edgeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2175,12 +2209,14 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-torch/ios",
 				);
 				INFOPLIST_FILE = edgeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2230,6 +2266,7 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-torch/ios",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2280,6 +2317,7 @@
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
 					"$(SRCROOT)/../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen",
 					"$(SRCROOT)/../../../react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-torch/ios",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2329,11 +2367,13 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-torch/ios",
 				);
 				INFOPLIST_FILE = "edge-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2385,11 +2425,13 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-torch/ios",
 				);
 				INFOPLIST_FILE = "edge-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2426,6 +2468,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.edge-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2450,6 +2493,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
