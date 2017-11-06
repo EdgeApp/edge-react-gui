@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {View, Text, TextInput} from 'react-native'
 
@@ -14,8 +16,19 @@ const feeOptions = [
   { value: FEE.CUSTOM_FEE, label: 'mining_fee_custom_label_choice' },
 ]
 
-export default class ChangeMiningFee extends Component {
-  constructor (props) {
+type Props = {
+  fee: string,
+  feeSetting: string,
+  onSubmit: (feeSetting: string, fee: string) => void,
+}
+
+type State = {
+  fee: string,
+  feeSetting: string,
+}
+
+export default class ChangeMiningFee extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       fee: props.fee,
@@ -29,8 +42,8 @@ export default class ChangeMiningFee extends Component {
     }
   }
 
-  handlePress = (feeSetting) => this.setState({ feeSetting, fee: '' });
-  handleChange = (fee) => this.setState({ fee });
+  handlePress = (feeSetting: string) => this.setState({ feeSetting, fee: '' });
+  handleChange = (fee: string) => this.setState({ fee: fee.replace(/\D/g, '') });
 
   render () {
     const { feeSetting, fee } = this.state

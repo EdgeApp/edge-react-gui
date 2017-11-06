@@ -43,7 +43,7 @@ function setShapeTransaction (type: string, data: {
   }
 }
 
-export const changeFee = (feeSetting, fee = '') => ({
+export const changeFee = (feeSetting: string, fee: string = '') => ({
   type: Constants.CHANGE_EXCHANGE_FEE,
   feeSetting,
   fee,

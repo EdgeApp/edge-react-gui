@@ -1,10 +1,20 @@
+// @flow
+
 import React, {Component} from 'react'
 import {TouchableWithoutFeedback, View} from 'react-native'
 import T from '../../../components/FormattedText'
 
 import style from '../style'
 
-export default class RadioButton extends Component {
+
+type Props = {
+  value: string,
+  label: string,
+  isSelected: boolean,
+  onPress: (value: string) => void,
+}
+
+export default class RadioButton extends Component<Props> {
   handlePress = () => this.props.onPress(this.props.value)
 
   renderIcon () {
