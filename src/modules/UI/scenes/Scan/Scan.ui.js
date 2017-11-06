@@ -72,7 +72,7 @@ export default class Scan extends Component<any, any> {
     Torch.switchState(this.props.torchEnabled)
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: Props) {
     if (nextProps.torchEnabled !== this.props.torchEnabled) {
       Torch.switchState(nextProps.torchEnabled)
     }
