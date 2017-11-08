@@ -51,7 +51,8 @@ import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
-import ChangeMiningFee from './UI/scenes/ChangeMiningFee/ChangeMiningFeeConnector.ui'
+import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
+import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
@@ -253,14 +254,27 @@ export default class Main extends Component<Props, State> {
                             animation={'fade'}
                             duration={200} />
                         </Stack>
-                        <Scene key={Constants.EXCHANGE} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                        <Stack key={Constants.EXCHANGE} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} title='Exchange' animation={'fade'} duration={600} >
+                          <Scene key='exchange_notused' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                          <Scene
+                            key={Constants.CHANGE_MINING_FEE_EXCHANGE}
+                            component={ChangeMiningFeeExchange}
+                            onLeft={Actions.pop}
+                            leftTitle='Back'
+                            renderRightButton={() => <HelpButton/>}
+                            title='Change Mining Fee'
+                            animation='fade'
+                            duration={600}
+                        />
+                        </Stack>
                       </Tabs>
                       <Stack key={Constants.SEND_CONFIRMATION} navTransparent={true} hideTabBar title='Send Confirmation' >
                         <Scene key='sendconfirmation_notused' hideTabBar component={SendConfirmation} back title='Send Confirmation' panHandlers={null} renderRightButton={() => <SendConfirmationOptions/>} animation={'fade'} duration={600} />
                         <Scene
-                          key={Constants.CHANGE_MINING_FEE}
-                          component={ChangeMiningFee}
+                          key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+                          component={ChangeMiningFeeSendConfirmation}
                           onLeft={Actions.pop}
+                          navTransparent={false}
                           leftTitle='Back'
                           renderRightButton={() => <HelpButton/>}
                           title='Change Mining Fee'

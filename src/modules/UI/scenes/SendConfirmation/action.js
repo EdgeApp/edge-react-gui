@@ -24,6 +24,7 @@ export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
 export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
 import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action'
@@ -209,3 +210,9 @@ const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
   }
   return spendInfo
 }
+
+export const changeFee = (feeSetting: string, fee: string = '') => ({
+  type: CHANGE_MINING_FEE,
+  feeSetting,
+  fee,
+})

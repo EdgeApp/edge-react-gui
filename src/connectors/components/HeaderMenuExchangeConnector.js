@@ -47,7 +47,7 @@ export const mapDispatchToProps = (dispatch: any) => ({
       break
     case Constants.CHANGE_MINING_FEE_VALUE:
       console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
-      Actions[Constants.CHANGE_MINING_FEE]()
+      Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]()
       break
     }
   }

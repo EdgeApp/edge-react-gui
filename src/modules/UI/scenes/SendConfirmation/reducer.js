@@ -1,5 +1,6 @@
 // @flow
 import * as ACTION from './action'
+import * as Constants from '../../../../constants/indexConstants'
 import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 export type SendConfirmationState = {
@@ -11,6 +12,9 @@ export type SendConfirmationState = {
   publicAddress: string,
   feeSatoshi: number,
   label: string,
+
+  fee: string,
+  feeSetting: string,
 
   inputCurrencySelected: string,
   maxSatoshi: number,
@@ -33,6 +37,9 @@ export const initialState: SendConfirmationState = {
   publicAddress: '',
   feeSatoshi: 0,
   label: '',
+
+  fee: '',
+  feeSetting: Constants.STANDARD_FEE,
 
   inputCurrencySelected: 'fiat',
   maxSatoshi: 0,
@@ -136,6 +143,8 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
       }
     }
   }
+  case ACTION.CHANGE_MINING_FEE:
+    return {...state, fee: action.fee,  feeSetting: action.feeSetting}
   default:
     return state
   }
