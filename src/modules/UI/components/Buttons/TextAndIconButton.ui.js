@@ -8,7 +8,8 @@ type Props = {
   icon: string,
   style: any,
   onPress: Function,
-  title: string
+  title: string,
+  iconType: string
 }
 type State = {
   pressed: boolean
@@ -39,10 +40,27 @@ class TextAndIconButton extends Component<Props, State> {
       pressed: false
     })
   }
+  renderIcon (iconStyle: any, iconPressedStyle: any, iconSize: number) {
+    try {
+      return (
+        <FAIcon
+          style={[iconStyle, this.state.pressed && iconPressedStyle]}
+          name={this.props.icon}
+          size={iconSize}
+        />
+      )
+    } catch (e) {
+      console.log('Error')
+    }
+  }
+
   render () {
     const {
       container,
+      centeredContent,
       inner,
+      textContainer,
+      iconContainer,
       text,
       textPressed,
       icon,
@@ -53,21 +71,27 @@ class TextAndIconButton extends Component<Props, State> {
     return (
       <TouchableHighlight
         style={container}
-        onPress={this._onPressButton}
-        onShowUnderlay={this._onShowUnderlay}
-        onHideUnderlay={this._onHideUnderlay}
+        onPress={this._onPressButton.bind(this)}
+        onShowUnderlay={this._onShowUnderlay.bind(this)}
+        onHideUnderlay={this._onHideUnderlay.bind(this)}
         underlayColor={underlayColor}
       >
-      <View style={inner} >
-        <Text style={[text, this.state.pressed && textPressed]} ellipsizeMode={'middle'} numberOfLines={1} >
-        {this.props.title
-        }<FAIcon
-          style={[icon, this.state.pressed && iconPressed]}
-          name={this.props.icon}
-          size={iconSize}
-        />
-         </Text>
-      </View>
+        <View style={centeredContent}>
+          <View style={inner}>
+            <View style={textContainer} >
+              <Text
+                style={[text, this.state.pressed && textPressed]}
+                ellipsizeMode={'middle'}
+                numberOfLines={1}
+              >
+                {this.props.title + ' '}
+              </Text>
+            </View>
+            <View style={iconContainer}>
+              {this.renderIcon(icon, iconPressed, iconSize)}
+            </View>
+          </View>
+        </View>
       </TouchableHighlight>
     )
   }
