@@ -6,6 +6,12 @@ export default StyleSheet.create({
   stylizedModal: {
     height: (PLATFORM.deviceHeight * 2 / 3)
   },
+  webView: {
+    justifyContent: 'center',
+    alignItems:'center',
+    height: 240,
+    flex: 1
+  },
   modalBottomContainer: {
     justifyContent: 'center',
     width: '100%',
