@@ -227,13 +227,13 @@ export default class Scan extends Component<any, any> {
 
   renderCamera = () => {
     if (this.state.cameraPermission === true) {
-      const flashMode = this.props.torchEnabled
-        ? Camera.constants.FlashMode.on
-        : Camera.constants.FlashMode.off
+      const torchMode = this.props.torchEnabled
+        ? Camera.constants.TorchMode.on
+        : Camera.constants.TorchMode.off
 
       return (
         <Camera
-          flashMode={flashMode}
+          torchMode={torchMode}
           style={styles.preview}
           onBarCodeRead={this.onBarCodeRead}
           ref='cameraCapture' />
