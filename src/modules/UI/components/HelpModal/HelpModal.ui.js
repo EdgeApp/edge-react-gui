@@ -13,18 +13,12 @@ import StylizedModal from '../Modal/index.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import helpImage from '../../../../assets/images/modal/help.png'
 import DeviceInfo from 'react-native-device-info'
+const HTML = require('../../../../html/enUS/info.html')
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
 
-let contentScaling, helpHTMLSource
-if (Platform.OS === 'ios') {
-  contentScaling = false
-  helpHTMLSource = require('../../../../html/enUS/info.html')
-} else {
-  contentScaling = true
-  helpHTMLSource = {uri: 'file:///android_asset/html/enUS/info.html'}
-}
+const contentScaling = (Platform.OS === 'ios') ? false : true
 
 export default class HelpModal extends Component {
 
@@ -35,7 +29,7 @@ export default class HelpModal extends Component {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText='help_modal_title'
-        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={contentScaling} style={styles.webView} source={helpHTMLSource}
+        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={contentScaling} style={styles.webView} source={HTML}
           onNavigationStateChange={(event) => {
             if (!event.url.includes('html/enUS/info.html')) {
               console.log('event is: ', event)
