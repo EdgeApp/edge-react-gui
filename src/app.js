@@ -5,8 +5,9 @@ import React, {Component} from 'react'
 import {Provider} from 'react-redux'
 import configureStore from './lib/configureStore'
 import Main from './modules/MainConnector'
-import {logToServer} from './util/logger'
+import {logToServer, log} from './util/logger'
 import ENV from '../env.json'
+import RNFS from 'react-native-fs'
 
 import './util/polyfills'
 
@@ -15,12 +16,16 @@ const store: {} = configureStore({})
 const perfTimers = {}
 const perfCounters = {}
 
+console.log('***********************')
+console.log('App directory: ' + RNFS.DocumentDirectoryPath)
+console.log('***********************')
+
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
   // $FlowFixMe: suppressing this error until we can find a workaround
-  // console.log = log
+  console.log = log
   // $FlowFixMe: suppressing this error until we can find a workaround
-  console.log = () => {}
+  // console.log = () => {}
 }
 
 if (ENV.LOG_SERVER) {
