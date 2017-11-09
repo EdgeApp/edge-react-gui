@@ -40,12 +40,17 @@ if (PERF_LOGGING_ONLY) {
 }
 
 // $FlowFixMe: suppressing this error until we can find a workaround
+global.pnow = function (label: string) {
+  clog('PTIMER PNOW: ' + label + ':' + Date.now())
+}
+
+// $FlowFixMe: suppressing this error until we can find a workaround
 global.pstart = function (label: string) {
 // $FlowFixMe: suppressing this error until we can find a workaround
   if (typeof perfTimers[label] === 'undefined') {
     perfTimers[label] = Date.now()
   } else {
-    clog('Error: PTimer already started')
+    clog('PTIMER Error: PTimer already started')
   }
 }
 
@@ -57,7 +62,7 @@ global.pend = function (label: string) {
     clog('PTIMER: ' + label + ': ' + elapsed + 'ms')
     perfTimers[label] = undefined
   } else {
-    clog('Error: PTimer not started')
+    clog('PTIMER Error: PTimer not started')
   }
 }
 
@@ -69,7 +74,7 @@ global.pcount = function (label: string) {
   } else {
     perfCounters[label] = perfCounters[label] + 1
     if (perfCounters[label] % 10 === 0) {
-      clog('PCOUNT: ' + label + ': ' + perfCounters[label])
+      clog('PTIMER PCOUNT: ' + label + ': ' + perfCounters[label])
     }
   }
 }
