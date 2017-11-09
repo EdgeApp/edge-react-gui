@@ -117,7 +117,9 @@ const CryptoExchangeSceneStyle = {
       flexDirection: 'column',
       justifyContent: 'space-around'
     },
-    walletSelector: Styles.TextAndIconButtonStyle,
+    walletSelector: {...Styles.TextAndIconButtonStyle,
+      content:  {...Styles.TextAndIconButtonStyle.content, position: 'relative', width:'80%'},
+      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width:'80%'}},
     iconContainer:{
       position:'absolute',
       top:0,

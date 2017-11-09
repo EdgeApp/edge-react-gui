@@ -15,5 +15,5 @@ copy_build () {
 }
 
 copy_build airbitz-core-js
-copy_build airbitz-currency-shitcoin
+# copy_build airbitz-currency-shitcoin
 
