@@ -32,8 +32,7 @@ export default class ShareButtons extends Component {
         onPress={shareViaSMS} />*/}
       <ShareButton
         displayName={SHARE_TEXT}
-        onPress={shareViaShare}
-        border={styles.borderLeft} />
+        onPress={shareViaShare} />
     </View>
   }
 }

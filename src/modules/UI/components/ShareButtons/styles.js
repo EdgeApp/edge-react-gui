@@ -10,11 +10,7 @@ export const styles = {
   },
   borderRight: {
     borderColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.MID}`,
-    borderRightWidth: 0.5,
-  },
-  borderLeft: {
-    borderColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.MID}`,
-    borderLeftWidth: 0.5
+    borderRightWidth: 1,
   }
 }
 
