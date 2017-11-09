@@ -667,7 +667,7 @@ const strings = {
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
   mining_fee_high_label_choice: 'High',
-  mining_fee_custom_label_choice: 'Custom (Advanced)',
+  // mining_fee_custom_label_choice: 'Custom (Advanced)',
   save_recovery_token_popup: 'Save Recovery Token',
   save_recovery_token_popup_message: '"To complete account recovery setup you MUST save an account recovery token. This will be required to recover your account in addition to your username and recovery answers. Please enter your email below to send yourself the recovery token.',
   recovery_token_email_subject: '%s Recovery Token"',

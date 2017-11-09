@@ -13,7 +13,7 @@ export type SendConfirmationState = {
   feeSatoshi: number,
   label: string,
 
-  fee: string,
+  // fee: string,
   feeSetting: string,
 
   inputCurrencySelected: string,
@@ -38,7 +38,7 @@ export const initialState: SendConfirmationState = {
   feeSatoshi: 0,
   label: '',
 
-  fee: '',
+  // fee: '',
   feeSetting: Constants.STANDARD_FEE,
 
   inputCurrencySelected: 'fiat',
@@ -144,7 +144,11 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
     }
   }
   case ACTION.CHANGE_MINING_FEE:
-    return {...state, fee: action.fee,  feeSetting: action.feeSetting}
+    return {
+      ...state,
+      // fee: action.fee,
+      feeSetting: action.feeSetting
+    }
   default:
     return state
   }

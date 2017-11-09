@@ -43,10 +43,10 @@ function setShapeTransaction (type: string, data: {
   }
 }
 
-export const changeFee = (feeSetting: string, fee: string = '') => ({
+export const changeFee = (feeSetting: string) => ({
   type: Constants.CHANGE_EXCHANGE_FEE,
   feeSetting,
-  fee,
+  // fee,
 })
 
 export const exchangeMax = () => async (dispatch: any, getState: any) => {

@@ -6,7 +6,7 @@ import ChangeMiningFee from './ChangeMiningFee.ui'
 import { changeFee } from '../../../../modules/UI/scenes/SendConfirmation/action'
 
 export const mapStateToProps = (state: State) => ({
-  fee: state.ui.scenes.sendConfirmation.fee,
+  // fee: state.ui.scenes.sendConfirmation.fee,
   feeSetting: state.ui.scenes.sendConfirmation.feeSetting,
 })
 

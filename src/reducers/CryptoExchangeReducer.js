@@ -21,7 +21,7 @@ const initialState = {
   toCurrencyIconDark: null,
 
   insufficientError: false,
-  fee: '',
+  // fee: '',
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
@@ -132,7 +132,7 @@ function cryptoExchangerReducer (state = initialState, action) {
   case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR :
     return {...state, transaction: null, insufficientError: true}
   case Constants.CHANGE_EXCHANGE_FEE :
-    return {...state, fee: action.fee,  feeSetting: action.feeSetting}
+    return {...state,  feeSetting: action.feeSetting}
   default:
     return state
   }
