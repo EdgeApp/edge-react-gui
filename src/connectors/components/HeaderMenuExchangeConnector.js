@@ -1,5 +1,6 @@
 //@flow
 import {connect} from 'react-redux'
+import {Actions} from 'react-native-router-flux'
 import LinkedComponent
   from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
 import * as Styles from '../../styles/indexStyles'
@@ -44,9 +45,9 @@ export const mapDispatchToProps = (dispatch: any) => ({
       console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
       dispatch(actions.exchangeMax())
       break
-
     case Constants.CHANGE_MINING_FEE_VALUE:
       console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
+      Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]()
       break
     }
   }
