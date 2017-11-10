@@ -16,6 +16,7 @@ export const SET_CRYPTO_TO_NATIVE_AMOUNT = 'setCryptoToNativeAmount'
 export const RECEIVED_TRANSACTION_ERROR = 'receivedTRansactionError'
 export const RECEIVED_INSUFFICIENT_FUNDS_ERROR = 'receivedInsufficentFundsError'
 export const RECEIVED_DUST_ERROR = 'receivedInsufficentFundsError'
+export const CHANGE_EXCHANGE_FEE = 'CHANGE_EXCHANGE_FEE'
 // Alert
 export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
 export const CLOSE_AB_ALERT = 'CLOSE_AB_ALERT'
