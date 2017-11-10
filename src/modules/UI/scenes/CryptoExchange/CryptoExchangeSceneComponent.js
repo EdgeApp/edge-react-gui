@@ -69,6 +69,9 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
   componentWillReceiveProps (nextProps: Props) {
     if (!nextProps.fromWallet && nextProps.intialWalletOne) {
       this.props.selectFromWallet(nextProps.intialWalletOne)
+      if (nextProps.wallets.length === 1) {
+        this.props.selectToWallet(nextProps.intialWalletOne)
+      }
     }
     if (!nextProps.toWallet && nextProps.intialWalletTwo) {
       this.props.selectToWallet(nextProps.intialWalletTwo)
