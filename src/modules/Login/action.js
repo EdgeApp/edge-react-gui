@@ -28,7 +28,7 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
   CONTEXT_API.getCurrencyPlugins(context)
-    .then(async (currencyPlugins) => {
+    .then((currencyPlugins) => {
       currencyPlugins.forEach((plugin) => {
         plugin.currencyInfo.walletTypes.forEach((type) => {
           currencyCodes[type] = plugin.currencyInfo.currencyCode
@@ -38,13 +38,19 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
 
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-      if (!ACCOUNT_API.checkForExistingWallets(account)) {
-        // TODO: Allen - Turn on when Bitcoin is turned back on
-        // await dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
-        await dispatch(actions.createCurrencyWallet(strings.enUS['string_first_ethereum_wallet_name'], Constants.ETHEREUM_WALLET, Constants.USD_FIAT, false))
+      if (ACCOUNT_API.checkForExistingWallets(account)) {
+        const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+        dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+        dispatch(loadSettings())
+        return
       }
-      const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
-      dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+      // TODO: Allen - Turn on when Bitcoin is turned back on
+      // await dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
+      dispatch(actions.createCurrencyWallet(
+        strings.enUS['string_first_ethereum_wallet_name'],
+        Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
+        false, true
+      ))
       dispatch(loadSettings())
     })
 }
