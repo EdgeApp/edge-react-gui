@@ -8,7 +8,7 @@ import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import strings from '../../locales/default'
 import THEME from '../../theme/variables/airbitz'
-
+import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
 
 export const mapStateToProps = (state: any) => {
   const data =[
@@ -39,8 +39,8 @@ export const mapDispatchToProps = (dispatch: any) => ({
     switch (value) {
     case Constants.HELP_VALUE:
       console.log('HELP MENU CLICK ')
+      dispatch(openHelpModal())
       break
-
     case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
       console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
       dispatch(actions.exchangeMax())
