@@ -88,6 +88,7 @@
     "react-native-linear-gradient": "^2.0.0",
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git",
+    "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
     "react-native-menu": "git://github.com/Airbitz/react-native-menu.git#33df5d9",
     "react-native-modal": "^2.2.0",
     "react-native-permissions": "^1.0.0",
