@@ -97,7 +97,8 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, ge
     const toExchangeAmount = bns.mul(fromExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
 
     const toNativeAmount = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
-    const toDisplayAmount = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier)
+    const toDisplayAmountTemp = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+    const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
 
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: fromDisplayAmount}))
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
@@ -108,7 +109,8 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, ge
     const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
 
     const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
-    const fromDisplayAmount = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier)
+    const fromDisplayAmountTemp = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+    const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
 
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: toDisplayAmount}))
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount}))
