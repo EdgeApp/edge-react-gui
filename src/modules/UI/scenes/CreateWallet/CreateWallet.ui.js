@@ -12,6 +12,7 @@ import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 import {FormField} from '../../../../components/FormField.js'
 
 import styles from './styles.js'
+import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
 import strings from '../../../../locales/default'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
@@ -175,7 +176,7 @@ class WalletNameInput extends Component {
   render () {
     return (
       <View style={styles.pickerView}>
-        <FormField style={styles.picker}
+        <FormField style={MaterialInputOnWhite}
           clearButtonMode={'while-editing'}
           autoCorrect={false}
           autoFocus

@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
   view: {
     position: 'relative',
     top: 66,
-    padding: 20
+    paddingHorizontal: 20,
+    paddingVertical: 5
   },
   walletNameInputView: {
     height: 50,

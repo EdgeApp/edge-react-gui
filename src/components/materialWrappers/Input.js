@@ -101,6 +101,7 @@ class Input extends Component<Props, State> {
         onBlur={this.onBlur}
         onFocus={this.onFocus}
         onSubmitEditing={this.onSubmitEditing}
+        labelHeight={26}
       />
     )
   }
