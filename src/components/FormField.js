@@ -1,4 +1,4 @@
-// @flow
+
 import React, { Component } from 'react'
 // import * as Constants from '../../../common/constants'
 import { Input } from './materialWrappers/indexMaterial'
@@ -6,20 +6,21 @@ import { Input } from './materialWrappers/indexMaterial'
 type Props = {
 
   style: any,
-  label: string,
+  label?: string,
   value?: string,
   placeholder?: string,
   autoCorrect: boolean,
   autoFocus: boolean,
   forceFocus: boolean,
   autoCapitalize?: string,
-  secureTextEntry: boolean,
-  showSecureCheckbox: boolean,
+  secureTextEntry?: boolean,
+  showSecureCheckbox?: boolean,
   returnKeyType?: string,
   error?: string,
-  onSubmitEditing():void,
-  onFocus():void,
-  onChangeText():void,
+  onSubmitEditing(): void,
+  onFocus(): void,
+  onBlur(): void,
+  onChangeText(string):void,
 }
 
 type State = {
@@ -34,7 +35,7 @@ class FormField extends Component<Props, State> {
     autoFocus: false,
     forceFocus: false,
     returnKeyType: 'go',
-    onFocus: null
+    label: ''
   }
   componentWillMount () {
     const secure = this.props.secureTextEntry
@@ -71,6 +72,7 @@ class FormField extends Component<Props, State> {
         autoFocus={this.state.autoFocus}
         forceFocus={this.props.forceFocus}
         onFocus={this.props.onFocus}
+        onBlur={this.props.onBlur}
         autoCapitalize={'none'}
         onSubmitEditing={this.onSubmitEditing.bind(this)}
         value={this.props.value}

@@ -1,4 +1,4 @@
-import {Platform, StyleSheet} from 'react-native'
+import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
@@ -21,9 +21,7 @@ const styles = StyleSheet.create({
   picker: {
     fontFamily: THEME.FONTS.DEFAULT,
     height: 50,
-    padding: 5,
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
-    borderColor: THEME.COLORS.GRAY_2
+    padding: 5
   },
   listView: {
     maxHeight: 200

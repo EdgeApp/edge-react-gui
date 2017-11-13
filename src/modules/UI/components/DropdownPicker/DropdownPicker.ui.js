@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import {
   KeyboardAvoidingView,
   ListView,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
 import T from '../../components/FormattedText'
+import {FormField} from '../../../../components/FormField.js'
 import styles from './styles.js'
 
 export default class DropdownPicker extends Component {
@@ -27,9 +27,18 @@ export default class DropdownPicker extends Component {
     })
     this.props.onSelect(item)
   }
-  handleSearchTermChange = (searchTerm) => this.setState({isListVisible: true, searchTerm})
-  handleOnFocus = () => this.setState({isListVisible: true})
-  handleOnBlur = () => this.setState({isListVisible: false})
+  handleSearchTermChange = (searchTerm) => {
+    this.setState({
+      isListVisible: true,
+      searchTerm
+    })
+  }
+  handleOnFocus = () => {
+    this.setState({isListVisible: true})
+  }
+  handleOnBlur = () => {
+    this.setState({isListVisible: false})
+  }
 
   getMatchingListItems = () => {
     const {searchTerm} = this.state
@@ -43,7 +52,7 @@ export default class DropdownPicker extends Component {
   render () {
     return (
       <View style={styles.pickerView}>
-        <TextInput style={styles.picker}
+        <FormField style={styles.picker}
           autoFocus={this.props.autoFocus}
           clearButtonMode={'while-editing'}
           onFocus={this.handleOnFocus}
@@ -52,7 +61,7 @@ export default class DropdownPicker extends Component {
           autoCapitalize={'words'}
           onChangeText={this.handleSearchTermChange}
           value={this.state.searchTerm}
-          placeholder={this.props.placeholder} />
+          label={this.props.placeholder} />
 
           {this.state.isListVisible
             && <DropdownList

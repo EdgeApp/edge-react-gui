@@ -1,12 +1,14 @@
 // @flow
 import React, {Component} from 'react'
-import {TextInput, View} from 'react-native'
+import {View} from 'react-native'
+import {FormField} from '../../../../../components/FormField.js'
 import styles from '../style'
 
 type Props = {
   currentWalletBeingRenamed: string,
   updateRenameWalletInput: (string) => any,
-  walletName: string
+  walletName: string,
+  label: string
 }
 
 type State = {
@@ -30,9 +32,13 @@ export default class WalletNameInput extends Component<Props, State> {
   render () {
     return (
       <View style={[styles.nameInputWrap]}>
-        <TextInput style={[styles.nameInput]}
+        <FormField
+          style={[styles.nameInput]}
           onChangeText={this._onNameInputChange}
-          value={this.state.currentWalletNameInput} autoFocus />
+          value={this.state.currentWalletNameInput}
+          label={this.props.label}
+          autoFocus
+        />
       </View>
     )
   }
