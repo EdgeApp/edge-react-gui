@@ -397,7 +397,7 @@ export default class WalletList extends Component<any, {
     featuredIcon={<RenameIcon />}
     headerText='fragment_wallets_rename_wallet'
     headerSubtext={this.props.walletName}
-    modalMiddle={<WalletNameInput />}
+    modalMiddle={<WalletNameInput walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
     modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}

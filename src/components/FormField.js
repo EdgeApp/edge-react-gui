@@ -58,7 +58,6 @@ class FormField extends Component<Props, State> {
     return (
       <Input
         label={this.props.label}
-        value={this.props.value}
         onChangeText={this.props.onChangeText}
         error={this.props.error}
         containerStyle={container}
@@ -74,6 +73,7 @@ class FormField extends Component<Props, State> {
         onFocus={this.props.onFocus}
         autoCapitalize={'none'}
         onSubmitEditing={this.onSubmitEditing.bind(this)}
+        value={this.props.value}
         />
     )
   }
