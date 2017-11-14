@@ -11,7 +11,8 @@ import {getDenomFromIsoCode} from '../../../utils'
 const mapStateToProps = (state) => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  if (!guiWallet) {
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  if (!guiWallet || !currencyCode) {
     return {
       loading: true,
       request: {},
@@ -25,7 +26,6 @@ const mapStateToProps = (state) => {
   }
 
   const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
