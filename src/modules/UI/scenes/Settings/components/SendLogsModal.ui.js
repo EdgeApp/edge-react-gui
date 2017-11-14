@@ -1,13 +1,10 @@
 import React, {Component} from 'react'
 
-import {TextInput} from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
-
+import {FormField} from '../../../../../components/FormField.js'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
-
 import styles from './styles'
-
 import THEME from '../../../../../theme/variables/airbitz'
 
 export default class SendLogsModal extends Component {
@@ -30,12 +27,13 @@ export default class SendLogsModal extends Component {
   }
 
   render () {
-    const input = <TextInput
+    const input = <FormField
       style={styles.sendLogsModalInput}
-      placeholder='Type some text'
+      label='Type some text'
       value={this.state.text}
       onChangeText={this.onChangeText}
-      returnKeyType='done' />
+      returnKeyType='done'
+    />
 
     const modalBottom = <ModalButtons
       onDone={this.onDone}
@@ -56,6 +54,8 @@ export default class SendLogsModal extends Component {
       featuredIcon={icon}
       headerText={'settings_modal_send_logs_title'}
       modalMiddle={input}
-      modalBottom={modalBottom}/>
+      modalBottom={modalBottom}
+      onExitButtonFxn={this.onCancel}
+    />
   }
 }
