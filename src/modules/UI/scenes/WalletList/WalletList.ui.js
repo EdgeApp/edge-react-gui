@@ -58,7 +58,9 @@ export default class WalletList extends Component<any, {
   sortableListOpacity: number,
   fullListOpacity: number,
   sortableListZIndex: number,
+  sortableListExists: boolean,
   fullListZIndex: number,
+  fullListExists: boolean,
   balanceBoxVisible: boolean
 }> {
   constructor (props: any) {
@@ -67,8 +69,10 @@ export default class WalletList extends Component<any, {
       sortableMode: false,
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
+      sortableListExists: false,
       fullListOpacity: new Animated.Value(1),
       fullListZIndex: new Animated.Value(100),
+      fullListExists: true,
       balanceBoxVisible: true
     }
   }
@@ -175,7 +179,7 @@ export default class WalletList extends Component<any, {
             </View>
 
             <View style={[styles.donePlusContainer, UTILS.border()]}>
-
+              {this.state.sortableListExists && (
               <Animated.View style={[
                 styles.doneContainer,
                 UTILS.border(),
@@ -192,7 +196,8 @@ export default class WalletList extends Component<any, {
                   </T>
                 </TouchableOpacity>
               </Animated.View>
-
+              )}
+              {this.state.fullListExists && (
               <Animated.View style={[
                 styles.plusContainer,
                 UTILS.border(),
@@ -208,7 +213,7 @@ export default class WalletList extends Component<any, {
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
-
+              )}
             </View>
           </Gradient>
 
@@ -225,6 +230,7 @@ export default class WalletList extends Component<any, {
     const {width} = platform.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
+        {this.state.sortableListExists && (
         <Animated.View testID={'sortableList'} style={[UTILS.border(), {flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
           <SortableListView
             style={{flex: 1, width}}
@@ -237,6 +243,8 @@ export default class WalletList extends Component<any, {
             dimensions={this.props.dimensions}
           />
         </Animated.View>
+        )}
+        {this.state.fullListExists && (
         <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
           <FlatList
             style={{flex: 1, width}}
@@ -246,6 +254,7 @@ export default class WalletList extends Component<any, {
             sortableMode={this.state.sortableMode}
             executeWalletRowOption={this.executeWalletRowOption} />
         </Animated.View>
+        )}
       </View>
     )
   }
@@ -257,38 +266,42 @@ export default class WalletList extends Component<any, {
     let fullListToOpacity = 0
     let fullListToZIndex = 0
 
-    Animated.parallel([
-      Animated.timing(
-        this.state.sortableListOpacity,
-        {
-          toValue: sortableToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.sortableListZIndex,
-        {
-          toValue: sortableListToZIndex,
-          timing: 300
-        }
-      ),
-      Animated.timing(
-        this.state.fullListOpacity,
-        {
-          toValue: fullListToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.fullListZIndex,
-        {
-          toValue: fullListToZIndex,
-          timing: 300
-        }
-      )
-    ]).start()
+    this.setState({sortableListExists: true}, () => {
+      Animated.parallel([
+        Animated.timing(
+          this.state.sortableListOpacity,
+          {
+            toValue: sortableToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.sortableListZIndex,
+          {
+            toValue: sortableListToZIndex,
+            timing: 300
+          }
+        ),
+        Animated.timing(
+          this.state.fullListOpacity,
+          {
+            toValue: fullListToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.fullListZIndex,
+          {
+            toValue: fullListToZIndex,
+            timing: 300
+          }
+        )
+      ]).start(() => {
+        this.setState({fullListExists: false})
+      })
+    })
   }
 
   disableSorting = () => {
@@ -297,38 +310,42 @@ export default class WalletList extends Component<any, {
     let fullListToOpacity = 1
     let fullListToZIndex = 100
 
-    Animated.parallel([
-      Animated.timing(
-        this.state.sortableListOpacity,
-        {
-          toValue: sortableToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.sortableListZIndex,
-        {
-          toValue: sortableListToZIndex,
-          timing: 300
-        }
-      ),
-      Animated.timing(
-        this.state.fullListOpacity,
-        {
-          toValue: fullListToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.fullListZIndex,
-        {
-          toValue: fullListToZIndex,
-          timing: 300
-        }
-      )
-    ]).start()
+    this.setState({fullListExists: true}, () => {
+      Animated.parallel([
+        Animated.timing(
+          this.state.sortableListOpacity,
+          {
+            toValue: sortableToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.sortableListZIndex,
+          {
+            toValue: sortableListToZIndex,
+            timing: 300
+          }
+        ),
+        Animated.timing(
+          this.state.fullListOpacity,
+          {
+            toValue: fullListToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.fullListZIndex,
+          {
+            toValue: fullListToZIndex,
+            timing: 300
+          }
+        )
+      ]).start(() => {
+        this.setState({sortableListExists: false})
+      })
+    })
   }
 
   renderArchivedSortableList = (data: any, order: any, label: any, renderRow: any) => {

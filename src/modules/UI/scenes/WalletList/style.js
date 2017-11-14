@@ -159,9 +159,8 @@ export const styles = {
     width: platform.deviceWidth,
     height: 50,
     backgroundColor: THEME.COLORS.WHITE,
-    padding: 16,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingVertical: 6,
+    paddingHorizontal: 20,
     justifyContent: 'space-between',
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.WHITE

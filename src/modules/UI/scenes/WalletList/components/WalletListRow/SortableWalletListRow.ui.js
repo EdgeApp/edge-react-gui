@@ -40,7 +40,7 @@ class SortableWalletListRow extends Component<Props, State> {
         underlayColor={styleRaw.walletRowUnderlay.color}
         {...this.props.sortHandlers}>
           {walletData.currencyCode? (
-            <View style={[styles.rowContent]}>
+            <View style={[styles.rowContent, b()]}>
               <View style={[styles.rowNameTextWrap]}>
                 <T style={[styles.rowNameText]} numberOfLines={1}>
                   {symbolImageDarkMono
@@ -48,8 +48,8 @@ class SortableWalletListRow extends Component<Props, State> {
                   }  {cutOffText(name, 34)}
                 </T>
               </View>
-              <View style={[styles.rowBalanceTextWrap]}>
-                <T style={[styles.rowBalanceAmountText]}>
+              <View style={[styles.rowBalanceTextWrap, b()]}>
+                <T style={[styles.rowBalanceAmountText, b()]}>
                   {finalCryptoAmount}
                 </T>
                 <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}
