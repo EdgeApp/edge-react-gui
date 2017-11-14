@@ -5,6 +5,7 @@ import makeAccountCallbacks from '../../../Core/Account/callbacks'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {initializeAccount} from '../../../Login/action'
 import {Actions} from 'react-native-router-flux'
+import THEME from '../../../../theme/variables/airbitz'
 
 class Login extends Component {
   constructor (props) {
@@ -34,6 +35,9 @@ class Login extends Component {
         accountOptions={{callbacks}}
         context={this.props.context}
         onLogin={this.onLogin}
+        fontDescription={{
+          regularFontFamily: THEME.FONTS.DEFAULT
+        }}
         key={this.state.key.toString()}
       />
     )
