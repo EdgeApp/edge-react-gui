@@ -23,7 +23,8 @@ type Props = {
   addressModalVisible: boolean,
   toggleAddressModal():void,
   updateParsedURI(AbcParsedUri):void,
-  loginWithEdge(string): void
+  loginWithEdge(string): void,
+  onExitButtonFxn: void
 }
 type State = {
   uri: string,
@@ -91,6 +92,7 @@ export default class AddressModal extends Component<Props,State> {
         modalMiddle={middle}
         modalBottom={bottom}
         visibilityBoolean={this.props.addressModalVisible}
+        onExitButtonFxn={this.props.onExitButtonFxn}
       />
     )
   }

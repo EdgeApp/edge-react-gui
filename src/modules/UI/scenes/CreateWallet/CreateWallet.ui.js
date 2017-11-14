@@ -4,14 +4,15 @@ import {
   ActivityIndicator,
   Alert,
   View,
-  Keyboard,
-  TextInput
+  Keyboard
 } from 'react-native'
 import {fixFiatCurrencyCode} from '../../../utils'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
+import {FormField} from '../../../../components/FormField.js'
 
 import styles from './styles.js'
+import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
 import strings from '../../../../locales/default'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
@@ -117,8 +118,9 @@ export default class CreateWallet extends Component {
         <Gradient style={styles.gradient} />
         <View style={styles.view}>
           <WalletNameInput
-            placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
-            onChangeText={this.handleChangeWalletName} />
+            onChangeText={this.handleChangeWalletName}
+            value={this.state.walletName}
+          />
 
           <DropdownPicker
             keyboardShouldPersistTaps={'always'}
@@ -174,12 +176,15 @@ class WalletNameInput extends Component {
   render () {
     return (
       <View style={styles.pickerView}>
-        <TextInput style={styles.picker}
+        <FormField style={MaterialInputOnWhite}
           clearButtonMode={'while-editing'}
           autoCorrect={false}
           autoFocus
           placeholder={this.props.placeholder}
-          onChangeText={this.props.onChangeText} />
+          onChangeText={this.props.onChangeText}
+          label={WALLET_NAME_INPUT_PLACEHOLDER}
+          value={this.props.value}
+        />
       </View>
     )
   }
