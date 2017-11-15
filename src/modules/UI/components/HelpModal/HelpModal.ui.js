@@ -13,11 +13,10 @@ import StylizedModal from '../Modal/index.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import helpImage from '../../../../assets/images/modal/help.png'
 import DeviceInfo from 'react-native-device-info'
-const HTML = require('../../../../html/enUS/info.html')
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
-
+const CONTENT_URI = 'https://edgesecure.co/info.html'
 const contentScaling = (Platform.OS === 'ios') ? false : true
 
 export default class HelpModal extends Component {
@@ -29,12 +28,12 @@ export default class HelpModal extends Component {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText='help_modal_title'
-        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={contentScaling} style={styles.webView} source={HTML}
+        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={contentScaling} style={styles.webView} source={{uri: CONTENT_URI}}
           onNavigationStateChange={(event) => {
-            if (!event.url.includes('html/enUS/info.html')) {
-              console.log('event is: ', event)
-              this.webview.stopLoading()
-              Linking.openURL(event.url)
+            if (!event.url.includes('info.html')) { // if NOT initial URL
+              this.webview.stopLoading() // do not load in WebView
+              Linking.openURL(event.url) // load externally
+              this.props.closeModal()
             }
           }} />}
         modalBottom={<View style={[styles.modalBottomContainer]}>
