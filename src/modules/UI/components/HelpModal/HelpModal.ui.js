@@ -16,7 +16,7 @@ import DeviceInfo from 'react-native-device-info'
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
-const CONTENT_URI = 'http://10.0.3.2:8123/info.html'
+const CONTENT_URI = 'https://edgesecure.co/info.html'
 const contentScaling = (Platform.OS === 'ios') ? false : true
 
 export default class HelpModal extends Component {
