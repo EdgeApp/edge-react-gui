@@ -97,6 +97,7 @@ export default class FlipInput extends Component<Props, State> {
         keyboardType='numeric'
         selectionColor='white'
         returnKeyType='done'
+        underlineColorAndroid={'transparent'}
       />
       <Text style={[top.currencyCode]}>
         {denominationInfo.displayDenomination.name}
