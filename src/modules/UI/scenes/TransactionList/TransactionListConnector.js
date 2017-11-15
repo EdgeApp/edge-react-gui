@@ -15,7 +15,6 @@ import * as UTILS from '../../../utils'
 const mapStateToProps = (state) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
-
   if (!wallet) return {
     loading: true
   }
@@ -55,7 +54,8 @@ const mapStateToProps = (state) => {
     currencyConverter,
     multiplier,
     contacts: state.ui.contacts.contactList,
-    fiatSymbol
+    fiatSymbol,
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 

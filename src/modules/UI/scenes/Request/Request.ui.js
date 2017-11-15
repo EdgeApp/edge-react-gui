@@ -18,8 +18,10 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import strings from '../../../../locales/default'
-
+import WalletListModal
+from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as Constants from '../../../../constants/indexConstants'
 
 export default class Request extends Component {
   constructor (props) {
@@ -79,6 +81,17 @@ export default class Request extends Component {
       encodedURI
     })
   }
+  renderDropUp = () => {
+    if (this.props.showToWalletModal) {
+      return (
+        <WalletListModal
+          topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP}
+          type={Constants.TO}
+        />
+      )
+    }
+    return null
+  }
 
   render () {
     if (this.props.loading) {
@@ -117,7 +130,7 @@ export default class Request extends Component {
         <View style={styles.shareButtonsContainer}>
           <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
         </View>
-
+        {this.renderDropUp()}
       </Gradient>
     )
   }
