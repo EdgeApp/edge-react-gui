@@ -32,6 +32,10 @@ import platform from '../../../../theme/variables/platform.js'
 import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
 import type {GuiWallet} from '../../../../types'
 
+import WalletListModal
+from '../../../UI/components/WalletListModal/WalletListModalConnector'
+import * as Constants from '../../../../constants/indexConstants'
+
 type Props = {
   getTransactions: (walletId: string, currencyCode: string) => void,
   updateExchangeRates: () => void,
@@ -182,6 +186,18 @@ export default class TransactionList extends Component<Props, State> {
   _onCancel = () => this.setState({width: 0})
 
   toggleShowBalance = () => this.setState({showBalance: !this.state.showBalance})
+
+  renderDropUp = () => {
+    if (this.props.showToWalletModal) {
+      return (
+        <WalletListModal
+          topDisplacement={Constants.TRANSACTIONLIST_WALLET_DIALOG_TOP}
+          type={Constants.FROM}
+        />
+      )
+    }
+    return null
+  }
 
   render () {
     const {
@@ -354,6 +370,7 @@ export default class TransactionList extends Component<Props, State> {
             </View>
           </View>
         </ScrollView>
+        {this.renderDropUp()}
       </View>
     )
   }

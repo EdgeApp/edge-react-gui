@@ -59,7 +59,8 @@ const mapStateToProps = (state: State) => {
     wallet: guiWallet,
     currencyCode,
     primaryInfo,
-    secondaryInfo
+    secondaryInfo,
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({

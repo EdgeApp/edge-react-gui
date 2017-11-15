@@ -27,6 +27,10 @@ import * as UTILS from '../../../utils.js'
 import styles, {styles as styleRaw} from './style'
 import ABAlert from '../../components/ABAlert/indexABAlert'
 
+import WalletListModal
+from '../../../UI/components/WalletListModal/WalletListModalConnector'
+import * as Constants from '../../../../constants/indexConstants'
+
 type Props = {
   abcWallet: AbcCurrencyWallet,
   sceneName: string,
@@ -68,6 +72,18 @@ export default class Scan extends Component<any, any> {
   componentDidMount () {
     PERMISSIONS.request('camera')
     .then(this.setCameraPermission)
+  }
+
+  renderDropUp = () => {
+    if (this.props.showToWalletModal) {
+      return (
+        <WalletListModal
+          topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP}
+          type={Constants.FROM}
+        />
+      )
+    }
+    return null
   }
 
   render () {
@@ -153,6 +169,7 @@ export default class Scan extends Component<any, any> {
             </View>
           <ABAlert />
         </View>
+        {this.renderDropUp()}
       </View>
     )
   }

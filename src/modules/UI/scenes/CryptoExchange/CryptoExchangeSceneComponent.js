@@ -99,7 +99,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
     if (this.props.showWalletSelectModal) {
       return (
         <WalletListModal
-          topDisplacement={33}
+          topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
           type={Constants.CRYPTO_EXCHANGE}
           whichWallet={this.state.whichWallet}
         />
