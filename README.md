@@ -80,3 +80,4 @@ https://github.com/jhen0409/react-native-debugger/releases
 
 Please follow the coding conventions defined in [Edge Conventions](https://github.com/Airbitz/edge-conventions
 )
+
