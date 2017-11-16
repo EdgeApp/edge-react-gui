@@ -59,7 +59,7 @@ import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/Car
 import HelpModal from './UI/components/HelpModal'
 import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import MenuIcon from '../assets/images/walletlist/sort.png'
+import MenuIcon from '../assets/images/hamburger.png'
 import Header from './UI/components/Header/Header.ui'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
