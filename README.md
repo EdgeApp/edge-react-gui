@@ -37,7 +37,7 @@ If not, download and unzip the NDK from https://developer.android.com/ndk/index.
 Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
 
     export ANDROID_NDK_HOME=/Users/bob/Library/Android/sdk/ndk-bundle
-
+ 
 ### Add API key in env.json
 
 Get an API key from https://developer.airbitz.co by scanning the QR code with your Airbitz wallet (https://airbitz.co/app)
