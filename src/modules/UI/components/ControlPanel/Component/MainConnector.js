@@ -1,14 +1,15 @@
+// @flow
+
 import {connect} from 'react-redux'
 import Main from './Main'
 import {logoutRequest} from '../../../../Login/action'
-import {closeSideMenu} from '../../SideMenu/action'
+import type {State, Dispatch} from '../../../../ReduxTypes'
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: State) => ({
   usersView: state.ui.scenes.controlPanel.usersView
 })
-const mapDispatchToProps = (dispatch) => ({
-  onPressOption: () => dispatch(closeSideMenu()),
-  logout:        () => dispatch(logoutRequest(null))
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  logout: () => dispatch(logoutRequest(null))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
