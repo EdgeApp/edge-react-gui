@@ -6,11 +6,14 @@ import THEME from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
 
 export const styles = {
+  topSpacer: {
+    height: THEME.SPACER.HEADER
+  },
   container: {
     height: platform.deviceHeight - 66 - platform.footerHeight,
+    flex: 1,
     flexDirection: 'row',
     position: 'relative',
-    top: 66
   },
   gradient: {
     height: 66,

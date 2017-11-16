@@ -147,12 +147,13 @@ class AmountArea extends Component<Props, State> {
           <View style={[styles.editableFiatArea]}>
             <FormattedText style={styles.fiatSymbol}>{this.props.fiatCurrencySymbol}</FormattedText>
             <TextInput
+              underlineColorAndroid={'transparent'}
               returnKeyType='done'
               autoCapitalize='none'
               autoCorrect={false}
               onFocus={this.props.onFocusFiatAmount}
               onChangeText={this.props.onChangeFiatFxn}
-              style={[styles.editableFiat]}
+              style={[styles.editableFiat, UTILS.inputBottomPadding()]}
               keyboardType='numeric'
               placeholder={''}
               value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-',''), 2, true)}
@@ -171,13 +172,14 @@ class AmountArea extends Component<Props, State> {
           </TouchableOpacity>
           <View style={[styles.categoryInputArea]}>
             <TextInput
+              underlineColorAndroid={'transparent'}
               blurOnSubmit
               autoCapitalize='words'
               placeholderTextColor={THEME.COLORS.GRAY_}
               onFocus={this.props.onEnterSubcategories}
               onChangeText={this.props.onChangeSubcategoryFxn}
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
-              style={[styles.categoryInput]}
+              style={[styles.categoryInput, UTILS.inputBottomPadding()]}
               defaultValue={this.props.subCategory || ''}
               placeholder={strings.enUS['transaction_details_category_title']}
               autoCorrect={false}
@@ -206,11 +208,12 @@ class AmountArea extends Component<Props, State> {
         <View style={[styles.notesRow]}>
           <View style={[styles.notesInputWrap]} >
             <TextInput
+              underlineColorAndroid={'transparent'}
               onChangeText={this.props.onChangeNotesFxn}
               multiline
               numberOfLines={3}
               defaultValue={notes}
-              style={[styles.notesInput]}
+              style={[styles.notesInput, UTILS.inputBottomPadding()]}
               placeholderTextColor={THEME.COLORS.GRAY_}
               placeholder={strings.enUS['transaction_details_notes_title']}
               autoCapitalize='sentences'

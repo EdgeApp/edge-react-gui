@@ -468,13 +468,14 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
             <View style={[styles.payeeNameArea]}>
               <View style={[styles.payeeNameWrap]}>
                 <TextInput
+                  underlineColorAndroid={'transparent'}
                   ref={(component) => { this.payeeTextInput = component }}
                   blurOnSubmit
                   onSubmitEditing={this.onBlurPayee}
                   autoCapitalize='words'
                   autoCorrect={false}
                   onChangeText={this.onChangePayee}
-                  style={[styles.payeeNameInput]}
+                  style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
                   placeholder='Payee'
                   defaultValue={this.state.name}
                   value={this.state.name}
@@ -504,12 +505,13 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
               </TouchableOpacity>
               <View style={[styles.modalCategoryInputArea]}>
                 <TextInput
+                  underlineColorAndroid={'transparent'}
                   ref={(component) => { this.subcategoryTextInput = component }}
                   blurOnSubmit
                   autoCapitalize='words'
                   onBlur={this.onExitSubcategories}
                   onChangeText={this.onChangeSubcategory}
-                  style={[styles.categoryInput]}
+                  style={[styles.categoryInput, UTILS.inputBottomPadding()]}
                   defaultValue={this.state.subCategory || ''}
                   placeholder={strings.enUS['transaction_details_category_title']}
                   autoCorrect={false}
@@ -538,10 +540,11 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 <View style={[styles.payeeNameArea]}>
                   <View style={[styles.payeeNameWrap]}>
                     <TextInput
+                      underlineColorAndroid={'transparent'}
                       autoCapitalize='words'
                       onFocus={this.onFocusPayee}
                       autoCorrect={false}
-                      style={[styles.payeeNameInput]}
+                      style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
                       placeholder={strings.enUS['transaction_details_payee']}
                       defaultValue={this.state.name}
                       value={this.state.name}
