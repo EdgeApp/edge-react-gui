@@ -1,4 +1,5 @@
 // @flow
+import {Platform} from 'react-native'
 import borderColors from '../theme/variables/css3Colors'
 import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
@@ -70,6 +71,14 @@ export const border = (color: ?string) => {
   return {
     borderColor: borderColor,
     borderWidth: 0
+  }
+}
+
+export const inputBottomPadding = () => {
+  if (Platform.OS === 'android') {
+    return {
+      paddingBottom: 0
+    }
   }
 }
 
