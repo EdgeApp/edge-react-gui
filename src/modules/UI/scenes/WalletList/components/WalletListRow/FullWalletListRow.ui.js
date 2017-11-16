@@ -5,7 +5,8 @@ import {
   View,
   TouchableHighlight,
   ActivityIndicator,
-  Image
+  Image,
+  Platform
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
@@ -89,10 +90,25 @@ class FullWalletListRow extends Component<Props, State> {
             >
               <View style={[styles.rowContent]}>
                 <View style={[styles.rowNameTextWrap, b()]}>
-                  <T style={[styles.rowNameText, b()]} numberOfLines={1}>
-                  {symbolImageDarkMono
-                    && <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
-                  }  {cutOffText(name, 34)}</T>
+                {(Platform.OS === 'ios')
+                && (
+                  <View style={[styles.rowNameTextWrapIOS, b()]}>
+                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                    {symbolImageDarkMono
+                      && <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} />
+                    }  {cutOffText(name, 34)}</T>
+                </View>
+                )}
+                {(Platform.OS === 'android')
+                  && (
+                    <View style={[styles.rowNameTextWrapAndroid, b()]}>
+                    {symbolImageDarkMono
+                      && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
+                    }
+                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                      {cutOffText(name, 34)}</T>
+                    </View>
+                  )}
                 </View>
                 <View style={[styles.rowBalanceTextWrap]}>
                   <T style={[styles.rowBalanceAmountText]}>
