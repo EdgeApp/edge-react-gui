@@ -34,6 +34,11 @@ export default {
   BUTTONS: {
     HEIGHT: 44
   },
+
+  SPACER: {
+    HEADER: 66
+  },
+
   DEBUG: {
     COLORS: {
       HIGHLIGHT: '#f03a47'
