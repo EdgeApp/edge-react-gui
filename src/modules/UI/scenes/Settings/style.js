@@ -106,9 +106,6 @@ export const styles = {
     justifyContent: 'space-between',
     height: 50
   },
-  headerTextWrap: {
-    height: 10
-  },
   headerText: {
     fontSize: 18,
     color: THEME.COLORS.WHITE,
