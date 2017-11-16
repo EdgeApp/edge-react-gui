@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Platform} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -44,7 +44,7 @@ export const styles = {
   payeeNameInput: {
     color: THEME.COLORS.GRAY_1,
     fontSize: 17,
-    height: 24,
+    height: Platform.OS === 'ios' ? 24 : 27,
     textAlign: 'center',
     width: '100%',
     fontFamily: THEME.FONTS.DEFAULT
