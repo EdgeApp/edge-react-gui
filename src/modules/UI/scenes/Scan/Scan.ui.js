@@ -74,6 +74,7 @@ export default class Scan extends Component<any, any> {
     return (
       <View style={{flex: 1}}>
         <Gradient style={styles.gradient} />
+        <View style={styles.topSpacer} />
         <View style={styles.container}>
             {this.renderCamera()}
             <View style={[styles.overlay, UTILS.border()]}>
