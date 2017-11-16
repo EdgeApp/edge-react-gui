@@ -7,7 +7,7 @@ import type {
   AbcContextOptions
 } from 'airbitz-core-types'
 import SplashScreen from 'react-native-smart-splash-screen'
-
+import { selectLocale } from '../locales/strings.js'
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
 import {Keyboard, Platform, StatusBar, Image, AppState} from 'react-native'
@@ -193,6 +193,7 @@ export default class Main extends Component<Props, State> {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
+      selectLocale(localeInfo.collatorIdentifier)
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
         duration: 850,
