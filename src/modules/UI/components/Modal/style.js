@@ -59,7 +59,7 @@ export const styles = {
     top: 27,
     borderRadius: 27,
     borderWidth: 2,
-    borderColor: THEME.COLORS.PRIMARY,
+    borderColor: THEME.COLORS.SECONDARY,
     backgroundColor: THEME.COLORS.WHITE,
     height: 54,
     width: 54,
