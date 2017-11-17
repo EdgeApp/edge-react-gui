@@ -93,6 +93,7 @@ export default class AddressModal extends Component<Props,State> {
         modalBottom={bottom}
         visibilityBoolean={this.props.addressModalVisible}
         onExitButtonFxn={this.props.onExitButtonFxn}
+        style={copyMessage && styles.withAddressCopied}
       />
     )
   }

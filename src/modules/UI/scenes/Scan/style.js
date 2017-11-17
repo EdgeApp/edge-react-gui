@@ -116,15 +116,8 @@ export const styles = {
     flex: 1,
     padding: 10
   },
-  modalBox: {
-    top: platform.deviceHeight / 5,
-    borderRadius: 3,
-    alignItems: 'stretch',
-    height: (platform.deviceHeight) / 4,
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: 15,
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
+  withAddressCopied: {
+    top: platform.deviceHeight / 16
   },
   modalTopTextWrap: {
     flex: 1
