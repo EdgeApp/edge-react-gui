@@ -10,7 +10,7 @@ import SplashScreen from 'react-native-smart-splash-screen'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, AppState} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, AppState, TouchableWithoutFeedback} from 'react-native'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import THEME from '../theme/variables/airbitz'
@@ -59,7 +59,7 @@ import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/Car
 import HelpModal from './UI/components/HelpModal'
 import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import MenuIcon from '../assets/images/hamburger.png'
+import MenuIcon from '../assets/images/MenuButton/menu.png'
 import Header from './UI/components/Header/Header.ui'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
@@ -240,13 +240,13 @@ export default class Main extends Component<Props, State> {
                       {/*<Gradient>*/}
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} title='Wallets' icon={this.icon(Constants.WALLET_LIST)} activeTintColor={'transparent'} tabBarLabel='Wallets'>
-                          <Scene key='walletList_notused' component={WalletList} navTransparent={true} title='Wallets' onRight={() => Actions.drawerOpen()} renderLeftButton={() => <HelpButton/>} rightButtonImage={MenuIcon} />
+                          <Scene key='walletList_notused' component={WalletList} navTransparent={true} title='Wallets' renderLeftButton={() => <HelpButton/>} renderRightButton={() => <TouchableWithoutFeedback onPress={() => Actions.drawerOpen()}><Image source={MenuIcon}/></TouchableWithoutFeedback>} />
                           <Scene key={Constants.CREATE_WALLET} component={CreateWallet} tintColor={styles.backButtonColor} title='Create Wallet' navTransparent={true} animation={'fade'} duration={600} />
-                          <Scene key={Constants.TRANSACTION_LIST} tintColor={styles.backButtonColor} navTransparent={true} icon={this.icon(Constants.TRANSACTION_LIST)}renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
+                          <Scene key={Constants.TRANSACTION_LIST} tintColor={styles.backButtonColor} navTransparent={true} icon={this.icon(Constants.TRANSACTION_LIST)} renderTitle={this.renderWalletListNavBar} component={TransactionListConnector} renderRightButton={() => <TouchableWithoutFeedback onPress={() => Actions.drawerOpen()}><Image source={MenuIcon}/></TouchableWithoutFeedback>} tabBarLabel='Transactions' title='Transactions' animation={'fade'} duration={600} />
                         </Stack>
-                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} navTransparent={true} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} animation={'fade'} duration={600} />
+                        <Scene key={Constants.REQUEST} renderTitle={this.renderWalletListNavBar} navTransparent={true} icon={this.icon(Constants.REQUEST)} component={Request} tabBarLabel='Request' title='Request' renderLeftButton={() => <HelpButton/>} renderRightButton={() => <TouchableWithoutFeedback onPress={() => Actions.drawerOpen()}><Image source={MenuIcon}/></TouchableWithoutFeedback>} animation={'fade'} duration={600} />
                         <Stack key={Constants.SCAN} title='Send' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.SCAN)} tabBarLabel='Send' >
-                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tintColor={styles.backButtonColor} navTransparent={true} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
+                          <Scene key='scan_notused' renderTitle={this.renderWalletListNavBar} component={Scan} tintColor={styles.backButtonColor} navTransparent={true} renderRightButton={() => <TouchableWithoutFeedback onPress={() => Actions.drawerOpen()}><Image source={MenuIcon}/></TouchableWithoutFeedback>} onEnter={this.props.dispatchEnableScan} onExit={this.props.dispatchDisableScan} renderLeftButton={() => <HelpButton/>} tabBarLabel='Send' title='Send' animation={'fade'} duration={600} />
                           <Scene key={Constants.EDGE_LOGIN}
                             renderTitle={'Edge Login'}
                             component={EdgeLoginSceneConnector}
@@ -255,7 +255,7 @@ export default class Main extends Component<Props, State> {
                             duration={200} />
                         </Stack>
                         <Stack key={Constants.EXCHANGE} navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} title='Exchange' animation={'fade'} duration={600} >
-                          <Scene key='exchange_notused' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} onRight={() => Actions.drawerOpen()} rightButtonImage={MenuIcon} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
+                          <Scene key='exchange_notused' navigationBarStyle={{backgroundColor: THEME.COLORS.PRIMARY}} icon={this.icon(Constants.EXCHANGE)} renderLeftButton={() => <ExchangeDropMenu/>} component={ExchangeConnector} renderRightButton={() => <TouchableWithoutFeedback onPress={() => Actions.drawerOpen()}><Image source={MenuIcon}/></TouchableWithoutFeedback>} tabBarLabel='Exchange' title='Exchange' animation={'fade'} duration={600} />
                           <Scene
                             key={Constants.CHANGE_MINING_FEE_EXCHANGE}
                             component={ChangeMiningFeeExchange}
