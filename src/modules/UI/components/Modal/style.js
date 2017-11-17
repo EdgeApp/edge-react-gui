@@ -58,6 +58,8 @@ export const styles = {
     position: 'relative',
     top: 27,
     borderRadius: 27,
+    borderWidth: 2,
+    borderColor: THEME.COLORS.SECONDARY,
     backgroundColor: THEME.COLORS.WHITE,
     height: 54,
     width: 54,
@@ -72,7 +74,8 @@ export const styles = {
     zIndex: 100,
     elevation: 100,
     height: 48,
-    width: 48
+    width: 48,
+    overflow: 'hidden'
   },
 
   // beginning of rename wallet modal
