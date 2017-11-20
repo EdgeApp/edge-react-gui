@@ -7,8 +7,7 @@ import {
   Alert,
   Text,
   View,
-  TouchableHighlight,
-  Platform
+  TouchableHighlight
 } from 'react-native'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -69,13 +68,6 @@ export default class Scan extends Component<any, any> {
       cameraPermission: undefined
     }
   }
-  // check the status of a single permission
-  componentDidMount () {
-    if (Platform.OS === 'ios') {
-      PERMISSIONS.request('camera')
-      .then((resp) => this.setCameraPermission(resp))
-    }
-  }
 
   renderDropUp = () => {
     if (this.props.showToWalletModal) {
@@ -90,7 +82,7 @@ export default class Scan extends Component<any, any> {
   }
 
   render () {
-    if (Platform.OS === 'android' && !this.state.cameraPermission) {
+    if (!this.state.cameraPermission) {
       PERMISSIONS.request('camera')
       .then((resp) => this.setCameraPermission(resp))
     }
