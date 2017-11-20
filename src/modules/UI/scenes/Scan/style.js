@@ -117,7 +117,7 @@ export const styles = {
     padding: 10
   },
   withAddressCopied: {
-    top: platform.deviceHeight / 16
+    top: 0
   },
   modalTopTextWrap: {
     flex: 1
