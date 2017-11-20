@@ -9,7 +9,6 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 import styles, {exitColor} from './style'
 import Modal from 'react-native-modal'
-import Gradient from '../Gradient/Gradient.ui'
 import T from '../FormattedText'
 import {border as b} from '../../../utils'
 
@@ -19,11 +18,9 @@ export default class StylizedModal extends Component {
     const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
     return (
       <Modal style={[styles.topLevelModal, b('yellow'), this.props.style]} isVisible={this.props.visibilityBoolean}>
-        <Gradient style={[styles.modalHeaderIconWrapBottom]}>
-          <View style={styles.modalHeaderIconWrapTop}>
-            {this.props.featuredIcon}
-          </View>
-        </Gradient>
+        <View style={[styles.modalHeaderIconWrapBottom]}>
+          {this.props.featuredIcon}
+        </View>
         <View style={[styles.visibleModal]}>
           <View style={[styles.exitRow, b('green')]}>
             <TouchableOpacity
