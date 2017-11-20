@@ -17,8 +17,9 @@ type Props = {
 }
 export default class WalletListModal extends Component<Props> {
   render () {
+    const top = this.props.topDisplacement ? this.props.topDisplacement : 38
     return (
-      <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: 38, height: (platform.deviceHeight - platform.toolbarHeight - platform.footerHeight)}]}
+      <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: top, height: (platform.deviceHeight - platform.toolbarHeight - platform.footerHeight)}]}
         animation='fadeInDown'
         duration={100} >
         <ScrollView>

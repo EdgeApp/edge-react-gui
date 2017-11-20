@@ -1,12 +1,12 @@
 import Sound from 'react-native-sound'
 
 import {DISPLAY_TRANSACTION_ALERT} from '../modules/UI/components/TransactionAlert/actions'
-import {OPEN_AB_ALERT} from '../modules/UI/components/ABAlert/action'
+import {OPEN_AB_ALERT} from '../../src/constants/ActionConstants'
 
 const AUDIO_RECEUVED_FILE = 'audio_received.mp3'
 const AUDIO_SEND_FILE = 'audio_sent.mp3'
 
-Sound.setCategory('Playback')
+Sound.setCategory('Ambient')
 
 const audioReceived = new Sound(AUDIO_RECEUVED_FILE, Sound.MAIN_BUNDLE, (error) => {
   if (error) console.warn(`failed to load the sound ${AUDIO_RECEUVED_FILE}`, error)
@@ -28,8 +28,8 @@ export default () => (next) => (action) => {
   if (action.type === DISPLAY_TRANSACTION_ALERT) {
     audioReceived.play(playCb(AUDIO_RECEUVED_FILE))
   }
-  if (action.type === OPEN_AB_ALERT && action.data.syntax.success) {
-    audioSent.play(playCb(OPEN_AB_ALERT))
+  if (action.type === OPEN_AB_ALERT && action.data.success) {
+    audioSent.play(playCb(AUDIO_SEND_FILE))
   }
   next(action)
 }

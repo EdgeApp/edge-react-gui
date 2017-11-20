@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, TouchableNativeFeedback, Image} from 'react-native'
+import {View, TouchableHighlight, Image} from 'react-native'
 import {Text} from 'native-base'
 import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
@@ -25,7 +25,7 @@ type State = {}
 
 export default class Main extends Component<Props, State> {
   onLogout = () => {
-    this.props.onPressOption()
+    // console.log('logout')
     this.props.logout()
   }
 
@@ -33,9 +33,10 @@ export default class Main extends Component<Props, State> {
     return this.props.usersView ? <UserList /> : (
       <View style={{flex: 1, justifyContent: 'flex-end'}}>
         <View style={styles.others.container}>
-          <TouchableNativeFeedback
-            onpress={this.onLogout}>
-            <View style={[styles.others.link, styles.others.borderVertical]}>
+          <TouchableHighlight style={styles.others.iosTouchableHighlight}
+            underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+            onPress={this.onLogout}>
+            <View style={[ styles.others.link, styles.others.borderVertical, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={logoutImage} />
               </View>
@@ -45,11 +46,11 @@ export default class Main extends Component<Props, State> {
                 </Text>
               </View>
             </View>
-          </TouchableNativeFeedback>
-          <TouchableNativeFeedback
-            onPress={this._handleOnPressRouting('settingsOverview')}
-            background={TouchableNativeFeedback.SelectableBackground()}>
-            <View style={styles.others.link}>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.others.iosTouchableHighlight}
+            underlayColor={styles.main.iosTouchableHighlightUnderlayColor}
+            onPress={Actions.settingsOverviewTab}>
+            <View style={[ styles.others.link, styles.others.borderBottom, {flex: 1} ]}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={settings} />
               </View>
@@ -59,23 +60,9 @@ export default class Main extends Component<Props, State> {
                 </Text>
               </View>
             </View>
-          </TouchableNativeFeedback>
+          </TouchableHighlight>
         </View>
       </View>
     )
-  }
-
-  _handleOnPressRouting = (route) => () => {
-    this.props.onPressOption()
-    switch (route) {
-    case 'settingsOverview':
-      return Actions.settingsOverviewTab()
-    case 'walletList':
-      return Actions.walletListTab()
-    case 'transactions':
-      return Actions.scanTab()
-    default:
-      return
-    }
   }
 }

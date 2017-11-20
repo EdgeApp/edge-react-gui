@@ -5,7 +5,8 @@ import {
   Text,
   TextInput,
   TouchableWithoutFeedback,
-  View
+  View,
+  Platform
 } from 'react-native'
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -88,7 +89,7 @@ export default class FlipInput extends Component<Props, State> {
       <Text style={[top.symbol]}>
         {denominationInfo.displayDenomination.symbol}
       </Text>
-      <TextInput style={[top.amount]}
+      <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
         placeholder={'0'}
         placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
         value={this.topDisplayAmount()}
@@ -97,6 +98,7 @@ export default class FlipInput extends Component<Props, State> {
         keyboardType='numeric'
         selectionColor='white'
         returnKeyType='done'
+        underlineColorAndroid={'transparent'}
       />
       <Text style={[top.currencyCode]}>
         {denominationInfo.displayDenomination.name}

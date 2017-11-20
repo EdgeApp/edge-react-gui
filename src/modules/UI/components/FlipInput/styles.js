@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    marginVertical: 20,
+    marginVertical: 0,
     marginHorizontal: 14,
     alignSelf: 'stretch',
     backgroundColor: THEME.COLORS.TRANSPARENT,

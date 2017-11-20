@@ -1,38 +1,37 @@
 import {connect} from 'react-redux'
-import WalletSelector from './WalletSelector.ui'
+import {TextAndIconButton} from '../../../components/Buttons/TextAndIconButton.ui'
 import * as UI_SELECTORS from '../../../selectors'
 import {
   toggleSelectedWalletListModal,
   toggleScanToWalletListModal
 } from '../../WalletListModal/action'
-
-const mapStateToProps = (state, ownProps) => {
-
-  const walletList = UI_SELECTORS.getWallets(state)
+import {sprintf} from 'sprintf-js'
+import strings from '../../../../../locales/default'
+import * as Constants from '../../../../../constants/indexConstants'
+import * as Styles from '../../../../../styles/indexStyles'
+const mapStateToProps = (state) => {
 
   const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-
-  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
-  const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
-
-  const selectedWalletListModalVisibility = state.ui.scenes.scan.selectedWalletListModalVisibility
-  const scanToWalletListModalVisibility = state.ui.scenes.scan.scanToWalletListModalVisibility
-
+  const LOADING_TEXT = sprintf(strings.enUS['loading'])
+  const title = selectedWallet
+  ? selectedWallet.name + ':' + selectedWalletCurrencyCode
+  : LOADING_TEXT
   return {
-    walletList,
-    selectedWallet,
-    selectedWalletCurrencyCode,
-    activeWalletIds,
-    archivedWalletIds,
-    toggleFunction: ownProps.toggleFunction,
-    visibleFlag: ownProps.visibleFlag,
-    scanToWalletListModalVisibility,
-    selectedWalletListModalVisibility,
+    title,
+    style: {...Styles.TextAndIconButtonStyle,
+      content:  {...Styles.TextAndIconButtonStyle.content, position: 'relative', width:'80%'},
+      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width:'80%'}},
+    icon: Constants.KEYBOARD_ARROW_DOWN,
+    iconType: Constants.MATERIAL_ICONS
   }
 }
 const mapDispatchToProps = (dispatch) => ({
-  toggleSelectedWalletListModal: () => dispatch(toggleSelectedWalletListModal()),
-  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
+  onPress: () => {
+    dispatch(toggleSelectedWalletListModal())
+    dispatch(toggleScanToWalletListModal())
+    /* toggleSelectedWalletListModal: () => dispatch(toggleSelectedWalletListModal())
+    toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()) */
+  }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(WalletSelector)
+export default connect(mapStateToProps, mapDispatchToProps)(TextAndIconButton)
