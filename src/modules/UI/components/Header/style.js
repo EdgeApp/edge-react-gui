@@ -10,6 +10,16 @@ export default StyleSheet.create({
     paddingBottom: 3,
     paddingLeft: 10
   },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  backIconStyle: {
+    paddingLeft: 10,
+    paddingRight: 5,
+    paddingTop: 3,
+    color: THEME.COLORS.WHITE,
+  },
   sideText: {
     color: THEME.COLORS.WHITE,
     fontSize: 18
