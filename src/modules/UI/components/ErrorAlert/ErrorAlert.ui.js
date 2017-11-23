@@ -1,12 +1,6 @@
 // @flow
 import React, {Component} from 'react'
-import {Text, View} from 'react-native'
-import SLIcon from 'react-native-vector-icons/SimpleLineIcons'
-import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons'
-
-import DropdownAlert from '../DropdownAlert/DropdownAlert.ui'
-import {AlertContainer, AlertHeader} from '../DropdownAlert/components'
-import styles from './styles'
+import LocalNotification from 'react-native-local-notification'
 
 type Props = {
   displayAlert: boolean,
@@ -14,31 +8,28 @@ type Props = {
   message: string
 }
 
+const DURATION = 4000 // ms
+
 export default class ErrorAlert extends Component<Props> {
-  alertIcon = () => <MCIcon name={'alert-outline'} style={styles.alertIcon} />
-  infoIcon = () => <SLIcon name={'question'} style={styles.infoIcon} />
+  localNotification: any
+
+  componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.displayAlert && !this.props.displayAlert) {
+      this.localNotification.showNotification({
+        title: 'Error',
+        text: nextProps.message,
+        onHide: nextProps.dismissAlert,
+      })
+
+      setTimeout(nextProps.dismissAlert, DURATION) // android do not call onHide
+    }
+  }
+
+  handleRef = (localNotification: any) => {
+    this.localNotification = localNotification
+  }
 
   render () {
-    const {
-      displayAlert,
-      dismissAlert,
-      message: error
-    } = this.props
-
-    return <DropdownAlert visible={displayAlert} onClose={dismissAlert}>
-        <View>
-
-        <AlertContainer style={styles.alertContainer}>
-          <AlertHeader style={styles.alertHeader}>
-            {this.alertIcon()}
-            <Text style={styles.alertHeaderText}>
-              {error}
-            </Text>
-            {this.infoIcon()}
-          </AlertHeader>
-        </AlertContainer>
-
-      </View>
-    </DropdownAlert>
+    return <LocalNotification ref={this.handleRef} duration={DURATION} />
   }
 }

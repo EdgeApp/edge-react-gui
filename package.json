@@ -86,6 +86,7 @@
     "react-native-keyboard-aware-scroll-view": "^0.4.1",
     "react-native-level-fs": "^3.0.0",
     "react-native-linear-gradient": "^2.0.0",
+    "react-native-local-notification": "^3.0.3",
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git",
     "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
