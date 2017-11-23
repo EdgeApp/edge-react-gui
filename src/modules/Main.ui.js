@@ -194,7 +194,7 @@ export default class Main extends Component<Props, State> {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
-      selectLocale(localeInfo.collatorIdentifier)
+      selectLocale('enUS')
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
         duration: 850,
