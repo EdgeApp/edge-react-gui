@@ -33,8 +33,7 @@
     "flow:0": "flow; exit 0",
     "flow": "flow",
     "test": "npm run lint && npm run flow && jest",
-    "watch": "npm test -- --watch",
-    "precommit": "npm test"
+    "watch": "npm test -- --watch"
   },
   "jest": {
     "preset": "react-native"
@@ -92,6 +91,7 @@
     "react-native-menu": "git://github.com/Airbitz/react-native-menu.git#33df5d9",
     "react-native-modal": "^2.2.0",
     "react-native-permissions": "^1.0.0",
+    "react-native-picker": "^4.3.0",
     "react-native-qrcode": "^0.2.3",
     "react-native-router-flux": "^4.0.0-beta.24",
     "react-native-share": "^1.0.21",
