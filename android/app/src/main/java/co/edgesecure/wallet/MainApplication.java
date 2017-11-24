@@ -3,7 +3,6 @@ package co.edgesecure.wallet;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
@@ -47,7 +46,6 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
-            new RCTSplashScreenPackage(),
             new PickerViewPackage(),
             new RCTSplashScreenPackage(),
             new AbcCoreJsUiPackage(),
