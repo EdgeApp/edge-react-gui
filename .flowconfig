@@ -20,6 +20,7 @@
 .*/node_modules/react-navigation/.*
 .*/node_modules/react-native-router-flux/.*
 .*/node_modules/react-native-tab-view/.*
+.*/node_modules/react-native-permissions/.*
 .*/node_modules/react-native-tcp/.*
 .*/node_modules/react-native-udp/.*
 .*/node_modules/react-static-container/.*
