@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   Keyboard
 } from 'react-native'
-import Picker from 'react-native-picker'
 import Permissions from 'react-native-permissions'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
@@ -82,8 +81,6 @@ const TRANSFER_TEXT = strings.enUS['fragment_transaction_transfer']
 const INCOME_TEXT = strings.enUS['fragment_transaction_income']
 
 export class TransactionDetails extends Component<Props & DispatchProps, State> {
-  subcategoryTextInput: ?HTMLButtonElement
-  payeeTextInput: ?HTMLButtonElement
   guiWallet: GuiWallet
   fiatSymbol: string
 
@@ -156,7 +153,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   onFocusPayee = () => {
     this.enablePayeeVisibility()
     this.refs._scrollView.scrollTo({x: 0, y: 62, animated: true})
-    this.payeeTextInput ? this.payeeTextInput.focus() : null
   }
 
   onBlurPayee = () => {
@@ -269,9 +265,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   onEnterSubcategories = () => {
     this.refs._scrollView.scrollTo({x: 0, y: 260, animated: true})
     this.enableSubcategoryVisibility()
-    if (this.subcategoryTextInput) {
-      this.subcategoryTextInput.focus()
-    }
   }
 
   onExitSubcategories = () => {
@@ -470,7 +463,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 <View style={[styles.payeeNameWrap]}>
                   <TextInput
                     underlineColorAndroid={'transparent'}
-                    ref={(component) => { this.payeeTextInput = component }}
+                    autoFocus
                     blurOnSubmit
                     onSubmitEditing={this.onBlurPayee}
                     autoCapitalize='words'
@@ -515,7 +508,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                 <View style={[styles.modalCategoryInputArea]}>
                   <TextInput
                     underlineColorAndroid={'transparent'}
-                    ref={(component) => { this.subcategoryTextInput = component }}
+                    autoFocus
                     blurOnSubmit
                     autoCapitalize='words'
                     onBlur={this.onExitSubcategories}
