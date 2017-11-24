@@ -349,9 +349,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     })
   }
 
-  onSelectCategory = (item: any) => {
-    this.setState({type: item.itemValue})
-    this.onExitCategories()
+  onSelectCategory = (type: any) => {
+    this.setState({type})
   }
 
   onFocusFiatAmount = () => {
@@ -576,7 +575,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   onSelectSubCategory={this.onSelectSubCategory}
                   subCategory={this.state.subCategory}
                   type={type}
-                  selectCategory={this.onSelectCategory}
                   onEnterCategories={this.onEnterCategories}
                   onExitCategories={this.onExitCategories}
                   usableHeight={platform.usableHeight}
@@ -593,6 +591,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   openModalFxn={this.amountAreaOpenModal}
                   txExplorerUrl={txExplorerLink}
                   guiWallet={this.guiWallet}
+                  onSelectCategory={this.onSelectCategory}
                 />
               </View>
             </View>
