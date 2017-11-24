@@ -9,6 +9,8 @@ import {connect} from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import styles from './style.js'
 import * as UTILS from '../../../utils.js'
+import THEME from '../../../../theme/variables/airbitz'
+
 
 class ManageTokenRow extends Component {
   constructor (props) {
@@ -20,10 +22,12 @@ class ManageTokenRow extends Component {
 
   render () {
     const { item } = this.props.metaToken
+
     return (
       <TouchableHighlight
         style={[styles.manageTokenRow, UTILS.border()]}
         onPress={() => this.props.toggleToken(item.currencyCode)}
+        underlayColor={THEME.COLORS.PRIMARY_BUTTON_TOUCHED}
       >
         <View style={[styles.manageTokenRowInterior, UTILS.border()]}>
           <View style={[styles.tokenNameArea, UTILS.border()]}>

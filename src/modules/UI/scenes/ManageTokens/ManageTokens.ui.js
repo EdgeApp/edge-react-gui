@@ -10,6 +10,8 @@ import {connect} from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import styles from './style.js'
 import ManageTokenRow from './ManageTokenRow.ui.js'
+import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
+import * as UTILS from '../../../utils.js'
 
 
 class ManageTokens extends Component {
@@ -49,13 +51,26 @@ class ManageTokens extends Component {
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
           </View>
-          <View style={styles.metaTokenListArea}>
-            <FlatList
-              data={metaTokens}
-              renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} />}
-            />
+          <View style={[styles.metaTokenListArea, UTILS.border()]}>
+            <View style={[styles.metaTokenListWrap]}>
+              <FlatList
+                data={metaTokens}
+                renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} />}
+                style={[styles.tokenList, UTILS.border()]}
+              />
+            </View>
+            <View style={[styles.buttonsArea, UTILS.border()]}>
+              <SecondaryButton
+                style={styles.addButton}
+                text={'Add'}
+              />
+              <PrimaryButton
+                text={'Save'}
+                style={styles.saveButton}
+              />
+            </View>
           </View>
-          </View>
+        </View>
       </View>
     )
   }

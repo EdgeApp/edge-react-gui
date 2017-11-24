@@ -1,5 +1,7 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
+import PLATFORM from '../../../../theme/variables/platform'
+
 
 export const styles = {
 
@@ -10,7 +12,7 @@ export const styles = {
   },
   container: {
     position: 'relative',
-    height:'100%',
+    height: PLATFORM.deviceHeight - 66 - 52,
     top: 66
   },
   leftArea: {
@@ -41,7 +43,8 @@ export const styles = {
 
   instructionalArea: {
     paddingVertical: 16,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    flex: 1
   },
   instructionalText: {
     fontSize: 16,
@@ -49,7 +52,14 @@ export const styles = {
   },
   metaTokenListArea: {
     borderTopWidth: 1,
-    borderTopColor: THEME.COLORS.GRAY_3
+    borderTopColor: THEME.COLORS.GRAY_3,
+    flex: 11
+  },
+  metaTokenListWrap: {
+    flex: 1
+  },
+  tokenList: {
+    flex: 1
   },
   /////// start of token row styling ///////
 
@@ -59,7 +69,7 @@ export const styles = {
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   manageTokenRowInterior: {
     flex: 1,
@@ -76,8 +86,39 @@ export const styles = {
   },
   tokenCheckboxArea: {
     alignSelf: 'center'
-  }
+  },
+  underlay: {
+    color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
+  },
 
   /////// end of token row styling /////////
+
+  buttonsArea: {
+    height: 52,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    paddingVertical: 4,
+    paddingHorizontal: 20
+  },
+  addButton: {
+    flex: 1,
+    marginRight: 2,
+    backgroundColor: THEME.COLORS.SECONDARY,
+
+    borderRadius: 3
+  },
+  buttonText: {
+    color: THEME.COLORS.WHITE,
+    fontSize: 18
+  },
+  saveButton: {
+    flex: 1,
+    marginLeft: 2,
+    backgroundColor: THEME.COLORS.GRAY_2,
+
+    borderRadius: 3
+  }
 }
 export default StyleSheet.create(styles)
