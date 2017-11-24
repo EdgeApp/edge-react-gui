@@ -17,7 +17,7 @@ export default class StylizedModal extends Component {
     const {headerText, headerSubtext} = this.props
     const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
     return (
-      <Modal style={[styles.topLevelModal, b('yellow')]} isVisible={this.props.visibilityBoolean}>
+      <Modal style={[styles.topLevelModal, b('yellow'), this.props.style]} isVisible={this.props.visibilityBoolean}>
         <View style={[styles.modalHeaderIconWrapBottom]}>
           {this.props.featuredIcon}
         </View>
