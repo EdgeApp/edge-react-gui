@@ -33,7 +33,8 @@
     "flow:0": "flow; exit 0",
     "flow": "flow",
     "test": "npm run lint && npm run flow && jest",
-    "watch": "npm test -- --watch"
+    "watch": "npm test -- --watch",
+    "precommit": "npm test"
   },
   "jest": {
     "preset": "react-native"
