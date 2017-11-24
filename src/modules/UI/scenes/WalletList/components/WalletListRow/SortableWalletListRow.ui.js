@@ -6,6 +6,7 @@ import {
   View,
   TouchableHighlight,
   Image,
+  Platform,
   ActivityIndicator
 } from 'react-native'
 import styles, {styles as styleRaw} from '../../style.js'
@@ -42,11 +43,25 @@ class SortableWalletListRow extends Component<Props, State> {
           {walletData.currencyCode? (
             <View style={[styles.rowContent, b()]}>
               <View style={[styles.rowNameTextWrap]}>
-                <T style={[styles.rowNameText]} numberOfLines={1}>
+                {(Platform.OS === 'ios')
+                && (
+                  <View style={[styles.rowNameTextWrapIOS, b()]}>
+                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                    {symbolImageDarkMono
+                      && <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} />
+                    }  {cutOffText(name, 34)}</T>
+                </View>
+                )}
+                {(Platform.OS === 'android')
+                && (
+                  <View style={[styles.rowNameTextWrapAndroid, b()]}>
                   {symbolImageDarkMono
-                    && <Image style={[styles.rowCurrencyLogo, b()]} transform={[{translateY: 5}]} source={{uri: symbolImageDarkMono}} resizeMode='cover' />
-                  }  {cutOffText(name, 34)}
-                </T>
+                    && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
+                  }
+                  <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                    {cutOffText(name, 34)}</T>
+                  </View>
+                )}
               </View>
               <View style={[styles.rowBalanceTextWrap, b()]}>
                 <T style={[styles.rowBalanceAmountText, b()]}>
