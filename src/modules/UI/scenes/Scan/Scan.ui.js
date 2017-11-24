@@ -68,11 +68,6 @@ export default class Scan extends Component<any, any> {
       cameraPermission: undefined
     }
   }
-  // check the status of a single permission
-  componentDidMount () {
-    PERMISSIONS.request('camera')
-    .then(this.setCameraPermission)
-  }
 
   renderDropUp = () => {
     if (this.props.showToWalletModal) {
@@ -87,6 +82,10 @@ export default class Scan extends Component<any, any> {
   }
 
   render () {
+    if (!this.state.cameraPermission) {
+      PERMISSIONS.request('camera')
+      .then((resp) => this.setCameraPermission(resp))
+    }
     return (
       <View style={{flex: 1}}>
         <Gradient style={styles.gradient} />

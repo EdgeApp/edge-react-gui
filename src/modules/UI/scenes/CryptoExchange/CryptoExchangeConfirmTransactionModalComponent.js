@@ -74,9 +74,9 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
         <Text style={text}>
           {sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount,this.props.toCurrencyCode, toWallet.name)}
         </Text>
+        <View style={shim} />
+        <View style={shim} />
       </View>
-      <View style={shim} />
-      <View style={shim} />
     </View>
     </View>
   }
