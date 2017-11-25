@@ -141,7 +141,7 @@ export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) =
     return
   }
   if (!state.cryptoExchange.transaction) {
-    getShiftTransaction(state.cryptoExchange.fromWallet, state.cryptoExchange.toWallet))
+    getShiftTransaction(state.cryptoExchange.fromWallet, state.cryptoExchange.toWallet)
     return
   }
   if (srcWallet) {
