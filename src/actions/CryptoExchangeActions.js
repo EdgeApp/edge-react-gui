@@ -156,7 +156,7 @@ export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) =
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR,error.message))
       setTimeout(() => {
-        Alert.alert(strings.enUS['exchange_succeeded'], error.message)
+        Alert.alert(strings.enUS['exchange_failed'], error.message)
       },1)
     }
     return
