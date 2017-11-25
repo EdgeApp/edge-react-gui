@@ -18,8 +18,8 @@ class AddToken extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      nameInput: '',
-      currencyCodeInput: '',
+      nameInput: 'CapCoin',
+      currencyCodeInput: 'CAP',
       denominationInput: 1
     }
   }
@@ -33,7 +33,7 @@ class AddToken extends Component {
             <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
           </View>
           <View style={styles.formArea}>
-            <View style={[styles.nameArea ,UTILS.border()]}>
+            <View style={[styles.nameArea, UTILS.border()]}>
               <FormField
                 style={[styles.nameInput]}
                 value={this.state.nameInput}
