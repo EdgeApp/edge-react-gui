@@ -11,6 +11,7 @@ import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import * as UTILS from '../../../utils.js'
+import * as ACTIONS from './action.js'
 
 
 class AddToken extends Component {
@@ -63,6 +64,7 @@ class AddToken extends Component {
                 label={s.strings.addtoken_denomination_input_text}
                 returnKeyType={'done'}
                 keyboardType={'numeric'}
+                value={this.state.denominationInput}
               />
             </View>
           </View>
@@ -70,7 +72,7 @@ class AddToken extends Component {
             <PrimaryButton
               text={'Save'}
               style={styles.saveButton}
-              onPressFxn={this._onSave}
+              onPressFunction={this._onSave}
             />
           </View>
         </View>
@@ -86,27 +88,30 @@ class AddToken extends Component {
 
   onChangeCurrencyCode = (input) => {
     this.setState({
-      currencyCodeInput: input.toUpperCase()
+      currencyCodeInput: input.substring(0,5)
     })
   }
 
   onChangeDenomination = (input) => {
     this.setState({
-      denominationInput: input
+      denominationInput: input.toString()
     })
   }
 
-  onSave = () => {
-  
+  _onSave = () => {
+    const { nameInput, currencyCodeInput, denominationInput } = this.state
+    const {walletId} = this.props
+    this.props.addToken(walletId, nameInput, currencyCodeInput, denominationInput)
   }
 }
 
 const mapStateToProps = (state) => ({
-  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state)
+  // context: CORE_SELECTORS.getContext(state),
+  // account: CORE_SELECTORS.getAccount(state)
 })
 const mapDispatchToProps = (dispatch) => ({
-  dispatch
+  dispatch,
+  addToken: (name: string, currencyCode: string, denomination: string) => dispatch(ACTIONS.addToken(name, currencyCode, denomination))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

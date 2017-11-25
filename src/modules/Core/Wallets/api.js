@@ -78,6 +78,42 @@ export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =
   // XXX need to hook up to Core -paulvp
    wallet.enableTokens(tokens)
 
+export const getTokens = (wallet: AbcCurrencyWallet) => {
+  wallet.folder.file('tokens.json').getText()
+    .then((text) => {
+      return JSON.parse(text)
+    })
+}
+
+export const setTokens = (wallet: AbcCurrencyWallet, tokens: Object) => {
+  wallet.folder.file('tokens.json').setData(tokens)
+    .then(() => {
+      return
+    })
+}
+
+export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tokenCode: string, tokenDenomination: string) => {
+  getTokens(wallet)
+    .then((tokens) => {
+      const denominations = [
+        {
+          name: tokenCode,
+          multiplier: tokenDenomination
+        }
+      ]
+      tokens[tokenCode] = {
+        currencyCode: tokenCode,
+        currencyName: tokenName,
+        denominations
+      }
+      setTokens(tokens)
+        .then(() => {
+          return
+        })
+    })
+  return
+}
+
 export const parseURI = (wallet: AbcCurrencyWallet, uri: string): AbcParsedUri => wallet.parseUri(uri)
 
 export const signTransaction = (wallet: AbcCurrencyWallet, unsignedTransaction: AbcTransaction): Promise<AbcTransaction> => wallet.signTx(unsignedTransaction)

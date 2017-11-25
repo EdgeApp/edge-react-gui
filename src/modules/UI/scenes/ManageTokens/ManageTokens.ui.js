@@ -61,7 +61,7 @@ class ManageTokens extends Component {
               <SecondaryButton
                 style={styles.addButton}
                 text={'Add'}
-                onPressFunction={Actions.addToken}
+                onPressFunction={this.goToAddTokenScene}
               />
               <PrimaryButton
                 text={'Save'}
@@ -75,7 +75,8 @@ class ManageTokens extends Component {
   }
 
   goToAddTokenScene = () => {
-    Actions.addToken({})
+    const { id } = this.props.guiWallet
+    Actions.addToken({walletId: id})
   }
 }
 
