@@ -26,6 +26,7 @@ matrix:
         - nvm install 8
         - node --version
         # install NDK
+        - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
         - git clone https://github.com/urho3d/android-ndk.git $HOME/android-ndk-root
         - export ANDROID_NDK_HOME=$HOME/android-ndk-root
         - echo "y" | sdkmanager "cmake;3.6.4111459"
@@ -58,11 +59,12 @@ matrix:
       before_install:
         - nvm install 8
         - node --version
+        - openssl aes-256-cbc -K $encrypted_e28d423744bc_key -iv $encrypted_e28d423744bc_iv -in env.json.enc -out env.json -d
       install:
         - travis_retry gem install xcpretty
-        - travis_retry npm i -d
+        - travis_wait npm i -d
       xcode_project: ios/edge.xcworkspace
       xcode_scheme: ios/edge
       script:
         - cd ios
-        - xcodebuild -scheme edge -project edge.xcodeproj archive ONLY_ACTIVE_ARCH=NO
+        - xcodebuild -derivedDataPath build clean build -scheme edge -configuration release -sdk iphonesimulator10.3 CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=""

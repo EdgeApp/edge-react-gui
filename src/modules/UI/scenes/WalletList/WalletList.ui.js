@@ -20,6 +20,7 @@ import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
@@ -173,7 +174,7 @@ export default class WalletList extends Component<any, {
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
-                  {strings.enUS['fragment_wallets_header']}
+                  {s.strings.fragment_wallets_header}
                 </T>
               </View>
             </View>
