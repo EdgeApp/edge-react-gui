@@ -6,6 +6,7 @@ import {
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import {Actions} from 'react-native-router-flux'
 import {connect} from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import styles from './style.js'
@@ -17,9 +18,6 @@ import * as UTILS from '../../../utils.js'
 class ManageTokens extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      metaTokens: props.guiWallet.metaTokens
-    }
   }
 
   header () {
@@ -63,6 +61,7 @@ class ManageTokens extends Component {
               <SecondaryButton
                 style={styles.addButton}
                 text={'Add'}
+                onPressFunction={Actions.addToken}
               />
               <PrimaryButton
                 text={'Save'}
@@ -75,8 +74,8 @@ class ManageTokens extends Component {
     )
   }
 
-  toggleToken = (currencyCode) => {
-    console.log('do something with the token being toggled, currencyCode is: ', currencyCode)
+  goToAddTokenScene = () => {
+    Actions.addToken({})
   }
 }
 

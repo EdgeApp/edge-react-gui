@@ -14,7 +14,8 @@ export const styles = {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
     top: 66,
-    backgroundColor: THEME.COLORS.WHITE
+    paddingHorizontal: 20,
+    backgroundColor: THEME.COLORS.GRAY_4
   },
   leftArea: {
     flexDirection: 'row'
@@ -44,64 +45,31 @@ export const styles = {
 
   instructionalArea: {
     paddingVertical: 16,
-    paddingHorizontal: 20,
-    flex: 1
+    paddingHorizontal: 20
   },
   instructionalText: {
     fontSize: 16,
     textAlign: 'center'
   },
-  metaTokenListArea: {
-    borderTopWidth: 1,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    flex: 11
-  },
-  metaTokenListWrap: {
-    flex: 1
-  },
-  tokenList: {
-    flex: 1
-  },
-  /////// start of token row styling ///////
 
-  manageTokenRow: {
-    height: 44,
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingLeft: 20,
-    paddingRight: 20,
+  nameArea: {
+    height: 70
   },
-  manageTokenRowInterior: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  }  ,
-  tokenNameArea: {
-    alignSelf: 'center'
+  currencyCodeArea: {
+    height: 70
   },
-  tokenNameText: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: 16
+  denominationArea: {
+    height: 70
   },
-  tokenCheckboxArea: {
-    alignSelf: 'center'
-  },
-  underlay: {
-    color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
-  },
-
-  /////// end of token row styling /////////
 
   buttonsArea: {
+    marginTop: 16,
     height: 52,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    paddingVertical: 8,
-    paddingHorizontal: 20,
+    paddingVertical: 4
   },
   addButton: {
     flex: 1,

@@ -789,6 +789,10 @@ const strings = {
   fragmet_wallets_addtoken_option: 'Add Token',
   fragmet_wallets_managetokens_option: 'Manage Tokens',
   managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
+  addtoken_top_instructions: 'To add a token, please fill out the following form and press \'Save\'',
+  addtoken_name_input_text: 'Token Name',
+  addtoken_currency_code_input_text: 'Token Code',
+  addtoken_denomination_input_text: 'Token Denomination',
   fragment_wallets_sort: 'Sort',
   fragment_wallets_this_wallet: 'this wallet?', // needs work
   fragment_select_wallet_header_title: 'Choose one of the following as selected wallet:',
