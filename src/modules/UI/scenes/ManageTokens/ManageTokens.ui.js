@@ -13,11 +13,18 @@ import styles from './style.js'
 import ManageTokenRow from './ManageTokenRow.ui.js'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import * as UTILS from '../../../utils.js'
+import {
+  getEnabledTokens,
+  setEnabledTokens
+} from '../../Wallets/action.js'
 
 
 class ManageTokens extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      enabledTokens: []
+    }
   }
 
   header () {
@@ -36,11 +43,51 @@ class ManageTokens extends Component {
   }
 
   componentDidMount () {
+    let enabledTokens = []
+    const { id } = this.props.guiWallet
+    const walletEnabledTokens = this.props.getEnabledTokensList(id)
+    for (let prop in walletEnabledTokens) {
+      let tokenValues = walletEnabledTokens[prop]
+      enabledTokens.push(tokenValues)
+    }
+    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
+      return a.currencyCode - b.currencyCode
+    })
+    this.setState({
+      enabledTokens: sortedEnabledTokens
+    })
+  }
 
+  toggleToken = (currencyCode) => {
+    let enabledTokens = []
+    const { id } = this.props.guiWallet
+    const walletEnabledTokens = this.props.getEnabledTokensList(id)
+    for (let prop in walletEnabledTokens) {
+      if (prop === currencyCode) {
+        walletEnabledTokens[prop].enabled = !walletEnabledTokens[prop].enabled
+      }
+      let tokenValues = walletEnabledTokens[prop]
+      enabledTokens.push(tokenValues)
+    }
+    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
+      return a.currencyCode - b.currencyCode
+    })
+    this.setState({
+      enabledTokens: sortedEnabledTokens
+    })
+  }
+
+  saveEnabledTokenList = () => {
+    const { id } = this.props.guiWallet
+    const walletEnabledTokens = this.props.getEnabledTokensList(id)
+    for (let item of this.state.enabledTokens) {
+      walletEnabledTokens[item.currencyCode].enabled = item.enabled
+    }
+    this.props.setEnabledTokensList(id, walletEnabledTokens)
+    Actions.pop()
   }
 
   render () {
-    const {metaTokens} = this.props.guiWallet
     return (
       <View style={[styles.manageTokens]}>
         <Gradient style={styles.gradient} />
@@ -52,7 +99,7 @@ class ManageTokens extends Component {
           <View style={[styles.metaTokenListArea, UTILS.border()]}>
             <View style={[styles.metaTokenListWrap]}>
               <FlatList
-                data={metaTokens}
+                data={this.state.enabledTokens}
                 renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} />}
                 style={[styles.tokenList, UTILS.border()]}
               />
@@ -66,6 +113,7 @@ class ManageTokens extends Component {
               <PrimaryButton
                 text={'Save'}
                 style={styles.saveButton}
+                onPressFunction={this.saveEnabledTokenList}
               />
             </View>
           </View>
@@ -80,13 +128,15 @@ class ManageTokens extends Component {
   }
 }
 
+const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
 
-const mapStateToProps = (state) => ({
-  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state)
-})
-const mapDispatchToProps = (dispatch) => ({
-  dispatch
-})
+  return {
 
+  }
+}
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
+  setEnabledTokensList: (walletId, enabledTokens) => dispatch(setEnabledTokens(walletId, enabledTokens))
+
+})
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)

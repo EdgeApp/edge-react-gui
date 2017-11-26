@@ -69,6 +69,11 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
   })
 }
 
+export const setEnabledTokens = (walletId: string, enabledTokens: any) => (dispatch: any, getState: any) => {
+  const state = getState()
+  const wallet = UI_SELECTORS.getWallet(state, walletId)
+  return WALLET_API.setSyncedTokensTemp(wallet, enabledTokens)
+}
 
 export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
   const state = getState()

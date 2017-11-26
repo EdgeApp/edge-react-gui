@@ -1,5 +1,5 @@
 export const tokens = {
-  'CAP': {
+  'CAP1': {
     enabled: true,
     currencyCode: 'CAP1',
     currencyName: 'CaptainCoin',

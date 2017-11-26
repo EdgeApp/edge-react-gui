@@ -33,7 +33,7 @@ class ManageTokenRow extends Component {
           <View style={[styles.tokenNameArea, UTILS.border()]}>
             <Text style={[styles.tokenNameText, UTILS.border()]}>{item.currencyName} ({item.currencyCode})</Text>
           </View>
-          <CheckBox enabled={true} />
+          <CheckBox enabled={item.enabled} />
         </View>
       </TouchableHighlight>
     )

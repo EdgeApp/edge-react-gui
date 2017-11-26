@@ -117,6 +117,10 @@ export const getSyncedTokensTemp = (wallet: AbcCurrencyWallet) => {
   return tokens
 }
 
+export const setSyncedTokensTemp = (wallet: AbcCurrencyWallet, tokens: any) => {
+  return tokens
+}
+
 export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {
   let tokenFile = getSyncedTokensFile(wallet)
   tokenFile.getText()
