@@ -13,7 +13,7 @@ export const addToken = (walletId, tokenName, tokenCode, tokenDenomination) => (
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-  // dispatch(addTokenStart(walletId))
+  dispatch(addTokenStart(walletId))
 
   WALLET_API.addCustomToken(wallet, tokenName, tokenCode, tokenDenomination)
     .then(() => {

@@ -14,6 +14,7 @@ import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 import {GuiWallet} from '../../../types'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import * as WALLET_API from '../../Core/Wallets/api.js'
 
 export const selectWallet = (walletId: string, currencyCode: string) =>
   (dispatch: any) => {
@@ -66,4 +67,11 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
     type: UPSERT_WALLET,
     data: {wallet}
   })
+}
+
+
+export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
+  const state = getState()
+  const wallet = UI_SELECTORS.getWallet(state, walletId)
+  return WALLET_API.getSyncedTokensTemp(wallet)
 }

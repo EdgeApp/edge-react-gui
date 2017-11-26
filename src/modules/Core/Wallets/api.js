@@ -1,7 +1,7 @@
 // @flow
 // import { renameWalletStart } from ''
 import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'airbitz-core-types'
-// import { tokens } from './tokens.js'
+import { tokens } from './Tokens.js'
 export const SYNCED_TOKENS_FILENAME = 'Tokens.js'
 export const SYNCED_TOKENS_DEFAULTS = {
   'CAP': {
@@ -96,6 +96,7 @@ export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tok
   let tokens = getSyncedTokens(wallet)
 
   const incomingToken = {
+    enabled: true,
     currencyCode: 'CAP1',
     currencyName: 'CaptainCoin',
     denominations: [
@@ -112,8 +113,13 @@ export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tok
   })
 }
 
+export const getSyncedTokensTemp = (wallet: AbcCurrencyWallet) => {
+  return tokens
+}
+
 export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {
-  getSyncedTokensFile(wallet).getText()
+  let tokenFile = getSyncedTokensFile(wallet)
+  tokenFile.getText()
   .then((text) => {
     let tokensText = JSON.parse(text)
     return tokensText.tokens
