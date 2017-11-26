@@ -45,8 +45,8 @@ class ManageTokens extends Component {
   componentDidMount () {
     let enabledTokens = []
     const { id } = this.props.guiWallet
-    const walletEnabledTokens = this.props.getEnabledTokensList(id)
-    for (let prop in walletEnabledTokens) {
+    // const walletEnabledTokens = this.props.getEnabledTokensList(id)
+    /*for (let prop in walletEnabledTokens) {
       let tokenValues = walletEnabledTokens[prop]
       enabledTokens.push(tokenValues)
     }
@@ -55,7 +55,7 @@ class ManageTokens extends Component {
     })
     this.setState({
       enabledTokens: sortedEnabledTokens
-    })
+    })*/
   }
 
   toggleToken = (currencyCode) => {

@@ -69,15 +69,9 @@ class FullWalletListRow extends Component<Props, State> {
     Actions.transactionList({params: 'walletList'})
   }
 
-  getEnabledNativeBalances = (nativeBalances, walletId) => {
-    let enabledNativeBalances = {}
-    const walletEnabledTokens = this.props.getEnabledTokensList(walletId)
-    for (const prop in nativeBalances) {
-      if (walletEnabledTokens[prop] && walletEnabledTokens[prop].enabled) {
-        enabledNativeBalances[prop] = nativeBalances[prop]
-      }
-    }
-    return enabledNativeBalances
+  componentWillMount () {
+    const walletData = this.props.data.item
+    this.props.getEnabledTokensList(walletData.id)
   }
 
   render () {
@@ -88,12 +82,22 @@ class FullWalletListRow extends Component<Props, State> {
     const denomination = this.props.displayDenomination
     const multiplier = denomination.multiplier
     const id = walletData.id
-    const enabledNativeBalances = this.getEnabledNativeBalances(walletData.nativeBalances, id)
     const name = walletData.name || strings.enUS['string_no_name']
     const symbol = denomination.symbol
     let symbolImageDarkMono = walletData.symbolImageDarkMono
     let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     let finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    
+    // need to crossreference tokensEnabled with nativeBalances
+    let enabledNativeBalances = {}
+    const enabledTokens = walletData.tokensEnabled
+    
+    for (let prop in walletData.nativeBalances) {
+      if ((prop !== currencyCode) && enabledTokens[prop] && enabledTokens[prop].enabled) {
+        enabledNativeBalances[prop] = walletData.nativeBalances[prop]
+      }
+    }
+
     return (
       <View style={[{width: platform.deviceWidth}, b()]}>
           <View>
@@ -159,14 +163,16 @@ class FullWalletListRow extends Component<Props, State> {
 const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+  const wallets = state.ui.wallets.byId
   return {
     displayDenomination,
-    exchangeDenomination
+    exchangeDenomination,
+    wallets
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
-  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId))
+  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
 })
 export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 

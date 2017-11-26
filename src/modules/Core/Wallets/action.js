@@ -35,7 +35,7 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
   for (const walletId:string of Object.keys(currencyWallets)) {
     const abcWallet:AbcCurrencyWallet = currencyWallets[walletId]
     if (abcWallet.type === 'wallet:ethereum') {
-      abcWallet.enableTokens(['WINGS', 'REP'])
+      abcWallet.enableTokens([])
     }
   }
 

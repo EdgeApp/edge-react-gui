@@ -71,12 +71,19 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
 
 export const setEnabledTokens = (walletId: string, enabledTokens: any) => (dispatch: any, getState: any) => {
   const state = getState()
-  const wallet = UI_SELECTORS.getWallet(state, walletId)
-  return WALLET_API.setSyncedTokensTemp(wallet, enabledTokens)
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  WALLET_API.setSyncedTokens(wallet, enabledTokens)
+  .then((tokens) => {
+    return tokens
+  })
 }
 
 export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
   const state = getState()
-  const wallet = UI_SELECTORS.getWallet(state, walletId)
-  return WALLET_API.getSyncedTokensTemp(wallet)
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  WALLET_API.getSyncedTokens(wallet)
+  .then((tokens) => {
+    wallet.tokensEnabled = tokens
+    dispatch(upsertWallet(wallet))
+  })
 }

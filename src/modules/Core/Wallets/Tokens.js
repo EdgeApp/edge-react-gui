@@ -1,4 +1,5 @@
 export const tokens = {
+  /*
   'CAP1': {
     enabled: true,
     currencyCode: 'CAP1',
@@ -31,9 +32,9 @@ export const tokens = {
         multiplier: '1'
       }
     ]
-  },
+  },*/
   'REP': {
-    enabled: true,
+    enabled: false,
     currencyCode: 'REP',
     currencyName: 'Augur',
     denominations: [

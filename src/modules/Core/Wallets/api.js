@@ -3,18 +3,6 @@
 import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'airbitz-core-types'
 import { tokens } from './Tokens.js'
 export const SYNCED_TOKENS_FILENAME = 'Tokens.js'
-export const SYNCED_TOKENS_DEFAULTS = {
-  'CAP': {
-    currencyCode: 'CAP1',
-    currencyName: 'CaptainCoin',
-    denominations: [
-      {
-        name: 'CAP1',
-        multiplier: 1000
-      }
-    ]
-  }
-}
 
 export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => wallet.renameWallet(name)
   .then(() => {
@@ -97,11 +85,11 @@ export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tok
 
   const incomingToken = {
     enabled: true,
-    currencyCode: 'CAP1',
-    currencyName: 'CaptainCoin',
+    currencyCode: tokenCode,
+    currencyName: tokenName,
     denominations: [
       {
-        name: 'CAP1',
+        name: tokenCode,
         multiplier: tokenDenomination
       }
     ]
@@ -122,22 +110,21 @@ export const setSyncedTokensTemp = (wallet: AbcCurrencyWallet, tokens: any) => {
 }
 
 export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {
-  let tokenFile = getSyncedTokensFile(wallet)
-  tokenFile.getText()
+  return getSyncedTokensFile(wallet).getText()
   .then((text) => {
-    let tokensText = JSON.parse(text)
-    return tokensText.tokens
+    return JSON.parse(text)
   })
-  .catch(() => {
-    setSyncedTokens(wallet, SYNCED_TOKENS_DEFAULTS)
-    .then(() => {
-      SYNCED_TOKENS_DEFAULTS
-    })
+  .catch((e) => {
+    setSyncedTokens(wallet, tokens)
+    console.log(e)
+    return tokens
   })
 }
 
 export const getSyncedTokensFile = (wallet: AbcCurrencyWallet) => {
-  wallet.folder.file(SYNCED_TOKENS_FILENAME)
+  const folder = wallet.folder
+  const file = folder.file(SYNCED_TOKENS_FILENAME)
+  return file
 }
 
 export async function setSyncedTokens (wallet: AbcCurrencyWallet, tokens: any) {
