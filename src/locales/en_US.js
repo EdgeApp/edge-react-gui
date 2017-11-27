@@ -857,7 +857,7 @@ const strings = {
 
   //Exchange
   title_confirm_excahnge: 'Confirm exchange',
-  string_from_exchange_info: 'Your are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
+  string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
   string_fee: 'Fee: ',
   string_TBD: 'TBD',

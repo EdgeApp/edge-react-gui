@@ -1,3 +1,5 @@
+// @flow
+
 import {
   StyleSheet
 } from 'react-native'
@@ -49,7 +51,7 @@ export const styles = {
   exitText: {
     fontSize: 18,
     backgroundColor: 'transparent',
-    color: THEME.GRAY_1
+    color: THEME.COLORS.GRAY_1
   },
   iconWrapper: {
 
@@ -149,6 +151,6 @@ export const styles = {
   }
 }
 
-export const exitColor = THEME.GRAY_1
+export const exitColor = THEME.COLORS.GRAY_1
 
 export default StyleSheet.create(styles)
