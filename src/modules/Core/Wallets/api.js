@@ -81,6 +81,7 @@ export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =
    wallet.enableTokens(tokens)
 
 export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tokenCode: string, tokenMultiplier: string) => {
+  enableTokens(wallet, [tokenCode])
   return getSyncedTokens(wallet)
     .then((currentTokens) => {
       const incomingToken = {

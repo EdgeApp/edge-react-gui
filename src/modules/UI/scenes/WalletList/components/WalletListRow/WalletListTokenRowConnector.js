@@ -6,7 +6,7 @@ import {selectWallet} from '../../../../Wallets/action'
 
 const mapStateToProps = (state, ownProps) => {
   const currencyCode:string = ownProps.currencyCode
-  const displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode) || SETTINGS_SELECTORS.getDisplayDenomination(state, 'TOKEN_DEFAULT')
 
   return {
     displayDenomination

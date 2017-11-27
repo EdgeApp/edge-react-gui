@@ -22,7 +22,10 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   'BTC': {denomination: '100000000'},
   'BCH': {denomination: '100000000'},
   'LTC': {denomination: '100000000'},
-  'ETH': {denomination: '1000000000000000000'}
+  'ETH': {denomination: '1000000000000000000'},
+  'REP': {denomination: '1000000000000000000'},
+  'WINGS': {denomination: '1000000000000000000'},
+  'TOKEN_DEFAULT': {denomination: '1000000000000000000'}
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {bluetoothMode: false}
