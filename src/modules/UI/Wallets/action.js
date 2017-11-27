@@ -87,10 +87,19 @@ export const setEnabledTokens = (walletId: string, enabledTokens: any) => (dispa
 export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  WALLET_API.getSyncedTokens(wallet)
+  WALLET_API.getSyncedTokens(wallet) // get list of enabled / disbaled tokens on the user's side (not core)
   .then((tokens) => {
-    wallet.tokensEnabled = tokens
-    dispatch(upsertWallet(wallet))
+    wallet.tokensEnabled = tokens // set the tokensEnabled property on the GuiWallet to the returned tokens object for easy access
+    let guiEnabledTokens = [] // initialize array that will be used to enable tokens in the core
+    for (let prop in tokens) {
+      if (tokens[prop].enabled) {
+        guiEnabledTokens.push(prop)
+      }
+    }
+    WALLET_API.enableTokens(wallet, guiEnabledTokens) // take GUI enabled tokens and enable them in the core
+    .then(() => {
+      dispatch(upsertWallet(wallet)) // now update the wallet in Redux so that the tokensEnabled property can be used by GUI
+    })
   })
 }
 

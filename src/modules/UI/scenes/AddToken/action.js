@@ -11,13 +11,18 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 export const addToken = (walletId, tokenName, tokenCode, tokenDenomination) => (dispatch, getState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const tokenObj = {
+    currencyCode: tokenCode,
+    currencyName: tokenName,
+    multiplier: tokenDenomination
+  }
 
   dispatch(addTokenStart(walletId))
 
-  WALLET_API.addCustomToken(wallet, tokenName, tokenCode, tokenDenomination)
+  WALLET_API.addCustomToken(wallet, tokenObj)
     .then(() => {
       dispatch(addTokenSuccess())
-      Actions.pop()
+      Actions.walletList()
       // dispatch(UI_ACTIONS.refreshWallet(walletId))
     })
     .catch((e) => console.log(e))

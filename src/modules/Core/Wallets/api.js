@@ -84,19 +84,29 @@ export const getCoreEnabledTokens = (wallet: AbcCurrencyWallet) => {
   return wallet.getEnabledTokens()
 }
 
-export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenCode: string) => {
-  return wallet.addCustomToken(tokenCode)
-  .then((response) => {
-    return true
+export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
+  return wallet.addCustomToken(tokenObj)
+  .then(() => {
+    wallet.enableTokens([tokenObj.currencyCode])
+    .then(() => {
+      return
+    })
+    .catch((e) => {
+      console.log('addCoreCustomToken error: ', e)
+    })
   })
   .catch((e) => {
     console.log('addCoreCustomToken error: ', e)
   })
 }
 
-export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tokenCode: string, tokenMultiplier: string) => {
-  return addCoreCustomToken(wallet, tokenCode)
-  .then((response) => {
+export const addCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
+  const tokenName = tokenObj.currencyName
+  const tokenCode = tokenObj.currencyCode
+  const tokenMultiplier = tokenObj.multiplier
+
+  return addCoreCustomToken(wallet, tokenObj)
+  .then(() => {
     return getSyncedTokens(wallet)
     .then((currentTokens) => {
       const incomingToken = {
