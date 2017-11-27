@@ -140,7 +140,6 @@ export default class FlipInput extends Component<Props, State> {
   render () {
     const {primaryInfo, secondaryInfo} = this.props
     const {isToggled} = this.state
-    // console.log('this.state', this.state)
     return (
       <View style={[styles.container]}>
         <View style={styles.flipButton}>
