@@ -87,11 +87,11 @@ class FullWalletListRow extends Component<Props, State> {
     let symbolImageDarkMono = walletData.symbolImageDarkMono
     let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     let finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
-    
+
     // need to crossreference tokensEnabled with nativeBalances
     let enabledNativeBalances = {}
     const enabledTokens = walletData.tokensEnabled
-    
+
     for (let prop in walletData.nativeBalances) {
       if ((prop !== currencyCode) && enabledTokens[prop] && enabledTokens[prop].enabled) {
         enabledNativeBalances[prop] = walletData.nativeBalances[prop]

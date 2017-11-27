@@ -80,33 +80,27 @@ export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =
   // XXX need to hook up to Core -paulvp
    wallet.enableTokens(tokens)
 
-export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tokenCode: string, tokenDenomination: string) => {
-  let tokens = getSyncedTokens(wallet)
-
-  const incomingToken = {
-    enabled: true,
-    currencyCode: tokenCode,
-    currencyName: tokenName,
-    denominations: [
-      {
-        name: tokenCode,
-        multiplier: tokenDenomination
+export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tokenCode: string, tokenMultiplier: string) => {
+  return getSyncedTokens(wallet)
+    .then((currentTokens) => {
+      const incomingToken = {
+        enabled: true,
+        currencyCode: tokenCode,
+        currencyName: tokenName,
+        denominations: [
+          {
+            name: tokenCode,
+            multiplier: tokenMultiplier
+          }
+        ]
       }
-    ]
-  }
-  tokens[tokenCode] = incomingToken
-  setSyncedTokens(wallet, tokens)
-  .then(() => {
-    tokens
-  })
-}
+      currentTokens[tokenCode] = incomingToken
+      setSyncedTokens(wallet, currentTokens)
+      .then(() => {
+        return tokens
+      })
+    })
 
-export const getSyncedTokensTemp = (wallet: AbcCurrencyWallet) => {
-  return tokens
-}
-
-export const setSyncedTokensTemp = (wallet: AbcCurrencyWallet, tokens: any) => {
-  return tokens
 }
 
 export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {

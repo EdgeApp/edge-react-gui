@@ -5,7 +5,6 @@ export const ADD_TOKEN_SUCCESS = 'ADD_TOKEN_SUCCESS'
 import {Actions} from 'react-native-router-flux'
 
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as UI_ACTIONS from '../../Wallets/action.js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
@@ -25,11 +24,9 @@ export const addToken = (walletId, tokenName, tokenCode, tokenDenomination) => (
 }
 
 export const addTokenStart = () => ({
-  type: ADD_TOKEN_START,
-  data: null
+  type: ADD_TOKEN_START
 })
 
 export const addTokenSuccess = () => ({
-  type: ADD_TOKEN_SUCCESS,
-  data: null
+  type: ADD_TOKEN_SUCCESS
 })

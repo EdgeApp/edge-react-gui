@@ -27,50 +27,33 @@ class ManageTokens extends Component {
     }
   }
 
-  header () {
-    const {name} = this.props.guiWallet
-    return (
-      <Gradient style={[styles.headerRow]}>
-        <View style={[styles.headerTextWrap]}>
-          <View style={styles.leftArea}>
-          <Text style={styles.headerText}>
-            {name}
-          </Text>
-        </View>
-        </View>
-      </Gradient>
-    )
-  }
-
   componentDidMount () {
     let enabledTokens = []
-    const { id } = this.props.guiWallet
-    // const walletEnabledTokens = this.props.getEnabledTokensList(id)
-    /*for (let prop in walletEnabledTokens) {
-      let tokenValues = walletEnabledTokens[prop]
+    const { tokensEnabled } = this.props.guiWallet
+    for (let prop in tokensEnabled) {
+      let tokenValues = tokensEnabled[prop]
       enabledTokens.push(tokenValues)
     }
     let sortedEnabledTokens = enabledTokens.sort((a, b) => {
-      return a.currencyCode - b.currencyCode
+      return b.currencyCode - a.currencyCode
     })
     this.setState({
       enabledTokens: sortedEnabledTokens
-    })*/
+    })
   }
 
   toggleToken = (currencyCode) => {
     let enabledTokens = []
-    const { id } = this.props.guiWallet
-    const walletEnabledTokens = this.props.getEnabledTokensList(id)
-    for (let prop in walletEnabledTokens) {
+    const { tokensEnabled } = this.props.guiWallet
+    for (let prop in tokensEnabled) {
       if (prop === currencyCode) {
-        walletEnabledTokens[prop].enabled = !walletEnabledTokens[prop].enabled
+        tokensEnabled[prop].enabled = !tokensEnabled[prop].enabled
       }
-      let tokenValues = walletEnabledTokens[prop]
+      let tokenValues = tokensEnabled[prop]
       enabledTokens.push(tokenValues)
     }
     let sortedEnabledTokens = enabledTokens.sort((a, b) => {
-      return a.currencyCode - b.currencyCode
+      return b.currencyCode - a.currencyCode
     })
     this.setState({
       enabledTokens: sortedEnabledTokens
@@ -78,8 +61,8 @@ class ManageTokens extends Component {
   }
 
   saveEnabledTokenList = () => {
-    const { id } = this.props.guiWallet
-    const walletEnabledTokens = this.props.getEnabledTokensList(id)
+    const { tokensEnabled, id } = this.props.guiWallet
+    const walletEnabledTokens = tokensEnabled
     for (let item of this.state.enabledTokens) {
       walletEnabledTokens[item.currencyCode].enabled = item.enabled
     }
@@ -88,6 +71,7 @@ class ManageTokens extends Component {
   }
 
   render () {
+
     return (
       <View style={[styles.manageTokens]}>
         <Gradient style={styles.gradient} />
@@ -119,6 +103,22 @@ class ManageTokens extends Component {
           </View>
         </View>
       </View>
+    )
+  }
+
+
+  header () {
+    const {name} = this.props.guiWallet
+    return (
+      <Gradient style={[styles.headerRow]}>
+        <View style={[styles.headerTextWrap]}>
+          <View style={styles.leftArea}>
+          <Text style={styles.headerText}>
+            {name}
+          </Text>
+        </View>
+        </View>
+      </Gradient>
     )
   }
 

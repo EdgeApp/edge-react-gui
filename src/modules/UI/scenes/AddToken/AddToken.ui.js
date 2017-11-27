@@ -11,7 +11,7 @@ import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import * as UTILS from '../../../utils.js'
-import * as ACTIONS from './action.js'
+import * as ADD_TOKEN_ACTIONS from './action.js'
 
 
 class AddToken extends Component {
@@ -19,7 +19,7 @@ class AddToken extends Component {
     super(props)
     this.state = {
       nameInput: 'CapCoin',
-      currencyCodeInput: 'CAP',
+      currencyCodeInput: 'CAP1',
       denominationInput: 1
     }
   }
@@ -111,7 +111,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
-  addToken: (name: string, currencyCode: string, denomination: string) => dispatch(ACTIONS.addToken(name, currencyCode, denomination))
+  addToken: (walletId: string, name: string, currencyCode: string, multiplier: string) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, name, currencyCode, multiplier))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)
