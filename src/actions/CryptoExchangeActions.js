@@ -136,12 +136,14 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, ge
 
 export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) => {
   const state = getState()
-  if (!state.cryptoExchange.transaction) {
-    console.warn('NO VALID TRANSACTION')
-    // call make spend and display error/
+  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, state.cryptoExchange.fromWallet.id)
+  if (!srcWallet) {
     return
   }
-  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, state.cryptoExchange.fromWallet.id)
+  if (!state.cryptoExchange.transaction) {
+    getShiftTransaction(state.cryptoExchange.fromWallet, state.cryptoExchange.toWallet)
+    return
+  }
   if (srcWallet) {
     try {
       const signedTransaction = await WALLET_API.signTransaction(srcWallet, state.cryptoExchange.transaction)
@@ -154,8 +156,10 @@ export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) =
         Alert.alert(strings.enUS['exchange_succeeded'], strings.enUS['exchanges_may_take_minutes'])
       },1)
     } catch (error) {
-      console.log(error.message)
-      console.warn(error)
+      dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR,error.message))
+      setTimeout(() => {
+        Alert.alert(strings.enUS['exchange_failed'], error.message)
+      },1)
     }
     return
   }

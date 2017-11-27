@@ -25,6 +25,7 @@ const initialState = {
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
+  shiftTransactionError: null,
   changeWallet: Constants.NONE,
   transaction: null
 }
@@ -120,7 +121,15 @@ function cryptoExchangerReducer (state = initialState, action) {
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
     return {...state, transaction: null, insufficientError: false}
   case Constants.SHIFT_COMPLETE:
-    return {...state, transaction: null, confirmTransactionModalVisible: false}
+    return {...state,
+      transaction: null,
+      confirmTransactionModalVisible: false,
+      fromNativeAmount: '0',
+      toNativeAmount:'0',
+      fromDisplayAmount: '0',
+      toDisplayAmount: '0'}
+  case Constants.SHIFT_ERROR:
+    return {...state, confirmTransactionModalVisible: false, shiftTransactionError: action.data}
   case Constants.CLOSE_CRYPTO_EXC_CONF_MODAL:
     return {...state, confirmTransactionModalVisible: false}
   case Constants.OPEN_CRYPTO_EXC_CONF_MODAL:

@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {bns} from 'biggystring'
 import {
   ActivityIndicator,
@@ -69,7 +70,7 @@ type State = {
 
 type TransactionListTx = any
 
-const SHOW_BALANCE_TEXT = strings.enUS['string_show_balance']
+const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const REQUEST_TEXT      = strings.enUS['fragment_request_subtitle']
 const SEND_TEXT         = strings.enUS['fragment_send_subtitle']
 const SENT_TEXT         = strings.enUS['fragment_transaction_list_sent_prefix']

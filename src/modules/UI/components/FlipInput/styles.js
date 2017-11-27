@@ -1,3 +1,5 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -51,22 +53,22 @@ export const top = StyleSheet.create({
     borderBottomWidth: 1
   },
   symbol: {
-    flex: 3,
-    fontSize: 30,
+    flex: 2,
+    fontSize: 15,
     color: THEME.COLORS.WHITE,
     textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   amount: {
     flex: 6,
-    fontSize: 32,
+    fontSize: 30,
     color: THEME.COLORS.WHITE,
     textAlign: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currencyCode: {
-    flex: 3,
-    fontSize: 17,
+    flex: 2,
+    fontSize: 10,
     lineHeight: 20,
     color: THEME.COLORS.WHITE,
     textAlign: 'right',

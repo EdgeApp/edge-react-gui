@@ -60,6 +60,7 @@
 		7889781B11C945A7A235E1B8 /* libAbcCoreJsUi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3359707856FB42188A179E0E /* libAbcCoreJsUi.a */; };
 		79D627E0AF47498FB03B5D40 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 581BD78CAE5D4A1ABFD0B441 /* Octicons.ttf */; };
 		80E39B4427094BD098E6CB68 /* libRNFastCrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D55A245786234924ABF5C5DA /* libRNFastCrypto.a */; };
+		823813F3F2D141698C85559A /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 38CF5140901F4B05B5C578A1 /* libRCTBEEPickerManager.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		85B89D30F0DB45F7B93DB2C1 /* SourceSansPro-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21B066BA09454AA2818C01A2 /* SourceSansPro-Black.ttf */; };
 		8B47B4F58613478BA6774CC9 /* libRNRandomBytes.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C97FCA27CAF047368D3B0458 /* libRNRandomBytes.a */; };
@@ -430,6 +431,13 @@
 			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
 			remoteInfo = RNSound;
 		};
+		B3478FBD1FC60E0000FDA94E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2BF0E6DD44C34212B790AA9C /* RCTBEEPickerManager.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 17D41E551D7EE0CA0031415E;
+			remoteInfo = RCTBEEPickerManager;
+		};
 		DA6569461F17436100226952 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -550,6 +558,7 @@
 		255BC1B71F1EC87C008C57CC /* Secp256k1.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Secp256k1.framework; sourceTree = "<group>"; };
 		26236CD03CA74A02860A63F8 /* libTcpSockets.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libTcpSockets.a; sourceTree = "<group>"; };
 		2A2684F551B44D0AB6288C90 /* RCTContacts.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTContacts.xcodeproj; path = "../node_modules/react-native-contacts/ios/RCTContacts.xcodeproj"; sourceTree = "<group>"; };
+		2BF0E6DD44C34212B790AA9C /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* edge-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "edge-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* edge-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "edge-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D32630C043E4462A94ED904 /* SplashScreen.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = SplashScreen.xcodeproj; path = "../node_modules/react-native-splash-screen/ios/SplashScreen.xcodeproj"; sourceTree = "<group>"; };
@@ -557,6 +566,7 @@
 		3359707856FB42188A179E0E /* libAbcCoreJsUi.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libAbcCoreJsUi.a; sourceTree = "<group>"; };
 		35B7C9406B7E4DCDACBBFCAC /* SourceSansPro-SemiboldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-SemiboldItalic.ttf"; path = "../src/assets/fonts/SourceSansPro-SemiboldItalic.ttf"; sourceTree = "<group>"; };
 		3778FEBC546640FEB6B32567 /* libReactNativePermissions.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libReactNativePermissions.a; sourceTree = "<group>"; };
+		38CF5140901F4B05B5C578A1 /* libRCTBEEPickerManager.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTBEEPickerManager.a; sourceTree = "<group>"; };
 		3B43774D8E1D41F0A625BA1B /* SourceSansPro-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "SourceSansPro-Italic.ttf"; path = "../src/assets/fonts/SourceSansPro-Italic.ttf"; sourceTree = "<group>"; };
 		3EB5B764809C6E2BDDD47714 /* libPods-edge.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-edge.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4071F13220774C1E884D7CE6 /* RNFastCrypto.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFastCrypto.xcodeproj; path = "../node_modules/react-native-fast-crypto/ios/RNFastCrypto.xcodeproj"; sourceTree = "<group>"; };
@@ -671,6 +681,7 @@
 				8B47B4F58613478BA6774CC9 /* libRNRandomBytes.a in Frameworks */,
 				63BDB00177514EDCBF39D1D5 /* libRNShare.a in Frameworks */,
 				7889781B11C945A7A235E1B8 /* libAbcCoreJsUi.a in Frameworks */,
+				823813F3F2D141698C85559A /* libRCTBEEPickerManager.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1068,6 +1079,7 @@
 				9FAF874E8B104A9B88AD9E6C /* RNRandomBytes.xcodeproj */,
 				24A1BC4D1FC647CC8F52B48A /* RNShare.xcodeproj */,
 				D508A63DA69244B691ABB3A5 /* AbcCoreJsUi.xcodeproj */,
+				2BF0E6DD44C34212B790AA9C /* RCTBEEPickerManager.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1117,6 +1129,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		B3478FBA1FC60DFF00FDA94E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3478FBE1FC60E0000FDA94E /* libRCTBEEPickerManager.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DA600D001F8F1D57001F3096 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -1140,6 +1160,7 @@
 				C97FCA27CAF047368D3B0458 /* libRNRandomBytes.a */,
 				E938232DFFFF4A8283C2F074 /* libRNShare.a */,
 				3359707856FB42188A179E0E /* libAbcCoreJsUi.a */,
+				38CF5140901F4B05B5C578A1 /* libRCTBEEPickerManager.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1338,6 +1359,10 @@
 				{
 					ProductGroup = 5E91572E1DD0AC6500FF2AA8 /* Products */;
 					ProjectRef = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
+				},
+				{
+					ProductGroup = B3478FBA1FC60DFF00FDA94E /* Products */;
+					ProjectRef = 2BF0E6DD44C34212B790AA9C /* RCTBEEPickerManager.xcodeproj */;
 				},
 				{
 					ProductGroup = 6E1090F11EB0512100947A0B /* Products */;
@@ -1774,6 +1799,13 @@
 			remoteRef = 980AF5C81F9907460014FACB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		B3478FBE1FC60E0000FDA94E /* libRCTBEEPickerManager.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTBEEPickerManager.a;
+			remoteRef = B3478FBD1FC60E0000FDA94E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		DA6569471F17436100226952 /* libthird-party.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2128,12 +2160,14 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 				);
 				INFOPLIST_FILE = edgeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2175,12 +2209,14 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 				);
 				INFOPLIST_FILE = edgeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2230,6 +2266,7 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2280,6 +2317,7 @@
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
 					"$(SRCROOT)/../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen",
 					"$(SRCROOT)/../../../react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -2329,11 +2367,13 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 				);
 				INFOPLIST_FILE = "edge-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2385,11 +2425,13 @@
 					"$(SRCROOT)/../node_modules/react-native-randombytes",
 					"$(SRCROOT)/../node_modules/react-native-share/ios",
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
+					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 				);
 				INFOPLIST_FILE = "edge-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2426,6 +2468,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.edge-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2450,6 +2493,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
