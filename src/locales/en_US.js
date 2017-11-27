@@ -816,6 +816,7 @@ const strings = {
   fragment_transaction_receive_past: 'Received',
   fragment_transaction_send_past: 'Sent',
   fragment_transaction_income: 'Income',
+  fragment_transaction_expense: 'Expense',    
   fragment_transaction_transfer: 'Transfer',
   fragment_transaction_exchange: 'Exchange',
   transactions_list_date_jan: 'Jan',
@@ -834,6 +835,7 @@ const strings = {
   // Transaction Details Page
   title_Transaction_Details: 'Transaction Details',
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
+  tx_detail_picker_title: 'Please choose a category:',
 
   // Not new to react-gui (I don't think), not sure why at end of JSON
   password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
@@ -869,6 +871,7 @@ const strings = {
   fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
   string_confirm: 'Confirm',
   exchange_succeeded: 'Exchange Succeeded',
+  exchange_failed: 'Exchange Failed',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes'
 }
 
