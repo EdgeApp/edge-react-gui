@@ -1,4 +1,6 @@
-import React, {Component} from 'react'
+// @flow
+
+import React, {Component, type Node} from 'react'
 import strings from '../../../../locales/default'
 import {
   View,
@@ -12,7 +14,22 @@ import Modal from 'react-native-modal'
 import T from '../FormattedText'
 import {border as b} from '../../../utils'
 
-export default class StylizedModal extends Component {
+type Props = {
+  headerText: string,
+  headerTextStyle?: {},
+  headerSubtext?: string,
+  visibilityBoolean: boolean,
+  featuredIcon: Node,
+  modalMiddle: Node,
+  modalMiddleStyle?: {},
+  modalBottom: Node,
+  modalBottomStyle?: {},
+  onExitButtonFxn: ?() => void,
+  style?: any
+}
+type State = {}
+
+export default class StylizedModal extends Component<Props, State> {
   render () {
     const {headerText, headerSubtext} = this.props
     const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
@@ -21,45 +38,49 @@ export default class StylizedModal extends Component {
         <View style={[styles.modalHeaderIconWrapBottom]}>
           {this.props.featuredIcon}
         </View>
+
         <View style={[styles.visibleModal]}>
-          <View style={[styles.exitRow, b('green')]}>
+
+          <View style={[styles.exitRow]}>
             <TouchableOpacity
               style={[styles.exitButton, b()]}
-              onPress={this.props.onExitButtonFxn}
-            >
+              onPress={this.props.onExitButtonFxn}>
               <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
             </TouchableOpacity>
           </View>
-          <View style={[styles.modalBox, b('red')]}>
+
+          <View style={[styles.modalBox]}>
             <View style={[styles.modalContent]}>
-              <View style={[styles.modalBody, b('purple')]}>
-                <View style={[styles.modalTopTextWrap, b('blue')]}>
-                  <T style={[styles.modalTopText, b('yellow')]}>
+              <View style={[styles.modalBody]}>
+
+                <View style={[styles.modalTopTextWrap]}>
+                  <T style={[styles.modalTopText, this.props.headerTextStyle]}>
                     {strings.enUS[headerText]}
                   </T>
-                  {
-                    this.props.headerSubtext
-                    && <T style={[styles.modalTopSubtext, b('green')]}>
+
+                  {this.props.headerSubtext
+                    && <T style={[styles.modalTopSubtext]}>
                       {headerSubtext ? strings.enUS[headerSubtext] : ''}
                     </T>
                   }
-
                 </View>
-                {
-                  this.props.modalMiddle
-                  && <View style={[styles.modalMiddle, b('brown')]}>
+
+                {this.props.modalMiddle
+                  && <View style={[styles.modalMiddle, this.props.modalMiddleStyle]}>
                     {this.props.modalMiddle}
                   </View>
                 }
-                {
-                  this.props.modalBottom
-                  && <View style={[styles.modalBottom, b('green')]}>
+
+                {this.props.modalBottom
+                  && <View style={[styles.modalBottom, this.props.modalBottomStyle]}>
                     {this.props.modalBottom}
                   </View>
                 }
+
               </View>
             </View>
           </View>
+
         </View>
 
       </Modal>
