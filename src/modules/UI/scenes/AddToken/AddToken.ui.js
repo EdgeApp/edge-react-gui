@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {
-  View
+  View,
+  ActivityIndicator
 } from 'react-native'
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
@@ -73,6 +74,8 @@ class AddToken extends Component {
               text={'Save'}
               style={styles.saveButton}
               onPressFunction={this._onSave}
+              processingElement={<ActivityIndicator />}
+              processingFlag={this.props.addTokenPending}
             />
           </View>
         </View>
@@ -108,6 +111,7 @@ class AddToken extends Component {
 const mapStateToProps = (state) => ({
   // context: CORE_SELECTORS.getContext(state),
   // account: CORE_SELECTORS.getAccount(state)
+  addTokenPending: state.ui.wallets.addTokenPending
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,

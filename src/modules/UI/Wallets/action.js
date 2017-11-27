@@ -9,6 +9,10 @@ export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
 export const SELECT_WALLET_ID = PREFIX + 'SELECT_WALLET_ID'
 export const SELECT_CURRENCY_CODE = PREFIX + 'SELECT_CURRENCY_CODE'
 
+export const MANAGE_TOKENS = 'MANAGE_TOKEN'
+export const MANAGE_TOKENS_START = 'MANAGE_TOKEN_START'
+export const MANAGE_TOKENS_SUCCESS = 'MANAGE_TOKEN_SUCCESS'
+
 import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
@@ -70,10 +74,12 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
 }
 
 export const setEnabledTokens = (walletId: string, enabledTokens: any) => (dispatch: any, getState: any) => {
+  dispatch(setTokensStart())
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   WALLET_API.setSyncedTokens(wallet, enabledTokens)
   .then((tokens) => {
+    dispatch(setTokensSuccess())
     return tokens
   })
 }
@@ -87,3 +93,23 @@ export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: 
     dispatch(upsertWallet(wallet))
   })
 }
+
+export const getCoreEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
+  const state = getState()
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  WALLET_API.getCoreEnabledTokens(wallet)
+  .then((enabledTokens) => {
+    return enabledTokens
+  })
+  .catch((e) => {
+    console.log('getCoreEnabledTokens error: ' , e)
+  })
+}
+
+export const setTokensStart = () => ({
+  type: MANAGE_TOKENS_START
+})
+
+export const setTokensSuccess = () => ({
+  type: MANAGE_TOKENS_SUCCESS
+})

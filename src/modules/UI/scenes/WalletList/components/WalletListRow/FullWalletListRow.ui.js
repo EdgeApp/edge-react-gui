@@ -17,7 +17,8 @@ import WalletListTokenRow from './WalletListTokenRowConnector.js'
 import {border as b, cutOffText, truncateDecimals, decimalOrZero} from '../../../../../utils.js'
 import {
   selectWallet,
-  getEnabledTokens
+  getEnabledTokens,
+  getCoreEnabledTokens
 } from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
@@ -72,6 +73,7 @@ class FullWalletListRow extends Component<Props, State> {
   componentWillMount () {
     const walletData = this.props.data.item
     this.props.getEnabledTokensList(walletData.id)
+    this.props.getCoreEnabledTokens(walletData.id)
   }
 
   render () {
@@ -173,6 +175,7 @@ const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalPr
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
   getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
+  getCoreEnabledTokens: (walletId) => dispatch(getCoreEnabledTokens(walletId))
 })
 export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 

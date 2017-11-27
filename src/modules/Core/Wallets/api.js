@@ -80,9 +80,24 @@ export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =
   // XXX need to hook up to Core -paulvp
    wallet.enableTokens(tokens)
 
+export const getCoreEnabledTokens = (wallet: AbcCurrencyWallet) => {
+  return wallet.getEnabledTokens()
+}
+
+export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenCode: string) => {
+  return wallet.addCustomToken(tokenCode)
+  .then((response) => {
+    return true
+  })
+  .catch((e) => {
+    console.log('addCoreCustomToken error: ', e)
+  })
+}
+
 export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tokenCode: string, tokenMultiplier: string) => {
-  enableTokens(wallet, [tokenCode])
-  return getSyncedTokens(wallet)
+  return addCoreCustomToken(wallet, tokenCode)
+  .then((response) => {
+    return getSyncedTokens(wallet)
     .then((currentTokens) => {
       const incomingToken = {
         enabled: true,
@@ -98,10 +113,13 @@ export const addCustomToken = (wallet: AbcCurrencyWallet, tokenName: string, tok
       currentTokens[tokenCode] = incomingToken
       setSyncedTokens(wallet, currentTokens)
       .then(() => {
-        return tokens
+        return true
       })
     })
-
+  })
+  .catch((e) => {
+    console.log(e)
+  })
 }
 
 export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {

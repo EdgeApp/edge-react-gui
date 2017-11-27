@@ -3,7 +3,6 @@ import scan from './Scan/reducer'
 import sendConfirmation from './SendConfirmation/reducer'
 import transactionList from './TransactionList/reducer'
 import transactionDetails from './TransactionDetails/reducer'
-import addToken from './AddToken/reducer.js'
 import walletList from './WalletList/reducer'
 import walletTransferListReducer from './WalletTransferList/reducer'
 import request from './Request/reducer.js'
@@ -23,7 +22,6 @@ export const scenes = combineReducers({
   sendConfirmation,
   transactionList,
   transactionDetails,
-  addToken,
   controlPanel,
   walletList,
   walletTransferList: walletTransferListReducer,

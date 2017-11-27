@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {
   View,
-  FlatList
+  FlatList,
+  ActivityIndicator
 } from 'react-native'
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
@@ -98,6 +99,8 @@ class ManageTokens extends Component {
                 text={'Save'}
                 style={styles.saveButton}
                 onPressFunction={this.saveEnabledTokenList}
+                processingElement={<ActivityIndicator />}
+                processingFlag={this.props.manageTokenPending}
               />
             </View>
           </View>
@@ -129,9 +132,9 @@ class ManageTokens extends Component {
 }
 
 const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
-
+  const manageTokensPending = state.ui.wallets.manageTokensPending
   return {
-
+    manageTokensPending
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
