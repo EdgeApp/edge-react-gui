@@ -793,6 +793,7 @@ const strings = {
   addtoken_name_input_text: 'Token Name',
   addtoken_currency_code_input_text: 'Token Code',
   addtoken_contract_address_input_text: 'Contract Address',
+  addtoken_default_error_message: 'Please enter valid information',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   fragment_wallets_sort: 'Sort',
   fragment_wallets_this_wallet: 'this wallet?', // needs work

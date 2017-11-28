@@ -64,7 +64,14 @@ export const styles = {
   decimalPlacesArea: {
     height: 70
   },
-
+  errorMessageArea: {
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorMessageText: {
+    color: THEME.COLORS.ACCENT_RED
+  },
   buttonsArea: {
     marginTop: 16,
     height: 52,
