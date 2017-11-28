@@ -9,6 +9,7 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SETTINGS_ACTIONS from '../Settings/action.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_ACTIONS from '../../Wallets/action.js'
 
 export const addToken = (walletId, tokenObj) => (dispatch, getState) => {
   const state = getState()
@@ -27,6 +28,7 @@ export const addToken = (walletId, tokenObj) => (dispatch, getState) => {
           .then(() => {
             dispatch(setTokenSettings(tokenObj))
             dispatch(addTokenSuccess())
+            dispatch(UI_ACTIONS.refreshWallet(walletId))
             Actions.walletList()
           })
         })

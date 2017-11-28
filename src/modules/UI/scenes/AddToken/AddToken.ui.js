@@ -21,7 +21,7 @@ class AddToken extends Component {
       currencyName: '',
       currencyCode: '',
       contractAddress: '',
-      multiplier: '1000000000000000000'
+      decimalPlaces: ''
     }
   }
 
@@ -67,6 +67,17 @@ class AddToken extends Component {
                 autoCorrect={false}
               />
             </View>
+            <View style={[styles.decimalPlacesArea ,UTILS.border()]}>
+              <FormField
+                style={[styles.decimalPlacesInput]}
+                value={this.state.decimalPlaces}
+                onChangeText={this.onChangeDecimalPlaces}
+                label={s.strings.addtoken_denomination_input_text}
+                returnKeyType={'done'}
+                autoCorrect={false}
+                keyboardType={'numeric'}
+              />
+            </View>
           </View>
           <View style={[styles.buttonsArea, UTILS.border()]}>
             <PrimaryButton
@@ -94,6 +105,12 @@ class AddToken extends Component {
     })
   }
 
+  onChangeDecimalPlaces = (input) => {
+    this.setState({
+      decimalPlaces: input
+    })
+  }
+
   onChangeContractAddress = (input) => {
     this.setState({
       contractAddress: input
@@ -102,7 +119,10 @@ class AddToken extends Component {
 
   _onSave = () => {
     const {walletId} = this.props
-    const tokenObj = this.state
+    const numberOfDecimalPlaces = parseInt(this.state.decimalPlaces)
+    const multiplier = '1' + '0'.repeat(numberOfDecimalPlaces)
+    let tokenObj = this.state
+    tokenObj.multiplier = multiplier
     this.props.addToken(walletId, tokenObj)
   }
 }

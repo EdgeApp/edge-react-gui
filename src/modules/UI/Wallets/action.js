@@ -82,6 +82,7 @@ export const setEnabledTokens = (walletId: string, enabledTokens: any) => (dispa
   WALLET_API.setSyncedTokens(wallet, enabledTokens)
   .then((tokens) => {
     dispatch(setTokensSuccess())
+    dispatch(refreshWallet(walletId))
     return tokens
   })
 }
