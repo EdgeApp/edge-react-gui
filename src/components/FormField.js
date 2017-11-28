@@ -35,7 +35,8 @@ class FormField extends Component<Props, State> {
     autoFocus: false,
     forceFocus: false,
     returnKeyType: 'go',
-    label: ''
+    label: '',
+    keyboardType: 'default'
   }
   componentWillMount () {
     const secure = this.props.secureTextEntry
@@ -73,10 +74,11 @@ class FormField extends Component<Props, State> {
         forceFocus={this.props.forceFocus}
         onFocus={this.props.onFocus}
         onBlur={this.props.onBlur}
-        autoCapitalize={'none'}
+        autoCapitalize={this.props.autoCapitalize}
         onSubmitEditing={this.onSubmitEditing.bind(this)}
         value={this.props.value}
-        />
+        keyboardType={this.props.keyboardType}
+      />
     )
   }
   onSubmitEditing = () => {

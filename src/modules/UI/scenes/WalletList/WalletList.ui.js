@@ -42,8 +42,8 @@ const options = [
     value: 'sort',
     syntax: strings.enUS['fragment_wallets_sort']
   },{
-    value: 'addToken',
-    syntax: strings.enUS['fragmet_wallets_addtoken_option']
+    value: 'manageTokens',
+    syntax: strings.enUS['fragmet_wallets_managetokens_option']
   },{
     value: 'archive'
   },{
@@ -106,8 +106,9 @@ export default class WalletList extends Component<any, {
         this.enableSorting()
       }
       break
-    case options[2].value: // 'addToken'
-      this.props.walletRowOption(walletId, 'addToken')
+    case options[2].value: // 'manageTokens'
+      console.log('executing option 2')
+      Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
       break
     case options[3].value: // 'archive'
       if (!this.props.walletsp[walletId].archived) {

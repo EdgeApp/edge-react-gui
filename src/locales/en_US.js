@@ -787,6 +787,14 @@ const strings = {
   fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
   fragmet_wallets_addtoken_option: 'Add Token',
+  fragmet_wallets_managetokens_option: 'Manage Tokens',
+  managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
+  addtoken_top_instructions: 'To add a token, please fill out the following form and press \'Save\'',
+  addtoken_name_input_text: 'Token Name',
+  addtoken_currency_code_input_text: 'Token Code',
+  addtoken_contract_address_input_text: 'Contract Address',
+  addtoken_default_error_message: 'Please enter valid information',
+  addtoken_denomination_input_text: 'Number of Decimal Places',
   fragment_wallets_sort: 'Sort',
   fragment_wallets_this_wallet: 'this wallet?', // needs work
   fragment_select_wallet_header_title: 'Choose one of the following as selected wallet:',
@@ -810,7 +818,7 @@ const strings = {
   fragment_transaction_receive_past: 'Received',
   fragment_transaction_send_past: 'Sent',
   fragment_transaction_income: 'Income',
-  fragment_transaction_expense: 'Expense',    
+  fragment_transaction_expense: 'Expense',
   fragment_transaction_transfer: 'Transfer',
   fragment_transaction_exchange: 'Exchange',
   transactions_list_date_jan: 'Jan',
@@ -857,7 +865,7 @@ const strings = {
 
   //Exchange
   title_confirm_excahnge: 'Confirm exchange',
-  string_from_exchange_info: 'Your are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
+  string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
   string_fee: 'Fee: ',
   string_TBD: 'TBD',
@@ -866,7 +874,9 @@ const strings = {
   string_confirm: 'Confirm',
   exchange_succeeded: 'Exchange Succeeded',
   exchange_failed: 'Exchange Failed',
-  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes'
+  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
+  could_not_select: 'Could Not Select Wallet',
+  token_not_supported: 'Token is not supported by exchange'
 }
 
 export default strings

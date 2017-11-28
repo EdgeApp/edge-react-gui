@@ -5,8 +5,8 @@ import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import {selectWallet} from '../../../../Wallets/action'
 
 const mapStateToProps = (state, ownProps) => {
-  const currencyCode:string = ownProps.currencyCode
-  const displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  let currencyCode:string = ownProps.currencyCode
+  let displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
   return {
     displayDenomination

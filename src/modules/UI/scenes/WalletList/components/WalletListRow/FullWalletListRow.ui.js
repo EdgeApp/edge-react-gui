@@ -15,12 +15,15 @@ import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
 import {border as b, cutOffText, truncateDecimals, decimalOrZero} from '../../../../../utils.js'
-import {selectWallet} from '../../../../Wallets/action.js'
+import {
+  selectWallet,
+  getEnabledTokens,
+  getCoreEnabledTokens
+} from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
 import type {GuiDenomination} from '../../../../../../types'
 import type {State as ReduxState, Dispatch} from '../../../../../ReduxTypes'
-
 const DIVIDE_PRECISION = 18
 
 export type FullWalletRowProps = {
@@ -34,7 +37,8 @@ type InternalProps = {
 }
 
 type DispatchProps = {
-  selectWallet: (walletId: string, currencyCode: string) => any
+  selectWallet: (walletId: string, currencyCode: string) => any,
+  getEnabledTokensList: (walletId: string) => any
 }
 
 type Props = FullWalletRowProps & InternalProps & DispatchProps
@@ -66,6 +70,12 @@ class FullWalletListRow extends Component<Props, State> {
     Actions.transactionList({params: 'walletList'})
   }
 
+  componentWillMount () {
+    const walletData = this.props.data.item
+    this.props.getEnabledTokensList(walletData.id)
+    this.props.getCoreEnabledTokens(walletData.id)
+  }
+
   render () {
     const {data} = this.props
     const walletData = data.item
@@ -79,6 +89,17 @@ class FullWalletListRow extends Component<Props, State> {
     let symbolImageDarkMono = walletData.symbolImageDarkMono
     let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
     let finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
+
+    // need to crossreference tokensEnabled with nativeBalances
+    let enabledNativeBalances = {}
+    const enabledTokens = walletData.tokensEnabled
+
+    for (let prop in walletData.nativeBalances) {
+      if ((prop !== currencyCode) && enabledTokens[prop] && enabledTokens[prop].enabled) {
+        enabledNativeBalances[prop] = walletData.nativeBalances[prop]
+      }
+    }
+
     return (
       <View style={[{width: platform.deviceWidth}, b()]}>
           <View>
@@ -119,7 +140,7 @@ class FullWalletListRow extends Component<Props, State> {
                 <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
               </View>
             </TouchableHighlight>
-            {this.renderTokenRow(id, walletData.nativeBalances, this.props.active)}
+            {this.renderTokenRow(id, enabledNativeBalances, this.props.active)}
           </View>
       </View>
     )
@@ -144,13 +165,17 @@ class FullWalletListRow extends Component<Props, State> {
 const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
+  const wallets = state.ui.wallets.byId
   return {
     displayDenomination,
-    exchangeDenomination
+    exchangeDenomination,
+    wallets
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode))
+  selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
+  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
+  getCoreEnabledTokens: (walletId) => dispatch(getCoreEnabledTokens(walletId))
 })
 export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 

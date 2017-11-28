@@ -70,6 +70,30 @@ export const selectedCurrencyCode = (state: string = '', action: any) => {
   }
 }
 
+const addTokenPending = (state = false, action) => {
+  const type = action.type
+  switch (type) {
+  case ACTION.ADD_TOKEN_START :
+    return true
+  case ACTION.ADD_TOKEN_SUCCESS :
+    return false
+  default:
+    return state
+  }
+}
+
+const manageTokensPending = (state = false, action) => {
+  const type = action.type
+  switch (type) {
+  case ACTION.MANAGE_TOKENS_START :
+    return true
+  case ACTION.MANAGE_TOKENS_SUCCESS :
+    return false
+  default:
+    return state
+  }
+}
+
 function schema (wallet: any): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
@@ -82,6 +106,7 @@ function schema (wallet: any): GuiWallet {
   const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
+  const tokensEnabled: any = wallet.tokensEnabled || {}
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }
@@ -135,7 +160,8 @@ function schema (wallet: any): GuiWallet {
     allDenominations,
     symbolImage,
     symbolImageDarkMono,
-    metaTokens
+    metaTokens,
+    tokensEnabled
   )
 
   return newWallet
@@ -146,5 +172,7 @@ export const wallets = combineReducers({
   activeWalletIds,
   archivedWalletIds,
   selectedWalletId,
-  selectedCurrencyCode
+  selectedCurrencyCode,
+  addTokenPending,
+  manageTokensPending
 })
