@@ -32,7 +32,7 @@ import RenameWalletButtons from './components/RenameWalletButtonsConnector'
 import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
-
+import * as Constants from '../../../../constants/indexConstants.js'
 
 const options = [
   {
@@ -76,6 +76,10 @@ export default class WalletList extends Component<any, {
       fullListExists: true,
       balanceBoxVisible: true
     }
+  }
+
+  shouldComponentUpdate (nextProps: any) {
+    return (nextProps.sceneName === Constants.WALLET_LIST)
   }
 
   componentDidMount () {

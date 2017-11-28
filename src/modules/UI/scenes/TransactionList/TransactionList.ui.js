@@ -38,6 +38,7 @@ from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as Constants from '../../../../constants/indexConstants'
 
 type Props = {
+  sceneName: string,
   getTransactions: (walletId: string, currencyCode: string) => void,
   updateExchangeRates: () => void,
   setContactList: (contacts: Array<any>) => void,
@@ -90,6 +91,10 @@ export default class TransactionList extends Component<Props, State> {
     completedTx: [],
     dataSrc: [],
     width: undefined
+  }
+
+  shouldComponentUpdate (nextProps: Props) {
+    return (nextProps.sceneName === Constants.TRANSACTION_LIST)
   }
 
   componentDidMount () {

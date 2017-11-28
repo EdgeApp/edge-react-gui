@@ -14,6 +14,7 @@ import {addCurrencyPlugin} from './UI/Settings/action.js'
 import {addUsernames} from './Core/Context/action'
 import {setLocaleInfo} from './UI/locale/action'
 import {enableScan, disableScan} from './UI/scenes/Scan/action'
+import {dispatchFocusRoute} from '../actions/indexActions.js'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
@@ -27,6 +28,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dispatchDisableScan: () => {
     return dispatch(disableScan())
+  },
+  dispatchFocusRoute: (sceneName: string) => {
+    return dispatch(dispatchFocusRoute(sceneName))
   },
   addExchangeTimer: () => dispatch(addExchangeTimer()),
   addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),

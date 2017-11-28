@@ -38,6 +38,7 @@ const mapStateToProps = (state) => {
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   return {
+    sceneName: state.routes.scene.sceneName,
     displayDenomination,
     updatingBalance: false,
     transactions,

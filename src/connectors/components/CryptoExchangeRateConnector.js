@@ -12,6 +12,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
   const exchangeRateString = insufficient ? 'insufficient funds' : '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
 
   return {
+    sceneName: state.routes.scene.sceneName,
     style: ownProps.style,
     exchangeRate: exchangeRateString,
     insufficient
