@@ -21,7 +21,8 @@ class AddToken extends Component {
       currencyName: '',
       currencyCode: '',
       contractAddress: '',
-      decimalPlaces: ''
+      decimalPlaces: '',
+      errorMessage: ''
     }
   }
 
@@ -79,6 +80,9 @@ class AddToken extends Component {
               />
             </View>
           </View>
+          <View style={styles.errorMessageArea}>
+            <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
+          </View>
           <View style={[styles.buttonsArea, UTILS.border()]}>
             <PrimaryButton
               text={'Save'}
@@ -118,12 +122,19 @@ class AddToken extends Component {
   }
 
   _onSave = () => {
-    const {walletId} = this.props
-    const numberOfDecimalPlaces = parseInt(this.state.decimalPlaces)
-    const multiplier = '1' + '0'.repeat(numberOfDecimalPlaces)
-    let tokenObj = this.state
-    tokenObj.multiplier = multiplier
-    this.props.addToken(walletId, tokenObj)
+    const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
+    if (currencyName && currencyCode && decimalPlaces && contractAddress) {
+      const {walletId} = this.props
+      const numberOfDecimalPlaces = parseInt(this.state.decimalPlaces)
+      const multiplier = '1' + '0'.repeat(numberOfDecimalPlaces)
+      let tokenObj = this.state
+      tokenObj.multiplier = multiplier
+      this.props.addToken(walletId, tokenObj)
+    } else {
+      this.setState({
+        errorMessage: s.strings.addtoken_default_error_message
+      })
+    }
   }
 }
 
