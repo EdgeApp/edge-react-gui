@@ -91,13 +91,13 @@ class ManageTokens extends Component {
             </View>
             <View style={[styles.buttonsArea, UTILS.border()]}>
               <SecondaryButton
-                style={styles.addButton}
+                style={[styles.addButton, UTILS.border()]}
                 text={'Add'}
                 onPressFunction={this.goToAddTokenScene}
               />
               <PrimaryButton
                 text={'Save'}
-                style={styles.saveButton}
+                style={[styles.saveButton, UTILS.border()]}
                 onPressFunction={this.saveEnabledTokenList}
                 processingElement={<ActivityIndicator />}
                 processingFlag={this.props.manageTokenPending}

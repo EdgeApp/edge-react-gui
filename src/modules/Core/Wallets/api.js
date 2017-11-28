@@ -101,9 +101,7 @@ export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => 
 }
 
 export const addCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
-  const tokenName = tokenObj.currencyName
-  const tokenCode = tokenObj.currencyCode
-  const tokenMultiplier = tokenObj.multiplier
+  const {currencyName, currencyCode, contractAddress, multiplier} = tokenObj
 
   return addCoreCustomToken(wallet, tokenObj)
   .then(() => {
@@ -111,16 +109,17 @@ export const addCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
     .then((currentTokens) => {
       const incomingToken = {
         enabled: true,
-        currencyCode: tokenCode,
-        currencyName: tokenName,
+        currencyCode,
+        currencyName,
+        contractAddress,
         denominations: [
           {
-            name: tokenCode,
-            multiplier: tokenMultiplier
+            name: currencyCode,
+            multiplier
           }
         ]
       }
-      currentTokens[tokenCode] = incomingToken
+      currentTokens[currencyCode] = incomingToken
       setSyncedTokens(wallet, currentTokens)
       .then(() => {
         return true

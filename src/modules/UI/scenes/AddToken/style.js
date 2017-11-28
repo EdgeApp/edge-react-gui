@@ -58,6 +58,9 @@ export const styles = {
   currencyCodeArea: {
     height: 70
   },
+  contractAddressArea: {
+    height: 70
+  },
   denominationArea: {
     height: 70
   },

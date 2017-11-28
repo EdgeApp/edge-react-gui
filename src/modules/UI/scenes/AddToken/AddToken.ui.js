@@ -7,7 +7,6 @@ import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {connect} from 'react-redux'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
@@ -19,9 +18,10 @@ class AddToken extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      nameInput: 'CapCoin',
-      currencyCodeInput: 'CAP1',
-      denominationInput: 1
+      currencyName: '',
+      currencyCode: '',
+      contractAddress: '',
+      multiplier: '1000000000000000000'
     }
   }
 
@@ -36,8 +36,8 @@ class AddToken extends Component {
           <View style={styles.formArea}>
             <View style={[styles.nameArea, UTILS.border()]}>
               <FormField
-                style={[styles.nameInput]}
-                value={this.state.nameInput}
+                style={[styles.currencyName]}
+                value={this.state.currencyName}
                 onChangeText={this.onChangeName}
                 autoCapitalize={'words'}
                 autoFocus
@@ -49,7 +49,7 @@ class AddToken extends Component {
             <View style={[styles.currencyCodeArea ,UTILS.border()]}>
               <FormField
                 style={[styles.currencyCodeInput]}
-                value={this.state.currencyCodeInput}
+                value={this.state.currencyCode}
                 onChangeText={this.onChangeCurrencyCode}
                 autoCapitalize={'characters'}
                 label={s.strings.addtoken_currency_code_input_text}
@@ -57,15 +57,14 @@ class AddToken extends Component {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.denominationArea ,UTILS.border()]}>
+            <View style={[styles.contractAddressArea ,UTILS.border()]}>
               <FormField
-                style={[styles.denominationInput]}
-                onChangeText={this.onChangeDenomination}
-                autoCapitalize={'none'}
-                label={s.strings.addtoken_denomination_input_text}
+                style={[styles.contractAddressInput]}
+                value={this.state.contractAddress}
+                onChangeText={this.onChangeContractAddress}
+                label={s.strings.addtoken_contract_address_input_text}
                 returnKeyType={'done'}
-                keyboardType={'numeric'}
-                value={this.state.denominationInput}
+                autoCorrect={false}
               />
             </View>
           </View>
@@ -85,26 +84,26 @@ class AddToken extends Component {
 
   onChangeName = (input) => {
     this.setState({
-      nameInput: input
+      currencyName: input
     })
   }
 
   onChangeCurrencyCode = (input) => {
     this.setState({
-      currencyCodeInput: input.substring(0,5)
+      currencyCode: input.substring(0,5)
     })
   }
 
-  onChangeDenomination = (input) => {
+  onChangeContractAddress = (input) => {
     this.setState({
-      denominationInput: input.toString()
+      contractAddress: input
     })
   }
 
   _onSave = () => {
-    const { nameInput, currencyCodeInput, denominationInput } = this.state
     const {walletId} = this.props
-    this.props.addToken(walletId, nameInput, currencyCodeInput, denominationInput)
+    const tokenObj = this.state
+    this.props.addToken(walletId, tokenObj)
   }
 }
 
@@ -115,7 +114,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = (dispatch) => ({
   dispatch,
-  addToken: (walletId: string, name: string, currencyCode: string, multiplier: string) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, name, currencyCode, multiplier))
+  addToken: (walletId: string, tokenObj: object) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

@@ -19,6 +19,7 @@ import * as SETTINGS_SELECTORS from '../Settings/selectors'
 import {GuiWallet} from '../../../types'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import * as ADD_TOKEN_ACTIONS from '../scenes/AddToken/action.js'
 
 export const selectWallet = (walletId: string, currencyCode: string) =>
   (dispatch: any) => {
@@ -73,6 +74,7 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
   })
 }
 
+// setEnabledTokens is specifically for enabling them *within the GUI*, not within the core
 export const setEnabledTokens = (walletId: string, enabledTokens: any) => (dispatch: any, getState: any) => {
   dispatch(setTokensStart())
   const state = getState()
@@ -94,6 +96,10 @@ export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: 
     for (let prop in tokens) {
       if (tokens[prop].enabled) {
         guiEnabledTokens.push(prop)
+        let tokenObj = tokens[prop]
+        tokenObj.multiplier = tokens[prop].denominations[0].multiplier // this needs to be improved upon
+        WALLET_API.addCoreCustomToken(wallet, tokenObj)
+        dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(tokenObj))
       }
     }
     WALLET_API.enableTokens(wallet, guiEnabledTokens) // take GUI enabled tokens and enable them in the core

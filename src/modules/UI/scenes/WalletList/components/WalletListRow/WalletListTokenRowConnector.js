@@ -6,7 +6,6 @@ import {selectWallet} from '../../../../Wallets/action'
 
 const mapStateToProps = (state, ownProps) => {
   let currencyCode:string = ownProps.currencyCode
-  if (currencyCode === 'SUB') currencyCode = 'ETH' // this needs to be changed, multiplier saved to settings.js
   let displayDenomination:AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
 
   return {

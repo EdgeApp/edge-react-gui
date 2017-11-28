@@ -100,7 +100,7 @@ export const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    paddingVertical: 8,
+    paddingVertical: 4,
     paddingHorizontal: 20,
   },
   addButton: {
