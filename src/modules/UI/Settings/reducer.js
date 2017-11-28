@@ -1,4 +1,5 @@
 import * as ACTION from './action.js'
+import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import {
   SYNCED_ACCOUNT_DEFAULTS,
   LOCAL_ACCOUNT_DEFAULTS,
@@ -27,6 +28,14 @@ export const settings = (state = initialState, action) => {
       loginStatus
     }
   }
+  case ADD_TOKEN_ACTION.SET_TOKEN_SETTINGS: {
+    const {currencyCode} = data
+    return {
+      ...state,
+      [currencyCode]: data
+    }
+  }
+
   case ACTION.ADD_EXCHANGE_TIMER: {
     const {exchangeTimer} = data
     return {
@@ -164,6 +173,8 @@ export const settings = (state = initialState, action) => {
       }
     }
   }
+
+
 
   case ACTION.ADD_CURRENCY_PLUGIN: {
     const {plugins} = state

@@ -69,6 +69,7 @@ export default {
   COLORS: {
     PRIMARY:   '#0D2145',
     SECONDARY: '#0E4B75',
+    PRIMARY_BUTTON_TOUCHED: 'rgba(42,87,153,0.55)',
 
     GRADIENT: {
       DARK:  '#0D2145',

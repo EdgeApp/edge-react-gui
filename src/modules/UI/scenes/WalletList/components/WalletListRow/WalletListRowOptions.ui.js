@@ -10,9 +10,9 @@ export const options = [
   },{
     value: Constants.SORT_VALUE,
     label: strings.enUS['fragment_wallets_sort']
-  // },{
-  //   value: Constants.ADD_TOKENS_VALUE,
-  //   label: strings.enUS['fragmet_wallets_addtoken_option']
+  },{
+    value: Constants.MANAGE_TOKENS_VALUE,
+    label: strings.enUS['fragmet_wallets_managetokens_option']
   },/*{
     value: 'archive'
   },*/{
