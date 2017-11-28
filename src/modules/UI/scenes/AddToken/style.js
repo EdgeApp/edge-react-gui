@@ -61,7 +61,7 @@ export const styles = {
   contractAddressArea: {
     height: 70
   },
-  denominationArea: {
+  decimalPlacesArea: {
     height: 70
   },
 
