@@ -92,6 +92,17 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     let denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
+
+    // need to crossreference tokensEnabled with nativeBalances
+    let enabledNativeBalances = {}
+    const enabledTokens = guiWallet.tokensEnabled
+
+    for (let prop in guiWallet.nativeBalances) {
+      if ((prop !== currencyCode) && enabledTokens[prop] && enabledTokens[prop].enabled) {
+        enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
+      }
+    }
+
     return (
       <View key={guiWallet.id}>
         <TouchableHighlight style={styles.rowContainer}
@@ -116,7 +127,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
           </View>
         </TouchableHighlight>
 
-        {this.renderTokens(guiWallet.id, guiWallet.nativeBalances, guiWallet.currencyCode)}
+        {this.renderTokens(guiWallet.id, enabledNativeBalances, guiWallet.currencyCode)}
       </View>
     )
   }
