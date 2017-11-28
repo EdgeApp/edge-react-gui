@@ -121,10 +121,16 @@ export default class Request extends Component {
             secondaryInfo={secondaryInfo}
             secondaryToPrimaryRatio={secondaryToPrimaryRatio}
             onAmountsChange={this.onAmountsChange}
-            color={color} />
-
-          <QRCode value={this.state.encodedURI} />
-          <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+            color={color}
+          />
+          <QRCode
+            value={this.state.encodedURI}
+          />
+          <RequestStatus
+            requestAddress={this.state.publicAddress}
+            amountRequestedInCrypto={0}
+            amountReceivedInCrypto={0}
+          />
         </View>
 
         <View style={styles.shareButtonsContainer}>

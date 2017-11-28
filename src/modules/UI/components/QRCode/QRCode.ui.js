@@ -10,7 +10,6 @@ export default class QRCode extends Component {
     return (
       <View style={styles.qrCodeBorder}>
         <QrCode
-          style={styles.qrCode}
           value={this.props.value}
           bgColor={styles.qrCodeBackground.color}
           fgColor={styles.qrCodeForeground.color}
