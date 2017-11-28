@@ -20,6 +20,7 @@ const mapStateToProps = (state: State) => {
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (!guiWallet || !currencyCode) {
     return {
+      sceneName: state.routes.scene.sceneName,
       loading: true,
       request: {},
       abcWallet: {},

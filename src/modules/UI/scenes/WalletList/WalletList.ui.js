@@ -32,7 +32,7 @@ import RenameWalletButtons from './components/RenameWalletButtonsConnector'
 import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
-
+import * as Constants from '../../../../constants/indexConstants.js'
 
 const options = [
   {
@@ -78,12 +78,10 @@ export default class WalletList extends Component<any, {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (global.currentScene === Constants.WALLET_LIST) {
-      return true
-    }
-    return false
+  shouldComponentUpdate (nextProps: any) {
+    return (nextProps.sceneName === Constants.WALLET_LIST)
   }
+
   componentDidMount () {
     Permissions.request('contacts').then((response) => {
       if (response === 'authorized') {

@@ -18,6 +18,7 @@ const mapStateToProps = (state: any): {} => {
 
   return {
     settings,
+    sceneName: state.routes.scene.sceneName,
     coreWallets: state.core.wallets.byId,
     wallets: state.ui.wallets.byId,
     activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),

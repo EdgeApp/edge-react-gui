@@ -33,12 +33,10 @@ export default class Request extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState) {
-    if (global.currentScene === Constants.REQUEST) {
-      return true
-    }
-    return false
+  shouldComponentUpdate (nextProps) {
+    return (nextProps.sceneName === Constants.REQUEST)
   }
+
   componentWillReceiveProps (nextProps) {
     if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
       const {abcWallet, currencyCode} = nextProps

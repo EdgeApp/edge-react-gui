@@ -18,7 +18,8 @@ import {GuiWallet} from '../../../../types'
 // $FlowFixMe
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-type Props ={
+type Props = {
+  sceneName: string,
   exchangeRate: number,
   wallets: Array<GuiWallet>,
   intialWalletOne: GuiWallet,
@@ -53,11 +54,8 @@ type State = {
   whichWallet: string
 }
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
-  shouldComponentUpdate (nextProps, nextState) {
-    if (global.currentScene === Constants.EXCHANGE) {
-      return true
-    }
-    return false
+  shouldComponentUpdate (nextProps: Props) {
+    return (nextProps.sceneName === Constants.EXCHANGE)
   }
 
   componentWillMount () {

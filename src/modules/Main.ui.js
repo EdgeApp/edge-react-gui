@@ -120,6 +120,7 @@ type Props = {
   autoLogout: () => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
+  dispatchFocusRoute: (sceneName: string) => void,
   contextCallbacks: AbcContextCallbacks
 }
 
@@ -227,9 +228,7 @@ export default class Main extends Component<Props, State> {
   }
 
   onEnter = (sceneName: string) => () => {
-    // $FlowFixMe
-    global.currentScene = sceneName
-
+    this.props.dispatchFocusRoute(sceneName)
     if (sceneName === Constants.SCAN) {
       this.props.dispatchEnableScan()
     }
