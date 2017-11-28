@@ -817,7 +817,7 @@ const strings = {
   fragment_transaction_receive_past: 'Received',
   fragment_transaction_send_past: 'Sent',
   fragment_transaction_income: 'Income',
-  fragment_transaction_expense: 'Expense',    
+  fragment_transaction_expense: 'Expense',
   fragment_transaction_transfer: 'Transfer',
   fragment_transaction_exchange: 'Exchange',
   transactions_list_date_jan: 'Jan',
@@ -873,7 +873,9 @@ const strings = {
   string_confirm: 'Confirm',
   exchange_succeeded: 'Exchange Succeeded',
   exchange_failed: 'Exchange Failed',
-  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes'
+  exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
+  could_not_select: 'Could Not Select Wallet',
+  token_not_supported: 'Token is not supported by exchange'
 }
 
 export default strings

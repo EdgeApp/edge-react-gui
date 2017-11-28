@@ -12,7 +12,7 @@ import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import {bns} from 'biggystring'
 import type {FlipInputFieldInfo} from '../modules/UI/components/FlipInput/FlipInput.ui'
 import strings from '../locales/default'
-
+import {checkShiftTokenAvailability} from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
 const DIVIDE_PRECISION = 18
 
 export type SetNativeAmountInfo = {
@@ -284,6 +284,14 @@ export const selectWalletForExchange = (
   walletId: string,
   currencyCode: string
 ) => (dispatch: any, getState: any) => {
+  // This is a hack .. if the currecy code is not supported then we cant do the exchange
+  if (!checkShiftTokenAvailability(currencyCode)) {
+    setTimeout(() => {
+      Alert.alert(strings.enUS['could_not_select'], currencyCode+' '+strings.enUS['token_not_supported'])
+    },1)
+    return
+  }
+
   const state = getState()
   console.log(currencyCode)
   const wallet = state.ui.wallets.byId[walletId]

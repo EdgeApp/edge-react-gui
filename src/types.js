@@ -20,7 +20,7 @@ export class GuiWallet {
   symbolImage: string
   symbolImageDarkMono: string
   metaTokens: Array<AbcMetaToken>
-  tokensEnabled: object
+  tokensEnabled: any
   constructor (
     id: string,
     type: string,
