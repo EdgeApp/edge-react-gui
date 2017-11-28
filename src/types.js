@@ -20,7 +20,7 @@ export class GuiWallet {
   symbolImage: string
   symbolImageDarkMono: string
   metaTokens: Array<AbcMetaToken>
-  tokensEnabled: object
+  tokensEnabled: any
   constructor (
     id: string,
     type: string,
@@ -36,7 +36,7 @@ export class GuiWallet {
     symbolImage: string,
     symbolImageDarkMono: string,
     metaTokens: Array<AbcMetaToken>,
-    tokensEnabled: object,
+    tokensEnabled: any,
   ) {
     this.id = id
     this.type = type

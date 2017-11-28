@@ -9,7 +9,7 @@ import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import {connect} from 'react-redux'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
+// import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import styles from './style.js'
 import ManageTokenRow from './ManageTokenRow.ui.js'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
@@ -131,7 +131,7 @@ class ManageTokens extends Component {
   }
 }
 
-const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
+const mapStateToProps = (state: ReduxStatenpm): InternalProps => {
   const manageTokensPending = state.ui.wallets.manageTokensPending
   return {
     manageTokensPending
