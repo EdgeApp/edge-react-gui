@@ -53,6 +53,12 @@ type State = {
   whichWallet: string
 }
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
+  shouldComponentUpdate (nextProps, nextState) {
+    if (global.currentScene === Constants.EXCHANGE) {
+      return true
+    }
+    return false
+  }
 
   componentWillMount () {
     if (this.props.wallets.length > 1) {

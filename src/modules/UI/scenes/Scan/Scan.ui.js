@@ -69,6 +69,12 @@ export default class Scan extends Component<any, any> {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (global.currentScene === Constants.SCAN) {
+      return true
+    }
+    return false
+  }
   renderDropUp = () => {
     if (this.props.showToWalletModal) {
       return (

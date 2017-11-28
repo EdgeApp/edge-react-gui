@@ -92,6 +92,12 @@ export default class TransactionList extends Component<Props, State> {
     width: undefined
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (global.currentScene === Constants.TRANSACTION_LIST) {
+      return true
+    }
+    return false
+  }
   componentDidMount () {
     if (this.props.loading) return
 

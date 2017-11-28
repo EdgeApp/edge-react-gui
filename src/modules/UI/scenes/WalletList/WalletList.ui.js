@@ -78,6 +78,12 @@ export default class WalletList extends Component<any, {
     }
   }
 
+  shouldComponentUpdate (nextProps, nextState) {
+    if (global.currentScene === Constants.WALLET_LIST) {
+      return true
+    }
+    return false
+  }
   componentDidMount () {
     Permissions.request('contacts').then((response) => {
       if (response === 'authorized') {
