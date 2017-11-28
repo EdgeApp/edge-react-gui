@@ -81,7 +81,11 @@ import * as CONTEXT_API from './Core/Context/api'
 import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
 import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 // $FlowFixMe
-// import {BitcoinCurrencyPluginFactory, LitecoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory} from 'edge-currency-bitcoin'
+import {
+  BitcoinCurrencyPluginFactory,
+  BitcoincashCurrencyPluginFactory
+  // LitecoinCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 const pluginFactories: Array<AbcCorePlugin> = [
@@ -89,9 +93,9 @@ const pluginFactories: Array<AbcCorePlugin> = [
   shapeshiftPlugin
 ]
 pluginFactories.push(EthereumCurrencyPluginFactory)
-// pluginFactories.push(BitcoinCurrencyPluginFactory)
+pluginFactories.push(BitcoinCurrencyPluginFactory)
+pluginFactories.push(BitcoincashCurrencyPluginFactory)
 // pluginFactories.push(LitecoinCurrencyPluginFactory)
-// pluginFactories.push(BitcoincashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
