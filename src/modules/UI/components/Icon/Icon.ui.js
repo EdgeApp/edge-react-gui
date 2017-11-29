@@ -1,4 +1,5 @@
 //@flow
+
 import React from 'react'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import FAIcon from 'react-native-vector-icons/FontAwesome'

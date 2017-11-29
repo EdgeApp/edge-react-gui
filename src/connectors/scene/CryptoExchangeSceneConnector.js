@@ -1,4 +1,5 @@
 //@flow
+
 import {GuiWallet} from '../../types'
 import {connect} from 'react-redux'
 import LinkedComponent from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
