@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -13,15 +15,35 @@ import {FormField} from '../../../../components/FormField.js'
 import * as UTILS from '../../../utils.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
 
+import type { GuiTokenInfo } from '../../../../types'
 
-class AddToken extends Component {
-  constructor (props) {
+export type Props = {
+  addTokenPending: boolean,
+  walletId: string
+}
+
+export type DispatchProps = {
+  addToken: (string, GuiTokenInfo) => void
+}
+
+export type State = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string,
+  multiplier: string,
+  errorMessage: string
+}
+
+class AddToken extends Component<Props & DispatchProps, State> {
+  constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
       currencyName: '',
       currencyCode: '',
       contractAddress: '',
       decimalPlaces: '',
+      multiplier: '',
       errorMessage: ''
     }
   }
@@ -97,25 +119,25 @@ class AddToken extends Component {
     )
   }
 
-  onChangeName = (input) => {
+  onChangeName = (input: string) => {
     this.setState({
       currencyName: input
     })
   }
 
-  onChangeCurrencyCode = (input) => {
+  onChangeCurrencyCode = (input: string) => {
     this.setState({
       currencyCode: input.substring(0,5)
     })
   }
 
-  onChangeDecimalPlaces = (input) => {
+  onChangeDecimalPlaces = (input: string) => {
     this.setState({
       decimalPlaces: input
     })
   }
 
-  onChangeContractAddress = (input) => {
+  onChangeContractAddress = (input: string) => {
     this.setState({
       contractAddress: input
     })
@@ -125,8 +147,8 @@ class AddToken extends Component {
     const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
     if (currencyName && currencyCode && decimalPlaces && contractAddress) {
       const {walletId} = this.props
-      const numberOfDecimalPlaces = parseInt(this.state.decimalPlaces)
-      const multiplier = '1' + '0'.repeat(numberOfDecimalPlaces)
+      const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
+      const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
       let tokenObj = this.state
       tokenObj.multiplier = multiplier
       this.props.addToken(walletId, tokenObj)
@@ -138,14 +160,14 @@ class AddToken extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  // context: CORE_SELECTORS.getContext(state),
-  // account: CORE_SELECTORS.getAccount(state)
-  addTokenPending: state.ui.wallets.addTokenPending
+const mapStateToProps = (state: any, ownProps: any): Props => ({
+  addTokenPending: state.ui.wallets.addTokenPending,
+  walletId: ownProps.walletId
 })
-const mapDispatchToProps = (dispatch) => ({
+
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   dispatch,
-  addToken: (walletId: string, tokenObj: object) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
+  addToken: (walletId: string, tokenObj: GuiTokenInfo) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

@@ -95,3 +95,10 @@ export type ExchangeData = {
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
+
+export type GuiTokenInfo = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  multiplier: string
+}
