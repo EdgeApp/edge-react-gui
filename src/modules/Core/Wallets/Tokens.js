@@ -1,4 +1,4 @@
-export const tokens = {
+export const defaultTokens = {
   /*
   'CAP1': {
     enabled: true,
@@ -37,7 +37,8 @@ export const tokens = {
     enabled: false,
     currencyCode: 'REP',
     currencyName: 'Augur',
-    contactAddress: '	0xe94327d07fc17907b4db788e5adf2ed424addff6',
+    fromTokensJs: true,
+    contractAddress: '0xe94327d07fc17907b4db788e5adf2ed424addff6',
     denominations: [
       {
         name: 'REP',
@@ -49,6 +50,7 @@ export const tokens = {
     enabled: false,
     currencyCode: 'WINGS',
     currencyName: 'Wings',
+    fromTokensJs: true,
     contractAddress: '0x667088b212ce3d06a1b553a7221E1fD19000d9aF',
     denominations: [
       {

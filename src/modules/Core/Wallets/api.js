@@ -1,7 +1,7 @@
 // @flow
 // import { renameWalletStart } from ''
 import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'airbitz-core-types'
-import { tokens } from './Tokens.js'
+import { defaultTokens } from './Tokens.js'
 export const SYNCED_TOKENS_FILENAME = 'Tokens.js'
 
 export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => wallet.renameWallet(name)
@@ -109,6 +109,7 @@ export const addCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
     .then((currentTokens) => {
       const incomingToken = {
         enabled: true,
+        fromTokensJs: false,
         currencyCode,
         currencyName,
         contractAddress,
@@ -137,9 +138,9 @@ export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {
     return JSON.parse(text)
   })
   .catch((e) => {
-    setSyncedTokens(wallet, tokens)
+    setSyncedTokens(wallet, defaultTokens)
     console.log(e)
-    return tokens
+    return defaultTokens
   })
 }
 
