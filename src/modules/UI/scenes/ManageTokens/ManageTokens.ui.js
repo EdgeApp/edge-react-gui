@@ -18,10 +18,22 @@ import {
   getEnabledTokens,
   setEnabledTokens
 } from '../../Wallets/action.js'
+import { GuiTokenInfo, GuiWallet } from '../../../../types'
 
+export type Props = {
+  guiWallet: GuiWallet
+}
 
-class ManageTokens extends Component {
-  constructor (props) {
+export type DispatchProps = {
+
+}
+
+export type State = {
+  enabledTokens: Array<GuiTokenInfo>
+}
+
+class ManageTokens extends Component<Props & DispatchProps, State> {
+  constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
       enabledTokens: []
@@ -29,13 +41,13 @@ class ManageTokens extends Component {
   }
 
   componentDidMount () {
-    let enabledTokens = []
+    let enabledTokens: array = []
     const { tokensEnabled } = this.props.guiWallet
     for (let prop in tokensEnabled) {
       let tokenValues = tokensEnabled[prop]
       enabledTokens.push(tokenValues)
     }
-    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
+    let sortedEnabledTokens: string = enabledTokens.sort((a, b) => {
       return b.currencyCode - a.currencyCode
     })
     this.setState({
@@ -44,7 +56,7 @@ class ManageTokens extends Component {
   }
 
   toggleToken = (currencyCode) => {
-    let enabledTokens = []
+    let enabledTokens: array = []
     const { tokensEnabled } = this.props.guiWallet
     for (let prop in tokensEnabled) {
       if (prop === currencyCode) {
@@ -139,7 +151,7 @@ const mapStateToProps = (state: ReduxStatenpm): InternalProps => {
 }
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
-  setEnabledTokensList: (walletId, enabledTokens) => dispatch(setEnabledTokens(walletId, enabledTokens))
+  setEnabledTokensList: (walletId: string, enabledTokens: Array<GuiTokenInfo>) => dispatch(setEnabledTokens(walletId, enabledTokens))
 
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)
