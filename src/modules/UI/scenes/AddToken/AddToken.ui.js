@@ -32,7 +32,8 @@ export type State = {
   contractAddress: string,
   decimalPlaces: string,
   multiplier: string,
-  errorMessage: string
+  errorMessage: string,
+  enabled?: boolean
 }
 
 class AddToken extends Component<Props & DispatchProps, State> {

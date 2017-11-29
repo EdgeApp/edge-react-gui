@@ -100,5 +100,6 @@ export type GuiTokenInfo = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
-  multiplier: string
+  multiplier: string,
+  enabled?: boolean
 }

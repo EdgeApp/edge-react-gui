@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -18,14 +20,16 @@ import {
   getEnabledTokens,
   setEnabledTokens
 } from '../../Wallets/action.js'
-import { GuiTokenInfo, GuiWallet } from '../../../../types'
+import type { GuiTokenInfo, GuiWallet } from '../../../../types'
 
 export type Props = {
-  guiWallet: GuiWallet
+  guiWallet: GuiWallet,
+  manageTokensPending: boolean
 }
 
 export type DispatchProps = {
-
+  getEnabledTokensList: (string) => void,
+  setEnabledTokensList: (string, Array<GuiTokenInfo>) => void
 }
 
 export type State = {
@@ -41,14 +45,16 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
   }
 
   componentDidMount () {
-    let enabledTokens: array = []
+    let enabledTokens = []
     const { tokensEnabled } = this.props.guiWallet
     for (let prop in tokensEnabled) {
       let tokenValues = tokensEnabled[prop]
       enabledTokens.push(tokenValues)
     }
-    let sortedEnabledTokens: string = enabledTokens.sort((a, b) => {
-      return b.currencyCode - a.currencyCode
+    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
+      if (a.currencyCode < b.currencyCode) return -1
+      if (a === b) return 0
+      return 1
     })
     this.setState({
       enabledTokens: sortedEnabledTokens
@@ -56,7 +62,7 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
   }
 
   toggleToken = (currencyCode) => {
-    let enabledTokens: array = []
+    let enabledTokens = []
     const { tokensEnabled } = this.props.guiWallet
     for (let prop in tokensEnabled) {
       if (prop === currencyCode) {
@@ -66,7 +72,9 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
       enabledTokens.push(tokenValues)
     }
     let sortedEnabledTokens = enabledTokens.sort((a, b) => {
-      return b.currencyCode - a.currencyCode
+      if (a.currencyCode < b.currencyCode) return -1
+      if (a.currencyCode === b.currencyCode) return 0
+      return 1
     })
     this.setState({
       enabledTokens: sortedEnabledTokens
@@ -112,7 +120,7 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
                 style={[styles.saveButton, UTILS.border()]}
                 onPressFunction={this.saveEnabledTokenList}
                 processingElement={<ActivityIndicator />}
-                processingFlag={this.props.manageTokenPending}
+                processingFlag={this.props.manageTokensPending}
               />
             </View>
           </View>
@@ -143,14 +151,13 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
   }
 }
 
-const mapStateToProps = (state: ReduxStatenpm): InternalProps => {
-  const manageTokensPending = state.ui.wallets.manageTokensPending
-  return {
-    manageTokensPending
-  }
-}
+const mapStateToProps = (state: any, ownProps: any): Props => ({
+  manageTokensPending: state.ui.wallets.manageTokensPending,
+  guiWallet: ownProps.guiWallet
+
+})
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
+  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId)),
   setEnabledTokensList: (walletId: string, enabledTokens: Array<GuiTokenInfo>) => dispatch(setEnabledTokens(walletId, enabledTokens))
 
 })
