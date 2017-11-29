@@ -18,14 +18,13 @@ const LOGOUT_TEXT = sprintf(strings.enUS['settings_button_logout'])
 const SETTINGS_TEXT = sprintf(strings.enUS['settings_title'])
 
 type Props ={
-  logout: () => void,
+  logout: (username?: string) => void,
   onPressOption: () => void
 }
 type State = {}
 
 export default class Main extends Component<Props, State> {
   onLogout = () => {
-    // console.log('logout')
     this.props.logout()
   }
 
