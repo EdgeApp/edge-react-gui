@@ -44,17 +44,17 @@ export const tokens = {
         multiplier: '1000000000000000000'
       }
     ]
+  },
+  'WINGS': {
+    enabled: false,
+    currencyCode: 'WINGS',
+    currencyName: 'Wings',
+    contractAddress: '0x667088b212ce3d06a1b553a7221E1fD19000d9aF',
+    denominations: [
+      {
+        name: 'WINGS',
+        multiplier: '1000000000000000000'
+      }
+    ]
   }
-  // 'WINGS': {
-  //   enabled: false,
-  //   currencyCode: 'WINGS',
-  //   currencyName: 'Wings',
-  //   contractAddress: '0x667088b212ce3d06a1b553a7221E1fD19000d9aF',
-  //   denominations: [
-  //     {
-  //       name: 'WINGS',
-  //       multiplier: '1000000000000000000'
-  //     }
-  //   ]
-  // }
 }
