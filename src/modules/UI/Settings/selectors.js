@@ -88,11 +88,11 @@ export const getSupportedWalletTypes = (state: any) => {
     if (plugin.currencyInfo.pluginName === 'bitcoin') {
       supportedWalletTypes.push({
         label: 'Bitcoin (Segwit)',
-        value: 'bitcoin-bip49'
+        value: 'wallet:bitcoin-bip49'
       })
       supportedWalletTypes.push({
         label: 'Bitcoin',
-        value: 'bitcoin-bip44'
+        value: 'wallet:bitcoin-bip44'
       })
     } else {
       supportedWalletTypes.push({
