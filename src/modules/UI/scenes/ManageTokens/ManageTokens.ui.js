@@ -136,9 +136,9 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-          <Text style={styles.headerText}>
-            {name}
-          </Text>
+            <Text style={styles.headerText}>
+              {name}
+            </Text>
         </View>
         </View>
       </Gradient>

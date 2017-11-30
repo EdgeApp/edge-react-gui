@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -5,15 +7,23 @@ import {
 } from 'react-native'
 import Text from '../../components/FormattedText'
 import CheckBox from '../../components/CheckBox'
-import {connect} from 'react-redux'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import styles from './style.js'
 import * as UTILS from '../../../utils.js'
 import THEME from '../../../../theme/variables/airbitz'
+import type {GuiTokenInfo} from '../../../../types.js'
 
+export type State = {
+  enabled?: boolean
+}
 
-class ManageTokenRow extends Component {
-  constructor (props) {
+export type Props = {
+  toggleToken: (string) => void,
+  metaToken: GuiTokenInfo,
+  enabled?: boolean
+}
+
+class ManageTokenRow extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       enabled: props.enabled
@@ -21,7 +31,7 @@ class ManageTokenRow extends Component {
   }
 
   render () {
-    const { item } = this.props.metaToken
+    const item = this.props.metaToken
 
     return (
       <TouchableHighlight
@@ -40,13 +50,4 @@ class ManageTokenRow extends Component {
   }
 }
 
-
-const mapStateToProps = (state) => ({
-  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state)
-})
-const mapDispatchToProps = (dispatch) => ({
-  dispatch
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ManageTokenRow)
+export default ManageTokenRow
