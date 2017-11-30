@@ -12,7 +12,6 @@ import {connect} from 'react-redux'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
-import * as UTILS from '../../../utils.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
 
 import type { GuiTokenInfo } from '../../../../types'
@@ -58,7 +57,7 @@ class AddToken extends Component<Props & DispatchProps, State> {
             <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
           </View>
           <View style={styles.formArea}>
-            <View style={[styles.nameArea, UTILS.border()]}>
+            <View style={[styles.nameArea]}>
               <FormField
                 style={[styles.currencyName]}
                 value={this.state.currencyName}
@@ -70,7 +69,7 @@ class AddToken extends Component<Props & DispatchProps, State> {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.currencyCodeArea ,UTILS.border()]}>
+            <View style={[styles.currencyCodeArea]}>
               <FormField
                 style={[styles.currencyCodeInput]}
                 value={this.state.currencyCode}
@@ -81,7 +80,7 @@ class AddToken extends Component<Props & DispatchProps, State> {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.contractAddressArea ,UTILS.border()]}>
+            <View style={[styles.contractAddressArea]}>
               <FormField
                 style={[styles.contractAddressInput]}
                 value={this.state.contractAddress}
@@ -91,7 +90,7 @@ class AddToken extends Component<Props & DispatchProps, State> {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.decimalPlacesArea ,UTILS.border()]}>
+            <View style={[styles.decimalPlacesArea]}>
               <FormField
                 style={[styles.decimalPlacesInput]}
                 value={this.state.decimalPlaces}
@@ -106,7 +105,7 @@ class AddToken extends Component<Props & DispatchProps, State> {
           <View style={styles.errorMessageArea}>
             <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
           </View>
-          <View style={[styles.buttonsArea, UTILS.border()]}>
+          <View style={[styles.buttonsArea]}>
             <PrimaryButton
               text={'Save'}
               style={styles.saveButton}

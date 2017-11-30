@@ -8,7 +8,6 @@ import {
 import Text from '../../components/FormattedText'
 import CheckBox from '../../components/CheckBox'
 import styles from './style.js'
-import * as UTILS from '../../../utils.js'
 import THEME from '../../../../theme/variables/airbitz'
 import type {GuiTokenInfo} from '../../../../types.js'
 
@@ -35,13 +34,13 @@ class ManageTokenRow extends Component<Props, State> {
 
     return (
       <TouchableHighlight
-        style={[styles.manageTokenRow, UTILS.border()]}
+        style={[styles.manageTokenRow]}
         onPress={() => this.props.toggleToken(item.currencyCode)}
         underlayColor={THEME.COLORS.PRIMARY_BUTTON_TOUCHED}
       >
-        <View style={[styles.manageTokenRowInterior, UTILS.border()]}>
-          <View style={[styles.tokenNameArea, UTILS.border()]}>
-            <Text style={[styles.tokenNameText, UTILS.border()]}>{item.currencyName} ({item.currencyCode})</Text>
+        <View style={[styles.manageTokenRowInterior]}>
+          <View style={[styles.tokenNameArea]}>
+            <Text style={[styles.tokenNameText]}>{item.currencyName} ({item.currencyCode})</Text>
           </View>
           <CheckBox enabled={item.enabled} />
         </View>

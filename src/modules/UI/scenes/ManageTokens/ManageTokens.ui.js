@@ -15,7 +15,6 @@ import {connect} from 'react-redux'
 import styles from './style.js'
 import ManageTokenRow from './ManageTokenRow.ui.js'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
-import * as UTILS from '../../../utils.js'
 import {
   getEnabledTokens,
   setEnabledTokens
@@ -101,23 +100,23 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
           </View>
-          <View style={[styles.metaTokenListArea, UTILS.border()]}>
+          <View style={[styles.metaTokenListArea]}>
             <View style={[styles.metaTokenListWrap]}>
               <FlatList
                 data={this.state.enabledTokens}
                 renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} />}
-                style={[styles.tokenList, UTILS.border()]}
+                style={[styles.tokenList]}
               />
             </View>
-            <View style={[styles.buttonsArea, UTILS.border()]}>
+            <View style={[styles.buttonsArea]}>
               <SecondaryButton
-                style={[styles.addButton, UTILS.border()]}
+                style={[styles.addButton]}
                 text={'Add'}
                 onPressFunction={this.goToAddTokenScene}
               />
               <PrimaryButton
                 text={'Save'}
-                style={[styles.saveButton, UTILS.border()]}
+                style={[styles.saveButton]}
                 onPressFunction={this.saveEnabledTokenList}
                 processingElement={<ActivityIndicator />}
                 processingFlag={this.props.manageTokensPending}
