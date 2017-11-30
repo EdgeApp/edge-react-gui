@@ -56,6 +56,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
+    "edge-currency-bitcoin": "git://github.com/Airbitz/edge-currency-bitcoin.git",
     "edge-currency-ethereum": "^0.4.4",
     "edge-exchange-plugins": "^0.1.1",
     "https-browserify": "0.0.1",
