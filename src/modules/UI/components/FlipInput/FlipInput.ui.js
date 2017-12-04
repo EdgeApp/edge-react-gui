@@ -85,42 +85,48 @@ export default class FlipInput extends Component<Props, State> {
   topDisplayAmount = () => this.state.isToggled ? this.state.secondaryDisplayAmount : this.state.primaryDisplayAmount
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
-  topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void)) => <View style={top.row} key={'top'}>
-      <Text style={[top.symbol]}>
-        {denominationInfo.displayDenomination.symbol}
-      </Text>
-      <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
-        placeholder={'0'}
-        placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
-        value={this.topDisplayAmount()}
-        onChangeText={onChangeText}
-        autoCorrect={false}
-        keyboardType='numeric'
-        selectionColor='white'
-        returnKeyType='done'
-        underlineColorAndroid={'transparent'}
-      />
-      <Text style={[top.currencyCode]}>
-        {denominationInfo.displayDenomination.name}
-      </Text>
-    </View>
+  topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void)) => {
+    return (
+      <View style={top.row} key={'top'}>
+        <Text style={[top.symbol]}>
+          {denominationInfo.displayDenomination.symbol}
+        </Text>
+        <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
+          placeholder={'0'}
+          placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+          value={this.topDisplayAmount()}
+          onChangeText={onChangeText}
+          autoCorrect={false}
+          keyboardType='numeric'
+          selectionColor='white'
+          returnKeyType='done'
+          underlineColorAndroid={'transparent'}
+        />
+        <Text style={[top.currencyCode]}>
+          {denominationInfo.displayDenomination.name}
+        </Text>
+      </View>
+    )
+  }
 
   bottomRow = (denominationInfo: FlipInputFieldInfo) => {
     const amount = this.bottomDisplayAmount()
-    return <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key={'bottom'}><View style={bottom.row}>
-      <Text style={[bottom.symbol]}>
-        {denominationInfo.displayDenomination.symbol}
-      </Text>
-      <Text style={[
-        bottom.amount,
-        !amount && bottom.alert
-      ]}>
-        {amount || '0'}
-      </Text>
-      <Text style={[bottom.currencyCode]}>
-        {denominationInfo.displayDenomination.name}
-      </Text>
+    return (
+      <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key={'bottom'}><View style={bottom.row}>
+          <Text style={[bottom.symbol]}>
+            {denominationInfo.displayDenomination.symbol}
+          </Text>
+          <Text style={[
+            bottom.amount,
+            !amount && bottom.alert
+          ]}>
+          {amount || '0'}
+        </Text>
+        <Text style={[bottom.currencyCode]}>
+          {denominationInfo.displayDenomination.name}
+        </Text>
     </View></TouchableWithoutFeedback>
+    )
   }
 
   renderRows = (primaryInfo: FlipInputFieldInfo, secondaryInfo: FlipInputFieldInfo, isToggled: boolean) => (
@@ -140,7 +146,6 @@ export default class FlipInput extends Component<Props, State> {
   render () {
     const {primaryInfo, secondaryInfo} = this.props
     const {isToggled} = this.state
-    // console.log('this.state', this.state)
     return (
       <View style={[styles.container]}>
         <View style={styles.flipButton}>
