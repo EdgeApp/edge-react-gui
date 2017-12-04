@@ -1,8 +1,13 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Image} from 'react-native'
-import strings from '../../../../locales/default'
 import {Actions} from 'react-native-router-flux'
 import {Footer, FooterTab, Button} from 'native-base'
+
+import type {Dispatch} from '../../../ReduxTypes'
+
+import strings from '../../../../locales/default'
 import {openSideMenu, closeSideMenu} from '../SideMenu/action'
 import T from '../FormattedText'
 import wallet from '../../../../assets/images/tabbar/wallets.png'
@@ -23,7 +28,13 @@ const SCAN_TEXT         = strings.enUS['drawer_scan']
 const TRANSACTIONS_TEXT = strings.enUS['drawer_transactions']
 const MORE_TEXT         = strings.enUS['drawer_more']
 
-export default class TabBar extends Component {
+type State = {}
+type Props = {
+  dispatch: Dispatch,
+  routes: any
+}
+
+export default class TabBar extends Component<Props, State> {
   handleToggleSideMenu = () => {
     if (!this.props.sidemenu) {
       this.props.dispatch(openSideMenu())
