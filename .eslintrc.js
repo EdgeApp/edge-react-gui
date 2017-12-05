@@ -86,6 +86,5 @@ module.exports = {
         "react-native/no-unused-styles": 0,
         "react-native/split-platform-components": 2,
         "react-native/no-inline-styles": 0,
-        "flowtype/no-types-missing-file-annotation": 0
     }
 };
