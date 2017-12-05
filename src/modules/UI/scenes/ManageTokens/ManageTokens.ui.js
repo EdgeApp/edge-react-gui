@@ -131,13 +131,13 @@ class ManageTokens extends Component {
   }
 }
 
-const mapStateToProps = (state: ReduxStatenpm): InternalProps => {
+const mapStateToProps = (state) => {
   const manageTokensPending = state.ui.wallets.manageTokensPending
   return {
     manageTokensPending
   }
 }
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch) => ({
   getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
   setEnabledTokensList: (walletId, enabledTokens) => dispatch(setEnabledTokens(walletId, enabledTokens))
 
