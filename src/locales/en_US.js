@@ -876,7 +876,10 @@ const strings = {
   exchange_failed: 'Exchange Failed',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
   could_not_select: 'Could Not Select Wallet',
-  token_not_supported: 'Token is not supported by exchange'
+  token_not_supported: 'Token is not supported by exchange',
+  select_src_wallet: 'Select Source Wallet',
+  select_dest_wallet: 'Select Dest Wallet',
+  fragment_insufficient_funds: 'insufficient funds'
 }
 
 export default strings
