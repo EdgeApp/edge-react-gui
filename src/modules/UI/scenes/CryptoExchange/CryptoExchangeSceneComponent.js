@@ -55,28 +55,12 @@ type State = {
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
 
   componentWillMount () {
-    if (this.props.wallets.length > 1) {
-      this.props.selectFromWallet(this.props.intialWalletOne)
-      this.props.selectToWallet(this.props.intialWalletTwo)
-    } else if (this.props.wallets.length > 0) {
-      this.props.selectFromWallet(this.props.intialWalletOne)
-    }
     this.setState({
       whichWallet: Constants.FROM
     })
 
   }
-  componentWillReceiveProps (nextProps: Props) {
-    if (!nextProps.fromWallet && nextProps.intialWalletOne) {
-      this.props.selectFromWallet(nextProps.intialWalletOne)
-      if (nextProps.wallets.length === 1) {
-        this.props.selectToWallet(nextProps.intialWalletOne)
-      }
-    }
-    if (!nextProps.toWallet && nextProps.intialWalletTwo) {
-      this.props.selectToWallet(nextProps.intialWalletTwo)
-    }
-  }
+
   renderButton = () => {
     if (this.props.showNextButton) {
       return <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.props.openConfirmation} />
