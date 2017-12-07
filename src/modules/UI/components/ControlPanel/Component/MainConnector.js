@@ -9,7 +9,7 @@ const mapStateToProps = (state: State) => ({
   usersView: state.ui.scenes.controlPanel.usersView
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  logout: () => dispatch(logoutRequest(null))
+  logout: (username?: string) => dispatch(logoutRequest(username))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main)
