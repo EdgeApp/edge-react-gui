@@ -104,6 +104,7 @@ export default class Request extends Component {
       primaryInfo,
       secondaryInfo
     } = this.props
+    console.log('public address: ', this.state.publicAddress)
     return (
       <Gradient style={styles.view}>
         <Gradient style={{height: 66, width: '100%'}} />

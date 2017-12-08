@@ -61,15 +61,20 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = {...syncDefaults, ...settings}
-
+      // const customTokens = settings ? settings.customTokens : []
       // Add all the settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
-
+      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
+      /* if (customTokens) {
+        customTokens.forEach((element) => {
+          dispatch(SETTINGS_ACTIONS.setDenominationKey(element.currencyCode, element.multiplier))
+        })
+      } */
 
       // dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
       // dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))

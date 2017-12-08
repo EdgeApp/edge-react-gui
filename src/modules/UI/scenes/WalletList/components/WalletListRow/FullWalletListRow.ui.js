@@ -14,7 +14,7 @@ import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
-import {border as b, cutOffText, truncateDecimals, decimalOrZero} from '../../../../../utils.js'
+import {border as b, cutOffText, truncateDecimals, decimalOrZero, mergeTokens} from '../../../../../utils.js'
 import {
   selectWallet,
   getEnabledTokens,
@@ -22,7 +22,7 @@ import {
 } from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
-import type {GuiDenomination} from '../../../../../../types'
+import type {GuiDenomination, GuiTokenInfo} from '../../../../../../types'
 import type {State as ReduxState, Dispatch} from '../../../../../ReduxTypes'
 const DIVIDE_PRECISION = 18
 
@@ -44,15 +44,21 @@ type DispatchProps = {
 type Props = FullWalletRowProps & InternalProps & DispatchProps
 
 type State = {
-
+  mergedTokens: Array<GuiTokenInfo>
 }
 
 class FullWalletRow extends Component<Props, State> {
+  constructor (props) {
+    super(props)
+    this.state = {
+      mergedTokens: []
+    }
+  }
   render () {
     return (
       <View>
         {this.props.data.item.id ? (
-          <FullWalletListRowConnect data={this.props.data} />
+          <FullWalletListRowConnect data={this.props.data} customTokens={this.props.customTokens} />
         ) : (
           <FullListRowEmptyData />
         )}
@@ -71,9 +77,14 @@ class FullWalletListRow extends Component<Props, State> {
   }
 
   componentWillMount () {
-    const walletData = this.props.data.item
-    this.props.getEnabledTokensList(walletData.id)
-    this.props.getCoreEnabledTokens(walletData.id)
+    const walletId = this.props.data.item.id
+    const walletTokens = this.props.data.item.metaTokens
+    const customTokens = this.props.customTokens || []
+    const mergedTokens = mergeTokens(walletTokens, customTokens)
+    this.setState({
+      mergedTokens
+    })
+    this.props.getEnabledTokensList(walletId)
   }
 
   render () {
@@ -92,10 +103,10 @@ class FullWalletListRow extends Component<Props, State> {
 
     // need to crossreference tokensEnabled with nativeBalances
     let enabledNativeBalances = {}
-    const enabledTokens = walletData.tokensEnabled
+    const enabledTokens = walletData.enabledTokens
 
     for (let prop in walletData.nativeBalances) {
-      if ((prop !== currencyCode) && enabledTokens[prop] && enabledTokens[prop].enabled) {
+      if ((prop !== currencyCode) && (enabledTokens.indexOf(prop) >= 0)) {
         enabledNativeBalances[prop] = walletData.nativeBalances[prop]
       }
     }
@@ -175,7 +186,7 @@ const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalPr
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
   getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
-  getCoreEnabledTokens: (walletId) => dispatch(getCoreEnabledTokens(walletId))
+  getCoreEnabledTokens: (walletId) => dispatch(getCoreEnabledTokens(walletId)),
 })
 export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 

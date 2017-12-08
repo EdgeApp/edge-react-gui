@@ -106,7 +106,7 @@ function schema (wallet: any): GuiWallet {
   const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
-  const tokensEnabled: any = wallet.tokensEnabled || {}
+  const enabledTokens: Array<string> = wallet.enabledTokens || []
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }
@@ -161,7 +161,7 @@ function schema (wallet: any): GuiWallet {
     symbolImage,
     symbolImageDarkMono,
     metaTokens,
-    tokensEnabled
+    enabledTokens
   )
 
   return newWallet

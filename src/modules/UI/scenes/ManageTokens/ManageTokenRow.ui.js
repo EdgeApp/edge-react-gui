@@ -18,7 +18,8 @@ export type State = {
 export type Props = {
   toggleToken: (string) => void,
   metaToken: GuiTokenInfo,
-  enabled?: boolean
+  enabled?: boolean,
+  enabledList: Array<string>
 }
 
 class ManageTokenRow extends Component<Props, State> {
@@ -30,7 +31,11 @@ class ManageTokenRow extends Component<Props, State> {
   }
 
   render () {
-    const item = this.props.metaToken
+    const { item } = this.props.metaToken
+    let enabled = false
+    if (this.props.enabledList.indexOf(item.currencyCode) >= 0) {
+      enabled = true
+    }
 
     return (
       <TouchableHighlight
@@ -42,7 +47,7 @@ class ManageTokenRow extends Component<Props, State> {
           <View style={[styles.tokenNameArea]}>
             <Text style={[styles.tokenNameText]}>{item.currencyName} ({item.currencyCode})</Text>
           </View>
-          <CheckBox enabled={item.enabled} />
+          <CheckBox enabled={enabled} />
         </View>
       </TouchableHighlight>
     )

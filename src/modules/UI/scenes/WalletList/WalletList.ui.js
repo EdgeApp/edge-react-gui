@@ -252,9 +252,10 @@ export default class WalletList extends Component<any, {
             style={{flex: 1, width}}
             data={activeWalletsArray}
             extraData={this.props.wallets}
-            renderItem={(item) => <FullWalletListRow data={item} />}
+            renderItem={(item) => <FullWalletListRow data={item} customTokens={this.props.customTokens} />}
             sortableMode={this.state.sortableMode}
-            executeWalletRowOption={this.executeWalletRowOption} />
+            executeWalletRowOption={this.executeWalletRowOption}
+          />
         </Animated.View>
         )}
       </View>
@@ -429,8 +430,13 @@ export default class WalletList extends Component<any, {
           temporaryTotalCrypto[balanceProp] = 0
         }
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
+        let denominations
         if (nativeBalance && nativeBalance !== '0') {
-          const denominations = this.props.settings[balanceProp].denominations
+          if (this.props.settings[balanceProp]) {
+            denominations = this.props.settings[balanceProp].denominations
+          } else {
+            denominations = this.props.settings.customTokens[balanceProp].denominations
+          }
           const exchangeDenomination = denominations.find((denomination) => denomination.name === balanceProp)
           const nativeToExchangeRatio:string = exchangeDenomination.multiplier
 

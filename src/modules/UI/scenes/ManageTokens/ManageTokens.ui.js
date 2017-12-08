@@ -32,61 +32,67 @@ export type DispatchProps = {
 }
 
 export type State = {
-  enabledTokens: Array<GuiTokenInfo>
+  enabledList: Array<string>,
+  combinedCurrencyInfos: Array<GuiTokenInfo>
 }
 
 class ManageTokens extends Component<Props & DispatchProps, State> {
   constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
-      enabledTokens: []
+      enabledList: this.props.guiWallet.enabledTokens || [],
+      combinedCurrencyInfos: []
     }
   }
 
   componentDidMount () {
-    let enabledTokens = []
-    const { tokensEnabled } = this.props.guiWallet
-    for (let prop in tokensEnabled) {
-      let tokenValues = tokensEnabled[prop]
-      enabledTokens.push(tokenValues)
-    }
-    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
+    const { metaTokens } = this.props.guiWallet
+    let accountMetaTokenInfo = this.props.accountMetaTokenInfo || []
+    let combinedTokenInfo = this.mergeTokens(metaTokens, accountMetaTokenInfo)
+
+    let sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
       if (a === b) return 0
       return 1
     })
+
     this.setState({
-      enabledTokens: sortedEnabledTokens
+      combinedCurrencyInfos: sortedTokenInfo
     })
   }
 
   toggleToken = (currencyCode) => {
-    let enabledTokens = []
-    const { tokensEnabled } = this.props.guiWallet
-    for (let prop in tokensEnabled) {
-      if (prop === currencyCode) {
-        tokensEnabled[prop].enabled = !tokensEnabled[prop].enabled
-      }
-      let tokenValues = tokensEnabled[prop]
-      enabledTokens.push(tokenValues)
+    let newEnabledList = this.state.enabledList
+    let index = newEnabledList.indexOf(currencyCode)
+    if (index >= 0) {
+      newEnabledList.splice(index, 1)
+    } else {
+      newEnabledList.push(currencyCode)
     }
-    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
-      if (a.currencyCode < b.currencyCode) return -1
-      if (a.currencyCode === b.currencyCode) return 0
-      return 1
-    })
     this.setState({
-      enabledTokens: sortedEnabledTokens
+      enabledList: newEnabledList
     })
   }
 
-  saveEnabledTokenList = () => {
-    const { tokensEnabled, id } = this.props.guiWallet
-    const walletEnabledTokens = tokensEnabled
-    for (let item of this.state.enabledTokens) {
-      walletEnabledTokens[item.currencyCode].enabled = item.enabled
+  // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
+  mergeTokens (metaTokens: Array<GuiTokenInfo>, accountTokenInfo: Array<GuiTokenInfo>) {
+    let tokensEnabled = metaTokens // initially set the array to currencyInfo (from plugin), since it takes priority
+    for (let x of accountTokenInfo) { // loops through the account-level array
+      let found = false // assumes it is not present in the currencyInfo from plugin
+      for (let prop in tokensEnabled) { // loops through currencyInfo array to see if already present
+        if ((x.currencyCode === tokensEnabled[prop].currencyCode) && (x.currencyName === tokensEnabled[prop].currencyName)) {
+          found = true // if present, then set 'found' to true
+        }
+      }
+      if (!found) tokensEnabled.push(x) // if not already in the currencyInfo, then add to tokensEnabled array
     }
-    this.props.setEnabledTokensList(id, walletEnabledTokens)
+    return tokensEnabled
+  }
+
+  saveEnabledTokenList = () => {
+    const { id } = this.props.guiWallet
+
+    this.props.setEnabledTokensList(id, this.state.enabledList)
     Actions.pop()
   }
 
@@ -103,8 +109,8 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
           <View style={[styles.metaTokenListArea]}>
             <View style={[styles.metaTokenListWrap]}>
               <FlatList
-                data={this.state.enabledTokens}
-                renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} />}
+                data={this.state.combinedCurrencyInfos}
+                renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} enabledList={this.state.enabledList} />}
                 style={[styles.tokenList]}
               />
             </View>
@@ -152,7 +158,8 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
 
 const mapStateToProps = (state: any, ownProps: any): Props => ({
   manageTokensPending: state.ui.wallets.manageTokensPending,
-  guiWallet: ownProps.guiWallet
+  guiWallet: ownProps.guiWallet,
+  accountMetaTokenInfo: state.ui.something
 
 })
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
