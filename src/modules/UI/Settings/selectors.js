@@ -82,14 +82,26 @@ export const getEthereumPlugin = (state: any) => {
 
 export const getSupportedWalletTypes = (state: any) => {
   const plugins = getPlugins(state).arrayPlugins
-  const supportedWalletTypes = plugins.reduce((walletTypes, plugin) =>
-    [
-      ...walletTypes,
-      {
+
+  const supportedWalletTypes = []
+  for (const plugin of plugins) {
+    if (plugin.currencyInfo.pluginName === 'bitcoin') {
+      supportedWalletTypes.push({
+        label: 'Bitcoin (Segwit)',
+        value: 'wallet:bitcoin-bip49'
+      })
+      supportedWalletTypes.push({
+        label: 'Bitcoin',
+        value: 'wallet:bitcoin-bip44'
+      })
+    } else {
+      supportedWalletTypes.push({
         label: plugin.currencyInfo.currencyName,
         value: plugin.currencyInfo.walletTypes[0]
-      }
-    ], [])
+      })
+    }
+  }
+
   return supportedWalletTypes
 }
 

@@ -93,11 +93,11 @@ export default class SettingsOverview extends Component {
       {
         text: 'Ethereum',
         routeFunction: Actions.ethSettings
-      }
-      // {
-      //   text: 'Litecoin',
-      //   routeFunction: Actions.ltcSettings
-      // },
+      },
+      {
+        text: 'Litecoin',
+        routeFunction: Actions.ltcSettings
+      },
     ]
   }
 
