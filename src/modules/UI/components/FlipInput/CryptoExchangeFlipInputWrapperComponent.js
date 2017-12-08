@@ -1,31 +1,14 @@
 import React, {Component} from 'react'
 import {View, Image, Text} from 'react-native'
-import ExchangedFlipInput, {type FlipInputAmountsChanged} from './ExchangedFlipInput'
+import ExchangedFlipInput from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
 import * as Constants from '../../../../constants/indexConstants'
-import type {FlipInputFieldInfo} from '../FlipInput/FlipInput.ui'
-import {GuiWallet} from '../../../../types'
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
 import * as UTILS from '../../../utils'
-import type {SetNativeAmountInfo} from '../../../../actions/CryptoExchangeActions'
 import strings from '../../../../locales/default'
 
-type Props = {
-  style: any,
-  fee: string,
-  uiWallet: GuiWallet,
-  currencyCode: string,
-  whichWallet: string,
-  abcWallet: AbcCurrencyWallet,
-  primaryInfo: FlipInputFieldInfo,
-  secondaryInfo: FlipInputFieldInfo,
-  fiatPerCrypto: number,
-  nativeAmount: string
-}
+export default class CryptoExchangeFlipInputWrapperComponent extends Component {
 
-export default class CryptoExchangeFlipInputWrapperComponent extends Component<Props> {
-
-  renderFee (style: any) {
+  renderFee (style) {
     if (this.props.fee) {
       return (
         <View style={style.fee}>
@@ -40,13 +23,13 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
     this.props.launchWalletSelector(this.props.whichWallet)
   }
 
-  onAmountsChange = ({primaryDisplayAmount}: FlipInputAmountsChanged) => {
+  onAmountsChange = ({primaryDisplayAmount}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
 
     if (primaryNativeAmount != this.props.nativeAmount) {
       const {whichWallet} = this.props
-      const data: SetNativeAmountInfo = {
+      const data = {
         whichWallet,
         primaryNativeAmount
       }
@@ -55,7 +38,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component<P
     }
   }
 
-  renderLogo = (style: any, logo: string) => {
+  renderLogo = (style, logo) => {
     if (logo) {
       return <View style={style.iconContainer}>
       <Image style={style.currencyIcon} source={{uri: logo}} />

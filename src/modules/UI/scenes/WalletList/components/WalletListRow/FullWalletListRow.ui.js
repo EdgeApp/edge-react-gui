@@ -22,32 +22,9 @@ import {
 } from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
-import type {GuiDenomination} from '../../../../../../types'
-import type {State as ReduxState, Dispatch} from '../../../../../ReduxTypes'
 const DIVIDE_PRECISION = 18
 
-export type FullWalletRowProps = {
-  data: any, // TODO: Need to type this
-  sortableMode: boolean
-}
-
-type InternalProps = {
-  displayDenomination: GuiDenomination,
-  exchangeDenomination: GuiDenomination
-}
-
-type DispatchProps = {
-  selectWallet: (walletId: string, currencyCode: string) => any,
-  getEnabledTokensList: (walletId: string) => any
-}
-
-type Props = FullWalletRowProps & InternalProps & DispatchProps
-
-type State = {
-
-}
-
-class FullWalletRow extends Component<Props, State> {
+class FullWalletRow extends Component {
   render () {
     return (
       <View>
@@ -65,7 +42,7 @@ export default FullWalletRow
 
 class FullWalletListRow extends Component<Props, State> {
 
-  _onPressSelectWallet = (walletId: string, currencyCode: string) => {
+  _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.selectWallet(walletId, currencyCode)
     Actions.transactionList({params: 'walletList'})
   }
@@ -146,7 +123,7 @@ class FullWalletListRow extends Component<Props, State> {
     )
   }
 
-  renderTokenRow = (parentId: string, metaTokenBalances: { [currencyCode: string]: string }) => {
+  renderTokenRow = (parentId, metaTokenBalances) => {
     let tokens = []
     for (let property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
@@ -162,7 +139,7 @@ class FullWalletListRow extends Component<Props, State> {
     return tokens
   }
 }
-const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalProps => {
+const mapStateToProps = (state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.item.currencyCode)
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, ownProps.data.item.currencyCode)
   const wallets = state.ui.wallets.byId
@@ -172,7 +149,7 @@ const mapStateToProps = (state: ReduxState, ownProps: InternalProps): InternalPr
     wallets
   }
 }
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch) => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
   getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
   getCoreEnabledTokens: (walletId) => dispatch(getCoreEnabledTokens(walletId))

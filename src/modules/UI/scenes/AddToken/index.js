@@ -1,3 +1,5 @@
 import AddToken from './AddToken.ui.js'
+import AddTokenConnector from './AddTokenConnector'
 
-export default AddToken
+export {AddToken}
+export default AddTokenConnector
