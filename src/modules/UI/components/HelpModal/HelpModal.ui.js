@@ -36,6 +36,11 @@ export default class HelpModal extends Component {
               this.props.closeModal()
             }
           }} />}
+        modalBodyStyle={styles.modalBodyStyle}
+        modalVisibleStyle={styles.modalVisibleStyle}
+        modalBoxStyle={styles.modalBoxStyle}
+        modalContentStyle={styles.modalContentStyle}
+        modalMiddleStyle={styles.modalMiddleWebView}
         modalBottom={<View style={[styles.modalBottomContainer]}>
                         <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {versionNumber}</Text>
                         <Text style={styles.modalBottomText}>{strings.enUS['help_build']} {buildNumber}</Text>
