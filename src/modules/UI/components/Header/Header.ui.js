@@ -1,4 +1,5 @@
-// @ flow
+// @flow
+
 import React, {Component} from 'react'
 import WalletSelector from './Component/WalletSelectorConnector'
 

@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -6,16 +8,26 @@ import {
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {connect} from 'react-redux'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import * as UTILS from '../../../utils.js'
-import * as ADD_TOKEN_ACTIONS from './action.js'
 
+type State = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string,
+  errorMessage: string
+}
+type Props = {
+  walletId: string,
+  addTokenPending: Function,
+  addToken: Function
+}
 
-class AddToken extends Component {
-  constructor (props) {
+export default class AddToken extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       currencyName: '',
@@ -97,25 +109,25 @@ class AddToken extends Component {
     )
   }
 
-  onChangeName = (input) => {
+  onChangeName = (input: string) => {
     this.setState({
       currencyName: input
     })
   }
 
-  onChangeCurrencyCode = (input) => {
+  onChangeCurrencyCode = (input: string) => {
     this.setState({
       currencyCode: input.substring(0,5)
     })
   }
 
-  onChangeDecimalPlaces = (input) => {
+  onChangeDecimalPlaces = (input: string) => {
     this.setState({
       decimalPlaces: input
     })
   }
 
-  onChangeContractAddress = (input) => {
+  onChangeContractAddress = (input: string) => {
     this.setState({
       contractAddress: input
     })
@@ -127,7 +139,7 @@ class AddToken extends Component {
       const {walletId} = this.props
       const numberOfDecimalPlaces = parseInt(this.state.decimalPlaces)
       const multiplier = '1' + '0'.repeat(numberOfDecimalPlaces)
-      let tokenObj = this.state
+      let tokenObj: any = this.state
       tokenObj.multiplier = multiplier
       this.props.addToken(walletId, tokenObj)
     } else {
@@ -137,15 +149,3 @@ class AddToken extends Component {
     }
   }
 }
-
-const mapStateToProps = (state) => ({
-  // context: CORE_SELECTORS.getContext(state),
-  // account: CORE_SELECTORS.getAccount(state)
-  addTokenPending: state.ui.wallets.addTokenPending
-})
-const mapDispatchToProps = (dispatch) => ({
-  dispatch,
-  addToken: (walletId: string, tokenObj: object) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddToken)
