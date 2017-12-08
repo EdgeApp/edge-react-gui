@@ -9,9 +9,16 @@ export const mapStateToProps = (state: any, ownProps: any) => {
   const exchangeRate = state.cryptoExchange.exchangeRate
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode
   const insufficient = state.cryptoExchange.insufficientError
+  const genericError = state.cryptoExchange.genericShapeShiftError
   let exchangeRateString = ''
   if (fromCurrencyCode && toCurrencyCode) {
-    exchangeRateString = insufficient ? strings.enUS['fragment_insufficient_funds'] : '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
+    exchangeRateString = '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
+    if (insufficient) {
+      exchangeRateString = strings.enUS['fragment_insufficient_funds']
+    }
+    if (genericError) {
+      exchangeRateString = genericError
+    }
   }
   return {
     style: ownProps.style,

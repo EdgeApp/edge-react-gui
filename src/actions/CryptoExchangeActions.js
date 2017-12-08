@@ -13,6 +13,7 @@ import {bns} from 'biggystring'
 import type {FlipInputFieldInfo} from '../modules/UI/components/FlipInput/FlipInput.ui'
 import strings from '../locales/default'
 import {checkShiftTokenAvailability} from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
+
 const DIVIDE_PRECISION = 18
 
 export type SetNativeAmountInfo = {
@@ -93,27 +94,28 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, ge
   if (whichWallet === Constants.FROM) {
     const fromDisplayAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
     const fromExchangeAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-
-    const toExchangeAmount = bns.mul(fromExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
-
-    const toNativeAmount = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
-    const toDisplayAmountTemp = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
-
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: fromDisplayAmount}))
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
+
+    if (toWallet) {
+      const toExchangeAmount = bns.mul(fromExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
+      const toNativeAmount = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
+      const toDisplayAmountTemp = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+      const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
+      dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
+    }
+
   } else {
     const toDisplayAmount = bns.div(primaryNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
     const toExchangeAmount = bns.div(primaryNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-
-    const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
-
-    const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
-    const fromDisplayAmountTemp = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
-
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: toDisplayAmount}))
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount}))
+
+    if (fromWallet) {
+      const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
+      const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
+      const fromDisplayAmountTemp = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+      const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
+      dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount}))
+    }
   }
 
   // make spend
@@ -129,7 +131,7 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, ge
         dispatch(actions.dispatchAction(Constants.RECEIVED_DUST_ERROR))
         return
       }
-      console.warn('creating shift transaction failed' , e)
+      dispatch(actions.dispatchActionString(Constants.GENERIC_SHAPE_SHIFT_ERROR, e.message))
     })
   }
 }
@@ -183,7 +185,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   }
   const srcCurrencyCode = spendInfo.currencyCode
   const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
-  console.log('stop for breakpoint')
   if (srcCurrencyCode !== destCurrencyCode) {
     let abcTransaction = await srcWallet.makeSpend(spendInfo)
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
