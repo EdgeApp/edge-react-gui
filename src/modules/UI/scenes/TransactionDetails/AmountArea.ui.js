@@ -16,7 +16,6 @@ import {PrimaryButton} from '../../components/Buttons'
 import styles from './style'
 import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
-import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -26,48 +25,8 @@ categories.map((key) => {
   return pickerValues.push(strings.enUS['fragment_transaction_' + key])
 })
 
-type Props = {
-  abcTransaction: AbcTransaction,
-  onChangeNotesFxn: (string) => void,
-  onChangeCategoryFxn: (string) => void,
-  onChangeFiatFxn: (string) => void,
-  onBlurFiatFxn: () => void,
-  onPressFxn: () => void,
-  selectCategory: (any) => void,
-  onSelectSubCategory: (string) => void,
-  onEnterCategories: () => void,
-  onExitCategories: () => void,
-  onSubcategoryKeyboardReturn: () => void,
-  onNotesKeyboardReturn: () => void,
-  onFocusNotes: () => void,
-  onBlurNotes: () => void,
-  onFocusFiatAmount: () => void,
-  openModalFxn: () => void,
-  fiatCurrencyCode: string,
-  cryptoCurrencyCode: string,
-  fiatCurrencySymbol: string,
-  fiatAmount: string,
-  onEnterSubcategories: () => void,
-  subCategorySelectVisibility: boolean,
-  categorySelectVisibility: boolean,
-  subCategory: string,
-  types: any,
-  usableHeight: number,
-  dimensions: any,
-  leftData: any,
-  direction: string,
-  feeSyntax: string,
-  color: string,
-  type: any,
-  walletDefaultDenomProps: AbcDenomination
-}
-
-type State = {
-
-}
-
-class AmountArea extends Component<Props, State> {
-  constructor (props: Props) {
+class AmountArea extends Component {
+  constructor (props) {
     super(props)
     this.state = {
       color: ''
@@ -106,7 +65,7 @@ class AmountArea extends Component<Props, State> {
     this.Picker.show()
   }
 
-  onPickerSelect = (input: string) => {
+  onPickerSelect = (input) => {
     this.props.selectCategory(input)
   }
 

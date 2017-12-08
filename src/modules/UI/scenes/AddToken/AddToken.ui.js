@@ -8,11 +8,11 @@ import {
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {connect} from 'react-redux'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
+import * as UTILS from '../../../utils.js'
 
 import type { GuiTokenInfo } from '../../../../types'
 
@@ -25,7 +25,8 @@ export type DispatchProps = {
   addToken: (string, GuiTokenInfo) => void
 }
 
-export type State = {
+
+type State = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
@@ -35,8 +36,14 @@ export type State = {
   enabled?: boolean
 }
 
-class AddToken extends Component<Props & DispatchProps, State> {
-  constructor (props: Props & DispatchProps) {
+type Props = {
+  walletId: string,
+  addTokenPending: Function,
+  addToken: Function
+}
+
+export default class AddToken extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       currencyName: '',
@@ -149,7 +156,7 @@ class AddToken extends Component<Props & DispatchProps, State> {
       const {walletId} = this.props
       const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
       const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-      let tokenObj = this.state
+      let tokenObj: any = this.state
       tokenObj.multiplier = multiplier
       tokenObj.denominations = [
         {
