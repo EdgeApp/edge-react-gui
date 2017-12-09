@@ -432,7 +432,13 @@ export default class WalletList extends Component<any, {
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
         console.log('balance for ' , balanceProp, ' is: ', nativeBalance)
         if (nativeBalance && nativeBalance !== '0') {
-          const denominations = this.props.settings[balanceProp].denominations
+          let denominations
+          if (this.props.settings[balanceProp]) {
+            denominations = this.props.settings[balanceProp].denominations
+          } else {
+            const tokenInfo = this.props.settings.customTokens.find((token) => token.currencyCode === balanceProp)
+            denominations = tokenInfo.denominations
+          }
           const exchangeDenomination = denominations.find((denomination) => denomination.name === balanceProp)
           const nativeToExchangeRatio:string = exchangeDenomination.multiplier
 

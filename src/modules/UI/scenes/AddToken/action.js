@@ -27,6 +27,7 @@ export const addToken = (walletId, tokenObj) => (dispatch, getState) => {
   const account = CORE_SELECTORS.getAccount(state)
   const wallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   dispatch(addTokenStart(walletId))
+  dispatch(UI_ACTIONS.addCustomToken(walletId, tokenObj))
   SETTINGS_API.getSyncedSettings(account)
   .then((settings) => {
     const customTokens = settings.customTokens
@@ -48,15 +49,13 @@ export const addToken = (walletId, tokenObj) => (dispatch, getState) => {
           newEnabledTokens.push(newTokenObj.currencyCode)
           dispatch(UI_ACTIONS.setEnabledTokens(walletId, newEnabledTokens)) // then enable it
         }
-        dispatch(setCustomTokens(settings.customTokens))
+        dispatch(setCustomTokens(settings.customTokens)) // update customTokens object in Redux store
         dispatch(addTokenSuccess())
         dispatch(UI_ACTIONS.refreshWallet(walletId))
         dispatch(UI_ACTIONS.getEnabledTokens(walletId)) // refresh wallet enabled tokens
         Actions.walletList()
       })
-      .catch((e) => {
-        console.log(e)
-      })
+      .catch((e) => console.log(e))
     })
     .catch((e) => console.log(e))
   })

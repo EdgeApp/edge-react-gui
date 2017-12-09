@@ -73,7 +73,17 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
   })
 }
 
-// setEnabledTokens is specifically for enabling them *within the GUI*, not within the core
+// adds to core and enables in core
+export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: any, getState: any) => {
+  const state = getState()
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  WALLET_API.addCoreCustomToken(wallet, tokenObj)
+  .then(() => {
+    return
+  })
+  .catch((e) => console.log(e))
+}
+
 export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>) => (dispatch: any, getState: any) => {
   dispatch(setTokensStart())
   const state = getState()
