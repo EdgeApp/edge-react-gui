@@ -1,6 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {
   View,
   ActivityIndicator
@@ -12,19 +13,11 @@ import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
-import * as UTILS from '../../../utils.js'
-
-import type { GuiTokenInfo } from '../../../../types'
-
-export type Props = {
-  addTokenPending: boolean,
-  walletId: string
-}
+import type {AbcMetaToken} from 'airbitz-core-types'
 
 export type DispatchProps = {
-  addToken: (string, GuiTokenInfo) => void
+  addToken: (string, AbcMetaToken) => void
 }
-
 
 type State = {
   currencyName: string,
@@ -42,7 +35,7 @@ type Props = {
   addToken: Function
 }
 
-export default class AddToken extends Component<Props, State> {
+class AddToken extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -173,14 +166,14 @@ export default class AddToken extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: any, ownProps: any): Props => ({
+const mapStateToProps = (state: any, ownProps: any) => ({
   addTokenPending: state.ui.wallets.addTokenPending,
   walletId: ownProps.walletId
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   dispatch,
-  addToken: (walletId: string, tokenObj: GuiTokenInfo) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
+  addToken: (walletId: string, tokenObj: AbcMetaToken) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

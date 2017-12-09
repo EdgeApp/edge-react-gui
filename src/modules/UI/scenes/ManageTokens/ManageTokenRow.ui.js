@@ -9,7 +9,6 @@ import Text from '../../components/FormattedText'
 import CheckBox from '../../components/CheckBox'
 import styles from './style.js'
 import THEME from '../../../../theme/variables/airbitz'
-import type {GuiTokenInfo} from '../../../../types.js'
 
 export type State = {
   enabled?: boolean
@@ -17,7 +16,7 @@ export type State = {
 
 export type Props = {
   toggleToken: (string) => void,
-  metaToken: GuiTokenInfo,
+  metaToken: any,
   enabled?: boolean,
   enabledList: Array<string>
 }

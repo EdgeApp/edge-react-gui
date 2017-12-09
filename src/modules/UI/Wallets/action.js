@@ -79,12 +79,19 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>)
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   WALLET_API.setEnabledTokens(wallet, enabledTokens)
-  .then((tokens) => {
+  .then(() => {
     WALLET_API.enableTokens(wallet, enabledTokens)
     .then(() => {
       dispatch(setTokensSuccess())
       dispatch(refreshWallet(walletId))
-      return tokens
+      wallet.getEnabledTokens()
+      .then((enabledTokens) => {
+        console.log(enabledTokens)
+        return
+      })
+      .catch((e) => {
+        console.log(e)
+      })
     })
     .catch((e) => {
       console.log(e)
@@ -102,20 +109,12 @@ export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: 
     WALLET_API.enableTokens(modifiedWallet, tokens) // take GUI enabled tokens and enable them in the core
     .then(() => {
       dispatch(upsertWallet(wallet)) // now update the wallet in Redux so that the tokensEnabled property can be used by GUI
-      return tokens
+      wallet.getEnabledTokens()
+      .then((enabledTokens) => {
+        console.log(enabledTokens)
+        return
+      })
     })
-  })
-}
-
-export const getCoreEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  WALLET_API.getCoreEnabledTokens(wallet)
-  .then((enabledTokens) => {
-    return enabledTokens
-  })
-  .catch((e) => {
-    console.log('getCoreEnabledTokens error: ' , e)
   })
 }
 

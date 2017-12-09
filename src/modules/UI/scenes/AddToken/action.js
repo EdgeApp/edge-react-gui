@@ -18,6 +18,7 @@ export const addToken = (walletId, tokenObj) => (dispatch, getState) => {
   const state = getState()
   let newTokenObj = {
     ...tokenObj,
+    denomination: tokenObj.multiplier,
     denominations: [{
       name: tokenObj.currencyCode,
       multiplier: tokenObj.multiplier

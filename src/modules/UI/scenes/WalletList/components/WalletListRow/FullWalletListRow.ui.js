@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import strings from '../../../../../../locales/default'
 import {bns} from 'biggystring'
@@ -14,21 +16,27 @@ import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
-import {border as b, cutOffText, truncateDecimals, decimalOrZero, mergeTokens} from '../../../../../utils.js'
+import {border as b,
+  cutOffText,
+  truncateDecimals,
+  decimalOrZero,
+  mergeTokens
+} from '../../../../../utils.js'
 import {
   selectWallet,
-  getEnabledTokens,
-  getCoreEnabledTokens
+  getEnabledTokens
 } from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import platform from '../../../../../../theme/variables/platform.js'
-import type {GuiDenomination, GuiTokenInfo} from '../../../../../../types'
-import type {State as ReduxState, Dispatch} from '../../../../../ReduxTypes'
+import type {GuiDenomination} from '../../../../../../types'
+import type {AbcMetaToken} from 'airbitz-core-types'
 const DIVIDE_PRECISION = 18
 
 export type FullWalletRowProps = {
   data: any, // TODO: Need to type this
-  sortableMode: boolean
+  sortableMode: boolean,
+  customTokens: Array<AbcMetaToken>,
+  sortHandlers: any
 }
 
 type InternalProps = {
@@ -44,11 +52,11 @@ type DispatchProps = {
 type Props = FullWalletRowProps & InternalProps & DispatchProps
 
 type State = {
-  mergedTokens: Array<GuiTokenInfo>
+  mergedTokens: Array<AbcMetaToken>
 }
 
 class FullWalletRow extends Component<Props, State> {
-  constructor (props) {
+  constructor (props: any) {
     super(props)
     this.state = {
       mergedTokens: []
@@ -151,7 +159,7 @@ class FullWalletListRow extends Component<Props, State> {
                 <RowOptions sortableMode={this.props.sortableMode} executeWalletRowOption={walletData.executeWalletRowOption} walletKey={id} archived={walletData.archived} />
               </View>
             </TouchableHighlight>
-            {this.renderTokenRow(id, enabledNativeBalances, this.props.active)}
+            {this.renderTokenRow(id, enabledNativeBalances)}
           </View>
       </View>
     )
@@ -167,7 +175,7 @@ class FullWalletListRow extends Component<Props, State> {
             currencyCode={property}
             key={property}
             balance={metaTokenBalances[property]}
-            active={this.props.active} />)
+            />)
       }
     }
     return tokens
@@ -185,9 +193,10 @@ const mapStateToProps = (state, ownProps) => {
 }
 const mapDispatchToProps = (dispatch) => ({
   selectWallet: (walletId, currencyCode) => dispatch(selectWallet(walletId, currencyCode)),
-  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
-  getCoreEnabledTokens: (walletId) => dispatch(getCoreEnabledTokens(walletId)),
+  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId))
 })
+
+// $FlowFixMe
 export const FullWalletListRowConnect = connect(mapStateToProps, mapDispatchToProps)(FullWalletListRow)
 
 class FullListRowEmptyData extends Component<any, State> {

@@ -19,21 +19,24 @@ import {
   getEnabledTokens,
   setEnabledTokens
 } from '../../Wallets/action.js'
-import type { GuiTokenInfo, GuiWallet } from '../../../../types'
+import type { GuiWallet } from '../../../../types'
+import type {AbcMetaToken} from 'airbitz-core-types'
+
 
 export type Props = {
   guiWallet: GuiWallet,
-  manageTokensPending: boolean
+  manageTokensPending: boolean,
+  accountMetaTokenInfo: Array<AbcMetaToken>
 }
 
 export type DispatchProps = {
   getEnabledTokensList: (string) => void,
-  setEnabledTokensList: (string, Array<GuiTokenInfo>) => void
+  setEnabledTokensList: (string, Array<string>) => void
 }
 
 export type State = {
   enabledList: Array<string>,
-  combinedCurrencyInfos: Array<GuiTokenInfo>
+  combinedCurrencyInfos: Array<AbcMetaToken>
 }
 
 class ManageTokens extends Component<Props & DispatchProps, State> {
@@ -75,12 +78,12 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
   }
 
   // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-  mergeTokens (metaTokens: Array<GuiTokenInfo>, accountTokenInfo: Array<GuiTokenInfo>) {
+  mergeTokens (metaTokens: Array<AbcMetaToken>, accountTokenInfo: Array<AbcMetaToken>) {
     let tokensEnabled = metaTokens // initially set the array to currencyInfo (from plugin), since it takes priority
     for (let x of accountTokenInfo) { // loops through the account-level array
       let found = false // assumes it is not present in the currencyInfo from plugin
-      for (let prop in tokensEnabled) { // loops through currencyInfo array to see if already present
-        if ((x.currencyCode === tokensEnabled[prop].currencyCode) && (x.currencyName === tokensEnabled[prop].currencyName)) {
+      for (let prop of tokensEnabled) { // loops through currencyInfo array to see if already present
+        if ((x.currencyCode === prop.currencyCode) && (x.currencyName === prop.currencyName)) {
           found = true // if present, then set 'found' to true
         }
       }
@@ -164,7 +167,7 @@ const mapStateToProps = (state: any, ownProps: any): Props => ({
 })
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId)),
-  setEnabledTokensList: (walletId: string, enabledTokens: Array<GuiTokenInfo>) => dispatch(setEnabledTokens(walletId, enabledTokens))
+  setEnabledTokensList: (walletId: string, enabledTokens: Array<string>) => dispatch(setEnabledTokens(walletId, enabledTokens))
 
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)
