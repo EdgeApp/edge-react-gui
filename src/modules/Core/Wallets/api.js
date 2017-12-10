@@ -76,8 +76,10 @@ export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): str
   }
 }
 
-export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
- wallet.disableTokens(tokens)
+export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+  wallet.disableTokens(tokens)
+}
+
 
 export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
   wallet.enableTokens(tokens)

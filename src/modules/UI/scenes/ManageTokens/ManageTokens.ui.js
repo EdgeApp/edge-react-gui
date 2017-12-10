@@ -93,10 +93,13 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
   }
 
   saveEnabledTokenList = () => {
-    const { id, enabledTokens } = this.props.guiWallet
-    const oldEnabledTokensList = enabledTokens
-
-    this.props.setEnabledTokensList(id, this.state.enabledList, oldEnabledTokensList /* <- old list */)
+    const { id } = this.props.guiWallet
+    let disabledList: Array<string> = []
+    // get disabled list
+    for (let val of this.state.combinedCurrencyInfos) {
+      if (this.state.enabledList.indexOf(val.currencyCode) === -1) disabledList.push(val.currencyCode)
+    }
+    this.props.setEnabledTokensList(id, this.state.enabledList, disabledList)
     Actions.pop()
   }
 

@@ -84,19 +84,15 @@ export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: an
   .catch((e) => console.log(e))
 }
 
-export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, oldEnabledTokensList?: Array<string>) => (dispatch: any, getState: any) => {
-  let tokenRemovalList
+export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disableTokens: Array<string>) => (dispatch: any, getState: any) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch(setTokensStart())
   // get a snapshot of the state
   const state = getState()
   // get a copy of the relevant core wallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  if (oldEnabledTokensList) {
-    tokenRemovalList = oldEnabledTokensList.filter((item) => enabledTokens.indexOf(item) === -1)
-  }
   // now actually tell the wallet to enable the token(s) in the core and save to file
-  WALLET_API.setEnabledTokens(wallet, enabledTokens, tokenRemovalList)
+  WALLET_API.setEnabledTokens(wallet, enabledTokens, disableTokens)
   .then(() => {
     dispatch(setTokensSuccess())
     dispatch(refreshWallet(walletId))
