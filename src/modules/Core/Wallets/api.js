@@ -76,9 +76,11 @@ export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): str
   }
 }
 
+export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
+ wallet.disableTokens(tokens)
+
 export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
-  // XXX need to hook up to Core -paulvp
-   wallet.enableTokens(tokens)
+  wallet.enableTokens(tokens)
 
 export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
   return wallet.addCustomToken(tokenObj)
@@ -114,16 +116,34 @@ export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
   return file
 }
 
-export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: any) {
+export const enableTokenOnWallet = (wallet: AbcCurrencyWallet, token: string) => {
+  getEnabledTokens(wallet)
+  .then((currentTokens) => {
+    if (currentTokens.indexOf(token) === -1) {
+      currentTokens.push(token)
+      setEnabledTokens(wallet, currentTokens)
+      return currentTokens
+    }
+    return currentTokens
+  })
+}
+
+export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {  // initialize array for eventual setting of file
   let finalText = []
+  // add in the tokens that will be enabled
   finalText = tokens
-  const tokensFile = getEnabledTokensFile(wallet)
+  // now stringify the new tokens
   let stringifiedTokens = JSON.stringify(finalText)
+  // grab the enabledTokensFile
+  const tokensFile = getEnabledTokensFile(wallet)
   try {
     await tokensFile.setText(stringifiedTokens)
     enableTokens(wallet, tokens)
+    if (tokensToDisable && tokensToDisable.length > 0) {
+      disableTokens(wallet, tokensToDisable)
+    }
   } catch (e) {
-    console.log('error writing tokens: ', e)
+    console.log(e)
   }
 }
 

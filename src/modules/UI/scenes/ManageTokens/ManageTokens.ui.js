@@ -31,7 +31,7 @@ export type Props = {
 
 export type DispatchProps = {
   getEnabledTokensList: (string) => void,
-  setEnabledTokensList: (string, Array<string>) => void
+  setEnabledTokensList: (string, Array<string>, Array<string>) => void
 }
 
 export type State = {
@@ -93,9 +93,10 @@ class ManageTokens extends Component<Props & DispatchProps, State> {
   }
 
   saveEnabledTokenList = () => {
-    const { id } = this.props.guiWallet
+    const { id, enabledTokens } = this.props.guiWallet
+    const oldEnabledTokensList = enabledTokens
 
-    this.props.setEnabledTokensList(id, this.state.enabledList)
+    this.props.setEnabledTokensList(id, this.state.enabledList, oldEnabledTokensList /* <- old list */)
     Actions.pop()
   }
 
@@ -167,7 +168,7 @@ const mapStateToProps = (state: any, ownProps: any): Props => ({
 })
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId)),
-  setEnabledTokensList: (walletId: string, enabledTokens: Array<string>) => dispatch(setEnabledTokens(walletId, enabledTokens))
+  setEnabledTokensList: (walletId: string, enabledTokens: Array<string>, oldEnabledTokensList: Array<string>) => dispatch(setEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
 
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)
