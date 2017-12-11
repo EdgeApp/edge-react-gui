@@ -3,7 +3,8 @@ import {
   ActivityIndicator,
   Clipboard,
   View,
-  Share
+  Share,
+  Keyboard
 } from 'react-native'
 import Alert from './alert'
 import styles from './styles.js'
@@ -29,6 +30,7 @@ export default class Request extends Component {
     this.state = {
       publicAddress: '',
       encodedURI: '',
+      keyboardUp: false,
       loading: props.loading
     }
   }
@@ -65,6 +67,16 @@ export default class Request extends Component {
       })
     })
     .catch((e) => console.log(e))
+  }
+
+  componentWillMount () {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
   }
 
   onAmountsChange = ({primaryDisplayAmount}) => {
@@ -125,6 +137,7 @@ export default class Request extends Component {
           />
           <QRCode
             value={this.state.encodedURI}
+            keyboardUp={this.state.keyboardUp}
           />
           <RequestStatus
             requestAddress={this.state.publicAddress}
@@ -200,5 +213,18 @@ export default class Request extends Component {
   shareViaShare = () => {
     this.shareMessage()
     // console.log('shareViaShare')
+  }
+
+  keyboardWillShow () {
+    console.log('show')
+    this.setState({
+      keyboardUp: true
+    })
+  }
+  keyboardWillHide () {
+    console.log('hide')
+    this.setState({
+      keyboardUp: false
+    })
   }
 }
