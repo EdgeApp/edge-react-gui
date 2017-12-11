@@ -63,7 +63,7 @@ export const selectedCurrencyCode = (state: string = '', action: any) => {
   const {currencyCode} = data
 
   switch (type) {
-  case ACTION.SELECT_CURRENCY_CODE:
+  case ACTION.SELECT_WALLET_ID:
     return currencyCode
   default:
     return state
