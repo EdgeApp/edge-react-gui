@@ -29,7 +29,8 @@ const mapStateToProps = (state: any): {} => {
     walletId: state.ui.scenes.walletList.walletId,
     walletOrder: state.ui.wallets.walletListOrder,
     currencyConverter,
-    dimensions: state.ui.scenes.dimensions
+    dimensions: state.ui.scenes.dimensions,
+    customTokens: state.ui.settings.customTokens
   }
 }
 
