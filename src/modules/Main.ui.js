@@ -83,7 +83,8 @@ import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 import {
   BitcoinCurrencyPluginFactory,
   BitcoincashCurrencyPluginFactory,
-  LitecoinCurrencyPluginFactory
+  LitecoinCurrencyPluginFactory,
+  DashCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
@@ -95,6 +96,7 @@ pluginFactories.push(EthereumCurrencyPluginFactory)
 pluginFactories.push(BitcoinCurrencyPluginFactory)
 pluginFactories.push(BitcoincashCurrencyPluginFactory)
 pluginFactories.push(LitecoinCurrencyPluginFactory)
+pluginFactories.push(DashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 

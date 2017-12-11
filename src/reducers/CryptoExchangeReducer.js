@@ -30,6 +30,7 @@ const initialState = {
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
   shiftTransactionError: null,
+  genericShapeShiftError: null,
   changeWallet: Constants.NONE,
   transaction: null
 }
@@ -73,17 +74,14 @@ function cryptoExchangerReducer (state = initialState, action) {
   case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE:
     return {...state, reverseExchange: action.data}
   case Constants.UPDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: action.data.abcTransaction, fee: action.data.networkFee && state.fromCurrencyCode ? strings.enUS['string_fee'] + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ', insufficientError: false}
+    return {...state, transaction: action.data.abcTransaction,
+      fee: action.data.networkFee && state.fromCurrencyCode ? strings.enUS['string_fee'] + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
+      insufficientError: false,
+      genericShapeShiftError: null}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: null, insufficientError: false}
+    return {...state, transaction: null, insufficientError: false, genericShapeShiftError: null}
   case Constants.SHIFT_COMPLETE:
-    return {...state,
-      transaction: null,
-      confirmTransactionModalVisible: false,
-      fromNativeAmount: '0',
-      toNativeAmount:'0',
-      fromDisplayAmount: '0',
-      toDisplayAmount: '0'}
+    return initialState
   case Constants.SHIFT_ERROR:
     return {...state, confirmTransactionModalVisible: false, shiftTransactionError: action.data}
   case Constants.CLOSE_CRYPTO_EXC_CONF_MODAL:
@@ -96,6 +94,8 @@ function cryptoExchangerReducer (state = initialState, action) {
     return {...state, fromNativeAmount: action.data.native, fromDisplayAmount:action.data.display}
   case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR :
     return {...state, transaction: null, insufficientError: true}
+  case Constants.GENERIC_SHAPE_SHIFT_ERROR :
+    return {...state, transaction: null, genericShapeShiftError: action.data}
   case Constants.CHANGE_EXCHANGE_FEE :
     return {...state,  feeSetting: action.feeSetting}
   default:
