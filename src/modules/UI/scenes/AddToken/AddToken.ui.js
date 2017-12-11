@@ -107,7 +107,7 @@ class AddToken extends Component<Props, State> {
           </View>
           <View style={[styles.buttonsArea]}>
             <PrimaryButton
-              text={'Save'}
+              text={s.strings.string_save}
               style={styles.saveButton}
               onPressFunction={this._onSave}
               processingElement={<ActivityIndicator />}

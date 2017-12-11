@@ -92,16 +92,12 @@ export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => 
     .then(() => {
       return
     })
-    .catch((e) => {
-      console.log('addCoreCustomToken error: ', e)
-    })
+    .catch((e) => console.log(e))
   })
-  .catch((e) => {
-    console.log('addCoreCustomToken error: ', e)
-  })
+  .catch((e) => console.log(e))
 }
 
-export const getEnabledTokens = (wallet: AbcCurrencyWallet) => {
+export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet) => {
   return getEnabledTokensFile(wallet).getText()
   .then((text) => {
     return JSON.parse(text)
@@ -120,7 +116,7 @@ export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
 }
 
 export const enableTokenOnWallet = (wallet: AbcCurrencyWallet, token: string) => {
-  getEnabledTokens(wallet)
+  getEnabledTokensFromFile(wallet)
   .then((currentTokens) => {
     if (currentTokens.indexOf(token) === -1) {
       currentTokens.push(token)
