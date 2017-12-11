@@ -13,20 +13,20 @@ export default class QRCode extends Component {
     }
   }
   componentWillMount () {
-    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow.bind(this))
-    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide.bind(this))
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this._keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this._keyboardWillHide.bind(this))
   }
   componentWillUnmount () {
-    this.keyboardDidShowListener.remove()
-    this.keyboardDidHideListener.remove()
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
   }
-  _keyboardDidShow () {
+  _keyboardWillShow () {
     this.setState({
       keyboardUp: true
     })
   }
 
-  _keyboardDidHide () {
+  _keyboardWillHide () {
     this.setState({
       keyboardUp: false
     })
