@@ -4,6 +4,7 @@ import {combineReducers} from 'redux'
 import {GuiWallet} from '../../../types.js'
 import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 import * as ACTION from './action'
+import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import {UPDATE_WALLETS} from '../../Core/Wallets/action.js'
 
 export const byId = (state: any = {}, action: any) => {
@@ -73,9 +74,9 @@ export const selectedCurrencyCode = (state: string = '', action: any) => {
 const addTokenPending = (state = false, action) => {
   const type = action.type
   switch (type) {
-  case ACTION.ADD_TOKEN_START :
+  case ADD_TOKEN_ACTION.ADD_TOKEN_START :
     return true
-  case ACTION.ADD_TOKEN_SUCCESS :
+  case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS :
     return false
   default:
     return state
@@ -106,7 +107,7 @@ function schema (wallet: any): GuiWallet {
   const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
-  const tokensEnabled: any = wallet.tokensEnabled || {}
+  const enabledTokens: Array<string> = wallet.enabledTokens || []
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }
@@ -161,7 +162,7 @@ function schema (wallet: any): GuiWallet {
     symbolImage,
     symbolImageDarkMono,
     metaTokens,
-    tokensEnabled
+    enabledTokens
   )
 
   return newWallet

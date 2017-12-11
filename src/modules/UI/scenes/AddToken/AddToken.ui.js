@@ -1,6 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {
   View,
   ActivityIndicator
@@ -11,22 +12,30 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
-import * as UTILS from '../../../utils.js'
+import * as ADD_TOKEN_ACTIONS from './action.js'
+import type {AbcMetaToken} from 'airbitz-core-types'
+
+export type DispatchProps = {
+  addToken: (string, AbcMetaToken) => void
+}
 
 type State = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
   decimalPlaces: string,
-  errorMessage: string
+  multiplier: string,
+  errorMessage: string,
+  enabled?: boolean
 }
+
 type Props = {
   walletId: string,
   addTokenPending: Function,
   addToken: Function
 }
 
-export default class AddToken extends Component<Props, State> {
+class AddToken extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -34,6 +43,7 @@ export default class AddToken extends Component<Props, State> {
       currencyCode: '',
       contractAddress: '',
       decimalPlaces: '',
+      multiplier: '',
       errorMessage: ''
     }
   }
@@ -47,7 +57,7 @@ export default class AddToken extends Component<Props, State> {
             <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
           </View>
           <View style={styles.formArea}>
-            <View style={[styles.nameArea, UTILS.border()]}>
+            <View style={[styles.nameArea]}>
               <FormField
                 style={[styles.currencyName]}
                 value={this.state.currencyName}
@@ -59,7 +69,7 @@ export default class AddToken extends Component<Props, State> {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.currencyCodeArea ,UTILS.border()]}>
+            <View style={[styles.currencyCodeArea]}>
               <FormField
                 style={[styles.currencyCodeInput]}
                 value={this.state.currencyCode}
@@ -70,7 +80,7 @@ export default class AddToken extends Component<Props, State> {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.contractAddressArea ,UTILS.border()]}>
+            <View style={[styles.contractAddressArea]}>
               <FormField
                 style={[styles.contractAddressInput]}
                 value={this.state.contractAddress}
@@ -80,7 +90,7 @@ export default class AddToken extends Component<Props, State> {
                 autoCorrect={false}
               />
             </View>
-            <View style={[styles.decimalPlacesArea ,UTILS.border()]}>
+            <View style={[styles.decimalPlacesArea]}>
               <FormField
                 style={[styles.decimalPlacesInput]}
                 value={this.state.decimalPlaces}
@@ -95,7 +105,7 @@ export default class AddToken extends Component<Props, State> {
           <View style={styles.errorMessageArea}>
             <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
           </View>
-          <View style={[styles.buttonsArea, UTILS.border()]}>
+          <View style={[styles.buttonsArea]}>
             <PrimaryButton
               text={'Save'}
               style={styles.saveButton}
@@ -137,10 +147,16 @@ export default class AddToken extends Component<Props, State> {
     const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
     if (currencyName && currencyCode && decimalPlaces && contractAddress) {
       const {walletId} = this.props
-      const numberOfDecimalPlaces = parseInt(this.state.decimalPlaces)
-      const multiplier = '1' + '0'.repeat(numberOfDecimalPlaces)
+      const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
+      const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
       let tokenObj: any = this.state
       tokenObj.multiplier = multiplier
+      tokenObj.denominations = [
+        {
+          name: currencyCode,
+          multiplier
+        }
+      ]
       this.props.addToken(walletId, tokenObj)
     } else {
       this.setState({
@@ -149,3 +165,15 @@ export default class AddToken extends Component<Props, State> {
     }
   }
 }
+
+const mapStateToProps = (state: any, ownProps: any) => ({
+  addTokenPending: state.ui.wallets.addTokenPending,
+  walletId: ownProps.walletId
+})
+
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+  dispatch,
+  addToken: (walletId: string, tokenObj: AbcMetaToken) => dispatch(ADD_TOKEN_ACTIONS.addToken(walletId, tokenObj))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddToken)
