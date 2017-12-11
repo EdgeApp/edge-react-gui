@@ -77,12 +77,13 @@ export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): str
 }
 
 export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
-  wallet.disableTokens(tokens)
+  return wallet.disableTokens(tokens)
 }
 
 
-export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
-  wallet.enableTokens(tokens)
+export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+  return wallet.enableTokens(tokens)
+}
 
 export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
   return wallet.addCustomToken(tokenObj)

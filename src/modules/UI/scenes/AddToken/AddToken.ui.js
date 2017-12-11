@@ -139,7 +139,7 @@ class AddToken extends Component<Props, State> {
 
   onChangeContractAddress = (input: string) => {
     this.setState({
-      contractAddress: input
+      contractAddress: input.trim()
     })
   }
 
