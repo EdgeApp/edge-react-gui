@@ -7,13 +7,12 @@ export const ACTIVATE_WALLET_ID = PREFIX + 'ACTIVATE_WALLET_ID'
 export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
 
 export const SELECT_WALLET_ID = PREFIX + 'SELECT_WALLET_ID'
-export const SELECT_CURRENCY_CODE = PREFIX + 'SELECT_CURRENCY_CODE'
 
 export const MANAGE_TOKENS = 'MANAGE_TOKEN'
 export const MANAGE_TOKENS_START = 'MANAGE_TOKEN_START'
 export const MANAGE_TOKENS_SUCCESS = 'MANAGE_TOKEN_SUCCESS'
 
-import * as UI_SELECTORS from '../selectors.js'
+// import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 import {GuiWallet} from '../../../types'
@@ -23,28 +22,14 @@ import * as ADD_TOKEN_ACTIONS from '../scenes/AddToken/action.js'
 
 export const selectWallet = (walletId: string, currencyCode: string) =>
   (dispatch: any) => {
-    dispatch(selectWalletId(walletId))
-    dispatch(selectCurrencyCode(currencyCode))
+    dispatch(selectWalletId(walletId, currencyCode))
   }
 
-export const selectWalletIdRequest = (walletId: string) => (dispatch: any, getState: any) => {
-  const state = getState()
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-
-  if (!selectedWalletId) {
-    dispatch(selectWalletId(walletId))
-  }
-}
-
-export const selectWalletId = (walletId: string) => ({
+export const selectWalletId = (walletId: string, currencyCode: string) => ({
   type: SELECT_WALLET_ID,
-  data: {walletId}
+  data: {walletId, currencyCode}
 })
 
-export const selectCurrencyCode = (currencyCode: string) => ({
-  type: SELECT_CURRENCY_CODE,
-  data: {currencyCode}
-})
 
 export const refreshWallet = (walletId: string) =>
   // console.log('refreshWallet')
