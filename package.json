@@ -56,7 +56,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^2.1.3",
+    "edge-currency-bitcoin": "^2.1.8",
     "edge-currency-ethereum": "^0.4.4",
     "edge-exchange-plugins": "^0.1.1",
     "https-browserify": "0.0.1",
