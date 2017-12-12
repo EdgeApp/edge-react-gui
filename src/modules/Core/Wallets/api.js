@@ -97,7 +97,7 @@ export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => 
   .catch((e) => console.log(e))
 }
 
-export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet) => {
+export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
   return getEnabledTokensFile(wallet).getText()
   .then((text) => {
     return JSON.parse(text)
@@ -129,6 +129,7 @@ export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array
     return tokens
   } catch (e) {
     console.log(e)
+    return
   }
 }
 
