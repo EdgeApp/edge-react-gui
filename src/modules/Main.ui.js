@@ -12,7 +12,7 @@ import { selectLocale } from '../locales/strings.js'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, AppState, TouchableWithoutFeedback} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback} from 'react-native'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import THEME from '../theme/variables/airbitz'
@@ -74,6 +74,8 @@ import scanIcon from '../assets/images/tabbar/scan.png'
 import scanIconSelected from '../assets/images/tabbar/scan_selected.png'
 import exchangeIcon from '../assets/images/tabbar/exchange.png'
 import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
+import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
+
 import styles from './style.js'
 
 import * as CONTEXT_API from './Core/Context/api'
@@ -109,8 +111,6 @@ const RouterWithRedux = connect()(Router)
 
 type Props = {
   username?: string,
-  routes: any,
-  autoLogoutTimeInSeconds: number,
   addExchangeTimer: (number) => void,
   addCurrencyPlugin: (AbcCurrencyPlugin) => void,
   setKeyboardHeight: (number) => void,
@@ -118,7 +118,6 @@ type Props = {
   addUsernames: (Array<string>) => void,
   setLocaleInfo: (any) => void,
   setDeviceDimensions: (any) => void,
-  autoLogout: () => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   contextCallbacks: AbcContextCallbacks
@@ -126,8 +125,6 @@ type Props = {
 
 type State = {
   context: ?AbcContext,
-  mainActive: boolean,
-  timeout: ?number
 }
 
 StatusBar.setBarStyle('light-content', true)
@@ -170,8 +167,6 @@ export default class Main extends Component<Props, State> {
     super(props)
 
     this.state = {
-      mainActive: true,
-      timeout: undefined,
       context: undefined,
     }
   }
@@ -183,14 +178,11 @@ export default class Main extends Component<Props, State> {
   }
 
   componentWillUnmount () {
-    AppState.removeEventListener('change', this._handleAppStateChange)
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }
 
   componentDidMount () {
-    AppState.addEventListener('change', this._handleAppStateChange)
-
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
     makeCoreContext(this.props.contextCallbacks)
@@ -325,6 +317,8 @@ export default class Main extends Component<Props, State> {
           <ErrorAlert/>
           <TransactionAlert/>
 
+          <AutoLogout />
+
         </MenuContext>
       </StyleProvider>
     )
@@ -337,48 +331,6 @@ export default class Main extends Component<Props, State> {
 
   _keyboardDidHide = () => {
     this.props.setKeyboardHeight(0)
-  }
-
-  _handleAppStateChange = (nextAppState: 'active' | 'background' | 'inactive') => {
-    if (this.foregrounded(nextAppState)) {
-      // console.log('Background -> Foreground')
-      // this.setState({mainActive: true})
-      //
-      // this.cancelAutoLogoutTimer()
-    }
-
-    if (this.backgrounded(nextAppState)) {
-      // Todo: Figure out why setState() inside _handleAppStateChange crashes app upon foreground
-      // console.log('Foreground -> Background')
-      // this.setState({mainActive: false})
-      //
-      // if (this.props.autoLogoutTimeInSeconds) this.beginAutoLogoutTimer()
-    }
-  }
-
-  foregrounded (nextAppState: 'active' | 'background' | 'inactive') {
-    return !this.state.mainActive && nextAppState === 'active'
-  }
-
-  backgrounded (nextAppState: 'active' | 'background' | 'inactive') {
-    return this.state.mainActive && nextAppState !== 'active'
-  }
-
-  beginAutoLogoutTimer () {
-    const autoLogoutTimeInMilliseconds = (this.props.autoLogoutTimeInSeconds * 1000)
-    const timeout = setTimeout(this.autoLogout, autoLogoutTimeInMilliseconds)
-    this.setState({timeout})
-  }
-
-  cancelAutoLogoutTimer () {
-    const {timeout} = this.state
-    clearTimeout(timeout)
-    this.setState({timeout: undefined})
-  }
-
-  autoLogout () {
-    // console.log('TIMEOUT')
-    this.props.autoLogout()
   }
 
   isCurrentScene = (sceneKey: string) => {
