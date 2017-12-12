@@ -26,7 +26,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   'ETH': {denomination: '1000000000000000000'},
   'REP': {denomination: '1000000000000000000'},
   'WINGS': {denomination: '1000000000000000000'},
-  'TOKEN_DEFAULT': {denomination: '1000000000000000000'}
+  customTokens: []
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {bluetoothMode: false}

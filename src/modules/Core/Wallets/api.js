@@ -1,8 +1,8 @@
 // @flow
 // import { renameWalletStart } from ''
 import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'airbitz-core-types'
-import { tokens } from './Tokens.js'
-export const SYNCED_TOKENS_FILENAME = 'Tokens.js'
+
+const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
 export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => wallet.renameWallet(name)
   .then(() => {
@@ -76,12 +76,13 @@ export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): str
   }
 }
 
-export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
-  // XXX need to hook up to Core -paulvp
-   wallet.enableTokens(tokens)
+export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+  return wallet.disableTokens(tokens)
+}
 
-export const getCoreEnabledTokens = (wallet: AbcCurrencyWallet) => {
-  return wallet.getEnabledTokens()
+
+export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+  return wallet.enableTokens(tokens)
 }
 
 export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
@@ -91,73 +92,44 @@ export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => 
     .then(() => {
       return
     })
-    .catch((e) => {
-      console.log('addCoreCustomToken error: ', e)
-    })
+    .catch((e) => console.log(e))
   })
-  .catch((e) => {
-    console.log('addCoreCustomToken error: ', e)
-  })
+  .catch((e) => console.log(e))
 }
 
-export const addCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
-  const {currencyName, currencyCode, contractAddress, multiplier} = tokenObj
-
-  return addCoreCustomToken(wallet, tokenObj)
-  .then(() => {
-    return getSyncedTokens(wallet)
-    .then((currentTokens) => {
-      const incomingToken = {
-        enabled: true,
-        currencyCode,
-        currencyName,
-        contractAddress,
-        denominations: [
-          {
-            name: currencyCode,
-            multiplier
-          }
-        ]
-      }
-      currentTokens[currencyCode] = incomingToken
-      setSyncedTokens(wallet, currentTokens)
-      .then(() => {
-        return true
-      })
-    })
-  })
-  .catch((e) => {
-    console.log(e)
-  })
-}
-
-export const getSyncedTokens = (wallet: AbcCurrencyWallet) => {
-  return getSyncedTokensFile(wallet).getText()
+export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
+  return getEnabledTokensFile(wallet).getText()
   .then((text) => {
     return JSON.parse(text)
   })
   .catch((e) => {
-    setSyncedTokens(wallet, tokens)
     console.log(e)
-    return tokens
+    return setEnabledTokens(wallet, [])
   })
 }
 
-export const getSyncedTokensFile = (wallet: AbcCurrencyWallet) => {
+export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
   const folder = wallet.folder
-  const file = folder.file(SYNCED_TOKENS_FILENAME)
+  const file = folder.file(ENABLED_TOKENS_FILENAME)
   return file
 }
 
-export async function setSyncedTokens (wallet: AbcCurrencyWallet, tokens: any) {
-  let finalText = {}
-  finalText = tokens
-  const tokensFile = getSyncedTokensFile(wallet)
-  let stringifiedTokens = JSON.stringify(finalText)
+export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {  // initialize array for eventual setting of file
+  let finalTextArray = tokens
+  // now stringify the new tokens
+  let stringifiedTokens = JSON.stringify(finalTextArray)
+  // grab the enabledTokensFile
+  const tokensFile = getEnabledTokensFile(wallet)
   try {
     await tokensFile.setText(stringifiedTokens)
+    enableTokens(wallet, tokens)
+    if (tokensToDisable && tokensToDisable.length > 0) {
+      disableTokens(wallet, tokensToDisable)
+    }
+    return tokens
   } catch (e) {
-    console.log('error writing tokens: ', e)
+    console.log(e)
+    return
   }
 }
 

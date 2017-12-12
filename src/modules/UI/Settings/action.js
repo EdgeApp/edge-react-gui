@@ -33,6 +33,9 @@ export const SET_DENOMINATION_KEY = PREFIX + 'SET_DENOMINATION_KEY'
 // Plugins
 export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
+// tokens
+export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
+
 export const setLoginStatus = (loginStatus) => ({
   type: SET_LOGIN_STATUS,
   data: {loginStatus}
@@ -122,5 +125,14 @@ export const addCurrencyPlugin = (plugin) => {
   return {
     type: ADD_CURRENCY_PLUGIN,
     data: {pluginName, plugin, walletTypes}
+  }
+}
+
+// tokens
+
+export const setCustomTokens = (customTokens) => {
+  return {
+    type: SET_CUSTOM_TOKENS,
+    data: {customTokens}
   }
 }

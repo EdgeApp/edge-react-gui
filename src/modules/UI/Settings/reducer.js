@@ -28,6 +28,15 @@ export const settings = (state = initialState, action) => {
       loginStatus
     }
   }
+
+  case ACTION.SET_CUSTOM_TOKENS: {
+    const {customTokens} = data
+    return {
+      ...state,
+      customTokens
+    }
+  }
+
   case ADD_TOKEN_ACTION.SET_TOKEN_SETTINGS: {
     const {currencyCode} = data
     return {

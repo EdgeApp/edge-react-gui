@@ -11,13 +11,11 @@ export const options = [
     value: Constants.SORT_VALUE,
     label: strings.enUS['fragment_wallets_sort']
   },{
-    value: Constants.MANAGE_TOKENS_VALUE,
-    label: strings.enUS['fragmet_wallets_managetokens_option']
-  },/*{
-    value: 'archive'
-  },*/{
     value: Constants.DELETE_VALUE,
     label: strings.enUS['string_delete']
+  },{
+    value: Constants.MANAGE_TOKENS_VALUE,
+    label: strings.enUS['fragmet_wallets_managetokens_option']
   }
 ]
 
@@ -31,6 +29,7 @@ export default class WalletListRowOptions extends Component {
         : 'archive')
         + '_title_capitalized']
     }
+    this.options = (this.props.currencyCode === 'ETH') ? options : options.slice(0, -1)
   }
 
   optionAction = (optionKey) => {
@@ -41,7 +40,7 @@ export default class WalletListRowOptions extends Component {
     return (
       <MenuDropDown style={MenuDropDownStyle}
         onSelect={this.optionAction}
-        data={options} />
+        data={this.options} />
     )
   }
 }
