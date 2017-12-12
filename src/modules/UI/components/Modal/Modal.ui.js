@@ -20,6 +20,10 @@ type Props = {
   headerSubtext?: string,
   visibilityBoolean: boolean,
   featuredIcon: Node,
+  modalVisibleStyle?: {},
+  modalBoxStyle?: {},
+  modalContentStyle?: {},
+  modalBodyStyle?: {},
   modalMiddle: Node,
   modalMiddleStyle?: {},
   modalBottom: Node,
@@ -39,7 +43,7 @@ export default class StylizedModal extends Component<Props, State> {
           {this.props.featuredIcon}
         </View>
 
-        <View style={[styles.visibleModal]}>
+        <View style={[styles.visibleModal, this.props.modalVisibleStyle]}>
 
           <View style={[styles.exitRow]}>
             <TouchableOpacity
@@ -49,9 +53,9 @@ export default class StylizedModal extends Component<Props, State> {
             </TouchableOpacity>
           </View>
 
-          <View style={[styles.modalBox]}>
-            <View style={[styles.modalContent]}>
-              <View style={[styles.modalBody]}>
+          <View style={[styles.modalBox, this.props.modalBoxStyle]}>
+            <View style={[styles.modalContent, this.props.modalContentStyle]}>
+              <View style={[styles.modalBody, this.props.modalBodyStyle]}>
 
                 <View style={[styles.modalTopTextWrap]}>
                   <T style={[styles.modalTopText, this.props.headerTextStyle]}>
