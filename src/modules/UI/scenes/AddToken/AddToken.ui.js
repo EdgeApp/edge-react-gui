@@ -4,7 +4,8 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {
   View,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native'
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
@@ -52,7 +53,7 @@ class AddToken extends Component<Props, State> {
     return (
       <View style={[styles.addTokens]}>
         <Gradient style={styles.gradient} />
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.addtoken_top_instructions}</Text>
           </View>
@@ -114,7 +115,8 @@ class AddToken extends Component<Props, State> {
               processingFlag={this.props.addTokenPending}
             />
           </View>
-        </View>
+          <View style={styles.bottomPaddingForKeyboard} />
+        </ScrollView>
       </View>
     )
   }
