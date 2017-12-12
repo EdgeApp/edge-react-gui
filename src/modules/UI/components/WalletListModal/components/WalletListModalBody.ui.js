@@ -98,7 +98,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const enabledTokens = guiWallet.enabledTokens
 
     for (let prop in guiWallet.nativeBalances) {
-      if ((prop !== currencyCode) && (enabledTokens.indexOf(prop) >= 0)) {
+      if ((prop !== currencyCode) && (enabledTokens.includes(prop))) {
         enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
       }
     }

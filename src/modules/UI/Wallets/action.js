@@ -84,7 +84,7 @@ export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: an
   .catch((e) => console.log(e))
 }
 
-export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disableTokens: Array<string>) => (dispatch: any, getState: any) => {
+export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (dispatch: any, getState: any) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch(setTokensStart())
   // get a snapshot of the state
@@ -92,7 +92,7 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   // get a copy of the relevant core wallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   // now actually tell the wallet to enable the token(s) in the core and save to file
-  WALLET_API.setEnabledTokens(wallet, enabledTokens, disableTokens)
+  WALLET_API.setEnabledTokens(wallet, enabledTokens, disabledTokens)
   .then(() => {
     // let Redux know it was completed successfully
     dispatch(setTokensSuccess())

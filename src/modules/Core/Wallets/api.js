@@ -103,9 +103,8 @@ export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet) => {
     return JSON.parse(text)
   })
   .catch((e) => {
-    setEnabledTokens(wallet, [])
     console.log(e)
-    return []
+    return setEnabledTokens(wallet, [])
   })
 }
 
@@ -115,24 +114,10 @@ export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
   return file
 }
 
-export const enableTokenOnWallet = (wallet: AbcCurrencyWallet, token: string) => {
-  getEnabledTokensFromFile(wallet)
-  .then((currentTokens) => {
-    if (currentTokens.indexOf(token) === -1) {
-      currentTokens.push(token)
-      setEnabledTokens(wallet, currentTokens)
-      return currentTokens
-    }
-    return currentTokens
-  })
-}
-
 export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {  // initialize array for eventual setting of file
-  let finalText = []
-  // add in the tokens that will be enabled
-  finalText = tokens
+  let finalTextArray = tokens
   // now stringify the new tokens
-  let stringifiedTokens = JSON.stringify(finalText)
+  let stringifiedTokens = JSON.stringify(finalTextArray)
   // grab the enabledTokensFile
   const tokensFile = getEnabledTokensFile(wallet)
   try {
@@ -141,6 +126,7 @@ export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array
     if (tokensToDisable && tokensToDisable.length > 0) {
       disableTokens(wallet, tokensToDisable)
     }
+    return tokens
   } catch (e) {
     console.log(e)
   }
