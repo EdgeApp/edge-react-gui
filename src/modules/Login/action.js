@@ -17,6 +17,7 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
+import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import strings from '../../locales/default'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 export const LOGOUT = 'LOGOUT'
@@ -61,6 +62,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = {...syncDefaults, ...settings}
+      const customTokens = settings ? settings.customTokens : []
       // Add all the settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
@@ -69,11 +71,13 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
-      /* if (customTokens) {
-        customTokens.forEach((element) => {
-          dispatch(SETTINGS_ACTIONS.setDenominationKey(element.currencyCode, element.multiplier))
+      if (customTokens) {
+        customTokens.forEach((token) => {
+          dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
+          // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
+          dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
         })
-      } */
+      }
 
       // dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
       // dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))

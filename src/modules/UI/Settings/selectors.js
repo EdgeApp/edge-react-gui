@@ -25,12 +25,7 @@ export const getExchangeTimer = (state: State): number => {
 
 export const getCurrencySettings = (state: State, currencyCode: string) => {
   const settings = getSettings(state)
-  let currencySettings
-  if (settings[currencyCode] || isoFiatDenominations[currencyCode]) {
-    currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
-  } else {
-    currencySettings = settings.customTokens.find((token) => token.currencyCode === currencyCode)
-  }
+  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   return currencySettings
 }
 
@@ -42,20 +37,13 @@ export const getDenominations = (state: State, currencyCode: string) => {
 
 export const getDisplayDenominationKey = (state: State, currencyCode: string) => {
   const settings = getSettings(state)
-  let currencySettings, selectedDenominationKey
-  if (settings[currencyCode]) {
-    currencySettings = settings[currencyCode]
-    selectedDenominationKey = currencySettings.denomination
-  } else {
-    let tokenInfo = settings.customTokens.find((token) => token.currencyCode === currencyCode)
-    currencySettings = tokenInfo
-    selectedDenominationKey = currencySettings.multiplier
-  }
+  const currencySettings = settings[currencyCode]
+  const selectedDenominationKey = currencySettings.denomination
   return selectedDenominationKey
 }
 
 export const getDisplayDenominationFromSettings = (settings: any, currencyCode: string) => {
-  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode] || settings.customTokens[currencyCode]
+  const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
   const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
