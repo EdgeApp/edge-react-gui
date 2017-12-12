@@ -7,13 +7,12 @@ export const ACTIVATE_WALLET_ID = PREFIX + 'ACTIVATE_WALLET_ID'
 export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
 
 export const SELECT_WALLET_ID = PREFIX + 'SELECT_WALLET_ID'
-export const SELECT_CURRENCY_CODE = PREFIX + 'SELECT_CURRENCY_CODE'
 
 export const MANAGE_TOKENS = 'MANAGE_TOKEN'
 export const MANAGE_TOKENS_START = 'MANAGE_TOKEN_START'
 export const MANAGE_TOKENS_SUCCESS = 'MANAGE_TOKEN_SUCCESS'
 
-import * as UI_SELECTORS from '../selectors.js'
+// import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
 import {GuiWallet} from '../../../types'
@@ -23,38 +22,51 @@ import * as ADD_TOKEN_ACTIONS from '../scenes/AddToken/action.js'
 
 export const selectWallet = (walletId: string, currencyCode: string) =>
   (dispatch: any) => {
-    dispatch(selectWalletId(walletId))
-    dispatch(selectCurrencyCode(currencyCode))
+    dispatch(selectWalletId(walletId, currencyCode))
   }
 
-export const selectWalletIdRequest = (walletId: string) => (dispatch: any, getState: any) => {
-  const state = getState()
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+export const selectWalletId = (walletId: string, currencyCode: string) => ({
+  type: SELECT_WALLET_ID,
+  data: {walletId, currencyCode}
+})
 
-  if (!selectedWalletId) {
-    dispatch(selectWalletId(walletId))
-  }
+function dispatchUpsertWallet (dispatch, wallet, walletId) {
+  console.log('dispatchUpsertWallet')
+  dispatch(upsertWallet(wallet))
+  refreshDetails[walletId].delayUpsert = false
+  refreshDetails[walletId].lastUpsert = Date.now()
 }
 
-export const selectWalletId = (walletId: string) => ({
-  type: SELECT_WALLET_ID,
-  data: {walletId}
-})
-
-export const selectCurrencyCode = (currencyCode: string) => ({
-  type: SELECT_CURRENCY_CODE,
-  data: {currencyCode}
-})
+const refreshDetails = {}
 
 export const refreshWallet = (walletId: string) =>
   // console.log('refreshWallet')
   (dispatch: any, getState: any) => {
     const state = getState()
     const wallet = CORE_SELECTORS.getWallet(state, walletId)
-
     if (wallet) {
-      // console.log('updating wallet balance', walletId)
-      return dispatch(upsertWallet(wallet))
+      if (!refreshDetails[walletId]) {
+        refreshDetails[walletId] = {
+          delayUpsert: false,
+          lastUpsert: 0
+        }
+      }
+      if (!refreshDetails[walletId].delayUpsert) {
+        const now = Date.now()
+        if (now - refreshDetails[walletId].lastUpsert > 3000) {
+          dispatchUpsertWallet(dispatch, wallet, walletId)
+        } else {
+          console.log('refreshWallets setTimeout delay upsert id:' + walletId)
+          refreshDetails[walletId].delayUpsert = true
+          setTimeout(() => {
+            dispatchUpsertWallet(dispatch, wallet, walletId)
+          }, 3000)
+        }
+      } else {
+        console.log('refreshWallets delayUpsert id:' + walletId)
+      }
+    } else {
+      console.log('refreshWallets no wallet. id:' + walletId)
     }
     // console.log('wallet doesn\'t exist yet', walletId)
   }
