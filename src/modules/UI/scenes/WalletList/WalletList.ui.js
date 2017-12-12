@@ -42,13 +42,13 @@ const options = [
     value: 'sort',
     syntax: strings.enUS['fragment_wallets_sort']
   },{
+    value: 'delete',
+    syntax: strings.enUS['string_delete']
+  },{
     value: 'manageTokens',
     syntax: strings.enUS['fragmet_wallets_managetokens_option']
   },{
     value: 'archive'
-  },{
-    value: 'delete',
-    syntax: strings.enUS['string_delete']
   }
 ]
 
@@ -106,19 +106,19 @@ export default class WalletList extends Component<any, {
         this.enableSorting()
       }
       break
-    case options[2].value: // 'manageTokens'
+    case options[2].value: // 'delete
+      this.props.walletRowOption(walletId, 'delete')
+      break
+    case options[3].value: // 'manageTokens'
       console.log('executing option 2')
       Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
       break
-    case options[3].value: // 'archive'
+    case options[4].value: // 'archive'
       if (!this.props.walletsp[walletId].archived) {
         this.props.walletRowOption(walletId, 'archive')
       } else {
         this.props.walletRowOption(walletId, 'activate')
       }
-      break
-    case options[4].value: // 'delete
-      this.props.walletRowOption(walletId, 'delete')
       break
     }
   }
