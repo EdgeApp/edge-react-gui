@@ -3,7 +3,6 @@ import color from 'color';
 import { Platform, Dimensions, PixelRatio } from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
 
-
 const deviceHeight = platform.deviceHeight;
 const deviceWidth = platform.deviceWidth;
 const platform = Platform.OS;
@@ -48,7 +47,7 @@ export default {
   segmentActiveTextColor: '#3F51B5',
   segmentBorderColor: '#fff',
   segmentBorderColorMain: '#3F51B5',
-  
+
     // New Variable
   get defaultTextColor() {
     return this.textColor;

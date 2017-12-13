@@ -4,7 +4,8 @@ import {
   Clipboard,
   View,
   Share,
-  Keyboard
+  Keyboard,
+  Animated
 } from 'react-native'
 import Alert from './alert'
 import styles from './styles.js'
@@ -23,6 +24,8 @@ import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
+import platform from '../../../../theme/variables/platform.js'
+
 
 export default class Request extends Component {
   constructor (props) {
@@ -31,7 +34,9 @@ export default class Request extends Component {
       publicAddress: '',
       encodedURI: '',
       keyboardUp: false,
-      loading: props.loading
+      loading: props.loading,
+      animationQrSize: new Animated.Value(platform.deviceHeight / 2.9),
+      animationPushUpSize: new Animated.Value(0)
     }
   }
 
@@ -138,6 +143,8 @@ export default class Request extends Component {
           <QRCode
             value={this.state.encodedURI}
             keyboardUp={this.state.keyboardUp}
+            animationQrSize={this.state.animationQrSize}
+            animationPushUpSize={this.state.animationPushUpSize}
           />
           <RequestStatus
             requestAddress={this.state.publicAddress}
@@ -215,16 +222,58 @@ export default class Request extends Component {
     // console.log('shareViaShare')
   }
 
-  keyboardWillShow () {
-    console.log('show')
+  keyboardWillShow (event) {
     this.setState({
       keyboardUp: true
     })
+    this._animateQRCodeOnShow(event)
   }
-  keyboardWillHide () {
-    console.log('hide')
+  keyboardWillHide (event) {
     this.setState({
       keyboardUp: false
     })
+    this._animateQRCodeOnHide(event)
+  }
+
+  _animateQRCodeOnShow (event) {
+    Animated.timing(this.state.animationQrSize, {
+      duration: event.duration,
+      toValue: platform.deviceHeight / 4.3,
+    }).start()
+    Animated.timing(this.state.animationPushUpSize, {
+      duration: event.duration,
+      toValue: 60,
+    }).start()
+    // Animated.spring(this.state.animationQrSize,{
+    //   toValue: platform.deviceHeight / 4.3,
+    //   speed: 0.5,
+    //   bounciness: 3
+    // }).start()
+    // Animated.spring(this.state.animationPushUpSize,{
+    //   toValue: 60,
+    //   speed: 0.5,
+    //   bounciness: 3
+    // }).start()
+  }
+
+  _animateQRCodeOnHide (event) {
+    Animated.timing(this.state.animationQrSize, {
+      duration: event.duration,
+      toValue: platform.deviceHeight / 2.9,
+    }).start()
+    Animated.timing(this.state.animationPushUpSize, {
+      duration: event.duration,
+      toValue: 0,
+    }).start()
+    // Animated.spring(this.state.animationQrSize,{
+    //   toValue: platform.deviceHeight / 2.9,
+    //   speed: 0.5,
+    //   bounciness: 3
+    // }).start()
+    // Animated.spring(this.state.animationPushUpSize,{
+    //   toValue: 0,
+    //   speed: 0.5,
+    //   bounciness: 3
+    // }).start()
   }
 }
