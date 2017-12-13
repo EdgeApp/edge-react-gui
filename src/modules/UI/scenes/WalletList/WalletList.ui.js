@@ -31,6 +31,8 @@ import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
 
+import type {GuiContact} from '../../../../types'
+
 const DONE_TEXT           = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
 const ARCHIVED_TEXT       = s.strings.fragmet_wallets_list_archive_title_capitalized
@@ -60,8 +62,7 @@ const options = [
   }
 ]
 
-
-export default class WalletList extends Component<any, {
+type State = {
   sortableMode: boolean,
   sortableListOpacity: number,
   fullListOpacity: number,
@@ -70,7 +71,28 @@ export default class WalletList extends Component<any, {
   fullListZIndex: number,
   fullListExists: boolean,
   balanceBoxVisible: boolean
-}> {
+}
+type Props = {
+  activeWalletIds: Array<string>,
+  currencyConverter: any,
+  customTokens: Array<any>,
+  deleteWalletModalVisible: boolean,
+  dimensions: any,
+  renameWalletModalVisible: boolean,
+  settings: any,
+  walletId: string,
+  walletName: string,
+  wallets: any,
+  closeDeleteWalletModal: () => void,
+  closeRenameWalletModal: () => void,
+  renameWalletInput: () => void,
+  setContactList: (Array<GuiContact>) => void,
+  updateArchivedWalletsOrder: (Array<string>) => void,
+  updateActiveWalletsOrder: (Array<string>) => void,
+  walletRowOption: (walletId: string, string) => void,
+}
+
+export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
     this.state = {
@@ -121,7 +143,7 @@ export default class WalletList extends Component<any, {
       Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
       break
     case options[4].value: // 'archive'
-      if (!this.props.walletsp[walletId].archived) {
+      if (!this.props.wallets[walletId].archived) {
         this.props.walletRowOption(walletId, 'archive')
       } else {
         this.props.walletRowOption(walletId, 'activate')
