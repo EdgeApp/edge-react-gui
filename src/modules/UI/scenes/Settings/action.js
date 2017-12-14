@@ -105,6 +105,17 @@ export const setBluetoothModeRequest = (bluetoothMode) => (dispatch, getState) =
     .catch((error) => { console.error(error) })
 }
 
+export const checkCurrentPassword = (arg) => async (dispatch, getState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const isPassword = await account.checkPassword(arg)
+  dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
+}
+
+export const lockSettings = () => async (dispatch) => {
+  dispatch(SETTINGS_ACTIONS.setSettingsLock(true))
+}
+
 // Denominations
 export const setDenominationKeyRequest = (currencyCode, denominationKey) => (dispatch, getState) => {
   const state = getState()

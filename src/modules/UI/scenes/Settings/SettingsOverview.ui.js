@@ -18,10 +18,13 @@ import {PrimaryButton} from '../../components/Buttons'
 import {border as b} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import SendLogsModal from './components/SendLogsModal.ui'
+import ConfirmPasswordModal from './components/ConfirmPasswordModal.ui'
 
-import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
+import {Icon} from '../../components/Icon/Icon.ui'
 
 import styles from './style'
+import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
 
 export default class SettingsOverview extends Component {
   constructor (props) {
@@ -29,6 +32,7 @@ export default class SettingsOverview extends Component {
     this.state = {
       showAutoLogoutModal: false,
       showSendLogsModal: false,
+      showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
 
@@ -106,10 +110,12 @@ export default class SettingsOverview extends Component {
   }
 
   _onPressChangePasswordRouting = () => {
+    if (this.props.isLocked) return
     Actions[Constants.CHANGE_PASSWORD]()
   }
 
   _onPressChangePinRouting = () => {
+    if (this.props.isLocked) return
     Actions[Constants.CHANGE_PIN]()
 
   }
@@ -180,15 +186,21 @@ export default class SettingsOverview extends Component {
               </View>
             </View>
           </Gradient>
-
+          <RowRoute
+            leftText={strings.enUS[this.props.lockButton]}
+            routeFunction={this.showConfirmPasswordModal}
+            right={<Icon style={styles.settingsLocks}
+              name={this.props.lockButtonIcon}
+              size={24}
+              type={Constants.ION_ICONS}/>} />
           <RowRoute
             leftText={strings.enUS['settings_button_change_password']}
             routeFunction={this._onPressChangePasswordRouting}
-            right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
+            right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
           <RowRoute
             leftText={strings.enUS['settings_button_pin']}
             routeFunction={this._onPressChangePinRouting}
-            right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
+            right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
           <Gradient style={[styles.unlockRow]}>
             <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -236,11 +248,28 @@ export default class SettingsOverview extends Component {
           <SendLogsModal showModal={this.state.showSendLogsModal}
             onDone={this.onDoneSendLogsModal}
             onCancel={this.onCancelSendLogsModal} />
+          <ConfirmPasswordModal
+            style={ConfirmPasswordModalStyle}
+            headerText={'settings_lock_header'}
+            showModal={this.state.showConfirmPasswordModal}
+            onDone={this.confirmPassword}
+            onCancel={this.hideConfirmPasswordModal} />
         </ScrollView>
       </View>
     )
   }
-
+  confirmPassword = (arg) => {
+    this.setState({showConfirmPasswordModal: false})
+    this.props.confirmPassword(arg)
+  }
+  showConfirmPasswordModal = () => {
+    if (!this.props.isLocked) {
+      this.props.lockSettings()
+      return
+    }
+    this.setState({showConfirmPasswordModal: true})
+  }
+  hideConfirmPasswordModal = () => this.setState({showConfirmPasswordModal: false})
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
   renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />

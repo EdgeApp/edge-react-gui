@@ -34,9 +34,22 @@ type Props = {
 type State = {}
 
 export default class StylizedModal extends Component<Props, State> {
+  showExitIcon = () => {
+    const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
+    if (this.props.onExitButtonFxn) {
+      return <View style={[styles.exitRow]}>
+        <TouchableOpacity
+          style={[styles.exitButton, b()]}
+          onPress={this.props.onExitButtonFxn}>
+          <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
+        </TouchableOpacity>
+      </View>
+    }
+    return <View style={[styles.exitRow]} />
+  }
   render () {
     const {headerText, headerSubtext} = this.props
-    const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
+
     return (
       <Modal style={[styles.topLevelModal, b('yellow'), this.props.style]} isVisible={this.props.visibilityBoolean}>
         <View style={[styles.modalHeaderIconWrapBottom]}>
@@ -45,13 +58,7 @@ export default class StylizedModal extends Component<Props, State> {
 
         <View style={[styles.visibleModal, this.props.modalVisibleStyle]}>
 
-          <View style={[styles.exitRow]}>
-            <TouchableOpacity
-              style={[styles.exitButton, b()]}
-              onPress={this.props.onExitButtonFxn}>
-              <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
-            </TouchableOpacity>
-          </View>
+          {this.showExitIcon()}
 
           <View style={[styles.modalBox, this.props.modalBoxStyle]}>
             <View style={[styles.modalContent, this.props.modalContentStyle]}>
