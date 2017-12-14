@@ -14,7 +14,9 @@ const mapStateToProps = (state: State) => ({
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  autoLogout: () => dispatch(logoutRequest()),
+  autoLogout: () => {
+    return dispatch(logoutRequest())
+  },
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AutoLogout)
