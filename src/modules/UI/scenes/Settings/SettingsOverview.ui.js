@@ -230,6 +230,7 @@ export default class SettingsOverview extends Component {
           </View>
 
           <AutoLogoutModal
+            autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
             showModal={this.state.showAutoLogoutModal}
             onDone={this.onDoneAutoLogoutModal}
             onCancel={this.onCancelAutoLogoutModal} />
