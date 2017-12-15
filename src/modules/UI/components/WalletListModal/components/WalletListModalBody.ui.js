@@ -10,6 +10,7 @@ import styles, {styles as styleRaw} from '../style'
 import * as UTILS from '../../../../utils'
 import {bns} from 'biggystring'
 import type {GuiWallet} from '../../../../../types'
+import _ from 'lodash'
 
 const DIVIDE_PRECISION = 18
 
@@ -38,21 +39,32 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     this.props.disableWalletListModalVisibility()
   }
 
-  renderTokens = (walletId: string, metaTokenBalances: any, code: any) => {
+  renderTokens = (walletId: string, metaTokenBalances: any, code: any, combinedTokens: Array<any> /* merge between customToken and metaToken */) => {
     let tokens = []
     for (let property in metaTokenBalances) {
       if (property !== code) {
-        tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
+        if (_.findIndex(combinedTokens, (token) => token.currencyCode === property)) {
+          tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
+        }
       }
     }
     return tokens
   }
 
   renderTokenRowContent = (parentId: string, currencyCode: string, balance: any) => {
+    const denomination = this.props.walletList[parentId].allDenominations[currencyCode]
     let multiplier
-      = this.props.walletList[parentId]
-      .allDenominations[currencyCode][this.props.settings[currencyCode].denomination]
-      .multiplier
+    if (denomination) {
+      multiplier = denomination[this.props.settings[currencyCode].denomination].multiplier
+    } else {
+      const customDenom = _.find(this.props.settings.customTokens, (item) => item.currencyCode === currencyCode)
+      if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
+        multiplier = customDenom.denominations[0].multiplier
+      } else {
+        return // let it blow up. It shouldn't be attempting to display
+      }
+
+    }
     let cryptoAmount = bns.div(balance, multiplier, DIVIDE_PRECISION)
     const walletId = parentId
     return (
@@ -103,6 +115,8 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       }
     }
 
+    const combinedTokens = UTILS.mergeTokensRemoveInvisible(guiWallet.metaTokens, this.props.settings.customTokens)
+
     return (
       <View key={guiWallet.id}>
         <TouchableHighlight style={styles.rowContainer}
@@ -127,7 +141,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
           </View>
         </TouchableHighlight>
 
-        {this.renderTokens(guiWallet.id, enabledNativeBalances, guiWallet.currencyCode)}
+        {this.renderTokens(guiWallet.id, enabledNativeBalances, guiWallet.currencyCode, combinedTokens)}
       </View>
     )
   }

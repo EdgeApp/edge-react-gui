@@ -1,19 +1,21 @@
-// @flow
-
 import {StyleSheet} from 'react-native'
-
 import THEME from '../../../../theme/variables/airbitz'
 import PLATFORM from '../../../../theme/variables/platform'
 
+
 export const styles = {
+
   gradient: {
-    height: THEME.HEADER,
+    height: 66,
+    width: '100%',
+    position: 'absolute'
   },
   container: {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
-    backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: 32
+    top: 66,
+    paddingHorizontal: 20,
+    backgroundColor: THEME.COLORS.GRAY_4
   },
   leftArea: {
     flexDirection: 'row'
@@ -23,6 +25,7 @@ export const styles = {
     fontSize: 22,
     color: THEME.COLORS.WHITE
   },
+
   headerRow: {
     padding: 12,
     flexDirection: 'row',
@@ -39,94 +42,80 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
   },
+
   instructionalArea: {
     paddingVertical: 16,
-    paddingHorizontal: 20,
-    flex: 1
+    paddingHorizontal: 20
   },
   instructionalText: {
     fontSize: 16,
     textAlign: 'center'
   },
-  metaTokenListArea: {
-    borderTopWidth: 1,
-    borderTopColor: THEME.COLORS.GRAY_3,
-    flex: 11
-  },
-  metaTokenListWrap: {
-    flex: 1
-  },
-  tokenList: {
-    flex: 1
-  },
 
-  /////// start of token row styling ///////
-  manageTokenRow: {
-    height: 44,
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.COLORS.GRAY_3,
-    paddingLeft: 20,
-    paddingRight: 20,
+  nameArea: {
+    height: 70
   },
-  rowLeftArea: {
-    flexDirection: 'row'
+  currencyCodeArea: {
+    height: 70
   },
-  manageTokenRowInterior: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  contractAddressArea: {
+    height: 70
   },
-  touchableCheckboxInterior: {
-    paddingHorizontal: 8,
+  decimalPlacesArea: {
+    height: 70
+  },
+  errorMessageArea: {
+    height: 16,
     justifyContent: 'center',
     alignItems: 'center'
   },
-  tokenNameArea: {
-    alignSelf: 'center'
+  errorMessageText: {
+    color: THEME.COLORS.ACCENT_RED
   },
-  tokenNameText: {
-    color: THEME.COLORS.GRAY_1,
-    fontSize: 16
-  },
-  tokenCheckboxArea: {
-    alignSelf: 'center'
-  },
-  underlay: {
-    color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
-  },
-  rowRightArrow: {
-    fontSize: 18,
-    color: THEME.COLORS.GRAY_1
-  },
-  /////// end of token row styling /////////
-
   buttonsArea: {
+    marginTop: 16,
     height: 52,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'flex-end',
-    paddingVertical: 4,
-    paddingHorizontal: 20,
-  },
-  addButton: {
-    flex: 1,
-    marginRight: 2,
-    backgroundColor: THEME.COLORS.GRAY_2,
-    borderRadius: 3
+    paddingVertical: 4
   },
   buttonText: {
     color: THEME.COLORS.WHITE,
     fontSize: 18
   },
-  saveButton: {
+  button: {
     flex: 1,
+    borderRadius: 3
+  },
+  deleteButton: {
+    marginRight: 2,
+  },
+  saveButton: {
     marginLeft: 2,
     backgroundColor: THEME.COLORS.SECONDARY,
-    borderRadius: 3
+  },
+  deleteModalButtonsArea: {
+    height: 52,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 4,
+    flexDirection: 'row',
+    flex: 1
+  },
+  modalCancelButton: {
+    marginRight: 2,
+  },
+  modalDeleteButton: {
+    marginLeft: 2,
+    backgroundColor: THEME.COLORS.SECONDARY,
+  },
+  bottomPaddingForKeyboard: {
+    height: 300
+  },
+  highlight: {
+    color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
   }
 }
-
 export default StyleSheet.create(styles)

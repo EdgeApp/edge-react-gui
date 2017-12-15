@@ -59,6 +59,15 @@ export const getDisplayDenominationFromSettings = (settings: any, currencyCode: 
   return selectedDenomination
 }
 
+export const getDisplayDenominationFull = (state: State, currencyCode: string) => {
+  const settings = state.ui.settings
+  const currencySettings = settings[currencyCode]
+  const selectedDenominationKey = currencySettings.denomination
+  const denominations = currencySettings.denominations
+  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
+  return selectedDenomination
+}
+
 export const getDisplayDenomination = (state: State, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
@@ -70,6 +79,11 @@ export const getExchangeDenomination = (state: State, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
   const exchangeDenomination = denominations.find((denomination) => denomination.name === currencyCode)
   return exchangeDenomination
+}
+
+export const getCustomTokens = (state: State) => {
+  const settings = getSettings(state)
+  return settings.customTokens
 }
 
 export const getPlugins = (state: State) => {

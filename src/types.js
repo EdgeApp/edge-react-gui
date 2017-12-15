@@ -61,7 +61,7 @@ export type GuiDenomination = {
   currencyCode?: string,
   symbol: string,
   multiplier: string,
-  precision: number
+  precision?: number
 }
 
 export type GuiCurrencyInfo = {
@@ -90,6 +90,18 @@ export type ExchangeData = {
   secondaryDisplayAmount: string,
   secondaryDisplaySymbol: string,
   secondaryCurrencyCode: string
+}
+
+export type CustomTokenInfo = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string,
+  multiplier: string,
+  decimalPlaces: string,
+  denomination: string, // eventually change to mandatory
+  isVisible?: boolean, // eventually change to mandatory,
+  denominations: Array<AbcDenomination>
 }
 
 export type CurrencyConverter = {

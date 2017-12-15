@@ -1,3 +1,5 @@
+// @flow
+
 import {
   StyleSheet
 } from 'react-native'
@@ -11,7 +13,12 @@ const styles = StyleSheet.create({
     width: 28,
     borderColor: THEME.COLORS.GRAY_1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+
+  },
+  checkmark: {
+
   }
 })
 

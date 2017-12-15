@@ -55,6 +55,7 @@ import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
 import AddToken from './UI/scenes/AddToken'
+import EditToken from './UI/scenes/EditToken'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
@@ -296,7 +297,6 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton} />
                       </Stack>
-
                       <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
                         <Scene key='manageTokens_notused' navTransparent={true}
                           component={ManageTokens}
@@ -309,7 +309,6 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton} />
                       </Stack>
-
                       <Stack key='settingsOverviewTab' hideDrawerButton={true}>
                         <Scene key={Constants.SETTINGS_OVERVIEW} navTransparent={true}
                           component={SettingsOverview}

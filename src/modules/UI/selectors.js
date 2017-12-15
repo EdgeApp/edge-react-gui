@@ -5,6 +5,8 @@ import type {AbcTransaction} from 'airbitz-core-types'
 
 import type {State} from '../ReduxTypes'
 import type {GuiDenomination, GuiWallet} from '../../types'
+import * as SETTINGS_SELECTORS from './Settings/selectors'
+import _ from 'lodash'
 
 export const getWallets = (state: State) => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
@@ -56,14 +58,22 @@ export const getDenominations = (state: State, currencyCode: string) => {
 
 export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
   let wallet = getSelectedWallet(state)
-  if (specificWallet) {
-    wallet = getWallet(state, specificWallet.id)
+  const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
+  if (wallet.allDenominations[currencyCode]) {
+    if (specificWallet) {
+      wallet = getWallet(state, specificWallet.id)
+    }
+    for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
+      const denomination = wallet.allDenominations[currencyCode][key]
+      if (denomination.name === currencyCode) return denomination
+    }
+  } else {
+    const customToken = _.find(customTokens, (item) => item.currencyCode === currencyCode)
+    if (customToken && customToken.denomination && customToken.denomination[0]) {
+      const denomination = customToken.denominations[0]
+      return denomination
+    }
   }
-  for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
-    const denomination = wallet.allDenominations[currencyCode][key]
-    if (denomination.name === currencyCode) return denomination
-  }
-
   throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }
 
