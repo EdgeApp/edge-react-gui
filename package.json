@@ -45,7 +45,7 @@
     ]
   },
   "dependencies": {
-    "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",
+    "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#android-fingerprint",
     "airbitz-core-react-native": "git://github.com/Airbitz/airbitz-core-react-native.git",
     "airbitz-core-types": "git://github.com/Airbitz/airbitz-core-types.git",
     "biggystring": "^3.0.1",
