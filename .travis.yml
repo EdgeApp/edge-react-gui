@@ -39,8 +39,10 @@ matrix:
           - build-tools-23.0.1
           - build-tools-23.0.3
           - build-tools-25.0.1
+          - build-tools-25.0.3
           - android-23
           - android-25
+          - android-27
           - extra
           - extra-android-m2repository
           - extra-android-support
