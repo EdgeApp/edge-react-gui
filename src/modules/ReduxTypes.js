@@ -1,7 +1,7 @@
 // @flow
 import type {Store as ReduxStore, Dispatch as ReduxDispatch} from 'redux'
 
-export type Action = { type: string, data: any }
+export type Action = { type: string, data?: any }
 
 export type State = {
   routes: any,

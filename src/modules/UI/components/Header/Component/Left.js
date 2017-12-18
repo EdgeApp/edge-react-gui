@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import BackButton from './BackButton.ui'
 import * as Constants from '../../../../../constants'
 
-const BACK_TEXT = strings.enUS['back_button_text']
-const CANCEL_TEXT = strings.enUS['string_cancel_cap']
+const BACK_TEXT = s.strings.back_button_text
+const CANCEL_TEXT = s.strings.string_cancel_cap
 
 export default class Left extends Component {
   render () {

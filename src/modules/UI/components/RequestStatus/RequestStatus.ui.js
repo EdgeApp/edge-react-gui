@@ -3,13 +3,13 @@ import {Text, View} from 'react-native'
 import T from '../FormattedText/'
 import {connect} from 'react-redux'
 import {border as b} from '../../../utils.js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 import styles from './styles'
 
-const WAITING_FOR_PAYMENT_TEXT = strings.enUS['request_qr_waiting_for_payment']
-const REMAINING_TEXT           = strings.enUS['bitcoin_remaining']
-const RECEIVED_TEXT            = strings.enUS['bitcoin_received']
+const WAITING_FOR_PAYMENT_TEXT = s.strings.request_qr_waiting_for_payment
+const REMAINING_TEXT           = s.strings.bitcoin_remaining
+const RECEIVED_TEXT            = s.strings.bitcoin_received
 
 const RequestStatus = (props) => {
   const amountRequestedInCrypto = props.amountSatoshi

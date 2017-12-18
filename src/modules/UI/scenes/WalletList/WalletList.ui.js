@@ -7,7 +7,6 @@ import {
   Animated,
   FlatList
 } from 'react-native'
-// $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
@@ -19,7 +18,6 @@ import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
-import strings from '../../../../locales/default'
 import s from '../../../../locales/strings.js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
@@ -33,28 +31,38 @@ import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
 
+import type {GuiContact} from '../../../../types'
+
+const DONE_TEXT           = s.strings.string_done_cap
+const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
+const ARCHIVED_TEXT       = s.strings.fragmet_wallets_list_archive_title_capitalized
+const SHOW_BALANCE_TEXT   = s.strings.string_show_balance
+const BALANCE_TEXT        = s.strings.fragment_wallets_balance_text
+const RENAME_WALLET_TEXT  = s.strings.fragment_wallets_rename_wallet
+const RENAME_TEXT         = s.strings.string_rename
+const SORT_TEXT           = s.strings.fragment_wallets_sort
+const DELETE_TEXT         = s.strings.string_delete
+const MANAGE_TOKENS_TEXT  = s.strings.fragmet_wallets_managetokens_option
 
 const options = [
   {
     value: 'rename',
-    syntax: strings.enUS['string_rename']
+    syntax: RENAME_TEXT
   },{
     value: 'sort',
-    syntax: strings.enUS['fragment_wallets_sort']
+    syntax: SORT_TEXT
   },{
     value: 'delete',
-    syntax: strings.enUS['string_delete']
+    syntax: DELETE_TEXT
   },{
     value: 'manageTokens',
-    syntax: strings.enUS['fragmet_wallets_managetokens_option']
+    syntax: MANAGE_TOKENS_TEXT
   },{
     value: 'archive'
   }
 ]
 
-const SHOW_BALANCE_TEXT = strings.enUS['string_show_balance']
-
-export default class WalletList extends Component<any, {
+type State = {
   sortableMode: boolean,
   sortableListOpacity: number,
   fullListOpacity: number,
@@ -63,7 +71,28 @@ export default class WalletList extends Component<any, {
   fullListZIndex: number,
   fullListExists: boolean,
   balanceBoxVisible: boolean
-}> {
+}
+type Props = {
+  activeWalletIds: Array<string>,
+  currencyConverter: any,
+  customTokens: Array<any>,
+  deleteWalletModalVisible: boolean,
+  dimensions: any,
+  renameWalletModalVisible: boolean,
+  settings: any,
+  walletId: string,
+  walletName: string,
+  wallets: any,
+  closeDeleteWalletModal: () => void,
+  closeRenameWalletModal: () => void,
+  renameWalletInput: () => void,
+  setContactList: (Array<GuiContact>) => void,
+  updateArchivedWalletsOrder: (Array<string>) => void,
+  updateActiveWalletsOrder: (Array<string>) => void,
+  walletRowOption: (walletId: string, string) => void,
+}
+
+export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
     this.state = {
@@ -114,7 +143,7 @@ export default class WalletList extends Component<any, {
       Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
       break
     case options[4].value: // 'archive'
-      if (!this.props.walletsp[walletId].archived) {
+      if (!this.props.wallets[walletId].archived) {
         this.props.walletRowOption(walletId, 'archive')
       } else {
         this.props.walletRowOption(walletId, 'activate')
@@ -175,7 +204,7 @@ export default class WalletList extends Component<any, {
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
-                  {s.strings.fragment_wallets_header}
+                  {WALLETS_HEADER_TEXT}
                 </T>
               </View>
             </View>
@@ -194,7 +223,7 @@ export default class WalletList extends Component<any, {
                 ]}
                   onPress={this.disableSorting}>
                   <T style={[styles.walletsBoxDoneText]}>
-                    {strings.enUS['string_done_cap']}
+                    {DONE_TEXT}
                   </T>
                 </TouchableOpacity>
               </Animated.View>
@@ -239,7 +268,7 @@ export default class WalletList extends Component<any, {
             data={activeWalletsObject}
             order={this.props.activeWalletIds}
             onRowMoved={this.onActiveRowMoved}
-            render={strings.enUS['fragmet_wallets_list_archive_title_capitalized']}
+            render={ARCHIVED_TEXT}
             renderRow={(row) => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
             executeWalletRowOption={this.executeWalletRowOption}
             dimensions={this.props.dimensions}
@@ -416,7 +445,7 @@ export default class WalletList extends Component<any, {
   renderRenameWalletModal = () => <StylizedModal
     featuredIcon={<RenameIcon />}
     headerText='fragment_wallets_rename_wallet'
-    modalMiddle={<WalletNameInput label={strings.enUS['fragment_wallets_rename_wallet']} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
+    modalMiddle={<WalletNameInput label={RENAME_WALLET_TEXT} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
     modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}
@@ -465,7 +494,7 @@ export default class WalletList extends Component<any, {
       <View style={[styles.totalBalanceWrap]}>
         <View style={[styles.totalBalanceHeader]}>
           <T style={[styles.totalBalanceText]}>
-            {strings.enUS['fragment_wallets_balance_text']}
+            {BALANCE_TEXT}
           </T>
         </View>
         <View style={[styles.currentBalanceBoxDollarsWrap]}>

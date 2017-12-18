@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { View, Text, ActivityIndicator, Image } from 'react-native'
 import { PrimaryButton, SecondaryButton } from '../../components/Buttons/index'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import type { AbcLobby } from 'airbitz-core-types'
 
 type Props = {
@@ -17,7 +17,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
   renderBody (style: any) {
     let message = this.props.error
     if (!this.props.error) {
-      message = strings.enUS['edge_description']
+      message = s.strings.edge_description
     }
     return (
       <View style={style.body}>
@@ -39,7 +39,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
           <SecondaryButton
             style={style.cancelSolo}
             onPressFunction={this.props.decline}
-            text={strings.enUS['string_cancel_cap']}
+            text={s.strings.string_cancel_cap}
           />
         </View>
       )
@@ -49,12 +49,12 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
         <SecondaryButton
           style={style.cancel}
           onPressFunction={this.props.decline}
-          text={strings.enUS['string_cancel_cap']}
+          text={s.strings.string_cancel_cap}
         />
         <PrimaryButton
           style={style.submit}
           onPressFunction={this.props.accept}
-          text={strings.enUS['accept_button_text']}
+          text={s.strings.accept_button_text}
         />
       </View>
     )

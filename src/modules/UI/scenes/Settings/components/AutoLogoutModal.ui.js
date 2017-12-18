@@ -3,25 +3,23 @@ import {Picker} from 'react-native'
 
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 
 import styles from './styles'
 
-const DISABLE_TEXT = strings.enUS['string_disable']
+const DISABLE_TEXT = s.strings.string_disable
 
 export default class AutoLogoutModal extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      showModal: props.showModal,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
   }
 
   onDone = () => {
-    this.setState({showModal: false})
     this.props.onDone(this.state.autoLogoutTimeInMinutes)
   }
 
@@ -32,7 +30,7 @@ export default class AutoLogoutModal extends Component {
 
   render () {
     const logoutOptions = [
-      {label: DISABLE_TEXT, value: null},
+      {label: DISABLE_TEXT, value: Infinity},
       {label: '1', value: 1},
       {label: '15', value: 15},
       {label: '30', value: 30},

@@ -4,7 +4,7 @@ import ExchangedFlipInput from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
 import * as Constants from '../../../../constants/indexConstants'
 import * as UTILS from '../../../utils'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 export default class CryptoExchangeFlipInputWrapperComponent extends Component {
 
@@ -60,7 +60,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
     } = this.props
 
     if (!this.props.uiWallet) {
-      const buttonText = this.props.whichWallet === Constants.TO ? strings.enUS['select_dest_wallet'] : strings.enUS['select_src_wallet']
+      const buttonText = this.props.whichWallet === Constants.TO ? s.strings.select_dest_wallet : s.strings.select_src_wallet
       return <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
               <TextAndIconButton

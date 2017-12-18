@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component, type Node} from 'react'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {
   View,
   TouchableOpacity,
@@ -66,12 +66,12 @@ export default class StylizedModal extends Component<Props, State> {
 
                 <View style={[styles.modalTopTextWrap]}>
                   <T style={[styles.modalTopText, this.props.headerTextStyle]}>
-                    {strings.enUS[headerText]}
+                    {s.strings[headerText]}
                   </T>
 
                   {this.props.headerSubtext
                     && <T style={[styles.modalTopSubtext]}>
-                      {headerSubtext ? strings.enUS[headerSubtext] : ''}
+                      {headerSubtext ? s.strings[headerSubtext] : ''}
                     </T>
                   }
                 </View>

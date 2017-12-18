@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import strings from '../../../../../../locales/default'
+import s from '../../../../../../locales/strings.js'
 import {bns} from 'biggystring'
 import {
   View,
@@ -103,7 +103,7 @@ class FullWalletListRow extends Component<Props, State> {
     const denomination = this.props.displayDenomination
     const multiplier = denomination.multiplier
     const id = walletData.id
-    const name = walletData.name || strings.enUS['string_no_name']
+    const name = walletData.name || s.strings.string_no_name
     const symbol = denomination.symbol
     let symbolImageDarkMono = walletData.symbolImageDarkMono
     let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)

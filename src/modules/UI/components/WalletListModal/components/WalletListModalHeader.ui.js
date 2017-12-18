@@ -4,7 +4,7 @@ import {
   View,
   TouchableHighlight
 } from 'react-native'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import PropTypes from 'prop-types'
 import T from '../../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -33,7 +33,7 @@ export default class WalletListModalHeader extends Component<any> {
               {color: THEME.COLORS.WHITE},
               b()
             ]}>
-              {strings.enUS[headerSyntax]}
+              {s.strings[headerSyntax]}
             </T>
           </View>
 
