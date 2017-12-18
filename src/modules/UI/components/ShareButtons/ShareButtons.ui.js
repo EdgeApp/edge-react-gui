@@ -3,12 +3,12 @@ import {
   View
 } from 'react-native'
 import ShareButton from '../ShareButton'
-import strings from '../../../../locales/default.js'
+import s from '../../../../locales/strings'
 
 import styles from './styles.js'
 
-const COPY_TEXT = strings.enUS['fragment_request_copy_title']
-const SHARE_TEXT = strings.enUS['string_share']
+const COPY_TEXT = s.strings.fragment_request_copy_title
+const SHARE_TEXT = s.strings.string_share
 
 export default class ShareButtons extends Component {
   render () {

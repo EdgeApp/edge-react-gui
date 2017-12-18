@@ -11,7 +11,7 @@ import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import {bns} from 'biggystring'
 import type {FlipInputFieldInfo} from '../modules/UI/components/FlipInput/FlipInput.ui'
-import strings from '../locales/default'
+import s from '../locales/strings.js'
 import {checkShiftTokenAvailability} from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
 
 const DIVIDE_PRECISION = 18
@@ -155,12 +155,12 @@ export const shiftCryptoCurrency = () => async  (dispatch: any, getState: any) =
       console.log(broadcastedTransaction)
       console.log(savedTransaction)
       setTimeout(() => {
-        Alert.alert(strings.enUS['exchange_succeeded'], strings.enUS['exchanges_may_take_minutes'])
+        Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
       },1)
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR,error.message))
       setTimeout(() => {
-        Alert.alert(strings.enUS['exchange_failed'], error.message)
+        Alert.alert(s.strings.exchange_failed, error.message)
       },1)
     }
     return
@@ -288,7 +288,7 @@ export const selectWalletForExchange = (
   // This is a hack .. if the currecy code is not supported then we cant do the exchange
   if (!checkShiftTokenAvailability(currencyCode)) {
     setTimeout(() => {
-      Alert.alert(strings.enUS['could_not_select'], currencyCode+' '+strings.enUS['token_not_supported'])
+      Alert.alert(s.strings.could_not_select, currencyCode+' '+s.strings.token_not_supported)
     },1)
     return
   }

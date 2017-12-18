@@ -2,11 +2,11 @@ import React, {Component} from 'react'
 import {View,  TouchableHighlight} from 'react-native'
 import T from '../../../components/FormattedText/FormattedText.ui'
 import styles from '../style'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import {sprintf} from 'sprintf-js'
 
-const NEGATIVE_TEXT = sprintf(strings.enUS['string_cancel_cap'])
-const POSITIVE_TEXT = sprintf(strings.enUS['string_delete'])
+const NEGATIVE_TEXT = sprintf(s.strings.string_cancel_cap)
+const POSITIVE_TEXT = sprintf(s.strings.string_delete)
 
 export default class DeleteWalletButtons extends Component {
   onNegative = () => {

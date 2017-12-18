@@ -4,10 +4,10 @@ import React, {Component} from 'react'
 import {Text, View} from 'react-native'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils.js'
 
-const SLIDE_TO_COMPLETE_TEXT = strings.enUS['send_confirmation_slide_to_confirm']
+const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
 
 type Props = {
   sliderDisabled: boolean,

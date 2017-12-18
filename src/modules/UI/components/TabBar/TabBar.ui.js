@@ -7,7 +7,7 @@ import {Footer, FooterTab, Button} from 'native-base'
 
 import type {Dispatch} from '../../../ReduxTypes'
 
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {openSideMenu, closeSideMenu} from '../SideMenu/action'
 import T from '../FormattedText'
 import wallet from '../../../../assets/images/tabbar/wallets.png'
@@ -22,11 +22,11 @@ import more from '../../../../assets/images/tabbar/more.png'
 import moreSelected from '../../../../assets/images/tabbar/more_selected.png'
 import styles from './styles.js'
 
-const WALLETS_TEXT      = strings.enUS['drawer_wallets']
-const REQUEST_TEXT      = strings.enUS['drawer_request']
-const SCAN_TEXT         = strings.enUS['drawer_scan']
-const TRANSACTIONS_TEXT = strings.enUS['drawer_transactions']
-const MORE_TEXT         = strings.enUS['drawer_more']
+const WALLETS_TEXT      = s.strings.drawer_wallets
+const REQUEST_TEXT      = s.strings.drawer_request
+const SCAN_TEXT         = s.strings.drawer_scan
+const TRANSACTIONS_TEXT = s.strings.drawer_transactions
+const MORE_TEXT         = s.strings.drawer_more
 
 type State = {}
 type Props = {
