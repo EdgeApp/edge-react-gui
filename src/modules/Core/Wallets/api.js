@@ -4,12 +4,14 @@ import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcPa
 
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
-export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) =>
-  wallet.renameWallet(name)
+export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => {
+  return wallet.renameWallet(name)
   .then(() => wallet)
+}
 
-export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<Array<AbcTransaction>> =>
-  wallet.getTransactions ? wallet.getTransactions({currencyCode}) : Promise.resolve([])
+export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<Array<AbcTransaction>> => {
+  return wallet.getTransactions ? wallet.getTransactions({currencyCode}) : Promise.resolve([])
+}
 
 const dummyAbcTransaction: AbcTransaction = {
   txid: '',
@@ -30,39 +32,48 @@ const dummyAbcReceiveAddress: AbcReceiveAddress = {
   nativeAmount: ''
 }
 
-export const setTransactionDetailsRequest = (wallet: AbcCurrencyWallet, txid: string, currencyCode: string, abcMetadata: AbcMetadata): Promise<void> =>
-   wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata): Promise.resolve()
+export const setTransactionDetailsRequest = (wallet: AbcCurrencyWallet, txid: string, currencyCode: string, abcMetadata: AbcMetadata): Promise<void> => {
+  return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata): Promise.resolve()
+}
 
-export const getReceiveAddress = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<AbcReceiveAddress> =>
-  wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyAbcReceiveAddress)
+export const getReceiveAddress = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<AbcReceiveAddress> => {
+  return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyAbcReceiveAddress)
+}
 
-export const makeSpend = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<AbcTransaction> =>
-  wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyAbcTransaction)
+export const makeSpend = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<AbcTransaction> => {
+  return wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyAbcTransaction)
+}
 
-export const getMaxSpendable = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<string> =>
-  wallet.getMaxSpendable ? wallet.getMaxSpendable(spendInfo) : Promise.resolve('0')
+export const getMaxSpendable = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<string> => {
+  return wallet.getMaxSpendable ? wallet.getMaxSpendable(spendInfo) : Promise.resolve('0')
+}
 
-export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): string =>
-  wallet.getBalance ? wallet.getBalance({currencyCode}) : '0'
+export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): string => {
+  return wallet.getBalance ? wallet.getBalance({currencyCode}) : '0'
+}
 
-export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
-  wallet.disableTokens(tokens)
+export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+  return wallet.disableTokens(tokens)
+}
 
-export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =>
-  wallet.enableTokens(tokens)
+export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
+  return wallet.enableTokens(tokens)
+}
 
-export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) =>
-  wallet.addCustomToken(tokenObj)
+export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
+  return wallet.addCustomToken(tokenObj)
   .then(() => wallet.enableTokens([tokenObj.currencyCode]))
   .catch((e) => console.log(e))
+}
 
-export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet): Promise<Array<any>> =>
-  getEnabledTokensFile(wallet).getText()
+export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
+  return getEnabledTokensFile(wallet).getText()
   .then(JSON.parse)
   .catch((e) => {
     console.log(e)
     return setEnabledTokens(wallet, [])
   })
+}
 
 export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
   const folder = wallet.folder
@@ -89,13 +100,21 @@ export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array
   }
 }
 
-export const parseURI = (wallet: AbcCurrencyWallet, uri: string): AbcParsedUri => wallet.parseUri(uri)
+export const parseURI = (wallet: AbcCurrencyWallet, uri: string): AbcParsedUri => {
+  return wallet.parseUri(uri)
+}
 
-export const signTransaction = (wallet: AbcCurrencyWallet, unsignedTransaction: AbcTransaction): Promise<AbcTransaction> => wallet.signTx(unsignedTransaction)
+export const signTransaction = (wallet: AbcCurrencyWallet, unsignedTransaction: AbcTransaction): Promise<AbcTransaction> => {
+  return wallet.signTx(unsignedTransaction)
+}
 
-export const broadcastTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<AbcTransaction> => wallet.broadcastTx(signedTransaction)
+export const broadcastTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<AbcTransaction> => {
+  return wallet.broadcastTx(signedTransaction)
+}
 
-export const saveTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<void> => wallet.saveTx(signedTransaction)
+export const saveTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<void> => {
+  return wallet.saveTx(signedTransaction)
+}
 
 // Documented but not implemented in the core
 // Do not use for Glidera transactions
