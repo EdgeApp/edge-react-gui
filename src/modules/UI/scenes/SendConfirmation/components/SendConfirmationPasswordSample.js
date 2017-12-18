@@ -5,9 +5,9 @@ import {
   TextInput
 } from 'react-native'
 import styles from '../styles'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 
-const PASSWORD_TEXT = strings.enUS['send_confirmation_enter_send_password']
+const PASSWORD_TEXT = s.strings.send_confirmation_enter_send_password
 
 export default class Password extends Component {
   render () {

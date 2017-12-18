@@ -4,7 +4,7 @@ import {
 } from 'react-native'
 import {TertiaryButton} from '../../../components/Buttons'
 import styles from '../style.js'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import {FormField} from '../../../../../components/FormField.js'
 
 
@@ -18,7 +18,7 @@ export class AddressInput extends Component { // this component is for the input
             onChangeText={this.props.onChangeText}
             autoCapitalize={'none'}
             autoFocus
-            label={strings.enUS.fragment_send_send_to_hint}
+            label={s.strings.fragment_send_send_to_hint}
             returnKeyType={'done'}
             autoCorrect={false}
             onSubmitEditing={this.props.onSubmit}

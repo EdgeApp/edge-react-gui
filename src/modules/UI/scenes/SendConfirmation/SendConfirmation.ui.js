@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import Text from '../../components/FormattedText'
 import {sprintf} from 'sprintf-js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import styles from './styles.js'
 import {bns} from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
@@ -98,7 +98,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
       fiatFeeAmountString = fiatFeeAmount.toFixed(2)
       fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
       fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
-      networkFeeSyntax = sprintf(strings.enUS['send_confirmation_fee_line'], cryptoFeeString, fiatFeeString)
+      networkFeeSyntax = sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
     } else {
       networkFeeSyntax = ''
     }

@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {
   ActivityIndicator,
   Alert,
@@ -48,13 +48,13 @@ type Props = {
   loginWithEdge(string): void
 }
 
-const HEADER_TEXT     = strings.enUS['send_scan_header_text']
+const HEADER_TEXT     = s.strings.send_scan_header_text
 
 const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
-// const TRANSFER_TEXT = strings.enUS['fragment_send_transfer']
-const ADDRESS_TEXT  = strings.enUS['fragment_send_address']
-// const PHOTOS_TEXT   = strings.enUS['fragment_send_photos']
-const FLASH_TEXT    = strings.enUS['fragment_send_flash']
+// const TRANSFER_TEXT = s.strings.fragment_send_transfer
+const ADDRESS_TEXT  = s.strings.fragment_send_address
+// const PHOTOS_TEXT   = s.strings.fragment_send_photos
+const FLASH_TEXT    = s.strings.fragment_send_flash
 
 export default class Scan extends Component<any, any> {
   static defaultProps: any;
@@ -213,10 +213,10 @@ export default class Scan extends Component<any, any> {
     } catch (error) {
       this.props.dispatchDisableScan()
       Alert.alert(
-        strings.enUS['fragment_send_send_bitcoin_unscannable'],
+        s.strings.fragment_send_send_bitcoin_unscannable,
         error.toString(),
         [
-          {text: strings.enUS['string_ok'], onPress: () => this.props.dispatchEnableScan()},
+          {text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan()},
         ]
       )
     }

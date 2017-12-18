@@ -1,21 +1,21 @@
 import React, {Component} from 'react'
 import * as Constants from '../../../../../../constants/indexConstants'
-import strings from '../../../../../../locales/default'
+import s from '../../../../../../locales/strings.js'
 import MenuDropDown from '../../../../components/MenuDropDown/MenuDropDown.ui'
 import {MenuDropDownStyle} from '../../../../../../styles/indexStyles'
 export const options = [
   {
     value: Constants.RENAME_VALUE,
-    label: strings.enUS['string_rename']
+    label: s.strings.string_rename
   },{
     value: Constants.SORT_VALUE,
-    label: strings.enUS['fragment_wallets_sort']
+    label: s.strings.fragment_wallets_sort
   },{
     value: Constants.DELETE_VALUE,
-    label: strings.enUS['string_delete']
+    label: s.strings.string_delete
   },{
     value: Constants.MANAGE_TOKENS_VALUE,
-    label: strings.enUS['fragmet_wallets_managetokens_option']
+    label: s.strings.fragmet_wallets_managetokens_option
   }
 ]
 
@@ -23,7 +23,7 @@ export default class WalletListRowOptions extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      archiveSyntax: strings.enUS['fragmet_wallets_list_'
+      archiveSyntax: s.strings['fragmet_wallets_list_'
       + (this.props.archived
         ? 'restore'
         : 'archive')
