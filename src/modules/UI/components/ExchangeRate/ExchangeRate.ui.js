@@ -4,11 +4,11 @@ import {
   Text,
   View
 } from 'react-native'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils'
 import styles from './styles'
 
-const EXCHANGE_RATE_LOADING_TEXT = strings.enUS['drawer_exchange_rate_loading']
+const EXCHANGE_RATE_LOADING_TEXT = s.strings.drawer_exchange_rate_loading
 
 type Props = {
   primaryInfo: Object,

@@ -6,14 +6,14 @@ import {
   toggleScanToWalletListModal
 } from '../../WalletListModal/action'
 import {sprintf} from 'sprintf-js'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import * as Constants from '../../../../../constants/indexConstants'
 import * as Styles from '../../../../../styles/indexStyles'
 const mapStateToProps = (state) => {
 
   const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const LOADING_TEXT = sprintf(strings.enUS['loading'])
+  const LOADING_TEXT = sprintf(s.strings.loading)
   const title = selectedWallet
   ? selectedWallet.name + ':' + selectedWalletCurrencyCode
   : LOADING_TEXT

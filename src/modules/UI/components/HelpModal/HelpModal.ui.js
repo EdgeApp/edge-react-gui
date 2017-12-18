@@ -7,7 +7,7 @@ import {
   Linking,
   Platform
 } from 'react-native'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import styles from './style.js'
 import StylizedModal from '../Modal/index.js'
 import THEME from '../../../../theme/variables/airbitz.js'
@@ -42,8 +42,8 @@ export default class HelpModal extends Component {
         modalContentStyle={styles.modalContentStyle}
         modalMiddleStyle={styles.modalMiddleWebView}
         modalBottom={<View style={[styles.modalBottomContainer]}>
-                        <Text style={styles.modalBottomText}>{strings.enUS['help_version']} {versionNumber}</Text>
-                        <Text style={styles.modalBottomText}>{strings.enUS['help_build']} {buildNumber}</Text>
+                        <Text style={styles.modalBottomText}>{s.strings.help_version} {versionNumber}</Text>
+                        <Text style={styles.modalBottomText}>{s.strings.help_build} {buildNumber}</Text>
                     </View>}
         featuredIcon={<Image source={helpImage}  style={styles.modalFeaturedIcon} color={THEME.secondary} size={20} />}
       />

@@ -19,7 +19,6 @@ import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
-import strings from '../../../../locales/default'
 import s from '../../../../locales/strings.js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
@@ -37,22 +36,22 @@ import platform from '../../../../theme/variables/platform.js'
 const options = [
   {
     value: 'rename',
-    syntax: strings.enUS['string_rename']
+    syntax: s.strings.string_rename
   },{
     value: 'sort',
-    syntax: strings.enUS['fragment_wallets_sort']
+    syntax: s.strings.fragment_wallets_sort
   },{
     value: 'delete',
-    syntax: strings.enUS['string_delete']
+    syntax: s.strings.string_delete
   },{
     value: 'manageTokens',
-    syntax: strings.enUS['fragmet_wallets_managetokens_option']
+    syntax: s.strings.fragmet_wallets_managetokens_option
   },{
     value: 'archive'
   }
 ]
 
-const SHOW_BALANCE_TEXT = strings.enUS['string_show_balance']
+const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 
 export default class WalletList extends Component<any, {
   sortableMode: boolean,
@@ -194,7 +193,7 @@ export default class WalletList extends Component<any, {
                 ]}
                   onPress={this.disableSorting}>
                   <T style={[styles.walletsBoxDoneText]}>
-                    {strings.enUS['string_done_cap']}
+                    {s.strings.string_done_cap}
                   </T>
                 </TouchableOpacity>
               </Animated.View>
@@ -239,7 +238,7 @@ export default class WalletList extends Component<any, {
             data={activeWalletsObject}
             order={this.props.activeWalletIds}
             onRowMoved={this.onActiveRowMoved}
-            render={strings.enUS['fragmet_wallets_list_archive_title_capitalized']}
+            render={s.strings.fragmet_wallets_list_archive_title_capitalized}
             renderRow={(row) => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
             executeWalletRowOption={this.executeWalletRowOption}
             dimensions={this.props.dimensions}
@@ -416,7 +415,7 @@ export default class WalletList extends Component<any, {
   renderRenameWalletModal = () => <StylizedModal
     featuredIcon={<RenameIcon />}
     headerText='fragment_wallets_rename_wallet'
-    modalMiddle={<WalletNameInput label={strings.enUS['fragment_wallets_rename_wallet']} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
+    modalMiddle={<WalletNameInput label={s.strings.fragment_wallets_rename_wallet} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
     modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}
@@ -465,7 +464,7 @@ export default class WalletList extends Component<any, {
       <View style={[styles.totalBalanceWrap]}>
         <View style={[styles.totalBalanceHeader]}>
           <T style={[styles.totalBalanceText]}>
-            {strings.enUS['fragment_wallets_balance_text']}
+            {s.strings.fragment_wallets_balance_text}
           </T>
         </View>
         <View style={[styles.currentBalanceBoxDollarsWrap]}>

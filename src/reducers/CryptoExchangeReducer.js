@@ -2,7 +2,7 @@
 
 import type {State} from '../modules/ReduxTypes'
 import * as Constants from '../constants/indexConstants'
-import strings from '../locales/default'
+import s from '../locales/strings.js'
 
 const initialState = {
   exchangeRate: 1,
@@ -75,7 +75,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     return {...state, reverseExchange: action.data}
   case Constants.UPDATE_SHIFT_TRANSACTION:
     return {...state, transaction: action.data.abcTransaction,
-      fee: action.data.networkFee && state.fromCurrencyCode ? strings.enUS['string_fee'] + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
+      fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
       insufficientError: false,
       genericShapeShiftError: null}
   case Constants.INVALIDATE_SHIFT_TRANSACTION:

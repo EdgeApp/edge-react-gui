@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Title} from 'native-base'
 
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings'
 import {sprintf} from 'sprintf-js'
 
 export default class DefaultHeader extends Component {
@@ -13,12 +13,12 @@ export default class DefaultHeader extends Component {
       ? this.props.routes.scene.children[sceneIndex].title
       : null
 
-    return title || strings.enUS['title_Header']
+    return title || s.strings.title_Header
   }
 
   render () {
     return <Title>
-      {sprintf('%s', strings.enUS['title_' + this._renderTitle().replace(/ /g, '_')])}
+      {sprintf('%s', s.strings['title_' + this._renderTitle().replace(/ /g, '_')])}
     </Title>
   }
 }

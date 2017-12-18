@@ -1,6 +1,6 @@
 //@flow
 import React, {Component} from 'react'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
@@ -63,7 +63,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
 
   renderButton = () => {
     if (this.props.showNextButton) {
-      return <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.props.openConfirmation} />
+      return <PrimaryButton text={s.strings.string_next} onPressFunction={this.props.openConfirmation} />
     }
     return null
   }

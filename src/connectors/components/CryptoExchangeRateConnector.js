@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import LinkedComponent
   from '../../modules/UI/components/CryptoExchangeRate/CryptoExchangeRate'
 // import * as actions from '../../actions/indexActions'
-import strings from '../../locales/default'
+import s from '../../locales/strings.js'
 export const mapStateToProps = (state: any, ownProps: any) => {
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
   const exchangeRate = state.cryptoExchange.exchangeRate
@@ -14,7 +14,7 @@ export const mapStateToProps = (state: any, ownProps: any) => {
   if (fromCurrencyCode && toCurrencyCode) {
     exchangeRateString = '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
     if (insufficient) {
-      exchangeRateString = strings.enUS['fragment_insufficient_funds']
+      exchangeRateString = s.strings.fragment_insufficient_funds
     }
     if (genericError) {
       exchangeRateString = genericError

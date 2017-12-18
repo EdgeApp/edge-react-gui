@@ -22,7 +22,7 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -183,7 +183,7 @@ export default class Request extends Component<Props, State> {
     const APP_NAME = 'Edge Wallet'
     Share.share({
       message: this.state.encodedURI,
-      title: sprintf(strings.enUS['request_qr_email_title'], APP_NAME)
+      title: sprintf(s.strings.request_qr_email_title, APP_NAME)
     }, {dialogTitle: 'Share Airbitz Request'})
     .then(this.showResult)
     .catch((error) => this.setState({
