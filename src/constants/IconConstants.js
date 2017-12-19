@@ -17,6 +17,8 @@ export const TRASH_O = 'trash-o'
 export const ION_ICONS = 'ionIcons'
 export const CLOSE_ICON = 'close'
 export const EXCHANGE_ICON = 'ios-swap'
+export const UNLOCKED_ICON = 'ios-unlock-outline'
+export const LOCKED_ICON = 'ios-lock-outline'
 
 // Material
 export const MATERIAL_ICONS = 'material'

@@ -75,6 +75,9 @@ export const styles = {
     fontSize: 18,
     color: THEME.COLORS.GRAY_1
   },
+  settingsLocks: {
+    color: THEME.COLORS.GRAY_1
+  },
   modalRightText: {
     color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold'

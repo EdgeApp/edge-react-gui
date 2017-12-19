@@ -11,7 +11,7 @@ import {border as b} from '../../../../utils'
 
 type Props = {
     leftText: string,
-    right: string,
+    right?: any,
     routeFunction(): void
 }
 export default class RowRoute extends Component<Props> {
