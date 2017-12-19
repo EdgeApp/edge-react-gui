@@ -1,3 +1,4 @@
+// @flow
 const strings = {
   loading: 'Loading…',
   synchronizing: 'Synchronizing…',

@@ -1,3 +1,4 @@
+// @flow
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
@@ -25,9 +26,41 @@ import {Icon} from '../../components/Icon/Icon.ui'
 
 import styles from './style'
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
+import { AbcAccount } from 'airbitz-core-types'
+type Props = {
+  defaultFiat: string,
+  autoLogoutTimeInMinutes: number,
+  username: string,
+  account: AbcAccount,
+  supportsTouchId: string,
+  touchIdEnabled: boolean,
+  lockButton: string,
+  lockButtonIcon: string,
+  isLocked: boolean,
+  setAutoLogoutTimeInMinutes(number): void,
+  confirmPassword(string): void,
+  lockSettings(): void,
+  enableTouchId(boolean): void,
+  sendLogs(string): void
+}
+type State = {
+  showAutoLogoutModal: boolean,
+  showSendLogsModal: boolean,
+  showConfirmPasswordModal: boolean,
+  autoLogoutTimeInMinutes: number
+}
 
-export default class SettingsOverview extends Component {
-  constructor (props) {
+/* type OptionsType = {
+  pinRelogin: Object,
+  useTouchID: Object
+} */
+export default class SettingsOverview extends Component<Props,State> {
+  settings: Array<Object>
+  securityRoute: Array<Object>
+  optionModals: Array<Object>
+  currencies: Array<Object>
+  options: Object
+  constructor (props: Props) {
     super(props)
     this.state = {
       showAutoLogoutModal: false,
@@ -69,14 +102,14 @@ export default class SettingsOverview extends Component {
         value: false
       }
     }
-    if (this.props.supportsTouchId) {
+    /* if (this.props.supportsTouchId) {
       this.options.useTouchID =  {
         text: s.strings.settings_button_use_touchID,
         key: 'useTouchID',
         routeFunction: this._onToggleTouchIdOption,
         value: this.props.touchIdEnabled
       }
-    }
+    } */
 
     this.optionModals = [
       {
@@ -135,11 +168,11 @@ export default class SettingsOverview extends Component {
     // console.log('open change categories thingy')
   }
 
-  _onToggleOption = (property) => {
+  _onToggleOption = (property: string) => {
     console.log('Allen toggling option: ', property)
   }
 
-  _onToggleTouchIdOption = (bool) => {
+  _onToggleTouchIdOption = (bool: boolean) => {
     this.props.enableTouchId(bool)
     console.log('Allen toggling _onToggleTouchIdOption: ', bool)
   }
@@ -148,7 +181,7 @@ export default class SettingsOverview extends Component {
     // HockeyApp.generateTestCrash()
   }
 
-  onDoneAutoLogoutModal = (autoLogoutTimeInMinutes) => {
+  onDoneAutoLogoutModal = (autoLogoutTimeInMinutes: number) => {
     this.setState({
       showAutoLogoutModal: false,
       autoLogoutTimeInMinutes
@@ -160,7 +193,7 @@ export default class SettingsOverview extends Component {
     this.setState({showAutoLogoutModal: false})
   }
 
-  onDoneSendLogsModal = (text) => {
+  onDoneSendLogsModal = (text: string) => {
     this.setState({showSendLogsModal: false})
     this.props.sendLogs(text)
   }
@@ -187,7 +220,7 @@ export default class SettingsOverview extends Component {
             </View>
           </Gradient>
           <RowRoute
-            leftText={strings.enUS[this.props.lockButton]}
+            leftText={s.strings[this.props.lockButton]}
             routeFunction={this.showConfirmPasswordModal}
             right={<Icon style={styles.settingsLocks}
               name={this.props.lockButtonIcon}
@@ -258,7 +291,7 @@ export default class SettingsOverview extends Component {
       </View>
     )
   }
-  confirmPassword = (arg) => {
+  confirmPassword = (arg: string) => {
     this.setState({showConfirmPasswordModal: false})
     this.props.confirmPassword(arg)
   }
@@ -272,8 +305,8 @@ export default class SettingsOverview extends Component {
   hideConfirmPasswordModal = () => this.setState({showConfirmPasswordModal: false})
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
-  renderRowRoute = (x, i) => <RowRoute key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
-  renderRowSwitch = (x) => (
+  renderRowRoute = (x: Object, i: number) => <RowRoute key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
+  renderRowSwitch = (x: string) => (
     <RowSwitch
       leftText={this.options[x].text}
       key={this.options[x].key}
@@ -282,5 +315,5 @@ export default class SettingsOverview extends Component {
       value={this.options[x].value}
     />
   )
-  renderRowModal = (x) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
+  renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
 }
