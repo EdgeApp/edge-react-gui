@@ -50,10 +50,6 @@ type State = {
   autoLogoutTimeInMinutes: number
 }
 
-/* type OptionsType = {
-  pinRelogin: Object,
-  useTouchID: Object
-} */
 export default class SettingsOverview extends Component<Props,State> {
   settings: Array<Object>
   securityRoute: Array<Object>
@@ -93,23 +89,32 @@ export default class SettingsOverview extends Component<Props,State> {
         routeFunction: this._onPressDummyRouting
       }
     ]
+    const pinRelogin = {
+      text: s.strings.settings_title_pin_login,
+      key: 'pinRelogin',
+      routeFunction: this._onToggleOption,
+      value: false
+    }
+    const useTouchID = this.props.supportsTouchId ? {
+      text: s.strings.settings_button_use_touchID,
+      key: 'useTouchID',
+      routeFunction: this._onToggleTouchIdOption,
+      value: this.props.touchIdEnabled
+    } : null
 
     this.options = {
-      pinRelogin: {
-        text: s.strings.settings_title_pin_login,
-        key: 'pinRelogin',
-        routeFunction: this._onToggleOption,
-        value: false
-      }
+      pinRelogin,
+      useTouchID
     }
-    /* if (this.props.supportsTouchId) {
+
+    if (this.props.supportsTouchId) {
       this.options.useTouchID =  {
         text: s.strings.settings_button_use_touchID,
         key: 'useTouchID',
         routeFunction: this._onToggleTouchIdOption,
         value: this.props.touchIdEnabled
       }
-    } */
+    }
 
     this.optionModals = [
       {
