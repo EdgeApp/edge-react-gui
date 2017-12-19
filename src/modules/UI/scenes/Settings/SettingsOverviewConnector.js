@@ -1,3 +1,4 @@
+// @flow
 // import HockeyApp from 'react-native-hockeyapp'
 import {connect} from 'react-redux'
 import {touchIdEnabled, supportsTouchId, enableTouchId} from 'airbitz-core-js-ui'
@@ -8,9 +9,10 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import {setAutoLogoutTimeInMinutesRequest, checkCurrentPassword, lockSettings} from './action'
 import {sendLogs} from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
-
+import type {State, Dispatch} from '../../../../modules/ReduxTypes'
+import { AbcAccount } from 'airbitz-core-types'
 //settings_button_lock_settings, or //settings_button_unlock_settings
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: State) => {
   const isLocked = SETTINGS_SELECTORS.getSettingsLock(state)
   const lockButtonIcon = isLocked ? Constants.LOCKED_ICON : Constants.UNLOCKED_ICON
   const lockButton = isLocked ? 'settings_button_unlock_settings' : 'settings_button_lock_settings'
@@ -26,12 +28,12 @@ const mapStateToProps = (state) => {
     isLocked
   }
 }
-const mapDispatchToProps = (dispatch) => ({
-  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
-  confirmPassword: (arg) => dispatch(checkCurrentPassword(arg)),
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes: number) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
+  confirmPassword: (arg: string) => dispatch(checkCurrentPassword(arg)),
   lockSettings: () => dispatch(lockSettings()),
-  enableTouchId: (arg, account) => enableTouchId(arg, account),
-  sendLogs: (text) => dispatch(sendLogs(text))
+  enableTouchId: (arg: string, account: AbcAccount) => enableTouchId(arg, account),
+  sendLogs: (text: string) => dispatch(sendLogs(text))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)
