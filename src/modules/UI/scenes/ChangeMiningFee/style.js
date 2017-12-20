@@ -4,19 +4,31 @@ import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = {
-  wrapper: {
-    padding: 60,
+  gradient: {
+    height: THEME.SPACER.HEADER
+  },
+  container: {
     flexDirection: 'column',
+  },
+  headerContainer: {
+    padding: 25,
+    paddingBottom: 10,
   },
   header: {
     fontSize: 15,
-    paddingBottom: 10,
     color: THEME.COLORS.GRAY_1,
+  },
+  body: {
+    paddingTop: 24,
+    paddingLeft: 40
   },
   column: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 10,
+  },
+  row: {
+    padding: 8
   },
   radio: {
     borderRadius: 9,
