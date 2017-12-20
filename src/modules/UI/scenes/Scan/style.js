@@ -1,3 +1,5 @@
+// @flow
+
 import {
   StyleSheet,
   Platform
