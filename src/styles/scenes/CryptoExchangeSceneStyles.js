@@ -42,7 +42,7 @@ const CryptoExchangeSceneStyle = {
     }
   },
   shim: {
-    height:20
+    height: 20
   },
 
   flipButton: Styles.IconButtonStyle,

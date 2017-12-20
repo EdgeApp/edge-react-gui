@@ -117,7 +117,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
   render () {
     const style = CryptoExchangeSceneStyle
     return (
-      <View style={[style.scene]}>
+      <Gradient style={[style.scene]}>
         <Gradient style={style.gradient} />
         <KeyboardAwareScrollView
           style={[style.mainScrollView]}
@@ -155,7 +155,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
         </KeyboardAwareScrollView>
         {this.renderDropUp()}
         {this.renderConfirmation(style.confirmModal)}
-      </View>
+      </Gradient>
     )
   }
 }
