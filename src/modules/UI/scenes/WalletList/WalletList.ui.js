@@ -1,4 +1,5 @@
 // @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -91,7 +92,6 @@ type Props = {
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, string) => void,
 }
-
 export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
@@ -151,6 +151,7 @@ export default class WalletList extends Component<Props, State> {
       break
     }
   }
+
   render () {
     const {
       wallets,
@@ -189,7 +190,7 @@ export default class WalletList extends Component<Props, State> {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
 
         <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
           {this.state.balanceBoxVisible

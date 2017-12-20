@@ -1,3 +1,5 @@
+// @flow
+
 import { StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -7,7 +9,7 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.GRAY_4
   },
   gradient: {
-    height: 66,
+    height: THEME.HEADER,
     width: '100%',
     position: 'absolute'
   },

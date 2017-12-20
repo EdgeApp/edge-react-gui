@@ -1,4 +1,5 @@
 //@flow
+
 import React, {Component} from 'react'
 import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
@@ -117,6 +118,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
     const style = CryptoExchangeSceneStyle
     return (
       <Gradient style={[style.scene]}>
+        <Gradient style={style.gradient} />
         <KeyboardAwareScrollView
           style={[style.mainScrollView]}
           keyboardShouldPersistTaps={Constants.ALWAYS}
