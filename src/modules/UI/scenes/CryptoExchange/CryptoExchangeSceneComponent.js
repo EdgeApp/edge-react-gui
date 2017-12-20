@@ -1,4 +1,5 @@
 //@flow
+
 import React, {Component} from 'react'
 import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
