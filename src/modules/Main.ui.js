@@ -41,7 +41,7 @@ import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswor
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
 import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
-import HelpButton from './UI/components/Header/Component/HelpButton.ui'
+import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import BackButton from './UI/components/Header/Component/BackButton.ui'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
 
