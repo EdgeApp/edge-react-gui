@@ -8,7 +8,7 @@ export default StyleSheet.create({
   sideTextWrap: {
     paddingTop: 3,
     paddingBottom: 3,
-    paddingLeft: 10
+    paddingHorizontal: 10
   },
   backButton: {
     flexDirection: 'row',
