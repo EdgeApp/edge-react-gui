@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   Alert,
@@ -14,8 +16,16 @@ import styles from './style'
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = s.strings.settings_select_currency
 const INVALID_DATA_TEXT               = s.strings.fragment_create_wallet_select_valid
 
-export default class DefaultFiatSetting extends Component {
-  constructor (props) {
+type Props = {
+  supportedFiats: Array<{value: string}>,
+  onSelectFiat: (string) => void
+}
+type State = {
+  supportedFiats: Array<{value: string}>,
+  selectedFiat: string
+}
+export default class DefaultFiatSetting extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       supportedFiats: props.supportedFiats,
@@ -40,7 +50,7 @@ export default class DefaultFiatSetting extends Component {
     </View>
   }
 
-  onSelectFiat = ({value: selectedFiat}) => {
+  onSelectFiat = ({value: selectedFiat}: {value: string}) => {
     if (!this.isValidFiat(selectedFiat)) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
@@ -50,7 +60,7 @@ export default class DefaultFiatSetting extends Component {
     }
   }
 
-  isValidFiat = (selectedFiat) => {
+  isValidFiat = (selectedFiat: string) => {
     const {
       supportedFiats
     } = this.state
