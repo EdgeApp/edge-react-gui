@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.GRAY_4
   },
   gradient: {
-    height: 66,
+    height: THEME.HEADER,
     width: '100%',
     position: 'absolute'
   },

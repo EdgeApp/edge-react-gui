@@ -1,6 +1,11 @@
 import {StyleSheet} from 'react-native'
 
+import THEME from '../../../../theme/variables/airbitz'
+
 const styles = StyleSheet.create({
+  gradient: {
+    height: THEME.HEADER
+  },
   view: {
     flex: 1,
     flexDirection: 'column',

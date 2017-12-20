@@ -4,6 +4,9 @@ import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
 import {Image} from 'react-native'
 const CryptoExchangeSceneStyle = {
+  gradient: {
+    height: THEME.SPACER.HEADER
+  },
   scene: Styles.SceneContainer,
   styleCatch:Styles,
   mainScrollView: {
