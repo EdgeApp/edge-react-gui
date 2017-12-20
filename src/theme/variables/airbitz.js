@@ -1,5 +1,7 @@
 // @flow
 
+import {Platform} from 'react-native'
+
 export const colors = {
   gradient: {
     light: '#3b7ada',
@@ -36,8 +38,10 @@ export default {
   },
 
   SPACER: {
-    HEADER: 66
+    HEADER: Platform.OS === 'ios' ? 66 : 56
   },
+
+  HEADER: Platform.OS === 'ios' ? 66 : 56,
 
   DEBUG: {
     COLORS: {
