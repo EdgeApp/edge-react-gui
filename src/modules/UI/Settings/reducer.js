@@ -15,7 +15,9 @@ const initialState = {
     arrayPlugins: [],
     supportedWalletTypes: []
   },
-  loginStatus: null
+  loginStatus: null,
+  isTouchSupported: false,
+  isTouchEnabled: false
 }
 
 export const settings = (state = initialState, action) => {
@@ -189,6 +191,20 @@ export const settings = (state = initialState, action) => {
     return {...state, changesLocked: data}
   }
 
+  case ACTION.TOUCH_ID_SETTINGS: {
+    return {
+      ...state,
+      isTouchSupported: data.isTouchSupported,
+      isTouchEnabled: data.isTouchEnabled
+    }
+  }
+
+  case ACTION.CHANGE_TOUCH_ID_SETTINGS: {
+    return {
+      ...state,
+      isTouchEnabled: data
+    }
+  }
 
   case ACTION.ADD_CURRENCY_PLUGIN: {
     const {plugins} = state

@@ -14,8 +14,9 @@ const mapStateToProps = (state: State) => ({
   username: CORE_SELECTORS.getNextUsername(state)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  dispatch,
   addUsernames: (usernames) => dispatch(addUsernames(usernames)),
-  initializeAccount: (account) => dispatch(initializeAccount(account))
+  initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

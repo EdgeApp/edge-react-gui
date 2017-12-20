@@ -37,7 +37,7 @@ export default class RowSwitch extends Component {
         </View>
         <Switch
           onValueChange={() => this._onPressToggleSetting(this.props.property)}
-          value={false} />
+          value={this.props.value} />
       </View>
 
     </TouchableHighlight>
