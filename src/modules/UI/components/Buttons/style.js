@@ -16,9 +16,12 @@ export const styles = {
   },
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: THEME.FONTS.DEFAULT
   },
-
+  text: {
+    fontFamily: THEME.FONTS.DEFAULT
+  },
   primaryButtonWrap: {
     backgroundColor: THEME.COLORS.SECONDARY
   },
