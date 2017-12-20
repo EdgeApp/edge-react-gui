@@ -1,5 +1,8 @@
+// @flow
+
+import THEME from '../../../../theme/variables/airbitz'
 export default {
   defaultStyle: {
-    fontFamily: 'SourceSansPro-Black'
+    fontFamily: THEME.FONTS.DEFAULT
   }
 }
