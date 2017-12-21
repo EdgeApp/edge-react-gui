@@ -6,7 +6,8 @@ import {
   Alert,
   Clipboard,
   View,
-  Share
+  Share,
+  Keyboard
 } from 'react-native'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
@@ -52,7 +53,8 @@ export default class Request extends Component<Props, State> {
       publicAddress: '',
       encodedURI: '',
       loading: props.loading,
-      result: ''
+      result: '',
+      keyboardUp: false
     }
   }
 
@@ -88,6 +90,16 @@ export default class Request extends Component<Props, State> {
       })
     })
     .catch((e) => console.log(e))
+  }
+
+  componentWillMount () {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
   }
 
   onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string}) => {
@@ -144,10 +156,17 @@ export default class Request extends Component<Props, State> {
             secondaryInfo={secondaryInfo}
             secondaryToPrimaryRatio={secondaryToPrimaryRatio}
             onAmountsChange={this.onAmountsChange}
-            color={color} />
-
-          <QRCode value={this.state.encodedURI} />
-          <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+            color={color}
+          />
+          <QRCode
+            value={this.state.encodedURI}
+            keyboardUp={this.state.keyboardUp}
+          />
+          <RequestStatus
+            requestAddress={this.state.publicAddress}
+            amountRequestedInCrypto={0}
+            amountReceivedInCrypto={0}
+          />
         </View>
 
         <View style={styles.shareButtonsContainer}>
@@ -217,5 +236,18 @@ export default class Request extends Component<Props, State> {
   shareViaShare = () => {
     this.shareMessage()
     // console.log('shareViaShare')
+  }
+
+  keyboardWillShow () {
+    console.log('show')
+    this.setState({
+      keyboardUp: true
+    })
+  }
+  keyboardWillHide () {
+    console.log('hide')
+    this.setState({
+      keyboardUp: false
+    })
   }
 }

@@ -1,5 +1,5 @@
 // @flow
-import type {State} from '../reduxTypes'
+import type {State} from '../ReduxTypes'
 
 import {combineReducers} from 'redux'
 
