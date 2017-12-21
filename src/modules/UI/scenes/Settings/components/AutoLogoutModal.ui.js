@@ -3,13 +3,13 @@ import {Picker} from 'react-native'
 
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 
 import styles from './styles'
 
-const DISABLE_TEXT = strings.enUS['string_disable']
+const DISABLE_TEXT = s.strings.string_disable
 
 export default class AutoLogoutModal extends Component {
   constructor (props) {

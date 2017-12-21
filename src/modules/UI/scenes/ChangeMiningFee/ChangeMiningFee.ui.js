@@ -5,7 +5,7 @@ import {View, Text} from 'react-native'
 
 import RadioButton from './components/RadioButton.ui'
 import * as FEE from '../../../../constants/FeeConstants'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 import style from './style'
 
@@ -51,14 +51,14 @@ export default class ChangeMiningFee extends Component<Props, State> {
     return (
       <View style={style.wrapper}>
         <Text style={style.header} >
-          {strings.enUS['change_mining_fee_body']}
+          {s.strings.change_mining_fee_body}
         </Text>
         <View>
           {feeOptions.map(({ value, label }) => (
             <RadioButton
               key={value}
               value={value}
-              label={strings.enUS[label]}
+              label={s.strings[label]}
               onPress={this.handlePress}
               isSelected={value === feeSetting}
             />

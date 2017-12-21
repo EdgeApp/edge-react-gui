@@ -6,7 +6,7 @@ export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
 export const ACTIVATE_WALLET_ID = PREFIX + 'ACTIVATE_WALLET_ID'
 export const ARCHIVE_WALLET_ID = PREFIX + 'ARCHIVE_WALLET_ID'
 
-export const SELECT_WALLET_ID = PREFIX + 'SELECT_WALLET_ID'
+export const SELECT_WALLET = PREFIX + 'SELECT_WALLET'
 
 export const MANAGE_TOKENS = 'MANAGE_TOKENS'
 export const MANAGE_TOKENS_START = 'MANAGE_TOKENS_START'
@@ -15,22 +15,18 @@ export const MANAGE_TOKENS_SUCCESS = 'MANAGE_TOKENS_SUCCESS'
 // import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
-import {GuiWallet} from '../../../types'
+
+import type {Dispatch, GetState} from '../../ReduxTypes'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
+
 import * as WALLET_API from '../../Core/Wallets/api.js'
 
-export const selectWallet = (walletId: string, currencyCode: string) =>
-  (dispatch: any) => {
-    dispatch(selectWalletId(walletId, currencyCode))
-  }
-
-export const selectWalletId = (walletId: string, currencyCode: string) => ({
-  type: SELECT_WALLET_ID,
+export const selectWallet = (walletId: string, currencyCode: string) => ({
+  type: SELECT_WALLET,
   data: {walletId, currencyCode}
 })
 
 function dispatchUpsertWallet (dispatch, wallet, walletId) {
-  console.log('dispatchUpsertWallet')
   dispatch(upsertWallet(wallet))
   refreshDetails[walletId].delayUpsert = false
   refreshDetails[walletId].lastUpsert = Date.now()
@@ -38,45 +34,40 @@ function dispatchUpsertWallet (dispatch, wallet, walletId) {
 
 const refreshDetails = {}
 
-export const refreshWallet = (walletId: string) =>
-  // console.log('refreshWallet')
-  (dispatch: any, getState: any) => {
-    const state = getState()
-    const wallet = CORE_SELECTORS.getWallet(state, walletId)
-    if (wallet) {
-      if (!refreshDetails[walletId]) {
-        refreshDetails[walletId] = {
-          delayUpsert: false,
-          lastUpsert: 0
-        }
+export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  if (wallet) {
+    if (!refreshDetails[walletId]) {
+      refreshDetails[walletId] = {
+        delayUpsert: false,
+        lastUpsert: 0
       }
-      if (!refreshDetails[walletId].delayUpsert) {
-        const now = Date.now()
-        if (now - refreshDetails[walletId].lastUpsert > 3000) {
-          dispatchUpsertWallet(dispatch, wallet, walletId)
-        } else {
-          console.log('refreshWallets setTimeout delay upsert id:' + walletId)
-          refreshDetails[walletId].delayUpsert = true
-          setTimeout(() => {
-            dispatchUpsertWallet(dispatch, wallet, walletId)
-          }, 3000)
-        }
+    }
+    if (!refreshDetails[walletId].delayUpsert) {
+      const now = Date.now()
+      if (now - refreshDetails[walletId].lastUpsert > 3000) {
+        dispatchUpsertWallet(dispatch, wallet, walletId)
       } else {
-        console.log('refreshWallets delayUpsert id:' + walletId)
+        console.log('refreshWallets setTimeout delay upsert id:' + walletId)
+        refreshDetails[walletId].delayUpsert = true
+        setTimeout(() => {
+          dispatchUpsertWallet(dispatch, wallet, walletId)
+        }, 3000)
       }
     } else {
-      console.log('refreshWallets no wallet. id:' + walletId)
+      console.log('refreshWallets delayUpsert id:' + walletId)
     }
-    // console.log('wallet doesn\'t exist yet', walletId)
+  } else {
+    console.log('refreshWallets no wallet. id:' + walletId)
   }
+}
 
-export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getState: any): ?GuiWallet => {
+export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
-    dispatch({
-      type: 'LOGGED_OUT'
-    })
+    dispatch({type: 'LOGGED_OUT'})
   }
 
   dispatch({
@@ -86,17 +77,14 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: any, getSt
 }
 
 // adds to core and enables in core
-export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: any, getState: any) => {
+export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   WALLET_API.addCoreCustomToken(wallet, tokenObj)
-  .then(() => {
-    return
-  })
   .catch((e) => console.log(e))
 }
 
-export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (dispatch: any, getState: any) => {
+export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   // tell Redux that we are updating the enabledTokens list
   dispatch(setTokensStart())
   // get a snapshot of the state
@@ -114,7 +102,7 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   .catch((e) => console.log(e))
 }
 
-export const getEnabledTokens = (walletId: string) => (dispatch: any, getState: any) => {
+export const getEnabledTokens = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   // get a snapshot of the state
   const state = getState()
   // get the AbcWallet

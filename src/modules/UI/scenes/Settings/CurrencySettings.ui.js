@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Image, View} from 'react-native'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style'
@@ -8,7 +8,7 @@ import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
 
-const SETTINGS_DENOMIANTION_TEXT = strings.enUS['settings_denominations_title']
+const SETTINGS_DENOMIANTION_TEXT = s.strings.settings_denominations_title
 
 export default class CurrencySettings extends Component {
   header () {

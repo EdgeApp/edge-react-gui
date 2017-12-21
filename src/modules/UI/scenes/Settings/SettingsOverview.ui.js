@@ -9,7 +9,7 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as Constants from '../../../../constants/indexConstants'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
 import RowRoute from './components/RowRoute.ui'
@@ -35,31 +35,31 @@ export default class SettingsOverview extends Component {
     this.settings = [
       {
         key: Constants.CHANGE_PASSWORD,
-        text: strings.enUS['settings_button_change_password'],
+        text: s.strings.settings_button_change_password,
         routeFunction: this._onPressChangePasswordRouting
       },
       {
         key: Constants.CHANGE_PIN,
-        text: strings.enUS['settings_button_pin'],
+        text: s.strings.settings_button_pin,
         routeFunction: this._onPressChangePinRouting
       }/* ,
       {
         key: Constants.RECOVER_PASSWORD,
-        text: strings.enUS['settings_button_change_pass_recovery'],
+        text: s.strings.settings_button_change_pass_recovery,
         routeFunction: this._onPressRecoverPasswordRouting
       } */
     ]
     this.securityRoute = [
       {
         key: 'setup2Factor',
-        text: strings.enUS['settings_button_setup_two_factor'],
+        text: s.strings.settings_button_setup_two_factor,
         routeFunction: this._onPressDummyRouting
       }
     ]
 
     this.options = {
       pinRelogin: {
-        text: strings.enUS['settings_title_pin_login'],
+        text: s.strings.settings_title_pin_login,
         key: 'pinRelogin',
         routeFunction: this._onToggleOption,
         value: false
@@ -67,7 +67,7 @@ export default class SettingsOverview extends Component {
     }
     if (this.props.supportsTouchId) {
       this.options.useTouchID =  {
-        text: strings.enUS['settings_button_use_touchID'],
+        text: s.strings.settings_button_use_touchID,
         key: 'useTouchID',
         routeFunction: this._onToggleTouchIdOption,
         value: this.props.touchIdEnabled
@@ -77,7 +77,7 @@ export default class SettingsOverview extends Component {
     this.optionModals = [
       {
         key: 'autoLogoff',
-        text: strings.enUS['settings_title_auto_logoff']
+        text: s.strings.settings_title_auto_logoff
       }
     ]
 
@@ -164,7 +164,7 @@ export default class SettingsOverview extends Component {
   }
 
   render () {
-    const disabled = strings.enUS['string_disable']
+    const disabled = s.strings.string_disable
 
     return (
       <View>
@@ -175,18 +175,18 @@ export default class SettingsOverview extends Component {
               <View style={styles.leftArea}>
                 <FAIcon style={[styles.icon, b('green')]} name={Constants.USER_O} />
                 <T style={styles.accountBoxHeaderText}>
-                  {strings.enUS['settings_account_title_cap']}: {this.props.username}
+                  {s.strings.settings_account_title_cap}: {this.props.username}
                 </T>
               </View>
             </View>
           </Gradient>
 
           <RowRoute
-            leftText={strings.enUS['settings_button_change_password']}
+            leftText={s.strings.settings_button_change_password}
             routeFunction={this._onPressChangePasswordRouting}
             right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
           <RowRoute
-            leftText={strings.enUS['settings_button_pin']}
+            leftText={s.strings.settings_button_pin}
             routeFunction={this._onPressChangePinRouting}
             right={<Icon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
@@ -195,7 +195,7 @@ export default class SettingsOverview extends Component {
               <View style={styles.leftArea}>
                 <IonIcon name='ios-options' style={[styles.icon, b('green')]} />
                 <T style={styles.accountBoxHeaderText}>
-                  {strings.enUS['settings_options_title_cap']}
+                  {s.strings.settings_options_title_cap}
                 </T>
               </View>
             </View>
@@ -203,11 +203,11 @@ export default class SettingsOverview extends Component {
 
           <View>
             <RowModal onPress={this.showAutoLogoutModal}
-              leftText={strings.enUS['settings_title_auto_logoff']}
+              leftText={s.strings.settings_title_auto_logoff}
               rightText={this.props.autoLogoutTimeInMinutes || disabled} />
 
             <RowRoute
-              leftText={strings.enUS['settings_title_currency']}
+              leftText={s.strings.settings_title_currency}
               routeFunction={Actions.defaultFiatSetting}
               right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
 
@@ -218,12 +218,12 @@ export default class SettingsOverview extends Component {
             {this.currencies.map(this.renderRowRoute)}
 
             <RowRoute
-              leftText={strings.enUS['settings_button_send_logs']}
+              leftText={s.strings.settings_button_send_logs}
               scene={'changePassword'}
               routeFunction={this.showSendLogsModal} />
 
             <View style={[styles.debugArea, b('green')]}>
-              <PrimaryButton text={strings.enUS['settings_button_debug']} onPressFunction={this._onPressDebug} />
+              <PrimaryButton text={s.strings.settings_button_debug} onPressFunction={this._onPressDebug} />
             </View>
 
             <View style={styles.emptyBottom} />

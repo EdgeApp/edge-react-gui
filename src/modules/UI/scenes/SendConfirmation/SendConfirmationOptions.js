@@ -2,14 +2,14 @@ import React, {Component} from 'react'
 import {Text, View} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
 import {sprintf} from 'sprintf-js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {border} from '../../../utils'
 
 
-const CHANGE_MINING_FEE_TEXT = sprintf(strings.enUS['change_mining_fee_title'])
+const CHANGE_MINING_FEE_TEXT = sprintf(s.strings.change_mining_fee_title)
 const CHANGE_CURRENCY_TEXT = 'Change Currency'
-const SEND_MAX_TEXT = sprintf(strings.enUS['send_confirmation_max_button_title'])
-const HELP_TEXT = sprintf(strings.enUS['string_help'])
+const SEND_MAX_TEXT = sprintf(s.strings.send_confirmation_max_button_title)
+const HELP_TEXT = sprintf(s.strings.string_help)
 
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
 const CHANGE_CURRENCY = 'CHANGE_CURRENCY'

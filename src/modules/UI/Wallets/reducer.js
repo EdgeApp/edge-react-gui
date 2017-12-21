@@ -52,7 +52,7 @@ export const selectedWalletId = (state: string = '', action: any) => {
   const {walletId} = data
 
   switch (type) {
-  case ACTION.SELECT_WALLET_ID:
+  case ACTION.SELECT_WALLET:
     return walletId
   default:
     return state
@@ -64,7 +64,7 @@ export const selectedCurrencyCode = (state: string = '', action: any) => {
   const {currencyCode} = data
 
   switch (type) {
-  case ACTION.SELECT_WALLET_ID:
+  case ACTION.SELECT_WALLET:
     return currencyCode
   default:
     return state

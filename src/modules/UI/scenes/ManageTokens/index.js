@@ -1,3 +1,3 @@
-import ManageTokens from './ManageTokens.ui.js'
+import ManageTokens from './ManageTokensConnector.js'
 
 export default ManageTokens
