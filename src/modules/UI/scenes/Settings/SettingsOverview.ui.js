@@ -32,7 +32,7 @@ type Props = {
   autoLogoutTimeInMinutes: number,
   username: string,
   account: AbcAccount,
-  supportsTouchId: string,
+  supportsTouchId: boolean,
   touchIdEnabled: boolean,
   lockButton: string,
   lockButtonIcon: string,
@@ -179,7 +179,7 @@ export default class SettingsOverview extends Component<Props,State> {
 
   _onToggleTouchIdOption = (bool: boolean) => {
     this.props.enableTouchId(bool, this.props.account)
-    console.log('Allen toggling _onToggleTouchIdOption: ', bool)
+    this.options.useTouchID.value = bool
   }
 
   _onPressDebug = () => {
@@ -318,7 +318,7 @@ export default class SettingsOverview extends Component<Props,State> {
       property={this.options[x].key}
       onToggle={this.options[x].routeFunction}
       value={this.options[x].value}
-    />
+      />
   )
   renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
 }
