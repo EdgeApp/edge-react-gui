@@ -9,19 +9,21 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as Constants from '../../../../constants/indexConstants'
-import s from '../../../../locales/strings.js'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
 import RowRoute from './components/RowRoute.ui'
 import RowSwitch from './components/RowSwitch.ui'
 import {PrimaryButton} from '../../components/Buttons'
-import {border as b} from '../../../utils'
+import {border as b, getTimeWithMeasurement} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import SendLogsModal from './components/SendLogsModal.ui'
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import styles from './style'
+import s from '../../../../locales/strings'
+
+const DISABLE_TEXT = s.strings.string_disable
 
 export default class SettingsOverview extends Component {
   constructor (props) {
@@ -164,7 +166,11 @@ export default class SettingsOverview extends Component {
   }
 
   render () {
-    const disabled = s.strings.string_disable
+    const {measurement: autoLogoutMeasurement,
+      value: autoLogoutValue} = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
+    const autoLogoutRightText = autoLogoutValue === 0
+      ? DISABLE_TEXT
+      : `${autoLogoutValue} ${s.strings['settings_'+ autoLogoutMeasurement]}`
 
     return (
       <View>
@@ -204,7 +210,7 @@ export default class SettingsOverview extends Component {
           <View>
             <RowModal onPress={this.showAutoLogoutModal}
               leftText={s.strings.settings_title_auto_logoff}
-              rightText={this.props.autoLogoutTimeInMinutes || disabled} />
+              rightText={autoLogoutRightText} />
 
             <RowRoute
               leftText={s.strings.settings_title_currency}

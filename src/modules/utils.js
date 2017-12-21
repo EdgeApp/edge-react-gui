@@ -285,7 +285,7 @@ export const getTimeMeasurement = (inMinutes: number): string => {
   case inMinutes < 1440:
     return 'hours'
 
-  case inMinutes < 84960:
+  case inMinutes <= 84960:
     return 'days'
 
   default:
