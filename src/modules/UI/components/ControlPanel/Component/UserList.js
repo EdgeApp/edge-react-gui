@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   Alert,
@@ -13,7 +15,10 @@ import _ from 'lodash'
 
 import styles from '../style'
 
-export default class UserList extends Component {
+type Props = {usernames: Array<string>, logout: (username?: string) => void, deleteLocalAccount: (string) => void}
+type State = {}
+
+export default class UserList extends Component<Props, State> {
   render () {
     return <ScrollView style={styles.userList.container}>
       {this.rows()}
@@ -38,9 +43,9 @@ export default class UserList extends Component {
     </View>
   )
 
-  handlePressUserSelect = (username) => () => this.props.logout(username)
-  handleDeleteLocalAccount = (username) => () => this.props.deleteLocalAccount(username)
-  handlePressDeleteLocalAccount = (username) => () =>
+  handlePressUserSelect = (username: string) => () => this.props.logout(username)
+  handleDeleteLocalAccount = (username: string) => () => this.props.deleteLocalAccount(username)
+  handlePressDeleteLocalAccount = (username: string) => () =>
     Alert.alert('Delete Account', 'Delete \''
       + username
       + '\' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days',

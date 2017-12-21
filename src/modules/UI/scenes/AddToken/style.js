@@ -96,6 +96,9 @@ export const styles = {
     marginLeft: 2,
     backgroundColor: THEME.COLORS.SECONDARY,
     borderRadius: 3
+  },
+  bottomPaddingForKeyboard: {
+    height: 300
   }
 }
 export default StyleSheet.create(styles)

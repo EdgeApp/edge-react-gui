@@ -16,6 +16,7 @@ export const SET_CRYPTO_FROM_NATIVE_AMOUNT = 'setCryptoFromNativeAmount'
 export const SET_CRYPTO_TO_NATIVE_AMOUNT = 'setCryptoToNativeAmount'
 export const RECEIVED_TRANSACTION_ERROR = 'receivedTRansactionError'
 export const RECEIVED_INSUFFICIENT_FUNDS_ERROR = 'receivedInsufficentFundsError'
+export const GENERIC_SHAPE_SHIFT_ERROR = 'genericShapeShiftError'
 export const RECEIVED_DUST_ERROR = 'receivedInsufficentFundsError'
 export const CHANGE_EXCHANGE_FEE = 'CHANGE_EXCHANGE_FEE'
 // Alert

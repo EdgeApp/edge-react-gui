@@ -159,6 +159,8 @@ export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, get
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
   const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
+  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
+  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
 
   return WALLET_API.makeSpend(abcWallet, spendInfo)
   .then((abcTransaction: AbcTransaction) => {
@@ -177,6 +179,8 @@ export const getMaxSpendable = () => (dispatch: any, getState: any) => {
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
   const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
+  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
+  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
 
   return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
     .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))

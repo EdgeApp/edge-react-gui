@@ -95,10 +95,10 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
 
     // need to crossreference tokensEnabled with nativeBalances
     let enabledNativeBalances = {}
-    const enabledTokens = guiWallet.tokensEnabled
+    const enabledTokens = guiWallet.enabledTokens
 
     for (let prop in guiWallet.nativeBalances) {
-      if ((prop !== currencyCode) && enabledTokens[prop] && enabledTokens[prop].enabled) {
+      if ((prop !== currencyCode) && (enabledTokens.includes(prop))) {
         enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
       }
     }

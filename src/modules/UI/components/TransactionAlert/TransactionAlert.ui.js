@@ -8,7 +8,7 @@ import {sprintf} from 'sprintf-js'
 import DropdownAlert from '../DropdownAlert/DropdownAlert.ui'
 import {AlertContainer, AlertHeader, AlertBody} from '../DropdownAlert/components'
 import styles from './styles'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 export type Props = {
   message: string,
@@ -30,7 +30,7 @@ export default class TransactionAlert extends Component<Props> {
     // const {
     //   fiatCurrencyCode
     // } = wallet
-    const message = sprintf(strings.enUS['bitcoin_received'], `${displaySymbol || displayName} ${displayAmount}`)
+    const message = sprintf(s.strings.bitcoin_received, `${displaySymbol || displayName} ${displayAmount}`)
 
     return message
   }

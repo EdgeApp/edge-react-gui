@@ -1,8 +1,5 @@
 // @flow
-import type {State, Dispatch} from './ReduxTypes'
-
-import * as SETTINGS_SELECTORS from './UI/Settings/selectors'
-import {logoutRequest} from './Login/action'
+import type {Dispatch} from './ReduxTypes'
 
 import {connect} from 'react-redux'
 import Main from './Main.ui'
@@ -17,10 +14,8 @@ import {enableScan, disableScan} from './UI/scenes/Scan/action'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
-const mapStateToProps = (state: State) => ({
-  routes: state.routes,
-  autoLogoutTimeInSeconds: SETTINGS_SELECTORS.getAutoLogoutTimeInSeconds(state)
-})
+const mapStateToProps = () => ({})
+
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatchEnableScan: () => {
     return dispatch(enableScan())
@@ -28,13 +23,24 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatchDisableScan: () => {
     return dispatch(disableScan())
   },
-  addExchangeTimer: () => dispatch(addExchangeTimer()),
-  addCurrencyPlugin: (plugin) => dispatch(addCurrencyPlugin(plugin)),
-  setKeyboardHeight: (keyboardHeight) => dispatch(setKeyboardHeight(keyboardHeight)),
-  addContext: (context) => dispatch(addContext(context)),
-  addUsernames: (usernames) => dispatch(addUsernames(usernames)),
-  setLocaleInfo: (localeInfo) => dispatch(setLocaleInfo(localeInfo)),
-  autoLogout: () => dispatch(logoutRequest(null)),
+  addExchangeTimer: () => {
+    return dispatch(addExchangeTimer())
+  },
+  addCurrencyPlugin: (plugin) => {
+    return dispatch(addCurrencyPlugin(plugin))
+  },
+  setKeyboardHeight: (keyboardHeight) => {
+    return dispatch(setKeyboardHeight(keyboardHeight))
+  },
+  addContext: (context) => {
+    return dispatch(addContext(context))
+  },
+  addUsernames: (usernames) => {
+    return dispatch(addUsernames(usernames))
+  },
+  setLocaleInfo: (localeInfo) => {
+    return dispatch(setLocaleInfo(localeInfo))
+  },
   contextCallbacks: makeContextCallbacks(dispatch)
 })
 

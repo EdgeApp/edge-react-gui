@@ -9,65 +9,24 @@ import {
 } from 'react-native'
 import {abs, sub} from 'biggystring'
 import {sprintf} from 'sprintf-js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import Picker from 'react-native-picker'
 import FormattedText from '../../components/FormattedText'
 import {PrimaryButton} from '../../components/Buttons'
 import styles from './style'
 import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
-import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
 let pickerValues = []
 
 categories.map((key) => {
-  return pickerValues.push(strings.enUS['fragment_transaction_' + key])
+  return pickerValues.push(s.strings['fragment_transaction_' + key])
 })
 
-type Props = {
-  abcTransaction: AbcTransaction,
-  onChangeNotesFxn: (string) => void,
-  onChangeCategoryFxn: (string) => void,
-  onChangeFiatFxn: (string) => void,
-  onBlurFiatFxn: () => void,
-  onPressFxn: () => void,
-  selectCategory: (any) => void,
-  onSelectSubCategory: (string) => void,
-  onEnterCategories: () => void,
-  onExitCategories: () => void,
-  onSubcategoryKeyboardReturn: () => void,
-  onNotesKeyboardReturn: () => void,
-  onFocusNotes: () => void,
-  onBlurNotes: () => void,
-  onFocusFiatAmount: () => void,
-  openModalFxn: () => void,
-  fiatCurrencyCode: string,
-  cryptoCurrencyCode: string,
-  fiatCurrencySymbol: string,
-  fiatAmount: string,
-  onEnterSubcategories: () => void,
-  subCategorySelectVisibility: boolean,
-  categorySelectVisibility: boolean,
-  subCategory: string,
-  types: any,
-  usableHeight: number,
-  dimensions: any,
-  leftData: any,
-  direction: string,
-  feeSyntax: string,
-  color: string,
-  type: any,
-  walletDefaultDenomProps: AbcDenomination
-}
-
-type State = {
-
-}
-
-class AmountArea extends Component<Props, State> {
-  constructor (props: Props) {
+class AmountArea extends Component {
+  constructor (props) {
     super(props)
     this.state = {
       color: ''
@@ -83,9 +42,9 @@ class AmountArea extends Component<Props, State> {
       onPickerCancel: () => {
         this.Picker.hide()
       },
-      pickerTitleText: strings.enUS['tx_detail_picker_title'],
-      pickerConfirmBtnText: strings.enUS['string_confirm'],
-      pickerCancelBtnText: strings.enUS['string_cancel_cap'],
+      pickerTitleText: s.strings.tx_detail_picker_title,
+      pickerConfirmBtnText: s.strings.string_confirm,
+      pickerCancelBtnText: s.strings.string_cancel_cap,
       pickerFontSize: 22
     })
     this.Picker = Picker
@@ -106,7 +65,7 @@ class AmountArea extends Component<Props, State> {
     this.Picker.show()
   }
 
-  onPickerSelect = (input: string) => {
+  onPickerSelect = (input) => {
     this.props.selectCategory(input)
   }
 
@@ -121,7 +80,7 @@ class AmountArea extends Component<Props, State> {
       feeSyntax = ''
       leftData = {
         color: THEME.COLORS.ACCENT_GREEN,
-        syntax: strings.enUS['fragment_transaction_income']
+        syntax: s.strings.fragment_transaction_income
       }
     } else { // send tx
       if (this.props.abcTransaction.networkFee) { // stub, check BTC vs. ETH (parent currency)
@@ -131,16 +90,16 @@ class AmountArea extends Component<Props, State> {
         const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
         amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
         const feeString = abs(UTILS.truncateDecimals(convertedFee, 6)) // fee should never be negative
-        feeSyntax = sprintf(strings.enUS['fragment_tx_detail_mining_fee'], feeString)
+        feeSyntax = sprintf(s.strings.fragment_tx_detail_mining_fee, feeString)
         leftData = {
           color: THEME.COLORS.ACCENT_RED,
-          syntax: strings.enUS['fragment_transaction_expense']}
+          syntax: s.strings.fragment_transaction_expense}
       } else { // do not show fee, because token
         amountString = absoluteAmount
         feeSyntax = ''
         leftData = {
           color: THEME.COLORS.ACCENT_RED,
-          syntax: strings.enUS['fragment_transaction_expense']}
+          syntax: s.strings.fragment_transaction_expense}
       }
     }
 
@@ -157,7 +116,7 @@ class AmountArea extends Component<Props, State> {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <FormattedText style={[styles.amountAreaLeftText, {color: leftData.color}]}>{strings.enUS['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
+            <FormattedText style={[styles.amountAreaLeftText, {color: leftData.color}]}>{s.strings['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
@@ -212,7 +171,7 @@ class AmountArea extends Component<Props, State> {
               onSubmitEditing={this.props.onSubcategoryKeyboardReturn}
               style={[styles.categoryInput, UTILS.inputBottomPadding()]}
               defaultValue={this.props.subCategory || ''}
-              placeholder={strings.enUS['transaction_details_category_title']}
+              placeholder={s.strings.transaction_details_category_title}
               autoCorrect={false}
             />
           </View>
@@ -227,7 +186,7 @@ class AmountArea extends Component<Props, State> {
               defaultValue={notes}
               style={[styles.notesInput, UTILS.inputBottomPadding()]}
               placeholderTextColor={THEME.COLORS.GRAY_}
-              placeholder={strings.enUS['transaction_details_notes_title']}
+              placeholder={s.strings.transaction_details_notes_title}
               autoCapitalize='sentences'
               autoCorrect={false}
               onFocus={this.props.onFocusNotes}
@@ -240,10 +199,10 @@ class AmountArea extends Component<Props, State> {
         </View>
         <View style={[styles.footerArea]}>
           <View style={[styles.buttonArea]}>
-            <PrimaryButton text={strings.enUS['string_save']} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
+            <PrimaryButton text={s.strings.string_save} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
           <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
-            <FormattedText style={[styles.advancedTxText]}>{strings.enUS['transaction_details_view_advanced_data']}</FormattedText>
+            <FormattedText style={[styles.advancedTxText]}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
           </TouchableWithoutFeedback>
         </View>
       </View>

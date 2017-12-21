@@ -14,7 +14,7 @@ export default class CryptoExchageRate extends Component<Props> {
       textError
     } = this.props.style
     return (
-      <View style={[container, this.props.insufficient && containerError]}>
+      <View style={[container, (this.props.insufficient || this.props.genericError) && containerError]}>
           <Text style={[text,this.props.insufficient && textError ]}>{this.props.exchangeRate}</Text>
       </View>
     )

@@ -337,3 +337,51 @@ describe('isCompleteExchangeData', function () {
     expect(actual).toBe(expected)
   })
 })
+
+describe('mergeTokens', function () {
+  test('Preferred tokens take precendence', function () {
+    const preferredTokenA = {currencyCode: 'TA', currencyName: 'TA', preferred: true}
+    const preferredTokenB = {currencyCode: 'TB', currencyName: 'TB', preferred: true}
+
+    const tokenA = {currencyCode: 'TA', currencyName: 'TA'}
+    const tokenD = {currencyCode: 'TD', currencyName: 'TD'}
+
+    const preferredAbcMetaTokens = [preferredTokenA, preferredTokenB]
+    const abcMetaTokens = [tokenA, tokenD]
+
+    const expected = [
+      preferredTokenA, // from preferredAbcTokens
+      preferredTokenB, // from preferredAbcTokens
+      tokenD
+    ]
+    // $FlowExpectedError
+    const actual = UTILS.mergeTokens(preferredAbcMetaTokens, abcMetaTokens)
+    expect(actual).toEqual(expected)
+  })
+
+  test('Empty preferredTokens', function () {
+    const tokenA = {currencyCode: 'TA', currencyName: 'TA'}
+    const tokenD = {currencyCode: 'TD', currencyName: 'TD'}
+
+    const preferredAbcMetaTokens = []
+    const abcMetaTokens = [tokenA, tokenD]
+
+    const expected = [tokenA, tokenD]
+    // $FlowExpectedError
+    const actual = UTILS.mergeTokens(preferredAbcMetaTokens, abcMetaTokens)
+    expect(actual).toEqual(expected)
+  })
+
+  test('Empty tokens', function () {
+    const preferredTokenA = {currencyCode: 'TA', currencyName: 'TA', preferred: true}
+    const preferredTokenB = {currencyCode: 'TB', currencyName: 'TB', preferred: true}
+
+    const preferredAbcMetaTokens = [preferredTokenA, preferredTokenB]
+    const abcMetaTokens = []
+
+    const expected = [preferredTokenA, preferredTokenB]
+    // $FlowExpectedError
+    const actual = UTILS.mergeTokens(preferredAbcMetaTokens, abcMetaTokens)
+    expect(actual).toEqual(expected)
+  })
+})
