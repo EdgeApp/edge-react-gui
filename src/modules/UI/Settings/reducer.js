@@ -10,6 +10,7 @@ const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,
+  changesLocked: true,
   plugins: {
     arrayPlugins: [],
     supportedWalletTypes: []
@@ -183,6 +184,10 @@ export const settings = (state = initialState, action) => {
     }
   }
 
+  case ACTION.SET_SETTINGS_LOCK: {
+    // const {denomination} = data
+    return {...state, changesLocked: data}
+  }
 
 
   case ACTION.ADD_CURRENCY_PLUGIN: {

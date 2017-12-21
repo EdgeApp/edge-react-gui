@@ -32,10 +32,15 @@ const CryptoExchangeSceneStyle = {
       backgroundColor: THEME.COLORS.GRAY_4
     },
     text: {
-      color: THEME.COLORS.WHITE
+      color: THEME.COLORS.WHITE,
+      textAlign: 'center',
+      marginRight: '2%',
+      marginLeft: '2%'
     },
     textError: {
-      color: THEME.COLORS.PRIMARY
+      color: THEME.COLORS.PRIMARY,
+      backgroundColor: THEME.COLORS.TRANSPARENT,
+      fontSize: 10
     }
   },
   shim: {

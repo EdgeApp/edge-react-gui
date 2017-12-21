@@ -1,3 +1,4 @@
+// @flow
 const strings = {
   loading: 'Loading…',
   synchronizing: 'Synchronizing…',
@@ -235,6 +236,9 @@ const strings = {
   settings_button_change_spending_limits: 'Spending Limits',
   settings_button_two_factor_authentication: '2 Factor (Enhanced Security)',
   settings_button_change_password: 'Change password',
+  settings_lock_header: 'Enter your password to make changes to your account Settings',
+  settings_button_lock_settings: 'Tap to lock Account Settings',
+  settings_button_unlock_settings: 'Tap to unlock Account Settings',
   settings_button_pin: 'Change PIN',
   settings_button_recovery: 'Change Recovery Questions',
   settings_user_title: 'NAME',
@@ -849,6 +853,7 @@ const strings = {
   in: 'in',
 
   // New items added before Localization overhaul.- Need Other than English Translation
+
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
   title_Password_Recovery: 'Password Recovery',
