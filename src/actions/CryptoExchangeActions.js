@@ -1,5 +1,4 @@
 // @flow
-import {error} from 'airbitz-core-react-native'
 import {Alert} from 'react-native'
 import type {GuiWallet,GuiDenomination, GuiCurrencyInfo} from '../types'
 import * as Constants from '../constants/indexConstants'
@@ -124,11 +123,11 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => (dispatch: any, ge
     dispatch(getShiftTransaction(fromWallet, toWallet)).catch((e) => {
       console.log(' ERROR getting shidt transaction. ')
       console.log(e)
-      if (e.name === error.InsufficientFundsError.name) {
+      if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
         dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
         return
       }
-      if (e.name === error.DustSpendError.name) {
+      if (e.message === Constants.DUST) {
         dispatch(actions.dispatchAction(Constants.RECEIVED_DUST_ERROR))
         return
       }
