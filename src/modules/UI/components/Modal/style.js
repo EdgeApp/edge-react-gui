@@ -65,7 +65,9 @@ export const styles = {
     backgroundColor: THEME.COLORS.WHITE,
     height: 54,
     width: 54,
-    zIndex: 2
+    zIndex: 2,
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
   modalHeaderIconWrapTop: {
     position: 'relative',
