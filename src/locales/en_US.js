@@ -1,7 +1,29 @@
 // @flow
+
 import unusedStrings from './en_US.unused'
 
 const strings = {
+  title_wallets: 'Wallets',
+  title_create_wallet: 'Create Wallet',
+  title_transactions: 'Transactions',
+  title_request: 'Request',
+  title_send: 'Send',
+  title_edge_login: 'Edge Login',
+  title_exchange: 'Exchange',
+  title_change_mining_fee: 'Change Mining Fee',
+  title_back: 'Back',
+  title_send_confirmation: 'Send Confirmation',
+  title_manage_tokens: 'Manage Tokens',
+  title_add_tokens: 'Add Tokens',
+  title_settings: 'Settings',
+  title_change_password: 'Change Password',
+  title_change_pin: 'Change Pin',
+  title_password_recovery: 'Password Recovery',
+  title_bitcoin_settings: 'Bitcoin Settings',
+  title_bitcoin_cash_settings: 'Bitcoin Cash Settings',
+  title_litecoin_settings: 'Litecoin Settings',
+  title_ethereum_settings: 'Ethereum Settings',
+  title_default_fiat: 'Default Fiat',
   settings_button_logout: 'Logout',
   settings_title: 'Settings',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
