@@ -1,4 +1,5 @@
 // @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -106,7 +107,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
     return (
       <Gradient style={[styles.view]}>
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
         <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
           <View style={[styles.exchangeRateContainer, UTILS.border()]}>

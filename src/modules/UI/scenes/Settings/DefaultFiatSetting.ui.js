@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   Alert,
@@ -7,11 +9,23 @@ import {
 import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 import s from '../../../../locales/strings.js'
 
+import Gradient from '../../components/Gradient/Gradient.ui'
+
+import styles from './style'
+
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = s.strings.settings_select_currency
 const INVALID_DATA_TEXT               = s.strings.fragment_create_wallet_select_valid
 
-export default class DefaultFiatSetting extends Component {
-  constructor (props) {
+type Props = {
+  supportedFiats: Array<{value: string}>,
+  onSelectFiat: (string) => void
+}
+type State = {
+  supportedFiats: Array<{value: string}>,
+  selectedFiat: string
+}
+export default class DefaultFiatSetting extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       supportedFiats: props.supportedFiats,
@@ -23,17 +37,20 @@ export default class DefaultFiatSetting extends Component {
     const {supportedFiats} = this.state
 
     return <View>
-      <DropdownPicker
-        startOpen
-        autoFocus
-        keyboardShouldPersistTaps={'always'}
-        listItems={supportedFiats || []}
-        placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}
-        onSelect={this.onSelectFiat} />
+      <Gradient style={styles.gradient} />
+      <View style={styles.body}>
+        <DropdownPicker
+          startOpen
+          autoFocus
+          keyboardShouldPersistTaps={'always'}
+          listItems={supportedFiats || []}
+          placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}
+          onSelect={this.onSelectFiat} />
       </View>
+    </View>
   }
 
-  onSelectFiat = ({value: selectedFiat}) => {
+  onSelectFiat = ({value: selectedFiat}: {value: string}) => {
     if (!this.isValidFiat(selectedFiat)) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
@@ -43,7 +60,7 @@ export default class DefaultFiatSetting extends Component {
     }
   }
 
-  isValidFiat = (selectedFiat) => {
+  isValidFiat = (selectedFiat: string) => {
     const {
       supportedFiats
     } = this.state

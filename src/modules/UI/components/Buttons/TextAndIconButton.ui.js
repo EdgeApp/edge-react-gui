@@ -1,8 +1,11 @@
 //@flow
+
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {View, Text, TouchableHighlight} from 'react-native'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
+
+import styles from './style'
 
 type Props = {
   icon: string,
@@ -80,7 +83,7 @@ class TextAndIconButton extends Component<Props, State> {
           <View style={inner}>
             <View style={textContainer} >
               <Text
-                style={[text, this.state.pressed && textPressed]}
+                style={[styles.text, text, this.state.pressed && textPressed]}
                 ellipsizeMode={'middle'}
                 numberOfLines={1}
               >
