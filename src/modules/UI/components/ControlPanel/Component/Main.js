@@ -5,7 +5,7 @@ import {View, TouchableHighlight, Image} from 'react-native'
 import {Text} from 'native-base'
 import {Actions} from 'react-native-router-flux'
 import {sprintf} from 'sprintf-js'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 
 import UserList from './UserListConnector'
 
@@ -14,18 +14,17 @@ import styles from '../style'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
 
-const LOGOUT_TEXT = sprintf(strings.enUS['settings_button_logout'])
-const SETTINGS_TEXT = sprintf(strings.enUS['settings_title'])
+const LOGOUT_TEXT = sprintf(s.strings.settings_button_logout)
+const SETTINGS_TEXT = sprintf(s.strings.settings_title)
 
 type Props ={
-  logout: () => void,
+  logout: (username?: string) => void,
   onPressOption: () => void
 }
 type State = {}
 
 export default class Main extends Component<Props, State> {
   onLogout = () => {
-    // console.log('logout')
     this.props.logout()
   }
 

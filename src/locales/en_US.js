@@ -1,3 +1,4 @@
+// @flow
 const strings = {
   loading: 'Loading…',
   synchronizing: 'Synchronizing…',
@@ -235,6 +236,9 @@ const strings = {
   settings_button_change_spending_limits: 'Spending Limits',
   settings_button_two_factor_authentication: '2 Factor (Enhanced Security)',
   settings_button_change_password: 'Change password',
+  settings_lock_header: 'Enter your password to make changes to your account Settings',
+  settings_button_lock_settings: 'Tap to lock Account Settings',
+  settings_button_unlock_settings: 'Tap to unlock Account Settings',
   settings_button_pin: 'Change PIN',
   settings_button_recovery: 'Change Recovery Questions',
   settings_user_title: 'NAME',
@@ -849,6 +853,7 @@ const strings = {
   in: 'in',
 
   // New items added before Localization overhaul.- Need Other than English Translation
+
   title_Change_Password: 'Change Password',
   title_Change_Pin: 'Change Pin',
   title_Password_Recovery: 'Password Recovery',
@@ -867,7 +872,8 @@ const strings = {
   title_confirm_excahnge: 'Confirm exchange',
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
-  string_fee: 'Fee: ',
+  string_fee_with_colon: 'Fee: ',
+  string_fee_with_brackets:'(Fee)',
   string_TBD: 'TBD',
   fragment_excahnge_wallet_from_header_title: 'Choose a wallet to exchange funds from:',
   fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
@@ -876,7 +882,10 @@ const strings = {
   exchange_failed: 'Exchange Failed',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
   could_not_select: 'Could Not Select Wallet',
-  token_not_supported: 'Token is not supported by exchange'
+  token_not_supported: 'Token is not supported by exchange',
+  select_src_wallet: 'Select Source Wallet',
+  select_dest_wallet: 'Select Dest Wallet',
+  fragment_insufficient_funds: 'insufficient funds'
 }
 
 export default strings

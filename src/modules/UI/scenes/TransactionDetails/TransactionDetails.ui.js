@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {
   Animated,
   Easing,
@@ -44,7 +44,7 @@ export type Props = {
 }
 
 export type DispatchProps = {
-  setNewSubcategory: (string, Array<strings>) => void,
+  setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
   setTransactionDetails: (string, string, AbcMetadata) => void,
   setContactList: (Array<GuiContact>) => void,
@@ -75,10 +75,10 @@ export type State = {
   walletDefaultDenomProps: AbcDenomination
 }
 
-const EXCHANGE_TEXT = strings.enUS['fragment_transaction_exchange']
-const EXPENSE_TEXT = strings.enUS['fragment_transaction_expense']
-const TRANSFER_TEXT = strings.enUS['fragment_transaction_transfer']
-const INCOME_TEXT = strings.enUS['fragment_transaction_income']
+const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
+const EXPENSE_TEXT = s.strings.fragment_transaction_expense
+const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
+const INCOME_TEXT = s.strings.fragment_transaction_income
 
 export class TransactionDetails extends Component<Props & DispatchProps, State> {
   guiWallet: GuiWallet
@@ -515,7 +515,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                     onChangeText={this.onChangeSubcategory}
                     style={[styles.categoryInput, UTILS.inputBottomPadding()]}
                     defaultValue={this.state.subCategory || ''}
-                    placeholder={strings.enUS['transaction_details_category_title']}
+                    placeholder={s.strings.transaction_details_category_title}
                     autoCorrect={false}
                     onSubmitEditing={this.onSubcategoriesKeyboardReturn}
                     placeholderTextColor={THEME.COLORS.GRAY_2}
@@ -548,7 +548,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                       onFocus={this.onFocusPayee}
                       autoCorrect={false}
                       style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
-                      placeholder={strings.enUS['transaction_details_payee']}
+                      placeholder={s.strings.transaction_details_payee}
                       defaultValue={this.state.name}
                       placeholderTextColor={THEME.COLORS.GRAY_2}
                     />

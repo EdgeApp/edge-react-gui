@@ -1,12 +1,19 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   ActivityIndicator,
+  Alert,
   Clipboard,
   View,
   Share,
   Keyboard
 } from 'react-native'
-import Alert from './alert'
+import {bns} from 'biggystring'
+import {sprintf} from 'sprintf-js'
+
+import type {AbcCurrencyWallet, AbcEncodeUri} from 'airbitz-core-types'
+
 import styles from './styles.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
@@ -16,26 +23,42 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {bns} from 'biggystring'
-import {sprintf} from 'sprintf-js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
 
-export default class Request extends Component {
-  constructor (props) {
+type State = {
+  publicAddress: string,
+  encodedURI: string,
+  loading: boolean,
+  result: string
+}
+type Props = {
+  loading: boolean,
+  abcWallet: AbcCurrencyWallet,
+  currencyCode: string,
+  primaryInfo: any,
+  secondaryInfo: any,
+  secondaryToPrimaryRatio: number,
+  request: any,
+  saveReceiveAddress(string): void,
+}
+
+export default class Request extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       publicAddress: '',
       encodedURI: '',
-      keyboardUp: false,
-      loading: props.loading
+      loading: props.loading,
+      result: '',
+      keyboardUp: false
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: Props) {
     if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
       const {abcWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
@@ -79,7 +102,7 @@ export default class Request extends Component {
     this.keyboardWillHideListener.remove()
   }
 
-  onAmountsChange = ({primaryDisplayAmount}) => {
+  onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
 
@@ -159,7 +182,7 @@ export default class Request extends Component {
     Alert.alert('Request copied to clipboard')
   }
 
-  showResult = (result) => {
+  showResult = (result: {activityType: string}) => {
     if (result.action === Share.sharedAction) {
       this.props.saveReceiveAddress(this.props.request.receiveAddress)
 
@@ -179,7 +202,7 @@ export default class Request extends Component {
     const APP_NAME = 'Edge Wallet'
     Share.share({
       message: this.state.encodedURI,
-      title: sprintf(strings.enUS['request_qr_email_title'], APP_NAME)
+      title: sprintf(s.strings.request_qr_email_title, APP_NAME)
     }, {dialogTitle: 'Share Airbitz Request'})
     .then(this.showResult)
     .catch((error) => this.setState({

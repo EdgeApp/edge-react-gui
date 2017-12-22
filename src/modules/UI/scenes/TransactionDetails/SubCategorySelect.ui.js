@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
     View,
@@ -11,7 +13,19 @@ import platform from '../../../../theme/variables/platform.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-class SubCategorySelect extends Component {
+type State = {
+  subcategories: Array<string>,
+  filteredSubcategories: Array<string>,
+  enteredSubcategory: string
+}
+type Props = {
+  subcategoriesList: Array<string>,
+  enteredSubcategory: string,
+  usableHeight: number,
+  onPressFxn: Function
+}
+
+class SubCategorySelect extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -45,7 +59,7 @@ class SubCategorySelect extends Component {
     )
   }
 
-  renderSubcategory (data, onRegularSelectFxn) {
+  renderSubcategory (data: any, onRegularSelectFxn: any) {
     return (
       <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
@@ -60,7 +74,7 @@ class SubCategorySelect extends Component {
     )
   }
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item: any, index: number) => index
 }
 
 export default SubCategorySelect
