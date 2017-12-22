@@ -11,6 +11,15 @@ export const getSettings = (state: State) => {
   return settings
 }
 
+export const getIsTouchIdSupported = (state: State) => {
+  const settings = getSettings(state)
+  return settings.isTouchSupported
+}
+export const getIsTouchIdEnabled = (state: State) => {
+  const settings = getSettings(state)
+  return settings.isTouchEnabled
+}
+
 export const getLoginStatus = (state: State): boolean => {
   const settings = getSettings(state)
   const loginStatus: boolean = settings.loginStatus
@@ -110,6 +119,10 @@ export const getSupportedWalletTypes = (state: State) => {
   return supportedWalletTypes
 }
 
+export const getSettingsLock = (state: State) => {
+  const settings = getSettings(state)
+  return settings.changesLocked
+}
 export const getAutoLogoutTimeInSeconds = (state: State): number => {
   const settings = getSettings(state)
   const autoLogoutTimeInSeconds: number = settings.autoLogoutTimeInSeconds
