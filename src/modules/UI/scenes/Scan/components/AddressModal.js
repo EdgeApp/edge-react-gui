@@ -90,7 +90,7 @@ export default class AddressModal extends Component<Props,State> {
     return (
       <StylizedModal
         featuredIcon={icon}
-        headerText='fragment_send_address_dialog_title'
+        headerText={s.strings.fragment_send_address_dialog_title}
         modalMiddle={middle}
         modalBottom={bottom}
         visibilityBoolean={this.props.addressModalVisible}

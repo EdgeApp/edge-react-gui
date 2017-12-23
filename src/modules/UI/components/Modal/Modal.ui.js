@@ -66,7 +66,7 @@ export default class StylizedModal extends Component<Props, State> {
 
                 <View style={[styles.modalTopTextWrap]}>
                   <T style={[styles.modalTopText, this.props.headerTextStyle]}>
-                    {s.strings[headerText]}
+                    {headerText}
                   </T>
 
                   {this.props.headerSubtext
