@@ -1,7 +1,5 @@
 // @flow
 
-import unusedStrings from './en_US.unused'
-
 const strings = {
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
@@ -144,21 +142,4 @@ const strings = {
   transaction_details_payee: 'Payee',
 }
 
-/*
-  Checks if string is placed in en_US.unused.js,
-  use it and shows warn
- */
-const handler = {
-  get (target, propKey) {
-    if (!target[propKey]) {
-      if (unusedStrings[propKey] !== undefined) {
-        console.warn(`Please move string "${propKey}" from "en_US.unused.js" to "en_US.js"`)
-        return unusedStrings[propKey]
-      }
-      return undefined
-    }
-    return target[propKey]
-  }
-}
-
-export default new Proxy(strings, handler)
+export default strings
