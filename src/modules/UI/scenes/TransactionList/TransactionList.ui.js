@@ -275,7 +275,7 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
         <ScrollView style={[UTILS.border(), styles.scrollView]}>
           <View style={[styles.container, UTILS.border()]}>
             <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>

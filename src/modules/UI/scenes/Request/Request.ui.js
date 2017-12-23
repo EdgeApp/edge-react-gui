@@ -129,7 +129,7 @@ export default class Request extends Component<Props, State> {
     } = this.props
     return (
       <Gradient style={styles.view}>
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate

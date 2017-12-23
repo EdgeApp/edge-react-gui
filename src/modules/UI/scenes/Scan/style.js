@@ -1,3 +1,5 @@
+// @flow
+
 import {
   StyleSheet,
   Platform
@@ -6,19 +8,14 @@ import THEME from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
 
 export const styles = {
-  topSpacer: {
-    height: THEME.SPACER.HEADER
+  gradient: {
+    height: THEME.HEADER
   },
   container: {
     height: platform.deviceHeight - 66 - platform.footerHeight,
     flex: 1,
     flexDirection: 'row',
     position: 'relative',
-  },
-  gradient: {
-    height: 66,
-    width: '100%',
-    position: 'absolute'
   },
   preview: {
     flex: 1,

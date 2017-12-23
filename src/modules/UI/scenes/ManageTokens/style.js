@@ -1,3 +1,5 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
@@ -5,14 +7,11 @@ import PLATFORM from '../../../../theme/variables/platform'
 
 export const styles = {
   gradient: {
-    height: 66,
-    width: '100%',
-    position: 'absolute'
+    height: THEME.HEADER,
   },
   container: {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
-    top: 66,
     backgroundColor: THEME.COLORS.WHITE,
     paddingBottom: 32
   },
