@@ -385,3 +385,62 @@ describe('mergeTokens', function () {
     expect(actual).toEqual(expected)
   })
 })
+
+describe('getTimeMeasurement', function () {
+  test('should return seconds measurement', function () {
+    const expected = 'seconds'
+    const actual = UTILS.getTimeMeasurement(0.9)
+    expect(actual).toBe(expected)
+  })
+
+  test('should return minutes measurements', function () {
+    // accept minutes
+    const expected = 'minutes'
+    expect(UTILS.getTimeMeasurement(1)).toBe(expected)
+    expect(UTILS.getTimeMeasurement(59)).toBe(expected)
+  })
+
+  test('should return hours measurements', function () {
+    const expected = 'hours'
+    expect(UTILS.getTimeMeasurement(60)).toBe(expected)
+    expect(UTILS.getTimeMeasurement(1439)).toBe(expected)
+  })
+
+  test('should return days measurements', function () {
+    const expected = 'days'
+    expect(UTILS.getTimeMeasurement(1440)).toBe(expected)
+    expect(UTILS.getTimeMeasurement(50000)).toBe(expected)
+  })
+
+})
+
+describe('getTimeWithMeasurement', function () {
+  test(' => {measurement: "seconds", value: 35 }', function () {
+    expect(UTILS.getTimeWithMeasurement(0.58)).toEqual({measurement: 'seconds', value: 35})
+  })
+  test(' => {measurement: "minutes", value: 2 }', function () {
+    expect(UTILS.getTimeWithMeasurement(2)).toEqual({measurement: 'minutes', value: 2})
+  })
+  test(' => {measurement: "hours", value: 1 }', function () {
+    expect(UTILS.getTimeWithMeasurement(60)).toEqual({measurement: 'hours', value: 1})
+  })
+  test(' => {measurement: "days", value: 1 }', function () {
+    expect(UTILS.getTimeWithMeasurement(1440)).toEqual({measurement: 'days', value: 1})
+  })
+})
+
+describe('getTimeInMinutes', function () {
+  test('1 min => 1', function () {
+    expect(UTILS.getTimeInMinutes({measurement: 'minutes', value: 1})).toEqual(1)
+  })
+  test('2 hours => 120', function () {
+    expect(UTILS.getTimeInMinutes({measurement: 'hours', value: 2})).toEqual(120)
+  })
+  test('1 days => 1440', function () {
+    expect(UTILS.getTimeInMinutes({measurement: 'days', value: 1})).toEqual(1440)
+  })
+  test('44 seconds => 0.73', function () {
+    expect(UTILS.getTimeInMinutes({measurement: 'seconds', value: 44})).toEqual(0.73)
+  })
+})
+

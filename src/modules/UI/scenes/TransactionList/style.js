@@ -1,7 +1,12 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
+  gradient: {
+    height: THEME.HEADER
+  },
   container: {
     flex: 1,
     alignItems: 'stretch'

@@ -10,13 +10,12 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as Constants from '../../../../constants/indexConstants'
-import s from '../../../../locales/strings.js'
 import T from '../../components/FormattedText'
 import RowModal from './components/RowModal.ui'
 import RowRoute from './components/RowRoute.ui'
 import RowSwitch from './components/RowSwitch.ui'
 import {PrimaryButton} from '../../components/Buttons'
-import {border as b} from '../../../utils'
+import {border as b, getTimeWithMeasurement} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import SendLogsModal from './components/SendLogsModal.ui'
 import ConfirmPasswordModal from './components/ConfirmPasswordModal.ui'
@@ -25,6 +24,9 @@ import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 import {Icon} from '../../components/Icon/Icon.ui'
 
 import styles from './style'
+import s from '../../../../locales/strings'
+
+const DISABLE_TEXT = s.strings.string_disable
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
 import { AbcAccount } from 'airbitz-core-types'
 type Props = {
@@ -32,7 +34,7 @@ type Props = {
   autoLogoutTimeInMinutes: number,
   username: string,
   account: AbcAccount,
-  supportsTouchId: string,
+  supportsTouchId: boolean,
   touchIdEnabled: boolean,
   lockButton: string,
   lockButtonIcon: string,
@@ -179,7 +181,7 @@ export default class SettingsOverview extends Component<Props,State> {
 
   _onToggleTouchIdOption = (bool: boolean) => {
     this.props.enableTouchId(bool, this.props.account)
-    console.log('Allen toggling _onToggleTouchIdOption: ', bool)
+    this.options.useTouchID.value = bool
   }
 
   _onPressDebug = () => {
@@ -208,7 +210,11 @@ export default class SettingsOverview extends Component<Props,State> {
   }
 
   render () {
-    const disabled = s.strings.string_disable
+    const {measurement: autoLogoutMeasurement,
+      value: autoLogoutValue} = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
+    const autoLogoutRightText = autoLogoutValue === 0
+      ? DISABLE_TEXT
+      : `${autoLogoutValue} ${s.strings['settings_'+ autoLogoutMeasurement]}`
 
     return (
       <View>
@@ -254,7 +260,7 @@ export default class SettingsOverview extends Component<Props,State> {
           <View>
             <RowModal onPress={this.showAutoLogoutModal}
               leftText={s.strings.settings_title_auto_logoff}
-              rightText={this.props.autoLogoutTimeInMinutes || disabled} />
+              rightText={autoLogoutRightText} />
 
             <RowRoute
               leftText={s.strings.settings_title_currency}
@@ -280,6 +286,7 @@ export default class SettingsOverview extends Component<Props,State> {
           </View>
 
           <AutoLogoutModal
+            autoLogoutTimeInMinutes={this.state.autoLogoutTimeInMinutes}
             showModal={this.state.showAutoLogoutModal}
             onDone={this.onDoneAutoLogoutModal}
             onCancel={this.onCancelAutoLogoutModal} />
@@ -318,7 +325,7 @@ export default class SettingsOverview extends Component<Props,State> {
       property={this.options[x].key}
       onToggle={this.options[x].routeFunction}
       value={this.options[x].value}
-    />
+      />
   )
   renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
 }

@@ -17,6 +17,8 @@ const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
+import type { AbcAccount } from 'airbitz-core-types'
+import {enableTouchId} from 'airbitz-core-js-ui'
 import type {
   GetState,
   Dispatch
@@ -144,6 +146,13 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
     .catch((error) => { console.error(error) }) */
 
   dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
+}
+
+// touch id interaction
+export const updateTouchIdEnabled = (arg: boolean, account: AbcAccount) => async (dispatch: Dispatch) => {
+  // dispatch the update for the new state for
+  dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
+  enableTouchId (arg, account)
 }
 
 // Simple Actions
