@@ -1,7 +1,12 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
+  gradient: {
+    height: THEME.HEADER
+  },
   view: {
     flex: 1,
     flexDirection: 'column',
@@ -63,13 +68,14 @@ export default StyleSheet.create({
   trigger: {
     fontSize: 25,
     color: THEME.COLORS.WHITE,
-    fontWeight: '700'
+    fontWeight: '700',
+    paddingHorizontal: 8
   },
   optionContainer: {
     width: 165
   },
   optionRow: {
-    paddingVertical: 17
+    paddingVertical: 17,
   },
   optionText: {
     fontSize: 16

@@ -45,8 +45,8 @@
     ]
   },
   "dependencies": {
-    "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",
-    "airbitz-core-react-native": "^0.3.4",
+    "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#android-fingerprint",
+    "airbitz-core-react-native": "^0.4.0",
     "airbitz-core-types": "git://github.com/Airbitz/airbitz-core-types.git",
     "biggystring": "^3.0.1",
     "browserify-zlib": "^0.1.4",
@@ -56,7 +56,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^2.2.1",
+    "edge-currency-bitcoin": "^2.3.1",
     "edge-currency-ethereum": "^0.5.2",
     "edge-exchange-plugins": "^0.1.1",
     "https-browserify": "0.0.1",
@@ -88,7 +88,7 @@
     "react-native-level-fs": "^3.0.0",
     "react-native-linear-gradient": "^2.0.0",
     "react-native-locale": "^0.0.17",
-    "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git",
+    "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git#fix-threadpool",
     "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
     "react-native-menu": "git://github.com/Airbitz/react-native-menu.git#33df5d9",
     "react-native-modal": "^2.2.0",

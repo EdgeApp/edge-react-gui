@@ -105,7 +105,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     return <StylizedModal
       visibilityBoolean={true}
       featuredIcon={icon}
-      headerText={'title_confirm_excahnge'}
+      headerText={s.strings.title_confirm_exchange}
       headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
       modalMiddle={this.renderMiddle(style)}
       modalMiddleStyle={{paddingBottom: 40}}

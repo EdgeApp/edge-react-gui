@@ -31,4 +31,3 @@ export default class WalletListModal extends Component<Props> {
     )
   }
 }
-

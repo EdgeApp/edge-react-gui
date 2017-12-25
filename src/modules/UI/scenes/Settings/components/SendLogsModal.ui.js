@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 
+import s from '../../../../../locales/strings.js'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import {FormField} from '../../../../../components/FormField.js'
 import ModalButtons from './ModalButtons.ui'
@@ -52,7 +53,7 @@ export default class SendLogsModal extends Component {
 
     return <StylizedModal visibilityBoolean={this.props.showModal}
       featuredIcon={icon}
-      headerText={'settings_modal_send_logs_title'}
+      headerText={s.strings.settings_modal_send_logs_title}
       modalMiddle={input}
       modalBottom={modalBottom}
       onExitButtonFxn={this.onCancel}

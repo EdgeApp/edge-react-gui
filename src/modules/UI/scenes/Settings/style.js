@@ -1,19 +1,18 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
-  scene: {
-    flex: 1
-  },
   gradient: {
-    height: 66,
-    width: '100%',
-    position: 'absolute'
+    height: THEME.HEADER
+  },
+  body: {
+    padding: 18
   },
   container: {
     position: 'relative',
     height:'100%',
-    top: 66
   },
   listStyle: {
     height: 100
