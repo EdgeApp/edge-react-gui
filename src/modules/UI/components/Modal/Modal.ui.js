@@ -31,6 +31,7 @@ type Props = {
   onExitButtonFxn: ?() => void,
   style?: any
 }
+
 type State = {}
 
 export default class StylizedModal extends Component<Props, State> {
