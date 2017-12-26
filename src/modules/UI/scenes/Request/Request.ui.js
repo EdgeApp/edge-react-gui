@@ -33,7 +33,8 @@ type State = {
   publicAddress: string,
   encodedURI: string,
   loading: boolean,
-  result: string
+  result: string,
+  keyboardUp: boolean
 }
 type Props = {
   loading: boolean,
@@ -47,6 +48,10 @@ type Props = {
 }
 
 export default class Request extends Component<Props, State> {
+
+  keyboardWillShowListener: any
+  keyboardWillHideListener: any
+
   constructor (props: Props) {
     super(props)
     this.state = {
