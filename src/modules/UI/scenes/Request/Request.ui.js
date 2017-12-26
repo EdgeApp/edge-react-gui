@@ -37,6 +37,7 @@ type State = {
   encodedURI: string,
   loading: boolean,
   result: string,
+  keyboardUp: boolean,
   animationQrSize: any,
   animationPushUpSize: any
 }
@@ -52,6 +53,10 @@ type Props = {
 }
 
 export default class Request extends Component<Props, State> {
+
+  keyboardWillShowListener: any
+  keyboardWillHideListener: any
+
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -59,6 +64,7 @@ export default class Request extends Component<Props, State> {
       encodedURI: '',
       keyboardUp: false,
       loading: props.loading,
+      result: '',
       animationQrSize: new Animated.Value(platform.deviceHeight / 2.9),
       animationPushUpSize: new Animated.Value(0)
     }
@@ -239,20 +245,20 @@ export default class Request extends Component<Props, State> {
     this.shareMessage()
   }
 
-  keyboardWillShow (event) {
+  keyboardWillShow (event: any) {
     this.setState({
       keyboardUp: true
     })
-    this._animateQRCodeOnShow(event)
+    this.animateQRCodeOnShow(event)
   }
-  keyboardWillHide (event) {
+  keyboardWillHide (event: any) {
     this.setState({
       keyboardUp: false
     })
-    this._animateQRCodeOnHide(event)
+    this.animateQRCodeOnHide(event)
   }
 
-  animateQRCodeOnShow (event) {
+  animateQRCodeOnShow (event: any) {
     Animated.timing(this.state.animationQrSize, {
       duration: event.duration,
       toValue: platform.deviceHeight / 4.3,
@@ -263,7 +269,7 @@ export default class Request extends Component<Props, State> {
     }).start()
   }
 
-  animateQRCodeOnHide (event) {
+  animateQRCodeOnHide (event: any) {
     Animated.timing(this.state.animationQrSize, {
       duration: event.duration,
       toValue: platform.deviceHeight / 2.9,
