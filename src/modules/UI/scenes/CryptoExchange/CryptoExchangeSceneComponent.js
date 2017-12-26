@@ -6,7 +6,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
   from '../../../../connectors/components/CryptoExchangeRateConnector'
-import {View} from 'react-native'
+import {View, Animated, Platform} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
 import CryptoExchangeFlipConnector
   from '../../../../connectors/components/CryptoExchangeFlipConnector'
@@ -51,15 +51,57 @@ type Props ={
 }
 
 type State = {
+  isToggled: boolean,
   whichWallet: string
 }
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
+
+  animatedValue: any
+  frontInterpolate: any
+  backInterpolate: any
+
+  constructor (props: Props) {
+    super(props)
+    this.state = {
+      isToggled: false,
+      whichWallet: ''
+    }
+  }
 
   componentWillMount () {
     this.setState({
       whichWallet: Constants.FROM
     })
+    this.animatedValue = new Animated.Value(0)
+    this.frontInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: ['0deg', '180deg']
+    })
 
+    this.backInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: ['180deg', '360deg']
+    })
+  }
+
+  onToggle = () => {
+    this.setState({
+      isToggled: !this.state.isToggled
+    })
+    if (this.state.isToggled) {
+      Animated.spring(this.animatedValue,{
+        toValue: 0,
+        friction: 8,
+        tension: 10
+      }).start()
+    }
+    if (!this.state.isToggled) {
+      Animated.spring(this.animatedValue,{
+        toValue: 180,
+        friction: 8,
+        tension: 10
+      }).start()
+    }
   }
 
   renderButton = () => {
@@ -115,47 +157,136 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
   }
 
   render () {
+    const {isToggled} = this.state
+    const frontAnimatedStyle = {
+      transform: [
+        { rotateX: this.frontInterpolate }
+      ]
+    }
+    const backAnimatedStyle = {
+      transform: [
+        { rotateX: this.backInterpolate }
+      ]
+    }
     const style = CryptoExchangeSceneStyle
-    return (
-      <Gradient style={[style.scene]}>
-        <Gradient style={style.gradient} />
-        <KeyboardAwareScrollView
-          style={[style.mainScrollView]}
-          keyboardShouldPersistTaps={Constants.ALWAYS}
-          contentContainerStyle={style.scrollViewContentContainer}
-        >
+
+    if (Platform.OS === 'ios') {
+      return (
+        <Gradient style={[style.scene]}>
+          <Gradient style={style.gradient} />
           <CryptoExchangeConnector style={style.exchangeRateBanner} />
-          <View style={style.shim} />
-          <CryptoExchangeFlipConnector
-            style={style.flipWrapper}
-            uiWallet={this.props.fromWallet}
-            currencyCode={this.props.fromCurrencyCode}
-            whichWallet={Constants.FROM}
-            launchWalletSelector={this.launchWalletSelector}
-            fee={this.props.fee}
-          />
-          <View style={style.shim} />
-          <IconButton
-            style={style.flipButton}
-            icon={Constants.SWAP_VERT}
-            onPress={this.flipThis}
-          />
-          <View style={style.shim} />
-          <CryptoExchangeFlipConnector
-            style={style.flipWrapper}
-            uiWallet={this.props.toWallet}
-            currencyCode={this.props.toCurrencyCode}
-            whichWallet={Constants.TO}
-            launchWalletSelector={this.launchWalletSelector}
-          />
-          <View style={style.shim} />
-          <View style={style.actionButtonContainer} >
-            {this.renderButton()}
-          </View>
-        </KeyboardAwareScrollView>
-        {this.renderDropUp()}
-        {this.renderConfirmation(style.confirmModal)}
-      </Gradient>
-    )
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps={Constants.ALWAYS}
+          >
+            <Animated.View style={[ style.exchangeContainerFront, frontAnimatedStyle ]} pointerEvents={isToggled ? 'none' : 'auto'}>
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.fromWallet}
+                currencyCode={this.props.fromCurrencyCode}
+                whichWallet={Constants.FROM}
+                launchWalletSelector={this.launchWalletSelector}
+                fee={this.props.fee}
+              />
+              <View style={style.shim} />
+              <IconButton
+                style={style.flipButton}
+                icon={Constants.SWAP_VERT}
+                onPress={this.onToggle}
+              />
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.toWallet}
+                currencyCode={this.props.toCurrencyCode}
+                whichWallet={Constants.TO}
+                launchWalletSelector={this.launchWalletSelector}
+              />
+              <View style={style.shim} />
+              <View style={style.actionButtonContainer} >
+                {this.renderButton()}
+              </View>
+            </Animated.View>
+            <Animated.View style={[ style.exchangeContainerFront, style.exchangeContainerBack, backAnimatedStyle ]}  pointerEvents={isToggled ? 'auto' : 'none'}>
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.toWallet}
+                currencyCode={this.props.toCurrencyCode}
+                whichWallet={Constants.TO}
+                launchWalletSelector={this.launchWalletSelector}
+              />
+              <View style={style.shim} />
+              <IconButton
+                style={style.flipButton}
+                icon={Constants.SWAP_VERT}
+                onPress={this.onToggle}
+              />
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.fromWallet}
+                currencyCode={this.props.fromCurrencyCode}
+                whichWallet={Constants.FROM}
+                launchWalletSelector={this.launchWalletSelector}
+                fee={this.props.fee}
+              />
+              <View style={style.shim} />
+              <View style={style.actionButtonContainer} >
+                {this.renderButton()}
+              </View>
+            </Animated.View>
+          </KeyboardAwareScrollView>
+          {this.renderDropUp()}
+          {this.renderConfirmation(style.confirmModal)}
+        </Gradient>
+      )
+    }
+
+    if (Platform.OS !== 'ios') {
+      return (
+        <Gradient style={[style.scene]}>
+          <Gradient style={style.gradient} />
+          <KeyboardAwareScrollView
+            style={[style.mainScrollView]}
+            keyboardShouldPersistTaps={Constants.ALWAYS}
+            contentContainerStyle={style.scrollViewContentContainer}
+          >
+            <CryptoExchangeConnector style={style.exchangeRateBanner} />
+            <View style={style.shim} />
+            <CryptoExchangeFlipConnector
+              style={style.flipWrapper}
+              uiWallet={this.props.fromWallet}
+              currencyCode={this.props.fromCurrencyCode}
+              whichWallet={Constants.FROM}
+              launchWalletSelector={this.launchWalletSelector}
+              fee={this.props.fee}
+            />
+            <View style={style.shim} />
+            <IconButton
+              style={style.flipButton}
+              icon={Constants.SWAP_VERT}
+              onPress={this.flipThis}
+            />
+            <View style={style.shim} />
+            <CryptoExchangeFlipConnector
+              style={style.flipWrapper}
+              uiWallet={this.props.toWallet}
+              currencyCode={this.props.toCurrencyCode}
+              whichWallet={Constants.TO}
+              launchWalletSelector={this.launchWalletSelector}
+            />
+            <View style={style.shim} />
+            <View style={style.actionButtonContainer} >
+              {this.renderButton()}
+            </View>
+          </KeyboardAwareScrollView>
+          {this.renderDropUp()}
+          {this.renderConfirmation(style.confirmModal)}
+        </Gradient>
+      )
+    }
+
+
   }
 }

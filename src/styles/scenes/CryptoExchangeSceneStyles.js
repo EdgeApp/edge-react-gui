@@ -13,7 +13,20 @@ const CryptoExchangeSceneStyle = {
     flex: 1,
   },
   scrollViewContentContainer: {
+    flex: 1,
     alignItems:'center'
+  },
+  exchangeContainerFront: {
+    flex: 1,
+    alignItems: 'center',
+    backfaceVisibility: 'hidden'
+  },
+  exchangeContainerBack: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   exchangeRateBanner : {
     container: {
