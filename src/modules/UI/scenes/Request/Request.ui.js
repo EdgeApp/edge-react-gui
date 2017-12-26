@@ -29,12 +29,6 @@ from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
 
-type State = {
-  publicAddress: string,
-  encodedURI: string,
-  loading: boolean,
-  result: string
-}
 type Props = {
   loading: boolean,
   abcWallet: AbcCurrencyWallet,
@@ -46,7 +40,19 @@ type Props = {
   saveReceiveAddress(string): void,
 }
 
+type State = {
+  publicAddress: string,
+  encodedURI: string,
+  loading: boolean,
+  result: string,
+  keyboardUp: boolean
+}
+
 export default class Request extends Component<Props, State> {
+
+  keyboardWillShowListener: any
+  keyboardWillHideListener: any
+
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -239,13 +245,11 @@ export default class Request extends Component<Props, State> {
   }
 
   keyboardWillShow () {
-    console.log('show')
     this.setState({
       keyboardUp: true
     })
   }
   keyboardWillHide () {
-    console.log('hide')
     this.setState({
       keyboardUp: false
     })
