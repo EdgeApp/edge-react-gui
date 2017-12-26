@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Text, View} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
@@ -12,14 +14,20 @@ const SEND_MAX_TEXT = sprintf(s.strings.send_confirmation_max_button_title)
 const HELP_TEXT = sprintf(s.strings.string_help)
 
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
-const CHANGE_CURRENCY = 'CHANGE_CURRENCY'
-const SEND_MAX = 'SEND_MAX'
-const HELP = 'HELP'
+const CHANGE_CURRENCY   = 'CHANGE_CURRENCY'
+const SEND_MAX          = 'SEND_MAX'
+const HELP              = 'HELP'
 
 import styles from './styles'
 
-export default class SendConfirmationOptions extends Component {
-  handleMenuOptions (key) {
+type Props = {
+  changeMiningFee: () => void,
+  openHelpModal: () => void,
+  sendMaxSpend: () => void
+}
+type State = {}
+export default class SendConfirmationOptions extends Component<Props, State> {
+  handleMenuOptions (key: string) {
     switch (key) {
     case CHANGE_MINING_FEE:
       return this.props.changeMiningFee()

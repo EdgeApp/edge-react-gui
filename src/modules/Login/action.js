@@ -24,10 +24,12 @@ export const LOGOUT = 'LOGOUT'
 
 import {Actions} from 'react-native-router-flux'
 
-export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
+  // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
+  dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
   CONTEXT_API.getCurrencyPlugins(context)
     .then((currencyPlugins) => {
       currencyPlugins.forEach((plugin) => {
