@@ -71,6 +71,16 @@ export const styles = {
   },
   underlay: {
     color: THEME.COLORS.GRAY_4
+  },
+  autoLogoutMiddleContainer: {
+    flexDirection: 'row',
+  },
+  autoLogoutDialogTitle: {
+    color: THEME.COLORS.PRIMARY
+  },
+  autoLogoutPickerContainer: {
+    flex: 1,
+    margin: 4,
   }
 }
 

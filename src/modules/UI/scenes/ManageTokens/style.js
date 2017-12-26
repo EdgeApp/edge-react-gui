@@ -1,20 +1,19 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
+
 import THEME from '../../../../theme/variables/airbitz'
 import PLATFORM from '../../../../theme/variables/platform'
 
-
 export const styles = {
-
   gradient: {
-    height: 66,
-    width: '100%',
-    position: 'absolute'
+    height: THEME.HEADER,
   },
   container: {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
-    top: 66,
-    backgroundColor: THEME.COLORS.WHITE
+    backgroundColor: THEME.COLORS.WHITE,
+    paddingBottom: 32
   },
   leftArea: {
     flexDirection: 'row'
@@ -24,7 +23,6 @@ export const styles = {
     fontSize: 22,
     color: THEME.COLORS.WHITE
   },
-
   headerRow: {
     padding: 12,
     flexDirection: 'row',
@@ -41,7 +39,6 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 22
   },
-
   instructionalArea: {
     paddingVertical: 16,
     paddingHorizontal: 20,
@@ -62,8 +59,8 @@ export const styles = {
   tokenList: {
     flex: 1
   },
-  /////// start of token row styling ///////
 
+  /////// start of token row styling ///////
   manageTokenRow: {
     height: 44,
     flexDirection: 'row',
@@ -77,7 +74,7 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-  }  ,
+  },
   tokenNameArea: {
     alignSelf: 'center'
   },
@@ -93,7 +90,6 @@ export const styles = {
   },
 
   /////// end of token row styling /////////
-
   buttonsArea: {
     height: 52,
     flexDirection: 'row',
@@ -120,4 +116,5 @@ export const styles = {
     borderRadius: 3
   }
 }
+
 export default StyleSheet.create(styles)

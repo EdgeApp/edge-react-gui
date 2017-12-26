@@ -9,7 +9,6 @@ export default StyleSheet.create({
   webView: {
     justifyContent: 'center',
     alignItems:'center',
-    height: 240,
     flex: 1
   },
   modalBottomContainer: {
@@ -23,7 +22,19 @@ export default StyleSheet.create({
     padding: 4
   },
   modalMiddleWebView: {
-
+    flex: 1,
+  },
+  modalVisibleStyle: {
+    flex: 1,
+  },
+  modalBoxStyle: {
+    flex: 1,
+  },
+  modalContentStyle: {
+    flex: 1,
+  },
+  modalBodyStyle: {
+    flex: 1,
   },
   modalFeaturedIcon: {
     top: 12,

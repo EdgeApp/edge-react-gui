@@ -1,19 +1,16 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 import PLATFORM from '../../../../theme/variables/platform'
 
-
 export const styles = {
-
   gradient: {
-    height: 66,
-    width: '100%',
-    position: 'absolute'
+    height: THEME.HEADER
   },
   container: {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
-    top: 66,
     paddingHorizontal: 20,
     backgroundColor: THEME.COLORS.GRAY_4
   },
@@ -96,6 +93,9 @@ export const styles = {
     marginLeft: 2,
     backgroundColor: THEME.COLORS.SECONDARY,
     borderRadius: 3
+  },
+  bottomPaddingForKeyboard: {
+    height: 300
   }
 }
 export default StyleSheet.create(styles)

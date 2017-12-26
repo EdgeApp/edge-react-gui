@@ -4,6 +4,9 @@ import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
 import {Image} from 'react-native'
 const CryptoExchangeSceneStyle = {
+  gradient: {
+    height: THEME.SPACER.HEADER
+  },
   scene: Styles.SceneContainer,
   styleCatch:Styles,
   mainScrollView: {
@@ -32,14 +35,19 @@ const CryptoExchangeSceneStyle = {
       backgroundColor: THEME.COLORS.GRAY_4
     },
     text: {
-      color: THEME.COLORS.WHITE
+      color: THEME.COLORS.WHITE,
+      textAlign: 'center',
+      marginRight: '2%',
+      marginLeft: '2%'
     },
     textError: {
-      color: THEME.COLORS.PRIMARY
+      color: THEME.COLORS.PRIMARY,
+      backgroundColor: THEME.COLORS.TRANSPARENT,
+      fontSize: 10
     }
   },
   shim: {
-    height:20
+    height: 20
   },
 
   flipButton: Styles.IconButtonStyle,

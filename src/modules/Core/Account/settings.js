@@ -21,11 +21,12 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   merchantMode: false,
   'BTC': {denomination: '100000000'},
   'BCH': {denomination: '100000000'},
+  'DASH': {denomination: '100000000'},
   'LTC': {denomination: '100000000'},
   'ETH': {denomination: '1000000000000000000'},
   'REP': {denomination: '1000000000000000000'},
   'WINGS': {denomination: '1000000000000000000'},
-  'TOKEN_DEFAULT': {denomination: '1000000000000000000'}
+  customTokens: []
 }
 
 export const LOCAL_ACCOUNT_DEFAULTS = {bluetoothMode: false}
@@ -36,7 +37,7 @@ const CATEGORIES_FILENAME = 'Categories.json'
 
 //  Settings
 // Core Settings
-export const setOtpModeRequest = (account: AbcAccount, otpMode: Boolean) =>
+export const setOTPModeRequest = (account: AbcAccount, otpMode: boolean) =>
   otpMode // $FlowFixMe enableOtp not found on AbcAccount type
   ? account.enableOtp() // $FlowFixMe disableOtp not found on AbcAccount type
   : account.disableOtp()
@@ -45,12 +46,12 @@ export const setOTPRequest = (account: AbcAccount, key: string) =>
 // $FlowFixMe setupOTPKey not found on AbcAccount type
 account.setupOTPKey(key)
 
-export const setPinModeRequest = (account: AbcAccount, pinMode: Boolean) =>
+export const setPINModeRequest = (account: AbcAccount, pinMode: boolean) =>
   pinMode // $FlowFixMe enablePIN not found on AbcAccount type
   ? account.enablePIN() // $FlowFixMe isablePIN not found on AbcAccount type
   : account.disablePIN()
 
-export const setPinRequest = (account: AbcAccount, pin: string) =>
+export const setPINRequest = (account: AbcAccount, pin: string) =>
   account.changePIN(pin)
 
 // Account Settings
@@ -68,7 +69,7 @@ export const setDefaultFiatRequest = (account: AbcAccount, defaultFiat: string) 
     return setSyncedSettings(account, updatedSettings)
   })
 
-export const setMerchantModeRequest = (account: AbcAccount, merchantMode: Boolean) =>
+export const setMerchantModeRequest = (account: AbcAccount, merchantMode: boolean) =>
   getSyncedSettings(account)
   .then((settings) => {
     const updatedSettings = updateSettings(settings, {merchantMode})
@@ -76,7 +77,7 @@ export const setMerchantModeRequest = (account: AbcAccount, merchantMode: Boolea
   })
 
 // Local Settings
-export const setBluetoothModeRequest = (account: AbcAccount, bluetoothMode: Boolean) =>
+export const setBluetoothModeRequest = (account: AbcAccount, bluetoothMode: boolean) =>
   getLocalSettings(account)
   .then((settings) => {
     const updatedSettings = updateSettings(settings, {bluetoothMode})

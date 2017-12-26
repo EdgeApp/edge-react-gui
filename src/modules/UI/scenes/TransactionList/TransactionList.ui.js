@@ -1,7 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import strings from '../../../../locales/default'
 import s from '../../../../locales/strings.js'
 import {bns} from 'biggystring'
 import {
@@ -71,11 +70,11 @@ type State = {
 type TransactionListTx = any
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
-const REQUEST_TEXT      = strings.enUS['fragment_request_subtitle']
-const SEND_TEXT         = strings.enUS['fragment_send_subtitle']
-const SENT_TEXT         = strings.enUS['fragment_transaction_list_sent_prefix']
-const RECEIVED_TEXT     = strings.enUS['fragment_transaction_list_receive_prefix']
-const UNCONFIRMED_TEXT  = strings.enUS['fragment_wallet_unconfirmed']
+const REQUEST_TEXT      = s.strings.fragment_request_subtitle
+const SEND_TEXT         = s.strings.fragment_send_subtitle
+const SENT_TEXT         = s.strings.fragment_transaction_list_sent_prefix
+const RECEIVED_TEXT     = s.strings.fragment_transaction_list_receive_prefix
+const UNCONFIRMED_TEXT  = s.strings.fragment_wallet_unconfirmed
 
 export default class TransactionList extends Component<Props, State> {
   state = {
@@ -276,7 +275,7 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
         <ScrollView style={[UTILS.border(), styles.scrollView]}>
           <View style={[styles.container, UTILS.border()]}>
             <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>

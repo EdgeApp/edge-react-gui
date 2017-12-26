@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component, type Node} from 'react'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {
   View,
   TouchableOpacity,
@@ -20,6 +20,10 @@ type Props = {
   headerSubtext?: string,
   visibilityBoolean: boolean,
   featuredIcon: Node,
+  modalVisibleStyle?: {},
+  modalBoxStyle?: {},
+  modalContentStyle?: {},
+  modalBodyStyle?: {},
   modalMiddle: Node,
   modalMiddleStyle?: {},
   modalBottom: Node,
@@ -30,37 +34,44 @@ type Props = {
 type State = {}
 
 export default class StylizedModal extends Component<Props, State> {
+  showExitIcon = () => {
+    const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
+    if (this.props.onExitButtonFxn) {
+      return <View style={[styles.exitRow]}>
+        <TouchableOpacity
+          style={[styles.exitButton, b()]}
+          onPress={this.props.onExitButtonFxn}>
+          <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
+        </TouchableOpacity>
+      </View>
+    }
+    return <View style={[styles.exitRow]} />
+  }
   render () {
     const {headerText, headerSubtext} = this.props
-    const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
+
     return (
       <Modal style={[styles.topLevelModal, b('yellow'), this.props.style]} isVisible={this.props.visibilityBoolean}>
         <View style={[styles.modalHeaderIconWrapBottom]}>
           {this.props.featuredIcon}
         </View>
 
-        <View style={[styles.visibleModal]}>
+        <View style={[styles.visibleModal, this.props.modalVisibleStyle]}>
 
-          <View style={[styles.exitRow]}>
-            <TouchableOpacity
-              style={[styles.exitButton, b()]}
-              onPress={this.props.onExitButtonFxn}>
-              <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
-            </TouchableOpacity>
-          </View>
+          {this.showExitIcon()}
 
-          <View style={[styles.modalBox]}>
-            <View style={[styles.modalContent]}>
-              <View style={[styles.modalBody]}>
+          <View style={[styles.modalBox, this.props.modalBoxStyle]}>
+            <View style={[styles.modalContent, this.props.modalContentStyle]}>
+              <View style={[styles.modalBody, this.props.modalBodyStyle]}>
 
                 <View style={[styles.modalTopTextWrap]}>
                   <T style={[styles.modalTopText, this.props.headerTextStyle]}>
-                    {strings.enUS[headerText]}
+                    {headerText}
                   </T>
 
                   {this.props.headerSubtext
                     && <T style={[styles.modalTopSubtext]}>
-                      {headerSubtext ? strings.enUS[headerSubtext] : ''}
+                      {headerSubtext ? s.strings[headerSubtext] : ''}
                     </T>
                   }
                 </View>

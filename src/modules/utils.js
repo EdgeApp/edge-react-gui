@@ -1,9 +1,10 @@
 // @flow
 import {Platform} from 'react-native'
+
 import borderColors from '../theme/variables/css3Colors'
 import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction} from 'airbitz-core-types'
+import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'airbitz-core-types'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
 
 const DIVIDE_PRECISION = 18
@@ -80,6 +81,21 @@ export const inputBottomPadding = () => {
       paddingBottom: 0
     }
   }
+}
+
+// will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
+export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<AbcMetaToken>) => {
+  let tokensEnabled = preferredAbcMetaTokens // initially set the array to currencyInfo (from plugin), since it takes priority
+  for (let x of abcMetaTokens) { // loops through the account-level array
+    let found = false // assumes it is not present in the currencyInfo from plugin
+    for (let val of tokensEnabled) { // loops through currencyInfo array to see if already present
+      if ((x.currencyCode === val.currencyCode) && (x.currencyName === val.currencyName)) {
+        found = true // if present, then set 'found' to true
+      }
+    }
+    if (!found) tokensEnabled.push(x) // if not already in the currencyInfo, then add to tokensEnabled array
+  }
+  return tokensEnabled
 }
 
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
@@ -257,3 +273,77 @@ export const isReceivedTransaction = (abcTransaction: AbcTransaction): boolean =
   gte(abcTransaction.nativeAmount, '0')
 export const isSentTransaction = (abcTransaction: AbcTransaction): boolean =>
   !isReceivedTransaction(abcTransaction)
+
+export const getTimeMeasurement = (inMinutes: number): string => {
+  switch (true) {
+  case inMinutes < 1:
+    return 'seconds'
+
+  case inMinutes < 60:
+    return 'minutes'
+
+  case inMinutes < 1440:
+    return 'hours'
+
+  case inMinutes <= 84960:
+    return 'days'
+
+  default:
+    return ''
+  }
+}
+
+export const getTimeWithMeasurement = (inMinutes: number): {measurement: string, value: number} => {
+  const measurement = getTimeMeasurement(inMinutes)
+
+  const measurements = {
+    'seconds' (minutes) {
+      const val = Math.round(minutes * 60)
+      return val
+    },
+    'minutes' (minutes) {
+      return minutes
+    },
+    'hours' (minutes) {
+      return minutes / 60
+    },
+    'days' (minutes) {
+      return minutes / 24 / 60
+    }
+  }
+  const strategy = measurements[measurement]
+
+  if (!strategy) {
+    console.error(`No strategy for particular measurement: ${measurement}`)
+    return {measurement: '', value: Infinity}
+  }
+  return {
+    measurement,
+    value: strategy(inMinutes)
+  }
+}
+export const getTimeInMinutes = (params: {measurement: string, value: number}): number => {
+  const {measurement, value} = params
+  const measurementStrategies = {
+    'seconds' (v) {
+      const val = Math.round(v / 60 * 100) / 100
+      return val
+    },
+    'minutes' (v) {
+      return v
+    },
+    'hours' (v) {
+      return v * 60
+    },
+    'days' (v) {
+      return v * 24 * 60
+    }
+  }
+  const strategy = measurementStrategies[measurement]
+
+  if (!strategy) {
+    console.error(`No strategy for particular measurement: ${measurement}`)
+    return Infinity
+  }
+  return strategy(value)
+}

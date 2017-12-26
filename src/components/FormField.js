@@ -1,34 +1,36 @@
-
 import React, { Component } from 'react'
 // import * as Constants from '../../../common/constants'
 import { Input } from './materialWrappers/indexMaterial'
 
+/*
 type Props = {
 
-  style: any,
-  label?: string,
-  value?: string,
-  placeholder?: string,
-  autoCorrect: boolean,
-  autoFocus: boolean,
-  forceFocus: boolean,
-  autoCapitalize?: string,
-  secureTextEntry?: boolean,
-  showSecureCheckbox?: boolean,
-  returnKeyType?: string,
-  error?: string,
-  onSubmitEditing(): void,
-  onFocus(): void,
-  onBlur(): void,
-  onChangeText(string):void,
+ style: any,
+ label?: string,
+ value?: string,
+ placeholder?: string,
+ autoCorrect: boolean,
+ autoFocus: boolean,
+ forceFocus: boolean,
+ autoCapitalize?: string,
+ secureTextEntry?: boolean,
+ showSecureCheckbox?: boolean,
+ returnKeyType?: string,
+ error?: string,
+ onSubmitEditing(): void,
+ onFocus(): void,
+ onBlur(): void,
+ onChangeText(string):void,
 }
 
 type State = {
-  secure: boolean,
-  autoFocus: boolean
+ secure: boolean,
+ autoFocus: boolean
 }
 
 class FormField extends Component<Props, State> {
+*/
+class FormField extends Component {
   static defaultProps = {
     autoCapitalize: 'none',
     autoCorrect: false,

@@ -1,78 +1,83 @@
+// @flow
+
 import React, {Component} from 'react'
-import {
-  View,
-  FlatList,
-  ActivityIndicator
-} from 'react-native'
+import {View, FlatList, ActivityIndicator} from 'react-native'
+import {Actions} from 'react-native-router-flux'
+
+import type {AbcMetaToken} from 'airbitz-core-types'
+import type { GuiWallet } from '../../../../types'
+
+import * as UTILS from '../../../utils'
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {Actions} from 'react-native-router-flux'
-import {connect} from 'react-redux'
-// import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import styles from './style.js'
 import ManageTokenRow from './ManageTokenRow.ui.js'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
-import * as UTILS from '../../../utils.js'
-import {
-  getEnabledTokens,
-  setEnabledTokens
-} from '../../Wallets/action.js'
+import styles from './style.js'
 
-
-class ManageTokens extends Component {
-  constructor (props) {
+export type Props = {
+  guiWallet: GuiWallet,
+  manageTokensPending: boolean,
+  accountMetaTokenInfo: Array<AbcMetaToken>
+}
+export type DispatchProps = {
+  getEnabledTokensList: (string) => void,
+  setEnabledTokensList: (string, Array<string>, Array<string>) => void
+}
+export type State = {
+  enabledList: Array<string>,
+  combinedCurrencyInfos: Array<AbcMetaToken>
+}
+export default class ManageTokens extends Component<Props & DispatchProps, State> {
+  constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
-      enabledTokens: []
+      enabledList: this.props.guiWallet.enabledTokens || [],
+      combinedCurrencyInfos: []
     }
   }
 
   componentDidMount () {
-    let enabledTokens = []
-    const { tokensEnabled } = this.props.guiWallet
-    for (let prop in tokensEnabled) {
-      let tokenValues = tokensEnabled[prop]
-      enabledTokens.push(tokenValues)
-    }
-    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
-      return b.currencyCode - a.currencyCode
+    const { metaTokens } = this.props.guiWallet
+    let accountMetaTokenInfo = this.props.accountMetaTokenInfo || []
+    let combinedTokenInfo = UTILS.mergeTokens(metaTokens, accountMetaTokenInfo)
+
+    let sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
+      if (a.currencyCode < b.currencyCode) return -1
+      if (a === b) return 0
+      return 1
     })
+
     this.setState({
-      enabledTokens: sortedEnabledTokens
+      combinedCurrencyInfos: sortedTokenInfo
     })
   }
 
-  toggleToken = (currencyCode) => {
-    let enabledTokens = []
-    const { tokensEnabled } = this.props.guiWallet
-    for (let prop in tokensEnabled) {
-      if (prop === currencyCode) {
-        tokensEnabled[prop].enabled = !tokensEnabled[prop].enabled
-      }
-      let tokenValues = tokensEnabled[prop]
-      enabledTokens.push(tokenValues)
+  toggleToken = (currencyCode: string) => {
+    let newEnabledList = this.state.enabledList
+    let index = newEnabledList.indexOf(currencyCode)
+    if (index >= 0) {
+      newEnabledList.splice(index, 1)
+    } else {
+      newEnabledList.push(currencyCode)
     }
-    let sortedEnabledTokens = enabledTokens.sort((a, b) => {
-      return b.currencyCode - a.currencyCode
-    })
     this.setState({
-      enabledTokens: sortedEnabledTokens
+      enabledList: newEnabledList
     })
   }
 
   saveEnabledTokenList = () => {
-    const { tokensEnabled, id } = this.props.guiWallet
-    const walletEnabledTokens = tokensEnabled
-    for (let item of this.state.enabledTokens) {
-      walletEnabledTokens[item.currencyCode].enabled = item.enabled
+    const { id } = this.props.guiWallet
+    let disabledList: Array<string> = []
+    // get disabled list
+    for (let val of this.state.combinedCurrencyInfos) {
+      if (this.state.enabledList.indexOf(val.currencyCode) === -1) disabledList.push(val.currencyCode)
     }
-    this.props.setEnabledTokensList(id, walletEnabledTokens)
+    this.props.setEnabledTokensList(id, this.state.enabledList, disabledList)
     Actions.pop()
   }
 
   render () {
-
     return (
       <View style={[styles.manageTokens]}>
         <Gradient style={styles.gradient} />
@@ -81,26 +86,27 @@ class ManageTokens extends Component {
           <View style={styles.instructionalArea}>
             <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
           </View>
-          <View style={[styles.metaTokenListArea, UTILS.border()]}>
+          <View style={[styles.metaTokenListArea]}>
             <View style={[styles.metaTokenListWrap]}>
               <FlatList
-                data={this.state.enabledTokens}
-                renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} />}
-                style={[styles.tokenList, UTILS.border()]}
+                keyExtractor={(item) => item.currencyCode}
+                data={this.state.combinedCurrencyInfos}
+                renderItem={(metaToken) => <ManageTokenRow metaToken={metaToken} toggleToken={this.toggleToken} enabledList={this.state.enabledList} />}
+                style={[styles.tokenList]}
               />
             </View>
-            <View style={[styles.buttonsArea, UTILS.border()]}>
+            <View style={[styles.buttonsArea]}>
               <SecondaryButton
-                style={[styles.addButton, UTILS.border()]}
+                style={[styles.addButton]}
                 text={'Add'}
                 onPressFunction={this.goToAddTokenScene}
               />
               <PrimaryButton
                 text={'Save'}
-                style={[styles.saveButton, UTILS.border()]}
+                style={[styles.saveButton]}
                 onPressFunction={this.saveEnabledTokenList}
                 processingElement={<ActivityIndicator />}
-                processingFlag={this.props.manageTokenPending}
+                processingFlag={this.props.manageTokensPending}
               />
             </View>
           </View>
@@ -116,9 +122,9 @@ class ManageTokens extends Component {
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-          <Text style={styles.headerText}>
-            {name}
-          </Text>
+            <Text style={styles.headerText}>
+              {name}
+            </Text>
         </View>
         </View>
       </Gradient>
@@ -130,16 +136,3 @@ class ManageTokens extends Component {
     Actions.addToken({walletId: id})
   }
 }
-
-const mapStateToProps = (state: ReduxStatenpm): InternalProps => {
-  const manageTokensPending = state.ui.wallets.manageTokensPending
-  return {
-    manageTokensPending
-  }
-}
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  getEnabledTokensList: (walletId) => dispatch(getEnabledTokens(walletId)),
-  setEnabledTokensList: (walletId, enabledTokens) => dispatch(setEnabledTokens(walletId, enabledTokens))
-
-})
-export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)

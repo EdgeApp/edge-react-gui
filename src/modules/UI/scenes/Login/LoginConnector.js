@@ -1,4 +1,5 @@
 // @flow
+
 import type {Dispatch, State} from '../../../ReduxTypes'
 
 import {connect} from 'react-redux'
@@ -9,11 +10,13 @@ import {addUsernames} from '../../../Core/Context/action'
 import {initializeAccount} from '../../../Login/action'
 
 const mapStateToProps = (state: State) => ({
-  context: CORE_SELECTORS.getContext(state)
+  context: CORE_SELECTORS.getContext(state),
+  username: CORE_SELECTORS.getNextUsername(state)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  dispatch,
   addUsernames: (usernames) => dispatch(addUsernames(usernames)),
-  initializeAccount: (account) => dispatch(initializeAccount(account))
+  initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
