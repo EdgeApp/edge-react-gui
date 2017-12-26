@@ -62,7 +62,10 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
 
   constructor (props: Props) {
     super(props)
-    this.state.isToggled = false
+    this.state = {
+      isToggled: false,
+      whichWallet: ''
+    }
   }
 
   componentWillMount () {
