@@ -6,7 +6,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
   from '../../../../connectors/components/CryptoExchangeRateConnector'
-import {View, Animated} from 'react-native'
+import {View, Animated, Platform} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
 import CryptoExchangeFlipConnector
   from '../../../../connectors/components/CryptoExchangeFlipConnector'
@@ -169,14 +169,90 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
       ]
     }
     const style = CryptoExchangeSceneStyle
-    return (
-      <Gradient style={[style.scene]}>
-        <Gradient style={style.gradient} />
-        <CryptoExchangeConnector style={style.exchangeRateBanner} />
-        <KeyboardAwareScrollView
-          keyboardShouldPersistTaps={Constants.ALWAYS}
-        >
-          <Animated.View style={[ style.exchangeContainerFront, frontAnimatedStyle ]} pointerEvents={isToggled ? 'none' : 'auto'}>
+
+    if (Platform.OS === 'ios') {
+      return (
+        <Gradient style={[style.scene]}>
+          <Gradient style={style.gradient} />
+          <CryptoExchangeConnector style={style.exchangeRateBanner} />
+          <KeyboardAwareScrollView
+            keyboardShouldPersistTaps={Constants.ALWAYS}
+          >
+            <Animated.View style={[ style.exchangeContainerFront, frontAnimatedStyle ]} pointerEvents={isToggled ? 'none' : 'auto'}>
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.fromWallet}
+                currencyCode={this.props.fromCurrencyCode}
+                whichWallet={Constants.FROM}
+                launchWalletSelector={this.launchWalletSelector}
+                fee={this.props.fee}
+              />
+              <View style={style.shim} />
+              <IconButton
+                style={style.flipButton}
+                icon={Constants.SWAP_VERT}
+                onPress={this.onToggle}
+              />
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.toWallet}
+                currencyCode={this.props.toCurrencyCode}
+                whichWallet={Constants.TO}
+                launchWalletSelector={this.launchWalletSelector}
+              />
+              <View style={style.shim} />
+              <View style={style.actionButtonContainer} >
+                {this.renderButton()}
+              </View>
+            </Animated.View>
+            <Animated.View style={[ style.exchangeContainerFront, style.exchangeContainerBack, backAnimatedStyle ]}  pointerEvents={isToggled ? 'auto' : 'none'}>
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.toWallet}
+                currencyCode={this.props.toCurrencyCode}
+                whichWallet={Constants.TO}
+                launchWalletSelector={this.launchWalletSelector}
+              />
+              <View style={style.shim} />
+              <IconButton
+                style={style.flipButton}
+                icon={Constants.SWAP_VERT}
+                onPress={this.onToggle}
+              />
+              <View style={style.shim} />
+              <CryptoExchangeFlipConnector
+                style={style.flipWrapper}
+                uiWallet={this.props.fromWallet}
+                currencyCode={this.props.fromCurrencyCode}
+                whichWallet={Constants.FROM}
+                launchWalletSelector={this.launchWalletSelector}
+                fee={this.props.fee}
+              />
+              <View style={style.shim} />
+              <View style={style.actionButtonContainer} >
+                {this.renderButton()}
+              </View>
+            </Animated.View>
+          </KeyboardAwareScrollView>
+          {this.renderDropUp()}
+          {this.renderConfirmation(style.confirmModal)}
+        </Gradient>
+      )
+    }
+
+    if (Platform.OS !== 'ios') {
+      return (
+        <Gradient style={[style.scene]}>
+          <Gradient style={style.gradient} />
+          <KeyboardAwareScrollView
+            style={[style.mainScrollView]}
+            keyboardShouldPersistTaps={Constants.ALWAYS}
+            contentContainerStyle={style.scrollViewContentContainer}
+          >
+            <CryptoExchangeConnector style={style.exchangeRateBanner} />
             <View style={style.shim} />
             <CryptoExchangeFlipConnector
               style={style.flipWrapper}
@@ -190,7 +266,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
             <IconButton
               style={style.flipButton}
               icon={Constants.SWAP_VERT}
-              onPress={this.onToggle}
+              onPress={this.flipThis}
             />
             <View style={style.shim} />
             <CryptoExchangeFlipConnector
@@ -204,40 +280,13 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
             <View style={style.actionButtonContainer} >
               {this.renderButton()}
             </View>
-          </Animated.View>
-          <Animated.View style={[ style.exchangeContainerFront, style.exchangeContainerBack, backAnimatedStyle ]}  pointerEvents={isToggled ? 'auto' : 'none'}>
-            <View style={style.shim} />
-            <CryptoExchangeFlipConnector
-              style={style.flipWrapper}
-              uiWallet={this.props.toWallet}
-              currencyCode={this.props.toCurrencyCode}
-              whichWallet={Constants.TO}
-              launchWalletSelector={this.launchWalletSelector}
-            />
-            <View style={style.shim} />
-            <IconButton
-              style={style.flipButton}
-              icon={Constants.SWAP_VERT}
-              onPress={this.onToggle}
-            />
-            <View style={style.shim} />
-            <CryptoExchangeFlipConnector
-              style={style.flipWrapper}
-              uiWallet={this.props.fromWallet}
-              currencyCode={this.props.fromCurrencyCode}
-              whichWallet={Constants.FROM}
-              launchWalletSelector={this.launchWalletSelector}
-              fee={this.props.fee}
-            />
-            <View style={style.shim} />
-            <View style={style.actionButtonContainer} >
-              {this.renderButton()}
-            </View>
-          </Animated.View>
-        </KeyboardAwareScrollView>
-        {this.renderDropUp()}
-        {this.renderConfirmation(style.confirmModal)}
-      </Gradient>
-    )
+          </KeyboardAwareScrollView>
+          {this.renderDropUp()}
+          {this.renderConfirmation(style.confirmModal)}
+        </Gradient>
+      )
+    }
+
+
   }
 }
