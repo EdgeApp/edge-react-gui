@@ -146,7 +146,7 @@ export default class Request extends Component<Props, State> {
     } = this.props
     return (
       <Gradient style={styles.view}>
-        <Gradient style={styles.gradient} />
+        <Gradient style={{height: 66, width: '100%'}} />
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
@@ -244,13 +244,11 @@ export default class Request extends Component<Props, State> {
   }
 
   keyboardWillShow () {
-    console.log('show')
     this.setState({
       keyboardUp: true
     })
   }
   keyboardWillHide () {
-    console.log('hide')
     this.setState({
       keyboardUp: false
     })
