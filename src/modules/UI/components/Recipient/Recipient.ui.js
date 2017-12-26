@@ -3,11 +3,11 @@ import {
   View,
   Text
 } from 'react-native'
-import strings from '../../../../locales/default.js'
+import s from '../../../../locales/strings'
 
 import styles from './styles'
 
-const SENT_TO_TEXT = strings.enUS['send_to_title']
+const SENT_TO_TEXT = s.strings.send_to_title
 
 export default class Recipient extends Component {
   render () {

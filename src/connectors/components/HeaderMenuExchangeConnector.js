@@ -6,22 +6,22 @@ import LinkedComponent
 import * as Styles from '../../styles/indexStyles'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
-import strings from '../../locales/default'
+import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz'
 import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
 
 export const mapStateToProps = (state: any) => {
   const data =[
     {
-      label : strings.enUS['change_mining_fee_title'], // tie into
+      label : s.strings.change_mining_fee_title, // tie into
       value: Constants.CHANGE_MINING_FEE_VALUE
     },
     {
-      label : strings.enUS['dropdown_exchange_max_amount'],
+      label : s.strings.dropdown_exchange_max_amount,
       value: Constants.EXCHANGE_MAX_AMOUNT_VALUE
     },
     {
-      label : strings.enUS['string_help'],
+      label : s.strings.string_help,
       value: Constants.HELP_VALUE
     }
   ]

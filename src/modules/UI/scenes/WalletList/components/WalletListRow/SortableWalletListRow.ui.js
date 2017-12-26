@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import strings from '../../../../../../locales/default'
+import s from '../../../../../../locales/strings.js'
 import {bns} from 'biggystring'
 import {
   View,
@@ -28,7 +28,7 @@ class SortableWalletListRow extends Component<Props, State> {
     if (walletData.currencyCode) { // if wallet is done loading
       let displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, walletData.currencyCode)
       multiplier = displayDenomination.multiplier
-      name = walletData.name || strings.enUS['string_no_name']
+      name = walletData.name || s.strings.string_no_name
       symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
       cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
       symbolImageDarkMono = walletData.symbolImageDarkMono

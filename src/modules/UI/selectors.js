@@ -1,12 +1,12 @@
 // UI/selectors
 // @flow
-import type {State} from '../ReduxTypes'
-import type {
-  GuiDenomination,
-  GuiWallet
-} from '../../types'
 
-export const getWallets = (state: State)  => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
+import type {AbcTransaction} from 'airbitz-core-types'
+
+import type {State} from '../ReduxTypes'
+import type {GuiDenomination, GuiWallet} from '../../types'
+
+export const getWallets = (state: State) => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
   return wallets
 }
@@ -33,17 +33,17 @@ export const getSelectedWallet = (state: State) => {
   return selectedWallet
 }
 
-export const getActiveWalletIds = (state: State) => {
+export const getActiveWalletIds = (state: State): Array<string> => {
   const activeWalletIds = state.ui.wallets.activeWalletIds
   return activeWalletIds
 }
 
-export const getArchivedWalletIds = (state: State) => {
+export const getArchivedWalletIds = (state: State): Array<string> => {
   const archivedWalletIds = state.ui.wallets.archivedWalletIds
   return archivedWalletIds
 }
 
-export const getTransactions = (state: State) => {
+export const getTransactions = (state: State): Array<AbcTransaction> => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
 }
@@ -83,7 +83,7 @@ export const getSceneState = (state: State, sceneKey: string) => {
   return sceneState
 }
 
-export const getDropdownAlertState = (state: State) => {
+export const getDropdownAlertState = (state: State): {displayAlert: boolean, message: string} => {
   const dropdownAlertState = getUIState(state).dropdownAlert
   return dropdownAlertState
 }

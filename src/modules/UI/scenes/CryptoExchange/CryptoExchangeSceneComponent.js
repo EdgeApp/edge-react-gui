@@ -1,6 +1,7 @@
 //@flow
+
 import React, {Component} from 'react'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
@@ -55,31 +56,15 @@ type State = {
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
 
   componentWillMount () {
-    if (this.props.wallets.length > 1) {
-      this.props.selectFromWallet(this.props.intialWalletOne)
-      this.props.selectToWallet(this.props.intialWalletTwo)
-    } else if (this.props.wallets.length > 0) {
-      this.props.selectFromWallet(this.props.intialWalletOne)
-    }
     this.setState({
       whichWallet: Constants.FROM
     })
 
   }
-  componentWillReceiveProps (nextProps: Props) {
-    if (!nextProps.fromWallet && nextProps.intialWalletOne) {
-      this.props.selectFromWallet(nextProps.intialWalletOne)
-      if (nextProps.wallets.length === 1) {
-        this.props.selectToWallet(nextProps.intialWalletOne)
-      }
-    }
-    if (!nextProps.toWallet && nextProps.intialWalletTwo) {
-      this.props.selectToWallet(nextProps.intialWalletTwo)
-    }
-  }
+
   renderButton = () => {
     if (this.props.showNextButton) {
-      return <PrimaryButton text={strings.enUS['string_next']} onPressFunction={this.props.openConfirmation} />
+      return <PrimaryButton text={s.strings.string_next} onPressFunction={this.props.openConfirmation} />
     }
     return null
   }
@@ -133,6 +118,7 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
     const style = CryptoExchangeSceneStyle
     return (
       <Gradient style={[style.scene]}>
+        <Gradient style={style.gradient} />
         <KeyboardAwareScrollView
           style={[style.mainScrollView]}
           keyboardShouldPersistTaps={Constants.ALWAYS}

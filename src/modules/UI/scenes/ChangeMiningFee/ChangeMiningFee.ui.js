@@ -3,9 +3,11 @@
 import React, {Component} from 'react'
 import {View, Text} from 'react-native'
 
+import Gradient from '../../components/Gradient/Gradient.ui'
+
 import RadioButton from './components/RadioButton.ui'
 import * as FEE from '../../../../constants/FeeConstants'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 import style from './style'
 
@@ -49,19 +51,23 @@ export default class ChangeMiningFee extends Component<Props, State> {
     const { feeSetting } = this.state
 
     return (
-      <View style={style.wrapper}>
-        <Text style={style.header} >
-          {strings.enUS['change_mining_fee_body']}
-        </Text>
-        <View>
+      <View style={style.container}>
+        <Gradient style={style.gradient} />
+        <View style={style.headerContainer}>
+          <Text style={style.header} >
+            {s.strings.change_mining_fee_body}
+          </Text>
+        </View>
+        <View style={style.body}>
           {feeOptions.map(({ value, label }) => (
-            <RadioButton
-              key={value}
-              value={value}
-              label={strings.enUS[label]}
-              onPress={this.handlePress}
-              isSelected={value === feeSetting}
-            />
+            <View key={value} style={style.row}>
+              <RadioButton
+                value={value}
+                label={s.strings[label]}
+                onPress={this.handlePress}
+                isSelected={value === feeSetting}
+              />
+            </View>
           ))}
         </View>
         {/* feeSetting === FEE.CUSTOM_FEE

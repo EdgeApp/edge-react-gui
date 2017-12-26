@@ -17,16 +17,19 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
-import strings from '../../locales/default'
+import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
+import s from '../../locales/strings.js'
 // import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
 export const LOGOUT = 'LOGOUT'
 
 import {Actions} from 'react-native-router-flux'
 
-export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
+  // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
+  dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
   CONTEXT_API.getCurrencyPlugins(context)
     .then((currencyPlugins) => {
       currencyPlugins.forEach((plugin) => {
@@ -45,9 +48,9 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
         return
       }
       // TODO: Allen - Turn on when Bitcoin is turned back on
-      // await dispatch(actions.createCurrencyWallet(strings.enUS['strings_first_bitcoin_44_wallet_name'], Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
+      // await dispatch(actions.createCurrencyWallet(s.strings.strings_first_bitcoin_44_wallet_name, Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
       dispatch(actions.createCurrencyWallet(
-        strings.enUS['string_first_ethereum_wallet_name'],
+        s.strings.string_first_ethereum_wallet_name,
         Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
         false, true
       ))
@@ -61,15 +64,22 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = {...syncDefaults, ...settings}
-
+      const customTokens = settings ? settings.customTokens : []
       // Add all the settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
-
+      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
+      if (customTokens) {
+        customTokens.forEach((token) => {
+          dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
+          // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
+          dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
+        })
+      }
 
       // dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
       // dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))
@@ -102,7 +112,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     })
 }
 
-export const logoutRequest = (username: string | null) => (dispatch: Dispatch, getState: GetState) => {
+export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
   Actions.popTo(Constants.LOGIN, {username})
 
   const state = getState()
@@ -115,8 +125,7 @@ export const logoutRequest = (username: string | null) => (dispatch: Dispatch, g
    })
 }
 
-export type LogoutAction = { type: 'LOGOUT', data: { username: string | null } }
-export const logout = (username: string | null): LogoutAction => ({
+export const logout = (username?: string) => ({
   type: LOGOUT,
   data: {username}
 })

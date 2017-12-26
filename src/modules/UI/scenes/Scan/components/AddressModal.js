@@ -5,7 +5,7 @@ import {
   Clipboard
 } from 'react-native'
 import * as Constants from '../../../../../constants/indexConstants'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import {sprintf} from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import {Actions} from 'react-native-router-flux'
@@ -73,7 +73,7 @@ export default class AddressModal extends Component<Props,State> {
 
     const copyMessage
       = this.state.clipboard
-      ? sprintf(strings.enUS['string_paste_address'], this.state.clipboard)
+      ? sprintf(s.strings.string_paste_address, this.state.clipboard)
       : null
     const middle = <AddressInput
       copyMessage={copyMessage}
@@ -90,7 +90,7 @@ export default class AddressModal extends Component<Props,State> {
     return (
       <StylizedModal
         featuredIcon={icon}
-        headerText='fragment_send_address_dialog_title'
+        headerText={s.strings.fragment_send_address_dialog_title}
         modalMiddle={middle}
         modalBottom={bottom}
         visibilityBoolean={this.props.addressModalVisible}

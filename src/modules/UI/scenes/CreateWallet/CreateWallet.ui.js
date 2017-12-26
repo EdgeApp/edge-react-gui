@@ -13,16 +13,16 @@ import {FormField} from '../../../../components/FormField.js'
 
 import styles from './styles.js'
 import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
-const WALLET_NAME_INPUT_PLACEHOLDER  = strings.enUS['fragment_wallets_addwallet_name_hint']
+const WALLET_NAME_INPUT_PLACEHOLDER  = s.strings.fragment_wallets_addwallet_name_hint
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
-const FIAT_PICKER_PLACEHOLDER        = strings.enUS['fragment_wallets_addwallet_fiat_hint']
+const FIAT_PICKER_PLACEHOLDER        = s.strings.fragment_wallets_addwallet_fiat_hint
 
-const DONE_TEXT         = strings.enUS['fragment_create_wallet_create_wallet']
-const CANCEL_TEXT       = strings.enUS['string_cancel_cap']
-const INVALID_DATA_TEXT = strings.enUS['fragment_create_wallet_select_valid']
+const DONE_TEXT         = s.strings.fragment_create_wallet_create_wallet
+const CANCEL_TEXT       = s.strings.string_cancel_cap
+const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
 export default class CreateWallet extends Component {
   constructor (props) {

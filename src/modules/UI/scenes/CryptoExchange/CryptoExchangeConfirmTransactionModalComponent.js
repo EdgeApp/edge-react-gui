@@ -8,7 +8,7 @@ import Slider from '../../components/Slider'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import {Icon} from '../../components/Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import {GuiWallet} from '../../../../types'
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -73,7 +73,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
           {this.renderLogo(style, this.props.fromCurrencyIconDark)}
         </View>
         <View style={topRight}>
-          <Text style={text}>{sprintf(strings.enUS['string_from_exchange_info'], fromCurrencyAmount, fromCurrencyCode, fee, fromWallet.name)}</Text>
+          <Text style={text}>{sprintf(s.strings.string_from_exchange_info, fromCurrencyAmount, fromCurrencyCode, fee, fromWallet.name)}</Text>
         </View>
       </View>
 
@@ -85,7 +85,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
         </View>
 
         <View style={bottomRight}>
-          <Text style={text}>{sprintf(strings.enUS['string_to_exchange_info'], this.props.toCurrencyAmount, this.props.toCurrencyCode, toWallet.name)}</Text>
+          <Text style={text}>{sprintf(s.strings.string_to_exchange_info, this.props.toCurrencyAmount, this.props.toCurrencyCode, toWallet.name)}</Text>
         </View>
 
         <View style={shim} />
@@ -105,7 +105,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     return <StylizedModal
       visibilityBoolean={true}
       featuredIcon={icon}
-      headerText={'title_confirm_excahnge'}
+      headerText={s.strings.title_confirm_exchange}
       headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
       modalMiddle={this.renderMiddle(style)}
       modalMiddleStyle={{paddingBottom: 40}}

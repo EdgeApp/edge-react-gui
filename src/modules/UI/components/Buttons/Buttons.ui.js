@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {Text, View, TouchableHighlight} from 'react-native'
 import T from '../FormattedText'
 import styles, {styles as styleRaw} from './style'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 class PrimaryButton extends Component {
   constructor (props) {
@@ -46,7 +46,7 @@ PrimaryButton.propTypes = {
   onPressFunction: PropTypes.func
 }
 
-const CANCEL_TEXT = strings.enUS['string_cancel']
+const CANCEL_TEXT = s.strings.string_cancel
 
 class SecondaryButton extends Component {
   render () {

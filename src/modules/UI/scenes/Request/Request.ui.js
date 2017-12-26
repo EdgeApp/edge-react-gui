@@ -1,13 +1,20 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   ActivityIndicator,
+  Alert,
   Clipboard,
   View,
   Share,
   Keyboard,
   Animated
 } from 'react-native'
-import Alert from './alert'
+import {bns} from 'biggystring'
+import {sprintf} from 'sprintf-js'
+
+import type {AbcCurrencyWallet, AbcEncodeUri} from 'airbitz-core-types'
+
 import styles from './styles.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
 import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
@@ -17,9 +24,7 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {bns} from 'biggystring'
-import {sprintf} from 'sprintf-js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -27,8 +32,27 @@ import * as Constants from '../../../../constants/indexConstants'
 import platform from '../../../../theme/variables/platform.js'
 
 
-export default class Request extends Component {
-  constructor (props) {
+type State = {
+  publicAddress: string,
+  encodedURI: string,
+  loading: boolean,
+  result: string,
+  animationQrSize: any,
+  animationPushUpSize: any
+}
+type Props = {
+  loading: boolean,
+  abcWallet: AbcCurrencyWallet,
+  currencyCode: string,
+  primaryInfo: any,
+  secondaryInfo: any,
+  secondaryToPrimaryRatio: number,
+  request: any,
+  saveReceiveAddress(string): void,
+}
+
+export default class Request extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       publicAddress: '',
@@ -40,7 +64,7 @@ export default class Request extends Component {
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps (nextProps: Props) {
     if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
       const {abcWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
@@ -84,7 +108,7 @@ export default class Request extends Component {
     this.keyboardWillHideListener.remove()
   }
 
-  onAmountsChange = ({primaryDisplayAmount}) => {
+  onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string}) => {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
 
@@ -123,7 +147,7 @@ export default class Request extends Component {
     } = this.props
     return (
       <Gradient style={styles.view}>
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
@@ -166,7 +190,7 @@ export default class Request extends Component {
     Alert.alert('Request copied to clipboard')
   }
 
-  showResult = (result) => {
+  showResult = (result: {activityType: string}) => {
     if (result.action === Share.sharedAction) {
       this.props.saveReceiveAddress(this.props.request.receiveAddress)
 
@@ -186,7 +210,7 @@ export default class Request extends Component {
     const APP_NAME = 'Edge Wallet'
     Share.share({
       message: this.state.encodedURI,
-      title: sprintf(strings.enUS['request_qr_email_title'], APP_NAME)
+      title: sprintf(s.strings.request_qr_email_title, APP_NAME)
     }, {dialogTitle: 'Share Airbitz Request'})
     .then(this.showResult)
     .catch((error) => this.setState({
@@ -198,28 +222,21 @@ export default class Request extends Component {
     ContactsWrapper.getContact()
     .then(() => {
       this.shareMessage()
-      // console.log('shareViaEmail')
     })
     .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaSMS = () => {
     ContactsWrapper.getContact().then(() => {
       this.shareMessage()
-      // console.log('shareViaSMS')
     })
     .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaShare = () => {
     this.shareMessage()
-    // console.log('shareViaShare')
   }
 
   keyboardWillShow (event) {
@@ -235,7 +252,7 @@ export default class Request extends Component {
     this._animateQRCodeOnHide(event)
   }
 
-  _animateQRCodeOnShow (event) {
+  animateQRCodeOnShow (event) {
     Animated.timing(this.state.animationQrSize, {
       duration: event.duration,
       toValue: platform.deviceHeight / 4.3,
@@ -244,19 +261,9 @@ export default class Request extends Component {
       duration: event.duration,
       toValue: 60,
     }).start()
-    // Animated.spring(this.state.animationQrSize,{
-    //   toValue: platform.deviceHeight / 4.3,
-    //   speed: 0.5,
-    //   bounciness: 3
-    // }).start()
-    // Animated.spring(this.state.animationPushUpSize,{
-    //   toValue: 60,
-    //   speed: 0.5,
-    //   bounciness: 3
-    // }).start()
   }
 
-  _animateQRCodeOnHide (event) {
+  animateQRCodeOnHide (event) {
     Animated.timing(this.state.animationQrSize, {
       duration: event.duration,
       toValue: platform.deviceHeight / 2.9,
@@ -265,15 +272,5 @@ export default class Request extends Component {
       duration: event.duration,
       toValue: 0,
     }).start()
-    // Animated.spring(this.state.animationQrSize,{
-    //   toValue: platform.deviceHeight / 2.9,
-    //   speed: 0.5,
-    //   bounciness: 3
-    // }).start()
-    // Animated.spring(this.state.animationPushUpSize,{
-    //   toValue: 0,
-    //   speed: 0.5,
-    //   bounciness: 3
-    // }).start()
   }
 }
