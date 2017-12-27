@@ -1,6 +1,7 @@
 // @flow
 import {connect} from 'react-redux'
 import WalletList from './WalletList.ui'
+import {injectIntl} from 'react-intl'
 import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder,
@@ -43,4 +44,4 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   closeRenameWalletModal: () => dispatch(closeRenameWalletModal())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletList)
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(WalletList))

@@ -87,3 +87,25 @@ export const getDropdownAlertState = (state: State): {displayAlert: boolean, mes
   const dropdownAlertState = getUIState(state).dropdownAlert
   return dropdownAlertState
 }
+
+export const getLocaleInfo = (state: State) => {
+  const uiState = getUIState(state)
+  const locale = uiState.locale
+  const localeInfo = locale.localeInfo
+  return localeInfo
+}
+
+export const getDecimalSeparatorSymbol = (state: State): string => {
+  const localeInfo = getLocaleInfo(state)
+  return localeInfo.groupingSeparator
+}
+
+export const getGroupingSeparatorSymbol = (state: State): string => {
+  const localeInfo = getLocaleInfo(state)
+  return localeInfo.groupingSeparator
+}
+
+export const getLocaleLanguageCode = (state: State): string => {
+  const localeInfo = getLocaleInfo(state)
+  return localeInfo.localeLanguageCode
+}

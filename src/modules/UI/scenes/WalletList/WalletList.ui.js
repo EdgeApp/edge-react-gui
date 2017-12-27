@@ -486,7 +486,7 @@ export default class WalletList extends Component<Props, State> {
       let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
-    return total.toFixed(2)
+    return this.props.intl.formatNumber(total, {minimumFractionDigits:2})
   }
 
   handleOnBalanceBoxPress = () => this.setState({balanceBoxVisible: !this.state.balanceBoxVisible})
