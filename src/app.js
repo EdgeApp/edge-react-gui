@@ -9,17 +9,6 @@ import {logToServer, log} from './util/logger'
 import ENV from '../env.json'
 import RNFS from 'react-native-fs'
 import {Platform} from 'react-native'
-import 'intl' // polyfill for android
-import {IntlProvider, addLocaleData} from 'react-intl'
-import Locale from 'react-native-locale'
-
-import en from 'react-intl/locale-data/en'
-import fr from 'react-intl/locale-data/fr'
-import es from 'react-intl/locale-data/es'
-import de from 'react-intl/locale-data/de'
-import ru from 'react-intl/locale-data/ru'
-
-addLocaleData([...en, ...fr, ...es, ...de, ...ru])
 
 import './util/polyfills'
 
@@ -99,15 +88,11 @@ global.pcount = function (label: string) {
   }
 }
 
-const localeLanguageCode = Locale.constants().localeLanguageCode
-
 export default class App extends Component<{}> {
   render () {
     return (
       <Provider store={store}>
-        <IntlProvider locale={localeLanguageCode}>
-          <Main />
-        </IntlProvider>
+        <Main />
       </Provider>
     )
   }
