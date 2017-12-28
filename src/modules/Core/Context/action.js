@@ -23,7 +23,7 @@ export const deleteLocalAccountRequest = (username: string) => ({
 })
 
 export const DELETE_LOCAL_ACCOUNT_SUCCESS = PREFIX + 'DELETE_LOCAL_ACCOUNT_SUCCESS'
-export const deleteLocalAccountSuccess = (allUsernames: string) => ({
+export const deleteLocalAccountSuccess = (allUsernames: Array<string>) => ({
   type: DELETE_LOCAL_ACCOUNT_SUCCESS,
   data: {usernames: allUsernames}
 })
