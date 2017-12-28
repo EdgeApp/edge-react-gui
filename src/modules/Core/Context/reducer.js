@@ -36,7 +36,7 @@ export const context = (state: State = initialState, action: Action) => {
   }
 
   case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
-    const usernames = state.usernames.filter((username) => username !== data.username)
+    const {usernames} = data
     return {
       ...state,
       usernames

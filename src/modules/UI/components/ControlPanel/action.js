@@ -39,8 +39,10 @@ export const deleteLocalAccount = (username: string) => (dispatch: Dispatch, get
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   dispatch(deleteLocalAccountRequest(username))
+
   return CONTEXT_API.deleteLocalAccount(context, username)
-  .then(() => dispatch(deleteLocalAccountSuccess(username)))
+  .then(() => CONTEXT_API.listUsernames(context))
+  .then((allUsernames) => dispatch(deleteLocalAccountSuccess(allUsernames)))
   .catch((error) => {
     console.log(error)
     dispatch(deleteLocalAccountError(username))
