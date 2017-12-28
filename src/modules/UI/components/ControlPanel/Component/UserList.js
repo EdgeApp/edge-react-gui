@@ -7,17 +7,17 @@ import {
   ScrollView,
   TouchableHighlight
 } from 'react-native'
-import {
-  Text,
-  Icon
-} from 'native-base'
+import {Text, Icon} from 'native-base'
 import _ from 'lodash'
 
 import styles from '../style'
 
-type Props = {usernames: Array<string>, logout: (username?: string) => void, deleteLocalAccount: (string) => void}
+type Props = {
+  usernames: Array<string>,
+  logout: (username?: string) => void,
+  deleteLocalAccount: (string) => void
+}
 type State = {}
-
 export default class UserList extends Component<Props, State> {
   render () {
     return <ScrollView style={styles.userList.container}>
@@ -43,15 +43,19 @@ export default class UserList extends Component<Props, State> {
     </View>
   )
 
-  handlePressUserSelect = (username: string) => () => this.props.logout(username)
-  handleDeleteLocalAccount = (username: string) => () => this.props.deleteLocalAccount(username)
-  handlePressDeleteLocalAccount = (username: string) => () =>
-    Alert.alert('Delete Account', 'Delete \''
-      + username
+  handlePressUserSelect = (username: string) => () => {
+    return this.props.logout(username)
+  }
+  handleDeleteLocalAccount = (username: string) => () => {
+    return this.props.deleteLocalAccount(username)
+  }
+  handlePressDeleteLocalAccount = (username: string) => () => {
+    return Alert.alert('Delete Account', 'Delete \'' + username
       + '\' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days',
-      [{
-        text: 'No', style: 'cancel'
-      }, {
-        text: 'Yes', onPress: () => this.handleDeleteLocalAccount(username)
-      }])
+      [
+        {text: 'No', style: 'cancel'},
+        {text: 'Yes', onPress: () => this.handleDeleteLocalAccount(username)()}
+      ]
+    )
+  }
 }
