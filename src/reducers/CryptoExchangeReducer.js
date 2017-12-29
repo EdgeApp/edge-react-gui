@@ -6,7 +6,11 @@ import s from '../locales/strings.js'
 
 const initialState = {
   exchangeRate: 1,
+  nativeMax: '0',
+  nativeMin: '0',
   reverseExchange: 1,
+  reverseNativeMax: '0',
+  reverseNativeMin: '0',
 
   fromWallet: null,
   fromCurrencyCode: null,
@@ -25,7 +29,6 @@ const initialState = {
   toCurrencyIconDark: null,
 
   insufficientError: false,
-  // fee: '',
   feeSetting: Constants.STANDARD_FEE,
   walletListModalVisible: false,
   confirmTransactionModalVisible: false,
@@ -69,15 +72,29 @@ function cryptoExchangerReducer (state = initialState, action) {
     return {...state, walletListModalVisible: false}
   case Constants.OPEN_WALLET_SELECTOR_MODAL:
     return {...state, walletListModalVisible: true, changeWallet: action.data}
-  case Constants.UPDATE_CRYPTO_EXCHANGE_RATE:
-    return {...state, exchangeRate: action.data}
-  case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE:
-    return {...state, reverseExchange: action.data}
+  case Constants.UPDATE_CRYPTO_EXCHANGE_INFO: {
+    const result = {...state,
+      exchangeRate: action.data.rate,
+      nativeMin: action.data.nativeMin,
+      nativeMax: action.data.nativeMax
+    }
+    return result
+  }
+  case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO: {
+    const result = {...state,
+      reverseExchange: action.data.rate,
+      reverseNativeMin: action.data.nativeMin,
+      reverseNativeMax: action.data.nativeMax
+    }
+    return result
+  }
   case Constants.UPDATE_SHIFT_TRANSACTION:
-    return {...state, transaction: action.data.abcTransaction,
+    return {...state,
+      transaction: action.data.abcTransaction,
       fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
       insufficientError: false,
-      genericShapeShiftError: null}
+      genericShapeShiftError: null
+    }
   case Constants.INVALIDATE_SHIFT_TRANSACTION:
     return {...state, transaction: null, insufficientError: false, genericShapeShiftError: null}
   case Constants.SHIFT_COMPLETE:
@@ -92,11 +109,13 @@ function cryptoExchangerReducer (state = initialState, action) {
     return {...state, toNativeAmount: action.data.native, toDisplayAmount:action.data.display }
   case Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT:
     return {...state, fromNativeAmount: action.data.native, fromDisplayAmount:action.data.display}
-  case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR :
-    return {...state, transaction: null, insufficientError: true}
-  case Constants.GENERIC_SHAPE_SHIFT_ERROR :
+  case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR:
+    return {...state, transaction: null, insufficientError: true, genericShapeShiftError: null}
+  case Constants.RECEIVED_DUST_ERROR:
+    return {...state, transaction: null, insufficientError: true, genericShapeShiftError: action.data}
+  case Constants.GENERIC_SHAPE_SHIFT_ERROR:
     return {...state, transaction: null, genericShapeShiftError: action.data}
-  case Constants.CHANGE_EXCHANGE_FEE :
+  case Constants.CHANGE_EXCHANGE_FEE:
     return {...state,  feeSetting: action.feeSetting}
   default:
     return state
@@ -128,22 +147,31 @@ function getLogoDark (wallet, currencyCode) {
 function deepCopyState (state) {
   const deepCopy = JSON.parse(JSON.stringify(state))
   deepCopy.toWallet = state.fromWallet
+  deepCopy.fromWallet = state.toWallet
   deepCopy.toCurrencyCode = state.fromCurrencyCode
   deepCopy.toNativeAmount = state.fromNativeAmount
   deepCopy.toDisplayAmount = state.fromDisplayAmount
   deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
   deepCopy.toCurrencyIcon = state.fromCurrencyIcon
   deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
-  deepCopy.fromWallet = state.toWallet
   deepCopy.fromCurrencyCode = state.toCurrencyCode
   deepCopy.fromNativeAmount = state.toNativeAmount
   deepCopy.fromDisplayAmount = state.toDisplayAmount
   deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
+
   deepCopy.exchangeRate = state.reverseExchange
   deepCopy.reverseExchange = state.exchangeRate
+
+  deepCopy.nativeMin = state.reverseNativeMin
+  deepCopy.reverseNativeMin = state.nativeMin
+
+  deepCopy.nativeMax = state.reverseNativeMax
+  deepCopy.reverseNativeMax = state.nativeMax
+
   deepCopy.insufficientError = false
+
   return deepCopy
 }
 
