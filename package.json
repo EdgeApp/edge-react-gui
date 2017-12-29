@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",
-    "airbitz-core-react-native": "^0.5.0",
+    "airbitz-core-react-native": "^0.5.4",
     "airbitz-core-types": "git://github.com/Airbitz/airbitz-core-types.git",
     "biggystring": "^3.0.1",
     "browserify-zlib": "^0.1.4",
@@ -56,7 +56,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^2.5.4",
+    "edge-currency-bitcoin": "^2.5.5",
     "edge-currency-ethereum": "^0.5.2",
     "edge-exchange-plugins": "^0.1.1",
     "https-browserify": "0.0.1",
