@@ -42,7 +42,7 @@ type Props = {
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
-  enableTouchId(boolean, AbcAccount): void,
+  dispatchUpdateEnableTouchIdEnable(boolean, AbcAccount): void,
   sendLogs(string): void
 }
 type State = {
@@ -180,7 +180,7 @@ export default class SettingsOverview extends Component<Props,State> {
   }
 
   _onToggleTouchIdOption = (bool: boolean) => {
-    this.props.enableTouchId(bool, this.props.account)
+    this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
     this.options.useTouchID.value = bool
   }
 

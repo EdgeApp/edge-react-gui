@@ -37,7 +37,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setAutoLogoutTimeInMinutes: (autoLogoutTimeInMinutes: number) => dispatch(setAutoLogoutTimeInMinutesRequest(autoLogoutTimeInMinutes)),
   confirmPassword: (arg: string) => dispatch(checkCurrentPassword(arg)),
   lockSettings: () => dispatch(lockSettings()),
-  enableTouchId: (arg: boolean, account: AbcAccount) => dispatch(updateTouchIdEnabled(arg, account)),
+  dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: AbcAccount) => dispatch(updateTouchIdEnabled(arg, account)),
   sendLogs: (text: string) => dispatch(sendLogs(text))
 })
 
