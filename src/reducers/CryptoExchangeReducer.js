@@ -111,8 +111,6 @@ function cryptoExchangerReducer (state = initialState, action) {
     return {...state, fromNativeAmount: action.data.native, fromDisplayAmount:action.data.display}
   case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR:
     return {...state, transaction: null, insufficientError: true, genericShapeShiftError: null}
-  case Constants.RECEIVED_DUST_ERROR:
-    return {...state, transaction: null, insufficientError: true, genericShapeShiftError: action.data}
   case Constants.GENERIC_SHAPE_SHIFT_ERROR:
     return {...state, transaction: null, genericShapeShiftError: action.data}
   case Constants.CHANGE_EXCHANGE_FEE:
