@@ -48,24 +48,18 @@ export const archivedWalletIds = (state: any = [], action: any) => {
 }
 
 export const selectedWalletId = (state: string = '', action: any) => {
-  const {type, data = {} } = action
-  const {walletId} = data
-
-  switch (type) {
+  switch (action.type) {
   case ACTION.SELECT_WALLET:
-    return walletId
+    return action.data.walletId
   default:
     return state
   }
 }
 
 export const selectedCurrencyCode = (state: string = '', action: any) => {
-  const {type, data = {} } = action
-  const {currencyCode} = data
-
-  switch (type) {
+  switch (action.type) {
   case ACTION.SELECT_WALLET:
-    return currencyCode
+    return action.data.currencyCode
   default:
     return state
   }

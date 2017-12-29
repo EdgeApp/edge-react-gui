@@ -16,15 +16,19 @@ const initialState = {
 }
 
 export const request = (state = initialState, action) => {
-  const {type, data = {} } = action
-  const {receiveAddress, amountSatoshi, amountFiat} = data
-  switch (type) {
+  let receiveAddress
+  let amountSatoshi
+  let amountFiat
+
+  switch (action.type) {
   case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS:
+    receiveAddress = action.data.receiveAddress
     return {
       ...state,
       receiveAddress
     }
   case 'UPDATE_AMOUNT_REQUESTED_IN_CRYPTO':
+    amountSatoshi = action.data.amountSatoshi
     return {
       ...state,
       receiveAddress: {
@@ -33,6 +37,7 @@ export const request = (state = initialState, action) => {
       }
     }
   case 'UPDATE_AMOUNT_REQUESTED_IN_FIAT':
+    amountFiat = action.data.amountFiat
     return {
       ...state,
       receiveAddress: {

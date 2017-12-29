@@ -16,10 +16,12 @@ const displayAlert = (state = false, action = {}) => {
 }
 
 const abcTransaction = (state = '', action = {}) => {
-  const {type, data: {abcTransaction} = {} } = action
-  switch (type) {
+  switch (action.type) {
   case ACTIONS.DISPLAY_TRANSACTION_ALERT:
-    return abcTransaction
+    if (action.data) {
+      return action.data.abcTransaction
+    }
+    return state
   case ACTIONS.DISMISS_TRANSACTION_ALERT:
     return ''
   default:

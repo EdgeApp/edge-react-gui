@@ -1,12 +1,12 @@
 import * as ACTION from './action.js'
 
 export const accountReducer = (state = {}, action) => {
-  const {type, data = {} } = action
-  const {account} = data
-
-  switch (type) {
+  switch (action.type) {
   case ACTION.ADD_ACCOUNT:
-    return account
+    if (action.data) {
+      return action.data.account
+    }
+    return state
   default:
     return state
   }
