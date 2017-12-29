@@ -128,6 +128,10 @@ export const formatNumber = (input: string): string => {
   return out
 }
 
+export const replaceCommaToPeriod = (input: string): string => {
+  return input.replace(/,/, '.')
+}
+
 export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) { // do nothing to numbers greater than one
     return input

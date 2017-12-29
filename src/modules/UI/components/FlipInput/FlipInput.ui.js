@@ -66,17 +66,18 @@ export default class FlipInput extends Component<Props, State> {
   }
 
   onPrimaryAmountChange = (primaryDisplayAmount: string) => {
-    if (!this.props.isValidInput(primaryDisplayAmount)) { return }
-    const formattedPrimaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(primaryDisplayAmount), 8)
+    const standartizedAmount = UTILS.replaceCommaToPeriod(primaryDisplayAmount)
+    if (!this.props.isValidInput(standartizedAmount)) { return }
+    const formattedPrimaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(standartizedAmount), 8)
     this.setState({
       primaryDisplayAmount: formattedPrimaryDisplayAmount
     }, this.props.onPrimaryAmountChange(formattedPrimaryDisplayAmount))
   }
 
   onSecondaryAmountChange = (secondaryDisplayAmount: string) => {
-    if (!this.props.isValidInput(secondaryDisplayAmount)) { return }
-    const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(secondaryDisplayAmount), 2)
-    // console.log('BEFORE: this.setState', this.state)
+    const standartizedAmount = UTILS.replaceCommaToPeriod(secondaryDisplayAmount)
+    if (!this.props.isValidInput(standartizedAmount)) { return }
+    const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(standartizedAmount), 2)
     this.setState({
       secondaryDisplayAmount: formattedSecondaryDisplayAmount,
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
