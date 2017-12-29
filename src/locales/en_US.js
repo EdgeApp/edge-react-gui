@@ -141,6 +141,8 @@ const strings = {
   title_transactions: 'Transactions',
   title_wallets: 'Wallets',
   token_not_supported: 'Token is not supported by exchange',
+  amount_above_limit: 'Transaction amount is above the max limit of %1$s',
+  amount_below_limit: 'Transaction amount is below the min limit of %1$s',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
 }
