@@ -1,19 +1,21 @@
 //@flow
 
+import type {Dispatch, State} from '../../modules/ReduxTypes'
 import {GuiWallet} from '../../types'
 import {connect} from 'react-redux'
 import LinkedComponent from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 
-export const mapStateToProps = (state: any) => {
+export const mapStateToProps = (state: State) => {
   const wallets = []
   for (const wallet in state.ui.wallets.byId) {
     wallets.push(state.ui.wallets.byId[wallet])
   }
   const exchangeRate =  state.cryptoExchange.exchangeRate
-  const fromAmountNative =  '.01'
-  const toAmountNative = Number(fromAmountNative)*exchangeRate //TODO: math with exchange rate. ( from )
+  const fromAmountNative = '.01'
+  const toAmountNative = Number(fromAmountNative) * exchangeRate //TODO: math with exchange rate. ( from )
+
   return {
     exchangeRate,
     wallets: wallets,
@@ -38,7 +40,7 @@ export const mapStateToProps = (state: any) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: any) => ({
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
   selectFromWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
   selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
@@ -46,9 +48,6 @@ export const mapDispatchToProps = (dispatch: any) => ({
   shift: () => dispatch(actions.shiftCryptoCurrency()),
   closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
   openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL))
-
 })
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LinkedComponent)
+
+export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

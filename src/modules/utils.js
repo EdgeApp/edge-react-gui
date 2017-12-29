@@ -1,10 +1,11 @@
 // @flow
-import {Platform} from 'react-native'
 
-import borderColors from '../theme/variables/css3Colors'
+import {Platform} from 'react-native'
 import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'airbitz-core-types'
+
+import borderColors from '../theme/variables/css3Colors'
 import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
 
 const DIVIDE_PRECISION = 18
