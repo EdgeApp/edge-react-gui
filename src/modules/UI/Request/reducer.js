@@ -1,6 +1,24 @@
-import * as ACTION from './action'
+// @flow
 
-const initialState = {
+import * as ACTION from './action'
+import type {Action} from '../../ReduxTypes.js'
+
+export type RequestState = {
+  receiveAddress: {
+    publicAddress: string,
+    amountSatoshi: number,
+    metadata: {
+      payeeName: string,
+      category: string,
+      notes: string,
+      amountFiat: number,
+      bizId: null,
+      miscJson: string
+    }
+  }
+}
+
+const initialState: RequestState = {
   receiveAddress: {
     publicAddress: '',
     amountSatoshi: 0,
@@ -15,16 +33,24 @@ const initialState = {
   }
 }
 
-export const request = (state = initialState, action) => {
-  const {type, data = {} } = action
-  const {receiveAddress, amountSatoshi, amountFiat} = data
-  switch (type) {
+export const request = (state: RequestState = initialState, action: Action): RequestState => {
+  let receiveAddress
+  let amountSatoshi
+  let amountFiat
+
+  if (!action.data) {
+    return state
+  }
+
+  switch (action.type) {
   case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS:
+    receiveAddress = action.data.receiveAddress
     return {
       ...state,
       receiveAddress
     }
   case 'UPDATE_AMOUNT_REQUESTED_IN_CRYPTO':
+    amountSatoshi = action.data.amountSatoshi
     return {
       ...state,
       receiveAddress: {
@@ -33,6 +59,7 @@ export const request = (state = initialState, action) => {
       }
     }
   case 'UPDATE_AMOUNT_REQUESTED_IN_FIAT':
+    amountFiat = action.data.amountFiat
     return {
       ...state,
       receiveAddress: {

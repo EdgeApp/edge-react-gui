@@ -35,6 +35,14 @@ export const context = (state: State = initialState, action: Action) => {
     }
   }
 
+  case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
+    const {usernames} = data
+    return {
+      ...state,
+      usernames
+    }
+  }
+
   case 'LOGOUT': {
     const {username} = data
     return {
