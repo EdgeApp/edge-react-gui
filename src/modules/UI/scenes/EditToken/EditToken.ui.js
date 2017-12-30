@@ -76,7 +76,7 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
       <View style={[styles.editTokens]}>
         <Gradient style={styles.gradient} />
         <StylizedModal
-          headerText={'edittoken_delete_prompt'}
+          headerText={s.strings.edittoken_delete_prompt}
           visibilityBoolean={this.props.deleteTokenModalVisible}
           featuredIcon={<DeleteIcon />}
           modalBottom={<DeleteTokenButtons

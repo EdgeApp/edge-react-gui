@@ -208,16 +208,18 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
   syncedCustomTokens[indexOfSyncedToken].isVisible = false
   receivedSyncSettings.customTokens = syncedCustomTokens
   await SETTINGS_API.setSyncedSettingsAsync(account, receivedSyncSettings)
-  let walletPromises = []
-  for (let wallet of guiWallets) {
-    let theCoreWallet = coreWallets[wallet.id]
-    if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
+  const walletPromises = Object.values(guiWallets).map((wallet) => {
+    // Flow is having issues here, need to fix
+    // $FlowFixMe
+    let temporaryWalletId = wallet.id
+    let theCoreWallet = coreWallets[temporaryWalletId]
+    // $FlowFixMe
+    if (wallet.enabledTokens && wallet.enabledTokens.length > 0) { // if the wallet has some enabled tokens
       coreWalletsToUpdate.push(theCoreWallet)
-      // $FlowFixMe
       return WALLET_API.updateEnabledTokens(theCoreWallet, [], [currencyCode])
     }
     return Promise.resolve()
-  }
+  })
   await Promise.all(walletPromises)
   return coreWalletsToUpdate
 }
@@ -250,15 +252,19 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     return SETTINGS_API.setSyncedSettings(account, adjustedSettings)
   })
   .then(() => {
-    for (let wallet of guiWallets) {
-      let theCoreWallet = coreWallets[wallet.id]
+    const walletPromises = Object.values(guiWallets).map((wallet) => {
+      // Flow is having issues here, need to fix
+      // $FlowFixMe
+      let temporaryWalletId = wallet.id
+      let theCoreWallet = coreWallets[temporaryWalletId]
+      // $FlowFixMe
       if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
         coreWalletsToUpdate.push(theCoreWallet)
-        // $FlowFixMe
         return WALLET_API.updateEnabledTokens(theCoreWallet, [], [currencyCode])
       }
       return Promise.resolve()
-    }
+    })
+    return Promise.all(walletPromises)
   })
   .then(() => {
     coreWalletsToUpdate.forEach((wallet) => {

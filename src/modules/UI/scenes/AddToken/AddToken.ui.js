@@ -158,16 +158,21 @@ class AddToken extends Component<Props, State> {
         const {walletId} = this.props
         const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
         const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-        let tokenObj: any = this.state
-        tokenObj.multiplier = multiplier
-        tokenObj.denomination = multiplier
-        tokenObj.denominations = [
-          {
-            name: currencyCode,
-            multiplier,
-            symbol: ''
-          }
-        ]
+        let tokenObj: any = {
+          currencyName,
+          currencyCode,
+          decimalPlaces,
+          contractAddress,
+          multiplier: multiplier,
+          denomination: multiplier,
+          denominations: [
+            {
+              name: currencyCode,
+              multiplier,
+              symbol: ''
+            }
+          ]
+        }
         this.props.addNewToken(walletId, tokenObj)
       } else {
         this.setState({

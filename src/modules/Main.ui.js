@@ -140,7 +140,8 @@ const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
 const BACK              = s.strings.title_back
 const SEND_CONFIRMATION = s.strings.title_send_confirmation
 const MANAGE_TOKENS     = s.strings.title_manage_tokens
-const ADD_TOKENS        = s.strings.title_add_tokens
+const ADD_TOKEN         = s.strings.title_add_token
+const EDIT_TOKEN       = s.strings.title_edit_token
 const SETTINGS          = s.strings.title_settings
 const CHANGE_PASSWORD   = s.strings.title_change_password
 const CHANGE_PIN        = s.strings.title_change_pin
@@ -297,18 +298,25 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton} />
                       </Stack>
-                      <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
-                        <Scene key='manageTokens_notused' navTransparent={true}
+                      <Stack key={Constants.MANAGE_TOKENS} title={'Manage Tokens'} navTransparent={true} hideTabBar>
+                        <Scene key='manageTokens_notused'
+                          renderLeftButton={this.renderBackButton()} navTransparent={true}
                           component={ManageTokens}
                           renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                          renderRightButton={this.renderEmptyButton}
+                          animation={'fade'} duration={600}  />
+                        <Scene key={Constants.ADD_TOKEN}
+                          component={AddToken} navTransparent={true}
+                          onLeft={Actions.pop}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
-                          component={AddToken}
-                          renderTitle={this.renderTitle(ADD_TOKENS)}
+                          renderRightButton={this.renderEmptyButton}
+                          renderTitle={this.renderTitle(ADD_TOKEN)} />
+                        <Scene key={Constants.EDIT_TOKEN}
+                          component={EditToken} navTransparent={true}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                      </Stack>
+                          renderRightButton={this.renderEmptyButton}
+                          renderTitle={this.renderTitle(EDIT_TOKEN)} />
+                        </Stack>
                       <Stack key='settingsOverviewTab' hideDrawerButton={true}>
                         <Scene key={Constants.SETTINGS_OVERVIEW} navTransparent={true}
                           component={SettingsOverview}

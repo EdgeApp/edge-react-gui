@@ -7,6 +7,7 @@ import * as ACTION from './action'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import {UPDATE_WALLETS} from '../../Core/Wallets/action.js'
 import _ from 'lodash'
+import type {Action} from '../../ReduxTypes.js'
 
 export type WalletId = string
 export type WalletIds = Array<WalletId>
@@ -46,7 +47,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   }
 
   case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS : {
-    const {enabledTokens, walletId} = data
+    const {enabledTokens, walletId} = action.data
     return {
       ...state,
       [walletId]: {
@@ -57,17 +58,17 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   }
 
   case ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS : {
-    const {coreWalletsToUpdate, oldCurrencyCode, tokenObj} = data
+    const {coreWalletsToUpdate, oldCurrencyCode, tokenObj} = action.data
     // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
     // receiving token will have to take on sending tokens enabledness
     // sending token will already be disabled because it was deleted
     coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
       const guiWallet = state[wallet.id]
       const enabledTokens = guiWallet.enabledTokens
-      let newEnabledTokens = [enabledTokens]
+      let newEnabledTokens = enabledTokens
       // replace old code in enabledTokens with new code for each relevant wallet
       if (newEnabledTokens.indexOf(oldCurrencyCode) >= 0) {
-        newEnabledTokens = _.remove(enabledTokens, (item) => item === oldCurrencyCode)
+        newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
         newEnabledTokens.push(tokenObj.currencyCode)
       }
       const newState = {
@@ -83,7 +84,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   }
 
   case ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS : { // adjust enabled tokens
-    const {coreWalletsToUpdate, oldCurrencyCode} = data
+    const {coreWalletsToUpdate, oldCurrencyCode} = action.data
     // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
     // receiving token will have to take on sending tokens enabledness
     // sending token will already be disabled because it was deleted

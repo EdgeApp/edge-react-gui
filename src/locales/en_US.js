@@ -252,6 +252,8 @@ const strings = {
   title_exchange: 'Exchange',
   title_litecoin_settings: 'Litecoin Settings',
   title_manage_tokens: 'Manage Tokens',
+  title_edit_token: 'Edit Token',
+  title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
