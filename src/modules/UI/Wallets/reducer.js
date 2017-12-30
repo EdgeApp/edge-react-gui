@@ -2,14 +2,20 @@
 
 import {combineReducers} from 'redux'
 import {GuiWallet} from '../../../types.js'
-import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
+import type {AbcDenomination, AbcMetaToken, AbcCurrencyWallet} from 'airbitz-core-types'
 import * as ACTION from './action'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import {UPDATE_WALLETS} from '../../Core/Wallets/action.js'
+import type {Action} from '../../ReduxTypes.js'
 
-export const byId = (state: any = {}, action: any) => {
-  const {type, data = {} } = action
-  switch (type) {
+export type WalletId = string
+export type WalletIds = Array<WalletId>
+export type WalletByIdState = {[walletId: WalletId]: GuiWallet}
+
+
+export const byId = (state: WalletByIdState = {}, action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
   case UPDATE_WALLETS: {
     const wallets = action.data.currencyWallets
     const out = {}
@@ -23,7 +29,7 @@ export const byId = (state: any = {}, action: any) => {
   case ACTION.UPSERT_WALLET:
     return {
       ...state,
-      [data.wallet.id]: schema(data.wallet)
+      [action.data.wallet.id]: schema(action.data.wallet)
     }
 
   default:
@@ -31,7 +37,8 @@ export const byId = (state: any = {}, action: any) => {
   }
 }
 
-export const activeWalletIds = (state: any = [], action: any) => {
+export const activeWalletIds = (state: WalletIds = [], action: Action) => {
+  if (!action.data) return state
   if (action.type === UPDATE_WALLETS) {
     return action.data.activeWalletIds
   }
@@ -39,7 +46,8 @@ export const activeWalletIds = (state: any = [], action: any) => {
   return state
 }
 
-export const archivedWalletIds = (state: any = [], action: any) => {
+export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
+  if (!action.data) return state
   if (action.type === UPDATE_WALLETS) {
     return action.data.archivedWalletIds
   }
@@ -47,31 +55,28 @@ export const archivedWalletIds = (state: any = [], action: any) => {
   return state
 }
 
-export const selectedWalletId = (state: string = '', action: any) => {
-  const {type, data = {} } = action
-  const {walletId} = data
-
-  switch (type) {
+export const selectedWalletId = (state: WalletId = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
   case ACTION.SELECT_WALLET:
-    return walletId
+    return action.data.walletId
   default:
     return state
   }
 }
 
-export const selectedCurrencyCode = (state: string = '', action: any) => {
-  const {type, data = {} } = action
-  const {currencyCode} = data
-
-  switch (type) {
+export const selectedCurrencyCode = (state: string = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
   case ACTION.SELECT_WALLET:
-    return currencyCode
+    return action.data.currencyCode
   default:
     return state
   }
 }
 
-const addTokenPending = (state = false, action) => {
+const addTokenPending = (state: boolean = false, action: Action) => {
+  if (!action.data) return state
   const type = action.type
   switch (type) {
   case ADD_TOKEN_ACTION.ADD_TOKEN_START :
@@ -83,7 +88,8 @@ const addTokenPending = (state = false, action) => {
   }
 }
 
-const manageTokensPending = (state = false, action) => {
+const manageTokensPending = (state: boolean = false, action: Action) => {
+  if (!action.data) return state
   const type = action.type
   switch (type) {
   case ACTION.MANAGE_TOKENS_START :
@@ -95,7 +101,7 @@ const manageTokensPending = (state = false, action) => {
   }
 }
 
-function schema (wallet: any): GuiWallet {
+function schema (wallet: AbcCurrencyWallet): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'

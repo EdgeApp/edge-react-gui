@@ -1,34 +1,38 @@
+// @flow
+
 import {combineReducers} from 'redux'
 import * as ACTION from './action'
+import type {Action} from '../../../ReduxTypes.js'
 
-const walletName = (state = '', action) => {
-  const {type, data = {} } = action
-  const {walletName} = data
-  switch (type) {
-  case ACTION.UPDATE_WALLET_NAME :
-    return walletName
+export type WalletNameState = string
+export type SelectedWalletTypeState = string
+export type SelectedFiatState = string
+
+const walletName = (state: WalletNameState = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+  case ACTION.UPDATE_WALLET_NAME:
+    return action.data.walletName
   default:
     return state
   }
 }
 
-const selectedWalletType = (state = '', action) => {
-  const {type, data = {} } = action
-  const {walletType} = data
-  switch (type) {
+const selectedWalletType = (state: SelectedWalletTypeState = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
   case ACTION.SELECT_WALLET_TYPE:
-    return walletType
+    return action.data.walletType
   default:
     return state
   }
 }
 
-const selectedFiat = (state = '', action) => {
-  const {type, data = {} } = action
-  const {fiat} = data
-  switch (type) {
+const selectedFiat = (state: SelectedFiatState = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
   case ACTION.SELECT_FIAT:
-    return fiat
+    return action.data.fiat
   default:
     return state
   }

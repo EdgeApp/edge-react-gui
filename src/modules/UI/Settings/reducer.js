@@ -192,10 +192,18 @@ export const settings = (state = initialState, action) => {
   }
 
   case ACTION.TOUCH_ID_SETTINGS: {
-    return {
-      ...state,
-      isTouchSupported: data.isTouchSupported,
-      isTouchEnabled: data.isTouchEnabled
+    if (data) {
+      return {
+        ...state,
+        isTouchSupported: data.isTouchSupported,
+        isTouchEnabled: data.isTouchEnabled
+      }
+    } else {
+      return {
+        ...state,
+        isTouchSupported: false,
+        isTouchEnabled: false
+      }
     }
   }
 
