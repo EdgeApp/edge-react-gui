@@ -2,8 +2,10 @@
 
 import * as ACTIONS from './actions'
 import {combineReducers} from 'redux'
+import type {Action} from '../../../ReduxTypes.js'
+import type {AbcTransaction} from 'airbitz-core-types'
 
-const displayAlert = (state = false, action = {}) => {
+const displayAlert = (state: boolean = false, action: Action) => {
   const {type} = action
   switch (type) {
   case ACTIONS.DISPLAY_TRANSACTION_ALERT:
@@ -15,7 +17,9 @@ const displayAlert = (state = false, action = {}) => {
   }
 }
 
-const abcTransaction = (state = '', action = {}) => {
+type AbcTransactionState = AbcTransaction | ''
+
+const abcTransaction = (state: AbcTransactionState = '', action: Action) => {
   switch (action.type) {
   case ACTIONS.DISPLAY_TRANSACTION_ALERT:
     if (action.data) {
