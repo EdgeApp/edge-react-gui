@@ -15,6 +15,7 @@ import {
   getSubcategories
 } from './action.js'
 
+import {setContactList} from '../../contacts/action'
 import {TransactionDetails} from './TransactionDetails.ui'
 
 const mapStateToProps = (state: State, ownProps: any) => {
@@ -41,6 +42,7 @@ const mapStateToProps = (state: State, ownProps: any) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => { dispatch(setTransactionDetails(txid, currencyCode, abcMetadata)) },
+  setContactList: (contacts) => dispatch(setContactList(contacts)),
   getSubcategories: () => dispatch(getSubcategories())
 })
 

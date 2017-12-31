@@ -5,7 +5,7 @@ import {
   // transactionsSearchHidden,
   getTransactionsRequest
 } from './action'
-import {setContactsList} from '../../contacts/action'
+import {setContactList} from '../../contacts/action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -62,7 +62,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactsList: (contacts) => dispatch(setContactsList(contacts)),
+  setContactList: (contacts) => dispatch(setContactList(contacts)),
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })
