@@ -697,7 +697,6 @@ const strings = {
   transaction_details_title: 'Transaction Details',
   transaction_details_to: '"To: "',
   transaction_details_transaction_save_failed: 'Unable to save all transaction data',
-  transaction_details_view_advanced_data: 'View advanced transaction data',
   transaction_footer_amazon_discount: '15%-20% off Amazon',
   transaction_footer_bitrefill: 'Buy Mobile Phone Topups',
   transaction_footer_buy_bitcoin: 'Buy Bitcoin',
