@@ -17,27 +17,30 @@ import {FormField} from '../../../../components/FormField.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
 import type {AbcMetaToken} from 'airbitz-core-types'
 import _ from 'lodash'
-import type { CustomTokenInfo } from '../../../../types'
+import type { CustomTokenInfo, GuiWallet } from '../../../../types'
+import {
+  getWallet
+} from '../../selectors'
 
 export type DispatchProps = {
   addNewToken: (string, AbcMetaToken) => void
 }
 
-type State = {
+export type State = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
   decimalPlaces: string,
   multiplier: string,
-  errorMessage: string,
   enabled?: boolean
 }
 
-type Props = {
+export type Props = {
   walletId: string,
   addTokenPending: Function,
   addNewToken: Function,
-  currentCustomTokens: Array<CustomTokenInfo>
+  currentCustomTokens: Array<CustomTokenInfo>,
+  wallet: GuiWallet
 }
 
 class AddToken extends Component<Props, State> {
@@ -48,8 +51,7 @@ class AddToken extends Component<Props, State> {
       currencyCode: '',
       contractAddress: '',
       decimalPlaces: '',
-      multiplier: '',
-      errorMessage: ''
+      multiplier: ''
     }
   }
 
@@ -107,9 +109,6 @@ class AddToken extends Component<Props, State> {
               />
             </View>
           </View>
-          <View style={styles.errorMessageArea}>
-            <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
-          </View>
           <View style={[styles.buttonsArea]}>
             <PrimaryButton
               text={s.strings.string_save}
@@ -151,7 +150,13 @@ class AddToken extends Component<Props, State> {
 
   _onSave = () => {
     const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
-    if (_.findIndex(this.props.currentCustomTokens, (item) => item.currencyCode === currencyCode) >= 0) {
+    const {currentCustomTokens, wallet} = this.props
+    const currentCustomTokenIndex = _.findIndex(currentCustomTokens, (item) => item.currencyCode === currencyCode)
+    const metaTokensIndex = _.findIndex(wallet.metaTokens, (item) => item.currencyCode === currencyCode)
+    // if token is hard-coded into wallets of this type
+    if (metaTokensIndex >= 0) Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
+    // if that token already exists and is visible (ie not deleted)
+    if (currentCustomTokenIndex >= 0 && currentCustomTokens[currentCustomTokenIndex].isVisible !== false) {
       Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
     } else {
       if (currencyName && currencyCode && decimalPlaces && contractAddress) {
@@ -175,9 +180,7 @@ class AddToken extends Component<Props, State> {
         }
         this.props.addNewToken(walletId, tokenObj)
       } else {
-        this.setState({
-          errorMessage: s.strings.addtoken_default_error_message
-        })
+        Alert.alert(s.strings.addtoken_default_error_message)
       }
     }
   }
@@ -186,7 +189,8 @@ class AddToken extends Component<Props, State> {
 const mapStateToProps = (state: any, ownProps: any) => ({
   addTokenPending: state.ui.wallets.addTokenPending,
   walletId: ownProps.walletId,
-  currentCustomTokens: state.ui.settings.customTokens
+  currentCustomTokens: state.ui.settings.customTokens,
+  wallet: getWallet(state, ownProps.walletId)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({

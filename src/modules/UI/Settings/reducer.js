@@ -282,19 +282,6 @@ export const settings = (state = initialState, action) => {
     }
   }
 
-  /* case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS: {
-    const currencyCode = data.currencyCode
-    const denomination = data.denominationKey
-    const currencyState = state[currencyCode]
-    return {
-      ...state,
-      [currencyCode]: {
-        ...currencyState,
-        denomination
-      }
-    }
-  }
-
   case ACTION.SET_SETTINGS_LOCK: {
     // const {denomination} = data
     return {...state, changesLocked: data}
@@ -322,7 +309,7 @@ export const settings = (state = initialState, action) => {
       isTouchEnabled: data
     }
   }
-*/
+
   case ACTION.ADD_CURRENCY_PLUGIN: {
     const {plugins} = state
     const {supportedWalletTypes} = plugins

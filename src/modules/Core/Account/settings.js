@@ -107,7 +107,7 @@ export const getSyncedSettings = (account: AbcAccount) =>
 
 export async function getSyncedSettingsAsync (account: AbcAccount) {
   try {
-    const file = await getSyncedSettingsFile(account)
+    const file = getSyncedSettingsFile(account)
     const text = await file.getText()
     const settingsFromFile = JSON.parse(text)
     return settingsFromFile
@@ -122,7 +122,6 @@ export const setSyncedSettings = (account: AbcAccount, settings: Object) => {
   const text = JSON.stringify(settings)
   const SettingsFile = getSyncedSettingsFile(account)
   SettingsFile.setText(text)
-  .then(() => settings)
 }
 
 export async function setSyncedSettingsAsync (account: AbcAccount, settings: Object) {
@@ -172,7 +171,6 @@ export const getLocalSettings = (account: AbcAccount) =>
   getLocalSettingsFile(account).getText()
   .then(JSON.parse)
   .catch(() =>
-    // console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
      setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
     .then(() => LOCAL_ACCOUNT_DEFAULTS))
@@ -190,13 +188,6 @@ export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean,
   // build up settings object,
   // return settings object
   return Promise.resolve(coreSettings)
-}
-
-export async function getSyncedSettingsFileAsync (account: AbcAccount) {
-  // $FlowFixMe folder not found on AbcAccount type
-  const folder = account.folder
-//   console.log(folder)
-  return folder.file(SYNCHED_SETTINGS_FILENAME)
 }
 
 export const getSyncedSettingsFile = (account: AbcAccount) => {

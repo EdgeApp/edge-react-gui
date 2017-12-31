@@ -89,6 +89,11 @@ export const styles = {
     flex: 1,
     borderRadius: 3
   },
+  deleteIcon: {
+    position: 'relative',
+    top: 0,
+    left: 3
+  },
   deleteButton: {
     marginRight: 2,
   },

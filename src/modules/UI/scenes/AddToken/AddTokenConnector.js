@@ -4,10 +4,14 @@ import {connect} from 'react-redux'
 
 import AddToken from './AddToken.ui'
 import * as ADD_TOKEN_ACTIONS from './action.js'
+import {
+  getWallet
+} from '../../selectors'
 import type {Dispatch, State} from '../../../ReduxTypes'
 
-const mapStateToProps = (state: State) => ({
-  addTokenPending: state.ui.wallets.addTokenPending
+const mapStateToProps = (state: State, ownProps: any) => ({
+  addTokenPending: state.ui.wallets.addTokenPending,
+  wallet: getWallet(state, ownProps.walletId)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatch,

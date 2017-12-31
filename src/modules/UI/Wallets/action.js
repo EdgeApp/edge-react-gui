@@ -13,9 +13,11 @@ export const MANAGE_TOKENS_START = 'MANAGE_TOKENS_START'
 export const MANAGE_TOKENS_SUCCESS = 'MANAGE_TOKENS_SUCCESS'
 export const DELETE_CUSTOM_TOKEN_START = 'DELETE_CUSTOM_TOKEN_START'
 export const DELETE_CUSTOM_TOKEN_SUCCESS = 'DELETE_CUSTOM_TOKEN_SUCCESS'
+export const DELETE_CUSTOM_TOKEN_FAILURE = 'DELETE_CUSTOM_TOKEN_FAILURE'
 export const UPDATE_WALLET_ENABLED_TOKENS = 'UPDATE_WALLET_ENABLED_TOKENS'
 export const EDIT_CUSTOM_TOKEN_START = 'EDIT_CUSTOM_TOKEN_START'
 export const EDIT_CUSTOM_TOKEN_SUCCESS = 'EDIT_CUSTOM_TOKEN_SUCCESS'
+export const EDIT_CUSTOM_TOKEN_FAILURE = 'EDIT_CUSTOM_TOKEN_FAILURE'
 export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
@@ -97,7 +99,7 @@ export const addCustomToken = (walletId: string, tokenObj: any) => (dispatch: Di
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   WALLET_API.addCoreCustomToken(wallet, tokenObj)
-  .catch((e) => dispatch(displayErrorAlert(e)))
+  .catch((e) => dispatch(displayErrorAlert(e.message)))
 }
 
 export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>, disabledTokens: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
@@ -116,7 +118,7 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
     // refresh the wallet in Redux
     dispatch(refreshWallet(walletId))
   })
-  .catch((e) => dispatch(displayErrorAlert(e)))
+  .catch((e) => dispatch(displayErrorAlert(e.message)))
 }
 
 export const getEnabledTokens = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -127,7 +129,6 @@ export const getEnabledTokens = (walletId: string) => (dispatch: Dispatch, getSt
   // get token information from settings
   const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
   const customTokenPromises = customTokens.map((token) => {
-
     return wallet.addCustomToken(token)
   })
   Promise.all(customTokenPromises)
@@ -142,7 +143,7 @@ export const getEnabledTokens = (walletId: string) => (dispatch: Dispatch, getSt
     // now reflect that change in Redux's version of the wallet
     dispatch(updateWalletEnabledTokens(walletId, tokens))
   })
-  .catch((e) => dispatch(displayErrorAlert(e)))
+  .catch((e) => dispatch(displayErrorAlert(e.message)))
 }
 
 export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode: string) => {
@@ -161,15 +162,22 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
           dispatch(updateExistingTokenSuccess(tokenObj))
           Actions.pop()
         })
-        .catch((e) => dispatch(displayErrorAlert(e)))
+        .catch((e) => {
+          dispatch(displayErrorAlert(e.message))
+          dispatch(editCustomTokenFailure())
+        })
       } else { // replacing an existing but invisible token CASE 3
         addTokenAsync(walletId, tokenObj, state) // update the receiving token
         .then(() => {
           deleteCustomTokenAsync(walletId, oldCurrencyCode, getState) // delete the sending token
           .then((coreWalletsToUpdate) => {
             dispatch(overwriteThenDeleteTokenSuccess(tokenObj, oldCurrencyCode, coreWalletsToUpdate))
-            Actions.pop()
+            Actions.walletList()
           })
+        })
+        .catch((e) => {
+          dispatch(displayErrorAlert(e.message))
+          dispatch(editCustomTokenFailure())
         })
       }
     } else { // does not yet exist. Create the new one then delete the old one, CASE 4
@@ -187,10 +195,13 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
             coreWalletsToUpdate,
             code: tokenObj.currencyCode
           }))
-          Actions.pop()
+          Actions.waletList()
         })
       })
-      .catch((e) => dispatch(displayErrorAlert(e)))
+      .catch((e) => {
+        dispatch(displayErrorAlert(e.message))
+        dispatch(editCustomTokenFailure())
+      })
     }
   }
 }
@@ -279,7 +290,10 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     Actions.pop()
     return
   })
-  .catch((e) => dispatch(displayErrorAlert(e)))
+  .catch((e) => {
+    dispatch(displayErrorAlert(e.message))
+    dispatch(deleteCustomTokenFailure())
+  })
 }
 
 export const deleteCustomTokenStart = () => ({
@@ -289,6 +303,10 @@ export const deleteCustomTokenStart = () => ({
 export const deleteCustomTokenSuccess = (currencyCode: string) => ({
   type: DELETE_CUSTOM_TOKEN_SUCCESS,
   data: {currencyCode}
+})
+
+export const deleteCustomTokenFailure = () => ({
+  type: DELETE_CUSTOM_TOKEN_FAILURE
 })
 
 export const setTokensStart = () => ({
@@ -311,6 +329,10 @@ export const editCustomTokenStart = () => ({
 export const editCustomTokenSuccess = (currencyCode: string) => ({
   type: EDIT_CUSTOM_TOKEN_SUCCESS,
   data: {currencyCode}
+})
+
+export const editCustomTokenFailure = () => ({
+  type: EDIT_CUSTOM_TOKEN_FAILURE
 })
 
 export function updateExistingTokenSuccess (tokenObj: CustomTokenInfo) {

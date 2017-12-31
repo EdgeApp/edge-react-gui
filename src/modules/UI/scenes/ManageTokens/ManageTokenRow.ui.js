@@ -62,7 +62,7 @@ class ManageTokenRow extends Component<Props , State> {
             enabled={enabled}
           >
             <View style={[styles.touchableCheckboxInterior]}>
-              <CheckBox style={{alignSelf: 'center'}} enabled={enabled} />
+              <CheckBox style={styles.checkBox} enabled={enabled} />
             </View>
           </TouchableWithoutFeedback>
           <View style={[styles.tokenNameArea]}>
