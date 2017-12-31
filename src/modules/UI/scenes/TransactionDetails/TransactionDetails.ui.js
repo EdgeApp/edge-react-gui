@@ -377,10 +377,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   componentDidMount () {
-    const permissionStatus = ['authorized', 'undetermined']
     if (!this.props.contacts) {
       Permissions.check('contacts').then((response) => {
-        if (permissionStatus.indexOf(response)) {
+        if (response === 'authorized') {
           Contacts.getAll((err, contacts) => {
             if (err === 'denied') {
               // error
