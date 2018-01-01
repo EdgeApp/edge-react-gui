@@ -269,7 +269,15 @@ export default class SettingsOverview extends Component<Props,State> {
 
             {this.securityRoute.map(this.renderRowRoute)}
 
-            {Object.keys(this.options).map(this.renderRowSwitch)}
+            {
+              Object.keys(this.options)
+                .filter((optionName) => {
+                  if (!this.options[optionName]) return false
+                  const {text, key, routeFunction, value} = this.options[optionName]
+                  return text && key && routeFunction && value
+                })
+                .map(this.renderRowSwitch)
+            }
 
             {this.currencies.map(this.renderRowRoute)}
 
