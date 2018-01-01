@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
+import qrcode from 'yaqrcode'
 
 import type {AbcCurrencyWallet, AbcEncodeUri} from 'airbitz-core-types'
 
@@ -79,7 +80,7 @@ export default class Request extends Component<Props, State> {
         const abcEncodeUri: AbcEncodeUri = {publicAddress}
         const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
-          encodedURI,
+          encodedURI: qrcode(encodedURI),
           publicAddress
         })
       })
@@ -97,7 +98,7 @@ export default class Request extends Component<Props, State> {
       const abcEncodeUri: AbcEncodeUri = {publicAddress}
       const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
       this.setState({
-        encodedURI,
+        encodedURI: qrcode(encodedURI),
         publicAddress
       })
     })
@@ -125,7 +126,7 @@ export default class Request extends Component<Props, State> {
     const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
     this.setState({
-      encodedURI
+      encodedURI: qrcode(encodedURI)
     })
   }
   renderDropUp = () => {
