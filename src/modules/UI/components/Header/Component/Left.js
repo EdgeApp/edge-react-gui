@@ -24,14 +24,6 @@ export default class Left extends Component {
       return makeBackButton(CANCEL_TEXT, Constants.TRANSACTION_LIST)
     case Constants.SEND_CONFIRMATION:
       return makeBackButton(BACK_TEXT, Constants.SCAN)
-    case Constants.BTC_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.ETH_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.LTC_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.BCH_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
     case Constants.CHANGE_PASSWORD:
       return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
     case Constants.CHANGE_PIN:
@@ -39,6 +31,9 @@ export default class Left extends Component {
     case Constants.RECOVER_PASSWORD:
       return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
     default:
+      if (Object.keys(Constants.CURRENCY_SETTINGS).indexOf(sceneName) !== -1) {
+        return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
+      }
       return null
     }
   }
