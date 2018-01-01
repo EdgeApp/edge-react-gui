@@ -18,7 +18,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import type { AbcAccount } from 'airbitz-core-types'
-import {enableTouchId} from 'airbitz-core-js-ui'
+import { enableTouchId, disableTouchId } from 'airbitz-core-js-ui'
 import type {
   GetState,
   Dispatch
@@ -149,10 +149,15 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
 }
 
 // touch id interaction
-export const updateTouchIdEnabled = (arg: boolean, account: AbcAccount) => async (dispatch: Dispatch) => {
+export const updateTouchIdEnabled = (arg: boolean, account: AbcAccount) => async (dispatch: Dispatch, getState: GetState) => {
+  const context = CORE_SELECTORS.getContext(getState())
   // dispatch the update for the new state for
   dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
-  enableTouchId (arg, account)
+  if (arg) {
+    enableTouchId(context, account)
+  } else {
+    disableTouchId(context, account)
+  }
 }
 
 // Simple Actions

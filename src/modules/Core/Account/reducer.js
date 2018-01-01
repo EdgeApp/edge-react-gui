@@ -1,18 +1,26 @@
+// @flow
+
 import * as ACTION from './action.js'
+import type {Action} from '../../ReduxTypes.js'
+import type {AbcAccount} from 'airbitz-core-types'
 
-export const accountReducer = (state = {}, action) => {
-  const {type, data = {} } = action
-  const {account} = data
+type AccountReducerState = AbcAccount | {} | void
 
-  switch (type) {
+export const initialState: AccountReducerState = {}
+
+const accountReducer = (state = initialState, action) => {
+  switch (action.type) {
   case ACTION.ADD_ACCOUNT:
-    return account
+    if (action.data) {
+      return action.data.account
+    }
+    return state
   default:
     return state
   }
 }
 
-export const account = (state, action) => {
+export const account = (state: AccountReducerState, action: Action) => {
   if (action.type === 'LOGOUT') {
     state = undefined
   }
