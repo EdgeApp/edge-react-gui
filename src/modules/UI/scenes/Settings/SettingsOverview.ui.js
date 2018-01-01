@@ -104,18 +104,13 @@ export default class SettingsOverview extends Component<Props,State> {
       value: this.props.touchIdEnabled
     } : null
 
-    this.options = {
-      pinRelogin,
-      useTouchID
-    }
-
-    if (this.props.supportsTouchId) {
-      this.options.useTouchID =  {
-        text: s.strings.settings_button_use_touchID,
-        key: 'useTouchID',
-        routeFunction: this._onToggleTouchIdOption,
-        value: this.props.touchIdEnabled
+    if (useTouchID) {
+      this.options = {
+        pinRelogin,
+        useTouchID
       }
+    } else {
+      this.options = { pinRelogin }
     }
 
     this.optionModals = [
