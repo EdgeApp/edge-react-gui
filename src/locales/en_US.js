@@ -143,6 +143,7 @@ const strings = {
   token_not_supported: 'Token is not supported by exchange',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
+  transaction_details_view_advanced_data: 'View advanced transaction data'
 }
 
 export default strings
