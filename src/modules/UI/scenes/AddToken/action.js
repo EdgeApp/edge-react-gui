@@ -69,7 +69,7 @@ export async function addTokenAsync (walletId, tokenObj, state) {
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
   await WALLET_API.updateEnabledTokens(coreWallet, newEnabledTokens)
-  return {walletId, newTokenObj, setSettings, newEnabledTokens}
+  return {walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens}
 }
 
 export const addTokenStart = () => ({
