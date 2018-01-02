@@ -1,4 +1,5 @@
 // @flow
+
 import type {Dispatch} from '../../ReduxTypes'
 import type {AbcTransaction, AbcAccountCallbacks} from 'airbitz-core-types'
 

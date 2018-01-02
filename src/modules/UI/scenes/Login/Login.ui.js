@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {LoginScreen} from 'airbitz-core-js-ui'
 import makeAccountCallbacks from '../../../Core/Account/callbacks'
@@ -24,10 +26,11 @@ export default class Login extends Component {
 
   componentWillReceiveProps (nextProps) {
     // If we have logged out, destroy and recreate the login screen:
-    if (this.props.account && (nextProps.account !== this.props.account))
+    if (this.props.account && (nextProps.account !== this.props.account)) {
       if (typeof nextProps.account.username === 'undefined') {
         this.setState({key: this.state.key + 1})
       }
+    }
   }
 
   render () {
@@ -46,4 +49,3 @@ export default class Login extends Component {
     )
   }
 }
-

@@ -1,4 +1,5 @@
 //@flow
+
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -86,6 +87,7 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch, 
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
     dispatch({type: 'LOGGED_OUT'})
+    return
   }
 
   dispatch({
