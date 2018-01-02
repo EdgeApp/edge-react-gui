@@ -258,8 +258,8 @@ export default class SettingsOverview extends Component<Props,State> {
               Object.keys(this.options)
                 .filter((optionName) => {
                   if (!this.options[optionName]) return false
-                  const {text, key, routeFunction, value} = this.options[optionName]
-                  return text && key && routeFunction && value
+                  const {text, key, routeFunction} = this.options[optionName]
+                  return text && key && routeFunction
                 })
                 .map(this.renderRowSwitch)
             }
