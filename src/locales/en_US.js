@@ -145,7 +145,16 @@ const strings = {
   amount_below_limit: 'Transaction amount is below the min limit of %1$s',
   transaction_details_category_title: 'Category',
   transaction_details_payee: 'Payee',
-  transaction_details_view_advanced_data: 'View advanced transaction data'
+  transaction_details_view_advanced_data: 'View advanced transaction data',
+  string_fee_with_brackets: '(Fee)',
+  title_Header: 'Header',
+  back_button_text: 'Back',
+  send_confirmation_enter_send_password: 'Password',
+  tx_detail_picker_title: 'Please choose a category:',
+  string_confirm: 'Confirm',
+  fragment_tx_detail_mining_fee: '+ %f (Fee)',
+  transaction_details_notes_title: 'Notes',
+  string_search: 'Search',
 }
 
 export default strings
