@@ -172,7 +172,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
           deleteCustomTokenAsync(walletId, oldCurrencyCode, getState) // delete the sending token
           .then((coreWalletsToUpdate) => {
             dispatch(overwriteThenDeleteTokenSuccess(tokenObj, oldCurrencyCode, coreWalletsToUpdate))
-            Actions.walletList()
+            Actions.pop()
           })
         })
         .catch((e) => {
@@ -195,7 +195,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
             coreWalletsToUpdate,
             code: tokenObj.currencyCode
           }))
-          Actions.waletList()
+          Actions.pop()
         })
       })
       .catch((e) => {
