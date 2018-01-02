@@ -1,3 +1,5 @@
+// @flow
+
 export * from './SceneKeys'
 export * from './ActionConstants'
 export * from './IconConstants'
@@ -13,6 +15,5 @@ export const NONE ='none'
 export const FROM ='from'
 export const TO ='to'
 export const ALWAYS ='always'
-
 
 export const CRYPTO_EXCHANGE ='cryptoExchange'
