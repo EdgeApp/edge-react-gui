@@ -19,7 +19,21 @@ export const CHANGE_MINING_FEE_SEND_CONFIRMATION = 'changeMiningFeeSendConfirmat
 export const CHANGE_MINING_FEE_EXCHANGE = 'changeMiningFeeExchange'
 export const REQUEST = 'request'
 export const SETTINGS_OVERVIEW = 'settingsOverview'
-export const BTC_SETTINGS = 'btcSettings'
-export const BCH_SETTINGS = 'bchSettings'
-export const ETH_SETTINGS = 'ethSettings'
-export const LTC_SETTINGS = 'ltcSettings'
+export const CURRENCY_SETTINGS = {
+  'btcSettings': {
+    pluginName: 'bitcoin',
+    currencyCode: 'BTC'
+  },
+  'bchSettings': {
+    pluginName: 'bitcoinCash',
+    currencyCode: 'BCH'
+  },
+  'ethSettings': {
+    pluginName: 'ethereum',
+    currencyCode: 'ETH'
+  },
+  'ltcSettings': {
+    pluginName: 'litecoin',
+    currencyCode: 'LTC'
+  }
+}

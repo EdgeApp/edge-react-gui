@@ -1,10 +1,14 @@
-//Crypto Exchagnge
+// @flow
+
+//Crypto Exchange
 export const SELECT_FROM_WALLET_CRYPTO_EXCHANGE = 'selectFromWalletCryptoExchange_ALLENROCKS'
 export const SELECT_TO_WALLET_CRYPTO_EXCHANGE = 'selectToWalletCryptoExchange'
 export const SWAP_FROM_TO_CRYPTO_WALLETS = 'swapFromToCryptoWallets'
 export const OPEN_WALLET_SELECTOR_MODAL = 'openWalletSelectorModal'
 export const UPDATE_CRYPTO_EXCHANGE_RATE = 'updateCryptoExchangeRate'
 export const UPDATE_CRYPTO_REVERSE_EXCHANGE_RATE = 'updateCryptoReverseExchangeRate'
+export const UPDATE_CRYPTO_EXCHANGE_INFO = 'updateCryptoExchangeInfo'
+export const UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO = 'updateCryptoReverseExchangeInfo'
 export const UPDATE_SHIFT_TRANSACTION = 'updateShiftTransactionFee'
 export const INVALIDATE_SHIFT_TRANSACTION = 'invalidateShiftTransaction'
 export const SHIFT_CRYPTO_CURRENCY = 'shiftCryptoCurrency'
@@ -17,8 +21,8 @@ export const SET_CRYPTO_TO_NATIVE_AMOUNT = 'setCryptoToNativeAmount'
 export const RECEIVED_TRANSACTION_ERROR = 'receivedTRansactionError'
 export const RECEIVED_INSUFFICIENT_FUNDS_ERROR = 'receivedInsufficentFundsError'
 export const GENERIC_SHAPE_SHIFT_ERROR = 'genericShapeShiftError'
-export const RECEIVED_DUST_ERROR = 'receivedInsufficentFundsError'
 export const CHANGE_EXCHANGE_FEE = 'CHANGE_EXCHANGE_FEE'
+
 // Alert
 export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
 export const CLOSE_AB_ALERT = 'CLOSE_AB_ALERT'
