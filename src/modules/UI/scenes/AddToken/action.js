@@ -12,6 +12,8 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
+import * as CONSTANTS from '../../../../constants/indexConstants'
+
 import {displayErrorAlert} from '../../components/ErrorAlert/actions'
 
 export const addNewToken = (walletId, tokenObj) => {
@@ -23,7 +25,7 @@ export const addNewToken = (walletId, tokenObj) => {
       const {walletId, newTokenObj, setSettings, enabledTokensOnWallet} = addedWalletInfo
       dispatch(addNewTokenSuccess(walletId, newTokenObj, setSettings, enabledTokensOnWallet))
       dispatch(WALLET_ACTIONS.refreshWallet(walletId))
-      Actions.walletList()
+      Actions.popTo(CONSTANTS.WALLET_LIST_SCENE)
     })
     .catch((e) => {
       dispatch(addNewTokenFailure(e.message))
@@ -67,8 +69,8 @@ export async function addTokenAsync (walletId, tokenObj, state) {
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
-  const enabledTokensOnWallet = await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens, null)
-  return {walletId, newTokenObj, setSettings, enabledTokensOnWallet}
+  await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens, null)
+  return {walletId, newTokenObj, setSettings, newEnabledTokens}
 }
 
 export const addTokenStart = () => ({
