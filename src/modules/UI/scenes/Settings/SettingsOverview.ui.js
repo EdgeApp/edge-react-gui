@@ -288,7 +288,7 @@ export default class SettingsOverview extends Component<Props,State> {
             onCancel={this.onCancelSendLogsModal} />
           <ConfirmPasswordModal
             style={ConfirmPasswordModalStyle}
-            headerText={'settings_lock_header'}
+            headerText={''}
             showModal={this.state.showConfirmPasswordModal}
             onDone={this.confirmPassword}
             onCancel={this.hideConfirmPasswordModal} />

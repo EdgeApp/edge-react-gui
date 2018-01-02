@@ -11,6 +11,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
+import _ from 'lodash'
 
 const mapStateToProps = (state) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -31,7 +32,19 @@ const mapStateToProps = (state) => {
   const transactions = UI_SELECTORS.getTransactions(state)
 
   const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
-  const denomination = wallet.allDenominations[currencyCode][index]
+  const denominationsOnWallet = wallet.allDenominations[currencyCode]
+  let denomination
+  if (denominationsOnWallet) {
+    denomination = denominationsOnWallet[index]
+  } else { // if it is a token
+    const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
+    const customTokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === currencyCode)
+    denomination = {
+      ...customTokens[customTokenIndex].denominations[0],
+      name: currencyCode,
+      symbol: ''
+    }
+  }
   const multiplier = denomination.multiplier
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)

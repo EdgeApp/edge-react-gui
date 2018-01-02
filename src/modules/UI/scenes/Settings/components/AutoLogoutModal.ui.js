@@ -86,7 +86,7 @@ export default class AutoLogoutModal extends Component {
     return <StylizedModal
       visibilityBoolean={this.props.showModal}
       featuredIcon={icon}
-      headerText={'dialog_title'}
+      headerText={s.strings.dialog_title}
       modalMiddle={modalMiddle}
       modalBottom={modalBottom}
       onExitButtonFxn={this.onCancel}

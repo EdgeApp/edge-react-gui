@@ -3,7 +3,7 @@
 import {connect} from 'react-redux'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 
-import type {Dispatch, State} from '../../../../../Airbitz/edge-react-gui/src/modules/ReduxTypes'
+import type {Dispatch, State} from '../../modules/ReduxTypes'
 import type {GuiWallet, GuiDenomination, GuiCurrencyInfo} from '../../types'
 import LinkedComponent
   from '../../modules/UI/components/FlipInput/CryptoExchangeFlipInputWrapperComponent'

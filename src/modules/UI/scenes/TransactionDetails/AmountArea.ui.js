@@ -201,9 +201,14 @@ class AmountArea extends Component {
           <View style={[styles.buttonArea]}>
             <PrimaryButton text={s.strings.string_save} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
-          <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
-            <FormattedText style={[styles.advancedTxText]}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
-          </TouchableWithoutFeedback>
+          {
+            this.props.txExplorerUrl
+              ? (
+                <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
+                  <FormattedText style={[styles.advancedTxText]}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
+                </TouchableWithoutFeedback>
+              ) : null
+          }
         </View>
       </View>
     )

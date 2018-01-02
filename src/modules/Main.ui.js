@@ -55,6 +55,7 @@ import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
 import AddToken from './UI/scenes/AddToken'
+import EditToken from './UI/scenes/EditToken'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
@@ -139,7 +140,8 @@ const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
 const BACK              = s.strings.title_back
 const SEND_CONFIRMATION = s.strings.title_send_confirmation
 const MANAGE_TOKENS     = s.strings.title_manage_tokens
-const ADD_TOKENS        = s.strings.title_add_tokens
+const ADD_TOKEN         = s.strings.title_add_token
+const EDIT_TOKEN       = s.strings.title_edit_token
 const SETTINGS          = s.strings.title_settings
 const CHANGE_PASSWORD   = s.strings.title_change_password
 const CHANGE_PIN        = s.strings.title_change_pin
@@ -228,7 +230,7 @@ export default class Main extends Component<Props, State> {
                     <Scene hideNavBar>
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
-                          <Scene key='walletList_notused' navTransparent={true}
+                          <Scene key={Constants.WALLET_LIST_SCENE} navTransparent={true}
                             component={WalletList}
                             renderTitle={this.renderTitle(WALLETS)}
                             renderLeftButton={this.renderHelpButton}
@@ -245,6 +247,24 @@ export default class Main extends Component<Props, State> {
                             renderTitle={this.renderWalletListNavBar}
                             renderLeftButton={this.renderBackButton(WALLETS)}
                             renderRightButton={this.renderMenuButton} />
+
+                          <Scene key={Constants.MANAGE_TOKENS}
+                            renderLeftButton={this.renderBackButton()} navTransparent={true}
+                            component={ManageTokens}
+                            renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                            renderRightButton={this.renderEmptyButton}
+                            animation={'fade'} duration={600}  />
+                          <Scene key={Constants.ADD_TOKEN}
+                            component={AddToken} navTransparent={true}
+                            onLeft={Actions.pop}
+                            renderLeftButton={this.renderBackButton()}
+                            renderRightButton={this.renderEmptyButton}
+                            renderTitle={this.renderTitle(ADD_TOKEN)} />
+                          <Scene key={Constants.EDIT_TOKEN}
+                            component={EditToken} navTransparent={true}
+                            renderLeftButton={this.renderBackButton()}
+                            renderRightButton={this.renderEmptyButton}
+                            renderTitle={this.renderTitle(EDIT_TOKEN)} />
                         </Stack>
 
                         <Scene key={Constants.REQUEST} navTransparent={true} icon={this.icon(Constants.REQUEST)} tabBarLabel={REQUEST}
@@ -292,20 +312,6 @@ export default class Main extends Component<Props, State> {
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton} />
                       </Stack>
-
-                      <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
-                        <Scene key='manageTokens_notused' navTransparent={true}
-                          component={ManageTokens}
-                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
-                          component={AddToken}
-                          renderTitle={this.renderTitle(ADD_TOKENS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                      </Stack>
-
                       <Stack key='settingsOverviewTab' hideDrawerButton={true}>
                         <Scene key={Constants.SETTINGS_OVERVIEW} navTransparent={true}
                           component={SettingsOverview}
@@ -404,7 +410,7 @@ export default class Main extends Component<Props, State> {
   }
 
   handleBack = () => {
-    if (!this.isCurrentScene('walletList_notused')) {
+    if (!this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
       Actions.pop()
     }
     return true

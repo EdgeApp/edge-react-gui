@@ -390,14 +390,18 @@ export default class TransactionList extends Component<Props, State> {
     let txColorStyle, txImage, lastOfDate, thumbnailPath, pendingTimeStyle, pendingTimeSyntax
     let txName = ''
 
+    let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+    if (!currencyName) {
+      currencyName = this.props.selectedCurrencyCode
+    }
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
       txColorStyle = styles.accentRed
-      txName = SENT_TEXT + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txName = SENT_TEXT + currencyName
       txImage = sentTypeImage
     } else {
       txColorStyle = styles.accentGreen
-      txName = RECEIVED_TEXT + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txName = RECEIVED_TEXT + currencyName
       txImage = receivedTypeImage
     }
 
