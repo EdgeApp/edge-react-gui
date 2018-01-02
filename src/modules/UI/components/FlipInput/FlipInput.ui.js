@@ -45,9 +45,9 @@ const getInitialState = (props: Props) => ({
 })
 
 export default class FlipInput extends Component<Props, State> {
-  animatedValue: any
-  frontInterpolate: any
-  backInterpolate: any
+  animatedValue: Animated.Value
+  frontInterpolate: Animated.Value
+  backInterpolate: Animated.Value
 
   constructor (props: Props) {
     super(props)

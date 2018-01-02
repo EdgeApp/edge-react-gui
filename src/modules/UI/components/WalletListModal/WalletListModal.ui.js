@@ -20,8 +20,8 @@ export default class WalletListModal extends Component<Props> {
     const top = this.props.topDisplacement ? this.props.topDisplacement : 38
     return (
       <Animatable.View style={[b(), styles.topLevel, {position: 'absolute', top: top, height: (platform.deviceHeight - platform.toolbarHeight - platform.footerHeight)}]}
-        animation='fadeInUp'
-        duration={250} >
+        animation='fadeInDown'
+        duration={100} >
         <ScrollView>
           <WalletListModalHeader type={this.props.type} whichWallet={this.props.whichWallet} />
           <WalletListModalBody style={{flex: 1}}

@@ -6,8 +6,7 @@ import {
   Alert,
   Clipboard,
   View,
-  Share,
-  Keyboard
+  Share
 } from 'react-native'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
@@ -33,8 +32,7 @@ type State = {
   publicAddress: string,
   encodedURI: string,
   loading: boolean,
-  result: string,
-  keyboardUp: boolean
+  result: string
 }
 type Props = {
   loading: boolean,
@@ -48,18 +46,13 @@ type Props = {
 }
 
 export default class Request extends Component<Props, State> {
-
-  keyboardWillShowListener: any
-  keyboardWillHideListener: any
-
   constructor (props: Props) {
     super(props)
     this.state = {
       publicAddress: '',
       encodedURI: '',
       loading: props.loading,
-      result: '',
-      keyboardUp: false
+      result: ''
     }
   }
 
@@ -95,16 +88,6 @@ export default class Request extends Component<Props, State> {
       })
     })
     .catch((e) => console.log(e))
-  }
-
-  componentWillMount () {
-    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
-    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
-  }
-
-  componentWillUnmount () {
-    this.keyboardWillShowListener.remove()
-    this.keyboardWillHideListener.remove()
   }
 
   onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string}) => {
@@ -146,7 +129,7 @@ export default class Request extends Component<Props, State> {
     } = this.props
     return (
       <Gradient style={styles.view}>
-        <Gradient style={{height: 66, width: '100%'}} />
+        <Gradient style={styles.gradient} />
 
         <View style={styles.exchangeRateContainer}>
           <ExchangedExchangeRate
@@ -161,17 +144,10 @@ export default class Request extends Component<Props, State> {
             secondaryInfo={secondaryInfo}
             secondaryToPrimaryRatio={secondaryToPrimaryRatio}
             onAmountsChange={this.onAmountsChange}
-            color={color}
-          />
-          <QRCode
-            value={this.state.encodedURI}
-            keyboardUp={this.state.keyboardUp}
-          />
-          <RequestStatus
-            requestAddress={this.state.publicAddress}
-            amountRequestedInCrypto={0}
-            amountReceivedInCrypto={0}
-          />
+            color={color} />
+
+          <QRCode value={this.state.encodedURI} />
+          <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
         </View>
 
         <View style={styles.shareButtonsContainer}>
@@ -241,16 +217,5 @@ export default class Request extends Component<Props, State> {
   shareViaShare = () => {
     this.shareMessage()
     // console.log('shareViaShare')
-  }
-
-  keyboardWillShow () {
-    this.setState({
-      keyboardUp: true
-    })
-  }
-  keyboardWillHide () {
-    this.setState({
-      keyboardUp: false
-    })
   }
 }

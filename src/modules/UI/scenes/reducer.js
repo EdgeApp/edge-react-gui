@@ -7,6 +7,7 @@ import walletList from './WalletList/reducer'
 import walletTransferListReducer from './WalletTransferList/reducer'
 import request from './Request/reducer.js'
 import createWallet from './CreateWallet/reducer'
+import editToken from './EditToken/reducer'
 
 import controlPanel from '../components/ControlPanel/reducer.js'
 import sideMenu from '../components/SideMenu/reducer'
@@ -28,6 +29,7 @@ export const scenes = combineReducers({
   walletListModal,
   sideMenu,
   createWallet,
+  editToken,
   request,
   dimensions,
   helpModal,

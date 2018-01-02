@@ -13,7 +13,7 @@ export const styles = {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
     backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: 32
+    paddingBottom: 50
   },
   leftArea: {
     flexDirection: 'row'
@@ -69,11 +69,22 @@ export const styles = {
     paddingLeft: 20,
     paddingRight: 20,
   },
+  rowLeftArea: {
+    flexDirection: 'row'
+  },
   manageTokenRowInterior: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  touchableCheckboxInterior: {
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  checkBox: {
+    alignSelf: 'center'
   },
   tokenNameArea: {
     alignSelf: 'center'
@@ -88,8 +99,12 @@ export const styles = {
   underlay: {
     color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
   },
-
+  rowRightArrow: {
+    fontSize: 18,
+    color: THEME.COLORS.GRAY_1
+  },
   /////// end of token row styling /////////
+
   buttonsArea: {
     height: 52,
     flexDirection: 'row',

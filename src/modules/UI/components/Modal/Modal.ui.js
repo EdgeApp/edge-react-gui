@@ -24,7 +24,7 @@ type Props = {
   modalBoxStyle?: {},
   modalContentStyle?: {},
   modalBodyStyle?: {},
-  modalMiddle: Node,
+  modalMiddle?: Node, // should be allowed to not give a middle component
   modalMiddleStyle?: {},
   modalBottom: Node,
   modalBottomStyle?: {},

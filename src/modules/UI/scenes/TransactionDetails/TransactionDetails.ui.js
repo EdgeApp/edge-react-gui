@@ -38,7 +38,7 @@ export type Props = {
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
-  currencyInfo: AbcCurrencyInfo,
+  currencyInfo: AbcCurrencyInfo | null,
   currencyCode: string,
   wallets: Array<GuiWallet>
 }
@@ -442,7 +442,10 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
 
     const categoryColor = type.color
     let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
-    const txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
+    let txExplorerLink = null
+    if (this.props.currencyInfo) {
+      txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
+    }
     return (
       <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
         <Gradient style={styles.headerGradient} />
