@@ -146,10 +146,6 @@ const SETTINGS          = s.strings.title_settings
 const CHANGE_PASSWORD   = s.strings.title_change_password
 const CHANGE_PIN        = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
-const BTC_SETTINGS      = s.strings.title_bitcoin_settings
-const BTH_SETTINGS      = s.strings.title_bitcoin_cash_settings
-const LTC_SETTINGS      = s.strings.title_litecoin_settings
-const ETH_SETTINGS      = s.strings.title_ethereum_settings
 const DEFAULT_FIAT      = s.strings.title_default_fiat
 
 type Props = {
@@ -338,26 +334,7 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton} />
-                        <Scene key={Constants.BTC_SETTINGS} pluginName={'bitcoin'} currencyCode={'BTC'} navTransparent={true}
-                          component={CurrencySettings}
-                          renderTitle={this.renderTitle(BTC_SETTINGS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                        <Scene key={Constants.BCH_SETTINGS} pluginName={'bitcoinCash'} currencyCode={'BCH'} navTransparent={true}
-                          component={CurrencySettings}
-                          renderTitle={this.renderTitle(BTH_SETTINGS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                        <Scene key={Constants.ETH_SETTINGS} pluginName={'ethereum'} currencyCode={'ETH'} navTransparent={true}
-                          component={CurrencySettings}
-                          renderTitle={this.renderTitle(ETH_SETTINGS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
-                        <Scene key={Constants.LTC_SETTINGS} pluginName={'litecoin'} currencyCode={'LTC'} navTransparent={true}
-                          component={CurrencySettings}
-                          renderTitle={this.renderTitle(LTC_SETTINGS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
+                        {this.renderCurrencySettings()}
                         <Scene key='defaultFiatSetting' navTransparent={true}
                           component={DefaultFiatSettingConnector}
                           renderTitle={this.renderTitle(DEFAULT_FIAT)}
@@ -383,6 +360,19 @@ export default class Main extends Component<Props, State> {
     )
   }
 
+  renderCurrencySettings = () => {
+    const settings = []
+    for (const key in Constants.CURRENCY_SETTINGS) {
+      const {pluginName, currencyCode} = Constants.CURRENCY_SETTINGS[key]
+      const title = s.strings[`title_${pluginName}_settings`]
+      settings.push(<Scene key={key} pluginName={pluginName} currencyCode={currencyCode} navTransparent={true}
+        component={CurrencySettings}
+        renderTitle={this.renderTitle(title || pluginName)}
+        renderLeftButton={this.renderBackButton()}
+        renderRightButton={this.renderEmptyButton} />)
+    }
+    return settings
+  }
   renderWalletListNavBar = () => (<Header/>)
   renderEmptyButton = () => () => (<BackButton />)
   renderHelpButton = () => (<HelpButton/>)

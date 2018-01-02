@@ -99,10 +99,9 @@ export default class TransactionList extends Component<Props, State> {
     this.props.updateExchangeRates()
     this.props.getTransactions(walletId, currencyCode)
 
-    const permissionStatus = ['authorized', 'undetermined']
     if (!this.props.contact) {
       Permissions.check('contacts').then((response) => {
-        if (permissionStatus.indexOf(response)) {
+        if (response === 'authorized') {
           Contacts.getAll((err, contacts) => {
             if (err === 'denied') {
               // error

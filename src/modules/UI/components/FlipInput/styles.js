@@ -4,13 +4,10 @@ import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = StyleSheet.create({
-
-  // Main Flip Input Styles
   dev: {
     borderColor: THEME.DEBUG.COLORS.HIGHLIGHT,
     borderWidth: 1
   },
-
   container: {
     flex: 1,
     marginVertical: 0,
@@ -18,6 +15,19 @@ export const styles = StyleSheet.create({
     alignSelf: 'stretch',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row'
+  },
+  flipContainerFront: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    backfaceVisibility: 'hidden'
+  },
+  flipContainerBack: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
   },
   flipButton: {
     flex: 1,

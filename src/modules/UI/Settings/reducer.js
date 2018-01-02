@@ -222,18 +222,6 @@ export const settings = (state = initialState, action) => {
     }
   }
 
-  case ACTION.SET_BTC_DENOMINATION: {
-    const {denomination} = data
-    const BTC = state['BTC']
-    return {
-      ...state,
-      BTC: {
-        ...BTC,
-        denomination
-      }
-    }
-  }
-
   case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
     const {overrideServer} = data
     const BTC = state['BTC']
@@ -242,42 +230,6 @@ export const settings = (state = initialState, action) => {
       BTC: {
         ...BTC,
         overrideServer
-      }
-    }
-  }
-
-  case ACTION.SET_ETH_DENOMINATION: {
-    const {denomination} = data
-    const ETH = state['ETH']
-    return {
-      ...state,
-      ETH: {
-        ...ETH,
-        denomination
-      }
-    }
-  }
-
-  case ACTION.SET_BCH_DENOMINATION: {
-    const {denomination} = data
-    const BCH = state['BCH']
-    return {
-      ...state,
-      BCH: {
-        ...BCH,
-        denomination
-      }
-    }
-  }
-
-  case ACTION.SET_LTC_DENOMINATION: {
-    const {denomination} = data
-    const LTC = state['LTC']
-    return {
-      ...state,
-      LTC: {
-        ...LTC,
-        denomination
       }
     }
   }
