@@ -12,7 +12,6 @@ import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
-import * as CONSTANTS from '../../../../constants/indexConstants'
 
 import {displayErrorAlert} from '../../components/ErrorAlert/actions'
 
@@ -25,7 +24,7 @@ export const addNewToken = (walletId, tokenObj) => {
       const {walletId, newTokenObj, setSettings, enabledTokensOnWallet} = addedWalletInfo
       dispatch(addNewTokenSuccess(walletId, newTokenObj, setSettings, enabledTokensOnWallet))
       dispatch(WALLET_ACTIONS.refreshWallet(walletId))
-      Actions.popTo(CONSTANTS.WALLET_LIST_SCENE)
+      Actions.pop()
     })
     .catch((e) => {
       dispatch(addNewTokenFailure(e.message))

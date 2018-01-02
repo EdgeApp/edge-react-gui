@@ -37,7 +37,6 @@ import type {GuiWallet, CustomTokenInfo} from '../../../types.js'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 import * as UTILS from '../../utils'
 import * as WALLET_API from '../../Core/Wallets/api.js'
-import * as CONSTANTS from '../../../constants/indexConstants'
 import _ from 'lodash'
 
 export const selectWallet = (walletId: string, currencyCode: string) => ({
@@ -176,7 +175,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
           deleteCustomTokenAsync(walletId, oldCurrencyCode, getState) // delete the sending token
           .then((coreWalletsToUpdate) => {
             dispatch(overwriteThenDeleteTokenSuccess(tokenObj, oldCurrencyCode, coreWalletsToUpdate))
-            Actions.popTo(CONSTANTS.WALLET_LIST_SCENE)
+            Actions.pop()
           })
         })
         .catch((e) => {
@@ -199,7 +198,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
             coreWalletsToUpdate,
             code: tokenObj.currencyCode
           }))
-          Actions.popTo(CONSTANTS.WALLET_LIST_SCENE)
+          Actions.pop()
         })
       })
       .catch((e) => {
