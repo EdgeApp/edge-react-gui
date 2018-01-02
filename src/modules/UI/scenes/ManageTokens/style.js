@@ -13,7 +13,7 @@ export const styles = {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
     backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: 32
+    paddingBottom: 50
   },
   leftArea: {
     flexDirection: 'row'
@@ -82,6 +82,9 @@ export const styles = {
     paddingHorizontal: 8,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  checkBox: {
+    alignSelf: 'center'
   },
   tokenNameArea: {
     alignSelf: 'center'

@@ -111,7 +111,7 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   // get a copy of the relevant core wallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   // now actually tell the wallet to enable the token(s) in the core and save to file
-  WALLET_API.setEnabledTokens(wallet, enabledTokens, disabledTokens)
+  WALLET_API.updateEnabledTokens(wallet, enabledTokens, disabledTokens)
   .then(() => {
     // let Redux know it was completed successfully
     dispatch(setTokensSuccess())

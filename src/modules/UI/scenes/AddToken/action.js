@@ -69,7 +69,7 @@ export async function addTokenAsync (walletId, tokenObj, state) {
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
-  await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens, null)
+  await WALLET_API.updateEnabledTokens(coreWallet, newEnabledTokens)
   return {walletId, newTokenObj, setSettings, newEnabledTokens}
 }
 

@@ -92,7 +92,7 @@ export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array
   if (tokensToDisable && tokensToDisable.length > 0) {
     disableTokens(wallet, tokensToDisable)
   }
-  return tokens
+  return
 }
 
 export async function updateEnabledTokens (wallet: AbcCurrencyWallet, tokensToEnable: Array<string>, tokensToDisable: Array<string>) {
