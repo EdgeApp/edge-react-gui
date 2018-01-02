@@ -32,6 +32,8 @@ export const editCustomTokenProcessing = (state = false, action) => {
     return true
   case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_SUCCESS :
     return false
+  case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_FAILURE :
+    return false
   case WALLET_ACTIONS.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS :
     return false
   case WALLET_ACTIONS.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS :

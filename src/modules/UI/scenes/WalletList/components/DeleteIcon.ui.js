@@ -8,8 +8,8 @@ export default class DeleteIcon extends Component<{}> {
   render () {
     return <FAIcon name={Constants.TRASH_O} size={24} color={THEME.COLORS.PRIMARY} style={[{
       position: 'relative',
-      top: 12,
-      left: 14,
+      top: 0,
+      left: 3,
       height: 24,
       width: 24,
       backgroundColor: THEME.COLORS.TRANSPARENT,

@@ -37,6 +37,7 @@ import type {GuiWallet, CustomTokenInfo} from '../../../types.js'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
 import * as UTILS from '../../utils'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import * as CONSTANTS from '../../../constants/indexConstants'
 import _ from 'lodash'
 
 export const selectWallet = (walletId: string, currencyCode: string) => ({
@@ -110,8 +111,8 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   // get a copy of the relevant core wallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   // now actually tell the wallet to enable the token(s) in the core and save to file
-  WALLET_API.setEnabledTokens(wallet, enabledTokens, disabledTokens)
-  .then((enabledTokens) => {
+  WALLET_API.updateEnabledTokens(wallet, enabledTokens, disabledTokens)
+  .then(() => {
     // let Redux know it was completed successfully
     dispatch(setTokensSuccess())
     dispatch(updateWalletEnabledTokens(walletId, enabledTokens))
@@ -175,7 +176,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
           deleteCustomTokenAsync(walletId, oldCurrencyCode, getState) // delete the sending token
           .then((coreWalletsToUpdate) => {
             dispatch(overwriteThenDeleteTokenSuccess(tokenObj, oldCurrencyCode, coreWalletsToUpdate))
-            Actions.pop()
+            Actions.popTo(CONSTANTS.WALLET_LIST_SCENE)
           })
         })
         .catch((e) => {
@@ -198,7 +199,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
             coreWalletsToUpdate,
             code: tokenObj.currencyCode
           }))
-          Actions.pop()
+          Actions.popTo(CONSTANTS.WALLET_LIST_SCENE)
         })
       })
       .catch((e) => {
