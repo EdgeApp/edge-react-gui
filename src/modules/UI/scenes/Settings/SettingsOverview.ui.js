@@ -54,7 +54,6 @@ type State = {
 
 export default class SettingsOverview extends Component<Props,State> {
   settings: Array<Object>
-  securityRoute: Array<Object>
   optionModals: Array<Object>
   currencies: Array<Object>
   options: Object
@@ -83,13 +82,6 @@ export default class SettingsOverview extends Component<Props,State> {
         text: s.strings.settings_button_change_pass_recovery,
         routeFunction: this._onPressRecoverPasswordRouting
       } */
-    ]
-    this.securityRoute = [
-      {
-        key: 'setup2Factor',
-        text: s.strings.settings_button_setup_two_factor,
-        routeFunction: this._onPressDummyRouting
-      }
     ]
     const pinRelogin = {
       text: s.strings.settings_title_pin_login,
@@ -168,6 +160,10 @@ export default class SettingsOverview extends Component<Props,State> {
     this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
     this.options.useTouchID.value = bool
   }
+  _onPressOtp = () => {
+    if (this.props.isLocked) return
+    Actions[Constants.CHANGE_PASSWORD]()
+  }
 
   _onPressDebug = () => {
     // HockeyApp.generateTestCrash()
@@ -230,6 +226,10 @@ export default class SettingsOverview extends Component<Props,State> {
             leftText={s.strings.settings_button_pin}
             routeFunction={this._onPressChangePinRouting}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
+          <RowRoute
+            leftText={s.strings.settings_button_setup_two_factor}
+            routeFunction={this._onPressOtp}
+            right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
           <Gradient style={[styles.unlockRow]}>
             <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -251,8 +251,6 @@ export default class SettingsOverview extends Component<Props,State> {
               leftText={s.strings.settings_title_currency}
               routeFunction={Actions.defaultFiatSetting}
               right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
-
-            {this.securityRoute.map(this.renderRowRoute)}
 
             {
               Object.keys(this.options)
@@ -307,6 +305,7 @@ export default class SettingsOverview extends Component<Props,State> {
     }
     this.setState({showConfirmPasswordModal: true})
   }
+
   hideConfirmPasswordModal = () => this.setState({showConfirmPasswordModal: false})
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
