@@ -1,5 +1,7 @@
 // @flow
+
 import {connect} from 'react-redux'
+
 import WalletListModalBody from './WalletListModalBody.ui'
 import {
   toggleScanToWalletListModal,
@@ -17,7 +19,7 @@ import type {
   Dispatch
 } from '../../../../ReduxTypes'
 
-const mapStateToProps = (state: State, ownProps: any): {} => ({
+const mapStateToProps = (state: State, ownProps: {type: string}): {} => ({
   type: ownProps.type,
   walletList: UI_SELECTORS.getWallets(state),
   activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
@@ -31,6 +33,7 @@ const mapDispatchToProps = (dispatch: Dispatch): {} => ({
       dispatch(UI_ACTIONS.selectWallet(walletId, currencyCode))
       return
     }
+    // $FlowFixMe
     dispatch(actions.selectWalletForExchange(walletId, currencyCode))
   },
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),

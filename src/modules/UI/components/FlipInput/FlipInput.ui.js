@@ -45,9 +45,9 @@ const getInitialState = (props: Props) => ({
 })
 
 export default class FlipInput extends Component<Props, State> {
-  animatedValue: any
-  frontInterpolate: any
-  backInterpolate: any
+  animatedValue: Animated.Value
+  frontInterpolate: Animated.Value
+  backInterpolate: Animated.Value
 
   constructor (props: Props) {
     super(props)
@@ -193,17 +193,6 @@ export default class FlipInput extends Component<Props, State> {
         { rotateX: this.backInterpolate }
       ]
     }
-    if (Platform.OS !== 'ios') {
-      return (
-        <View style={[styles.container]}>
-          <View style={styles.flipButton}>
-            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-          </View>
-          {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
-          <View style={styles.spacer} />
-        </View>
-      )
-    }
     if (Platform.OS === 'ios') {
       return (
         <View style={[styles.container]}>
@@ -230,5 +219,14 @@ export default class FlipInput extends Component<Props, State> {
         </View>
       )
     }
+    return (
+      <View style={[styles.container]}>
+        <View style={styles.flipButton}>
+          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+        </View>
+        {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
+        <View style={styles.spacer} />
+      </View>
+    )
   }
 }

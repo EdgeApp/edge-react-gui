@@ -71,6 +71,16 @@ export default class Request extends Component<Props, State> {
     }
   }
 
+  componentWillMount () {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
+  }
+
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
       const {abcWallet, currencyCode} = nextProps
@@ -103,16 +113,6 @@ export default class Request extends Component<Props, State> {
       })
     })
     .catch((e) => console.log(e))
-  }
-
-  componentWillMount () {
-    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
-    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
-  }
-
-  componentWillUnmount () {
-    this.keyboardWillShowListener.remove()
-    this.keyboardWillHideListener.remove()
   }
 
   onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string}) => {
@@ -245,7 +245,6 @@ export default class Request extends Component<Props, State> {
   shareViaShare = () => {
     this.shareMessage()
   }
-
   keyboardWillShow (event: any) {
     this.setState({
       keyboardUp: true
@@ -262,22 +261,22 @@ export default class Request extends Component<Props, State> {
   animateQRCodeOnShow (event: any) {
     Animated.timing(this.state.animationQrSize, {
       duration: event.duration,
-      toValue: platform.deviceHeight / 4.3,
+      toValue: platform.deviceHeight / 4.3
     }).start()
     Animated.timing(this.state.animationPushUpSize, {
       duration: event.duration,
-      toValue: 60,
+      toValue: 60
     }).start()
   }
 
   animateQRCodeOnHide (event: any) {
     Animated.timing(this.state.animationQrSize, {
       duration: event.duration,
-      toValue: platform.deviceHeight / 2.9,
+      toValue: platform.deviceHeight / 2.9
     }).start()
     Animated.timing(this.state.animationPushUpSize, {
       duration: event.duration,
-      toValue: 0,
+      toValue: 0
     }).start()
   }
 }

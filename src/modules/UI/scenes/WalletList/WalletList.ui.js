@@ -282,9 +282,10 @@ export default class WalletList extends Component<Props, State> {
             style={{flex: 1, width}}
             data={activeWalletsArray}
             extraData={this.props.wallets}
-            renderItem={(item) => <FullWalletListRow data={item} customTokens={this.props.customTokens} />}
+            renderItem={(item) => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}
             sortableMode={this.state.sortableMode}
             executeWalletRowOption={this.executeWalletRowOption}
+            settings={this.props.settings}
           />
         </Animated.View>
         )}

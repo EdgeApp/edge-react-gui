@@ -1,20 +1,10 @@
-// @flow
-
 import React, {Component} from 'react'
 import {Animated} from 'react-native'
 
 import styles from './styles'
 
-type Props = {
-  keyboardUp: boolean,
-  value: string,
-  animationQrSize: {},
-  animationPushUpSize: {}
-}
-
-export default class QRCode extends Component<Props> {
+export default class QRCode extends Component {
   render () {
-    console.log(this.props.value)
     return (
       <Animated.View style={[ styles.qrCodeBorder, {marginBottom: this.props.animationPushUpSize}]}>
         <Animated.Image

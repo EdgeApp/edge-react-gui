@@ -46,8 +46,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
-            new RCTSplashScreenPackage(),
             new PickerViewPackage(),
+            new RCTSplashScreenPackage(),
             new AbcCoreJsUiPackage(),
             new RNSoundPackage(),
             new RNSharePackage(),

@@ -11,7 +11,7 @@ import {selectWallet} from '../../../../Wallets/action'
 
 const mapStateToProps = (state: State, ownProps) => {
   let currencyCode: string = ownProps.currencyCode
-  let displayDenomination: AbcDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  let displayDenomination: AbcDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
 
   return {
     displayDenomination
