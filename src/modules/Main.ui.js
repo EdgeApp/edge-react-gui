@@ -222,18 +222,16 @@ export default class Main extends Component<Props, State> {
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
                 {/* <Lightbox> */}
-                <Stack key="root" hideNavBar panHandlers={null}>
-                  <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+                <Stack key='root' hideNavBar panHandlers={null}>
+                  <Scene key={Constants.LOGIN} initial
+                    component={LoginConnector}
+                    username={this.props.username} />
 
-                  <Scene
-                    key={Constants.TRANSACTION_DETAILS}
-                    navTransparent={true}
-                    clone
+                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} clone
                     component={TransactionDetails}
                     renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
                     renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton}
-                  />
+                    renderRightButton={this.renderMenuButton} />
 
                   <Drawer key="edge" hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
                     {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
@@ -481,10 +479,11 @@ export default class Main extends Component<Props, State> {
     }
     return settings
   }
-  renderWalletListNavBar = () => <Header />
-  renderEmptyButton = () => () => <BackButton />
-  renderHelpButton = () => <HelpButton />
-  renderBackButton = (label: string = BACK) => () => <BackButton withArrow onPress={this.handleBack} label={label} />
+
+  renderWalletListNavBar = () => (<Header />)
+  renderEmptyButton = () => () => (<BackButton />)
+  renderHelpButton = () => (<HelpButton />)
+  renderBackButton = (label: string = BACK) => () => (<BackButton withArrow onPress={this.handleBack} label={label} />)
   renderTitle = (title: string) => {
     return <T style={styles.titleStyle}>{title}</T>
   }
@@ -493,8 +492,8 @@ export default class Main extends Component<Props, State> {
       <Image source={MenuIcon} />
     </TouchableWithoutFeedback>
   )
-  renderExchangeButton = () => <ExchangeDropMenu />
-  renderSendConfirmationButton = () => <SendConfirmationOptions />
+  renderExchangeButton = () => (<ExchangeDropMenu />)
+  renderSendConfirmationButton = () => (<SendConfirmationOptions />)
 
   icon = (tabName: string) => (props: { focused: boolean }) => {
     if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {

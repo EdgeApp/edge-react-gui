@@ -135,7 +135,7 @@ const strings = {
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
 
-  // Exchange
+  //Exchange
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
   string_next: 'NEXT',
