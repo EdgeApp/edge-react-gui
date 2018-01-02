@@ -121,29 +121,32 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
   .catch((e) => dispatch(displayErrorAlert(e.message)))
 }
 
-export const getEnabledTokens = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
+export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
   // get a snapshot of the state
   const state = getState()
   // get the AbcWallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   // get token information from settings
-  const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
-  const customTokenPromises = customTokens.map((token) => {
-    return wallet.addCustomToken(token)
-  })
-  Promise.all(customTokenPromises)
-  .then(() => {
-    return WALLET_API.getEnabledTokensFromFile(wallet)
-  })
-  .then((tokens) => {
-    wallet.enableTokens(tokens)
-    return tokens
-  })
-  .then((tokens) => {
+  const customTokens: Array<CustomTokenInfo> = SETTINGS_SELECTORS.getCustomTokens(state)
+  try {
+    const enabledTokens = await WALLET_API.getEnabledTokensFromFile(wallet)
+    const promiseArray = []
+
+    // Add any enabledTokens that are custom tokens
+    for (const ct of customTokens) {
+      const found = enabledTokens.find((element) => {
+        return element === ct.currencyCode
+      })
+      if (found) {
+        promiseArray.push(wallet.addCustomToken(ct))
+      }
+    }
+    await Promise.all(promiseArray)
     // now reflect that change in Redux's version of the wallet
-    dispatch(updateWalletEnabledTokens(walletId, tokens))
-  })
-  .catch((e) => dispatch(displayErrorAlert(e.message)))
+    dispatch(updateWalletEnabledTokens(walletId, enabledTokens))
+  } catch (e) {
+    dispatch(displayErrorAlert(e.message))
+  }
 }
 
 export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode: string) => {
