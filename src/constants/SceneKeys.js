@@ -1,3 +1,5 @@
+// @flow
+
 export const LOGIN = 'login'
 export const CHANGE_PASSWORD = 'changePassword'
 export const CHANGE_PIN = 'changePin'
