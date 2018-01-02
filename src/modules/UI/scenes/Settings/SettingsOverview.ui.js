@@ -120,24 +120,14 @@ export default class SettingsOverview extends Component<Props,State> {
       }
     ]
 
-    this.currencies = [
-      {
-        text: 'Bitcoin',
-        routeFunction: Actions.btcSettings
-      },
-      {
-        text: 'BitcoinCash',
-        routeFunction: Actions.bchSettings
-      },
-      {
-        text: 'Ethereum',
-        routeFunction: Actions.ethSettings
-      },
-      {
-        text: 'Litecoin',
-        routeFunction: Actions.ltcSettings
-      },
-    ]
+    this.currencies = []
+    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
+      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
+      this.currencies.push({
+        text: pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
+        routeFunction: Actions[currencyKey]
+      })
+    }
   }
 
   _onPressDummyRouting = () => {
