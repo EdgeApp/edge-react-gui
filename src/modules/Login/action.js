@@ -1,11 +1,9 @@
 // @flow
-import type {
-  GetState,
-  Dispatch
-} from '../ReduxTypes'
-import {
-  AbcAccount
-} from 'airbitz-core-types'
+
+import {AbcAccount} from 'airbitz-core-types'
+import {Actions} from 'react-native-router-flux'
+
+import type {GetState, Dispatch} from '../ReduxTypes'
 
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
@@ -19,10 +17,8 @@ import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import s from '../../locales/strings.js'
-// import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
-export const LOGOUT = 'LOGOUT'
 
-import {Actions} from 'react-native-router-flux'
+export const LOGOUT = 'LOGOUT'
 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -47,8 +43,6 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
         dispatch(loadSettings())
         return
       }
-      // TODO: Allen - Turn on when Bitcoin is turned back on
-      // await dispatch(actions.createCurrencyWallet(s.strings.strings_first_bitcoin_44_wallet_name, Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
       dispatch(actions.createCurrencyWallet(
         s.strings.string_first_ethereum_wallet_name,
         Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
@@ -80,18 +74,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
           dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
         })
       }
-
-      // dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
-      // dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))
     })
-    /* SETTINGS_API.getSyncedSubcategories(account)
-    .then(subcategories => {
-      // console.log('subcategories have been loaded and are: ', subcategories)
-      const syncDefaults = SETTINGS_API.SYNCED_SUBCATEGORY_DEFAULTS
-      const syncFinal = Object.assign({}, syncDefaults, subcategories)
-      // console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
-      dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
-    }) */
 
   SETTINGS_API.getLocalSettings(account)
     .then((settings) => {
@@ -119,10 +102,8 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
 
   const account = CORE_SELECTORS.getAccount(state)
+  dispatch(logout(username))
   ACCOUNT_API.logoutRequest(account)
-   .then(() => {
-     dispatch(logout(username))
-   })
 }
 
 export const logout = (username?: string) => ({
