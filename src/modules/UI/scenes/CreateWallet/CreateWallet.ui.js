@@ -4,7 +4,8 @@ import {
   ActivityIndicator,
   Alert,
   View,
-  Keyboard
+  Keyboard,
+  ScrollView
 } from 'react-native'
 import {fixFiatCurrencyCode} from '../../../utils'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
@@ -116,32 +117,32 @@ export default class CreateWallet extends Component {
     return (
       <View style={styles.scene}>
         <Gradient style={styles.gradient} />
-        <View style={styles.view}>
-          <WalletNameInput
-            onChangeText={this.handleChangeWalletName}
-            value={this.state.walletName}
-          />
+        <ScrollView style={styles.view} keyboardShouldPersistTaps={'always'} >
+            <WalletNameInput
+              onChangeText={this.handleChangeWalletName}
+              value={this.state.walletName}
+            />
 
-          <DropdownPicker
-            keyboardShouldPersistTaps={'always'}
-            listItems={this.props.supportedWalletTypes || []}
-            placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
-            onSelect={this.handleSelectWalletType} />
+            <DropdownPicker
+              keyboardShouldPersistTaps={'always'}
+              listItems={this.props.supportedWalletTypes || []}
+              placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
+              onSelect={this.handleSelectWalletType} />
 
-          <DropdownPicker
-            keyboardShouldPersistTaps={'always'}
-            listStyle={{maxHeight: 140}}
-            listItems={this.getSupportedFiats()}
-            placeholder={FIAT_PICKER_PLACEHOLDER}
-            onSelect={this.handleSelectFiat} />
+            <DropdownPicker
+              keyboardShouldPersistTaps={'always'}
+              listStyle={{maxHeight: 140}}
+              listItems={this.getSupportedFiats()}
+              placeholder={FIAT_PICKER_PLACEHOLDER}
+              onSelect={this.handleSelectFiat} />
 
-          <Buttons
-            style={styles.buttons}
-            isCreatingWallet={this.state.isCreatingWallet}
-            onDone={this.onSubmit}
-            onCancel={this.onCancel} />
-
-        </View>
+            <Buttons
+              style={styles.buttons}
+              isCreatingWallet={this.state.isCreatingWallet}
+              onDone={this.onSubmit}
+              onCancel={this.onCancel} />
+          <View style={styles.bottomPaddingForKeyboard} />
+        </ScrollView>
       </View>
     )
   }
