@@ -23,7 +23,7 @@ matrix:
       sudo: required
       node_js: false
       before_install:
-        - nvm install 8
+        - nvm install 8.9.3
         - nvm use 8.9.3
         - node --version
         # install NDK
