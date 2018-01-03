@@ -3,6 +3,7 @@
 export const LOGIN = 'login'
 export const CHANGE_PASSWORD = 'changePassword'
 export const CHANGE_PIN = 'changePin'
+export const OTP_SETUP = 'otpSetup'
 export const RECOVER_PASSWORD = 'passwordRecovery'
 export const EDGE = 'edge'
 export const EXCHANGE = 'exchange'

@@ -101,7 +101,7 @@ const strings = {
   settings_button_change_password: 'Change password',
   settings_button_debug: 'Debug',
   settings_button_lock_settings: 'Tap to lock Account Settings',
-  
+  settings_button_password_recovery: 'Password Recovery',
   settings_button_logout: 'Logout',
   settings_button_pin: 'Change PIN',
   settings_button_send_logs: 'Send logs',
@@ -158,6 +158,7 @@ const strings = {
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',
   title_password_recovery: 'Password Recovery',
+  title_otp: '2 Factor Authentication',
   title_request: 'Request',
   title_send_confirmation: 'Send Confirmation',
   title_send: 'Send',

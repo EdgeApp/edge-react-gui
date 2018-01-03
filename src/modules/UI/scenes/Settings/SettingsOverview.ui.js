@@ -53,7 +53,6 @@ type State = {
 }
 
 export default class SettingsOverview extends Component<Props,State> {
-  settings: Array<Object>
   optionModals: Array<Object>
   currencies: Array<Object>
   options: Object
@@ -65,24 +64,6 @@ export default class SettingsOverview extends Component<Props,State> {
       showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
-
-    this.settings = [
-      {
-        key: Constants.CHANGE_PASSWORD,
-        text: s.strings.settings_button_change_password,
-        routeFunction: this._onPressChangePasswordRouting
-      },
-      {
-        key: Constants.CHANGE_PIN,
-        text: s.strings.settings_button_pin,
-        routeFunction: this._onPressChangePinRouting
-      }/* ,
-      {
-        key: Constants.RECOVER_PASSWORD,
-        text: s.strings.settings_button_change_pass_recovery,
-        routeFunction: this._onPressRecoverPasswordRouting
-      } */
-    ]
     const pinRelogin = {
       text: s.strings.settings_title_pin_login,
       key: 'pinRelogin',
@@ -137,7 +118,8 @@ export default class SettingsOverview extends Component<Props,State> {
 
   }
   _onPressRecoverPasswordRouting = () => {
-    Actions[Constants.CHANGE_PASSWORD]()
+    //if (this.props.isLocked) return
+    Actions[Constants.RECOVER_PASSWORD]()
   }
 
   _onPressOpenLogoffTime = () => {
@@ -161,8 +143,8 @@ export default class SettingsOverview extends Component<Props,State> {
     this.options.useTouchID.value = bool
   }
   _onPressOtp = () => {
-    if (this.props.isLocked) return
-    Actions[Constants.CHANGE_PASSWORD]()
+    //if (this.props.isLocked) return
+    Actions[Constants.OTP_SETUP]()
   }
 
   _onPressDebug = () => {
@@ -229,6 +211,10 @@ export default class SettingsOverview extends Component<Props,State> {
           <RowRoute
             leftText={s.strings.settings_button_setup_two_factor}
             routeFunction={this._onPressOtp}
+            right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
+          <RowRoute
+            leftText={s.strings.settings_button_password_recovery}
+            routeFunction={this._onPressRecoverPasswordRouting}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
           <Gradient style={[styles.unlockRow]}>

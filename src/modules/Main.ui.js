@@ -39,7 +39,8 @@ import LoginConnector from './UI/scenes/Login/LoginConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
-import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
+import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
+import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import BackButton from './UI/components/Header/Component/BackButton.ui'
@@ -146,6 +147,7 @@ const SETTINGS          = s.strings.title_settings
 const CHANGE_PASSWORD   = s.strings.title_change_password
 const CHANGE_PIN        = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
+const OTP = s.strings.title_otp
 const DEFAULT_FIAT      = s.strings.title_default_fiat
 
 type Props = {
@@ -329,6 +331,11 @@ export default class Main extends Component<Props, State> {
                         <Scene key={Constants.CHANGE_PIN} navTransparent={true}
                           component={ChangePinConnector}
                           renderTitle={this.renderTitle(CHANGE_PIN)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+                        <Scene key={Constants.OTP_SETUP} navTransparent={true}
+                          component={OtpSettingsSceneConnector}
+                          renderTitle={this.renderTitle(OTP)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton} />
                         <Scene key={Constants.RECOVER_PASSWORD} navTransparent={true}
