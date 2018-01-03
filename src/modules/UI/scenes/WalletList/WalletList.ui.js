@@ -86,7 +86,7 @@ type Props = {
   wallets: any,
   closeDeleteWalletModal: () => void,
   closeRenameWalletModal: () => void,
-  renameWalletInput: () => void,
+  renameWalletInput: string,
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
