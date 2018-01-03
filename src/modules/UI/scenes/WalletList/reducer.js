@@ -59,7 +59,7 @@ const walletName = (state: string = '', action: Action) => {
   switch (action.type) {
   case ACTION.OPEN_RENAME_WALLET_MODAL:
     if (action.data && action.data.walletName) {
-      return walletName
+      return action.data.walletName
     }
     return 'Wallet Name'
     // case ACTION.CLOSE_RENAME_WALLET_MODAL:
@@ -73,7 +73,7 @@ const renameWalletInput = (state: string = '', action: Action) => {
   switch (action.type) {
   case ACTION.UPDATE_RENAME_WALLET_INPUT:
     if (action.data && action.data.renameWalletInput) {
-      return renameWalletInput
+      return action.data.renameWalletInput
     }
     return ''
   case ACTION.CLOSE_RENAME_WALLET_MODAL:

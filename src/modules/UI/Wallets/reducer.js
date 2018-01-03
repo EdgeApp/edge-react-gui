@@ -13,9 +13,9 @@ export type WalletId = string
 export type WalletIds = Array<WalletId>
 export type WalletByIdState = {[walletId: WalletId]: GuiWallet}
 
-
 export const byId = (state: WalletByIdState = {}, action: Action) => {
   if (!action.data) return state
+
   switch (action.type) {
   case UPDATE_WALLETS: {
     const wallets = action.data.currencyWallets

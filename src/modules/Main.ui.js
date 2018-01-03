@@ -129,9 +129,9 @@ tabBarIconFilesSelected[Constants.SCAN] = scanIconSelected
 tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
 tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
+const TRANSACTION_DETAILS = s.strings.title_transaction_details
 const WALLETS           = s.strings.title_wallets
 const CREATE_WALLET     = s.strings.title_create_wallet
-// const TRANSACTIONS      = s.strings.title_transactions
 const REQUEST           = s.strings.title_request
 const SEND              = s.strings.title_send
 const EDGE_LOGIN        = s.strings.title_edge_login
@@ -221,9 +221,12 @@ export default class Main extends Component<Props, State> {
                   <Scene key={Constants.LOGIN} initial
                     component={LoginConnector}
                     username={this.props.username} />
-                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} back clone
+
+                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} clone
                     component={TransactionDetails}
-                    title='Transaction Details' />
+                    renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+                    renderLeftButton={this.renderBackButton()}
+                    renderRightButton={this.renderMenuButton} />
 
                   <Drawer key='edge' hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
@@ -376,7 +379,9 @@ export default class Main extends Component<Props, State> {
   renderEmptyButton = () => () => (<BackButton />)
   renderHelpButton = () => (<HelpButton/>)
   renderBackButton = (label: string = BACK) => () => (<BackButton withArrow onPress={this.handleBack} label={label} />)
-  renderTitle = (title: string) => (<T style={styles.titleStyle}>{title}</T>)
+  renderTitle = (title: string) => {
+    return <T style={styles.titleStyle}>{title}</T>
+  }
   renderMenuButton = () => (<TouchableWithoutFeedback onPress={Actions.drawerOpen}><Image source={MenuIcon}/></TouchableWithoutFeedback>)
   renderExchangeButton = () => (<ExchangeDropMenu/>)
   renderSendConfirmationButton = () => (<SendConfirmationOptions/>)
