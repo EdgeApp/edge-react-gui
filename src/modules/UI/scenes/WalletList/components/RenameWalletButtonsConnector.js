@@ -13,7 +13,7 @@ const mapStateToProps = (state: State): StateToProps => ({
 })
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onNegative: () => {},
-  onPositive: (walletId, walletName) => dispatch(renameWallet(walletId, walletName)),
+  onPositive: (walletId: string, walletName: string) => dispatch(renameWallet(walletId, walletName)),
   onDone: () => dispatch(closeRenameWalletModal()),
 })
 
