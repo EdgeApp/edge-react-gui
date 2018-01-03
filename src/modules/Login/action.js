@@ -17,6 +17,7 @@ import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import s from '../../locales/strings.js'
+import {updateWalletsRequest} from '../Core/Wallets/action.js'
 
 export const LOGOUT = 'LOGOUT'
 
@@ -37,6 +38,10 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
 
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
+      // TODO: understand why this fails flow -paulvp
+      // $FlowFixMe
+      dispatch(updateWalletsRequest())
+
       if (ACCOUNT_API.checkForExistingWallets(account)) {
         const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
         dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
