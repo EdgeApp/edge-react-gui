@@ -6,7 +6,7 @@ import {
 export default class RadioRows extends Component {
   render () {
     return (
-      <View style={[{height: 200}]}>
+      <View>
         {this.props.children}
       </View>
     )
