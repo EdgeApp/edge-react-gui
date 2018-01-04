@@ -28,7 +28,7 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
   // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
   dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
   // this needs to be refactored into single dispatch
-  dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: account.otpEnabled, otpKey:' account.otpKey'}))
+  dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: account.otpEnabled, otpKey: account.otpKey}))
   // adding call to determine if we have OTP set up.
   // console.log(optDetails)
   CONTEXT_API.getCurrencyPlugins(context)
