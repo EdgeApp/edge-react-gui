@@ -1,19 +1,25 @@
 import * as ACTION from './action.js'
+import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
+import * as WALLET_ACTION from '../Wallets/action'
 import {
   SYNCED_ACCOUNT_DEFAULTS,
   LOCAL_ACCOUNT_DEFAULTS,
   CORE_DEFAULTS
 } from '../../Core/Account/settings.js'
+import _ from 'lodash'
 
 const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,
+  changesLocked: true,
   plugins: {
     arrayPlugins: [],
     supportedWalletTypes: []
   },
-  loginStatus: null
+  loginStatus: null,
+  isTouchSupported: false,
+  isTouchEnabled: false
 }
 
 export const settings = (state = initialState, action) => {
@@ -27,6 +33,130 @@ export const settings = (state = initialState, action) => {
       loginStatus
     }
   }
+
+  case ACTION.SET_CUSTOM_TOKENS: {
+    const {customTokens} = data
+    return {
+      ...state,
+      customTokens
+    }
+  }
+
+  case WALLET_ACTION.UPDATE_EXISTING_TOKEN_SUCCESS : {
+    const {tokenObj} = data
+    const customTokenSettings = state.customTokens
+    const newCustomTokenSettings = customTokenSettings.map((item) => {
+      if (item.currencyCode === tokenObj.currencyCode) return {...item, ...tokenObj}
+      return item
+    })
+    const updatedSettings = {
+      ...state,
+      [tokenObj.currencyCode]: {
+        ...state[tokenObj.currencyCode],
+        ...tokenObj
+      },
+      customTokens: newCustomTokenSettings
+    }
+    return updatedSettings
+  }
+
+  case WALLET_ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS : {
+    // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
+    const receiverCode = data.tokenObj.currencyCode
+    const senderCode = data.oldCurrencyCode
+    const {tokenObj} = data
+    const customTokenSettings = state.customTokens
+    let tokenSettingsWithUpdatedToken = customTokenSettings.map((item) => { // overwrite receiver token
+      if (item.currencyCode === receiverCode) return {...item, ...tokenObj, isVisible: true}
+      return item
+    })
+    const tokenSettingsWithUpdatedAndDeleted = tokenSettingsWithUpdatedToken.map((item) => { // make sender token invisible
+      if (item.currencyCode === senderCode) return {...item, isVisible: false}
+      return item
+    })
+    const updatedSettings = {
+      ...state,
+      [receiverCode]: {
+        ...state[receiverCode],
+        ...tokenObj,
+        isVisible: true
+      },
+      [senderCode]: {
+        ...state[senderCode],
+        isVisible: false
+      },
+      customTokens: tokenSettingsWithUpdatedAndDeleted
+    }
+    return updatedSettings
+  }
+
+  case WALLET_ACTION.DELETE_CUSTOM_TOKEN_SUCCESS: {
+    const {currencyCode} = data
+    const customTokenSettings = state.customTokens
+    const newCustomTokenSettings = customTokenSettings.map((item) => {
+      if (item.currencyCode === currencyCode) return {...item, isVisible: false}
+      return item
+    })
+    return {
+      ...state,
+      [currencyCode]: {
+        ...state[currencyCode],
+        isVisible: false
+      },
+      customTokens: newCustomTokenSettings
+    }
+  }
+
+  case ADD_TOKEN_ACTION.SET_TOKEN_SETTINGS: {
+    const {currencyCode} = data
+    return {
+      ...state,
+      [currencyCode]: data
+    }
+  }
+
+  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
+    const {tokenObj, newCurrencyCode, settings} = data
+    const customTokens = settings.customTokens
+    return {
+      ...state,
+      [newCurrencyCode]: tokenObj,
+      customTokens
+    }
+  }
+
+  case WALLET_ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS : {
+    const {tokenObj, code, setSettings, oldCurrencyCode} = data
+    let customTokens = setSettings.customTokens
+    let oldCurrencyCodeIndex = _.findIndex(customTokens, (item) => item.currencyCode === oldCurrencyCode)
+    customTokens[oldCurrencyCodeIndex] = {
+      ...state.customTokens[oldCurrencyCodeIndex],
+      isVisible: false
+    }
+    return {
+      ...state,
+      [code]: tokenObj,
+      [oldCurrencyCode]: {
+        ...state[oldCurrencyCode],
+        isVisible: false
+      },
+      customTokens
+    }
+  }
+
+  case ACTION.SET_DENOMINATION_KEY: {
+    const currencyCode = data.currencyCode
+    const denomination = data.denominationKey
+    const currencyState = state[currencyCode]
+    return {
+      ...state,
+      [currencyCode]: {
+        ...currencyState,
+        denomination
+      }
+    }
+  }
+
   case ACTION.ADD_EXCHANGE_TIMER: {
     const {exchangeTimer} = data
     return {
@@ -92,18 +222,6 @@ export const settings = (state = initialState, action) => {
     }
   }
 
-  case ACTION.SET_BTC_DENOMINATION: {
-    const {denomination} = data
-    const BTC = state['BTC']
-    return {
-      ...state,
-      BTC: {
-        ...BTC,
-        denomination
-      }
-    }
-  }
-
   case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
     const {overrideServer} = data
     const BTC = state['BTC']
@@ -116,52 +234,31 @@ export const settings = (state = initialState, action) => {
     }
   }
 
-  case ACTION.SET_ETH_DENOMINATION: {
-    const {denomination} = data
-    const ETH = state['ETH']
-    return {
-      ...state,
-      ETH: {
-        ...ETH,
-        denomination
+  case ACTION.SET_SETTINGS_LOCK: {
+    // const {denomination} = data
+    return {...state, changesLocked: data}
+  }
+
+  case ACTION.TOUCH_ID_SETTINGS: {
+    if (data) {
+      return {
+        ...state,
+        isTouchSupported: data.isTouchSupported,
+        isTouchEnabled: data.isTouchEnabled
+      }
+    } else {
+      return {
+        ...state,
+        isTouchSupported: false,
+        isTouchEnabled: false
       }
     }
   }
 
-  case ACTION.SET_BCH_DENOMINATION: {
-    const {denomination} = data
-    const BCH = state['BCH']
+  case ACTION.CHANGE_TOUCH_ID_SETTINGS: {
     return {
       ...state,
-      BCH: {
-        ...BCH,
-        denomination
-      }
-    }
-  }
-
-  case ACTION.SET_LTC_DENOMINATION: {
-    const {denomination} = data
-    const LTC = state['LTC']
-    return {
-      ...state,
-      LTC: {
-        ...LTC,
-        denomination
-      }
-    }
-  }
-
-  case ACTION.SET_DENOMINATION_KEY: {
-    const currencyCode = data.currencyCode
-    const denomination = data.denominationKey
-    const currencyState = state[currencyCode]
-    return {
-      ...state,
-      [currencyCode]: {
-        ...currencyState,
-        denomination
-      }
+      isTouchEnabled: data
     }
   }
 

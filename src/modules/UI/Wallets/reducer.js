@@ -2,35 +2,129 @@
 
 import {combineReducers} from 'redux'
 import {GuiWallet} from '../../../types.js'
-import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
+import type {AbcDenomination, AbcMetaToken, AbcCurrencyWallet} from 'airbitz-core-types'
 import * as ACTION from './action'
+import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import {UPDATE_WALLETS} from '../../Core/Wallets/action.js'
+import _ from 'lodash'
+import type {Action} from '../../ReduxTypes.js'
 
-export const byId = (state: any = {}, action: any) => {
-  const {type, data = {} } = action
-  switch (type) {
+export type WalletId = string
+export type WalletIds = Array<WalletId>
+export type WalletByIdState = {[walletId: WalletId]: GuiWallet}
+
+export const byId = (state: WalletByIdState = {}, action: Action) => {
+  if (!action.data) return state
+
+  switch (action.type) {
   case UPDATE_WALLETS: {
     const wallets = action.data.currencyWallets
     const out = {}
     for (const walletId of Object.keys(wallets)) {
-      out[walletId] = schema(wallets[walletId])
+      let tempWallet = schema(wallets[walletId])
+      if (state[walletId]) {
+        const enabledTokensOnWallet = state[walletId].enabledTokens
+        tempWallet.enabledTokens = enabledTokensOnWallet
+        enabledTokensOnWallet.forEach((customToken) => {
+          tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({currencyCode: customToken})
+        })
+      }
+      out[walletId] = tempWallet
     }
 
     return out
   }
 
-  case ACTION.UPSERT_WALLET:
+  case ACTION.UPDATE_WALLET_ENABLED_TOKENS : {
+    const {walletId, tokens} = action.data
     return {
       ...state,
-      [data.wallet.id]: schema(data.wallet)
+      [walletId]: {
+        ...state[walletId],
+        enabledTokens: tokens
+      }
     }
+  }
+
+  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS : {
+    const {enabledTokens, walletId} = action.data
+    return {
+      ...state,
+      [walletId]: {
+        ...state[walletId],
+        enabledTokens
+      }
+    }
+  }
+
+  case ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS : {
+    const {coreWalletsToUpdate, oldCurrencyCode, tokenObj} = action.data
+    // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
+    // receiving token will have to take on sending tokens enabledness
+    // sending token will already be disabled because it was deleted
+    coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
+      const guiWallet = state[wallet.id]
+      const enabledTokens = guiWallet.enabledTokens
+      let newEnabledTokens = enabledTokens
+      // replace old code in enabledTokens with new code for each relevant wallet
+      if (newEnabledTokens.indexOf(oldCurrencyCode) >= 0) {
+        newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
+        newEnabledTokens.push(tokenObj.currencyCode)
+      }
+      const newState = {
+        ...state,
+        [wallet.id]: {
+          ...state[wallet.id],
+          enabledTokens: newEnabledTokens
+        }
+      }
+      return newState
+    })
+    return state
+  }
+
+  case ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS : { // adjust enabled tokens
+    const {coreWalletsToUpdate, oldCurrencyCode} = action.data
+    // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
+    // receiving token will have to take on sending tokens enabledness
+    // sending token will already be disabled because it was deleted
+    coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
+      const guiWallet = state[wallet.id]
+      const enabledTokens = guiWallet.enabledTokens
+      const newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
+      const newState = {
+        ...state,
+        [wallet.id]: {
+          ...state[wallet.id],
+          enabledTokens: newEnabledTokens
+        }
+      }
+      return newState
+    })
+    return state
+  }
+
+  case ACTION.UPSERT_WALLET: {
+    const {data} = action
+    let guiWallet = schema(data.wallet)
+    const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
+    guiWallet.enabledTokens = enabledTokensOnWallet
+    enabledTokensOnWallet.forEach((customToken) => {
+      guiWallet.nativeBalances[customToken] = data.wallet.getBalance({currencyCode: customToken})
+    })
+    return {
+      ...state,
+      [data.wallet.id]: guiWallet
+    }
+  }
 
   default:
     return state
   }
 }
 
-export const activeWalletIds = (state: any = [], action: any) => {
+
+export const walletEnabledTokens = (state: any = {}, action: any) => {
   if (action.type === UPDATE_WALLETS) {
     return action.data.activeWalletIds
   }
@@ -38,7 +132,17 @@ export const activeWalletIds = (state: any = [], action: any) => {
   return state
 }
 
-export const archivedWalletIds = (state: any = [], action: any) => {
+export const activeWalletIds = (state: WalletIds = [], action: Action) => {
+  if (!action.data) return state
+  if (action.type === UPDATE_WALLETS) {
+    return action.data.activeWalletIds
+  }
+
+  return state
+}
+
+export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
+  if (!action.data) return state
   if (action.type === UPDATE_WALLETS) {
     return action.data.archivedWalletIds
   }
@@ -46,31 +150,57 @@ export const archivedWalletIds = (state: any = [], action: any) => {
   return state
 }
 
-export const selectedWalletId = (state: string = '', action: any) => {
-  const {type, data = {} } = action
-  const {walletId} = data
-
-  switch (type) {
-  case ACTION.SELECT_WALLET_ID:
-    return walletId
+export const selectedWalletId = (state: WalletId = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+  case ACTION.SELECT_WALLET:
+    return action.data.walletId
   default:
     return state
   }
 }
 
-export const selectedCurrencyCode = (state: string = '', action: any) => {
-  const {type, data = {} } = action
-  const {currencyCode} = data
-
-  switch (type) {
-  case ACTION.SELECT_CURRENCY_CODE:
-    return currencyCode
+export const selectedCurrencyCode = (state: string = '', action: Action) => {
+  if (!action.data) return state
+  switch (action.type) {
+  case ACTION.SELECT_WALLET:
+    return action.data.currencyCode
   default:
     return state
   }
 }
 
-function schema (wallet: any): GuiWallet {
+const addTokenPending = (state: boolean = false, action: Action) => {
+  // if (!action.data) return state
+  const type = action.type
+  switch (type) {
+  case ADD_TOKEN_ACTION.ADD_TOKEN_START :
+    return true
+  case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS :
+    return false
+  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS :
+    return false
+  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_FAILURE :
+    return false
+  default:
+    return state
+  }
+}
+
+const manageTokensPending = (state: boolean = false, action: Action) => {
+  if (!action.data) return state
+  const type = action.type
+  switch (type) {
+  case ACTION.MANAGE_TOKENS_START :
+    return true
+  case ACTION.MANAGE_TOKENS_SUCCESS :
+    return false
+  default:
+    return state
+  }
+}
+
+function schema (wallet: AbcCurrencyWallet): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -82,6 +212,7 @@ function schema (wallet: any): GuiWallet {
   const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
+  const enabledTokens: Array<string> = wallet.enabledTokens || []
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }
@@ -135,7 +266,8 @@ function schema (wallet: any): GuiWallet {
     allDenominations,
     symbolImage,
     symbolImageDarkMono,
-    metaTokens
+    metaTokens,
+    enabledTokens
   )
 
   return newWallet
@@ -146,5 +278,7 @@ export const wallets = combineReducers({
   activeWalletIds,
   archivedWalletIds,
   selectedWalletId,
-  selectedCurrencyCode
+  selectedCurrencyCode,
+  addTokenPending,
+  manageTokensPending
 })

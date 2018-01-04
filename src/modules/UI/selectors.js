@@ -1,11 +1,14 @@
 // UI/selectors
 // @flow
-import type {State} from '../ReduxTypes'
-import type {
-  GuiDenomination
-} from '../../types'
 
-export const getWallets = (state: State) => {
+import type {AbcTransaction} from 'airbitz-core-types'
+
+import type {State} from '../ReduxTypes'
+import type {GuiDenomination, GuiWallet} from '../../types'
+import * as SETTINGS_SELECTORS from './Settings/selectors'
+import _ from 'lodash'
+
+export const getWallets = (state: State) => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
   return wallets
 }
@@ -16,12 +19,12 @@ export const getWallet = (state: State, walletId: string) => {
   return wallet
 }
 
-export const getSelectedWalletId = (state: State) => {
+export const getSelectedWalletId = (state: State): string  => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId
 }
 
-export const getSelectedCurrencyCode = (state: State) => {
+export const getSelectedCurrencyCode = (state: State): string => {
   const selectedCurrencyCode = state.ui.wallets.selectedCurrencyCode
   return selectedCurrencyCode
 }
@@ -32,17 +35,17 @@ export const getSelectedWallet = (state: State) => {
   return selectedWallet
 }
 
-export const getActiveWalletIds = (state: State) => {
+export const getActiveWalletIds = (state: State): Array<string> => {
   const activeWalletIds = state.ui.wallets.activeWalletIds
   return activeWalletIds
 }
 
-export const getArchivedWalletIds = (state: State) => {
+export const getArchivedWalletIds = (state: State): Array<string> => {
   const archivedWalletIds = state.ui.wallets.archivedWalletIds
   return archivedWalletIds
 }
 
-export const getTransactions = (state: State) => {
+export const getTransactions = (state: State): Array<AbcTransaction> => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
 }
@@ -53,13 +56,24 @@ export const getDenominations = (state: State, currencyCode: string) => {
   return denominations
 }
 
-export const getExchangeDenomination = (state: State, currencyCode: string): GuiDenomination => {
-  const wallet = getSelectedWallet(state)
-  for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
-    const denomination = wallet.allDenominations[currencyCode][key]
-    if (denomination.name === currencyCode) return denomination
+export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
+  let wallet = getSelectedWallet(state)
+  const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
+  if (specificWallet) {
+    wallet = getWallet(state, specificWallet.id)
   }
-
+  if (wallet.allDenominations[currencyCode]) {
+    for (const key of Object.keys(wallet.allDenominations[currencyCode])) {
+      const denomination = wallet.allDenominations[currencyCode][key]
+      if (denomination.name === currencyCode) return denomination
+    }
+  } else {
+    const customToken = _.find(customTokens, (item) => item.currencyCode === currencyCode)
+    if (customToken && customToken.denomination && customToken.denomination[0]) {
+      const denomination = customToken.denominations[0]
+      return denomination
+    }
+  }
   throw new Error('Edge: Denomination not found. Possible invalid currencyCode.')
 }
 
@@ -79,7 +93,7 @@ export const getSceneState = (state: State, sceneKey: string) => {
   return sceneState
 }
 
-export const getDropdownAlertState = (state: State) => {
+export const getDropdownAlertState = (state: State): {displayAlert: boolean, message: string} => {
   const dropdownAlertState = getUIState(state).dropdownAlert
   return dropdownAlertState
 }

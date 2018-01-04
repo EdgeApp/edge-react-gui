@@ -4,23 +4,25 @@ import {
   ActivityIndicator,
   Alert,
   View,
-  Keyboard,
-  TextInput
+  Keyboard
 } from 'react-native'
 import {fixFiatCurrencyCode} from '../../../utils'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
+import {FormField} from '../../../../components/FormField.js'
 
 import styles from './styles.js'
-import strings from '../../../../locales/default'
+import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
+import s from '../../../../locales/strings.js'
+import Gradient from '../../components/Gradient/Gradient.ui'
 
-const WALLET_NAME_INPUT_PLACEHOLDER  = strings.enUS['fragment_wallets_addwallet_name_hint']
+const WALLET_NAME_INPUT_PLACEHOLDER  = s.strings.fragment_wallets_addwallet_name_hint
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
-const FIAT_PICKER_PLACEHOLDER        = strings.enUS['fragment_wallets_addwallet_fiat_hint']
+const FIAT_PICKER_PLACEHOLDER        = s.strings.fragment_wallets_addwallet_fiat_hint
 
-const DONE_TEXT         = strings.enUS['fragment_create_wallet_create_wallet']
-const CANCEL_TEXT       = strings.enUS['string_cancel_cap']
-const INVALID_DATA_TEXT = strings.enUS['fragment_create_wallet_select_valid']
+const DONE_TEXT         = s.strings.fragment_create_wallet_create_wallet
+const CANCEL_TEXT       = s.strings.string_cancel_cap
+const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
 export default class CreateWallet extends Component {
   constructor (props) {
@@ -94,7 +96,7 @@ export default class CreateWallet extends Component {
 
   onCancel = () => {
     Keyboard.dismiss()
-    Actions.walletList() // redirect to the list of wallets
+    Actions.pop() // redirect to the list of wallets
   }
 
   handleChangeWalletName = (walletName) => {
@@ -112,31 +114,34 @@ export default class CreateWallet extends Component {
 
   render () {
     return (
-      <View style={styles.view}>
+      <View style={styles.scene}>
+        <Gradient style={styles.gradient} />
+        <View style={styles.view}>
+          <WalletNameInput
+            onChangeText={this.handleChangeWalletName}
+            value={this.state.walletName}
+          />
 
-        <WalletNameInput
-          placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
-          onChangeText={this.handleChangeWalletName} />
+          <DropdownPicker
+            keyboardShouldPersistTaps={'always'}
+            listItems={this.props.supportedWalletTypes || []}
+            placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
+            onSelect={this.handleSelectWalletType} />
 
-        <DropdownPicker
-          keyboardShouldPersistTaps={'always'}
-          listItems={this.props.supportedWalletTypes || []}
-          placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
-          onSelect={this.handleSelectWalletType} />
+          <DropdownPicker
+            keyboardShouldPersistTaps={'always'}
+            listStyle={{maxHeight: 140}}
+            listItems={this.getSupportedFiats()}
+            placeholder={FIAT_PICKER_PLACEHOLDER}
+            onSelect={this.handleSelectFiat} />
 
-        <DropdownPicker
-          keyboardShouldPersistTaps={'always'}
-          listStyle={{maxHeight: 140}}
-          listItems={this.getSupportedFiats()}
-          placeholder={FIAT_PICKER_PLACEHOLDER}
-          onSelect={this.handleSelectFiat} />
+          <Buttons
+            style={styles.buttons}
+            isCreatingWallet={this.state.isCreatingWallet}
+            onDone={this.onSubmit}
+            onCancel={this.onCancel} />
 
-        <Buttons
-          style={styles.buttons}
-          isCreatingWallet={this.state.isCreatingWallet}
-          onDone={this.onSubmit}
-          onCancel={this.onCancel} />
-
+        </View>
       </View>
     )
   }
@@ -171,12 +176,15 @@ class WalletNameInput extends Component {
   render () {
     return (
       <View style={styles.pickerView}>
-        <TextInput style={styles.picker}
+        <FormField style={MaterialInputOnWhite}
           clearButtonMode={'while-editing'}
           autoCorrect={false}
           autoFocus
           placeholder={this.props.placeholder}
-          onChangeText={this.props.onChangeText} />
+          onChangeText={this.props.onChangeText}
+          label={WALLET_NAME_INPUT_PLACEHOLDER}
+          value={this.props.value}
+        />
       </View>
     )
   }

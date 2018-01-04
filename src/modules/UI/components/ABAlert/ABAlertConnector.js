@@ -1,12 +1,12 @@
 // @flow
 import ABAlert from './ABAlert.ui'
 import {connect} from 'react-redux'
-import {closeABAlert} from './action.js'
-
+import * as actions from '../../../../actions/indexActions'
+import * as Constants from '../../../../constants/indexConstants'
 import type {
-  State,
-  Dispatch
-} from '../../../ReduxTypes.js'
+  State
+} from '../../../ReduxTypes.js' //Dispatch was left out beacuse it causes a cascade
+// of problems
 
 const mapStateToProps = (state: State) => ({
   view: state.ui.scenes.ABAlert.view,
@@ -16,8 +16,8 @@ const mapStateToProps = (state: State) => ({
   route: state.ui.scenes.ABAlert.route
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  closeAlert: () => dispatch(closeABAlert())
+const mapDispatchToProps = (dispatch: any) => ({
+  closeAlert: () => dispatch(actions.dispatchAction(Constants.CLOSE_AB_ALERT))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ABAlert)

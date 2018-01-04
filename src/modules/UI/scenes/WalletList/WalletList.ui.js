@@ -1,4 +1,5 @@
 // @flow
+
 import React, {Component} from 'react'
 import {
   View,
@@ -7,7 +8,6 @@ import {
   Animated,
   FlatList
 } from 'react-native'
-// $FlowFixMe: suppressing this error until we can find a workaround
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
@@ -19,7 +19,7 @@ import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
-import strings from '../../../../locales/default'
+import s from '../../../../locales/strings.js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
@@ -32,40 +32,78 @@ import DeleteIcon from './components/DeleteIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
 
+import type {GuiContact} from '../../../../types'
+
+const DONE_TEXT           = s.strings.string_done_cap
+const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
+const ARCHIVED_TEXT       = s.strings.fragmet_wallets_list_archive_title_capitalized
+const SHOW_BALANCE_TEXT   = s.strings.string_show_balance
+const BALANCE_TEXT        = s.strings.fragment_wallets_balance_text
+const RENAME_WALLET_TEXT  = s.strings.fragment_wallets_rename_wallet
+const RENAME_TEXT         = s.strings.string_rename
+const SORT_TEXT           = s.strings.fragment_wallets_sort
+const DELETE_TEXT         = s.strings.string_delete
+const MANAGE_TOKENS_TEXT  = s.strings.fragmet_wallets_managetokens_option
 
 const options = [
   {
     value: 'rename',
-    syntax: strings.enUS['string_rename']
+    syntax: RENAME_TEXT
   },{
     value: 'sort',
-    syntax: strings.enUS['fragment_wallets_sort']
-  },{
-    value: 'addToken',
-    syntax: strings.enUS['fragmet_wallets_addtoken_option']
-  },{
-    value: 'archive'
+    syntax: SORT_TEXT
   },{
     value: 'delete',
-    syntax: strings.enUS['string_delete']
+    syntax: DELETE_TEXT
+  },{
+    value: 'manageTokens',
+    syntax: MANAGE_TOKENS_TEXT
+  },{
+    value: 'archive'
   }
 ]
 
-export default class WalletList extends Component<any, {
+type State = {
   sortableMode: boolean,
   sortableListOpacity: number,
   fullListOpacity: number,
   sortableListZIndex: number,
-  fullListZIndex: number
-}> {
+  sortableListExists: boolean,
+  fullListZIndex: number,
+  fullListExists: boolean,
+  balanceBoxVisible: boolean
+}
+type Props = {
+  activeWalletIds: Array<string>,
+  currencyConverter: any,
+  customTokens: Array<any>,
+  deleteWalletModalVisible: boolean,
+  dimensions: any,
+  renameWalletModalVisible: boolean,
+  settings: any,
+  walletId: string,
+  walletName: string,
+  wallets: any,
+  closeDeleteWalletModal: () => void,
+  closeRenameWalletModal: () => void,
+  renameWalletInput: string,
+  setContactList: (Array<GuiContact>) => void,
+  updateArchivedWalletsOrder: (Array<string>) => void,
+  updateActiveWalletsOrder: (Array<string>) => void,
+  walletRowOption: (walletId: string, string) => void,
+}
+export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
     this.state = {
       sortableMode: false,
       sortableListOpacity: new Animated.Value(0),
       sortableListZIndex: new Animated.Value(0),
+      sortableListExists: false,
       fullListOpacity: new Animated.Value(1),
-      fullListZIndex: new Animated.Value(100)
+      fullListZIndex: new Animated.Value(100),
+      fullListExists: true,
+      balanceBoxVisible: true
     }
   }
 
@@ -97,21 +135,23 @@ export default class WalletList extends Component<any, {
         this.enableSorting()
       }
       break
-    case options[2].value: // 'addToken'
-      this.props.walletRowOption(walletId, 'addToken')
+    case options[2].value: // 'delete
+      this.props.walletRowOption(walletId, 'delete')
       break
-    case options[3].value: // 'archive'
-      if (!this.props.walletsp[walletId].archived) {
+    case options[3].value: // 'manageTokens'
+      console.log('executing option 2')
+      Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
+      break
+    case options[4].value: // 'archive'
+      if (!this.props.wallets[walletId].archived) {
         this.props.walletRowOption(walletId, 'archive')
       } else {
         this.props.walletRowOption(walletId, 'activate')
       }
       break
-    case options[4].value: // 'delete
-      this.props.walletRowOption(walletId, 'delete')
-      break
     }
   }
+
   render () {
     const {
       wallets,
@@ -150,21 +190,13 @@ export default class WalletList extends Component<any, {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
+        <Gradient style={styles.gradient} />
 
-        <View style={[styles.totalBalanceBox]}>
-          <View style={[styles.totalBalanceWrap]}>
-            <View style={[styles.totalBalanceHeader]}>
-              <T style={[styles.totalBalanceText]}>
-                {strings.enUS['fragment_wallets_balance_text']}
-              </T>
-            </View>
-            <View style={[styles.currentBalanceBoxDollarsWrap]}>
-              <T style={[styles.currentBalanceBoxDollars]}>
-                {fiatBalanceString}
-              </T>
-            </View>
-          </View>
-        </View>
+        <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
+          {this.state.balanceBoxVisible
+          ? this.balanceBox(fiatBalanceString)
+          : this.hiddenBalanceBox()}
+        </TouchableOpacity>
 
         <View style={[styles.walletsBox]}>
           <Gradient style={[styles.walletsBoxHeaderWrap, UTILS.border()]}>
@@ -173,13 +205,13 @@ export default class WalletList extends Component<any, {
               <View style={styles.leftArea}>
                 <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
                 <T style={styles.walletsBoxHeaderText}>
-                  {strings.enUS['fragment_wallets_header']}
+                  {WALLETS_HEADER_TEXT}
                 </T>
               </View>
             </View>
 
             <View style={[styles.donePlusContainer, UTILS.border()]}>
-
+              {this.state.sortableListExists && (
               <Animated.View style={[
                 styles.doneContainer,
                 UTILS.border(),
@@ -192,11 +224,12 @@ export default class WalletList extends Component<any, {
                 ]}
                   onPress={this.disableSorting}>
                   <T style={[styles.walletsBoxDoneText]}>
-                    {strings.enUS['string_done_cap']}
+                    {DONE_TEXT}
                   </T>
                 </TouchableOpacity>
               </Animated.View>
-
+              )}
+              {this.state.fullListExists && (
               <Animated.View style={[
                 styles.plusContainer,
                 UTILS.border(),
@@ -212,7 +245,7 @@ export default class WalletList extends Component<any, {
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
-
+              )}
             </View>
           </Gradient>
 
@@ -229,27 +262,33 @@ export default class WalletList extends Component<any, {
     const {width} = platform.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
+        {this.state.sortableListExists && (
         <Animated.View testID={'sortableList'} style={[UTILS.border(), {flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex}, styles.sortableList, UTILS.border()]}>
           <SortableListView
             style={{flex: 1, width}}
             data={activeWalletsObject}
             order={this.props.activeWalletIds}
             onRowMoved={this.onActiveRowMoved}
-            render={strings.enUS['fragmet_wallets_list_archive_title_capitalized']}
+            render={ARCHIVED_TEXT}
             renderRow={(row) => <SortableWalletListRow data={row} dimensions={this.props.dimensions} />}
             executeWalletRowOption={this.executeWalletRowOption}
             dimensions={this.props.dimensions}
           />
         </Animated.View>
+        )}
+        {this.state.fullListExists && (
         <Animated.View testID={'fullList'} style={[{flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex}, styles.fullList]}>
           <FlatList
             style={{flex: 1, width}}
             data={activeWalletsArray}
             extraData={this.props.wallets}
-            renderItem={(item) => <FullWalletListRow data={item} />}
+            renderItem={(item) => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}
             sortableMode={this.state.sortableMode}
-            executeWalletRowOption={this.executeWalletRowOption} />
+            executeWalletRowOption={this.executeWalletRowOption}
+            settings={this.props.settings}
+          />
         </Animated.View>
+        )}
       </View>
     )
   }
@@ -261,38 +300,42 @@ export default class WalletList extends Component<any, {
     let fullListToOpacity = 0
     let fullListToZIndex = 0
 
-    Animated.parallel([
-      Animated.timing(
-        this.state.sortableListOpacity,
-        {
-          toValue: sortableToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.sortableListZIndex,
-        {
-          toValue: sortableListToZIndex,
-          timing: 300
-        }
-      ),
-      Animated.timing(
-        this.state.fullListOpacity,
-        {
-          toValue: fullListToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.fullListZIndex,
-        {
-          toValue: fullListToZIndex,
-          timing: 300
-        }
-      )
-    ]).start()
+    this.setState({sortableListExists: true}, () => {
+      Animated.parallel([
+        Animated.timing(
+          this.state.sortableListOpacity,
+          {
+            toValue: sortableToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.sortableListZIndex,
+          {
+            toValue: sortableListToZIndex,
+            timing: 300
+          }
+        ),
+        Animated.timing(
+          this.state.fullListOpacity,
+          {
+            toValue: fullListToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.fullListZIndex,
+          {
+            toValue: fullListToZIndex,
+            timing: 300
+          }
+        )
+      ]).start(() => {
+        this.setState({fullListExists: false})
+      })
+    })
   }
 
   disableSorting = () => {
@@ -301,38 +344,42 @@ export default class WalletList extends Component<any, {
     let fullListToOpacity = 1
     let fullListToZIndex = 100
 
-    Animated.parallel([
-      Animated.timing(
-        this.state.sortableListOpacity,
-        {
-          toValue: sortableToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.sortableListZIndex,
-        {
-          toValue: sortableListToZIndex,
-          timing: 300
-        }
-      ),
-      Animated.timing(
-        this.state.fullListOpacity,
-        {
-          toValue: fullListToOpacity,
-          timing: 300,
-          useNativeDriver: false
-        }
-      ),
-      Animated.timing(
-        this.state.fullListZIndex,
-        {
-          toValue: fullListToZIndex,
-          timing: 300
-        }
-      )
-    ]).start()
+    this.setState({fullListExists: true}, () => {
+      Animated.parallel([
+        Animated.timing(
+          this.state.sortableListOpacity,
+          {
+            toValue: sortableToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.sortableListZIndex,
+          {
+            toValue: sortableListToZIndex,
+            timing: 300
+          }
+        ),
+        Animated.timing(
+          this.state.fullListOpacity,
+          {
+            toValue: fullListToOpacity,
+            timing: 300,
+            useNativeDriver: false
+          }
+        ),
+        Animated.timing(
+          this.state.fullListZIndex,
+          {
+            toValue: fullListToZIndex,
+            timing: 300
+          }
+        )
+      ]).start(() => {
+        this.setState({sortableListExists: false})
+      })
+    })
   }
 
   renderArchivedSortableList = (data: any, order: any, label: any, renderRow: any) => {
@@ -390,7 +437,7 @@ export default class WalletList extends Component<any, {
 
   renderDeleteWalletModal = () => <StylizedModal
     featuredIcon={<DeleteIcon />}
-    headerText='fragment_wallets_delete_wallet'
+    headerText={s.strings.fragment_wallets_delete_wallet}
     modalMiddle={<DeleteWalletSubtext />}
     modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
     visibilityBoolean={this.props.deleteWalletModalVisible}
@@ -399,10 +446,9 @@ export default class WalletList extends Component<any, {
 
   renderRenameWalletModal = () => <StylizedModal
     featuredIcon={<RenameIcon />}
-    headerText='fragment_wallets_rename_wallet'
-    headerSubtext={this.props.walletName}
-    modalMiddle={<WalletNameInput />}
-    modalBottom={<RenameWalletButtons walletId={this.props.walletId} />}
+    headerText={s.strings.fragment_wallets_rename_wallet}
+    modalMiddle={<WalletNameInput label={RENAME_WALLET_TEXT} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
+    modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}
     />
@@ -416,7 +462,13 @@ export default class WalletList extends Component<any, {
         }
         const nativeBalance = this.props.wallets[parentProp].nativeBalances[balanceProp]
         if (nativeBalance && nativeBalance !== '0') {
-          const denominations = this.props.settings[balanceProp].denominations
+          let denominations
+          if (this.props.settings[balanceProp]) {
+            denominations = this.props.settings[balanceProp].denominations
+          } else {
+            const tokenInfo = this.props.settings.customTokens.find((token) => token.currencyCode === balanceProp)
+            denominations = tokenInfo.denominations
+          }
           const exchangeDenomination = denominations.find((denomination) => denomination.name === balanceProp)
           const nativeToExchangeRatio:string = exchangeDenomination.multiplier
 
@@ -436,5 +488,35 @@ export default class WalletList extends Component<any, {
       total = total + addValue
     }
     return total.toFixed(2)
+  }
+
+  handleOnBalanceBoxPress = () => this.setState({balanceBoxVisible: !this.state.balanceBoxVisible})
+  balanceBox (fiatBalanceString: string) {
+    return <View style={[styles.totalBalanceBox]}>
+      <View style={[styles.totalBalanceWrap]}>
+        <View style={[styles.totalBalanceHeader]}>
+          <T style={[styles.totalBalanceText]}>
+            {BALANCE_TEXT}
+          </T>
+        </View>
+        <View style={[styles.currentBalanceBoxDollarsWrap]}>
+          <T style={[styles.currentBalanceBoxDollars]}>
+            {fiatBalanceString}
+          </T>
+        </View>
+      </View>
+    </View>
+  }
+
+  hiddenBalanceBox () {
+    return <View style={[styles.totalBalanceBox]}>
+      <View style={[styles.totalBalanceWrap]}>
+        <View style={[styles.hiddenBalanceBoxDollarsWrap]}>
+          <T style={[styles.currentBalanceBoxDollars]}>
+            {SHOW_BALANCE_TEXT}
+          </T>
+        </View>
+      </View>
+    </View>
   }
 }

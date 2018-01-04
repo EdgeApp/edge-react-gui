@@ -1,7 +1,12 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
+  gradient: {
+    height: THEME.HEADER
+  },
   view: {
     flex: 1,
     flexDirection: 'column',
@@ -26,6 +31,15 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
+  feeArea: {
+    width: '100%',
+    alignItems: 'center',
+    backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  feeAreaText: {
+    fontSize: 16,
+    color: 'white'
+  },
   pendingSymbolArea: {
     height: 12
   },
@@ -38,7 +52,7 @@ export default StyleSheet.create({
     justifyContent: 'center'
   },
   sliderStyle: {
-    width: 300
+    width: 270
   },
   error: {
     flex: 1,
@@ -47,16 +61,21 @@ export default StyleSheet.create({
     marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
+  menuTrigger: {
+    paddingHorizontal: 8,
+    paddingVertical: 4
+  },
   trigger: {
     fontSize: 25,
     color: THEME.COLORS.WHITE,
-    fontWeight: '700'
+    fontWeight: '700',
+    paddingHorizontal: 8
   },
   optionContainer: {
     width: 165
   },
   optionRow: {
-    paddingVertical: 17
+    paddingVertical: 17,
   },
   optionText: {
     fontSize: 16

@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import BackButton from './BackButton.ui'
 import * as Constants from '../../../../../constants'
 
-const BACK_TEXT = strings.enUS['back_button_text']
-const CANCEL_TEXT = strings.enUS['string_cancel_cap']
+const BACK_TEXT = s.strings.back_button_text
+const CANCEL_TEXT = s.strings.string_cancel_cap
 
 export default class Left extends Component {
   render () {
@@ -24,14 +24,6 @@ export default class Left extends Component {
       return makeBackButton(CANCEL_TEXT, Constants.TRANSACTION_LIST)
     case Constants.SEND_CONFIRMATION:
       return makeBackButton(BACK_TEXT, Constants.SCAN)
-    case Constants.BTC_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.ETH_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.LTC_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.BCH_SETTINGS:
-      return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
     case Constants.CHANGE_PASSWORD:
       return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
     case Constants.CHANGE_PIN:
@@ -39,6 +31,9 @@ export default class Left extends Component {
     case Constants.RECOVER_PASSWORD:
       return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
     default:
+      if (Object.keys(Constants.CURRENCY_SETTINGS).indexOf(sceneName) !== -1) {
+        return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
+      }
       return null
     }
   }

@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
 import {TouchableHighlight, View} from 'react-native'
 
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import FormattedText from '../../../components/FormattedText/FormattedText.ui'
 
 import styles, {styles as styleRaw} from '../../../components/Modal/style'
 
-const CANCEL_TEXT = strings.enUS['string_cancel_cap']
-const DONE_TEXT   = strings.enUS['calculator_done']
+const CANCEL_TEXT = s.strings.string_cancel_cap
+const DONE_TEXT   = s.strings.calculator_done
 
 export default class ModalButtons extends Component {
   render () {

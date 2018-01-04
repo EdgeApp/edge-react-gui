@@ -9,6 +9,8 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 import {Actions} from 'react-native-router-flux'
 
+import * as WalletActions from '../../Wallets/action'
+
 export const updateWalletName = (walletName: string) => ({
   type: UPDATE_WALLET_NAME,
   data: {walletName}
@@ -27,7 +29,9 @@ export const selectFiat = (fiat: string) => ({
 export const createCurrencyWallet = (
   walletName: string,
   walletType: string,
-  fiatCurrencyCode: string
+  fiatCurrencyCode: string,
+  popScene: boolean = true,
+  selectWallet: boolean = false
 ) => (dispatch: any, getState: any) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
@@ -35,7 +39,11 @@ export const createCurrencyWallet = (
   return ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {
     name: walletName,
     fiatCurrencyCode
-  }).then(() => {
-    Actions.walletList({type: 'reset'})
+  }).then((abcWallet) => {
+    if (popScene) {
+      Actions.pop()
+    } else if (selectWallet) {
+      dispatch(WalletActions.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
+    }
   })
 }

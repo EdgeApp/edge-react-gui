@@ -1,5 +1,7 @@
-import React, {Component} from 'react'
-import strings from '../../../../locales/default'
+// @flow
+
+import React, {Component, type Node} from 'react'
+import s from '../../../../locales/strings.js'
 import {
   View,
   TouchableOpacity,
@@ -9,61 +11,89 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import PropTypes from 'prop-types'
 import styles, {exitColor} from './style'
 import Modal from 'react-native-modal'
-import Gradient from '../Gradient/Gradient.ui'
 import T from '../FormattedText'
 import {border as b} from '../../../utils'
 
-export default class StylizedModal extends Component {
+type Props = {
+  headerText: string,
+  headerTextStyle?: {},
+  headerSubtext?: string,
+  visibilityBoolean: boolean,
+  featuredIcon: Node,
+  modalVisibleStyle?: {},
+  modalBoxStyle?: {},
+  modalContentStyle?: {},
+  modalBodyStyle?: {},
+  modalMiddle?: Node, // should be allowed to not give a middle component
+  modalMiddleStyle?: {},
+  modalBottom: Node,
+  modalBottomStyle?: {},
+  onExitButtonFxn: ?() => void,
+  style?: any
+}
+type State = {}
+
+export default class StylizedModal extends Component<Props, State> {
+  showExitIcon = () => {
+    const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
+    if (this.props.onExitButtonFxn) {
+      return <View style={[styles.exitRow]}>
+        <TouchableOpacity
+          style={[styles.exitButton, b()]}
+          onPress={this.props.onExitButtonFxn}>
+          <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
+        </TouchableOpacity>
+      </View>
+    }
+    return <View style={[styles.exitRow]} />
+  }
   render () {
     const {headerText, headerSubtext} = this.props
-    const exitIconName = (Platform.OS === 'ios' ? 'ios' : 'md') + '-close'
+
     return (
-      <Modal style={[styles.topLevelModal, {marginLeft: 20, marginRight: 20, marginTop: 20}, b('yellow')]}
-        isVisible={this.props.visibilityBoolean}>
-        <View style={[styles.modalBox, b('red')]}>
-          <View style={[styles.modalContent, styles.modalBoxWithExit]}>
-            <View style={[styles.exitRow, b('green')]}>
-              <TouchableOpacity
-                style={[styles.exitButton, b()]}
-                onPress={this.props.onExitButtonFxn}
-              >
-                <Ionicon style={b()} name={exitIconName} size={30} color={exitColor} />
-              </TouchableOpacity>
-            </View>
-            <View style={[styles.modalBody, b('purple')]}>
-              <View style={[styles.modalTopTextWrap, b('blue')]}>
-                <T style={[styles.modalTopText, b('yellow')]}>
-                  {strings.enUS[headerText]}
-                </T>
-                {
-                  this.props.headerSubtext
-                  && <T style={[styles.modalTopSubtext, b('green')]}>
-                    {headerSubtext ? strings.enUS[headerSubtext] : ''}
+      <Modal style={[styles.topLevelModal, b('yellow'), this.props.style]} isVisible={this.props.visibilityBoolean}>
+        <View style={[styles.modalHeaderIconWrapBottom]}>
+          {this.props.featuredIcon}
+        </View>
+
+        <View style={[styles.visibleModal, this.props.modalVisibleStyle]}>
+
+          {this.showExitIcon()}
+
+          <View style={[styles.modalBox, this.props.modalBoxStyle]}>
+            <View style={[styles.modalContent, this.props.modalContentStyle]}>
+              <View style={[styles.modalBody, this.props.modalBodyStyle]}>
+
+                <View style={[styles.modalTopTextWrap]}>
+                  <T style={[styles.modalTopText, this.props.headerTextStyle]}>
+                    {headerText}
                   </T>
+
+                  {this.props.headerSubtext
+                    && <T style={[styles.modalTopSubtext]}>
+                      {headerSubtext ? s.strings[headerSubtext] : ''}
+                    </T>
+                  }
+                </View>
+
+                {this.props.modalMiddle
+                  && <View style={[styles.modalMiddle, this.props.modalMiddleStyle]}>
+                    {this.props.modalMiddle}
+                  </View>
+                }
+
+                {this.props.modalBottom
+                  && <View style={[styles.modalBottom, this.props.modalBottomStyle]}>
+                    {this.props.modalBottom}
+                  </View>
                 }
 
               </View>
-              {
-                this.props.modalMiddle
-                && <View style={[styles.modalMiddle, b('brown')]}>
-                  {this.props.modalMiddle}
-                </View>
-              }
-              {
-                this.props.modalBottom
-                && <View style={[styles.modalBottom, b('green')]}>
-                  {this.props.modalBottom}
-                </View>
-              }
             </View>
           </View>
+
         </View>
 
-        <Gradient style={[styles.modalHeaderIconWrapBottom]}>
-          <View style={styles.modalHeaderIconWrapTop}>
-            {this.props.featuredIcon}
-          </View>
-        </Gradient>
       </Modal>
     )
   }

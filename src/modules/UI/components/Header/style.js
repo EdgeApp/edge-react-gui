@@ -1,3 +1,5 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -7,7 +9,18 @@ export default StyleSheet.create({
   },
   sideTextWrap: {
     paddingTop: 3,
-    paddingBottom: 3
+    paddingBottom: 3,
+    paddingHorizontal: 10
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  backIconStyle: {
+    paddingLeft: 10,
+    paddingRight: 5,
+    paddingTop: 3,
+    color: THEME.COLORS.WHITE,
   },
   sideText: {
     color: THEME.COLORS.WHITE,
@@ -16,5 +29,9 @@ export default StyleSheet.create({
   icon: {
     color: THEME.COLORS.WHITE,
     fontSize: 25
+  },
+  default: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.WHITE
   }
 })

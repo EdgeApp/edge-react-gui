@@ -1,11 +1,23 @@
-import {Platform, StyleSheet} from 'react-native'
+// @flow
+
+import { StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
-  view: {
+  scene: {
     flex: 1,
-    padding: 20,
     backgroundColor: THEME.COLORS.GRAY_4
+  },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%',
+    position: 'absolute'
+  },
+  view: {
+    position: 'relative',
+    top: 66,
+    paddingHorizontal: 20,
+    paddingVertical: 5
   },
   walletNameInputView: {
     height: 50,
@@ -17,8 +29,6 @@ const styles = StyleSheet.create({
   },
   pickerView: {
     marginBottom: 15,
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0,
-    borderColor: THEME.COLORS.GRAY_2
   },
   picker: {
     fontFamily: THEME.FONTS.DEFAULT,

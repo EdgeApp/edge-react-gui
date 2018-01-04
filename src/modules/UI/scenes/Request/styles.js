@@ -1,10 +1,17 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 
+import THEME from '../../../../theme/variables/airbitz'
+
 const styles = StyleSheet.create({
+  gradient: {
+    height: THEME.HEADER
+  },
   view: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'stretch'
   },
   main: {
@@ -14,7 +21,7 @@ const styles = StyleSheet.create({
   },
   exchangeRateContainer: {
     alignItems: 'center',
-    marginVertical: 20
+    marginVertical: 5
   },
   flipInputContainer: {
     alignItems: 'center',

@@ -1,11 +1,9 @@
 // @flow
-import type {
-  GetState,
-  Dispatch
-} from '../ReduxTypes'
-import {
-  AbcAccount
-} from 'airbitz-core-types'
+
+import {AbcAccount} from 'airbitz-core-types'
+import {Actions} from 'react-native-router-flux'
+
+import type {GetState, Dispatch} from '../ReduxTypes'
 
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
@@ -15,15 +13,20 @@ import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
 import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as WALLET_ACTIONS from '../UI/Wallets/action'
-// import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
+import * as actions from '../../actions/indexActions'
+import * as Constants from '../../constants/indexConstants'
+import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
+import s from '../../locales/strings.js'
+import {updateWalletsRequest} from '../Core/Wallets/action.js'
+
 export const LOGOUT = 'LOGOUT'
 
-import {Actions} from 'react-native-router-flux'
-
-export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
+  // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
+  dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
   CONTEXT_API.getCurrencyPlugins(context)
     .then((currencyPlugins) => {
       currencyPlugins.forEach((plugin) => {
@@ -35,17 +38,22 @@ export const initializeAccount = (account: AbcAccount) => (dispatch: Dispatch, g
 
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
+      // TODO: understand why this fails flow -paulvp
+
       if (ACCOUNT_API.checkForExistingWallets(account)) {
-        const {
-          walletId,
-          currencyCode
-        } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+        const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
         dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
         dispatch(loadSettings())
         return
       }
-      // TODO: Allen - create wallets here since there are no existing wallets
+      dispatch(actions.createCurrencyWallet(
+        s.strings.string_first_ethereum_wallet_name,
+        Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
+        false, true
+      ))
       dispatch(loadSettings())
+      // $FlowFixMe
+      dispatch(updateWalletsRequest())
     })
 }
 
@@ -55,27 +63,23 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
       const syncFinal = {...syncDefaults, ...settings}
-
+      const customTokens = settings ? settings.customTokens : []
       // Add all the settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
-
+      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
-
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))
+      if (customTokens) {
+        customTokens.forEach((token) => {
+          dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
+          // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
+          dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
+        })
+      }
     })
-    /* SETTINGS_API.getSyncedSubcategories(account)
-    .then(subcategories => {
-      // console.log('subcategories have been loaded and are: ', subcategories)
-      const syncDefaults = SETTINGS_API.SYNCED_SUBCATEGORY_DEFAULTS
-      const syncFinal = Object.assign({}, syncDefaults, subcategories)
-      // console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
-      dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
-    }) */
 
   SETTINGS_API.getLocalSettings(account)
     .then((settings) => {
@@ -96,21 +100,18 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
     })
 }
 
-export const logoutRequest = (username: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.login({username})
+export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
+  Actions.popTo(Constants.LOGIN, {username})
 
   const state = getState()
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
 
   const account = CORE_SELECTORS.getAccount(state)
+  dispatch(logout(username))
   ACCOUNT_API.logoutRequest(account)
-   .then(() => {
-     dispatch(logout(username))
-   })
 }
 
-export type LogoutAction = { type: 'LOGOUT', data: { username: string } }
-export const logout = (username: string): LogoutAction => ({
+export const logout = (username?: string) => ({
   type: LOGOUT,
   data: {username}
 })

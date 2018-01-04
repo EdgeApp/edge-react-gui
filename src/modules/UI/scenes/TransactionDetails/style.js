@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Platform} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -13,6 +13,11 @@ export const styles = {
     height: 32,
     flexDirection: 'row',
     justifyContent: 'center'
+  },
+  headerGradient: {
+    height: 66,
+    width: '100%',
+    position: 'absolute'
   },
   modalHeaderIconWrapBottom: {
     borderRadius: 24,
@@ -39,7 +44,7 @@ export const styles = {
   payeeNameInput: {
     color: THEME.COLORS.GRAY_1,
     fontSize: 17,
-    height: 24,
+    height: Platform.OS === 'ios' ? 24 : 27,
     textAlign: 'center',
     width: '100%',
     fontFamily: THEME.FONTS.DEFAULT
@@ -218,7 +223,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
-    height: 500,
+    height: 700,
     paddingLeft: 15,
     paddingRight: 15
   },

@@ -2,7 +2,7 @@
  * Created by paul on 8/16/17.
  */
 // @flow
-
+// trying to trigger a build. .. will remove this line
 import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 
 export class GuiWallet {
@@ -20,6 +20,7 @@ export class GuiWallet {
   symbolImage: string
   symbolImageDarkMono: string
   metaTokens: Array<AbcMetaToken>
+  enabledTokens: Array<string>
   constructor (
     id: string,
     type: string,
@@ -35,6 +36,7 @@ export class GuiWallet {
     symbolImage: string,
     symbolImageDarkMono: string,
     metaTokens: Array<AbcMetaToken>,
+    enabledTokens: Array<string>,
   ) {
     this.id = id
     this.type = type
@@ -50,6 +52,7 @@ export class GuiWallet {
     this.symbolImage = symbolImage
     this.symbolImageDarkMono = symbolImageDarkMono
     this.metaTokens = metaTokens
+    this.enabledTokens = enabledTokens
   }
 }
 
@@ -58,7 +61,7 @@ export type GuiDenomination = {
   currencyCode?: string,
   symbol: string,
   multiplier: string,
-  precision: number
+  precision?: number
 }
 
 export type GuiCurrencyInfo = {
@@ -87,4 +90,20 @@ export type ExchangeData = {
   secondaryDisplayAmount: string,
   secondaryDisplaySymbol: string,
   secondaryCurrencyCode: string
+}
+
+export type CustomTokenInfo = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string,
+  multiplier: string,
+  decimalPlaces: string,
+  denomination: string, // eventually change to mandatory
+  isVisible?: boolean, // eventually change to mandatory,
+  denominations: Array<AbcDenomination>
+}
+
+export type CurrencyConverter = {
+  convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }

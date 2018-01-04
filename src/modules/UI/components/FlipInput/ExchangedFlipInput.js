@@ -32,15 +32,12 @@ type State = {
 
 function precisionAdjust (props: Props) {
   const order = Math.floor((Math.log(props.secondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
-  const exchageRateOrderOfMagnitude = Math.pow(10,order)
-  // console.log('exchageRateOrderOfMagnitude: ' + exchageRateOrderOfMagnitude.toString())
+  const exchangeRateOrderOfMagnitude = Math.pow(10,order)
 
   // Get the exchange rate in pennies
-  const exchangeRateString = bns.mul(exchageRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
-  // console.log('exchangeRateString: ' + exchangeRateString)
+  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
 
   let precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-  // console.log('precisionAdjust:' + precisionAdjust)
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
@@ -67,23 +64,15 @@ export default class ExchangedFlipInput extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.primaryInfo.nativeAmount) {
-      const nativeAmount:string = bns.abs(nextProps.primaryInfo.nativeAmount)
-      const primaryDisplayAmount:string = this.convertPrimaryNativeToDisplay(nativeAmount)
-      if (bns.eq(this.state.primaryDisplayAmount, primaryDisplayAmount)) {
-        // Display amount didn't change. Check if exchange rate did.
-        if (this.props.secondaryToPrimaryRatio !== nextProps.secondaryToPrimaryRatio) {
-          if (this.state.lastChanged === LC_PRIMARY) {
-            this.onPrimaryAmountChange(this.state.primaryDisplayAmount)
-          } else if (this.state.lastChanged === LC_SECONDARY) {
-            this.onSecondaryAmountChange(this.state.secondaryDisplayAmount)
-          }
-        }
-      } else {
-        if (this.state.lastChanged === LC_UNDEFINED || this.state.lastChanged === LC_PRIMARY) {
+      const primaryNativeAmount: string = bns.abs(nextProps.primaryInfo.nativeAmount)
+      const primaryDisplayAmount = this.convertPrimaryNativeToDisplay(primaryNativeAmount)
+      if (this.state.lastChanged === LC_UNDEFINED) {
+        this.onPrimaryAmountChange(primaryDisplayAmount)
+      } else if (this.state.lastChanged === LC_PRIMARY) {
+        if (!bns.eq(this.state.primaryDisplayAmount, primaryDisplayAmount)) {
           this.onPrimaryAmountChange(primaryDisplayAmount)
         }
       }
-      // console.log('componentWillReceiveProps')
     }
   }
 
@@ -121,7 +110,6 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   }
 
   onSecondaryAmountChange = (secondaryInput: string) => {
-    // console.log('onSecondaryAmountChange')
     if (secondaryInput === '') {
       this.setState({
         lastChanged: LC_SECONDARY,

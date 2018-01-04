@@ -1,14 +1,10 @@
+// @flow
+
 import {
-  StyleSheet,
-  Dimensions
+  StyleSheet
 } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
-
-const screenDimensions = {
-  height: Dimensions.get('window').height,
-  width: Dimensions.get('window').width
-}
-
+import PLATFORM from '../../../../theme/variables/platform'
 export const styles = {
   // modal styles
   modalContainer: {
@@ -17,57 +13,61 @@ export const styles = {
     zIndex: 1,
     elevation: 1
   },
-  modalOverlay: {
-    flex: 1,
-    padding: 10
+  topLevelModal: {
+    alignItems: 'center',
+    position: 'absolute',
+    top: PLATFORM.deviceHeight * 1 / 8,
+    left: PLATFORM.deviceWidth * 1 / 8 - 20,
+    backgroundColor:'transparent'
+  },
+  visibleModal: {
+    zIndex: 1,
+    paddingVertical: 6,
+    borderRadius: 3,
+    backgroundColor: THEME.COLORS.WHITE,
+    width: PLATFORM.deviceWidth * 3 / 4
   },
   modalBox: {
-    top: (screenDimensions.height / 8),
-    left: (screenDimensions.width / 8) - 20,
-    width: screenDimensions.width * 3 / 4,
-    borderRadius: 3,
     alignItems: 'stretch',
-    position: 'absolute',
     // height: (screenDimensions.height) / 3,
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: 15,
-    paddingTop: 25,
+    paddingHorizontal: 15,
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
-  modalBoxWithExit: {
-    position: 'relative',
-    bottom: 24
-  },
+
   exitRow: {
     alignItems: 'flex-end',
     position: 'relative',
+    justifyContent: 'center',
     zIndex: 200
   },
   exitButton: {
     backgroundColor: 'transparent',
-    width: 30,
+    width: 40,
     height: 30,
-    alignItems: 'flex-end',
-    position: 'relative',
-    top: 6
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   exitText: {
     fontSize: 18,
     backgroundColor: 'transparent',
-    color: THEME.GRAY_1
+    color: THEME.COLORS.GRAY_1
   },
   iconWrapper: {
 
   },
   modalHeaderIconWrapBottom: {
-    position: 'absolute',
-    left: (screenDimensions.width / 2) - 47,
-    top: (screenDimensions.height / 8) - 28,
+    position: 'relative',
+    top: 27,
     borderRadius: 27,
+    borderWidth: 2,
+    borderColor: THEME.COLORS.SECONDARY,
     backgroundColor: THEME.COLORS.WHITE,
     height: 54,
-    width: 54
+    width: 54,
+    zIndex: 2,
+    alignItems: 'center',
+    justifyContent: 'space-around'
   },
   modalHeaderIconWrapTop: {
     position: 'relative',
@@ -78,7 +78,8 @@ export const styles = {
     zIndex: 100,
     elevation: 100,
     height: 48,
-    width: 48
+    width: 48,
+    overflow: 'hidden'
   },
 
   // beginning of rename wallet modal
@@ -111,9 +112,7 @@ export const styles = {
     height: 50,
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    alignItems: 'flex-end',
-    position: 'relative',
-    top: 30
+    alignItems: 'flex-end'
   },
 
   // buttons
@@ -154,6 +153,6 @@ export const styles = {
   }
 }
 
-export const exitColor = THEME.GRAY_1
+export const exitColor = THEME.COLORS.GRAY_1
 
 export default StyleSheet.create(styles)

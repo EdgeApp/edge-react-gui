@@ -1,6 +1,8 @@
 import {View, StyleSheet, Text} from 'react-native'
 import React, {Component} from 'react'
 
+import * as s from '../../../../locales/strings.js'
+
 const styles = StyleSheet.create({
   view: {
     alignItems: 'center',
@@ -21,7 +23,7 @@ export default class Fees extends Component {
     const {primaryFee, secondaryFee} = this.props
     return <View style={styles.view}>
       <Text style={styles.label}>
-        (Fee)
+        {s.strings.string_fee_with_brackets}
       </Text>
 
       <Text style={styles.feesInCrypto}>

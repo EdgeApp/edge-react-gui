@@ -10,8 +10,23 @@ import styles, {styles as styleRaw} from '../style'
 import * as UTILS from '../../../../utils'
 import {bns} from 'biggystring'
 import type {GuiWallet} from '../../../../../types'
+import _ from 'lodash'
 
 const DIVIDE_PRECISION = 18
+
+/* type Props = {
+  type: string,
+  walletList: Array<void>,
+  settings: Array<void>,
+  activeWalletIds: Array<void>,
+  selectedWalletId: Array<void>,
+  disableWalletListModalVisibility(): void,
+  toggleSelectedWalletListModal(): void,
+  toggleScanToWalletListModal(): void,
+  getTransactions(string, string): void,
+  selectWallet(string, string, string): void,
+  updateReceiveAddress(string, string): void
+} */
 
 export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   selectFromWallet = () => {
@@ -24,21 +39,32 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     this.props.disableWalletListModalVisibility()
   }
 
-  renderTokens = (walletId: string, metaTokenBalances: any, code: any) => {
+  renderTokens = (walletId: string, metaTokenBalances: any, code: any, combinedTokens: Array<any> /* merge between customToken and metaToken */) => {
     let tokens = []
     for (let property in metaTokenBalances) {
       if (property !== code) {
-        tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
+        if (_.findIndex(combinedTokens, (token) => token.currencyCode === property)) {
+          tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
+        }
       }
     }
     return tokens
   }
 
   renderTokenRowContent = (parentId: string, currencyCode: string, balance: any) => {
+    const denomination = this.props.walletList[parentId].allDenominations[currencyCode]
     let multiplier
-      = this.props.walletList[parentId]
-      .allDenominations[currencyCode][this.props.settings[currencyCode].denomination]
-      .multiplier
+    if (denomination) {
+      multiplier = denomination[this.props.settings[currencyCode].denomination].multiplier
+    } else {
+      const customDenom = _.find(this.props.settings.customTokens, (item) => item.currencyCode === currencyCode)
+      if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
+        multiplier = customDenom.denominations[0].multiplier
+      } else {
+        return // let it blow up. It shouldn't be attempting to display
+      }
+
+    }
     let cryptoAmount = bns.div(balance, multiplier, DIVIDE_PRECISION)
     const walletId = parentId
     return (
@@ -47,7 +73,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
         key={currencyCode} onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
-          this.props.selectWallet(walletId, currencyCode)
+          this.props.selectWallet(walletId, currencyCode, this.props.type)
           this.props.updateReceiveAddress(parentId, currencyCode)
         }}>
         <View style={styles.currencyRowContent}>
@@ -66,7 +92,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     )
   }
 
-  renderWalletRow = (guiWallet: GuiWallet, i: number) => {
+  renderWalletRow = (guiWallet: GuiWallet) => {
     let multiplier
       = guiWallet
       .allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination]
@@ -78,14 +104,27 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     let denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
+
+    // need to crossreference tokensEnabled with nativeBalances
+    let enabledNativeBalances = {}
+    const enabledTokens = guiWallet.enabledTokens
+
+    for (let prop in guiWallet.nativeBalances) {
+      if ((prop !== currencyCode) && (enabledTokens.includes(prop))) {
+        enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
+      }
+    }
+
+    const combinedTokens = UTILS.mergeTokensRemoveInvisible(guiWallet.metaTokens, this.props.settings.customTokens)
+
     return (
-      <View key={i}>
+      <View key={guiWallet.id}>
         <TouchableHighlight style={styles.rowContainer}
           underlayColor={styleRaw.underlay.color}
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
-            this.props.selectWallet(walletId, currencyCode)
+            this.props.selectWallet(walletId, currencyCode, this.props.type)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
           }}>
           <View style={styles.currencyRowContent}>
@@ -102,22 +141,20 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
           </View>
         </TouchableHighlight>
 
-        {this.renderTokens(guiWallet.id, guiWallet.nativeBalances, guiWallet.currencyCode)}
+        {this.renderTokens(guiWallet.id, enabledNativeBalances, guiWallet.currencyCode, combinedTokens)}
       </View>
     )
   }
 
   renderWalletRows () {
-    let i = -1
-    let rows = []
-    for (const n in this.props.walletList) {
-      i = i + 1
-      const guiWallet = this.props.walletList[n]
-      if (typeof guiWallet.id !== 'undefined' && this.props.activeWalletIds.includes(guiWallet.id)) {
-        rows.push(this.renderWalletRow(guiWallet, i))
+    const guiWallets: Array<GuiWallet> = []
+    for (const id of this.props.activeWalletIds) {
+      if (typeof this.props.walletList[id] !== 'undefined') {
+        guiWallets.push(this.props.walletList[id])
       }
     }
-    return rows
+
+    return guiWallets.map(this.renderWalletRow)
   }
 
   render () {

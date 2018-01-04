@@ -1,18 +1,41 @@
+// @flow
+
 export const LOGIN = 'login'
 export const CHANGE_PASSWORD = 'changePassword'
 export const CHANGE_PIN = 'changePin'
 export const RECOVER_PASSWORD = 'passwordRecovery'
 export const EDGE = 'edge'
+export const EXCHANGE = 'exchange'
+export const EDGE_LOGIN = 'edgeLogin'
 export const WALLET_LIST = 'walletList'
+export const WALLET_LIST_SCENE = 'walletListScene' // distinguished as actual scene vs. stack
 export const CREATE_WALLET = 'createWallet'
+export const MANAGE_TOKENS = 'manageTokens'
+export const ADD_TOKEN = 'addToken'
+export const EDIT_TOKEN = 'editToken'
 export const TRANSACTION_LIST = 'transactionList'
 export const TRANSACTION_DETAILS = 'transactionDetails'
 export const SCAN = 'scan'
 export const SEND_CONFIRMATION = 'sendConfirmation'
+export const CHANGE_MINING_FEE_SEND_CONFIRMATION = 'changeMiningFeeSendConfirmation'
+export const CHANGE_MINING_FEE_EXCHANGE = 'changeMiningFeeExchange'
 export const REQUEST = 'request'
 export const SETTINGS_OVERVIEW = 'settingsOverview'
-export const BTC_SETTINGS = 'btcSettings'
-export const BCH_SETTINGS = 'bchSettings'
-export const ETH_SETTINGS = 'ethSettings'
-export const LTC_SETTINGS = 'ltcSettings'
-export const DIRECTORY= 'directory'
+export const CURRENCY_SETTINGS = {
+  'btcSettings': {
+    pluginName: 'bitcoin',
+    currencyCode: 'BTC'
+  },
+  'bchSettings': {
+    pluginName: 'bitcoinCash',
+    currencyCode: 'BCH'
+  },
+  'ethSettings': {
+    pluginName: 'ethereum',
+    currencyCode: 'ETH'
+  },
+  'ltcSettings': {
+    pluginName: 'litecoin',
+    currencyCode: 'LTC'
+  }
+}

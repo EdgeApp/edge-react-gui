@@ -1,34 +1,26 @@
-// Core/Context/api.js
+// @flow
 
-export const getCurrencyPlugins = (context) =>
-  context.getCurrencyPlugins()
+import type {AbcContext} from 'airbitz-core-types'
 
-export const createAccount = (context, ...opts) =>
-  context.createAccount(...opts)
+export const getCurrencyPlugins = (context: AbcContext) => {
+  return context.getCurrencyPlugins()
+}
 
-export const getLocalAccount = (context, username, callbacks) =>
-  context.getLocalAccount(username, callbacks)
+export const deleteLocalAccount = (context: AbcContext, username: string) => {
+  return context.deleteLocalAccount(username)
+}
 
-export const deleteLocalAccount = (context, username) =>
-  context.deleteLocalAccount(username)
+export const listUsernames = (context: AbcContext) => {
+  return context.listUsernames()
+}
 
-export const listUsernames = (context) =>
-  context.listUsernames()
+export const getExchangeSwapRate = (context: AbcContext, sourceCurrencyCode: string, targetCurrencyCode: string) => {
+  return context.getExchangeSwapRate(sourceCurrencyCode, targetCurrencyCode)
+}
 
-export const isUsernameAvailable = (context, username) =>
-  context.usernameAvailable(username)
+export const getExchangeSwapInfo = (context: AbcContext, sourceCurrencyCode: string, targetCurrencyCode: string) => {
+  // $FlowExpectedError
+  return context.getExchangeSwapInfo(sourceCurrencyCode, targetCurrencyCode)
+}
 
-export const loginWithPassword = (context, ...opts) =>
-  context.loginWithPassword(...opts)
-
-export const loginWithPin = (context, ...opts) =>
-  context.loginWithPin(...opts)
-
-export const hasPassword = (context, username) =>
-  context.accountHasPassword(username)
-
-export const isPinReLoginEnabled = (context, username) =>
-  context.pinLoginEnabled(username)
-
-export const requestOTPReset = (context, username, otpResetToken) =>
-  context.requestOTPReset(username, otpResetToken)
+// TODO Allen: Function that returns exchange rate.

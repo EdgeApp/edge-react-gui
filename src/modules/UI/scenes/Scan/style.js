@@ -1,3 +1,5 @@
+// @flow
+
 import {
   StyleSheet,
   Platform
@@ -6,9 +8,14 @@ import THEME from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
 
 export const styles = {
+  gradient: {
+    height: THEME.HEADER
+  },
   container: {
+    height: platform.deviceHeight - 66 - platform.footerHeight,
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
+    position: 'relative',
   },
   preview: {
     flex: 1,
@@ -106,15 +113,8 @@ export const styles = {
     flex: 1,
     padding: 10
   },
-  modalBox: {
-    top: platform.deviceHeight / 5,
-    borderRadius: 3,
-    alignItems: 'stretch',
-    height: (platform.deviceHeight) / 4,
-    backgroundColor: THEME.COLORS.WHITE,
-    padding: 15,
-    flexDirection: 'column',
-    justifyContent: 'flex-start'
+  withAddressCopied: {
+    top: 0
   },
   modalTopTextWrap: {
     flex: 1

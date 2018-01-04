@@ -6,6 +6,11 @@ export default StyleSheet.create({
   stylizedModal: {
     height: (PLATFORM.deviceHeight * 2 / 3)
   },
+  webView: {
+    justifyContent: 'center',
+    alignItems:'center',
+    flex: 1
+  },
   modalBottomContainer: {
     justifyContent: 'center',
     width: '100%',
@@ -17,7 +22,19 @@ export default StyleSheet.create({
     padding: 4
   },
   modalMiddleWebView: {
-
+    flex: 1,
+  },
+  modalVisibleStyle: {
+    flex: 1,
+  },
+  modalBoxStyle: {
+    flex: 1,
+  },
+  modalContentStyle: {
+    flex: 1,
+  },
+  modalBodyStyle: {
+    flex: 1,
   },
   modalFeaturedIcon: {
     top: 12,

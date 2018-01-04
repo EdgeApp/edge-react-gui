@@ -1,22 +1,24 @@
 import React, {Component} from 'react'
 import {
-  View,
-  TextInput
+  View
 } from 'react-native'
 import {TertiaryButton} from '../../../components/Buttons'
 import styles from '../style.js'
+import s from '../../../../../locales/strings.js'
+import {FormField} from '../../../../../components/FormField.js'
+
 
 export class AddressInput extends Component { // this component is for the input area of the Recipient Address Modal
   render () {
     return (
       <View>
         <View style={[styles.addressInputWrap]}>
-          <TextInput style={[styles.addressInput]}
+          <FormField style={[styles.addressInput]}
             value={this.props.uri}
             onChangeText={this.props.onChangeText}
             autoCapitalize={'none'}
             autoFocus
-            placeholder={this.props.copyMessage}
+            label={s.strings.fragment_send_send_to_hint}
             returnKeyType={'done'}
             autoCorrect={false}
             onSubmitEditing={this.props.onSubmit}

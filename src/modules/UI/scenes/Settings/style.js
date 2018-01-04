@@ -1,7 +1,19 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
+  gradient: {
+    height: THEME.HEADER
+  },
+  body: {
+    padding: 18
+  },
+  container: {
+    position: 'relative',
+    height:'100%',
+  },
   listStyle: {
     height: 100
   },
@@ -62,6 +74,9 @@ export const styles = {
     fontSize: 18,
     color: THEME.COLORS.GRAY_1
   },
+  settingsLocks: {
+    color: THEME.COLORS.GRAY_1
+  },
   modalRightText: {
     color: THEME.COLORS.SECONDARY,
     fontWeight: 'bold'
@@ -92,9 +107,6 @@ export const styles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     height: 50
-  },
-  headerTextWrap: {
-    height: 10
   },
   headerText: {
     fontSize: 18,

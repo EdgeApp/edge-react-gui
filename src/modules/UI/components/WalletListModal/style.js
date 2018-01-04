@@ -1,3 +1,5 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
@@ -27,7 +29,8 @@ export const styles = {
     justifyContent: 'space-between'
   },
   rowNameText: {
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: THEME.FONTS.DEFAULT
   },
   headerContent: {
     justifyContent: 'space-between',
@@ -38,7 +41,8 @@ export const styles = {
   },
   headerText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: THEME.FONTS.DEFAULT
   },
   headerCloseWrap: {
     alignSelf: 'flex-end'
@@ -73,7 +77,8 @@ export const styles = {
   },
   currencyRowText: {
     color: THEME.COLORS.GRAY_1,
-    fontSize: 14
+    fontSize: 14,
+    fontFamily: THEME.FONTS.DEFAULT
   },
   underlay: {
     color: THEME.COLORS.ROW_PRESSED

@@ -1,21 +1,21 @@
+// @flow
+
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {TouchableOpacity} from 'react-native'
 
-import {sprintf} from 'sprintf-js'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 
-import {openHelpModal} from '../../HelpModal/actions.js'
 import T from '../../../components/FormattedText'
 import styles from '../style'
 
-const HELP_TEXT = sprintf(strings.enUS['string_help'])
+const HELP_TEXT = s.strings.string_help
 
-class HelpButton extends Component {
+type Props ={openHelpModal: () => void}
+type State = {}
+export default class HelpButton extends Component<Props, State> {
   render () {
     return (
-      <TouchableOpacity style={styles.sideTextWrap}
-        onPress={() => this.props.dispatch(openHelpModal())}>
+      <TouchableOpacity style={styles.sideTextWrap} onPress={() => this.props.openHelpModal()}>
         <T style={[styles.sideText]}>
           {HELP_TEXT}
         </T>
@@ -23,5 +23,3 @@ class HelpButton extends Component {
     )
   }
 }
-
-export default connect()(HelpButton)

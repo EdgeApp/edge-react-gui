@@ -1,6 +1,16 @@
-import {Platform} from 'react-native'
-const platform = Platform.OS
+// @flow
 
-export default {
-  statusBarHack: (platform === 'ios') ? {marginTop: 20, flex: 1} : {flex: 1}
+import {StyleSheet} from 'react-native'
+
+import THEME from '../theme/variables/airbitz.js'
+
+export const stylesRaw = {
+  titleStyle: {
+    alignSelf: 'center',
+    fontSize: 24,
+    color: THEME.COLORS.WHITE,
+    fontFamily: THEME.FONTS.DEFAULT,
+  }
 }
+
+export const styles = StyleSheet.create(stylesRaw)

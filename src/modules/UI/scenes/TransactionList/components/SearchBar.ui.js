@@ -6,14 +6,14 @@ import {
   TouchableHighlight,
   Animated
 } from 'react-native'
-import strings from '../../../../../locales/default'
+import s from '../../../../../locales/strings.js'
 import {sprintf} from 'sprintf-js'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import styles from '../style'
 import * as UTILS from '../../../../utils'
 
-const CANCEL_TEXT = sprintf(strings.enUS['string_cancel_cap'])
-const SEARCH_PLACEHOLDER_TEXT = sprintf(strings.enUS['string_search'])
+const CANCEL_TEXT = sprintf(s.strings.string_cancel_cap)
+const SEARCH_PLACEHOLDER_TEXT = sprintf(s.strings.string_search)
 
 export default class SearchBar extends Component {
   constructor (props) {

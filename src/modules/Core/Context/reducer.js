@@ -1,15 +1,26 @@
+// @flow
+
+import type {AbcContext} from 'airbitz-core-types'
+
+import type {Action} from '../../ReduxTypes'
 import * as ACTION from './action.js'
 
 const initialState = {
   context: {},
-  usernames: []
+  usernames: [],
+  nextUsername: ''
 }
-export const context = (state = initialState, action) => {
+export type State = {
+  context: AbcContext | {},
+  usernames: Array<string>,
+  nextUsername: string
+}
+export const context = (state: State = initialState, action: Action) => {
   const {type, data = {} } = action
 
   switch (type) {
   case ACTION.ADD_CONTEXT: {
-    const {context}  = data
+    const context: AbcContext = data.context
     return {
       ...state,
       context
@@ -24,11 +35,19 @@ export const context = (state = initialState, action) => {
     }
   }
 
+  case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
+    const {usernames} = data
+    return {
+      ...state,
+      usernames
+    }
+  }
+
   case 'LOGOUT': {
     const {username} = data
     return {
       ...state,
-      nextUsername: username
+      nextUsername: username || ''
     }
   }
 

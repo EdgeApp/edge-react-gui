@@ -24,9 +24,11 @@ export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
 export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
 import {Actions} from 'react-native-router-flux'
 import {openABAlert} from '../../components/ABAlert/action'
+import * as Constants from '../../../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 // import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -106,21 +108,23 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.saveTransaction(wallet, abcSignedTransaction))
     .then(() => {
       dispatch(updateSpendPending(false))
-      Actions.transactionList({type: 'reset'})
+      Actions.pop()
       const successInfo = {
+        success: true,
         title: 'Transaction Sent',
         message: 'Your transaction has been successfully sent.'
       }
-      dispatch(openABAlert(successInfo))
+      dispatch(openABAlert(Constants.OPEN_AB_ALERT, successInfo))
     })
     .catch((e) => {
       // console.log(e)
       dispatch(updateSpendPending(false))
       const errorInfo = {
+        success: false,
         title: 'Transaction Failure',
         message: e.message
       }
-      dispatch(openABAlert(errorInfo))
+      dispatch(openABAlert(Constants.OPEN_AB_ALERT, errorInfo))
     })
 }
 
@@ -155,6 +159,8 @@ export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, get
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
   const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
+  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
+  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
 
   return WALLET_API.makeSpend(abcWallet, spendInfo)
   .then((abcTransaction: AbcTransaction) => {
@@ -173,6 +179,8 @@ export const getMaxSpendable = () => (dispatch: any, getState: any) => {
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
   const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
+  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
+  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
 
   return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
     .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
@@ -206,3 +214,9 @@ const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
   }
   return spendInfo
 }
+
+export const changeFee = (feeSetting: string) => ({
+  type: CHANGE_MINING_FEE,
+  feeSetting,
+  // fee,
+})

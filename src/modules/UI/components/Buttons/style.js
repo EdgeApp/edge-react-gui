@@ -1,3 +1,5 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
@@ -8,7 +10,7 @@ export const styles = {
     alignSelf: 'flex-end'
   },
   stylizedButton: {
-    height: 44,
+    height: THEME.BUTTONS.HEIGHT,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
@@ -16,16 +18,19 @@ export const styles = {
   },
   stylizedButtonText: {
     color: THEME.COLORS.WHITE,
-    fontSize: 16
+    fontSize: 16,
+    fontFamily: THEME.FONTS.DEFAULT
   },
-
+  text: {
+    fontFamily: THEME.FONTS.DEFAULT
+  },
   primaryButtonWrap: {
     backgroundColor: THEME.COLORS.SECONDARY
   },
   primaryUnderlay: {
     color: THEME.COLORS.PRIMARY
   },
-  primaryButton: {
+  primaryButtonText: {
     color: THEME.COLORS.GRADIENT.LIGHT
   },
 
@@ -33,7 +38,7 @@ export const styles = {
     backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
-  secondaryButton: {
+  secondaryButtonText: {
     color: THEME.COLORS.GRADIENT.LIGHT
   },
   secondaryUnderlay: {
@@ -45,9 +50,8 @@ export const styles = {
     borderWidth: 1,
     borderColor: THEME.COLORS.SECONDARY
   },
-  tertiaryButton: {
-    color: THEME.COLORS.SECONDARY,
-    paddingHorizontal: 10
+  tertiaryButtonText: {
+    color: THEME.COLORS.SECONDARY
   },
   tertiaryUnderlay: {
     color: THEME.COLORS.GRAY_3

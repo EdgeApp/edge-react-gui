@@ -1,5 +1,7 @@
 // @flow
 
+import {Platform} from 'react-native'
+
 export const colors = {
   gradient: {
     light: '#3b7ada',
@@ -31,12 +33,21 @@ export const font = {
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
 export default {
+  BUTTONS: {
+    HEIGHT: 44
+  },
+
+  SPACER: {
+    HEADER: Platform.OS === 'ios' ? 66 : 56
+  },
+
+  HEADER: Platform.OS === 'ios' ? 66 : 56,
+
   DEBUG: {
     COLORS: {
       HIGHLIGHT: '#f03a47'
     }
   },
-
   FONTS: {
     DEFAULT: 'SourceSansPro-Black'
   },
@@ -62,6 +73,7 @@ export default {
   COLORS: {
     PRIMARY:   '#0D2145',
     SECONDARY: '#0E4B75',
+    PRIMARY_BUTTON_TOUCHED: 'rgba(42,87,153,0.55)',
 
     GRADIENT: {
       DARK:  '#0D2145',
@@ -79,6 +91,7 @@ export default {
     GRAY_3: '#D9E3ED',
     GRAY_4: '#F4F5F6',
     WHITE:  '#FFFFFF',
+    CLEAR:  'rgba(0, 0, 0, 0)',
 
     TRANSPARENT: 'transparent',
 

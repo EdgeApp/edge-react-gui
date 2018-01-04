@@ -1,7 +1,12 @@
+// @flow
+
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
+  gradient: {
+    height: THEME.HEADER
+  },
   container: {
     flex: 1,
     alignItems: 'stretch'
@@ -197,6 +202,7 @@ export const styles = {
     paddingLeft: 15,
   },
   singleTransactionWrap: {
+    backgroundColor: THEME.COLORS.WHITE,
     flexDirection: 'column',
     flex: 1,
   },
@@ -250,12 +256,17 @@ export const styles = {
     alignItems: 'flex-end',
     justifyContent: 'center'
   },
-  transactionTime: {
+  transactionTimePendingArea: {
     fontSize: 12,
-    color: THEME.COLORS.GRAY_1,
     textAlignVertical: 'bottom',
     position: 'relative',
     top: 4
+  },
+  transactionTime: {
+    color: THEME.COLORS.GRAY_1,
+  },
+  transactionPending: {
+    color: THEME.COLORS.ACCENT_RED
   },
   transactionDollarAmount: {
     fontSize: 12,

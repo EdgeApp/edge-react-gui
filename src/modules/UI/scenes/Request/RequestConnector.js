@@ -1,3 +1,5 @@
+// @flow
+
 import {connect} from 'react-redux'
 import Request from './Request.ui'
 
@@ -8,15 +10,20 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import {saveReceiveAddress} from './action.js'
 import {getDenomFromIsoCode} from '../../../utils'
 
-const mapStateToProps = (state) => {
-  let secondaryToPrimaryRatio = 0
-  const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  if (!guiWallet) {
+import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {GuiDenomination, GuiWallet} from '../../../../types'
+import type {Dispatch, State} from '../../../ReduxTypes'
+
+const mapStateToProps = (state: State) => {
+  let secondaryToPrimaryRatio: number = 0
+  const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
+  const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
+  if (!guiWallet || !currencyCode) {
     return {
       loading: true,
       request: {},
       abcWallet: {},
-      secondaryToPrimaryRatio: '',
+      secondaryToPrimaryRatio: 0,
       wallet: {},
       currencyCode: '',
       primaryInfo: {},
@@ -24,12 +31,11 @@ const mapStateToProps = (state) => {
     }
   }
 
-  const abcWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-  const secondaryDisplayDenomination = secondaryExchangeDenomination
+  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
   const primaryInfo = {
     displayCurrencyCode: currencyCode,
     displayDenomination: primaryDisplayDenomination,
@@ -41,7 +47,7 @@ const mapStateToProps = (state) => {
     exchangeDenomination: secondaryExchangeDenomination
   }
   if (guiWallet) {
-    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+    const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
     secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
@@ -53,10 +59,11 @@ const mapStateToProps = (state) => {
     wallet: guiWallet,
     currencyCode,
     primaryInfo,
-    secondaryInfo
+    secondaryInfo,
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   saveReceiveAddress: (receiveAddress) => dispatch(saveReceiveAddress(receiveAddress))
 })
 
