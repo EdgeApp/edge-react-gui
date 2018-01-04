@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Image, View} from 'react-native'
 import s from '../../../../locales/strings.js'
@@ -8,9 +10,18 @@ import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
 
+import type {GuiDenomination} from '../../../../types'
+
 const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
 
-export default class CurrencySettings extends Component {
+type Props = {
+  denominations: Array<GuiDenomination>,
+  logo: string,
+  selectDenomination: (string) => void,
+  selectedDenominationKey: string
+}
+type State = {}
+export default class CurrencySettings extends Component<Props, State> {
   header () {
     return <Gradient style={[styles.headerRow, b()]}>
 
@@ -27,7 +38,7 @@ export default class CurrencySettings extends Component {
     </Gradient>
   }
 
-  selectDenomination = (key) => () => {
+  selectDenomination = (key: string) => () => {
     console.log('src/modules/UI/scences/Settings/CurrencySettings.ui.js/selectDenomination', key)
     return this.props.selectDenomination(key)
   }
