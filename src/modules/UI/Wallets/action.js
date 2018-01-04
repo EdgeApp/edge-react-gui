@@ -128,6 +128,8 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const state = getState()
   // get the AbcWallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+
   // get token information from settings
   const customTokens: Array<CustomTokenInfo> = SETTINGS_SELECTORS.getCustomTokens(state)
   try {
@@ -135,14 +137,22 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
     const promiseArray = []
     const tokensToEnable = []
 
-    // Add any enabledTokens that are custom tokens
-    for (const ct of customTokens) {
-      const found = enabledTokens.find((element) => {
-        return element === ct.currencyCode
+    // Add any enabledTokens that are custom tokens or in the currencyInfo
+    for (const et of enabledTokens) {
+      let found = guiWallet.metaTokens.find((element) => {
+        return element.currencyCode === et
       })
       if (found) {
-        tokensToEnable.push(found)
-        promiseArray.push(wallet.addCustomToken(ct))
+        tokensToEnable.push(et)
+        continue
+      }
+
+      found = customTokens.find((element) => {
+        return element.currencyCode === et
+      })
+      if (found) {
+        tokensToEnable.push(et)
+        promiseArray.push(wallet.addCustomToken(found))
       }
     }
     await Promise.all(promiseArray)
