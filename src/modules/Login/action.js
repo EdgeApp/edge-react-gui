@@ -39,8 +39,6 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
       // TODO: understand why this fails flow -paulvp
-      // $FlowFixMe
-      dispatch(updateWalletsRequest())
 
       if (ACCOUNT_API.checkForExistingWallets(account)) {
         const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
@@ -54,6 +52,8 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
         false, true
       ))
       dispatch(loadSettings())
+      // $FlowFixMe
+      dispatch(updateWalletsRequest())
     })
 }
 
