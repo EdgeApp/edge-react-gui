@@ -44,6 +44,8 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
         const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
         dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
         dispatch(loadSettings())
+        // $FlowFixMe
+        dispatch(updateWalletsRequest())
         return
       }
       dispatch(actions.createCurrencyWallet(
