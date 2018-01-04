@@ -57,6 +57,7 @@ import AddToken from './UI/scenes/AddToken'
 import EditToken from './UI/scenes/EditToken'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
+import SpendingLimits from './UI/scenes/SpendingLimits/indexSpendingLimits.js'
 import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -146,6 +147,7 @@ const CHANGE_PASSWORD = s.strings.title_change_password
 const CHANGE_PIN = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const DEFAULT_FIAT = s.strings.title_default_fiat
+const CANCEL_TEXT = s.strings.cancel
 
 type Props = {
   username?: string,
@@ -365,13 +367,26 @@ export default class Main extends Component<Props, State> {
     const settings = []
     for (const key in Constants.CURRENCY_SETTINGS) {
       const {pluginName, currencyCode} = Constants.CURRENCY_SETTINGS[key]
-      const title = s.strings[`title_${pluginName}_settings`]
-      settings.push(<Scene key={key} pluginName={pluginName} currencyCode={currencyCode} navTransparent={true}
-        component={CurrencySettings}
-        renderTitle={this.renderTitle(title || pluginName)}
-        renderLeftButton={this.renderBackButton()}
-        renderRightButton={this.renderEmptyButton} />)
+
+      const pluginSettingsKey = `title_${pluginName}_settings`
+
+      const currencySettingsTitle = s.strings[pluginSettingsKey]
+      const spendingLimitsTitle   = s.strings.spending_limits
+
+      settings.push(
+        <Scene key={key} pluginName={pluginName} currencyCode={currencyCode} navTransparent={true}
+          component={CurrencySettings}
+          renderTitle={this.renderTitle(currencySettingsTitle || pluginName)}
+          renderLeftButton={this.renderBackButton()}
+          renderRightButton={this.renderEmptyButton} />,
+        <Scene key={`${pluginName}SpendingLimits`} pluginName={pluginName} currencyCode={currencyCode} navTransparent={true}
+          component={SpendingLimits}
+          renderTitle={this.renderTitle(spendingLimitsTitle)}
+          renderLeftButton={this.renderBackButton(CANCEL_TEXT)}
+          renderRightButton={this.renderHelpButton} />
+      )
     }
+
     return settings
   }
   renderWalletListNavBar = () => (<Header/>)
