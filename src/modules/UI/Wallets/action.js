@@ -1,4 +1,5 @@
 //@flow
+
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -86,6 +87,7 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch, 
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
     dispatch({type: 'LOGGED_OUT'})
+    return
   }
 
   dispatch({
@@ -131,6 +133,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   try {
     const enabledTokens = await WALLET_API.getEnabledTokensFromFile(wallet)
     const promiseArray = []
+    const tokensToEnable = []
 
     // Add any enabledTokens that are custom tokens
     for (const ct of customTokens) {
@@ -138,12 +141,13 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
         return element === ct.currencyCode
       })
       if (found) {
+        tokensToEnable.push(found)
         promiseArray.push(wallet.addCustomToken(ct))
       }
     }
     await Promise.all(promiseArray)
     // now reflect that change in Redux's version of the wallet
-    dispatch(updateWalletEnabledTokens(walletId, enabledTokens))
+    dispatch(updateWalletEnabledTokens(walletId, tokensToEnable))
   } catch (e) {
     dispatch(displayErrorAlert(e.message))
   }
