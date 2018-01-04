@@ -19,7 +19,9 @@ const initialState = {
   },
   loginStatus: null,
   isTouchSupported: false,
-  isTouchEnabled: false
+  isTouchEnabled: false,
+  isOtpEnabled: false,
+  otpKey: null
 }
 
 export const settings = (state = initialState, action) => {
@@ -261,6 +263,14 @@ export const settings = (state = initialState, action) => {
       isTouchEnabled: data
     }
   }
+  case ACTION.OTP_SETTINGS: {
+    return {
+      ...state,
+      isOtpEnabled: data.enabled,
+      otpKey: data.otpKey
+    }
+  }
+
 
   case ACTION.ADD_CURRENCY_PLUGIN: {
     const {plugins} = state

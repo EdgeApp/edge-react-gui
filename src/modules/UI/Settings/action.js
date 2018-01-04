@@ -10,6 +10,7 @@ export const ADD_EXCHANGE_TIMER = PREFIX + 'ADD_EXCHANGE_TIMER'
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'
 export const LOAD_SETTINGS = PREFIX + 'LOAD_SETTINGS'
 export const TOUCH_ID_SETTINGS = PREFIX + 'TOUCH_ID_SETTINGS'
+export const OTP_SETTINGS = PREFIX + 'OTP_SETTINGS'
 export const CHANGE_TOUCH_ID_SETTINGS = PREFIX + 'CHANGE_TOUCH_ID_SETTINGS'
 
 // Core Settings
@@ -158,5 +159,12 @@ export const updateTouchIdEnabled = (bool) => {
   return {
     type: CHANGE_TOUCH_ID_SETTINGS,
     data: bool
+  }
+}
+
+export const updateOtpInfo = (otpInfo) => { //{enabled}
+  return {
+    type: OTP_SETTINGS,
+    data: otpInfo
   }
 }

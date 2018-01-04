@@ -4,8 +4,6 @@ const PREFIX = 'UI/Scenes/Settings/'
 
 const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
 const SET_PIN_START = PREFIX + 'SET_PIN_START'
-const SET_OTP_MODE_START = PREFIX + 'SET_OTP_MODE_START'
-const SET_OTP_START = PREFIX + 'SET_OTP_START'
 
 const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
 const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
@@ -25,26 +23,6 @@ import type {
 } from '../../../../../src/modules/ReduxTypes.js'
 
 export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
-
-export const setOTPModeRequest = (otpMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(setOTPModeStart(otpMode))
-
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  ACCOUNT_SETTINGS.setOTPModeRequest(account, otpMode)
-    .then(() => dispatch(SETTINGS_ACTIONS.setOTPMode(otpMode)))
-    .catch((error) => { console.error(error) })
-}
-
-export const setOTPRequest = (otp: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(setOTPStart(otp))
-
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  ACCOUNT_SETTINGS.setOTPRequest(account, otp)
-    .then(() => dispatch(SETTINGS_ACTIONS.setOTP(otp)))
-    .catch((error) => { console.error(error) })
-}
 
 export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(setPINModeStart(pinMode))
@@ -160,8 +138,10 @@ export const updateTouchIdEnabled = (arg: boolean, account: AbcAccount) => async
   }
 }
 
+//export const enable
+
 // Simple Actions
-const setOTPModeStart = (otpMode: boolean) => ({
+/* const setOTPModeStart = (otpMode: boolean) => ({
   type: SET_OTP_MODE_START,
   data: {otpMode}
 })
@@ -170,7 +150,7 @@ const setOTPStart = (otp: string) => ({
   type: SET_OTP_START,
   data: {otp}
 })
-
+ */
 const setPINModeStart = (pinMode: boolean) => ({
   type: SET_PIN_MODE_START,
   data: {pinMode}

@@ -181,6 +181,22 @@ const strings = {
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
   transaction_details_notes_title: 'Notes',
   string_search: 'Search',
+
+  // OTP
+  title_otp_enabled: '2FA is enabled',
+  title_otp_disabled: 'Protect your account with 2FA',
+  otp_description: '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
+  otp_enabled_description: 'You can scan a QR code or type in the authentication code to seamlessly authorize other devices.',
+  otp_show_code: 'Show authentication code',
+  otp_hide_code: 'Hide authentication code',
+  otp_disable: 'Disable 2FA',
+  otp_enable: 'Enable 2FA',
+  otp_enabled_modal_part_one: '2fa has been enabled. A unique authentication code will be generated. ',
+  otp_enabled_modal_part_two: 'If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code',
+  otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
+  otp_modal_headline: 'Are you sure you want to disable 2FA?',
+  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.'
+
 }
 
 export default strings

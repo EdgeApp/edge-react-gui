@@ -1,17 +1,17 @@
 // @flow
 import {connect} from 'react-redux'
-//import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import {Actions} from 'react-native-router-flux'
+import type {Dispatch, State} from '../../modules/ReduxTypes'
+import * as SETTINGS_SELECTORS from '../../modules/UI/Settings/selectors.js'
 import OtpSettingsSceneComponent from '../../modules/UI/scenes/Otp/OtpSettingsSceneComponent.js'
-import * as Constants from '../../constants/indexConstants.js'
-
-export const mapStateToProps = () => ({
- /*  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state) */
+// import * as Constants from '../../constants/indexConstants.js'
+import {enableOtp, disableOtp} from '../../actions/indexActions.js'
+export const mapStateToProps = (state: State) => ({
+  isOtpEnabled: SETTINGS_SELECTORS.getIsOtpEnabled(state)
 })
 
-export const mapDispatchToProps = () => ({
-  onComplete: () => Actions[Constants.SETTINGS_OVERVIEW]()
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
+  enableOtp: () => dispatch(enableOtp()),
+  disableOtp: () => dispatch(disableOtp())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(OtpSettingsSceneComponent)
