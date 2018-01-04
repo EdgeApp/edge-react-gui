@@ -14,8 +14,8 @@ import RowRoute from './components/RowRoute.ui'
 import type {GuiDenomination} from '../../../../types'
 
 const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
-const SETTINGS_OPTIONS_TEXT      = s.strings.settings_options_title
-const SPENDING_LIMITS_TEXT       = s.strings.settings_spending_limits
+const SETTINGS_OPTIONS_TEXT = s.strings.settings_options_title
+const SPENDING_LIMITS_TEXT = s.strings.settings_spending_limits
 
 type Props = {
   denominations: Array<GuiDenomination>,
