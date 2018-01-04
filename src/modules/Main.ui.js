@@ -51,7 +51,7 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
+import CreateWallet from './UI/scenes/CreateWallet/CreateWalletConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
 import AddToken from './UI/scenes/AddToken'

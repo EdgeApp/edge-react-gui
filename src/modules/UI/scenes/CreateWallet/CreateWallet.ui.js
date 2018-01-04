@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {
@@ -16,6 +18,7 @@ import styles from './styles.js'
 import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import type {GuiWalletType, GuiFiatType} from '../../..'
 
 const WALLET_NAME_INPUT_PLACEHOLDER  = s.strings.fragment_wallets_addwallet_name_hint
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
@@ -25,8 +28,26 @@ const DONE_TEXT         = s.strings.fragment_create_wallet_create_wallet
 const CANCEL_TEXT       = s.strings.string_cancel_cap
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
-export default class CreateWallet extends Component {
-  constructor (props) {
+export type Props = {
+  supportedWalletTypes: Array<GuiWalletType>,
+  supportedFiats: Array<GuiFiatType>
+}
+
+export type State = {
+  supportedWalletTypes: Array<GuiWalletType>,
+  isCreatingWallet: boolean,
+  walletInfoValid: boolean,
+  walletName: string,
+  selectedWalletType: string,
+  selectedFiat: string
+}
+
+export type DispatchProps = {
+  createCurrencyWallet: (string, string, string) => void
+}
+
+export default class CreateWallet extends Component<Props & DispatchProps, State> {
+  constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
       supportedWalletTypes: props.supportedWalletTypes,
@@ -44,25 +65,26 @@ export default class CreateWallet extends Component {
   }
 
   isValidData = () => {
-    const isValidWalletName = !!this.isValidWalletName()
-    const isValidWalletType = !!this.isValidWalletType()
-    const isValidFiat       = !!this.isValidFiat()
+    const isValidWalletName = this.isValidWalletName()
+    const isValidWalletType = this.isValidWalletType()
+    const isValidFiat       = this.isValidFiat()
 
     return (isValidWalletName && isValidWalletType && isValidFiat)
   }
 
   isValidWalletName = () => {
     const {walletName} = this.state
-    const isValid = walletName.length > 0
+    const isValid: boolean = walletName.length > 0
 
     return isValid
   }
 
   isValidWalletType = () => {
     const {supportedWalletTypes, selectedWalletType} = this.state
-    const isValid = supportedWalletTypes
+    const walletTypeValue = supportedWalletTypes
       .find((walletType) => walletType.value === selectedWalletType)
 
+    const isValid: boolean = walletTypeValue ? true : false
     return isValid
   }
 
@@ -70,9 +92,10 @@ export default class CreateWallet extends Component {
     const supportedFiats = this.getSupportedFiats()
     const {selectedFiat} = this.state
 
-    const isValid = supportedFiats
+    const fiatValue = supportedFiats
       .find((fiat) => fiat.value === selectedFiat)
 
+    const isValid: boolean = fiatValue ? true : false
     return isValid
   }
 
@@ -100,16 +123,18 @@ export default class CreateWallet extends Component {
     Actions.pop() // redirect to the list of wallets
   }
 
-  handleChangeWalletName = (walletName) => {
+  handleChangeWalletName = (walletName: string) => {
     this.setState({walletName})
   }
 
-  handleSelectWalletType = ({value} = {value: ''}) => {
+  handleSelectWalletType = ({value}: {value: string} = {value: ''}) => {
     const selectedWalletType = this.props.supportedWalletTypes.find((type) => type.value = value)
-    this.setState({selectedWalletType: selectedWalletType.value})
+    if (selectedWalletType && selectedWalletType.value) {
+      this.setState({selectedWalletType: selectedWalletType.value})
+    }
   }
 
-  handleSelectFiat = ({value}) => {
+  handleSelectFiat = ({value}: {value: string}) => {
     this.setState({selectedFiat: value})
   }
 
@@ -121,6 +146,7 @@ export default class CreateWallet extends Component {
             <WalletNameInput
               onChangeText={this.handleChangeWalletName}
               value={this.state.walletName}
+              placeholder={''}
             />
 
             <DropdownPicker
@@ -173,7 +199,13 @@ const Buttons = ({isCreatingWallet, onDone, onCancel}) => (
 
 // //////////////////////////// WalletNameInput /////////////////////////////////
 
-class WalletNameInput extends Component {
+export type WalletNameInputProps = {
+ value: string,
+  placeholder: string,
+  onChangeText: Function
+}
+
+class WalletNameInput extends Component<WalletNameInputProps> {
   render () {
     return (
       <View style={styles.pickerView}>

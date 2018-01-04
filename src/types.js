@@ -104,6 +104,16 @@ export type CustomTokenInfo = {
   denominations: Array<AbcDenomination>
 }
 
+export type GUiWalletType = {
+  label: string,
+  value: string
+}
+
+export type GuiFiatType = {
+  label: string,
+  value: string
+}
+
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
