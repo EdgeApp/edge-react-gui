@@ -1,17 +1,31 @@
 // @flow
-import React, {Component} from 'react'
-import { View } from 'react-native'
-import Gradient from '../../components/Gradient/Gradient.ui.js'
-import {RecoverPasswordSceneStyles} from '../../../../styles/indexStyles.js'
-type Props = {
 
+import React, {Component} from 'react'
+import {View} from 'react-native'
+import {PasswordRecoveryScreen} from 'airbitz-core-js-ui'
+import Gradient from '../../components/Gradient/Gradient.ui'
+import styles from '../Settings/style.js'
+
+type Props = {
+  account: Object,
+  context: Object,
+  showHeader: boolean,
+  onComplete(): void
 }
 export default class PasswordRecovery extends Component<Props> {
   render () {
-    const styles = RecoverPasswordSceneStyles
     return (
-      <View >
+      <View>
         <Gradient style={styles.gradient} />
+        <View style={styles.container}>
+          <PasswordRecoveryScreen
+            account={this.props.account}
+            context={this.props.context}
+            onComplete={this.props.onComplete}
+            onCancel={this.props.onComplete}
+            showHeader={this.props.showHeader}
+          />
+        </View>
       </View>
     )
   }
