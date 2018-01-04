@@ -28,9 +28,13 @@ class Row extends Component {
 
       <View style={[styles.rowTextRow, debugBorder()]}>
         <View style={[styles.rowLeftContainer, debugBorder()]}>
-          <T style={[styles.rowLeftText, debugBorder()]}>
-            {left}
-          </T>
+          {
+            typeof left === 'string'
+              ? <T style={[styles.rowLeftText, debugBorder()]}>
+                  {left}
+                </T>
+              : left
+          }
         </View>
         {icon}
       </View>

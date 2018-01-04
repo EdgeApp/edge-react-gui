@@ -67,7 +67,8 @@ export const top = StyleSheet.create({
     fontSize: 15,
     color: THEME.COLORS.WHITE,
     textAlign: 'left',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontFamily: THEME.FONTS.SYMBOLS
   },
   amount: {
     flex: 6,

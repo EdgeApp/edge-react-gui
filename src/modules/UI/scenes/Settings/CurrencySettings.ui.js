@@ -8,7 +8,7 @@ import {border as b} from '../../../utils'
 import Row from './components/Row.ui.js'
 import RadioRows from './components/RadioRows.ui.js'
 
-const SETTINGS_DENOMIANTION_TEXT = s.strings.settings_denominations_title
+const SETTINGS_DENOMINATION_TEXT = s.strings.settings_denominations_title
 
 export default class CurrencySettings extends Component {
   header () {
@@ -19,7 +19,7 @@ export default class CurrencySettings extends Component {
           <Image style={{height: 25, width: 25, resizeMode: Image.resizeMode.contain}}
             source={{uri: this.props.logo}}/>
           <T style={styles.headerText}>
-            {SETTINGS_DENOMIANTION_TEXT}
+            {SETTINGS_DENOMINATION_TEXT}
           </T>
         </View>
       </View>
@@ -43,7 +43,7 @@ export default class CurrencySettings extends Component {
             {
               this.props.denominations.map((denomination) => {
                 const key = denomination.multiplier
-                const left = `${denomination.symbol} - ${denomination.name}`
+                const left = <View style={{flexDirection: 'row'}}><T style={styles.symbol}>{denomination.symbol}</T><T> - {denomination.name}</T></View>
                 const right = 'Right'
                 const isSelected = key === this.props.selectedDenominationKey
                 const onPress = this.selectDenomination(key)
