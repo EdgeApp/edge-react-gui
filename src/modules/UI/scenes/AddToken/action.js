@@ -1,10 +1,3 @@
-export const ADD_TOKEN = 'ADD_TOKEN'
-export const ADD_TOKEN_START = 'ADD_TOKEN_START'
-export const ADD_TOKEN_SUCCESS = 'ADD_TOKEN_SUCCESS'
-export const SET_TOKEN_SETTINGS = 'SET_TOKEN_SETTINGS'
-export const ADD_NEW_CUSTOM_TOKEN_SUCCESS = 'ADD_NEW_CUSTOM_TOKEN_SUCCESS'
-export const ADD_NEW_CUSTOM_TOKEN_FAILURE = 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
-
 import {Actions} from 'react-native-router-flux'
 import * as UTILS from '../../../utils.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
@@ -14,6 +7,13 @@ import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
 
 import {displayErrorAlert} from '../../components/ErrorAlert/actions'
+
+export const ADD_TOKEN = 'ADD_TOKEN'
+export const ADD_TOKEN_START = 'ADD_TOKEN_START'
+export const ADD_TOKEN_SUCCESS = 'ADD_TOKEN_SUCCESS'
+export const SET_TOKEN_SETTINGS = 'SET_TOKEN_SETTINGS'
+export const ADD_NEW_CUSTOM_TOKEN_SUCCESS = 'ADD_NEW_CUSTOM_TOKEN_SUCCESS'
+export const ADD_NEW_CUSTOM_TOKEN_FAILURE = 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
 
 export const addNewToken = (walletId, tokenObj) => {
   return (dispatch, getState) => {
@@ -34,9 +34,8 @@ export const addNewToken = (walletId, tokenObj) => {
 }
 
 export async function addTokenAsync (walletId, tokenObj, state) {
-  let setSettings
   // create modified object structure to match metaTokens
-  let newTokenObj = {
+  const newTokenObj = {
     ...tokenObj,
     denomination: tokenObj.multiplier,
     denominations: [{
@@ -53,7 +52,7 @@ export async function addTokenAsync (walletId, tokenObj, state) {
   coreWallet.enableTokens([tokenObj.currencyCode])
   const settingsOnFile = await SETTINGS_API.getSyncedSettingsAsync(account)
 
-  setSettings = settingsOnFile
+  const setSettings = settingsOnFile
   const customTokens = settingsOnFile.customTokens
   let newCustomTokens = []
   if (!customTokens || customTokens.length === 0) {
@@ -64,7 +63,7 @@ export async function addTokenAsync (walletId, tokenObj, state) {
   settingsOnFile.customTokens = newCustomTokens
   settingsOnFile[tokenObj.currencyCode] = newTokenObj
   await SETTINGS_API.setSyncedSettingsAsync(account, settingsOnFile)
-  let newEnabledTokens = uiWallet.enabledTokens
+  const newEnabledTokens = uiWallet.enabledTokens
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {
     newEnabledTokens.push(newTokenObj.currencyCode)
   }

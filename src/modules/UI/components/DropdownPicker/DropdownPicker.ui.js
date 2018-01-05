@@ -3,7 +3,7 @@ import {
   KeyboardAvoidingView,
   ListView,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native'
 import T from '../../components/FormattedText'
 import {FormField} from '../../../../components/FormField.js'
@@ -63,8 +63,8 @@ export default class DropdownPicker extends Component {
           value={this.state.searchTerm}
           label={this.props.placeholder} />
 
-          {this.state.isListVisible
-            && <DropdownList
+          {this.state.isListVisible &&
+            <DropdownList
               style={this.props.listStyle}
               dataSource={this.getMatchingListItems()}
               onPress={this.handleSelectListItem} />}
@@ -91,5 +91,4 @@ const DropdownList = (props) => {
       dataSource={dataSource}
       renderRow={renderRow} />
   </KeyboardAvoidingView>
-
 }

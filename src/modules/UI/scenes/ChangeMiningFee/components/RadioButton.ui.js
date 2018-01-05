@@ -6,7 +6,6 @@ import T from '../../../components/FormattedText'
 
 import style from '../style'
 
-
 type Props = {
   value: string,
   label: string,

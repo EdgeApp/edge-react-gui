@@ -50,6 +50,6 @@ RowSwitch.propTypes = {
   leftText: PropTypes.string,
   property: PropTypes.string
 }
-RowSwitch.defaultProps ={
+RowSwitch.defaultProps = {
   value: false
 }

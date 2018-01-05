@@ -1,6 +1,6 @@
 export const UPDATE_EXCHANGE_RATES = 'UPDATE_EXCHANGE_RATES'
 
-let randomSeed = Math.random() / 10 // produces random number between 0 and 1
+const randomSeed = Math.random() / 10 // produces random number between 0 and 1
 
 const fakeExchangeRate = {
   'BTC': {

@@ -32,12 +32,12 @@ type State = {
 
 function precisionAdjust (props: Props) {
   const order = Math.floor((Math.log(props.secondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
-  const exchangeRateOrderOfMagnitude = Math.pow(10,order)
+  const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in pennies
   const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
 
-  let precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+  const precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)

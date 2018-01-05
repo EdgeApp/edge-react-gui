@@ -1,6 +1,6 @@
-//@flow
+// @flow
 import {connect} from 'react-redux'
-//import * as Constants from '../../constants/indexConstants'
+// import * as Constants from '../../constants/indexConstants'
 import * as actions from '../../actions/indexActions'
 import LinkedComponent
   from '../../modules/UI/scenes/EdgeLogin/EdgeLoginSceneComponent'

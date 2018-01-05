@@ -1,4 +1,4 @@
-//@flow
+// @flow
 
 import {connect} from 'react-redux'
 
@@ -15,7 +15,7 @@ export const mapStateToProps = (state: State, ownProps: Object) => {
   const genericError = state.cryptoExchange.genericShapeShiftError
   let exchangeRateString = ''
   if (fromCurrencyCode && toCurrencyCode) {
-    exchangeRateString = '1 ' + fromCurrencyCode + ' = '+ exchangeRate + ' ' + toCurrencyCode
+    exchangeRateString = '1 ' + fromCurrencyCode + ' = ' + exchangeRate + ' ' + toCurrencyCode
     if (insufficient) { exchangeRateString = s.strings.fragment_insufficient_funds }
     if (genericError) { exchangeRateString = genericError }
   }

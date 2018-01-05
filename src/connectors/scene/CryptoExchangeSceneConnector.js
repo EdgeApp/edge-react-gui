@@ -1,4 +1,4 @@
-//@flow
+// @flow
 
 import type {Dispatch, State} from '../../modules/ReduxTypes'
 import {GuiWallet} from '../../types'
@@ -12,9 +12,9 @@ export const mapStateToProps = (state: State) => {
   for (const wallet in state.ui.wallets.byId) {
     wallets.push(state.ui.wallets.byId[wallet])
   }
-  const exchangeRate =  state.cryptoExchange.exchangeRate
+  const exchangeRate = state.cryptoExchange.exchangeRate
   const fromAmountNative = '.01'
-  const toAmountNative = Number(fromAmountNative) * exchangeRate //TODO: math with exchange rate. ( from )
+  const toAmountNative = Number(fromAmountNative) * exchangeRate // TODO: math with exchange rate. ( from )
 
   return {
     exchangeRate,
@@ -44,7 +44,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   selectFromWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
   selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
-  openModal:(data: string) => dispatch(actions.dispatchActionString(Constants.OPEN_WALLET_SELECTOR_MODAL, data)),
+  openModal: (data: string) => dispatch(actions.dispatchActionString(Constants.OPEN_WALLET_SELECTOR_MODAL, data)),
   shift: () => dispatch(actions.shiftCryptoCurrency()),
   closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
   openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL))

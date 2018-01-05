@@ -51,12 +51,12 @@ export const styles = {
     color: THEME.COLORS.GRAY_1
   },
   sendLogsModalInput: {
-    marginBottom:15,
-    borderBottomWidth:1,
+    marginBottom: 15,
+    borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_4,
     color: THEME.COLORS.GRAY_1,
     height: 50,
-    padding: 5,
+    padding: 5
   },
   icon: {
     color: THEME.COLORS.PRIMARY,
@@ -73,14 +73,14 @@ export const styles = {
     color: THEME.COLORS.GRAY_4
   },
   autoLogoutMiddleContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   autoLogoutDialogTitle: {
     color: THEME.COLORS.PRIMARY
   },
   autoLogoutPickerContainer: {
     flex: 1,
-    margin: 4,
+    margin: 4
   }
 }
 

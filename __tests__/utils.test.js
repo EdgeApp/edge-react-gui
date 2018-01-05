@@ -411,7 +411,6 @@ describe('getTimeMeasurement', function () {
     expect(UTILS.getTimeMeasurement(1440)).toBe(expected)
     expect(UTILS.getTimeMeasurement(50000)).toBe(expected)
   })
-
 })
 
 describe('getTimeWithMeasurement', function () {
@@ -443,4 +442,3 @@ describe('getTimeInMinutes', function () {
     expect(UTILS.getTimeInMinutes({measurement: 'seconds', value: 44})).toEqual(0.73)
   })
 })
-

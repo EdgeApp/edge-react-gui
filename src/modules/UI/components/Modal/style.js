@@ -18,7 +18,7 @@ export const styles = {
     position: 'absolute',
     top: PLATFORM.deviceHeight * 1 / 8,
     left: PLATFORM.deviceWidth * 1 / 8 - 20,
-    backgroundColor:'transparent'
+    backgroundColor: 'transparent'
   },
   visibleModal: {
     zIndex: 1,

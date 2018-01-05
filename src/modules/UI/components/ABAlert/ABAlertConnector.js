@@ -5,7 +5,7 @@ import * as actions from '../../../../actions/indexActions'
 import * as Constants from '../../../../constants/indexConstants'
 import type {
   State
-} from '../../../ReduxTypes.js' //Dispatch was left out beacuse it causes a cascade
+} from '../../../ReduxTypes.js' // Dispatch was left out beacuse it causes a cascade
 // of problems
 
 const mapStateToProps = (state: State) => ({
