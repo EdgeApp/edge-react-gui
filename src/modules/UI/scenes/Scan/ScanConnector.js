@@ -46,7 +46,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet)),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   loginWithEdge: (url: string) => {
-    Actions[Constants.EDGE_LOGIN](),
+    Actions[Constants.EDGE_LOGIN]()
     dispatch(loginWithEdge(url))
   }
 })

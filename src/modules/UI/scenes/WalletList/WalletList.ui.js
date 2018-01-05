@@ -34,31 +34,31 @@ import platform from '../../../../theme/variables/platform.js'
 
 import type {GuiContact} from '../../../../types'
 
-const DONE_TEXT           = s.strings.string_done_cap
+const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
-const ARCHIVED_TEXT       = s.strings.fragmet_wallets_list_archive_title_capitalized
-const SHOW_BALANCE_TEXT   = s.strings.string_show_balance
-const BALANCE_TEXT        = s.strings.fragment_wallets_balance_text
-const RENAME_WALLET_TEXT  = s.strings.fragment_wallets_rename_wallet
-const RENAME_TEXT         = s.strings.string_rename
-const SORT_TEXT           = s.strings.fragment_wallets_sort
-const DELETE_TEXT         = s.strings.string_delete
-const MANAGE_TOKENS_TEXT  = s.strings.fragmet_wallets_managetokens_option
+const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
+const SHOW_BALANCE_TEXT = s.strings.string_show_balance
+const BALANCE_TEXT = s.strings.fragment_wallets_balance_text
+const RENAME_WALLET_TEXT = s.strings.fragment_wallets_rename_wallet
+const RENAME_TEXT = s.strings.string_rename
+const SORT_TEXT = s.strings.fragment_wallets_sort
+const DELETE_TEXT = s.strings.string_delete
+const MANAGE_TOKENS_TEXT = s.strings.fragmet_wallets_managetokens_option
 
 const options = [
   {
     value: 'rename',
     syntax: RENAME_TEXT
-  },{
+  }, {
     value: 'sort',
     syntax: SORT_TEXT
-  },{
+  }, {
     value: 'delete',
     syntax: DELETE_TEXT
-  },{
+  }, {
     value: 'manageTokens',
     syntax: MANAGE_TOKENS_TEXT
-  },{
+  }, {
     value: 'archive'
   }
 ]
@@ -86,7 +86,7 @@ type Props = {
   wallets: any,
   closeDeleteWalletModal: () => void,
   closeRenameWalletModal: () => void,
-  renameWalletInput: () => void,
+  renameWalletInput: string,
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
@@ -124,31 +124,31 @@ export default class WalletList extends Component<Props, State> {
 
   executeWalletRowOption = (walletId: string, option: string) => {
     switch (option) {
-    case options[0].value: // 'rename'
+      case options[0].value: // 'rename'
       // console.log('executing rename')
-      this.props.walletRowOption(walletId, 'rename')
-      break
-    case options[1].value: // 'sort'
-      if (this.state.sortableMode) {
-        this.disableSorting()
-      } else {
-        this.enableSorting()
-      }
-      break
-    case options[2].value: // 'delete
-      this.props.walletRowOption(walletId, 'delete')
-      break
-    case options[3].value: // 'manageTokens'
-      console.log('executing option 2')
-      Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
-      break
-    case options[4].value: // 'archive'
-      if (!this.props.wallets[walletId].archived) {
-        this.props.walletRowOption(walletId, 'archive')
-      } else {
-        this.props.walletRowOption(walletId, 'activate')
-      }
-      break
+        this.props.walletRowOption(walletId, 'rename')
+        break
+      case options[1].value: // 'sort'
+        if (this.state.sortableMode) {
+          this.disableSorting()
+        } else {
+          this.enableSorting()
+        }
+        break
+      case options[2].value: // 'delete
+        this.props.walletRowOption(walletId, 'delete')
+        break
+      case options[3].value: // 'manageTokens'
+        console.log('executing option 2')
+        Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
+        break
+      case options[4].value: // 'archive'
+        if (!this.props.wallets[walletId].archived) {
+          this.props.walletRowOption(walletId, 'archive')
+        } else {
+          this.props.walletRowOption(walletId, 'activate')
+        }
+        break
     }
   }
 
@@ -158,30 +158,30 @@ export default class WalletList extends Component<Props, State> {
       activeWalletIds,
       settings
     } = this.props
-    let walletsArray = []
-    let activeWallets = {}
-    for (let wallet in wallets) {
-      let theWallet = wallets[wallet]
+    const walletsArray = []
+    const activeWallets = {}
+    for (const wallet in wallets) {
+      const theWallet = wallets[wallet]
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
       if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
     }
 
-    let activeWalletsArray = activeWalletIds.map(function (x) {
-      let tempWalletObj = {key: x}
+    const activeWalletsArray = activeWalletIds.map(function (x) {
+      const tempWalletObj = {key: x}
       return wallets[x] || tempWalletObj
     })
 
-    let activeWalletsObject = {}
+    const activeWalletsObject = {}
     activeWalletIds.forEach(function (x) {
-      let tempWalletObj = wallets[x] ? wallets[x] : {key: null}
+      const tempWalletObj = wallets[x] ? wallets[x] : {key: null}
       activeWalletsObject[x] = tempWalletObj
     })
     let fiatBalanceString
-    let fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
+    const fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
     if (fiatSymbol.length !== 1) {
-      fiatBalanceString =  this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+      fiatBalanceString = this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
     } else {
       fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
     }
@@ -295,10 +295,10 @@ export default class WalletList extends Component<Props, State> {
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
-    let sortableToOpacity = 1
-    let sortableListToZIndex = 100
-    let fullListToOpacity = 0
-    let fullListToZIndex = 0
+    const sortableToOpacity = 1
+    const sortableListToZIndex = 100
+    const fullListToOpacity = 0
+    const fullListToZIndex = 0
 
     this.setState({sortableListExists: true}, () => {
       Animated.parallel([
@@ -339,10 +339,10 @@ export default class WalletList extends Component<Props, State> {
   }
 
   disableSorting = () => {
-    let sortableToOpacity = 0
-    let sortableListToZIndex = 0
-    let fullListToOpacity = 1
-    let fullListToZIndex = 100
+    const sortableToOpacity = 0
+    const sortableListToZIndex = 0
+    const fullListToOpacity = 1
+    const fullListToZIndex = 100
 
     this.setState({fullListExists: true}, () => {
       Animated.parallel([
@@ -398,7 +398,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   sortActiveWallets = (wallets: any) => {
-    let activeOrdered = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
+    const activeOrdered = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => {
       if (wallets[a].sortIndex === wallets[b].sortIndex) {
         return -1
@@ -477,14 +477,14 @@ export default class WalletList extends Component<Props, State> {
         }
       }
     }
-    let totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
+    const totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
     return totalBalance
   }
 
   calculateTotalBalance = (values: any) => {
     let total = 0
-    for (let currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
+    for (const currency in values) {
+      const addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
     return total.toFixed(2)

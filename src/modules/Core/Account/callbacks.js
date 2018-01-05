@@ -1,4 +1,5 @@
 // @flow
+
 import type {Dispatch} from '../../ReduxTypes'
 import type {AbcTransaction, AbcAccountCallbacks} from 'airbitz-core-types'
 
@@ -67,7 +68,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     },
 
     onWalletNameChanged (walletId: string, walletName: string | null) {
-      console.log('onWalletNameChanged:' + walletId + ' newname:' + (walletName ? walletName : ''))
+      console.log('onWalletNameChanged:' + walletId + ' newname:' + (walletName || ''))
       dispatch(refreshWallet(walletId))
     }
   }

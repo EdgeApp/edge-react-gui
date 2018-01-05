@@ -3,7 +3,7 @@
 import THEME from '../theme/variables/airbitz'
 
 export const CHANGE_MINING_FEE_VALUE = 'changeMiningFee'
-export const EXCHANGE_MAX_AMOUNT_VALUE ='exchangeMaxAmountValue'
+export const EXCHANGE_MAX_AMOUNT_VALUE = 'exchangeMaxAmountValue'
 export const HELP_VALUE = 'helpValue'
 export const SORT_VALUE = 'sort'
 export const RENAME_VALUE = 'rename'

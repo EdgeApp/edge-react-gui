@@ -3,10 +3,10 @@ import * as ACTION from './action'
 
 const contactList = (state = [], action) => {
   switch (action.type) {
-  case ACTION.SET_CONTACT_LIST:
-    return action.data
-  default:
-    return state
+    case ACTION.SET_CONTACT_LIST:
+      return action.data
+    default:
+      return state
   }
 }
 

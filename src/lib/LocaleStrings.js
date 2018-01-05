@@ -1,12 +1,13 @@
 import defaultLang from '../locales/default'
 import enPH from '../locales/es'
+import DeviceInfo from 'react-native-device-info'
+
 const supportedLocales = {
   en_PH: enPH
 }
 
 // HEY YOU! just import and then add your locales to the supportedLocales array
 // PROBABLY DO NOT CHANGE ANYTHING BELOW THIS LINE
-import DeviceInfo from 'react-native-device-info'
 const deviceLocale = DeviceInfo.getDeviceLocale()
 
 const LocaleStrings = function (inputKey, reqLocale) {

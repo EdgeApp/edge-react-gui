@@ -1,21 +1,21 @@
 {
   "name": "edge-react-gui",
-  "version": "0.2.0",
+  "version": "0.5.1",
   "description": "Edge Wallet React GUI",
-  "author": "Airbitz, Inc.",
+  "author": "Edge, Inc.",
   "contributors": [
-    "Paul Puey <paul@airbitz.co>",
-    "William Swanson<william@airbitz.co>",
-    "Kevin Sullivan <kevin@airbitz.co>",
-    "Kylan Hurt <kylan@airbitz.co>",
-    "Eliran Zack <eliran@airbitz.co>"
+    "Paul Puey <paul@edgesecure.co>",
+    "William Swanson<william@edgesecure.co>",
+    "Kevin Sullivan <kevin@edgesecure.co>",
+    "Kylan Hurt <kylan@edgesecure.co>",
+    "Eliran Zack <eliran@edgesecure.co>"
   ],
   "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "git@github.com:Airbitz/edge-react-gui.git"
   },
-  "url": "https://airbitz.co",
+  "url": "https://edgesecure.co",
   "private": true,
   "scripts": {
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
@@ -57,9 +57,13 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^2.7.1",
-    "edge-currency-ethereum": "^0.6.2",
+    "edge-currency-bitcoin": "^2.8.1",
+    "edge-currency-ethereum": "^0.7.1",
     "edge-exchange-plugins": "^0.1.1",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
     "native-base": "^2.2.1",

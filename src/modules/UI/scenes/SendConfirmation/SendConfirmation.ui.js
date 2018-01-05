@@ -60,7 +60,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
     this.state = {
       primaryNativeAmount: amt,
       secondaryNativeAmount: '',
-      keyboardVisible: false,
+      keyboardVisible: false
     }
   }
 
@@ -104,7 +104,6 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
       networkFeeSyntax = ''
     }
 
-
     return (
       <Gradient style={[styles.view]}>
         <Gradient style={styles.gradient} />
@@ -133,11 +132,11 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
             <View style={[styles.feeArea]}>
               <Text style={[styles.feeAreaText]}>{networkFeeSyntax}</Text>
             </View>
-            <Recipient label={label} link={''} publicAddress={publicAddress}  style={styles.recipient} />
+            <Recipient label={label} link={''} publicAddress={publicAddress} style={styles.recipient} />
           </View>
           <View style={[styles.pendingSymbolArea]}>
-            {this.props.sendConfirmation.pending
-              && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
+            {this.props.sendConfirmation.pending &&
+              <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
             }
           </View>
           <View style={[styles.sliderWrap]}>
@@ -184,7 +183,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   getTopSpacer = () => {
     if (this.props.sendConfirmation.keyboardIsVisible) {
-      return
+
     } else {
       return <View style={styles.spacer} />
     }
@@ -192,7 +191,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   getBottomSpacer = () => {
     if (!this.props.sendConfirmation.keyboardIsVisible) {
-      return
+
     } else {
       return <View style={styles.spacer} />
     }

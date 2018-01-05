@@ -9,6 +9,6 @@ const mapStateToProps = (state, ownProps) => ({
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode)
 })
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  selectDenomination: (denominationKey) => { dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey)) },
+  selectDenomination: (denominationKey) => { dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey)) }
 })
 export default connect(mapStateToProps, mapDispatchToProps)(CurrencySettings)

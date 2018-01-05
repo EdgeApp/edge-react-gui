@@ -4,7 +4,6 @@ import {ChangePasswordScreen} from 'airbitz-core-js-ui'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from '../Settings/style.js'
 
-
 export default class ChangePassword extends Component {
   onComplete = () => {
     this.props.onComplete()

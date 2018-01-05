@@ -87,7 +87,7 @@ export async function log (...info: Array<number | string | null | {}>) {
 async function request (data: string) {
   return global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
     method: 'POST',
-    headers : {
+    headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
@@ -96,9 +96,9 @@ async function request (data: string) {
 }
 
 export async function logToServer (...info: Array<any>) {
-  let args = info[0]
+  const args = info[0]
   let logs = ''
-  for (let item of args) {
+  for (const item of args) {
     if (isObject(item)) {
       logs = logs + (' ' + JSON.stringify(item))
     } else {

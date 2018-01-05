@@ -7,7 +7,7 @@ export default StyleSheet.create({
   },
   text: {
     alignSelf: 'center',
-    marginBottom: 7,
+    marginBottom: 7
   },
   mb: {
     marginBottom: 15
@@ -21,5 +21,5 @@ export default StyleSheet.create({
   },
   badgeValue: {
     color: THEME.COLORS.WHITE
-  },
+  }
 })

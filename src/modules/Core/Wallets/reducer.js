@@ -3,18 +3,18 @@ import * as ACTION from './action.js'
 
 const initialState = {}
 const byId = (state = initialState, action) => {
-  const {type, data = {} } = action
+  const { type, data = {} } = action
 
   switch (type) {
-  case ACTION.UPDATE_WALLETS: {
-    const {currencyWallets} = data
-    return {
-      ...state,
-      ...currencyWallets
+    case ACTION.UPDATE_WALLETS: {
+      const {currencyWallets} = data
+      return {
+        ...state,
+        ...currencyWallets
+      }
     }
-  }
-  default:
-    return state
+    default:
+      return state
   }
 }
 
