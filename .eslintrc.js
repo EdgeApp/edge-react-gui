@@ -2,7 +2,7 @@ module.exports =
 {
   "extends": ["standard", "plugin:flowtype/recommended"],
   "parser": "babel-eslint",
-  "plugins": ["flowtype", "standard"],
+  "plugins": ["flowtype", "standard", "react"],
   "rules": {
     "camelcase": "error",
     "flowtype/generic-spacing": "off",
