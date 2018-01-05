@@ -4,7 +4,6 @@ import HelpButton from './HelpButton.ui'
 import * as Constants from '../../../../../constants'
 
 export default class Right extends Component {
-
   render () {
     const children = this.props.routes.scene.children
     const sceneName = children
@@ -12,23 +11,22 @@ export default class Right extends Component {
       : null
 
     switch (sceneName) {
-    case Constants.SCAN:
-      return <HelpButton />
-    case Constants.WALLET_LIST:
-      return <HelpButton />
-    case Constants.TRANSACTION_LIST:
-      return <HelpButton />
-    case Constants.TRANSACTION_DETAILS:
-      return <HelpButton />
-    case Constants.REQUEST:
-      return <HelpButton />
-    case Constants.SEND_CONFIRMATION:
-      return <SendConfirmationOptions />
-    case Constants.CREATE_WALLET:
-      return <HelpButton />
-    default:
-      return null
+      case Constants.SCAN:
+        return <HelpButton />
+      case Constants.WALLET_LIST:
+        return <HelpButton />
+      case Constants.TRANSACTION_LIST:
+        return <HelpButton />
+      case Constants.TRANSACTION_DETAILS:
+        return <HelpButton />
+      case Constants.REQUEST:
+        return <HelpButton />
+      case Constants.SEND_CONFIRMATION:
+        return <SendConfirmationOptions />
+      case Constants.CREATE_WALLET:
+        return <HelpButton />
+      default:
+        return null
     }
   }
-
 }

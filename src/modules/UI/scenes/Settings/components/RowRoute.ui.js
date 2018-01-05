@@ -39,4 +39,3 @@ export default class RowRoute extends Component<Props> {
     )
   }
 }
-

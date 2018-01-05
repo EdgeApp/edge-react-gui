@@ -14,7 +14,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style'
 
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = s.strings.settings_select_currency
-const INVALID_DATA_TEXT               = s.strings.fragment_create_wallet_select_valid
+const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
 type Props = {
   supportedFiats: Array<{value: string}>,
@@ -70,5 +70,4 @@ export default class DefaultFiatSetting extends Component<Props, State> {
 
     return isValid
   }
-
 }

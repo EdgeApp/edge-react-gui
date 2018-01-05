@@ -738,6 +738,6 @@ const strings = {
   verify_domain_and_approve: 'Please verify the domain above and tap LOGIN to authenticate with this site',
   wait_until_wallets_loaded: 'Please wait until your wallets are loaded.',
   would_like_to: 'This site would like to:',
-  your_location: 'Your Location',
+  your_location: 'Your Location'
 }
 export default strings

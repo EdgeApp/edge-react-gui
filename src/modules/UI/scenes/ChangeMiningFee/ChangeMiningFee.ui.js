@@ -14,7 +14,7 @@ import style from './style'
 const feeOptions = [
   { value: FEE.LOW_FEE, label: 'mining_fee_low_label_choice' },
   { value: FEE.STANDARD_FEE, label: 'mining_fee_standard_label_choice' },
-  { value: FEE.HIGH_FEE, label: 'mining_fee_high_label_choice' },
+  { value: FEE.HIGH_FEE, label: 'mining_fee_high_label_choice' }
   // { value: FEE.CUSTOM_FEE, label: 'mining_fee_custom_label_choice' },
 ]
 
@@ -34,7 +34,7 @@ export default class ChangeMiningFee extends Component<Props, State> {
     super(props)
     this.state = {
       // fee: props.fee,
-      feeSetting: props.feeSetting,
+      feeSetting: props.feeSetting
     }
   }
 

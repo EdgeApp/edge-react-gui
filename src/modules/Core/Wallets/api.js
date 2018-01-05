@@ -33,7 +33,7 @@ const dummyAbcReceiveAddress: AbcReceiveAddress = {
 }
 
 export const setTransactionDetailsRequest = (wallet: AbcCurrencyWallet, txid: string, currencyCode: string, abcMetadata: AbcMetadata): Promise<void> => {
-  return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata): Promise.resolve()
+  return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata) : Promise.resolve()
 }
 
 export const getReceiveAddress = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<AbcReceiveAddress> => {
@@ -82,9 +82,9 @@ export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
 }
 
 export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {  // initialize array for eventual setting of file
-  let finalTextArray = [...tokens]
+  const finalTextArray = [...tokens]
   // now stringify the new tokens
-  let stringifiedTokens = JSON.stringify(finalTextArray)
+  const stringifiedTokens = JSON.stringify(finalTextArray)
   // grab the enabledTokensFile
   const tokensFile = getEnabledTokensFile(wallet)
   await tokensFile.setText(stringifiedTokens)
@@ -100,8 +100,8 @@ export async function updateEnabledTokens (wallet: AbcCurrencyWallet, tokensToEn
   try {
     const tokensText = await tokensFile.getText()
     const enabledTokens = JSON.parse(tokensText)
-    let tokensWithNewTokens = _.union(tokensToEnable, enabledTokens)
-    let finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
+    const tokensWithNewTokens = _.union(tokensToEnable, enabledTokens)
+    const finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
     return Promise.all([
       enableTokens(wallet, finalTokensToEnable),
       disableTokens(wallet, tokensToDisable),

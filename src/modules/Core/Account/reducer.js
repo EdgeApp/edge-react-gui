@@ -10,13 +10,13 @@ export const initialState: AccountReducerState = {}
 
 const accountReducer = (state = initialState, action) => {
   switch (action.type) {
-  case ACTION.ADD_ACCOUNT:
-    if (action.data) {
-      return action.data.account
-    }
-    return state
-  default:
-    return state
+    case ACTION.ADD_ACCOUNT:
+      if (action.data) {
+        return action.data.account
+      }
+      return state
+    default:
+      return state
   }
 }
 

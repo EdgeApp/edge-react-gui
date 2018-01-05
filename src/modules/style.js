@@ -9,7 +9,7 @@ export const stylesRaw = {
     alignSelf: 'center',
     fontSize: 24,
     color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
+    fontFamily: THEME.FONTS.DEFAULT
   }
 }
 

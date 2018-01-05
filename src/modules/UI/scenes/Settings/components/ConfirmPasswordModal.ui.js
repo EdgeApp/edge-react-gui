@@ -38,8 +38,8 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     this.props.onDone(this.state.confimPassword)
   }
   renderMiddle = (style: any) => {
-    const formStyle={...MaterialInputOnWhite,
-      container:{...MaterialInputOnWhite.container, width: 244}
+    const formStyle = {...MaterialInputOnWhite,
+      container: {...MaterialInputOnWhite.container, width: 244}
     }
     return <View style={style.middle.container} >
       <FormField onChangeText={this.textChange}
