@@ -25,7 +25,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
   loginWithEdge: (url: string) => {
-    Actions[Constants.EDGE_LOGIN]() ,
+    Actions[Constants.EDGE_LOGIN]()
     dispatch(loginWithEdge(url))
   }
 })

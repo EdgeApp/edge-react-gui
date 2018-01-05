@@ -132,7 +132,7 @@ class AddToken extends Component<Props, State> {
 
   onChangeCurrencyCode = (input: string) => {
     this.setState({
-      currencyCode: input.substring(0,5)
+      currencyCode: input.substring(0, 5)
     })
   }
 
@@ -163,7 +163,7 @@ class AddToken extends Component<Props, State> {
         const {walletId} = this.props
         const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
         const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-        let tokenObj: any = {
+        const tokenObj: any = {
           currencyName,
           currencyCode,
           decimalPlaces,

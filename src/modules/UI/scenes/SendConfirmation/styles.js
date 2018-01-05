@@ -75,7 +75,7 @@ export default StyleSheet.create({
     width: 165
   },
   optionRow: {
-    paddingVertical: 17,
+    paddingVertical: 17
   },
   optionText: {
     fontSize: 16

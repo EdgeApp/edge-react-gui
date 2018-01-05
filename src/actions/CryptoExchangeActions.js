@@ -6,7 +6,7 @@ import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 
 import type {Dispatch, GetState} from '../modules/ReduxTypes'
-import type {GuiWallet,GuiDenomination, GuiCurrencyInfo} from '../types'
+import type {GuiWallet, GuiDenomination, GuiCurrencyInfo} from '../types'
 import * as Constants from '../constants/indexConstants'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as UI_SELECTORS from '../modules/UI/selectors'
@@ -53,7 +53,7 @@ function setShapeTransaction (type: string, data: {
 
 export const changeFee = (feeSetting: string) => ({
   type: Constants.CHANGE_EXCHANGE_FEE,
-  feeSetting,
+  feeSetting
 })
 
 export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) => {
@@ -69,7 +69,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
     currencyCode,
     spendTargets: [
       {
-        publicAddress: receiveAddress.publicAddress,
+        publicAddress: receiveAddress.publicAddress
       }
     ]
   }
@@ -88,7 +88,7 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
   const state = getState()
   const fromWallet: GuiWallet = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet = state.cryptoExchange.toWallet
-  const  {
+  const {
     whichWallet,
     primaryNativeAmount
   } = info
@@ -108,7 +108,6 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
       const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
       dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
     }
-
   } else {
     const toDisplayAmount = bns.div(primaryNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
     const toExchangeAmount = bns.div(primaryNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -138,7 +137,7 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
   }
 }
 
-export const shiftCryptoCurrency = () => async  (dispatch: Dispatch, getState: GetState) => {
+export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, state.cryptoExchange.fromWallet.id)
 
@@ -157,10 +156,9 @@ export const shiftCryptoCurrency = () => async  (dispatch: Dispatch, getState: G
       console.log(savedTransaction)
       setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
     } catch (error) {
-      dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR,error.message))
+      dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
       setTimeout(() => { Alert.alert(s.strings.exchange_failed, error.message) }, 1)
     }
-    return
   }
 }
 
@@ -184,10 +182,10 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
 
   if (srcCurrencyCode !== destCurrencyCode) {
-    let abcTransaction = await srcWallet.makeSpend(spendInfo)
+    const abcTransaction = await srcWallet.makeSpend(spendInfo)
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     const ratio = primaryInfo.displayDenomination.multiplier.toString()
-    let networkFee = UTILS.convertNativeToDenomination(ratio)(abcTransaction.networkFee)
+    const networkFee = UTILS.convertNativeToDenomination(ratio)(abcTransaction.networkFee)
     let displayAmount = UTILS.convertNativeToDenomination(ratio)(abcTransaction.nativeAmount)
     displayAmount = bns.toFixed(displayAmount, 0, 0)
     const returnObject = {
@@ -216,7 +214,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   }
 }
 
-export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
+export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode?: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   let hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
   let hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
@@ -231,27 +229,25 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet,currencyCode?
     exchangeDenomination: primaryExchangeDenomination
   }
 
-  let data = {
+  const data = {
     wallet,
     currencyCode: cc,
     primaryInfo
   }
 
-  type === Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE
-    ? (
-      dispatch(getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode)),
-      dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
-      hasFrom = wallet
-    )
-    : (
-      dispatch(getCryptoExchangeRate(state.cryptoExchange.fromCurrencyCode, cc)),
-      dispatch(setWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE,data)),
-      hasTo = wallet
-    )
+  if (type === Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE) {
+    dispatch(getCryptoExchangeRate(cc, state.cryptoExchange.toCurrencyCode))
+    dispatch(setWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data))
+    hasFrom = wallet
+  } else {
+    dispatch(getCryptoExchangeRate(state.cryptoExchange.fromCurrencyCode, cc))
+    dispatch(setWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data))
+    hasTo = wallet
+  }
 
   if (hasFrom && hasTo) {
     try {
-      await dispatch(getShiftTransaction(hasFrom,hasTo))
+      await dispatch(getShiftTransaction(hasFrom, hasTo))
     } catch (e) {
       console.log(e)
       dispatch(actions.dispatchAction(Constants.INVALIDATE_SHIFT_TRANSACTION))
@@ -291,11 +287,10 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
   })
 }
 
-
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   // This is a hack .. if the currecy code is not supported then we cant do the exchange
   if (!checkShiftTokenAvailability(currencyCode)) {
-    setTimeout(() => { Alert.alert(s.strings.could_not_select, currencyCode+' '+s.strings.token_not_supported) }, 1)
+    setTimeout(() => { Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported) }, 1)
     return
   }
 
@@ -303,10 +298,10 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
   const wallet = state.ui.wallets.byId[walletId]
 
   switch (state.cryptoExchange.changeWallet) {
-  case Constants.TO:
-    return dispatch(selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
-  case Constants.FROM:
-    return dispatch(selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
-  default:
+    case Constants.TO:
+      return dispatch(selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
+    case Constants.FROM:
+      return dispatch(selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
+    default:
   }
 }

@@ -51,106 +51,100 @@ export const initialState: SendConfirmationState = {
 }
 
 const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
-  const {type, data = {} } = action
+  const { type, data = {} } = action
   switch (type) {
-  case ACTION.UPDATE_TRANSACTION: {
-    const transaction: AbcTransaction = data.transaction
-    const parsedUri: AbcParsedUri = data.parsedUri
-    const error: Error = data.error
-    const out: SendConfirmationState = {
-      ...state,
-      transaction,
-      parsedUri,
-      error
+    case ACTION.UPDATE_TRANSACTION: {
+      const transaction: AbcTransaction = data.transaction
+      const parsedUri: AbcParsedUri = data.parsedUri
+      const error: Error = data.error
+      const out: SendConfirmationState = {
+        ...state,
+        transaction,
+        parsedUri,
+        error
+      }
+      return out
     }
-    return out
-  }
-  case ACTION.UPDATE_PARSED_URI: {
-    const {parsedUri = {} } = data
-    const publicAddress = parsedUri.publicAddress
-    return {
-      ...state,
-      parsedUri,
-      publicAddress
-    }
-  }
-  case ACTION.UPDATE_DISPLAY_AMOUNT: {
-    const {displayAmount} = data
-    return {
-      ...state,
-      displayAmount
-    }
-  }
-  // case ACTION.UPDATE_INPUT_CURRENCY_SELECTED: {
-  //   const {inputCurrencySelected} = data
-  //   return {
-  //     ...state,
-  //     inputCurrencySelected
-  //   }
-  // }
-  case ACTION.UPDATE_MAX_SATOSHI: {
-    const {maxSatoshi} = data
-    return {
-      ...state,
-      maxSatoshi
-    }
-  }
-  case ACTION.USE_MAX_SATOSHI: {
-    const {maxSatoshi} = data
-    return {
-      ...state,
-      maxSatoshi
-    }
-  }
-  case ACTION.UNLOCK_SLIDER: {
-    const {isSliderLocked} = data
-    return {
-      ...state,
-      isSliderLocked
-    }
-  }
-  case ACTION.UPDATE_DRAFT_STATUS: {
-    const {draftStatus} = data
-    return {
-      ...state,
-      draftStatus
-    }
-  }
-  case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
-    const {isKeyboardVisible} = data
-    return {
-      ...state,
-      isKeyboardVisible
-    }
-  }
-  case ACTION.UPDATE_SPEND_PENDING: {
-    const {pending} = data
-    return {
-      ...state,
-      pending
-    }
-  }
-  case ACTION.RESET: {
-    return initialState
-  }
-  case ACTION.UPDATE_NATIVE_AMOUNT: {
-    const {nativeAmount} = data
-    return {
-      ...state,
-      parsedUri: {
-        ...state.parsedUri,
-        nativeAmount
+    case ACTION.UPDATE_PARSED_URI: {
+      const { parsedUri = {} } = data
+      const publicAddress = parsedUri.publicAddress
+      return {
+        ...state,
+        parsedUri,
+        publicAddress
       }
     }
-  }
-  case ACTION.CHANGE_MINING_FEE:
-    return {
-      ...state,
-      // fee: action.fee,
-      feeSetting: action.feeSetting
+    case ACTION.UPDATE_DISPLAY_AMOUNT: {
+      const {displayAmount} = data
+      return {
+        ...state,
+        displayAmount
+      }
     }
-  default:
-    return state
+
+    case ACTION.UPDATE_MAX_SATOSHI: {
+      const {maxSatoshi} = data
+      return {
+        ...state,
+        maxSatoshi
+      }
+    }
+    case ACTION.USE_MAX_SATOSHI: {
+      const {maxSatoshi} = data
+      return {
+        ...state,
+        maxSatoshi
+      }
+    }
+    case ACTION.UNLOCK_SLIDER: {
+      const {isSliderLocked} = data
+      return {
+        ...state,
+        isSliderLocked
+      }
+    }
+    case ACTION.UPDATE_DRAFT_STATUS: {
+      const {draftStatus} = data
+      return {
+        ...state,
+        draftStatus
+      }
+    }
+    case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
+      const {isKeyboardVisible} = data
+      return {
+        ...state,
+        isKeyboardVisible
+      }
+    }
+    case ACTION.UPDATE_SPEND_PENDING: {
+      const {pending} = data
+      return {
+        ...state,
+        pending
+      }
+    }
+    case ACTION.RESET: {
+      return initialState
+    }
+    case ACTION.UPDATE_NATIVE_AMOUNT: {
+      const {nativeAmount} = data
+      return {
+        ...state,
+        parsedUri: {
+          ...state.parsedUri,
+          nativeAmount
+        }
+      }
+    }
+    case ACTION.CHANGE_MINING_FEE:
+      return {
+        ...state,
+      // fee: action.fee,
+        feeSetting: action.feeSetting
+      }
+    default:
+      return state
   }
 }
 

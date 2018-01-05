@@ -11,7 +11,6 @@ import {Actions} from 'react-native-router-flux'
 import styles from './style'
 
 export default class WalletTransferList extends Component {
-
   _closeWalletListModal () {
     this.props.toggleWalletListModal()
   }
@@ -25,7 +24,7 @@ export default class WalletTransferList extends Component {
     const ds = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
-    let walletRowSource = ds.cloneWithRows(this.props.walletTransferList)
+    const walletRowSource = ds.cloneWithRows(this.props.walletTransferList)
     return (
       <View style={styles.container}>
         <View style={[styles.headerRowWrap]}>

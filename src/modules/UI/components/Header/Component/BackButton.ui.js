@@ -9,7 +9,7 @@ const isIos = Platform.OS === 'ios'
 
 export default class BackButton extends Component {
   static defaultProps = {
-    withArrow: false,
+    withArrow: false
   }
 
   render () {

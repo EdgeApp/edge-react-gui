@@ -16,8 +16,10 @@ import _ from 'lodash'
 const mapStateToProps = (state) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
-  if (!wallet) return {
-    loading: true
+  if (!wallet) {
+    return {
+      loading: true
+    }
   }
 
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
@@ -75,7 +77,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactList: (contacts) => dispatch(setContactList(contacts)),
+  setContactList: (contacts) => dispatch(setContactList(contacts))
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })
