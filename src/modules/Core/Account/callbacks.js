@@ -35,7 +35,13 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     },
 
     onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>) {
-      if (!transactions || !transactions.length) {
+      if (transactions && transactions.length) {
+        console.log(`${walletId} - onTransactionsChanged, num of tx's changed: ${transactions.length}`)
+        console.log('onNewTransactions length=' + transactions.length.toString())
+        for (const tx of transactions) {
+          console.log(`${walletId} - onTransactionsChanged with TXID: ${tx.txid}`)
+        }
+      } else {
         console.log(`${walletId} - onTransactionsChanged: No transactions`)
       }
       // $FlowFixMe
@@ -44,7 +50,12 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     },
 
     onNewTransactions (walletId: string, transactions: Array<AbcTransaction>) {
-      if (!transactions || !transactions.length) {
+      if (transactions && transactions.length) {
+        console.log(`${walletId} - onNewTransactions, num of new tx's: ${transactions.length}`)
+        for (const tx of transactions) {
+          console.log(`${walletId} - onNewTransactions with TXID: ${tx.txid}`)
+        }
+      } else {
         console.log(`${walletId} - onNewTransactions: No transactions`)
       }
       dispatch(newTransactionsRequest(walletId, transactions))
@@ -59,7 +70,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     },
 
     onWalletNameChanged (walletId: string, walletName: string | null) {
-      console.log(`${walletId} - onWalletNameChanged with new name:${walletName ? walletName : ''}`)
+      console.log(`${walletId} - onWalletNameChanged with new name:${walletName || ''}`)
       dispatch(refreshWallet(walletId))
     }
   }
