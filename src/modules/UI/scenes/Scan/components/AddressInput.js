@@ -7,7 +7,6 @@ import styles from '../style.js'
 import s from '../../../../../locales/strings.js'
 import {FormField} from '../../../../../components/FormField.js'
 
-
 export class AddressInput extends Component { // this component is for the input area of the Recipient Address Modal
   render () {
     return (
@@ -24,8 +23,8 @@ export class AddressInput extends Component { // this component is for the input
             onSubmitEditing={this.props.onSubmit}
           />
         </View>
-        {this.props.copyMessage
-          && <View style={styles.pasteButtonRow}>
+        {this.props.copyMessage &&
+          <View style={styles.pasteButtonRow}>
             <TertiaryButton text={this.props.copyMessage}
               ellipsizeMode={'middle'}
               onPressFunction={this.props.onPaste}

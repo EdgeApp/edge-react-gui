@@ -8,8 +8,7 @@ import type {
   AbcContextOptions
 } from 'airbitz-core-types'
 import SplashScreen from 'react-native-smart-splash-screen'
-import { selectLocale } from '../locales/strings.js'
-import s from '../locales/strings'
+import s, { selectLocale } from '../locales/strings.js'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
@@ -95,6 +94,8 @@ import {
 } from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
+import ENV from '../../env.json'
+
 const pluginFactories: Array<AbcCorePlugin> = [
   coinbasePlugin,
   shapeshiftPlugin
@@ -106,8 +107,6 @@ pluginFactories.push(LitecoinCurrencyPluginFactory)
 pluginFactories.push(DashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
-
-import ENV from '../../env.json'
 
 const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
@@ -131,24 +130,24 @@ tabBarIconFilesSelected[Constants.TRANSACTION_LIST] = exchangeIconSelected
 tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 const TRANSACTION_DETAILS = s.strings.title_transaction_details
-const WALLETS           = s.strings.title_wallets
-const CREATE_WALLET     = s.strings.title_create_wallet
-const REQUEST           = s.strings.title_request
-const SEND              = s.strings.title_send
-const EDGE_LOGIN        = s.strings.title_edge_login
-const EXCHANGE          = s.strings.title_exchange
+const WALLETS = s.strings.title_wallets
+const CREATE_WALLET = s.strings.title_create_wallet
+const REQUEST = s.strings.title_request
+const SEND = s.strings.title_send
+const EDGE_LOGIN = s.strings.title_edge_login
+const EXCHANGE = s.strings.title_exchange
 const CHANGE_MINING_FEE = s.strings.title_change_mining_fee
-const BACK              = s.strings.title_back
+const BACK = s.strings.title_back
 const SEND_CONFIRMATION = s.strings.title_send_confirmation
-const MANAGE_TOKENS     = s.strings.title_manage_tokens
-const ADD_TOKEN         = s.strings.title_add_token
-const EDIT_TOKEN       = s.strings.title_edit_token
-const SETTINGS          = s.strings.title_settings
-const CHANGE_PASSWORD   = s.strings.title_change_password
-const CHANGE_PIN        = s.strings.title_change_pin
+const MANAGE_TOKENS = s.strings.title_manage_tokens
+const ADD_TOKEN = s.strings.title_add_token
+const EDIT_TOKEN = s.strings.title_edit_token
+const SETTINGS = s.strings.title_settings
+const CHANGE_PASSWORD = s.strings.title_change_password
+const CHANGE_PIN = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const OTP = s.strings.title_otp
-const DEFAULT_FIAT      = s.strings.title_default_fiat
+const DEFAULT_FIAT = s.strings.title_default_fiat
 
 type Props = {
   username?: string,
@@ -174,7 +173,7 @@ export default class Main extends Component<Props, State> {
     super(props)
 
     this.state = {
-      context: undefined,
+      context: undefined
     }
   }
 
@@ -206,7 +205,7 @@ export default class Main extends Component<Props, State> {
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
         duration: 850,
-        delay: 500,
+        delay: 500
       })
     })
   }
@@ -214,11 +213,11 @@ export default class Main extends Component<Props, State> {
   render () {
     return (
       <StyleProvider style={getTheme(platform)}>
-        <MenuContext style={{flex: 1}}>
+        <MenuContext style={styles.mainMenuContext}>
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
-                {/*<Lightbox>*/}
+                {/* <Lightbox> */}
                 <Stack key='root' hideNavBar>
                   <Scene key={Constants.LOGIN} initial
                     component={LoginConnector}
@@ -258,7 +257,7 @@ export default class Main extends Component<Props, State> {
                             component={ManageTokens}
                             renderTitle={this.renderTitle(MANAGE_TOKENS)}
                             renderRightButton={this.renderEmptyButton}
-                            animation={'fade'} duration={600}  />
+                            animation={'fade'} duration={600} />
                           <Scene key={Constants.ADD_TOKEN}
                             component={AddToken} navTransparent={true}
                             onLeft={Actions.pop}
@@ -353,7 +352,7 @@ export default class Main extends Component<Props, State> {
                     </Scene>
                   </Drawer>
                 </Stack>
-                {/*</Lightbox>*/}
+                {/* </Lightbox> */}
               </Modal>
             </Overlay>
           </RouterWithRedux>
@@ -409,7 +408,7 @@ export default class Main extends Component<Props, State> {
   }
 
   keyboardDidShow = (event: any) => {
-    let keyboardHeight = event.endCoordinates.height
+    const keyboardHeight = event.endCoordinates.height
     this.props.setKeyboardHeight(keyboardHeight)
   }
 

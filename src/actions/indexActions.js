@@ -1,4 +1,4 @@
-//@flow
+// @flow
 
 export * from './CryptoExchangeActions.js'
 export * from './EdgeLoginActions.js'

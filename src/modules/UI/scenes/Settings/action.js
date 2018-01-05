@@ -1,17 +1,5 @@
 // @flow
 // UI/Scenes/Settings
-const PREFIX = 'UI/Scenes/Settings/'
-
-const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
-const SET_PIN_START = PREFIX + 'SET_PIN_START'
-
-const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
-const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
-
-const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
-
-const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
-
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
@@ -21,6 +9,17 @@ import type {
   GetState,
   Dispatch
 } from '../../../../../src/modules/ReduxTypes.js'
+
+const PREFIX = 'UI/Scenes/Settings/'
+
+const SET_PIN_MODE_START = PREFIX + 'SET_PIN_MODE_START'
+const SET_PIN_START = PREFIX + 'SET_PIN_START'
+
+const SET_DEFAULT_FIAT_START = PREFIX + 'SET_DEFAULT_FIAT_START'
+const SET_MERCHANT_MODE_START = PREFIX + 'SET_MERCHANT_MODE_START'
+
+const SET_BLUETOOTH_MODE_START = PREFIX + 'SET_BLUETOOTH_MODE_START'
+const SET_BITCOIN_OVERRIDE_SERVER_START = PREFIX + 'SET_BITCOIN_OVERRIDE_SERVER_START'
 
 export const SELECT_DEFAULT_FIAT = PREFIX + 'SELECT_DEFAULT_FIAT'
 
@@ -32,7 +31,6 @@ export const setPINModeRequest = (pinMode: boolean) => (dispatch: Dispatch, getS
   ACCOUNT_SETTINGS.setPINModeRequest(account, pinMode)
     .then(() => dispatch(SETTINGS_ACTIONS.setPINMode(pinMode)))
     .catch((error) => { console.error(error) })
-
 }
 
 export const setPINRequest = (pin: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -58,7 +56,7 @@ export const setAutoLogoutTimeInSecondsRequest = (autoLogoutTimeInSeconds: numbe
     .catch((error) => { console.error(error) })
 }
 
-export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatch , getState: GetState) => {
+export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatch, getState: GetState) => {
   dispatch(setDefaultFiatStart(defaultFiat))
 
   const state = getState()
@@ -114,14 +112,8 @@ export const setDenominationKeyRequest = (currencyCode: string, denominationKey:
     .catch(onError)
 }
 
-export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch/* , getState: GetState */) => {
+export const setBitcoinOverrideServerRequest = (overrideServer: string) => (dispatch: Dispatch) => {
   dispatch(setBitcoinOverrideServerStart(overrideServer))
-
-  /* const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  ACCOUNT_SETTINGS.setBitcoinOverrideServerRequest(account, overrideServer)
-    .then(() => dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer)))
-    .catch((error) => { console.error(error) }) */
 
   dispatch(SETTINGS_ACTIONS.setBitcoinOverrideServer(overrideServer))
 }

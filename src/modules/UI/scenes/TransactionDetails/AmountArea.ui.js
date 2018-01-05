@@ -19,7 +19,7 @@ import * as UTILS from '../../../utils'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-let pickerValues = []
+const pickerValues = []
 
 categories.map((key) => {
   return pickerValues.push(s.strings['fragment_transaction_' + key])
@@ -34,8 +34,8 @@ class AmountArea extends Component {
     Picker.init({
       pickerData: pickerValues,
       onPickerConfirm: (data) => {
-        let categoryIndex = pickerValues.indexOf(data[0])
-        let categoryKey = categories[categoryIndex]
+        const categoryIndex = pickerValues.indexOf(data[0])
+        const categoryKey = categories[categoryIndex]
         this.props.onSelectCategory(categoryKey)
         this.Picker.hide()
       },
@@ -70,9 +70,9 @@ class AmountArea extends Component {
   }
 
   render () {
-    let feeSyntax, leftData, convertedAmount, amountString, absoluteAmount, symbolString
+    let feeSyntax, leftData, convertedAmount, amountString, symbolString
 
-    absoluteAmount = abs(this.props.abcTransaction.nativeAmount)
+    const absoluteAmount = abs(this.props.abcTransaction.nativeAmount)
 
     if (this.props.direction === 'receive') {
       convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
@@ -146,7 +146,7 @@ class AmountArea extends Component {
               style={[styles.editableFiat, UTILS.inputBottomPadding()]}
               keyboardType='numeric'
               placeholder={''}
-              value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-',''), 2, true)}
+              value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-', ''), 2, true)}
               defaultValue={''}
               onBlur={this.props.onBlurFiatFxn}
               blurOnSubmit={true}

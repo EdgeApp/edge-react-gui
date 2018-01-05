@@ -135,7 +135,7 @@ export async function setSyncedSubcategories (account: AbcAccount, subcategories
     finalText = subcategories
   }
   const SubcategoriesFile = getSyncedSubcategoriesFile(account)
-  let stringifiedSubcategories = JSON.stringify(finalText)
+  const stringifiedSubcategories = JSON.stringify(finalText)
   try {
     await SubcategoriesFile.setText(stringifiedSubcategories)
   } catch (e) {
@@ -146,7 +146,7 @@ export async function setSyncedSubcategories (account: AbcAccount, subcategories
 export const getSyncedSubcategories = (account: AbcAccount) =>
   getSyncedSubcategoriesFile(account).getText()
   .then((text) => {
-    let categoriesText = JSON.parse(text)
+    const categoriesText = JSON.parse(text)
     return categoriesText.categories
   })
   .catch(() =>
@@ -172,7 +172,6 @@ export const setLocalSettings = (account: AbcAccount, settings: Object) => {
   const localSettingsFile = getLocalSettingsFile(account)
   return localSettingsFile.setText(text)
 }
-
 
 export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean, pinMode: boolean}> => { // eslint-disable-line no-unused-vars
   const coreSettings: {otpMode: boolean, pinMode: boolean} = CORE_DEFAULTS

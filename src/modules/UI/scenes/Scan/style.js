@@ -15,7 +15,7 @@ export const styles = {
     height: platform.deviceHeight - 66 - platform.footerHeight,
     flex: 1,
     flexDirection: 'row',
-    position: 'relative',
+    position: 'relative'
   },
   preview: {
     flex: 1,

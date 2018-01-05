@@ -10,13 +10,12 @@ export type Props = {
 }
 
 class CheckBox extends Component<Props> {
-
   render () {
     const { enabled } = this.props
 
     return (
       <View style={styles.checkBoxOutline}>
-        {enabled &&<Image source={Checkmark} style={styles.checkmark} />}
+        {enabled && <Image source={Checkmark} style={styles.checkmark} />}
       </View>
     )
   }

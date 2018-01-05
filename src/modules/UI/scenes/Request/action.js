@@ -1,13 +1,13 @@
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+
 export const UPDATE_RECEIVE_ADDRESS = 'UPDATE_RECEIVE_ADDRESS'
 export const UPDATE_RECEIVE_ADDRESS_START = 'UPDATE_RECEIVE_ADDRESS_START'
 export const UPDATE_RECEIVE_ADDRESS_SUCCESS = 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
 export const UPDATE_RECEIVE_ADDRESS_ERROR = 'UPDATE_RECEIVE_ADDRESS_ERROR'
 export const SAVE_RECEIVE_ADDRESS = 'SAVE_RECEIVE_ADDRESS'
 export const UPDATE_INPUT_CURRENCY_SELECTED = 'UPDATE_INPUT_CURRENCY_SELECTED'
-
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
 
 export const updateReceiveAddress = (walletId, currencyCode) => (dispatch, getState) => {
   const state = getState()

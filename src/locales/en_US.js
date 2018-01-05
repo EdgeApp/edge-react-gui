@@ -1,18 +1,12 @@
 // @flow
 
 const strings = {
-  accept_button_text: 'Accept',
-  addtoken_contract_address_input_text: 'Contract Address',
-  addtoken_currency_code_input_text: 'Token Code',
-  addtoken_default_error_message: 'Please enter valid information',
-  addtoken_denomination_input_text: 'Number of Decimal Places',
-  addtoken_name_input_text: 'Token Name',
-  addtoken_top_instructions: 'To add a token, please fill out the following form and press \'Save\'',
   bitcoin_received: '%1$s Received',
   bitcoin_remaining: '%1$s Remaining…',
   calculator_done: 'Done',
   change_mining_fee_body: 'Warning: Low Fees may cause long delays in transaction confirmation',
   change_mining_fee_title: 'Change Mining Fee',
+  change_currency_fee: 'Change Currency',
   could_not_select: 'Could Not Select Wallet',
   dialog_title: 'Set Auto Logoff time',
   drawer_exchange_rate_loading: 'Exchange Rate Loading',
@@ -33,11 +27,12 @@ const strings = {
   managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
   manage_tokens_duplicate_currency_code: 'A token with that currency code already exists.',
   addtoken_top_instructions: 'To add a token, please fill out the following form and press \'Save\'',
-  addtoken_name_input_text: 'Token Name',
-  addtoken_currency_code_input_text: 'Token Code',
+  accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
+  addtoken_currency_code_input_text: 'Token Code',
   addtoken_default_error_message: 'Please enter valid information',
   addtoken_denomination_input_text: 'Number of Decimal Places',
+  addtoken_name_input_text: 'Token Name',
   edittoken_top_instructions: 'Fill out token info and tap \'Save\' to edit token:',
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
@@ -54,7 +49,6 @@ const strings = {
   fragment_insufficient_funds: 'insufficient funds',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
-  fragment_select_wallet_header_title: 'Choose one of the following as selected wallet:',
   fragment_send_address_dialog_title: 'Send to Public Address',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
@@ -69,22 +63,17 @@ const strings = {
   fragment_transaction_list_sent_prefix: 'Sent ',
   fragment_transaction_transfer: 'Transfer',
   fragment_wallet_unconfirmed: 'Pending',
-  fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Delete Wallet',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
-  fragment_wallets_sort: 'Sort',
-  fragment_wallets_this_wallet: 'this wallet?',
   fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
   fragmet_wallets_list_archive_title_capitalized: 'Archive',
-  fragmet_wallets_managetokens_option: 'Manage Tokens',
   help_build: 'Build',
   help_modal_title: 'Crypto Wallet and Directory',
   help_version: 'Version',
   loading: 'Loading…',
-  managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
   mining_fee_high_label_choice: 'High',
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
@@ -128,7 +117,7 @@ const strings = {
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
 
-  //Exchange
+  // Exchange
   string_from_exchange_info: 'You are about to exchange\n %1$s %2$s\n (%3$s)\n from %4$s',
   string_help: 'Help',
   string_next: 'NEXT',
@@ -177,6 +166,8 @@ const strings = {
   back_button_text: 'Back',
   send_confirmation_enter_send_password: 'Password',
   tx_detail_picker_title: 'Please choose a category:',
+  transaction_detail_no_wallet: 'No wallet on transaction object',
+  transaction_detail_unable_to_load_transaction: 'Unable to load transaction',
   string_confirm: 'Confirm',
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
   transaction_details_notes_title: 'Notes',
@@ -196,7 +187,6 @@ const strings = {
   otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.'
-
 }
 
 export default strings

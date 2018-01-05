@@ -3,8 +3,8 @@ const IconButtonStyle = {
   container: {
     width: 40,
     height: 40,
-    justifyContent:'space-around',
-    alignItems:'center',
+    justifyContent: 'space-around',
+    alignItems: 'center'
   },
   icon: {
     color: THEME.COLORS.WHITE

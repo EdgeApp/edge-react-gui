@@ -26,9 +26,11 @@ import {Icon} from '../../components/Icon/Icon.ui'
 import styles from './style'
 import s from '../../../../locales/strings'
 
-const DISABLE_TEXT = s.strings.string_disable
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
 import { AbcAccount } from 'airbitz-core-types'
+
+const DISABLE_TEXT = s.strings.string_disable
+
 type Props = {
   defaultFiat: string,
   autoLogoutTimeInMinutes: number,
@@ -115,7 +117,6 @@ export default class SettingsOverview extends Component<Props,State> {
   _onPressChangePinRouting = () => {
     if (this.props.isLocked) return
     Actions[Constants.CHANGE_PIN]()
-
   }
   _onPressRecoverPasswordRouting = () => {
     if (this.props.isLocked) return
@@ -177,7 +178,7 @@ export default class SettingsOverview extends Component<Props,State> {
       value: autoLogoutValue} = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
     const autoLogoutRightText = autoLogoutValue === 0
       ? DISABLE_TEXT
-      : `${autoLogoutValue} ${s.strings['settings_'+ autoLogoutMeasurement]}`
+      : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
 
     return (
       <View>
