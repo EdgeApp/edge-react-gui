@@ -12,7 +12,7 @@ export default (dispatch: Dispatch): AbcContextCallbacks => ({
   },
 
   onExchangeUpdate () {
-    console.log('onExchangeUpdate')
+    // console.log('onExchangeUpdate')
     dispatch(updateExchangeRates())
   }
 })
