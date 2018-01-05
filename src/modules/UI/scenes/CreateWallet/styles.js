@@ -1,6 +1,6 @@
 // @flow
 
-import { StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     padding: 5
   },
   pickerView: {
-    marginBottom: 15,
+    marginBottom: 15
   },
   picker: {
     fontFamily: THEME.FONTS.DEFAULT,

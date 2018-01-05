@@ -79,7 +79,6 @@ class FullWalletRow extends Component<Props, State> {
 export default FullWalletRow
 
 class FullWalletListRow extends Component<Props, State> {
-
   _onPressSelectWallet = (walletId, currencyCode) => {
     this.props.selectWallet(walletId, currencyCode)
     Actions.transactionList({params: 'walletList'})
@@ -106,17 +105,17 @@ class FullWalletListRow extends Component<Props, State> {
     const id = walletData.id
     const name = walletData.name || s.strings.string_no_name
     const symbol = denomination.symbol
-    let symbolImageDarkMono = walletData.symbolImageDarkMono
-    let preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    let finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    const symbolImageDarkMono = walletData.symbolImageDarkMono
+    const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
+    const finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
     // need to crossreference tokensEnabled with nativeBalances
-    let enabledNativeBalances = {}
+    const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
 
-    for (let prop in walletData.nativeBalances) {
-      if ((prop !== currencyCode)
-          && (enabledTokens.indexOf(prop) >= 0)) {
+    for (const prop in walletData.nativeBalances) {
+      if ((prop !== currencyCode) &&
+          (enabledTokens.indexOf(prop) >= 0)) {
         enabledNativeBalances[prop] = walletData.nativeBalances[prop]
       }
     }
@@ -132,20 +131,20 @@ class FullWalletListRow extends Component<Props, State> {
             >
               <View style={[styles.rowContent]}>
                 <View style={[styles.rowNameTextWrap, b()]}>
-                {(Platform.OS === 'ios')
-                && (
+                {(Platform.OS === 'ios') &&
+                (
                   <View style={[styles.rowNameTextWrapIOS, b()]}>
                     <T style={[styles.rowNameText, b()]} numberOfLines={1}>
-                    {symbolImageDarkMono
-                      && <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} />
-                    }  {cutOffText(name, 34)}</T>
+                    {symbolImageDarkMono &&
+                      <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} />
+                    } {cutOffText(name, 34)}</T>
                 </View>
                 )}
-                {(Platform.OS === 'android')
-                  && (
+                {(Platform.OS === 'android') &&
+                  (
                     <View style={[styles.rowNameTextWrapAndroid, b()]}>
-                    {symbolImageDarkMono
-                      && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
+                    {symbolImageDarkMono &&
+                      <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
                     }
                     <T style={[styles.rowNameText, b()]} numberOfLines={1}>
                       {cutOffText(name, 34)}</T>
@@ -173,8 +172,8 @@ class FullWalletListRow extends Component<Props, State> {
   }
 
   renderTokenRow = (parentId, metaTokenBalances) => {
-    let tokens = []
-    for (let property in metaTokenBalances) {
+    const tokens = []
+    for (const property in metaTokenBalances) {
       if (property !== this.props.data.item.currencyCode) {
         tokens.push(
           <WalletListTokenRow

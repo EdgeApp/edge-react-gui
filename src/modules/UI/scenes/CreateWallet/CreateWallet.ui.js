@@ -20,12 +20,12 @@ import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import type {GuiWalletType, GuiFiatType} from '../../..'
 
-const WALLET_NAME_INPUT_PLACEHOLDER  = s.strings.fragment_wallets_addwallet_name_hint
+const WALLET_NAME_INPUT_PLACEHOLDER = s.strings.fragment_wallets_addwallet_name_hint
 const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
-const FIAT_PICKER_PLACEHOLDER        = s.strings.fragment_wallets_addwallet_fiat_hint
+const FIAT_PICKER_PLACEHOLDER = s.strings.fragment_wallets_addwallet_fiat_hint
 
-const DONE_TEXT         = s.strings.fragment_create_wallet_create_wallet
-const CANCEL_TEXT       = s.strings.string_cancel_cap
+const DONE_TEXT = s.strings.fragment_create_wallet_create_wallet
+const CANCEL_TEXT = s.strings.string_cancel_cap
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
 export type Props = {
@@ -65,9 +65,9 @@ export default class CreateWallet extends Component<Props & DispatchProps, State
   }
 
   isValidData = () => {
-    const isValidWalletName = this.isValidWalletName()
-    const isValidWalletType = this.isValidWalletType()
-    const isValidFiat       = this.isValidFiat()
+    const isValidWalletName = !!this.isValidWalletName()
+    const isValidWalletType = !!this.isValidWalletType()
+    const isValidFiat = !!this.isValidFiat()
 
     return (isValidWalletName && isValidWalletType && isValidFiat)
   }

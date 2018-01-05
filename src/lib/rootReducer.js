@@ -13,5 +13,4 @@ const rootReducer = combineReducers({
   exchangeRates
 })
 
-
 export default rootReducer

@@ -17,10 +17,9 @@ import DeviceInfo from 'react-native-device-info'
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
 const CONTENT_URI = 'https://edgesecure.co/info.html'
-const contentScaling = (Platform.OS === 'ios') ? false : true
+const contentScaling = Platform.OS !== 'ios'
 
 export default class HelpModal extends Component {
-
   render () {
     return (
       <StylizedModal
@@ -45,7 +44,7 @@ export default class HelpModal extends Component {
                         <Text style={styles.modalBottomText}>{s.strings.help_version} {versionNumber}</Text>
                         <Text style={styles.modalBottomText}>{s.strings.help_build} {buildNumber}</Text>
                     </View>}
-        featuredIcon={<Image source={helpImage}  style={styles.modalFeaturedIcon} color={THEME.secondary} size={20} />}
+        featuredIcon={<Image source={helpImage} style={styles.modalFeaturedIcon} color={THEME.secondary} size={20} />}
       />
     )
   }

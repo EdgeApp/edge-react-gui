@@ -1,4 +1,4 @@
-//@flow
+// @flow
 
 export * from './CryptoExchangeActions'
 export * from './EdgeLoginActions'

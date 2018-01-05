@@ -20,7 +20,6 @@ import {
   processParsedUri
 } from './action.js'
 
-
 const mapStateToProps = (state: State): Props => {
   const sendConfirmation = UI_SELECTORS.getSceneState(state, 'sendConfirmation')
   let fiatPerCrypto = 0

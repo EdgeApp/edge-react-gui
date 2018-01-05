@@ -36,7 +36,7 @@ export class GuiWallet {
     symbolImage: string,
     symbolImageDarkMono: string,
     metaTokens: Array<AbcMetaToken>,
-    enabledTokens: Array<string>,
+    enabledTokens: Array<string>
   ) {
     this.id = id
     this.type = type

@@ -66,7 +66,6 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
         source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
-
   }
   renderHeader (style: any) {
     let title = ''
