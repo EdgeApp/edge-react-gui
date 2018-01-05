@@ -16,7 +16,6 @@ export type Props = {
 }
 
 export default class DeleteTokenButtons extends Component<Props> {
-
   render () {
     return (
       <View style={[styles.deleteModalButtonsArea]}>

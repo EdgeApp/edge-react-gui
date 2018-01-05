@@ -58,14 +58,14 @@ export default class FlipInput extends Component<Props, State> {
       isToggled: !this.state.isToggled
     })
     if (this.state.isToggled) {
-      Animated.spring(this.animatedValue,{
+      Animated.spring(this.animatedValue, {
         toValue: 0,
         friction: 8,
         tension: 10
       }).start()
     }
     if (!this.state.isToggled) {
-      Animated.spring(this.animatedValue,{
+      Animated.spring(this.animatedValue, {
         toValue: 180,
         friction: 8,
         tension: 10
@@ -112,7 +112,7 @@ export default class FlipInput extends Component<Props, State> {
     const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(secondaryDisplayAmount), 2)
     // console.log('BEFORE: this.setState', this.state)
     this.setState({
-      secondaryDisplayAmount: formattedSecondaryDisplayAmount,
+      secondaryDisplayAmount: formattedSecondaryDisplayAmount
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
   }
 

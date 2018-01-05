@@ -1,7 +1,7 @@
-//@flow
+// @flow
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {View,TouchableHighlight} from 'react-native'
+import {View, TouchableHighlight} from 'react-native'
 import {Icon} from '../Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
 
@@ -43,7 +43,7 @@ class IconButton extends Component<Props, State> {
       pressed: false
     })
   }
-  renderIcon = (icon: string ,iconPressed: string ,iconSize: number) => {
+  renderIcon = (icon: string, iconPressed: string, iconSize: number) => {
     let style = icon
     if (this.state.pressed) {
       style = iconPressed
@@ -72,7 +72,7 @@ class IconButton extends Component<Props, State> {
         underlayColor={underlayColor}
       >
       <View>
-        {this.renderIcon(icon,iconPressed,iconSize)}
+        {this.renderIcon(icon, iconPressed, iconSize)}
       </View>
       </TouchableHighlight>
     )

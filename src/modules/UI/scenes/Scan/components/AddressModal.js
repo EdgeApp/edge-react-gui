@@ -31,7 +31,7 @@ type State = {
   clipboard: string
 }
 
-export default class AddressModal extends Component<Props,State> {
+export default class AddressModal extends Component<Props, State> {
   componentWillMount () {
     this.setState(
       {
@@ -71,8 +71,8 @@ export default class AddressModal extends Component<Props,State> {
     const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color='#2A5799'
       style={styles.icon} />
 
-    const copyMessage
-      = this.state.clipboard
+    const copyMessage =
+      this.state.clipboard
       ? sprintf(s.strings.string_paste_address, this.state.clipboard)
       : null
     const middle = <AddressInput

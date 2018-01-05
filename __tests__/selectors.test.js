@@ -7,8 +7,8 @@ describe('getSupportedWalletTypes', function () {
   describe('when multiple supported wallet types', function () {
     test('[plugins] => [supportedWalletTypes]', function () {
       const plugins = [
-        {pluginName: 'bitcoin', currencyInfo: {currencyName: 'Bitcoin', walletTypes: ['wallet:bitcoin']} },
-        {pluginName: 'ethereum', currencyInfo: {currencyName: 'Ethereum', walletTypes: ['wallet:ethereum']} }
+        { pluginName: 'bitcoin', currencyInfo: {currencyName: 'Bitcoin', walletTypes: ['wallet:bitcoin']} },
+        { pluginName: 'ethereum', currencyInfo: {currencyName: 'Ethereum', walletTypes: ['wallet:ethereum']} }
       ]
       const state = {ui: {settings: {plugins: {arrayPlugins: [
         ...plugins

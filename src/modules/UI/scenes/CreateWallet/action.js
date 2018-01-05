@@ -1,15 +1,12 @@
 // @flow
+import * as ACCOUNT_API from '../../../Core/Account/api.js'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import {Actions} from 'react-native-router-flux'
+import * as WalletActions from '../../Wallets/action'
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
 export const SELECT_WALLET_TYPE = 'SELECT_WALLET_TYPE'
 export const SELECT_FIAT = 'SELECT_FIAT'
-
-import * as ACCOUNT_API from '../../../Core/Account/api.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-
-import {Actions} from 'react-native-router-flux'
-
-import * as WalletActions from '../../Wallets/action'
 
 export const updateWalletName = (walletName: string) => ({
   type: UPDATE_WALLET_NAME,

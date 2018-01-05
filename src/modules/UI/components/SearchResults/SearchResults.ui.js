@@ -10,8 +10,8 @@ import platform from '../../../../theme/variables/platform.js'
 export default class SearchResults extends Component {
   constructor (props) {
     super(props)
-    let completedDataList = this.props.regularArray.map((x, i) => {
-      let newValue = x
+    const completedDataList = this.props.regularArray.map((x, i) => {
+      const newValue = x
       newValue.key = i
       return newValue
     })
@@ -22,8 +22,8 @@ export default class SearchResults extends Component {
 
   render () {
     let searchResultsHeight
-    let completedDataList = this.props.regularArray.map((x, i) => {
-      let newValue = x
+    const completedDataList = this.props.regularArray.map((x, i) => {
+      const newValue = x
       newValue.key = i
       return newValue
     })

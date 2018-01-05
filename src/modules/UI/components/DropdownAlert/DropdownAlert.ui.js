@@ -13,22 +13,25 @@ export default class DropdownAlert extends Component<Props> {
   dropdownAlert: {alert: Function}
   componentWillReceiveProps (nextProps: Props) {
     if (this.shouldDisplay(this.props, nextProps)) {
-      this.dropdownAlert.alert()
+      if (this.dropdownAlert) this.dropdownAlert.alert()
     }
   }
+
+  dropdownAlert: ?any
 
   render () {
     const {children, onClose, onPress} = this.props
 
     // $FlowFixMe
-    return <RNDropdownAlert ref={(ref) => this.dropdownAlert = ref}
+    return (
+    <RNDropdownAlert ref={this.dropdownAlert}
       onPress={onPress}
       panResponderEnabled={false}
       updateStatusBar={false}
       endDelta={20}
       onClose={onClose}>
       {children}
-    </RNDropdownAlert>
+    </RNDropdownAlert>)
   }
 
   shouldDisplay = (current: Props, next: Props) => (!current.visible && next.visible)

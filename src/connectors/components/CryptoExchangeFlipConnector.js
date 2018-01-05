@@ -1,4 +1,4 @@
-//@flow
+// @flow
 
 import {connect} from 'react-redux'
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
@@ -14,7 +14,7 @@ import * as actions from '../../actions/indexActions'
 import type {SetNativeAmountInfo} from '../../actions/CryptoExchangeActions'
 
 export const mapStateToProps = (state: State, ownProps: Object) => {
-  const fee = ownProps.fee ? ownProps.fee: null
+  const fee = ownProps.fee ? ownProps.fee : null
   let fiatPerCrypto = 0
   const uiWallet: GuiWallet = ownProps.uiWallet
   const currencyCode = ownProps.currencyCode
@@ -41,7 +41,7 @@ export const mapStateToProps = (state: State, ownProps: Object) => {
     const isoFiatCurrencyCode = uiWallet.isoFiatCurrencyCode
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
-  const nativeAmount =  ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromNativeAmount : state.cryptoExchange.toNativeAmount
+  const nativeAmount = ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromNativeAmount : state.cryptoExchange.toNativeAmount
   const currencyLogo = ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromCurrencyIcon : state.cryptoExchange.toCurrencyIcon
   return {
     style: ownProps.style,
@@ -53,7 +53,7 @@ export const mapStateToProps = (state: State, ownProps: Object) => {
     secondaryInfo,
     fiatPerCrypto,
     nativeAmount,
-    fee,
+    fee
   }
 }
 

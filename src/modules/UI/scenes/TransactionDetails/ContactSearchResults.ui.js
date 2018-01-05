@@ -10,7 +10,6 @@ import ContactImage from '../../../../assets/images/contact.png'
 import styles from './style'
 
 class ContactSearchResults extends Component {
-
   render () {
     const filteredArray = this.props.contacts.filter((entry) =>
       (entry.givenName + ' ' + entry.familyName).indexOf(this.props.currentPayeeText) >= 0)

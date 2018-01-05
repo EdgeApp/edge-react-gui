@@ -1,8 +1,9 @@
 import {
-  Platform,
+  Platform
 } from 'react-native'
-const platform = Platform.OS
 import THEME from '../../../../theme/variables/airbitz'
+
+const platform = Platform.OS
 
 export default {
   iconImageContainer: {

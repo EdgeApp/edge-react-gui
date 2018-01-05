@@ -22,11 +22,11 @@ import more from '../../../../assets/images/tabbar/more.png'
 import moreSelected from '../../../../assets/images/tabbar/more_selected.png'
 import styles from './styles.js'
 
-const WALLETS_TEXT      = s.strings.drawer_wallets
-const REQUEST_TEXT      = s.strings.drawer_request
-const SCAN_TEXT         = s.strings.drawer_scan
+const WALLETS_TEXT = s.strings.drawer_wallets
+const REQUEST_TEXT = s.strings.drawer_request
+const SCAN_TEXT = s.strings.drawer_scan
 const TRANSACTIONS_TEXT = s.strings.drawer_transactions
-const MORE_TEXT         = s.strings.drawer_more
+const MORE_TEXT = s.strings.drawer_more
 
 type State = {}
 type Props = {

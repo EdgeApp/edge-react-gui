@@ -1,5 +1,4 @@
 // @flow
-export const SET_TRANSACTION_DETAILS = 'SET_TRANSACTION_DETAILS'
 
 import type {AbcMetadata} from 'airbitz-core-types'
 
@@ -8,6 +7,8 @@ import type {Dispatch, GetState} from '../../../ReduxTypes'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import {Actions} from 'react-native-router-flux'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
+
+export const SET_TRANSACTION_DETAILS = 'SET_TRANSACTION_DETAILS'
 
 export const SET_TRANSACTION_SUBCATEGORIES_START = 'SET_TRANSACTION_SUBCATEGORIES_START'
 export const SET_TRANSACTION_SUBCATEGORIES = 'SET_TRANSACTION_SUBCATEGORIES'
@@ -38,7 +39,7 @@ export const setSubcategories = (subcategories: any) => ({
 
 export const setNewSubcategory = (newSubcategory: any) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  let oldSubcats = state.ui.scenes.transactionDetails.subcategories
+  const oldSubcats = state.ui.scenes.transactionDetails.subcategories
   const newSubcategories = [...oldSubcats, newSubcategory]
   return dispatch(setSubcategoriesRequest(newSubcategories))
 }

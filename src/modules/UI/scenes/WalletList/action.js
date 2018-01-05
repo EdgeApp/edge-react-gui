@@ -1,3 +1,9 @@
+import * as ACCOUNT_API from '../../../Core/Account/api.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as UI_ACTIONS from '../../Wallets/action.js'
+
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+
 export const TOGGLE_ARCHIVE_VISIBILITY = 'TOGGLE_ARCHIVE_VISIBILITY'
 
 export const OPEN_DELETE_WALLET_MODAL = 'OPEN_DELETE_WALLET_MODAL'
@@ -27,57 +33,51 @@ export const DELETE_WALLET_SUCCESS = 'DELETE_WALLET_SUCCESS'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 
-import * as ACCOUNT_API from '../../../Core/Account/api.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
-import * as UI_ACTIONS from '../../Wallets/action.js'
-
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-
 export const walletRowOption = (walletId, option) => {
   switch (option) {
-  case 'restore':
-  case 'activate':
-    return (dispatch, getState) => {
-      const state = getState()
-      const account = CORE_SELECTORS.getAccount(state)
+    case 'restore':
+    case 'activate':
+      return (dispatch, getState) => {
+        const state = getState()
+        const account = CORE_SELECTORS.getAccount(state)
 
-      dispatch(activateWalletStart(walletId))
+        dispatch(activateWalletStart(walletId))
 
-      ACCOUNT_API.activateWalletRequest(account, walletId)
+        ACCOUNT_API.activateWalletRequest(account, walletId)
         .then(() => {
           dispatch(activateWalletSuccess(walletId))
         })
         .catch((e) => console.log(e))
-    }
+      }
 
-  case 'archive':
-    return (dispatch, getState) => {
-      const state = getState()
-      const account = CORE_SELECTORS.getAccount(state)
+    case 'archive':
+      return (dispatch, getState) => {
+        const state = getState()
+        const account = CORE_SELECTORS.getAccount(state)
 
-      dispatch(archiveWalletStart(walletId))
+        dispatch(archiveWalletStart(walletId))
 
-      ACCOUNT_API.archiveWalletRequest(account, walletId)
+        ACCOUNT_API.archiveWalletRequest(account, walletId)
         .then(() => {
           dispatch(archiveWalletSuccess(walletId))
         })
         .catch((e) => console.log(e))
-    }
+      }
 
-  case 'delete':
-    return (dispatch) => {
-      dispatch(openDeleteWalletModal(walletId))
-    }
+    case 'delete':
+      return (dispatch) => {
+        dispatch(openDeleteWalletModal(walletId))
+      }
 
-  case 'rename':
-    return (dispatch) => {
-      dispatch(openRenameWalletModal(walletId))
-    }
+    case 'rename':
+      return (dispatch) => {
+        dispatch(openRenameWalletModal(walletId))
+      }
 
-  case 'addToken':
-    return (dispatch) => {
-      dispatch(addToken(walletId))
-    }
+    case 'addToken':
+      return (dispatch) => {
+        dispatch(addToken(walletId))
+      }
   }
 }
 

@@ -32,7 +32,7 @@ class PrimaryButton extends Component {
         <View style={styles.stylizedButtonTextWrap}>
           {this.props.processingFlag
             ? (this.props.processingElement)
-            :    (<T style={[styles.primaryButtonText, styles.stylizedButtonText]}>
+            : (<T style={[styles.primaryButtonText, styles.stylizedButtonText]}>
               {this.props.text}
             </T>)
           }

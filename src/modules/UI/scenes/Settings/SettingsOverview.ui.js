@@ -26,9 +26,11 @@ import {Icon} from '../../components/Icon/Icon.ui'
 import styles from './style'
 import s from '../../../../locales/strings'
 
-const DISABLE_TEXT = s.strings.string_disable
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
 import { AbcAccount } from 'airbitz-core-types'
+
+const DISABLE_TEXT = s.strings.string_disable
+
 type Props = {
   defaultFiat: string,
   autoLogoutTimeInMinutes: number,
@@ -52,7 +54,7 @@ type State = {
   autoLogoutTimeInMinutes: number
 }
 
-export default class SettingsOverview extends Component<Props,State> {
+export default class SettingsOverview extends Component<Props, State> {
   settings: Array<Object>
   securityRoute: Array<Object>
   optionModals: Array<Object>
@@ -142,7 +144,6 @@ export default class SettingsOverview extends Component<Props,State> {
   _onPressChangePinRouting = () => {
     if (this.props.isLocked) return
     Actions[Constants.CHANGE_PIN]()
-
   }
   _onPressRecoverPasswordRouting = () => {
     Actions[Constants.CHANGE_PASSWORD]()
@@ -199,7 +200,7 @@ export default class SettingsOverview extends Component<Props,State> {
       value: autoLogoutValue} = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
     const autoLogoutRightText = autoLogoutValue === 0
       ? DISABLE_TEXT
-      : `${autoLogoutValue} ${s.strings['settings_'+ autoLogoutMeasurement]}`
+      : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
 
     return (
       <View>
@@ -258,8 +259,8 @@ export default class SettingsOverview extends Component<Props,State> {
               Object.keys(this.options)
                 .filter((optionName) => {
                   if (!this.options[optionName]) return false
-                  const {text, key, routeFunction, value} = this.options[optionName]
-                  return text && key && routeFunction && value
+                  const {text, key, routeFunction} = this.options[optionName]
+                  return text && key && routeFunction
                 })
                 .map(this.renderRowSwitch)
             }

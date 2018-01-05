@@ -8,12 +8,12 @@ import type {AbcTransaction} from 'airbitz-core-types'
 const displayAlert = (state: boolean = false, action: Action) => {
   const {type} = action
   switch (type) {
-  case ACTIONS.DISPLAY_TRANSACTION_ALERT:
-    return true
-  case ACTIONS.DISMISS_TRANSACTION_ALERT:
-    return false
-  default:
-    return state
+    case ACTIONS.DISPLAY_TRANSACTION_ALERT:
+      return true
+    case ACTIONS.DISMISS_TRANSACTION_ALERT:
+      return false
+    default:
+      return state
   }
 }
 
@@ -21,15 +21,15 @@ type AbcTransactionState = AbcTransaction | ''
 
 const abcTransaction = (state: AbcTransactionState = '', action: Action) => {
   switch (action.type) {
-  case ACTIONS.DISPLAY_TRANSACTION_ALERT:
-    if (action.data) {
-      return action.data.abcTransaction
-    }
-    return state
-  case ACTIONS.DISMISS_TRANSACTION_ALERT:
-    return ''
-  default:
-    return state
+    case ACTIONS.DISPLAY_TRANSACTION_ALERT:
+      if (action.data) {
+        return action.data.abcTransaction
+      }
+      return state
+    case ACTIONS.DISMISS_TRANSACTION_ALERT:
+      return ''
+    default:
+      return state
   }
 }
 

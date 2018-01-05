@@ -10,7 +10,6 @@ import s from '../../../../../locales/strings.js'
 import * as Constants from '../../../../../constants/indexConstants'
 import * as Styles from '../../../../../styles/indexStyles'
 const mapStateToProps = (state) => {
-
   const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const LOADING_TEXT = sprintf(s.strings.loading)
@@ -20,8 +19,8 @@ const mapStateToProps = (state) => {
   return {
     title,
     style: {...Styles.TextAndIconButtonStyle,
-      content:  {...Styles.TextAndIconButtonStyle.content, position: 'relative', width:'80%'},
-      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width:'80%'}},
+      content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
+      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}},
     icon: Constants.KEYBOARD_ARROW_DOWN,
     iconType: Constants.MATERIAL_ICONS
   }
