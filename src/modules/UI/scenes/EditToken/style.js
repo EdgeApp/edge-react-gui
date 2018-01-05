@@ -2,7 +2,6 @@ import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 import PLATFORM from '../../../../theme/variables/platform'
 
-
 export const styles = {
 
   gradient: {
@@ -95,11 +94,11 @@ export const styles = {
     left: 3
   },
   deleteButton: {
-    marginRight: 2,
+    marginRight: 2
   },
   saveButton: {
     marginLeft: 2,
-    backgroundColor: THEME.COLORS.SECONDARY,
+    backgroundColor: THEME.COLORS.SECONDARY
   },
   deleteModalButtonsArea: {
     height: 52,
@@ -110,11 +109,11 @@ export const styles = {
     flex: 1
   },
   modalCancelButton: {
-    marginRight: 2,
+    marginRight: 2
   },
   modalDeleteButton: {
     marginLeft: 2,
-    backgroundColor: THEME.COLORS.SECONDARY,
+    backgroundColor: THEME.COLORS.SECONDARY
   },
   bottomPaddingForKeyboard: {
     height: 300

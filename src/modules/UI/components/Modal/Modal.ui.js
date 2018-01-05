@@ -69,21 +69,21 @@ export default class StylizedModal extends Component<Props, State> {
                     {headerText}
                   </T>
 
-                  {this.props.headerSubtext
-                    && <T style={[styles.modalTopSubtext]}>
+                  {this.props.headerSubtext &&
+                    <T style={[styles.modalTopSubtext]}>
                       {headerSubtext ? s.strings[headerSubtext] : ''}
                     </T>
                   }
                 </View>
 
-                {this.props.modalMiddle
-                  && <View style={[styles.modalMiddle, this.props.modalMiddleStyle]}>
+                {this.props.modalMiddle &&
+                  <View style={[styles.modalMiddle, this.props.modalMiddleStyle]}>
                     {this.props.modalMiddle}
                   </View>
                 }
 
-                {this.props.modalBottom
-                  && <View style={[styles.modalBottom, this.props.modalBottomStyle]}>
+                {this.props.modalBottom &&
+                  <View style={[styles.modalBottom, this.props.modalBottomStyle]}>
                     {this.props.modalBottom}
                   </View>
                 }

@@ -158,7 +158,6 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
     )
   }
 
-
   showDeleteTokenModal = () => {
     this.props.showDeleteTokenModal()
   }
@@ -175,7 +174,7 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
 
   onChangeCurrencyCode = (input: string) => {
     this.setState({
-      currencyCode: input.substring(0,5)
+      currencyCode: input.substring(0, 5)
     })
   }
 

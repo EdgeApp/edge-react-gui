@@ -20,7 +20,7 @@ export default StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 5,
     paddingTop: 3,
-    color: THEME.COLORS.WHITE,
+    color: THEME.COLORS.WHITE
   },
   sideText: {
     color: THEME.COLORS.WHITE,

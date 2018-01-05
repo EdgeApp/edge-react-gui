@@ -13,7 +13,7 @@ import {sendLogs} from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
 import type {State, Dispatch} from '../../../../modules/ReduxTypes'
 import { AbcAccount } from 'airbitz-core-types'
-//settings_button_lock_settings, or //settings_button_unlock_settings
+// settings_button_lock_settings, or //settings_button_unlock_settings
 const mapStateToProps = (state: State) => {
   const isLocked = SETTINGS_SELECTORS.getSettingsLock(state)
   const lockButtonIcon = isLocked ? Constants.LOCKED_ICON : Constants.UNLOCKED_ICON

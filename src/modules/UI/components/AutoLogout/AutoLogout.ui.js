@@ -3,7 +3,6 @@
 import {Component} from 'react'
 import {AppState} from 'react-native'
 
-
 type AppStateType = 'active' | 'background' | 'inactive'
 type State = {
   timestamp: Date,

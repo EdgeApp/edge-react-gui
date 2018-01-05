@@ -30,7 +30,7 @@ const mapStateToProps = (state: State) => {
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  dismissAlert: () => dispatch(dismissTransactionAlert()),
+  dismissAlert: () => dispatch(dismissTransactionAlert())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionAlert)

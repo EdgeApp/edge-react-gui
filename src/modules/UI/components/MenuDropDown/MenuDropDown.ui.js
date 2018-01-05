@@ -1,4 +1,4 @@
-//@flow
+// @flow
 import React, {Component} from 'react'
 import {View, Text} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
@@ -39,7 +39,7 @@ export default class MenuDropDown extends Component<Props> {
   render () {
     let optionsStyle = {}
     if (this.props.rightSide) {
-      optionsStyle = {left:'1%'}
+      optionsStyle = {left: '1%'}
     }
     const style = this.props.style
     return (

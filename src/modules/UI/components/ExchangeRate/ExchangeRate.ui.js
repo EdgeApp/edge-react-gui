@@ -26,17 +26,17 @@ export default class ExchangeRate extends Component<Props> {
       secondaryDisplayAmount
     } = this.props
 
-    const primaryDisplayName :string
-      = primaryInfo.displayDenomination.name
+    const primaryDisplayName :string =
+      primaryInfo.displayDenomination.name
 
-    const secondaryDisplaySymbol :string
-      = secondaryInfo.displayDenomination.symbol
+    const secondaryDisplaySymbol :string =
+      secondaryInfo.displayDenomination.symbol
 
-    const formattedSecondaryDisplayAmount :string
-      = parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
+    const formattedSecondaryDisplayAmount :string =
+      parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
 
-    const secondaryCurrencyCode :string
-      = secondaryInfo.displayDenomination.currencyCode
+    const secondaryCurrencyCode :string =
+      secondaryInfo.displayDenomination.currencyCode
 
     const exchangeData = {
       primaryDisplayAmount: primaryDisplayAmount || '1',
