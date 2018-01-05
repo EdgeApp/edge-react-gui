@@ -6,7 +6,8 @@ import OtpSettingsSceneComponent from '../../modules/UI/scenes/Otp/OtpSettingsSc
 // import * as Constants from '../../constants/indexConstants.js'
 import {enableOtp, disableOtp} from '../../actions/indexActions.js'
 export const mapStateToProps = (state: State) => ({
-  isOtpEnabled: SETTINGS_SELECTORS.getIsOtpEnabled(state)
+  isOtpEnabled: SETTINGS_SELECTORS.getIsOtpEnabled(state),
+  otpKey: SETTINGS_SELECTORS.getOtpKey(state)
 })
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({

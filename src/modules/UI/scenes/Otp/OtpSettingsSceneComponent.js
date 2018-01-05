@@ -6,11 +6,12 @@ import Gradient from '../../components/Gradient/Gradient.ui.js'
 import OtpHeroComponent from './OtpHeroComponent.js'
 import {PrimaryButton, TertiaryButton} from '../../components/Buttons/index'
 import s from '../../../../locales/strings.js'
-import {StaticModalComponent, TwoButtonTextModalComponent} from '../../../../components/indexComponents.js'
+import {StaticModalComponent, TwoButtonTextModalComponent, ExpandableBoxComponent} from '../../../../components/indexComponents.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 
 type Props = {
   isOtpEnabled: boolean,
+  otpKey?: string,
   enableOtp(): void,
   disableOtp(): void
 }
@@ -70,11 +71,23 @@ export default class OtpSettingsSceneComponent extends Component<Props,State> {
     }
     return <PrimaryButton text={s.strings.otp_enable} onPressFunction={this.onPress} />
   }
+  renderKeyBox = (styles: Object) => {
+    if (this.props.isOtpEnabled) {
+      return <ExpandableBoxComponent
+        style={styles.keyBox}
+        showMessage={s.strings.otp_show_code}
+        hideMessage={s.strings.otp_hide_code} >
+        <Text style={styles.keyText}>{this.props.otpKey}</Text>
+      </ExpandableBoxComponent>
+    }
+    return null
+  }
   renderMiddle (styles: Object) {
     const message = this.props.isOtpEnabled ? s.strings.otp_enabled_description : s.strings.otp_description
     return <View style={styles.middle} >
             <Text style={styles.middleText}>{message}</Text>
             <View style={styles.shim} />
+            {this.renderKeyBox(styles)}
           </View>
   }
   renderModals (styles: Object) {
@@ -103,7 +116,7 @@ export default class OtpSettingsSceneComponent extends Component<Props,State> {
   render () {
     const styles = OtpSettingsScreenStyles
     return (
-      <View >
+      <View style={styles.container}>
         <Gradient style={styles.gradient} />
         <View style={styles.body}>
           <OtpHeroComponent style={styles.hero}

@@ -160,3 +160,8 @@ export const getIsOtpEnabled = (state: State) => {
   const enabled: boolean = settings.isOtpEnabled
   return enabled
 }
+export const getOtpKey = (state: State) => {
+  const settings = getSettings(state)
+  const otpKey: string = settings.otpKey
+  return otpKey
+}

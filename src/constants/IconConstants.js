@@ -22,7 +22,8 @@ export const LOCKED_ICON = 'ios-lock-outline'
 
 // Material
 export const MATERIAL_ICONS = 'material'
-export const KEYBOARD_ARROW_DOWN='keyboard-arrow-down'
+export const KEYBOARD_ARROW_DOWN = 'keyboard-arrow-down'
+export const KEYBOARD_ARROW_UP = 'keyboard-arrow-up'
 export const SWAP_VERT = 'swap-vert'
 export const SWAP_HORIZ = 'swap-horiz'
 export const EXCLAMATION = 'exclamation'
