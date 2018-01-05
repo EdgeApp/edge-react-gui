@@ -19,29 +19,29 @@ const Icon = ({style, name, size, type}: Props) => {
   switch (type) {
     case Constants.ENTYPO:
       return <Entypo
-      style={style}
-      name={name}
-      size={size}/>
+        style={style}
+        name={name}
+        size={size}/>
     case Constants.MATERIAL_ICONS:
       return <MaterialIcon
-      style={style}
-      name={name}
-      size={size}/>
+        style={style}
+        name={name}
+        size={size}/>
     case Constants.FONT_AWESOME:
       return <FAIcon
-      style={style}
-      name={name}
-      size={size}/>
+        style={style}
+        name={name}
+        size={size}/>
     case Constants.ION_ICONS:
       return <IonIcon
-      style={style}
-      name={name}
-      size={size}/>
+        style={style}
+        name={name}
+        size={size}/>
     case Constants.SIMPLE_ICONS:
       return <SimpleIcon
-      style={style}
-      name={name}
-      size={size}/>
+        style={style}
+        name={name}
+        size={size}/>
   }
   return null
 }

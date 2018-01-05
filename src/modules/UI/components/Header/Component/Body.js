@@ -14,23 +14,23 @@ export default class Body extends Component {
     switch (sceneName) {
       case 'scan':
         return <WalletSelector walletList={this.props.walletList}
-        toggleFunction='_onPressToggleSelectedWalletModal'
-        visibleFlag='selectedWalletListModalVisibility' style={b()} />
+          toggleFunction='_onPressToggleSelectedWalletModal'
+          visibleFlag='selectedWalletListModalVisibility' style={b()} />
 
       case 'request':
         return <WalletSelector wallets={this.props.walletList}
-        toggleFunction='_onPressToggleSelectedWalletModal'
-        visibleFlag='selectedWalletListModalVisibility' />
+          toggleFunction='_onPressToggleSelectedWalletModal'
+          visibleFlag='selectedWalletListModalVisibility' />
 
       case 'transactionList':
         return <WalletSelector wallets={this.props.walletList}
-        toggleFunction='_onPressToggleSelectedWalletModal'
-        visibleFlag='selectedWalletListModalVisibility' />
+          toggleFunction='_onPressToggleSelectedWalletModal'
+          visibleFlag='selectedWalletListModalVisibility' />
 
       case 'sendConfirmation':
         return <WalletSelector wallets={this.props.walletList}
-        toggleFunction='_onPressToggleSelectedWalletModal'
-        visibleFlag='selectedWalletListModalVisibility' />
+          toggleFunction='_onPressToggleSelectedWalletModal'
+          visibleFlag='selectedWalletListModalVisibility' />
 
       default:
         return <DefaultHeader routes={this.props.routes} />
