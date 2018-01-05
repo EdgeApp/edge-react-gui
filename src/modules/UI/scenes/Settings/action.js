@@ -192,3 +192,34 @@ const setBitcoinOverrideServerStart = (overrideServer: string) => ({
   type: SET_BITCOIN_OVERRIDE_SERVER_START,
   data: {overrideServer}
 })
+
+// Settings
+
+// Account Settings
+// pinLoginEnabled         (boolean)
+// fingerprintLoginEnabled (boolean)
+// pinLoginCount           (integer)
+// minutesAutoLogout       (integer)
+// secondsAutoLogout       (integer)
+// recoveryReminderCount   (integer)
+
+// Requests Settings
+// nameOnPayments (boolean)
+// firstName      (string)
+// lastName       (string)
+// nickName       (string)
+
+// Spend Limits
+// spendRequirePinEnabled  (boolean)
+// spendRequirePinSatoshis (integer)
+// dailySpendLimitEnabled  (boolean)
+// dailySpendLimitSatoshi  (integer)
+
+// Currency Settings
+// advancedFeatures          (boolean)
+// bitcoinDenomination       (Value)?
+// exchangeRateSource        (string)
+// language                  (string)
+// numCurrency?              (integer)
+// overrideBitcoinServers    (boolean)
+// overrideBitcoinServerList (string)
