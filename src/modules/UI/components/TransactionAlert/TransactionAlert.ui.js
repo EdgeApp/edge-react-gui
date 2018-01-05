@@ -38,7 +38,6 @@ export default class TransactionAlert extends Component<Props> {
   render () {
     const {displayAlert, dismissAlert, viewTransaction} = this.props
 
-
     return <DropdownAlert visible={displayAlert} onClose={dismissAlert} onPress={viewTransaction}>
       {/* Do not remove <View> */}
       <View>

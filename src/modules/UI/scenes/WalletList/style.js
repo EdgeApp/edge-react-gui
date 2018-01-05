@@ -158,7 +158,7 @@ export const styles = {
   sortableList: {
     flex: 1,
     position: 'absolute',
-    height: platform.usableHeight - 130 - 50,
+    height: platform.usableHeight - 130 - 50
   },
   sortableWalletListRow: {
     width: platform.deviceWidth,
@@ -173,7 +173,7 @@ export const styles = {
   fullList: {
     flex: 1,
     position: 'absolute',
-    height: platform.usableHeight - 130 - 50,
+    height: platform.usableHeight - 130 - 50
   },
   rowContainer: {
     padding: 6,

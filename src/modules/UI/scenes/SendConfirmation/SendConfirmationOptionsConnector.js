@@ -10,9 +10,9 @@ import {getMaxSpendable} from './action'
 const mapStateToProps = () => ({})
 
 const mapDispatchToProps = (dispatch) => ({
-  changeMiningFee : Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION],
-  openHelpModal : () => dispatch(openHelpModal()),
-  sendMaxSpend : () => dispatch(getMaxSpendable()),
+  changeMiningFee: Actions[CHANGE_MINING_FEE_SEND_CONFIRMATION],
+  openHelpModal: () => dispatch(openHelpModal()),
+  sendMaxSpend: () => dispatch(getMaxSpendable())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmationOptions)

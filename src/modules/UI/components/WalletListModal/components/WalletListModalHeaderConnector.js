@@ -11,7 +11,6 @@ const mapStateToProps = (state?: any, ownProps: any): {type: string, whichWallet
     type: walletType,
     whichWallet: ownProps.whichWallet
   }
-
 }
 const mapDispatchToProps = (dispatch: Function): {} => ({
   disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility())

@@ -7,7 +7,7 @@ import PLATFORM from '../../../../theme/variables/platform'
 
 export const styles = {
   gradient: {
-    height: THEME.HEADER,
+    height: THEME.HEADER
   },
   container: {
     position: 'relative',
@@ -60,14 +60,14 @@ export const styles = {
     flex: 1
   },
 
-  /////// start of token row styling ///////
+  /// //// start of token row styling ///////
   manageTokenRow: {
     height: 44,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
-    paddingRight: 20,
+    paddingRight: 20
   },
   rowLeftArea: {
     flexDirection: 'row'
@@ -76,7 +76,7 @@ export const styles = {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   touchableCheckboxInterior: {
     paddingHorizontal: 8,
@@ -103,7 +103,7 @@ export const styles = {
     fontSize: 18,
     color: THEME.COLORS.GRAY_1
   },
-  /////// end of token row styling /////////
+  /// //// end of token row styling /////////
 
   buttonsArea: {
     height: 52,
@@ -112,7 +112,7 @@ export const styles = {
     alignItems: 'center',
     alignSelf: 'flex-end',
     paddingVertical: 4,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   addButton: {
     flex: 1,

@@ -3,10 +3,10 @@ import * as ACTION from './action'
 
 const keyboardHeight = (state = 0, action) => {
   switch (action.type) {
-  case ACTION.SET_KEYBOARD_HEIGHT:
-    return action.data
-  default:
-    return state
+    case ACTION.SET_KEYBOARD_HEIGHT:
+      return action.data
+    default:
+      return state
   }
 }
 

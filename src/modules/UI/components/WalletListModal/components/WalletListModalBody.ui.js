@@ -40,8 +40,8 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   }
 
   renderTokens = (walletId: string, metaTokenBalances: any, code: any, combinedTokens: Array<any> /* merge between customToken and metaToken */) => {
-    let tokens = []
-    for (let property in metaTokenBalances) {
+    const tokens = []
+    for (const property in metaTokenBalances) {
       if (property !== code) {
         if (_.findIndex(combinedTokens, (token) => token.currencyCode === property)) {
           tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
@@ -63,9 +63,8 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
       } else {
         return // let it blow up. It shouldn't be attempting to display
       }
-
     }
-    let cryptoAmount = bns.div(balance, multiplier, DIVIDE_PRECISION)
+    const cryptoAmount = bns.div(balance, multiplier, DIVIDE_PRECISION)
     const walletId = parentId
     return (
       <TouchableHighlight style={styles.tokenRowContainer}
@@ -93,23 +92,23 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   }
 
   renderWalletRow = (guiWallet: GuiWallet) => {
-    let multiplier
-      = guiWallet
+    const multiplier =
+      guiWallet
       .allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination]
       .multiplier
-    let symbol
-      = guiWallet
+    const symbol =
+      guiWallet
       .allDenominations[guiWallet.currencyCode][multiplier]
       .symbol
-    let denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
+    const denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
 
     // need to crossreference tokensEnabled with nativeBalances
-    let enabledNativeBalances = {}
+    const enabledNativeBalances = {}
     const enabledTokens = guiWallet.enabledTokens
 
-    for (let prop in guiWallet.nativeBalances) {
+    for (const prop in guiWallet.nativeBalances) {
       if ((prop !== currencyCode) && (enabledTokens.includes(prop))) {
         enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
       }

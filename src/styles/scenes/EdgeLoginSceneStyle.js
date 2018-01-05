@@ -4,11 +4,11 @@ import * as Styles from '../indexStyles'
 
 const EdgeLoginScreen = {
   container: {...Styles.SceneContainer,
-    height:'100%'
+    height: '100%'
   },
   header: {
     flex: 2,
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   headerTopShim: {
     flex: 2
@@ -30,7 +30,7 @@ const EdgeLoginScreen = {
   },
   headerText: {
     color: THEME.COLORS.PRIMARY,
-    fontSize: 36,
+    fontSize: 36
   },
   headerBottomShim: {
     flex: 1
@@ -49,10 +49,10 @@ const EdgeLoginScreen = {
   buttonsProcessing: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   spinnerContainer: {
-    flex: 1,
+    flex: 1
   },
   bodyText: {
     marginRight: '5%',

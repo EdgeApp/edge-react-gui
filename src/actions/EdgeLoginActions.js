@@ -18,11 +18,10 @@ export const loginWithEdge = (url: string) => async (
   const state = getState()
   const account = state.core.account
   const lobby: AbcLobby = await account.fetchLobby(splitArray[1]).catch((e) => {
-    dispatch(actions.dispatchActionString(Constants.SET_LOBBY_ERROR,e.message))
-    return
+    dispatch(actions.dispatchActionString(Constants.SET_LOBBY_ERROR, e.message))
   })
   if (lobby) {
-    dispatch(storeLobby(Constants.SAVE_ABC_LOBBY,lobby))
+    dispatch(storeLobby(Constants.SAVE_ABC_LOBBY, lobby))
   }
 }
 
@@ -33,4 +32,3 @@ export const lobbyLogin = () => async (dispatch: any, getState: any) => {
   dispatch(actions.dispatchAction(Constants.INVALIDATE_ABC_LOBBY))
   Actions.pop()
 }
-
