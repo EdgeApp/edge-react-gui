@@ -152,12 +152,27 @@ class FullWalletListRow extends Component<Props, State> {
                     </View>
                   )}
                 </View>
+
                 <View style={[styles.rowBalanceTextWrap]}>
-                  <T style={[styles.rowBalanceAmountText]}>
-                    {finalCryptoAmount}
-                  </T>
-                  <T style={[styles.rowBalanceDenominationText]}>{cryptocurrencyName} ({symbol || ''})</T>
+                  <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <T style={[styles.rowBalanceAmountText]}>
+                      {finalCryptoAmount}
+                    </T>
+                  </View>
+
+                  <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                    <T style={[styles.rowBalanceDenominationText]}>
+                      {cryptocurrencyName} (
+                    </T>
+                    <T style={[styles.rowBalanceDenominationText, styles.symbol]}>
+                      {symbol || ''}
+                    </T>
+                    <T style={[styles.rowBalanceDenominationText]}>
+                      )
+                    </T>
+                  </View>
                 </View>
+
                 <RowOptions
                   sortableMode={this.props.sortableMode}
                   currencyCode={walletData.currencyCode}

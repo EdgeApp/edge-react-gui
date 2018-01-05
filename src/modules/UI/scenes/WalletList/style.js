@@ -243,6 +243,10 @@ export const styles = {
     position: 'relative',
     top: 16
   },
+
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
+  },
   // beginning of options component
   editIcon: {
     justifyContent: 'center',
