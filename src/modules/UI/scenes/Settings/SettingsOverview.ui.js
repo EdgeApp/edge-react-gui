@@ -118,7 +118,7 @@ export default class SettingsOverview extends Component<Props,State> {
 
   }
   _onPressRecoverPasswordRouting = () => {
-    //if (this.props.isLocked) return
+    if (this.props.isLocked) return
     Actions[Constants.RECOVER_PASSWORD]()
   }
 
@@ -143,7 +143,7 @@ export default class SettingsOverview extends Component<Props,State> {
     this.options.useTouchID.value = bool
   }
   _onPressOtp = () => {
-    //if (this.props.isLocked) return
+    if (this.props.isLocked) return
     Actions[Constants.OTP_SETUP]()
   }
 
