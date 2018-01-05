@@ -66,13 +66,15 @@ export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => 
   .catch((e) => console.log(e))
 }
 
-export const getEnabledTokensFromFile = (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
-  return getEnabledTokensFile(wallet).getText()
-  .then(JSON.parse)
-  .catch((e) => {
+export const getEnabledTokensFromFile = async (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
+  try {
+    const tokensText = await getEnabledTokensFile(wallet).getText()
+    const tokens = JSON.parse(tokensText)
+    return tokens
+  } catch (e) {
     console.log(e)
     return setEnabledTokens(wallet, [])
-  })
+  }
 }
 
 export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
@@ -102,11 +104,10 @@ export async function updateEnabledTokens (wallet: AbcCurrencyWallet, tokensToEn
     const enabledTokens = JSON.parse(tokensText)
     const tokensWithNewTokens = _.union(tokensToEnable, enabledTokens)
     const finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
-    return Promise.all([
-      enableTokens(wallet, finalTokensToEnable),
-      disableTokens(wallet, tokensToDisable),
-      tokensFile.setText(JSON.stringify(finalTokensToEnable))
-    ])
+    await enableTokens(wallet, finalTokensToEnable)
+    await disableTokens(wallet, tokensToDisable)
+    console.log('updateEnabledTokens setText', finalTokensToEnable)
+    await tokensFile.setText(JSON.stringify(finalTokensToEnable))
   } catch (e) {
     console.log(e)
   }
