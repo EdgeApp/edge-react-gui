@@ -296,8 +296,8 @@ export default class TransactionList extends Component<Props, State> {
                               </View>
                               <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
                                 <View style={{flexDirection: 'row'}}>
-                                  {displayDenomination.symbol
-                                    && <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                                  {displayDenomination.symbol &&
+                                    <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                                       {displayDenomination.symbol}
                                     </T>
                                   }
@@ -306,8 +306,8 @@ export default class TransactionList extends Component<Props, State> {
                                     {cryptoAmountString}
                                     </T>
 
-                                  {!displayDenomination.symbol
-                                    && <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                                  {!displayDenomination.symbol &&
+                                    <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
                                       {selectedCurrencyCode}
                                     </T>
                                   }
