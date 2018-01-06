@@ -8,15 +8,15 @@ const styles = {
     height: THEME.SPACER.HEADER
   },
   container: {
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   headerContainer: {
     padding: 25,
-    paddingBottom: 10,
+    paddingBottom: 10
   },
   header: {
     fontSize: 15,
-    color: THEME.COLORS.GRAY_1,
+    color: THEME.COLORS.GRAY_1
   },
   body: {
     paddingTop: 24,
@@ -25,7 +25,7 @@ const styles = {
   column: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 10,
+    paddingTop: 10
   },
   row: {
     padding: 8
@@ -35,17 +35,17 @@ const styles = {
     width: 18,
     height: 18,
     borderWidth: 1,
-    borderColor: THEME.COLORS.GRAY_2,
+    borderColor: THEME.COLORS.GRAY_2
   },
   selected: {
     borderColor: THEME.COLORS.ACCENT_GREEN,
-    backgroundColor: THEME.COLORS.ACCENT_GREEN,
+    backgroundColor: THEME.COLORS.ACCENT_GREEN
   },
   label: {
     fontSize: 16,
     paddingLeft: 10,
     color: THEME.COLORS.GRAY_2,
-    lineHeight: 16,
+    lineHeight: 16
   },
   input: {
     marginTop: 10,
@@ -53,7 +53,7 @@ const styles = {
     padding: 2,
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_2,
-    color: THEME.COLORS.GRAY_2,
+    color: THEME.COLORS.GRAY_2
   }
 }
 export default StyleSheet.create(styles)

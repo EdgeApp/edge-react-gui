@@ -26,9 +26,11 @@ import {Icon} from '../../components/Icon/Icon.ui'
 import styles from './style'
 import s from '../../../../locales/strings'
 
-const DISABLE_TEXT = s.strings.string_disable
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
 import { AbcAccount } from 'airbitz-core-types'
+
+const DISABLE_TEXT = s.strings.string_disable
+
 type Props = {
   defaultFiat: string,
   autoLogoutTimeInMinutes: number,
@@ -52,7 +54,7 @@ type State = {
   autoLogoutTimeInMinutes: number
 }
 
-export default class SettingsOverview extends Component<Props,State> {
+export default class SettingsOverview extends Component<Props, State> {
   settings: Array<Object>
   securityRoute: Array<Object>
   optionModals: Array<Object>
@@ -104,18 +106,13 @@ export default class SettingsOverview extends Component<Props,State> {
       value: this.props.touchIdEnabled
     } : null
 
-    this.options = {
-      pinRelogin,
-      useTouchID
-    }
-
-    if (this.props.supportsTouchId) {
-      this.options.useTouchID =  {
-        text: s.strings.settings_button_use_touchID,
-        key: 'useTouchID',
-        routeFunction: this._onToggleTouchIdOption,
-        value: this.props.touchIdEnabled
+    if (useTouchID) {
+      this.options = {
+        pinRelogin,
+        useTouchID
       }
+    } else {
+      this.options = { pinRelogin }
     }
 
     this.optionModals = [
@@ -125,24 +122,14 @@ export default class SettingsOverview extends Component<Props,State> {
       }
     ]
 
-    this.currencies = [
-      {
-        text: 'Bitcoin',
-        routeFunction: Actions.btcSettings
-      },
-      {
-        text: 'BitcoinCash',
-        routeFunction: Actions.bchSettings
-      },
-      {
-        text: 'Ethereum',
-        routeFunction: Actions.ethSettings
-      },
-      {
-        text: 'Litecoin',
-        routeFunction: Actions.ltcSettings
-      },
-    ]
+    this.currencies = []
+    for (const currencyKey in Constants.CURRENCY_SETTINGS) {
+      const { pluginName } = Constants.CURRENCY_SETTINGS[currencyKey]
+      this.currencies.push({
+        text: pluginName.charAt(0).toUpperCase() + pluginName.slice(1),
+        routeFunction: Actions[currencyKey]
+      })
+    }
   }
 
   _onPressDummyRouting = () => {
@@ -157,7 +144,6 @@ export default class SettingsOverview extends Component<Props,State> {
   _onPressChangePinRouting = () => {
     if (this.props.isLocked) return
     Actions[Constants.CHANGE_PIN]()
-
   }
   _onPressRecoverPasswordRouting = () => {
     Actions[Constants.CHANGE_PASSWORD]()
@@ -214,7 +200,7 @@ export default class SettingsOverview extends Component<Props,State> {
       value: autoLogoutValue} = getTimeWithMeasurement(this.state.autoLogoutTimeInMinutes)
     const autoLogoutRightText = autoLogoutValue === 0
       ? DISABLE_TEXT
-      : `${autoLogoutValue} ${s.strings['settings_'+ autoLogoutMeasurement]}`
+      : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
 
     return (
       <View>
@@ -269,7 +255,15 @@ export default class SettingsOverview extends Component<Props,State> {
 
             {this.securityRoute.map(this.renderRowRoute)}
 
-            {Object.keys(this.options).map(this.renderRowSwitch)}
+            {
+              Object.keys(this.options)
+                .filter((optionName) => {
+                  if (!this.options[optionName]) return false
+                  const {text, key, routeFunction} = this.options[optionName]
+                  return text && key && routeFunction
+                })
+                .map(this.renderRowSwitch)
+            }
 
             {this.currencies.map(this.renderRowRoute)}
 
@@ -295,7 +289,7 @@ export default class SettingsOverview extends Component<Props,State> {
             onCancel={this.onCancelSendLogsModal} />
           <ConfirmPasswordModal
             style={ConfirmPasswordModalStyle}
-            headerText={'settings_lock_header'}
+            headerText={''}
             showModal={this.state.showConfirmPasswordModal}
             onDone={this.confirmPassword}
             onCancel={this.hideConfirmPasswordModal} />

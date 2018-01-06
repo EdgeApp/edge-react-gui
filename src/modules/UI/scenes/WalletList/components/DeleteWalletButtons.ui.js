@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View,  TouchableHighlight} from 'react-native'
+import {View, TouchableHighlight} from 'react-native'
 import T from '../../../components/FormattedText/FormattedText.ui'
 import styles from '../style'
 import s from '../../../../../locales/strings.js'

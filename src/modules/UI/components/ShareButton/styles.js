@@ -9,13 +9,13 @@ export const styles = {
     justifyContent: 'center',
     paddingVertical: 7,
     flexDirection: 'row',
-    borderColor: THEME.COLORS.GRAY_4,
+    borderColor: THEME.COLORS.GRAY_4
   },
   outerView: {
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 7,
-    flex: 1,
+    flex: 1
   },
   view: {
     flexDirection: 'row',

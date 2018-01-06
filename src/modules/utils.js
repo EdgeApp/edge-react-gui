@@ -1,11 +1,12 @@
 // @flow
-import {Platform} from 'react-native'
 
-import borderColors from '../theme/variables/css3Colors'
+import {Platform} from 'react-native'
 import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'airbitz-core-types'
-import type {GuiDenomination, ExchangeData, GuiWallet} from '../types'
+import type {GuiDenomination, ExchangeData, GuiWallet, CustomTokenInfo} from '../types'
+import _ from 'lodash'
+import borderColors from '../theme/variables/css3Colors'
 
 const DIVIDE_PRECISION = 18
 
@@ -30,15 +31,21 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
 
 export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): AbcDenomination => {
   // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
-  let allWalletDenoms = wallet.allDenominations
+  const allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode
   if (currencyCode) { // if metaToken
     walletCurrencyCode = currencyCode
-  } else { //if not a metaToken
+  } else { // if not a metaToken
     walletCurrencyCode = wallet.currencyCode
   }
-  let currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: AbcDenomination = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
+  const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
+  let denomProperties: AbcDenomination
+  if (allWalletDenoms[walletCurrencyCode]) {
+    denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
+  } else {
+    // This is likely a custom token which has no denom setup in allWalletDenominations
+    denomProperties = currencySettings.denominations[0]
+  }
   // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
   return denomProperties
 }
@@ -68,7 +75,7 @@ export const logError = (msg: string) => {
 }
 
 export const border = (color: ?string) => {
-  let borderColor = color || getRandomColor()
+  const borderColor = color || getRandomColor()
   return {
     borderColor: borderColor,
     borderWidth: 0
@@ -84,18 +91,29 @@ export const inputBottomPadding = () => {
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<AbcMetaToken>) => {
-  let tokensEnabled = preferredAbcMetaTokens // initially set the array to currencyInfo (from plugin), since it takes priority
-  for (let x of abcMetaTokens) { // loops through the account-level array
+export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
+  const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+  for (const x of abcMetaTokens) { // loops through the account-level array
     let found = false // assumes it is not present in the currencyInfo from plugin
-    for (let val of tokensEnabled) { // loops through currencyInfo array to see if already present
-      if ((x.currencyCode === val.currencyCode) && (x.currencyName === val.currencyName)) {
+    for (const val of tokensEnabled) { // loops through currencyInfo array to see if already present
+      if ((x.currencyCode === val.currencyCode)) {
         found = true // if present, then set 'found' to true
       }
     }
     if (!found) tokensEnabled.push(x) // if not already in the currencyInfo, then add to tokensEnabled array
   }
   return tokensEnabled
+}
+
+export const mergeTokensRemoveInvisible = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
+  const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+  const tokensToAdd = []
+  for (const x of abcMetaTokens) { // loops through the account-level array
+    if ((x.isVisible !== false) && (_.findIndex(tokensEnabled, (walletToken) => walletToken.currencyCode === x.currencyCode) === -1)) {
+      tokensToAdd.push(x)
+    }
+  }
+  return tokensEnabled.concat(tokensToAdd)
 }
 
 export const getRandomColor = () => borderColors[Math.floor(Math.random() * borderColors.length)]
@@ -121,7 +139,7 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
 }
 
 export const formatNumber = (input: string): string => {
-  let out = input.replace(/^0+/,'')
+  let out = input.replace(/^0+/, '')
   if (out.startsWith('.')) {
     out = '0' + out
   }
@@ -132,7 +150,7 @@ export const decimalOrZero = (input: string, decimalPlaces: number): string => {
   if (gte(input, '1')) { // do nothing to numbers greater than one
     return input
   } else {
-    let truncatedToDecimals = toFixed(input, decimalPlaces, decimalPlaces)
+    const truncatedToDecimals = toFixed(input, decimalPlaces, decimalPlaces)
     if (eq(truncatedToDecimals, '0')) { // cut off to number of decimal places equivalent to zero?
       return '0' // then return zero
     } else { // if not equivalent to zero
@@ -237,14 +255,14 @@ export function fixFiatCurrencyCode (currencyCode: string) {
 }
 
 export const isCompleteExchangeData = (exchangeData: ExchangeData) =>
-  !!exchangeData.primaryDisplayAmount
-  && !!exchangeData.primaryDisplayName
-  && !!exchangeData.secondaryDisplayAmount
-  && !!exchangeData.secondaryDisplaySymbol
-  && !!exchangeData.secondaryCurrencyCode
+  !!exchangeData.primaryDisplayAmount &&
+  !!exchangeData.primaryDisplayName &&
+  !!exchangeData.secondaryDisplayAmount &&
+  !!exchangeData.secondaryDisplaySymbol &&
+  !!exchangeData.secondaryCurrencyCode
 
 export const unspacedLowercase = (input: string) => {
-  let newInput = input.replace(' ', '').toLowerCase()
+  const newInput = input.replace(' ', '').toLowerCase()
   return newInput
 }
 
@@ -276,20 +294,20 @@ export const isSentTransaction = (abcTransaction: AbcTransaction): boolean =>
 
 export const getTimeMeasurement = (inMinutes: number): string => {
   switch (true) {
-  case inMinutes < 1:
-    return 'seconds'
+    case inMinutes < 1:
+      return 'seconds'
 
-  case inMinutes < 60:
-    return 'minutes'
+    case inMinutes < 60:
+      return 'minutes'
 
-  case inMinutes < 1440:
-    return 'hours'
+    case inMinutes < 1440:
+      return 'hours'
 
-  case inMinutes <= 84960:
-    return 'days'
+    case inMinutes <= 84960:
+      return 'days'
 
-  default:
-    return ''
+    default:
+      return ''
   }
 }
 
@@ -346,4 +364,8 @@ export const getTimeInMinutes = (params: {measurement: string, value: number}): 
     return Infinity
   }
   return strategy(value)
+}
+
+export const noOp = (optionalArgument: any = null) => {
+  return optionalArgument
 }

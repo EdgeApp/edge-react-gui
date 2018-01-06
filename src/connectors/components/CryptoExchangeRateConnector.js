@@ -1,10 +1,13 @@
-//@flow
+// @flow
+
 import {connect} from 'react-redux'
+
 import LinkedComponent
   from '../../modules/UI/components/CryptoExchangeRate/CryptoExchangeRate'
-// import * as actions from '../../actions/indexActions'
 import s from '../../locales/strings.js'
-export const mapStateToProps = (state: any, ownProps: any) => {
+import type {State} from '../../modules/ReduxTypes'
+
+export const mapStateToProps = (state: State, ownProps: Object) => {
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode
   const exchangeRate = state.cryptoExchange.exchangeRate
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode
@@ -12,23 +15,18 @@ export const mapStateToProps = (state: any, ownProps: any) => {
   const genericError = state.cryptoExchange.genericShapeShiftError
   let exchangeRateString = ''
   if (fromCurrencyCode && toCurrencyCode) {
-    exchangeRateString = '1 '+fromCurrencyCode + ' = '+ exchangeRate +' '+ toCurrencyCode
-    if (insufficient) {
-      exchangeRateString = s.strings.fragment_insufficient_funds
-    }
-    if (genericError) {
-      exchangeRateString = genericError
-    }
+    exchangeRateString = '1 ' + fromCurrencyCode + ' = ' + exchangeRate + ' ' + toCurrencyCode
+    if (insufficient) { exchangeRateString = s.strings.fragment_insufficient_funds }
+    if (genericError) { exchangeRateString = genericError }
   }
   return {
     style: ownProps.style,
     exchangeRate: exchangeRateString,
-    insufficient
+    insufficient,
+    genericError
   }
 }
 
-/* export const mapDispatchToProps = (dispatch) => ({
-  // nextScreen: () => dispatch(actions.nextScreen())
-})*/
+export const mapDispatchToProps = () => ({})
 
-export default connect(mapStateToProps, null)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

@@ -7,13 +7,13 @@ import PLATFORM from '../../../../theme/variables/platform'
 
 export const styles = {
   gradient: {
-    height: THEME.HEADER,
+    height: THEME.HEADER
   },
   container: {
     position: 'relative',
     height: PLATFORM.deviceHeight - 66,
     backgroundColor: THEME.COLORS.WHITE,
-    paddingBottom: 32
+    paddingBottom: 50
   },
   leftArea: {
     flexDirection: 'row'
@@ -60,20 +60,31 @@ export const styles = {
     flex: 1
   },
 
-  /////// start of token row styling ///////
+  /// //// start of token row styling ///////
   manageTokenRow: {
     height: 44,
     flexDirection: 'row',
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
-    paddingRight: 20,
+    paddingRight: 20
+  },
+  rowLeftArea: {
+    flexDirection: 'row'
   },
   manageTokenRowInterior: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'center'
+  },
+  touchableCheckboxInterior: {
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  checkBox: {
+    alignSelf: 'center'
   },
   tokenNameArea: {
     alignSelf: 'center'
@@ -88,8 +99,12 @@ export const styles = {
   underlay: {
     color: THEME.COLORS.PRIMARY_BUTTON_TOUCHED
   },
+  rowRightArrow: {
+    fontSize: 18,
+    color: THEME.COLORS.GRAY_1
+  },
+  /// //// end of token row styling /////////
 
-  /////// end of token row styling /////////
   buttonsArea: {
     height: 52,
     flexDirection: 'row',
@@ -97,7 +112,7 @@ export const styles = {
     alignItems: 'center',
     alignSelf: 'flex-end',
     paddingVertical: 4,
-    paddingHorizontal: 20,
+    paddingHorizontal: 20
   },
   addButton: {
     flex: 1,

@@ -28,7 +28,6 @@ import type {GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
 import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'airbitz-core-types'
 
-
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
 export type Props = {
@@ -38,7 +37,7 @@ export type Props = {
   settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
-  currencyInfo: AbcCurrencyInfo,
+  currencyInfo: AbcCurrencyInfo | null,
   currencyCode: string,
   wallets: Array<GuiWallet>
 }
@@ -48,7 +47,8 @@ export type DispatchProps = {
   openHelpModal: () => void,
   setTransactionDetails: (string, string, AbcMetadata) => void,
   setContactList: (Array<GuiContact>) => void,
-  getSubcategories: () => void
+  getSubcategories: () => void,
+  displayDropdownAlert: (string, string) => void
 }
 
 export type State = {
@@ -99,7 +99,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       this.guiWallet = props.wallets[props.abcTransaction.wallet.id]
       this.fiatSymbol = UTILS.getFiatSymbol(this.guiWallet.fiatCurrencyCode)
     } else {
-      throw 'No wallet on transaction object'
+      this.props.displayDropdownAlert(s.strings.transaction_detail_no_wallet, s.strings.transaction_detail_unable_to_load_transaction)
     }
 
     if (props.abcTransaction && props.abcTransaction.metadata) {
@@ -107,14 +107,14 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       name = props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '' // remove commenting once metaData in Redux
       notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
       if (props.abcTransaction.metadata.amountFiat) {
-        let initial = props.abcTransaction.metadata.amountFiat.toFixed(2)
+        const initial = props.abcTransaction.metadata.amountFiat.toFixed(2)
         amountFiat = bns.abs(initial)
         amountFiat = bns.toFixed(amountFiat, 2, 2)
       }
     }
 
     if (cat) {
-      let colonOccurrence = cat.indexOf(':')
+      const colonOccurrence = cat.indexOf(':')
       if (cat && colonOccurrence) {
         type = cat.substring(0, colonOccurrence)
         type = type.charAt(0).toLowerCase() + type.slice(1)
@@ -199,17 +199,15 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   onChangeFiat = (input: string) => {
-    let newInputStripped, newInputFiltered
     // This next chained statement / expression is to ensure only one decimal place. Remember decimals are commas in some locales
-    newInputStripped = input.replace(/[^\d.,]/, '').replace(/\./, 'x')
+    // double-check that this implementation change works!
+    const newInputStripped = input.replace(/[^\d.,]/, '').replace(/\./, 'x')
     .replace(/\./g, '')
     .replace(/x/, '.')
-    .replace(/\,/, 'x')
-    .replace(/\,/g, '')
+    .replace(/,/, 'x')
+    .replace(/,/g, '')
     .replace(/x/, ',')
-    // console.log('onChangeFiat being executed, input is: ', input)
-    newInputFiltered = ((isNaN(newInputStripped.replace(',', '.')) && (newInputStripped != ',' && newInputStripped != '.')) || (newInputStripped === '')) ? '' : newInputStripped
-    // console.log('onChangeFiat, now newInput is: ', newInput)
+    const newInputFiltered = ((isNaN(newInputStripped.replace(',', '.')) && (newInputStripped !== ',' && newInputStripped !== '.')) || (newInputStripped === '')) ? '' : newInputStripped
     this.setState({
       amountFiat: newInputFiltered
     })
@@ -325,7 +323,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
   }
 
   enableSubcategoryVisibility = () => {
-    let toOpacity = 1
+    const toOpacity = 1
     this.setState({subCategorySelectVisibility: true, subcatZIndex: 99999}, () => {
       Animated.timing(
         this.state.subcategoryOpacity,
@@ -370,7 +368,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     }
     const {name, notes, bizId, miscJson} = this.state
     const txid = this.props.abcTransaction.txid
-    let newAmountFiat = this.state.amountFiat
+    const newAmountFiat = this.state.amountFiat
     const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
     const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
     this.props.setTransactionDetails(txid, this.guiWallet.currencyCode, abcMetadata)
@@ -402,7 +400,6 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       this.setState({walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings, this.props.abcTransaction.currencyCode)})
     }
   }
-
 
   render () {
     let type
@@ -441,14 +438,17 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     }
 
     const categoryColor = type.color
-    let sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
-    const txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
+    const sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
+    let txExplorerLink = null
+    if (this.props.currencyInfo) {
+      txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
+    }
     return (
       <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
         <Gradient style={styles.headerGradient} />
         <View style={{position: 'relative', top: 66}}>
-          {this.state.contactSearchVisibility
-            && <Animated.View id='payeeSearchResults'
+          {this.state.contactSearchVisibility &&
+            <Animated.View id='payeeSearchResults'
               style={[{
                 opacity: this.state.payeeOpacity,
                 width: '100%',
@@ -489,8 +489,8 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
               />
             </Animated.View>
           }
-          {this.state.subCategorySelectVisibility
-            && <Animated.View id='subcategorySearchResults'
+          {this.state.subCategorySelectVisibility &&
+            <Animated.View id='subcategorySearchResults'
               style={[{
                 opacity: this.state.subcategoryOpacity,
                 width: '100%',

@@ -10,7 +10,7 @@ import T from '../../../components/FormattedText'
 import {styles as styleRaw} from '../style'
 
 const CANCEL_TEXT = s.strings.string_cancel_cap
-const DONE_TEXT   = s.strings.string_done_cap
+const DONE_TEXT = s.strings.string_done_cap
 
 export class AddressInputButtons extends Component {
   render () {

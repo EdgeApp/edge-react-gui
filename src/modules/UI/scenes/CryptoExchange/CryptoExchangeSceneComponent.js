@@ -1,12 +1,14 @@
-//@flow
+// @flow
 
 import React, {Component} from 'react'
+import {View} from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import CryptoExchangeConnector
   from '../../../../connectors/components/CryptoExchangeRateConnector'
-import {View} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
 import CryptoExchangeFlipConnector
   from '../../../../connectors/components/CryptoExchangeFlipConnector'
@@ -16,10 +18,8 @@ import WalletListModal
 import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
 import {IconButton} from '../../components/Buttons/IconButton.ui'
 import {GuiWallet} from '../../../../types'
-// $FlowFixMe
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-type Props ={
+type Props = {
   exchangeRate: number,
   wallets: Array<GuiWallet>,
   intialWalletOne: GuiWallet,
@@ -47,71 +47,15 @@ type Props ={
   shift: Function,
   openConfirmation: Function,
   closeConfirmation: Function
-
 }
-
 type State = {
   whichWallet: string
 }
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
-
   componentWillMount () {
     this.setState({
       whichWallet: Constants.FROM
     })
-
-  }
-
-  renderButton = () => {
-    if (this.props.showNextButton) {
-      return <PrimaryButton text={s.strings.string_next} onPressFunction={this.props.openConfirmation} />
-    }
-    return null
-  }
-
-  flipThis = () => {
-    this.props.swapFromAndToWallets()
-  }
-
-  launchWalletSelector = (arg: string) => {
-    this.props.openModal(arg)
-    this.setState({
-      whichWallet: arg
-    })
-  }
-
-  renderDropUp = () => {
-    if (this.props.showWalletSelectModal) {
-      return (
-        <WalletListModal
-          topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
-          type={Constants.CRYPTO_EXCHANGE}
-          whichWallet={this.state.whichWallet}
-        />
-      )
-    }
-    return null
-  }
-  renderConfirmation = (style: any) => {
-    if (this.props.showConfirmShiftModal) {
-      return (
-        <CryptoExchangeConfirmTransactionModalComponent
-          style={style}
-          fromWallet={this.props.fromWallet}
-          toWallet={this.props.toWallet}
-          closeFunction={this.props.closeConfirmation}
-          fromCurrencyIconDark={this.props.fromCurrencyIconDark}
-          fromCurrencyAmount={this.props.fromDisplayAmount}
-          fromCurrencyCode={this.props.fromCurrencyCode}
-          toCurrencyIconDark={this.props.toCurrencyIconDark}
-          toCurrencyAmount={this.props.toDisplayAmount}
-          toCurrencyCode={this.props.toCurrencyCode}
-          fee={this.props.fee}
-          confirmFunction={this.props.shift}
-        />
-      )
-    }
-    return null
   }
 
   render () {
@@ -157,5 +101,58 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
         {this.renderConfirmation(style.confirmModal)}
       </Gradient>
     )
+  }
+
+  renderButton = () => {
+    if (this.props.showNextButton) {
+      return <PrimaryButton text={s.strings.string_next} onPressFunction={this.props.openConfirmation} />
+    }
+    return null
+  }
+
+  flipThis = () => {
+    this.props.swapFromAndToWallets()
+  }
+
+  launchWalletSelector = (arg: string) => {
+    this.props.openModal(arg)
+    this.setState({
+      whichWallet: arg
+    })
+  }
+
+  renderDropUp = () => {
+    if (this.props.showWalletSelectModal) {
+      return (
+        <WalletListModal
+          topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
+          type={Constants.CRYPTO_EXCHANGE}
+          whichWallet={this.state.whichWallet}
+        />
+      )
+    }
+    return null
+  }
+
+  renderConfirmation = (style: Object) => {
+    if (this.props.showConfirmShiftModal) {
+      return (
+        <CryptoExchangeConfirmTransactionModalComponent
+          style={style}
+          fromWallet={this.props.fromWallet}
+          toWallet={this.props.toWallet}
+          closeFunction={this.props.closeConfirmation}
+          fromCurrencyIconDark={this.props.fromCurrencyIconDark}
+          fromCurrencyAmount={this.props.fromDisplayAmount}
+          fromCurrencyCode={this.props.fromCurrencyCode}
+          toCurrencyIconDark={this.props.toCurrencyIconDark}
+          toCurrencyAmount={this.props.toDisplayAmount}
+          toCurrencyCode={this.props.toCurrencyCode}
+          fee={this.props.fee}
+          confirmFunction={this.props.shift}
+        />
+      )
+    }
+    return null
   }
 }

@@ -1,26 +1,21 @@
+// @flow
+
 import React, {Component} from 'react'
-import {View, Platform} from 'react-native'
-import Ionicon from 'react-native-vector-icons/Ionicons'
+import {View, Image} from 'react-native'
 import styles from './style'
-import THEME from '../../../../theme/variables/airbitz'
+import Checkmark from '../../../../assets/images/manageTokens/check_mark.png'
 
+export type Props = {
+  enabled: boolean
+}
 
-class CheckBox extends Component {
-  constructor (props) {
-    super(props)
-    this.state= {
-      osPrefix: (Platform.OS === 'ios') ? 'ios' : 'md'
-    }
-  }
-
+class CheckBox extends Component<Props> {
   render () {
     const { enabled } = this.props
-    const { osPrefix } = this.state
-    const checkmarkName = osPrefix + '-checkmark'
 
     return (
       <View style={styles.checkBoxOutline}>
-        {enabled &&<Ionicon name={checkmarkName} size={34} color={THEME.COLORS.PRIMARY} />}
+        {enabled && <Image source={Checkmark} style={styles.checkmark} />}
       </View>
     )
   }

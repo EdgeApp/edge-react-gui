@@ -21,7 +21,7 @@ const mapStateToProps = (state) => {
   if (guiWallet && currencyCode) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+    primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
     primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
     secondaryExchangeDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
     secondaryDisplayDenomination = secondaryExchangeDenomination
@@ -35,11 +35,11 @@ const mapStateToProps = (state) => {
       displayDenomination: secondaryDisplayDenomination,
       exchangeDenomination: secondaryExchangeDenomination
     }
-    secondaryDisplayAmount
-      = parseFloat(1)
-      * parseFloat(secondaryToPrimaryRatio)
-      * parseFloat(primaryInfo.displayDenomination.multiplier)
-      / parseFloat(primaryInfo.exchangeDenomination.multiplier)
+    secondaryDisplayAmount =
+      parseFloat(1) *
+      parseFloat(secondaryToPrimaryRatio) *
+      parseFloat(primaryInfo.displayDenomination.multiplier) /
+      parseFloat(primaryInfo.exchangeDenomination.multiplier)
   }
 
   return {

@@ -22,14 +22,14 @@ export default class ShareButtons extends Component {
         displayName={COPY_TEXT}
         border={styles.borderRight}
         onPress={copyToClipboard} />
-      {/*<ShareButton
+      {/* <ShareButton
         style={styles.border}
         displayName='Email'
         onPress={shareViaEmail} />
       <ShareButton
         style={styles.border}
         displayName='SMS'
-        onPress={shareViaSMS} />*/}
+        onPress={shareViaSMS} /> */}
       <ShareButton
         displayName={SHARE_TEXT}
         onPress={shareViaShare} />

@@ -32,15 +32,12 @@ type State = {
 
 function precisionAdjust (props: Props) {
   const order = Math.floor((Math.log(props.secondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
-  const exchageRateOrderOfMagnitude = Math.pow(10,order)
-  // console.log('exchageRateOrderOfMagnitude: ' + exchageRateOrderOfMagnitude.toString())
+  const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in pennies
-  const exchangeRateString = bns.mul(exchageRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
-  // console.log('exchangeRateString: ' + exchangeRateString)
+  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
 
-  let precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-  // console.log('precisionAdjust:' + precisionAdjust)
+  const precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
@@ -113,7 +110,6 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   }
 
   onSecondaryAmountChange = (secondaryInput: string) => {
-    // console.log('onSecondaryAmountChange')
     if (secondaryInput === '') {
       this.setState({
         lastChanged: LC_SECONDARY,

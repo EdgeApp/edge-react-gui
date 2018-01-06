@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {Text, View, TouchableHighlight} from 'react-native'
+import {View, TouchableHighlight} from 'react-native'
 import T from '../FormattedText'
 import styles, {styles as styleRaw} from './style'
 import s from '../../../../locales/strings.js'
@@ -32,7 +32,7 @@ class PrimaryButton extends Component {
         <View style={styles.stylizedButtonTextWrap}>
           {this.props.processingFlag
             ? (this.props.processingElement)
-            :    (<T style={[styles.primaryButton, styles.stylizedButtonText]}>
+            : (<T style={[styles.primaryButtonText, styles.stylizedButtonText]}>
               {this.props.text}
             </T>)
           }
@@ -60,7 +60,7 @@ class SecondaryButton extends Component {
         disabled={this.props.disabled}
         underlayColor={styleRaw.secondaryUnderlay.color}>
         <View style={styles.stylizedButtonTextWrap}>
-          <T style={[styles.secondaryButton, styles.stylizedButtonText]}>
+          <T style={[styles.secondaryButtonText, styles.stylizedButtonText]}>
             {this.props.text || CANCEL_TEXT}
           </T>
         </View>
@@ -74,19 +74,20 @@ SecondaryButton.propTypes = {
 }
 
 class TertiaryButton extends Component {
-  onPress = this.props.onPressFunction
-
   render () {
     return (
       <TouchableHighlight style={[
+        styles.tertiaryButtonWrap,
         styles.stylizedButton,
-        styles.tertiaryButtonWrap
+        this.props.buttonStyle
       ]}
-        onPress={this.onPress}
+        onPress={this.props.onPressFunction}
         underlayColor={styleRaw.tertiaryUnderlay.color}>
-        <Text style={styles.tertiaryButton} {...this.props}>
-          {this.props.text}
-        </Text>
+        <View style={[styles.stylizedButtonTextWrap]}>
+          <T style={[styles.tertiaryButtonText, this.props.textStyle]} {...this.props}>
+            {this.props.text}
+          </T>
+        </View>
       </TouchableHighlight>
     )
   }
