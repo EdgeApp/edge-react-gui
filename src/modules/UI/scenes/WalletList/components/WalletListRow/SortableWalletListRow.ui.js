@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import s from '../../../../../../locales/strings.js'
+import intl from '../../../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   View,
@@ -32,7 +33,7 @@ class SortableWalletListRow extends Component<Props, State> {
       cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
       symbolImageDarkMono = walletData.symbolImageDarkMono
       preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-      finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // make it show zero if infinitesimal number
+      finalCryptoAmount = intl.formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     }
     return (
       <TouchableHighlight

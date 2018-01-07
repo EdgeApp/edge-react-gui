@@ -1,30 +1,30 @@
+/* globals describe test expect beforeEach */
 import intl, {setIntlLocale} from './intl'
 import * as UTILS from '../../src/modules/utils'
 
 const EN_US_LOCALE = {
-  "localeIdentifier":"en_US",
-  "decimalSeparator":".",
-  "quotationBeginDelimiterKey":"“",
-  "quotationEndDelimiterKey":"”",
-  "currencySymbol":"$",
-  "currencyCode":"USD",
-  "groupingSeparator":","
+  'localeIdentifier': 'en_US',
+  'decimalSeparator': '.',
+  'quotationBeginDelimiterKey': '“',
+  'quotationEndDelimiterKey': '”',
+  'currencySymbol': '$',
+  'currencyCode': 'USD',
+  'groupingSeparator': ','
 }
 const DE_DE_LOCALE = {
-  'localeIdentifier':'de_DE',
-  'decimalSeparator':',',
-  'quotationBeginDelimiterKey':'“',
-  'quotationEndDelimiterKey':'”',
-  'currencySymbol':'DKK',
-  'currencyCode':'DKK',
-  'groupingSeparator':'.'
+  'localeIdentifier': 'de_DE',
+  'decimalSeparator': ',',
+  'quotationBeginDelimiterKey': '“',
+  'quotationEndDelimiterKey': '”',
+  'currencySymbol': 'DKK',
+  'currencyCode': 'DKK',
+  'groupingSeparator': '.'
 }
-
 
 describe('Intl numbers', function () {
   describe('isValidInput', function () {
     describe('when input is valid', function () {
-      beforeEach(function (){
+      beforeEach(function () {
         setIntlLocale(EN_US_LOCALE)
       })
       test('1 => true', function () {
@@ -71,7 +71,7 @@ describe('Intl numbers', function () {
     })
 
     describe('when input is invalid', function () {
-      beforeEach(function (){
+      beforeEach(function () {
         setIntlLocale(EN_US_LOCALE)
       })
       test('R => false', function () {
@@ -111,64 +111,64 @@ describe('Intl numbers', function () {
     })
 
     describe('en-Us', function () {
-      beforeEach(function (){
+      beforeEach(function () {
         setIntlLocale(EN_US_LOCALE)
       })
 
       test('en .', function () {
-        expect(intl.isValidInput('.')).toBe(true);
+        expect(intl.isValidInput('.')).toBe(true)
       })
       test('en 1.', function () {
-        expect(intl.isValidInput('1.')).toBe(true);
+        expect(intl.isValidInput('1.')).toBe(true)
       })
       test('1,000', function () {
-        expect(intl.isValidInput('1,000')).toBe(true);
+        expect(intl.isValidInput('1,000')).toBe(true)
       })
       test('1,000.12', function () {
-        expect(intl.isValidInput('1,000.12')).toBe(true);
+        expect(intl.isValidInput('1,000.12')).toBe(true)
       })
       test('test => false', function () {
-        expect(intl.isValidInput('test')).toBe(false);
+        expect(intl.isValidInput('test')).toBe(false)
       })
     })
 
     describe('de-DE', function () {
       beforeEach(() => {
         setIntlLocale(DE_DE_LOCALE)
-      });
+      })
       test(',', function () {
-        expect(intl.isValidInput(',')).toBe(true);
+        expect(intl.isValidInput(',')).toBe(true)
       })
       test('de 1,', function () {
-        expect(intl.isValidInput('1,')).toBe(true);
+        expect(intl.isValidInput('1,')).toBe(true)
       })
       test('1.000', function () {
-        expect(intl.isValidInput('1.000')).toBe(true);
+        expect(intl.isValidInput('1.000')).toBe(true)
       })
       test('1.000,12', function () {
-        expect(intl.isValidInput('1.000,12')).toBe(true);
+        expect(intl.isValidInput('1.000,12')).toBe(true)
       })
       test('test => false', function () {
-        expect(intl.isValidInput('test')).toBe(false);
+        expect(intl.isValidInput('test')).toBe(false)
       })
     })
 
     describe('en-US should fail', function () {
       beforeEach(() => {
         setIntlLocale(EN_US_LOCALE)
-      });
+      })
       test(',', function () {
-        expect(intl.isValidInput(',')).toBe(false);
+        expect(intl.isValidInput(',')).toBe(false)
       })
       test('de 1,', function () {
-        expect(intl.isValidInput('1,')).toBe(false);
+        expect(intl.isValidInput('1,')).toBe(false)
       })
     })
   })
 
   describe('formatNumberInput => prettifyNumber', function () {
     describe('en-EN', function () {
-      beforeEach(function (){
+      beforeEach(function () {
         setIntlLocale(EN_US_LOCALE)
       })
       test('. => 0.', function () {
@@ -180,9 +180,9 @@ describe('Intl numbers', function () {
     })
   })
 
-  describe('', function () {
+  describe('prettifyNumber', function () {
     describe('en-EN', function () {
-      beforeEach(function (){
+      beforeEach(function () {
         setIntlLocale(EN_US_LOCALE)
       })
       test('. => 0.', function () {
@@ -197,7 +197,7 @@ describe('Intl numbers', function () {
 
 describe('Integration with UTILS functionality', function () {
   describe('truncateDecimals', function () {
-    beforeEach(function (){
+    beforeEach(function () {
       setIntlLocale(EN_US_LOCALE)
     })
     test('', function () {
@@ -271,7 +271,7 @@ describe('Integration with default numbers formatting', function () {
       setIntlLocale(DE_DE_LOCALE)
     })
     test('1. => 1,', function () {
-      const input = '1.';
+      const input = '1.'
       const expected = '1,'
       const actual = intl.formatNumberInput(input)
       expect(actual).toBe(expected)
@@ -283,12 +283,38 @@ describe('Integration with default numbers formatting', function () {
       setIntlLocale(EN_US_LOCALE)
     })
     test('0.1 => 0.1', function () {
-      const input = '0.1';
+      const input = '0.1'
       const expected = '0.1'
       const actual = intl.formatNumberInput(intl.formatNumberInput(input))
       expect(actual).toBe(expected)
     })
   })
-
 })
 
+describe('formatNumber', function () {
+  describe('en_US', function () {
+    beforeEach(function () {
+      setIntlLocale(EN_US_LOCALE)
+    })
+    test('1.2', function () {
+      const input = '1.2'
+      const expected = '1.2'
+      const actual = intl.formatNumber(input)
+      expect(actual).toBe(expected)
+    })
+    test('toFixed option 1.237 => 1.24', function () {
+      const input = '1.237'
+      const options = {toFixed: 2}
+      const expected = '1.24'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+    test('toFixed option 1 => 1.00', function () {
+      const input = '1'
+      const options = {toFixed: 2}
+      const expected = '1.00'
+      const actual = intl.formatNumber(input, options)
+      expect(actual).toBe(expected)
+    })
+  })
+})

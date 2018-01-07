@@ -1,30 +1,47 @@
 import 'intl'
 
 const EN_US_LOCALE = {
-  "localeIdentifier":"en_US",
-  "decimalSeparator":".",
-  "quotationBeginDelimiterKey":"“",
-  "quotationEndDelimiterKey":"”",
-  "currencySymbol":"$",
-  "currencyCode":"USD",
-  "groupingSeparator":","
+  'localeIdentifier': 'en_US',
+  'decimalSeparator': '.',
+  'quotationBeginDelimiterKey': '“',
+  'quotationEndDelimiterKey': '”',
+  'currencySymbol': '$',
+  'currencyCode': 'USD',
+  'groupingSeparator': ','
 }
-let locale = EN_US_LOCALE;
+let locale = EN_US_LOCALE
 
 const intlHandler = {
   /**
-   * Formats number according to user locale
+   * Formats number input according to user locale
+   * Allows decimalSeparator at the end of string
    * @param number  - Native style (JS) number
    * @param options
    * @returns {string}
    */
-  formatNumberInput(number, options) {
+  formatNumberInput (number, options) {
     if (typeof number === 'string') {
       if (number.slice(-1) === '.') {
         return number.replace('.', locale.decimalSeparator)
       }
     }
-    return new Intl.NumberFormat(locale.localeIdentifier.replace('_', '-'), options).format(number)
+    return intlHandler.formatNumber(number, options)
+  },
+
+  /**
+   * Formats number according to user locale
+   * @param number
+   * @param options
+   * @return {string}
+   */
+  formatNumber (number, options) {
+    const _options = {}
+    if (options && options.toFixed) {
+      _options.minimumFractionDigits = options.toFixed
+      _options.maximumFractionDigits = options.toFixed
+    }
+    Object.assign(_options, options)
+    return new Intl.NumberFormat(locale.localeIdentifier.replace('_', '-'), _options).format(number)
   },
 
   /**
@@ -32,13 +49,13 @@ const intlHandler = {
    * @param value
    * @returns {boolean}
    */
-  isValidInput(value) {
+  isValidInput (value) {
     const {decimalSeparator, groupingSeparator} = locale
-    const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g' )
+    const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
     if (value === decimalSeparator) return true
     if (value === groupingSeparator || value.slice(-1) === groupingSeparator) return false
-    let standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+    const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
 
     return !isNaN(+standartized)
   },
@@ -47,8 +64,8 @@ const intlHandler = {
    * Should change UTILS.formatNumberInput
    * @param input
    */
-  prettifyNumber(input) {
-    let out = input.replace(/^0+/,'')
+  prettifyNumber (input) {
+    let out = input.replace(/^0+/, '')
     if (out.startsWith(locale.decimalSeparator)) {
       out = '0' + out
     }
@@ -62,7 +79,7 @@ const intlHandler = {
    * @param allowBlank
    * @returns {string}
    */
-  truncateDecimals(input, precision, allowBlank = false) {
+  truncateDecimals (input, precision, allowBlank = false) {
     const {decimalSeparator, groupingSeparator} = locale
 
     if (input === '') {
@@ -84,19 +101,19 @@ const intlHandler = {
    * @param options
    * @returns {boolean}
    */
-  formatToNativeNumber(value, options) {
+  formatToNativeNumber (value, options) {
     const {decimalSeparator, groupingSeparator} = locale
-    const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g' )
+    const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
     if (value === decimalSeparator) return true
-    let standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
+    const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
 
     return standartized
   },
 
-  formatDate(date, options) {
+  formatDate (date, options) {
     throw new Error('Not implemented')
-  },
+  }
 }
 
 export const setIntlLocale = (l) => {
