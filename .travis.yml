@@ -33,6 +33,7 @@ matrix:
         - echo "y" | sdkmanager "cmake;3.6.4111459"
       install:
         - travis_retry npm i -d
+        - npm t
       android:
         components:
           - tools
