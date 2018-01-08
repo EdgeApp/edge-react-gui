@@ -40,6 +40,7 @@ const strings = {
   edittoken_improper_token_load: 'Unable to load initial data.',
   edittoken_top_instructions: 'Fill out token info and tap \'Save\' to edit token:',
   enter_your_password: 'Enter your password',
+  enter_password_to_make_changes: 'Enter password to make changes',
   ethereum_set_spending_limits: 'Set Spending Limits for Ethereum',
   ethereum: 'Ethereum',
   exchange_failed: 'Exchange Failed',
