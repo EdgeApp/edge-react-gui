@@ -78,7 +78,7 @@ const strings = {
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
   request_qr_email_title: '%1$s Bitcoin Request',
-  request_qr_waiting_for_payment: 'Waiting for Payment…',
+  request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
   send_confirmation_fee_line: 'Fee: + %s (%s)',
