@@ -1,74 +1,47 @@
 // @flow
 
-const PREFIX = 'SPENDING_LIMITS/'
+import type {Dispatch, GetState} from '../../../ReduxTypes'
 
-export const UPDATE_PIN_SPENDING_LIMIT_START   = PREFIX + 'UPDATE_PIN_SPENDING_LIMIT'
-export const UPDATE_PIN_SPENDING_LIMIT_SUCCESS = PREFIX + 'UPDATE_PIN_SPENDING_LIMIT'
-export const UPDATE_PIN_SPENDING_LIMIT_ERROR   = PREFIX + 'UPDATE_PIN_SPENDING_LIMIT'
+import {
+  updateTransactionSpendingLimitStart,
+  updateTransactionSpendingLimitSuccess,
+  updateTransactionSpendingLimitError,
+  updateDailySpendingLimitStart,
+  updateDailySpendingLimitSuccess,
+  updateDailySpendingLimitError
+} from '../../Settings/action.js'
 
-export const UPDATE_PASSWORD_SPENDING_LIMIT_START   = PREFIX + 'UPDATE_PASSWORD_SPENDING_LIMIT'
-export const UPDATE_PASSWORD_SPENDING_LIMIT_SUCCESS = PREFIX + 'UPDATE_PASSWORD_SPENDING_LIMIT'
-export const UPDATE_PASSWORD_SPENDING_LIMIT_ERROR   = PREFIX + 'UPDATE_PASSWORD_SPENDING_LIMIT'
+import * as CORE_SELECTORS from '../../../Core/selectors'
+import * as SETTINGS_API from '../../../Core/Account/settings'
 
-import type {
-  Dispatch,
-  // GetState
-} from '../../../ReduxTypes'
+export const updateTransactionSpendingLimit = (currencyCode: string, isEnabled: boolean, transactionSpendingLimit: string) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(updateTransactionSpendingLimitStart(currencyCode, isEnabled, transactionSpendingLimit))
 
-export const updatePinSpendingLimit = (currencyCode: string, spendingLimit: string) => (dispatch: Dispatch) => {
-  dispatch(updatePinSpendingLimitStart(currencyCode, spendingLimit))
-  // do core stuff
-  Promise.resolve()
-  .then(() => dispatch(updatePinSpendingLimitSuccess(currencyCode, spendingLimit)))
-  .catch((error) => dispatch(updatePinSpendingLimitError(error)))
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+
+  return SETTINGS_API.setTransactionSpendingLimitRequest(account, currencyCode, isEnabled, transactionSpendingLimit)
+    .then((settings) => {
+      console.log(settings)
+      dispatch(updateTransactionSpendingLimitSuccess(currencyCode, isEnabled, transactionSpendingLimit))
+    })
+    .catch((error) => {
+      dispatch(updateTransactionSpendingLimitError(error))
+    })
 }
 
-export const updatePinSpendingLimitStart = (currencyCode: string, spendingLimit: string) => ({
-  type: UPDATE_PIN_SPENDING_LIMIT_START,
-  data: {
-    currencyCode,
-    spendingLimit
-  }
-})
+export const updateDailySpendingLimit = (currencyCode: string, isEnabled: boolean, dailySpendingLimit: string) => (dispatch: Dispatch, getState: GetState) => {
+  dispatch(updateDailySpendingLimitStart(currencyCode, isEnabled,dailySpendingLimit))
 
-export const updatePinSpendingLimitSuccess = (currencyCode: string, spendingLimit: string) => ({
-  type: UPDATE_PIN_SPENDING_LIMIT_SUCCESS,
-  data: {
-    currencyCode,
-    spendingLimit
-  }
-})
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
 
-export const updatePinSpendingLimitError = (error: Error) => ({
-  type: UPDATE_PIN_SPENDING_LIMIT_ERROR,
-  data: {error}
-})
-
-export const updatePasswordSpendingLimit = (currencyCode: string, spendingLimit: string) => (dispatch: Dispatch) => {
-  dispatch(updatePasswordSpendingLimitStart(currencyCode, spendingLimit))
-  // do core stuff
-  Promise.resolve()
-  .then(() => dispatch(updatePasswordSpendingLimitSuccess(currencyCode, spendingLimit)))
-  .catch((error) => dispatch(updatePasswordSpendingLimitError(error)))
+  return SETTINGS_API.setDailySpendingLimitRequest(account, currencyCode, isEnabled, dailySpendingLimit)
+  .then((settings) => {
+    console.log(settings)
+    dispatch(updateDailySpendingLimitSuccess(currencyCode, isEnabled, dailySpendingLimit))
+  })
+  .catch((error) => {
+    dispatch(updateDailySpendingLimitError(error))
+  })
 }
-
-export const updatePasswordSpendingLimitStart = (currencyCode: string, spendingLimit: string) => ({
-  type: UPDATE_PASSWORD_SPENDING_LIMIT_START,
-  data: {
-    currencyCode,
-    spendingLimit
-  }
-})
-
-export const updatePasswordSpendingLimitSuccess = (currencyCode: string, spendingLimit: string) => ({
-  type: UPDATE_PASSWORD_SPENDING_LIMIT_SUCCESS,
-  data: {
-    currencyCode,
-    spendingLimit
-  }
-})
-
-export const updatePasswordSpendingLimitError = (error: Error) => ({
-  type: UPDATE_PASSWORD_SPENDING_LIMIT_ERROR,
-  data: {error}
-})
