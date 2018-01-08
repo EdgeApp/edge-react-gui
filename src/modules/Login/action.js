@@ -70,22 +70,28 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
       // const syncFinal = {...syncDefaults, ...settings}
       const customTokens = settings ? settings.customTokens : []
 
+      if (!settings.DASH) {
+        syncFinal.DASH = syncDefaults.DASH
+      }
+
       // Add all the settings to UI/Settings
       dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
-      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('LTC', syncFinal.LTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('DASH', syncFinal.DASH.denomination))
+
+      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
       dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
       dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
       dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
 
       const currencySettings = {
-        BTC: settings.BTC.transactionSpendingLimits,
-        LTC: settings.LTC.transactionSpendingLimits,
-        BCH: settings.BCH.transactionSpendingLimits,
-        ETH: settings.ETH.transactionSpendingLimits,
-        DASH: settings.DASH.transactionSpendingLimits,
+        BTC: syncFinal.BTC.transactionSpendingLimit,
+        LTC: syncFinal.LTC.transactionSpendingLimit,
+        BCH: syncFinal.BCH.transactionSpendingLimit,
+        ETH: syncFinal.ETH.transactionSpendingLimit,
+        DASH: syncFinal.DASH.transactionSpendingLimit,
       }
 
       dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
@@ -113,11 +119,11 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
           const localFinal = {...localDefaults, ...settings}
 
           const currencySettings = {
-            BTC: settings.BTC.dailySpendingLimit,
-            LTC: settings.LTC.dailySpendingLimit,
-            BCH: settings.BCH.dailySpendingLimit,
-            ETH: settings.ETH.dailySpendingLimit,
-            DASH: settings.DASH.dailySpendingLimit,
+            BTC: localFinal.BTC.dailySpendingLimit,
+            LTC: localFinal.LTC.dailySpendingLimit,
+            BCH: localFinal.BCH.dailySpendingLimit,
+            ETH: localFinal.ETH.dailySpendingLimit,
+            DASH: localFinal.DASH.dailySpendingLimit,
           }
 
           dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
