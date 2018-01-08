@@ -4,8 +4,7 @@ import type {
   AbcContext,
   AbcContextCallbacks,
   AbcCorePlugin,
-  AbcCurrencyPlugin,
-  AbcContextOptions
+  AbcCurrencyPlugin
 } from 'airbitz-core-types'
 import SplashScreen from 'react-native-smart-splash-screen'
 import { selectLocale } from '../locales/strings.js'
@@ -84,7 +83,6 @@ import {styles} from './style.js'
 
 import * as CONTEXT_API from './Core/Context/api'
 
-import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
 import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 import {
   BitcoinCurrencyPluginFactory,
@@ -93,6 +91,10 @@ import {
   DashCurrencyPluginFactory
 } from 'edge-currency-bitcoin'
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
+
+
+import ENV from '../../env.json'
+import {makeCoreContext} from '../util/makeContext.js'
 
 const pluginFactories: Array<AbcCorePlugin> = [
   coinbasePlugin,
@@ -106,9 +108,6 @@ pluginFactories.push(DashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-import ENV from '../../env.json'
-
-const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 
 const RouterWithRedux = connect()(Router)
@@ -190,7 +189,7 @@ export default class Main extends Component<Props, State> {
   componentDidMount () {
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
-    makeCoreContext(this.props.contextCallbacks)
+    makeCoreContext(this.props.contextCallbacks, pluginFactories)
     .then((context) => {
       // Put the context into Redux:
       this.props.addContext(context)
@@ -420,20 +419,4 @@ export default class Main extends Component<Props, State> {
     }
     return true
   }
-}
-
-function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
-  const opts: AbcContextOptions = {
-    apiKey: AIRBITZ_API_KEY,
-    callbacks,
-    plugins: pluginFactories,
-    shapeshiftKey: SHAPESHIFT_API_KEY
-  }
-
-  if (ENV.USE_FAKE_CORE) {
-    const [context] = makeFakeContexts({...opts, localFakeUser: true})
-    return Promise.resolve(context)
-  }
-
-  return makeReactNativeContext(opts)
 }
