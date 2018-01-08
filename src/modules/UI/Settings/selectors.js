@@ -38,6 +38,36 @@ export const getCurrencySettings = (state: State, currencyCode: string) => {
   return currencySettings
 }
 
+export const getSpendingLimits = (state: State, currencyCode: string) => {
+  const currencySettings = getCurrencySettings(state, currencyCode)
+  const spendingLimits = currencySettings.spendingLimits
+  return spendingLimits
+}
+
+export const getDailySpendingLimit = (state: State, currencyCode: string) => {
+  const spendingLimits = getSpendingLimits(state, currencyCode)
+  const dailySpendingLimit = spendingLimits.dailySpendingLimit
+  return dailySpendingLimit
+}
+
+export const getIsDailySpendingLimitEnabled = (state: State, currencyCode: string) => {
+  const dailySpendingLimit = getDailySpendingLimit(state, currencyCode)
+  const isDailySpendingLimitEnabled = dailySpendingLimit.isEnabled
+  return isDailySpendingLimitEnabled
+}
+
+export const getTransactionSpendingLimit = (state: State, currencyCode: string) => {
+  const spendingLimits = getSpendingLimits(state, currencyCode)
+  const transactionSpendingLimit = spendingLimits.transactionSpendingLimit
+  return transactionSpendingLimit
+}
+
+export const getIsTransactionSpendingLimitEnabled = (state: State, currencyCode: string) => {
+  const transactionSpendingLimit = getTransactionSpendingLimit(state, currencyCode)
+  const isDailySpendingLimitEnabled = transactionSpendingLimit.isEnabled
+  return isDailySpendingLimitEnabled
+}
+
 export const getDenominations = (state: State, currencyCode: string) => {
   const currencySettings = getCurrencySettings(state, currencyCode)
   const denominations = currencySettings.denominations
@@ -153,4 +183,10 @@ export const getDefaultFiat = (state: State) => {
   const settings = getSettings(state)
   const defaultFiat: string = settings.defaultFiat
   return defaultFiat
+}
+
+export const getIsAuthorized = (state: State) => {
+  const settings = getSettings(state)
+  const isAuthorized = !settings.changesLocked
+  return isAuthorized
 }
