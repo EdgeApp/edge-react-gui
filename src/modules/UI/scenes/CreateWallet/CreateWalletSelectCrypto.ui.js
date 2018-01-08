@@ -25,7 +25,8 @@ import type {GuiWalletType, FlatListItem, DeviceDimensions} from '../../../../ty
 const WALLET_TYPE_PICKER_PLACEHOLDER = s.strings.create_wallet_choose_crypto
 
 const BACK_TEXT = s.strings.title_back
-const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
+const INVALID_INPUT_TITLE = s.strings.create_wallet_invalid_input
+const INVALID_DATA_TEXT = s.strings.create_wallet_select_valid_crypto
 const NEXT_TEXT = s.strings.string_next_capitalized
 
 export type Props = {
@@ -59,10 +60,14 @@ export default class CreateWalletSelectCrypto extends Component<Props, State> {
   }
 
   onNext = (): void => {
-    Actions.createWalletSelectFiat({
-      walletName: this.props.walletName,
-      selectedWalletType: this.state.selectedWalletType
-    })
+    if (this.isValidWalletType()) {
+      Actions.createWalletSelectFiat({
+        walletName: this.props.walletName,
+        selectedWalletType: this.state.selectedWalletType
+      })
+    } else {
+      Alert.alert(INVALID_INPUT_TITLE, INVALID_DATA_TEXT)
+    }
   }
 
   onBack = (): void => {

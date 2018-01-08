@@ -35,7 +35,8 @@ const FIAT_PICKER_PLACEHOLDER = s.strings.fragment_wallets_addwallet_fiat_hint
 const DONE_TEXT = s.strings.fragment_create_wallet_create_wallet
 const CANCEL_TEXT = s.strings.string_cancel_cap
 const BACK_TEXT = s.strings.title_back
-const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
+const INVALID_DATA_TITLE = s.strings.create_wallet_invalid_input
+const INVALID_DATA_TEXT = s.strings.create_wallet_select_valid_fiat
 const NEXT_TEXT = s.strings.string_next_capitalized
 
 export type Props = {
@@ -69,11 +70,15 @@ export default class CreateWalletSelectFiat extends Component<Props, State> {
   }
 
   onNext = (): void => {
-    Actions.createWalletReview({
-      walletName: this.props.walletName,
-      selectedWalletType: this.props.selectedWalletType,
-      selectedFiat: this.state.selectedFiat
-    })
+    if (this.isValidFiatType()) {
+      Actions.createWalletReview({
+        walletName: this.props.walletName,
+        selectedWalletType: this.props.selectedWalletType,
+        selectedFiat: this.state.selectedFiat
+      })
+    } else {
+      Alert.alert(INVALID_DATA_TITLE, INVALID_DATA_TEXT)
+    }
   }
 
   onBack = (): void => {

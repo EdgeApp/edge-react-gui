@@ -12,6 +12,8 @@ const isCreatingWallet = (state = false, action) => {
       return true
     case ACTION.CREATE_WALLET_SUCCESS:
       return false
+    case ACTION.CREATE_WALLET_FAILURE:
+      return false
     default:
       return state
   }

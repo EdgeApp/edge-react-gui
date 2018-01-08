@@ -4,12 +4,14 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {Actions} from 'react-native-router-flux'
 import * as WalletActions from '../../Wallets/action'
 import {WALLET_LIST_SCENE} from '../../../../constants/SceneKeys.js'
+import {displayErrorAlert} from '../../components/ErrorAlert/actions'
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
 export const SELECT_WALLET_TYPE = 'SELECT_WALLET_TYPE'
 export const SELECT_FIAT = 'SELECT_FIAT'
 export const CREATE_WALLET_START = 'CREATE_WALLET_START'
 export const CREATE_WALLET_SUCCESS = 'CREATE_WALLET_SUCCESS'
+export const CREATE_WALLET_FAILURE = 'CREATE_WALLET_FAILURE'
 
 export const updateWalletName = (walletName: string) => ({
   type: UPDATE_WALLET_NAME,
@@ -46,6 +48,9 @@ export const createCurrencyWallet = (
       dispatch(WalletActions.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
     }
   })
+  .catch((e) => {
+    dispatch(displayErrorAlert(e.message))
+  })
 }
 
 export const createWalletStart = () => ({
@@ -54,4 +59,8 @@ export const createWalletStart = () => ({
 
 export const createWalletSuccess = () => ({
   type: CREATE_WALLET_SUCCESS
+})
+
+export const createWalletFailure = () => ({
+  type: CREATE_WALLET_FAILURE
 })

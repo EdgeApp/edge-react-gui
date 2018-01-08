@@ -19,7 +19,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 const WALLET_NAME_INPUT_PLACEHOLDER = s.strings.fragment_wallets_addwallet_name_hint
 const CANCEL_TEXT = s.strings.string_cancel_cap
 const WALLET_NAME_INVALID_TEXT = s.strings.create_wallet_invalid_name
-const WALLET_NAME_E_ENTER_VALID_TEXT = s.strings.create_wallet_enter_valid_name
+const WALLET_NAME_ENTER_VALID_TEXT = s.strings.create_wallet_enter_valid_name
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 const NEXT_TEXT = s.strings.string_next_capitalized
 
@@ -50,7 +50,7 @@ export default class CreateWallet extends Component<Props, State> {
     if (this.isValidWalletName()) {
       Actions.createWalletSelectCrypto({walletName: this.state.walletName})
     } else {
-      Alert.alert(WALLET_NAME_INVALID_TEXT, WALLET_NAME_E_ENTER_VALID_TEXT)
+      Alert.alert(WALLET_NAME_INVALID_TEXT, WALLET_NAME_ENTER_VALID_TEXT)
     }
   }
 
