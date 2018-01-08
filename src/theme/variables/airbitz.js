@@ -50,7 +50,7 @@ export default {
   },
   FONTS: {
     DEFAULT: 'SourceSansPro-Black',
-    SYMBOLS: 'SF-UI-Text-Regular'
+    SYMBOLS: 'SourceSansPro-Black'
   },
 
   OPACITY: {
