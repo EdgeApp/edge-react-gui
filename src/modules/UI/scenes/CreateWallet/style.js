@@ -6,7 +6,7 @@ import THEME from '../../../../theme/variables/airbitz'
 export const styles = {
   scene: {
     flex: 1,
-    backgroundColor: THEME.COLORS.GRAY_4
+    backgroundColor: THEME.COLORS.WHITE
   },
   gradient: {
     height: THEME.HEADER,
@@ -35,17 +35,24 @@ export const styles = {
     height: 50,
     padding: 5
   },
+  selectedItem: {
+    backgroundColor: THEME.COLORS.GRAY_4,
+    borderLeftWidth: 1,
+    borderLeftColor: THEME.COLORS.GRAY_3,
+    borderRightWidth: 1,
+    borderRightColor: THEME.COLORS.GRAY_3
+  },
   searchContainer: {
     position: 'relative',
     backgroundColor: THEME.COLORS.TRANSPARENT,
     borderBottomWidth: 1,
-    borderBottomColor: '#D8D6D6',
+    borderBottomColor: THEME.COLORS.GRAY_3,
     width: '100%'
   },
   singleCryptoType: {
     height: 60,
     borderBottomWidth: 1,
-    borderBottomColor: '#D8D6D6',
+    borderBottomColor: THEME.COLORS.GRAY_3,
     paddingVertical: 10,
     paddingHorizontal: 15
   },
@@ -119,8 +126,7 @@ export const styles = {
     flexDirection: 'row'
   },
   next: {
-    marginLeft: 2,
-    color: THEME.COLORS.SECONDARY
+    marginLeft: 2
   },
   buttonText: {
     color: THEME.COLORS.WHITE,

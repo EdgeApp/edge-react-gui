@@ -120,6 +120,9 @@ export const styles = {
   },
   underlay: {
     color: THEME.COLORS.GRAY_4
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   }
 }
 export default StyleSheet.create(styles)

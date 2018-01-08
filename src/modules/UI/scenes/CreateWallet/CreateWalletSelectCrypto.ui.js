@@ -11,7 +11,7 @@ import {
   Image
 } from 'react-native'
 import Text from '../../components/FormattedText'
-import {SecondaryButton, TertiaryButton} from '../../components/Buttons'
+import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import SearchResults from '../../components/SearchResults'
 
@@ -59,11 +59,19 @@ export default class CreateWalletSelectCrypto extends Component<Props, State> {
     return isValid
   }
 
+  getWalletType = (walletTypeValue: string): GuiWalletType => {
+    const {supportedWalletTypes} = this.props
+    const foundValueIndex = supportedWalletTypes.findIndex((walletType) => walletType.value === walletTypeValue)
+    const foundValue = supportedWalletTypes[foundValueIndex]
+
+    return foundValue
+  }
+
   onNext = (): void => {
     if (this.isValidWalletType()) {
       Actions.createWalletSelectFiat({
         walletName: this.props.walletName,
-        selectedWalletType: this.state.selectedWalletType
+        selectedWalletType: this.getWalletType(this.state.selectedWalletType)
       })
     } else {
       Alert.alert(INVALID_INPUT_TITLE, INVALID_DATA_TEXT)
@@ -136,7 +144,7 @@ export default class CreateWalletSelectCrypto extends Component<Props, State> {
               onPressFunction={this.onBack}
               text={BACK_TEXT} />
 
-            <TertiaryButton
+            <PrimaryButton
               style={[styles.next]}
               disabled={isDisabled}
               onPressFunction={this.onNext}
@@ -150,7 +158,7 @@ export default class CreateWalletSelectCrypto extends Component<Props, State> {
 
   renderWalletTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
-      <View style={styles.singleCryptoTypeWrap}>
+      <View style={[styles.singleCryptoTypeWrap, (data.item.value === this.state.selectedWalletType) && styles.selectedItem]}>
         <TouchableHighlight style={[styles.singleCryptoType]}
           onPress={() => onRegularSelect(data.item)}
           underlayColor={stylesRaw.underlayColor.color}>
@@ -165,7 +173,7 @@ export default class CreateWalletSelectCrypto extends Component<Props, State> {
 
               </View>
               <View style={[styles.cryptoTypeLeftTextWrap]}>
-                <Text style={[styles.cryptoTypeName]}>{data.item.label}</Text>
+                <Text style={[styles.cryptoTypeName]}>{data.item.label} - {data.item.currencyCode}</Text>
               </View>
             </View>
           </View>

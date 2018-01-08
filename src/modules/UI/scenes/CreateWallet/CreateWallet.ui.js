@@ -8,7 +8,7 @@ import {
   View,
   Keyboard
 } from 'react-native'
-import {SecondaryButton, TertiaryButton} from '../../components/Buttons'
+import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 
 import styles from './style.js'
@@ -79,7 +79,7 @@ export default class CreateWallet extends Component<Props, State> {
               onPressFunction={this.onCancel}
               text={CANCEL_TEXT} />
 
-            <TertiaryButton
+            <PrimaryButton
               style={[styles.next]}
               disabled={!this.state.walletName}
               onPressFunction={this.onNext}

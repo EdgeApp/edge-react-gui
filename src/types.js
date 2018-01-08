@@ -108,7 +108,8 @@ export type GuiWalletType = {
   label: string,
   value: string,
   symbolImage?: string,
-  symbolImageDarkMono?: string
+  symbolImageDarkMono?: string,
+  currencyCode: string
 }
 
 export type GuiFiatType = {

@@ -11,7 +11,7 @@ import {
   Image
 } from 'react-native'
 import Text from '../../components/FormattedText'
-import {SecondaryButton, TertiaryButton} from '../../components/Buttons'
+import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import SearchResults from '../../components/SearchResults'
 
@@ -69,12 +69,19 @@ export default class CreateWalletSelectFiat extends Component<Props, State> {
     return isValid
   }
 
+  getFiatType = (fiatKey: string): GuiFiatType => {
+    const fiatTypeIndex = this.props.supportedFiats
+      .findIndex((fiatType) => fiatType.value === fiatKey)
+
+    return this.props.supportedFiats[fiatTypeIndex]
+  }
+
   onNext = (): void => {
     if (this.isValidFiatType()) {
       Actions.createWalletReview({
         walletName: this.props.walletName,
         selectedWalletType: this.props.selectedWalletType,
-        selectedFiat: this.state.selectedFiat
+        selectedFiat: this.getFiatType(this.state.selectedFiat)
       })
     } else {
       Alert.alert(INVALID_DATA_TITLE, INVALID_DATA_TEXT)
@@ -150,7 +157,7 @@ export default class CreateWalletSelectFiat extends Component<Props, State> {
               onPressFunction={this.onBack}
               text={BACK_TEXT} />
 
-            <TertiaryButton
+            <PrimaryButton
               style={[styles.next]}
               disabled={isDisabled}
               onPressFunction={this.onNext}
@@ -164,7 +171,7 @@ export default class CreateWalletSelectFiat extends Component<Props, State> {
 
   renderFiatTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
-      <View style={styles.singleCryptoTypeWrap}>
+      <View style={[styles.singleCryptoTypeWrap, (data.item.value === this.state.selectedFiat) && styles.selectedItem]}>
         <TouchableHighlight style={[styles.singleCryptoType]}
           onPress={() => onRegularSelect(data.item)}
           underlayColor={stylesRaw.underlayColor.color}>

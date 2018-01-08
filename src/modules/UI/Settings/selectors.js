@@ -118,20 +118,23 @@ export const getSupportedWalletTypes = (state: State) => {
         label: 'Bitcoin (Segwit)',
         value: 'wallet:bitcoin-bip49',
         symbolImage: plugin.currencyInfo.symbolImage,
-        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
       supportedWalletTypes.push({
         label: 'Bitcoin',
         value: 'wallet:bitcoin-bip44',
         symbolImage: plugin.currencyInfo.symbolImage,
-        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
     } else {
       supportedWalletTypes.push({
         label: plugin.currencyInfo.currencyName,
         value: plugin.currencyInfo.walletTypes[0],
         symbolImage: plugin.currencyInfo.symbolImage,
-        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
     }
   }

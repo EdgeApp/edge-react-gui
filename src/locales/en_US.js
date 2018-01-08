@@ -88,8 +88,8 @@ const strings = {
   mining_fee_low_label_choice: 'Low',
   mining_fee_standard_label_choice: 'Standard',
   request_qr_email_title: '%1$s Bitcoin Request',
-  request_qr_waiting_for_payment: 'Waiting for Payment…',
-  select_dest_wallet: 'Select Dest Wallet',
+  request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
+  select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
@@ -182,7 +182,8 @@ const strings = {
   string_confirm: 'Confirm',
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
   transaction_details_notes_title: 'Notes',
-  string_search: 'Search'
+  string_search: 'Search',
+  confirm_password_text: 'Confirm Password'
 }
 
 export default strings

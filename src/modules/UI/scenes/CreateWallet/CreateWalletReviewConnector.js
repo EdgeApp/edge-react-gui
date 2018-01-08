@@ -4,6 +4,8 @@ import {connect} from 'react-redux'
 import CreateWalletReview from './CreateWalletReview.ui'
 import {createCurrencyWallet} from './action'
 import type {State, Dispatch} from '../../../ReduxTypes'
+import {getSupportedFiats} from '../../../utils.js'
+import {getSupportedWalletTypes} from '../../Settings/selectors.js'
 
 export type OwnProps = {
   walletName: string,
@@ -16,7 +18,9 @@ export type DispatchProps = {
 }
 
 const mapStateToProps = (state: State) => ({
-  isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet
+  isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet,
+  supportedWalletTypes: getSupportedWalletTypes(state),
+  supportedFiats: getSupportedFiats()
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
