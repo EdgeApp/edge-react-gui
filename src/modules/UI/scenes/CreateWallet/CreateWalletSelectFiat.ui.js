@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {
@@ -16,8 +18,15 @@ import SearchResults from '../../components/SearchResults'
 import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
 import PLATFORM from '../../../../theme/variables/platform'
-import Gradient from '../../components/Gradient/Gradient.ui'
+import Gradient from '../../components/Gradient/Gradient.ui.js'
 import * as UTILS from '../../../utils'
+import type
+{
+  GuiWalletType,
+  GuiFiatType,
+  FlatListItem,
+  DeviceDimensions
+} from '../../../../types'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = s.strings.fragment_wallets_addwallet_name_hint
 const WALLET_TYPE_PICKER_PLACEHOLDER = s.strings.create_wallet_choose_crypto
@@ -29,8 +38,20 @@ const BACK_TEXT = s.strings.title_back
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 const NEXT_TEXT = s.strings.string_next_capitalized
 
-export default class CreateWallet extends Component {
-  constructor (props) {
+export type Props = {
+  walletName: string,
+  selectedWalletType: string,
+  supportedFiats: Array<GuiFiatType>,
+  dimensions: DeviceDimensions
+}
+
+export type State = {
+  searchTerm: string,
+  selectedFiat: string
+}
+
+export default class CreateWalletSelectFiat extends Component<Props, State> {
+  constructor (props: Props & State) {
     super(props)
     this.state = {
       walletName: this.props.walletName || '',
@@ -39,15 +60,15 @@ export default class CreateWallet extends Component {
     }
   }
 
-  isValidFiatType = () => {
+  isValidFiatType = (): boolean => {
     const {selectedFiat} = this.state
-    const isValid = this.props.supportedFiats
+    const fiatTypeIndex = this.props.supportedFiats
       .findIndex((fiatType) => fiatType.value === selectedFiat)
-
-    return (isValid >= 0)
+    const isValid = fiatTypeIndex >= 0
+    return isValid
   }
 
-  onNext = () => {
+  onNext = (): void => {
     Actions.createWalletReview({
       walletName: this.props.walletName,
       selectedWalletType: this.props.selectedWalletType,
@@ -55,23 +76,34 @@ export default class CreateWallet extends Component {
     })
   }
 
-  onBack = () => {
+  onBack = (): void => {
     Keyboard.dismiss()
-    Actions.pop() // redirect to the list of wallets
+    Actions.pop() // redirect to the list of crypto types
   }
 
-  handleSearchTermChange = (searchTerm) => {
+  handleSearchTermChange = (searchTerm: string): void => {
     this.setState({
       searchTerm
     })
   }
 
-  handleSelectFiatType = (item) => {
+  handleSelectFiatType = (item: GuiFiatType): void => {
     const selectedFiat = this.props.supportedFiats.find((type) => type.value === item.value)
-    this.setState({
-      selectedFiat: selectedFiat.value,
-      searchTerm: selectedFiat.label
-    })
+
+    if (selectedFiat) {
+      this.setState({
+        selectedFiat: selectedFiat.value,
+        searchTerm: selectedFiat.label
+      })
+    }
+  }
+
+  handleOnFocus = (): void => {
+    UTILS.noOp()
+  }
+
+  handleOnBlur = (): void => {
+    UTILS.noOp()
   }
 
   render () {
@@ -79,6 +111,8 @@ export default class CreateWallet extends Component {
       return (entry.label.indexOf(this.state.searchTerm) >= 0)
     })
     const isDisabled = !this.isValidFiatType()
+    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
+    const searchResultsHeight = PLATFORM.usableHeight - keyboardHeight - 50 - 58 // substract button area height and FormField height
 
     return (
       <View style={styles.scene}>
@@ -100,7 +134,7 @@ export default class CreateWallet extends Component {
             onRegularSelectFxn={this.handleSelectFiatType}
             regularArray={filteredArray}
             style={[styles.SearchResults]}
-            containerStyle={[styles.searchContainer, {height: PLATFORM.usableHeight - 50 - 58 - this.props.dimensions.keyboardHeight}]}
+            containerStyle={[styles.searchContainer, {height: searchResultsHeight}]}
             keyExtractor={this.keyExtractor}
             initialNumToRender={30}
             scrollRenderAheadDistance={1600}
@@ -123,11 +157,11 @@ export default class CreateWallet extends Component {
     )
   }
 
-  renderFiatTypeResult = (data, onRegularSelectFxn) => {
+  renderFiatTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
       <View style={styles.singleCryptoTypeWrap}>
         <TouchableHighlight style={[styles.singleCryptoType]}
-          onPress={() => onRegularSelectFxn(data.item)}
+          onPress={() => onRegularSelect(data.item)}
           underlayColor={stylesRaw.underlayColor.color}>
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
@@ -141,5 +175,5 @@ export default class CreateWallet extends Component {
     )
   }
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item: GuiFiatType, index: string) => index
 }

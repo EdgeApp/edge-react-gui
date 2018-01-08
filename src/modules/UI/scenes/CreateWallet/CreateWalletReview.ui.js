@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {
@@ -12,31 +14,32 @@ import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import { createCurrencyWallet } from '../../../../actions/indexActions'
 
 const DONE_TEXT = s.strings.fragment_create_wallet_create_wallet
 const BACK_TEXT = s.strings.title_back
 
-export default class CreateWallet extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      walletName: this.props.walletName,
-      selectedWalletType: this.props.selectedWalletType,
-      selectedFiat: this.props.selectedFiat
-    }
-  }
+export type Props = {
+  walletName: string,
+  selectedFiat: string,
+  selectedWalletType: string,
+  createCurrencyWallet: Function,
+  isCreatingWallet: boolean
+}
 
-  onSubmit = () => {
+export default class CreateWallet extends Component<Props> {
+  onSubmit = (): void => {
     const { walletName, selectedWalletType, selectedFiat } = this.props
     this.props.createCurrencyWallet(walletName, selectedWalletType, fixFiatCurrencyCode(selectedFiat))
   }
 
-  onBack = () => {
+  onBack = (): void => {
     Keyboard.dismiss()
     Actions.pop()
   }
 
   render () {
+    const {walletName, selectedWalletType, selectedFiat, isCreatingWallet} = this.props
     return (
       <View style={styles.scene}>
         <Gradient style={styles.gradient} />
@@ -58,7 +61,7 @@ export default class CreateWallet extends Component {
             <PrimaryButton
               onPressFunction={this.onSubmit}
               text={DONE_TEXT}
-              processingFlag={this.props.isCreatingWallet}
+              processingFlag={isCreatingWallet}
               processingElement={<ActivityIndicator />}
             />
           </View>

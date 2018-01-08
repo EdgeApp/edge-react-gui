@@ -71,6 +71,8 @@ const strings = {
   fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
   fragmet_wallets_list_archive_title_capitalized: 'Archive',
   create_wallet_choose_crypto: 'Choose a wallet type',
+  create_wallet_invalid_name: 'Invalid wallet name',
+  create_wallet_enter_valid_name: 'Please enter a valid wallet name',
   create_wallet_top_instructions: 'Please double-check wallet information and submit:',
   create_wallet_name_label: 'Wallet Name:',
   create_wallet_crypto_type_label: 'Wallet Type:',

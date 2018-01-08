@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {
@@ -18,6 +20,7 @@ import s from '../../../../locales/strings.js'
 import PLATFORM from '../../../../theme/variables/platform'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import * as UTILS from '../../../utils'
+import type {GuiWalletType, FlatListItem, DeviceDimensions} from '../../../../types'
 
 const WALLET_TYPE_PICKER_PLACEHOLDER = s.strings.create_wallet_choose_crypto
 
@@ -25,52 +28,70 @@ const BACK_TEXT = s.strings.title_back
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 const NEXT_TEXT = s.strings.string_next_capitalized
 
-export default class CreateWallet extends Component {
-  constructor (props) {
+export type Props = {
+  walletName: string,
+  dimensions: DeviceDimensions,
+  supportedWalletTypes: Array<GuiWalletType>
+}
+
+export type State = {
+  selectedWalletType: string,
+  searchTerm: string
+}
+
+export default class CreateWalletSelectCrypto extends Component<Props, State> {
+  constructor (props: Props & State) {
     super(props)
     this.state = {
-      isCreatingWallet: false,
-      walletInfoValid: false,
-      walletName: this.props.walletName || '',
       selectedWalletType: '',
-      searchTerm: '',
-      selectedFiat: ''
+      searchTerm: ''
     }
   }
 
-  isValidWalletType = () => {
+  isValidWalletType = (): boolean => {
     const {selectedWalletType} = this.state
-    const isValid = this.props.supportedWalletTypes
+    const {supportedWalletTypes} = this.props
+    const walletTypeValue = supportedWalletTypes
       .findIndex((walletType) => walletType.value === selectedWalletType)
 
-    return (isValid >= 0)
+    const isValid: boolean = walletTypeValue >= 0
+    return isValid
   }
 
-  onNext = () => {
-    console.log('this is a test')
+  onNext = (): void => {
     Actions.createWalletSelectFiat({
       walletName: this.props.walletName,
       selectedWalletType: this.state.selectedWalletType
     })
   }
 
-  onBack = () => {
+  onBack = (): void => {
     Keyboard.dismiss()
     Actions.pop() // redirect to the list of wallets
   }
 
-  handleSearchTermChange = (searchTerm) => {
+  handleSearchTermChange = (searchTerm: string): void => {
     this.setState({
       searchTerm
     })
   }
 
-  handleSelectWalletType = (item) => {
+  handleSelectWalletType = (item: GuiWalletType): void => {
     const selectedWalletType = this.props.supportedWalletTypes.find((type) => type.value === item.value)
-    this.setState({
-      selectedWalletType: selectedWalletType.value,
-      searchTerm: selectedWalletType.label
-    })
+    if (selectedWalletType) {
+      this.setState({
+        selectedWalletType: selectedWalletType.value,
+        searchTerm: selectedWalletType.label
+      })
+    }
+  }
+
+  handleOnFocus = () => {
+    UTILS.noOp()
+  }
+
+  handleOnBlur = () => {
+    UTILS.noOp()
   }
 
   render () {
@@ -78,6 +99,8 @@ export default class CreateWallet extends Component {
       return (entry.label.indexOf(this.state.searchTerm) >= 0)
     })
     const isDisabled = !this.isValidWalletType()
+    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
+    const searchResultsHeight = PLATFORM.usableHeight - keyboardHeight - 50 - 58 // substract button area height and FormField height
 
     return (
       <View style={styles.scene}>
@@ -98,11 +121,11 @@ export default class CreateWallet extends Component {
             renderRegularResultFxn={this.renderWalletTypeResult}
             onRegularSelectFxn={this.handleSelectWalletType}
             regularArray={filteredArray}
-            style={[styles.SearchResults, UTILS.border()]}
-            containerStyle={[styles.searchContainer, {height: PLATFORM.usableHeight - 50 - 58 - this.props.dimensions.keyboardHeight}] }
+            style={[styles.SearchResults]}
+            containerStyle={[styles.searchContainer, {height: searchResultsHeight}] }
             keyExtractor={this.keyExtractor}
           />
-          <View style={[styles.buttons, UTILS.border()]}>
+          <View style={[styles.buttons]}>
             <SecondaryButton
               style={[styles.cancel]}
               onPressFunction={this.onBack}
@@ -120,19 +143,19 @@ export default class CreateWallet extends Component {
     )
   }
 
-  renderWalletTypeResult = (data, onRegularSelectFxn) => {
+  renderWalletTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
       <View style={styles.singleCryptoTypeWrap}>
         <TouchableHighlight style={[styles.singleCryptoType]}
-          onPress={() => onRegularSelectFxn(data.item)}
+          onPress={() => onRegularSelect(data.item)}
           underlayColor={stylesRaw.underlayColor.color}>
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
               <View style={[styles.cryptoTypeLogo]} >
                 {
                   data.item.symbolImageDarkMono
-                  ? <Image source={{uri: data.item.symbolImageDarkMono}} style={{height: 40, width: 40, borderRadius: 20}} />
-                  : <View style={{height: 40, width: 40}} />
+                  ? <Image source={{uri: data.item.symbolImageDarkMono}} style={[styles.cryptoTypeLogo, {borderRadius: 20}]} />
+                  : <View style={styles.cryptoTypeLogo} />
                 }
 
               </View>
@@ -146,5 +169,5 @@ export default class CreateWallet extends Component {
     )
   }
 
-  keyExtractor = (item, index) => index
+  keyExtractor = (item: GuiWalletType, index: number): number => index
 }
