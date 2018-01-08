@@ -23,7 +23,8 @@ type Props = {
   denominations: Array<GuiDenomination>,
   logo: string,
   selectDenomination: (string) => void,
-  selectedDenominationKey: string
+  selectedDenominationKey: string,
+  pluginName: string
 }
 type State = {}
 export default class CurrencySettings extends Component<Props, State> {
