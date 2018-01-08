@@ -69,25 +69,25 @@ export const LOCAL_ACCOUNT_DEFAULTS = {
     dailySpendingLimit: {
       isEnabled: true,
       nativeAmount: '10000000'
-    },
+    }
   },
   'LTC': {
     dailySpendingLimit: {
       isEnabled: true,
       nativeAmount: '1000000000'
-    },
+    }
   },
   'ETH': {
     dailySpendingLimit: {
       isEnabled: true,
       nativeAmount: '1000000000000'
-    },
+    }
   },
   'DASH': {
     dailySpendingLimit: {
       isEnabled: true,
       nativeAmount: '1000000000000'
-    },
+    }
   }
 }
 
@@ -161,7 +161,7 @@ export const setDailySpendingLimitRequest = (account: AbcAccount, currencyCode: 
 }
 
 export const setTransactionSpendingLimitRequest = (account: AbcAccount, currencyCode: string, isEnabled: boolean, nativeAmount: string) => {
-  return getLocalSettings(account)
+  return getSyncedSettings(account)
   .then((settings) => {
     const updatedSettings = updateCurrencySettings(settings, currencyCode, {transactionSpendingLimit: {isEnabled, nativeAmount}})
     return setSyncedSettings(account, updatedSettings)
