@@ -31,7 +31,7 @@ export const updateTransactionSpendingLimit = (currencyCode: string, isEnabled: 
 }
 
 export const updateDailySpendingLimit = (currencyCode: string, isEnabled: boolean, dailySpendingLimit: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch(updateDailySpendingLimitStart(currencyCode, isEnabled,dailySpendingLimit))
+  dispatch(updateDailySpendingLimitStart(currencyCode, isEnabled, dailySpendingLimit))
 
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)

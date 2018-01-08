@@ -11,7 +11,7 @@ export const stylesRaw = {
     padding: 18
   },
   container: {
-    position: 'relative',
+    position: 'relative'
   },
   listStyle: {
     height: 100

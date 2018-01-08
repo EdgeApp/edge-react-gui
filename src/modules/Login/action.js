@@ -91,7 +91,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
         LTC: syncFinal.LTC.transactionSpendingLimit,
         BCH: syncFinal.BCH.transactionSpendingLimit,
         ETH: syncFinal.ETH.transactionSpendingLimit,
-        DASH: syncFinal.DASH.transactionSpendingLimit,
+        DASH: syncFinal.DASH.transactionSpendingLimit
       }
 
       dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
@@ -123,7 +123,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
             LTC: localFinal.LTC.dailySpendingLimit,
             BCH: localFinal.BCH.dailySpendingLimit,
             ETH: localFinal.ETH.dailySpendingLimit,
-            DASH: localFinal.DASH.dailySpendingLimit,
+            DASH: localFinal.DASH.dailySpendingLimit
           }
 
           dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))

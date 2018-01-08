@@ -7,20 +7,20 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles, {stylesRaw} from './styles'
 
-import {PrimaryButton}  from '../../components/Buttons'
+import {PrimaryButton} from '../../components/Buttons'
 import RowSwitch from '../Settings/components/RowSwitch.ui'
 import T from '../../components/FormattedText/FormattedText.ui'
 import {FormField} from '../../../../components/FormField.js'
 import {PasswordComponent} from '../../../../components/materialWrappers/PasswordComponent'
 import s from '../../../../locales/strings.js'
 
-const PER_DAY_SPENDING_LIMITS_TEXT             = s.strings.per_day_spending_limit
-const PER_DAY_SPENDING_LIMITS_DESCRIPTION_TEXT = s.strings.per_day_spending_limit_description
-const PER_TRANSACTION_SPENDING_LIMITS_TEXT     = s.strings.per_transaction_spending_limit
-const PER_TRANSACTION_SPENDING_LIMITS_DESCRIPTION_TEXT = s.strings.per_transaction_spending_limit_description
-const ENTER_PASSWORD_TO_MAKE_CHANGES_TEXT      = s.strings.enter_password_to_make_changes
-
 import THEME from '../../../../theme/variables/airbitz'
+
+const PER_DAY_SPENDING_LIMITS_TEXT = s.strings.per_day_spending_limit
+const PER_DAY_SPENDING_LIMITS_DESCRIPTION_TEXT = s.strings.per_day_spending_limit_description
+const PER_TRANSACTION_SPENDING_LIMITS_TEXT = s.strings.per_transaction_spending_limit
+const PER_TRANSACTION_SPENDING_LIMITS_DESCRIPTION_TEXT = s.strings.per_transaction_spending_limit_description
+const ENTER_PASSWORD_TO_MAKE_CHANGES_TEXT = s.strings.enter_password_to_make_changes
 
 type Props = {
   pluginName: string,
