@@ -39,7 +39,8 @@ class FormField extends Component {
     returnKeyType: 'go',
     label: '',
     keyboardType: 'default',
-    style: {}
+    style: {},
+    disabled: false
   }
   componentWillMount () {
     const secure = this.props.secureTextEntry
@@ -62,6 +63,7 @@ class FormField extends Component {
 
     return (
       <Input
+        disabled={this.props.disabled}
         label={this.props.label}
         onChangeText={this.props.onChangeText}
         error={this.props.error}

@@ -21,6 +21,7 @@ type Props = {
   secureTextEntry: boolean,
   returnKeyType: string,
   keyboardType: string,
+  disabled: boolean,
   onFocus(): void,
   onSubmitEditing(): void,
   onBlur(): void,
@@ -82,10 +83,12 @@ class Input extends Component<Props, State> {
       errorColor,
       titleTextStyle,
       secureTextEntry,
-      returnKeyType
+      returnKeyType,
+      disabled
     } = this.props
     return (
       <TextField
+        disabled={disabled}
         ref={this.addRef}
         label={this.props.label}
         value={value}

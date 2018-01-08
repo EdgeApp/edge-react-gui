@@ -22,6 +22,7 @@ class PrimaryButton extends Component {
   render () {
     return (
       <TouchableHighlight {...this.props}
+        disabled={this.props.disabled}
         onPress={this.props.onPressFunction}
         underlayColor={styleRaw.primaryUnderlay.color}
         style={[
