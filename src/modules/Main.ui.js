@@ -148,7 +148,6 @@ const CHANGE_PIN = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
 const DEFAULT_FIAT = s.strings.title_default_fiat
 const CANCEL_TEXT = s.strings.cancel
-
 type Props = {
   username?: string,
   addExchangeTimer: (number) => void,
@@ -371,7 +370,7 @@ export default class Main extends Component<Props, State> {
       const pluginSettingsKey = `title_${pluginName}_settings`
 
       const currencySettingsTitle = s.strings[pluginSettingsKey]
-      const spendingLimitsTitle   = s.strings.spending_limits
+      const spendingLimitsTitle = s.strings.spending_limits
 
       settings.push(
         <Scene key={key} pluginName={pluginName} currencyCode={currencyCode} navTransparent={true}
@@ -382,7 +381,7 @@ export default class Main extends Component<Props, State> {
         <Scene key={`${pluginName}SpendingLimits`} pluginName={pluginName} currencyCode={currencyCode} navTransparent={true}
           component={SpendingLimits}
           renderTitle={this.renderTitle(spendingLimitsTitle)}
-          renderLeftButton={this.renderBackButton(CANCEL_TEXT)}
+          renderLeftButton={this.renderBackButton()}
           renderRightButton={this.renderHelpButton} />
       )
     }
