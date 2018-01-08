@@ -2,6 +2,7 @@
 
 import {AbcAccount} from 'airbitz-core-types'
 import {Actions} from 'react-native-router-flux'
+import R from 'ramda'
 
 import type {GetState, Dispatch} from '../ReduxTypes'
 
@@ -61,19 +62,38 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
 
 const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
   const {account} = getState().core
+
   SETTINGS_API.getSyncedSettings(account)
     .then((settings) => {
       const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
-      const syncFinal = {...syncDefaults, ...settings}
+      const syncFinal = R.mergeDeepLeft(settings, syncDefaults)
+      // const syncFinal = {...syncDefaults, ...settings}
       const customTokens = settings ? settings.customTokens : []
+
       // Add all the settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
-      dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
-      dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
       dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
       dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
+      dispatch(SETTINGS_ACTIONS.setDenominationKey('LTC', syncFinal.LTC.denomination))
+      dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
+      dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
+      dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
+
+      const currencySettings = {
+        BTC: settings.BTC.transactionSpendingLimits,
+        LTC: settings.LTC.transactionSpendingLimits,
+        BCH: settings.BCH.transactionSpendingLimits,
+        ETH: settings.ETH.transactionSpendingLimits,
+        DASH: settings.DASH.transactionSpendingLimits,
+      }
+
+      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
+      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
+      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
+      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
+      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
+
       if (customTokens) {
         customTokens.forEach((token) => {
           dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
@@ -82,23 +102,43 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
         })
       }
     })
-
-  SETTINGS_API.getLocalSettings(account)
-    .then((settings) => {
-      const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
-
-      const localFinal = {...localDefaults, ...settings}
-      // Add all the local settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
+    .catch((error) => {
+      console.error(error)
     })
+    .then(() => {
+      SETTINGS_API.getLocalSettings(account)
+        .then((settings) => {
+          const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
 
-  SETTINGS_API.getCoreSettings(account)
-    .then((settings) => {
-      const coreDefaults = SETTINGS_API.CORE_DEFAULTS
+          const localFinal = {...localDefaults, ...settings}
 
-      const coreFinal = {...coreDefaults, ...settings}
-      dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
-      dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
+          const currencySettings = {
+            BTC: settings.BTC.dailySpendingLimit,
+            LTC: settings.LTC.dailySpendingLimit,
+            BCH: settings.BCH.dailySpendingLimit,
+            ETH: settings.ETH.dailySpendingLimit,
+            DASH: settings.DASH.dailySpendingLimit,
+          }
+
+          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
+          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
+          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
+          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
+          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
+
+          // Add all the local settings to UI/Settings
+          dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
+        })
+    })
+    .then(() => {
+      SETTINGS_API.getCoreSettings(account)
+        .then((settings) => {
+          const coreDefaults = SETTINGS_API.CORE_DEFAULTS
+
+          const coreFinal = {...coreDefaults, ...settings}
+          dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
+          dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
+        })
     })
 }
 
