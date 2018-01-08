@@ -31,10 +31,14 @@ export default class ExchangedExchangeRate extends Component<Props> {
   }
 
   isBits (primaryInfo: {displayDenomination: AbcDenomination}) {
-    return primaryInfo.displayDenomination.name === 'bits'
+    return primaryInfo.displayDenomination && primaryInfo.displayDenomination.name === 'bits'
   }
 
   render () {
+    if (!this.props.primaryInfo || !this.props.primaryInfo.displayDenomination) {
+      return null // TODO: Remove this guard when settings are safe --KS
+    }
+
     const emptyDenomination = {
       name: '',
       symbol: '',

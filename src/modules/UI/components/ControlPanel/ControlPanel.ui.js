@@ -25,6 +25,8 @@ export default class ControlPanel extends Component {
   }
 
   render () {
+    if (this.props.isLoading) return null
+
     const primaryDisplayAmount = '1'
     const {
       primaryInfo,
