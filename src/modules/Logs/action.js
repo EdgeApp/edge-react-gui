@@ -7,10 +7,40 @@ export const SEND_LOGS_REQUEST = PREFIX + 'SEND_LOGS_REQUEST'
 export const SEND_LOGS_SUCCESS = PREFIX + 'SEND_LOGS_SUCCESS'
 export const SEND_LOGS_FAILURE = PREFIX + 'SEND_LOGS_FAILURE'
 
-export const sendLogs = (text) => (dispatch) => {
+export const sendLogs = (text) => (dispatch, getState) => {
   dispatch({type: SEND_LOGS_REQUEST, text})
 
+  const core = getState().core
+  let walletDump = ''
+  if (core && core.wallets && core.wallets.byId) {
+    for (const walletId in core.wallets.byId) {
+      const wallet = core.wallets.byId[walletId]
+      if (wallet) {
+        const dataDump = wallet.dumpData()
+        let ds = ''
+        ds = ds + '--------------------- Wallet Data Dump ----------------------\n'
+        ds = ds + `Wallet ID: ${dataDump.walletId}\n`
+        ds = ds + `Wallet Type: ${dataDump.walletType}\n`
+        ds = ds + `Plugin Type: ${dataDump.pluginType}\n`
+        ds = ds + '------------------------- Data -------------------------\n'
+        for (const cache in dataDump.data) {
+          try {
+            let t = `-------------------- ${cache} ---------------------\n`
+            // $FlowFixMe
+            t = t + `${JSON.stringify(dataDump.data[cache], null, 2)}\n`
+            ds = ds + t
+          } catch (e) {
+            console.error(e)
+          }
+        }
+        ds = ds + '------------------ End of Wallet Data Dump ------------------\n\n'
+        walletDump = walletDump + ds
+      }
+    }
+  }
+
   LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)
+    .then(LOGGER.log(walletDump))
     .then(LOGGER.readLogs)
     .then(LOGS_API.sendLogs)
     .then((result) => dispatch({type: SEND_LOGS_SUCCESS, result}))

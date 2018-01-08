@@ -49,7 +49,8 @@ export default {
     }
   },
   FONTS: {
-    DEFAULT: 'SourceSansPro-Black'
+    DEFAULT: 'SourceSansPro-Black',
+    SYMBOLS: 'SourceSansPro-Black'
   },
 
   OPACITY: {

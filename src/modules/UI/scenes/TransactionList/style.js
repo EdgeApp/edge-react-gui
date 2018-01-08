@@ -286,6 +286,9 @@ export const styles = {
   },
   transactionUnderlay: {
     color: THEME.COLORS.ROW_PRESSED
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   }
 }
 
