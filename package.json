@@ -57,7 +57,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^2.8.3",
+    "edge-currency-bitcoin": "^2.8.4",
     "edge-currency-ethereum": "^0.7.1",
     "edge-exchange-plugins": "^0.1.1",
     "eslint-config-standard": "^11.0.0-beta.0",
