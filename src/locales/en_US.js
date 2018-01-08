@@ -169,7 +169,8 @@ const strings = {
   string_confirm: 'Confirm',
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
   transaction_details_notes_title: 'Notes',
-  string_search: 'Search'
+  string_search: 'Search',
+  confirm_password_text: 'Confirm Password'
 }
 
 export default strings
