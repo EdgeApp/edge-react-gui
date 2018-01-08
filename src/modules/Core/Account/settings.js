@@ -19,19 +19,79 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   merchantMode: false,
-  'BTC': {denomination: '100000000'},
-  'BCH': {denomination: '100000000'},
-  'DASH': {denomination: '100000000'},
-  'LTC': {denomination: '100000000'},
-  'ETH': {denomination: '1000000000000000000'},
-  'REP': {denomination: '1000000000000000000'},
-  'WINGS': {denomination: '1000000000000000000'},
+  'BTC': {
+    denomination: '100000000',
+    transactionSpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '1000000000'
+    }
+  },
+  'BCH': {
+    denomination: '100000000',
+    transactionSpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '1000000000'
+    }
+  },
+  'LTC': {
+    denomination: '100000000',
+    transactionSpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '100000000000'
+    }
+  },
+  'ETH': {
+    denomination: '1000000000000000000',
+    transactionSpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '10000000000000000'
+    }
+  },
+  'DASH': {
+    denomination: '1000000000000000000',
+    transactionSpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '10000000000000000'
+    }
+  },
   customTokens: []
 }
 
-export const LOCAL_ACCOUNT_DEFAULTS = {bluetoothMode: false}
+export const LOCAL_ACCOUNT_DEFAULTS = {
+  bluetoothMode: false,
+  'BTC': {
+    dailySpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '1000000000'
+    }
+  },
+  'BCH': {
+    dailySpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '10000000'
+    },
+  },
+  'LTC': {
+    dailySpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '1000000000'
+    },
+  },
+  'ETH': {
+    dailySpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '1000000000000'
+    },
+  },
+  'DASH': {
+    dailySpendingLimit: {
+      isEnabled: true,
+      nativeAmount: '1000000000000'
+    },
+  }
+}
 
-const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
+const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 const CATEGORIES_FILENAME = 'Categories.json'
 
@@ -43,8 +103,8 @@ export const setOTPModeRequest = (account: AbcAccount, otpMode: boolean) =>
   : account.disableOtp()
 
 export const setOTPRequest = (account: AbcAccount, key: string) =>
-// $FlowFixMe setupOTPKey not found on AbcAccount type
-account.setupOTPKey(key)
+  // $FlowFixMe
+  account.setupOTPKey(key)
 
 export const setPINModeRequest = (account: AbcAccount, pinMode: boolean) =>
   pinMode // $FlowFixMe enablePIN not found on AbcAccount type
@@ -92,17 +152,33 @@ export const setDenominationKeyRequest = (account: AbcAccount, currencyCode: str
     return setSyncedSettings(account, updatedSettings)
   })
 
+export const setDailySpendingLimitRequest = (account: AbcAccount, currencyCode: string, isEnabled: boolean, nativeAmount: string) => {
+  return getLocalSettings(account)
+  .then((settings) => {
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, {dailySpendingLimit: {isEnabled, nativeAmount}})
+    return setLocalSettings(account, updatedSettings)
+  })
+}
+
+export const setTransactionSpendingLimitRequest = (account: AbcAccount, currencyCode: string, isEnabled: boolean, nativeAmount: string) => {
+  return getLocalSettings(account)
+  .then((settings) => {
+    const updatedSettings = updateCurrencySettings(settings, currencyCode, {transactionSpendingLimit: {isEnabled, nativeAmount}})
+    return setSyncedSettings(account, updatedSettings)
+  })
+}
+
 // Helper Functions
 export const getSyncedSettings = (account: AbcAccount) =>
   getSyncedSettingsFile(account).getText()
   .then((text) => {
-    const settingsFromFile = JSON.parse(text)
-    return settingsFromFile
+    const syncedSettings = JSON.parse(text)
+    return syncedSettings
   })
   .catch((e) => {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    return SYNCED_ACCOUNT_DEFAULTS
   })
 
 export async function getSyncedSettingsAsync (account: AbcAccount) {
@@ -114,14 +190,17 @@ export async function getSyncedSettingsAsync (account: AbcAccount) {
   } catch (e) {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
-    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+    return SYNCED_ACCOUNT_DEFAULTS
   }
 }
 
 export const setSyncedSettings = (account: AbcAccount, settings: Object) => {
   const text = JSON.stringify(settings)
   const SettingsFile = getSyncedSettingsFile(account)
-  SettingsFile.setText(text)
+  const updatedSyncedSettings = SettingsFile.setText(text)
+    .then(() => SettingsFile.getText())
+    .then(JSON.parse)
+  return updatedSyncedSettings
 }
 
 export async function setSyncedSettingsAsync (account: AbcAccount, settings: Object) {
@@ -192,8 +271,9 @@ export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean,
 export const getSyncedSettingsFile = (account: AbcAccount) => {
   // $FlowFixMe folder not found on AbcAccount type
   const folder = account.folder
-//   console.log(folder)
-  return folder.file(SYNCHED_SETTINGS_FILENAME)
+//   console.error(folder)
+  const settingsFile = folder.file(SYNCED_SETTINGS_FILENAME)
+  return settingsFile
 }
 
 export const getLocalSettingsFile = (account: AbcAccount) =>
