@@ -294,7 +294,7 @@ export default class Main extends Component<Props, State> {
                             renderTitle={this.renderTitle(EXCHANGE)}
                             renderLeftButton={this.renderExchangeButton}
                             renderRightButton={this.renderMenuButton} />
-                          <Scene key={Constants.CHANGE_MINING_FEE_EXCHANGE}
+                          <Scene key={Constants.CHANGE_MINING_FEE_EXCHANGE} navTransparent={true}
                             component={ChangeMiningFeeExchange}
                             renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                             renderLeftButton={this.renderBackButton()}
