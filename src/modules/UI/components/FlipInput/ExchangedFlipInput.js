@@ -3,7 +3,7 @@
 import React, {Component} from 'react'
 import FlipInput, {type FlipInputFieldInfo} from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
-import intl from '../../../../locales/intl'
+import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 
 const DIVIDE_PRECISION = 18

@@ -1,3 +1,5 @@
+// @flow
+/* global Intl */
 import 'intl'
 
 const EN_US_LOCALE = {
@@ -5,27 +7,40 @@ const EN_US_LOCALE = {
   'decimalSeparator': '.',
   'quotationBeginDelimiterKey': '“',
   'quotationEndDelimiterKey': '”',
-  'currencySymbol': '$',
-  'currencyCode': 'USD',
   'groupingSeparator': ','
 }
 let locale = EN_US_LOCALE
+
+declare var Intl: any;
+
+type IntlLocaleType = any;
+type IntlNumberFormatOptionsType = {
+  toFixed?: number,
+  localeMatcher?: 'lookup' | 'best fit',
+  style?: 'decimal' | 'currency' | 'percent',
+  currency?: string,
+  currencyDisplay?: string,
+  useGrouping?: boolean,
+  minimumIntegerDigits?: number,
+  minimumFractionDigits?: number,
+  maximumFractionDigits?: number,
+  minimumSignificantDigits?: number,
+  maximumSignificantDigits?: number,
+};
 
 const intlHandler = {
   /**
    * Formats number input according to user locale
    * Allows decimalSeparator at the end of string
-   * @param number  - Native style (JS) number
+   * @param input {string} - Native style (JS) number
    * @param options
    * @returns {string}
    */
-  formatNumberInput (number, options) {
-    if (typeof number === 'string') {
-      if (number.slice(-1) === '.') {
-        return number.replace('.', locale.decimalSeparator)
-      }
+  formatNumberInput (input: string, options?: IntlNumberFormatOptionsType): string {
+    if (input.slice(-1) === '.') {
+      return input.replace('.', locale.decimalSeparator)
     }
-    return intlHandler.formatNumber(number, options)
+    return intlHandler.formatNumber(input, options)
   },
 
   /**
@@ -34,7 +49,7 @@ const intlHandler = {
    * @param options
    * @return {string}
    */
-  formatNumber (number, options) {
+  formatNumber (number: number | string, options?: IntlNumberFormatOptionsType): string {
     const _options = {}
     if (options && options.toFixed) {
       _options.minimumFractionDigits = options.toFixed
@@ -49,7 +64,7 @@ const intlHandler = {
    * @param value
    * @returns {boolean}
    */
-  isValidInput (value) {
+  isValidInput (value: string): boolean {
     const {decimalSeparator, groupingSeparator} = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
@@ -64,7 +79,7 @@ const intlHandler = {
    * Should change UTILS.formatNumberInput
    * @param input
    */
-  prettifyNumber (input) {
+  prettifyNumber (input: string): string {
     let out = input.replace(/^0+/, '')
     if (out.startsWith(locale.decimalSeparator)) {
       out = '0' + out
@@ -79,8 +94,8 @@ const intlHandler = {
    * @param allowBlank
    * @returns {string}
    */
-  truncateDecimals (input, precision, allowBlank = false) {
-    const {decimalSeparator, groupingSeparator} = locale
+  truncateDecimals (input: string, precision?: number, allowBlank?: boolean = false): string {
+    const {decimalSeparator} = locale
 
     if (input === '') {
       if (allowBlank) {
@@ -99,27 +114,24 @@ const intlHandler = {
    * Converts internationalized number to Native (JS) presentation
    * @param value
    * @param options
-   * @returns {boolean}
+   * @returns {string}
    */
-  formatToNativeNumber (value, options) {
+  formatToNativeNumber (value: string, options?: IntlNumberFormatOptionsType): string {
     const {decimalSeparator, groupingSeparator} = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
-
-    if (value === decimalSeparator) return true
     const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
 
     return standartized
   },
-
+  // $FlowFixMe: add after implementation
   formatDate (date, options) {
     throw new Error('Not implemented')
   }
 }
 
-export const setIntlLocale = (l) => {
+export const setIntlLocale = (l: IntlLocaleType) => {
   if (!locale) throw new Error('Please select locale for internationalization')
   locale = l
   return intlHandler
 }
-
-export default intlHandler
+export { intlHandler as intl }

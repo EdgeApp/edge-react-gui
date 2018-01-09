@@ -1,6 +1,6 @@
 /* globals describe test expect beforeEach */
-import intl, {setIntlLocale} from './intl'
-import * as UTILS from '../../src/modules/utils'
+import {intl, setIntlLocale} from './intl'
+import { truncateDecimals } from '../../src/modules/utils'
 
 const EN_US_LOCALE = {
   'localeIdentifier': 'en_US',
@@ -195,7 +195,7 @@ describe('Intl numbers', function () {
   })
 })
 
-describe('Integration with UTILS functionality', function () {
+describe('Integration with functionality', function () {
   describe('truncateDecimals', function () {
     beforeEach(function () {
       setIntlLocale(EN_US_LOCALE)
@@ -204,7 +204,7 @@ describe('Integration with UTILS functionality', function () {
       const input = '1'
       const precision = 0
       const expected = '1'
-      const actual = UTILS.truncateDecimals(input, precision)
+      const actual = truncateDecimals(input, precision)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
@@ -212,7 +212,7 @@ describe('Integration with UTILS functionality', function () {
       const input = '1'
       const precision = 8
       const expected = '1'
-      const actual = UTILS.truncateDecimals(input, precision)
+      const actual = truncateDecimals(input, precision)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
@@ -221,7 +221,7 @@ describe('Integration with UTILS functionality', function () {
       const input = '1.0'
       const precision = 1
       const expected = '1.0'
-      const actual = UTILS.truncateDecimals(input, precision)
+      const actual = truncateDecimals(input, precision)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
@@ -230,7 +230,7 @@ describe('Integration with UTILS functionality', function () {
       const input = '1.123456789'
       const precision = 1
       const expected = '1.1'
-      const actual = UTILS.truncateDecimals(input, precision)
+      const actual = truncateDecimals(input, precision)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
@@ -239,7 +239,7 @@ describe('Integration with UTILS functionality', function () {
       const input = '1.19'
       const precision = 1
       const expected = '1.1'
-      const actual = UTILS.truncateDecimals(input, precision)
+      const actual = truncateDecimals(input, precision)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
@@ -249,7 +249,7 @@ describe('Integration with UTILS functionality', function () {
       const precision = 1
       const expected = ''
       const allowBlank = true
-      const actual = UTILS.truncateDecimals(input, precision, allowBlank)
+      const actual = truncateDecimals(input, precision, allowBlank)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision, allowBlank)).toBe(expected)
     })
@@ -258,7 +258,7 @@ describe('Integration with UTILS functionality', function () {
       const precision = 1
       const expected = '0'
       const allowBlank = false
-      const actual = UTILS.truncateDecimals(input, precision, allowBlank)
+      const actual = truncateDecimals(input, precision, allowBlank)
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision, allowBlank)).toBe(expected)
     })

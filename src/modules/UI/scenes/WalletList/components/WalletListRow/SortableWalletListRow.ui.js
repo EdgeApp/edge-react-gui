@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import s from '../../../../../../locales/strings.js'
-import intl from '../../../../../../locales/intl'
+import {intl} from '../../../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   View,

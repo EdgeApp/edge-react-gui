@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 import s from '../../../../locales/strings.js'
-import intl from '../../../../locales/intl'
+import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   ActivityIndicator,

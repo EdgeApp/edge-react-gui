@@ -15,7 +15,7 @@ import * as UTILS from '../../../utils.js'
 import {bns} from 'biggystring'
 import type {GuiCurrencyInfo} from '../../../../types'
 import * as Constants from '../../../../constants/indexConstants'
-import intl from '../../../../locales/intl'
+import {intl} from '../../../../locales/intl'
 
 export type FlipInputFieldInfo = GuiCurrencyInfo & {
   nativeAmount?: string,
@@ -104,7 +104,7 @@ export default class FlipInput extends Component<Props, State> {
     if (!intl.isValidInput(primaryDisplayAmount)) {
       return
     }
-    const formattedPrimaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(primaryDisplayAmount)), 8)
+    const formattedPrimaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(primaryDisplayAmount), 8))
     this.setState({
       primaryDisplayAmount: formattedPrimaryDisplayAmount
     }, this.props.onPrimaryAmountChange(formattedPrimaryDisplayAmount))
@@ -114,7 +114,7 @@ export default class FlipInput extends Component<Props, State> {
     if (!intl.isValidInput(secondaryDisplayAmount)) {
       return
     }
-    const formattedSecondaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(secondaryDisplayAmount)), 8)
+    const formattedSecondaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(secondaryDisplayAmount), 8))
     this.setState({
       secondaryDisplayAmount: formattedSecondaryDisplayAmount
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
