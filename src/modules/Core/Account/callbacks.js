@@ -37,7 +37,6 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
     onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>) {
       if (transactions && transactions.length) {
         console.log(`${walletId} - onTransactionsChanged, num of tx's changed: ${transactions.length}`)
-        console.log('onNewTransactions length=' + transactions.length.toString())
         for (const tx of transactions) {
           console.log(`${walletId} - onTransactionsChanged with TXID: ${tx.txid}`)
         }

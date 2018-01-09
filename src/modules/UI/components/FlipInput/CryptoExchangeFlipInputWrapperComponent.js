@@ -59,7 +59,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
     } = this.props
 
     if (!this.props.uiWallet) {
-      const buttonText = this.props.whichWallet === Constants.TO ? s.strings.select_dest_wallet : s.strings.select_src_wallet
+      const buttonText = this.props.whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
       return <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
               <TextAndIconButton
