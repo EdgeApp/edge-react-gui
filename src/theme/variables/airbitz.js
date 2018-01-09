@@ -50,7 +50,7 @@ export default {
   },
   FONTS: {
     DEFAULT: 'SourceSansPro-Black',
-    SYMBOLS: 'SourceSansPro-Black'
+    SYMBOLS: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black'
   },
 
   OPACITY: {
