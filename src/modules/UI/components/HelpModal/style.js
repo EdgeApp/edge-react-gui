@@ -37,8 +37,8 @@ export default StyleSheet.create({
     flex: 1
   },
   modalFeaturedIcon: {
-    top: 12,
-    left: 12
+    top: 0,
+    left: 0
   },
   closeButtonWrap: {
     marginTop: 12,

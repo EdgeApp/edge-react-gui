@@ -179,8 +179,8 @@ export const styles = {
   },
   icon: {
     position: 'relative',
-    top: 12,
-    left: 13,
+    top: 0,
+    left: 1,
     height: 24,
     width: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
