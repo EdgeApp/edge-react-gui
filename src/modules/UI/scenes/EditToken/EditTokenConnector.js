@@ -18,7 +18,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   showDeleteTokenModal: () => dispatch(EDIT_TOKEN_ACTIONS.showDeleteTokenModal()),
   hideDeleteTokenModal: () => dispatch(EDIT_TOKEN_ACTIONS.hideDeleteTokenModal()),
   deleteCustomToken: (walletId: string, currencyCode: string) => dispatch(WALLET_ACTIONS.deleteCustomToken(walletId, currencyCode)),
-  editCustomToken: (walletId: string, tokenObj: any, currencyCode: string) => dispatch(WALLET_ACTIONS.editCustomToken(walletId, tokenObj, currencyCode))
+  editCustomToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) =>
+    dispatch(WALLET_ACTIONS.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, oldCurrencyCode))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditToken)
