@@ -26,126 +26,128 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
+
   // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
   dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
+
   CONTEXT_API.getCurrencyPlugins(context)
-    .then((currencyPlugins) => {
-      currencyPlugins.forEach((plugin) => {
-        plugin.currencyInfo.walletTypes.forEach((type) => {
-          currencyCodes[type] = plugin.currencyInfo.currencyCode
-        })
-        dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))
+  .then((currencyPlugins) => {
+    currencyPlugins.forEach((plugin) => {
+      plugin.currencyInfo.walletTypes.forEach((type) => {
+        currencyCodes[type] = plugin.currencyInfo.currencyCode
       })
+      dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))
+    })
 
-      dispatch(ACCOUNT_ACTIONS.addAccount(account))
-      dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-      // TODO: understand why this fails flow -paulvp
+    dispatch(ACCOUNT_ACTIONS.addAccount(account))
+    dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
+    // TODO: understand why this fails flow -paulvp
 
-      if (ACCOUNT_API.checkForExistingWallets(account)) {
-        const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
-        dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
-        dispatch(loadSettings())
-        // $FlowFixMe
-        dispatch(updateWalletsRequest())
-        return
-      }
-      dispatch(actions.createCurrencyWallet(
-        s.strings.string_first_ethereum_wallet_name,
-        Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
-        false, true
-      ))
-      dispatch(loadSettings())
+    if (ACCOUNT_API.checkForExistingWallets(account)) {
+      const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+      dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
+      loadSettings(dispatch, getState)
       // $FlowFixMe
       dispatch(updateWalletsRequest())
-    })
+      return
+    }
+    dispatch(actions.createCurrencyWallet(
+      s.strings.string_first_ethereum_wallet_name,
+      Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
+      false, true
+    ))
+    loadSettings(dispatch, getState)
+    // $FlowFixMe
+    dispatch(updateWalletsRequest())
+  })
 }
 
-const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
+const loadSettings = (dispatch: Dispatch, getState: GetState) => {
   const {account} = getState().core
 
   SETTINGS_API.getSyncedSettings(account)
-    .then((settings) => {
-      const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
-      const syncFinal = R.mergeDeepLeft(settings, syncDefaults)
-      // const syncFinal = {...syncDefaults, ...settings}
-      const customTokens = settings ? settings.customTokens : []
+  .then((settings) => {
+    const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
+    const syncFinal = R.mergeDeepLeft(settings, syncDefaults)
+    // const syncFinal = {...syncDefaults, ...settings}
+    const customTokens = settings ? settings.customTokens : []
 
-      if (!settings.DASH) {
-        syncFinal.DASH = syncDefaults.DASH
-      }
+    if (!settings.DASH) {
+      syncFinal.DASH = syncDefaults.DASH
+    }
 
-      // Add all the settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('LTC', syncFinal.LTC.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('DASH', syncFinal.DASH.denomination))
+    // Add all the settings to UI/Settings
+    dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
+    dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
+    dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
+    dispatch(SETTINGS_ACTIONS.setDenominationKey('LTC', syncFinal.LTC.denomination))
+    dispatch(SETTINGS_ACTIONS.setDenominationKey('DASH', syncFinal.DASH.denomination))
 
-      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
-      dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
-      dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
-      dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
+    dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
+    dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
+    dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
+    dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
 
-      const currencySettings = {
-        BTC: syncFinal.BTC.transactionSpendingLimit,
-        LTC: syncFinal.LTC.transactionSpendingLimit,
-        BCH: syncFinal.BCH.transactionSpendingLimit,
-        ETH: syncFinal.ETH.transactionSpendingLimit,
-        DASH: syncFinal.DASH.transactionSpendingLimit
-      }
+    const currencySettings = {
+      BTC: syncFinal.BTC.transactionSpendingLimit,
+      LTC: syncFinal.LTC.transactionSpendingLimit,
+      BCH: syncFinal.BCH.transactionSpendingLimit,
+      ETH: syncFinal.ETH.transactionSpendingLimit,
+      DASH: syncFinal.DASH.transactionSpendingLimit
+    }
 
-      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
-      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
-      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
-      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
-      dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
+    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
+    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
+    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
+    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
+    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
 
-      if (customTokens) {
-        customTokens.forEach((token) => {
-          dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
-          // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
-          dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
-        })
-      }
-    })
-    .catch((error) => {
-      console.error(error)
-    })
-    .then(() => {
-      SETTINGS_API.getLocalSettings(account)
-        .then((settings) => {
-          const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
+    if (customTokens) {
+      customTokens.forEach((token) => {
+        dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
+        // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
+        dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
+      })
+    }
+  })
+  .catch((error) => {
+    console.error(error)
+  })
+  .then(() => {
+    SETTINGS_API.getLocalSettings(account)
+      .then((settings) => {
+        const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
 
-          const localFinal = {...localDefaults, ...settings}
+        const localFinal = {...localDefaults, ...settings}
 
-          const currencySettings = {
-            BTC: localFinal.BTC.dailySpendingLimit,
-            LTC: localFinal.LTC.dailySpendingLimit,
-            BCH: localFinal.BCH.dailySpendingLimit,
-            ETH: localFinal.ETH.dailySpendingLimit,
-            DASH: localFinal.DASH.dailySpendingLimit
-          }
+        const currencySettings = {
+          BTC: localFinal.BTC.dailySpendingLimit,
+          LTC: localFinal.LTC.dailySpendingLimit,
+          BCH: localFinal.BCH.dailySpendingLimit,
+          ETH: localFinal.ETH.dailySpendingLimit,
+          DASH: localFinal.DASH.dailySpendingLimit
+        }
 
-          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
-          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
-          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
-          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
-          dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
+        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
+        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
+        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
+        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
+        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
 
-          // Add all the local settings to UI/Settings
-          dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
-        })
-    })
-    .then(() => {
-      SETTINGS_API.getCoreSettings(account)
-        .then((settings) => {
-          const coreDefaults = SETTINGS_API.CORE_DEFAULTS
+        // Add all the local settings to UI/Settings
+        dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
+      })
+  })
+  .then(() => {
+    SETTINGS_API.getCoreSettings(account)
+      .then((settings) => {
+        const coreDefaults = SETTINGS_API.CORE_DEFAULTS
 
-          const coreFinal = {...coreDefaults, ...settings}
-          dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
-          dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
-        })
-    })
+        const coreFinal = {...coreDefaults, ...settings}
+        dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
+        dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
+      })
+  })
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
