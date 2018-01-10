@@ -296,10 +296,12 @@ export default class TransactionList extends Component<Props, State> {
                               </View>
                               <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
                                 <View style={{flexDirection: 'row'}}>
-                                  {displayDenomination.symbol &&
-                                    <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                                      {displayDenomination.symbol}
-                                    </T>
+                                  {displayDenomination.symbol
+                                    ? (
+                                      <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                                        {displayDenomination.symbol + ' '}
+                                      </T>
+                                    ) : null
                                   }
 
                                     <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
@@ -308,7 +310,7 @@ export default class TransactionList extends Component<Props, State> {
 
                                   {!displayDenomination.symbol &&
                                     <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                                      {selectedCurrencyCode}
+                                      {' ' + selectedCurrencyCode}
                                     </T>
                                   }
                                 </View>
