@@ -3,6 +3,7 @@
 import React, {Component} from 'react'
 import {View} from 'react-native'
 // import {sprintf} from 'sprintf-js'
+import s from '../../../../../locales/strings.js'
 
 import StylizedModal from '../../../components/Modal/Modal.ui'
 import {Icon} from '../../../components/Icon/Icon.ui'
@@ -44,7 +45,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     return <View style={style.middle.container} >
       <FormField onChangeText={this.textChange}
         style={formStyle}
-        label={'confirm Password'}
+        label={s.strings.confirm_password_text}
         value={this.state.confimPassword}
         secureTextEntry
         returnKeyType={'done'}

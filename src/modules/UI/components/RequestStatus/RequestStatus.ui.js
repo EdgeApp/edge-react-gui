@@ -7,7 +7,6 @@ import s from '../../../../locales/strings.js'
 
 import styles from './styles'
 
-const WAITING_FOR_PAYMENT_TEXT = s.strings.request_qr_waiting_for_payment
 const REMAINING_TEXT = s.strings.bitcoin_remaining
 const RECEIVED_TEXT = s.strings.bitcoin_received
 
@@ -47,7 +46,7 @@ const RequestStatus = (props) => {
     const waitingForPayment =
       <View style={styles.view}>
         <Text style={styles.text}>
-          {WAITING_FOR_PAYMENT_TEXT}
+          {s.strings.request_qr_your_receiving_wallet_address}
         </Text>
 
         <T numberOfLines={1} ellipsizeMode='middle' style={[b(), styles.text]}>

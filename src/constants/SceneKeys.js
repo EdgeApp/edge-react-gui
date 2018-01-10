@@ -37,5 +37,9 @@ export const CURRENCY_SETTINGS = {
   'ltcSettings': {
     pluginName: 'litecoin',
     currencyCode: 'LTC'
+  },
+  'dashSettings': {
+    pluginName: 'dash',
+    currencyCode: 'DASH'
   }
 }
