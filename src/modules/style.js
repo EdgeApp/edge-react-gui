@@ -10,7 +10,7 @@ export const stylesRaw = {
   },
   titleStyle: {
     alignSelf: 'center',
-    fontSize: 24,
+    fontSize: 20,
     color: THEME.COLORS.WHITE,
     fontFamily: THEME.FONTS.DEFAULT
   },
