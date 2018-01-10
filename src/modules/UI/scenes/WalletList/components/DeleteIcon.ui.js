@@ -7,11 +7,6 @@ import THEME from '../../../../../theme/variables/airbitz.js'
 export default class DeleteIcon extends Component<{}> {
   render () {
     return <FAIcon name={Constants.TRASH_O} size={24} color={THEME.COLORS.PRIMARY} style={[{
-      position: 'relative',
-      top: 0,
-      left: 3,
-      height: 24,
-      width: 24,
       backgroundColor: THEME.COLORS.TRANSPARENT,
       zIndex: 1015,
       elevation: 1015

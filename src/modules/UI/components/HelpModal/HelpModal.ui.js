@@ -44,7 +44,7 @@ export default class HelpModal extends Component {
                         <Text style={styles.modalBottomText}>{s.strings.help_version} {versionNumber}</Text>
                         <Text style={styles.modalBottomText}>{s.strings.help_build} {buildNumber}</Text>
                     </View>}
-        featuredIcon={<Image source={helpImage} style={styles.modalFeaturedIcon} color={THEME.secondary} size={20} />}
+        featuredIcon={<Image source={helpImage} color={THEME.secondary} size={20} />}
       />
     )
   }
