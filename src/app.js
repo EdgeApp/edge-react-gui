@@ -11,7 +11,7 @@ import RNFS from 'react-native-fs'
 import {Platform} from 'react-native'
 // import {makeCoreContext} from './util/makeContext.js'
 import './util/polyfills'
-/* import BackgroundTask from 'react-native-background-task' */
+// import BackgroundTask from 'react-native-background-task'
 
 const store: {} = configureStore({})
 
