@@ -1,11 +1,8 @@
 // @flow
-import {
-  AbcAccount
-} from 'airbitz-core-types'
 
-import {
-  categories
-} from './subcategories.js'
+import {AbcAccount} from 'airbitz-core-types'
+
+import {categories} from './subcategories.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -95,6 +92,10 @@ const SYNCED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
 const CATEGORIES_FILENAME = 'Categories.json'
 
+export const SYNCED_SUBCATEGORIES_DEFAULTS = {
+  categories: categories
+}
+
 //  Settings
 // Core Settings
 export const setOTPModeRequest = (account: AbcAccount, otpMode: boolean) =>
@@ -177,7 +178,6 @@ export const getSyncedSettings = (account: AbcAccount) =>
   })
   .catch((e) => {
     console.log(e)
-    // If Settings.json doesn't exist yet, create it, and return it
     return SYNCED_ACCOUNT_DEFAULTS
   })
 
@@ -249,10 +249,10 @@ export const getSyncedSubcategoriesFile = (account: AbcAccount) =>
 export const getLocalSettings = (account: AbcAccount) =>
   getLocalSettingsFile(account).getText()
   .then(JSON.parse)
-  .catch(() =>
-    // If Settings.json doesn't exist yet, create it, and return it
-     setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
-    .then(() => LOCAL_ACCOUNT_DEFAULTS))
+  .catch((error) => {
+    console.log(error)
+    return LOCAL_ACCOUNT_DEFAULTS
+  })
 
 export const setLocalSettings = (account: AbcAccount, settings: Object) => {
   const text = JSON.stringify(settings)
@@ -262,9 +262,6 @@ export const setLocalSettings = (account: AbcAccount, settings: Object) => {
 
 export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean, pinMode: boolean}> => { // eslint-disable-line no-unused-vars
   const coreSettings: {otpMode: boolean, pinMode: boolean} = CORE_DEFAULTS
-  // TODO: Get each setting separately,
-  // build up settings object,
-  // return settings object
   return Promise.resolve(coreSettings)
 }
 
@@ -300,8 +297,4 @@ export const updateSettings = (currentSettings: Object, newSettings: Object) => 
     ...newSettings
   }
   return updatedSettings
-}
-
-export const SYNCED_SUBCATEGORIES_DEFAULTS = {
-  categories: categories
 }
