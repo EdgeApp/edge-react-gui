@@ -324,6 +324,42 @@ export const settings = (state = initialState, action) => {
       }
     }
 
+    case ACTION.LOAD_TRANSACTION_SPENDING_LIMITS: {
+      const {transactionSpendingLimits} = action.data
+      const currencyCodes = Object.keys(transactionSpendingLimits)
+      const newState = {...state}
+
+      currencyCodes.forEach((currencyCode) => {
+        newState[currencyCode] = {
+          ...state[currencyCode],
+          spendingLimits: {
+            ...state[currencyCode].spendingLimits,
+            transactionSpendingLimit: transactionSpendingLimits[currencyCode]
+          }
+        }
+      })
+
+      return newState
+    }
+
+    case ACTION.LOAD_DAILY_SPENDING_LIMITS: {
+      const {dailySpendingLimits} = action.data
+      const currencyCodes = Object.keys(dailySpendingLimits)
+      const newState = {...state}
+
+      currencyCodes.forEach((currencyCode) => {
+        newState[currencyCode] = {
+          ...state[currencyCode],
+          spendingLimits: {
+            ...state[currencyCode].spendingLimits,
+            dailySpendingLimit: dailySpendingLimits[currencyCode]
+          }
+        }
+      })
+
+      return newState
+    }
+
     case ACTION.UPDATE_TRANSACTION_SPENDING_LIMIT_SUCCESS: {
       const {currencyCode, nativeAmount, isEnabled} = action.data
       const currentCurrencySettings = state[currencyCode]

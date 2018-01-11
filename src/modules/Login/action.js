@@ -88,7 +88,7 @@ const loadSettings = (dispatch: Dispatch, getState: GetState) => {
     dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
     dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
 
-    const currencySettings = {
+    const transactionSpendingLimits = {
       BTC: syncFinal.BTC.transactionSpendingLimit,
       LTC: syncFinal.LTC.transactionSpendingLimit,
       BCH: syncFinal.BCH.transactionSpendingLimit,
@@ -96,11 +96,7 @@ const loadSettings = (dispatch: Dispatch, getState: GetState) => {
       DASH: syncFinal.DASH.transactionSpendingLimit
     }
 
-    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
-    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
-    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
-    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
-    dispatch(SETTINGS_ACTIONS.updateTransactionSpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
+    dispatch(SETTINGS_ACTIONS.loadTransactionSpendingLimits(transactionSpendingLimits))
 
     if (customTokens) {
       customTokens.forEach((token) => {
@@ -120,7 +116,7 @@ const loadSettings = (dispatch: Dispatch, getState: GetState) => {
 
         const localFinal = {...localDefaults, ...settings}
 
-        const currencySettings = {
+        const dailySpendinglimits = {
           BTC: localFinal.BTC.dailySpendingLimit,
           LTC: localFinal.LTC.dailySpendingLimit,
           BCH: localFinal.BCH.dailySpendingLimit,
@@ -128,11 +124,7 @@ const loadSettings = (dispatch: Dispatch, getState: GetState) => {
           DASH: localFinal.DASH.dailySpendingLimit
         }
 
-        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BTC', currencySettings.BTC.isEnabled, currencySettings.BTC.nativeAmount))
-        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('LTC', currencySettings.LTC.isEnabled, currencySettings.LTC.nativeAmount))
-        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('BCH', currencySettings.BCH.isEnabled, currencySettings.BCH.nativeAmount))
-        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('ETH', currencySettings.ETH.isEnabled, currencySettings.ETH.nativeAmount))
-        dispatch(SETTINGS_ACTIONS.updateDailySpendingLimitSuccess('DASH', currencySettings.DASH.isEnabled, currencySettings.DASH.nativeAmount))
+        dispatch(SETTINGS_ACTIONS.loadDailySpendingLimits(dailySpendinglimits))
 
         // Add all the local settings to UI/Settings
         dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))

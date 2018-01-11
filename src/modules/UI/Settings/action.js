@@ -45,9 +45,12 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 // tokens
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
 
+export const LOAD_TRANSACTION_SPENDING_LIMITS = PREFIX + 'LOAD_TRANSACTION_SPENDING_LIMITS'
 export const UPDATE_TRANSACTION_SPENDING_LIMIT_START = PREFIX + 'UPDATE_TRANSACTION_SPENDING_LIMIT_START'
 export const UPDATE_TRANSACTION_SPENDING_LIMIT_SUCCESS = PREFIX + 'UPDATE_TRANSACTION_SPENDING_LIMIT_SUCCESS'
 export const UPDATE_TRANSACTION_SPENDING_LIMIT_ERROR = PREFIX + 'UPDATE_TRANSACTION_SPENDING_LIMIT_ERROR'
+
+export const LOAD_DAILY_SPENDING_LIMITS = PREFIX + 'LOAD_DAILY_SPENDING_LIMITS'
 export const UPDATE_DAILY_SPENDING_LIMIT_START = PREFIX + 'UPDATE_DAILY_SPENDING_LIMIT_START'
 export const UPDATE_DAILY_SPENDING_LIMIT_SUCCESS = PREFIX + 'UPDATE_DAILY_SPENDING_LIMIT_SUCCESS'
 export const UPDATE_DAILY_SPENDING_LIMIT_ERROR = PREFIX + 'UPDATE_DAILY_SPENDING_LIMIT_ERROR'
@@ -174,6 +177,11 @@ export const updateTouchIdEnabled = (bool: boolean) => {
   }
 }
 
+export const loadTransactionSpendingLimits = (transactionSpendingLimits: {[currencyCode: string]: {isEnabled: boolean, nativeAmount: string}}) => ({
+  type: LOAD_TRANSACTION_SPENDING_LIMITS,
+  data: {transactionSpendingLimits}
+})
+
 export const updateTransactionSpendingLimitStart = (currencyCode: string, isEnabled: boolean, nativeAmount: string) => ({
   type: UPDATE_TRANSACTION_SPENDING_LIMIT_START,
   data: {
@@ -195,6 +203,11 @@ export const updateTransactionSpendingLimitSuccess = (currencyCode: string, isEn
 export const updateTransactionSpendingLimitError = (error: Error) => ({
   type: UPDATE_TRANSACTION_SPENDING_LIMIT_ERROR,
   data: {error}
+})
+
+export const loadDailySpendingLimits = (dailySpendingLimits: {[currencyCode: string]: {isEnabled: boolean, nativeAmount: string}}) => ({
+  type: LOAD_DAILY_SPENDING_LIMITS,
+  data: {dailySpendingLimits}
 })
 
 export const updateDailySpendingLimitStart = (currencyCode: string, isEnabled: boolean, nativeAmount: string) => ({
