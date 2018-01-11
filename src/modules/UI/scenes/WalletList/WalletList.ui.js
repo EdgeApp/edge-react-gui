@@ -241,7 +241,7 @@ export default class WalletList extends Component<Props, State> {
                   styles.walletsBoxHeaderAddWallet,
                   {width: 41}
                 ]}
-                  onPress={Actions.createWallet}>
+                  onPress={Actions.createWalletName}>
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>

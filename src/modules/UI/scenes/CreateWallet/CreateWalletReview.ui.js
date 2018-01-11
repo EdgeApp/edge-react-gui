@@ -30,7 +30,7 @@ export type Props = {
   supportedFiats: Array<GuiFiatType>
 }
 
-export default class CreateWallet extends Component<Props> {
+export class CreateWalletReviewComponent extends Component<Props> {
   onSubmit = (): void => {
     const { walletName, selectedWalletType, selectedFiat } = this.props
     this.props.createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value))

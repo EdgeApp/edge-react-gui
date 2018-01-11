@@ -31,7 +31,7 @@ export type State = {
   walletName: string
 }
 
-export default class CreateWallet extends Component<Props, State> {
+export class CreateWalletName extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {

@@ -1,7 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-import CreateWalletSelectCrypto from './CreateWalletSelectCrypto.ui.js'
+import {CreateWalletSelectCryptoComponent} from './CreateWalletSelectCrypto.ui.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import type {State, Dispatch} from '../../../ReduxTypes'
 import type {GuiWalletType, DeviceDimensions} from '../../../../types'
@@ -20,4 +20,4 @@ const mapStateToProps = (state: State): StateProps => ({
   dimensions: state.ui.scenes.dimensions
 })
 
-export default connect(mapStateToProps)(CreateWalletSelectCrypto)
+export const CreateWalletSelectCrypto = connect(mapStateToProps)(CreateWalletSelectCryptoComponent)

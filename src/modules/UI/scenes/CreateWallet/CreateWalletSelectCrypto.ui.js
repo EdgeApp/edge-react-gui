@@ -40,7 +40,7 @@ export type State = {
   searchTerm: string
 }
 
-export default class CreateWalletSelectCrypto extends Component<Props, State> {
+export class CreateWalletSelectCryptoComponent extends Component<Props, State> {
   constructor (props: Props & State) {
     super(props)
     this.state = {

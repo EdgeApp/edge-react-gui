@@ -1,7 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-import CreateWalletReview from './CreateWalletReview.ui'
+import {CreateWalletReviewComponent} from './CreateWalletReview.ui'
 import {createCurrencyWallet} from './action'
 import type {State, Dispatch} from '../../../ReduxTypes'
 import {getSupportedFiats} from '../../../utils.js'
@@ -27,4 +27,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string): any => dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateWalletReview)
+export const CreateWalletReview = connect(mapStateToProps, mapDispatchToProps)(CreateWalletReviewComponent)

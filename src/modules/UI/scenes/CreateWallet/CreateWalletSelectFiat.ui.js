@@ -51,7 +51,7 @@ export type State = {
   selectedFiat: string
 }
 
-export default class CreateWalletSelectFiat extends Component<Props, State> {
+export class CreateWalletSelectFiatComponent extends Component<Props, State> {
   constructor (props: Props & State) {
     super(props)
     this.state = {
