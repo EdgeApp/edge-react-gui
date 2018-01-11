@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {
@@ -6,110 +8,59 @@ import {
   View,
   Keyboard
 } from 'react-native'
-import {fixFiatCurrencyCode} from '../../../utils'
-import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
-import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
+import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 
-import styles from './styles.js'
+import styles from './style.js'
 import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 const WALLET_NAME_INPUT_PLACEHOLDER = s.strings.fragment_wallets_addwallet_name_hint
-const WALLET_TYPE_PICKER_PLACEHOLDER = 'Choose a wallet type'
-const FIAT_PICKER_PLACEHOLDER = s.strings.fragment_wallets_addwallet_fiat_hint
-
-const DONE_TEXT = s.strings.fragment_create_wallet_create_wallet
 const CANCEL_TEXT = s.strings.string_cancel_cap
+const WALLET_NAME_INVALID_TEXT = s.strings.create_wallet_invalid_name
+const WALLET_NAME_ENTER_VALID_TEXT = s.strings.create_wallet_enter_valid_name
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
+const NEXT_TEXT = s.strings.string_next_capitalized
 
-export default class CreateWallet extends Component {
-  constructor (props) {
+export type Props = {
+
+}
+
+export type State = {
+  walletName: string
+}
+
+export default class CreateWallet extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
-      supportedWalletTypes: props.supportedWalletTypes,
-      isCreatingWallet: false,
-      walletInfoValid: false,
-      walletName: '',
-      selectedWalletType: '',
-      selectedFiat: ''
+      walletName: ''
     }
   }
 
-  getSupportedFiats = () => {
-    const {supportedFiats} = this.props
-    return supportedFiats
-  }
-
-  isValidData = () => {
-    const isValidWalletName = !!this.isValidWalletName()
-    const isValidWalletType = !!this.isValidWalletType()
-    const isValidFiat = !!this.isValidFiat()
-
-    return (isValidWalletName && isValidWalletType && isValidFiat)
-  }
-
-  isValidWalletName = () => {
+  isValidWalletName = (): boolean => {
     const {walletName} = this.state
-    const isValid = walletName.length > 0
+    const isValid: boolean = walletName.length > 0
 
     return isValid
   }
 
-  isValidWalletType = () => {
-    const {supportedWalletTypes, selectedWalletType} = this.state
-    const isValid = supportedWalletTypes
-      .find((walletType) => walletType.value === selectedWalletType)
-
-    return isValid
-  }
-
-  isValidFiat = () => {
-    const supportedFiats = this.getSupportedFiats()
-    const {selectedFiat} = this.state
-
-    const isValid = supportedFiats
-      .find((fiat) => fiat.value === selectedFiat)
-
-    return isValid
-  }
-
-  onSubmit = () => {
-    if (!this.isValidData()) {
-      Alert.alert(INVALID_DATA_TEXT)
+  onNext = (): void => {
+    if (this.isValidWalletName()) {
+      Actions.createWalletSelectCrypto({walletName: this.state.walletName})
     } else {
-      this.setState({isCreatingWallet: true})
-      Keyboard.dismiss()
-      const {
-        walletName,
-        selectedWalletType,
-        selectedFiat
-      } = this.state
-      this.props.createCurrencyWallet(
-        walletName,
-        selectedWalletType,
-        fixFiatCurrencyCode(selectedFiat)
-      )
+      Alert.alert(WALLET_NAME_INVALID_TEXT, WALLET_NAME_ENTER_VALID_TEXT)
     }
   }
 
-  onCancel = () => {
+  onCancel = (): void => {
     Keyboard.dismiss()
     Actions.pop() // redirect to the list of wallets
   }
 
-  handleChangeWalletName = (walletName) => {
+  handleChangeWalletName = (walletName: string) => {
     this.setState({walletName})
-  }
-
-  handleSelectWalletType = ({value} = {value: ''}) => {
-    const selectedWalletType = this.props.supportedWalletTypes.find((type) => type.value === value)
-    this.setState({selectedWalletType: selectedWalletType.value})
-  }
-
-  handleSelectFiat = ({value}) => {
-    this.setState({selectedFiat: value})
   }
 
   render () {
@@ -120,59 +71,37 @@ export default class CreateWallet extends Component {
           <WalletNameInput
             onChangeText={this.handleChangeWalletName}
             value={this.state.walletName}
+            placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
           />
+         <View style={styles.buttons}>
+            <SecondaryButton
+              style={[styles.cancel]}
+              onPressFunction={this.onCancel}
+              text={CANCEL_TEXT} />
 
-          <DropdownPicker
-            keyboardShouldPersistTaps={'always'}
-            listItems={this.props.supportedWalletTypes || []}
-            placeholder={WALLET_TYPE_PICKER_PLACEHOLDER}
-            onSelect={this.handleSelectWalletType} />
-
-          <DropdownPicker
-            keyboardShouldPersistTaps={'always'}
-            listStyle={{maxHeight: 140}}
-            listItems={this.getSupportedFiats()}
-            placeholder={FIAT_PICKER_PLACEHOLDER}
-            onSelect={this.handleSelectFiat} />
-
-          <Buttons
-            style={styles.buttons}
-            isCreatingWallet={this.state.isCreatingWallet}
-            onDone={this.onSubmit}
-            onCancel={this.onCancel} />
-
+            <PrimaryButton
+              style={[styles.next]}
+              disabled={!this.state.walletName}
+              onPressFunction={this.onNext}
+              text={NEXT_TEXT}
+              processingElement={<ActivityIndicator />}
+            />
+          </View>
         </View>
       </View>
     )
   }
 }
 
-// //////////////////////////// Buttons ////////////////////////////////////////
-
-const Buttons = ({isCreatingWallet, onDone, onCancel}) => (
-    <View style={styles.buttons}>
-
-      <SecondaryButton
-        style={[styles.cancel]}
-        disabled={isCreatingWallet}
-        onPressFunction={onCancel}
-        text={CANCEL_TEXT} />
-
-      <PrimaryButton
-        style={[styles.submit]}
-        disabled={isCreatingWallet}
-        onPressFunction={onDone}
-        text={DONE_TEXT}
-        processingFlag={isCreatingWallet}
-        processingElement={<ActivityIndicator />}
-      />
-
-    </View>
-  )
-
 // //////////////////////////// WalletNameInput /////////////////////////////////
 
-class WalletNameInput extends Component {
+export type WalletNameInputProps = {
+  value: string,
+  placeholder: string,
+  onChangeText: Function
+}
+
+class WalletNameInput extends Component<WalletNameInputProps> {
   render () {
     return (
       <View style={styles.pickerView}>
