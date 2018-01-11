@@ -69,7 +69,7 @@ class AddToken extends Component<Props, State> {
                 style={[styles.currencyName]}
                 value={this.state.currencyName}
                 onChangeText={this.onChangeName}
-                autoCapitalize={'words'}
+                autoCapitalize='words'
                 autoFocus
                 label={s.strings.addtoken_name_input_text}
                 returnKeyType={'done'}
