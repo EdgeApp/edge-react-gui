@@ -180,7 +180,7 @@ class WalletNameInput extends Component {
           clearButtonMode={'while-editing'}
           autoCorrect={false}
           autoFocus
-          autoCapitalize="words"
+          autoCapitalize='words'
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           label={WALLET_NAME_INPUT_PLACEHOLDER}

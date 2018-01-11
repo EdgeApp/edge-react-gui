@@ -465,7 +465,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                     autoFocus
                     blurOnSubmit
                     onSubmitEditing={this.onBlurPayee}
-                    autoCapitalize="words"
+                    autoCapitalize='words'
                     autoCorrect={false}
                     onChangeText={this.onChangePayee}
                     style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
@@ -509,7 +509,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                     underlineColorAndroid={'transparent'}
                     autoFocus
                     blurOnSubmit
-                    autoCapitalize="words"
+                    autoCapitalize='words'
                     onBlur={this.onExitSubcategories}
                     onChangeText={this.onChangeSubcategory}
                     style={[styles.categoryInput, UTILS.inputBottomPadding()]}
