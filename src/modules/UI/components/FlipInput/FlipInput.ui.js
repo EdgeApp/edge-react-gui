@@ -114,7 +114,7 @@ export default class FlipInput extends Component<Props, State> {
     if (!intl.isValidInput(secondaryDisplayAmount)) {
       return
     }
-    const formattedSecondaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(secondaryDisplayAmount), 8))
+    const formattedSecondaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(secondaryDisplayAmount), 2))
     this.setState({
       secondaryDisplayAmount: formattedSecondaryDisplayAmount
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))

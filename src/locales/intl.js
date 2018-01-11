@@ -2,6 +2,7 @@
 /* global Intl */
 import 'intl'
 
+const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
   'localeIdentifier': 'en_US',
   'decimalSeparator': '.',
@@ -37,10 +38,19 @@ const intlHandler = {
    * @returns {string}
    */
   formatNumberInput (input: string, options?: IntlNumberFormatOptionsType): string {
+    const _options = {}
+
     if (input.slice(-1) === '.') {
       return input.replace('.', locale.decimalSeparator)
     }
-    return intlHandler.formatNumber(input, options)
+    if (input.includes(decimalSeparatorNative)) {
+      const decimalPart = input.split(decimalSeparatorNative)[1]
+      if (decimalPart) {
+        _options.toFixed = decimalPart.length
+      }
+    }
+    Object.assign(_options, options)
+    return intlHandler.formatNumber(input, _options)
   },
 
   /**

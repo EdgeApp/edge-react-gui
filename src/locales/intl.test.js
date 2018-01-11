@@ -277,6 +277,23 @@ describe('Integration with default numbers formatting', function () {
       expect(actual).toBe(expected)
     })
   })
+  describe('formatNumberInput en_US', function () {
+    beforeEach(function () {
+      setIntlLocale(EN_US_LOCALE)
+    })
+    test('Should save zero in decimal: 12.0 => 12.0', function () {
+      const input = '12.0'
+      const expected = '12.0'
+      const actual = intl.formatNumberInput(input)
+      expect(actual).toBe(expected)
+    })
+    test('12.0000 => 12.0000', function () {
+      const input = '12.0000'
+      const expected = '12.0000'
+      const actual = intl.formatNumberInput(input)
+      expect(actual).toBe(expected)
+    })
+  })
 
   describe('truncateDecimals should be idempotent', function () {
     beforeEach(function () {
