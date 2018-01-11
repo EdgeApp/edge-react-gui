@@ -26,7 +26,9 @@ export const mapStateToProps = (state: any) => {
     }
   ]
   return {
-    style: { ...Styles.MenuDropDownStyle, icon: {...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE} },
+    style: { ...Styles.MenuDropDownStyleHeader,
+      icon: {...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE}
+    },
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,
     rightSide: true

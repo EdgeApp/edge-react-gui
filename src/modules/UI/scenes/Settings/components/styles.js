@@ -60,11 +60,6 @@ export const styles = {
   },
   icon: {
     color: THEME.COLORS.PRIMARY,
-    position: 'relative',
-    top: 12,
-    left: 13,
-    height: 24,
-    width: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
     zIndex: 1015,
     elevation: 1015
