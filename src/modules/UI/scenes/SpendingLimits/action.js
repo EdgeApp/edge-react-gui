@@ -22,7 +22,6 @@ export const updateTransactionSpendingLimit = (currencyCode: string, isEnabled: 
 
   return SETTINGS_API.setTransactionSpendingLimitRequest(account, currencyCode, isEnabled, transactionSpendingLimit)
     .then((settings) => {
-      console.log(settings)
       dispatch(updateTransactionSpendingLimitSuccess(currencyCode, isEnabled, transactionSpendingLimit))
     })
     .catch((error) => {
@@ -38,7 +37,6 @@ export const updateDailySpendingLimit = (currencyCode: string, isEnabled: boolea
 
   return SETTINGS_API.setDailySpendingLimitRequest(account, currencyCode, isEnabled, dailySpendingLimit)
   .then((settings) => {
-    console.log(settings)
     dispatch(updateDailySpendingLimitSuccess(currencyCode, isEnabled, dailySpendingLimit))
   })
   .catch((error) => {
