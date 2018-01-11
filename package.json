@@ -75,7 +75,7 @@
     "react": "16.0.0-alpha.12",
     "react-native": "^0.47.0",
     "react-native-animatable": "^1.1.0",
-    "react-native-background-fetch": "^2.0.8",
+    "react-native-background-fetch": "git://github.com/Airbitz/react-native-background-fetch.git",
     "react-native-background-task": "^0.2.1",
     "react-native-blur": "^3.2.0",
     "react-native-camera": "^0.12.0",
