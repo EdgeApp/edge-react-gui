@@ -112,6 +112,7 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 
 const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
+global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
 
 const RouterWithRedux = connect()(Router)
 
