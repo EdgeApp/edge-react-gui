@@ -11,9 +11,10 @@ export const THREE_DOT_MENU = 'dots-three-vertical'
 export const FONT_AWESOME = 'fontAwesome'
 export const ADDRESS_BOOK_O = 'address-book-o'
 export const USER_O = 'user-o'
-export const TRASH_O = 'trash-o'
+export const DELETE = 'trash-o'
 export const RESYNC = 'refresh'
 export const SPLIT = 'code-fork'
+export const RENAME = 'edit'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'
