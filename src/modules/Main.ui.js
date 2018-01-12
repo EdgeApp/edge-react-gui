@@ -12,7 +12,7 @@ import s, { selectLocale } from '../locales/strings.js'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking} from 'react-native'
 import T from './UI/components/FormattedText'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
@@ -160,6 +160,7 @@ type Props = {
   setDeviceDimensions: (any) => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
+  urlRecived: (string) => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -208,6 +209,25 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        this.props.urlRecived(url)
+        // this.navigate(url);
+      })
+    } else {
+      Linking.addEventListener('url', this.handleOpenURL)
+    }
+  }
+  handleOpenURL = (event: Object) => {
+    // this.props.urlRecived(event.url)
+    const splitArray = event.url.split('recovery?token=')
+    if (splitArray.length === 2) {
+      // const state = getState()
+      /*
+      dispatch(actions.deepLinkLogout()) */
+      this.props.urlRecived(splitArray[1])
+    }
+    // if(event.)
   }
 
   render () {

@@ -16,6 +16,7 @@ type Props = {
   context: AbcContext,
   addUsernames: (Array<string>) => void,
   account: ?AbcAccount,
+  recoveryLogin: boolean,
   dispatch: Dispatch,
   username?: string
 }
@@ -53,6 +54,7 @@ export default class Login extends Component<Props, State> {
         username={this.props.username}
         accountOptions={{callbacks}}
         context={this.props.context}
+        recoveryLogin={this.props.recoveryLogin}
         onLogin={this.onLogin}
         fontDescription={{
           regularFontFamily: THEME.FONTS.DEFAULT

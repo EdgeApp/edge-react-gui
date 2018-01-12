@@ -4,6 +4,7 @@ import type {AbcContext} from 'airbitz-core-types'
 
 import type {Action} from '../../ReduxTypes'
 import * as ACTION from './action.js'
+import * as Constants from '../../../constants/indexConstants.js'
 
 const initialState = {
   context: {},
@@ -42,8 +43,8 @@ export const context = (state: State = initialState, action: Action) => {
         usernames
       }
     }
-
-    case 'LOGOUT': {
+    case Constants.DEEP_LINK_RECEIVED :
+    case Constants.LOGOUT: {
       const {username} = data
       return {
         ...state,

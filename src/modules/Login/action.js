@@ -19,8 +19,6 @@ import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import s from '../../locales/strings.js'
 import {updateWalletsRequest} from '../Core/Wallets/action.js'
 
-export const LOGOUT = 'LOGOUT'
-
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
@@ -107,17 +105,31 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(Constants.LOGIN, {username})
+  /* Actions.popTo(Constants.LOGIN, {username})
 
   const state = getState()
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
 
   const account = CORE_SELECTORS.getAccount(state)
   dispatch(logout(username))
-  ACCOUNT_API.logoutRequest(account)
+  ACCOUNT_API.logoutRequest(account) */
+  Actions.popTo(Constants.LOGIN, {username})
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  dispatch(logout(username))
+  account.logout()
+}
+export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const username = account.username
+  Actions.popTo(Constants.LOGIN, {username})
+  dispatch(actions.dispatchActionString(Constants.DEEP_LINK_RECEIVED, backupKey))
+  // dispatch(logout(Constants.DEEP_LINK_RECEIVED))
+  account.logout()
 }
 
 export const logout = (username?: string) => ({
-  type: LOGOUT,
+  type: Constants.LOGOUT,
   data: {username}
 })
