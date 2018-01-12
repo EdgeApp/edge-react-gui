@@ -6,9 +6,10 @@ import {View, TouchableHighlight} from 'react-native'
 import T from '../../../components/FormattedText/FormattedText.ui'
 import styles from '../style'
 import s from '../../../../../locales/strings.js'
+import {sprintf} from 'sprintf-js'
 
 const NEGATIVE_TEXT = s.strings.string_cancel_cap
-const POSITIVE_TEXT = s.strings.string_delete
+const POSITIVE_TEXT = s.strings.string_split
 
 type Props = {
   onPositive: (walletId: string) => void,
@@ -18,7 +19,7 @@ type Props = {
 }
 type State = {}
 
-export default class DeleteWalletButtons extends Component<Props, State> {
+export default class SplitWalletButtons extends Component<Props, State> {
   onNegative = () => {
     this.props.onNegative()
     this.props.onDone()

@@ -8,7 +8,7 @@ import styles from '../style'
 import s from '../../../../../locales/strings.js'
 
 const NEGATIVE_TEXT = s.strings.string_cancel_cap
-const POSITIVE_TEXT = s.strings.string_delete
+const POSITIVE_TEXT = s.strings.string_resync
 
 type Props = {
   onPositive: (walletId: string) => void,
@@ -17,8 +17,7 @@ type Props = {
   walletId: string
 }
 type State = {}
-
-export default class DeleteWalletButtons extends Component<Props, State> {
+export default class ResyncWalletButtons extends Component<Props, State> {
   onNegative = () => {
     this.props.onNegative()
     this.props.onDone()

@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import * as Constants from '../../../../../../constants/indexConstants'
 import s from '../../../../../../locales/strings.js'
@@ -14,21 +16,39 @@ export const options = [
     value: Constants.DELETE_VALUE,
     label: s.strings.string_delete
   }, {
-    value: Constants.MANAGE_TOKENS_VALUE,
-    label: s.strings.fragmet_wallets_managetokens_option
+    value: Constants.RESYNC_VALUE,
+    label: s.strings.string_resync
   }
 ]
 
-export default class WalletListRowOptions extends Component {
-  constructor (props) {
+type Props = {
+  walletKey: string,
+  executeWalletRowOption: (walletKey: string, option: string) => void
+}
+type State = {}
+export default class WalletListRowOptions extends Component<Props, State> {
+  options: Array<{value: string, label: string}>
+  constructor (props: Props) {
     super(props)
+    this.options = options
     this.state = {
       archiveSyntax: s.strings['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized']
     }
-    this.options = (this.props.currencyCode === 'ETH') ? options : options.slice(0, -1)
+    if (this.props.currencyCode === 'ETH') {
+      this.options = this.options.concat([{
+        value: Constants.MANAGE_TOKENS_VALUE,
+        label: s.strings.fragmet_wallets_managetokens_option
+      }])
+    }
+    if (this.props.currencyCode === 'BTC') {
+      this.options = this.options.concat([{
+        value: Constants.SPLIT_VALUE,
+        label: s.strings.string_split
+      }])
+    }
   }
 
-  optionAction = (optionKey) => {
+  optionAction = (optionKey: string) => {
     this.props.executeWalletRowOption(this.props.walletKey, optionKey)
   }
 

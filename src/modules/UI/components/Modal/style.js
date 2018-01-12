@@ -22,7 +22,7 @@ export const styles = {
   },
   visibleModal: {
     zIndex: 1,
-    paddingVertical: 6,
+    paddingBottom: 14,
     borderRadius: 3,
     backgroundColor: THEME.COLORS.WHITE,
     width: PLATFORM.deviceWidth * 3 / 4

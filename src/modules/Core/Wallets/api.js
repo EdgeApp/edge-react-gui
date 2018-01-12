@@ -129,6 +129,19 @@ export const saveTransaction = (wallet: AbcCurrencyWallet, signedTransaction: Ab
   return wallet.saveTx(signedTransaction)
 }
 
+export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
+  return wallet.resyncBlockchain()
+}
+
+export const splitWallet = (wallet: AbcCurrencyWallet, newWalletType: string): Promise<void> => {
+  // return wallet.splitWalletInfo(wallet.id, newWalletType)
+  return Promise.resolve()
+}
+
+export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): Promise<void> => {
+  return wallet.getDisplayPrivateSeed()
+}
+
 // Documented but not implemented in the core
 // Do not use for Glidera transactions
 // export const signBroadcastAndSaveTransaction = (wallet:any, unsignedTransaction:any) => {

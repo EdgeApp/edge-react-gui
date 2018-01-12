@@ -55,6 +55,7 @@ export const updateActiveWalletsOrderRequest = (
     return keyStates
   }, {})
   return account.changeWalletStates(newKeyStates)
+  .then(() => account.activeWalletIds)
 }
 
 export const updateArchivedWalletsOrderRequest = (
@@ -67,4 +68,5 @@ export const updateArchivedWalletsOrderRequest = (
   }, {})
 
   return account.changeWalletStates(newKeyStates)
+  .then(() => account.archivedWalletIds)
 }
