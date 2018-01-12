@@ -138,6 +138,10 @@ export const splitWallet = (wallet: AbcCurrencyWallet, newWalletType: string, wa
   return Promise.resolve()
 }
 
+export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): Promise<void> => {
+  return wallet.getDisplayPrivateSeed()
+}
+
 // Documented but not implemented in the core
 // Do not use for Glidera transactions
 // export const signBroadcastAndSaveTransaction = (wallet:any, unsignedTransaction:any) => {
