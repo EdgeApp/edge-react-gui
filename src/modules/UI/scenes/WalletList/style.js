@@ -73,8 +73,7 @@ export const styles = {
     flexDirection: 'row'
   },
   walletIcon: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   walletsBoxHeaderText: {
     fontSize: 18,

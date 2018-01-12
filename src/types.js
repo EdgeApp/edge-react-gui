@@ -96,9 +96,7 @@ export type CustomTokenInfo = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
-  decimalPlaces: string,
   multiplier: string,
-  decimalPlaces: string,
   denomination: string, // eventually change to mandatory
   isVisible?: boolean, // eventually change to mandatory,
   denominations: Array<AbcDenomination>

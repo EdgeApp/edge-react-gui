@@ -27,7 +27,7 @@ export type DispatchProps = {
   showDeleteTokenModal: () => void,
   hideDeleteTokenModal: () => void,
   deleteCustomToken: (string, string) => void,
-  editCustomToken: (string, CustomTokenInfo, string) => void
+  editCustomToken: (string, string, string, string, string, string) => void
 }
 
 type State = {
@@ -58,7 +58,8 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
     const tokenInfoIndex = _.findIndex(props.customTokens, (item) => item.currencyCode === props.currencyCode)
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
-      const { currencyName, contractAddress, decimalPlaces } = tokenInfo
+      const { currencyName, contractAddress, denomination } = tokenInfo
+      const decimalPlaces = UTILS.denominationToDecimalPlaces(denomination)
       this.state = {
         currencyName,
         contractAddress,
@@ -164,7 +165,8 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
   }
 
   deleteToken = () => {
-    this.props.deleteCustomToken(this.props.walletId, this.props.currencyCode)
+    const {walletId, currencyCode} = this.props
+    this.props.deleteCustomToken(walletId, currencyCode)
   }
 
   onChangeName = (input: string) => {
@@ -202,47 +204,21 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
         if (indexInVisibleTokens >= 0) { // if the new currency code is already taken / visible
           Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
         } else { // not in the array of visible tokens, CASE 3
-          const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
-          const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-          tokenObj = this.state
-          if (multiplier) {
-            tokenObj = {
-              ...this.state,
-              multiplier,
-              denomination: multiplier,
-              denominations: [
-                {
-                  name: currencyCode,
-                  multiplier,
-                  symbol: ''
-                }
-              ]
-            }
-            this.props.editCustomToken(walletId, tokenObj, this.props.currencyCode)
+          if (parseInt(decimalPlaces) !== 'NaN') {
+            const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
+            this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
           } else {
-            Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
+            Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
           }
         }
       } else {
         const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
         const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-        tokenObj = this.state
-        if (multiplier) {
-          tokenObj = {
-            ...this.state,
-            multiplier,
-            denomination: multiplier,
-            denominations: [
-              {
-                name: currencyCode,
-                multiplier,
-                symbol: ''
-              }
-            ]
-          }
-          this.props.editCustomToken(walletId, tokenObj, this.props.currencyCode)
+        if (parseInt(decimalPlaces) !== 'NaN') {
+          const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
+          this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
         } else {
-          Alert.alert(s.strings.edittoken_delete_title, s.strings.addtoken_default_error_message)
+          Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_invalid_decimal_places)
         }
       }
     } else {

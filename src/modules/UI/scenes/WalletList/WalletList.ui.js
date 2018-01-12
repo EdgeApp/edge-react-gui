@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Animated,
-  FlatList
+  FlatList,
+  Image
 } from 'react-native'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
 import OptionSubtext from '../../components/OptionSubtext/OptionSubtextConnector.js'
@@ -32,6 +32,7 @@ import WalletNameInput from './components/WalletNameInputConnector'
 import RenameWalletButtons from './components/RenameWalletButtonsConnector'
 import ResyncWalletButtons from './components/ResyncWalletButtonsConnector'
 import SplitWalletButtons from './components/SplitWalletButtonsConnector'
+import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import platform from '../../../../theme/variables/platform.js'
 
 import type {GuiContact} from '../../../../types'
@@ -178,7 +179,7 @@ export default class WalletList extends Component<Props, State> {
 
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
+                <Image source={WalletIcon} style={[styles.walletIcon]} />
                 <T style={styles.walletsBoxHeaderText}>
                   {WALLETS_HEADER_TEXT}
                 </T>
