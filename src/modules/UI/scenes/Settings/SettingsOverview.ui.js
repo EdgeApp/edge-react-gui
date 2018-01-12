@@ -119,7 +119,7 @@ export default class SettingsOverview extends Component<Props, State> {
     Actions[Constants.CHANGE_PIN]()
   }
   _onPressRecoverPasswordRouting = () => {
-    // if (this.props.isLocked) return
+    if (this.props.isLocked) return
     Actions[Constants.RECOVER_PASSWORD]()
   }
 
