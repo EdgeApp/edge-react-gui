@@ -13,6 +13,7 @@ export const ADDRESS_BOOK_O = 'address-book-o'
 export const USER_O = 'user-o'
 export const TRASH_O = 'trash-o'
 export const RESYNC = 'refresh'
+export const SPLIT = 'code-fork'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'
