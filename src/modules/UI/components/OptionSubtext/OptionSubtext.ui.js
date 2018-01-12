@@ -17,7 +17,7 @@ export default class OptionSubtext extends Component<Props, State> {
   render () {
     const nameOrThisWallet = this.props.walletName || s.strings.fragment_wallets_this_wallet
 
-    return <View style={{flexDirection: 'row'}}>
+    return <View style={{alignItems: 'center'}}>
       <T style={styles.subHeaderSyntax}>{this.props.confirmationText}</T>
       <T style={{fontWeight: 'bold'}}>{nameOrThisWallet}?</T>
     </View>
