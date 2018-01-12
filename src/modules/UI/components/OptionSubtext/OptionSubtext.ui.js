@@ -18,7 +18,7 @@ export default class OptionSubtext extends Component<Props, State> {
     const THIS_WALLET_TEXT = sprintf(s.strings.fragment_wallets_this_wallet)
 
     return (
-      <T style={styles}>
+      <T style={styles.subHeaderSyntax}>
         {WALLET_CONFIRMATION_TEXT}
         {(this.props.currentWallet)
           ? <T style={{fontWeight: 'bold'}}>
