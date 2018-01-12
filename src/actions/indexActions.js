@@ -8,7 +8,6 @@ export * from '../modules/UI/scenes/Scan/action.js'
 export * from '../modules/UI/components/ABAlert/action.js'
 export * from '../modules/UI/Settings/action.js'
 
-
 export function dispatchAction (type: string) {
   return {
     type

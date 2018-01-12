@@ -13,11 +13,11 @@ const OtpSettingsScreenStyles = {
     height: THEME.HEADER
   },
   body: {
-    padding: 18,
+    padding: 18
   },
   hero: {
-    container :{
-      width:'100%',
+    container: {
+      width: '100%',
       height: 120,
       alignItems: 'center',
       backgroundColor: THEME.COLORS.TRANSPARENT
@@ -39,18 +39,18 @@ const OtpSettingsScreenStyles = {
     height: 10
   },
   middle: {
-    width:'100%',
+    width: '100%',
     minHeight: 200
   },
   middleText: {
-    width:'100%',
+    width: '100%',
     fontSize: 18,
     textAlign: 'center',
     fontFamily: THEME.FONTS.DEFAULT,
     color: THEME.COLORS.GRAY_2
   },
   keyText: {
-    width:'100%',
+    width: '100%',
     fontSize: 18,
     textAlign: 'center',
     fontFamily: THEME.FONTS.DEFAULT,

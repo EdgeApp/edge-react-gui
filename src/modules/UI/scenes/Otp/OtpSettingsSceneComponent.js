@@ -22,12 +22,12 @@ type State = {
   showConfirmationModal: boolean
 }
 
-export default class OtpSettingsSceneComponent extends Component<Props,State> {
+export default class OtpSettingsSceneComponent extends Component<Props, State> {
   componentWillMount () {
     this.setState({
       showMessageModal: false,
       messageModalMessage: '',
-      showConfirmationModal: false,
+      showConfirmationModal: false
     })
   }
   cancelStatic = () => {
@@ -38,7 +38,7 @@ export default class OtpSettingsSceneComponent extends Component<Props,State> {
   }
   cancelConfirmModal = () => {
     this.setState({
-      showConfirmationModal: false,
+      showConfirmationModal: false
     })
   }
   onPress = () => {
@@ -50,7 +50,7 @@ export default class OtpSettingsSceneComponent extends Component<Props,State> {
     }
     this.setState({
       showMessageModal: true,
-      messageModalMessage: s.strings.otp_enabled_modal_part_one+''+s.strings.otp_enabled_modal_part_two
+      messageModalMessage: s.strings.otp_enabled_modal_part_one + '' + s.strings.otp_enabled_modal_part_two
     })
     this.props.enableOtp()
   }
@@ -63,7 +63,6 @@ export default class OtpSettingsSceneComponent extends Component<Props,State> {
     })
     this.props.disableOtp()
   }
-
 
   renderButton = () => {
     if (this.props.isOtpEnabled) {

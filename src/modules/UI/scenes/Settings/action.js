@@ -130,19 +130,6 @@ export const updateTouchIdEnabled = (arg: boolean, account: AbcAccount) => async
   }
 }
 
-//export const enable
-
-// Simple Actions
-/* const setOTPModeStart = (otpMode: boolean) => ({
-  type: SET_OTP_MODE_START,
-  data: {otpMode}
-})
-
-const setOTPStart = (otp: string) => ({
-  type: SET_OTP_START,
-  data: {otp}
-})
- */
 const setPINModeStart = (pinMode: boolean) => ({
   type: SET_PIN_MODE_START,
   data: {pinMode}

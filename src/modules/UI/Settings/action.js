@@ -162,7 +162,7 @@ export const updateTouchIdEnabled = (bool) => {
   }
 }
 
-export const updateOtpInfo = (otpInfo) => { //{enabled}
+export const updateOtpInfo = (otpInfo) => { // {enabled}
   return {
     type: OTP_SETTINGS,
     data: otpInfo

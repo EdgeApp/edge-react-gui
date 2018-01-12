@@ -1,5 +1,4 @@
 // @flow
-
 import React, {Component} from 'react'
 import {View, Text} from 'react-native'
 // import {sprintf} from 'sprintf-js'
@@ -26,7 +25,6 @@ type Props = {
 type State = {
 }
 class TwoButtonTextModalComponent extends Component<Props, State> {
-
   onDone = () => {
     this.props.onDone()
   }

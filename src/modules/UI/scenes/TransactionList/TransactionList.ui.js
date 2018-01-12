@@ -217,8 +217,6 @@ export default class TransactionList extends Component<Props, State> {
       return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
     }
 
-    // console.log('about to render txList, this is: ', this)
-    let cryptoBalanceString
     const renderableTransactionList = transactions.sort(function (a: any, b: any) {
       a = new Date(a.date)
       b = new Date(b.date)
@@ -256,11 +254,6 @@ export default class TransactionList extends Component<Props, State> {
     const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
     const cryptoAmountString = cryptoAmount ? UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
 
-    if (displayDenomination.symbol) {
-      cryptoBalanceString = displayDenomination.symbol + ' ' + cryptoAmountString
-    } else {
-      cryptoBalanceString = cryptoAmountString + ' ' + selectedCurrencyCode
-    }
     // beginning of fiat balance
     let fiatBalanceString
     const receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
@@ -302,9 +295,24 @@ export default class TransactionList extends Component<Props, State> {
                                 }
                               </View>
                               <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
-                                <T numberOfLines={1} style={[styles.currentBalanceBoxBits, UTILS.border()]}>
-                                  {cryptoBalanceString}
-                                </T>
+                                <View style={{flexDirection: 'row'}}>
+                                  {displayDenomination.symbol &&
+                                    <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                                      {displayDenomination.symbol}
+                                    </T>
+                                  }
+
+                                    <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                                    {cryptoAmountString}
+                                    </T>
+
+                                  {!displayDenomination.symbol &&
+                                    <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                                      {selectedCurrencyCode}
+                                    </T>
+                                  }
+                                </View>
+
                               </View>
                               <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
                                 <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>

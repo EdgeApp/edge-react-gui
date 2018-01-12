@@ -7,16 +7,20 @@ const ExpandableBoxStyle = {
     width: '100%',
     flexDirection: 'column'
   },
-  textIconButton: {...Styles.TextAndIconButtonStyle,
-    text: {...Styles.TextAndIconButtonStyle.text,
+  textIconButton: {
+    ...Styles.TextAndIconButtonStyle,
+    text: {
+      ...Styles.TextAndIconButtonStyle.text,
       fontSize: 14,
       color: THEME.COLORS.SECONDARY
     },
-    textPressed: {...Styles.TextAndIconButtonStyle.text,
+    textPressed: {
+      ...Styles.TextAndIconButtonStyle.text,
       fontSize: 14,
       color: THEME.COLORS.SECONDARY
     },
-    icon: {...Styles.TextAndIconButtonStyle.icon,
+    icon: {
+      ...Styles.TextAndIconButtonStyle.icon,
       color: THEME.COLORS.SECONDARY
     }
   },
@@ -26,10 +30,10 @@ const ExpandableBoxStyle = {
     backgroundColor: THEME.COLORS.GRAY_3,
     height: THEME.BUTTONS.HEIGHT
   },
-  shim: {height: 5, backgroundColor: THEME.COLORS.TRANSPARENT },
+  shim: { height: 5, backgroundColor: THEME.COLORS.TRANSPARENT },
   bottom: {
     width: '100%',
-    flexDirection: 'column',
+    flexDirection: 'column'
   },
   bottomInfo: {
     width: '100%',
@@ -38,14 +42,14 @@ const ExpandableBoxStyle = {
     borderRightWidth: 1,
     borderBottomWidth: 1,
     padding: 5,
-    borderColor: THEME.COLORS.GRAY_3,
+    borderColor: THEME.COLORS.GRAY_3
   },
   bottomInner: {
     width: '100%',
     height: 20,
     flexDirection: 'column',
     padding: 5
-  },
+  }
 }
 
 export { ExpandableBoxStyle }

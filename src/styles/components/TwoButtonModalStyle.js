@@ -3,35 +3,35 @@ import THEME from '../../theme/variables/airbitz'
 const TwoButtonModalStyle = {
   middle: {
     container: {
-      width:'100%',
+      width: '100%'
     },
     top: {
       flex: 4,
-      flexDirection : 'row',
+      flexDirection: 'row'
     },
-    topRight:{
+    topRight: {
       flex: 8
     },
-    topLeft:{
+    topLeft: {
       flex: 2,
       flexDirection: 'column',
       alignItems: 'center'
     },
-    shim:{
+    shim: {
       height: 10,
       backgroundColor: THEME.COLORS.WHITE
     },
     bottom: {
       flex: 4,
-      flexDirection : 'row',
+      flexDirection: 'row'
     },
-    bottomRight:{
+    bottomRight: {
       flex: 8
     },
-    bottomLeft:{
+    bottomLeft: {
       flex: 2,
       flexDirection: 'column',
-      alignItems: 'center',
+      alignItems: 'center'
     },
     text: {
       color: THEME.COLORS.GRAY_1,
@@ -40,12 +40,12 @@ const TwoButtonModalStyle = {
     }
   },
   bottom: {
-    width:'100%',
+    width: '100%'
   },
   icon: {
     color: THEME.COLORS.SECONDARY,
-    position:'relative',
-    alignItems:'center',
+    position: 'relative',
+    alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
@@ -53,4 +53,4 @@ const TwoButtonModalStyle = {
   iconSize: 48
 }
 
-export {TwoButtonModalStyle}
+export { TwoButtonModalStyle }
