@@ -170,7 +170,7 @@ export const deleteWallet = (walletId) => (dispatch, getState) => {
   ACCOUNT_API.deleteWalletRequest(account, walletId)
     .then(() => {
       dispatch(wrap(DELETE_WALLET_SUCCESS, {walletId}))
-      dispatch(closeDeleteWalletModal())
+      dispatch({type: CLOSE_DELETE_WALLET_MODAL})
     })
     .catch((e) => console.log(e))
 }
@@ -207,22 +207,6 @@ export const updateArchivedWalletsOrder = (archivedWalletIds) => (dispatch, getS
 }
 
 const wrap = (type, data) => ({ type, data })
-
-export const closeResyncWalletModal = () => ({
-  type: CLOSE_RESYNC_WALLET_MODAL
-})
-
-export const closeSplitWalletModal = () => ({
-  type: CLOSE_SPLIT_WALLET_MODAL
-})
-
-export const closeDeleteWalletModal = () => ({
-  type: CLOSE_DELETE_WALLET_MODAL
-})
-
-export const closeRenameWalletModal = () => ({
-  type: CLOSE_RENAME_WALLET_MODAL
-})
 
 export const updateRenameWalletInput = (renameWalletInput) => ({
   type: UPDATE_RENAME_WALLET_INPUT,

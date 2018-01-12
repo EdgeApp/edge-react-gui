@@ -2,7 +2,7 @@
 import {connect} from 'react-redux'
 import ResyncWalletButtons from './ResyncWalletButtons.ui'
 import type {State, Dispatch} from '../../../../ReduxTypes'
-import {closeResyncWalletModal, resyncWallet} from '../action'
+import {CLOSE_RESYNC_WALLET_MODAL, resyncWallet} from '../action'
 
 export type StateToProps = {
   walletId: string
@@ -20,7 +20,7 @@ const mapStateToProps = (state: State): StateToProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onNegative: () => {},
   onPositive: (walletId) => dispatch(resyncWallet(walletId)),
-  onDone: () => dispatch(closeResyncWalletModal())
+  onDone: () => dispatch({ type: CLOSE_RESYNC_WALLET_MODAL })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResyncWalletButtons)
