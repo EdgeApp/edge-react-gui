@@ -162,7 +162,26 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   }
 }
 
-export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode: string) => {
+export const assembleCustomToken = (currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
+  // create modified object structure to match metaTokens
+  const newTokenObj: CustomTokenInfo = {
+    currencyName,
+    currencyCode,
+    contractAddress,
+    denomination,
+    multiplier: denomination,
+    denominations: [{
+      name: currencyCode,
+      multiplier: denomination,
+      symbol: ''
+    }],
+    isVisible: true
+  }
+
+  return newTokenObj
+}
+
+export const editCustomToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) => {
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch(editCustomTokenStart())
     const state = getState()
@@ -170,10 +189,11 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
     const customTokens = settings.customTokens
     const guiWallet = UI_SELECTORS.getWallet(state, walletId)
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
-    const indexInAllTokens = _.findIndex(allTokens, (token) => token.currencyCode === tokenObj.currencyCode)
+    const indexInAllTokens = _.findIndex(allTokens, (token) => token.currencyCode === currencyCode)
+    const tokenObj = assembleCustomToken(currencyName, currencyCode, denomination, contractAddress)
     if (indexInAllTokens >= 0) { // currently exists in some form
-      if (tokenObj.currencyCode === oldCurrencyCode) { // just updating same token, CASE 1
-        addTokenAsync(walletId, tokenObj, state)
+      if (currencyCode === oldCurrencyCode) { // just updating same token, CASE 1
+        addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
         .then(() => {
           dispatch(updateExistingTokenSuccess(tokenObj))
           Actions.pop()
@@ -183,7 +203,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
           dispatch(editCustomTokenFailure())
         })
       } else { // replacing an existing but invisible token CASE 3
-        addTokenAsync(walletId, tokenObj, state) // update the receiving token
+        addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state) // update the receiving token
         .then(() => {
           deleteCustomTokenAsync(walletId, oldCurrencyCode, getState) // delete the sending token
           .then((coreWalletsToUpdate) => {
@@ -197,7 +217,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
         })
       }
     } else { // does not yet exist. Create the new one then delete the old one, CASE 4
-      addTokenAsync(walletId, tokenObj, state)
+      addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
       .then((addedTokenData) => {
         deleteCustomTokenAsync(walletId, oldCurrencyCode, getState)
         .then((coreWalletsToUpdate) => {

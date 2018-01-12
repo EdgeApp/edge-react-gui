@@ -21,6 +21,8 @@ export const deleteCustomTokenProcessing = (state = false, action) => {
       return true
     case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_SUCCESS :
       return false
+    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_FAILURE :
+      return false
     default:
       return state
   }
