@@ -1,14 +1,23 @@
+// @flow
+
 import React, {Component} from 'react'
 import {View, TouchableHighlight} from 'react-native'
+
 import T from '../../../components/FormattedText/FormattedText.ui'
 import styles from '../style'
 import s from '../../../../../locales/strings.js'
-import {sprintf} from 'sprintf-js'
 
-const NEGATIVE_TEXT = sprintf(s.strings.string_cancel_cap)
-const POSITIVE_TEXT = sprintf(s.strings.string_resync)
+const NEGATIVE_TEXT = s.strings.string_cancel_cap
+const POSITIVE_TEXT = s.strings.string_resync
 
-export default class ResyncWalletButtons extends Component {
+type Props = {
+  onPositive: (walletId: string) => void,
+  onNegative: () => void,
+  onDone: () => void,
+  walletId: string
+}
+type State = {}
+export default class ResyncWalletButtons extends Component<Props, State> {
   onNegative = () => {
     this.props.onNegative()
     this.props.onDone()

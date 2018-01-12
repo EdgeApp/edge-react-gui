@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import * as Constants from '../../../../../../constants/indexConstants'
 import s from '../../../../../../locales/strings.js'
@@ -19,8 +21,14 @@ export const options = [
   }
 ]
 
-export default class WalletListRowOptions extends Component {
-  constructor (props) {
+type Props = {
+  walletKey: string,
+  executeWalletRowOption: (walletKey: string, option: string) => void
+}
+type State = {}
+export default class WalletListRowOptions extends Component<Props, State> {
+  options: Array<{value: string, label: string}>
+  constructor (props: Props) {
     super(props)
     this.options = options
     this.state = {
@@ -40,7 +48,7 @@ export default class WalletListRowOptions extends Component {
     }
   }
 
-  optionAction = (optionKey) => {
+  optionAction = (optionKey: string) => {
     this.props.executeWalletRowOption(this.props.walletKey, optionKey)
   }
 

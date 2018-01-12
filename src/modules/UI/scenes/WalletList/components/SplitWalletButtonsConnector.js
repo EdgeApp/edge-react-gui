@@ -1,10 +1,12 @@
 // @flow
+
 import {connect} from 'react-redux'
+
 import SplitWalletButtons from './SplitWalletButtons.ui'
 import type {State, Dispatch} from '../../../../ReduxTypes'
 import {CLOSE_SPLIT_WALLET_MODAL, splitWallet} from '../action'
 
-export type StateToProps = {
+export type StateProps = {
   walletId: string
 }
 
@@ -14,7 +16,7 @@ export type DispatchProps = {
   onDone: () => any
 }
 
-const mapStateToProps = (state: State): StateToProps => ({
+const mapStateToProps = (state: State): StateProps => ({
   walletId: state.ui.scenes.walletList.walletId
 })
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({

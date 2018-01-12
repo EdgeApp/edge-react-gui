@@ -54,10 +54,10 @@ const deleteWalletModalVisible = (state: boolean = false, action: Action) => {
 
 const walletArchivesVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
-    case ACTION.OPEN_WALLET_ARCHIVES:
-      return true
-    case ACTION.CLOSE_WALLET_ARCHIVES:
-      return false
+    // case ACTION.OPEN_WALLET_ARCHIVES:
+    //   return true
+    // case ACTION.CLOSE_WALLET_ARCHIVES:
+    //   return false
     default:
       return state
   }
@@ -105,7 +105,6 @@ const renameWalletInput = (state: string = '', action: Action) => {
       }
       return ''
     case ACTION.CLOSE_RENAME_WALLET_MODAL:
-    case ACTION.RENAME_WALLET:
       return ''
     default:
       return state

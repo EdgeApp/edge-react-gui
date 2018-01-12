@@ -1,7 +1,12 @@
+// @flow
+
+import {Actions} from 'react-native-router-flux'
+
+import type {Dispatch, GetState} from '../../../ReduxTypes'
+
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as UI_ACTIONS from '../../Wallets/action.js'
-import {Actions} from 'react-native-router-flux'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_SELECTORS from '../../selectors.js'
@@ -47,14 +52,14 @@ export const DELETE_WALLET_SUCCESS = 'DELETE_WALLET_SUCCESS'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 
-export const walletRowOption = (walletId, option, archived) => {
+export const walletRowOption = (walletId: string, option: string, archived: boolean) => {
   if (option === 'archive' && archived) {
     option = 'activate'
   }
   switch (option) {
     case 'restore':
     case 'activate':
-      return (dispatch, getState) => {
+      return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
@@ -68,7 +73,7 @@ export const walletRowOption = (walletId, option, archived) => {
       }
 
     case 'archive':
-      return (dispatch, getState) => {
+      return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const account = CORE_SELECTORS.getAccount(state)
 
@@ -82,18 +87,18 @@ export const walletRowOption = (walletId, option, archived) => {
       }
 
     case 'manageTokens':
-      return (dispatch, getState) => {
+      return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = WALLET_SELECTORS.getWallet(state, walletId)
         Actions.manageTokens({guiWallet: wallet})
       }
     case 'delete':
-      return (dispatch) => {
+      return (dispatch: Dispatch) => {
         dispatch(wrap(OPEN_DELETE_WALLET_MODAL, {walletId}))
       }
 
     case 'rename':
-      return (dispatch, getState) => {
+      return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const walletName = CORE_SELECTORS.getWallet(state, walletId).name
 
@@ -101,23 +106,23 @@ export const walletRowOption = (walletId, option, archived) => {
       }
 
     case 'resync':
-      return (dispatch) => {
+      return (dispatch: Dispatch) => {
         dispatch(wrap(OPEN_RESYNC_WALLET_MODAL, {walletId}))
       }
 
     case 'split':
-      return (dispatch) => {
+      return (dispatch: Dispatch) => {
         dispatch(wrap(OPEN_SPLIT_WALLET_MODAL, {walletId}))
       }
 
     case 'addToken':
-      return (dispatch) => {
+      return (dispatch: Dispatch) => {
         dispatch(wrap(ADD_TOKEN, {walletId}))
       }
   }
 }
 
-export const renameWallet = (walletId, walletName) => (dispatch, getState) => {
+export const renameWallet = (walletId: string, walletName: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
@@ -131,7 +136,7 @@ export const renameWallet = (walletId, walletName) => (dispatch, getState) => {
     .catch((e) => console.log(e))
 }
 
-export const resyncWallet = (walletId) => (dispatch, getState) => {
+export const resyncWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
 
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
@@ -146,7 +151,7 @@ export const resyncWallet = (walletId) => (dispatch, getState) => {
     .catch((e) => console.log(e))
 }
 
-export const splitWallet = (walletId) => (dispatch, getState) => {
+export const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
 
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
@@ -161,7 +166,7 @@ export const splitWallet = (walletId) => (dispatch, getState) => {
     .catch((e) => console.log(e))
 }
 
-export const deleteWallet = (walletId) => (dispatch, getState) => {
+export const deleteWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
 
@@ -175,7 +180,7 @@ export const deleteWallet = (walletId) => (dispatch, getState) => {
     .catch((e) => console.log(e))
 }
 
-export const updateActiveWalletsOrder = (activeWalletIds) => (dispatch, getState) => {
+export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const {account} = state.core
   dispatch(wrap(UPDATE_ACTIVE_WALLETS_ORDER_START, {activeWalletIds}))
@@ -186,21 +191,21 @@ export const updateActiveWalletsOrder = (activeWalletIds) => (dispatch, getState
     .catch((e) => console.log(e))
 }
 
-export const updateIndividualWalletSortIndex = (walletId, sortIndex) => (dispatch, getState) => {
+export const updateIndividualWalletSortIndex = (walletId: string, sortIndex: number) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   wallet.sortIndex = sortIndex
   return dispatch(UI_ACTIONS.upsertWallet(wallet))
 }
 
-export const updateArchivedWalletsOrder = (archivedWalletIds) => (dispatch, getState) => {
+export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const {account} = state.core
 
   dispatch(wrap(UPDATE_ARCHIVED_WALLETS_ORDER_START, {archivedWalletIds}))
 
   ACCOUNT_API.updateArchivedWalletsOrderRequest(account, archivedWalletIds)
-    .then((archivedWalletIds) => {
+    .then((archivedWalletIds: Array<string>) => {
       dispatch(wrap(UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS, {archivedWalletIds}))
     })
     .catch((e) => console.log(e))
@@ -208,7 +213,7 @@ export const updateArchivedWalletsOrder = (archivedWalletIds) => (dispatch, getS
 
 const wrap = (type, data) => ({ type, data })
 
-export const updateRenameWalletInput = (renameWalletInput) => ({
+export const updateRenameWalletInput = (renameWalletInput: string) => ({
   type: UPDATE_RENAME_WALLET_INPUT,
   data: {renameWalletInput}
 })

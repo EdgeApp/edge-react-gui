@@ -1,4 +1,5 @@
 // @flow
+
 import React, {Component} from 'react'
 import T from '../FormattedText/FormattedText.ui'
 import styles from './style.js'
@@ -9,9 +10,7 @@ type Props = {
   confirmationText: string,
   label: string
 }
-
 type State = {}
-
 export default class OptionSubtext extends Component<Props, State> {
   render () {
     return (
