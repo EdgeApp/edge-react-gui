@@ -15,6 +15,7 @@ export const DELETE = 'trash-o'
 export const RESYNC = 'refresh'
 export const SPLIT = 'code-fork'
 export const RENAME = 'edit'
+export const GET_SEED = 'user-secret'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'
