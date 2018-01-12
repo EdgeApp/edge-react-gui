@@ -18,6 +18,9 @@ export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 export const OPEN_RESYNC_WALLET_MODAL = 'OPEN_RESYNC_WALLET_MODAL'
 export const CLOSE_RESYNC_WALLET_MODAL = 'CLOSE_RESYNC_WALLET_MODAL'
 
+export const OPEN_SPLIT_WALLET_MODAL = 'OPEN_SPLIT_WALLET_MODAL'
+export const CLOSE_SPLIT_WALLET_MODAL = 'CLOSE_SPLIT_WALLET_MODAL'
+
 export const UPDATE_ACTIVE_WALLETS_ORDER_START = 'UPDATE_ACTIVE_WALLETS_ORDER_START'
 export const UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS = 'UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS'
 
@@ -35,6 +38,9 @@ export const RENAME_WALLET_SUCCESS = 'RENAME_WALLET_SUCCESS'
 
 export const RESYNC_WALLET_START = 'RESYNC_WALLET_START'
 export const RESYNC_WALLET_SUCCESS = 'RESYNC_WALLET_SUCCESS'
+
+export const SPLIT_WALLET_START = 'SPLIT_WALLET_START'
+export const SPLIT_WALLET_SUCCESS = 'SPLIT_WALLET_SUCCESS'
 
 export const DELETE_WALLET_START = 'DELETE_WALLET_START'
 export const DELETE_WALLET_SUCCESS = 'DELETE_WALLET_SUCCESS'
@@ -96,6 +102,11 @@ export const walletRowOption = (walletId, option, archived) => {
         dispatch(openResyncWalletModal(walletId))
       }
 
+    case 'split':
+      return (dispatch) => {
+        dispatch(openSplitWalletModal(walletId))
+      }
+
     case 'addToken':
       return (dispatch) => {
         dispatch(addToken(walletId))
@@ -128,6 +139,21 @@ export const resyncWallet = (walletId) => (dispatch, getState) => {
     .then(() => {
       dispatch(resyncWalletSuccess(walletId))
       dispatch(UI_ACTIONS.refreshWallet(walletId))
+    })
+    .catch((e) => console.log(e))
+}
+
+export const splitWallet = (walletId) => (dispatch, getState) => {
+  const state = getState()
+
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const splitType = getSplitType()
+
+  dispatch(splitWalletStart(walletId))
+
+  WALLET_API.splitWallet(wallet, walletId, splitType)
+    .then(() => {
+      dispatch(splitWalletSuccess(walletId))
     })
     .catch((e) => console.log(e))
 }
@@ -261,6 +287,25 @@ export const closeResyncWalletModal = () => ({
   type: CLOSE_RESYNC_WALLET_MODAL
 })
 
+export const splitWalletStart = (walletId) => ({
+  type: SPLIT_WALLET_START,
+  data: {walletId}
+})
+
+export const splitWalletSuccess = (walletId) => ({
+  type: SPLIT_WALLET_SUCCESS,
+  data: {walletId}
+})
+
+export const openSplitWalletModal = (walletId) => ({
+  type: OPEN_SPLIT_WALLET_MODAL,
+  data: {walletId}
+})
+
+export const closeSplitWalletModal = () => ({
+  type: CLOSE_SPLIT_WALLET_MODAL
+})
+
 export const openDeleteWalletModal = (walletId) => ({
   type: OPEN_DELETE_WALLET_MODAL,
   data: {walletId}
@@ -294,3 +339,5 @@ export function toggleArchiveVisibility () {
     type: TOGGLE_ARCHIVE_VISIBILITY
   }
 }
+
+const getSplitType = () => 'wallet:bitcoincash'

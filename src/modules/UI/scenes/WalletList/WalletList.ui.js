@@ -32,6 +32,9 @@ import DeleteIcon from './components/DeleteIcon.ui'
 import ResyncWalletSubtext from './components/ResyncWalletSubtextConnector'
 import ResyncWalletButtons from './components/ResyncWalletButtonsConnector'
 import ResyncIcon from './components/ResyncIcon.ui'
+import SplitWalletSubtext from './components/SplitWalletSubtextConnector'
+import SplitWalletButtons from './components/SplitWalletButtonsConnector'
+import SplitIcon from './components/SplitIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
 
@@ -44,6 +47,7 @@ const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const BALANCE_TEXT = s.strings.fragment_wallets_balance_text
 const RENAME_WALLET_TEXT = s.strings.fragment_wallets_rename_wallet
 const RESYNC_WALLET_TEXT = s.strings.fragment_wallets_resync_wallet
+const SPLIT_WALLET_TEXT = s.strings.fragment_wallets_split_wallet
 const RENAME_TEXT = s.strings.string_rename
 const SORT_TEXT = s.strings.fragment_wallets_sort
 const DELETE_TEXT = s.strings.string_delete
@@ -74,12 +78,15 @@ type Props = {
   closeRenameWalletModal: () => void,
   resyncWalletModalVisible: boolean,
   closeResyncWalletModal: () => void,
+  splitWalletModalVisible: boolean,
+  closeSplitWalletModal: () => void,
   renameWalletInput: string,
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, string, boolean) => void,
 }
+
 export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
@@ -160,6 +167,7 @@ export default class WalletList extends Component<Props, State> {
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
         {this.renderResyncWalletModal()}
+        {this.renderSplitWalletModal()}
         <Gradient style={styles.gradient} />
 
         <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
@@ -430,6 +438,15 @@ export default class WalletList extends Component<Props, State> {
     modalBottom={<ResyncWalletButtons walletId={this.props.walletId} />}
     visibilityBoolean={this.props.resyncWalletModalVisible}
     onExitButtonFxn={this.props.closeResyncWalletModal}
+    />
+
+  renderSplitWalletModal = () => <StylizedModal
+    featuredIcon={<SplitIcon />}
+    headerText={s.strings.fragment_wallets_split_wallet}
+    modalMiddle={<SplitWalletSubtext label={SPLIT_WALLET_TEXT} />}
+    modalBottom={<SplitWalletButtons walletId={this.props.walletId} />}
+    visibilityBoolean={this.props.splitWalletModalVisible}
+    onExitButtonFxn={this.props.closeSplitWalletModal}
     />
 
   tallyUpTotalCrypto = () => {

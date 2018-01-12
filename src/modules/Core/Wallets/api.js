@@ -133,6 +133,11 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
   return wallet.resyncBlockchain()
 }
 
+export const splitWallet = (wallet: AbcCurrencyWallet, newWalletType: string, walletId: string): Promise<void> => {
+  // return wallet.splitWalletInfo(walletId, newWalletType)
+  return Promise.resolve()
+}
+
 // Documented but not implemented in the core
 // Do not use for Glidera transactions
 // export const signBroadcastAndSaveTransaction = (wallet:any, unsignedTransaction:any) => {

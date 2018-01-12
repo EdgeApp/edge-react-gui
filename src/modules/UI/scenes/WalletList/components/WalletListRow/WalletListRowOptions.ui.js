@@ -22,13 +22,22 @@ export const options = [
 export default class WalletListRowOptions extends Component {
   constructor (props) {
     super(props)
+    this.options = options
     this.state = {
       archiveSyntax: s.strings['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized']
     }
-    this.options = (this.props.currencyCode === 'ETH') ? options.concat([{
-      value: Constants.MANAGE_TOKENS_VALUE,
-      label: s.strings.fragmet_wallets_managetokens_option
-    }]) : options
+    if (this.props.currencyCode === 'ETH') {
+      this.options = this.options.concat([{
+        value: Constants.MANAGE_TOKENS_VALUE,
+        label: s.strings.fragmet_wallets_managetokens_option
+      }])
+    }
+    if (this.props.currencyCode === 'BTC') {
+      this.options = this.options.concat([{
+        value: Constants.SPLIT_VALUE,
+        label: s.strings.string_split
+      }])
+    }
   }
 
   optionAction = (optionKey) => {
