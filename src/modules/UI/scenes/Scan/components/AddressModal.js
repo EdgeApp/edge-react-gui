@@ -60,12 +60,22 @@ export default class AddressModal extends Component<Props, State> {
     })
   }
 
+  _flushUri () {
+    this.setState({
+      uri: ''
+    })
+  }
+
   componentDidMount () {
     this._setClipboard(this.props)
   }
 
   componentWillReceiveProps (nextProps: Props) {
     this._setClipboard(nextProps)
+    const uriShouldBeCleaned = !this.props.addressModalVisible && !!this.state.uri.length
+    if (uriShouldBeCleaned) {
+      this._flushUri()
+    }
   }
 
   render () {
