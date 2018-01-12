@@ -30,7 +30,8 @@ const strings = {
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
-  addtoken_default_error_message: 'Please enter valid information',
+  addtoken_default_error_message: 'Unable to edit token',
+  addtoken_invalid_information: 'Please enter valid token information and try again',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
   edittoken_top_instructions: 'Fill out token info and tap \'Save\' to edit token:',
@@ -38,6 +39,7 @@ const strings = {
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
   edittoken_delete_title: 'Unable to Edit Token',
   edittoken_duplicate_currency_code: 'A token with that token code already exists.',
+  edittoken_invalid_decimal_places: 'Please enter a valid numer of decimal places.',
   edittoken_improper_token_load: 'Unable to load initial data.',
   fragment_wallets_sort: 'Sort',
   fragment_wallets_this_wallet: 'this wallet?', // needs work

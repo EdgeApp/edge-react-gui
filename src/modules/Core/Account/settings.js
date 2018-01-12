@@ -97,7 +97,7 @@ export const getSyncedSettings = (account: AbcAccount) =>
     return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
   })
 
-export async function getSyncedSettingsAsync (account: AbcAccount) {
+export async function getSyncedSettingsAsync (account: AbcAccount): Promise<any> {
   try {
     const file = getSyncedSettingsFile(account)
     const text = await file.getText()

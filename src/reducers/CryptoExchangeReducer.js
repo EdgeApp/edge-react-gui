@@ -8,9 +8,11 @@ const initialState = {
   exchangeRate: 1,
   nativeMax: '0',
   nativeMin: '0',
+  minerFee: '0',
   reverseExchange: 1,
   reverseNativeMax: '0',
   reverseNativeMin: '0',
+  reverseMinerFee: '0',
 
   fromWallet: null,
   fromCurrencyCode: null,
@@ -76,7 +78,8 @@ function cryptoExchangerReducer (state = initialState, action) {
       const result = {...state,
         exchangeRate: action.data.rate,
         nativeMin: action.data.nativeMin,
-        nativeMax: action.data.nativeMax
+        nativeMax: action.data.nativeMax,
+        minerFee: action.data.minerFee
       }
       return result
     }
@@ -84,7 +87,8 @@ function cryptoExchangerReducer (state = initialState, action) {
       const result = {...state,
         reverseExchange: action.data.rate,
         reverseNativeMin: action.data.nativeMin,
-        reverseNativeMax: action.data.nativeMax
+        reverseNativeMax: action.data.nativeMax,
+        reverseMinerFee: action.data.minerFee
       }
       return result
     }
@@ -167,6 +171,9 @@ function deepCopyState (state) {
 
   deepCopy.nativeMax = state.reverseNativeMax
   deepCopy.reverseNativeMax = state.nativeMax
+
+  deepCopy.minerFee = state.reverseMinerFee
+  deepCopy.reverseMinerFee = state.minerFee
 
   deepCopy.insufficientError = false
 
