@@ -108,7 +108,8 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
 
   render () {
     const filteredArray = this.props.supportedWalletTypes.filter((entry) => {
-      return (entry.label.indexOf(this.state.searchTerm) >= 0)
+      return ((entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0) ||
+              (entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0))
     })
     const isDisabled = !this.isValidWalletType()
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0

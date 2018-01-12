@@ -116,7 +116,7 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
 
   render () {
     const filteredArray = this.props.supportedFiats.filter((entry) => {
-      return (entry.label.indexOf(this.state.searchTerm) >= 0)
+      return (entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0)
     })
     const isDisabled = !this.isValidFiatType()
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
