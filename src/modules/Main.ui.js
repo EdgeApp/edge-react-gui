@@ -50,7 +50,10 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
+import {CreateWalletNameComponent} from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
+import {CreateWalletSelectCrypto} from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
+import {CreateWalletSelectFiat} from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
+import {CreateWalletReview} from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
 import AddToken from './UI/scenes/AddToken'
@@ -131,6 +134,8 @@ tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 const TRANSACTION_DETAILS = s.strings.title_transaction_details
 const WALLETS = s.strings.title_wallets
+const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
+const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
 const REQUEST = s.strings.title_request
 const SEND = s.strings.title_send
@@ -239,10 +244,28 @@ export default class Main extends Component<Props, State> {
                             renderLeftButton={this.renderHelpButton}
                             renderRightButton={this.renderMenuButton} />
 
-                          <Scene key={Constants.CREATE_WALLET} navTransparent={true}
-                            component={CreateWallet}
+                          <Scene key={Constants.CREATE_WALLET_NAME} navTransparent={true}
+                            component={CreateWalletNameComponent}
                             renderTitle={this.renderTitle(CREATE_WALLET)}
                             renderLeftButton={this.renderBackButton(WALLETS)}
+                            renderRightButton={this.renderEmptyButton} />
+
+                          <Scene key={Constants.CREATE_WALLET_SELECT_CRYPTO} navTransparent={true}
+                            component={CreateWalletSelectCrypto}
+                            renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
+                            renderLeftButton={this.renderBackButton()}
+                            renderRightButton={this.renderEmptyButton} />
+
+                          <Scene key={Constants.CREATE_WALLET_SELECT_FIAT} navTransparent={true}
+                            component={CreateWalletSelectFiat}
+                            renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
+                            renderLeftButton={this.renderBackButton()}
+                            renderRightButton={this.renderEmptyButton} />
+
+                          <Scene key={Constants.CREATE_WALLET_REVIEW} navTransparent={true}
+                            component={CreateWalletReview}
+                            renderTitle={this.renderTitle(CREATE_WALLET)}
+                            renderLeftButton={this.renderBackButton()}
                             renderRightButton={this.renderEmptyButton} />
 
                           <Scene key={Constants.TRANSACTION_LIST} navTransparent={true}
