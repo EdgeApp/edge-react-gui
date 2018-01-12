@@ -1,27 +1,25 @@
 // @flow
 
 import React, {Component} from 'react'
+import {View} from 'react-native'
+
 import T from '../FormattedText/FormattedText.ui'
 import styles from './style.js'
 import s from '../../../../locales/strings.js'
-import {sprintf} from 'sprintf-js'
 
 type Props = {
   confirmationText: string,
-  label: string
+  label: string,
+  walletName?: string
 }
 type State = {}
 export default class OptionSubtext extends Component<Props, State> {
   render () {
-    return (
-      <T style={styles.subHeaderSyntax}>
-        {this.props.confirmationText}
-        {(this.props.currentWallet)
-          ? <T style={{fontWeight: 'bold'}}>
-            {this.props.currentWallet}?
-          </T>
-          : <T>{s.strings.fragment_wallets_this_wallet}</T>}
-      </T>
-    )
+    const nameOrThisWallet = this.props.walletName || s.strings.fragment_wallets_this_wallet
+
+    return <View style={{flexDirection: 'row'}}>
+      <T style={styles.subHeaderSyntax}>{this.props.confirmationText}</T>
+      <T style={{fontWeight: 'bold'}}>{nameOrThisWallet}?</T>
+    </View>
   }
 }
