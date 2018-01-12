@@ -14,17 +14,14 @@ type State = {}
 
 export default class OptionSubtext extends Component<Props, State> {
   render () {
-    const WALLET_CONFIRMATION_TEXT = sprintf(this.props.confirmationText)
-    const THIS_WALLET_TEXT = sprintf(s.strings.fragment_wallets_this_wallet)
-
     return (
       <T style={styles.subHeaderSyntax}>
-        {WALLET_CONFIRMATION_TEXT}
+        {this.props.confirmationText}
         {(this.props.currentWallet)
           ? <T style={{fontWeight: 'bold'}}>
             {this.props.currentWallet}?
           </T>
-          : <T>{THIS_WALLET_TEXT}</T>}
+          : <T>{s.strings.fragment_wallets_this_wallet}</T>}
       </T>
     )
   }
