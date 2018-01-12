@@ -25,7 +25,10 @@ export default class WalletListRowOptions extends Component {
     this.state = {
       archiveSyntax: s.strings['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized']
     }
-    this.options = (this.props.currencyCode === 'ETH') ? options : options.slice(0, -1)
+    this.options = (this.props.currencyCode === 'ETH') ? options.concat([{
+      value: Constants.MANAGE_TOKENS_VALUE,
+      label: s.strings.fragmet_wallets_managetokens_option
+    }]) : options
   }
 
   optionAction = (optionKey) => {

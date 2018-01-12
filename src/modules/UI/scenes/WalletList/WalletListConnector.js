@@ -38,7 +38,7 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   setContactList: (contacts) => dispatch(setContactList(contacts)),
-  walletRowOption: (walletId, option) => dispatch(walletRowOption(walletId, option)),
+  walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   closeDeleteWalletModal: () => dispatch(closeDeleteWalletModal()),
   closeRenameWalletModal: () => dispatch(closeRenameWalletModal())
 })

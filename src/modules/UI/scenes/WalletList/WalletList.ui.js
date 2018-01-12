@@ -45,24 +45,6 @@ const SORT_TEXT = s.strings.fragment_wallets_sort
 const DELETE_TEXT = s.strings.string_delete
 const MANAGE_TOKENS_TEXT = s.strings.fragmet_wallets_managetokens_option
 
-const options = [
-  {
-    value: 'rename',
-    syntax: RENAME_TEXT
-  }, {
-    value: 'sort',
-    syntax: SORT_TEXT
-  }, {
-    value: 'delete',
-    syntax: DELETE_TEXT
-  }, {
-    value: 'manageTokens',
-    syntax: MANAGE_TOKENS_TEXT
-  }, {
-    value: 'archive'
-  }
-]
-
 type State = {
   sortableMode: boolean,
   sortableListOpacity: number,
@@ -90,7 +72,7 @@ type Props = {
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, string) => void,
+  walletRowOption: (walletId: string, string, boolean) => void,
 }
 export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
@@ -123,32 +105,13 @@ export default class WalletList extends Component<Props, State> {
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
-    switch (option) {
-      case options[0].value: // 'rename'
-      // console.log('executing rename')
-        this.props.walletRowOption(walletId, 'rename')
-        break
-      case options[1].value: // 'sort'
-        if (this.state.sortableMode) {
-          this.disableSorting()
-        } else {
-          this.enableSorting()
-        }
-        break
-      case options[2].value: // 'delete
-        this.props.walletRowOption(walletId, 'delete')
-        break
-      case options[3].value: // 'manageTokens'
-        console.log('executing option 2')
-        Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
-        break
-      case options[4].value: // 'archive'
-        if (!this.props.wallets[walletId].archived) {
-          this.props.walletRowOption(walletId, 'archive')
-        } else {
-          this.props.walletRowOption(walletId, 'activate')
-        }
-        break
+    if (option !== 'sort') {
+      return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
+    }
+    if (this.state.sortableMode) {
+      this.disableSorting()
+    } else {
+      this.enableSorting()
     }
   }
 

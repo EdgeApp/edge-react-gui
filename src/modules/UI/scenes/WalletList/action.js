@@ -1,8 +1,10 @@
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as UI_ACTIONS from '../../Wallets/action.js'
+import {Actions} from 'react-native-router-flux'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as WALLET_SELECTORS from '../../selectors.js'
 
 export const TOGGLE_ARCHIVE_VISIBILITY = 'TOGGLE_ARCHIVE_VISIBILITY'
 
@@ -33,7 +35,10 @@ export const DELETE_WALLET_SUCCESS = 'DELETE_WALLET_SUCCESS'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 
-export const walletRowOption = (walletId, option) => {
+export const walletRowOption = (walletId, option, archived) => {
+  if (option === 'archive' && archived) {
+    option = 'activate'
+  }
   switch (option) {
     case 'restore':
     case 'activate':
@@ -64,6 +69,12 @@ export const walletRowOption = (walletId, option) => {
         .catch((e) => console.log(e))
       }
 
+    case 'manageTokens':
+      return (dispatch, getState) => {
+        const state = getState()
+        const wallet = WALLET_SELECTORS.getWallet(state, walletId)
+        Actions.manageTokens({guiWallet: wallet})
+      }
     case 'delete':
       return (dispatch) => {
         dispatch(openDeleteWalletModal(walletId))
