@@ -14,7 +14,7 @@ import Text from '../../components/FormattedText'
 import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import SearchResults from '../../components/SearchResults'
-
+import * as Constants from '../../../../constants/indexConstants.js'
 import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
 import PLATFORM from '../../../../theme/variables/platform'
@@ -22,26 +22,25 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import * as UTILS from '../../../utils'
 import type {GuiWalletType, FlatListItem, DeviceDimensions} from '../../../../types'
 
-const WALLET_TYPE_PICKER_PLACEHOLDER = s.strings.create_wallet_choose_crypto
-
-const BACK_TEXT = s.strings.title_back
-const INVALID_INPUT_TITLE = s.strings.create_wallet_invalid_input
-const INVALID_DATA_TEXT = s.strings.create_wallet_select_valid_crypto
-const NEXT_TEXT = s.strings.string_next_capitalized
-
-export type Props = {
+export type CreateWalletSelectCryptoOwnProps = {
   walletName: string,
   dimensions: DeviceDimensions,
   supportedWalletTypes: Array<GuiWalletType>
 }
+export type CreateWalletSelectCryptoStateProps = {
+  supportedWalletTypes: Array<GuiWalletType>,
+  dimensions: DeviceDimensions
+}
 
-export type State = {
+type State = {
   selectedWalletType: string,
   searchTerm: string
 }
 
-export class CreateWalletSelectCryptoComponent extends Component<Props, State> {
-  constructor (props: Props & State) {
+export type CreateWalletSelectCryptoComponentProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
+
+export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSelectCryptoComponentProps, State> {
+  constructor (props: CreateWalletSelectCryptoComponentProps & State) {
     super(props)
     this.state = {
       selectedWalletType: '',
@@ -69,12 +68,12 @@ export class CreateWalletSelectCryptoComponent extends Component<Props, State> {
 
   onNext = (): void => {
     if (this.isValidWalletType()) {
-      Actions.createWalletSelectFiat({
+      Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
         walletName: this.props.walletName,
         selectedWalletType: this.getWalletType(this.state.selectedWalletType)
       })
     } else {
-      Alert.alert(INVALID_INPUT_TITLE, INVALID_DATA_TEXT)
+      Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_crypto)
     }
   }
 
@@ -128,7 +127,7 @@ export class CreateWalletSelectCryptoComponent extends Component<Props, State> {
             autoCapitalize={'words'}
             onChangeText={this.handleSearchTermChange}
             value={this.state.searchTerm}
-            label={WALLET_TYPE_PICKER_PLACEHOLDER}
+            label={s.strings.create_wallet_choose_crypto}
           />
           <SearchResults
             renderRegularResultFxn={this.renderWalletTypeResult}
@@ -142,13 +141,13 @@ export class CreateWalletSelectCryptoComponent extends Component<Props, State> {
             <SecondaryButton
               style={[styles.cancel]}
               onPressFunction={this.onBack}
-              text={BACK_TEXT} />
+              text={s.strings.title_back} />
 
             <PrimaryButton
               style={[styles.next]}
               disabled={isDisabled}
               onPressFunction={this.onNext}
-              text={NEXT_TEXT}
+              text={s.strings.string_next_capitalized}
             />
           </View>
         </View>

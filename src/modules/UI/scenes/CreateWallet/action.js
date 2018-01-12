@@ -3,7 +3,7 @@ import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {Actions} from 'react-native-router-flux'
 import * as WalletActions from '../../Wallets/action'
-import {WALLET_LIST_SCENE} from '../../../../constants/SceneKeys.js'
+import * as Constants from '../../../../constants/indexConstants.js'
 import {displayErrorAlert} from '../../components/ErrorAlert/actions'
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
@@ -42,7 +42,7 @@ export const createCurrencyWallet = (
     name: walletName,
     fiatCurrencyCode
   }).then((abcWallet) => {
-    Actions.popTo(WALLET_LIST_SCENE)
+    Actions.popTo(Constants.WALLET_LIST_SCENE)
     dispatch(createWalletSuccess())
     if (selectWallet) {
       dispatch(WalletActions.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))

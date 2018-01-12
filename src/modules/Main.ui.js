@@ -50,7 +50,7 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import {CreateWalletName} from './UI/scenes/CreateWallet/CreateWalletNameConnector'
+import {CreateWalletNameComponent} from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
 import {CreateWalletSelectCrypto} from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
 import {CreateWalletSelectFiat} from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
 import {CreateWalletReview} from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
@@ -245,7 +245,7 @@ export default class Main extends Component<Props, State> {
                             renderRightButton={this.renderMenuButton} />
 
                           <Scene key={Constants.CREATE_WALLET_NAME} navTransparent={true}
-                            component={CreateWalletName}
+                            component={CreateWalletNameComponent}
                             renderTitle={this.renderTitle(CREATE_WALLET)}
                             renderLeftButton={this.renderBackButton(WALLETS)}
                             renderRightButton={this.renderEmptyButton} />
