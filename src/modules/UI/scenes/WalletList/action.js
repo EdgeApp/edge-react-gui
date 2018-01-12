@@ -154,7 +154,7 @@ export const splitWallet = (walletId) => (dispatch, getState) => {
 
   dispatch(wrap(SPLIT_WALLET_START, {walletId}))
 
-  WALLET_API.splitWallet(wallet, walletId, splitType)
+  WALLET_API.splitWallet(wallet, splitType)
     .then(() => {
       dispatch(wrap(SPLIT_WALLET_SUCCESS, {walletId}))
     })
