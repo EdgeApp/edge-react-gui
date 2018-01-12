@@ -133,8 +133,8 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
   return wallet.resyncBlockchain()
 }
 
-export const splitWallet = (wallet: AbcCurrencyWallet, newWalletType: string, walletId: string): Promise<void> => {
-  // return wallet.splitWalletInfo(walletId, newWalletType)
+export const splitWallet = (wallet: AbcCurrencyWallet, newWalletType: string): Promise<void> => {
+  // return wallet.splitWalletInfo(wallet.id, newWalletType)
   return Promise.resolve()
 }
 
