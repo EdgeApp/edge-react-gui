@@ -154,12 +154,12 @@ export const resyncWallet = (walletId: string) => (dispatch: Dispatch, getState:
 export const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
 
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const account = CORE_SELECTORS.getAccount(state)
   const splitType = getSplitType()
 
   dispatch(wrap(SPLIT_WALLET_START, {walletId}))
 
-  WALLET_API.splitWallet(wallet, splitType)
+  account.splitWalletInfo(walletId, splitType)
     .then(() => {
       dispatch(wrap(SPLIT_WALLET_SUCCESS, {walletId}))
     })
