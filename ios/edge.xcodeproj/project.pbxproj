@@ -87,6 +87,9 @@
 		CB8D1E15F431478DBADAF7BD /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D5DF84AD90B142838C4B352E /* libRNFS.a */; };
 		CFC169ACDFF24F3B8D8A38D6 /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8AE61E1C4DDF4FFD823E9883 /* Ionicons.ttf */; };
 		DA4A13F911E04BB99D3B3B8E /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 003276220D9E46DEB1AC6CFF /* FontAwesome.ttf */; };
+		DABD013820086A3300C51EF3 /* TSBackgroundFetch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E6240E2A20055A9300BA8177 /* TSBackgroundFetch.framework */; };
+		DABD017420086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DABD017320086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m */; };
+		DABD017520086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DABD017320086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m */; };
 		DAEC5C1188D34D94BD392B9D /* libRCTContactsWrapper.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E306F33BD2AA495DB502D784 /* libRCTContactsWrapper.a */; };
 		DFFE6C72345D4A3C8350CCFC /* SourceSansPro-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 842BCA6BE88D4CCDAAC176C5 /* SourceSansPro-BoldItalic.ttf */; };
 		E6DE0C2820054CCC0004097A /* libRNBackgroundFetch.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E6DE0C1A20054BF30004097A /* libRNBackgroundFetch.a */; };
@@ -628,6 +631,7 @@
 		D55A245786234924ABF5C5DA /* libRNFastCrypto.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFastCrypto.a; sourceTree = "<group>"; };
 		D5DF84AD90B142838C4B352E /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
 		DA39136B1FF54882916C37AC /* libSplashScreen.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSplashScreen.a; sourceTree = "<group>"; };
+		DABD017320086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		E306F33BD2AA495DB502D784 /* libRCTContactsWrapper.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContactsWrapper.a; sourceTree = "<group>"; };
 		E5D6824DDD854B41A4A6D426 /* libRCTContacts.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTContacts.a; sourceTree = "<group>"; };
 		E6240E2A20055A9300BA8177 /* TSBackgroundFetch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TSBackgroundFetch.framework; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/TSBackgroundFetch.framework"; sourceTree = "<group>"; };
@@ -658,6 +662,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DABD013820086A3300C51EF3 /* TSBackgroundFetch.framework in Frameworks */,
 				98C72D521F99E7AC00A92AE0 /* libRNSound.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
@@ -812,6 +817,7 @@
 		13B07FAE1A68108700A75B9A /* edge */ = {
 			isa = PBXGroup;
 			children = (
+				DABD017320086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -1332,6 +1338,11 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = G5LQ7MERPK;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -2126,6 +2137,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				FDD9C0D41F1C46ED004372CA /* RNHockeyApp.m in Sources */,
+				DABD017420086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2133,6 +2145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DABD017520086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */,
 				2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */,
 			);
@@ -2275,6 +2288,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2326,6 +2340,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/../node_modules/react-native-background-fetch/ios/**",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
