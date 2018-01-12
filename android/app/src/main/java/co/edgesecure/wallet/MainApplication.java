@@ -5,6 +5,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.chirag.RNMail.RNMail;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
+import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
@@ -50,6 +51,7 @@ public class MainApplication extends Application implements ReactApplication {
             new MainReactPackage(),
             new RNMail(),
             new RCTSplashScreenPackage(),
+            new BackgroundTaskPackage(),
             new PickerViewPackage(),
             new RCTSplashScreenPackage(),
             new AbcCoreJsUiPackage(),
@@ -84,5 +86,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    BackgroundTaskPackage.useContext(this);
   }
 }
