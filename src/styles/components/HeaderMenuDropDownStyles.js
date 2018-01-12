@@ -47,7 +47,16 @@ const MenuDropDownStyle = {
   altIconText: {
     fontSize: 20
   }
-
 }
+
+const MenuDropDownStyleHeader = {
+  ...MenuDropDownStyle,
+  menuTrigger: {
+    paddingLeft: 14,
+    paddingRight: 10
+  }
+}
+
 export {HeaderMenuRightSideStyle}
 export {MenuDropDownStyle}
+export {MenuDropDownStyleHeader}

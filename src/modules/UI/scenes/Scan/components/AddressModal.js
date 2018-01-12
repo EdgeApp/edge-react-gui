@@ -14,6 +14,7 @@ import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
 import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import {colors} from '../../../../../theme/variables/airbitz.js'
 
 import styles from '../style'
 
@@ -59,16 +60,26 @@ export default class AddressModal extends Component<Props, State> {
     })
   }
 
+  _flushUri () {
+    this.setState({
+      uri: ''
+    })
+  }
+
   componentDidMount () {
     this._setClipboard(this.props)
   }
 
   componentWillReceiveProps (nextProps: Props) {
     this._setClipboard(nextProps)
+    const uriShouldBeCleaned = !this.props.addressModalVisible && !!this.state.uri.length
+    if (uriShouldBeCleaned) {
+      this._flushUri()
+    }
   }
 
   render () {
-    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color='#2A5799'
+    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={colors.primary}
       style={styles.icon} />
 
     const copyMessage =

@@ -9,7 +9,10 @@ export const EXCHANGE = 'exchange'
 export const EDGE_LOGIN = 'edgeLogin'
 export const WALLET_LIST = 'walletList'
 export const WALLET_LIST_SCENE = 'walletListScene' // distinguished as actual scene vs. stack
-export const CREATE_WALLET = 'createWallet'
+export const CREATE_WALLET_NAME = 'createWalletName'
+export const CREATE_WALLET_SELECT_CRYPTO = 'createWalletSelectCrypto'
+export const CREATE_WALLET_SELECT_FIAT = 'createWalletSelectFiat'
+export const CREATE_WALLET_REVIEW = 'createWalletReview'
 export const MANAGE_TOKENS = 'manageTokens'
 export const ADD_TOKEN = 'addToken'
 export const EDIT_TOKEN = 'editToken'
@@ -37,5 +40,9 @@ export const CURRENCY_SETTINGS = {
   'ltcSettings': {
     pluginName: 'litecoin',
     currencyCode: 'LTC'
+  },
+  'dashSettings': {
+    pluginName: 'dash',
+    currencyCode: 'DASH'
   }
 }

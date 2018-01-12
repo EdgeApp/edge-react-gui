@@ -16,6 +16,30 @@ const renameWalletModalVisible = (state: boolean = false, action: Action) => {
   }
 }
 
+const resyncWalletModalVisible = (state: boolean = false, action: Action) => {
+  const {type} = action
+  switch (type) {
+    case ACTION.OPEN_RESYNC_WALLET_MODAL:
+      return true
+    case ACTION.CLOSE_RESYNC_WALLET_MODAL:
+      return false
+    default:
+      return state
+  }
+}
+
+const splitWalletModalVisible = (state: boolean = false, action: Action) => {
+  const {type} = action
+  switch (type) {
+    case ACTION.OPEN_SPLIT_WALLET_MODAL:
+      return true
+    case ACTION.CLOSE_SPLIT_WALLET_MODAL:
+      return false
+    default:
+      return state
+  }
+}
+
 const deleteWalletModalVisible = (state: boolean = false, action: Action) => {
   const {type} = action
   switch (type) {
@@ -30,10 +54,10 @@ const deleteWalletModalVisible = (state: boolean = false, action: Action) => {
 
 const walletArchivesVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {
-    case ACTION.OPEN_WALLET_ARCHIVES:
-      return true
-    case ACTION.CLOSE_WALLET_ARCHIVES:
-      return false
+    // case ACTION.OPEN_WALLET_ARCHIVES:
+    //   return true
+    // case ACTION.CLOSE_WALLET_ARCHIVES:
+    //   return false
     default:
       return state
   }
@@ -42,12 +66,16 @@ const walletArchivesVisible = (state: boolean = false, action: Action) => {
 const walletId = (state: string = '', action: Action) => {
   switch (action.type) {
     case ACTION.OPEN_DELETE_WALLET_MODAL:
+    case ACTION.OPEN_RESYNC_WALLET_MODAL:
+    case ACTION.OPEN_SPLIT_WALLET_MODAL:
     case ACTION.OPEN_RENAME_WALLET_MODAL:
       if (action.data) {
         return action.data.walletId
       }
       return state
     case ACTION.CLOSE_DELETE_WALLET_MODAL:
+    case ACTION.CLOSE_RESYNC_WALLET_MODAL:
+    case ACTION.CLOSE_SPLIT_WALLET_MODAL:
     case ACTION.CLOSE_RENAME_WALLET_MODAL:
       return ''
     default:
@@ -77,7 +105,6 @@ const renameWalletInput = (state: string = '', action: Action) => {
       }
       return ''
     case ACTION.CLOSE_RENAME_WALLET_MODAL:
-    case ACTION.RENAME_WALLET:
       return ''
     default:
       return state
@@ -87,6 +114,8 @@ const renameWalletInput = (state: string = '', action: Action) => {
 const walletList = combineReducers({
   renameWalletModalVisible,
   deleteWalletModalVisible,
+  resyncWalletModalVisible,
+  splitWalletModalVisible,
   walletArchivesVisible,
   renameWalletInput,
   walletId,

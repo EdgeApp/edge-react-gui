@@ -6,30 +6,34 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Animated,
-  FlatList
+  FlatList,
+  Image
 } from 'react-native'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
+import OptionSubtext from '../../components/OptionSubtext/OptionSubtextConnector.js'
 import {Actions} from 'react-native-router-flux'
+import * as Constants from '../../../../constants/indexConstants'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import s from '../../../../locales/strings.js'
+import * as Constants from '../../../../constants/indexConstants.js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
 
-import DeleteWalletSubtext from './components/DeleteWalletSubtextConnector'
 import DeleteWalletButtons from './components/DeleteWalletButtonsConnector'
 import WalletNameInput from './components/WalletNameInputConnector'
 import RenameWalletButtons from './components/RenameWalletButtonsConnector'
-import DeleteIcon from './components/DeleteIcon.ui'
-import RenameIcon from './components/RenameIcon.ui'
+import ResyncWalletButtons from './components/ResyncWalletButtonsConnector'
+import SplitWalletButtons from './components/SplitWalletButtonsConnector'
+import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import platform from '../../../../theme/variables/platform.js'
 
 import type {GuiContact} from '../../../../types'
@@ -40,28 +44,13 @@ const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const BALANCE_TEXT = s.strings.fragment_wallets_balance_text
 const RENAME_WALLET_TEXT = s.strings.fragment_wallets_rename_wallet
+const DELETE_WALLET_TEXT = s.strings.fragment_wallets_delete_wallet
+const RESYNC_WALLET_TEXT = s.strings.fragment_wallets_resync_wallet
+const SPLIT_WALLET_TEXT = s.strings.fragment_wallets_split_wallet
 const RENAME_TEXT = s.strings.string_rename
 const SORT_TEXT = s.strings.fragment_wallets_sort
 const DELETE_TEXT = s.strings.string_delete
 const MANAGE_TOKENS_TEXT = s.strings.fragmet_wallets_managetokens_option
-
-const options = [
-  {
-    value: 'rename',
-    syntax: RENAME_TEXT
-  }, {
-    value: 'sort',
-    syntax: SORT_TEXT
-  }, {
-    value: 'delete',
-    syntax: DELETE_TEXT
-  }, {
-    value: 'manageTokens',
-    syntax: MANAGE_TOKENS_TEXT
-  }, {
-    value: 'archive'
-  }
-]
 
 type State = {
   sortableMode: boolean,
@@ -86,12 +75,17 @@ type Props = {
   wallets: any,
   closeDeleteWalletModal: () => void,
   closeRenameWalletModal: () => void,
+  resyncWalletModalVisible: boolean,
+  closeResyncWalletModal: () => void,
+  splitWalletModalVisible: boolean,
+  closeSplitWalletModal: () => void,
   renameWalletInput: string,
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, string) => void,
+  walletRowOption: (walletId: string, string, boolean) => void,
 }
+
 export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
@@ -123,32 +117,13 @@ export default class WalletList extends Component<Props, State> {
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
-    switch (option) {
-      case options[0].value: // 'rename'
-      // console.log('executing rename')
-        this.props.walletRowOption(walletId, 'rename')
-        break
-      case options[1].value: // 'sort'
-        if (this.state.sortableMode) {
-          this.disableSorting()
-        } else {
-          this.enableSorting()
-        }
-        break
-      case options[2].value: // 'delete
-        this.props.walletRowOption(walletId, 'delete')
-        break
-      case options[3].value: // 'manageTokens'
-        console.log('executing option 2')
-        Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
-        break
-      case options[4].value: // 'archive'
-        if (!this.props.wallets[walletId].archived) {
-          this.props.walletRowOption(walletId, 'archive')
-        } else {
-          this.props.walletRowOption(walletId, 'activate')
-        }
-        break
+    if (option !== 'sort') {
+      return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
+    }
+    if (this.state.sortableMode) {
+      this.disableSorting()
+    } else {
+      this.enableSorting()
     }
   }
 
@@ -190,6 +165,8 @@ export default class WalletList extends Component<Props, State> {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
+        {this.renderResyncWalletModal()}
+        {this.renderSplitWalletModal()}
         <Gradient style={styles.gradient} />
 
         <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
@@ -203,7 +180,7 @@ export default class WalletList extends Component<Props, State> {
 
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
+                <Image source={WalletIcon} style={[styles.walletIcon]} />
                 <T style={styles.walletsBoxHeaderText}>
                   {WALLETS_HEADER_TEXT}
                 </T>
@@ -241,7 +218,7 @@ export default class WalletList extends Component<Props, State> {
                   styles.walletsBoxHeaderAddWallet,
                   {width: 41}
                 ]}
-                  onPress={Actions.createWallet}>
+                  onPress={Actions[Constants.CREATE_WALLET_NAME]}>
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
@@ -436,16 +413,46 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderDeleteWalletModal = () => <StylizedModal
-    featuredIcon={<DeleteIcon />}
+    featuredIcon={<OptionIcon iconName={Constants.DELETE}/>}
     headerText={s.strings.fragment_wallets_delete_wallet}
-    modalMiddle={<DeleteWalletSubtext />}
+    modalMiddle={
+      <OptionSubtext
+        confirmationText={s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
+        label={DELETE_WALLET_TEXT} />
+    }
     modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
     visibilityBoolean={this.props.deleteWalletModalVisible}
     onExitButtonFxn={this.props.closeDeleteWalletModal}
     />
 
+  renderResyncWalletModal = () => <StylizedModal
+    featuredIcon={<OptionIcon iconName={Constants.RESYNC}/>}
+    headerText={s.strings.fragment_wallets_resync_wallet}
+    modalMiddle={
+      <OptionSubtext
+        confirmationText={s.strings.fragment_wallets_resync_wallet_first_confirm_message_mobile}
+        label={RESYNC_WALLET_TEXT} />
+    }
+    modalBottom={<ResyncWalletButtons walletId={this.props.walletId} />}
+    visibilityBoolean={this.props.resyncWalletModalVisible}
+    onExitButtonFxn={this.props.closeResyncWalletModal}
+    />
+
+  renderSplitWalletModal = () => <StylizedModal
+    featuredIcon={<OptionIcon iconName={Constants.SPLIT}/>}
+    headerText={s.strings.fragment_wallets_split_wallet}
+    modalMiddle={
+      <OptionSubtext
+        confirmationText={s.strings.fragment_wallets_split_wallet_first_confirm_message_mobile}
+        label={SPLIT_WALLET_TEXT} />
+    }
+    modalBottom={<SplitWalletButtons walletId={this.props.walletId} />}
+    visibilityBoolean={this.props.splitWalletModalVisible}
+    onExitButtonFxn={this.props.closeSplitWalletModal}
+    />
+
   renderRenameWalletModal = () => <StylizedModal
-    featuredIcon={<RenameIcon />}
+    featuredIcon={<OptionIcon iconName={Constants.RENAME}/>}
     headerText={s.strings.fragment_wallets_rename_wallet}
     modalMiddle={<WalletNameInput label={RENAME_WALLET_TEXT} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
     modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
