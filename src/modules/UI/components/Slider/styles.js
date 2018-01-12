@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     position: 'absolute',
-    bottom: -26,
+    bottom: 0,
     backgroundColor: THEME.COLORS.WHITE,
     borderRadius: 52
   },

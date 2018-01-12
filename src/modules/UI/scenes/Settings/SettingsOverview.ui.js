@@ -314,11 +314,11 @@ export default class SettingsOverview extends Component<Props, State> {
   renderRowRoute = (x: Object, i: number) => <RowRoute key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
   renderRowSwitch = (x: string) => (
     <RowSwitch
-      leftText={this.options[x].text}
-      key={this.options[x].key}
-      property={this.options[x].key}
-      onToggle={this.options[x].routeFunction}
-      value={this.options[x].value}
+      leftText={this.options[x] ? this.options[x].text : ''}
+      key={this.options[x] ? this.options[x].key : ''}
+      property={this.options[x] ? this.options[x].key : ''}
+      onToggle={this.options[x] ? this.options[x].routeFunction : () => {}}
+      value={this.options[x] ? this.options[x].value : false}
       />
   )
   renderRowModal = (x: Object) => <RowModal leftText={x.text} key={x.key} modal={(x.key).toString()} />
