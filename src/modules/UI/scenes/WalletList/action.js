@@ -15,6 +15,9 @@ export const OPEN_RENAME_WALLET_MODAL = 'OPEN_RENAME_WALLET_MODAL'
 export const CLOSE_RENAME_WALLET_MODAL = 'CLOSE_RENAME_WALLET_MODAL'
 export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 
+export const OPEN_RESYNC_WALLET_MODAL = 'OPEN_RESYNC_WALLET_MODAL'
+export const CLOSE_RESYNC_WALLET_MODAL = 'CLOSE_RESYNC_WALLET_MODAL'
+
 export const UPDATE_ACTIVE_WALLETS_ORDER_START = 'UPDATE_ACTIVE_WALLETS_ORDER_START'
 export const UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS = 'UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS'
 
@@ -29,6 +32,9 @@ export const ACTIVATE_WALLET_SUCCESS = 'ACTIVATE_WALLET_SUCCESS'
 
 export const RENAME_WALLET_START = 'RENAME_WALLET_START'
 export const RENAME_WALLET_SUCCESS = 'RENAME_WALLET_SUCCESS'
+
+export const RESYNC_WALLET_START = 'RESYNC_WALLET_START'
+export const RESYNC_WALLET_SUCCESS = 'RESYNC_WALLET_SUCCESS'
 
 export const DELETE_WALLET_START = 'DELETE_WALLET_START'
 export const DELETE_WALLET_SUCCESS = 'DELETE_WALLET_SUCCESS'
@@ -85,6 +91,11 @@ export const walletRowOption = (walletId, option, archived) => {
         dispatch(openRenameWalletModal(walletId))
       }
 
+    case 'resync':
+      return (dispatch) => {
+        dispatch(openResyncWalletModal(walletId))
+      }
+
     case 'addToken':
       return (dispatch) => {
         dispatch(addToken(walletId))
@@ -101,6 +112,21 @@ export const renameWallet = (walletId, walletName) => (dispatch, getState) => {
   WALLET_API.renameWalletRequest(wallet, walletName)
     .then(() => {
       dispatch(renameWalletSuccess(walletId))
+      dispatch(UI_ACTIONS.refreshWallet(walletId))
+    })
+    .catch((e) => console.log(e))
+}
+
+export const resyncWallet = (walletId) => (dispatch, getState) => {
+  const state = getState()
+
+  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+
+  dispatch(resyncWalletStart(walletId))
+
+  WALLET_API.resyncWallet(wallet)
+    .then(() => {
+      dispatch(resyncWalletSuccess(walletId))
       dispatch(UI_ACTIONS.refreshWallet(walletId))
     })
     .catch((e) => console.log(e))
@@ -214,6 +240,25 @@ export const deleteWalletStart = (walletId) => ({
 export const deleteWalletSuccess = (walletId) => ({
   type: DELETE_WALLET_SUCCESS,
   data: {walletId}
+})
+
+export const resyncWalletStart = (walletId) => ({
+  type: RESYNC_WALLET_START,
+  data: {walletId}
+})
+
+export const resyncWalletSuccess = (walletId) => ({
+  type: RESYNC_WALLET_SUCCESS,
+  data: {walletId}
+})
+
+export const openResyncWalletModal = (walletId) => ({
+  type: OPEN_RESYNC_WALLET_MODAL,
+  data: {walletId}
+})
+
+export const closeResyncWalletModal = () => ({
+  type: CLOSE_RESYNC_WALLET_MODAL
 })
 
 export const openDeleteWalletModal = (walletId) => ({

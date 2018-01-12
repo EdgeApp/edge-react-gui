@@ -14,8 +14,8 @@ export const options = [
     value: Constants.DELETE_VALUE,
     label: s.strings.string_delete
   }, {
-    value: Constants.MANAGE_TOKENS_VALUE,
-    label: s.strings.fragmet_wallets_managetokens_option
+    value: Constants.RESYNC_VALUE,
+    label: s.strings.string_resync
   }
 ]
 

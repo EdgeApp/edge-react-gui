@@ -29,6 +29,9 @@ import DeleteWalletButtons from './components/DeleteWalletButtonsConnector'
 import WalletNameInput from './components/WalletNameInputConnector'
 import RenameWalletButtons from './components/RenameWalletButtonsConnector'
 import DeleteIcon from './components/DeleteIcon.ui'
+import ResyncWalletSubtext from './components/ResyncWalletSubtextConnector'
+import ResyncWalletButtons from './components/ResyncWalletButtonsConnector'
+import ResyncIcon from './components/ResyncIcon.ui'
 import RenameIcon from './components/RenameIcon.ui'
 import platform from '../../../../theme/variables/platform.js'
 
@@ -40,6 +43,7 @@ const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const BALANCE_TEXT = s.strings.fragment_wallets_balance_text
 const RENAME_WALLET_TEXT = s.strings.fragment_wallets_rename_wallet
+const RESYNC_WALLET_TEXT = s.strings.fragment_wallets_resync_wallet
 const RENAME_TEXT = s.strings.string_rename
 const SORT_TEXT = s.strings.fragment_wallets_sort
 const DELETE_TEXT = s.strings.string_delete
@@ -68,6 +72,8 @@ type Props = {
   wallets: any,
   closeDeleteWalletModal: () => void,
   closeRenameWalletModal: () => void,
+  resyncWalletModalVisible: boolean,
+  closeResyncWalletModal: () => void,
   renameWalletInput: string,
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
@@ -153,6 +159,7 @@ export default class WalletList extends Component<Props, State> {
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
+        {this.renderResyncWalletModal()}
         <Gradient style={styles.gradient} />
 
         <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
@@ -414,6 +421,15 @@ export default class WalletList extends Component<Props, State> {
     modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
     visibilityBoolean={this.props.renameWalletModalVisible}
     onExitButtonFxn={this.props.closeRenameWalletModal}
+    />
+
+  renderResyncWalletModal = () => <StylizedModal
+    featuredIcon={<ResyncIcon />}
+    headerText={s.strings.fragment_wallets_resync_wallet}
+    modalMiddle={<ResyncWalletSubtext label={RESYNC_WALLET_TEXT} />}
+    modalBottom={<ResyncWalletButtons walletId={this.props.walletId} />}
+    visibilityBoolean={this.props.resyncWalletModalVisible}
+    onExitButtonFxn={this.props.closeResyncWalletModal}
     />
 
   tallyUpTotalCrypto = () => {

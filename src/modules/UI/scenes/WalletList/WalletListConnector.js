@@ -6,7 +6,8 @@ import {
   updateArchivedWalletsOrder,
   walletRowOption,
   closeDeleteWalletModal,
-  closeRenameWalletModal
+  closeRenameWalletModal,
+  closeResyncWalletModal
 } from './action'
 import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -25,6 +26,7 @@ const mapStateToProps = (state: any): {} => {
     walletArchivesVisible: state.ui.scenes.walletList.walletArchivesVisible,
     renameWalletModalVisible: state.ui.scenes.walletList.renameWalletModalVisible,
     deleteWalletModalVisible: state.ui.scenes.walletList.deleteWalletModalVisible,
+    resyncWalletModalVisible: state.ui.scenes.walletList.resyncWalletModalVisible,
     walletName: state.ui.scenes.walletList.walletName,
     walletId: state.ui.scenes.walletList.walletId,
     walletOrder: state.ui.wallets.walletListOrder,
@@ -40,7 +42,8 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   setContactList: (contacts) => dispatch(setContactList(contacts)),
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   closeDeleteWalletModal: () => dispatch(closeDeleteWalletModal()),
-  closeRenameWalletModal: () => dispatch(closeRenameWalletModal())
+  closeRenameWalletModal: () => dispatch(closeRenameWalletModal()),
+  closeResyncWalletModal: () => dispatch(closeResyncWalletModal())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)
