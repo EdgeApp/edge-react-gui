@@ -17,32 +17,39 @@ const mapStateToProps = (state) => {
   let primaryInfo = {}
   let secondaryInfo = {}
   let secondaryDisplayAmount = '0'
+  let isLoading = false
 
-  if (guiWallet && currencyCode) {
-    const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
-    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
-    primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-    secondaryExchangeDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-    secondaryDisplayDenomination = secondaryExchangeDenomination
-    primaryInfo = {
-      displayCurrencyCode: currencyCode,
-      displayDenomination: primaryDisplayDenomination,
-      exchangeDenomination: primaryExchangeDenomination
+  try {
+    if (guiWallet && currencyCode) {
+      const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
+      secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+      primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
+      primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+      secondaryExchangeDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+      secondaryDisplayDenomination = secondaryExchangeDenomination
+      primaryInfo = {
+        displayCurrencyCode: currencyCode,
+        displayDenomination: primaryDisplayDenomination,
+        exchangeDenomination: primaryExchangeDenomination
+      }
+      secondaryInfo = {
+        displayCurrencyCode: guiWallet.fiatCurrencyCode,
+        displayDenomination: secondaryDisplayDenomination,
+        exchangeDenomination: secondaryExchangeDenomination
+      }
+      secondaryDisplayAmount =
+        parseFloat(1) *
+        parseFloat(secondaryToPrimaryRatio) *
+        parseFloat(primaryInfo.displayDenomination.multiplier) /
+        parseFloat(primaryInfo.exchangeDenomination.multiplier)
     }
-    secondaryInfo = {
-      displayCurrencyCode: guiWallet.fiatCurrencyCode,
-      displayDenomination: secondaryDisplayDenomination,
-      exchangeDenomination: secondaryExchangeDenomination
-    }
-    secondaryDisplayAmount =
-      parseFloat(1) *
-      parseFloat(secondaryToPrimaryRatio) *
-      parseFloat(primaryInfo.displayDenomination.multiplier) /
-      parseFloat(primaryInfo.exchangeDenomination.multiplier)
+  } catch (e) {
+    console.log(e)
+    isLoading = true
   }
 
   return {
+    isLoading,
     currencyCode,
     primaryInfo,
     secondaryInfo,

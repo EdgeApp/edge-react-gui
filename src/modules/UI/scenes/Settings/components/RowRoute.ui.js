@@ -5,14 +5,15 @@ import {
   TouchableHighlight,
   View
 } from 'react-native'
+
 import T from '../../../components/FormattedText'
 import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
 
 type Props = {
-    leftText: string,
-    right?: any,
-    routeFunction(): void
+  leftText: string,
+  right?: any,
+  routeFunction: () => void
 }
 export default class RowRoute extends Component<Props> {
   render () {

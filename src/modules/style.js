@@ -8,6 +8,9 @@ export const stylesRaw = {
   mainMenuContext: {
     flex: 1
   },
+  main: {
+    backgroundColor: THEME.COLORS.WHITE
+  },
   titleStyle: {
     alignSelf: 'center',
     fontSize: 20,

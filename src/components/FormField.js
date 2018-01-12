@@ -38,7 +38,9 @@ class FormField extends Component {
     forceFocus: false,
     returnKeyType: 'go',
     label: '',
-    keyboardType: 'default'
+    keyboardType: 'default',
+    style: {},
+    disabled: false
   }
   componentWillMount () {
     const secure = this.props.secureTextEntry
@@ -57,10 +59,11 @@ class FormField extends Component {
       textColor,
       errorColor,
       titleTextStyle
-
     } = this.props.style
+
     return (
       <Input
+        disabled={this.props.disabled}
         label={this.props.label}
         onChangeText={this.props.onChangeText}
         error={this.props.error}

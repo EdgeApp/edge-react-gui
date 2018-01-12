@@ -106,6 +106,10 @@ const strings = {
   settings_button_use_touchID: 'Use TouchID',
   settings_days: 'Day(s)',
   settings_denominations_title: 'Denominations',
+  settings_options_title: 'Options',
+  settings_spending_limits: 'Spending Limits',
+  settings_password_spending_limit_title: 'Password Spending Limit',
+  settings_pin_spending_limit_title: 'Pin Spending Limit',
   settings_hours: 'Hour(s)',
   settings_minutes: 'Minute(s)',
   settings_modal_send_logs_title: 'Send logs?',
@@ -181,7 +185,23 @@ const strings = {
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
   transaction_details_notes_title: 'Notes',
   string_search: 'Search',
-  confirm_password_text: 'Confirm Password'
+  confirm_password_text: 'Confirm Password',
+  bitcoin_cash_set_spending_limits: 'BSet Spending Limits for BitcoinCash',
+  bitcoin_set_spending_limits: 'Set Spending Limits for Bitcoin',
+  bitcoin: 'Bitcoin',
+  bitcoinCash: 'BitcoinCash',
+  cancel: 'Cancel',
+  enter_password_to_make_changes: 'Enter password to make changes',
+  enter_your_password: 'Enter your password',
+  ethereum_set_spending_limits: 'Set Spending Limits for Ethereum',
+  ethereum: 'Ethereum',
+  litecoin_set_spending_limits: 'Set Spending Limits for Litecoin',
+  litecoin: 'Litecoin',
+  per_day_spending_limit_description: 'Require password above daily limit',
+  per_day_spending_limit: 'Daily Spending Limit',
+  per_transaction_spending_limit_description: 'Require PIN above transaction limit',
+  per_transaction_spending_limit: 'Transaction Spending Limit',
+  spending_limits: 'Spending Limits'
 }
 
 export default strings

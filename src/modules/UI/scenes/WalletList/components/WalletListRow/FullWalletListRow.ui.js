@@ -101,6 +101,8 @@ class FullWalletListRow extends Component<Props, State> {
     const currencyCode = walletData.currencyCode
     const cryptocurrencyName = walletData.currencyNames[currencyCode]
     const denomination = this.props.displayDenomination
+
+    if (!denomination || !denomination.multiplier) return null // TODO: Remove this guard when settings are safe --KS
     const multiplier = denomination.multiplier
     const id = walletData.id
     const name = walletData.name || s.strings.string_no_name

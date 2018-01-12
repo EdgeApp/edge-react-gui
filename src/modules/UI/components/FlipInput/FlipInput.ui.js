@@ -25,7 +25,6 @@ type State = {
   isToggled: boolean,
   primaryDisplayAmount: string,
   secondaryDisplayAmount: string
-
 }
 
 type Props = {
@@ -182,6 +181,9 @@ export default class FlipInput extends Component<Props, State> {
 
   render () {
     const {primaryInfo, secondaryInfo} = this.props
+    if (!primaryInfo || !primaryInfo.displayDenomination || !primaryInfo.exchangeDenomination) return null // TODO: Remove guard once settings are safe --KS
+    if (!secondaryInfo || !secondaryInfo.displayDenomination || !secondaryInfo.exchangeDenomination) return null // TODO: Remove guard once settings are safe --KS
+
     const {isToggled} = this.state
     const frontAnimatedStyle = {
       transform: [

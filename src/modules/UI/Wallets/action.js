@@ -119,7 +119,9 @@ export const setEnabledTokens = (walletId: string, enabledTokens: Array<string>,
     // refresh the wallet in Redux
     dispatch(refreshWallet(walletId))
   })
-  .catch((e) => dispatch(displayErrorAlert(e.message)))
+  .catch((e) => {
+    return dispatch(displayErrorAlert(e.message))
+  })
 }
 
 export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch, getState: GetState) => {
