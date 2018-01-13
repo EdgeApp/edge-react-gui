@@ -181,7 +181,8 @@ const strings = {
   fragment_tx_detail_mining_fee: '+ %f (Fee)',
   transaction_details_notes_title: 'Notes',
   string_search: 'Search',
-  confirm_password_text: 'Confirm Password'
+  confirm_password_text: 'Confirm Password',
+  change_mining_fee_custom_title: 'Set Custom Mining Fee'
 }
 
 export default strings

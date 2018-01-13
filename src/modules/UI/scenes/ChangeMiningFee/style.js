@@ -54,6 +54,18 @@ const styles = {
     borderBottomWidth: 1,
     borderColor: THEME.COLORS.GRAY_2,
     color: THEME.COLORS.GRAY_2
+  },
+  customFeeButtonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    paddingTop: 25,
+    alignSelf: 'center',
+    height: 52,
+    width: 250
+  },
+  customFeeButton: {
+    backgroundColor: THEME.COLORS.SECONDARY,
+    borderRadius: 3
   }
 }
 export default StyleSheet.create(styles)

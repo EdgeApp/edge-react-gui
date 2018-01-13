@@ -1,40 +1,39 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, TextInput, TouchableHighlight} from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
-
+import StylizedModal from '../../components/Modal/Modal.ui'
 import RadioButton from './components/RadioButton.ui'
+import {CustomFeesModal} from './components/CustomFeesModal.ui'
+
+import {PrimaryButton} from '../../components/Buttons/Buttons.ui'
+
 import * as FEE from '../../../../constants/FeeConstants'
 import s from '../../../../locales/strings.js'
 
-import style from './style'
+import styles from './style'
 
-const feeOptions = [
-  { value: FEE.LOW_FEE, label: 'mining_fee_low_label_choice' },
-  { value: FEE.STANDARD_FEE, label: 'mining_fee_standard_label_choice' },
-  { value: FEE.HIGH_FEE, label: 'mining_fee_high_label_choice' }
-  // { value: FEE.CUSTOM_FEE, label: 'mining_fee_custom_label_choice' },
-]
+const HIGH_FEE_TEXT     = s.strings.mining_fee_high_label_choice
+const STANDARD_FEE_TEXT = s.strings.mining_fee_standard_label_choice
+const LOW_FEE_TEXT      = s.strings.mining_fee_low_label_choice
+const CUSTOM_FEE_TEXT   = s.strings.change_mining_fee_custom_title
 
 type Props = {
-  // fee: string,
   feeSetting: string,
   onSubmit: (feeSetting: string) => void,
 }
-
 type State = {
-  // fee: string,
   feeSetting: string,
 }
-
-export default class ChangeMiningFee extends Component<Props, State> {
+export class ChangeMiningFee extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      // fee: props.fee,
-      feeSetting: props.feeSetting
+      feeSetting: props.feeSetting,
+      fee: '',
+      customFeeModalVisible: false
     }
   }
 
@@ -44,45 +43,69 @@ export default class ChangeMiningFee extends Component<Props, State> {
     }
   }
 
-  handlePress = (feeSetting: string) => this.setState({ feeSetting });
-  // handleChange = (fee: string) => this.setState({ fee: fee.replace(/\D/g, '') });
-
   render () {
     const { feeSetting } = this.state
 
     return (
-      <View style={style.container}>
-        <Gradient style={style.gradient} />
-        <View style={style.headerContainer}>
-          <Text style={style.header} >
+      <View style={styles.container}>
+        <Gradient style={styles.gradient} />
+
+        <View style={styles.headerContainer}>
+          <Text style={styles.header} >
             {s.strings.change_mining_fee_body}
           </Text>
         </View>
-        <View style={style.body}>
-          {feeOptions.map(({ value, label }) => (
-            <View key={value} style={style.row}>
-              <RadioButton
-                value={value}
-                label={s.strings[label]}
-                onPress={this.handlePress}
-                isSelected={value === feeSetting}
-              />
-            </View>
-          ))}
-        </View>
-        {/* feeSetting === FEE.CUSTOM_FEE
-          && <View>
-            <TextInput
-              style={style.input}
-              value={fee}
-              keyboardType='numeric'
-              placeholder='Satoshi per byte'
-              onChangeText={this.handleChange}
-              returnKeyType='done'
+
+        <View style={styles.body}>
+          <View key={FEE.HIGH_FEE} style={styles.row}>
+            <RadioButton
+              value={FEE.HIGH_FEE}
+              label={HIGH_FEE_TEXT}
+              onPress={this.handlePress}
+              isSelected={FEE.HIGH_FEE === feeSetting}
             />
           </View>
-        */}
+
+          <View key={FEE.STANDARD_FEE} style={styles.row}>
+            <RadioButton
+              value={FEE.STANDARD_FEE}
+              label={STANDARD_FEE_TEXT}
+              onPress={this.handlePress}
+              isSelected={FEE.STANDARD_FEE === feeSetting}
+            />
+          </View>
+
+          <View key={FEE.LOW_FEE} style={styles.row}>
+            <RadioButton
+              value={FEE.LOW_FEE}
+              label={LOW_FEE_TEXT}
+              onPress={this.handlePress}
+              isSelected={FEE.LOW_FEE === feeSetting}
+            />
+          </View>
+        </View>
+
+        <View style={styles.customFeeButtonContainer}>
+          <PrimaryButton
+            text={CUSTOM_FEE_TEXT}
+            style={styles.customFeeButton}
+            onPressFunction={this.onPressCustomFees} />
+        </View>
+
+        <CustomFeesModal visible={this.state.customFeeModalVisible}>
+
+        </CustomFeesModal>
       </View>
     )
   }
+
+  handlePress = (feeSetting: string) => {
+    return this.setState({ feeSetting })
+  }
+
+  onPressCustomFees = () => {
+    this.setState({ customFeeModalVisible: true })
+  }
 }
+
+export default ChangeMiningFee

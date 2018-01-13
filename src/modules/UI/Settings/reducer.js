@@ -19,7 +19,8 @@ const initialState = {
   },
   loginStatus: null,
   isTouchSupported: false,
-  isTouchEnabled: false
+  isTouchEnabled: false,
+  currencyInfos: {}
 }
 
 export const settings = (state = initialState, action) => {
@@ -317,6 +318,17 @@ export const settings = (state = initialState, action) => {
             ...supportedWalletTypes,
             ...walletTypes
           ]
+        }
+      }
+    }
+
+    case WALLET_ACTION.UPSERT_WALLET: {
+      const wallet = action.data.wallet
+      return {
+        ...state,
+        currencyInfos: {
+          ...state.currencyInfos,
+          [wallet.currencyCode]: wallet.currencyInfo
         }
       }
     }
