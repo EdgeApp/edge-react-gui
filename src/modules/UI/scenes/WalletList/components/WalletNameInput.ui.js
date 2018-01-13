@@ -1,6 +1,8 @@
 // @flow
+
 import React, {Component} from 'react'
 import {View} from 'react-native'
+
 import {FormField} from '../../../../../components/FormField.js'
 import styles from '../style'
 

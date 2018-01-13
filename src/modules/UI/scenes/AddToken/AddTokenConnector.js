@@ -15,7 +15,7 @@ const mapStateToProps = (state: State, ownProps: any) => ({
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatch,
-  addNewToken: (walletId: string, tokenObj: Object) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, tokenObj))
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

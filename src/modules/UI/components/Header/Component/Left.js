@@ -18,7 +18,7 @@ export default class Left extends Component {
       <BackButton label={labelText} onPress={() => Actions[consts]({type: 'reset'})} />
 
     switch (sceneName) {
-      case Constants.CREATE_WALLET:
+      case Constants.CREATE_WALLET_NAME:
         return makeBackButton(CANCEL_TEXT, Constants.WALLET_LIST)
       case Constants.TRANSACTION_DETAILS:
         return makeBackButton(CANCEL_TEXT, Constants.TRANSACTION_LIST)
