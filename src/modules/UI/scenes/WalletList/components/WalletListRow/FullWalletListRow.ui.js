@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import s from '../../../../../../locales/strings.js'
+import {intl} from '../../../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   View,
@@ -107,7 +108,7 @@ class FullWalletListRow extends Component<Props, State> {
     const symbol = denomination.symbol
     const symbolImageDarkMono = walletData.symbolImageDarkMono
     const preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-    const finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // check if infinitesimal (would display as zero), cut off trailing zeroes
+    const finalCryptoAmount = intl.formatNumber(decimalOrZero(preliminaryCryptoAmount, 6)) // check if infinitesimal (would display as zero), cut off trailing zeroes
 
     // need to crossreference tokensEnabled with nativeBalances
     const enabledNativeBalances = {}

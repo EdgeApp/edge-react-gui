@@ -138,6 +138,11 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
   return `${integers}.${decimals.slice(0, precision)}`
 }
 
+/**
+ * @deprecated
+ * @param input
+ * @returns {string}
+ */
 export const formatNumber = (input: string): string => {
   let out = input.replace(/^0+/, '')
   if (out.startsWith('.')) {
