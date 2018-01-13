@@ -7,7 +7,6 @@ import com.chirag.RNMail.RNMail;
 import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import com.jamesisaac.rnbackgroundtask.BackgroundTaskPackage;
 import com.beefe.picker.PickerViewPackage;
-import com.reactnativecomponent.splashscreen.RCTSplashScreenPackage;
 import co.airbitz.AbcCoreJsUi.AbcCoreJsUiPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import cl.json.RNSharePackage;
@@ -53,7 +52,6 @@ public class MainApplication extends Application implements ReactApplication {
             new RCTSplashScreenPackage(),
             new BackgroundTaskPackage(),
             new PickerViewPackage(),
-            new RCTSplashScreenPackage(),
             new AbcCoreJsUiPackage(),
             new RNSoundPackage(),
             new RNSharePackage(),
