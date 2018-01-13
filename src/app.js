@@ -9,8 +9,9 @@ import {logToServer, log} from './util/logger'
 import ENV from '../env.json'
 import RNFS from 'react-native-fs'
 import {Platform} from 'react-native'
-
+import {makeCoreContext} from './util/makeContext.js'
 import './util/polyfills'
+import BackgroundTask from 'react-native-background-task'
 
 const store: {} = configureStore({})
 
@@ -88,7 +89,23 @@ global.pcount = function (label: string) {
   }
 }
 
+BackgroundTask.define(() => {
+  console.log('Hello from a background task')
+  makeCoreContext()
+    .then(async (context) => {
+      console.log('I got the context for this. ')
+      console.log(context)
+      const messages = await context.fetchLoginMessages()
+      console.log(messages)
+    })
+  BackgroundTask.finish()
+})
+
 export default class App extends Component<{}> {
+  componentDidMount () {
+    BackgroundTask.schedule()
+  }
+
   render () {
     return (
       <Provider store={store}>

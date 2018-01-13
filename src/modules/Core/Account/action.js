@@ -1,5 +1,5 @@
-export const ADD_ACCOUNT = 'ADD_ACCOUNT'
+import * as Constants from '../../../constants/indexConstants.js'
 export const addAccount = (account) => ({
-  type: ADD_ACCOUNT,
+  type: Constants.ADD_ACCOUNT,
   data: {account}
 })

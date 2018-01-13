@@ -142,6 +142,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-mail')
+    compile project(':react-native-smart-splash-screen')
+    compile project(':react-native-background-task')
     compile project(':react-native-picker')
     compile project(':react-native-smart-splashscreen')
     compile project(':airbitz-core-js-ui')
