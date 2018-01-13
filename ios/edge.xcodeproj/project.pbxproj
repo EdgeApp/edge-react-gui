@@ -520,7 +520,7 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = AbcCoreJsUi;
 		};
- 		E6CBD1EC2008075200A967E7 /* PBXContainerItemProxy */ = {
+		E6CBD1EC2008075200A967E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D8A4F000025E4FB6B7D895BB /* RNMail.xcodeproj */;
 			proxyType = 2;
@@ -2428,6 +2428,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -2482,6 +2483,7 @@
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
