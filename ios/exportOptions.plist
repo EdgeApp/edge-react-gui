@@ -3,6 +3,12 @@
 <plist version="1.0">
 <dict>
     <key>method</key>
-    <string>app-store</string>
+    <string>ad-hoc</string>
+    <key>teamID</key>
+    <string>Your10CharacterTeamId</string>
+    <key>compileBitcode</key>
+    <false/>
+    <key>uploadBitcode</key>
+    <false/>
 </dict>
 </plist>
