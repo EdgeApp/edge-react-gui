@@ -13,26 +13,20 @@ import {FormField} from '../../../../components/FormField.js'
 
 import styles from './style.js'
 import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
+import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
-const WALLET_NAME_INPUT_PLACEHOLDER = s.strings.fragment_wallets_addwallet_name_hint
-const CANCEL_TEXT = s.strings.string_cancel_cap
-const WALLET_NAME_INVALID_TEXT = s.strings.create_wallet_invalid_name
-const WALLET_NAME_ENTER_VALID_TEXT = s.strings.create_wallet_enter_valid_name
-const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
-const NEXT_TEXT = s.strings.string_next_capitalized
-
-export type Props = {
+export type CreateWalletNameProps = {
 
 }
 
-export type State = {
+type State = {
   walletName: string
 }
 
-export class CreateWalletName extends Component<Props, State> {
-  constructor (props: Props) {
+export class CreateWalletNameComponent extends Component<CreateWalletNameProps, State> {
+  constructor (props: CreateWalletNameProps) {
     super(props)
     this.state = {
       walletName: ''
@@ -48,9 +42,9 @@ export class CreateWalletName extends Component<Props, State> {
 
   onNext = (): void => {
     if (this.isValidWalletName()) {
-      Actions.createWalletSelectCrypto({walletName: this.state.walletName})
+      Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]({walletName: this.state.walletName})
     } else {
-      Alert.alert(WALLET_NAME_INVALID_TEXT, WALLET_NAME_ENTER_VALID_TEXT)
+      Alert.alert(s.strings.create_wallet_invalid_name, s.strings.create_wallet_enter_valid_name)
     }
   }
 
@@ -71,19 +65,19 @@ export class CreateWalletName extends Component<Props, State> {
           <WalletNameInput
             onChangeText={this.handleChangeWalletName}
             value={this.state.walletName}
-            placeholder={WALLET_NAME_INPUT_PLACEHOLDER}
+            placeholder={s.strings.fragment_wallets_addwallet_name_hint}
           />
          <View style={styles.buttons}>
             <SecondaryButton
               style={[styles.cancel]}
               onPressFunction={this.onCancel}
-              text={CANCEL_TEXT} />
+              text={s.strings.string_cancel_cap} />
 
             <PrimaryButton
               style={[styles.next]}
               disabled={!this.state.walletName}
               onPressFunction={this.onNext}
-              text={NEXT_TEXT}
+              text={s.strings.string_next_capitalized}
               processingElement={<ActivityIndicator />}
             />
           </View>
@@ -111,7 +105,7 @@ class WalletNameInput extends Component<WalletNameInputProps> {
           autoFocus
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
-          label={WALLET_NAME_INPUT_PLACEHOLDER}
+          label={s.strings.fragment_wallets_addwallet_name_hint}
           value={this.props.value}
         />
       </View>

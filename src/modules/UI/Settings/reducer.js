@@ -19,7 +19,9 @@ const initialState = {
   },
   loginStatus: null,
   isTouchSupported: false,
-  isTouchEnabled: false
+  isTouchEnabled: false,
+  isOtpEnabled: false,
+  otpKey: null
 }
 
 export const settings = (state = initialState, action) => {
@@ -237,6 +239,14 @@ export const settings = (state = initialState, action) => {
     case ACTION.SET_SETTINGS_LOCK: {
     // const {denomination} = data
       return {...state, changesLocked: data}
+    }
+
+    case ACTION.OTP_SETTINGS: {
+      return {
+        ...state,
+        isOtpEnabled: data.enabled,
+        otpKey: data.otpKey
+      }
     }
 
     case ACTION.TOUCH_ID_SETTINGS: {

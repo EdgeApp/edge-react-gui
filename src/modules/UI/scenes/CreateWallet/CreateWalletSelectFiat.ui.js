@@ -14,7 +14,7 @@ import Text from '../../components/FormattedText'
 import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import SearchResults from '../../components/SearchResults'
-
+import * as Constants from '../../../../constants/indexConstants.js'
 import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
 import PLATFORM from '../../../../theme/variables/platform'
@@ -28,31 +28,27 @@ import type
   DeviceDimensions
 } from '../../../../types'
 
-const WALLET_NAME_INPUT_PLACEHOLDER = s.strings.fragment_wallets_addwallet_name_hint
-const WALLET_TYPE_PICKER_PLACEHOLDER = s.strings.create_wallet_choose_crypto
-const FIAT_PICKER_PLACEHOLDER = s.strings.fragment_wallets_addwallet_fiat_hint
-
-const DONE_TEXT = s.strings.fragment_create_wallet_create_wallet
-const CANCEL_TEXT = s.strings.string_cancel_cap
-const BACK_TEXT = s.strings.title_back
-const INVALID_DATA_TITLE = s.strings.create_wallet_invalid_input
-const INVALID_DATA_TEXT = s.strings.create_wallet_select_valid_fiat
-const NEXT_TEXT = s.strings.string_next_capitalized
-
-export type Props = {
+export type CreateWalletSelectFiatOwnProps = {
   walletName: string,
   selectedWalletType: string,
   supportedFiats: Array<GuiFiatType>,
   dimensions: DeviceDimensions
 }
 
-export type State = {
+type State = {
   searchTerm: string,
   selectedFiat: string
 }
 
-export class CreateWalletSelectFiatComponent extends Component<Props, State> {
-  constructor (props: Props & State) {
+export type CreateWalletSelectFiatStateProps = {
+  dimensions: DeviceDimensions,
+  supportedFiats: Array<GuiFiatType>
+}
+
+export type CreateWalletSelectFiatComponentProps = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
+
+export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelectFiatComponentProps, State> {
+  constructor (props: CreateWalletSelectFiatComponentProps & State) {
     super(props)
     this.state = {
       walletName: this.props.walletName || '',
@@ -78,13 +74,13 @@ export class CreateWalletSelectFiatComponent extends Component<Props, State> {
 
   onNext = (): void => {
     if (this.isValidFiatType()) {
-      Actions.createWalletReview({
+      Actions[Constants.CREATE_WALLET_REVIEW]({
         walletName: this.props.walletName,
         selectedWalletType: this.props.selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat)
       })
     } else {
-      Alert.alert(INVALID_DATA_TITLE, INVALID_DATA_TEXT)
+      Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_fiat)
     }
   }
 
@@ -120,7 +116,7 @@ export class CreateWalletSelectFiatComponent extends Component<Props, State> {
 
   render () {
     const filteredArray = this.props.supportedFiats.filter((entry) => {
-      return (entry.label.indexOf(this.state.searchTerm) >= 0)
+      return (entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0)
     })
     const isDisabled = !this.isValidFiatType()
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
@@ -139,7 +135,7 @@ export class CreateWalletSelectFiatComponent extends Component<Props, State> {
             autoCapitalize={'words'}
             onChangeText={this.handleSearchTermChange}
             value={this.state.searchTerm}
-            label={FIAT_PICKER_PLACEHOLDER}
+            label={s.strings.fragment_wallets_addwallet_fiat_hint}
           />
           <SearchResults
             renderRegularResultFxn={this.renderFiatTypeResult}
@@ -155,13 +151,13 @@ export class CreateWalletSelectFiatComponent extends Component<Props, State> {
             <SecondaryButton
               style={[styles.cancel]}
               onPressFunction={this.onBack}
-              text={BACK_TEXT} />
+              text={s.strings.title_back} />
 
             <PrimaryButton
               style={[styles.next]}
               disabled={isDisabled}
               onPressFunction={this.onNext}
-              text={NEXT_TEXT}
+              text={s.strings.string_next_capitalized}
             />
           </View>
         </View>

@@ -5,6 +5,7 @@ import {
   View
 } from 'react-native'
 import s from '../../../../locales/strings.js'
+import {intl} from '../../../../locales/intl'
 import * as UTILS from '../../../utils'
 import styles from './styles'
 
@@ -46,6 +47,9 @@ export default class ExchangeRate extends Component<Props> {
       secondaryCurrencyCode
     }
 
+    const formattedPrimaryAmount = intl.formatNumber(primaryDisplayAmount || '1')
+    const formattedSecondaryAmount = intl.formatNumber(formattedSecondaryDisplayAmount, {toFixed: secondaryInfo.displayDenomination.precision})
+
     return (
       <View style={styles.view}>
         {
@@ -54,7 +58,7 @@ export default class ExchangeRate extends Component<Props> {
               {EXCHANGE_RATE_LOADING_TEXT}
             </Text>
           : <Text style={styles.text}>
-              {primaryDisplayAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryDisplayAmount} {secondaryCurrencyCode}
+              {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}
             </Text>
         }
       </View>

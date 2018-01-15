@@ -17,10 +17,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import { createCurrencyWallet } from '../../../../actions/indexActions'
 import type { GuiWalletType, GuiFiatType } from '../../../../types'
 
-const DONE_TEXT = s.strings.fragment_create_wallet_create_wallet
-const BACK_TEXT = s.strings.title_back
-
-export type Props = {
+export type CreateWalletReviewOwnProps = {
   walletName: string,
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
@@ -30,7 +27,13 @@ export type Props = {
   supportedFiats: Array<GuiFiatType>
 }
 
-export class CreateWalletReviewComponent extends Component<Props> {
+export type CreateWalletReviewDispatchProps = {
+  createCurrencyWallet: (string, string, string) => void
+}
+
+export type CreateWalletReviewComponentProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps
+
+export class CreateWalletReviewComponent extends Component<CreateWalletReviewComponentProps> {
   onSubmit = (): void => {
     const { walletName, selectedWalletType, selectedFiat } = this.props
     this.props.createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value))
@@ -59,11 +62,11 @@ export class CreateWalletReviewComponent extends Component<Props> {
             <SecondaryButton
               style={[styles.cancel]}
               onPressFunction={this.onBack}
-              text={BACK_TEXT} />
+              text={s.strings.title_back} />
 
             <PrimaryButton
               onPressFunction={this.onSubmit}
-              text={DONE_TEXT}
+              text={s.strings.fragment_create_wallet_create_wallet}
               processingFlag={isCreatingWallet}
               processingElement={<ActivityIndicator />}
             />

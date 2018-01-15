@@ -17,7 +17,8 @@ import {FormField} from '../../../../components/FormField.js'
 import type {CustomTokenInfo} from '../../../../types.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import DeleteTokenButtons from './components/DeleteTokenButtons.ui.js'
-import DeleteIcon from '../WalletList/components/DeleteIcon.ui'
+import * as Constants from '../../../../constants/indexConstants'
+import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
 import * as UTILS from '../../../utils'
 import type {AbcMetaToken} from 'airbitz-core-types'
 import _ from 'lodash'
@@ -79,7 +80,7 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
         <StylizedModal
           headerText={s.strings.edittoken_delete_prompt}
           visibilityBoolean={this.props.deleteTokenModalVisible}
-          featuredIcon={<DeleteIcon style={styles.deleteIcon} />}
+          featuredIcon={<OptionIcon iconName={Constants.DELETE} style={styles.deleteIcon} />}
           modalBottom={<DeleteTokenButtons
             onPressDelete={this.deleteToken}
             onPressCancel={() => this.props.hideDeleteTokenModal()}

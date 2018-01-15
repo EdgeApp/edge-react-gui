@@ -1,21 +1,18 @@
 // @flow
 
 import {connect} from 'react-redux'
-import {CreateWalletReviewComponent} from './CreateWalletReview.ui'
+// eslint-disable-next-line no-duplicate-imports
+import {
+  CreateWalletReviewComponent
+} from './CreateWalletReview.ui'
+// eslint-disable-next-line no-duplicate-imports
+import type {
+  CreateWalletReviewDispatchProps
+} from './CreateWalletReview.ui'
 import {createCurrencyWallet} from './action'
 import type {State, Dispatch} from '../../../ReduxTypes'
 import {getSupportedFiats} from '../../../utils.js'
 import {getSupportedWalletTypes} from '../../Settings/selectors.js'
-
-export type OwnProps = {
-  walletName: string,
-  selectedWalletType: string,
-  selectedFiat: string
-}
-
-export type DispatchProps = {
-  createCurrencyWallet: (string, string, string) => void
-}
 
 const mapStateToProps = (state: State) => ({
   isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet,
@@ -23,7 +20,7 @@ const mapStateToProps = (state: State) => ({
   supportedFiats: getSupportedFiats()
 })
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): CreateWalletReviewDispatchProps => ({
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string): any => dispatch(createCurrencyWallet(walletName, walletType, fiatCurrencyCode))
 })
 
