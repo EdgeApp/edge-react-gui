@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   TouchableHighlight,
@@ -8,7 +10,13 @@ import IonIcon from 'react-native-vector-icons/Ionicons'
 import styles, {styles as styleRaw} from './styles'
 import {border as debugBorder} from '../../../../utils'
 
-class Row extends Component {
+type Props = {
+  left: any,
+  isSelected: boolean,
+  onPress: () => void
+}
+type State = {}
+class Row extends Component<Props, State> {
   render () {
     const {
       left,
@@ -28,9 +36,13 @@ class Row extends Component {
 
       <View style={[styles.rowTextRow, debugBorder()]}>
         <View style={[styles.rowLeftContainer, debugBorder()]}>
-          <T style={[styles.rowLeftText, debugBorder()]}>
-            {left}
-          </T>
+          {
+            typeof left === 'string'
+              ? <T style={[styles.rowLeftText, debugBorder()]}>
+                  {left}
+                </T>
+              : left
+          }
         </View>
         {icon}
       </View>

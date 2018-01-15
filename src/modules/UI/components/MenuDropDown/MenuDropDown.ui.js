@@ -1,4 +1,4 @@
-//@flow
+// @flow
 import React, {Component} from 'react'
 import {View, Text} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
@@ -10,7 +10,6 @@ type Props = {
   data: any,
   icon: string,
   iconType: string,
-  text: string,
   onSelect: Function
 }
 
@@ -39,7 +38,7 @@ export default class MenuDropDown extends Component<Props> {
   render () {
     let optionsStyle = {}
     if (this.props.rightSide) {
-      optionsStyle = {left:'1%'}
+      optionsStyle = {left: '1%'}
     }
     const style = this.props.style
     return (
@@ -60,19 +59,11 @@ export default class MenuDropDown extends Component<Props> {
   }
   renderMenuIcon = (style: any) => {
     if (this.props.icon) {
-      return (
-        <Icon
-          style={style.icon}
-          name={this.props.icon}
-          size={style.icon.fontSize}
-          type={this.props.iconType}
-        />
-      )
+      return <Icon
+        style={style.icon}
+        name={this.props.icon}
+        size={style.icon.fontSize}
+        type={this.props.iconType} />
     }
-    return (
-      <Text style={style.altIconText}>
-        {this.props.text}
-      </Text>
-    )
   }
 }

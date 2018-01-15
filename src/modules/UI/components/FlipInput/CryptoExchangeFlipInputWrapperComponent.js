@@ -7,7 +7,6 @@ import * as UTILS from '../../../utils'
 import s from '../../../../locales/strings.js'
 
 export default class CryptoExchangeFlipInputWrapperComponent extends Component {
-
   renderFee (style) {
     if (this.props.fee) {
       return (
@@ -27,13 +26,13 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
     const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier
     const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
 
-    if (primaryNativeAmount != this.props.nativeAmount) {
+    if (primaryNativeAmount !== this.props.nativeAmount) {
       const {whichWallet} = this.props
       const data = {
         whichWallet,
         primaryNativeAmount
       }
-      console.log(this.props.whichWallet+' !==== Calling ')
+      console.log(this.props.whichWallet + ' !==== Calling ')
       this.props.setNativeAmount(data)
     }
   }
@@ -60,7 +59,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
     } = this.props
 
     if (!this.props.uiWallet) {
-      const buttonText = this.props.whichWallet === Constants.TO ? s.strings.select_dest_wallet : s.strings.select_src_wallet
+      const buttonText = this.props.whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
       return <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
               <TextAndIconButton
@@ -80,7 +79,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
               style={style.walletSelector}
               onPress={this.launchSelector}
               icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={this.props.uiWallet.name+':'+currencyCode}
+              title={this.props.uiWallet.name + ':' + currencyCode}
             />
           </View>
           {this.renderLogo(style, this.props.currencyLogo)}

@@ -17,13 +17,14 @@ import {FormField} from '../../../../components/FormField.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
 import type {AbcMetaToken} from 'airbitz-core-types'
 import _ from 'lodash'
+import {decimalPlacesToDenomination} from '../../../utils.js'
 import type { CustomTokenInfo, GuiWallet } from '../../../../types'
 import {
   getWallet
 } from '../../selectors'
 
 export type DispatchProps = {
-  addNewToken: (string, AbcMetaToken) => void
+  addNewToken: (string, string, string, string, string) => void
 }
 
 export type State = {
@@ -69,7 +70,7 @@ class AddToken extends Component<Props, State> {
                 style={[styles.currencyName]}
                 value={this.state.currencyName}
                 onChangeText={this.onChangeName}
-                autoCapitalize={'words'}
+                autoCapitalize='words'
                 autoFocus
                 label={s.strings.addtoken_name_input_text}
                 returnKeyType={'done'}
@@ -132,7 +133,7 @@ class AddToken extends Component<Props, State> {
 
   onChangeCurrencyCode = (input: string) => {
     this.setState({
-      currencyCode: input.substring(0,5)
+      currencyCode: input.substring(0, 5)
     })
   }
 
@@ -150,7 +151,7 @@ class AddToken extends Component<Props, State> {
 
   _onSave = () => {
     const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
-    const {currentCustomTokens, wallet} = this.props
+    const {currentCustomTokens, wallet, walletId} = this.props
     const currentCustomTokenIndex = _.findIndex(currentCustomTokens, (item) => item.currencyCode === currencyCode)
     const metaTokensIndex = _.findIndex(wallet.metaTokens, (item) => item.currencyCode === currencyCode)
     // if token is hard-coded into wallets of this type
@@ -160,27 +161,10 @@ class AddToken extends Component<Props, State> {
       Alert.alert(s.strings.manage_tokens_duplicate_currency_code)
     } else {
       if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-        const {walletId} = this.props
-        const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
-        const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
-        let tokenObj: any = {
-          currencyName,
-          currencyCode,
-          decimalPlaces,
-          contractAddress,
-          multiplier: multiplier,
-          denomination: multiplier,
-          denominations: [
-            {
-              name: currencyCode,
-              multiplier,
-              symbol: ''
-            }
-          ]
-        }
-        this.props.addNewToken(walletId, tokenObj)
+        const denomination = decimalPlacesToDenomination(decimalPlaces)
+        this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
       } else {
-        Alert.alert(s.strings.addtoken_default_error_message)
+        Alert.alert(s.strings.addtoken_invalid_information)
       }
     }
   }
@@ -195,7 +179,7 @@ const mapStateToProps = (state: any, ownProps: any) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   dispatch,
-  addNewToken: (walletId: string, tokenObj: AbcMetaToken) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, tokenObj))
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

@@ -18,23 +18,23 @@ export default class Left extends Component {
       <BackButton label={labelText} onPress={() => Actions[consts]({type: 'reset'})} />
 
     switch (sceneName) {
-    case Constants.CREATE_WALLET:
-      return makeBackButton(CANCEL_TEXT, Constants.WALLET_LIST)
-    case Constants.TRANSACTION_DETAILS:
-      return makeBackButton(CANCEL_TEXT, Constants.TRANSACTION_LIST)
-    case Constants.SEND_CONFIRMATION:
-      return makeBackButton(BACK_TEXT, Constants.SCAN)
-    case Constants.CHANGE_PASSWORD:
-      return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.CHANGE_PIN:
-      return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
-    case Constants.RECOVER_PASSWORD:
-      return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
-    default:
-      if (Object.keys(Constants.CURRENCY_SETTINGS).indexOf(sceneName) !== -1) {
-        return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
-      }
-      return null
+      case Constants.CREATE_WALLET_NAME:
+        return makeBackButton(CANCEL_TEXT, Constants.WALLET_LIST)
+      case Constants.TRANSACTION_DETAILS:
+        return makeBackButton(CANCEL_TEXT, Constants.TRANSACTION_LIST)
+      case Constants.SEND_CONFIRMATION:
+        return makeBackButton(BACK_TEXT, Constants.SCAN)
+      case Constants.CHANGE_PASSWORD:
+        return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
+      case Constants.CHANGE_PIN:
+        return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
+      case Constants.RECOVER_PASSWORD:
+        return makeBackButton(CANCEL_TEXT, Constants.SETTINGS_OVERVIEW)
+      default:
+        if (Object.keys(Constants.CURRENCY_SETTINGS).indexOf(sceneName) !== -1) {
+          return makeBackButton(BACK_TEXT, Constants.SETTINGS_OVERVIEW)
+        }
+        return null
     }
   }
 }

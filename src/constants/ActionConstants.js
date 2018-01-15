@@ -1,6 +1,6 @@
 // @flow
 
-//Crypto Exchange
+// Crypto Exchange
 export const SELECT_FROM_WALLET_CRYPTO_EXCHANGE = 'selectFromWalletCryptoExchange_ALLENROCKS'
 export const SELECT_TO_WALLET_CRYPTO_EXCHANGE = 'selectToWalletCryptoExchange'
 export const SWAP_FROM_TO_CRYPTO_WALLETS = 'swapFromToCryptoWallets'
@@ -32,3 +32,9 @@ export const SAVE_ABC_LOBBY = 'saveAbcLobby'
 export const INVALIDATE_ABC_LOBBY = 'invalidateAbcLobby'
 export const SET_LOBBY_ERROR = 'setLobbyError'
 export const PROCESS_ABC_LOGIN = 'setLobbyError'
+
+// deepLink
+export const ERASE_DEEP_LINK = 'eraseDeepLink'
+export const DEEP_LINK_RECEIVED = 'deepLinkReceived'
+
+export const ADD_ACCOUNT = 'ADD_ACCOUNT'

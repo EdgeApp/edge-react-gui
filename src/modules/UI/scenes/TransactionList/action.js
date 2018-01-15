@@ -1,6 +1,20 @@
 // @flow
 
 import * as UTILS from '../../../utils'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+
+import {displayTransactionAlert} from '../../components/TransactionAlert/actions'
+
+import type {
+  Dispatch,
+  GetState
+} from '../../../ReduxTypes'
+
+import type {
+  AbcTransaction
+} from 'airbitz-core-types'
 
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
@@ -18,21 +32,6 @@ export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 
 export const NEW_TRANSACTIONS = PREFIX + 'NEW_TRANSACTIONS'
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
-
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
-
-import {displayTransactionAlert} from '../../components/TransactionAlert/actions'
-
-import type {
-  Dispatch,
-  GetState
-} from '../../../ReduxTypes'
-
-import type {
-  AbcTransaction
-} from 'airbitz-core-types'
 
 export const getTransactionsRequest = (walletId: string, currencyCode) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -57,7 +56,7 @@ export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispa
 }
 
 export const newTransactionsRequest = (walletId: string, abcTransactions: Array<AbcTransaction>) => (dispatch: Dispatch) => {
-  const abcTransaction: abcTransaction = abcTransactions[0]
+  const abcTransaction: AbcTransaction = abcTransactions[0]
   if (!UTILS.isReceivedTransaction(abcTransaction)) return
 
   dispatch(displayTransactionAlert(abcTransaction))

@@ -15,6 +15,7 @@ import * as UTILS from '../../../utils.js'
 import {bns} from 'biggystring'
 import type {GuiCurrencyInfo} from '../../../../types'
 import * as Constants from '../../../../constants/indexConstants'
+import {intl} from '../../../../locales/intl'
 
 export type FlipInputFieldInfo = GuiCurrencyInfo & {
   nativeAmount?: string,
@@ -58,14 +59,14 @@ export default class FlipInput extends Component<Props, State> {
       isToggled: !this.state.isToggled
     })
     if (this.state.isToggled) {
-      Animated.spring(this.animatedValue,{
+      Animated.spring(this.animatedValue, {
         toValue: 0,
         friction: 8,
         tension: 10
       }).start()
     }
     if (!this.state.isToggled) {
-      Animated.spring(this.animatedValue,{
+      Animated.spring(this.animatedValue, {
         toValue: 180,
         friction: 8,
         tension: 10
@@ -100,23 +101,28 @@ export default class FlipInput extends Component<Props, State> {
   }
 
   onPrimaryAmountChange = (primaryDisplayAmount: string) => {
-    if (!this.props.isValidInput(primaryDisplayAmount)) { return }
-    const formattedPrimaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(primaryDisplayAmount), 8)
+    if (!intl.isValidInput(primaryDisplayAmount)) {
+      return
+    }
+    const formattedPrimaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(primaryDisplayAmount), 8))
     this.setState({
       primaryDisplayAmount: formattedPrimaryDisplayAmount
     }, this.props.onPrimaryAmountChange(formattedPrimaryDisplayAmount))
   }
 
   onSecondaryAmountChange = (secondaryDisplayAmount: string) => {
-    if (!this.props.isValidInput(secondaryDisplayAmount)) { return }
-    const formattedSecondaryDisplayAmount = UTILS.truncateDecimals(UTILS.formatNumber(secondaryDisplayAmount), 2)
-    // console.log('BEFORE: this.setState', this.state)
+    if (!intl.isValidInput(secondaryDisplayAmount)) {
+      return
+    }
+    const formattedSecondaryDisplayAmount = intl.formatToNativeNumber(intl.truncateDecimals(intl.prettifyNumber(secondaryDisplayAmount), 2))
     this.setState({
-      secondaryDisplayAmount: formattedSecondaryDisplayAmount,
+      secondaryDisplayAmount: formattedSecondaryDisplayAmount
     }, () => this.props.onSecondaryAmountChange(formattedSecondaryDisplayAmount))
   }
 
-  topDisplayAmount = () => this.state.isToggled ? this.state.secondaryDisplayAmount : this.state.primaryDisplayAmount
+  topDisplayAmount = () => this.state.isToggled
+    ? intl.formatNumberInput(this.state.secondaryDisplayAmount)
+    : intl.formatNumberInput(this.state.primaryDisplayAmount)
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
   topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
@@ -128,7 +134,7 @@ export default class FlipInput extends Component<Props, State> {
         <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
           placeholder={'0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
-          value={amount}
+          value={intl.formatNumberInput(amount)}
           onChangeText={onChangeText}
           autoCorrect={false}
           keyboardType='numeric'

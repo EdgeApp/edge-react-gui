@@ -19,7 +19,7 @@ export const getWallet = (state: State, walletId: string) => {
   return wallet
 }
 
-export const getSelectedWalletId = (state: State): string  => {
+export const getSelectedWalletId = (state: State): string => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId
 }

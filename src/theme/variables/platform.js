@@ -164,7 +164,7 @@ export default {
   toolbarDefaultBg: (platform === 'ios') ? '#F8F8F8' : '#3F51B5',
   toolbarHeight: (platform === 'ios') ? 44 : 56,
   // based on footerHeight, toolbarHeight, and deviceHeight
-  usableHeight: deviceHeight - ((platform === 'ios') ? 44 : 56) - 50,  
+  usableHeight: deviceHeight - ((platform === 'ios') ? 44 : 56) - 50,  // device - toolbar - footer
 
   toolbarIconSize: (platform === 'ios') ? 20 : 22,
   toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,

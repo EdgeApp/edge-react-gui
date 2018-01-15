@@ -31,17 +31,17 @@ export const styles = StyleSheet.create({
   },
   flipButton: {
     flex: 1,
-    backgroundColor:  THEME.COLORS.TRANSPARENT,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
     marginRight: 10,
     justifyContent: 'space-around'
   },
   flipIcon: {
-    color: THEME.COLORS.GRAY_3,
+    color: THEME.COLORS.GRAY_3
   },
   spacer: {
     flex: 1,
-    backgroundColor:  THEME.COLORS.TRANSPARENT,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     alignItems: 'center',
     justifyContent: 'space-around'
   },
@@ -58,7 +58,7 @@ export const top = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:  THEME.COLORS.TRANSPARENT,
+    backgroundColor: THEME.COLORS.TRANSPARENT,
     borderBottomColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1
   },
@@ -67,7 +67,8 @@ export const top = StyleSheet.create({
     fontSize: 15,
     color: THEME.COLORS.WHITE,
     textAlign: 'left',
-    backgroundColor: THEME.COLORS.TRANSPARENT
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    fontFamily: THEME.FONTS.SYMBOLS
   },
   amount: {
     flex: 6,

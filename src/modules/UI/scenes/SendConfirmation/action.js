@@ -1,9 +1,21 @@
 // @flow
+import {Actions} from 'react-native-router-flux'
+import {openABAlert} from '../../components/ABAlert/action'
+import * as Constants from '../../../../constants/indexConstants'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import type {
+  AbcParsedUri,
+  AbcSpendInfo,
+  AbcTransaction,
+  AbcCurrencyWallet,
+  AbcSpendTarget
+} from 'airbitz-core-types'
+
 const PREFIX = 'UI/SendConfimation/'
+
 export const UPDATE_AMOUNT_SATOSHI = PREFIX + 'UPDATE_AMOUNT_SATOSHI'
-// export const UPDATE_AMOUNT_FIAT = PREFIX + 'UPDATE_AMOUNT_FIAT'
-// export const UPDATE_FIAT_PER_CRYPTO = PREFIX + 'UPDATE_FIAT_PER_CRYPTO'
-// export const UPDATE_INPUT_CURRENCY_SELECTED = PREFIX + 'UPDATE_INPUT_CURRENCY_SELECTED'
 export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
 export const UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO = PREFIX + 'UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO'
 export const ENABLE_SLIDER = PREFIX + 'ENABLE_SLIDER'
@@ -26,47 +38,6 @@ export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
-import {Actions} from 'react-native-router-flux'
-import {openABAlert} from '../../components/ABAlert/action'
-import * as Constants from '../../../../constants/indexConstants'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
-// import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
-// import { convertDenominationToNative } from '../../../utils.js'
-import type {
-  AbcParsedUri,
-  AbcSpendInfo,
-  AbcTransaction,
-  AbcCurrencyWallet,
-  AbcSpendTarget
-} from 'airbitz-core-types'
-
-// export const updateFee = (feeSatoshi:string) => ({
-//   type: UPDATE_FEE,
-//   data: {feeSatoshi}
-// })
-//
-// export const updateAmountFiat = (amountFiat:number) => ({
-//   type: UPDATE_AMOUNT_FIAT,
-//   data: {amountFiat}
-// })
-//
-// export const updateFiatPerCrypto = (fiatPerCrypto) => ({
-//   type: UPDATE_FIAT_PER_CRYPTO,
-//   data: {fiatPerCrypto}
-// })
-//
-// export const updateInputCurrencySelected = (inputCurrencySelected) => ({
-//   type: UPDATE_INPUT_CURRENCY_SELECTED,
-//   data: {inputCurrencySelected}
-// })
-//
-// export const updateDraftStatus = (draftStatus) => ({
-//   type: UPDATE_DRAFT_STATUS,
-//   data: {draftStatus}
-// })
-//
 export type UpdateTransactionAction = {
   type: typeof UPDATE_TRANSACTION,
   data: {
@@ -217,6 +188,6 @@ const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
 
 export const changeFee = (feeSetting: string) => ({
   type: CHANGE_MINING_FEE,
-  feeSetting,
+  feeSetting
   // fee,
 })

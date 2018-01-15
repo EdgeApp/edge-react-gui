@@ -12,7 +12,7 @@ export const styles = {
   },
   container: {
     position: 'relative',
-    height:'100%',
+    height: '100%'
   },
   listStyle: {
     height: 100
@@ -120,6 +120,9 @@ export const styles = {
   },
   underlay: {
     color: THEME.COLORS.GRAY_4
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   }
 }
 export default StyleSheet.create(styles)

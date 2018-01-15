@@ -9,7 +9,7 @@ class SupportedTokens {
   constructor () {
     this.array = this.getTotalArray()
     this.holderObject = {}
-    for (let i = 0; i< this.array.length; i++) {
+    for (let i = 0; i < this.array.length; i++) {
       const pair = this.array[i].pair
       const tempArray = pair.split('_')
       if (!this.holderObject[tempArray[0]]) {
