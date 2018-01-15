@@ -15,21 +15,29 @@ import ManageTokenRow from './ManageTokenRow.ui.js'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import styles from './style.js'
 
-export type Props = {
+export type ManageTokensOwnProps = {
+  guiWallet: GuiWallet
+}
+export type ManageTokensDispatchProps = {
+  getEnabledTokensList: (string) => void,
+  setEnabledTokensList: (string, Array<string>, Array<string>) => void
+}
+
+export type ManageTokensStateProps = {
   guiWallet: GuiWallet,
   manageTokensPending: boolean,
   settingsCustomTokens: Array<CustomTokenInfo>
 }
-export type DispatchProps = {
-  getEnabledTokensList: (string) => void,
-  setEnabledTokensList: (string, Array<string>, Array<string>) => void
-}
+
+export type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps & ManageTokensStateProps
+
 export type State = {
   enabledList: Array<string>,
   combinedCurrencyInfos: Array<AbcMetaToken>
 }
-export default class ManageTokens extends Component<Props & DispatchProps, State> {
-  constructor (props: Props & DispatchProps) {
+
+export default class ManageTokens extends Component<ManageTokensProps, State> {
+  constructor (props: ManageTokensProps) {
     super(props)
     this.state = {
       enabledList: [...this.props.guiWallet.enabledTokens],

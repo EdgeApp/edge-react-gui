@@ -133,6 +133,11 @@ export type ExchangePair = {
   minerFee: number
 }
 
+export type GuiTouchIdInfo = {
+  isTouchEnabled: boolean,
+  isTouchSupported: boolean
+}
+
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }
