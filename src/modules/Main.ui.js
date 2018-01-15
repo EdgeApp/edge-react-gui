@@ -217,7 +217,9 @@ export default class Main extends Component<Props, State> {
     })
     if (Platform.OS === 'android') {
       Linking.getInitialURL().then(url => {
-        this.props.urlRecived(url)
+        if (url) {
+          this.props.urlRecived(url)
+        }
         // this.navigate(url);
       })
     } else {
