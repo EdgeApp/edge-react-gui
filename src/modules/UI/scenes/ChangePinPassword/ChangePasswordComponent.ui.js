@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {View} from 'react-native'
 import {ChangePasswordScreen} from 'airbitz-core-js-ui'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
 
 export default class ChangePassword extends Component {
@@ -11,7 +12,7 @@ export default class ChangePassword extends Component {
 
   render () {
     return (
-      <View>
+      <SafeAreaView>
         <Gradient style={styles.gradient} />
         <View style={styles.container}>
           <ChangePasswordScreen
@@ -22,7 +23,7 @@ export default class ChangePassword extends Component {
             showHeader={this.props.showHeader}
           />
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
 }

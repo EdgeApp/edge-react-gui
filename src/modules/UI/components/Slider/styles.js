@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     height: 52,
     position: 'absolute',
     backgroundColor: THEME.COLORS.ACCENT_MINT,
-    bottom: -26,
+    bottom: 0,
     borderRadius: 52
   },
   textOverlay: {

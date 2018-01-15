@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Image
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
 import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
@@ -116,43 +117,45 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
     const searchResultsHeight = PLATFORM.usableHeight - keyboardHeight - 50 - 58 // substract button area height and FormField height
 
     return (
-      <View style={styles.scene}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.view}>
-          <FormField style={styles.picker}
-            autoFocus
-            clearButtonMode={'while-editing'}
-            onFocus={this.handleOnFocus}
-            onBlur={this.handleOnBlur}
-            autoCorrect={false}
-            autoCapitalize={'words'}
-            onChangeText={this.handleSearchTermChange}
-            value={this.state.searchTerm}
-            label={s.strings.create_wallet_choose_crypto}
-          />
-          <SearchResults
-            renderRegularResultFxn={this.renderWalletTypeResult}
-            onRegularSelectFxn={this.handleSelectWalletType}
-            regularArray={filteredArray}
-            style={[styles.SearchResults]}
-            containerStyle={[styles.searchContainer, {height: searchResultsHeight}] }
-            keyExtractor={this.keyExtractor}
-          />
-          <View style={[styles.buttons]}>
-            <SecondaryButton
-              style={[styles.cancel]}
-              onPressFunction={this.onBack}
-              text={s.strings.title_back} />
-
-            <PrimaryButton
-              style={[styles.next]}
-              disabled={isDisabled}
-              onPressFunction={this.onNext}
-              text={s.strings.string_next_capitalized}
+      <SafeAreaView>
+        <View style={styles.scene}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.view}>
+            <FormField style={styles.picker}
+              autoFocus
+              clearButtonMode={'while-editing'}
+              onFocus={this.handleOnFocus}
+              onBlur={this.handleOnBlur}
+              autoCorrect={false}
+              autoCapitalize={'words'}
+              onChangeText={this.handleSearchTermChange}
+              value={this.state.searchTerm}
+              label={s.strings.create_wallet_choose_crypto}
             />
+            <SearchResults
+              renderRegularResultFxn={this.renderWalletTypeResult}
+              onRegularSelectFxn={this.handleSelectWalletType}
+              regularArray={filteredArray}
+              style={[styles.SearchResults]}
+              containerStyle={[styles.searchContainer, {height: searchResultsHeight}] }
+              keyExtractor={this.keyExtractor}
+            />
+            <View style={[styles.buttons]}>
+              <SecondaryButton
+                style={[styles.cancel]}
+                onPressFunction={this.onBack}
+                text={s.strings.title_back} />
+
+              <PrimaryButton
+                style={[styles.next]}
+                disabled={isDisabled}
+                onPressFunction={this.onNext}
+                text={s.strings.string_next_capitalized}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
 
