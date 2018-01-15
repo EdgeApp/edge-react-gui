@@ -48,13 +48,13 @@ type Props = {
   loginWithEdge(string): void
 }
 
-const HEADER_TEXT     = s.strings.send_scan_header_text
+const HEADER_TEXT = s.strings.send_scan_header_text
 
 const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
 // const TRANSFER_TEXT = s.strings.fragment_send_transfer
-const ADDRESS_TEXT  = s.strings.fragment_send_address
+const ADDRESS_TEXT = s.strings.fragment_send_address
 // const PHOTOS_TEXT   = s.strings.fragment_send_photos
-const FLASH_TEXT    = s.strings.fragment_send_flash
+const FLASH_TEXT = s.strings.fragment_send_flash
 
 export default class Scan extends Component<any, any> {
   static defaultProps: any;
@@ -157,7 +157,7 @@ export default class Scan extends Component<any, any> {
 
                     <Ionicon style={[styles.flashIcon]}
                       name='ios-flash-outline'
-                      size={24}  />
+                      size={24} />
                     <T style={[styles.flashButtonText, styles.bottomButtonText]}>
                       {FLASH_TEXT}
                     </T>
@@ -216,7 +216,7 @@ export default class Scan extends Component<any, any> {
         s.strings.fragment_send_send_bitcoin_unscannable,
         error.toString(),
         [
-          {text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan()},
+          {text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan()}
         ]
       )
     }
@@ -226,9 +226,9 @@ export default class Scan extends Component<any, any> {
     const options = {takePhotoButtonTitle: null}
 
     ImagePicker.showImagePicker(options, (response) => {
-      if (!response.didCancel
-        && !response.error
-        && !response.customButton) {
+      if (!response.didCancel &&
+        !response.error &&
+        !response.customButton) {
         // this.refs.cameraCapture.capture({})
         // You can also display the image using data:
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
@@ -236,7 +236,7 @@ export default class Scan extends Component<any, any> {
         /* if (/^airbitz:\/\/edge\//.test(uri)) {
           console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
           return
-        }*/
+        } */
         Actions.sendConfirmation()
       }
     })

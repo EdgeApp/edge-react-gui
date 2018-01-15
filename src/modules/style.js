@@ -5,11 +5,17 @@ import {StyleSheet} from 'react-native'
 import THEME from '../theme/variables/airbitz.js'
 
 export const stylesRaw = {
+  mainMenuContext: {
+    flex: 1
+  },
   titleStyle: {
     alignSelf: 'center',
-    fontSize: 24,
+    fontSize: 20,
     color: THEME.COLORS.WHITE,
-    fontFamily: THEME.FONTS.DEFAULT,
+    fontFamily: THEME.FONTS.DEFAULT
+  },
+  helpModal: {
+    flex: 1
   }
 }
 

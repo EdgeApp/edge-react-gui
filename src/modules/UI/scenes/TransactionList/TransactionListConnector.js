@@ -1,4 +1,7 @@
+// @flow
+
 import {connect} from 'react-redux'
+
 import TransactionList from './TransactionList.ui'
 import {
   // transactionsSearchVisible,
@@ -12,12 +15,15 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
 import _ from 'lodash'
+import type {Dispatch, State} from '../../../ReduxTypes'
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
-  if (!wallet) return {
-    loading: true
+  if (!wallet) {
+    return {
+      loading: true
+    }
   }
 
   const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
@@ -72,10 +78,10 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactList: (contacts) => dispatch(setContactList(contacts)),
+  setContactList: (contacts) => dispatch(setContactList(contacts))
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })

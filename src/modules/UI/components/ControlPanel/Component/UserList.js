@@ -50,8 +50,8 @@ export default class UserList extends Component<Props, State> {
     return this.props.deleteLocalAccount(username)
   }
   handlePressDeleteLocalAccount = (username: string) => () => {
-    return Alert.alert('Delete Account', 'Delete \'' + username
-      + '\' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days',
+    return Alert.alert('Delete Account', 'Delete \'' + username +
+      '\' on this device? This will disable access via PIN. If 2FA is enabled on this account, this device will not be able to login without 2FA reset which takes 7 days',
       [
         {text: 'No', style: 'cancel'},
         {text: 'Yes', onPress: () => this.handleDeleteLocalAccount(username)()}

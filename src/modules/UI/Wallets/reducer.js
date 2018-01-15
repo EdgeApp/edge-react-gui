@@ -13,116 +13,115 @@ export type WalletId = string
 export type WalletIds = Array<WalletId>
 export type WalletByIdState = {[walletId: WalletId]: GuiWallet}
 
-
 export const byId = (state: WalletByIdState = {}, action: Action) => {
   if (!action.data) return state
+
   switch (action.type) {
-  case UPDATE_WALLETS: {
-    const wallets = action.data.currencyWallets
-    const out = {}
-    for (const walletId of Object.keys(wallets)) {
-      let tempWallet = schema(wallets[walletId])
-      if (state[walletId]) {
-        const enabledTokensOnWallet = state[walletId].enabledTokens
-        tempWallet.enabledTokens = enabledTokensOnWallet
-        enabledTokensOnWallet.forEach((customToken) => {
-          tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({currencyCode: customToken})
-        })
+    case UPDATE_WALLETS: {
+      const wallets = action.data.currencyWallets
+      const out = {}
+      for (const walletId of Object.keys(wallets)) {
+        const tempWallet = schema(wallets[walletId])
+        if (state[walletId]) {
+          const enabledTokensOnWallet = state[walletId].enabledTokens
+          tempWallet.enabledTokens = enabledTokensOnWallet
+          enabledTokensOnWallet.forEach((customToken) => {
+            tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({currencyCode: customToken})
+          })
+        }
+        out[walletId] = tempWallet
       }
-      out[walletId] = tempWallet
+
+      return out
     }
 
-    return out
-  }
-
-  case ACTION.UPDATE_WALLET_ENABLED_TOKENS : {
-    const {walletId, tokens} = action.data
-    return {
-      ...state,
-      [walletId]: {
-        ...state[walletId],
-        enabledTokens: tokens
+    case ACTION.UPDATE_WALLET_ENABLED_TOKENS : {
+      const {walletId, tokens} = action.data
+      return {
+        ...state,
+        [walletId]: {
+          ...state[walletId],
+          enabledTokens: tokens
+        }
       }
     }
-  }
 
-  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS : {
-    const {enabledTokens, walletId} = action.data
-    return {
-      ...state,
-      [walletId]: {
-        ...state[walletId],
-        enabledTokens
+    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS : {
+      const {enabledTokens, walletId} = action.data
+      return {
+        ...state,
+        [walletId]: {
+          ...state[walletId],
+          enabledTokens
+        }
       }
     }
-  }
 
-  case ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS : {
-    const {coreWalletsToUpdate, oldCurrencyCode, tokenObj} = action.data
+    case ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS : {
+      const {coreWalletsToUpdate, oldCurrencyCode, tokenObj} = action.data
     // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
     // receiving token will have to take on sending tokens enabledness
     // sending token will already be disabled because it was deleted
-    coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
-      const guiWallet = state[wallet.id]
-      const enabledTokens = guiWallet.enabledTokens
-      let newEnabledTokens = enabledTokens
+      coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
+        const guiWallet = state[wallet.id]
+        const enabledTokens = guiWallet.enabledTokens
+        let newEnabledTokens = enabledTokens
       // replace old code in enabledTokens with new code for each relevant wallet
-      if (newEnabledTokens.indexOf(oldCurrencyCode) >= 0) {
-        newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
-        newEnabledTokens.push(tokenObj.currencyCode)
-      }
-      const newState = {
-        ...state,
-        [wallet.id]: {
-          ...state[wallet.id],
-          enabledTokens: newEnabledTokens
+        if (newEnabledTokens.indexOf(oldCurrencyCode) >= 0) {
+          newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
+          newEnabledTokens.push(tokenObj.currencyCode)
         }
-      }
-      return newState
-    })
-    return state
-  }
+        const newState = {
+          ...state,
+          [wallet.id]: {
+            ...state[wallet.id],
+            enabledTokens: newEnabledTokens
+          }
+        }
+        return newState
+      })
+      return state
+    }
 
-  case ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS : { // adjust enabled tokens
-    const {coreWalletsToUpdate, oldCurrencyCode} = action.data
+    case ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS : { // adjust enabled tokens
+      const {coreWalletsToUpdate, oldCurrencyCode} = action.data
     // coreWalletsToUpdate are wallets with non-empty enabledTokens properties
     // receiving token will have to take on sending tokens enabledness
     // sending token will already be disabled because it was deleted
-    coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
-      const guiWallet = state[wallet.id]
-      const enabledTokens = guiWallet.enabledTokens
-      const newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
-      const newState = {
-        ...state,
-        [wallet.id]: {
-          ...state[wallet.id],
-          enabledTokens: newEnabledTokens
+      coreWalletsToUpdate.forEach((wallet) => { // just disable sending coin from relevant wallet
+        const guiWallet = state[wallet.id]
+        const enabledTokens = guiWallet.enabledTokens
+        const newEnabledTokens = _.pull(enabledTokens, oldCurrencyCode)
+        const newState = {
+          ...state,
+          [wallet.id]: {
+            ...state[wallet.id],
+            enabledTokens: newEnabledTokens
+          }
         }
-      }
-      return newState
-    })
-    return state
-  }
-
-  case ACTION.UPSERT_WALLET: {
-    const {data} = action
-    let guiWallet = schema(data.wallet)
-    const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
-    guiWallet.enabledTokens = enabledTokensOnWallet
-    enabledTokensOnWallet.forEach((customToken) => {
-      guiWallet.nativeBalances[customToken] = data.wallet.getBalance({currencyCode: customToken})
-    })
-    return {
-      ...state,
-      [data.wallet.id]: guiWallet
+        return newState
+      })
+      return state
     }
-  }
 
-  default:
-    return state
+    case ACTION.UPSERT_WALLET: {
+      const {data} = action
+      const guiWallet = schema(data.wallet)
+      const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
+      guiWallet.enabledTokens = enabledTokensOnWallet
+      enabledTokensOnWallet.forEach((customToken) => {
+        guiWallet.nativeBalances[customToken] = data.wallet.getBalance({currencyCode: customToken})
+      })
+      return {
+        ...state,
+        [data.wallet.id]: guiWallet
+      }
+    }
+
+    default:
+      return state
   }
 }
-
 
 export const walletEnabledTokens = (state: any = {}, action: any) => {
   if (action.type === UPDATE_WALLETS) {
@@ -153,20 +152,20 @@ export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
 export const selectedWalletId = (state: WalletId = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-  case ACTION.SELECT_WALLET:
-    return action.data.walletId
-  default:
-    return state
+    case ACTION.SELECT_WALLET:
+      return action.data.walletId
+    default:
+      return state
   }
 }
 
 export const selectedCurrencyCode = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-  case ACTION.SELECT_WALLET:
-    return action.data.currencyCode
-  default:
-    return state
+    case ACTION.SELECT_WALLET:
+      return action.data.currencyCode
+    default:
+      return state
   }
 }
 
@@ -174,16 +173,16 @@ const addTokenPending = (state: boolean = false, action: Action) => {
   // if (!action.data) return state
   const type = action.type
   switch (type) {
-  case ADD_TOKEN_ACTION.ADD_TOKEN_START :
-    return true
-  case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS :
-    return false
-  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS :
-    return false
-  case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_FAILURE :
-    return false
-  default:
-    return state
+    case ADD_TOKEN_ACTION.ADD_TOKEN_START :
+      return true
+    case ADD_TOKEN_ACTION.ADD_TOKEN_SUCCESS :
+      return false
+    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS :
+      return false
+    case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_FAILURE :
+      return false
+    default:
+      return state
   }
 }
 
@@ -191,12 +190,12 @@ const manageTokensPending = (state: boolean = false, action: Action) => {
   if (!action.data) return state
   const type = action.type
   switch (type) {
-  case ACTION.MANAGE_TOKENS_START :
-    return true
-  case ACTION.MANAGE_TOKENS_SUCCESS :
-    return false
-  default:
-    return state
+    case ACTION.MANAGE_TOKENS_START :
+      return true
+    case ACTION.MANAGE_TOKENS_SUCCESS :
+      return false
+    default:
+      return state
   }
 }
 

@@ -538,6 +538,7 @@ const strings = {
   request_qr_unknown: 'Unknown User',
   request_title: 'Request Bitcoin',
   request_wallet_title: 'Wallet:',
+  request_qr_waiting_for_payment: 'Waiting for Payment…',
   request_your_identity_token_but_none: 'Request your Identity Token but you don\\\'t have any',
   request_your_identity_token: 'Request your Identity Token. Please select one below',
   restaurant_and_food_trucks: 'Restaurants &amp; Food Trucks',
@@ -738,6 +739,6 @@ const strings = {
   verify_domain_and_approve: 'Please verify the domain above and tap LOGIN to authenticate with this site',
   wait_until_wallets_loaded: 'Please wait until your wallets are loaded.',
   would_like_to: 'This site would like to:',
-  your_location: 'Your Location',
+  your_location: 'Your Location'
 }
 export default strings

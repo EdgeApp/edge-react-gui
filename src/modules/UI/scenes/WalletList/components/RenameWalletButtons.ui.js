@@ -2,19 +2,19 @@
 
 import React, {Component} from 'react'
 import {TouchableHighlight, View} from 'react-native'
+
 import T from '../../../components/FormattedText'
 import styles from '../style'
 import s from '../../../../../locales/strings.js'
-import {sprintf} from 'sprintf-js'
 
-const NEGATIVE_TEXT = sprintf(s.strings.string_cancel_cap)
-const POSITIVE_TEXT = sprintf(s.strings.calculator_done)
+const NEGATIVE_TEXT = s.strings.string_cancel_cap
+const POSITIVE_TEXT = s.strings.calculator_done
 
 export type JsxProps = {
   walletName: string,
 }
 
-export type StateToProps = {
+export type StateProps = {
   walletId: string,
   renameWalletInput: string
 }
@@ -25,7 +25,7 @@ export type DispatchProps = {
   onDone: () => any
 }
 
-type Props = JsxProps & StateToProps & DispatchProps
+type Props = JsxProps & StateProps & DispatchProps
 
 export default class RenameWalletButtons extends Component <Props> {
   onPositive = () => {

@@ -29,7 +29,7 @@ export type Props = {
   customTokensList: Array<CustomTokenInfo>
 }
 
-class ManageTokenRow extends Component<Props , State> {
+class ManageTokenRow extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -44,7 +44,7 @@ class ManageTokenRow extends Component<Props , State> {
       enabled = true
     }
 
-    const isEditable: boolean = (_.findIndex(this.props.customTokensList, (token) =>  token.currencyCode === item.currencyCode) !== -1)
+    const isEditable: boolean = (_.findIndex(this.props.customTokensList, (token) => token.currencyCode === item.currencyCode) !== -1)
     const onPress = isEditable ? this.props.goToEditTokenScene : UTILS.noOp
 
     return (

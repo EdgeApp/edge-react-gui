@@ -49,7 +49,8 @@ export default {
     }
   },
   FONTS: {
-    DEFAULT: 'SourceSansPro-Black'
+    DEFAULT: 'SourceSansPro-Black',
+    SYMBOLS: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black'
   },
 
   OPACITY: {
@@ -79,6 +80,10 @@ export default {
       DARK:  '#0D2145',
       LIGHT: '#0E4B75'
     },
+    GRADIENT_REVERSE: {
+      LIGHT:  '#0D2145',
+      DARK: '#0E4B75'
+    },
 
     ACCENT_GREEN:  '#0073D9',
     ACCENT_ORANGE: '#F1AA19',
@@ -94,6 +99,7 @@ export default {
     CLEAR:  'rgba(0, 0, 0, 0)',
 
     TRANSPARENT: 'transparent',
+    MODAL_BOX: 'rgba(0, 0, 0, .6)',
 
     ROW_PRESSED: '#D9E3ED', // same as GRAY_3
   }

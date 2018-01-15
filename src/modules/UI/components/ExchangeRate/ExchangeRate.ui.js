@@ -5,6 +5,7 @@ import {
   View
 } from 'react-native'
 import s from '../../../../locales/strings.js'
+import {intl} from '../../../../locales/intl'
 import * as UTILS from '../../../utils'
 import styles from './styles'
 
@@ -26,17 +27,17 @@ export default class ExchangeRate extends Component<Props> {
       secondaryDisplayAmount
     } = this.props
 
-    const primaryDisplayName :string
-      = primaryInfo.displayDenomination.name
+    const primaryDisplayName :string =
+      primaryInfo.displayDenomination.name
 
-    const secondaryDisplaySymbol :string
-      = secondaryInfo.displayDenomination.symbol
+    const secondaryDisplaySymbol :string =
+      secondaryInfo.displayDenomination.symbol
 
-    const formattedSecondaryDisplayAmount :string
-      = parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
+    const formattedSecondaryDisplayAmount :string =
+      parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
 
-    const secondaryCurrencyCode :string
-      = secondaryInfo.displayDenomination.currencyCode
+    const secondaryCurrencyCode :string =
+      secondaryInfo.displayDenomination.currencyCode
 
     const exchangeData = {
       primaryDisplayAmount: primaryDisplayAmount || '1',
@@ -46,6 +47,9 @@ export default class ExchangeRate extends Component<Props> {
       secondaryCurrencyCode
     }
 
+    const formattedPrimaryAmount = intl.formatNumber(primaryDisplayAmount || '1')
+    const formattedSecondaryAmount = intl.formatNumber(formattedSecondaryDisplayAmount, {toFixed: secondaryInfo.displayDenomination.precision})
+
     return (
       <View style={styles.view}>
         {
@@ -54,7 +58,7 @@ export default class ExchangeRate extends Component<Props> {
               {EXCHANGE_RATE_LOADING_TEXT}
             </Text>
           : <Text style={styles.text}>
-              {primaryDisplayAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryDisplayAmount} {secondaryCurrencyCode}
+              {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}
             </Text>
         }
       </View>

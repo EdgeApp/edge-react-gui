@@ -38,8 +38,8 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
   }
 
   toggleToken = (currencyCode: string) => {
-    let newEnabledList = this.state.enabledList
-    let index = newEnabledList.indexOf(currencyCode)
+    const newEnabledList = this.state.enabledList
+    const index = newEnabledList.indexOf(currencyCode)
     if (index >= 0) {
       newEnabledList.splice(index, 1)
     } else {
@@ -52,9 +52,9 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
 
   saveEnabledTokenList = () => {
     const { id } = this.props.guiWallet
-    let disabledList: Array<string> = []
+    const disabledList: Array<string> = []
     // get disabled list
-    for (let val of this.state.combinedCurrencyInfos) {
+    for (const val of this.state.combinedCurrencyInfos) {
       if (this.state.enabledList.indexOf(val.currencyCode) === -1) disabledList.push(val.currencyCode)
     }
     this.props.setEnabledTokensList(id, this.state.enabledList, disabledList)
@@ -63,10 +63,10 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
 
   render () {
     const { metaTokens } = this.props.guiWallet
-    let accountMetaTokenInfo = [...this.props.settingsCustomTokens]
-    let combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
+    const accountMetaTokenInfo = [...this.props.settingsCustomTokens]
+    const combinedTokenInfo = UTILS.mergeTokensRemoveInvisible(metaTokens, accountMetaTokenInfo)
 
-    let sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
+    const sortedTokenInfo = combinedTokenInfo.sort((a, b) => {
       if (a.currencyCode < b.currencyCode) return -1
       if (a === b) return 0
       return 1
@@ -117,7 +117,6 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
       </View>
     )
   }
-
 
   header () {
     const {name} = this.props.guiWallet

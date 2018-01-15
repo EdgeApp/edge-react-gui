@@ -3,6 +3,7 @@
 import React, {Component} from 'react'
 import FlipInput, {type FlipInputFieldInfo} from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
+import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 
 const DIVIDE_PRECISION = 18
@@ -32,12 +33,12 @@ type State = {
 
 function precisionAdjust (props: Props) {
   const order = Math.floor((Math.log(props.secondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
-  const exchangeRateOrderOfMagnitude = Math.pow(10,order)
+  const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in pennies
   const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), props.secondaryInfo.exchangeDenomination.multiplier)
 
-  let precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+  const precisionAdjust = bns.div(exchangeRateString, props.primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
@@ -182,7 +183,7 @@ export default class ExchangedFlipInput extends Component<Props, State> {
     return (
       <FlipInput
         color={this.props.color}
-        isValidInput={UTILS.isValidInput}
+        isValidInput={intl.isValidInput}
 
         primaryDisplayAmount={this.state.primaryDisplayAmount}
         primaryInfo={primaryInfo}

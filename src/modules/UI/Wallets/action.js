@@ -1,4 +1,21 @@
-//@flow
+// @flow
+import * as UI_SELECTORS from '../selectors.js'
+import * as CORE_SELECTORS from '../../Core/selectors.js'
+import * as SETTINGS_SELECTORS from '../Settings/selectors'
+import * as SETTINGS_API from '../../Core/Account/settings.js'
+import {Actions} from 'react-native-router-flux'
+import {
+  updateSettings
+} from '../Settings/action'
+import {addTokenAsync} from '../scenes/AddToken/action'
+import {displayErrorAlert} from '../../UI/components/ErrorAlert/actions'
+import type {Dispatch, GetState} from '../../ReduxTypes'
+import type {GuiWallet, CustomTokenInfo} from '../../../types.js'
+import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import * as UTILS from '../../utils'
+import * as WALLET_API from '../../Core/Wallets/api.js'
+import _ from 'lodash'
+
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -21,23 +38,6 @@ export const EDIT_CUSTOM_TOKEN_FAILURE = 'EDIT_CUSTOM_TOKEN_FAILURE'
 export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
-
-import * as UI_SELECTORS from '../selectors.js'
-import * as CORE_SELECTORS from '../../Core/selectors.js'
-import * as SETTINGS_SELECTORS from '../Settings/selectors'
-import * as SETTINGS_API from '../../Core/Account/settings.js'
-import {Actions} from 'react-native-router-flux'
-import {
-  updateSettings
-} from '../Settings/action'
-import {addTokenAsync} from '../scenes/AddToken/action'
-import {displayErrorAlert} from '../../UI/components/ErrorAlert/actions'
-import type {Dispatch, GetState} from '../../ReduxTypes'
-import type {GuiWallet, CustomTokenInfo} from '../../../types.js'
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
-import * as UTILS from '../../utils'
-import * as WALLET_API from '../../Core/Wallets/api.js'
-import _ from 'lodash'
 
 export const selectWallet = (walletId: string, currencyCode: string) => ({
   type: SELECT_WALLET,
@@ -86,6 +86,7 @@ export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch, 
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
     dispatch({type: 'LOGGED_OUT'})
+    return
   }
 
   dispatch({
@@ -126,30 +127,61 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
   const state = getState()
   // get the AbcWallet
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const guiWallet = UI_SELECTORS.getWallet(state, walletId)
+
   // get token information from settings
   const customTokens: Array<CustomTokenInfo> = SETTINGS_SELECTORS.getCustomTokens(state)
   try {
     const enabledTokens = await WALLET_API.getEnabledTokensFromFile(wallet)
     const promiseArray = []
+    const tokensToEnable = []
 
-    // Add any enabledTokens that are custom tokens
-    for (const ct of customTokens) {
-      const found = enabledTokens.find((element) => {
-        return element === ct.currencyCode
+    // Add any enabledTokens that are custom tokens or in the currencyInfo
+    for (const et of enabledTokens) {
+      let found = guiWallet.metaTokens.find((element) => {
+        return element.currencyCode === et
       })
       if (found) {
-        promiseArray.push(wallet.addCustomToken(ct))
+        tokensToEnable.push(et)
+        continue
+      }
+
+      found = customTokens.find((element) => {
+        return element.currencyCode === et
+      })
+      if (found) {
+        tokensToEnable.push(et)
+        promiseArray.push(wallet.addCustomToken(found))
       }
     }
     await Promise.all(promiseArray)
     // now reflect that change in Redux's version of the wallet
-    dispatch(updateWalletEnabledTokens(walletId, enabledTokens))
+    dispatch(updateWalletEnabledTokens(walletId, tokensToEnable))
   } catch (e) {
     dispatch(displayErrorAlert(e.message))
   }
 }
 
-export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode: string) => {
+export const assembleCustomToken = (currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
+  // create modified object structure to match metaTokens
+  const newTokenObj: CustomTokenInfo = {
+    currencyName,
+    currencyCode,
+    contractAddress,
+    denomination,
+    multiplier: denomination,
+    denominations: [{
+      name: currencyCode,
+      multiplier: denomination,
+      symbol: ''
+    }],
+    isVisible: true
+  }
+
+  return newTokenObj
+}
+
+export const editCustomToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) => {
   return (dispatch: Dispatch, getState: GetState) => {
     dispatch(editCustomTokenStart())
     const state = getState()
@@ -157,10 +189,11 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
     const customTokens = settings.customTokens
     const guiWallet = UI_SELECTORS.getWallet(state, walletId)
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
-    const indexInAllTokens = _.findIndex(allTokens, (token) => token.currencyCode === tokenObj.currencyCode)
+    const indexInAllTokens = _.findIndex(allTokens, (token) => token.currencyCode === currencyCode)
+    const tokenObj = assembleCustomToken(currencyName, currencyCode, denomination, contractAddress)
     if (indexInAllTokens >= 0) { // currently exists in some form
-      if (tokenObj.currencyCode === oldCurrencyCode) { // just updating same token, CASE 1
-        addTokenAsync(walletId, tokenObj, state)
+      if (currencyCode === oldCurrencyCode) { // just updating same token, CASE 1
+        addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
         .then(() => {
           dispatch(updateExistingTokenSuccess(tokenObj))
           Actions.pop()
@@ -170,7 +203,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
           dispatch(editCustomTokenFailure())
         })
       } else { // replacing an existing but invisible token CASE 3
-        addTokenAsync(walletId, tokenObj, state) // update the receiving token
+        addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state) // update the receiving token
         .then(() => {
           deleteCustomTokenAsync(walletId, oldCurrencyCode, getState) // delete the sending token
           .then((coreWalletsToUpdate) => {
@@ -184,7 +217,7 @@ export const editCustomToken = (walletId: string, tokenObj: any, oldCurrencyCode
         })
       }
     } else { // does not yet exist. Create the new one then delete the old one, CASE 4
-      addTokenAsync(walletId, tokenObj, state)
+      addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
       .then((addedTokenData) => {
         deleteCustomTokenAsync(walletId, oldCurrencyCode, getState)
         .then((coreWalletsToUpdate) => {
@@ -214,8 +247,8 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
   const coreWallets = CORE_SELECTORS.getWallets(state)
   const guiWallets: Array<GuiWallet> = state.ui.wallets.byId
   const account = CORE_SELECTORS.getAccount(state)
-  let coreWalletsToUpdate = []
-  let receivedSyncSettings = await SETTINGS_API.getSyncedSettings(account)
+  const coreWalletsToUpdate = []
+  const receivedSyncSettings = await SETTINGS_API.getSyncedSettings(account)
   receivedSyncSettings[currencyCode].isVisible = false
   const syncedCustomTokens: Array<CustomTokenInfo> = [...receivedSyncSettings.customTokens]
   const indexOfSyncedToken: number = _.findIndex(syncedCustomTokens, (item) => item.currencyCode === currencyCode)
@@ -225,8 +258,8 @@ export async function deleteCustomTokenAsync (walletId: string, currencyCode: st
   const walletPromises = Object.values(guiWallets).map((wallet) => {
     // Flow is having issues here, need to fix
     // $FlowFixMe
-    let temporaryWalletId = wallet.id
-    let theCoreWallet = coreWallets[temporaryWalletId]
+    const temporaryWalletId = wallet.id
+    const theCoreWallet = coreWallets[temporaryWalletId]
     // $FlowFixMe
     if (wallet.enabledTokens && wallet.enabledTokens.length > 0) { // if the wallet has some enabled tokens
       coreWalletsToUpdate.push(theCoreWallet)
@@ -246,7 +279,7 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
   const localSettings = {
     ...SETTINGS_SELECTORS.getSettings(state)
   }
-  let coreWalletsToUpdate = []
+  const coreWalletsToUpdate = []
   dispatch(deleteCustomTokenStart())
   SETTINGS_API.getSyncedSettings(account)
   .then((settings) => {
@@ -269,8 +302,8 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     const walletPromises = Object.values(guiWallets).map((wallet) => {
       // Flow is having issues here, need to fix
       // $FlowFixMe
-      let temporaryWalletId = wallet.id
-      let theCoreWallet = coreWallets[temporaryWalletId]
+      const temporaryWalletId = wallet.id
+      const theCoreWallet = coreWallets[temporaryWalletId]
       // $FlowFixMe
       if (wallet.enabledTokens && wallet.enabledTokens.length > 0) {
         coreWalletsToUpdate.push(theCoreWallet)
@@ -291,7 +324,6 @@ export const deleteCustomToken = (walletId: string, currencyCode: string) => (di
     dispatch(updateSettings(localSettings))
     dispatch(deleteCustomTokenSuccess(currencyCode)) // need to remove modal and update settings
     Actions.pop()
-    return
   })
   .catch((e) => {
     dispatch(displayErrorAlert(e.message))
@@ -320,7 +352,7 @@ export const setTokensSuccess = () => ({
   type: MANAGE_TOKENS_SUCCESS
 })
 
-export const updateWalletEnabledTokens = (walletId: string, tokens: Array<string>) =>  ({
+export const updateWalletEnabledTokens = (walletId: string, tokens: Array<string>) => ({
   type: UPDATE_WALLET_ENABLED_TOKENS,
   data: {walletId, tokens}
 })

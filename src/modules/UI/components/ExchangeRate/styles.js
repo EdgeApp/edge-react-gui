@@ -6,9 +6,8 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   text: {
-    color: THEME.COLORS.WHITE
+    color: THEME.COLORS.ACCENT_MINT
   }
 })
-
 
 export default styles

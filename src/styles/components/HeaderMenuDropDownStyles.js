@@ -3,13 +3,13 @@ import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
 const HeaderMenuRightSideStyle = {
   menuContainer: {
-    width:300,
-    height:platform.deviceHeight,
+    width: 300,
+    height: platform.deviceHeight,
     backgroundColor: 'rgba(255,255,255,.8)'
   },
   buttonContainer: {
-    width:40,
-    height:35,
+    width: 40,
+    height: 35,
     backgroundColor: 'rgba(255,255,255,0)'
   },
   iconButton: {...Styles.IconButtonStyle, iconSize: 15}
@@ -27,7 +27,7 @@ const MenuDropDownStyle = {
     borderBottomWidth: 1,
     justifyContent: 'center'
   },
-  menuTrigger : {
+  menuTrigger: {
     flex: 1,
     justifyContent: 'center',
     paddingLeft: 14,
@@ -36,18 +36,27 @@ const MenuDropDownStyle = {
   menuOptionItem: {
     flexDirection: 'row'
   },
-  optionText :{
+  optionText: {
     color: THEME.COLORS.GRAY_1,
     fontSize: 18
   },
-  icon : {
-    fontSize :20,
+  icon: {
+    fontSize: 20,
     color: THEME.COLORS.GRAY_1
   },
   altIconText: {
-    fontSize :20
+    fontSize: 20
   }
-
 }
+
+const MenuDropDownStyleHeader = {
+  ...MenuDropDownStyle,
+  menuTrigger: {
+    paddingLeft: 14,
+    paddingRight: 10
+  }
+}
+
 export {HeaderMenuRightSideStyle}
 export {MenuDropDownStyle}
+export {MenuDropDownStyleHeader}

@@ -7,9 +7,8 @@ import s from '../../../../locales/strings.js'
 
 import styles from './styles'
 
-const WAITING_FOR_PAYMENT_TEXT = s.strings.request_qr_waiting_for_payment
-const REMAINING_TEXT           = s.strings.bitcoin_remaining
-const RECEIVED_TEXT            = s.strings.bitcoin_received
+const REMAINING_TEXT = s.strings.bitcoin_remaining
+const RECEIVED_TEXT = s.strings.bitcoin_received
 
 const RequestStatus = (props) => {
   const amountRequestedInCrypto = props.amountSatoshi
@@ -17,8 +16,8 @@ const RequestStatus = (props) => {
   const requestAddress = props.requestAddress
 
   const hasReceivedPartialPayment = () => {
-    const hasReceivedPartialPayment
-      = (hasReceivedPayment() && !isPaymentSufficient())
+    const hasReceivedPartialPayment =
+      (hasReceivedPayment() && !isPaymentSufficient())
 
     return hasReceivedPartialPayment
   }
@@ -30,24 +29,24 @@ const RequestStatus = (props) => {
   }
 
   const isPaymentSufficient = () => {
-    const isPaymentSufficient
-      = amountReceivedInCrypto >= amountRequestedInCrypto
+    const isPaymentSufficient =
+      amountReceivedInCrypto >= amountRequestedInCrypto
 
     return isPaymentSufficient
   }
 
   const getOutstandingDebtInCrypto = () => {
-    const outstandingDebtInCrypto
-      = (amountRequestedInCrypto - amountReceivedInCrypto)
+    const outstandingDebtInCrypto =
+      (amountRequestedInCrypto - amountReceivedInCrypto)
 
     return outstandingDebtInCrypto
   }
 
   const getDisplayRequestStatus = () => {
-    const waitingForPayment
-      = <View style={styles.view}>
+    const waitingForPayment =
+      <View style={styles.view}>
         <Text style={styles.text}>
-          {WAITING_FOR_PAYMENT_TEXT}
+          {s.strings.request_qr_your_receiving_wallet_address}
         </Text>
 
         <T numberOfLines={1} ellipsizeMode='middle' style={[b(), styles.text]}>
@@ -55,8 +54,8 @@ const RequestStatus = (props) => {
         </T>
       </View>
 
-    const partialPaymentReceived
-      = <View style={styles.view}>
+    const partialPaymentReceived =
+      <View style={styles.view}>
         <Text style={styles.text}>
           {amountReceivedInCrypto + RECEIVED_TEXT}
         </Text>
@@ -70,8 +69,8 @@ const RequestStatus = (props) => {
         </Text>
       </View>
 
-    const displayStatus
-      = hasReceivedPartialPayment()
+    const displayStatus =
+      hasReceivedPartialPayment()
       ? partialPaymentReceived
       : waitingForPayment
 

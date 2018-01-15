@@ -6,7 +6,7 @@ import {FormField} from '../../../../../components/FormField.js'
 import ModalButtons from './ModalButtons.ui'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 import styles from './styles'
-import THEME from '../../../../../theme/variables/airbitz'
+import THEME, {colors} from '../../../../../theme/variables/airbitz'
 
 export default class SendLogsModal extends Component {
   state = {
@@ -40,13 +40,8 @@ export default class SendLogsModal extends Component {
       onDone={this.onDone}
       onCancel={this.onCancel} />
 
-    const icon = <IonIcon name='ios-paper-plane-outline' size={24} color='#2A5799'
+    const icon = <IonIcon name='ios-paper-plane-outline' size={24} color={colors.primary}
       style={[{
-        position: 'relative',
-        top: 12,
-        left: 13,
-        height: 24,
-        width: 24,
         backgroundColor: THEME.COLORS.TRANSPARENT,
         zIndex: 1015,
         elevation: 1015}]} />

@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import s from '../../../../../../locales/strings.js'
+import {intl} from '../../../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   View,
@@ -18,7 +19,6 @@ import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 const DIVIDE_PRECISION = 18
 
 class SortableWalletListRow extends Component<Props, State> {
-
   render () {
     const {data} = this.props
     const walletData = data
@@ -26,37 +26,37 @@ class SortableWalletListRow extends Component<Props, State> {
 
     // const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, data.currencyCode)
     if (walletData.currencyCode) { // if wallet is done loading
-      let displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, walletData.currencyCode)
+      const displayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFromSettings(this.props.settings, walletData.currencyCode)
       multiplier = displayDenomination.multiplier
       name = walletData.name || s.strings.string_no_name
       symbol = findDenominationSymbol(walletData.denominations, walletData.currencyCode)
       cryptoCurrencyName = walletData.currencyNames[walletData.currencyCode]
       symbolImageDarkMono = walletData.symbolImageDarkMono
       preliminaryCryptoAmount = truncateDecimals(bns.div(walletData.primaryNativeBalance, multiplier, DIVIDE_PRECISION), 6)
-      finalCryptoAmount = decimalOrZero(preliminaryCryptoAmount, 6) // make it show zero if infinitesimal number
+      finalCryptoAmount = intl.formatNumberInput(decimalOrZero(preliminaryCryptoAmount, 6)) // make it show zero if infinitesimal number
     }
     return (
       <TouchableHighlight
-        style={[b('green'), styles.rowContainer, styles.sortableWalletListRow ]}
+        style={[ styles.rowContainer, styles.sortableWalletListRow ]}
         underlayColor={styleRaw.walletRowUnderlay.color}
         {...this.props.sortHandlers}>
-          {walletData.currencyCode? (
+          {walletData.currencyCode ? (
             <View style={[styles.rowContent, b()]}>
               <View style={[styles.rowNameTextWrap]}>
-                {(Platform.OS === 'ios')
-                && (
+                {(Platform.OS === 'ios') &&
+                (
                   <View style={[styles.rowNameTextWrapIOS, b()]}>
                     <T style={[styles.rowNameText, b()]} numberOfLines={1}>
-                    {symbolImageDarkMono
-                      && <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} />
-                    }  {cutOffText(name, 34)}</T>
+                    {symbolImageDarkMono &&
+                      <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{translateY: 6}]} source={{uri: symbolImageDarkMono}} />
+                    } {cutOffText(name, 34)}</T>
                 </View>
                 )}
-                {(Platform.OS === 'android')
-                && (
+                {(Platform.OS === 'android') &&
+                (
                   <View style={[styles.rowNameTextWrapAndroid, b()]}>
-                  {symbolImageDarkMono
-                    && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
+                  {symbolImageDarkMono &&
+                    <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
                   }
                   <T style={[styles.rowNameText, b()]} numberOfLines={1}>
                     {cutOffText(name, 34)}</T>

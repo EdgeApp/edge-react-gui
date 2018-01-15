@@ -15,7 +15,7 @@ export const styles = {
     height: platform.deviceHeight - 66 - platform.footerHeight,
     flex: 1,
     flexDirection: 'row',
-    position: 'relative',
+    position: 'relative'
   },
   preview: {
     flex: 1,
@@ -178,11 +178,6 @@ export const styles = {
     color: THEME.COLORS.PRIMARY
   },
   icon: {
-    position: 'relative',
-    top: 12,
-    left: 13,
-    height: 24,
-    width: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
     zIndex: 1015,
     elevation: 1015

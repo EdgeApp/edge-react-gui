@@ -10,6 +10,7 @@
 process.env['NODE_ENV'] = __DEV__ ? 'development' : 'production'
 
 if (!Uint8Array.prototype.slice) {
+  // eslint-disable-next-line
   Object.defineProperty(Uint8Array.prototype, 'slice', {
     value: Array.prototype.slice
   })
