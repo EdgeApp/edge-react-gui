@@ -37,10 +37,10 @@ type State = {
   feeSetting: string,
 }
 
-export type ChangeMiningFeeComponentProps = ChangeMiningFeeOwnProps & ChangeMiningFeeDispatchProps & ChangeMiningFeeStateProps
+export type ChangeMiningFeeProps = ChangeMiningFeeOwnProps & ChangeMiningFeeDispatchProps & ChangeMiningFeeStateProps
 
-export default class ChangeMiningFee extends Component<ChangeMiningFeeComponentProps, State> {
-  constructor (props: ChangeMiningFeeComponentProps) {
+export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, State> {
+  constructor (props: ChangeMiningFeeProps) {
     super(props)
     this.state = {
       // fee: props.fee,

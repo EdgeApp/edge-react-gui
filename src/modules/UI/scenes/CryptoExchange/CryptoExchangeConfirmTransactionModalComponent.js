@@ -12,7 +12,7 @@ import s from '../../../../locales/strings.js'
 import {GuiWallet} from '../../../../types'
 import THEME from '../../../../theme/variables/airbitz'
 
-type CryptoExchangeConfirmTransactionModalProps = {
+type CryptoExchangeConfirmTransactionModalOwnProps = {
   style: any,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
@@ -27,7 +27,7 @@ type CryptoExchangeConfirmTransactionModalProps = {
   closeFunction(): void,
   confirmFunction(): void
 }
-export default class CryptoExchangeConfirmTransactionModalComponent extends Component<CryptoExchangeConfirmTransactionModalProps> {
+export default class CryptoExchangeConfirmTransactionModalComponent extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
   render () {
     const style = this.props.style
     const icon = <Icon
