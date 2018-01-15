@@ -19,7 +19,7 @@ import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConf
 import {IconButton} from '../../components/Buttons/IconButton.ui'
 import {GuiWallet} from '../../../../types'
 
-type Props = {
+type CryptoExchangeSceneOwnProps = {
   exchangeRate: number,
   wallets: Array<GuiWallet>,
   intialWalletOne: GuiWallet,
@@ -51,7 +51,7 @@ type Props = {
 type State = {
   whichWallet: string
 }
-export default class CryptoExchangeSceneComponent extends Component<Props, State> {
+export default class CryptoExchangeSceneComponent extends Component<CryptoExchangeSceneOwnProps, State> {
   componentWillMount () {
     this.setState({
       whichWallet: Constants.FROM

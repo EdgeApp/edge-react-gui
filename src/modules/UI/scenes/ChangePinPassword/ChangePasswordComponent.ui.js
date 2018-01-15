@@ -7,18 +7,26 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from '../Settings/style.js'
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
-export type Props = {
+export type ChangePasswordOwnProps = {
   onComplete: Function,
   account: AbcAccount,
   context: AbcContext,
   showHeader: boolean
 }
 
-export type DispatchProps = {
+export type ChangePasswordDispatchProps = {
   onComplete: () => void
 }
 
-export default class ChangePassword extends Component<Props> {
+export type ChangePasswordStateProps = {
+  context: AbcContext,
+  account: AbcAccount,
+  showHeader: boolean
+}
+
+type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
+
+export default class ChangePassword extends Component<ChangePasswordOwnProps> {
   onComplete = () => {
     this.props.onComplete()
   }

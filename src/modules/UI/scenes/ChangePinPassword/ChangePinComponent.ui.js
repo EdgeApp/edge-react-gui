@@ -7,18 +7,26 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from '../Settings/style.js'
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
-export type Props = {
+export type ChangePinOwnProps = {
   onComplete: Function,
   account: AbcAccount,
   context: AbcContext,
   showHeader: boolean
 }
 
-export type DispatchProps = {
+export type ChangePinDispatchProps = {
   onComplete: () => void
 }
 
-export default class ChangePassword extends Component<Props> {
+export type ChangePinStateProps = {
+  context: AbcContext,
+  account: AbcAccount,
+  showHeader: boolean
+}
+
+type ChangePinComponentProps = ChangePinOwnProps & ChangePinDispatchProps & ChangePinStateProps
+
+export default class ChangePassword extends Component<ChangePinComponentProps> {
   onComplete = () => {
     this.props.onComplete()
   }

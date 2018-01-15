@@ -23,11 +23,24 @@ import {
   getWallet
 } from '../../selectors'
 
-export type DispatchProps = {
+export type AddTokenOwnProps = {
+  walletId: string,
+  addTokenPending: Function,
+  addNewToken: Function,
+  currentCustomTokens: Array<CustomTokenInfo>,
+  wallet: GuiWallet
+}
+
+export type AddTokenDispatchProps = {
   addNewToken: (string, string, string, string, string) => void
 }
 
-export type State = {
+export type AddTokenStateProps = {
+  addTokenPending: Function,
+  wallet: GuiWallet
+}
+
+type State = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
@@ -36,16 +49,10 @@ export type State = {
   enabled?: boolean
 }
 
-export type Props = {
-  walletId: string,
-  addTokenPending: Function,
-  addNewToken: Function,
-  currentCustomTokens: Array<CustomTokenInfo>,
-  wallet: GuiWallet
-}
+export type AddTokenComponentProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
-class AddToken extends Component<Props, State> {
-  constructor (props: Props) {
+export class AddTokenComponent extends Component<AddTokenComponentProps, State> {
+  constructor (props: AddTokenComponentProps) {
     super(props)
     this.state = {
       currencyName: '',
@@ -169,17 +176,3 @@ class AddToken extends Component<Props, State> {
     }
   }
 }
-
-const mapStateToProps = (state: any, ownProps: any) => ({
-  addTokenPending: state.ui.wallets.addTokenPending,
-  walletId: ownProps.walletId,
-  currentCustomTokens: state.ui.settings.customTokens,
-  wallet: getWallet(state, ownProps.walletId)
-})
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  dispatch,
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

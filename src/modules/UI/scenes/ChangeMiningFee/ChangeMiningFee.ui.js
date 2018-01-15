@@ -18,10 +18,18 @@ const feeOptions = [
   // { value: FEE.CUSTOM_FEE, label: 'mining_fee_custom_label_choice' },
 ]
 
-type Props = {
+export type ChangeMiningFeeOwnProps = {
   // fee: string,
   feeSetting: string,
   onSubmit: (feeSetting: string) => void,
+}
+
+export type ChangeMiningFeeStateProps = {
+  feeSetting: string
+}
+
+export type ChangeMiningFeeDispatchProps = {
+  onSubmit: Function
 }
 
 type State = {
@@ -29,8 +37,10 @@ type State = {
   feeSetting: string,
 }
 
-export default class ChangeMiningFee extends Component<Props, State> {
-  constructor (props: Props) {
+export type ChangeMiningFeeComponentProps = ChangeMiningFeeOwnProps & ChangeMiningFeeDispatchProps & ChangeMiningFeeStateProps
+
+export default class ChangeMiningFee extends Component<ChangeMiningFeeComponentProps, State> {
+  constructor (props: ChangeMiningFeeComponentProps) {
     super(props)
     this.state = {
       // fee: props.fee,
@@ -70,18 +80,6 @@ export default class ChangeMiningFee extends Component<Props, State> {
             </View>
           ))}
         </View>
-        {/* feeSetting === FEE.CUSTOM_FEE
-          && <View>
-            <TextInput
-              style={style.input}
-              value={fee}
-              keyboardType='numeric'
-              placeholder='Satoshi per byte'
-              onChangeText={this.handleChange}
-              returnKeyType='done'
-            />
-          </View>
-        */}
       </View>
     )
   }

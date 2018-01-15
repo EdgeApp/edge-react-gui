@@ -9,13 +9,13 @@ import s from '../../../../../locales/strings.js'
 import styles from '../style.js'
 import {PrimaryButton, SecondaryButton} from '../../../components/Buttons'
 
-export type Props = {
+export type DeleteTokenButtonsProps = {
   onPressCancel: Function,
   onPressDelete: Function,
   processingFlag: boolean
 }
 
-export default class DeleteTokenButtons extends Component<Props> {
+export default class DeleteTokenButtons extends Component<DeleteTokenButtonsProps> {
   render () {
     return (
       <View style={[styles.deleteModalButtonsArea]}>

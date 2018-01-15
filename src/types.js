@@ -124,6 +124,15 @@ export type DeviceDimensions = {
   keyboardHeight?: number
 }
 
+export type ExchangePair = {
+  rate: string,
+  limit: number,
+  pair: string,
+  maxLimit: number,
+  min: number,
+  minerFee: number
+}
+
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }

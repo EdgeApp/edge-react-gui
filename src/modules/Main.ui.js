@@ -56,7 +56,7 @@ import {CreateWalletSelectFiat} from './UI/scenes/CreateWallet/CreateWalletSelec
 import {CreateWalletReview} from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
-import AddToken from './UI/scenes/AddToken'
+import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import EditToken from './UI/scenes/EditToken'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'

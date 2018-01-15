@@ -5,7 +5,7 @@ import { PrimaryButton, SecondaryButton } from '../../components/Buttons/index'
 import s from '../../../../locales/strings.js'
 import type { AbcLobby } from 'airbitz-core-types'
 
-type Props = {
+type EdgeLoginSceneProps = {
   style: any,
   lobby?: AbcLobby,
   error?: string,
@@ -13,7 +13,7 @@ type Props = {
   accept(): void,
   decline(): void
 }
-export default class EdgeLoginSceneComponent extends Component<Props> {
+export default class EdgeLoginSceneComponent extends Component<EdgeLoginSceneProps> {
   renderBody (style: any) {
     let message = this.props.error
     if (!this.props.error) {

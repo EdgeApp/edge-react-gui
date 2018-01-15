@@ -2,15 +2,21 @@
 
 import {connect} from 'react-redux'
 import type {State} from '../../../ReduxTypes'
-import ChangeMiningFee from './ChangeMiningFee.ui'
+// eslint-disable-next-line no-duplicate-imports
+import ChangeMiningFee from './ChangeMiningFee.ui.js'
+// eslint-disable-next-line no-duplicate-imports
+import type {
+  ChangeMiningFeeStateProps,
+  ChangeMiningFeeDispatchProps
+} from './ChangeMiningFee.ui.js'
 import { changeFee } from '../../../../actions/CryptoExchangeActions'
 
-export const mapStateToProps = (state: State) => ({
+export const mapStateToProps = (state: State): ChangeMiningFeeStateProps => ({
   // fee: state.cryptoExchange.fee,
   feeSetting: state.cryptoExchange.feeSetting
 })
 
-export const mapDispatchToProps = ({
+export const mapDispatchToProps = (dispatch: Dispatch): ChangeMiningFeeDispatchProps => ({
   onSubmit: changeFee
 })
 
