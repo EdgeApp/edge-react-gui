@@ -137,7 +137,7 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
               onRegularSelectFxn={this.handleSelectWalletType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, {height: searchResultsHeight}] }
+              containerStyle={[styles.searchContainer] }
               keyExtractor={this.keyExtractor}
             />
             <View style={[styles.buttons]}>

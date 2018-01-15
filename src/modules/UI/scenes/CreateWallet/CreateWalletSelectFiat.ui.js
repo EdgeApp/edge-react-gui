@@ -144,7 +144,7 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
               onRegularSelectFxn={this.handleSelectFiatType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, {height: searchResultsHeight}]}
+              containerStyle={[styles.searchContainer]}
               keyExtractor={this.keyExtractor}
               initialNumToRender={30}
               scrollRenderAheadDistance={1600}
