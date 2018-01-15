@@ -6,7 +6,6 @@ import {View, TouchableHighlight} from 'react-native'
 import T from '../../../components/FormattedText/FormattedText.ui'
 import styles from '../style'
 import s from '../../../../../locales/strings.js'
-import {sprintf} from 'sprintf-js'
 
 const NEGATIVE_TEXT = s.strings.string_cancel_cap
 const POSITIVE_TEXT = s.strings.string_split

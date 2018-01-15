@@ -4,7 +4,8 @@ import {connect} from 'react-redux'
 
 import SplitWalletButtons from './SplitWalletButtons.ui'
 import type {State, Dispatch} from '../../../../ReduxTypes'
-import {CLOSE_SPLIT_WALLET_MODAL, splitWallet} from '../action'
+import * as Constants from '../../../../../constants/indexConstants'
+import {CLOSE_MODAL_VALUE, splitWallet} from './WalletOptions/action'
 
 export type StateProps = {
   walletId: string
@@ -22,7 +23,7 @@ const mapStateToProps = (state: State): StateProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onNegative: () => {},
   onPositive: (walletId) => dispatch(splitWallet(walletId)),
-  onDone: () => dispatch({type: CLOSE_SPLIT_WALLET_MODAL})
+  onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.WALLET_OPTIONS.SPLIT.value) })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SplitWalletButtons)

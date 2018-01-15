@@ -4,10 +4,11 @@ import {connect} from 'react-redux'
 
 import RenameWalletButtons, {type StateProps, type DispatchProps} from './RenameWalletButtons.ui'
 import type {State, Dispatch} from '../../../../ReduxTypes'
+import * as Constants from '../../../../../constants/indexConstants'
 import {
-  CLOSE_RENAME_WALLET_MODAL,
+  CLOSE_MODAL_VALUE,
   renameWallet
-} from '../action'
+} from './WalletOptions/action'
 
 const mapStateToProps = (state: State): StateProps => ({
   walletId: state.ui.scenes.walletList.walletId,
@@ -16,7 +17,7 @@ const mapStateToProps = (state: State): StateProps => ({
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onNegative: () => {},
   onPositive: (walletId: string, walletName: string) => dispatch(renameWallet(walletId, walletName)),
-  onDone: () => dispatch({type: CLOSE_RENAME_WALLET_MODAL})
+  onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.WALLET_OPTIONS.RENAME.value) })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(RenameWalletButtons)
