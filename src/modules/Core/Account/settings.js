@@ -37,14 +37,6 @@ const CATEGORIES_FILENAME = 'Categories.json'
 
 //  Settings
 // Core Settings
-export const setOTPModeRequest = (account: AbcAccount, otpMode: boolean) =>
-  otpMode // $FlowFixMe enableOtp not found on AbcAccount type
-  ? account.enableOtp() // $FlowFixMe disableOtp not found on AbcAccount type
-  : account.disableOtp()
-
-export const setOTPRequest = (account: AbcAccount, key: string) =>
-// $FlowFixMe setupOTPKey not found on AbcAccount type
-account.setupOTPKey(key)
 
 export const setPINModeRequest = (account: AbcAccount, pinMode: boolean) =>
   pinMode // $FlowFixMe enablePIN not found on AbcAccount type

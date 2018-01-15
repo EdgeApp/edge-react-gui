@@ -17,12 +17,13 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
 import OptionSubtext from '../../components/OptionSubtext/OptionSubtextConnector.js'
 import {Actions} from 'react-native-router-flux'
-import * as Constants from '../../../../constants/indexConstants'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import s from '../../../../locales/strings.js'
+import {intl} from '../../../../locales/intl'
+import * as Constants from '../../../../constants/indexConstants.js'
 
 import StylizedModal from '../../components/Modal/Modal.ui'
 import * as UTILS from '../../../utils'
@@ -493,7 +494,7 @@ export default class WalletList extends Component<Props, State> {
       const addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
-    return total.toFixed(2)
+    return intl.formatNumber(total, {toFixed: 2})
   }
 
   handleOnBalanceBoxPress = () => this.setState({balanceBoxVisible: !this.state.balanceBoxVisible})
