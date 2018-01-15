@@ -9,6 +9,7 @@ import {
   FlatList,
   Image
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
@@ -162,6 +163,7 @@ export default class WalletList extends Component<Props, State> {
     }
 
     return (
+      <SafeAreaView>
       <View style={styles.container}>
         {this.renderDeleteWalletModal()}
         {this.renderRenameWalletModal()}
@@ -232,6 +234,7 @@ export default class WalletList extends Component<Props, State> {
 
         </View>
       </View>
+    </SafeAreaView>
     )
   }
 
