@@ -1,6 +1,8 @@
 // @flow
 /* global Intl */
 import 'intl'
+import 'intl/locale-data/jsonp/en-US'
+import {Platform} from 'react-native'
 
 const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
@@ -141,7 +143,11 @@ const intlHandler = {
 
 export const setIntlLocale = (l: IntlLocaleType) => {
   if (!locale) throw new Error('Please select locale for internationalization')
-  locale = l
+  if (Platform.OS !== 'ios') {
+    locale = EN_US_LOCALE
+  } else {
+    locale = l
+  }
   return intlHandler
 }
 export { intlHandler as intl }
