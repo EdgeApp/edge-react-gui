@@ -102,7 +102,6 @@ class WalletNameInput extends Component<WalletNameInputProps> {
         <FormField style={MaterialInputOnWhite}
           clearButtonMode={'while-editing'}
           autoCorrect={false}
-          autoFocus
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           label={s.strings.fragment_wallets_addwallet_name_hint}
