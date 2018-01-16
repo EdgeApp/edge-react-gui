@@ -69,20 +69,19 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
               value={this.state.walletName}
               placeholder={s.strings.fragment_wallets_addwallet_name_hint}
             />
-           <View style={styles.buttons}>
-              <SecondaryButton
-                style={[styles.cancel]}
-                onPressFunction={this.onCancel}
-                text={s.strings.string_cancel_cap} />
+             <View style={styles.buttons}>
+                <SecondaryButton
+                  style={[styles.cancel]}
+                  onPressFunction={this.onCancel}
+                  text={s.strings.string_cancel_cap} />
 
-              <PrimaryButton
-                style={[styles.next]}
-                disabled={!this.state.walletName}
-                onPressFunction={this.onNext}
-                text={s.strings.string_next_capitalized}
-                processingElement={<ActivityIndicator />}
-              />
-            </View>
+                <PrimaryButton
+                  style={[styles.next]}
+                  onPressFunction={this.onNext}
+                  text={s.strings.string_next_capitalized}
+                  processingElement={<ActivityIndicator />}
+                />
+             </View>
           </View>
         </View>
       </SafeAreaView>
@@ -105,7 +104,6 @@ class WalletNameInput extends Component<WalletNameInputProps> {
         <FormField style={MaterialInputOnWhite}
           clearButtonMode={'while-editing'}
           autoCorrect={false}
-          autoFocus
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           label={s.strings.fragment_wallets_addwallet_name_hint}
