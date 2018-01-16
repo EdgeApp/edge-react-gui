@@ -4,6 +4,7 @@ import {AbcAccount} from 'airbitz-core-types'
 import {Actions} from 'react-native-router-flux'
 
 import type {GetState, Dispatch} from '../ReduxTypes'
+import {displayErrorAlert} from '../UI/components/ErrorAlert/actions'
 
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
@@ -50,10 +51,10 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
         dispatch(updateWalletsRequest())
         return
       }
-      dispatch(actions.createCurrencyWallet(
+      dispatch(createCurrencyWallet(
         s.strings.string_first_ethereum_wallet_name,
-        Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
-        false, true
+        Constants.ETHEREUM_WALLET,
+        Constants.USD_FIAT
       ))
       dispatch(loadSettings())
       // $FlowFixMe
@@ -133,3 +134,22 @@ export const logout = (username?: string) => ({
   type: Constants.LOGOUT,
   data: {username}
 })
+
+const createCurrencyWallet = (
+  walletName: string,
+  walletType: string,
+  fiatCurrencyCode: string
+) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  dispatch(WALLET_ACTIONS.createWalletStart())
+
+  return ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {name: walletName, fiatCurrencyCode})
+  .then((abcWallet) => {
+    dispatch(WALLET_ACTIONS.createWalletSuccess())
+    dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
+  })
+  .catch((error) => {
+    dispatch(displayErrorAlert(error.message))
+  })
+}
