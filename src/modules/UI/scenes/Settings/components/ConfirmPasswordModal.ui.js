@@ -2,17 +2,16 @@
 
 import React, {Component} from 'react'
 import {View} from 'react-native'
-// import {sprintf} from 'sprintf-js'
 import s from '../../../../../locales/strings.js'
 
 import StylizedModal from '../../../components/Modal/Modal.ui'
 import {Icon} from '../../../components/Icon/Icon.ui'
 import * as Constants from '../../../../../constants/indexConstants'
-// import strings from '../../../../../locales/default'
 import THEME from '../../../../../theme/variables/airbitz'
 import ModalButtons from './ModalButtons.ui'
 import {FormField} from '../../../../../components/indexComponents'
 import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
+
 type Props = {
   style: any,
   headerText: string,

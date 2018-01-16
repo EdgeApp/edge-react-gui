@@ -75,7 +75,7 @@ const strings = {
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync ',
   fragment_wallets_split_wallet_first_confirm_message_mobile: 'Are you sure you want to split ',
-  fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for ',
+  fragment_wallets_get_seed_wallet_first_confirm_message_mobile: 'Are you sure you want to reveal the private seed for the following wallet?',
   fragmet_wallets_delete_wallet_first_confirm_message_mobile: 'Are you sure you want to delete ',
   fragmet_wallets_list_archive_title_capitalized: 'Archive',
   create_wallet_select_valid_crypto: 'Please select a valid wallet type',
@@ -146,7 +146,7 @@ const strings = {
   string_rename: 'Rename',
   string_resync: 'Resync',
   string_split: 'Split',
-  string_get_seed: 'Get seed',
+  string_get_seed: 'Get Seed',
   string_save: 'Save',
   string_share: 'Share',
   string_show_balance: 'Show Balance',
@@ -210,7 +210,9 @@ const strings = {
   otp_enabled_modal_part_two: 'If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code',
   otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
-  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.'
+  otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
+  otp_notif_title: '2FA disable has been requested by another device',
+  otp_notif_body: 'If you did not create this request, log in as %1$s and change your password'
 }
 
 export default strings

@@ -3,49 +3,36 @@
 import React, {Component} from 'react'
 import {View, TouchableHighlight} from 'react-native'
 
-import T from '../../../components/FormattedText/FormattedText.ui'
-import styles from '../style'
-import s from '../../../../../locales/strings.js'
-
-const NEGATIVE_TEXT = s.strings.string_cancel_cap
-const POSITIVE_TEXT = s.strings.string_delete
+import T from '../FormattedText/FormattedText.ui'
+import styles from './style'
+import s from '../../../../locales/strings.js'
 
 type Props = {
-  onPositive: (walletId: string) => void,
-  onNegative: () => void,
-  onDone: () => void,
-  walletId: string
+  positiveText: string,
+  onPositive: (...args: any) => void,
+  onNegative: (...args: any) => void
 }
 type State = {}
 
-export default class DeleteWalletButtons extends Component<Props, State> {
-  onNegative = () => {
-    this.props.onNegative()
-    this.props.onDone()
-  }
-  onPositive = () => {
-    this.props.onPositive(this.props.walletId)
-    this.props.onDone()
-  }
-
+export default class OptionButtons extends Component<Props, State> {
   render () {
     return (
       <View style={[styles.buttonsWrap]}>
 
         <TouchableHighlight style={[styles.cancelButtonWrap, styles.stylizedButton]}
-          onPress={this.onNegative}>
+          onPress={this.props.onNegative}>
           <View style={styles.stylizedButtonTextWrap}>
             <T style={[styles.cancelButton, styles.stylizedButtonText]}>
-              {NEGATIVE_TEXT}
+              {s.strings.string_cancel_cap}
             </T>
           </View>
         </TouchableHighlight>
 
         <TouchableHighlight style={[styles.doneButtonWrap, styles.stylizedButton]}
-          onPress={this.onPositive}>
+          onPress={this.props.onPositive}>
           <View style={styles.stylizedButtonTextWrap}>
             <T style={[styles.doneButton, styles.stylizedButtonText]}>
-              {POSITIVE_TEXT}
+              {this.props.positiveText}
             </T>
           </View>
         </TouchableHighlight>

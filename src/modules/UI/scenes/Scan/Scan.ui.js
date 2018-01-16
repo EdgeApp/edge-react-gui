@@ -11,6 +11,7 @@ import {
 } from 'react-native'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import AddressModal from './components/AddressModalConnector'
@@ -87,10 +88,11 @@ export default class Scan extends Component<any, any> {
       .then((resp) => this.setCameraPermission(resp))
     }
     return (
-      <View style={{flex: 1}}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.topSpacer} />
-        <View style={styles.container}>
+      <SafeAreaView>
+        <View style={{flex: 1}}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.topSpacer} />
+          <View style={styles.container}>
             {this.renderCamera()}
             <View style={[styles.overlay, UTILS.border()]}>
 
@@ -167,10 +169,11 @@ export default class Scan extends Component<any, any> {
 
               </Gradient>
             </View>
-          <ABAlert />
+            <ABAlert />
+          </View>
+          {this.renderDropUp()}
         </View>
-        {this.renderDropUp()}
-      </View>
+      </SafeAreaView>
     )
   }
 

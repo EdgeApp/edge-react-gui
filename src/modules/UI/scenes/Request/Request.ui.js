@@ -22,6 +22,7 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import s from '../../../../locales/strings.js'
 import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
@@ -128,33 +129,35 @@ export default class Request extends Component<Props, State> {
       secondaryInfo
     } = this.props
     return (
-      <Gradient style={styles.view}>
-        <Gradient style={styles.gradient} />
+      <SafeAreaView>
+        <Gradient style={styles.view}>
+          <Gradient style={styles.gradient} />
 
-        <View style={styles.exchangeRateContainer}>
-          <ExchangedExchangeRate
-            primaryInfo={primaryInfo}
-            secondaryInfo={secondaryInfo}
-            secondaryToPrimaryRatio={secondaryToPrimaryRatio} />
-        </View>
+          <View style={styles.exchangeRateContainer}>
+            <ExchangedExchangeRate
+              primaryInfo={primaryInfo}
+              secondaryInfo={secondaryInfo}
+              secondaryToPrimaryRatio={secondaryToPrimaryRatio} />
+          </View>
 
-        <View style={styles.main}>
-          <ExchangedFlipInput
-            primaryInfo={primaryInfo}
-            secondaryInfo={secondaryInfo}
-            secondaryToPrimaryRatio={secondaryToPrimaryRatio}
-            onAmountsChange={this.onAmountsChange}
-            color={color} />
+          <View style={styles.main}>
+            <ExchangedFlipInput
+              primaryInfo={primaryInfo}
+              secondaryInfo={secondaryInfo}
+              secondaryToPrimaryRatio={secondaryToPrimaryRatio}
+              onAmountsChange={this.onAmountsChange}
+              color={color} />
 
-          <QRCode value={this.state.encodedURI} />
-          <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
-        </View>
+            <QRCode value={this.state.encodedURI} />
+            <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+          </View>
 
-        <View style={styles.shareButtonsContainer}>
-          <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
-        </View>
-        {this.renderDropUp()}
-      </Gradient>
+          <View style={styles.shareButtonsContainer}>
+            <ShareButtons styles={styles.shareButtons} shareViaEmail={this.shareViaEmail} shareViaSMS={this.shareViaSMS} shareViaShare={this.shareViaShare} copyToClipboard={this.copyToClipboard} />
+          </View>
+          {this.renderDropUp()}
+        </Gradient>
+      </SafeAreaView>
     )
   }
 

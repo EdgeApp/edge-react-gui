@@ -20,3 +20,11 @@ process.env['NODE_ENV'] = isDev ? 'development' : 'production'
 if (typeof localStorage !== 'undefined') {
   localStorage.debug = isDev ? '*' : ''
 }
+
+// Prevents bcoin from crashing at boot on Android:
+if (!Object.setPrototypeOf) {
+  Object.setPrototypeOf = function(obj, proto) {
+    obj.__proto__ = proto
+    return obj
+  }
+}

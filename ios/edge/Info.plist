@@ -11,7 +11,7 @@
 				<string>airbitz</string>
 			</array>
 			<key>CFBundleURLName</key>
-			<string></string>
+			<string/>
 		</dict>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
