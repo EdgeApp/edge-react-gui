@@ -12,7 +12,7 @@ import { setIntlLocale } from '../locales/intl'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking, SafeAreaView, View} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking} from 'react-native'
 import T from './UI/components/FormattedText'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'

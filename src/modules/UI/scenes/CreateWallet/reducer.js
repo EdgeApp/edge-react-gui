@@ -6,7 +6,7 @@ import type {Action} from '../../../ReduxTypes.js'
 
 export type IsCreatingWallet = boolean
 
-const isCreatingWallet = (state = false, action) => {
+const isCreatingWallet = (state = false, action: Action) => {
   switch (action.type) {
     case ACTION.CREATE_WALLET_START:
       return true
