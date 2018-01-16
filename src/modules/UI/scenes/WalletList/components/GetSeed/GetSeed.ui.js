@@ -53,7 +53,7 @@ export default class GetSeed extends Component<Props, State> {
     this.props.onPositive(this.state.confimPassword)
   }
 
-  renderMiddle = (style: any) => {
+  renderPasswordInput = (style: any) => {
     const formStyle = {...MaterialInputOnWhite,
       container: {...MaterialInputOnWhite.container, width: 244}
     }
@@ -67,7 +67,7 @@ export default class GetSeed extends Component<Props, State> {
     </View>
   }
 
-  renderBottom = () => {
+  renderButtons = () => {
     return <View style={[styles.buttonsWrap]}>
       <TouchableHighlight style={[styles.cancelButtonWrap, styles.stylizedButton]}
         onPress={this.onNegative}>
@@ -96,8 +96,8 @@ export default class GetSeed extends Component<Props, State> {
     }
     return (
       <View style={[styles.container, {flexDirection: 'column'}]}>
-        {this.renderMiddle()}
-        {this.renderBottom()}
+        {this.renderPasswordInput()}
+        {this.renderButtons()}
       </View>
     )
   }
