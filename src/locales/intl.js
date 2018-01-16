@@ -1,8 +1,12 @@
 // @flow
 /* global Intl */
 import 'intl'
+import areIntlLocalesSupported from 'intl-locales-supported'
+
+// Polyfills for Android. Now support only these locales. en-US is fallback
 import 'intl/locale-data/jsonp/en-US'
-import {Platform} from 'react-native'
+import 'intl/locale-data/jsonp/de-DE'
+import 'intl/locale-data/jsonp/ru-RU'
 
 const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
@@ -143,7 +147,9 @@ const intlHandler = {
 
 export const setIntlLocale = (l: IntlLocaleType) => {
   if (!locale) throw new Error('Please select locale for internationalization')
-  if (Platform.OS !== 'ios') {
+  const localeIdentifier = l.localeIdentifier.replace('_', '-')
+
+  if (!areIntlLocalesSupported(localeIdentifier)) {
     locale = EN_US_LOCALE
   } else {
     locale = l
