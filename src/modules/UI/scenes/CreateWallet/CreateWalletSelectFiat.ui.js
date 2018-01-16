@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
   Image
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
 import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
@@ -122,6 +123,7 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
     const searchResultsHeight = PLATFORM.usableHeight - keyboardHeight - 50 - 58 // substract button area height and FormField height
 
     return (
+      <SafeAreaView>
       <View style={styles.scene}>
         <Gradient style={styles.gradient} />
         <View style={styles.view}>
@@ -141,7 +143,7 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
             onRegularSelectFxn={this.handleSelectFiatType}
             regularArray={filteredArray}
             style={[styles.SearchResults]}
-            containerStyle={[styles.searchContainer, {height: searchResultsHeight}]}
+            containerStyle={[styles.searchContainer]}
             keyExtractor={this.keyExtractor}
             initialNumToRender={30}
             scrollRenderAheadDistance={1600}
@@ -160,6 +162,7 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
           </View>
         </View>
       </View>
+      </SafeAreaView>
     )
   }
 

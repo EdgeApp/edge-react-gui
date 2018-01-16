@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {Image, View} from 'react-native'
 import s from '../../../../locales/strings.js'
 import T from '../../components/FormattedText'
+import SafeAreaView from '../../components/SafeAreaView'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style'
 import {border as b} from '../../../utils'
@@ -45,29 +46,30 @@ export default class CurrencySettings extends Component<Props, State> {
 
   render () {
     return (
-      <View style={[styles.ethereumSettings, b()]}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.container}>
-          {this.header()}
-
-          <RadioRows style={b()}>
-            {
-              this.props.denominations.map((denomination) => {
-                const key = denomination.multiplier
-                const left = <View style={{flexDirection: 'row'}}><T style={styles.symbol}>{denomination.symbol}</T><T> - {denomination.name}</T></View>
-                const right = 'Right'
-                const isSelected = key === this.props.selectedDenominationKey
-                const onPress = this.selectDenomination(key)
-                return <Row key={denomination.multiplier}
-                  denomination={denomination}
-                  left={left} right={right}
-                  isSelected={isSelected}
-                  onPress={onPress} />
-              })
-            }
-          </RadioRows>
+      <SafeAreaView>
+        <View style={[styles.ethereumSettings, b()]}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.container}>
+            {this.header()}
+            <RadioRows style={b()}>
+              {
+                this.props.denominations.map((denomination) => {
+                  const key = denomination.multiplier
+                  const left = <View style={{flexDirection: 'row'}}><T style={styles.symbol}>{denomination.symbol}</T><T> - {denomination.name}</T></View>
+                  const right = 'Right'
+                  const isSelected = key === this.props.selectedDenominationKey
+                  const onPress = this.selectDenomination(key)
+                  return <Row key={denomination.multiplier}
+                    denomination={denomination}
+                    left={left} right={right}
+                    isSelected={isSelected}
+                    onPress={onPress} />
+                })
+              }
+            </RadioRows>
           </View>
-      </View>
+        </View>
+      </SafeAreaView>
     )
   }
 }

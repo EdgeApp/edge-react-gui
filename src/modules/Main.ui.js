@@ -12,7 +12,7 @@ import { setIntlLocale } from '../locales/intl'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking, SafeAreaView, View} from 'react-native'
 import T from './UI/components/FormattedText'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
@@ -260,6 +260,7 @@ export default class Main extends Component<Props, State> {
                   <Drawer key='edge' hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
                     <Scene hideNavBar>
+
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
                           <Scene key={Constants.WALLET_LIST_SCENE} navTransparent={true}
@@ -402,13 +403,10 @@ export default class Main extends Component<Props, State> {
               </Modal>
             </Overlay>
           </RouterWithRedux>
-
           <HelpModal style={{flex: 1}} />
           <ErrorAlert/>
           <TransactionAlert/>
-
           <AutoLogout />
-
         </MenuContext>
       </StyleProvider>
     )

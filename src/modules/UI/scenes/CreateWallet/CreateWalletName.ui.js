@@ -8,6 +8,7 @@ import {
   View,
   Keyboard
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 
@@ -59,29 +60,31 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
 
   render () {
     return (
-      <View style={styles.scene}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.view}>
-          <WalletNameInput
-            onChangeText={this.handleChangeWalletName}
-            value={this.state.walletName}
-            placeholder={s.strings.fragment_wallets_addwallet_name_hint}
-          />
-         <View style={styles.buttons}>
-            <SecondaryButton
-              style={[styles.cancel]}
-              onPressFunction={this.onCancel}
-              text={s.strings.string_cancel_cap} />
-
-            <PrimaryButton
-              style={[styles.next]}
-              onPressFunction={this.onNext}
-              text={s.strings.string_next_capitalized}
-              processingElement={<ActivityIndicator />}
+      <SafeAreaView>
+        <View style={styles.scene}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.view}>
+            <WalletNameInput
+              onChangeText={this.handleChangeWalletName}
+              value={this.state.walletName}
+              placeholder={s.strings.fragment_wallets_addwallet_name_hint}
             />
+             <View style={styles.buttons}>
+                <SecondaryButton
+                  style={[styles.cancel]}
+                  onPressFunction={this.onCancel}
+                  text={s.strings.string_cancel_cap} />
+
+                <PrimaryButton
+                  style={[styles.next]}
+                  onPressFunction={this.onNext}
+                  text={s.strings.string_next_capitalized}
+                  processingElement={<ActivityIndicator />}
+                />
+             </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
 }
