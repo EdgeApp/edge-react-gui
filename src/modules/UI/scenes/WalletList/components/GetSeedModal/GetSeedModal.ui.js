@@ -67,9 +67,9 @@ export default class GetSeed extends Component<Props, State> {
 
   renderPasswordInput = (style: any) => {
     const formStyle = {...MaterialInputOnWhite,
-      container: {...MaterialInputOnWhite.container, width: 244}
+      container: {...MaterialInputOnWhite.container}
     }
-    return <View style={ConfirmPasswordModalStyle.middle.container} >
+    return <View style={[ConfirmPasswordModalStyle.middle.container, {paddingBottom: 4}]} >
       <FormField onChangeText={this.textChange}
         style={formStyle}
         label={s.strings.confirm_password_text}
@@ -80,6 +80,7 @@ export default class GetSeed extends Component<Props, State> {
   }
 
   render () {
+    let height = 108
     let modalBottom = <View style={[styles.container, {flexDirection: 'column'}]}>
       {this.renderPasswordInput()}
       <OptionButtons
@@ -97,6 +98,7 @@ export default class GetSeed extends Component<Props, State> {
     if (this.props.privateSeedUnlocked) {
       modalBottom = <T> {this.props.getSeed()} </T>
       modalMiddle = null
+      height = 50
     }
 
     return <StylizedModal
@@ -104,6 +106,8 @@ export default class GetSeed extends Component<Props, State> {
       headerText={s.strings.fragment_wallets_get_seed_wallet}
       modalMiddle={modalMiddle}
       modalBottom={modalBottom}
+      modalBottomStyle={{height}}
+      style={styles.getSeedModal}
       visibilityBoolean={this.props.visibilityBoolean}
       onExitButtonFxn={this.props.onExitButtonFxn}
     />
