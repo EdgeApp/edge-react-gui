@@ -38,10 +38,10 @@ export default {
   },
 
   SPACER: {
-    HEADER: Platform.OS === 'ios' ? 66 : 56
+    HEADER: Platform.OS === 'ios' ? 44 : 56
   },
 
-  HEADER: Platform.OS === 'ios' ? 66 : 56,
+  HEADER: Platform.OS === 'ios' ? 44 : 56,
 
   DEBUG: {
     COLORS: {
