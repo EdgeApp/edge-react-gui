@@ -91,8 +91,11 @@ export default class GetSeed extends Component<Props, State> {
   }
 
   render () {
+    if (this.props.privateSeedUnlocked) {
+      return (<T> {this.props.getSeed()} </T>)
+    }
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, {flexDirection: 'column'}]}>
         {this.renderMiddle()}
         {this.renderBottom()}
       </View>

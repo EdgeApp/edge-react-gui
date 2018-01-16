@@ -1,6 +1,7 @@
 // @flow
 import {connect} from 'react-redux'
 import WalletOptions from './WalletOptions.ui'
+import { LOCK } from '../GetSeed/GetSeedConnector'
 
 import {
   CLOSE_MODAL_VALUE,
@@ -23,6 +24,8 @@ const mapStateToProps = (state: any): {} => {
     }
   }
 
+  props.privateSeedUnlocked = state.ui.scenes.walletList.privateSeedUnlocked
+
   return props
 }
 
@@ -33,7 +36,10 @@ const mapDispatchToProps = (dispatch: Function): {} => {
     const option = Constants.WALLET_OPTIONS[walletOption]
     if (option.modalVisible) {
       const value = option.value
-      props[CLOSE_MODAL_FUNCTION(value)] = () => dispatch({ type: CLOSE_MODAL_VALUE(value) })
+      props[CLOSE_MODAL_FUNCTION(value)] = () => {
+        dispatch({ type: CLOSE_MODAL_VALUE(value) })
+        dispatch(({ type: LOCK }))
+      }
     }
   }
 

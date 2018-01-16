@@ -90,7 +90,7 @@ export default class WalletOptions extends Component<Props, State> {
             key={walletOption}
             featuredIcon={<OptionIcon iconName={Constants[walletOption]}/>}
             headerText={params.headerText}
-            modalMiddle={params.modalMiddle}
+            modalMiddle={!this.props.privateSeedUnlocked ? params.modalMiddle : null}
             modalBottom={params.modalBottom}
             visibilityBoolean={this.props[VISIBLE_MODAL_NAME(value)]}
             onExitButtonFxn={this.props[CLOSE_MODAL_FUNCTION(value)]}

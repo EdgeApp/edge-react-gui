@@ -4,7 +4,7 @@ import * as ACTION from './action'
 import {combineReducers} from 'redux'
 import type {Action} from '../../../../../ReduxTypes.js'
 import * as Constants from '../../../../../../constants/indexConstants'
-import { privateSeedLocked } from '../GetSeed/reducer'
+import { privateSeedUnlocked } from '../GetSeed/reducer'
 
 const reducers = {}
 const openVisible = {}
@@ -89,7 +89,7 @@ const walletList = combineReducers(Object.assign(reducers, {
   renameWalletInput,
   walletId,
   walletName,
-  privateSeedLocked
+  privateSeedUnlocked
 }))
 
 export default walletList
