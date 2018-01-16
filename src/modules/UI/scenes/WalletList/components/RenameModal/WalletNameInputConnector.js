@@ -3,9 +3,14 @@
 import {connect} from 'react-redux'
 
 import WalletNameInput from './WalletNameInput.ui'
-import {updateRenameWalletInput} from '../action'
+import type {State, Dispatch} from '../../../../../ReduxTypes'
 
-import type {Dispatch, State} from '../../../../ReduxTypes'
+export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
+
+const updateRenameWalletInput = (renameWalletInput: string) => ({
+  type: UPDATE_RENAME_WALLET_INPUT,
+  data: {renameWalletInput}
+})
 
 const mapStateToProps = (state: State) => ({
   currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,

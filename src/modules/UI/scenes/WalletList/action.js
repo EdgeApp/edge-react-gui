@@ -15,8 +15,6 @@ export const UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS = 'UPDATE_ACTIVE_WALLETS_ORDER_
 export const UPDATE_ARCHIVED_WALLETS_ORDER_START = 'UPDATE_ARCHIVED_WALLETS_ORDER_START'
 export const UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS = 'UPDATE_ARCHIVED_WALLETS_ORDER_SUCCESS'
 
-export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
-
 export const ADD_TOKEN = 'ADD_TOKEN'
 
 export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {
@@ -51,8 +49,3 @@ export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => 
 }
 
 const wrap = (type, data) => ({ type, data })
-
-export const updateRenameWalletInput = (renameWalletInput: string) => ({
-  type: UPDATE_RENAME_WALLET_INPUT,
-  data: {renameWalletInput}
-})

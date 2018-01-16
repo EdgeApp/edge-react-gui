@@ -4,7 +4,8 @@ import * as ACTION from './action'
 import {combineReducers} from 'redux'
 import type {Action} from '../../../../../ReduxTypes.js'
 import * as Constants from '../../../../../../constants/indexConstants'
-import { privateSeedUnlocked } from '../GetSeed/reducer'
+import { privateSeedUnlocked } from '../GetSeedModal/reducer'
+import { renameWalletInput, walletName } from '../RenameModal/reducer'
 
 const reducers = {}
 const openVisible = {}
@@ -51,34 +52,6 @@ const walletArchivesVisible = (state: boolean = false, action: Action) => {
     //   return true
     // case ACTION.CLOSE_WALLET_ARCHIVES:
     //   return false
-    default:
-      return state
-  }
-}
-
-const walletName = (state: string = '', action: Action) => {
-  switch (action.type) {
-    case ACTION.OPEN_MODAL_VALUE(Constants.WALLET_OPTIONS.RENAME.value):
-      if (action.data && action.data.walletName) {
-        return action.data.walletName
-      }
-      return 'Wallet Name'
-    // case ACTION.CLOSE_RENAME_WALLET_MODAL:
-    //   return ''
-    default:
-      return state
-  }
-}
-
-const renameWalletInput = (state: string = '', action: Action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_RENAME_WALLET_INPUT:
-      if (action.data && action.data.renameWalletInput) {
-        return action.data.renameWalletInput
-      }
-      return ''
-    case ACTION.CLOSE_MODAL_VALUE(Constants.WALLET_OPTIONS.RENAME.value):
-      return ''
     default:
       return state
   }

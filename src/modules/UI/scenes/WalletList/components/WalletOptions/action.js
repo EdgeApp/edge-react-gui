@@ -5,10 +5,7 @@ import {Actions} from 'react-native-router-flux'
 import type {Dispatch, GetState} from '../../../../../ReduxTypes'
 
 import * as ACCOUNT_API from '../../../../../Core/Account/api.js'
-import * as WALLET_API from '../../../../../Core/Wallets/api.js'
-import * as UI_ACTIONS from '../../../../Wallets/action.js'
 import * as Constants from '../../../../../../constants/indexConstants'
-
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import * as WALLET_SELECTORS from '../../../../selectors.js'
 
@@ -21,30 +18,18 @@ export const CLOSE_MODAL_FUNCTION = (value: string) =>
   `close${value.charAt(0).toUpperCase() + value.slice(1)}WalletModal`
 export const VISIBLE_MODAL_NAME = (value: string) => `${value}WalletModalVisible`
 
+export const START_MODAL_VALUE = (value: string) => `${value.toUpperCase()}_WALLET_START`
+export const SUCCESS_MODAL_VALUE = (value: string) => `CLOSE_${value.toUpperCase()}_WALLET_SUCCESS`
+
 export const ARCHIVE_WALLET_START = 'ARCHIVE_WALLET_START'
 export const ARCHIVE_WALLET_SUCCESS = 'ARCHIVE_WALLET_SUCCESS'
 
 export const ACTIVATE_WALLET_START = 'ACTIVATE_WALLET_START'
 export const ACTIVATE_WALLET_SUCCESS = 'ACTIVATE_WALLET_SUCCESS'
 
-export const RENAME_WALLET_START = 'RENAME_WALLET_START'
-export const RENAME_WALLET_SUCCESS = 'RENAME_WALLET_SUCCESS'
-
-export const RESYNC_WALLET_START = 'RESYNC_WALLET_START'
-export const RESYNC_WALLET_SUCCESS = 'RESYNC_WALLET_SUCCESS'
-
-export const SPLIT_WALLET_START = 'SPLIT_WALLET_START'
-export const SPLIT_WALLET_SUCCESS = 'SPLIT_WALLET_SUCCESS'
-
-export const DELETE_WALLET_START = 'DELETE_WALLET_START'
-export const DELETE_WALLET_SUCCESS = 'DELETE_WALLET_SUCCESS'
-
-export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
-
 export const ADD_TOKEN = 'ADD_TOKEN'
 
-const wrap = (type, data) => ({ type, data })
-const getSplitType = () => 'wallet:bitcoincash'
+export const wrap = (type: string, data: any) => ({ type, data })
 
 export const walletRowOption = (walletId: string, option: string, archived: boolean) => {
   if (option === Constants.ARCHIVE_VALUE && archived) {
@@ -85,94 +70,39 @@ export const walletRowOption = (walletId: string, option: string, archived: bool
         dispatch(wrap(ADD_TOKEN, {walletId}))
       }
 
-    case Constants.WALLET_OPTIONS.MANAGE_TOKENS.value:
+    case Constants.MANAGE_TOKENS_VALUE:
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const wallet = WALLET_SELECTORS.getWallet(state, walletId)
         Actions.manageTokens({guiWallet: wallet})
       }
 
-    case Constants.WALLET_OPTIONS.RENAME.value:
+    case Constants.RENAME_VALUE:
       return (dispatch: Dispatch, getState: GetState) => {
         const state = getState()
         const walletName = CORE_SELECTORS.getWallet(state, walletId).name
 
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.WALLET_OPTIONS.RENAME.value), {walletId, walletName}))
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.RENAME_VALUE), {walletId, walletName}))
       }
 
-    case Constants.WALLET_OPTIONS.DELETE.value:
+    case Constants.DELETE_VALUE:
       return (dispatch: Dispatch) => {
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.WALLET_OPTIONS.DELETE.value), {walletId}))
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.DELETE_VALUE), {walletId}))
       }
 
-    case Constants.WALLET_OPTIONS.RESYNC.value:
+    case Constants.RESYNC_VALUE:
       return (dispatch: Dispatch) => {
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.WALLET_OPTIONS.RESYNC.value), {walletId}))
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.RESYNC_VALUE), {walletId}))
       }
 
-    case Constants.WALLET_OPTIONS.SPLIT.value:
+    case Constants.SPLIT_VALUE:
       return (dispatch: Dispatch) => {
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.WALLET_OPTIONS.SPLIT.value), {walletId}))
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.SPLIT_VALUE), {walletId}))
       }
 
-    case Constants.WALLET_OPTIONS.GET_SEED.value:
+    case Constants.GET_SEED_VALUE:
       return (dispatch: Dispatch) => {
-        dispatch(wrap(OPEN_MODAL_VALUE(Constants.WALLET_OPTIONS.GET_SEED.value), {walletId}))
+        dispatch(wrap(OPEN_MODAL_VALUE(Constants.GET_SEED_VALUE), {walletId}))
       }
   }
-}
-
-export const renameWallet = (walletId: string, walletName: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-
-  dispatch(wrap(RENAME_WALLET_START, {walletId}))
-
-  WALLET_API.renameWalletRequest(wallet, walletName)
-    .then(() => {
-      dispatch(wrap(RENAME_WALLET_SUCCESS, {walletId}))
-      dispatch(UI_ACTIONS.refreshWallet(walletId))
-    })
-    .catch((e) => console.log(e))
-}
-
-export const resyncWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-
-  dispatch(wrap(RESYNC_WALLET_START, {walletId}))
-
-  WALLET_API.resyncWallet(wallet)
-    .then(() => {
-      dispatch(wrap(RESYNC_WALLET_SUCCESS, {walletId}))
-      dispatch(UI_ACTIONS.refreshWallet(walletId))
-    })
-    .catch((e) => console.log(e))
-}
-
-export const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-
-  dispatch(wrap(SPLIT_WALLET_START, {walletId}))
-
-  account.splitWalletInfo(walletId, getSplitType())
-    .then(() => {
-      dispatch(wrap(SPLIT_WALLET_SUCCESS, {walletId}))
-      dispatch(UI_ACTIONS.refreshWallet(walletId))
-    })
-    .catch((e) => console.log(e))
-}
-
-export const deleteWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-
-  dispatch(wrap(DELETE_WALLET_START, {walletId}))
-
-  ACCOUNT_API.deleteWalletRequest(account, walletId)
-    .then(() => {
-      dispatch(wrap(DELETE_WALLET_SUCCESS, {walletId}))
-    })
-    .catch((e) => console.log(e))
 }

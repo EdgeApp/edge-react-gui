@@ -2,10 +2,10 @@
 
 import {connect} from 'react-redux'
 
-import GetSeed from './GetSeed.ui'
+import GetSeedModal from './GetSeedModal.ui'
 import type {State, Dispatch, GetState} from '../../../../../ReduxTypes'
-import * as Constants from '../../../../../../constants/indexConstants'
-import {CLOSE_MODAL_VALUE} from '../WalletOptions/action'
+import * as Constants from '../../../../../../constants/indexConstants.js'
+import {CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME} from '../WalletOptions/action'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import s from '../../../../../../locales/strings.js'
 
@@ -23,7 +23,7 @@ export type DispatchProps = {
 export const UNLOCK = 'UNLOCK_WALLET_SEED'
 export const LOCK = 'LOCK_WALLET_SEED'
 
-export const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, getState: GetState) => {
+const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(password)
@@ -35,19 +35,25 @@ const mapStateToProps = (state: any): StateProps => {
   const walletId = state.ui.scenes.walletList.walletId
 
   return {
+    visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.GET_SEED_VALUE)],
     getSeed: wallet ? wallet.getDisplayPrivateSeed : () => {},
     walletId: walletId,
     privateSeedUnlocked: state.ui.scenes.walletList.privateSeedUnlocked
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  onNegative: () => dispatch({ type: LOCK }),
-  onPositive: (password: string) => dispatch(checkCurrentPassword(password)),
-  onDone: () => {
-    dispatch({ type: CLOSE_MODAL_VALUE(Constants.WALLET_OPTIONS.GET_SEED.value) })
-    dispatch({ type: LOCK })
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
+  const close = () => {
+    dispatch({ type: CLOSE_MODAL_VALUE(Constants.GET_SEED_VALUE) })
+    dispatch(({ type: LOCK }))
   }
-})
 
-export default connect(mapStateToProps, mapDispatchToProps)(GetSeed)
+  return ({
+    onExitButtonFxn: close,
+    onNegative: () => dispatch({ type: LOCK }),
+    onPositive: (password: string) => dispatch(checkCurrentPassword(password)),
+    onDone: close
+  })
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GetSeedModal)
