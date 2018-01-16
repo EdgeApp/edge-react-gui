@@ -75,7 +75,6 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
 
             <PrimaryButton
               style={[styles.next]}
-              disabled={!this.state.walletName}
               onPressFunction={this.onNext}
               text={s.strings.string_next_capitalized}
               processingElement={<ActivityIndicator />}
