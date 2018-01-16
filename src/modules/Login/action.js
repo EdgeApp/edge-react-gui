@@ -18,11 +18,17 @@ import * as Constants from '../../constants/indexConstants'
 import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import s from '../../locales/strings.js'
 import {updateWalletsRequest} from '../Core/Wallets/action.js'
+import PushNotification from 'react-native-push-notification'
 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
+  PushNotification.configure({
+    onNotification: (notification) => {
+      console.log('NOTIFICATION:', notification)
+    }
+  })
   // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
   dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
   // this needs to be refactored into single dispatch

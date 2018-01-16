@@ -103,6 +103,7 @@
     "react-native-modal": "^2.2.0",
     "react-native-permissions": "1.0.6",
     "react-native-picker": "^4.3.0",
+    "react-native-push-notification": "^3.0.2",
     "react-native-qrcode": "^0.2.3",
     "react-native-router-flux": "git://github.com/aksonov/react-native-router-flux.git#37c6553c168b9fb6947a5e533df9bd37793f1f68",
     "react-native-share": "^1.0.21",
