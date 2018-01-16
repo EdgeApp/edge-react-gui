@@ -43,7 +43,8 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const tokens = []
     for (const property in metaTokenBalances) {
       if (property !== code) {
-        if (_.findIndex(combinedTokens, (token) => token.currencyCode === property)) {
+        const index = _.findIndex(combinedTokens, (token) => token.currencyCode === property)
+        if (index !== -1) {
           tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
         }
       }
