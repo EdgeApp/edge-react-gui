@@ -215,27 +215,23 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
-    if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(url => {
-        if (url) {
-          this.props.urlRecived(url)
-        }
-        // this.navigate(url);
-      })
-    } else {
-      Linking.addEventListener('url', this.handleOpenURL)
-    }
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        this.doDeepLink(url)
+      }
+      // this.navigate(url);
+    }).catch(err => console.log('error occurred ', err))
+    Linking.addEventListener('url', this.handleOpenURL)
   }
-  handleOpenURL = (event: Object) => {
-    // this.props.urlRecived(event.url)
-    const splitArray = event.url.split('recovery?token=')
+  doDeepLink (url: string) {
+    const splitArray = url.split('recovery?token=')
     if (splitArray.length === 2) {
-      // const state = getState()
-      /*
-      dispatch(actions.deepLinkLogout()) */
       this.props.urlRecived(splitArray[1])
     }
-    // if(event.)
+    this.props.urlRecived(splitArray[1])
+  }
+  handleOpenURL = (event: Object) => {
+    this.doDeepLink(event.url)
   }
 
   render () {
