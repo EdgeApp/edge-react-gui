@@ -246,7 +246,7 @@ export default class Main extends Component<Props, State> {
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
                 {/* <Lightbox> */}
-                <Stack key='root' hideNavBar>
+                <Stack key='root' hideNavBar panHandlers={null}>
                   <Scene key={Constants.LOGIN} initial
                     component={LoginConnector}
                     username={this.props.username} />
