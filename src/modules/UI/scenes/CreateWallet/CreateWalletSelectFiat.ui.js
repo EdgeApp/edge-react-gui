@@ -118,7 +118,6 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
     const filteredArray = this.props.supportedFiats.filter((entry) => {
       return (entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0)
     })
-    const isDisabled = !this.isValidFiatType()
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
     const searchResultsHeight = PLATFORM.usableHeight - keyboardHeight - 50 - 58 // substract button area height and FormField height
 
@@ -155,7 +154,6 @@ export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelec
 
             <PrimaryButton
               style={[styles.next]}
-              disabled={isDisabled}
               onPressFunction={this.onNext}
               text={s.strings.string_next_capitalized}
             />
