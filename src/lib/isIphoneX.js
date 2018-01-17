@@ -5,4 +5,4 @@ const isIphoneX = () => {
   return Platform.OS === 'ios' && (height === 812 || width === 812)
 }
 
-export default isIphoneX
+export default isIphoneX()
