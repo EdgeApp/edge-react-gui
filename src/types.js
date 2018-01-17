@@ -96,12 +96,32 @@ export type CustomTokenInfo = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
-  decimalPlaces: string,
   multiplier: string,
-  decimalPlaces: string,
   denomination: string, // eventually change to mandatory
   isVisible?: boolean, // eventually change to mandatory,
   denominations: Array<AbcDenomination>
+}
+
+export type GuiWalletType = {
+  label: string,
+  value: string,
+  symbolImage?: string,
+  symbolImageDarkMono?: string,
+  currencyCode: string
+}
+
+export type GuiFiatType = {
+  label: string,
+  value: string
+}
+
+export type FlatListItem = {
+  key: number,
+  item: any
+}
+
+export type DeviceDimensions = {
+  keyboardHeight?: number
 }
 
 export type CurrencyConverter = {

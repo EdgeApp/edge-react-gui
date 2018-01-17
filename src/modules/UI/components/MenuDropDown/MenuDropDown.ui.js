@@ -10,7 +10,6 @@ type Props = {
   data: any,
   icon: string,
   iconType: string,
-  text: string,
   onSelect: Function
 }
 
@@ -60,19 +59,11 @@ export default class MenuDropDown extends Component<Props> {
   }
   renderMenuIcon = (style: any) => {
     if (this.props.icon) {
-      return (
-        <Icon
-          style={style.icon}
-          name={this.props.icon}
-          size={style.icon.fontSize}
-          type={this.props.iconType}
-        />
-      )
+      return <Icon
+        style={style.icon}
+        name={this.props.icon}
+        size={style.icon.fontSize}
+        type={this.props.iconType} />
     }
-    return (
-      <Text style={style.altIconText}>
-        {this.props.text}
-      </Text>
-    )
   }
 }

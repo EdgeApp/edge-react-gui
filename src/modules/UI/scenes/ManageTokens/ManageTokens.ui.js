@@ -3,6 +3,7 @@
 import React, {Component} from 'react'
 import {View, FlatList, ActivityIndicator} from 'react-native'
 import {Actions} from 'react-native-router-flux'
+import SafeAreaView from '../../components/SafeAreaView'
 
 import type {AbcMetaToken} from 'airbitz-core-types'
 import type { GuiWallet, CustomTokenInfo } from '../../../../types'
@@ -73,19 +74,20 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
     })
 
     return (
-      <View style={[styles.manageTokens]}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.container}>
-          {this.header()}
-          <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
-          </View>
-          <View style={[styles.metaTokenListArea]}>
-            <View style={[styles.metaTokenListWrap]}>
-              <FlatList
-                keyExtractor={(item) => item.currencyCode}
-                data={sortedTokenInfo}
-                renderItem={(metaToken) =>
+      <SafeAreaView>
+        <View style={[styles.manageTokens]}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.container}>
+            {this.header()}
+            <View style={styles.instructionalArea}>
+              <Text style={styles.instructionalText}>{s.strings.managetokens_top_instructions}</Text>
+            </View>
+            <View style={[styles.metaTokenListArea]}>
+              <View style={[styles.metaTokenListWrap]}>
+                <FlatList
+                  keyExtractor={(item) => item.currencyCode}
+                  data={sortedTokenInfo}
+                  renderItem={(metaToken) =>
                   <ManageTokenRow
                     goToEditTokenScene={this.goToEditTokenScene}
                     metaToken={metaToken}
@@ -94,27 +96,28 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
                     enabledList={this.state.enabledList}
                     customTokensList={this.props.settingsCustomTokens}
                     metaTokens={this.props.guiWallet.metaTokens}
-                />}
-                style={[styles.tokenList]}
-              />
-            </View>
-            <View style={[styles.buttonsArea]}>
-              <SecondaryButton
-                style={[styles.addButton]}
-                text={'Add'}
-                onPressFunction={this.goToAddTokenScene}
-              />
-              <PrimaryButton
-                text={'Save'}
-                style={[styles.saveButton]}
-                onPressFunction={this.saveEnabledTokenList}
-                processingElement={<ActivityIndicator />}
-                processingFlag={this.props.manageTokensPending}
-              />
+                  />}
+                  style={[styles.tokenList]}
+                />
+              </View>
+              <View style={[styles.buttonsArea]}>
+                <SecondaryButton
+                  style={[styles.addButton]}
+                  text={'Add'}
+                  onPressFunction={this.goToAddTokenScene}
+                />
+                <PrimaryButton
+                  text={'Save'}
+                  style={[styles.saveButton]}
+                  onPressFunction={this.saveEnabledTokenList}
+                  processingElement={<ActivityIndicator />}
+                  processingFlag={this.props.manageTokensPending}
+                />
+              </View>
             </View>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
 

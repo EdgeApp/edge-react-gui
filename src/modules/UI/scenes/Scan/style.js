@@ -178,11 +178,6 @@ export const styles = {
     color: THEME.COLORS.PRIMARY
   },
   icon: {
-    position: 'relative',
-    top: 0,
-    left: 1,
-    height: 24,
-    width: 24,
     backgroundColor: THEME.COLORS.TRANSPARENT,
     zIndex: 1015,
     elevation: 1015

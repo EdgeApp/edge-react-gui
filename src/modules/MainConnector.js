@@ -1,6 +1,6 @@
 // @flow
 import type {Dispatch} from './ReduxTypes'
-
+import * as Constants from '../constants/indexConstants.js'
 import {connect} from 'react-redux'
 import Main from './Main.ui'
 
@@ -18,6 +18,7 @@ import {
   enableScan,
   disableScan
 } from './UI/scenes/Scan/action'
+import * as actions from '../actions/indexActions'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
@@ -47,6 +48,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   setLocaleInfo: (localeInfo) => {
     return dispatch(setLocaleInfo(localeInfo))
+  },
+  urlRecived: (backupKey) => {
+    return dispatch(actions.deepLinkLogout(backupKey))
   },
   contextCallbacks: makeContextCallbacks(dispatch)
 })

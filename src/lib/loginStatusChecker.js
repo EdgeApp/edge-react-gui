@@ -1,11 +1,11 @@
 
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors'
-
+import * as Constants from '../constants/indexConstants.js'
 export default (store) => (next) => (action) => {
   const state = store.getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   const allowedActions = [
-    'LOGOUT',
+    Constants.LOGOUT,
     'REACT_NATIVE_ROUTER_FLUX_PUSH',
     'REACT_NATIVE_ROUTER_FLUX_FOCUS'
   ]

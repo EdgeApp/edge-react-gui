@@ -91,7 +91,7 @@ export const inputBottomPadding = () => {
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
-export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
+export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken | CustomTokenInfo>, abcMetaTokens: Array<CustomTokenInfo>) => {
   const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of abcMetaTokens) { // loops through the account-level array
     let found = false // assumes it is not present in the currencyInfo from plugin
@@ -138,6 +138,11 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
   return `${integers}.${decimals.slice(0, precision)}`
 }
 
+/**
+ * @deprecated
+ * @param input
+ * @returns {string}
+ */
 export const formatNumber = (input: string): string => {
   let out = input.replace(/^0+/, '')
   if (out.startsWith('.')) {
@@ -285,6 +290,20 @@ export const getCurrencyInfo = (plugins: Array<AbcCurrencyPlugin>, currencyCode:
   }
 
   return void 0
+}
+
+export const denominationToDecimalPlaces = (denomination: string): string => {
+  const numberOfDecimalPlaces = (denomination.match(/0/g) || []).length
+  const decimalPlaces = numberOfDecimalPlaces.toString()
+  return decimalPlaces
+}
+
+export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
+  const numberOfDecimalPlaces: number = parseInt(decimalPlaces)
+  const denomination: string = '1' + '0'.repeat(numberOfDecimalPlaces)
+
+  // will return, '1' at the very least
+  return denomination
 }
 
 export const isReceivedTransaction = (abcTransaction: AbcTransaction): boolean =>

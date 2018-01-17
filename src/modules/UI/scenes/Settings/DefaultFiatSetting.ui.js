@@ -9,6 +9,7 @@ import {
 import DropdownPicker from '../../components/DropdownPicker/indexDropdownPicker'
 import s from '../../../../locales/strings.js'
 
+import SafeAreaView from '../../components/SafeAreaView'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import styles from './style'
@@ -35,19 +36,20 @@ export default class DefaultFiatSetting extends Component<Props, State> {
 
   render () {
     const {supportedFiats} = this.state
-
-    return <View>
-      <Gradient style={styles.gradient} />
-      <View style={styles.body}>
-        <DropdownPicker
-          startOpen
-          autoFocus
-          keyboardShouldPersistTaps={'always'}
-          listItems={supportedFiats || []}
-          placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}
-          onSelect={this.onSelectFiat} />
-      </View>
-    </View>
+    return (
+      <SafeAreaView>
+        <Gradient style={styles.gradient} />
+        <View style={styles.body}>
+          <DropdownPicker
+            startOpen
+            autoFocus
+            keyboardShouldPersistTaps={'always'}
+            listItems={supportedFiats || []}
+            placeholder={DEFAULT_FIAT_PICKER_PLACEHOLDER}
+            onSelect={this.onSelectFiat} />
+        </View>
+      </SafeAreaView>
+    )
   }
 
   onSelectFiat = ({value: selectedFiat}: {value: string}) => {

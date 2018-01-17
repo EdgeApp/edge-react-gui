@@ -11,7 +11,7 @@ import locale from './locale/reducer'
 import contacts from './contacts/reducer'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
-
+import * as Constants from '../../constants/indexConstants'
 const uiReducer = combineReducers({
   errorAlert,
   transactionAlert,
@@ -24,7 +24,7 @@ const uiReducer = combineReducers({
 })
 
 export const ui = (state: $PropertyType<State, 'ui'>, action: any) => {
-  if (action.type === 'LOGOUT') {
+  if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
     return uiReducer(undefined, ({type: 'DUMMY_ACTION_PLEASE_IGNORE'}: any))
   }
 
