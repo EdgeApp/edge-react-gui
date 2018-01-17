@@ -98,7 +98,7 @@ import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
 import {makeCoreContext} from '../util/makeContext.js'
-
+import * as URI from 'uri-js'
 const pluginFactories: Array<AbcCorePlugin> = [
   coinbasePlugin,
   shapeshiftPlugin
@@ -224,11 +224,12 @@ export default class Main extends Component<Props, State> {
     Linking.addEventListener('url', this.handleOpenURL)
   }
   doDeepLink (url: string) {
-    const splitArray = url.split('recovery?token=')
-    if (splitArray.length === 2) {
-      this.props.urlRecived(splitArray[1])
-    }
-    this.props.urlRecived(splitArray[1])
+    const parsedUri = URI.parse(url)
+    const query = parsedUri.query
+    const splitArray = query.split('token=')
+    const nextString = splitArray[1]
+    const finalArray = nextString.split('&')
+    this.props.urlRecived(finalArray[0])
   }
   handleOpenURL = (event: Object) => {
     this.doDeepLink(event.url)
