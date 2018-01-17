@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import DeleteWalletButtons from './DeleteWalletButtons.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
-import type {Dispatch, GetState} from '../../../../../ReduxTypes'
+import type {Dispatch, GetState, State} from '../../../../../ReduxTypes'
 import {
   CLOSE_MODAL_VALUE,
   START_MODAL_VALUE,
@@ -28,7 +28,9 @@ const deleteWallet = (walletId: string) => (dispatch: Dispatch, getState: GetSta
     .catch((e) => console.log(e))
 }
 
-const mapStateToProps = () => ({})
+const mapStateToProps = (state: State) => ({
+  walletId: state.ui.scenes.walletList.walletId
+})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onNegative: () => {},
   onPositive: (walletId) => dispatch(deleteWallet(walletId)),
