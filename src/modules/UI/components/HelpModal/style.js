@@ -1,10 +1,11 @@
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz.js'
 import PLATFORM from '../../../../theme/variables/platform.js'
+import isIphoneX from '../../../../lib/isIphoneX.js'
 
 export default StyleSheet.create({
   stylizedModal: {
-    top: 0,
+    top: isIphoneX ? 30 : 0,
     left: 0,
     right: 0
   },
@@ -33,7 +34,7 @@ export default StyleSheet.create({
     flex: 1,
     top: -27,
     width: PLATFORM.deviceWidth - 20,
-    height: PLATFORM.deviceHeight - 80
+    height: isIphoneX ? PLATFORM.deviceHeight - 120 : PLATFORM.deviceHeight - 80
   },
   modalBoxStyle: {
     flex: 1
