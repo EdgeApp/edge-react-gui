@@ -33,7 +33,6 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,9 +72,7 @@ public class MainApplication extends Application implements ReactApplication {
             new ContactsWrapperPackage(),
             new ReactNativeContacts(),
             new RCTCameraPackage(),
-            new RCTLocalePackage(),
-            new MainReactPackage(),
-            new ReactNativePushNotificationPackage()
+            new RCTLocalePackage()
       );
     }
   };

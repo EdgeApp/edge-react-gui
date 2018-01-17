@@ -142,7 +142,6 @@ android {
 }
 
 dependencies {
-    compile project(':react-native-push-notification')
     compile project(':react-native-mail')
     compile project(':react-native-smart-splash-screen')
     compile project(':react-native-background-task')
@@ -170,7 +169,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'com.facebook.react:react-native:+'
     compile project(':react-native-push-notification')
-    compile ('com.google.android.gms:play-services-gcm:8.1.0') {
+    compile ('com.google.android.gms:play-services-gcm:+') {
         force = true;
     }
     // From node_modules
