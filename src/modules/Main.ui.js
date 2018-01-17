@@ -403,7 +403,7 @@ export default class Main extends Component<Props, State> {
               </Modal>
             </Overlay>
           </RouterWithRedux>
-          <HelpModal style={{flex: 1}} />
+          <HelpModal/>
           <ErrorAlert/>
           <TransactionAlert/>
           <AutoLogout />

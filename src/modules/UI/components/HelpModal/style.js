@@ -4,7 +4,9 @@ import PLATFORM from '../../../../theme/variables/platform.js'
 
 export default StyleSheet.create({
   stylizedModal: {
-    height: (PLATFORM.deviceHeight * 2 / 3)
+    top: 0,
+    left: 0,
+    right: 0
   },
   webView: {
     justifyContent: 'center',
@@ -24,8 +26,14 @@ export default StyleSheet.create({
   modalMiddleWebView: {
     flex: 1
   },
+  modalHeaderIcon: {
+    top: 0
+  },
   modalVisibleStyle: {
-    flex: 1
+    flex: 1,
+    top: -27,
+    width: PLATFORM.deviceWidth - 20,
+    height: PLATFORM.deviceHeight - 80
   },
   modalBoxStyle: {
     flex: 1

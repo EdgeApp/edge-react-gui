@@ -23,7 +23,6 @@ export default class HelpModal extends Component {
   render () {
     return (
       <StylizedModal
-        style={styles.stylizedModal}
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText={s.strings.help_modal_title}
@@ -35,6 +34,8 @@ export default class HelpModal extends Component {
               this.props.closeModal()
             }
           }} />}
+        style={styles.stylizedModal}
+        modalHeaderIcon={styles.modalHeaderIcon}
         modalBodyStyle={styles.modalBodyStyle}
         modalVisibleStyle={styles.modalVisibleStyle}
         modalBoxStyle={styles.modalBoxStyle}
