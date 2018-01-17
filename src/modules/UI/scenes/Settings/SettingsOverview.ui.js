@@ -19,6 +19,7 @@ import {border as b, getTimeWithMeasurement} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import SendLogsModal from './components/SendLogsModal.ui'
 import ConfirmPasswordModal from './components/ConfirmPasswordModal.ui'
+import SafeAreaView from '../../components/SafeAreaView'
 
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 import {Icon} from '../../components/Icon/Icon.ui'
@@ -181,8 +182,8 @@ export default class SettingsOverview extends Component<Props, State> {
       : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
 
     return (
-      <View>
-      <Gradient style={styles.gradient} />
+      <SafeAreaView>
+        <Gradient style={styles.gradient} />
         <ScrollView style={styles.container}>
           <Gradient style={[styles.unlockRow]}>
             <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -278,7 +279,7 @@ export default class SettingsOverview extends Component<Props, State> {
             onDone={this.confirmPassword}
             onCancel={this.hideConfirmPasswordModal} />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     )
   }
   confirmPassword = (arg: string) => {

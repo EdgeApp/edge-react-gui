@@ -19,7 +19,7 @@ export default class OptionSubtext extends Component<Props, State> {
 
     return <View style={{alignItems: 'center'}}>
       <T style={styles.subHeaderSyntax}>{this.props.confirmationText}</T>
-      <T style={{fontWeight: 'bold'}}>{nameOrThisWallet}?</T>
+      <T style={styles.subHeaderWalletName}>{nameOrThisWallet}</T>
     </View>
   }
 }

@@ -66,6 +66,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "https-browserify": "0.0.1",
     "intl": "^1.2.5",
+    "intl-locales-supported": "^1.0.0",
     "lodash": "^4.17.2",
     "native-base": "^2.2.1",
     "os-browserify": "^0.1.2",

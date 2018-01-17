@@ -92,13 +92,11 @@ global.pcount = function (label: string) {
 }
 
 BackgroundTask.define(async () => {
-  console.log('background Shit')
   makeCoreContext()
     .then(async (context) => {
       try {
         const result = await context.fetchLoginMessages()
         const date = new Date(Date.now() + 1000)
-        console.log(result)
         // for each key
         for (const key in result) {
           // skip loop if the property is from prototype
@@ -120,9 +118,7 @@ BackgroundTask.define(async () => {
             }
           }
         }
-        // return response
       } catch (error) {
-        console.error('Failed error ')
         console.error(error)
       }
     })

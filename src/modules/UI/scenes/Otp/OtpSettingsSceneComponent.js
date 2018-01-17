@@ -4,6 +4,7 @@ import { View, Text } from 'react-native'
 import {OtpSettingsScreenStyles} from '../../../../styles/indexStyles.js'
 import Gradient from '../../components/Gradient/Gradient.ui.js'
 import OtpHeroComponent from './OtpHeroComponent.js'
+import SafeAreaView from '../../components/SafeAreaView'
 import {PrimaryButton, TertiaryButton} from '../../components/Buttons/index'
 import s from '../../../../locales/strings.js'
 import {StaticModalComponent, TwoButtonTextModalComponent, ExpandableBoxComponent} from '../../../../components/indexComponents.js'
@@ -115,18 +116,20 @@ export default class OtpSettingsSceneComponent extends Component<Props, State> {
   render () {
     const styles = OtpSettingsScreenStyles
     return (
-      <View style={styles.container}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.body}>
-          <OtpHeroComponent style={styles.hero}
-            enabled={this.props.isOtpEnabled} />
+      <SafeAreaView>
+        <View style={styles.container}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.body}>
+            <OtpHeroComponent style={styles.hero}
+              enabled={this.props.isOtpEnabled} />
             {this.renderMiddle(styles)}
-          <View style={styles.buttonContainer} >
-            {this.renderButton()}
+            <View style={styles.buttonContainer} >
+              {this.renderButton()}
+            </View>
           </View>
+          {this.renderModals(styles)}
         </View>
-        {this.renderModals(styles)}
-      </View>
+      </SafeAreaView>
     )
   }
 }

@@ -134,7 +134,7 @@ export default class FlipInput extends Component<Props, State> {
         <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
           placeholder={'0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
-          value={intl.formatNumberInput(amount)}
+          value={amount}
           onChangeText={onChangeText}
           autoCorrect={false}
           keyboardType='numeric'
