@@ -33,7 +33,9 @@ const abcTransaction = (state: AbcTransactionState = '', action: Action) => {
   }
 }
 
-export default combineReducers({
+export const transactionAlert = combineReducers({
   displayAlert,
   abcTransaction
 })
+
+export default transactionAlert
