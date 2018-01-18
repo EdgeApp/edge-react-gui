@@ -9,9 +9,7 @@ module.exports =
   "parser": "babel-eslint",
   "plugins": ["flowtype", "standard", "react", "react-native"],
   "rules": {
-    "camelcase": "error",
     "flowtype/generic-spacing": "off",
-    "no-throw-literal": "error",
     "no-unused-vars": "off",
     "no-var": "error",
     "prefer-const": "error",
@@ -24,6 +22,6 @@ module.exports =
     "react/jsx-indent-props": ["error", 2],
     "react/self-closing-comp": ["error", {"component": true}],
     "react/no-typos": "error",
-    "react/no-array-index-key": "error",       
+    "react/no-array-index-key": "error",
   }
 }
