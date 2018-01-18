@@ -12,7 +12,8 @@ import contacts from './contacts/reducer'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
 import * as Constants from '../../constants/indexConstants'
-const uiReducer = combineReducers({
+
+export const uiReducer = combineReducers({
   errorAlert,
   transactionAlert,
   scenes,
