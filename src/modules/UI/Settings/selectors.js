@@ -116,16 +116,25 @@ export const getSupportedWalletTypes = (state: State) => {
     if (plugin.currencyInfo.pluginName === 'bitcoin') {
       supportedWalletTypes.push({
         label: 'Bitcoin (Segwit)',
-        value: 'wallet:bitcoin-bip49'
+        value: 'wallet:bitcoin-bip49',
+        symbolImage: plugin.currencyInfo.symbolImage,
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
       supportedWalletTypes.push({
         label: 'Bitcoin',
-        value: 'wallet:bitcoin-bip44'
+        value: 'wallet:bitcoin-bip44',
+        symbolImage: plugin.currencyInfo.symbolImage,
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
     } else {
       supportedWalletTypes.push({
         label: plugin.currencyInfo.currencyName,
-        value: plugin.currencyInfo.walletTypes[0]
+        value: plugin.currencyInfo.walletTypes[0],
+        symbolImage: plugin.currencyInfo.symbolImage,
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
     }
   }
@@ -171,4 +180,15 @@ export const getCustomFeeSettings = (state: State, currencyCode: string) => {
   const settings = getSettings(state)
   const currencyInfo = settings.currencyInfos.find((info) => currencyInfo.currencyCode === currencyCode)
   return currencyInfo
+}
+
+export const getIsOtpEnabled = (state: State) => {
+  const settings = getSettings(state)
+  const enabled: boolean = settings.isOtpEnabled
+  return enabled
+}
+export const getOtpKey = (state: State) => {
+  const settings = getSettings(state)
+  const otpKey: string = settings.otpKey
+  return otpKey
 }

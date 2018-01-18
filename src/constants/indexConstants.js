@@ -15,5 +15,7 @@ export const NONE = 'none'
 export const FROM = 'from'
 export const TO = 'to'
 export const ALWAYS = 'always'
+export const LOGOUT = 'LOGOUT'
 
 export const CRYPTO_EXCHANGE = 'cryptoExchange'
+export const PASSWORD_RECOVERY_LINK = 'passwordRecoveryLink'

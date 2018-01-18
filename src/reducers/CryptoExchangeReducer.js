@@ -182,7 +182,7 @@ function deepCopyState (state) {
 
 // Nuke the state on logout:
 export default (state: $PropertyType<State, 'ui'>, action: any) => {
-  if (action.type === 'LOGOUT') {
+  if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
     return cryptoExchangerReducer(undefined, ({type: 'DUMMY_ACTION_PLEASE_IGNORE'}: any))
   }
 

@@ -4,15 +4,15 @@ import type {
   AbcContext,
   AbcContextCallbacks,
   AbcCorePlugin,
-  AbcCurrencyPlugin,
-  AbcContextOptions
+  AbcCurrencyPlugin
 } from 'airbitz-core-types'
 import SplashScreen from 'react-native-smart-splash-screen'
 import s, { selectLocale } from '../locales/strings.js'
+import { setIntlLocale } from '../locales/intl'
 
 import HockeyApp from 'react-native-hockeyapp'
 import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback} from 'react-native'
+import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking, SafeAreaView, View} from 'react-native'
 import T from './UI/components/FormattedText'
 import {connect} from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
@@ -38,7 +38,8 @@ import LoginConnector from './UI/scenes/Login/LoginConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
 import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
-import PasswordRecoveryConnector from './UI/scenes/PasswordRecovery/PasswordRecoveryConnector.ui'
+import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
+import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import BackButton from './UI/components/Header/Component/BackButton.ui'
@@ -50,7 +51,10 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import CreateWallet from './UI/scenes/CreateWallet/createWalletConnector'
+import {CreateWalletNameComponent} from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
+import {CreateWalletSelectCrypto} from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
+import {CreateWalletSelectFiat} from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
+import {CreateWalletReview} from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
 import AddToken from './UI/scenes/AddToken'
@@ -83,7 +87,6 @@ import {styles} from './style.js'
 
 import * as CONTEXT_API from './Core/Context/api'
 
-import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
 import {coinbasePlugin, shapeshiftPlugin} from 'edge-exchange-plugins'
 import {
   BitcoinCurrencyPluginFactory,
@@ -94,6 +97,7 @@ import {
 import {EthereumCurrencyPluginFactory} from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
+import {makeCoreContext} from '../util/makeContext.js'
 
 const pluginFactories: Array<AbcCorePlugin> = [
   coinbasePlugin,
@@ -107,7 +111,6 @@ pluginFactories.push(DashCurrencyPluginFactory)
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 const HOCKEY_APP_ID = Platform.select(ENV.HOCKEY_APP_ID)
 global.etherscanApiKey = ENV.ETHERSCAN_API_KEY
 
@@ -131,6 +134,8 @@ tabBarIconFilesSelected[Constants.EXCHANGE] = exchangeIconSelected
 
 const TRANSACTION_DETAILS = s.strings.title_transaction_details
 const WALLETS = s.strings.title_wallets
+const CREATE_WALLET_SELECT_CRYPTO = s.strings.title_create_wallet_select_crypto
+const CREATE_WALLET_SELECT_FIAT = s.strings.title_create_wallet_select_fiat
 const CREATE_WALLET = s.strings.title_create_wallet
 const REQUEST = s.strings.title_request
 const SEND = s.strings.title_send
@@ -146,6 +151,7 @@ const SETTINGS = s.strings.title_settings
 const CHANGE_PASSWORD = s.strings.title_change_password
 const CHANGE_PIN = s.strings.title_change_pin
 const PASSWORD_RECOVERY = s.strings.title_password_recovery
+const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 
 type Props = {
@@ -159,6 +165,7 @@ type Props = {
   setDeviceDimensions: (any) => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
+  urlRecived: (string) => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -190,7 +197,7 @@ export default class Main extends Component<Props, State> {
   componentDidMount () {
     HockeyApp.start()
     HockeyApp.checkForUpdate() // optional
-    makeCoreContext(this.props.contextCallbacks)
+    makeCoreContext(this.props.contextCallbacks, pluginFactories)
     .then((context) => {
       // Put the context into Redux:
       this.props.addContext(context)
@@ -200,6 +207,7 @@ export default class Main extends Component<Props, State> {
         this.props.addUsernames(usernames)
       })
       this.props.setLocaleInfo(localeInfo)
+      setIntlLocale(localeInfo)
       selectLocale('enUS')
       SplashScreen.close({
         animationType: SplashScreen.animationType.fade,
@@ -207,6 +215,27 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
+    if (Platform.OS === 'android') {
+      Linking.getInitialURL().then(url => {
+        if (url) {
+          this.props.urlRecived(url)
+        }
+        // this.navigate(url);
+      })
+    } else {
+      Linking.addEventListener('url', this.handleOpenURL)
+    }
+  }
+  handleOpenURL = (event: Object) => {
+    // this.props.urlRecived(event.url)
+    const splitArray = event.url.split('recovery?token=')
+    if (splitArray.length === 2) {
+      // const state = getState()
+      /*
+      dispatch(actions.deepLinkLogout()) */
+      this.props.urlRecived(splitArray[1])
+    }
+    // if(event.)
   }
 
   render () {
@@ -217,7 +246,7 @@ export default class Main extends Component<Props, State> {
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid})}>
                 {/* <Lightbox> */}
-                <Stack key='root' hideNavBar>
+                <Stack key='root' hideNavBar panHandlers={null}>
                   <Scene key={Constants.LOGIN} initial
                     component={LoginConnector}
                     username={this.props.username} />
@@ -231,6 +260,7 @@ export default class Main extends Component<Props, State> {
                   <Drawer key='edge' hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
                     {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
                     <Scene hideNavBar>
+
                       <Tabs key='edge' swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
                           <Scene key={Constants.WALLET_LIST_SCENE} navTransparent={true}
@@ -239,10 +269,28 @@ export default class Main extends Component<Props, State> {
                             renderLeftButton={this.renderHelpButton}
                             renderRightButton={this.renderMenuButton} />
 
-                          <Scene key={Constants.CREATE_WALLET} navTransparent={true}
-                            component={CreateWallet}
+                          <Scene key={Constants.CREATE_WALLET_NAME} navTransparent={true}
+                            component={CreateWalletNameComponent}
                             renderTitle={this.renderTitle(CREATE_WALLET)}
                             renderLeftButton={this.renderBackButton(WALLETS)}
+                            renderRightButton={this.renderEmptyButton} />
+
+                          <Scene key={Constants.CREATE_WALLET_SELECT_CRYPTO} navTransparent={true}
+                            component={CreateWalletSelectCrypto}
+                            renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
+                            renderLeftButton={this.renderBackButton()}
+                            renderRightButton={this.renderEmptyButton} />
+
+                          <Scene key={Constants.CREATE_WALLET_SELECT_FIAT} navTransparent={true}
+                            component={CreateWalletSelectFiat}
+                            renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
+                            renderLeftButton={this.renderBackButton()}
+                            renderRightButton={this.renderEmptyButton} />
+
+                          <Scene key={Constants.CREATE_WALLET_REVIEW} navTransparent={true}
+                            component={CreateWalletReview}
+                            renderTitle={this.renderTitle(CREATE_WALLET)}
+                            renderLeftButton={this.renderBackButton()}
                             renderRightButton={this.renderEmptyButton} />
 
                           <Scene key={Constants.TRANSACTION_LIST} navTransparent={true}
@@ -331,6 +379,11 @@ export default class Main extends Component<Props, State> {
                           renderTitle={this.renderTitle(CHANGE_PIN)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderEmptyButton} />
+                        <Scene key={Constants.OTP_SETUP} navTransparent={true}
+                          component={OtpSettingsSceneConnector}
+                          renderTitle={this.renderTitle(OTP)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
                         <Scene key={Constants.RECOVER_PASSWORD} navTransparent={true}
                           component={PasswordRecoveryConnector}
                           renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
@@ -350,13 +403,10 @@ export default class Main extends Component<Props, State> {
               </Modal>
             </Overlay>
           </RouterWithRedux>
-
           <HelpModal style={{flex: 1}} />
           <ErrorAlert/>
           <TransactionAlert/>
-
           <AutoLogout />
-
         </MenuContext>
       </StyleProvider>
     )
@@ -420,20 +470,4 @@ export default class Main extends Component<Props, State> {
     }
     return true
   }
-}
-
-function makeCoreContext (callbacks: AbcContextCallbacks): Promise<AbcContext> {
-  const opts: AbcContextOptions = {
-    apiKey: AIRBITZ_API_KEY,
-    callbacks,
-    plugins: pluginFactories,
-    shapeshiftKey: SHAPESHIFT_API_KEY
-  }
-
-  if (ENV.USE_FAKE_CORE) {
-    const [context] = makeFakeContexts({...opts, localFakeUser: true})
-    return Promise.resolve(context)
-  }
-
-  return makeReactNativeContext(opts)
 }

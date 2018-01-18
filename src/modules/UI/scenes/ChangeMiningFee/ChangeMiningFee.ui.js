@@ -4,9 +4,8 @@ import React, {Component} from 'react'
 import {View, Text, TextInput, TouchableHighlight} from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
-import StylizedModal from '../../components/Modal/Modal.ui'
 import RadioButton from './components/RadioButton.ui'
-import {CustomFeesModal} from './components/CustomFeesModal.ui'
+import { CustomFeesModal } from './components/CustomFeesModal.ui'
 
 import {PrimaryButton} from '../../components/Buttons/Buttons.ui'
 
@@ -15,10 +14,10 @@ import s from '../../../../locales/strings.js'
 
 import styles from './style'
 
-const HIGH_FEE_TEXT     = s.strings.mining_fee_high_label_choice
+const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
 const STANDARD_FEE_TEXT = s.strings.mining_fee_standard_label_choice
-const LOW_FEE_TEXT      = s.strings.mining_fee_low_label_choice
-const CUSTOM_FEE_TEXT   = s.strings.change_mining_fee_custom_title
+const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
+const CUSTOM_FEE_TEXT = s.strings.change_mining_fee_custom_title
 
 type Props = {
   feeSetting: string,
@@ -91,10 +90,7 @@ export class ChangeMiningFee extends Component<Props, State> {
             style={styles.customFeeButton}
             onPressFunction={this.onPressCustomFees} />
         </View>
-
-        <CustomFeesModal visible={this.state.customFeeModalVisible}>
-
-        </CustomFeesModal>
+        <CustomFeesModal visible={this.state.customFeeModalVisible} />
       </View>
     )
   }

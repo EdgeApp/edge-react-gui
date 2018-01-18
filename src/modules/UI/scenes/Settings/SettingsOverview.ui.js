@@ -19,6 +19,7 @@ import {border as b, getTimeWithMeasurement} from '../../../utils'
 import AutoLogoutModal from './components/AutoLogoutModal.ui'
 import SendLogsModal from './components/SendLogsModal.ui'
 import ConfirmPasswordModal from './components/ConfirmPasswordModal.ui'
+import SafeAreaView from '../../components/SafeAreaView'
 
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
 import {Icon} from '../../components/Icon/Icon.ui'
@@ -55,8 +56,6 @@ type State = {
 }
 
 export default class SettingsOverview extends Component<Props, State> {
-  settings: Array<Object>
-  securityRoute: Array<Object>
   optionModals: Array<Object>
   currencies: Array<Object>
   options: Object
@@ -68,31 +67,6 @@ export default class SettingsOverview extends Component<Props, State> {
       showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
-
-    this.settings = [
-      {
-        key: Constants.CHANGE_PASSWORD,
-        text: s.strings.settings_button_change_password,
-        routeFunction: this._onPressChangePasswordRouting
-      },
-      {
-        key: Constants.CHANGE_PIN,
-        text: s.strings.settings_button_pin,
-        routeFunction: this._onPressChangePinRouting
-      }/* ,
-      {
-        key: Constants.RECOVER_PASSWORD,
-        text: s.strings.settings_button_change_pass_recovery,
-        routeFunction: this._onPressRecoverPasswordRouting
-      } */
-    ]
-    this.securityRoute = [
-      {
-        key: 'setup2Factor',
-        text: s.strings.settings_button_setup_two_factor,
-        routeFunction: this._onPressDummyRouting
-      }
-    ]
     const pinRelogin = {
       text: s.strings.settings_title_pin_login,
       key: 'pinRelogin',
@@ -146,7 +120,8 @@ export default class SettingsOverview extends Component<Props, State> {
     Actions[Constants.CHANGE_PIN]()
   }
   _onPressRecoverPasswordRouting = () => {
-    Actions[Constants.CHANGE_PASSWORD]()
+    if (this.props.isLocked) return
+    Actions[Constants.RECOVER_PASSWORD]()
   }
 
   _onPressOpenLogoffTime = () => {
@@ -168,6 +143,10 @@ export default class SettingsOverview extends Component<Props, State> {
   _onToggleTouchIdOption = (bool: boolean) => {
     this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
     this.options.useTouchID.value = bool
+  }
+  _onPressOtp = () => {
+    if (this.props.isLocked) return
+    Actions[Constants.OTP_SETUP]()
   }
 
   _onPressDebug = () => {
@@ -203,8 +182,8 @@ export default class SettingsOverview extends Component<Props, State> {
       : `${autoLogoutValue} ${s.strings['settings_' + autoLogoutMeasurement]}`
 
     return (
-      <View>
-      <Gradient style={styles.gradient} />
+      <SafeAreaView>
+        <Gradient style={styles.gradient} />
         <ScrollView style={styles.container}>
           <Gradient style={[styles.unlockRow]}>
             <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -231,6 +210,14 @@ export default class SettingsOverview extends Component<Props, State> {
             leftText={s.strings.settings_button_pin}
             routeFunction={this._onPressChangePinRouting}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
+          <RowRoute
+            leftText={s.strings.settings_button_setup_two_factor}
+            routeFunction={this._onPressOtp}
+            right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
+          <RowRoute
+            leftText={s.strings.settings_button_password_recovery}
+            routeFunction={this._onPressRecoverPasswordRouting}
+            right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
           <Gradient style={[styles.unlockRow]}>
             <View style={[styles.accountBoxHeaderTextWrap, b('yellow')]}>
@@ -252,8 +239,6 @@ export default class SettingsOverview extends Component<Props, State> {
               leftText={s.strings.settings_title_currency}
               routeFunction={Actions.defaultFiatSetting}
               right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
-
-            {this.securityRoute.map(this.renderRowRoute)}
 
             {
               Object.keys(this.options)
@@ -294,7 +279,7 @@ export default class SettingsOverview extends Component<Props, State> {
             onDone={this.confirmPassword}
             onCancel={this.hideConfirmPasswordModal} />
         </ScrollView>
-      </View>
+      </SafeAreaView>
     )
   }
   confirmPassword = (arg: string) => {
@@ -308,6 +293,7 @@ export default class SettingsOverview extends Component<Props, State> {
     }
     this.setState({showConfirmPasswordModal: true})
   }
+
   hideConfirmPasswordModal = () => this.setState({showConfirmPasswordModal: false})
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})

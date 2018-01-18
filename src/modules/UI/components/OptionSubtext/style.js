@@ -8,5 +8,10 @@ export default StyleSheet.create({
     color: THEME.COLORS.GRAY_1,
     textAlign: 'center',
     fontSize: 14
+  },
+  subHeaderWalletName: {
+    fontWeight: 'bold',
+    lineHeight: 26,
+    fontSize: 18
   }
 })
