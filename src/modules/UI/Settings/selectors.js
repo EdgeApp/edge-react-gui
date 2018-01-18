@@ -164,24 +164,6 @@ export const getDefaultFiat = (state: State) => {
   return defaultFiat
 }
 
-const getCurrencyInfos = (state: State) => {
-  const plugins = getPlugins(state)
-  const currencyInfos = plugins.map((plugin) => plugin.currencyInfo)
-  return currencyInfos
-}
-
-const getCurrencyInfo = (state: State, currencyCode: string) => {
-  const currencyInfos = getCurrencyInfos
-  const currencyInfo = currencyInfos[currencyCode]
-  return currencyInfo
-}
-
-export const getCustomFeeSettings = (state: State, currencyCode: string) => {
-  const settings = getSettings(state)
-  const currencyInfo = settings.currencyInfos.find((info) => currencyInfo.currencyCode === currencyCode)
-  return currencyInfo
-}
-
 export const getIsOtpEnabled = (state: State) => {
   const settings = getSettings(state)
   const enabled: boolean = settings.isOtpEnabled
