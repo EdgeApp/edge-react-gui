@@ -33,5 +33,12 @@ export default StyleSheet.create({
   default: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     color: THEME.COLORS.WHITE
+  },
+  headerNameContainer: {
+    display: 'flex',
+    flexDirection: 'row'
+  },
+  cCode: {
+    fontWeight: 'bold'
   }
 })

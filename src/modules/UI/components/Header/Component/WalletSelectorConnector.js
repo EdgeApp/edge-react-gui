@@ -1,5 +1,7 @@
+import React from 'react'
 import {connect} from 'react-redux'
 import {TextAndIconButton} from '../../../components/Buttons/TextAndIconButton.ui'
+import {SelectedWalletNameHeader} from './SelectedWalletNameHeader.ui'
 import * as UI_SELECTORS from '../../../selectors'
 import {
   toggleSelectedWalletListModal,
@@ -14,7 +16,9 @@ const mapStateToProps = (state) => {
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const LOADING_TEXT = sprintf(s.strings.loading)
   const title = selectedWallet
-  ? selectedWallet.name + ':' + selectedWalletCurrencyCode
+    ? function HeaderComp (styles) {
+      return (<SelectedWalletNameHeader name={selectedWallet.name} selectedWalletCurrencyCode={selectedWalletCurrencyCode} styles={styles}/>)
+    }
   : LOADING_TEXT
   return {
     title,
