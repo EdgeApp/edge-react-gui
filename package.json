@@ -33,17 +33,19 @@
     "flow:0": "flow; exit 0",
     "flow": "flow",
     "test": "npm run lint && npm run flow && jest",
+    "jest": "jest",
+    "cover": "jest --coverage",
     "watch": "npm test -- --watch",
     "server": "node ./loggingServer.js",
     "precommit": "npm test"
   },
   "jest": {
-    "preset": "react-native"
+    "preset": "react-native",
+    "transformIgnorePatterns": ["node_modules/(?!(jest-)?react-native|react-navigation|mobx|airbitz-core-types)"],
+    "setupFiles": ["./testSetup.js"]
   },
   "rnpm": {
-    "assets": [
-      "./src/assets/fonts"
-    ]
+    "assets": ["./src/assets/fonts"]
   },
   "dependencies": {
     "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",

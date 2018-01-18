@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 import * as ACTION from './action'
 
 const keyboardHeight = (state = 0, action) => {
@@ -10,7 +10,7 @@ const keyboardHeight = (state = 0, action) => {
   }
 }
 
-const dimensions = combineReducers({
+export const dimensions = combineReducers({
   keyboardHeight
 })
 
