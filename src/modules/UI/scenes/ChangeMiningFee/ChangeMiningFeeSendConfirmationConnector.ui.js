@@ -9,13 +9,11 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as SELECTORS from '../../selectors.js'
 
 export const mapStateToProps = (state: State) => {
-  const guiWallet = SELECTORS.getSelectedWallet(state)
-  const currencyCode = guiWallet.currencyCode
-  const currencyInfo = SETTINGS_SELECTORS.getCurrencyInfo(state, currencyCode)
+  const { currencyCode } = SELECTORS.getSelectedWallet(state)
   return {
     // fee: state.ui.scenes.sendConfirmation.fee,
-    feeSetting: state.ui.scenes.sendConfirmation.feeSetting,
-    customFeeSettings: SETTINGS_SELECTORS.getCustomFeeSettings(state)
+    customFeeSettings: SETTINGS_SELECTORS.getCustomFeeSettings(state, currencyCode),
+    feeSetting: state.ui.scenes.sendConfirmation.feeSetting
   }
 }
 
