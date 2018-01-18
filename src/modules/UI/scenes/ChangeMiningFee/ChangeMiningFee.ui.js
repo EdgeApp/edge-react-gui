@@ -5,7 +5,7 @@ import {View, Text, TextInput, TouchableHighlight} from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import RadioButton from './components/RadioButton.ui'
-import { CustomFeesModal } from './components/CustomFeesModal.ui'
+import CustomFees from './components/CustomFees/CustomFeesConnector.js'
 
 import {PrimaryButton} from '../../components/Buttons/Buttons.ui'
 
@@ -17,7 +17,6 @@ import styles from './style'
 const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
 const STANDARD_FEE_TEXT = s.strings.mining_fee_standard_label_choice
 const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
-const CUSTOM_FEE_TEXT = s.strings.change_mining_fee_custom_title
 
 type Props = {
   feeSetting: string,
@@ -40,6 +39,10 @@ export class ChangeMiningFee extends Component<Props, State> {
     if (this.state.feeSetting !== this.props.feeSetting) {
       this.props.onSubmit(this.state.feeSetting)
     }
+  }
+
+  handlePress = (feeSetting: string) => {
+    return this.setState({ feeSetting })
   }
 
   render () {
@@ -82,25 +85,10 @@ export class ChangeMiningFee extends Component<Props, State> {
               isSelected={FEE.LOW_FEE === feeSetting}
             />
           </View>
+          <CustomFees />
         </View>
-
-        <View style={styles.customFeeButtonContainer}>
-          <PrimaryButton
-            text={CUSTOM_FEE_TEXT}
-            style={styles.customFeeButton}
-            onPressFunction={this.onPressCustomFees} />
-        </View>
-        <CustomFeesModal visible={this.state.customFeeModalVisible} />
       </View>
     )
-  }
-
-  handlePress = (feeSetting: string) => {
-    return this.setState({ feeSetting })
-  }
-
-  onPressCustomFees = () => {
-    this.setState({ customFeeModalVisible: true })
   }
 }
 
