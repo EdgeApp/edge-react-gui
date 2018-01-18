@@ -3,33 +3,27 @@
 import React, {Component} from 'react'
 
 import { View, Text } from 'react-native'
-import { CustomFeesModal } from './CustomFeesModalConnector.js'
-import { PrimaryButton } from '../../components/Buttons/Buttons.ui'
+import CustomFeesModal from './CustomFeesModalConnector.js'
+import { PrimaryButton } from '../../../../components/Buttons/Buttons.ui'
+import s from '../../../../../../locales/strings.js'
 
-import * as FEE from '../../../../constants/FeeConstants'
-import s from '../../../../locales/strings.js'
 import styles from './style'
 
-const CUSTOM_FEE_TEXT = s.strings.change_mining_fee_custom_title
-
-type Props = {}
+type Props = {
+  onPressed: Function
+}
 type State = {}
 
-export class CustomFees extends Component<Props, State> {
-  constructor (props) {
-    super(props)
-    this.state = {}
-  }
-
+export default class CustomFees extends Component<Props, State> {
   render () {
     return (
       <View style={styles.customFeeButtonContainer}>
         <PrimaryButton
-          text={CUSTOM_FEE_TEXT}
+          text={s.strings.fragment_wallets_set_custom_fees}
           style={styles.customFeeButton}
-          onPressFunction={this.onPressCustomFees}
+          onPressFunction={this.props.onPressed}
         />
-        <CustomFeesModal visible={this.state.customFeeModalVisible} />
+        <CustomFeesModal />
       </View>
     )
   }
