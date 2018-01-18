@@ -25,11 +25,13 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
-  PushNotification.configure({
-    onNotification: (notification) => {
-      console.log('NOTIFICATION:', notification)
-    }
-  })
+  setTimeout(() => {
+    PushNotification.configure({
+      onNotification: (notification) => {
+        console.log('NOTIFICATION:', notification)
+      }
+    })
+  }, 6000)
   // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
   dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
   // this needs to be refactored into single dispatch
