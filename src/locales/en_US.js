@@ -68,6 +68,7 @@ const strings = {
   fragment_wallets_addwallet_name_hint: 'New Wallet Name',
   fragment_wallets_balance_text: 'Total Balance',
   fragment_wallets_delete_wallet: 'Delete Wallet',
+  fragment_wallets_set_custom_fees: 'Set Custom Mining Fee',
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_get_seed_wallet: 'Get Seed',
@@ -130,6 +131,7 @@ const strings = {
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_delete: 'Delete',
+  string_custom_fee: 'Set fees',
   string_disable: 'DISABLE',
   string_done_cap: 'Done',
   string_fee_with_colon: 'Fee: ',
@@ -197,7 +199,6 @@ const strings = {
   transaction_details_notes_title: 'Notes',
   string_search: 'Search',
   confirm_password_text: 'Confirm Password',
-  change_mining_fee_custom_title: 'Set Custom Mining Fee',
   // OTP
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
