@@ -22,8 +22,7 @@ export const styles = {
   },
   visibleModal: {
     zIndex: 1,
-    padding: 10,
-    paddingTop: 25,
+    paddingBottom: 14,
     borderRadius: 3,
     backgroundColor: THEME.COLORS.WHITE,
     width: PLATFORM.deviceWidth * 3 / 4
@@ -31,21 +30,21 @@ export const styles = {
   modalBox: {
     alignItems: 'stretch',
     // height: (screenDimensions.height) / 3,
-    // paddingHorizontal: 15,
+    paddingHorizontal: 15,
     flexDirection: 'column',
     justifyContent: 'flex-start'
   },
 
   exitRow: {
-    position: 'absolute',
-    // top: 5,
-    right: 0,
+    alignItems: 'flex-end',
+    position: 'relative',
+    justifyContent: 'center',
     zIndex: 200
   },
   exitButton: {
     backgroundColor: 'transparent',
     width: 40,
-    height: 40,
+    height: 30,
     alignItems: 'center',
     justifyContent: 'center'
   },
