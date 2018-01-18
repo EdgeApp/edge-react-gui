@@ -30,10 +30,25 @@ const updateFees = (walletId: string) => (dispatch: Dispatch, getState: GetState
   //   .catch((e) => console.log(e))
 }
 
-const mapStateToProps = (state: State) => ({
-  visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.CUSTOM_FEES)],
-  walletId: state.ui.scenes.walletList.walletId
-})
+const mapStateToProps = (state: State) => {
+  const selectedWalletId = state.ui.wallets.selectedWalletId
+  let customFeeSettings = []
+  if (selectedWalletId) {
+    const currencyInfo = state.core.wallets.byId[selectedWalletId]
+    if (
+      currencyInfo &&
+      currencyInfo.defaultSettings &&
+      Array.isArray(currencyInfo.defaultSettings.customFeeSettings)
+    ) {
+      customFeeSettings = currencyInfo.defaultSettings.customFeeSettings
+    }
+  }
+  return ({
+    customFeeSettings: customFeeSettings,
+    visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.CUSTOM_FEES)],
+    walletId: state.ui.scenes.walletList.walletId
+  })
+}
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onExitButtonFxn: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) }),
