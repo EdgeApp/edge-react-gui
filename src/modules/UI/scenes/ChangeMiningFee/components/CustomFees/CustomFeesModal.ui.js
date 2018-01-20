@@ -17,8 +17,7 @@ type Props = {
   onExitButtonFxn: Function,
   onNegative: Function,
   onPositive: Function,
-  onDone: Function,
-  walletId: string
+  onDone: Function
 }
 
 type State = any
