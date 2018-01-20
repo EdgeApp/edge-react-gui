@@ -1,7 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-
+import _ from 'lodash'
 import CustomFeesModal from './CustomFeesModal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import type {Dispatch, GetState, State} from '../../../../../ReduxTypes'
@@ -20,18 +20,10 @@ import { changeFee } from '../../../../scenes/SendConfirmation/action'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
+  const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
   let customFeeSettings = []
-  if (selectedWalletId) {
-    let currencyInfo = null
-    const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-    if (wallet) currencyInfo = wallet.currencyInfo
-    if (
-      currencyInfo &&
-      currencyInfo.defaultSettings &&
-      Array.isArray(currencyInfo.defaultSettings.customFeeSettings)
-    ) {
-      customFeeSettings = currencyInfo.defaultSettings.customFeeSettings
-    }
+  if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
+    customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings
   }
   return ({
     customFeeSettings: customFeeSettings,
