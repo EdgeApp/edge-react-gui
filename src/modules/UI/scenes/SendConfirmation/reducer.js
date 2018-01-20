@@ -138,10 +138,11 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
       }
     }
     case ACTION.CHANGE_MINING_FEE:
+      const {feeSetting, customNetworkFee} = data
       return {
         ...state,
-      // fee: action.fee,
-        feeSetting: action.feeSetting
+        feeSetting,
+        customNetworkFee
       }
     default:
       return state

@@ -30,8 +30,7 @@ export class ChangeMiningFee extends Component<Props, State> {
     super(props)
     this.state = {
       feeSetting: props.feeSetting,
-      fee: '',
-      customFeeModalVisible: false
+      fee: ''
     }
   }
 
