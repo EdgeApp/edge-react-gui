@@ -159,7 +159,10 @@ export default class FlipInput extends Component<Props, State> {
           <Text style={[
             bottom.amount,
             !amount && bottom.alert
-          ]}>
+          ]}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+          >
           {amount || '0'}
         </Text>
         <Text style={[bottom.currencyCode]}>
