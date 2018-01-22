@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -75,88 +76,90 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
 
   render () {
     return (
-      <View style={[styles.editTokens]}>
-        <Gradient style={styles.gradient} />
-        <StylizedModal
-          headerText={s.strings.edittoken_delete_prompt}
-          visibilityBoolean={this.props.deleteTokenModalVisible}
-          featuredIcon={<OptionIcon iconName={Constants.DELETE} style={styles.deleteIcon} />}
-          modalBottom={<DeleteTokenButtons
-            onPressDelete={this.deleteToken}
-            onPressCancel={() => this.props.hideDeleteTokenModal()}
-            processingFlag={this.props.deleteCustomTokenProcessing}
-          />}
-          onExitButtonFxn={() => this.props.hideDeleteTokenModal()}
-        />
-        <ScrollView style={styles.container}>
-          <View style={styles.instructionalArea}>
-            <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
-          </View>
-          <View style={styles.formArea}>
-            <View style={[styles.nameArea]}>
-              <FormField
-                style={[styles.currencyName]}
-                value={this.state.currencyName}
-                onChangeText={this.onChangeName}
-                autoCapitalize={'words'}
-                label={s.strings.addtoken_name_input_text}
-                returnKeyType={'done'}
-                autoCorrect={false}
+      <SafeAreaView>
+        <View style={[styles.editTokens]}>
+          <Gradient style={styles.gradient} />
+          <StylizedModal
+            headerText={s.strings.edittoken_delete_prompt}
+            visibilityBoolean={this.props.deleteTokenModalVisible}
+            featuredIcon={<OptionIcon iconName={Constants.DELETE} style={styles.deleteIcon} />}
+            modalBottom={<DeleteTokenButtons
+              onPressDelete={this.deleteToken}
+              onPressCancel={() => this.props.hideDeleteTokenModal()}
+              processingFlag={this.props.deleteCustomTokenProcessing}
+            />}
+            onExitButtonFxn={() => this.props.hideDeleteTokenModal()}
+          />
+          <ScrollView style={styles.container}>
+            <View style={styles.instructionalArea}>
+              <Text style={styles.instructionalText}>{s.strings.edittoken_top_instructions}</Text>
+            </View>
+            <View style={styles.formArea}>
+              <View style={[styles.nameArea]}>
+                <FormField
+                  style={[styles.currencyName]}
+                  value={this.state.currencyName}
+                  onChangeText={this.onChangeName}
+                  autoCapitalize={'words'}
+                  label={s.strings.addtoken_name_input_text}
+                  returnKeyType={'done'}
+                  autoCorrect={false}
+                />
+              </View>
+              <View style={[styles.currencyCodeArea]}>
+                <FormField
+                  style={[styles.currencyCodeInput]}
+                  value={this.state.currencyCode}
+                  onChangeText={this.onChangeCurrencyCode}
+                  autoCapitalize={'characters'}
+                  label={s.strings.addtoken_currency_code_input_text}
+                  returnKeyType={'done'}
+                  autoCorrect={false}
+                />
+              </View>
+              <View style={[styles.contractAddressArea]}>
+                <FormField
+                  style={[styles.contractAddressInput]}
+                  value={this.state.contractAddress}
+                  onChangeText={this.onChangeContractAddress}
+                  label={s.strings.addtoken_contract_address_input_text}
+                  returnKeyType={'done'}
+                  autoCorrect={false}
+                />
+              </View>
+              <View style={[styles.decimalPlacesArea]}>
+                <FormField
+                  style={[styles.decimalPlacesInput]}
+                  value={this.state.decimalPlaces}
+                  onChangeText={this.onChangeDecimalPlaces}
+                  label={s.strings.addtoken_denomination_input_text}
+                  returnKeyType={'done'}
+                  autoCorrect={false}
+                  keyboardType={'numeric'}
+                />
+              </View>
+            </View>
+            <View style={styles.errorMessageArea}>
+              <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
+            </View>
+            <View style={[styles.buttonsArea]}>
+              <TertiaryButton
+                text={s.strings.edittoken_delete_token}
+                onPressFunction={this.props.showDeleteTokenModal}
+                buttonStyle={styles.deleteButton}
+              />
+              <PrimaryButton
+                text={s.strings.string_save}
+                style={[styles.saveButton, styles.button]}
+                onPressFunction={this._onSave}
+                processingElement={<ActivityIndicator />}
+                processingFlag={this.props.editCustomTokenProcessing}
               />
             </View>
-            <View style={[styles.currencyCodeArea]}>
-              <FormField
-                style={[styles.currencyCodeInput]}
-                value={this.state.currencyCode}
-                onChangeText={this.onChangeCurrencyCode}
-                autoCapitalize={'characters'}
-                label={s.strings.addtoken_currency_code_input_text}
-                returnKeyType={'done'}
-                autoCorrect={false}
-              />
-            </View>
-            <View style={[styles.contractAddressArea]}>
-              <FormField
-                style={[styles.contractAddressInput]}
-                value={this.state.contractAddress}
-                onChangeText={this.onChangeContractAddress}
-                label={s.strings.addtoken_contract_address_input_text}
-                returnKeyType={'done'}
-                autoCorrect={false}
-              />
-            </View>
-            <View style={[styles.decimalPlacesArea]}>
-              <FormField
-                style={[styles.decimalPlacesInput]}
-                value={this.state.decimalPlaces}
-                onChangeText={this.onChangeDecimalPlaces}
-                label={s.strings.addtoken_denomination_input_text}
-                returnKeyType={'done'}
-                autoCorrect={false}
-                keyboardType={'numeric'}
-              />
-            </View>
-          </View>
-          <View style={styles.errorMessageArea}>
-            <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
-          </View>
-          <View style={[styles.buttonsArea]}>
-            <TertiaryButton
-              text={s.strings.edittoken_delete_token}
-              onPressFunction={this.props.showDeleteTokenModal}
-              buttonStyle={styles.deleteButton}
-            />
-            <PrimaryButton
-              text={s.strings.string_save}
-              style={[styles.saveButton, styles.button]}
-              onPressFunction={this._onSave}
-              processingElement={<ActivityIndicator />}
-              processingFlag={this.props.editCustomTokenProcessing}
-            />
-          </View>
-          <View style={styles.bottomPaddingForKeyboard} />
-        </ScrollView>
-      </View>
+            <View style={styles.bottomPaddingForKeyboard} />
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     )
   }
 

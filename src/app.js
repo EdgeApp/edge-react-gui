@@ -12,7 +12,9 @@ import {Platform} from 'react-native'
 import {makeCoreContext} from './util/makeContext.js'
 import './util/polyfills'
 import BackgroundTask from 'react-native-background-task'
-
+import PushNotification from 'react-native-push-notification'
+import {sprintf} from 'sprintf-js'
+import s from './locales/strings.js'
 const store: {} = configureStore({})
 
 const perfTimers = {}
@@ -89,14 +91,36 @@ global.pcount = function (label: string) {
   }
 }
 
-BackgroundTask.define(() => {
-  console.log('Hello from a background task')
+BackgroundTask.define(async () => {
   makeCoreContext()
     .then(async (context) => {
-      console.log('I got the context for this. ')
-      console.log(context)
-      const messages = await context.fetchLoginMessages()
-      console.log(messages)
+      try {
+        const result = await context.fetchLoginMessages()
+        const date = new Date(Date.now() + 1000)
+        // for each key
+        for (const key in result) {
+          // skip loop if the property is from prototype
+          if (!result.hasOwnProperty(key)) continue
+          const obj = result[key]
+          if (obj.otpResetPending) {
+            if (Platform === 'ios') {
+              PushNotification.localNotificationSchedule({
+                title: s.strings.otp_notif_title,
+                message: sprintf(s.strings.otp_notif_body, key),
+                date
+              })
+            } else {
+              PushNotification.localNotificationSchedule({
+                message: s.strings.otp_notif_title,
+                subText: sprintf(s.strings.otp_notif_body, key),
+                date
+              })
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error)
+      }
     })
   BackgroundTask.finish()
 })

@@ -43,8 +43,11 @@ export const context = (state: State = initialState, action: Action) => {
         usernames
       }
     }
-    case Constants.DEEP_LINK_RECEIVED :
+    case Constants.DEEP_LINK_RECEIVED:
     case Constants.LOGOUT: {
+      if (!data) {
+        return state
+      }
       const {username} = data
       return {
         ...state,

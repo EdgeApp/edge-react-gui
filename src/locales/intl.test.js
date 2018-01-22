@@ -1,6 +1,9 @@
-/* globals describe test expect beforeEach */
+/* globals describe test expect beforeEach jest */
+/* eslint-disable import/first */
 import {intl, setIntlLocale} from './intl'
 import { truncateDecimals } from '../../src/modules/utils'
+
+jest.mock('intl-locales-supported', () => () => (true))
 
 const EN_US_LOCALE = {
   'localeIdentifier': 'en_US',
