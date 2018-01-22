@@ -7,8 +7,7 @@ import {
   TouchableWithoutFeedback,
   View,
   Platform,
-  Animated,
-  ScrollView
+  Animated
 } from 'react-native'
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -56,8 +55,8 @@ export default class FlipInput extends Component<Props, State> {
   backInterpolate: Animated.Value
   androidFrontOpacityInterpolate: Animated.Value
   androidBackOpacityInterpolate: Animated.Value
-  textInputFront: any
-  textInputBack: any
+  textInputFront: TextInput
+  textInputBack: TextInput
 
   constructor (props: Props) {
     super(props)
