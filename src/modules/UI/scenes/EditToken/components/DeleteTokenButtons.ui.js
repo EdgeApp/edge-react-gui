@@ -10,8 +10,8 @@ import styles from '../style.js'
 import {PrimaryButton, SecondaryButton} from '../../../components/Buttons'
 
 export type DeleteTokenButtonsProps = {
-  onPressCancel: Function,
-  onPressDelete: Function,
+  onPressCancel: () => void,
+  onPressDelete: () => void,
   processingFlag: boolean
 }
 

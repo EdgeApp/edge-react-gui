@@ -28,8 +28,8 @@ import _ from 'lodash'
 export type EditTokenDispatchProps = {
   showDeleteTokenModal: () => void,
   hideDeleteTokenModal: () => void,
-  deleteCustomToken: (string, string) => void,
-  editCustomToken: (string, string, string, string, string, string) => void
+  deleteCustomToken: (walletId: string, currencyCode: string) => void,
+  editCustomToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) => void
 }
 
 export type EditTokenStateProps = {
@@ -41,8 +41,7 @@ export type EditTokenStateProps = {
 
 export type EditTokenOwnProps = {
   walletId: string,
-  addTokenPending: Function,
-  addToken: Function,
+  addTokenPending: boolean,
   currencyCode: string,
   metaTokens: Array<AbcMetaToken>
 }

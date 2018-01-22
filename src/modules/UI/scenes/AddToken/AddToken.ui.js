@@ -26,18 +26,16 @@ import {
 
 export type AddTokenOwnProps = {
   walletId: string,
-  addTokenPending: Function,
-  addNewToken: Function,
   currentCustomTokens: Array<CustomTokenInfo>,
   wallet: GuiWallet
 }
 
 export type AddTokenDispatchProps = {
-  addNewToken: (string, string, string, string, string) => void
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => void
 }
 
 export type AddTokenStateProps = {
-  addTokenPending: Function,
+  addTokenPending: boolean,
   wallet: GuiWallet
 }
 

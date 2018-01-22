@@ -46,10 +46,10 @@ export type Props = {
 export type DispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (string, string, AbcMetadata) => void,
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
   setContactList: (Array<GuiContact>) => void,
   getSubcategories: () => void,
-  displayDropdownAlert: (string, string) => void
+  displayDropdownAlert: (message: string, title: string) => void
 }
 
 export type State = {

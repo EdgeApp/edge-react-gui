@@ -9,7 +9,6 @@ import styles from '../Settings/style.js'
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
 export type ChangePinOwnProps = {
-  onComplete: Function,
   account: AbcAccount,
   context: AbcContext,
   showHeader: boolean

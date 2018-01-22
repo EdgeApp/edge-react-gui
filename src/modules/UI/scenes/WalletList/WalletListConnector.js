@@ -5,6 +5,7 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
+import type {Dispatch, State} from '../../../ReduxTypes'
 
 import { walletRowOption } from './components/WalletOptions/action.js'
 
@@ -13,7 +14,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 
-const mapStateToProps = (state: any): {} => {
+const mapStateToProps = (state: State): {} => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
 
@@ -37,7 +38,7 @@ const mapDispatchToProps = (dispatch: Function): {} => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   setContactList: (contacts) => dispatch(setContactList(contacts)),
-  walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived))
+  walletRowOption: (walletId: string, option: string, archived: boolean) => dispatch(walletRowOption(walletId, option, archived))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)

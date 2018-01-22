@@ -9,7 +9,6 @@ import styles from '../Settings/style.js'
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
 export type ChangePasswordOwnProps = {
-  onComplete: Function,
   account: AbcAccount,
   context: AbcContext,
   showHeader: boolean
@@ -27,7 +26,7 @@ export type ChangePasswordStateProps = {
 
 type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
 
-export default class ChangePassword extends Component<ChangePasswordOwnProps> {
+export default class ChangePassword extends Component<ChangePasswordComponent> {
   onComplete = () => {
     this.props.onComplete()
   }

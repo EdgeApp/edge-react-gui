@@ -30,7 +30,7 @@ export type ChangeMiningFeeStateProps = {
 }
 
 export type ChangeMiningFeeDispatchProps = {
-  onSubmit: Function
+
 }
 
 type State = {

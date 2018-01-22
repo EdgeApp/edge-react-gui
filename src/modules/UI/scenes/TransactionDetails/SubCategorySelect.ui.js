@@ -22,7 +22,7 @@ type Props = {
   subcategoriesList: Array<string>,
   enteredSubcategory: string,
   usableHeight: number,
-  onPressFxn: Function
+  onPressFxn: (input: string) => void
 }
 
 class SubCategorySelect extends Component<Props, State> {

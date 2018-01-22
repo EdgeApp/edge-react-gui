@@ -94,7 +94,7 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
 export type WalletNameInputProps = {
   value: string,
   placeholder: string,
-  onChangeText: Function
+  onChangeText: (walletName: string) => void
 }
 
 class WalletNameInput extends Component<WalletNameInputProps> {

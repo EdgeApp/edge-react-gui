@@ -2,8 +2,9 @@
 import {connect} from 'react-redux'
 import WalletOptions from './WalletOptions.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
+import type {Dispatch, State} from '../../../../../ReduxTypes'
 
-const mapStateToProps = (state: any): {} => ({})
-const mapDispatchToProps = (dispatch: Function): {} => ({})
+const mapStateToProps = (state: State): {} => ({})
+const mapDispatchToProps = (dispatch: Dispatch): {} => ({})
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletOptions)

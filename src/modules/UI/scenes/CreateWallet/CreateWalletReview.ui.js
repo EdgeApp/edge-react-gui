@@ -22,14 +22,13 @@ export type CreateWalletReviewOwnProps = {
   walletName: string,
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
-  createCurrencyWallet: Function,
   isCreatingWallet: boolean,
   supportedWalletTypes: Array<GuiWalletType>,
   supportedFiats: Array<GuiFiatType>
 }
 
 export type CreateWalletReviewDispatchProps = {
-  createCurrencyWallet: (string, string, string) => void
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => void
 }
 
 export type CreateWalletReviewComponentProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps

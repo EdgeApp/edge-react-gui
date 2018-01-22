@@ -24,21 +24,35 @@ import {
 export const GET_SEED_WALLET_START = 'GET_SEED_WALLET_START'
 export const GET_SEED_WALLET_SUCCESS = 'GET_SEED_WALLET_SUCCESS'
 
-type Props = {
+type GetSeedModalOwnProps = {
   onPositive: (walletId: string) => void,
   onNegative: () => void,
   onDone: () => void,
   walletId: string,
   getSeed: any,
   visibilityBoolean: boolean,
-  onExitButtonFxn: Function
+  onExitButtonFxn: () => void,
+  privateSeedUnlocked: boolean
 }
+
+export type GetSeedModalStateProps = {
+  walletId: string,
+  getSeed: any
+}
+
+export type GetSeedModalDispatchProps = {
+  onPositive: (password: string) => any,
+  onNegative: () => any,
+  onDone: () => any
+}
+
+type GetSeedModalComponentProps = GetSeedModalOwnProps & GetSeedModalStateProps & GetSeedModalDispatchProps
 
 type State = {
   confimPassword: string
 }
 
-export default class GetSeed extends Component<Props, State> {
+export default class GetSeed extends Component<GetSeedModalComponentProps, State> {
   componentWillMount () {
     this.setState((prevState, props) => ({ confimPassword: '' }))
   }
