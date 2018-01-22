@@ -49,6 +49,8 @@ export default class FlipInput extends Component<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value
+  androidFrontOpacityInterpolate: Animated.Value
+  androidBackOpacityInterpolate: Animated.Value
 
   constructor (props: Props) {
     super(props)
@@ -63,11 +65,12 @@ export default class FlipInput extends Component<Props, State> {
         toValue: 0,
         friction: 8,
         tension: 10
+
       }).start()
     }
     if (!this.state.isToggled) {
       Animated.spring(this.animatedValue, {
-        toValue: 180,
+        toValue: 1,
         friction: 8,
         tension: 10
       }).start()
@@ -76,13 +79,20 @@ export default class FlipInput extends Component<Props, State> {
   componentWillMount () {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 180],
+      inputRange: [0, 1],
       outputRange: ['0deg', '180deg']
     })
-
     this.backInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 180],
+      inputRange: [0, 1],
       outputRange: ['180deg', '360deg']
+    })
+    this.androidFrontOpacityInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 0.5, 0.5],
+      outputRange: [1, 1, 0]
+    })
+    this.androidBackOpacityInterpolate = this.animatedValue.interpolate({
+      inputRange: [0.5, 0.5, 1],
+      outputRange: [0, 1, 1]
     })
   }
 
@@ -202,39 +212,34 @@ export default class FlipInput extends Component<Props, State> {
         { rotateX: this.backInterpolate }
       ]
     }
-    if (Platform.OS === 'ios') {
-      return (
-        <View style={[styles.container]}>
-          <Animated.View style={[styles.flipContainerFront, frontAnimatedStyle]} pointerEvents={isToggled ? 'none' : 'auto'}>
-            <View style={styles.flipButton}>
-              <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-            </View>
-            <View style={[styles.rows]}>
-              {this.topRow(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount)}
-              {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
-            </View>
-            <View style={styles.spacer} />
-          </Animated.View>
-          <Animated.View style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle]} pointerEvents={isToggled ? 'auto' : 'none'}>
-            <View style={styles.flipButton}>
-              <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-            </View>
-            <View style={[styles.rows]}>
-              {this.topRow(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount)}
-              {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
-            </View>
-            <View style={styles.spacer} />
-          </Animated.View>
-        </View>
-      )
-    }
     return (
       <View style={[styles.container]}>
-        <View style={styles.flipButton}>
-          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-        </View>
-        {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
-        <View style={styles.spacer} />
+        <Animated.View
+          style={[styles.flipContainerFront, frontAnimatedStyle, {opacity: this.androidFrontOpacityInterpolate}]}
+          pointerEvents={isToggled ? 'none' : 'auto'}
+        >
+          <View style={styles.flipButton}>
+            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+          </View>
+          <View style={[styles.rows]}>
+            {this.topRow(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount)}
+            {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
+          </View>
+          <View style={styles.spacer} />
+        </Animated.View>
+        <Animated.View
+          style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle, {opacity: this.androidBackOpacityInterpolate}]}
+          pointerEvents={isToggled ? 'auto' : 'none'}
+        >
+          <View style={styles.flipButton}>
+            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+          </View>
+          <View style={[styles.rows]}>
+            {this.topRow(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount)}
+            {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
+          </View>
+          <View style={styles.spacer} />
+        </Animated.View>
       </View>
     )
   }
