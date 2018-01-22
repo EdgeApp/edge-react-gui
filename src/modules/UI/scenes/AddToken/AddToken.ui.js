@@ -9,6 +9,7 @@ import {
   Alert
 } from 'react-native'
 import Text from '../../components/FormattedText'
+import SafeAreaView from '../../components/SafeAreaView'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style.js'
@@ -65,6 +66,7 @@ export class AddTokenComponent extends Component<AddTokenComponentProps, State> 
 
   render () {
     return (
+      <SafeAreaView>
       <View style={[styles.addTokens]}>
         <Gradient style={styles.gradient} />
         <ScrollView style={styles.container}>
@@ -129,6 +131,7 @@ export class AddTokenComponent extends Component<AddTokenComponentProps, State> 
           <View style={styles.bottomPaddingForKeyboard} />
         </ScrollView>
       </View>
+    </SafeAreaView>
     )
   }
 

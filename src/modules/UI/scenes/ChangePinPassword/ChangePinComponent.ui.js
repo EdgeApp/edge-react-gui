@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import {ChangePinScreen} from 'airbitz-core-js-ui'
 import {View} from 'react-native'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
@@ -33,7 +34,7 @@ export default class ChangePassword extends Component<ChangePinComponentProps> {
 
   render () {
     return (
-      <View>
+      <SafeAreaView>
         <Gradient style={styles.gradient} />
         <View style={styles.container}>
           <ChangePinScreen
@@ -43,7 +44,7 @@ export default class ChangePassword extends Component<ChangePinComponentProps> {
             onCancel={this.onComplete}
           />
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
 }

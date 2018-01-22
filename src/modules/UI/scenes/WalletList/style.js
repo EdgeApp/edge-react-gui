@@ -177,7 +177,6 @@ export const styles = {
   rowContainer: {
     padding: 6,
     paddingLeft: 16,
-    marginRight: 4,
     flexDirection: 'row',
     backgroundColor: THEME.COLORS.WHITE
   },
@@ -365,6 +364,9 @@ export const styles = {
   },
   emptyRowUnderlay: {
     color: THEME.COLORS.ROW_PRESSED
+  },
+  getSeedModal: {
+    top: platform.deviceHeight / 18
   }
 }
 

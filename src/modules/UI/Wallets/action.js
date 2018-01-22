@@ -1,4 +1,5 @@
 // @flow
+
 import * as UI_SELECTORS from '../selectors.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
@@ -390,3 +391,18 @@ export function addNewTokenThenDeleteOldSuccess (data: any) {
     data
   }
 }
+
+export const CREATE_WALLET_START = PREFIX + 'CREATE_WALLET_START'
+export const createWalletStart = () => ({
+  type: CREATE_WALLET_START
+})
+
+export const CREATE_WALLET_SUCCESS = PREFIX + 'CREATE_WALLET_SUCCESS'
+export const createWalletSuccess = () => ({
+  type: CREATE_WALLET_SUCCESS
+})
+
+export const CREATE_WALLET_FAILURE = PREFIX + 'CREATE_WALLET_FAILURE'
+export const createWalletFailure = () => ({
+  type: CREATE_WALLET_FAILURE
+})

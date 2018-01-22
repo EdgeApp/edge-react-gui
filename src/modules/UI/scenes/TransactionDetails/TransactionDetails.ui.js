@@ -17,6 +17,7 @@ import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
+import SafeAreaView from '../../components/SafeAreaView'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import styles, {styles as styleRaw} from './style'
 import THEME from '../../../../theme/variables/airbitz'
@@ -444,159 +445,161 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
     }
     return (
-      <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
-        <Gradient style={styles.headerGradient} />
-        <View style={{position: 'relative', top: 66}}>
-          {this.state.contactSearchVisibility &&
-            <Animated.View id='payeeSearchResults'
-              style={[{
-                opacity: this.state.payeeOpacity,
-                width: '100%',
-                backgroundColor: THEME.COLORS.WHITE,
-                position: 'absolute',
-                top: 4,
-                height: platform.usableHeight,
-                zIndex: 99999
-              }]}>
-              <View style={[styles.payeeNameArea]}>
-                <View style={[styles.payeeNameWrap]}>
-                  <TextInput
-                    underlineColorAndroid={'transparent'}
-                    autoFocus
-                    blurOnSubmit
-                    onSubmitEditing={this.onBlurPayee}
-                    autoCapitalize='words'
-                    autoCorrect={false}
-                    onChangeText={this.onChangePayee}
-                    style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
-                    placeholder='Payee'
-                    defaultValue={this.state.name}
-                    placeholderTextColor={THEME.COLORS.GRAY_2}
-                    returnKeyType={'done'}
-                  />
-                </View>
-              </View>
-              <ContactSearchResults
-                onChangePayee={this.onSelectPayee}
-                contacts={this.props.contacts}
-                style={[{width: '100%'}]}
-                usableHeight={platform.usableHeight}
-                currentPayeeText={this.state.name || ''}
-                dimensions={platform.dimensions}
-                onSelectPayee={this.onSelectPayee}
-                blurOnSubmit
-                onBlur={this.onBlurPayee}
-              />
-            </Animated.View>
-          }
-          {this.state.subCategorySelectVisibility &&
-            <Animated.View id='subcategorySearchResults'
-              style={[{
-                opacity: this.state.subcategoryOpacity,
-                width: '100%',
-                backgroundColor: THEME.COLORS.WHITE,
-                position: 'absolute',
-                height: platform.usableHeight,
-                zIndex: 99999
-              }]}
-              >
-              <View style={[styles.modalCategoryRow]}>
-                <TouchableOpacity style={[styles.categoryLeft, {borderColor: categoryColor}]} disabled>
-                  <FormattedText style={[{color: categoryColor}, styles.categoryLeftText]}>{type.syntax}</FormattedText>
-                </TouchableOpacity>
-                <View style={[styles.modalCategoryInputArea]}>
-                  <TextInput
-                    underlineColorAndroid={'transparent'}
-                    autoFocus
-                    blurOnSubmit
-                    autoCapitalize='words'
-                    onBlur={this.onExitSubcategories}
-                    onChangeText={this.onChangeSubcategory}
-                    style={[styles.categoryInput, UTILS.inputBottomPadding()]}
-                    defaultValue={this.state.subCategory || ''}
-                    placeholder={s.strings.transaction_details_category_title}
-                    autoCorrect={false}
-                    onSubmitEditing={this.onSubcategoriesKeyboardReturn}
-                    placeholderTextColor={THEME.COLORS.GRAY_2}
-                    initialNumToRender={8}
-                    returnKeyType={'done'}
-                  />
-                </View>
-              </View>
-              <SubCategorySelect
-                onPressFxn={this.onSelectSubCategory}
-                enteredSubcategory={this.state.subCategory}
-                usableHeight={platform.usableHeight}
-                subcategoriesList={sortedSubcategories}
-              />
-            </Animated.View>
-          }
-          <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
-            <View style={[styles.container]}>
-              <View>
-                <Gradient style={[styles.expandedHeader]}>
-                  <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath} />
-                </Gradient>
-              </View>
-              <View style={[styles.dataArea]}>
+      <SafeAreaView>
+        <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
+          <Gradient style={styles.headerGradient} />
+          <View style={{position: 'relative', top: 66}}>
+            {this.state.contactSearchVisibility &&
+              <Animated.View id='payeeSearchResults'
+                style={[{
+                  opacity: this.state.payeeOpacity,
+                  width: '100%',
+                  backgroundColor: THEME.COLORS.WHITE,
+                  position: 'absolute',
+                  top: 4,
+                  height: platform.usableHeight,
+                  zIndex: 99999
+                }]}>
                 <View style={[styles.payeeNameArea]}>
                   <View style={[styles.payeeNameWrap]}>
                     <TextInput
                       underlineColorAndroid={'transparent'}
+                      autoFocus
+                      blurOnSubmit
+                      onSubmitEditing={this.onBlurPayee}
                       autoCapitalize='words'
-                      onFocus={this.onFocusPayee}
                       autoCorrect={false}
+                      onChangeText={this.onChangePayee}
                       style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
-                      placeholder={s.strings.transaction_details_payee}
+                      placeholder='Payee'
                       defaultValue={this.state.name}
                       placeholderTextColor={THEME.COLORS.GRAY_2}
+                      returnKeyType={'done'}
                     />
                   </View>
                 </View>
-                <View style={styles.payeeSeperator} />
-                <View style={[styles.dateWrap]}>
-                  <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
-                </View>
-                <AmountArea
-                  abcTransaction={this.props.abcTransaction}
-                  onChangeNotesFxn={this.onChangeNotes}
-                  onChangeCategoryFxn={this.onChangeCategory}
-                  onChangeFiatFxn={this.onChangeFiat}
-                  onBlurFiatFxn={this.onBlurFiat}
-                  onPressFxn={this.onSaveTxDetails}
-                  fiatCurrencyCode={this.guiWallet.fiatCurrencyCode}
-                  cryptoCurrencyCode={this.props.abcTransaction.currencyCode}
-                  fiatCurrencySymbol={this.fiatSymbol}
-                  fiatAmount={this.state.amountFiat}
-                  onEnterSubcategories={this.onEnterSubcategories}
-                  subCategorySelectVisibility={this.state.subCategorySelectVisibility}
-                  categorySelectVisibility={this.state.categorySelectVisibility}
-                  onSelectSubCategory={this.onSelectSubCategory}
-                  subCategory={this.state.subCategory}
-                  type={type}
-                  onEnterCategories={this.onEnterCategories}
-                  onExitCategories={this.onExitCategories}
+                <ContactSearchResults
+                  onChangePayee={this.onSelectPayee}
+                  contacts={this.props.contacts}
+                  style={[{width: '100%'}]}
                   usableHeight={platform.usableHeight}
-                  onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
+                  currentPayeeText={this.state.name || ''}
                   dimensions={platform.dimensions}
-                  onNotesKeyboardReturn={this.onNotesKeyboardReturn}
-                  onFocusNotes={this.onFocusNotes}
-                  onBlurNotes={this.onBlurNotes}
-                  direction={this.state.direction}
-                  color={categoryColor}
-                  types={types}
-                  onFocusFiatAmount={this.onFocusFiatAmount}
-                  walletDefaultDenomProps={this.state.walletDefaultDenomProps}
-                  openModalFxn={this.amountAreaOpenModal}
-                  txExplorerUrl={txExplorerLink}
-                  guiWallet={this.guiWallet}
-                  onSelectCategory={this.onSelectCategory}
+                  onSelectPayee={this.onSelectPayee}
+                  blurOnSubmit
+                  onBlur={this.onBlurPayee}
                 />
+              </Animated.View>
+            }
+            {this.state.subCategorySelectVisibility &&
+                <Animated.View id='subcategorySearchResults'
+                  style={[{
+                    opacity: this.state.subcategoryOpacity,
+                    width: '100%',
+                    backgroundColor: THEME.COLORS.WHITE,
+                    position: 'absolute',
+                    height: platform.usableHeight,
+                    zIndex: 99999
+                  }]}
+                >
+                  <View style={[styles.modalCategoryRow]}>
+                    <TouchableOpacity style={[styles.categoryLeft, {borderColor: categoryColor}]} disabled>
+                      <FormattedText style={[{color: categoryColor}, styles.categoryLeftText]}>{type.syntax}</FormattedText>
+                    </TouchableOpacity>
+                    <View style={[styles.modalCategoryInputArea]}>
+                      <TextInput
+                        underlineColorAndroid={'transparent'}
+                        autoFocus
+                        blurOnSubmit
+                        autoCapitalize='words'
+                        onBlur={this.onExitSubcategories}
+                        onChangeText={this.onChangeSubcategory}
+                        style={[styles.categoryInput, UTILS.inputBottomPadding()]}
+                        defaultValue={this.state.subCategory || ''}
+                        placeholder={s.strings.transaction_details_category_title}
+                        autoCorrect={false}
+                        onSubmitEditing={this.onSubcategoriesKeyboardReturn}
+                        placeholderTextColor={THEME.COLORS.GRAY_2}
+                        initialNumToRender={8}
+                        returnKeyType={'done'}
+                      />
+                    </View>
+                  </View>
+                  <SubCategorySelect
+                    onPressFxn={this.onSelectSubCategory}
+                    enteredSubcategory={this.state.subCategory}
+                    usableHeight={platform.usableHeight}
+                    subcategoriesList={sortedSubcategories}
+                  />
+                </Animated.View>
+            }
+            <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
+              <View style={[styles.container]}>
+                <View>
+                  <Gradient style={[styles.expandedHeader]}>
+                    <PayeeIcon direction={this.state.direction} thumbnailPath={this.state.thumbnailPath} />
+                  </Gradient>
+                </View>
+                <View style={[styles.dataArea]}>
+                  <View style={[styles.payeeNameArea]}>
+                    <View style={[styles.payeeNameWrap]}>
+                      <TextInput
+                        underlineColorAndroid={'transparent'}
+                        autoCapitalize='words'
+                        onFocus={this.onFocusPayee}
+                        autoCorrect={false}
+                        style={[styles.payeeNameInput, UTILS.inputBottomPadding()]}
+                        placeholder={s.strings.transaction_details_payee}
+                        defaultValue={this.state.name}
+                        placeholderTextColor={THEME.COLORS.GRAY_2}
+                      />
+                    </View>
+                  </View>
+                  <View style={styles.payeeSeperator} />
+                  <View style={[styles.dateWrap]}>
+                    <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
+                  </View>
+                  <AmountArea
+                    abcTransaction={this.props.abcTransaction}
+                    onChangeNotesFxn={this.onChangeNotes}
+                    onChangeCategoryFxn={this.onChangeCategory}
+                    onChangeFiatFxn={this.onChangeFiat}
+                    onBlurFiatFxn={this.onBlurFiat}
+                    onPressFxn={this.onSaveTxDetails}
+                    fiatCurrencyCode={this.guiWallet.fiatCurrencyCode}
+                    cryptoCurrencyCode={this.props.abcTransaction.currencyCode}
+                    fiatCurrencySymbol={this.fiatSymbol}
+                    fiatAmount={this.state.amountFiat}
+                    onEnterSubcategories={this.onEnterSubcategories}
+                    subCategorySelectVisibility={this.state.subCategorySelectVisibility}
+                    categorySelectVisibility={this.state.categorySelectVisibility}
+                    onSelectSubCategory={this.onSelectSubCategory}
+                    subCategory={this.state.subCategory}
+                    type={type}
+                    onEnterCategories={this.onEnterCategories}
+                    onExitCategories={this.onExitCategories}
+                    usableHeight={platform.usableHeight}
+                    onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
+                    dimensions={platform.dimensions}
+                    onNotesKeyboardReturn={this.onNotesKeyboardReturn}
+                    onFocusNotes={this.onFocusNotes}
+                    onBlurNotes={this.onBlurNotes}
+                    direction={this.state.direction}
+                    color={categoryColor}
+                    types={types}
+                    onFocusFiatAmount={this.onFocusFiatAmount}
+                    walletDefaultDenomProps={this.state.walletDefaultDenomProps}
+                    openModalFxn={this.amountAreaOpenModal}
+                    txExplorerUrl={txExplorerLink}
+                    guiWallet={this.guiWallet}
+                    onSelectCategory={this.onSelectCategory}
+                  />
+                </View>
               </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         </View>
-      </View>
+      </SafeAreaView>
     )
   }
 }
