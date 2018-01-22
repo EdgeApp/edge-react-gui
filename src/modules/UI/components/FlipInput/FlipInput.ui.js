@@ -7,7 +7,8 @@ import {
   TouchableWithoutFeedback,
   View,
   Platform,
-  Animated
+  Animated,
+  ScrollView
 } from 'react-native'
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -24,6 +25,8 @@ export type FlipInputFieldInfo = GuiCurrencyInfo & {
 
 type State = {
   isToggled: boolean,
+  textInputFrontFocus: boolean,
+  textInputBackFocus: boolean,
   primaryDisplayAmount: string,
   secondaryDisplayAmount: string
 
@@ -41,6 +44,8 @@ type Props = {
 
 const getInitialState = (props: Props) => ({
   isToggled: false,
+  textInputFrontFocus: false,
+  textInputBackFocus: false,
   primaryDisplayAmount: props.primaryDisplayAmount || '',
   secondaryDisplayAmount: props.secondaryDisplayAmount || ''
 })
@@ -51,6 +56,8 @@ export default class FlipInput extends Component<Props, State> {
   backInterpolate: Animated.Value
   androidFrontOpacityInterpolate: Animated.Value
   androidBackOpacityInterpolate: Animated.Value
+  textInputFront: any
+  textInputBack: any
 
   constructor (props: Props) {
     super(props)
@@ -61,6 +68,9 @@ export default class FlipInput extends Component<Props, State> {
       isToggled: !this.state.isToggled
     })
     if (this.state.isToggled) {
+      if (this.state.textInputBackFocus) {
+        this.textInputFront.focus()
+      }
       Animated.spring(this.animatedValue, {
         toValue: 0,
         friction: 8,
@@ -69,6 +79,9 @@ export default class FlipInput extends Component<Props, State> {
       }).start()
     }
     if (!this.state.isToggled) {
+      if (this.state.textInputFrontFocus) {
+        this.textInputBack.focus()
+      }
       Animated.spring(this.animatedValue, {
         toValue: 1,
         friction: 8,
@@ -135,7 +148,7 @@ export default class FlipInput extends Component<Props, State> {
     : intl.formatNumberInput(this.state.primaryDisplayAmount)
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
-  topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
+  topRowFront = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
     return (
       <View style={top.row} key={'top'}>
         <Text style={[top.symbol]}>
@@ -151,6 +164,36 @@ export default class FlipInput extends Component<Props, State> {
           selectionColor='white'
           returnKeyType='done'
           underlineColorAndroid={'transparent'}
+          ref={ (ref) => { this.textInputFront = ref } }
+          onFocus={ () => this.setState({ textInputFrontFocus: true }) }
+          onBlur={ () => this.setState({ textInputFrontFocus: false }) }
+        />
+        <Text style={[top.currencyCode]}>
+          {denominationInfo.displayDenomination.name}
+        </Text>
+      </View>
+    )
+  }
+
+  topRowBack = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
+    return (
+      <View style={top.row} key={'top'}>
+        <Text style={[top.symbol]}>
+          {denominationInfo.displayDenomination.symbol}
+        </Text>
+        <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
+          placeholder={'0'}
+          placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+          value={amount}
+          onChangeText={onChangeText}
+          autoCorrect={false}
+          keyboardType='numeric'
+          selectionColor='white'
+          returnKeyType='done'
+          underlineColorAndroid={'transparent'}
+          ref={ (ref) => { this.textInputBack = ref } }
+          onFocus={ () => this.setState({ textInputBackFocus: true }) }
+          onBlur={ () => this.setState({ textInputBackFocus: false }) }
         />
         <Text style={[top.currencyCode]}>
           {denominationInfo.displayDenomination.name}
@@ -183,22 +226,6 @@ export default class FlipInput extends Component<Props, State> {
     )
   }
 
-  renderRows = (primaryInfo: FlipInputFieldInfo, secondaryInfo: FlipInputFieldInfo, isToggled: boolean) => {
-    return (
-      <View style={[styles.rows]}>
-        {isToggled
-          ? [
-            this.topRow(secondaryInfo, this.onSecondaryAmountChange, this.topDisplayAmount()),
-            this.bottomRow(primaryInfo, this.bottomDisplayAmount())
-          ]
-          : [
-            this.topRow(primaryInfo, this.onPrimaryAmountChange, this.topDisplayAmount()),
-            this.bottomRow(secondaryInfo, this.bottomDisplayAmount())
-          ]}
-      </View>
-    )
-  }
-
   render () {
     const {primaryInfo, secondaryInfo} = this.props
     const {isToggled} = this.state
@@ -222,8 +249,8 @@ export default class FlipInput extends Component<Props, State> {
             <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
           </View>
           <View style={[styles.rows]}>
-            {this.topRow(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount)}
-            {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
+            {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, intl.formatNumberInput(this.state.primaryDisplayAmount))}
+            {this.bottomRow(secondaryInfo, intl.formatNumberInput(this.state.secondaryDisplayAmount))}
           </View>
           <View style={styles.spacer} />
         </Animated.View>
@@ -235,8 +262,8 @@ export default class FlipInput extends Component<Props, State> {
             <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
           </View>
           <View style={[styles.rows]}>
-            {this.topRow(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount)}
-            {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
+            {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, intl.formatNumberInput(this.state.secondaryDisplayAmount))}
+            {this.bottomRow(primaryInfo, intl.formatNumberInput(this.state.primaryDisplayAmount))}
           </View>
           <View style={styles.spacer} />
         </Animated.View>
