@@ -2,11 +2,9 @@
 
 import {connect} from 'react-redux'
 import type {State} from '../../../ReduxTypes'
-import ChangeMiningFee from './ChangeMiningFee.ui.js'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  ChangeMiningFeeStateProps,
-  ChangeMiningFeeDispatchProps
+import ChangeMiningFee, {
+  type ChangeMiningFeeStateProps,
+  type ChangeMiningFeeDispatchProps
 } from './ChangeMiningFee.ui.js'
 import { changeFee } from '../../../../modules/UI/scenes/SendConfirmation/action'
 

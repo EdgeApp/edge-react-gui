@@ -1,14 +1,11 @@
 // @flow
 
 import {connect} from 'react-redux'
-// eslint-disable-next-line no-duplicate-imports
 import {
-  CreateWalletReviewComponent
+  CreateWalletReviewComponent,
+  type CreateWalletReviewDispatchProps
 } from './CreateWalletReview.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  CreateWalletReviewDispatchProps
-} from './CreateWalletReview.ui'
+
 import {createCurrencyWallet} from './action'
 import type {State, Dispatch} from '../../../ReduxTypes'
 import {getSupportedFiats} from '../../../utils.js'

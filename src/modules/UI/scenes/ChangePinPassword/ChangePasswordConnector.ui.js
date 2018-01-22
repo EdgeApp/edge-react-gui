@@ -3,15 +3,11 @@
 import {connect} from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {Actions} from 'react-native-router-flux'
-// eslint-disable-next-line no-duplicate-imports
-import ChangePasswordComponent from './ChangePasswordComponent.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  ChangePasswordDispatchProps,
-  ChangePasswordStateProps,
-  ChangePasswordOwnProps
+import ChangePasswordComponent, {
+  type ChangePasswordDispatchProps,
+  type ChangePasswordStateProps,
+  type ChangePasswordOwnProps
 } from './ChangePasswordComponent.ui'
-
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
 import type {State} from '../../../ReduxTypes'

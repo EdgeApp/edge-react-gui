@@ -3,13 +3,10 @@
 import {connect} from 'react-redux'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import {Actions} from 'react-native-router-flux'
-// eslint-disable-next-line no-duplicate-imports
-import ChangePinComponent from './ChangePinComponent.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  ChangePinOwnProps,
-  ChangePinStateProps,
-  ChangePinDispatchProps
+import ChangePinComponent, {
+  type ChangePinOwnProps,
+  type ChangePinStateProps,
+  type ChangePinDispatchProps
 } from './ChangePinComponent.ui'
 
 import type {AbcContext, AbcAccount} from 'airbitz-core-types'

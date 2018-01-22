@@ -1,13 +1,10 @@
 // @flow
 
 import {connect} from 'react-redux'
-// eslint-disable-next-line no-duplicate-imports
-import ManageTokens from './ManageTokens.ui.js'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  ManageTokensOwnProps,
-  ManageTokensDispatchProps,
-  ManageTokensStateProps
+import ManageTokens, {
+  type ManageTokensOwnProps,
+  type ManageTokensDispatchProps,
+  type ManageTokensStateProps
 } from './ManageTokens.ui.js'
 import {getEnabledTokens, setEnabledTokens} from '../../Wallets/action.js'
 import type {GuiWallet, CustomTokenInfo} from '../../../../types'

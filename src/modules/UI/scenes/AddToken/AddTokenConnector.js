@@ -1,15 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-
-// eslint-disable-next-line no-duplicate-imports
-import {AddTokenComponent} from './AddToken.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  AddTokenOwnProps,
-  AddTokenDispatchProps,
-  AddTokenStateProps
-} from './AddToken.ui.js'
+import {AddTokenComponent, type AddTokenOwnProps, type AddTokenDispatchProps, type AddTokenStateProps} from './AddToken.ui'
 
 import * as ADD_TOKEN_ACTIONS from './action.js'
 import {

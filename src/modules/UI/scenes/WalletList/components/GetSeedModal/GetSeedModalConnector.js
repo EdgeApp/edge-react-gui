@@ -1,13 +1,10 @@
 // @flow
 
 import {connect} from 'react-redux'
-// eslint-disable-next-line no-duplicate-imports
-import GetSeedModal from './GetSeedModal.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  GetSeedModalDispatchProps,
-  GetSeedModalStateProps
-} from './GetSeedModal.ui.js'
+import GetSeedModal, {
+  type GetSeedModalDispatchProps,
+  type GetSeedModalStateProps
+} from './GetSeedModal.ui'
 import type {State, Dispatch, GetState} from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import {CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME} from '../WalletOptions/action'

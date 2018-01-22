@@ -1,13 +1,9 @@
 // @flow
 
 import {connect} from 'react-redux'
-// eslint-disable-next-line no-duplicate-imports
 import {
-  CreateWalletSelectCryptoComponent
-} from './CreateWalletSelectCrypto.ui.js'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  CreateWalletSelectCryptoStateProps
+  CreateWalletSelectCryptoComponent,
+  type CreateWalletSelectCryptoStateProps
 } from './CreateWalletSelectCrypto.ui.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import type {State, Dispatch} from '../../../ReduxTypes'

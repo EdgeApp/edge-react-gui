@@ -1,15 +1,10 @@
 // @flow
 
 import {connect} from 'react-redux'
-// eslint-disable-next-line no-duplicate-imports
 import {
-  CreateWalletSelectFiatComponent
+  CreateWalletSelectFiatComponent,
+  type CreateWalletSelectFiatStateProps
 } from './CreateWalletSelectFiat.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  CreateWalletSelectFiatStateProps
-} from './CreateWalletSelectFiat.ui'
-
 import type {State, Dispatch} from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
 import type { GuiFiatType, DeviceDimensions } from '../../../../types'

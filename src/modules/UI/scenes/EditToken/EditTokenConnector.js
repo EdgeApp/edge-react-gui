@@ -2,14 +2,11 @@
 
 import {connect} from 'react-redux'
 import * as EDIT_TOKEN_ACTIONS from './action.js'
-// eslint-disable-next-line no-duplicate-imports
-import EditToken from './EditToken.ui'
-// eslint-disable-next-line no-duplicate-imports
-import type {
-  EditTokenStateProps,
-  EditTokenDispatchProps,
-  EditTokenOwnProps
-} from './EditToken.ui.js'
+import EditToken, {
+  type EditTokenStateProps,
+  type EditTokenDispatchProps,
+  type EditTokenOwnProps
+} from './EditToken.ui'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 import type {Dispatch, State} from '../../../ReduxTypes'
 
