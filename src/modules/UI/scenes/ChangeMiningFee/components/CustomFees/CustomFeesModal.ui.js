@@ -52,7 +52,7 @@ export default class CustomFeesModal extends Component<Props, State> {
             placeholder={'0'}
             onChangeText={this._onFeeSettingInputChange(feeSetting)}
             value={this.state[feeSetting]}
-            label={feeSetting}
+            label={s.strings[feeSetting] || feeSetting}
             autoFocus
           />
         </View>
