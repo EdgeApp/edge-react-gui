@@ -169,9 +169,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'com.facebook.react:react-native:+'
     compile project(':react-native-push-notification')
-    compile ('com.google.android.gms:play-services-gcm:+') {
-        force = true;
-    }
     // From node_modules
 }
 
