@@ -17,7 +17,7 @@ export default class CryptoExchageRate extends Component<Props, State> {
       textError
     } = this.props.style
     const viewStyle = [container, (this.props.insufficient || this.props.genericError) ? containerError : null]
-    const textStyle = [text, this.props.insufficient || textError ? textError : null]
+    const textStyle = [text, (this.props.insufficient || this.props.genericError) ? textError : null]
 
     return (
       <View style={viewStyle}>
