@@ -1,25 +1,27 @@
-import React, {Component} from 'react'
-import {
-  View,
-  Image,
-  WebView,
-  Text,
-  Linking,
-  Platform
-} from 'react-native'
+// @flow
+
+import React, { Component } from 'react'
+import { View, Image, WebView, Text, Linking, Platform } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
+
 import s from '../../../../locales/strings.js'
 import styles from './style.js'
 import StylizedModal from '../Modal/index.js'
 import THEME from '../../../../theme/variables/airbitz.js'
 import helpImage from '../../../../assets/images/modal/help.png'
-import DeviceInfo from 'react-native-device-info'
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
 const CONTENT_URI = 'https://edgesecure.co/info.html'
 const contentScaling = Platform.OS !== 'ios'
 
-export default class HelpModal extends Component {
+type Props = {
+  modal: any,
+  closeModal: () => void
+}
+type State = {}
+
+export default class HelpModal extends Component<Props, State> {
   render () {
     return (
       <StylizedModal
@@ -41,11 +43,17 @@ export default class HelpModal extends Component {
         modalBoxStyle={styles.modalBoxStyle}
         modalContentStyle={styles.modalContentStyle}
         modalMiddleStyle={styles.modalMiddleWebView}
-        modalBottom={<View style={[styles.modalBottomContainer]}>
-                        <Text style={styles.modalBottomText}>{s.strings.help_version} {versionNumber}</Text>
-                        <Text style={styles.modalBottomText}>{s.strings.help_build} {buildNumber}</Text>
-                    </View>}
-        featuredIcon={<Image source={helpImage} color={THEME.secondary} size={20} />}
+        modalBottom={
+          <View style={[styles.modalBottomContainer]}>
+            <Text style={styles.modalBottomText}>
+              {s.strings.help_version} {versionNumber}
+            </Text>
+            <Text style={styles.modalBottomText}>
+              {s.strings.help_build} {buildNumber}
+            </Text>
+          </View>
+        }
+        featuredIcon={<Image source={helpImage} color={THEME.COLORS.SECONDARY} size={20} />}
       />
     )
   }

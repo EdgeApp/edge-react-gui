@@ -23,8 +23,7 @@ const CryptoExchangeSceneStyle = {
       alignItems: 'center',
       justifyContent: 'space-around',
       height: 26,
-      backgroundColor: THEME.COLORS.PRIMARY,
-      color: THEME.COLORS.ACCENT_MINT
+      backgroundColor: THEME.COLORS.PRIMARY
     },
     containerError: {
       display: 'flex',
