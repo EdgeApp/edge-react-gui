@@ -10,14 +10,12 @@ import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'
 import OptionSubtext from '../../../../components/OptionSubtext/OptionSubtextConnector.js'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 import s from '../../../../../../locales/strings.js'
-import { Platform } from 'react-native'
 
 type Props = {
+  customFeeSettings: Array<string>,
   visibilityBoolean: boolean,
-  onExitButtonFxn: Function,
-  onNegative: Function,
-  onPositive: Function,
-  onDone: Function
+  onPositive: (customFees: any) => any,
+  onDone: () => any
 }
 
 type State = any
@@ -26,37 +24,20 @@ export default class CustomFeesModal extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {}
-    this.cleanState()
-    for (const feeSetting of this.props.customFeeSettings) {
-      this.state[feeSetting] = ''
-    }
   }
 
-  cleanState = () => {
-    for (const feeSetting of this.props.customFeeSettings) {
-      this.state[feeSetting] = ''
-    }
-  }
-  
-  onNegative = () => {
-    this.props.onNegative()
-    this.cleanState()
-    this.props.onDone()
-  }
-
-  onPositive = () => {
-    this.props.onPositive(this.state)
-    this.cleanState()
-    this.props.onDone()
+  componentWillMount = () => {
+    this._initState()
   }
 
   _onFeeSettingInputChange = (feeSetting) => (input: string) => {
     this.setState({ [feeSetting]: input })
   }
 
-  onExitButtonFxn = () => {
-    this.cleanState()
-    this.props.onExitButtonFxn()
+  _initState = () => {
+    for (const feeSetting of this.props.customFeeSettings) {
+      this.setState({ [feeSetting]: '' })
+    }
   }
 
   renderModalMiddle = () => {
@@ -81,7 +62,7 @@ export default class CustomFeesModal extends Component<Props, State> {
 
   render () {
     const modalMiddle = this.renderModalMiddle()
-    const height = 50 + ( modalMiddle.length - 1 ) * 58
+    const height = 50 + (modalMiddle.length - 1) * 58
     return <StylizedModal
       featuredIcon={<OptionIcon iconName={Constants.CUSTOM_FEES_ICON}/>}
       headerText={s.strings.fragment_wallets_set_custom_fees}
@@ -89,11 +70,11 @@ export default class CustomFeesModal extends Component<Props, State> {
       modalMiddleStyle={{ height }}
       modalBottom={<OptionButtons
         positiveText={s.strings.string_custom_fee}
-        onPositive={this.onPositive}
-        onNegative={this.onNegative}
+        onPositive={() => this.props.onPositive(this.state)}
+        onNegative={this.props.onDone}
       />}
       visibilityBoolean={this.props.visibilityBoolean}
-      onExitButtonFxn={this.onExitButtonFxn}
+      onExitButtonFxn={this.props.onDone}
     />
   }
 }

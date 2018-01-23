@@ -177,7 +177,6 @@ export const styles = {
   rowContainer: {
     padding: 6,
     paddingLeft: 16,
-    marginRight: 4,
     flexDirection: 'row',
     backgroundColor: THEME.COLORS.WHITE
   },

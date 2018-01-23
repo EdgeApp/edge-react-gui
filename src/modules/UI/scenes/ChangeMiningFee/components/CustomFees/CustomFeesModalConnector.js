@@ -16,7 +16,7 @@ import {
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import * as ACCOUNT_API from '../../../../../Core/Account/api.js'
 import * as UI_SELECTORS from '../../../../selectors.js'
-import { changeFee } from '../../../../scenes/SendConfirmation/action'
+import { changeFee } from '../../action'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -32,9 +32,10 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onExitButtonFxn: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) }),
-  onNegative: () => {},
-  onPositive: (customFees) => dispatch(changeFee('custom', customFees)),
+  onPositive: (customFees: any) => {
+    dispatch(changeFee('custom', customFees))
+    dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
+  },
   onDone: () => dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
 })
 
