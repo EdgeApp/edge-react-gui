@@ -33,7 +33,7 @@ export type State = {
   },
   ui: any,
   cryptoExchange: any,
-  exchangeRates: any
+  exchangeRates: number
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A
