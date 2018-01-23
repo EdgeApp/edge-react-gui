@@ -185,9 +185,3 @@ const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
   }
   return spendInfo
 }
-
-export const changeFee = (feeSetting: string) => ({
-  type: CHANGE_MINING_FEE,
-  feeSetting
-  // fee,
-})
