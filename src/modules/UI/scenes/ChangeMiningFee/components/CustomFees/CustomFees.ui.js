@@ -10,7 +10,8 @@ import s from '../../../../../../locales/strings.js'
 import styles from './style'
 
 type Props = {
-  onPressed: Function
+  onPressed: Function,
+  handlePress: Function
 }
 type State = {}
 
@@ -23,7 +24,7 @@ export default class CustomFees extends Component<Props, State> {
           style={styles.customFeeButton}
           onPressFunction={this.props.onPressed}
         />
-        <CustomFeesModal />
+        <CustomFeesModal handlePress={this.props.handlePress}/>
       </View>
     )
   }

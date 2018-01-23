@@ -35,13 +35,11 @@ export class ChangeMiningFee extends Component<Props, State> {
   }
 
   componentWillUnmount () {
-    if (this.state.feeSetting !== this.props.feeSetting) {
-      this.props.onSubmit(this.state.feeSetting)
-    }
+    this.props.onSubmit(this.state.feeSetting)
   }
 
-  handlePress = (feeSetting: string) => {
-    return this.setState({ feeSetting })
+  handlePress = (feeSetting: string, cb: any) => {
+    return this.setState({ feeSetting }, cb)
   }
 
   render () {
@@ -84,7 +82,7 @@ export class ChangeMiningFee extends Component<Props, State> {
               isSelected={FEE.LOW_FEE === feeSetting}
             />
           </View>
-          <CustomFees />
+          <CustomFees handlePress={this.handlePress}/>
         </View>
       </View>
     )

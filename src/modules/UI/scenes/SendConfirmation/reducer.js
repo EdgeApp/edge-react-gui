@@ -13,8 +13,8 @@ export type SendConfirmationState = {
   feeSatoshi: number,
   label: string,
 
-  // fee: string,
-  feeSetting: string,
+  networkFeeOption: string,
+  customNetworkFee: any,
 
   inputCurrencySelected: string,
   maxSatoshi: number,
@@ -38,8 +38,8 @@ export const initialState: SendConfirmationState = {
   feeSatoshi: 0,
   label: '',
 
-  // fee: '',
-  feeSetting: Constants.STANDARD_FEE,
+  networkFeeOption: Constants.STANDARD_FEE,
+  customNetworkFee: {},
 
   inputCurrencySelected: 'fiat',
   maxSatoshi: 0,

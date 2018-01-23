@@ -15,7 +15,8 @@ type Props = {
   customFeeSettings: Array<string>,
   visibilityBoolean: boolean,
   onPositive: (customFees: any) => any,
-  onDone: () => any
+  onDone: () => any,
+  handlePress: Function
 }
 
 type State = any
@@ -70,7 +71,11 @@ export default class CustomFeesModal extends Component<Props, State> {
       modalMiddleStyle={{ height }}
       modalBottom={<OptionButtons
         positiveText={s.strings.string_custom_fee}
-        onPositive={() => this.props.onPositive(this.state)}
+        onPositive={() => {
+          this.props.handlePress(Constants.CUSTOM_FEES, () => {
+            this.props.onPositive(this.state)
+          })
+        }}
         onNegative={this.props.onDone}
       />}
       visibilityBoolean={this.props.visibilityBoolean}

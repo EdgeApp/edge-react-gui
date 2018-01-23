@@ -1,6 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
+import { Actions } from 'react-native-router-flux'
 import _ from 'lodash'
 import CustomFeesModal from './CustomFeesModal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
@@ -35,6 +36,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onPositive: (customFees: any) => {
     dispatch(changeFee('custom', customFees))
     dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
+    Actions.pop()
   },
   onDone: () => dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
 })
