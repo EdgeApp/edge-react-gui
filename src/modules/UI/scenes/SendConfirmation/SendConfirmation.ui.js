@@ -77,14 +77,6 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
         )
       })
     }
-    for (const prop in nextProps) {
-      if (nextProps[prop] !== this.props[prop]) {
-        console.log('renderrender - for prop', prop)
-        console.log('renderrender - old prop', this.props[prop])
-        console.log('renderrender - new prop', nextProps[prop])
-        console.log('renderrender - **************************')
-      }
-    }
   }
 
   componentDidMount () {
