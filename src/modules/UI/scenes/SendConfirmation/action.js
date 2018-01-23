@@ -5,6 +5,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as SEND_SELECTORS from './selectors'
 import type {
   AbcParsedUri,
   AbcSpendInfo,
@@ -34,30 +35,25 @@ export const UPDATE_CRYPTO_AMOUNT_REQUEST = PREFIX + 'UPDATE_CRYPTO_AMOUNT_REQUE
 export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
+export const UPDATE_TRANSACTION_ERROR = PREFIX + 'UPDATE_TRANSACTION_ERROR'
 
 export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
-
-export type UpdateTransactionAction = {
-  type: typeof UPDATE_TRANSACTION,
-  data: {
-    transaction?: AbcTransaction | null,
-    error?: Error | null
-  }
-}
 
 export const updateAmountSatoshi = (amountSatoshi: string) => ({
   type: UPDATE_AMOUNT_SATOSHI,
   data: {amountSatoshi}
 })
 
-export const updateTransactionAction = (
-  parsedUri: AbcParsedUri,
-  transaction: AbcTransaction | null,
-  error: Error | null): UpdateTransactionAction => ({
-    type: UPDATE_TRANSACTION,
-    data: {parsedUri, transaction, error}
-  })
+export const updateTransaction = (transaction: AbcTransaction): any => ({
+  type: UPDATE_TRANSACTION,
+  data: {transaction}
+})
+
+export const updateTransactionError = (error: Error): any => ({
+  type: UPDATE_TRANSACTION_ERROR,
+  data: {error}
+})
 
 export const updateSpendPending = (pending: boolean) => ({
   type: UPDATE_SPEND_PENDING,
@@ -69,10 +65,13 @@ export const updateNativeAmount = (nativeAmount: string) => ({
   data: {nativeAmount}
 })
 
-export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: any, getState: any) => {
+export const signBroadcastAndSave = () => (dispatch: any, getState: any) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+  const abcUnsignedTransaction = SEND_SELECTORS.getTransaction(state)
+
+  dispatch(updateSpendPending(true))
 
   WALLET_API.signTransaction(wallet, abcUnsignedTransaction)
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.broadcastTransaction(wallet, abcSignedTransaction))
@@ -88,7 +87,6 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
       dispatch(openABAlert(Constants.OPEN_AB_ALERT, successInfo))
     })
     .catch((e) => {
-      // console.log(e)
       dispatch(updateSpendPending(false))
       const errorInfo = {
         success: false,
@@ -125,33 +123,37 @@ export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: an
   dispatch(updateLabel(wallet.name))
 }
 
-export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, getState: any) => {
+export const updateTransactionAmount = (primaryNativeAmount: string, secondaryExchangeAmount: string) => (dispatch: any, getState: any) => {
   const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
-  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
-  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
+  const networkFeeOption = SEND_SELECTORS.getNetworkFeeOption(state)
+  const customNetworkFee = SEND_SELECTORS.getCustomNetworkFee(state)
+  const parsedUri = SEND_SELECTORS.getParsedUri(state)
+  parsedUri.metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
+  parsedUri.nativeAmount = primaryNativeAmount
+  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri, networkFeeOption, customNetworkFee)
 
   return WALLET_API.makeSpend(abcWallet, spendInfo)
   .then((abcTransaction: AbcTransaction) => {
-    dispatch(updateTransactionAction(parsedUri, abcTransaction, null))
+    dispatch(updateParsedURI(parsedUri))
+    dispatch(updateTransaction(abcTransaction))
   })
   .catch((error) => {
-    dispatch(updateTransactionAction(parsedUri, null, error))
+    dispatch(updateParsedURI(parsedUri))
+    dispatch(updateTransactionError(error))
   })
 }
 
 export const getMaxSpendable = () => (dispatch: any, getState: any) => {
   const state = getState()
 
-  const parsedUri: AbcParsedUri = state.ui.scenes.sendConfirmation.parsedUri
-
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
-  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
-  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
+  const networkFeeOption = SEND_SELECTORS.getNetworkFeeOption(state)
+  const parsedUri: AbcParsedUri = SEND_SELECTORS.getParsedUri(state)
+  const customNetworkFee = SEND_SELECTORS.getCustomNetworkFee(state)
+  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri, networkFeeOption, customNetworkFee)
 
   return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
     .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
@@ -172,7 +174,11 @@ export const reset = () => ({
   data: {}
 })
 
-const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
+const makeSpendInfo = (
+  parsedUri: AbcParsedUri,
+  networkFeeOption: string,
+  customNetworkFee: any
+): AbcSpendInfo => {
   const nativeAmount = parsedUri.nativeAmount ? parsedUri.nativeAmount : '0'
   const spendTarget:AbcSpendTarget = {
     publicAddress: parsedUri.publicAddress,
@@ -181,7 +187,12 @@ const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
   const spendInfo:AbcSpendInfo = {
     currencyCode: parsedUri.currencyCode,
     metadata: parsedUri.metadata,
-    spendTargets: [spendTarget]
+    spendTargets: [{
+      publicAddress: parsedUri.publicAddress,
+      nativeAmount
+    }],
+    networkFeeOption: networkFeeOption
   }
+  if (customNetworkFee) spendInfo.customNetworkFee = customNetworkFee
   return spendInfo
 }
