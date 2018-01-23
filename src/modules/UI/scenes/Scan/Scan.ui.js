@@ -34,7 +34,6 @@ import * as Constants from '../../../../constants/indexConstants'
 
 type Props = {
   abcWallet: AbcCurrencyWallet,
-  sceneName: string,
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,

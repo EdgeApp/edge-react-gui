@@ -1,18 +1,21 @@
 # Edge Wallet
-## A multicurrency mobile wallet for Bitcoin, Ethereum, Litecoin, and Bitcoin Cash 
+
+## A multicurrency mobile wallet for Bitcoin, Ethereum, Litecoin, and Bitcoin Cash
+
 ![Edge Wallet Screenshots](https://cdn-images-1.medium.com/max/1600/1*xMZMuK0_jGNZNzduvggsdw.png)
 
 Edge Wallet is:
-- simple
-- secure
-- private
-- decentralized
-- multi-currency
-- cross-platform
-- mobile first
-- open source
 
----------------------------------------------------
+* simple
+* secure
+* private
+* decentralized
+* multi-currency
+* cross-platform
+* mobile first
+* open source
+
+---
 
 ## Getting Started
 
@@ -37,7 +40,7 @@ If not, download and unzip the NDK from https://developer.android.com/ndk/index.
 Set `ANDROID_NDK_HOME` environment variable to the path of the NDK. ie
 
     export ANDROID_NDK_HOME=/Users/bob/Library/Android/sdk/ndk-bundle
- 
+
 ### Add API key in env.json
 
 Get an API key from https://developer.airbitz.co by scanning the QR code with your Airbitz wallet (https://airbitz.co/app)
@@ -45,9 +48,9 @@ Copy the env.example.json to env.json and change the `AIRBITZ_API_KEY` to the AP
 
 ### Run the app in debug mode
 
-  `react-native run-ios` or `react-native run-android`
+`react-native run-ios` or `react-native run-android`
 
----------------------------------------------------
+---
 
 ## Deploying
 
@@ -55,7 +58,7 @@ Copy the env.example.json to env.json and change the `AIRBITZ_API_KEY` to the AP
 
     npm run android:release-install
 
----------------------------------------------------
+---
 
 ## Debugging
 
@@ -64,7 +67,9 @@ For debugging, we recommend using React Native Debugger
 ### MacOS
 
 `brew update && brew cask install react-native-debugger`
+
 ##### iOS Simulator
+
     ⌘ + d (command + d)
     Select "Debug JS Remotely"
 
@@ -73,12 +78,10 @@ For debugging, we recommend using React Native Debugger
 https://github.com/jhen0409/react-native-debugger/releases
 
 ###### GenyMotion Android Emulator
+
     ⌘ + m (command + m)
     Select "Debug JS Remotely"
 
 ## Contributing
 
-Please follow the coding conventions defined in [Edge Conventions](https://github.com/Airbitz/edge-conventions
-)
-
-remove this line
+Please follow the coding conventions defined in [Edge Conventions](https://github.com/Airbitz/edge-conventions)
