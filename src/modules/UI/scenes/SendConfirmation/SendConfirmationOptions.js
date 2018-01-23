@@ -3,7 +3,6 @@
 import React, {Component} from 'react'
 import {Text, View} from 'react-native'
 import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-menu'
-import {sprintf} from 'sprintf-js'
 import s from '../../../../locales/strings.js'
 import {border} from '../../../utils'
 import styles from './styles'

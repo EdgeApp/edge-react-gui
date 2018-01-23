@@ -1,9 +1,7 @@
 // @flow
 
 import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux'
-import type { AbcContext, AbcCurrencyWallet, AbcCurrencyInfo, AbcAccount, AbcLobby, AbcTransaction } from 'airbitz-core-types'
-
-import type {GuiWallet} from '../types'
+import type { AbcContext, AbcCurrencyWallet, AbcAccount, AbcLobby, AbcTransaction } from 'airbitz-core-types'
 
 export type Action = { type: string, data?: any }
 
