@@ -18,11 +18,11 @@ export const styles = {
     position: 'absolute',
     top: PLATFORM.deviceHeight * 1 / 8,
     left: PLATFORM.deviceWidth * 1 / 8 - 20,
-    backgroundColor:'transparent'
+    backgroundColor: 'transparent'
   },
   visibleModal: {
     zIndex: 1,
-    paddingVertical: 6,
+    paddingBottom: 14,
     borderRadius: 3,
     backgroundColor: THEME.COLORS.WHITE,
     width: PLATFORM.deviceWidth * 3 / 4

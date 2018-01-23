@@ -36,7 +36,7 @@ export class GuiWallet {
     symbolImage: string,
     symbolImageDarkMono: string,
     metaTokens: Array<AbcMetaToken>,
-    enabledTokens: Array<string>,
+    enabledTokens: Array<string>
   ) {
     this.id = id
     this.type = type
@@ -61,7 +61,7 @@ export type GuiDenomination = {
   currencyCode?: string,
   symbol: string,
   multiplier: string,
-  precision: number
+  precision?: number
 }
 
 export type GuiCurrencyInfo = {
@@ -90,6 +90,38 @@ export type ExchangeData = {
   secondaryDisplayAmount: string,
   secondaryDisplaySymbol: string,
   secondaryCurrencyCode: string
+}
+
+export type CustomTokenInfo = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  multiplier: string,
+  denomination: string, // eventually change to mandatory
+  isVisible?: boolean, // eventually change to mandatory,
+  denominations: Array<AbcDenomination>
+}
+
+export type GuiWalletType = {
+  label: string,
+  value: string,
+  symbolImage?: string,
+  symbolImageDarkMono?: string,
+  currencyCode: string
+}
+
+export type GuiFiatType = {
+  label: string,
+  value: string
+}
+
+export type FlatListItem = {
+  key: number,
+  item: any
+}
+
+export type DeviceDimensions = {
+  keyboardHeight?: number
 }
 
 export type CurrencyConverter = {

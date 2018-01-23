@@ -1,12 +1,15 @@
-//@flow
+// @flow
 
 import React, {Component} from 'react'
+import {View} from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
 import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView'
 import CryptoExchangeConnector
   from '../../../../connectors/components/CryptoExchangeRateConnector'
-import {View} from 'react-native'
 import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
 import CryptoExchangeFlipConnector
   from '../../../../connectors/components/CryptoExchangeFlipConnector'
@@ -16,10 +19,8 @@ import WalletListModal
 import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
 import {IconButton} from '../../components/Buttons/IconButton.ui'
 import {GuiWallet} from '../../../../types'
-// $FlowFixMe
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-type Props ={
+type Props = {
   exchangeRate: number,
   wallets: Array<GuiWallet>,
   intialWalletOne: GuiWallet,
@@ -47,19 +48,62 @@ type Props ={
   shift: Function,
   openConfirmation: Function,
   closeConfirmation: Function
-
 }
-
 type State = {
   whichWallet: string
 }
 export default class CryptoExchangeSceneComponent extends Component<Props, State> {
-
   componentWillMount () {
     this.setState({
       whichWallet: Constants.FROM
     })
+  }
 
+  render () {
+    const style = CryptoExchangeSceneStyle
+    return (
+      <SafeAreaView>
+        <Gradient style={[style.scene]}>
+          <Gradient style={style.gradient} />
+          <KeyboardAwareScrollView
+            style={[style.mainScrollView]}
+            keyboardShouldPersistTaps={Constants.ALWAYS}
+            contentContainerStyle={style.scrollViewContentContainer}
+          >
+            <CryptoExchangeConnector style={style.exchangeRateBanner} />
+            <View style={style.shim} />
+            <CryptoExchangeFlipConnector
+              style={style.flipWrapper}
+              uiWallet={this.props.fromWallet}
+              currencyCode={this.props.fromCurrencyCode}
+              whichWallet={Constants.FROM}
+              launchWalletSelector={this.launchWalletSelector}
+              fee={this.props.fee}
+            />
+            <View style={style.shim} />
+            <IconButton
+              style={style.flipButton}
+              icon={Constants.SWAP_VERT}
+              onPress={this.flipThis}
+            />
+            <View style={style.shim} />
+            <CryptoExchangeFlipConnector
+              style={style.flipWrapper}
+              uiWallet={this.props.toWallet}
+              currencyCode={this.props.toCurrencyCode}
+              whichWallet={Constants.TO}
+              launchWalletSelector={this.launchWalletSelector}
+            />
+            <View style={style.shim} />
+            <View style={style.actionButtonContainer} >
+              {this.renderButton()}
+            </View>
+          </KeyboardAwareScrollView>
+          {this.renderDropUp()}
+          {this.renderConfirmation(style.confirmModal)}
+        </Gradient>
+      </SafeAreaView>
+    )
   }
 
   renderButton = () => {
@@ -92,7 +136,8 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
     }
     return null
   }
-  renderConfirmation = (style: any) => {
+
+  renderConfirmation = (style: Object) => {
     if (this.props.showConfirmShiftModal) {
       return (
         <CryptoExchangeConfirmTransactionModalComponent
@@ -112,50 +157,5 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
       )
     }
     return null
-  }
-
-  render () {
-    const style = CryptoExchangeSceneStyle
-    return (
-      <Gradient style={[style.scene]}>
-        <Gradient style={style.gradient} />
-        <KeyboardAwareScrollView
-          style={[style.mainScrollView]}
-          keyboardShouldPersistTaps={Constants.ALWAYS}
-          contentContainerStyle={style.scrollViewContentContainer}
-        >
-          <CryptoExchangeConnector style={style.exchangeRateBanner} />
-          <View style={style.shim} />
-          <CryptoExchangeFlipConnector
-            style={style.flipWrapper}
-            uiWallet={this.props.fromWallet}
-            currencyCode={this.props.fromCurrencyCode}
-            whichWallet={Constants.FROM}
-            launchWalletSelector={this.launchWalletSelector}
-            fee={this.props.fee}
-          />
-          <View style={style.shim} />
-          <IconButton
-            style={style.flipButton}
-            icon={Constants.SWAP_VERT}
-            onPress={this.flipThis}
-          />
-          <View style={style.shim} />
-          <CryptoExchangeFlipConnector
-            style={style.flipWrapper}
-            uiWallet={this.props.toWallet}
-            currencyCode={this.props.toCurrencyCode}
-            whichWallet={Constants.TO}
-            launchWalletSelector={this.launchWalletSelector}
-          />
-          <View style={style.shim} />
-          <View style={style.actionButtonContainer} >
-            {this.renderButton()}
-          </View>
-        </KeyboardAwareScrollView>
-        {this.renderDropUp()}
-        {this.renderConfirmation(style.confirmModal)}
-      </Gradient>
-    )
   }
 }

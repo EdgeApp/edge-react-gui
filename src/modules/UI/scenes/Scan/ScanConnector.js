@@ -20,13 +20,9 @@ import {toggleWalletListModal} from '../WalletTransferList/action'
 const mapStateToProps = (state: any) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const sceneName:? string = state.routes.scene.children
-    ? state.routes.scene.children[state.routes.scene.index].name
-    : null
 
   return {
     abcWallet,
-    sceneName,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
@@ -46,7 +42,7 @@ const mapDispatchToProps = (dispatch: any) => ({
   updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet)),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   loginWithEdge: (url: string) => {
-    Actions[Constants.EDGE_LOGIN](),
+    Actions[Constants.EDGE_LOGIN]()
     dispatch(loginWithEdge(url))
   }
 })

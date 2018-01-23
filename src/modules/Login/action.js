@@ -1,11 +1,10 @@
 // @flow
-import type {
-  GetState,
-  Dispatch
-} from '../ReduxTypes'
-import {
-  AbcAccount
-} from 'airbitz-core-types'
+
+import {AbcAccount} from 'airbitz-core-types'
+import {Actions} from 'react-native-router-flux'
+
+import type {GetState, Dispatch} from '../ReduxTypes'
+import {displayErrorAlert} from '../UI/components/ErrorAlert/actions'
 
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
@@ -19,17 +18,26 @@ import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import s from '../../locales/strings.js'
-// import * as TX_DETAILS_ACTIONS from '../UI/scenes/TransactionDetails/action.js'
-export const LOGOUT = 'LOGOUT'
+import {updateWalletsRequest} from '../Core/Wallets/action.js'
+import PushNotification from 'react-native-push-notification'
 
-import {Actions} from 'react-native-router-flux'
-
-export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
+  setTimeout(() => {
+    PushNotification.configure({
+      onNotification: (notification) => {
+        console.log('NOTIFICATION:', notification)
+      }
+    })
+  }, 6000)
   // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
   dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
+  // this needs to be refactored into single dispatch
+  dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: account.otpEnabled, otpKey: account.otpKey}))
+  // adding call to determine if we have OTP set up.
+  // console.log(optDetails)
   CONTEXT_API.getCurrencyPlugins(context)
     .then((currencyPlugins) => {
       currencyPlugins.forEach((plugin) => {
@@ -41,20 +49,24 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => (
 
       dispatch(ACCOUNT_ACTIONS.addAccount(account))
       dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
+      // TODO: understand why this fails flow -paulvp
+
       if (ACCOUNT_API.checkForExistingWallets(account)) {
         const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
         dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
         dispatch(loadSettings())
+        // $FlowFixMe
+        dispatch(updateWalletsRequest())
         return
       }
-      // TODO: Allen - Turn on when Bitcoin is turned back on
-      // await dispatch(actions.createCurrencyWallet(s.strings.strings_first_bitcoin_44_wallet_name, Constants.BITCOIN_44_WALLET, Constants.USD_FIAT, false)) //name.. walletType, fiat currency. TODO: get fiat to react to device.
-      dispatch(actions.createCurrencyWallet(
+      dispatch(createCurrencyWallet(
         s.strings.string_first_ethereum_wallet_name,
-        Constants.ETHEREUM_WALLET, Constants.USD_FIAT,
-        false, true
+        Constants.ETHEREUM_WALLET,
+        Constants.USD_FIAT
       ))
       dispatch(loadSettings())
+      // $FlowFixMe
+      dispatch(updateWalletsRequest())
     })
 }
 
@@ -80,18 +92,7 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
           dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
         })
       }
-
-      // dispatch(SETTINGS_ACTIONS.setDenominationKey('REP', syncFinal.REP.denomination))
-      // dispatch(SETTINGS_ACTIONS.setDenominationKey('WINGS', syncFinal.WINGS.denomination))
     })
-    /* SETTINGS_API.getSyncedSubcategories(account)
-    .then(subcategories => {
-      // console.log('subcategories have been loaded and are: ', subcategories)
-      const syncDefaults = SETTINGS_API.SYNCED_SUBCATEGORY_DEFAULTS
-      const syncFinal = Object.assign({}, syncDefaults, subcategories)
-      // console.log('in loadSettings, syncFinal.subcategories is: ' , syncFinal.subcategories)
-      dispatch(TX_DETAILS_ACTIONS.setSubcategories(syncFinal.subcategories))
-    }) */
 
   SETTINGS_API.getLocalSettings(account)
     .then((settings) => {
@@ -113,19 +114,50 @@ const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
-  Actions.popTo(Constants.LOGIN, {username})
+  /* Actions.popTo(Constants.LOGIN, {username})
 
   const state = getState()
   dispatch(SETTINGS_ACTIONS.setLoginStatus(false))
 
   const account = CORE_SELECTORS.getAccount(state)
-  ACCOUNT_API.logoutRequest(account)
-   .then(() => {
-     dispatch(logout(username))
-   })
+  dispatch(logout(username))
+  ACCOUNT_API.logoutRequest(account) */
+  Actions.popTo(Constants.LOGIN, {username})
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  dispatch(logout(username))
+  account.logout()
+}
+export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  const username = account.username
+  Actions.popTo(Constants.LOGIN, {username})
+  dispatch(actions.dispatchActionString(Constants.DEEP_LINK_RECEIVED, backupKey))
+  // dispatch(logout(Constants.DEEP_LINK_RECEIVED))
+  account.logout()
 }
 
 export const logout = (username?: string) => ({
-  type: LOGOUT,
+  type: Constants.LOGOUT,
   data: {username}
 })
+
+const createCurrencyWallet = (
+  walletName: string,
+  walletType: string,
+  fiatCurrencyCode: string
+) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const account = CORE_SELECTORS.getAccount(state)
+  dispatch(WALLET_ACTIONS.createWalletStart())
+
+  return ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {name: walletName, fiatCurrencyCode})
+  .then((abcWallet) => {
+    dispatch(WALLET_ACTIONS.createWalletSuccess())
+    dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
+  })
+  .catch((error) => {
+    dispatch(displayErrorAlert(error.message))
+  })
+}

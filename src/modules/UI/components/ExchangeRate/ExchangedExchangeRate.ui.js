@@ -13,7 +13,6 @@ type Props = {
 }
 
 export default class ExchangedExchangeRate extends Component<Props> {
-
   getSecondaryDisplayAmount () {
     const {
       secondaryToPrimaryRatio,
@@ -22,10 +21,10 @@ export default class ExchangedExchangeRate extends Component<Props> {
     if (!secondaryToPrimaryRatio || Object.keys(primaryInfo).length === 0) { return '0' }
 
     const secondaryDisplayAmount = (
-      parseFloat(1)
-      * parseFloat(this.props.secondaryToPrimaryRatio)
-      * parseFloat(this.props.primaryInfo.displayDenomination.multiplier)
-      / parseFloat(this.props.primaryInfo.exchangeDenomination.multiplier)
+      parseFloat(1) *
+      parseFloat(this.props.secondaryToPrimaryRatio) *
+      parseFloat(this.props.primaryInfo.displayDenomination.multiplier) /
+      parseFloat(this.props.primaryInfo.exchangeDenomination.multiplier)
     ).toString()
 
     return secondaryDisplayAmount

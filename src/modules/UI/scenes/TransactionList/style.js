@@ -132,7 +132,7 @@ export const styles = {
     marginLeft: 8,
     marginRight: 2,
     flexDirection: 'row',
-    borderColor: THEME.COLORS.GRAY_4,
+    borderColor: THEME.COLORS.GRAY_4
     // borderWidth: 0.1,
   },
   requestWrap: {
@@ -154,7 +154,7 @@ export const styles = {
     marginLeft: 2,
     marginRight: 8,
     flexDirection: 'row',
-    borderColor: THEME.COLORS.GRAY_4,
+    borderColor: THEME.COLORS.GRAY_4
     // borderWidth: 0.1,
   },
   sendWrap: {
@@ -199,12 +199,12 @@ export const styles = {
     borderBottomColor: THEME.COLORS.GRAY_3,
     padding: 10,
     paddingRight: 30,
-    paddingLeft: 15,
+    paddingLeft: 15
   },
   singleTransactionWrap: {
     backgroundColor: THEME.COLORS.WHITE,
     flexDirection: 'column',
-    flex: 1,
+    flex: 1
   },
   singleDateArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
@@ -263,7 +263,7 @@ export const styles = {
     top: 4
   },
   transactionTime: {
-    color: THEME.COLORS.GRAY_1,
+    color: THEME.COLORS.GRAY_1
   },
   transactionPending: {
     color: THEME.COLORS.ACCENT_RED
@@ -286,6 +286,9 @@ export const styles = {
   },
   transactionUnderlay: {
     color: THEME.COLORS.ROW_PRESSED
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   }
 }
 

@@ -22,7 +22,7 @@ export default class AutoLogoutModal extends Component {
     const {value, measurement} = UTILS.getTimeWithMeasurement(this.props.autoLogoutTimeInMinutes)
     this.state = {
       timeNumber: value,
-      timeMeasurement: measurement,
+      timeMeasurement: measurement
     }
   }
 
@@ -39,14 +39,14 @@ export default class AutoLogoutModal extends Component {
 
   render () {
     const logoutNumberOptions = [{label: DISABLE_TEXT, value: Infinity}]
-    for (let i = 1; i < 60; i ++) {
+    for (let i = 1; i < 60; i++) {
       logoutNumberOptions.push({label: String(i), value: i})
     }
     const logoutPeriodOptions = [
       {label: SECONDS_TEXT, value: 'seconds'},
       {label: MINUTEST_TEXT, value: 'minutes'},
       {label: HOURS_TEXT, value: 'hours'},
-      {label: DAYS_TEXT, value: 'days'},
+      {label: DAYS_TEXT, value: 'days'}
     ]
 
     const numberPickerOptions = logoutNumberOptions.map((option) =>
@@ -71,13 +71,13 @@ export default class AutoLogoutModal extends Component {
       {measurementPickerOptions}
     </Picker>
 
-    const modalMiddle = <View style={{flexDirection:'row'}}>
+    const modalMiddle = <View style={{flexDirection: 'row'}}>
       {numberPicker}
       {measurementPicker}
     </View>
 
     const modalBottom = <ModalButtons
-      onDone={() => this.onDone({timeMeasurement: this.state.timeMeasurement, timeNumber: this.state.timeNumber })}
+      onDone={() => this.onDone({ timeMeasurement: this.state.timeMeasurement, timeNumber: this.state.timeNumber })}
       onCancel={this.onCancel} />
 
     const icon = <IonIcon name='ios-time-outline' size={24}
@@ -86,7 +86,7 @@ export default class AutoLogoutModal extends Component {
     return <StylizedModal
       visibilityBoolean={this.props.showModal}
       featuredIcon={icon}
-      headerText={'dialog_title'}
+      headerText={s.strings.dialog_title}
       modalMiddle={modalMiddle}
       modalBottom={modalBottom}
       onExitButtonFxn={this.onCancel}

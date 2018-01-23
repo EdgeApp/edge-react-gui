@@ -59,6 +59,15 @@ export const getDisplayDenominationFromSettings = (settings: any, currencyCode: 
   return selectedDenomination
 }
 
+export const getDisplayDenominationFull = (state: State, currencyCode: string) => {
+  const settings = state.ui.settings
+  const currencySettings = settings[currencyCode]
+  const selectedDenominationKey = currencySettings.denomination
+  const denominations = currencySettings.denominations
+  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
+  return selectedDenomination
+}
+
 export const getDisplayDenomination = (state: State, currencyCode: string) => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
@@ -70,6 +79,11 @@ export const getExchangeDenomination = (state: State, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
   const exchangeDenomination = denominations.find((denomination) => denomination.name === currencyCode)
   return exchangeDenomination
+}
+
+export const getCustomTokens = (state: State) => {
+  const settings = getSettings(state)
+  return settings.customTokens
 }
 
 export const getPlugins = (state: State) => {
@@ -102,16 +116,25 @@ export const getSupportedWalletTypes = (state: State) => {
     if (plugin.currencyInfo.pluginName === 'bitcoin') {
       supportedWalletTypes.push({
         label: 'Bitcoin (Segwit)',
-        value: 'wallet:bitcoin-bip49'
+        value: 'wallet:bitcoin-bip49',
+        symbolImage: plugin.currencyInfo.symbolImage,
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
       supportedWalletTypes.push({
         label: 'Bitcoin',
-        value: 'wallet:bitcoin-bip44'
+        value: 'wallet:bitcoin-bip44',
+        symbolImage: plugin.currencyInfo.symbolImage,
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
     } else {
       supportedWalletTypes.push({
         label: plugin.currencyInfo.currencyName,
-        value: plugin.currencyInfo.walletTypes[0]
+        value: plugin.currencyInfo.walletTypes[0],
+        symbolImage: plugin.currencyInfo.symbolImage,
+        symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
+        currencyCode: plugin.currencyInfo.currencyCode
       })
     }
   }
@@ -139,4 +162,15 @@ export const getDefaultFiat = (state: State) => {
   const settings = getSettings(state)
   const defaultFiat: string = settings.defaultFiat
   return defaultFiat
+}
+
+export const getIsOtpEnabled = (state: State) => {
+  const settings = getSettings(state)
+  const enabled: boolean = settings.isOtpEnabled
+  return enabled
+}
+export const getOtpKey = (state: State) => {
+  const settings = getSettings(state)
+  const otpKey: string = settings.otpKey
+  return otpKey
 }

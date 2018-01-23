@@ -6,62 +6,36 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Animated,
-  FlatList
+  FlatList,
+  Image
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import styles from './style'
 import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
+import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import s from '../../../../locales/strings.js'
-
-import StylizedModal from '../../components/Modal/Modal.ui'
+import {intl} from '../../../../locales/intl'
+import * as Constants from '../../../../constants/indexConstants.js'
 import * as UTILS from '../../../utils'
 
-import DeleteWalletSubtext from './components/DeleteWalletSubtextConnector'
-import DeleteWalletButtons from './components/DeleteWalletButtonsConnector'
-import WalletNameInput from './components/WalletNameInputConnector'
-import RenameWalletButtons from './components/RenameWalletButtonsConnector'
-import DeleteIcon from './components/DeleteIcon.ui'
-import RenameIcon from './components/RenameIcon.ui'
+import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import platform from '../../../../theme/variables/platform.js'
 
 import type {GuiContact} from '../../../../types'
 
-const DONE_TEXT           = s.strings.string_done_cap
+const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
-const ARCHIVED_TEXT       = s.strings.fragmet_wallets_list_archive_title_capitalized
-const SHOW_BALANCE_TEXT   = s.strings.string_show_balance
-const BALANCE_TEXT        = s.strings.fragment_wallets_balance_text
-const RENAME_WALLET_TEXT  = s.strings.fragment_wallets_rename_wallet
-const RENAME_TEXT         = s.strings.string_rename
-const SORT_TEXT           = s.strings.fragment_wallets_sort
-const DELETE_TEXT         = s.strings.string_delete
-const MANAGE_TOKENS_TEXT  = s.strings.fragmet_wallets_managetokens_option
-
-const options = [
-  {
-    value: 'rename',
-    syntax: RENAME_TEXT
-  },{
-    value: 'sort',
-    syntax: SORT_TEXT
-  },{
-    value: 'delete',
-    syntax: DELETE_TEXT
-  },{
-    value: 'manageTokens',
-    syntax: MANAGE_TOKENS_TEXT
-  },{
-    value: 'archive'
-  }
-]
+const ARCHIVED_TEXT = s.strings.fragmet_wallets_list_archive_title_capitalized
+const SHOW_BALANCE_TEXT = s.strings.string_show_balance
+const BALANCE_TEXT = s.strings.fragment_wallets_balance_text
 
 type State = {
   sortableMode: boolean,
@@ -77,21 +51,18 @@ type Props = {
   activeWalletIds: Array<string>,
   currencyConverter: any,
   customTokens: Array<any>,
-  deleteWalletModalVisible: boolean,
   dimensions: any,
-  renameWalletModalVisible: boolean,
   settings: any,
   walletId: string,
   walletName: string,
   wallets: any,
-  closeDeleteWalletModal: () => void,
-  closeRenameWalletModal: () => void,
-  renameWalletInput: () => void,
+  renameWalletInput: string,
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, string) => void,
+  walletRowOption: (walletId: string, string, boolean) => void,
 }
+
 export default class WalletList extends Component<Props, State> {
   constructor (props: any) {
     super(props)
@@ -123,32 +94,13 @@ export default class WalletList extends Component<Props, State> {
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
-    switch (option) {
-    case options[0].value: // 'rename'
-      // console.log('executing rename')
-      this.props.walletRowOption(walletId, 'rename')
-      break
-    case options[1].value: // 'sort'
-      if (this.state.sortableMode) {
-        this.disableSorting()
-      } else {
-        this.enableSorting()
-      }
-      break
-    case options[2].value: // 'delete
-      this.props.walletRowOption(walletId, 'delete')
-      break
-    case options[3].value: // 'manageTokens'
-      console.log('executing option 2')
-      Actions.manageTokens({guiWallet: this.props.wallets[walletId]})
-      break
-    case options[4].value: // 'archive'
-      if (!this.props.wallets[walletId].archived) {
-        this.props.walletRowOption(walletId, 'archive')
-      } else {
-        this.props.walletRowOption(walletId, 'activate')
-      }
-      break
+    if (option !== 'sort') {
+      return this.props.walletRowOption(walletId, option, this.props.wallets[walletId].archived)
+    }
+    if (this.state.sortableMode) {
+      this.disableSorting()
+    } else {
+      this.enableSorting()
     }
   }
 
@@ -158,38 +110,38 @@ export default class WalletList extends Component<Props, State> {
       activeWalletIds,
       settings
     } = this.props
-    let walletsArray = []
-    let activeWallets = {}
-    for (let wallet in wallets) {
-      let theWallet = wallets[wallet]
+    const walletsArray = []
+    const activeWallets = {}
+    for (const wallet in wallets) {
+      const theWallet = wallets[wallet]
       theWallet.key = wallet
       theWallet.executeWalletRowOption = this.executeWalletRowOption
       walletsArray.push(theWallet)
       if (activeWalletIds.includes(wallet)) activeWallets[wallet] = wallets[wallet]
     }
 
-    let activeWalletsArray = activeWalletIds.map(function (x) {
-      let tempWalletObj = {key: x}
+    const activeWalletsArray = activeWalletIds.map(function (x) {
+      const tempWalletObj = {key: x}
       return wallets[x] || tempWalletObj
     })
 
-    let activeWalletsObject = {}
+    const activeWalletsObject = {}
     activeWalletIds.forEach(function (x) {
-      let tempWalletObj = wallets[x] ? wallets[x] : {key: null}
+      const tempWalletObj = wallets[x] ? wallets[x] : {key: null}
       activeWalletsObject[x] = tempWalletObj
     })
     let fiatBalanceString
-    let fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
+    const fiatSymbol = settings.defaultFiat ? UTILS.getFiatSymbol(settings.defaultFiat) : ''
     if (fiatSymbol.length !== 1) {
-      fiatBalanceString =  this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
+      fiatBalanceString = this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
     } else {
       fiatBalanceString = fiatSymbol + ' ' + this.tallyUpTotalCrypto() + ' ' + settings.defaultFiat
     }
 
     return (
+      <SafeAreaView>
       <View style={styles.container}>
-        {this.renderDeleteWalletModal()}
-        {this.renderRenameWalletModal()}
+        <WalletOptions />
         <Gradient style={styles.gradient} />
 
         <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
@@ -203,7 +155,7 @@ export default class WalletList extends Component<Props, State> {
 
             <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
               <View style={styles.leftArea}>
-                <SimpleLineIcons name='wallet' style={[styles.walletIcon]} color='white' />
+                <Image source={WalletIcon} style={[styles.walletIcon]} />
                 <T style={styles.walletsBoxHeaderText}>
                   {WALLETS_HEADER_TEXT}
                 </T>
@@ -241,7 +193,7 @@ export default class WalletList extends Component<Props, State> {
                   styles.walletsBoxHeaderAddWallet,
                   {width: 41}
                 ]}
-                  onPress={Actions.createWallet}>
+                  onPress={Actions[Constants.CREATE_WALLET_NAME]}>
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
@@ -255,6 +207,7 @@ export default class WalletList extends Component<Props, State> {
 
         </View>
       </View>
+    </SafeAreaView>
     )
   }
 
@@ -282,9 +235,10 @@ export default class WalletList extends Component<Props, State> {
             style={{flex: 1, width}}
             data={activeWalletsArray}
             extraData={this.props.wallets}
-            renderItem={(item) => <FullWalletListRow data={item} customTokens={this.props.customTokens} />}
+            renderItem={(item) => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}
             sortableMode={this.state.sortableMode}
             executeWalletRowOption={this.executeWalletRowOption}
+            settings={this.props.settings}
           />
         </Animated.View>
         )}
@@ -294,10 +248,10 @@ export default class WalletList extends Component<Props, State> {
 
   enableSorting = () => {
     // start animation, use callback to setState, then setState's callback to execute 2nd animation
-    let sortableToOpacity = 1
-    let sortableListToZIndex = 100
-    let fullListToOpacity = 0
-    let fullListToZIndex = 0
+    const sortableToOpacity = 1
+    const sortableListToZIndex = 100
+    const fullListToOpacity = 0
+    const fullListToZIndex = 0
 
     this.setState({sortableListExists: true}, () => {
       Animated.parallel([
@@ -338,10 +292,10 @@ export default class WalletList extends Component<Props, State> {
   }
 
   disableSorting = () => {
-    let sortableToOpacity = 0
-    let sortableListToZIndex = 0
-    let fullListToOpacity = 1
-    let fullListToZIndex = 100
+    const sortableToOpacity = 0
+    const sortableListToZIndex = 0
+    const fullListToOpacity = 1
+    const fullListToZIndex = 100
 
     this.setState({fullListExists: true}, () => {
       Animated.parallel([
@@ -397,7 +351,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   sortActiveWallets = (wallets: any) => {
-    let activeOrdered = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
+    const activeOrdered = Object.keys(wallets).filter((key) => !wallets[key].archived) // filter out archived wallets
     .sort((a, b) => {
       if (wallets[a].sortIndex === wallets[b].sortIndex) {
         return -1
@@ -434,24 +388,6 @@ export default class WalletList extends Component<Props, State> {
     return newOrder
   }
 
-  renderDeleteWalletModal = () => <StylizedModal
-    featuredIcon={<DeleteIcon />}
-    headerText={s.strings.fragment_wallets_delete_wallet}
-    modalMiddle={<DeleteWalletSubtext />}
-    modalBottom={<DeleteWalletButtons walletId={this.props.walletId} />}
-    visibilityBoolean={this.props.deleteWalletModalVisible}
-    onExitButtonFxn={this.props.closeDeleteWalletModal}
-    />
-
-  renderRenameWalletModal = () => <StylizedModal
-    featuredIcon={<RenameIcon />}
-    headerText={s.strings.fragment_wallets_rename_wallet}
-    modalMiddle={<WalletNameInput label={RENAME_WALLET_TEXT} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
-    modalBottom={<RenameWalletButtons walletName={this.props.walletName} walletId={this.props.walletId} />}
-    visibilityBoolean={this.props.renameWalletModalVisible}
-    onExitButtonFxn={this.props.closeRenameWalletModal}
-    />
-
   tallyUpTotalCrypto = () => {
     const temporaryTotalCrypto = {}
     for (const parentProp in this.props.wallets) {
@@ -476,17 +412,17 @@ export default class WalletList extends Component<Props, State> {
         }
       }
     }
-    let totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
+    const totalBalance = this.calculateTotalBalance(temporaryTotalCrypto)
     return totalBalance
   }
 
   calculateTotalBalance = (values: any) => {
     let total = 0
-    for (let currency in values) {
-      let addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
+    for (const currency in values) {
+      const addValue = this.props.currencyConverter.convertCurrency(currency, 'iso:' + this.props.settings.defaultFiat, values[currency])
       total = total + addValue
     }
-    return total.toFixed(2)
+    return intl.formatNumber(total, {toFixed: 2})
   }
 
   handleOnBalanceBoxPress = () => this.setState({balanceBoxVisible: !this.state.balanceBoxVisible})

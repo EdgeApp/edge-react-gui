@@ -11,7 +11,9 @@ import {initializeAccount} from '../../../Login/action'
 
 const mapStateToProps = (state: State) => ({
   context: CORE_SELECTORS.getContext(state),
-  username: CORE_SELECTORS.getNextUsername(state)
+  account: CORE_SELECTORS.getAccount(state),
+  username: CORE_SELECTORS.getNextUsername(state),
+  recoveryLogin: state.core.deepLinking.passwordRecoveryLink
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatch,

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
 
 export default class KeyboardButton extends Component {
   render () {
-    const {character, onPress, onLongPress}= this.props
+    const {character, onPress, onLongPress} = this.props
     return <View style={styles.view}>
       <TouchableHighlight
         style={styles.containerStyle}

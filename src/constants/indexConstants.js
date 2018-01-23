@@ -1,3 +1,5 @@
+// @flow
+
 export * from './SceneKeys'
 export * from './ActionConstants'
 export * from './IconConstants'
@@ -9,10 +11,11 @@ export * from './ErrorConstants'
 
 export const LEFT_TO_RIGHT = 'leftToRight'
 export const RIGHT_TO_LEFT = 'rightToLeft'
-export const NONE ='none'
-export const FROM ='from'
-export const TO ='to'
-export const ALWAYS ='always'
+export const NONE = 'none'
+export const FROM = 'from'
+export const TO = 'to'
+export const ALWAYS = 'always'
+export const LOGOUT = 'LOGOUT'
 
-
-export const CRYPTO_EXCHANGE ='cryptoExchange'
+export const CRYPTO_EXCHANGE = 'cryptoExchange'
+export const PASSWORD_RECOVERY_LINK = 'passwordRecoveryLink'

@@ -30,7 +30,7 @@ export const styles = {
   primaryUnderlay: {
     color: THEME.COLORS.PRIMARY
   },
-  primaryButton: {
+  primaryButtonText: {
     color: THEME.COLORS.GRADIENT.LIGHT
   },
 
@@ -38,7 +38,7 @@ export const styles = {
     backgroundColor: THEME.COLORS.GRAY_2,
     alignSelf: 'flex-start'
   },
-  secondaryButton: {
+  secondaryButtonText: {
     color: THEME.COLORS.GRADIENT.LIGHT
   },
   secondaryUnderlay: {
@@ -50,9 +50,8 @@ export const styles = {
     borderWidth: 1,
     borderColor: THEME.COLORS.SECONDARY
   },
-  tertiaryButton: {
-    color: THEME.COLORS.SECONDARY,
-    paddingHorizontal: 10
+  tertiaryButtonText: {
+    color: THEME.COLORS.SECONDARY
   },
   tertiaryUnderlay: {
     color: THEME.COLORS.GRAY_3

@@ -1,38 +1,37 @@
+// @flow
+
 import React, {Component} from 'react'
 import * as Constants from '../../../../../../constants/indexConstants'
 import s from '../../../../../../locales/strings.js'
 import MenuDropDown from '../../../../components/MenuDropDown/MenuDropDown.ui'
 import {MenuDropDownStyle} from '../../../../../../styles/indexStyles'
-export const options = [
-  {
-    value: Constants.RENAME_VALUE,
-    label: s.strings.string_rename
-  },{
-    value: Constants.SORT_VALUE,
-    label: s.strings.fragment_wallets_sort
-  },{
-    value: Constants.DELETE_VALUE,
-    label: s.strings.string_delete
-  },{
-    value: Constants.MANAGE_TOKENS_VALUE,
-    label: s.strings.fragmet_wallets_managetokens_option
-  }
-]
 
-export default class WalletListRowOptions extends Component {
-  constructor (props) {
+type Props = {
+  walletKey: string,
+  executeWalletRowOption: (walletKey: string, option: string) => void
+}
+type State = {}
+export default class WalletListRowOptions extends Component<Props, State> {
+  options: Array<{value: string, label: string}>
+  constructor (props: Props) {
     super(props)
     this.state = {
-      archiveSyntax: s.strings['fragmet_wallets_list_'
-      + (this.props.archived
-        ? 'restore'
-        : 'archive')
-        + '_title_capitalized']
+      archiveSyntax: s.strings['fragmet_wallets_list_' + (this.props.archived ? 'restore' : 'archive') + '_title_capitalized']
     }
-    this.options = (this.props.currencyCode === 'ETH') ? options : options.slice(0, -1)
+    this.options = []
+    for (const walletOption in Constants.WALLET_OPTIONS) {
+      const option = Constants.WALLET_OPTIONS[walletOption]
+      if (!option.currencyCode || this.props.currencyCode === option.currencyCode) {
+        const temp = {
+          value: option.value,
+          label: option.label
+        }
+        this.options.push(temp)
+      }
+    }
   }
 
-  optionAction = (optionKey) => {
+  optionAction = (optionKey: string) => {
     this.props.executeWalletRowOption(this.props.walletKey, optionKey)
   }
 

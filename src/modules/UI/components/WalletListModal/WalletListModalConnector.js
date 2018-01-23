@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import WalletListModal from './WalletListModal.ui'
 
 const mapStateToProps = (state: any, ownProps: any) => {
-  const topDisplacement = ownProps.topDisplacement ? ownProps.topDisplacement: 68
+  const topDisplacement = ownProps.topDisplacement ? ownProps.topDisplacement : 68
   const whichWallet = ownProps.whichWallet ? ownProps.whichWallet : null
   return {
     type: ownProps.type,

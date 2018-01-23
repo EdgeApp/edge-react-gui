@@ -1,16 +1,24 @@
 // @flow
 import type {Dispatch} from './ReduxTypes'
-
+import * as Constants from '../constants/indexConstants.js'
 import {connect} from 'react-redux'
 import Main from './Main.ui'
 
-import {addExchangeTimer} from  './UI/Settings/action'
+import {
+  addExchangeTimer,
+  addCurrencyPlugin
+} from './UI/Settings/action'
 import {setKeyboardHeight} from './UI/dimensions/action'
-import {addContext} from './Core/Context/action.js'
-import {addCurrencyPlugin} from './UI/Settings/action.js'
-import {addUsernames} from './Core/Context/action'
+import {
+  addContext,
+  addUsernames
+} from './Core/Context/action.js'
 import {setLocaleInfo} from './UI/locale/action'
-import {enableScan, disableScan} from './UI/scenes/Scan/action'
+import {
+  enableScan,
+  disableScan
+} from './UI/scenes/Scan/action'
+import * as actions from '../actions/indexActions'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
@@ -40,6 +48,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   setLocaleInfo: (localeInfo) => {
     return dispatch(setLocaleInfo(localeInfo))
+  },
+  urlRecived: (backupKey) => {
+    return dispatch(actions.deepLinkLogout(backupKey))
   },
   contextCallbacks: makeContextCallbacks(dispatch)
 })

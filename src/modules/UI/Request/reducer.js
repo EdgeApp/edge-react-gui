@@ -43,34 +43,34 @@ export const request = (state: RequestState = initialState, action: Action): Req
   }
 
   switch (action.type) {
-  case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS:
-    receiveAddress = action.data.receiveAddress
-    return {
-      ...state,
-      receiveAddress
-    }
-  case 'UPDATE_AMOUNT_REQUESTED_IN_CRYPTO':
-    amountSatoshi = action.data.amountSatoshi
-    return {
-      ...state,
-      receiveAddress: {
-        ...state.receiveAddress,
-        amountSatoshi
+    case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS:
+      receiveAddress = action.data.receiveAddress
+      return {
+        ...state,
+        receiveAddress
       }
-    }
-  case 'UPDATE_AMOUNT_REQUESTED_IN_FIAT':
-    amountFiat = action.data.amountFiat
-    return {
-      ...state,
-      receiveAddress: {
-        ...state.receiveAddress,
-        metadata: {
-          ...state.receiveAddress.metadata,
-          amountFiat
+    case 'UPDATE_AMOUNT_REQUESTED_IN_CRYPTO':
+      amountSatoshi = action.data.amountSatoshi
+      return {
+        ...state,
+        receiveAddress: {
+          ...state.receiveAddress,
+          amountSatoshi
         }
       }
-    }
-  default:
-    return state
+    case 'UPDATE_AMOUNT_REQUESTED_IN_FIAT':
+      amountFiat = action.data.amountFiat
+      return {
+        ...state,
+        receiveAddress: {
+          ...state.receiveAddress,
+          metadata: {
+            ...state.receiveAddress.metadata,
+            amountFiat
+          }
+        }
+      }
+    default:
+      return state
   }
 }

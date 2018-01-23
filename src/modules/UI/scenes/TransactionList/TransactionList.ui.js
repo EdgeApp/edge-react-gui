@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import s from '../../../../locales/strings.js'
+import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   ActivityIndicator,
@@ -13,6 +14,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
@@ -27,7 +29,7 @@ import sentTypeImage from '../../../../assets/images/transactions/transaction-ty
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
 import platform from '../../../../theme/variables/platform.js'
 
-//import SearchBar from './components/SearchBar.ui'
+// import SearchBar from './components/SearchBar.ui'
 
 import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
 import type {GuiWallet} from '../../../../types'
@@ -70,11 +72,11 @@ type State = {
 type TransactionListTx = any
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
-const REQUEST_TEXT      = s.strings.fragment_request_subtitle
-const SEND_TEXT         = s.strings.fragment_send_subtitle
-const SENT_TEXT         = s.strings.fragment_transaction_list_sent_prefix
-const RECEIVED_TEXT     = s.strings.fragment_transaction_list_receive_prefix
-const UNCONFIRMED_TEXT  = s.strings.fragment_wallet_unconfirmed
+const REQUEST_TEXT = s.strings.fragment_request_subtitle
+const SEND_TEXT = s.strings.fragment_send_subtitle
+const SENT_TEXT = s.strings.fragment_transaction_list_sent_prefix
+const RECEIVED_TEXT = s.strings.fragment_transaction_list_receive_prefix
+const UNCONFIRMED_TEXT = s.strings.fragment_wallet_unconfirmed
 
 export default class TransactionList extends Component<Props, State> {
   state = {
@@ -122,7 +124,7 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   _onPressSearch = () => {
-    //this.props.transactionsSearchVisible()
+    // this.props.transactionsSearchVisible()
   }
 
   _onSearchExit = () => {
@@ -155,10 +157,10 @@ export default class TransactionList extends Component<Props, State> {
       Animated.parallel([
         Animated.sequence([
           Animated.timing(this.state.op, {toValue: toOpacity, duration: 200}),
-          Animated.timing(this.state.animation,{toValue: toWidth, duration: 200})
+          Animated.timing(this.state.animation, {toValue: toWidth, duration: 200})
         ]),
-        Animated.sequence([Animated.timing(this.state.balanceBoxHeight,{toValue: toBalanceBoxHeight,duration: 400}),
-          Animated.timing(this.state.balanceBoxOpacity,{toValue: toBalanceBoxOpacity, duration: 400})
+        Animated.sequence([Animated.timing(this.state.balanceBoxHeight, {toValue: toBalanceBoxHeight, duration: 400}),
+          Animated.timing(this.state.balanceBoxOpacity, {toValue: toBalanceBoxOpacity, duration: 400})
         ])
       ]).start()
     } else {
@@ -169,14 +171,14 @@ export default class TransactionList extends Component<Props, State> {
 
       Animated.parallel([
         Animated.sequence([
-          Animated.timing(this.state.animation,{toValue: toWidth, duration: 200}),
+          Animated.timing(this.state.animation, {toValue: toWidth, duration: 200}),
           Animated.timing(this.state.op, {toValue: toOpacity, duration: 200})
         ]),
         Animated.sequence([
           Animated.sequence([
             Animated.timing(this.state.balanceBoxOpacity, {toValue: toBalanceBoxOpacity, duration: 400})
           ]),
-          Animated.timing(this.state.balanceBoxHeight,{toValue: toBalanceBoxHeight, duration: 400})
+          Animated.timing(this.state.balanceBoxHeight, {toValue: toBalanceBoxHeight, duration: 400})
         ])
       ]).start(() => this.setState({balanceBoxVisible: false}))
     }
@@ -217,35 +219,32 @@ export default class TransactionList extends Component<Props, State> {
       return <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'large'}/>
     }
 
-    // console.log('about to render txList, this is: ', this)
-    let cryptoBalanceString
-    let cryptoAmountString
-    let renderableTransactionList = transactions.sort(function (a: any, b: any) {
+    const renderableTransactionList = transactions.sort(function (a: any, b: any) {
       a = new Date(a.date)
       b = new Date(b.date)
       return a > b ? -1 : a < b ? 1 : 0
     })
 
-    let completedTxList = renderableTransactionList.map((x, i) => {
-      let newValue: TransactionListTx = x
+    const completedTxList = renderableTransactionList.map((x, i) => {
+      const newValue: TransactionListTx = x
       newValue.key = i
       newValue.multiplier = multiplier
-      let txDate = new Date(x.date * 1000)
+      const txDate = new Date(x.date * 1000)
 
       // let time = formatAMPM(txDate)
       // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
-      let dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
-      let time = txDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric'})
+      const dateString = txDate.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
+      const time = txDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric'})
       newValue.dateString = dateString
       newValue.time = time
       return newValue
     })
-    let ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
-    let dataSrc = ds.cloneWithRows(completedTxList)
+    const ds = new ListView.DataSource({rowHasChanged: (row1, row2) => row1 !== row2})
+    const dataSrc = ds.cloneWithRows(completedTxList)
     let logo
 
     if (uiWallet.currencyCode !== selectedCurrencyCode) {
-      for (let metatoken of uiWallet.metaTokens) {
+      for (const metatoken of uiWallet.metaTokens) {
         if (metatoken.currencyCode === selectedCurrencyCode) {
           logo = metatoken.symbolImage
         }
@@ -255,122 +254,136 @@ export default class TransactionList extends Component<Props, State> {
     }
 
     const cryptoAmount:string = UTILS.convertNativeToDisplay(displayDenomination.multiplier)(balanceInCrypto) // convert to correct denomination
-    cryptoAmountString = cryptoAmount ? UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
+    const cryptoAmountString = cryptoAmount ? intl.formatNumber(UTILS.decimalOrZero(bns.toFixed(cryptoAmount, 0, 6), 6)) : '0' // limit decimals and check if infitesimal, also cut off trailing zeroes (to right of significant figures)
 
-    if (displayDenomination.symbol) {
-      cryptoBalanceString = displayDenomination.symbol + ' ' + cryptoAmountString
-    } else {
-      cryptoBalanceString = cryptoAmountString + ' ' + selectedCurrencyCode
-    }
     // beginning of fiat balance
     let fiatBalanceString
-    let receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
+    const receivedFiatSymbol = fiatSymbol ? UTILS.getFiatSymbol(isoFiatCurrencyCode) : ''
     if (receivedFiatSymbol.length !== 1) {
-      fiatBalanceString =  (balanceInFiat ? balanceInFiat.toFixed(2) : '0.00') + ' ' + fiatCurrencyCode
+      fiatBalanceString = intl.formatNumber(balanceInFiat || 0, {toFixed: 2}) + ' ' + fiatCurrencyCode
     } else {
-      fiatBalanceString = receivedFiatSymbol + ' ' + (balanceInFiat ? balanceInFiat.toFixed(2) : (0.00).toFixed(2)) + ' ' + fiatCurrencyCode
+      fiatBalanceString = receivedFiatSymbol + ' ' + intl.formatNumber(balanceInFiat || 0, {toFixed: 2}) + ' ' + fiatCurrencyCode
     }
     // end of fiat balance
 
     return (
-      <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
-        <Gradient style={styles.gradient} />
-        <ScrollView style={[UTILS.border(), styles.scrollView]}>
-          <View style={[styles.container, UTILS.border()]}>
-            <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
-              <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
-                {this.state.balanceBoxVisible
-                && <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
-                  {updatingBalance ? (
-                    <View style={[styles.currentBalanceWrap]}>
-                      <View style={[styles.updatingBalanceWrap]}>
-                        <ActivityIndicator
-                          animating={updatingBalance}
-                          style={[styles.updatingBalance, {height: 40}]}
-                          size='small' />
+      <SafeAreaView>
+        <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
+          <Gradient style={styles.gradient} />
+          <ScrollView style={[UTILS.border(), styles.scrollView]}>
+            <View style={[styles.container, UTILS.border()]}>
+              <Animated.View style={[{height: this.state.balanceBoxHeight}, UTILS.border()]}>
+                <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
+                  {this.state.balanceBoxVisible &&
+                  <Animated.View style={{flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity}}>
+                    {updatingBalance ? (
+                      <View style={[styles.currentBalanceWrap]}>
+                        <View style={[styles.updatingBalanceWrap]}>
+                          <ActivityIndicator
+                            animating={updatingBalance}
+                            style={[styles.updatingBalance, {height: 40}]}
+                            size='small' />
+                        </View>
                       </View>
+                        ) : (
+                          <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, UTILS.border()]}>
+                            {this.state.showBalance ? (
+                              <View style={styles.balanceShownContainer}>
+                                <View style={[styles.iconWrap, UTILS.border()]}>
+                                  {logo
+                                    ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, UTILS.border()]} source={{uri: logo}} />
+                                    : <T style={[styles.request]}>
+                                        {displayDenomination.symbol}
+                                      </T>
+                                  }
+                                </View>
+                                <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
+                                  <View style={{flexDirection: 'row'}}>
+                                    {displayDenomination.symbol
+                                      ? (
+                                        <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                                          {displayDenomination.symbol + ' '}
+                                        </T>
+                                      ) : null
+                                    }
+
+                                      <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                                      {cryptoAmountString}
+                                      </T>
+
+                                    {!displayDenomination.symbol &&
+                                      <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                                        {' ' + selectedCurrencyCode}
+                                      </T>
+                                    }
+                                  </View>
+
+                                </View>
+                                <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
+                                  <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>
+                                    {fiatBalanceString}
+                                  </T>
+                                </View>
+                              </View>
+                            ) : (
+                              <View style={[UTILS.border(), styles.balanceHiddenContainer]}>
+                                <T style={[styles.balanceHiddenText]}>
+                                  {SHOW_BALANCE_TEXT}
+                                </T>
+                              </View>
+                            )}
+                          </TouchableOpacity>
+                        )}
+                    <View style={[styles.requestSendRow, UTILS.border()]}>
+
+                      <TouchableHighlight style={[styles.requestBox, styles.button]}
+                        underlayColor={styleRaw.underlay.color}
+                        onPress={Actions.request}>
+                        <View style={[styles.requestWrap]}>
+                          <Image
+                            style={{width: 25, height: 25}}
+                            source={requestImage}/>
+                          <T style={[styles.request]}>
+                            {REQUEST_TEXT}
+                          </T>
+                        </View>
+                      </TouchableHighlight>
+
+                      <TouchableHighlight style={[styles.sendBox, styles.button]}
+                        underlayColor={styleRaw.underlay.color}
+                        onPress={Actions.scan}>
+                        <View style={[styles.sendWrap]}>
+                          <Image
+                            style={{width: 25, height: 25}}
+                            source={sendImage} />
+                          <T style={styles.send}>
+                            {SEND_TEXT}
+                          </T>
+                        </View>
+                      </TouchableHighlight>
+
                     </View>
-                      ) : (
-                        <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, UTILS.border()]}>
-                          {this.state.showBalance ? (
-                            <View style={styles.balanceShownContainer}>
-                              <View style={[styles.iconWrap, UTILS.border()]}>
-                                {logo
-                                  ? <Image style={[{height: 28, width: 28, resizeMode: Image.resizeMode.contain}, UTILS.border()]} source={{uri: logo}} />
-                                  : <T style={[styles.request]}>
-                                      {displayDenomination.symbol}
-                                    </T>
-                                }
-                              </View>
-                              <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
-                                <T numberOfLines={1} style={[styles.currentBalanceBoxBits, UTILS.border()]}>
-                                  {cryptoBalanceString}
-                                </T>
-                              </View>
-                              <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
-                                <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>
-                                  {fiatBalanceString}
-                                </T>
-                              </View>
-                            </View>
-                          ) : (
-                            <View style={[UTILS.border(), styles.balanceHiddenContainer]}>
-                              <T style={[styles.balanceHiddenText]}>
-                                {SHOW_BALANCE_TEXT}
-                              </T>
-                            </View>
-                          )}
-                        </TouchableOpacity>
-                      )}
-                  <View style={[styles.requestSendRow, UTILS.border()]}>
-
-                    <TouchableHighlight style={[styles.requestBox, styles.button]}
-                      underlayColor={styleRaw.underlay.color}
-                      onPress={Actions.request}>
-                      <View style={[styles.requestWrap]}>
-                        <Image
-                          style={{width: 25, height: 25}}
-                          source={requestImage}/>
-                        <T style={[styles.request]}>
-                          {REQUEST_TEXT}
-                        </T>
-                      </View>
-                    </TouchableHighlight>
-
-                    <TouchableHighlight style={[styles.sendBox, styles.button]}
-                      underlayColor={styleRaw.underlay.color}
-                      onPress={Actions.scan}>
-                      <View style={[styles.sendWrap]}>
-                        <Image
-                          style={{width: 25, height: 25}}
-                          source={sendImage} />
-                        <T style={styles.send}>
-                          {SEND_TEXT}
-                        </T>
-                      </View>
-                    </TouchableHighlight>
-
-                  </View>
-                </Animated.View>
-                  }
-              </Gradient>
-            </Animated.View>
-            <View style={[styles.transactionsWrap]}>
-              <ListView
-                style={[styles.transactionsScrollWrap]}
-                dataSource={dataSrc}
-                renderRow={(tx) => this.renderTx(tx, completedTxList)}
-                onEndReached={this.loadMoreTransactions}
-                onEndReachedThreshold={60}
-                enableEmptySections
-                initialIterator={-1}
-                removeClippedSubviews={false}
-                />
+                  </Animated.View>
+                    }
+                </Gradient>
+              </Animated.View>
+              <View style={[styles.transactionsWrap]}>
+                <ListView
+                  style={[styles.transactionsScrollWrap]}
+                  dataSource={dataSrc}
+                  renderRow={(tx) => this.renderTx(tx, completedTxList)}
+                  onEndReached={this.loadMoreTransactions}
+                  onEndReachedThreshold={60}
+                  enableEmptySections
+                  initialIterator={-1}
+                  removeClippedSubviews={false}
+                  />
+              </View>
             </View>
-          </View>
-        </ScrollView>
-        {this.renderDropUp()}
-      </View>
+          </ScrollView>
+          {this.renderDropUp()}
+        </View>
+      </SafeAreaView>
     )
   }
 
@@ -387,25 +400,29 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   renderTx = (tx: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
-    let txColorStyle, txImage, lastOfDate, thumbnailPath, pendingTimeStyle, pendingTimeSyntax
+    let txColorStyle, txImage, lastOfDate, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
     let txName = ''
 
+    let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+    if (!currencyName) {
+      currencyName = this.props.selectedCurrencyCode
+    }
     if (this.isSentTransaction(tx)) {
       // XXX -paulvp Why is this hard coded here?
       txColorStyle = styles.accentRed
-      txName = SENT_TEXT + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txName = SENT_TEXT + currencyName
       txImage = sentTypeImage
     } else {
       txColorStyle = styles.accentGreen
-      txName = RECEIVED_TEXT + this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
+      txName = RECEIVED_TEXT + currencyName
       txImage = receivedTypeImage
     }
 
     if (tx.metadata && tx.metadata.name) {
       if (this.props.contacts) {
-        let contact = this.props.contacts.find((element) => {
-          let fullName = (element.givenName && element.familyName) ? element.givenName + ' ' + element.familyName : element.givenName
-          let found = (element.thumbnailPath && (UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)))
+        const contact = this.props.contacts.find((element) => {
+          const fullName = (element.givenName && element.familyName) ? element.givenName + ' ' + element.familyName : element.givenName
+          const found = (element.thumbnailPath && (UTILS.unspacedLowercase(fullName) === UTILS.unspacedLowercase(tx.metadata.name)))
           // if (found) console.log('element is: ', element)
           return found
         })
@@ -415,21 +432,21 @@ export default class TransactionList extends Component<Props, State> {
       }
     }
 
-    if (completedTxList[tx.key+1]) { // is there a subsequent transaction?
-      lastOfDate = (tx.dateString === completedTxList[tx.key + 1].dateString) ? false : true
+    if (completedTxList[tx.key + 1]) { // is there a subsequent transaction?
+      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
     } else {
       lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
     }
-    let stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
+    const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
-    let amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
-    let fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
+    const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
+    const fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
     let fiatAmountString
     if (tx.metadata && tx.metadata.amountFiat) {
       fiatAmountString = bns.abs(tx.metadata.amountFiat.toFixed(2))
-      fiatAmountString = bns.toFixed(fiatAmountString, 2, 2)
+      fiatAmountString = intl.formatNumber(bns.toFixed(fiatAmountString, 2, 2), {toFixed: 2})
     } else {
-      fiatAmountString = '0.00'
+      fiatAmountString = intl.formatNumber('0.00', {toFixed: 2})
     }
 
     if (tx.blockHeight <= 0) {
@@ -440,10 +457,16 @@ export default class TransactionList extends Component<Props, State> {
       pendingTimeSyntax = tx.time
     }
 
+    if (tx.metadata && tx.metadata.name) {
+      transactionPartner = tx.metadata.name
+    } else {
+      transactionPartner = txName
+    }
+
     return (
       <View style={[styles.singleTransactionWrap]}>
-        {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString))
-          && <View style={styles.singleDateArea}>
+        {((tx.key === 0) || (tx.dateString !== completedTxList[tx.key - 1].dateString)) &&
+          <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
               <T style={styles.formattedDate}>
                 {tx.dateString}
@@ -472,7 +495,7 @@ export default class TransactionList extends Component<Props, State> {
 
               <View style={[styles.transactionLeftTextWrap, UTILS.border()]}>
                 <T style={[styles.transactionPartner]}>
-                  {tx.metadata && tx.metadata.name || txName}
+                  {transactionPartner}
                 </T>
                 <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>
                   {pendingTimeSyntax}

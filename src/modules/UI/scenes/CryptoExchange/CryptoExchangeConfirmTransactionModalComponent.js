@@ -28,27 +28,34 @@ type Props = {
   confirmFunction(): void
 }
 export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props> {
-  renderBottom = (style: any) => {
-    return <View style={style.bottom}>
-      <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={false}
-        parentStyle={{
-          backgroundColor: THEME.COLORS.SECONDARY,
-          borderRadius: 40,
-          marginBottom: 10,
-          marginLeft: 0,
-          marginRight: 0
-        }} />
-    </View>
+  render () {
+    const style = this.props.style
+    const icon = <Icon
+      style={style.icon}
+      name={Constants.EXCHANGE_ICON}
+      size={style.iconSize}
+      type={Constants.ION_ICONS}/>
+
+    return <StylizedModal
+      visibilityBoolean={true}
+      featuredIcon={icon}
+      headerText={s.strings.title_confirm_exchange}
+      headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
+      modalMiddle={this.renderMiddle(style)}
+      modalMiddleStyle={{paddingBottom: 40}}
+      modalBottom={this.renderBottom(style)}
+      modalBottomStyle={{paddingBottom: 8}}
+      onExitButtonFxn={this.props.closeFunction} />
   }
 
-  renderLogo = (style: any, logo?: string) => {
+  renderLogo = (style: Object, logo?: string) => {
     if (logo) {
       return <Image style={style.middle.currencyIcon} source={{uri: logo}} />
     }
     return <Text style={style.middle.altCurrencyText}>{this.props.currencyCode}</Text>
   }
 
-  renderMiddle = (style: any) => {
+  renderMiddle = (style: Object) => {
     const {
       container,
       top,
@@ -67,6 +74,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
       fromWallet,
       toWallet
     } = this.props
+
     return <View style={container}>
       <View style={top}>
         <View style={topLeft}>
@@ -94,23 +102,17 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
 
     </View>
   }
-  render () {
-    const style = this.props.style
-    const icon = <Icon
-      style={style.icon}
-      name={Constants.EXCHANGE_ICON}
-      size={style.iconSize}
-      type={Constants.ION_ICONS}/>
 
-    return <StylizedModal
-      visibilityBoolean={true}
-      featuredIcon={icon}
-      headerText={s.strings.title_confirm_exchange}
-      headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
-      modalMiddle={this.renderMiddle(style)}
-      modalMiddleStyle={{paddingBottom: 40}}
-      modalBottom={this.renderBottom(style)}
-      modalBottomStyle={{paddingBottom: 8}}
-      onExitButtonFxn={this.props.closeFunction} />
+  renderBottom = (style: Object) => {
+    return <View style={style.bottom}>
+      <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={false}
+        parentStyle={{
+          backgroundColor: THEME.COLORS.SECONDARY,
+          borderRadius: 40,
+          marginBottom: 10,
+          marginLeft: 0,
+          marginRight: 0
+        }} />
+    </View>
   }
 }

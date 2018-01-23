@@ -37,14 +37,6 @@ const CATEGORIES_FILENAME = 'Categories.json'
 
 //  Settings
 // Core Settings
-export const setOTPModeRequest = (account: AbcAccount, otpMode: boolean) =>
-  otpMode // $FlowFixMe enableOtp not found on AbcAccount type
-  ? account.enableOtp() // $FlowFixMe disableOtp not found on AbcAccount type
-  : account.disableOtp()
-
-export const setOTPRequest = (account: AbcAccount, key: string) =>
-// $FlowFixMe setupOTPKey not found on AbcAccount type
-account.setupOTPKey(key)
 
 export const setPINModeRequest = (account: AbcAccount, pinMode: boolean) =>
   pinMode // $FlowFixMe enablePIN not found on AbcAccount type
@@ -95,18 +87,39 @@ export const setDenominationKeyRequest = (account: AbcAccount, currencyCode: str
 // Helper Functions
 export const getSyncedSettings = (account: AbcAccount) =>
   getSyncedSettingsFile(account).getText()
-  .then(JSON.parse)
+  .then((text) => {
+    const settingsFromFile = JSON.parse(text)
+    return settingsFromFile
+  })
   .catch((e) => {
     console.log(e)
     // If Settings.json doesn't exist yet, create it, and return it
     return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
   })
 
+export async function getSyncedSettingsAsync (account: AbcAccount): Promise<any> {
+  try {
+    const file = getSyncedSettingsFile(account)
+    const text = await file.getText()
+    const settingsFromFile = JSON.parse(text)
+    return settingsFromFile
+  } catch (e) {
+    console.log(e)
+    // If Settings.json doesn't exist yet, create it, and return it
+    return setSyncedSettings(account, SYNCED_ACCOUNT_DEFAULTS)
+  }
+}
+
 export const setSyncedSettings = (account: AbcAccount, settings: Object) => {
   const text = JSON.stringify(settings)
   const SettingsFile = getSyncedSettingsFile(account)
+  SettingsFile.setText(text)
+}
 
-  return SettingsFile.setText(text)
+export async function setSyncedSettingsAsync (account: AbcAccount, settings: Object) {
+  const text = JSON.stringify(settings)
+  const SettingsFile = getSyncedSettingsFile(account)
+  await SettingsFile.setText(text)
 }
 
 export async function setSubcategoriesRequest (account: AbcAccount, subcategories: any) {
@@ -122,7 +135,7 @@ export async function setSyncedSubcategories (account: AbcAccount, subcategories
     finalText = subcategories
   }
   const SubcategoriesFile = getSyncedSubcategoriesFile(account)
-  let stringifiedSubcategories = JSON.stringify(finalText)
+  const stringifiedSubcategories = JSON.stringify(finalText)
   try {
     await SubcategoriesFile.setText(stringifiedSubcategories)
   } catch (e) {
@@ -133,7 +146,7 @@ export async function setSyncedSubcategories (account: AbcAccount, subcategories
 export const getSyncedSubcategories = (account: AbcAccount) =>
   getSyncedSubcategoriesFile(account).getText()
   .then((text) => {
-    let categoriesText = JSON.parse(text)
+    const categoriesText = JSON.parse(text)
     return categoriesText.categories
   })
   .catch(() =>
@@ -150,7 +163,6 @@ export const getLocalSettings = (account: AbcAccount) =>
   getLocalSettingsFile(account).getText()
   .then(JSON.parse)
   .catch(() =>
-    // console.log('error: ', e)
     // If Settings.json doesn't exist yet, create it, and return it
      setLocalSettings(account, LOCAL_ACCOUNT_DEFAULTS)
     .then(() => LOCAL_ACCOUNT_DEFAULTS))
@@ -160,7 +172,6 @@ export const setLocalSettings = (account: AbcAccount, settings: Object) => {
   const localSettingsFile = getLocalSettingsFile(account)
   return localSettingsFile.setText(text)
 }
-
 
 export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean, pinMode: boolean}> => { // eslint-disable-line no-unused-vars
   const coreSettings: {otpMode: boolean, pinMode: boolean} = CORE_DEFAULTS

@@ -4,6 +4,7 @@ import type {AbcContext} from 'airbitz-core-types'
 
 import type {Action} from '../../ReduxTypes'
 import * as ACTION from './action.js'
+import * as Constants from '../../../constants/indexConstants.js'
 
 const initialState = {
   context: {},
@@ -16,42 +17,45 @@ export type State = {
   nextUsername: string
 }
 export const context = (state: State = initialState, action: Action) => {
-  const {type, data = {} } = action
+  const { type, data = {} } = action
 
   switch (type) {
-  case ACTION.ADD_CONTEXT: {
-    const context: AbcContext = data.context
-    return {
-      ...state,
-      context
+    case ACTION.ADD_CONTEXT: {
+      const context: AbcContext = data.context
+      return {
+        ...state,
+        context
+      }
     }
-  }
 
-  case ACTION.ADD_USERNAMES: {
-    const {usernames} = data
-    return {
-      ...state,
-      usernames
+    case ACTION.ADD_USERNAMES: {
+      const {usernames} = data
+      return {
+        ...state,
+        usernames
+      }
     }
-  }
 
-  case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
-    const {usernames} = data
-    return {
-      ...state,
-      usernames
+    case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
+      const {usernames} = data
+      return {
+        ...state,
+        usernames
+      }
     }
-  }
-
-  case 'LOGOUT': {
-    const {username} = data
-    return {
-      ...state,
-      nextUsername: username || ''
+    case Constants.DEEP_LINK_RECEIVED:
+    case Constants.LOGOUT: {
+      if (!data) {
+        return state
+      }
+      const {username} = data
+      return {
+        ...state,
+        nextUsername: username || ''
+      }
     }
-  }
 
-  default:
-    return state
+    default:
+      return state
   }
 }

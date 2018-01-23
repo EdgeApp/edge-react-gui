@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator
 } from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
 import {sprintf} from 'sprintf-js'
 import s from '../../../../locales/strings.js'
@@ -60,7 +61,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
     this.state = {
       primaryNativeAmount: amt,
       secondaryNativeAmount: '',
-      keyboardVisible: false,
+      keyboardVisible: false
     }
   }
 
@@ -104,50 +105,51 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
       networkFeeSyntax = ''
     }
 
-
     return (
-      <Gradient style={[styles.view]}>
-        <Gradient style={styles.gradient} />
-        <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
+      <SafeAreaView>
+        <Gradient style={[styles.view]}>
+          <Gradient style={styles.gradient} />
+          <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
-          <View style={[styles.exchangeRateContainer, UTILS.border()]}>
-            {
-              errorMsg
-                ? <Text style={[styles.error]}>
-                  {errorMsg}
-                </Text>
-                : <ExchangeRate
-                  secondaryDisplayAmount={this.props.fiatPerCrypto}
-                  primaryInfo={this.props.primaryInfo}
-                  secondaryInfo={this.props.secondaryInfo} />
-            }
-          </View>
-
-          <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
-            <ExchangedFlipInput
-              primaryInfo={{...primaryInfo, nativeAmount}}
-              secondaryInfo={secondaryInfo}
-              secondaryToPrimaryRatio={fiatPerCrypto}
-              onAmountsChange={this.onAmountsChange}
-              color={color} />
-            <View style={[styles.feeArea]}>
-              <Text style={[styles.feeAreaText]}>{networkFeeSyntax}</Text>
+            <View style={[styles.exchangeRateContainer, UTILS.border()]}>
+              {
+                errorMsg
+                  ? <Text style={[styles.error]}>
+                    {errorMsg}
+                  </Text>
+                  : <ExchangeRate
+                    secondaryDisplayAmount={this.props.fiatPerCrypto}
+                    primaryInfo={this.props.primaryInfo}
+                    secondaryInfo={this.props.secondaryInfo} />
+              }
             </View>
-            <Recipient label={label} link={''} publicAddress={publicAddress}  style={styles.recipient} />
-          </View>
-          <View style={[styles.pendingSymbolArea]}>
-            {this.props.sendConfirmation.pending
-              && <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
-            }
-          </View>
-          <View style={[styles.sliderWrap]}>
-            <ABSlider
-              parentStyle={styles.sliderStyle}
-              onSlidingComplete={this.signBroadcastAndSave}
-              sliderDisabled={this.props.sliderDisabled || this.props.sendConfirmation.pending} />
-          </View>
-        </ScrollView>
-      </Gradient>
+
+            <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+              <ExchangedFlipInput
+                primaryInfo={{...primaryInfo, nativeAmount}}
+                secondaryInfo={secondaryInfo}
+                secondaryToPrimaryRatio={fiatPerCrypto}
+                onAmountsChange={this.onAmountsChange}
+                color={color} />
+              <View style={[styles.feeArea]}>
+                <Text style={[styles.feeAreaText]}>{networkFeeSyntax}</Text>
+              </View>
+              <Recipient label={label} link={''} publicAddress={publicAddress} style={styles.recipient} />
+            </View>
+            <View style={[styles.pendingSymbolArea]}>
+              {this.props.sendConfirmation.pending &&
+                <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
+              }
+            </View>
+            <View style={[styles.sliderWrap]}>
+              <ABSlider
+                parentStyle={styles.sliderStyle}
+                onSlidingComplete={this.signBroadcastAndSave}
+                sliderDisabled={this.props.sliderDisabled || this.props.sendConfirmation.pending} />
+            </View>
+          </ScrollView>
+        </Gradient>
+      </SafeAreaView>
     )
   }
 
@@ -184,7 +186,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   getTopSpacer = () => {
     if (this.props.sendConfirmation.keyboardIsVisible) {
-      return
+
     } else {
       return <View style={styles.spacer} />
     }
@@ -192,7 +194,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
   getBottomSpacer = () => {
     if (!this.props.sendConfirmation.keyboardIsVisible) {
-      return
+
     } else {
       return <View style={styles.spacer} />
     }

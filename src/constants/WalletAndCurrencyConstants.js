@@ -1,4 +1,5 @@
-export const BITCOIN_44_WALLET = 'wallet:bitcoin44segwit'
+// @flow
+
 export const ETHEREUM_WALLET = 'wallet:ethereum'
 
 export const USD_FIAT = 'iso:USD'
