@@ -121,7 +121,6 @@ BackgroundTask.define(async () => {
                 date
               })
             } else {
-              console.log('SEND THE PUSH NOTIICATION ON ANDROID ')
               PushNotification.localNotificationSchedule({
                 message: s.strings.otp_notif_title,
                 subText: sprintf(s.strings.otp_notif_body, key),
