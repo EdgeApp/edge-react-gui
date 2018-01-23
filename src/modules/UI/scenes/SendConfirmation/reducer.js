@@ -54,14 +54,14 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
   const {type, data = {}} = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
-      const { transaction } = data.transaction
+      const { transaction } = data
       return {
         ...state,
         transaction
       }
     }
     case ACTION.UPDATE_TRANSACTION_ERROR: {
-      const {error} = data.error
+      const {error} = data
       return {
         ...state,
         error
@@ -69,7 +69,7 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
     }
     case ACTION.UPDATE_PARSED_URI: {
       const {parsedUri = {}} = data
-      const publicAddress = parsedUri.publicAddress
+      const {publicAddress} = parsedUri
       return {
         ...state,
         parsedUri,
