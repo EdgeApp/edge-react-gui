@@ -143,6 +143,7 @@ export const makeSpend = (options: AbcMakeSpendInfo) => (dispatch: any, getState
   return WALLET_API.makeSpend(abcWallet, makeSpendInfo(options))
   .then((abcTransaction: AbcTransaction) => {
     dispatch(updateTransaction(abcTransaction))
+    dispatch(updateTransactionError(null))
   })
   .catch((error) => {
     dispatch(updateTransactionError(error))
