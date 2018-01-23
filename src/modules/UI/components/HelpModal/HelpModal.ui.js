@@ -25,30 +25,19 @@ export default class HelpModal extends Component<Props, State> {
   render () {
     return (
       <StylizedModal
-        style={styles.stylizedModal}
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText={s.strings.help_modal_title}
-        modalMiddle={
-          <WebView
-            ref={ref => {
-              // $FlowFixMe
-              this.webview = ref
-            }}
-            scalesPageToFit={contentScaling}
-            style={styles.webView}
-            source={{ uri: CONTENT_URI }}
-            onNavigationStateChange={event => {
-              if (!event.url.includes('info.html')) {
-                // if NOT initial URL
-                // $FlowFixMe
-                this.webview.stopLoading() // do not load in WebView
-                Linking.openURL(event.url) // load externally
-                this.props.closeModal()
-              }
-            }}
-          />
-        }
+        modalMiddle={<WebView ref={(ref) => { this.webview = ref }} scalesPageToFit={contentScaling} style={styles.webView} source={{uri: CONTENT_URI}}
+          onNavigationStateChange={(event) => {
+            if (!event.url.includes('info.html')) { // if NOT initial URL
+              this.webview.stopLoading() // do not load in WebView
+              Linking.openURL(event.url) // load externally
+              this.props.closeModal()
+            }
+          }} />}
+        style={styles.stylizedModal}
+        modalHeaderIcon={styles.modalHeaderIcon}
         modalBodyStyle={styles.modalBodyStyle}
         modalVisibleStyle={styles.modalVisibleStyle}
         modalBoxStyle={styles.modalBoxStyle}
