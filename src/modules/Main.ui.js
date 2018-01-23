@@ -482,7 +482,7 @@ export default class Main extends Component<Props, State> {
   }
 
   renderWalletListNavBar = () => {
-    return <Header/>
+    return <Header />
   }
 
   renderEmptyButton = () => () => {
@@ -490,7 +490,7 @@ export default class Main extends Component<Props, State> {
   }
 
   renderHelpButton = () => {
-    return <HelpButton/>
+    return <HelpButton />
   }
 
   renderBackButton = (label: string = BACK) => () => {
@@ -503,16 +503,16 @@ export default class Main extends Component<Props, State> {
 
   renderMenuButton = () => {
     return <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
-      <Image source={MenuIcon}/>
+      <Image source={MenuIcon} />
     </TouchableWithoutFeedback>
   }
 
   renderExchangeButton = () => {
-    return <ExchangeDropMenu/>
+    return <ExchangeDropMenu />
   }
 
   renderSendConfirmationButton = () => {
-    return <SendConfirmationOptions/>
+    return <SendConfirmationOptions />
   }
 
   icon = (tabName: string) => (props: {focused: boolean}) => {
