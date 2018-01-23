@@ -9,19 +9,19 @@ import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri} from 'airbitz-core
 
 import {bns} from 'biggystring'
 
-import * as UTILS from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import * as SEND_SELECTORS from './selectors'
+import { resetFees } from '../ChangeMiningFee/action'
 
 import {
   signBroadcastAndSave,
   updateSpendPending,
-  processParsedUri
+  updateTransactionAmount
 } from './action.js'
 
 const mapStateToProps = (state: State): Props => {
-  const sendConfirmation = UI_SELECTORS.getSceneState(state, 'sendConfirmation')
   let fiatPerCrypto = 0
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
@@ -29,31 +29,17 @@ const mapStateToProps = (state: State): Props => {
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryInfo: FlipInputFieldInfo = {
-    displayCurrencyCode: currencyCode,
-    exchangeCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryInfo: FlipInputFieldInfo = {
-    displayCurrencyCode: guiWallet.fiatCurrencyCode,
-    exchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
+
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
-  const {
-    parsedUri,
-    error,
-    transaction,
-    pending
-  } = state.ui.scenes.sendConfirmation
+  const transaction = SEND_SELECTORS.getTransaction(state)
+  const pending = SEND_SELECTORS.getPending(state)
+  const parsedUri = SEND_SELECTORS.getParsedUri(state)
+  const keyboardIsVisible = SEND_SELECTORS.getKeyboardIsVisible(state)
+  const error = SEND_SELECTORS.getError(state)
 
   const nativeAmount = parsedUri.nativeAmount || '0'
   parsedUri.currencyCode = currencyCode
@@ -62,24 +48,29 @@ const mapStateToProps = (state: State): Props => {
   if (error && parsedUri.nativeAmount && bns.gt(parsedUri.nativeAmount, '0')) {
     errorMsg = error.message
   }
-
-  let sliderDisabled = true
-
-  if (transaction && !error && !pending) {
-    sliderDisabled = false
+  let networkFee = '0'
+  if (transaction && bns.gt(transaction.networkFee, '0')) {
+    networkFee = transaction.networkFee
   }
 
   return {
-    sendConfirmation,
-    abcWallet,
+    pending,
+    keyboardIsVisible,
+    label: SEND_SELECTORS.getLabel(state),
+    publicAddress: SEND_SELECTORS.getPublicAddress(state),
+    primaryDisplayCurrencyCode: currencyCode,
+    primaryExchangeCurrencyCode: currencyCode,
+    primaryDisplayDenomination,
+    primaryExchangeDenomination,
+    secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
+    secondaryExchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
+    networkFeeOption: SEND_SELECTORS.getNetworkFeeOption(state),
+    networkFee,
     nativeAmount,
     errorMsg,
     fiatPerCrypto,
-    guiWallet,
     currencyCode,
-    primaryInfo,
-    sliderDisabled,
-    secondaryInfo,
+    sliderDisabled: !transaction || error || pending,
     currencyConverter
   }
 }
