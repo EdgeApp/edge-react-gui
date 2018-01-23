@@ -19,3 +19,5 @@ export const LOGOUT = 'LOGOUT'
 
 export const CRYPTO_EXCHANGE = 'cryptoExchange'
 export const PASSWORD_RECOVERY_LINK = 'passwordRecoveryLink'
+export const IOS = 'ios'
+export const ANDROID = 'android'

@@ -2,8 +2,9 @@
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {ScrollView, Text, View, Platform} from 'react-native'
 import {Actions} from 'react-native-router-flux'
+import PushNotification from 'react-native-push-notification'
 
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
@@ -146,6 +147,13 @@ export default class SettingsOverview extends Component<Props, State> {
   }
   _onPressOtp = () => {
     if (this.props.isLocked) return
+    if (Platform.OS === Constants.IOS) {
+      PushNotification.configure({
+        onNotification: (notification) => {
+          console.log('NOTIFICATION:', notification)
+        }
+      })
+    }
     Actions[Constants.OTP_SETUP]()
   }
 
