@@ -146,6 +146,7 @@ export const makeSpend = (options: AbcMakeSpendInfo) => (dispatch: any, getState
     dispatch(updateTransactionError(null))
   })
   .catch((error) => {
+    dispatch(updateTransaction(null))
     dispatch(updateTransactionError(error))
   })
 }
