@@ -202,10 +202,14 @@ export default class Main extends Component<Props, State> {
   doDeepLink (url: string) {
     const parsedUri = URI.parse(url)
     const query = parsedUri.query
+    if (!query.includes('token=')) {
+      return
+    }
     const splitArray = query.split('token=')
     const nextString = splitArray[1]
     const finalArray = nextString.split('&')
-    this.props.urlRecived(finalArray[0])
+    const token = finalArray[0]
+    this.props.urlRecived(token)
   }
   handleOpenURL = (event: Object) => {
     this.doDeepLink(event.url)
