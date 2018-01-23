@@ -1,6 +1,6 @@
 // @flow
 
-import { CHANGE_MINING_FEE } from '../SendConfirmation/selectors'
+import { CHANGE_MINING_FEE } from '../SendConfirmation/action'
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 
 export const changeFee = (networkFeeOption: string, customNetworkFee: any) => ({

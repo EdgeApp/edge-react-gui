@@ -1,7 +1,7 @@
 // @flow
 
 import * as UI_SELECTORS from '../../selectors.js'
-import type { State } from '../ReduxTypes'
+import type { State } from '../../../ReduxTypes'
 
 export const getScene = (state: State) => UI_SELECTORS.getSceneState(state, 'sendConfirmation')
 
