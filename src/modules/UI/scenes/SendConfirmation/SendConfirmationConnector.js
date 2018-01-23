@@ -6,7 +6,7 @@ import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
 import type {State, Dispatch} from '../../../ReduxTypes'
 import type {GuiWallet, GuiDenomination} from '../../../../types'
 import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri, AbcMetadata} from 'airbitz-core-types'
-
+import type {AbcMakeSpendInfo} from './action'
 import {bns} from 'biggystring'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
@@ -35,10 +35,7 @@ const mapStateToProps = (state: State): Props => {
 
   const transaction: AbcTransaction = SEND_SELECTORS.getTransaction(state)
   const pending = SEND_SELECTORS.getPending(state)
-  const nativeAmount: string = SEND_SELECTORS.getNativeAmount(state)
-  const publicAddress: string = SEND_SELECTORS.getPublicAddress(state)
-  const metadata: AbcMetadata = SEND_SELECTORS.getMetadata(state)
-  const keyboardIsVisible = SEND_SELECTORS.getKeyboardIsVisible(state)
+  const nativeAmount: string = SEND_SELECTORS.getNativeAmount(state) || '0'
   const error = SEND_SELECTORS.getError(state)
 
   let errorMsg = null
@@ -51,11 +48,11 @@ const mapStateToProps = (state: State): Props => {
   }
 
   return {
-    metadata,
+    metadata: SEND_SELECTORS.getMetadata(state) || {},
     nativeAmount,
-    publicAddress,
+    publicAddress: SEND_SELECTORS.getPublicAddress(state) || '',
     pending,
-    keyboardIsVisible,
+    keyboardIsVisible: SEND_SELECTORS.getKeyboardIsVisible(state),
     label: SEND_SELECTORS.getLabel(state),
     primaryDisplayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: UI_SELECTORS.getExchangeDenomination(state, currencyCode),

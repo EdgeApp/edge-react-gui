@@ -14,6 +14,6 @@ export const getParsedUri = (state: State): AbcParsedUri => getScene(state).pars
 export const getKeyboardIsVisible = (state: State): boolean => getScene(state).keyboardIsVisible
 export const getError = (state: State): Error => getScene(state).error
 export const getLabel = (state: State): string => getScene(state).label
-export const getPublicAddress = (state: State): string => getParsedUri(state).publicAddress
-export const getNativeAmount = (state: State): string => getParsedUri(state).nativeAmount
-export const getMetadata = (state: State): AbcMetadata => getParsedUri(state).metadata
+export const getPublicAddress = (state: State): any => getParsedUri(state).publicAddress
+export const getNativeAmount = (state: State): any => getParsedUri(state).nativeAmount
+export const getMetadata = (state: State): any => getParsedUri(state).metadata

@@ -44,9 +44,9 @@ export const UPDATE_PARSED_URI_METADATA = PREFIX + 'UPDATE_METADATA'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
 export type AbcMakeSpendInfo = {
-  networkFeeOption: string,
   currencyCode: string,
-  publicAddress: string,
+  networkFeeOption?: string,
+  publicAddress?: string,
   metadata?: any,
   customNetworkFee?: any,
   nativeAmount?: string,
@@ -154,21 +154,15 @@ export const getMaxSpendable = () => (dispatch: any, getState: any) => {
 
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const nativeAmount: string = SEND_SELECTORS.getNativeAmount(state)
-  const publicAddress: string = SEND_SELECTORS.getPublicAddress(state)
-  const metadata: AbcMetadata = SEND_SELECTORS.getMetadata(state)
-  const networkFeeOption: string = SEND_SELECTORS.getNetworkFeeOption(state)
-  const customNetworkFee: any = SEND_SELECTORS.getCustomNetworkFee(state)
-
-  const spendInfo: AbcSpendInfo = makeSpendInfo({
-    currencyCode,
-    publicAddress,
-    networkFeeOption,
-    customNetworkFee,
-    metadata,
-    nativeAmount
-  })
+  const options: AbcMakeSpendInfo = {
+    currencyCode: UI_SELECTORS.getSelectedCurrencyCode(state),
+    publicAddress: SEND_SELECTORS.getPublicAddress(state),
+    networkFeeOption: SEND_SELECTORS.getNetworkFeeOption(state),
+    customNetworkFee: SEND_SELECTORS.getCustomNetworkFee(state),
+    metadata: SEND_SELECTORS.getMetadata(state),
+    nativeAmount: SEND_SELECTORS.getNativeAmount(state)
+  }
+  const spendInfo: AbcSpendInfo = makeSpendInfo(options)
 
   return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
     .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
@@ -176,14 +170,14 @@ export const getMaxSpendable = () => (dispatch: any, getState: any) => {
 }
 
 export const makeSpendInfo = ({
-  networkFeeOption,
   currencyCode,
-  publicAddress,
+  networkFeeOption = Constants.STANDARD_FEE,
+  publicAddress = '',
   customNetworkFee = {},
   metadata = { amountFiat: parseFloat('0') },
   nativeAmount = '0',
   spendTargets = [{ publicAddress, nativeAmount }]
-}): AbcSpendInfo => {
+}: AbcMakeSpendInfo): AbcSpendInfo => {
   const spendInfo: AbcSpendInfo = {
     currencyCode,
     metadata,

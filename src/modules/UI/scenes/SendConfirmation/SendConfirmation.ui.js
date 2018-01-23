@@ -20,7 +20,7 @@ import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
-
+import type { AbcMakeSpendInfo } from './action'
 import type {CurrencyConverter, GuiDenomination} from '../../../../types'
 import type { AbcMetadata } from 'airbitz-core-types'
 
@@ -50,9 +50,9 @@ export type Props = {
 export type DispatchProps = {
   updateSpendPending: (boolean) => any,
   signBroadcastAndSave: () => any,
-  makeSpend: (spendInfo: AbcSpendInfo) => any,
+  makeSpend: (options: AbcMakeSpendInfo) => any,
   resetFees: () => any,
-  updateTransactionAmount: (nativeAmount: string, metadata: string) => any
+  updateAmounts: (nativeAmount: string, metadata: AbcMetadata) => any
 }
 
 type State = {
@@ -92,12 +92,13 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
       secondaryDisplayDenomination: UTILS.getDenomFromIsoCode(
         this.props.secondaryDisplayCurrencyCode
       )
+    }, () => {
+      this.onAmountsChange({
+        primaryDisplayAmount: '0',
+        secondaryDisplayAmount: '0'
+      })
+      this.props.resetFees()
     })
-    this.props.onAmountsChange({
-      primaryDisplayAmount: '0',
-      secondaryDisplayAmount: '0'
-    })
-    this.props.resetFees()
   }
 
   render () {
