@@ -5,7 +5,7 @@ import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
 
 import type {State, Dispatch} from '../../../ReduxTypes'
 import type {GuiWallet, GuiDenomination} from '../../../../types'
-import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri, AbcMetadata} from 'airbitz-core-types'
 
 import {bns} from 'biggystring'
 
@@ -18,34 +18,31 @@ import { resetFees } from '../ChangeMiningFee/action'
 import {
   signBroadcastAndSave,
   updateSpendPending,
-  updateTransactionAmount
+  makeSpend,
+  updateNativeAmount,
+  updateMetadata
 } from './action.js'
 
 const mapStateToProps = (state: State): Props => {
   let fiatPerCrypto = 0
-  const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
-  const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
   }
 
-  const transaction = SEND_SELECTORS.getTransaction(state)
+  const transaction: AbcTransaction = SEND_SELECTORS.getTransaction(state)
   const pending = SEND_SELECTORS.getPending(state)
-  const parsedUri = SEND_SELECTORS.getParsedUri(state)
+  const nativeAmount: string = SEND_SELECTORS.getNativeAmount(state)
+  const publicAddress: string = SEND_SELECTORS.getPublicAddress(state)
+  const metadata: AbcMetadata = SEND_SELECTORS.getMetadata(state)
   const keyboardIsVisible = SEND_SELECTORS.getKeyboardIsVisible(state)
   const error = SEND_SELECTORS.getError(state)
 
-  const nativeAmount = parsedUri.nativeAmount || '0'
-  parsedUri.currencyCode = currencyCode
-
   let errorMsg = null
-  if (error && parsedUri.nativeAmount && bns.gt(parsedUri.nativeAmount, '0')) {
+  if (error && nativeAmount && bns.gt(nativeAmount, '0')) {
     errorMsg = error.message
   }
   let networkFee = '0'
@@ -54,32 +51,33 @@ const mapStateToProps = (state: State): Props => {
   }
 
   return {
+    metadata,
+    nativeAmount,
+    publicAddress,
     pending,
     keyboardIsVisible,
     label: SEND_SELECTORS.getLabel(state),
-    publicAddress: SEND_SELECTORS.getPublicAddress(state),
-    primaryDisplayCurrencyCode: currencyCode,
-    primaryExchangeCurrencyCode: currencyCode,
-    primaryDisplayDenomination,
-    primaryExchangeDenomination,
+    primaryDisplayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode),
+    primaryExchangeDenomination: UI_SELECTORS.getExchangeDenomination(state, currencyCode),
     secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
     secondaryExchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
     networkFeeOption: SEND_SELECTORS.getNetworkFeeOption(state),
+    customNetworkFee: SEND_SELECTORS.getCustomNetworkFee(state),
     networkFee,
-    nativeAmount,
     errorMsg,
     fiatPerCrypto,
     currencyCode,
-    sliderDisabled: !transaction || error || pending,
-    currencyConverter
+    sliderDisabled: !transaction || !!error || !!pending,
+    currencyConverter: CORE_SELECTORS.getCurrencyConverter(state)
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updateTransactionAmount: (
-    primaryNativeAmount: string,
-    secondaryExchangeAmount: string
-  ): any => dispatch(updateTransactionAmount(primaryNativeAmount, secondaryExchangeAmount)),
+  makeSpend: (options: AbcMakeSpendInfo): any => dispatch(makeSpend(options)),
+  updateAmounts: (nativeAmount: string, metadata: AbcMetadata): any => {
+    dispatch(updateNativeAmount(nativeAmount))
+    dispatch(updateMetadata(metadata))
+  },
   resetFees: (): any => dispatch(resetFees()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())

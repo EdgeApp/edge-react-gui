@@ -51,24 +51,24 @@ export const initialState: SendConfirmationState = {
 }
 
 const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
-  const { type, data = {} } = action
+  const {type, data = {}} = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
+      const { transaction } = data.transaction
       return {
         ...state,
-        transaction: data.transaction
+        transaction
       }
     }
-
     case ACTION.UPDATE_TRANSACTION_ERROR: {
+      const {error} = data.error
       return {
         ...state,
-        error: data.error
+        error
       }
     }
-
     case ACTION.UPDATE_PARSED_URI: {
-      const { parsedUri = {} } = data
+      const {parsedUri = {}} = data
       const publicAddress = parsedUri.publicAddress
       return {
         ...state,
@@ -83,7 +83,6 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
         displayAmount
       }
     }
-
     case ACTION.UPDATE_MAX_SATOSHI: {
       const {maxSatoshi} = data
       return {
@@ -129,14 +128,20 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
     case ACTION.RESET: {
       return initialState
     }
-    case ACTION.UPDATE_NATIVE_AMOUNT: {
+    case ACTION.UPDATE_PARSED_URI_NATIVE_AMOUNT: {
       const {nativeAmount} = data
+      const parsedUri = { ...state.parsedUri, nativeAmount }
       return {
         ...state,
-        parsedUri: {
-          ...state.parsedUri,
-          nativeAmount
-        }
+        parsedUri
+      }
+    }
+    case ACTION.UPDATE_PARSED_URI_METADATA: {
+      const {metadata} = data
+      const parsedUri = { ...state.parsedUri, metadata }
+      return {
+        ...state,
+        parsedUri
       }
     }
     case ACTION.CHANGE_MINING_FEE:

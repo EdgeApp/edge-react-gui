@@ -6,8 +6,10 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SEND_SELECTORS from './selectors'
-import type {
+import type
+ {
   AbcParsedUri,
+  AbcMetadata,
   AbcSpendInfo,
   AbcTransaction,
   AbcCurrencyWallet,
@@ -37,8 +39,19 @@ export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 export const UPDATE_TRANSACTION_ERROR = PREFIX + 'UPDATE_TRANSACTION_ERROR'
 
-export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+export const UPDATE_PARSED_URI_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+export const UPDATE_PARSED_URI_METADATA = PREFIX + 'UPDATE_METADATA'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
+
+export type AbcMakeSpendInfo = {
+  networkFeeOption: string,
+  currencyCode: string,
+  publicAddress: string,
+  metadata?: any,
+  customNetworkFee?: any,
+  nativeAmount?: string,
+  spendTargets?: Array<AbcSpendTarget>
+}
 
 export const updateAmountSatoshi = (amountSatoshi: string) => ({
   type: UPDATE_AMOUNT_SATOSHI,
@@ -61,7 +74,7 @@ export const updateSpendPending = (pending: boolean) => ({
 })
 
 export const updateNativeAmount = (nativeAmount: string) => ({
-  type: UPDATE_NATIVE_AMOUNT,
+  type: UPDATE_PARSED_URI_NATIVE_AMOUNT,
   data: {nativeAmount}
 })
 
@@ -123,24 +136,15 @@ export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: an
   dispatch(updateLabel(wallet.name))
 }
 
-export const updateTransactionAmount = (primaryNativeAmount: string, secondaryExchangeAmount: string) => (dispatch: any, getState: any) => {
+export const makeSpend = (options: AbcMakeSpendInfo) => (dispatch: any, getState: any) => {
   const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const networkFeeOption = SEND_SELECTORS.getNetworkFeeOption(state)
-  const customNetworkFee = SEND_SELECTORS.getCustomNetworkFee(state)
-  const parsedUri = SEND_SELECTORS.getParsedUri(state)
-  parsedUri.metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
-  parsedUri.nativeAmount = primaryNativeAmount
-  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri, networkFeeOption, customNetworkFee)
-
-  return WALLET_API.makeSpend(abcWallet, spendInfo)
+  return WALLET_API.makeSpend(abcWallet, makeSpendInfo(options))
   .then((abcTransaction: AbcTransaction) => {
-    dispatch(updateParsedURI(parsedUri))
     dispatch(updateTransaction(abcTransaction))
   })
   .catch((error) => {
-    dispatch(updateParsedURI(parsedUri))
     dispatch(updateTransactionError(error))
   })
 }
@@ -150,20 +154,56 @@ export const getMaxSpendable = () => (dispatch: any, getState: any) => {
 
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const networkFeeOption = SEND_SELECTORS.getNetworkFeeOption(state)
-  const parsedUri: AbcParsedUri = SEND_SELECTORS.getParsedUri(state)
-  const customNetworkFee = SEND_SELECTORS.getCustomNetworkFee(state)
-  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri, networkFeeOption, customNetworkFee)
+  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const nativeAmount: string = SEND_SELECTORS.getNativeAmount(state)
+  const publicAddress: string = SEND_SELECTORS.getPublicAddress(state)
+  const metadata: AbcMetadata = SEND_SELECTORS.getMetadata(state)
+  const networkFeeOption: string = SEND_SELECTORS.getNetworkFeeOption(state)
+  const customNetworkFee: any = SEND_SELECTORS.getCustomNetworkFee(state)
+
+  const spendInfo: AbcSpendInfo = makeSpendInfo({
+    currencyCode,
+    publicAddress,
+    networkFeeOption,
+    customNetworkFee,
+    metadata,
+    nativeAmount
+  })
 
   return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
     .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
     .catch((error) => console.log(error))
 }
 
+export const makeSpendInfo = ({
+  networkFeeOption,
+  currencyCode,
+  publicAddress,
+  customNetworkFee = {},
+  metadata = { amountFiat: parseFloat('0') },
+  nativeAmount = '0',
+  spendTargets = [{ publicAddress, nativeAmount }]
+}): AbcSpendInfo => {
+  const spendInfo: AbcSpendInfo = {
+    currencyCode,
+    metadata,
+    spendTargets,
+    networkFeeOption,
+    customNetworkFee
+  }
+  return spendInfo
+}
+
 export const updateParsedURI = (parsedUri: AbcParsedUri) => ({
   type: UPDATE_PARSED_URI,
   data: {parsedUri}
 })
+
+export const updateMetadata = (metadata: AbcMetadata) => ({
+  type: UPDATE_PARSED_URI_METADATA,
+  data: {metadata}
+})
+
 export const updateLabel = (label: string) => ({
   type: UPDATE_LABEL,
   data: {label}
@@ -173,26 +213,3 @@ export const reset = () => ({
   type: RESET,
   data: {}
 })
-
-const makeSpendInfo = (
-  parsedUri: AbcParsedUri,
-  networkFeeOption: string,
-  customNetworkFee: any
-): AbcSpendInfo => {
-  const nativeAmount = parsedUri.nativeAmount ? parsedUri.nativeAmount : '0'
-  const spendTarget:AbcSpendTarget = {
-    publicAddress: parsedUri.publicAddress,
-    nativeAmount
-  }
-  const spendInfo:AbcSpendInfo = {
-    currencyCode: parsedUri.currencyCode,
-    metadata: parsedUri.metadata,
-    spendTargets: [{
-      publicAddress: parsedUri.publicAddress,
-      nativeAmount
-    }],
-    networkFeeOption: networkFeeOption
-  }
-  if (customNetworkFee) spendInfo.customNetworkFee = customNetworkFee
-  return spendInfo
-}
