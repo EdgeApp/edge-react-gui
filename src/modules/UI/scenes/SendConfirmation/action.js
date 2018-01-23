@@ -58,12 +58,12 @@ export const updateAmountSatoshi = (amountSatoshi: string) => ({
   data: {amountSatoshi}
 })
 
-export const updateTransaction = (transaction: AbcTransaction): any => ({
+export const updateTransaction = (transaction: ?AbcTransaction): any => ({
   type: UPDATE_TRANSACTION,
   data: {transaction}
 })
 
-export const updateTransactionError = (error: Error): any => ({
+export const updateTransactionError = (error: ?Error): any => ({
   type: UPDATE_TRANSACTION_ERROR,
   data: {error}
 })
