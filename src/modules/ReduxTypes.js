@@ -1,7 +1,9 @@
 // @flow
 
 import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux'
-import type { AbcContext, AbcCurrencyWallet, AbcAccount, AbcLobby } from 'airbitz-core-types'
+import type { AbcContext, AbcCurrencyWallet, AbcCurrencyInfo, AbcAccount, AbcLobby, AbcTransaction } from 'airbitz-core-types'
+
+import type {GuiWallet} from '../types'
 
 export type Action = { type: string, data?: any }
 
@@ -32,7 +34,39 @@ export type State = {
     }
   },
   ui: any,
-  cryptoExchange: any,
+  cryptoExchange: {
+    exchangeRate: number,
+    nativeMax: string,
+    nativeMin: string,
+    minerFee: string,
+    reverseExchange: number,
+    reverseNativeMax: string,
+    reverseNativeMin: string,
+    reverseMinerFee: string,
+    fromWallet: any, // GuiWallet | null,
+    fromCurrencyCode: any, // CurrencyCode | null,
+    fromNativeAmount: string,
+    fromDisplayAmount: string,
+    fromWalletPrimaryInfo: any, // AbcCurrencyInfo | null,
+    fromCurrencyIcon: string | null,
+    fromCurrencyIconDark: string | null,
+    toWallet: any, // GuiWallet | null,
+    toCurrencyCode: any, // CurrencyCode | null,
+    toNativeAmount: string,
+    toDisplayAmount: string,
+    toWalletPrimaryInfo: any, // AbcCurrencyInfo | null,
+    toCurrencyIcon: string | null,
+    toCurrencyIconDark: string | null,
+    insufficientError: boolean,
+    feeSetting: 'low' | 'standard' | 'high' | 'custom',
+    walletListModalVisible: boolean,
+    confirmTransactionModalVisible: boolean,
+    shiftTransactionError: Error | null,
+    genericShapeShiftError: Error | null,
+    changeWallet: 'none',
+    transaction: AbcTransaction | null,
+    fee: any
+  },
   exchangeRates: number
 }
 
