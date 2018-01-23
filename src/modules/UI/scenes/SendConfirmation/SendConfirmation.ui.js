@@ -48,9 +48,13 @@ export type Props = {
 }
 
 export type DispatchProps = {
-  processParsedUri: (AbcParsedUri) => void,
-  updateSpendPending: (boolean) => void,
-  signBroadcastAndSave: (AbcTransaction) => void
+  updateSpendPending: (boolean) => any,
+  signBroadcastAndSave: () => any,
+  updateTransactionAmount: (
+    primaryNativeAmount: string,
+    secondaryExchangeAmount: string
+  ) => any,
+  resetFees: () => any
 }
 
 type State = {

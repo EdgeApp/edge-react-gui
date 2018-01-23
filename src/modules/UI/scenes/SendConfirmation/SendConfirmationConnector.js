@@ -76,9 +76,13 @@ const mapStateToProps = (state: State): Props => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  processParsedUri: (parsedUri: AbcParsedUri): any => dispatch(processParsedUri(parsedUri)),
+  updateTransactionAmount: (
+    primaryNativeAmount: string,
+    secondaryExchangeAmount: string
+  ): any => dispatch(updateTransactionAmount(primaryNativeAmount, secondaryExchangeAmount)),
+  resetFees: (): any => dispatch(resetFees()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (abcTransaction: AbcTransaction): any => dispatch(signBroadcastAndSave(abcTransaction))
+  signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)
