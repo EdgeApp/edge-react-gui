@@ -134,7 +134,6 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 
 type Props = {
   username?: string,
-  addExchangeTimer: number => void,
   addCurrencyPlugin: AbcCurrencyPlugin => void,
   setKeyboardHeight: number => void,
   addContext: AbcContext => void,

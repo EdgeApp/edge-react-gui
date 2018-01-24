@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import type {Dispatch} from './ReduxTypes'
 import Main from './Main.ui'
 
-import {addExchangeTimer, addCurrencyPlugin} from './UI/Settings/action'
+import {addCurrencyPlugin} from './UI/Settings/action'
 import {setKeyboardHeight} from './UI/dimensions/action'
 import {addContext, addUsernames} from './Core/Context/action.js'
 import {enableScan, disableScan} from './UI/scenes/Scan/action'
@@ -20,9 +20,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dispatchDisableScan: () => {
     return dispatch(disableScan())
-  },
-  addExchangeTimer: () => {
-    return dispatch(addExchangeTimer())
   },
   addCurrencyPlugin: (plugin) => {
     return dispatch(addCurrencyPlugin(plugin))
