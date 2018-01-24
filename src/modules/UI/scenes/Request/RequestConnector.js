@@ -51,7 +51,7 @@ const mapStateToProps = (state: State): RequestStateProps => {
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
   const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.currencyCode ? primaryExchangeDenomination.currencyCode : ''
+  const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
   const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.currencyCode ? secondaryExchangeDenomination.currencyCode : ''
 
   const primaryCurrencyInfo: GuiCurrencyInfo = {

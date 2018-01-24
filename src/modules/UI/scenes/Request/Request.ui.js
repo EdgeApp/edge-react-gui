@@ -68,13 +68,13 @@ export class Request extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.abcWallet && this.props.abcWallet && (nextProps.abcWallet.id !== this.props.abcWallet.id)) {
+    if (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id)) {
       const {abcWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
         const abcEncodeUri: AbcEncodeUri = {publicAddress}
-        const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
+        const encodedURI = nextProps.abcWallet ? nextProps.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
           encodedURI,
           publicAddress

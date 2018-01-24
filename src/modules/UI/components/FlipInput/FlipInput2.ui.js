@@ -50,7 +50,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
 
   // Converts to secondary value using exchange rate
-  let secondaryDecimalAmount = bns.div(primaryDecimalAmount, props.displaySecondaryToPrimaryRatio, 18)
+  let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.displaySecondaryToPrimaryRatio)
 
   // Truncate to however many decimals the secondary format should have
   secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
@@ -65,7 +65,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
 // Pretty much the same as setPrimaryToSecondary
 function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
   const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
-  let primaryDecimalAmount = bns.mul(secondaryDecimalAmount, props.displaySecondaryToPrimaryRatio)
+  let primaryDecimalAmount = bns.div(secondaryDecimalAmount, props.displaySecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
   return {secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount}
@@ -76,7 +76,7 @@ const getInitialState = (props: Props) => {
     isToggled: false,
     textInputFrontFocus: false,
     textInputBackFocus: false,
-    overridePrimaryDecimalAmount: '0',
+    overridePrimaryDecimalAmount: '',
     primaryDisplayAmount: '',
     secondaryDisplayAmount: ''
   }
@@ -154,6 +154,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     if (nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount) {
       const primaryDecimalAmount = UTILS.truncateDecimals(nextProps.overridePrimaryDecimalAmount, nextProps.primaryInfo.maxEntryDecimals)
       this.setState(setPrimaryToSecondary(nextProps, primaryDecimalAmount))
+      this.setState({overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount})
     } else {
       if (!this.state.isToggled) {
         const decimalAmount = intl.formatToNativeNumber(this.state.primaryDisplayAmount)
@@ -179,8 +180,13 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     // Format to standard US decimals with no 1000s separator. This is what we return to the parent view in the callback
     const decimalAmount = intl.formatToNativeNumber(formattedDisplayAmount)
 
-    this.setState(setPrimaryToSecondary(this.props, decimalAmount))
-    this.props.onAmountChanged(decimalAmount)
+    const result = setPrimaryToSecondary(this.props, decimalAmount)
+    this.setState(
+      result,
+      () => {
+        this.props.onAmountChanged(decimalAmount)
+      }
+    )
   }
 
   onSecondaryAmountChange = (displayAmount: string) => {
@@ -194,11 +200,15 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     const decimalAmount = intl.formatToNativeNumber(formattedDisplayAmount)
 
     const result = setSecondaryToPrimary(this.props, decimalAmount)
-    this.setState({
-      primaryDisplayAmount: result.primaryDisplayAmount,
-      secondaryDisplayAmount: result.secondaryDisplayAmount
-    })
-    this.props.onAmountChanged(result.primaryDisplayAmount)
+    this.setState(
+      {
+        primaryDisplayAmount: result.primaryDisplayAmount,
+        secondaryDisplayAmount: result.secondaryDisplayAmount
+      },
+      () => {
+        this.props.onAmountChanged(result.primaryDisplayAmount)
+      }
+    )
   }
 
   topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
