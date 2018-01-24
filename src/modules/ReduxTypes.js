@@ -2,20 +2,21 @@
 
 import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux'
 import type {
-  AbcContext,
-  AbcCurrencyWallet,
   AbcAccount,
+  AbcContext,
+  AbcCurrencyPlugin,
+  AbcCurrencyWallet,
+  AbcDenomination,
   AbcLobby,
-  AbcTransaction,
   AbcParsedUri,
-  // AbcCurrencyInfo,
-  AbcReceiveAddress // ,
+  AbcReceiveAddress,
+  AbcTransaction
  } from 'airbitz-core-types'
 
 import type {
   DeviceDimensions,
-  GuiWallet,
-  GuiContact
+  GuiContact,
+  GuiWallet
 } from '../types'
 
 export type Action = { type: string, data?: any }
@@ -143,7 +144,7 @@ export type State = {
         syntax: {
           title: string,
           message: string,
-          buttons: Array<any>
+          buttons: Array<{title: string, message: string}>
         }
       },
     },
@@ -159,7 +160,34 @@ export type State = {
     request: {
       receiveAddress: AbcReceiveAddress
     },
-    settings: any,
+    settings: {
+      autoLogoutTimeInSeconds: number,
+      defaultFiat: string,
+      merchantMode: boolean,
+      customTokens: Array<any>,
+      bluetoothMode: boolean,
+      otpMode: boolean,
+      pinMode: boolean,
+      changesLocked: true,
+      loginStatus: true,
+      isTouchSupported: boolean,
+      isTouchEnabled: boolean,
+      isOtpEnabled: true,
+      otpKey: string,
+      [CurrencyCode]: {
+        denomination: string,
+        currencyName: string,
+        currencyCode: string,
+        denominations: Array<AbcDenomination>,
+        symbolImage: string,
+        symbolImageDarkMono: string
+      },
+      plugins: {
+        arrayPlugins: Array<AbcCurrencyPlugin>,
+        supportedWalletTypes: Array<string>,
+        [pluginName: string]: AbcCurrencyPlugin
+      }
+    },
     contacts: {
       contactList: Array<GuiContact>
     }
