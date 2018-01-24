@@ -391,6 +391,21 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderHelpButton}
                         />
                       </Stack>
+
+                      <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
+                        <Scene key={Constants.MANAGE_TOKENS_NOT_USED} navTransparent={true}
+                          component={ManageTokens}
+                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+
+                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
+                          component={AddToken}
+                          renderTitle={this.renderTitle(ADD_TOKEN)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+                      </Stack>
+
                       <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
                         <Scene
                           key={Constants.SETTINGS_OVERVIEW}
@@ -445,7 +460,6 @@ export default class Main extends Component<Props, State> {
                     </Scene>
                   </Drawer>
                 </Stack>
-                {/* </Lightbox> */}
               </Modal>
             </Overlay>
           </RouterWithRedux>
