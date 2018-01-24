@@ -133,12 +133,10 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 
 type Props = {
   username?: string,
-  addExchangeTimer: number => void,
   addCurrencyPlugin: AbcCurrencyPlugin => void,
   setKeyboardHeight: number => void,
   addContext: AbcContext => void,
   addUsernames: (Array<string>) => void,
-  setLocaleInfo: any => void,
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
@@ -181,7 +179,6 @@ export default class Main extends Component<Props, State> {
       CONTEXT_API.listUsernames(context).then(usernames => {
         this.props.addUsernames(usernames)
       })
-      this.props.setLocaleInfo(localeInfo)
       setIntlLocale(localeInfo)
       selectLocale('enUS')
       SplashScreen.close({

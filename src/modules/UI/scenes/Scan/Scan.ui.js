@@ -31,7 +31,6 @@ type Props = {
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,
-  scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
   dispatchEnableScan(): void,
   dispatchDisableScan(): void,
