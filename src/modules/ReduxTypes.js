@@ -14,7 +14,7 @@ import type {
 
 import type {
   DeviceDimensions,
-  // GuiWallet,
+  GuiWallet,
   GuiContact
 } from '../types'
 
@@ -147,10 +147,22 @@ export type State = {
         }
       },
     },
-    wallets: any,
-    request: any,
+    wallets: {
+      byId: {[walletId: Id]: GuiWallet},
+      activeWalletIds: Array<Id>,
+      archivedWalletIds: Array<Id>,
+      selectedWalletId: string,
+      selectedCurrencyCode: string,
+      addTokenPending: boolean,
+      manageTokensPending: boolean
+    },
+    request: {
+      receiveAddress: AbcReceiveAddress
+    },
     settings: any,
-    contacts: any
+    contacts: {
+      contactList: Array<GuiContact>
+    }
   },
   cryptoExchange: {
     exchangeRate: number,
