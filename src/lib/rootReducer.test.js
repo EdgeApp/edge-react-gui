@@ -125,8 +125,8 @@ test('initialState', () => {
           'displayAmount': undefined,
           'draftStatus': 'under',
           'error': null,
-          'feeSatoshi': 0,
-          'feeSetting': 'standard',
+          'customNetworkFee': {},
+          'networkFeeOption': 'standard',
           'inputCurrencySelected': 'fiat',
           'isKeyboardVisible': false,
           'isPinEnabled': false,
@@ -135,11 +135,13 @@ test('initialState', () => {
           'maxSatoshi': 0,
           'parsedUri': {
             'nativeAmount': '',
-            'publicAddress': ''
+            'publicAddress': '',
+            'metadata': {}
           },
           'pending': false,
           'publicAddress': '',
-          'transaction': null},
+          'transaction': null
+        },
         'sideMenu': {
           'view': false},
         'transactionAlert': {

@@ -1,11 +1,10 @@
 // @flow
 import {connect} from 'react-redux'
 import SendConfirmation, {type Props, type DispatchProps} from './SendConfirmation.ui'
-import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
 
 import type {State, Dispatch} from '../../../ReduxTypes'
-import type {GuiWallet, GuiDenomination} from '../../../../types'
-import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri, AbcMetadata} from 'airbitz-core-types'
+import type {GuiWallet} from '../../../../types'
+import type {AbcTransaction, AbcMetadata} from 'airbitz-core-types'
 import type {AbcMakeSpendInfo} from './action'
 import {bns} from 'biggystring'
 

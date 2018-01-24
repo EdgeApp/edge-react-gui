@@ -7,15 +7,11 @@ export type SendConfirmationState = {
   transaction: AbcTransaction | null,
   parsedUri: AbcParsedUri,
   error: Error | null,
-
   displayAmount: number,
   publicAddress: string,
-  feeSatoshi: number,
   label: string,
-
-  // fee: string,
-  feeSetting: string,
-
+  networkFeeOption: string,
+  customNetworkFee?: any,
   inputCurrencySelected: string,
   maxSatoshi: number,
   isPinEnabled: boolean,
@@ -29,18 +25,15 @@ export const initialState: SendConfirmationState = {
   transaction: null,
   parsedUri: {
     publicAddress: '',
-    nativeAmount: ''
+    nativeAmount: '',
+    metadata: {}
   },
   error: null,
-
   displayAmount: 0,
   publicAddress: '',
-  feeSatoshi: 0,
   label: '',
-
-  // fee: '',
-  feeSetting: Constants.STANDARD_FEE,
-
+  networkFeeOption: Constants.STANDARD_FEE,
+  customNetworkFee: {},
   inputCurrencySelected: 'fiat',
   maxSatoshi: 0,
   isPinEnabled: false,
