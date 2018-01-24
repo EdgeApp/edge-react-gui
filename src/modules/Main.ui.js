@@ -11,7 +11,6 @@ import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking}
 import T from './UI/components/FormattedText'
 import { connect } from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
-// import THEME from '../theme/variables/airbitz'
 
 import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'react-native-router-flux'
 import { StyleProvider } from 'native-base'
@@ -222,7 +221,7 @@ export default class Main extends Component<Props, State> {
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
                 {/* <Lightbox> */}
-                <Stack key="root" hideNavBar panHandlers={null}>
+                <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
                   <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
                   <Scene
@@ -235,10 +234,10 @@ export default class Main extends Component<Props, State> {
                     renderRightButton={this.renderMenuButton}
                   />
 
-                  <Drawer key="edge" hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
+                  <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
                     {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
                     <Scene hideNavBar>
-                      <Tabs key="edge" swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
+                      <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
                         <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
                           <Scene
                             key={Constants.WALLET_LIST_SCENE}
@@ -336,7 +335,7 @@ export default class Main extends Component<Props, State> {
 
                         <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
                           <Scene
-                            key="scan_notused"
+                            key={Constants.SCAN_NOT_USED}
                             navTransparent={true}
                             onEnter={this.props.dispatchEnableScan}
                             onExit={this.props.dispatchDisableScan}
@@ -356,7 +355,7 @@ export default class Main extends Component<Props, State> {
 
                         <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
                           <Scene
-                            key="exchange_notused"
+                            key={Constants.EXCHANGE_NOT_USED}
                             navTransparent={true}
                             component={ExchangeConnector}
                             renderTitle={this.renderTitle(EXCHANGE)}
@@ -376,7 +375,7 @@ export default class Main extends Component<Props, State> {
 
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
                         <Scene
-                          key="sendconfirmation_notused"
+                          key={Constants.SEND_CONFIRMATION_NOT_USED}
                           navTransparent={true}
                           hideTabBar
                           panHandlers={null}
@@ -394,7 +393,7 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderHelpButton}
                         />
                       </Stack>
-                      <Stack key="settingsOverviewTab" hideDrawerButton={true}>
+                      <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
                         <Scene
                           key={Constants.SETTINGS_OVERVIEW}
                           navTransparent={true}
@@ -437,7 +436,7 @@ export default class Main extends Component<Props, State> {
                         />
                         {this.renderCurrencySettings()}
                         <Scene
-                          key="defaultFiatSetting"
+                          key={Constants.DEFAULT_FIAT_SETTING}
                           navTransparent={true}
                           component={DefaultFiatSettingConnector}
                           renderTitle={this.renderTitle(DEFAULT_FIAT)}
@@ -481,22 +480,42 @@ export default class Main extends Component<Props, State> {
     }
     return settings
   }
-  renderWalletListNavBar = () => <Header />
-  renderEmptyButton = () => () => <BackButton />
-  renderHelpButton = () => <HelpButton />
-  renderBackButton = (label: string = BACK) => () => <BackButton withArrow onPress={this.handleBack} label={label} />
+
+  renderWalletListNavBar = () => {
+    return <Header />
+  }
+
+  renderEmptyButton = () => () => {
+    return <BackButton />
+  }
+
+  renderHelpButton = () => {
+    return <HelpButton />
+  }
+
+  renderBackButton = (label: string = BACK) => () => {
+    return <BackButton withArrow onPress={this.handleBack} label={label} />
+  }
+
   renderTitle = (title: string) => {
     return <T style={styles.titleStyle}>{title}</T>
   }
-  renderMenuButton = () => (
-    <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
+
+  renderMenuButton = () => {
+    return <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
       <Image source={MenuIcon} />
     </TouchableWithoutFeedback>
-  )
-  renderExchangeButton = () => <ExchangeDropMenu />
-  renderSendConfirmationButton = () => <SendConfirmationOptions />
+  }
 
-  icon = (tabName: string) => (props: { focused: boolean }) => {
+  renderExchangeButton = () => {
+    return <ExchangeDropMenu />
+  }
+
+  renderSendConfirmationButton = () => {
+    return <SendConfirmationOptions />
+  }
+
+  icon = (tabName: string) => (props: {focused: boolean}) => {
     if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
       throw new Error('Invalid tabbar name')
     }
