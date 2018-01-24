@@ -53,6 +53,7 @@ const mapStateToProps = (state: State): Props => {
     pending,
     keyboardIsVisible: SEND_SELECTORS.getKeyboardIsVisible(state),
     label: SEND_SELECTORS.getLabel(state),
+    // $FlowFixMe
     primaryDisplayDenomination: SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: UI_SELECTORS.getExchangeDenomination(state, currencyCode),
     secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
