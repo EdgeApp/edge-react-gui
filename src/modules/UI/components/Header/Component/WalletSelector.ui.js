@@ -24,7 +24,6 @@ export default class WalletSelector extends Component<Props, State> {
       iconType={Constants.MATERIAL_ICONS}
       onPress={this.props.onPress}
       title={this.props.title}
-      blat={'WalletSelectorConnector'}
     />
   }
 }
