@@ -2,7 +2,7 @@
 
 import React, {Component} from 'react'
 
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import CustomFeesModal from './CustomFeesModalConnector.js'
 import { PrimaryButton } from '../../../../components/Buttons/Buttons.ui'
 import s from '../../../../../../locales/strings.js'

@@ -1,13 +1,11 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, Text, TextInput, TouchableHighlight, SafeAreaView} from 'react-native'
+import {View} from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import RadioButton from './components/RadioButton.ui'
 import CustomFees from './components/CustomFees/CustomFeesConnector.js'
-import EdgeRadioButton from '../../components/RadioRows'
-import {PrimaryButton} from '../../components/Buttons/Buttons.ui'
 
 import * as FEE from '../../../../constants/FeeConstants'
 import s from '../../../../locales/strings.js'

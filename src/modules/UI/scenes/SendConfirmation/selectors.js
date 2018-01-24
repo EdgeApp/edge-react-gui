@@ -2,7 +2,7 @@
 
 import * as UI_SELECTORS from '../../selectors.js'
 import type { State } from '../../../ReduxTypes'
-import type {AbcTransaction, AbcParsedUri, AbcMetadata} from 'airbitz-core-types'
+import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 export const getScene = (state: State): any => UI_SELECTORS.getSceneState(state, 'sendConfirmation')
 

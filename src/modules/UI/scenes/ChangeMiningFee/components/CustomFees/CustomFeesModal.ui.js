@@ -1,13 +1,12 @@
 // @flow
 
 import React, {Component} from 'react'
-import { View, TextInput } from 'react-native'
+import { View } from 'react-native'
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import { FormField } from '../../../../../../components/FormField.js'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import styles from './style'
 import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'
-import OptionSubtext from '../../../../components/OptionSubtext/OptionSubtextConnector.js'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 import s from '../../../../../../locales/strings.js'
 

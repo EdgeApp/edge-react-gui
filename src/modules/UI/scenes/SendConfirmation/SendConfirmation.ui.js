@@ -179,9 +179,6 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
   onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
     const primaryNativeToDenominationRatio = this.props.primaryDisplayDenomination.multiplier.toString()
     const nativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-
-    const secondaryNativeToDenominationRatio = this.state.secondaryDisplayDenomination.multiplier.toString()
-    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
     const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
     const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
 

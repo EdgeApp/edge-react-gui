@@ -11,6 +11,7 @@ import {selectWallet} from '../../../../Wallets/action'
 
 const mapStateToProps = (state: State, ownProps) => {
   const currencyCode: string = ownProps.currencyCode
+  // $FlowFixMe
   const displayDenomination: AbcDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
 
   return {

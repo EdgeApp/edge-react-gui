@@ -1,21 +1,17 @@
 // @flow
 import * as ACTION from './action'
 import * as Constants from '../../../../constants/indexConstants'
-import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
+import type { AbcTransaction, AbcParsedUri } from 'airbitz-core-types'
 
 export type SendConfirmationState = {
   transaction: AbcTransaction | null,
   parsedUri: AbcParsedUri,
   error: Error | null,
-
   displayAmount: number,
   publicAddress: string,
-  feeSatoshi: number,
   label: string,
-
   networkFeeOption: string,
-  customNetworkFee: any,
-
+  customNetworkFee?: any,
   inputCurrencySelected: string,
   maxSatoshi: number,
   isPinEnabled: boolean,
@@ -29,18 +25,15 @@ export const initialState: SendConfirmationState = {
   transaction: null,
   parsedUri: {
     publicAddress: '',
-    nativeAmount: ''
+    nativeAmount: '',
+    metadata: {}
   },
   error: null,
-
   displayAmount: 0,
   publicAddress: '',
-  feeSatoshi: 0,
   label: '',
-
   networkFeeOption: Constants.STANDARD_FEE,
   customNetworkFee: {},
-
   inputCurrencySelected: 'fiat',
   maxSatoshi: 0,
   isPinEnabled: false,
@@ -50,8 +43,8 @@ export const initialState: SendConfirmationState = {
   pending: false
 }
 
-const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
-  const {type, data = {}} = action
+export const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
+  const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
       const { transaction } = data
@@ -77,49 +70,49 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
       }
     }
     case ACTION.UPDATE_DISPLAY_AMOUNT: {
-      const {displayAmount} = data
+      const { displayAmount } = data
       return {
         ...state,
         displayAmount
       }
     }
     case ACTION.UPDATE_MAX_SATOSHI: {
-      const {maxSatoshi} = data
+      const { maxSatoshi } = data
       return {
         ...state,
         maxSatoshi
       }
     }
     case ACTION.USE_MAX_SATOSHI: {
-      const {maxSatoshi} = data
+      const { maxSatoshi } = data
       return {
         ...state,
         maxSatoshi
       }
     }
     case ACTION.UNLOCK_SLIDER: {
-      const {isSliderLocked} = data
+      const { isSliderLocked } = data
       return {
         ...state,
         isSliderLocked
       }
     }
     case ACTION.UPDATE_DRAFT_STATUS: {
-      const {draftStatus} = data
+      const { draftStatus } = data
       return {
         ...state,
         draftStatus
       }
     }
     case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
-      const {isKeyboardVisible} = data
+      const { isKeyboardVisible } = data
       return {
         ...state,
         isKeyboardVisible
       }
     }
     case ACTION.UPDATE_SPEND_PENDING: {
-      const {pending} = data
+      const { pending } = data
       return {
         ...state,
         pending
