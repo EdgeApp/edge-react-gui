@@ -64,6 +64,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
       return <Image
         style={style.image}
+        resizeMode={'contain'}
         source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null

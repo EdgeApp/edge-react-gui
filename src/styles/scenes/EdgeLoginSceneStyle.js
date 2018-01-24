@@ -11,7 +11,7 @@ const EdgeLoginScreen = {
     width: '100%'
   },
   header: {
-    flex: 2,
+    height: 120,
     flexDirection: 'column'
   },
   headerTopShim: {
@@ -24,8 +24,8 @@ const EdgeLoginScreen = {
 
   },
   image: {
-    width: 70,
-    height: 70
+    width: 80,
+    height: 80
   },
   headerTextRow: {
     flex: 3,
@@ -41,10 +41,10 @@ const EdgeLoginScreen = {
   },
 
   body: {
-    flex: 4
+    height: 200
   },
   buttons: {
-    flex: 1,
+    height: 150,
     marginRight: '5%',
     marginLeft: '5%',
     flexDirection: 'row',
