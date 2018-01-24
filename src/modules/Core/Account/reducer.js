@@ -1,8 +1,10 @@
 // @flow
 
-import type {Action} from '../../ReduxTypes.js'
-import type {AbcAccount} from 'airbitz-core-types'
+import type { AbcAccount } from 'airbitz-core-types'
+
+import type { Action } from '../../ReduxTypes.js'
 import * as Constants from '../../../constants/indexConstants.js'
+
 type AccountReducerState = AbcAccount | {} | void
 
 export const initialState: AccountReducerState = {}

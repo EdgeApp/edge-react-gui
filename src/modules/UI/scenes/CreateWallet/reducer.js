@@ -1,8 +1,8 @@
 // @flow
 
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 import * as ACTION from '../../Wallets/action'
-import type {Action} from '../../../ReduxTypes.js'
+import type { Action } from '../../../ReduxTypes.js'
 
 export type IsCreatingWallet = boolean
 
@@ -19,7 +19,7 @@ const isCreatingWallet = (state = false, action: Action) => {
   }
 }
 
-const createWallet = combineReducers({
+export const createWallet = combineReducers({
   isCreatingWallet
 })
 
