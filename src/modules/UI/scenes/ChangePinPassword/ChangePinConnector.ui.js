@@ -9,8 +9,6 @@ import ChangePinComponent, {
   type ChangePinDispatchProps
 } from './ChangePinComponent.ui'
 
-import type {AbcContext, AbcAccount} from 'airbitz-core-types'
-
 import type {State} from '../../../ReduxTypes'
 
 export const mapStateToProps = (state: State, ownProps: ChangePinOwnProps): ChangePinStateProps => ({

@@ -7,7 +7,6 @@ import ManageTokens, {
   type ManageTokensStateProps
 } from './ManageTokens.ui.js'
 import {getEnabledTokens, setEnabledTokens} from '../../Wallets/action.js'
-import type {GuiWallet, CustomTokenInfo} from '../../../../types'
 import type {State} from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State, ownProps: ManageTokensOwnProps): ManageTokensStateProps => ({

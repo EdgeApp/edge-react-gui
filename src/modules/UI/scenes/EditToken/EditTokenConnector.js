@@ -4,8 +4,7 @@ import {connect} from 'react-redux'
 import * as EDIT_TOKEN_ACTIONS from './action.js'
 import EditToken, {
   type EditTokenStateProps,
-  type EditTokenDispatchProps,
-  type EditTokenOwnProps
+  type EditTokenDispatchProps
 } from './EditToken.ui'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 import type {Dispatch, State} from '../../../ReduxTypes'

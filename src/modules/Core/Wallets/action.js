@@ -10,7 +10,7 @@ export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'
 export const updateWallets = (
   activeWalletIds: Array<string>,
   archivedWalletIds: Array<string>,
-  currencyWallets: Array<AbcCurrencyWallet>) => ({
+  currencyWallets: {[id: string]: AbcCurrencyWallet}) => ({
     type: UPDATE_WALLETS,
     data: {
       activeWalletIds,

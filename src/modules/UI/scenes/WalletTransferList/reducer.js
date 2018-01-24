@@ -19,7 +19,7 @@ const walletListModalVisible = (state = false, action) => {
   }
 }
 
-const walletTransferListReducer = combineReducers({
+export const walletTransferListReducer = combineReducers({
   walletTransferList,
   walletListModalVisible
 })

@@ -1,7 +1,8 @@
 // @flow
+
 import {connect} from 'react-redux'
+
 import WalletOptions from './WalletOptions.ui'
-import * as Constants from '../../../../../../constants/indexConstants.js'
 import type {Dispatch, State} from '../../../../../ReduxTypes'
 
 const mapStateToProps = (state: State): {} => ({})

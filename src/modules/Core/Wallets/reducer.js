@@ -1,13 +1,20 @@
-import {combineReducers} from 'redux'
+// @flow
+
+import { combineReducers } from 'redux'
+import { type AbcCurrencyWallet } from 'airbitz-core-types'
+
 import * as ACTION from './action.js'
 import * as Constants from '../../../constants/indexConstants'
-const initialState = {}
-const byId = (state = initialState, action) => {
-  const { type, data = {} } = action
+import type { Action } from '../../ReduxTypes'
 
-  switch (type) {
+type WalletState = { [id: string]: AbcCurrencyWallet } | void
+
+export const initialState = {}
+
+const byId = (state = initialState, action) => {
+  switch (action.type) {
     case ACTION.UPDATE_WALLETS: {
-      const {currencyWallets} = data
+      const { currencyWallets } = action.data
       return {
         ...state,
         ...currencyWallets
@@ -18,10 +25,10 @@ const byId = (state = initialState, action) => {
   }
 }
 
-export const wallets = (state, action) => {
+export const wallets = (state: WalletState, action: Action) => {
   if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
     state = undefined
   }
 
-  return combineReducers({byId})(state, action)
+  return combineReducers({ byId })(state, action)
 }

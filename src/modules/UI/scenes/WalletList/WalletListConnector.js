@@ -5,7 +5,7 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
-import type {Dispatch, State} from '../../../ReduxTypes'
+import type {State} from '../../../ReduxTypes'
 
 import { walletRowOption } from './components/WalletOptions/action.js'
 

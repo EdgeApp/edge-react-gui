@@ -1,10 +1,9 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, TouchableHighlight} from 'react-native'
+import {View} from 'react-native'
 import {MaterialInputOnWhite, ConfirmPasswordModalStyle} from '../../../../../../styles/indexStyles'
 import {FormField} from '../../../../../../components/indexComponents'
-import * as WALLET_API from '../../../../../Core/Wallets/api.js'
 
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
@@ -15,11 +14,6 @@ import T from '../../../../components/FormattedText/FormattedText.ui'
 import styles from '../../style'
 import s from '../../../../../../locales/strings.js'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
-
-import {
-  CLOSE_MODAL_FUNCTION,
-  VISIBLE_MODAL_NAME
-} from '../WalletOptions/action'
 
 export const GET_SEED_WALLET_START = 'GET_SEED_WALLET_START'
 export const GET_SEED_WALLET_SUCCESS = 'GET_SEED_WALLET_SUCCESS'

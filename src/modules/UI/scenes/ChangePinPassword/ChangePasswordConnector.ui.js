@@ -8,7 +8,6 @@ import ChangePasswordComponent, {
   type ChangePasswordStateProps,
   type ChangePasswordOwnProps
 } from './ChangePasswordComponent.ui'
-import type {AbcContext, AbcAccount} from 'airbitz-core-types'
 
 import type {State} from '../../../ReduxTypes'
 

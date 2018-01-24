@@ -204,7 +204,6 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   _onSave = () => {
     const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
     if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-      let tokenObj
       const {walletId} = this.props
       const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
       const indexInVisibleTokens = _.findIndex(visibleTokens, (token) => token.currencyCode === currencyCode)
@@ -220,8 +219,6 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
           }
         }
       } else {
-        const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
-        const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
         if (parseInt(decimalPlaces) !== 'NaN') {
           const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
           this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)
