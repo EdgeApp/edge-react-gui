@@ -8,6 +8,8 @@ import {
   ScrollView,
   Alert
 } from 'react-native'
+import _ from 'lodash'
+
 import Text from '../../components/FormattedText'
 import SafeAreaView from '../../components/SafeAreaView'
 import s from '../../../../locales/strings.js'
@@ -16,8 +18,6 @@ import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import * as ADD_TOKEN_ACTIONS from './action.js'
-import type {AbcMetaToken} from 'airbitz-core-types'
-import _ from 'lodash'
 import {decimalPlacesToDenomination} from '../../../utils.js'
 import type { CustomTokenInfo, GuiWallet } from '../../../../types'
 import {

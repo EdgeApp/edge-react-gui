@@ -1,7 +1,7 @@
 // @flow
 import * as ACTION from './action'
 import * as Constants from '../../../../constants/indexConstants'
-import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
+import type { AbcTransaction, AbcParsedUri } from 'airbitz-core-types'
 
 export type SendConfirmationState = {
   transaction: AbcTransaction | null,
@@ -50,8 +50,8 @@ export const initialState: SendConfirmationState = {
   pending: false
 }
 
-const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
-  const {type, data = {}} = action
+export const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
+  const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
       const { transaction } = data
@@ -77,49 +77,49 @@ const sendConfirmation = (state: SendConfirmationState = initialState, action: a
       }
     }
     case ACTION.UPDATE_DISPLAY_AMOUNT: {
-      const {displayAmount} = data
+      const { displayAmount } = data
       return {
         ...state,
         displayAmount
       }
     }
     case ACTION.UPDATE_MAX_SATOSHI: {
-      const {maxSatoshi} = data
+      const { maxSatoshi } = data
       return {
         ...state,
         maxSatoshi
       }
     }
     case ACTION.USE_MAX_SATOSHI: {
-      const {maxSatoshi} = data
+      const { maxSatoshi } = data
       return {
         ...state,
         maxSatoshi
       }
     }
     case ACTION.UNLOCK_SLIDER: {
-      const {isSliderLocked} = data
+      const { isSliderLocked } = data
       return {
         ...state,
         isSliderLocked
       }
     }
     case ACTION.UPDATE_DRAFT_STATUS: {
-      const {draftStatus} = data
+      const { draftStatus } = data
       return {
         ...state,
         draftStatus
       }
     }
     case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
-      const {isKeyboardVisible} = data
+      const { isKeyboardVisible } = data
       return {
         ...state,
         isKeyboardVisible
       }
     }
     case ACTION.UPDATE_SPEND_PENDING: {
-      const {pending} = data
+      const { pending } = data
       return {
         ...state,
         pending

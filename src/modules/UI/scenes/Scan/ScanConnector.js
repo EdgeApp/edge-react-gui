@@ -1,23 +1,24 @@
 // @flow
-import {connect} from 'react-redux'
+
+import { connect } from 'react-redux'
+import type { AbcParsedUri, AbcCurrencyWallet } from 'airbitz-core-types'
+import { Actions } from 'react-native-router-flux'
+
 import Scan from './Scan.ui'
 import * as Constants from '../../../../constants/indexConstants'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
-import {toggleScanToWalletListModal} from '../../components/WalletListModal/action'
-import {loginWithEdge} from '../../../../actions/indexActions'
-import type {AbcParsedUri, AbcCurrencyWallet} from 'airbitz-core-types'
-import {toggleEnableTorch, toggleAddressModal, disableScan, enableScan} from './action'
-import {
-  updateParsedURI,
-  updateWalletTransfer
-} from '../SendConfirmation/action.js'
-import {Actions} from 'react-native-router-flux'
+import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
+import { loginWithEdge } from '../../../../actions/indexActions'
+import { toggleEnableTorch, toggleAddressModal, disableScan, enableScan } from './action'
+import { updateParsedURI, updateWalletTransfer } from '../SendConfirmation/action.js'
 
-import {toggleWalletListModal} from '../WalletTransferList/action'
+import { toggleWalletListModal } from '../WalletTransferList/action'
 
-const mapStateToProps = (state: any) => {
+import type { Dispatch, State } from '../../../ReduxTypes'
+
+const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
 
@@ -32,14 +33,14 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: any) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatchEnableScan: () => dispatch(enableScan()),
   dispatchDisableScan: () => dispatch(disableScan()),
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),
   updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
-  updateWalletTransfer: (wallet) => dispatch(updateWalletTransfer(wallet)),
+  updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet)),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   loginWithEdge: (url: string) => {
     Actions[Constants.EDGE_LOGIN]()

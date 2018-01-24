@@ -1,4 +1,7 @@
+// @flow
+
 import {combineReducers} from 'redux'
+
 import * as ACTION from './action'
 
 const localeInfo = (state = {}, action) => {
@@ -10,7 +13,7 @@ const localeInfo = (state = {}, action) => {
   }
 }
 
-const locale = combineReducers({
+export const locale = combineReducers({
   localeInfo
 })
 

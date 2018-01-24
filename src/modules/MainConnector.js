@@ -1,29 +1,20 @@
 // @flow
-import type {Dispatch} from './ReduxTypes'
-import * as Constants from '../constants/indexConstants.js'
+
 import {connect} from 'react-redux'
+
+import type {Dispatch} from './ReduxTypes'
 import Main from './Main.ui'
 
-import {
-  addExchangeTimer,
-  addCurrencyPlugin
-} from './UI/Settings/action'
+import {addExchangeTimer, addCurrencyPlugin} from './UI/Settings/action'
 import {setKeyboardHeight} from './UI/dimensions/action'
-import {
-  addContext,
-  addUsernames
-} from './Core/Context/action.js'
+import {addContext, addUsernames} from './Core/Context/action.js'
 import {setLocaleInfo} from './UI/locale/action'
-import {
-  enableScan,
-  disableScan
-} from './UI/scenes/Scan/action'
+import {enableScan, disableScan} from './UI/scenes/Scan/action'
 import * as actions from '../actions/indexActions'
 
 import makeContextCallbacks from './Core/Context/callbacks'
 
 const mapStateToProps = () => ({})
-
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatchEnableScan: () => {
     return dispatch(enableScan())
@@ -54,5 +45,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   contextCallbacks: makeContextCallbacks(dispatch)
 })
-
 export default connect(mapStateToProps, mapDispatchToProps)(Main)

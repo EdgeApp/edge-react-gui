@@ -13,7 +13,6 @@ import {
   wrap
 } from '../WalletOptions/action'
 
-import * as WALLET_API from '../../../../../Core/Wallets/api.js'
 import * as UI_ACTIONS from '../../../../Wallets/action.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 
