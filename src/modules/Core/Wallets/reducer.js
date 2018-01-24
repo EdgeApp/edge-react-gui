@@ -5,7 +5,7 @@ import { type AbcCurrencyWallet } from 'airbitz-core-types'
 
 import * as ACTION from './action.js'
 import * as Constants from '../../../constants/indexConstants'
-import type { Action, State } from '../../ReduxTypes'
+import type { Action } from '../../ReduxTypes'
 
 type WalletState = { [id: string]: AbcCurrencyWallet } | void
 
