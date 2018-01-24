@@ -220,23 +220,28 @@ export default class Main extends Component<Props, State> {
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
+                {/* <Lightbox> */}
                 <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-                  <Scene key={Constants.LOGIN} initial
-                    component={LoginConnector}
-                    username={this.props.username} />
+                  <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
-                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} clone
+                  <Scene
+                    key={Constants.TRANSACTION_DETAILS}
+                    navTransparent={true}
+                    clone
                     component={TransactionDetails}
                     renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
                     renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton} />
+                    renderRightButton={this.renderMenuButton}
+                  />
 
-                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
-                  {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
-                  <Scene hideNavBar>
-                    <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
-                      <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
-                          <Scene key={Constants.WALLET_LIST_SCENE} navTransparent={true}
+                  <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
+                    {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
+                    <Scene hideNavBar>
+                      <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
+                        <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
+                          <Scene
+                            key={Constants.WALLET_LIST_SCENE}
+                            navTransparent={true}
                             component={WalletList}
                             renderTitle={this.renderTitle(WALLETS)}
                             renderLeftButton={this.renderHelpButton}
@@ -329,7 +334,11 @@ export default class Main extends Component<Props, State> {
                         />
 
                         <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
-                          <Scene key={Constants.SCAN_NOT_USED} navTransparent={true}
+                          <Scene
+                            key={Constants.SCAN_NOT_USED}
+                            navTransparent={true}
+                            onEnter={this.props.dispatchEnableScan}
+                            onExit={this.props.dispatchDisableScan}
                             component={Scan}
                             renderTitle={this.renderWalletListNavBar}
                             renderLeftButton={this.renderHelpButton}
@@ -345,7 +354,9 @@ export default class Main extends Component<Props, State> {
                         </Stack>
 
                         <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
-                          <Scene key={Constants.EXCHANGE_NOT_USED} navTransparent={true}
+                          <Scene
+                            key={Constants.EXCHANGE_NOT_USED}
+                            navTransparent={true}
                             component={ExchangeConnector}
                             renderTitle={this.renderTitle(EXCHANGE)}
                             renderLeftButton={this.renderExchangeButton}
@@ -363,7 +374,11 @@ export default class Main extends Component<Props, State> {
                       </Tabs>
 
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
-                        <Scene key={Constants.SEND_CONFIRMATION_NOT_USED} navTransparent={true} hideTabBar panHandlers={null}
+                        <Scene
+                          key={Constants.SEND_CONFIRMATION_NOT_USED}
+                          navTransparent={true}
+                          hideTabBar
+                          panHandlers={null}
                           component={SendConfirmation}
                           renderTitle={this.renderTitle(SEND_CONFIRMATION)}
                           renderLeftButton={this.renderBackButton()}
@@ -394,7 +409,9 @@ export default class Main extends Component<Props, State> {
                       </Stack>
 
                       <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
-                        <Scene key={Constants.SETTINGS_OVERVIEW} navTransparent={true}
+                        <Scene
+                          key={Constants.SETTINGS_OVERVIEW}
+                          navTransparent={true}
                           component={SettingsOverview}
                           renderTitle={this.renderTitle(SETTINGS)}
                           renderLeftButton={this.renderBackButton()}
@@ -433,8 +450,9 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderEmptyButton}
                         />
                         {this.renderCurrencySettings()}
-
-                        <Scene key={Constants.DEFAULT_FIAT_SETTING} navTransparent={true}
+                        <Scene
+                          key={Constants.DEFAULT_FIAT_SETTING}
+                          navTransparent={true}
                           component={DefaultFiatSettingConnector}
                           renderTitle={this.renderTitle(DEFAULT_FIAT)}
                           renderLeftButton={this.renderBackButton()}
@@ -511,7 +529,7 @@ export default class Main extends Component<Props, State> {
     return <SendConfirmationOptions />
   }
 
-  icon = (tabName: string) => (props: { focused: boolean }) => {
+  icon = (tabName: string) => (props: {focused: boolean}) => {
     if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
       throw new Error('Invalid tabbar name')
     }
