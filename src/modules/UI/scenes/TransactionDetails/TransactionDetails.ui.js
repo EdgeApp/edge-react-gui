@@ -544,7 +544,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   />
                 </Animated.View>
             }
-            <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
+            <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' >
               <View style={[styles.container]}>
                 <View>
                   <Gradient style={[styles.expandedHeader]}>

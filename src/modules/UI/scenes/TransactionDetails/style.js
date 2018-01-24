@@ -223,7 +223,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
-    height: 700,
+    height: 200,
     paddingLeft: 15,
     paddingRight: 15
   },
