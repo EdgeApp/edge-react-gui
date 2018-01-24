@@ -131,7 +131,7 @@ const strings = {
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_delete: 'Delete',
-  string_custom_fee: 'Set fees',
+  string_custom_fee: 'Set Fees',
   satPerByte: 'Satoshi Per Byte',
   gasLimit: 'Gas Limit',
   gasPrice: 'Gas Price',

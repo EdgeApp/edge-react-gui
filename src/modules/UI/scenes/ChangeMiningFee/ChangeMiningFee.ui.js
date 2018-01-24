@@ -1,12 +1,12 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, Text, TextInput, TouchableHighlight} from 'react-native'
+import {View, Text, TextInput, TouchableHighlight, SafeAreaView} from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import RadioButton from './components/RadioButton.ui'
 import CustomFees from './components/CustomFees/CustomFeesConnector.js'
-
+import EdgeRadioButton from '../../components/RadioRows'
 import {PrimaryButton} from '../../components/Buttons/Buttons.ui'
 
 import * as FEE from '../../../../constants/FeeConstants'
@@ -46,45 +46,39 @@ export class ChangeMiningFee extends Component<Props, State> {
     const { feeSetting } = this.state
 
     return (
-      <View style={styles.container}>
-        <Gradient style={styles.gradient} />
+        <View style={styles.scene}>
+          <Gradient style={styles.gradient} />
 
-        <View style={styles.headerContainer}>
-          <Text style={styles.header} >
-            {s.strings.change_mining_fee_body}
-          </Text>
+          <View style={styles.content}>
+            <View key={FEE.HIGH_FEE} style={styles.row}>
+              <RadioButton
+                value={FEE.HIGH_FEE}
+                label={HIGH_FEE_TEXT}
+                onPress={this.handlePress}
+                isSelected={FEE.HIGH_FEE === feeSetting}
+              />
+            </View>
+
+            <View key={FEE.STANDARD_FEE} style={styles.row}>
+              <RadioButton
+                value={FEE.STANDARD_FEE}
+                label={STANDARD_FEE_TEXT}
+                onPress={this.handlePress}
+                isSelected={FEE.STANDARD_FEE === feeSetting}
+              />
+            </View>
+
+            <View key={FEE.LOW_FEE} style={styles.row}>
+              <RadioButton
+                value={FEE.LOW_FEE}
+                label={LOW_FEE_TEXT}
+                onPress={this.handlePress}
+                isSelected={FEE.LOW_FEE === feeSetting}
+              />
+            </View>
+            <CustomFees handlePress={this.handlePress}/>
+          </View>
         </View>
-
-        <View style={styles.body}>
-          <View key={FEE.HIGH_FEE} style={styles.row}>
-            <RadioButton
-              value={FEE.HIGH_FEE}
-              label={HIGH_FEE_TEXT}
-              onPress={this.handlePress}
-              isSelected={FEE.HIGH_FEE === feeSetting}
-            />
-          </View>
-
-          <View key={FEE.STANDARD_FEE} style={styles.row}>
-            <RadioButton
-              value={FEE.STANDARD_FEE}
-              label={STANDARD_FEE_TEXT}
-              onPress={this.handlePress}
-              isSelected={FEE.STANDARD_FEE === feeSetting}
-            />
-          </View>
-
-          <View key={FEE.LOW_FEE} style={styles.row}>
-            <RadioButton
-              value={FEE.LOW_FEE}
-              label={LOW_FEE_TEXT}
-              onPress={this.handlePress}
-              isSelected={FEE.LOW_FEE === feeSetting}
-            />
-          </View>
-          <CustomFees handlePress={this.handlePress}/>
-        </View>
-      </View>
     )
   }
 }

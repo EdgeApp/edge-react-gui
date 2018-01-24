@@ -2,6 +2,7 @@
 
 import { StyleSheet, Platform } from 'react-native'
 import THEME from '../../../../../../theme/variables/airbitz'
+import PLATFORM from '../../../../../../theme/variables/platform'
 
 const styles = {
   customFeeButton: {
@@ -33,6 +34,9 @@ const styles = {
     textAlign: 'center',
     fontSize: 20,
     color: THEME.COLORS.GRAY_1
+  },
+  modalBoxStyle: {
+    top: PLATFORM.deviceHeight / 12
   }
 }
 

@@ -67,8 +67,9 @@ export default class CustomFeesModal extends Component<Props, State> {
     return <StylizedModal
       featuredIcon={<OptionIcon iconName={Constants.CUSTOM_FEES_ICON}/>}
       headerText={s.strings.fragment_wallets_set_custom_fees}
+      style={styles.modalBoxStyle}
       modalMiddle={modalMiddle}
-      modalMiddleStyle={{ height }}
+      modalMiddleStyle={{ height, marginBottom: 10 }}
       modalBottom={<OptionButtons
         positiveText={s.strings.string_custom_fee}
         onPositive={() => {
