@@ -346,6 +346,7 @@ export default class Main extends Component<Props, State> {
                           />
                           <Scene
                             key={Constants.EDGE_LOGIN}
+                            navTransparent={true}
                             component={EdgeLoginSceneConnector}
                             renderTitle={this.renderTitle(EDGE_LOGIN)}
                             renderLeftButton={this.renderHelpButton}
