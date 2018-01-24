@@ -150,7 +150,6 @@ export type State = {
     wallets: any,
     request: any,
     settings: any,
-    locale: any,
     contacts: any
   },
   cryptoExchange: {
