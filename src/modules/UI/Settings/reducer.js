@@ -1,12 +1,15 @@
+// @flow
+
+import type { AbcCurrencyPlugin } from 'airbitz-core-types'
+import _ from 'lodash'
+
 import * as ACTION from './action.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
-import {
-  SYNCED_ACCOUNT_DEFAULTS,
-  LOCAL_ACCOUNT_DEFAULTS,
-  CORE_DEFAULTS
-} from '../../Core/Account/settings.js'
-import _ from 'lodash'
+import { SYNCED_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, CORE_DEFAULTS } from '../../Core/Account/settings.js'
+
+import type { Action } from '../../ReduxTypes'
+import type { CustomTokenInfo } from '../../../types'
 
 const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -19,15 +22,58 @@ const initialState = {
   },
   loginStatus: null,
   isTouchSupported: false,
-  isTouchEnabled: false
+  isTouchEnabled: false,
+  isOtpEnabled: false,
+  otpKey: null
 }
 
-export const settings = (state = initialState, action) => {
+type SettingsState = {
+  BCH: {
+    denomination: string
+  },
+  BTC: {
+    denomination: string
+  },
+  DASH: {
+    denomination: string
+  },
+  ETH: {
+    denomination: string
+  },
+  LTC: {
+    denomination: string
+  },
+  REP: {
+    denomination: string
+  },
+  WINGS: {
+    denomination: string
+  },
+  autoLogoutTimeInSeconds: number,
+  bluetoothMode: boolean,
+  changesLocked: any,
+  customTokens: Array<CustomTokenInfo>,
+  defaultFiat: string,
+  isOtpEnabled: boolean,
+  isTouchEnabled: any,
+  isTouchSupported: boolean,
+  loginStatus: null,
+  merchantMode: boolean,
+  otpKey: null,
+  otpMode: boolean,
+  pinMode: boolean,
+  plugins: {
+    arrayPlugins: Array<AbcCurrencyPlugin>,
+    supportedWalletTypes: Array<string>
+  }
+}
+
+export const settings = (state: SettingsState = initialState, action: Action) => {
   const { type, data = {} } = action
 
   switch (type) {
     case ACTION.SET_LOGIN_STATUS: {
-      const {loginStatus} = data
+      const { loginStatus } = data
       return {
         ...state,
         loginStatus
@@ -35,18 +81,18 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_CUSTOM_TOKENS: {
-      const {customTokens} = data
+      const { customTokens } = data
       return {
         ...state,
         customTokens
       }
     }
 
-    case WALLET_ACTION.UPDATE_EXISTING_TOKEN_SUCCESS : {
-      const {tokenObj} = data
+    case WALLET_ACTION.UPDATE_EXISTING_TOKEN_SUCCESS: {
+      const { tokenObj } = data
       const customTokenSettings = state.customTokens
-      const newCustomTokenSettings = customTokenSettings.map((item) => {
-        if (item.currencyCode === tokenObj.currencyCode) return {...item, ...tokenObj}
+      const newCustomTokenSettings = customTokenSettings.map(item => {
+        if (item.currencyCode === tokenObj.currencyCode) return { ...item, ...tokenObj }
         return item
       })
       const updatedSettings = {
@@ -60,18 +106,20 @@ export const settings = (state = initialState, action) => {
       return updatedSettings
     }
 
-    case WALLET_ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS : {
-    // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
+    case WALLET_ACTION.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS: {
+      // where oldCurrencyCode is the sender, and tokenObj.currencyCode is the receiver (new code)
       const receiverCode = data.tokenObj.currencyCode
       const senderCode = data.oldCurrencyCode
-      const {tokenObj} = data
+      const { tokenObj } = data
       const customTokenSettings = state.customTokens
-      const tokenSettingsWithUpdatedToken = customTokenSettings.map((item) => { // overwrite receiver token
-        if (item.currencyCode === receiverCode) return {...item, ...tokenObj, isVisible: true}
+      const tokenSettingsWithUpdatedToken = customTokenSettings.map(item => {
+        // overwrite receiver token
+        if (item.currencyCode === receiverCode) return { ...item, ...tokenObj, isVisible: true }
         return item
       })
-      const tokenSettingsWithUpdatedAndDeleted = tokenSettingsWithUpdatedToken.map((item) => { // make sender token invisible
-        if (item.currencyCode === senderCode) return {...item, isVisible: false}
+      const tokenSettingsWithUpdatedAndDeleted = tokenSettingsWithUpdatedToken.map(item => {
+        // make sender token invisible
+        if (item.currencyCode === senderCode) return { ...item, isVisible: false }
         return item
       })
       const updatedSettings = {
@@ -91,10 +139,10 @@ export const settings = (state = initialState, action) => {
     }
 
     case WALLET_ACTION.DELETE_CUSTOM_TOKEN_SUCCESS: {
-      const {currencyCode} = data
+      const { currencyCode } = data
       const customTokenSettings = state.customTokens
-      const newCustomTokenSettings = customTokenSettings.map((item) => {
-        if (item.currencyCode === currencyCode) return {...item, isVisible: false}
+      const newCustomTokenSettings = customTokenSettings.map(item => {
+        if (item.currencyCode === currencyCode) return { ...item, isVisible: false }
         return item
       })
       return {
@@ -108,7 +156,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ADD_TOKEN_ACTION.SET_TOKEN_SETTINGS: {
-      const {currencyCode} = data
+      const { currencyCode } = data
       return {
         ...state,
         [currencyCode]: data
@@ -116,7 +164,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
-      const {tokenObj, newCurrencyCode, settings} = data
+      const { tokenObj, newCurrencyCode, settings } = data
       const customTokens = settings.customTokens
       return {
         ...state,
@@ -125,10 +173,10 @@ export const settings = (state = initialState, action) => {
       }
     }
 
-    case WALLET_ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS : {
-      const {tokenObj, code, setSettings, oldCurrencyCode} = data
+    case WALLET_ACTION.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS: {
+      const { tokenObj, code, setSettings, oldCurrencyCode } = data
       const customTokens = setSettings.customTokens
-      const oldCurrencyCodeIndex = _.findIndex(customTokens, (item) => item.currencyCode === oldCurrencyCode)
+      const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
       customTokens[oldCurrencyCodeIndex] = {
         ...state.customTokens[oldCurrencyCodeIndex],
         isVisible: false
@@ -157,25 +205,18 @@ export const settings = (state = initialState, action) => {
       }
     }
 
-    case ACTION.ADD_EXCHANGE_TIMER: {
-      const {exchangeTimer} = data
-      return {
-        ...state,
-        exchangeTimer
-      }
-    }
     case ACTION.UPDATE_SETTINGS: {
-      const {settings} = data
+      const { settings } = data
       return settings
     }
 
     case ACTION.LOAD_SETTINGS: {
-      const {settings} = data
+      const { settings } = data
       return settings
     }
 
     case ACTION.SET_PIN_MODE: {
-      const {pinMode} = data
+      const { pinMode } = data
       return {
         ...state,
         pinMode
@@ -183,7 +224,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_OTP_MODE: {
-      const {otpMode} = data
+      const { otpMode } = data
       return {
         ...state,
         otpMode
@@ -191,7 +232,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_AUTO_LOGOUT_TIME: {
-      const {autoLogoutTimeInSeconds} = data
+      const { autoLogoutTimeInSeconds } = data
       return {
         ...state,
         autoLogoutTimeInSeconds
@@ -199,7 +240,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_DEFAULT_FIAT: {
-      const {defaultFiat} = data
+      const { defaultFiat } = data
       return {
         ...state,
         defaultFiat
@@ -207,7 +248,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_MERCHANT_MODE: {
-      const {merchantMode} = data
+      const { merchantMode } = data
       return {
         ...state,
         merchantMode
@@ -215,7 +256,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_BLUETOOTH_MODE: {
-      const {bluetoothMode} = data
+      const { bluetoothMode } = data
       return {
         ...state,
         bluetoothMode
@@ -223,7 +264,7 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_BITCOIN_OVERRIDE_SERVER: {
-      const {overrideServer} = data
+      const { overrideServer } = data
       const BTC = state['BTC']
       return {
         ...state,
@@ -235,8 +276,18 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.SET_SETTINGS_LOCK: {
-    // const {denomination} = data
-      return {...state, changesLocked: data}
+      return {
+        ...state,
+        changesLocked: data
+      }
+    }
+
+    case ACTION.OTP_SETTINGS: {
+      return {
+        ...state,
+        isOtpEnabled: data.enabled,
+        otpKey: data.otpKey
+      }
     }
 
     case ACTION.TOUCH_ID_SETTINGS: {
@@ -263,10 +314,10 @@ export const settings = (state = initialState, action) => {
     }
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
-      const {plugins} = state
-      const {supportedWalletTypes} = plugins
-      const {arrayPlugins} = plugins
-      const {pluginName, plugin, walletTypes} = data
+      const { plugins } = state
+      const { supportedWalletTypes } = plugins
+      const { arrayPlugins } = plugins
+      const { pluginName, plugin, walletTypes } = data
       const currencyInfo = plugin.currencyInfo
       // Build up object with all the information for the parent currency, accesible by the currencyCode
       const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
@@ -309,14 +360,8 @@ export const settings = (state = initialState, action) => {
         plugins: {
           ...plugins,
           [pluginName]: plugin,
-          arrayPlugins: [
-            ...arrayPlugins,
-            plugin
-          ],
-          supportedWalletTypes: [
-            ...supportedWalletTypes,
-            ...walletTypes
-          ]
+          arrayPlugins: [...arrayPlugins, plugin],
+          supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
         }
       }
     }

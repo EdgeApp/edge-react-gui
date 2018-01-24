@@ -1,6 +1,3 @@
-import * as SETTINGS_SELECTORS from './selectors'
-
-// UI/Settings
 const PREFIX = 'UI/Settings/'
 
 export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
@@ -10,6 +7,7 @@ export const ADD_EXCHANGE_TIMER = PREFIX + 'ADD_EXCHANGE_TIMER'
 export const UPDATE_SETTINGS = PREFIX + 'UPDATE_SETTINGS'
 export const LOAD_SETTINGS = PREFIX + 'LOAD_SETTINGS'
 export const TOUCH_ID_SETTINGS = PREFIX + 'TOUCH_ID_SETTINGS'
+export const OTP_SETTINGS = PREFIX + 'OTP_SETTINGS'
 export const CHANGE_TOUCH_ID_SETTINGS = PREFIX + 'CHANGE_TOUCH_ID_SETTINGS'
 
 // Core Settings
@@ -45,21 +43,6 @@ export const setLoginStatus = (loginStatus) => ({
   type: SET_LOGIN_STATUS,
   data: {loginStatus}
 })
-
-export const addExchangeTimer = (exchangeTimer) => ({
-  type: ADD_EXCHANGE_TIMER,
-  data: {exchangeTimer}
-})
-
-export const removeExchangeTimer = () => (dispatch, getState) => {
-  const state = getState()
-  const exchangeTimer = SETTINGS_SELECTORS.getExchangeTimer(state)
-  clearInterval(exchangeTimer)
-
-  return {
-    type: 'REMOVE_EXCHANGE_TIMER'
-  }
-}
 
 export const updateSettings = (settings) => ({
   type: UPDATE_SETTINGS,
@@ -158,5 +141,12 @@ export const updateTouchIdEnabled = (bool) => {
   return {
     type: CHANGE_TOUCH_ID_SETTINGS,
     data: bool
+  }
+}
+
+export const updateOtpInfo = (otpInfo) => { // {enabled}
+  return {
+    type: OTP_SETTINGS,
+    data: otpInfo
   }
 }

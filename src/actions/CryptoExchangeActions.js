@@ -103,16 +103,24 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
 
     if (toWallet) {
       const toExchangeAmount = bns.mul(fromExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
-      const toNativeAmount = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
+      const toNativeAmountNoFee = bns.mul(toExchangeAmount, toPrimaryInfo.exchangeDenomination.multiplier)
+      const toNativeAmountWithFee = bns.sub(toNativeAmountNoFee, state.cryptoExchange.minerFee)
+      let toNativeAmount
+      if (bns.lt(toNativeAmountWithFee, '0')) {
+        toNativeAmount = '0'
+      } else {
+        toNativeAmount = toNativeAmountWithFee
+      }
       const toDisplayAmountTemp = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
       const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
       dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
     }
   } else {
     const toDisplayAmount = bns.div(primaryNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    const toExchangeAmount = bns.div(primaryNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
     dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: toDisplayAmount}))
 
+    const toNativeAmountWithFee = bns.add(primaryNativeAmount, state.cryptoExchange.minerFee)
+    const toExchangeAmount = bns.div(toNativeAmountWithFee, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
     if (fromWallet) {
       const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
       const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
@@ -198,6 +206,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
 
     if (isAboveLimit) {
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
       const errorMessage = sprintf(s.strings.amount_above_limit, displayMax)
@@ -205,6 +214,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
     }
     if (isBelowLimit) {
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
       const errorMessage = sprintf(s.strings.amount_below_limit, displayMin)
@@ -220,6 +230,7 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
   let hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
   const cc = currencyCode || wallet.currencyCode
 
+  // $FlowFixMe
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, cc)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, cc, wallet)
   const primaryInfo: GuiCurrencyInfo = {

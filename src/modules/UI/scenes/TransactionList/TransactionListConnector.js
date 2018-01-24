@@ -1,4 +1,7 @@
+// @flow
+
 import {connect} from 'react-redux'
+
 import TransactionList from './TransactionList.ui'
 import {
   // transactionsSearchVisible,
@@ -12,8 +15,9 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
 import _ from 'lodash'
+import type {Dispatch, State} from '../../../ReduxTypes'
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = UI_SELECTORS.getSelectedWallet(state)
   if (!wallet) {
@@ -49,6 +53,7 @@ const mapStateToProps = (state) => {
   }
   const multiplier = denomination.multiplier
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  // $FlowFixMe
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
@@ -74,7 +79,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
   setContactList: (contacts) => dispatch(setContactList(contacts))

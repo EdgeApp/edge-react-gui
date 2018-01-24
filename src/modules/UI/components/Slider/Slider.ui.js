@@ -6,6 +6,7 @@ import styles from './styles.js'
 import Slider from 'react-native-slider'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils.js'
+import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 
 const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
 
@@ -55,6 +56,7 @@ export default class ABSlider extends Component<Props, State> {
           style={styles.slider}
           trackStyle={styles.track}
           thumbStyle={styles.thumb}
+          thumbImage={leftArrowImg}
           minimumTrackTintColor='transparent'
           maximumTrackTintColor='transparent'
           thumbTouchSize={{width: 160, height: 160}}

@@ -73,8 +73,7 @@ export const styles = {
     flexDirection: 'row'
   },
   walletIcon: {
-    backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 22
+    backgroundColor: THEME.COLORS.TRANSPARENT
   },
   walletsBoxHeaderText: {
     fontSize: 18,
@@ -178,7 +177,6 @@ export const styles = {
   rowContainer: {
     padding: 6,
     paddingLeft: 16,
-    marginRight: 4,
     flexDirection: 'row',
     backgroundColor: THEME.COLORS.WHITE
   },
@@ -242,6 +240,10 @@ export const styles = {
   rowDragIcon: {
     position: 'relative',
     top: 16
+  },
+
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   },
   // beginning of options component
   editIcon: {
@@ -362,6 +364,9 @@ export const styles = {
   },
   emptyRowUnderlay: {
     color: THEME.COLORS.ROW_PRESSED
+  },
+  getSeedModal: {
+    top: platform.deviceHeight / 18
   }
 }
 

@@ -1,10 +1,15 @@
+// @flow
+
 import {Actions} from 'react-native-router-flux'
+
 import * as UTILS from '../../../utils.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
+import type {Dispatch, State, GetState} from '../../../ReduxTypes'
+import type {CustomTokenInfo} from '../../../../types.js'
 
 import {displayErrorAlert} from '../../components/ErrorAlert/actions'
 
@@ -15,11 +20,11 @@ export const SET_TOKEN_SETTINGS = 'SET_TOKEN_SETTINGS'
 export const ADD_NEW_CUSTOM_TOKEN_SUCCESS = 'ADD_NEW_CUSTOM_TOKEN_SUCCESS'
 export const ADD_NEW_CUSTOM_TOKEN_FAILURE = 'ADD_NEW_CUSTOM_TOKEN_FAILURE'
 
-export const addNewToken = (walletId, tokenObj) => {
-  return (dispatch, getState) => {
-    dispatch(addTokenStart(walletId))
+export const addNewToken = (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => {
+  return (dispatch: Dispatch, getState: GetState) => {
+    dispatch(addTokenStart())
     const state = getState()
-    addTokenAsync(walletId, tokenObj, state)
+    addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
     .then((addedWalletInfo) => {
       const {walletId, newTokenObj, setSettings, enabledTokensOnWallet} = addedWalletInfo
       dispatch(addNewTokenSuccess(walletId, newTokenObj, setSettings, enabledTokensOnWallet))
@@ -33,41 +38,32 @@ export const addNewToken = (walletId, tokenObj) => {
   }
 }
 
-export async function addTokenAsync (walletId, tokenObj, state) {
+export async function addTokenAsync (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, state: State) {
   // create modified object structure to match metaTokens
-  const newTokenObj = {
-    ...tokenObj,
-    denomination: tokenObj.multiplier,
-    denominations: [{
-      name: tokenObj.currencyCode,
-      multiplier: tokenObj.multiplier,
-      symbol: ''
-    }],
-    isVisible: true
-  }
+  const newTokenObj: CustomTokenInfo = WALLET_ACTIONS.assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
   const account = CORE_SELECTORS.getAccount(state)
   const uiWallet = UI_WALLET_SELECTORS.getWallet(state, walletId)
   const coreWallet = CORE_SELECTORS.getWallet(state, walletId)
   await coreWallet.addCustomToken(newTokenObj)
-  coreWallet.enableTokens([tokenObj.currencyCode])
+  coreWallet.enableTokens([currencyCode])
   const settingsOnFile = await SETTINGS_API.getSyncedSettingsAsync(account)
 
   const setSettings = settingsOnFile
   const customTokens = settingsOnFile.customTokens
   let newCustomTokens = []
-  if (!customTokens || customTokens.length === 0) {
+  if (!customTokens || customTokens.length === 0) { // if customTokens array is empty
     newCustomTokens = [newTokenObj]
   } else {
-    newCustomTokens = UTILS.mergeTokens([tokenObj], customTokens) // otherwise merge metaTokens and customTokens
+    newCustomTokens = UTILS.mergeTokens([newTokenObj], customTokens) // otherwise merge metaTokens and customTokens
   }
   settingsOnFile.customTokens = newCustomTokens
-  settingsOnFile[tokenObj.currencyCode] = newTokenObj
+  settingsOnFile[currencyCode] = newTokenObj
   await SETTINGS_API.setSyncedSettingsAsync(account, settingsOnFile)
   const newEnabledTokens = uiWallet.enabledTokens
   if (uiWallet.enabledTokens.indexOf(newTokenObj.currencyCode) === -1) {
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
-  await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens, null)
+  await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens)
   return {walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens}
 }
 
@@ -79,7 +75,7 @@ export const addTokenSuccess = () => ({
   type: ADD_TOKEN_SUCCESS
 })
 
-export function addNewTokenSuccess (walletId, tokenObj, settings, enabledTokens) {
+export function addNewTokenSuccess (walletId: string, tokenObj: CustomTokenInfo, settings: any, enabledTokens: Array<string>) {
   const data = {walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode}
   return {
     type: ADD_NEW_CUSTOM_TOKEN_SUCCESS,
@@ -87,7 +83,7 @@ export function addNewTokenSuccess (walletId, tokenObj, settings, enabledTokens)
   }
 }
 
-export function addNewTokenFailure (errorMessage) {
+export function addNewTokenFailure (errorMessage: string) {
   const data = {errorMessage}
   return {
     type: ADD_NEW_CUSTOM_TOKEN_FAILURE,
@@ -95,7 +91,7 @@ export function addNewTokenFailure (errorMessage) {
   }
 }
 
-export function setTokenSettings (tokenObj) {
+export function setTokenSettings (tokenObj: CustomTokenInfo) {
   const data = tokenObj
   return {
     type: SET_TOKEN_SETTINGS,

@@ -3,6 +3,7 @@
 import React, {Component} from 'react'
 import FlipInput, {type FlipInputFieldInfo} from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
+import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 
 const DIVIDE_PRECISION = 18
@@ -182,7 +183,7 @@ export default class ExchangedFlipInput extends Component<Props, State> {
     return (
       <FlipInput
         color={this.props.color}
-        isValidInput={UTILS.isValidInput}
+        isValidInput={intl.isValidInput}
 
         primaryDisplayAmount={this.state.primaryDisplayAmount}
         primaryInfo={primaryInfo}
@@ -229,7 +230,7 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   }
   convertSecondaryExchangeToPrimaryExchange = (secondaryExchangeAmount: string): string => {
     const secondaryToPrimaryRatio:number = this.props.secondaryToPrimaryRatio
-    const primaryToSecondaryRatio:string = (1 / secondaryToPrimaryRatio).toString()
+    const primaryToSecondaryRatio:string = secondaryToPrimaryRatio ? `${1 / secondaryToPrimaryRatio}` : '0'
     return bns.mul(primaryToSecondaryRatio, secondaryExchangeAmount)
   }
 

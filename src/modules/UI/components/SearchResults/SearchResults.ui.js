@@ -3,7 +3,7 @@ import {
   FlatList,
   View
 } from 'react-native'
-import PropTypes from 'prop-types'
+
 import style from './styles'
 import platform from '../../../../theme/variables/platform.js'
 
@@ -22,11 +22,6 @@ export default class SearchResults extends Component {
 
   render () {
     let searchResultsHeight
-    const completedDataList = this.props.regularArray.map((x, i) => {
-      const newValue = x
-      newValue.key = i
-      return newValue
-    })
     if (this.props.dimensions.keyboardHeight) {
       searchResultsHeight = this.props.height + platform.toolbarHeight - this.props.dimensions.keyboardHeight
     } else {
@@ -40,26 +35,21 @@ export default class SearchResults extends Component {
           width: platform.deviceWidth,
           top: platform.toolbarHeight + this.props.extraTopSpace,
           zIndex: 999
-        }]}>
-        <FlatList
-          style={[{width: '100%'}]}
-          data={completedDataList}
-          renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn)}
-          initialNumToRender={this.props.initialNumToRender || 12}
-          scrollRenderAheadDistance={this.props.scrollRenderAheadDistance || 800}
-          keyExtractor={this.props.keyExtractor}
-          overScrollMode='never'
-          keyboardShouldPersistTaps='handled'
+        },
+        this.props.containerStyle]}>
+          <FlatList
+            style={[{width: '100%'}]}
+            data={this.props.regularArray}
+            renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn)}
+            initialNumToRender={this.props.initialNumToRender || 12}
+            scrollRenderAheadDistance={this.props.scrollRenderAheadDistance || 800}
+            keyExtractor={this.props.keyExtractor}
+            overScrollMode='never'
+            keyboardShouldPersistTaps='handled'
         />
       </View>
     )
   }
 
   renderRegularRow = (data, onPressFxn) => this.props.regularResult(data, onPressFxn)
-}
-
-SearchResults.propTypes = {
-  onRegularSelect: PropTypes.func,
-  regularData: PropTypes.object,
-  usableHeight: PropTypes.number
 }

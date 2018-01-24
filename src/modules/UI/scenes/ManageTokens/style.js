@@ -3,15 +3,17 @@
 import {StyleSheet} from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
-import PLATFORM from '../../../../theme/variables/platform'
 
 export const styles = {
   gradient: {
     height: THEME.HEADER
   },
+  manageTokens: {
+    flex: 1
+  },
   container: {
     position: 'relative',
-    height: PLATFORM.deviceHeight - 66,
+    flex: 1,
     backgroundColor: THEME.COLORS.WHITE,
     paddingBottom: 50
   },
@@ -41,8 +43,7 @@ export const styles = {
   },
   instructionalArea: {
     paddingVertical: 16,
-    paddingHorizontal: 20,
-    flex: 1
+    paddingHorizontal: 20
   },
   instructionalText: {
     fontSize: 16,
@@ -51,7 +52,7 @@ export const styles = {
   metaTokenListArea: {
     borderTopWidth: 1,
     borderTopColor: THEME.COLORS.GRAY_3,
-    flex: 11
+    flex: 1
   },
   metaTokenListWrap: {
     flex: 1

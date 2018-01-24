@@ -2,6 +2,9 @@
 #
 env.json
 
+# Code Coverage
+coverage
+
 # OSX
 #
 .DS_Store
