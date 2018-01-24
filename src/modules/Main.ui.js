@@ -11,7 +11,6 @@ import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking}
 import T from './UI/components/FormattedText'
 import { connect } from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
-// import THEME from '../theme/variables/airbitz'
 
 import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'react-native-router-flux'
 import { StyleProvider } from 'native-base'
@@ -221,28 +220,23 @@ export default class Main extends Component<Props, State> {
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
               <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
-                {/* <Lightbox> */}
-                <Stack key="root" hideNavBar panHandlers={null}>
-                  <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+                <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
+                  <Scene key={Constants.LOGIN} initial
+                    component={LoginConnector}
+                    username={this.props.username} />
 
-                  <Scene
-                    key={Constants.TRANSACTION_DETAILS}
-                    navTransparent={true}
-                    clone
+                  <Scene key={Constants.TRANSACTION_DETAILS} navTransparent={true} clone
                     component={TransactionDetails}
                     renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
                     renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton}
-                  />
+                    renderRightButton={this.renderMenuButton} />
 
-                  <Drawer key="edge" hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
-                    {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
-                    <Scene hideNavBar>
-                      <Tabs key="edge" swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
-                        <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
-                          <Scene
-                            key={Constants.WALLET_LIST_SCENE}
-                            navTransparent={true}
+                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition='right'>
+                  {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
+                  <Scene hideNavBar>
+                    <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
+                      <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
+                          <Scene key={Constants.WALLET_LIST_SCENE} navTransparent={true}
                             component={WalletList}
                             renderTitle={this.renderTitle(WALLETS)}
                             renderLeftButton={this.renderHelpButton}
@@ -335,11 +329,7 @@ export default class Main extends Component<Props, State> {
                         />
 
                         <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
-                          <Scene
-                            key="scan_notused"
-                            navTransparent={true}
-                            onEnter={this.props.dispatchEnableScan}
-                            onExit={this.props.dispatchDisableScan}
+                          <Scene key={Constants.SCAN_NOT_USED} navTransparent={true}
                             component={Scan}
                             renderTitle={this.renderWalletListNavBar}
                             renderLeftButton={this.renderHelpButton}
@@ -355,9 +345,7 @@ export default class Main extends Component<Props, State> {
                         </Stack>
 
                         <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
-                          <Scene
-                            key="exchange_notused"
-                            navTransparent={true}
+                          <Scene key={Constants.EXCHANGE_NOT_USED} navTransparent={true}
                             component={ExchangeConnector}
                             renderTitle={this.renderTitle(EXCHANGE)}
                             renderLeftButton={this.renderExchangeButton}
@@ -375,11 +363,7 @@ export default class Main extends Component<Props, State> {
                       </Tabs>
 
                       <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
-                        <Scene
-                          key="sendconfirmation_notused"
-                          navTransparent={true}
-                          hideTabBar
-                          panHandlers={null}
+                        <Scene key={Constants.SEND_CONFIRMATION_NOT_USED} navTransparent={true} hideTabBar panHandlers={null}
                           component={SendConfirmation}
                           renderTitle={this.renderTitle(SEND_CONFIRMATION)}
                           renderLeftButton={this.renderBackButton()}
@@ -394,10 +378,23 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderHelpButton}
                         />
                       </Stack>
-                      <Stack key="settingsOverviewTab" hideDrawerButton={true}>
-                        <Scene
-                          key={Constants.SETTINGS_OVERVIEW}
-                          navTransparent={true}
+
+                      <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
+                        <Scene key={Constants.MANAGE_TOKENS_NOT_USED} navTransparent={true}
+                          component={ManageTokens}
+                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+
+                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
+                          component={AddToken}
+                          renderTitle={this.renderTitle(ADD_TOKEN)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+                      </Stack>
+
+                      <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
+                        <Scene key={Constants.SETTINGS_OVERVIEW} navTransparent={true}
                           component={SettingsOverview}
                           renderTitle={this.renderTitle(SETTINGS)}
                           renderLeftButton={this.renderBackButton()}
@@ -436,9 +433,8 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderEmptyButton}
                         />
                         {this.renderCurrencySettings()}
-                        <Scene
-                          key="defaultFiatSetting"
-                          navTransparent={true}
+
+                        <Scene key={Constants.DEFAULT_FIAT_SETTING} navTransparent={true}
                           component={DefaultFiatSettingConnector}
                           renderTitle={this.renderTitle(DEFAULT_FIAT)}
                           renderLeftButton={this.renderBackButton()}
@@ -448,7 +444,6 @@ export default class Main extends Component<Props, State> {
                     </Scene>
                   </Drawer>
                 </Stack>
-                {/* </Lightbox> */}
               </Modal>
             </Overlay>
           </RouterWithRedux>
@@ -481,20 +476,40 @@ export default class Main extends Component<Props, State> {
     }
     return settings
   }
-  renderWalletListNavBar = () => <Header />
-  renderEmptyButton = () => () => <BackButton />
-  renderHelpButton = () => <HelpButton />
-  renderBackButton = (label: string = BACK) => () => <BackButton withArrow onPress={this.handleBack} label={label} />
+
+  renderWalletListNavBar = () => {
+    return <Header />
+  }
+
+  renderEmptyButton = () => () => {
+    return <BackButton />
+  }
+
+  renderHelpButton = () => {
+    return <HelpButton />
+  }
+
+  renderBackButton = (label: string = BACK) => () => {
+    return <BackButton withArrow onPress={this.handleBack} label={label} />
+  }
+
   renderTitle = (title: string) => {
     return <T style={styles.titleStyle}>{title}</T>
   }
-  renderMenuButton = () => (
-    <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
+
+  renderMenuButton = () => {
+    return <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
       <Image source={MenuIcon} />
     </TouchableWithoutFeedback>
-  )
-  renderExchangeButton = () => <ExchangeDropMenu />
-  renderSendConfirmationButton = () => <SendConfirmationOptions />
+  }
+
+  renderExchangeButton = () => {
+    return <ExchangeDropMenu />
+  }
+
+  renderSendConfirmationButton = () => {
+    return <SendConfirmationOptions />
+  }
 
   icon = (tabName: string) => (props: { focused: boolean }) => {
     if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
