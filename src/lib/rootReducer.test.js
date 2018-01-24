@@ -63,9 +63,6 @@ test('initialState', () => {
         'displayAlert': false,
         'message': ''
       },
-      'locale': {
-        'localeInfo': {}
-      },
       'request': {
         'receiveAddress': {
           'amountSatoshi': 0,

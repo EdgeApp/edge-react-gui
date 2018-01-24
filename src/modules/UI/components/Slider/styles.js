@@ -9,8 +9,8 @@ const styles = StyleSheet.create({
   slider: {
     backgroundColor: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`,
     overflow: 'hidden',
-    borderRadius: 27,
-    height: 55
+    borderRadius: 26,
+    height: 52
   },
   thumb: {
     width: 52,
@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: 17
+    top: 17,
+    zIndex: -100
   }
 })
 
