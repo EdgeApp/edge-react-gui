@@ -6,6 +6,10 @@ const EdgeLoginScreen = {
   container: {...Styles.SceneContainer,
     height: '100%'
   },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%'
+  },
   header: {
     flex: 2,
     flexDirection: 'column'

@@ -7,7 +7,6 @@ import {scenes} from './scenes/reducer.js'
 import {wallets} from './Wallets/reducer.js'
 import {request} from './Request/reducer.js'
 import {settings} from './Settings/reducer.js'
-import locale from './locale/reducer'
 import contacts from './contacts/reducer'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
@@ -20,7 +19,6 @@ export const uiReducer = combineReducers({
   wallets,
   request,
   settings,
-  locale,
   contacts
 })
 
