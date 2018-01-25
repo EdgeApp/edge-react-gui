@@ -13,10 +13,17 @@ export type ExchangedFlipInputAmounts = {
 }
 
 export type ExchangedFlipInputOwnProps = {
+  // Initial amount of the primary field in `exchangeAmount` denomination. This is converted to a `decimalAmount`
+  // in the proper display denomination to be passed into FlipInput
   overridePrimaryExchangeAmount: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
+
+  // Exchange rate
   exchangeSecondaryToPrimaryRatio: number,
+
+  // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
+  // amounts are ONLY for the primary field. Parent will not be given values for the secondary field.
   onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): void
 }
 

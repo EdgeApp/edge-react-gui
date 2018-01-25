@@ -20,8 +20,15 @@ export type FlipInputFieldInfo = {
   currencyName: string,
   currencySymbol: string,  // currency symbol of field
   currencyCode: string, // 3-5 digit currency code
-  maxEntryDecimals: number, // Maximum number of decimals to allow the user to enter
-  maxConversionDecimals: number, // Maximum number of decimals to convert from the opposite field to this field
+
+  // Maximum number of decimals to allow the user to enter. FlipInput will automatically truncate use input to this
+  // number of decimals as the user types.
+  maxEntryDecimals: number,
+
+  // Maximum number of decimals to convert from the opposite field to this field.
+  // ie If the user is typing into the fiat field, and this FlipInputFieldInfo refers to a BTC field, then this is the number of
+  // decimals to use when converting the fiat value into this crypto field.
+  maxConversionDecimals: number,
 }
 
 type State = {
@@ -34,11 +41,20 @@ type State = {
 }
 
 export type FlipInputOwnProps = {
-  overridePrimaryDecimalAmount: string, // override value of field
+  // Override value of the primary field. This will be the initial value of the primary field. Only changes to this value will
+  // cause changes to the primary field
+  overridePrimaryDecimalAmount: string,
+
+  // Exchange rate
   exchangeSecondaryToPrimaryRatio: string,
+
+  // Information regarding the primary and secondary field. Mostly related to currency name, code, and denominations
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
-  onAmountChanged(decimalAmount: string): void, // Callback when primaryDecimalAmount changes. This is NOT called when the prop displayAmount is changed
+
+  // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
+  // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
+  onAmountChanged(decimalAmount: string): void,
 }
 
 type Props = FlipInputOwnProps
