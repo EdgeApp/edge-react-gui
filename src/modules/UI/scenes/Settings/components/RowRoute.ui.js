@@ -10,14 +10,15 @@ import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
 
 type Props = {
-    leftText: string,
-    right?: any,
-    routeFunction(): void
+  leftText: string,
+  disabled: boolean,
+  right?: any,
+  routeFunction(): void
 }
 export default class RowRoute extends Component<Props> {
   render () {
     return (
-      <TouchableHighlight style={[styles.settingsRowContainer]}
+      <TouchableHighlight style={[styles.settingsRowContainer, this.props.disabled ? styles.settingsRowDisabled : null]}
         underlayColor={styleRaw.underlay.color}
         disabled={false}
         onPress={this.props.routeFunction}>
