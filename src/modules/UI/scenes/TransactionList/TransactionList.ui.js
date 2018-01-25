@@ -108,9 +108,10 @@ export default class TransactionList extends Component<Props, State> {
             if (err === 'denied') {
               // error
             } else {
-              // console.log('all contacts: ', contacts)
-              contacts.sort((a, b) => a.givenName > b.givenName)
-              this.props.setContactList(contacts)
+              const filteredContacts = contacts
+              .filter(item => item.givenName)
+              .sort((a, b) => a.givenName.toUpperCase() - b.givenName.toUpperCase())
+              this.props.setContactList(filteredContacts)
             }
           })
         }
