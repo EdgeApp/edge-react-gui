@@ -38,7 +38,8 @@ class FormField extends Component {
     forceFocus: false,
     returnKeyType: 'go',
     label: '',
-    keyboardType: 'default'
+    keyboardType: 'default',
+    placeholder: ''
   }
   componentWillMount () {
     const secure = this.props.secureTextEntry
@@ -80,6 +81,7 @@ class FormField extends Component {
         onSubmitEditing={this.onSubmitEditing.bind(this)}
         value={this.props.value}
         keyboardType={this.props.keyboardType}
+        placeholder={this.props.placeholder}
       />
     )
   }

@@ -23,6 +23,7 @@ const initialState = {
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
+  currencyInfos: {},
   isOtpEnabled: false,
   otpKey: null
 }
@@ -52,6 +53,7 @@ type SettingsState = {
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean,
   changesLocked: any,
+  currencyInfos: any,
   customTokens: Array<CustomTokenInfo>,
   defaultFiat: string,
   isOtpEnabled: boolean,
@@ -364,6 +366,20 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
           supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
         }
       }
+    }
+
+    case WALLET_ACTION.UPSERT_WALLET: {
+      const wallet = data && data.action && data.action.wallet
+      if (wallet) {
+        return {
+          ...state,
+          currencyInfos: {
+            ...state.currencyInfos,
+            [wallet.currencyCode]: wallet.currencyInfo
+          }
+        }
+      }
+      return state
     }
 
     default:
