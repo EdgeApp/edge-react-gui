@@ -205,13 +205,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       }
     }
 
-    case ACTION.ADD_EXCHANGE_TIMER: {
-      const { exchangeTimer } = data
-      return {
-        ...state,
-        exchangeTimer
-      }
-    }
     case ACTION.UPDATE_SETTINGS: {
       const { settings } = data
       return settings

@@ -2,9 +2,10 @@
 import React, { Component } from 'react'
 import { View, Text, ActivityIndicator, Image } from 'react-native'
 import { PrimaryButton, SecondaryButton } from '../../components/Buttons/index'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import s from '../../../../locales/strings.js'
 import type { AbcLobby } from 'airbitz-core-types'
-
+import SafeAreaView from '../../components/SafeAreaView'
 type Props = {
   style: any,
   lobby?: AbcLobby,
@@ -100,11 +101,14 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
       )
     }
     return (
-      <View style={Style.container}>
-        {this.renderHeader(Style)}
-        {this.renderBody(Style)}
-        {this.renderButtons(Style)}
-      </View>
+      <SafeAreaView>
+        <Gradient style={Style.gradient} />
+        <View style={Style.container}>
+          {this.renderHeader(Style)}
+          {this.renderBody(Style)}
+          {this.renderButtons(Style)}
+        </View>
+      </SafeAreaView>
     )
   }
 }
