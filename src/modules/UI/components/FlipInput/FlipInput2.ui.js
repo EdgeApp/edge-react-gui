@@ -35,7 +35,7 @@ type State = {
 
 export type FlipInputOwnProps = {
   overridePrimaryDecimalAmount: string, // override value of field
-  displaySecondaryToPrimaryRatio: string,
+  exchangeSecondaryToPrimaryRatio: string,
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
   onAmountChanged(decimalAmount: string): void, // Callback when primaryDecimalAmount changes. This is NOT called when the prop displayAmount is changed
@@ -49,7 +49,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
 
   // Converts to secondary value using exchange rate
-  let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.displaySecondaryToPrimaryRatio)
+  let secondaryDecimalAmount = bns.mul(primaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio)
 
   // Truncate to however many decimals the secondary format should have
   secondaryDecimalAmount = UTILS.truncateDecimals(secondaryDecimalAmount, props.secondaryInfo.maxConversionDecimals)
@@ -64,7 +64,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
 // Pretty much the same as setPrimaryToSecondary
 function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
   const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
-  let primaryDecimalAmount = bns.div(secondaryDecimalAmount, props.displaySecondaryToPrimaryRatio, 18)
+  let primaryDecimalAmount = bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
   return {secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount}

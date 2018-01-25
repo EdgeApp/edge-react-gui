@@ -24,7 +24,7 @@ type Props = ExchangedFlipInputOwnProps
 
 type State = {
   overridePrimaryDecimalAmount: string, // This should be a decimal amount in display denomination (ie. mBTC)
-  displaySecondaryToPrimaryRatio: string,
+  exchangeSecondaryToPrimaryRatio: string,
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo
 }
@@ -67,14 +67,14 @@ function propsToState (props: Props): State {
   // nextProps.exchangeSecondaryToPrimaryRatio // ie. 1/10000
   const primaryDisplayToExchangeRatio = getPrimaryDisplayToExchangeRatio(props) // 1/1000 for mBTC
   const secondaryDisplayToExchangeRatio = getSecondaryDisplayToExchangeRatio(props) // 1 for USD
-  let displaySecondaryToPrimaryRatio = bns.div(
+  let exchangeSecondaryToPrimaryRatio = bns.div(
     props.exchangeSecondaryToPrimaryRatio.toString(),
     primaryDisplayToExchangeRatio,
     DIVIDE_PRECISION
   ) // Should be 1/10
 
-  displaySecondaryToPrimaryRatio = bns.mul(
-    displaySecondaryToPrimaryRatio,
+  exchangeSecondaryToPrimaryRatio = bns.mul(
+    exchangeSecondaryToPrimaryRatio,
     secondaryDisplayToExchangeRatio
   ) // Noop usually for USD since we only ever use the same exchange and display multiplier
 
@@ -112,7 +112,7 @@ function propsToState (props: Props): State {
   // ie BTC to mBTC
   const overridePrimaryDecimalAmount = bns.div(props.overridePrimaryExchangeAmount, primaryDisplayToExchangeRatio, DIVIDE_PRECISION)
 
-  return {primaryInfo, secondaryInfo, displaySecondaryToPrimaryRatio, overridePrimaryDecimalAmount}
+  return {primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount}
 }
 
 export class ExchangedFlipInput extends Component<Props, State> {
@@ -135,7 +135,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
     return (
       <FlipInput
         overridePrimaryDecimalAmount={this.state.overridePrimaryDecimalAmount}
-        displaySecondaryToPrimaryRatio={this.state.displaySecondaryToPrimaryRatio}
+        exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
         primaryInfo={this.state.primaryInfo}
         secondaryInfo={this.state.secondaryInfo}
         onAmountChanged={this.onAmountChanged}
