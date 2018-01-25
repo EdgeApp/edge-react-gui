@@ -110,7 +110,9 @@ export default class TransactionList extends Component<Props, State> {
             } else {
               const filteredContacts = contacts
               .filter(item => item.givenName)
-              .sort((a, b) => a.givenName.toUpperCase() - b.givenName.toUpperCase())
+              .sort((a, b) =>
+                a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+              )
               this.props.setContactList(filteredContacts)
             }
           })
