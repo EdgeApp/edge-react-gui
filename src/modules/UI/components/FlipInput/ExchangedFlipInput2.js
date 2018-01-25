@@ -126,7 +126,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
   }
 
   onAmountChanged = (decimalAmount: string): void => {
-    const exchangeAmount = bns.mul(decimalAmount, getPrimaryDisplayToExchangeRatio(this.props))
+    const exchangeAmount = bns.div(decimalAmount, getPrimaryDisplayToExchangeRatio(this.props), DIVIDE_PRECISION)
     const nativeAmount = bns.mul(exchangeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier)
     this.props.onExchangeAmountChanged({exchangeAmount, nativeAmount})
   }
