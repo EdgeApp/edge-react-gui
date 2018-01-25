@@ -119,9 +119,21 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
     }
     case ACTION.UPDATE_SPEND_PENDING: {
       const { pending } = data
-      return {
-        ...state,
-        pending
+      if (
+        pending === ACTION.UPDATE_SPEND_PENDING_START ||
+        pending === ACTION.UPDATE_SPEND_PENDING_FAIL
+      ) {
+        return {
+          ...state,
+          pending
+        }
+      } else {
+        return {
+          ...state,
+          pending,
+          transaction: null,
+          parsedUri: {}
+        }
       }
     }
     case ACTION.RESET: {

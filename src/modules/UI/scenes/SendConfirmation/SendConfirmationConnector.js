@@ -1,18 +1,18 @@
 // @flow
 import {connect} from 'react-redux'
-import SendConfirmation, {type Props, type DispatchProps} from './SendConfirmation.ui'
-import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
+import SendConfirmation, {type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
 
 import type {State, Dispatch} from '../../../ReduxTypes'
-import type {GuiWallet, GuiDenomination} from '../../../../types'
+import type { GuiWallet, GuiDenomination, GuiCurrencyInfo } from '../../../../types'
 import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 import {bns} from 'biggystring'
 
-import * as UTILS from '../../../utils'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+
+import { convertAbcToGuiDenomination, getDenomFromIsoCode } from '../../../utils.js'
 
 import {
   signBroadcastAndSave,
@@ -20,30 +20,36 @@ import {
   processParsedUri
 } from './action.js'
 
-const mapStateToProps = (state: State): Props => {
+const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const sendConfirmation = UI_SELECTORS.getSceneState(state, 'sendConfirmation')
   let fiatPerCrypto = 0
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+
   // $FlowFixMe
-  const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const primaryDisplayDenomination: GuiDenomination = convertAbcToGuiDenomination(SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode))
+  // const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryInfo: FlipInputFieldInfo = {
+  const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
+  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.currencyCode ? secondaryExchangeDenomination.currencyCode : ''
+
+  const primaryCurrencyInfo: GuiCurrencyInfo = {
     displayCurrencyCode: currencyCode,
-    exchangeCurrencyCode: currencyCode,
     displayDenomination: primaryDisplayDenomination,
+    exchangeCurrencyCode: primaryExchangeCurrencyCode,
     exchangeDenomination: primaryExchangeDenomination
   }
-  const secondaryInfo: FlipInputFieldInfo = {
+  const secondaryCurrencyInfo: GuiCurrencyInfo = {
     displayCurrencyCode: guiWallet.fiatCurrencyCode,
-    exchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
     displayDenomination: secondaryDisplayDenomination,
+    exchangeCurrencyCode: secondaryExchangeCurrencyCode,
     exchangeDenomination: secondaryExchangeDenomination
   }
+
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     fiatPerCrypto = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
@@ -78,16 +84,16 @@ const mapStateToProps = (state: State): Props => {
     fiatPerCrypto,
     guiWallet,
     currencyCode,
-    primaryInfo,
+    primaryCurrencyInfo,
     sliderDisabled,
-    secondaryInfo,
+    secondaryCurrencyInfo,
     currencyConverter
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
   processParsedUri: (parsedUri: AbcParsedUri): any => dispatch(processParsedUri(parsedUri)),
-  updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
+  updateSpendPending: (pending: number): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (abcTransaction: AbcTransaction): any => dispatch(signBroadcastAndSave(abcTransaction))
 })
 
