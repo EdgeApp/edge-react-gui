@@ -383,18 +383,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
             if (err === 'denied') {
               // error
             } else {
-              const filteredContacts = contacts.filter(item => item.givenName)
-              filteredContacts.sort((a, b) => {
-                const nameA = a.givenName.toUpperCase()
-                const nameB = b.givenName.toUpperCase()
-                if (nameA < nameB) {
-                  return -1
-                }
-                if (nameA > nameB) {
-                  return 1
-                }
-                return 0
-              })
+              const filteredContacts = contacts
+              .filter(item => item.givenName)
+              .sort((a, b) => a.givenName.toUpperCase() - b.givenName.toUpperCase())
               this.props.setContactList(filteredContacts)
             }
           })
