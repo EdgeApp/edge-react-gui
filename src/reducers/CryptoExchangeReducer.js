@@ -1,6 +1,6 @@
 // @flow
 
-import type {State} from '../modules/ReduxTypes'
+import type { State } from '../modules/ReduxTypes'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
 
@@ -45,7 +45,8 @@ function cryptoExchangerReducer (state = initialState, action) {
     case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
       return deepCopyState(state)
     case Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE:
-      return {...state,
+      return {
+        ...state,
         fromWallet: action.data.wallet,
         fromWalletPrimaryInfo: action.data.primaryInfo,
         fromCurrencyCode: action.data.currencyCode,
@@ -58,7 +59,8 @@ function cryptoExchangerReducer (state = initialState, action) {
         toDisplayAmount: '0'
       }
     case Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE:
-      return {...state,
+      return {
+        ...state,
         toWallet: action.data.wallet,
         toCurrencyCode: action.data.currencyCode,
         toWalletPrimaryInfo: action.data.primaryInfo,
@@ -71,11 +73,16 @@ function cryptoExchangerReducer (state = initialState, action) {
         toDisplayAmount: '0'
       }
     case Constants.DISABLE_WALLET_LIST_MODAL_VISIBILITY:
-      return {...state, walletListModalVisible: false}
+      return { ...state, walletListModalVisible: false }
     case Constants.OPEN_WALLET_SELECTOR_MODAL:
-      return {...state, walletListModalVisible: true, changeWallet: action.data}
+      return {
+        ...state,
+        walletListModalVisible: true,
+        changeWallet: action.data
+      }
     case Constants.UPDATE_CRYPTO_EXCHANGE_INFO: {
-      const result = {...state,
+      const result = {
+        ...state,
         exchangeRate: action.data.rate,
         nativeMin: action.data.nativeMin,
         nativeMax: action.data.nativeMax,
@@ -84,7 +91,8 @@ function cryptoExchangerReducer (state = initialState, action) {
       return result
     }
     case Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO: {
-      const result = {...state,
+      const result = {
+        ...state,
         reverseExchange: action.data.rate,
         reverseNativeMin: action.data.nativeMin,
         reverseNativeMax: action.data.nativeMax,
@@ -93,32 +101,59 @@ function cryptoExchangerReducer (state = initialState, action) {
       return result
     }
     case Constants.UPDATE_SHIFT_TRANSACTION:
-      return {...state,
+      return {
+        ...state,
         transaction: action.data.abcTransaction,
         fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
         insufficientError: false,
         genericShapeShiftError: null
       }
     case Constants.INVALIDATE_SHIFT_TRANSACTION:
-      return {...state, transaction: null, insufficientError: false, genericShapeShiftError: null}
+      return {
+        ...state,
+        transaction: null,
+        insufficientError: false,
+        genericShapeShiftError: null
+      }
     case Constants.SHIFT_COMPLETE:
       return initialState
     case Constants.SHIFT_ERROR:
-      return {...state, confirmTransactionModalVisible: false, shiftTransactionError: action.data}
+      return {
+        ...state,
+        confirmTransactionModalVisible: false,
+        shiftTransactionError: action.data
+      }
     case Constants.CLOSE_CRYPTO_EXC_CONF_MODAL:
-      return {...state, confirmTransactionModalVisible: false}
+      return { ...state, confirmTransactionModalVisible: false }
     case Constants.OPEN_CRYPTO_EXC_CONF_MODAL:
-      return {...state, confirmTransactionModalVisible: true}
+      return { ...state, confirmTransactionModalVisible: true }
     case Constants.SET_CRYPTO_TO_NATIVE_AMOUNT:
-      return {...state, toNativeAmount: action.data.native, toDisplayAmount: action.data.display}
+      return {
+        ...state,
+        toNativeAmount: action.data.native,
+        toDisplayAmount: action.data.display
+      }
     case Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT:
-      return {...state, fromNativeAmount: action.data.native, fromDisplayAmount: action.data.display}
+      return {
+        ...state,
+        fromNativeAmount: action.data.native,
+        fromDisplayAmount: action.data.display
+      }
     case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR:
-      return {...state, transaction: null, insufficientError: true, genericShapeShiftError: null}
+      return {
+        ...state,
+        transaction: null,
+        insufficientError: true,
+        genericShapeShiftError: null
+      }
     case Constants.GENERIC_SHAPE_SHIFT_ERROR:
-      return {...state, transaction: null, genericShapeShiftError: action.data}
+      return {
+        ...state,
+        transaction: null,
+        genericShapeShiftError: action.data
+      }
     case Constants.CHANGE_EXCHANGE_FEE:
-      return {...state, feeSetting: action.feeSetting}
+      return { ...state, feeSetting: action.feeSetting }
     default:
       return state
   }
@@ -181,10 +216,12 @@ function deepCopyState (state) {
 }
 
 // Nuke the state on logout:
-export default (state: $PropertyType<State, 'ui'>, action: any) => {
+export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: any) => {
   if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
-    return cryptoExchangerReducer(undefined, ({type: 'DUMMY_ACTION_PLEASE_IGNORE'}: any))
+    return cryptoExchangerReducer(undefined, ({ type: 'DUMMY_ACTION_PLEASE_IGNORE' }))
   }
 
   return cryptoExchangerReducer(state, action)
 }
+
+export default cryptoExchanger

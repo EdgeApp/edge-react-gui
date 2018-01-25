@@ -1,13 +1,13 @@
 // @flow
 
 import {Actions} from 'react-native-router-flux'
+
 import * as UTILS from '../../../utils.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
-import type {AbcMetaToken} from 'airbitz-core-types'
 import type {Dispatch, State, GetState} from '../../../ReduxTypes'
 import type {CustomTokenInfo} from '../../../../types.js'
 

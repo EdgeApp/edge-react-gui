@@ -2,15 +2,10 @@
 
 import React, {Component} from 'react'
 import {FlipInput, type FlipInputFieldInfo} from './FlipInput2.ui.js'
-import * as UTILS from '../../../utils.js'
-import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 import type {GuiCurrencyInfo} from '../../../../types'
 
 const DIVIDE_PRECISION = 18
-// const LC_UNDEFINED = 0
-// const LC_PRIMARY = 1
-// const LC_SECONDARY = 2
 
 export type ExchangedFlipInputAmounts = {
   exchangeAmount: string,
@@ -136,99 +131,6 @@ export class ExchangedFlipInput extends Component<Props, State> {
     this.props.onExchangeAmountChanged({exchangeAmount, nativeAmount})
   }
 
-  // onPrimaryAmountChange = (primaryInput: string) => {
-  //   if (primaryInput === '') {
-  //     this.setState({
-  //       lastChanged: LC_PRIMARY,
-  //       primaryDisplayAmount: '',
-  //       secondaryDisplayAmount: ''
-  //     })
-  //     this.props.onAmountsChange({
-  //       primaryDisplayAmount: '0',
-  //       secondaryDisplayAmount: '0'
-  //     })
-  //   } else {
-  //     // Truncate the input value by the denomination of this currency.
-  //     // ie. If denom multiplier is 100000, then truncate to 5 decimal places
-  //     const primaryPrecision: number = bns.log10(this.props.primaryInfo.displayDenomination.multiplier)
-  //     const primaryDisplayAmount = UTILS.truncateDecimals(primaryInput, primaryPrecision)
-  //
-  //     const secondaryPrecision = bns.log10(this.props.secondaryInfo.displayDenomination.multiplier)
-  //     let secondaryDisplayAmount = this.convertPrimaryDisplayToSecondaryDisplay(primaryDisplayAmount)
-  //     secondaryDisplayAmount = UTILS.truncateDecimals(secondaryDisplayAmount, secondaryPrecision)
-  //
-  //     this.setState({
-  //       lastChanged: LC_PRIMARY,
-  //       primaryDisplayAmount,
-  //       secondaryDisplayAmount
-  //     })
-  //     this.props.onAmountsChange({
-  //       primaryDisplayAmount,
-  //       secondaryDisplayAmount
-  //     })
-  //   }
-  // }
-  //
-  // onSecondaryAmountChange = (secondaryInput: string) => {
-  //   if (secondaryInput === '') {
-  //     this.setState({
-  //       lastChanged: LC_SECONDARY,
-  //       primaryDisplayAmount: '',
-  //       secondaryDisplayAmount: ''
-  //     })
-  //     this.props.onAmountsChange({
-  //       primaryDisplayAmount: '0',
-  //       secondaryDisplayAmount: '0'
-  //     })
-  //   } else {
-  //     const secondaryPrecision: number = bns.log10(this.props.secondaryInfo.displayDenomination.multiplier)
-  //     const secondaryDisplayAmount = UTILS.truncateDecimals(secondaryInput, secondaryPrecision)
-  //
-  //     let primaryPrecision = bns.log10(this.props.primaryInfo.displayDenomination.multiplier)
-  //     // Limit the precision of the primaryPrecision by what would be no more
-  //     // than 0.01 (of whateve fiat currency) accuracy when converting a fiat value into a crypto value.
-  //     //
-  //     // Assume secondaryInfo refers to a fiatValue and take the secondaryToPrimaryRatio (exchange rate) and
-  //     // see how much precision this crypto denomination needs to achieve accuracy to 0.01 units of the current fiat
-  //     // currency. To do this we need to compare the "exchangeDenomination" of primaryInfo and secondaryInfo since
-  //     // only those values are relevant to secondaryToPrimaryRatio
-  //     const precisionAdjustVal = precisionAdjust(this.props)
-  //     const newPrimaryPrecision = primaryPrecision - precisionAdjustVal
-  //     primaryPrecision = newPrimaryPrecision >= 0 ? newPrimaryPrecision : 0
-  //
-  //     let primaryDisplayAmount = this.convertSecondaryDisplayToPrimaryDisplay(secondaryDisplayAmount)
-  //     primaryDisplayAmount = UTILS.truncateDecimals(primaryDisplayAmount, primaryPrecision)
-  //
-  //     this.setState({
-  //       lastChanged: LC_SECONDARY,
-  //       primaryDisplayAmount,
-  //       secondaryDisplayAmount
-  //     })
-  //     this.props.onAmountsChange({
-  //       primaryDisplayAmount,
-  //       secondaryDisplayAmount
-  //     })
-  //   }
-  // }
-
-  // convertPrimaryDisplayToSecondaryDisplay = (primaryDisplayAmount: string): string => {
-  //   if (primaryDisplayAmount === '') { return '' }
-  //
-  //   const primaryExchangeAmount = this.convertPrimaryDisplayToPrimaryExchange(primaryDisplayAmount)
-  //   const secondaryExchangeAmount = this.convertPrimaryExchangeToSecondaryExchange(primaryExchangeAmount)
-  //   const secondaryDisplayAmount = this.convertSecondaryExchangeToSecondaryDisplay(secondaryExchangeAmount)
-  //   return secondaryDisplayAmount
-  // }
-  //
-  // convertSecondaryDisplayToPrimaryDisplay = (secondaryDisplayAmount: string): string => {
-  //   if (secondaryDisplayAmount === '') { return '' }
-  //
-  //   const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
-  //   const primaryExchangeAmount = this.convertSecondaryExchangeToPrimaryExchange(secondaryExchangeAmount)
-  //   const primaryDisplayAmount = this.convertPrimaryExchangeToPrimaryDisplay(primaryExchangeAmount)
-  //   return primaryDisplayAmount
-  // }
-  //
   render () {
     return (
       <FlipInput
@@ -240,32 +142,4 @@ export class ExchangedFlipInput extends Component<Props, State> {
       />
     )
   }
-
-  // convertPrimaryDisplayToPrimaryExchange = (primaryDisplayAmount: string): string => {
-  //   const primaryDisplayToExchangeRatio:string = this.getPrimaryDisplayToExchangeRatio()
-  //   return bns.div(primaryDisplayAmount, primaryDisplayToExchangeRatio, DIVIDE_PRECISION)
-  // }
-  // convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
-  //   const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-  //   return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
-  // }
-  //
-  // convertPrimaryExchangeToSecondaryExchange = (primaryExchangeAmount: string): string => {
-  //   const secondaryToPrimaryRatio:string = this.props.secondaryToPrimaryRatio.toString()
-  //   return bns.mul(secondaryToPrimaryRatio, primaryExchangeAmount)
-  // }
-  // convertSecondaryExchangeToPrimaryExchange = (secondaryExchangeAmount: string): string => {
-  //   const secondaryToPrimaryRatio:number = this.props.secondaryToPrimaryRatio
-  //   const primaryToSecondaryRatio:string = secondaryToPrimaryRatio ? `${1 / secondaryToPrimaryRatio}` : '0'
-  //   return bns.mul(primaryToSecondaryRatio, secondaryExchangeAmount)
-  // }
-  //
-  // convertPrimaryExchangeToPrimaryDisplay = (primaryExchangeAmount: string): string => {
-  //   const primaryDisplayToExchangeRatio:string = this.getPrimaryDisplayToExchangeRatio()
-  //   return bns.mul(primaryDisplayToExchangeRatio, primaryExchangeAmount)
-  // }
-  // convertSecondaryExchangeToSecondaryDisplay = (secondaryExchangeAmount: string): string => {
-  //   const secondaryExchangeToDisplayRatio:string = this.getSecondaryDisplayToExchangeRatio()
-  //   return bns.mul(secondaryExchangeToDisplayRatio, secondaryExchangeAmount)
-  // }
 }

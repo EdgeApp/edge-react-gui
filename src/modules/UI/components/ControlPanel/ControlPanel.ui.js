@@ -26,7 +26,6 @@ export default class ControlPanel extends Component {
   }
 
   render () {
-    const primaryDisplayAmount = '1'
     const {
       primaryInfo,
       secondaryInfo,

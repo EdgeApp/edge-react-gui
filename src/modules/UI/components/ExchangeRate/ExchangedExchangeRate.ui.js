@@ -3,10 +3,6 @@ import React, {Component} from 'react'
 import ExchangeRate from './ExchangeRate.ui.js'
 import type {GuiCurrencyInfo, GuiDenomination} from '../../../../types'
 
-import type {
-  AbcDenomination
-} from 'airbitz-core-types'
-
 type ExchangedExchangeRateOwnProps = {
   exchangeSecondaryToPrimaryRatio: number,
   primaryCurrencyInfo: GuiCurrencyInfo,

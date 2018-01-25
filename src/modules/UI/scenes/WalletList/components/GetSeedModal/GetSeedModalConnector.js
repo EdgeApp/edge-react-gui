@@ -3,11 +3,10 @@
 import {connect} from 'react-redux'
 
 import GetSeedModal from './GetSeedModal.ui'
-import type {State, Dispatch, GetState} from '../../../../../ReduxTypes'
+import type {Dispatch, GetState} from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import {CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME} from '../WalletOptions/action'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
-import s from '../../../../../../locales/strings.js'
 
 export type StateProps = {
   walletId: string,
