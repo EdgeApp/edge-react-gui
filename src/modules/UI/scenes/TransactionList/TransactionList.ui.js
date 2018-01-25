@@ -108,18 +108,19 @@ export default class TransactionList extends Component<Props, State> {
             if (err === 'denied') {
               // error
             } else {
-              const filteredContacts = contacts.filter(item => item.givenName)
-              filteredContacts.sort((a, b) => {
-                const nameA = a.givenName.toUpperCase()
-                const nameB = b.givenName.toUpperCase()
-                if (nameA < nameB) {
-                  return -1
-                }
-                if (nameA > nameB) {
-                  return 1
-                }
-                return 0
-              })
+              const filteredContacts = contacts
+                .filter(item => item.givenName)
+                .sort((a, b) => {
+                  const nameA = a.givenName.toUpperCase()
+                  const nameB = b.givenName.toUpperCase()
+                  if (nameA < nameB) {
+                    return -1
+                  }
+                  if (nameA > nameB) {
+                    return 1
+                  }
+                  return 0
+                })
               this.props.setContactList(filteredContacts)
             }
           })
