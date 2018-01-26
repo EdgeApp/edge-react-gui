@@ -108,13 +108,14 @@
     "react-native-permissions": "1.0.6",
     "react-native-picker": "^4.3.0",
     "react-native-push-notification": "^3.0.2",
-    "react-native-qrcode": "^0.2.3",
+    "react-native-qrcode": "^0.2.6",
     "react-native-router-flux": "git://github.com/aksonov/react-native-router-flux.git#37c6553c168b9fb6947a5e533df9bd37793f1f68",
     "react-native-share": "^1.0.21",
     "react-native-slider": "^0.11.0",
     "react-native-smart-splash-screen": "^2.3.5",
     "react-native-sortable-listview": "^0.2.7",
     "react-native-sound": "^0.10.4",
+    "react-native-svg": "^6.0.1-rc.1",
     "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.2.0",
@@ -127,7 +128,8 @@
     "timers-browserify": "^1.4.2",
     "tty-browserify": "0.0.0",
     "url": "^0.10.3",
-    "vm-browserify": "0.0.4"
+    "vm-browserify": "0.0.4",
+    "yaqrcode": "^0.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",

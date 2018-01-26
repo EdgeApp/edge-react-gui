@@ -6,10 +6,13 @@ import {
   Alert,
   Clipboard,
   View,
-  Share
+  Share,
+  Keyboard,
+  Animated
 } from 'react-native'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
+import qrcode from 'yaqrcode'
 
 import type {AbcCurrencyWallet, AbcEncodeUri} from 'airbitz-core-types'
 
@@ -28,12 +31,17 @@ import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
+import platform from '../../../../theme/variables/platform.js'
+
 
 type State = {
   publicAddress: string,
   encodedURI: string,
   loading: boolean,
-  result: string
+  result: string,
+  keyboardUp: boolean,
+  animationQrSize: any,
+  animationPushUpSize: any
 }
 type Props = {
   loading: boolean,
@@ -47,14 +55,31 @@ type Props = {
 }
 
 export default class Request extends Component<Props, State> {
+
+  keyboardWillShowListener: any
+  keyboardWillHideListener: any
+
   constructor (props: Props) {
     super(props)
     this.state = {
       publicAddress: '',
       encodedURI: '',
+      keyboardUp: false,
       loading: props.loading,
-      result: ''
+      result: '',
+      animationQrSize: new Animated.Value(platform.deviceHeight / 2.9),
+      animationPushUpSize: new Animated.Value(0)
     }
+  }
+
+  componentWillMount () {
+    this.keyboardWillShowListener = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow.bind(this))
+    this.keyboardWillHideListener = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide.bind(this))
+  }
+
+  componentWillUnmount () {
+    this.keyboardWillShowListener.remove()
+    this.keyboardWillHideListener.remove()
   }
 
   componentWillReceiveProps (nextProps: Props) {
@@ -66,7 +91,7 @@ export default class Request extends Component<Props, State> {
         const abcEncodeUri: AbcEncodeUri = {publicAddress}
         const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
-          encodedURI,
+          encodedURI: qrcode(encodedURI),
           publicAddress
         })
       })
@@ -84,7 +109,7 @@ export default class Request extends Component<Props, State> {
       const abcEncodeUri: AbcEncodeUri = {publicAddress}
       const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
       this.setState({
-        encodedURI,
+        encodedURI: qrcode(encodedURI),
         publicAddress
       })
     })
@@ -102,7 +127,7 @@ export default class Request extends Component<Props, State> {
     const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
 
     this.setState({
-      encodedURI
+      encodedURI: qrcode(encodedURI)
     })
   }
   renderDropUp = () => {
@@ -146,10 +171,19 @@ export default class Request extends Component<Props, State> {
               secondaryInfo={secondaryInfo}
               secondaryToPrimaryRatio={secondaryToPrimaryRatio}
               onAmountsChange={this.onAmountsChange}
-              color={color} />
-
-            <QRCode value={this.state.encodedURI} />
-            <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+              color={color}
+            />
+            <QRCode
+              value={this.state.encodedURI}
+              keyboardUp={this.state.keyboardUp}
+              animationQrSize={this.state.animationQrSize}
+              animationPushUpSize={this.state.animationPushUpSize}
+            />
+            <RequestStatus
+              requestAddress={this.state.publicAddress}
+              amountRequestedInCrypto={0}
+              amountReceivedInCrypto={0}
+            />
           </View>
 
           <View style={styles.shareButtonsContainer}>
@@ -198,27 +232,54 @@ export default class Request extends Component<Props, State> {
     ContactsWrapper.getContact()
     .then(() => {
       this.shareMessage()
-      // console.log('shareViaEmail')
     })
     .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaSMS = () => {
     ContactsWrapper.getContact().then(() => {
       this.shareMessage()
-      // console.log('shareViaSMS')
     })
     .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
     })
   }
 
   shareViaShare = () => {
     this.shareMessage()
-    // console.log('shareViaShare')
+  }
+  keyboardWillShow (event: any) {
+    this.setState({
+      keyboardUp: true
+    })
+    this.animateQRCodeOnShow(event)
+  }
+  keyboardWillHide (event: any) {
+    this.setState({
+      keyboardUp: false
+    })
+    this.animateQRCodeOnHide(event)
+  }
+
+  animateQRCodeOnShow (event: any) {
+    Animated.timing(this.state.animationQrSize, {
+      duration: event.duration,
+      toValue: platform.deviceHeight / 4.3
+    }).start()
+    Animated.timing(this.state.animationPushUpSize, {
+      duration: event.duration,
+      toValue: 60
+    }).start()
+  }
+
+  animateQRCodeOnHide (event: any) {
+    Animated.timing(this.state.animationQrSize, {
+      duration: event.duration,
+      toValue: platform.deviceHeight / 2.9
+    }).start()
+    Animated.timing(this.state.animationPushUpSize, {
+      duration: event.duration,
+      toValue: 0
+    }).start()
   }
 }
