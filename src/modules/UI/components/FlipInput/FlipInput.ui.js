@@ -7,7 +7,8 @@ import {
   TouchableWithoutFeedback,
   View,
   Platform,
-  Animated
+  Animated,
+  ScrollView
 } from 'react-native'
 import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
@@ -208,15 +209,15 @@ export default class FlipInput extends Component<Props, State> {
           <Text style={[bottom.symbol]}>
             {denominationInfo.displayDenomination.symbol}
           </Text>
-          <Text style={[
-            bottom.amount,
-            !amount && bottom.alert
-          ]}
-            numberOfLines={1}
-            ellipsizeMode='tail'
+          <ScrollView horizontal={true} centerContent={true} style={bottom.scrollviewAmount}>
+            <Text style={[
+              bottom.amount,
+              !amount && bottom.alert
+            ]}
           >
-          {amount || '0'}
-        </Text>
+            {amount || '0'}
+          </Text>
+        </ScrollView>
         <Text style={[bottom.currencyCode]}>
           {denominationInfo.displayDenomination.name}
         </Text>
