@@ -5,8 +5,11 @@ import * as Constants from '../../../../constants/indexConstants'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-import type {
+import * as SEND_SELECTORS from './selectors'
+import type
+ {
   AbcParsedUri,
+  AbcMetadata,
   AbcSpendInfo,
   AbcTransaction,
   AbcCurrencyWallet,
@@ -34,16 +37,20 @@ export const UPDATE_CRYPTO_AMOUNT_REQUEST = PREFIX + 'UPDATE_CRYPTO_AMOUNT_REQUE
 export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
+export const UPDATE_TRANSACTION_ERROR = PREFIX + 'UPDATE_TRANSACTION_ERROR'
 
-export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+export const UPDATE_PARSED_URI_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
+export const UPDATE_PARSED_URI_METADATA = PREFIX + 'UPDATE_METADATA'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
-export type UpdateTransactionAction = {
-  type: typeof UPDATE_TRANSACTION,
-  data: {
-    transaction?: AbcTransaction | null,
-    error?: Error | null
-  }
+export type AbcMakeSpendInfo = {
+  currencyCode: string,
+  networkFeeOption?: string,
+  publicAddress?: string,
+  metadata?: any,
+  customNetworkFee?: any,
+  nativeAmount?: string,
+  spendTargets?: Array<AbcSpendTarget>
 }
 
 export const updateAmountSatoshi = (amountSatoshi: string) => ({
@@ -51,13 +58,15 @@ export const updateAmountSatoshi = (amountSatoshi: string) => ({
   data: {amountSatoshi}
 })
 
-export const updateTransactionAction = (
-  parsedUri: AbcParsedUri,
-  transaction: AbcTransaction | null,
-  error: Error | null): UpdateTransactionAction => ({
-    type: UPDATE_TRANSACTION,
-    data: {parsedUri, transaction, error}
-  })
+export const updateTransaction = (transaction: ?AbcTransaction): any => ({
+  type: UPDATE_TRANSACTION,
+  data: {transaction}
+})
+
+export const updateTransactionError = (error: ?Error): any => ({
+  type: UPDATE_TRANSACTION_ERROR,
+  data: {error}
+})
 
 export const updateSpendPending = (pending: boolean) => ({
   type: UPDATE_SPEND_PENDING,
@@ -65,14 +74,17 @@ export const updateSpendPending = (pending: boolean) => ({
 })
 
 export const updateNativeAmount = (nativeAmount: string) => ({
-  type: UPDATE_NATIVE_AMOUNT,
+  type: UPDATE_PARSED_URI_NATIVE_AMOUNT,
   data: {nativeAmount}
 })
 
-export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: any, getState: any) => {
+export const signBroadcastAndSave = () => (dispatch: any, getState: any) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+  const abcUnsignedTransaction = SEND_SELECTORS.getTransaction(state)
+
+  dispatch(updateSpendPending(true))
 
   WALLET_API.signTransaction(wallet, abcUnsignedTransaction)
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.broadcastTransaction(wallet, abcSignedTransaction))
@@ -88,7 +100,6 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
       dispatch(openABAlert(Constants.OPEN_AB_ALERT, successInfo))
     })
     .catch((e) => {
-      // console.log(e)
       dispatch(updateSpendPending(false))
       const errorInfo = {
         success: false,
@@ -125,43 +136,70 @@ export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: an
   dispatch(updateLabel(wallet.name))
 }
 
-export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, getState: any) => {
+export const makeSpend = (options: AbcMakeSpendInfo) => (dispatch: any, getState: any) => {
   const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
-  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
-  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
-
-  return WALLET_API.makeSpend(abcWallet, spendInfo)
+  return WALLET_API.makeSpend(abcWallet, makeSpendInfo(options))
   .then((abcTransaction: AbcTransaction) => {
-    dispatch(updateTransactionAction(parsedUri, abcTransaction, null))
+    dispatch(updateTransaction(abcTransaction))
+    dispatch(updateTransactionError(null))
   })
   .catch((error) => {
-    dispatch(updateTransactionAction(parsedUri, null, error))
+    dispatch(updateTransaction(null))
+    dispatch(updateTransactionError(error))
   })
 }
 
 export const getMaxSpendable = () => (dispatch: any, getState: any) => {
   const state = getState()
 
-  const parsedUri: AbcParsedUri = state.ui.scenes.sendConfirmation.parsedUri
-
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const spendInfo: AbcSpendInfo = makeSpendInfo(parsedUri)
-  spendInfo.networkFeeOption = state.ui.scenes.sendConfirmation.feeSetting
-  spendInfo.customNetworkFee = state.ui.scenes.sendConfirmation.feeSatoshi
+  const options: AbcMakeSpendInfo = {
+    currencyCode: UI_SELECTORS.getSelectedCurrencyCode(state),
+    publicAddress: SEND_SELECTORS.getPublicAddress(state),
+    networkFeeOption: SEND_SELECTORS.getNetworkFeeOption(state),
+    customNetworkFee: SEND_SELECTORS.getCustomNetworkFee(state),
+    metadata: SEND_SELECTORS.getMetadata(state),
+    nativeAmount: SEND_SELECTORS.getNativeAmount(state)
+  }
+  const spendInfo: AbcSpendInfo = makeSpendInfo(options)
 
   return WALLET_API.getMaxSpendable(abcWallet, spendInfo)
     .then((maxSpendable) => dispatch(updateNativeAmount(maxSpendable)))
     .catch((error) => console.log(error))
 }
 
+export const makeSpendInfo = ({
+  currencyCode,
+  networkFeeOption = Constants.STANDARD_FEE,
+  publicAddress = '',
+  customNetworkFee = {},
+  metadata = { amountFiat: parseFloat('0') },
+  nativeAmount = '0',
+  spendTargets = [{ publicAddress, nativeAmount }]
+}: AbcMakeSpendInfo): AbcSpendInfo => {
+  const spendInfo: AbcSpendInfo = {
+    currencyCode,
+    metadata,
+    spendTargets,
+    networkFeeOption,
+    customNetworkFee
+  }
+  return spendInfo
+}
+
 export const updateParsedURI = (parsedUri: AbcParsedUri) => ({
   type: UPDATE_PARSED_URI,
   data: {parsedUri}
 })
+
+export const updateMetadata = (metadata: AbcMetadata) => ({
+  type: UPDATE_PARSED_URI_METADATA,
+  data: {metadata}
+})
+
 export const updateLabel = (label: string) => ({
   type: UPDATE_LABEL,
   data: {label}
@@ -170,24 +208,4 @@ export const updateLabel = (label: string) => ({
 export const reset = () => ({
   type: RESET,
   data: {}
-})
-
-const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
-  const nativeAmount = parsedUri.nativeAmount ? parsedUri.nativeAmount : '0'
-  const spendTarget:AbcSpendTarget = {
-    publicAddress: parsedUri.publicAddress,
-    nativeAmount
-  }
-  const spendInfo:AbcSpendInfo = {
-    currencyCode: parsedUri.currencyCode,
-    metadata: parsedUri.metadata,
-    spendTargets: [spendTarget]
-  }
-  return spendInfo
-}
-
-export const changeFee = (feeSetting: string) => ({
-  type: CHANGE_MINING_FEE,
-  feeSetting
-  // fee,
 })

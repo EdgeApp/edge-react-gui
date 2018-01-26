@@ -7,15 +7,11 @@ export type SendConfirmationState = {
   transaction: AbcTransaction | null,
   parsedUri: AbcParsedUri,
   error: Error | null,
-
   displayAmount: number,
   publicAddress: string,
-  feeSatoshi: number,
   label: string,
-
-  // fee: string,
-  feeSetting: string,
-
+  networkFeeOption: string,
+  customNetworkFee?: any,
   inputCurrencySelected: string,
   maxSatoshi: number,
   isPinEnabled: boolean,
@@ -29,18 +25,15 @@ export const initialState: SendConfirmationState = {
   transaction: null,
   parsedUri: {
     publicAddress: '',
-    nativeAmount: ''
+    nativeAmount: '',
+    metadata: {}
   },
   error: null,
-
   displayAmount: 0,
   publicAddress: '',
-  feeSatoshi: 0,
   label: '',
-
-  // fee: '',
-  feeSetting: Constants.STANDARD_FEE,
-
+  networkFeeOption: Constants.STANDARD_FEE,
+  customNetworkFee: {},
   inputCurrencySelected: 'fiat',
   maxSatoshi: 0,
   isPinEnabled: false,
@@ -54,20 +47,22 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
-      const transaction: AbcTransaction = data.transaction
-      const parsedUri: AbcParsedUri = data.parsedUri
-      const error: Error = data.error
-      const out: SendConfirmationState = {
+      const { transaction } = data
+      return {
         ...state,
-        transaction,
-        parsedUri,
+        transaction
+      }
+    }
+    case ACTION.UPDATE_TRANSACTION_ERROR: {
+      const {error} = data
+      return {
+        ...state,
         error
       }
-      return out
     }
     case ACTION.UPDATE_PARSED_URI: {
-      const { parsedUri = {} } = data
-      const publicAddress = parsedUri.publicAddress
+      const {parsedUri = {}} = data
+      const {publicAddress} = parsedUri
       return {
         ...state,
         parsedUri,
@@ -81,7 +76,6 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
         displayAmount
       }
     }
-
     case ACTION.UPDATE_MAX_SATOSHI: {
       const { maxSatoshi } = data
       return {
@@ -127,21 +121,29 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
     case ACTION.RESET: {
       return initialState
     }
-    case ACTION.UPDATE_NATIVE_AMOUNT: {
-      const { nativeAmount } = data
+    case ACTION.UPDATE_PARSED_URI_NATIVE_AMOUNT: {
+      const {nativeAmount} = data
+      const parsedUri = { ...state.parsedUri, nativeAmount }
       return {
         ...state,
-        parsedUri: {
-          ...state.parsedUri,
-          nativeAmount
-        }
+        parsedUri
+      }
+    }
+    case ACTION.UPDATE_PARSED_URI_METADATA: {
+      const {metadata} = data
+      const parsedUri = { ...state.parsedUri, metadata }
+      return {
+        ...state,
+        parsedUri
       }
     }
     case ACTION.CHANGE_MINING_FEE:
+      const {networkFeeOption, customNetworkFee} = data
+      if (!customNetworkFee) return { ...state, networkFeeOption }
       return {
         ...state,
-        // fee: action.fee,
-        feeSetting: action.feeSetting
+        networkFeeOption,
+        customNetworkFee
       }
     default:
       return state
