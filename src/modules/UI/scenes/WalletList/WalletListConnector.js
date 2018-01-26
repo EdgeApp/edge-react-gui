@@ -16,20 +16,29 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 const mapStateToProps = (state: any): {} => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
-
+  const coreWallets = state.core.wallets.byId
+  const wallets = state.ui.wallets.byId
+  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
+  const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
+  const walletArchivesVisible = state.ui.scenes.walletList.walletArchivesVisible
+  const walletName = state.ui.scenes.walletList.walletName
+  const walletId = state.ui.scenes.walletList.walletId
+  const walletOrder = state.ui.wallets.walletListOrder
+  const dimensions = state.ui.scenes.dimensions
+  const customTokens = state.ui.settings.customTokens
   return {
     settings,
-    coreWallets: state.core.wallets.byId,
-    wallets: state.ui.wallets.byId,
-    activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
-    archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
-    walletArchivesVisible: state.ui.scenes.walletList.walletArchivesVisible,
-    walletName: state.ui.scenes.walletList.walletName,
-    walletId: state.ui.scenes.walletList.walletId,
-    walletOrder: state.ui.wallets.walletListOrder,
+    coreWallets,
+    wallets,
+    activeWalletIds,
+    archivedWalletIds,
+    walletArchivesVisible,
+    walletName,
+    walletId,
+    walletOrder,
     currencyConverter,
-    dimensions: state.ui.scenes.dimensions,
-    customTokens: state.ui.settings.customTokens
+    dimensions,
+    customTokens
   }
 }
 

@@ -1,24 +1,19 @@
 // @flow
 
-import {AbcAccount} from 'airbitz-core-types'
+import {AbcAccount, type AbcCurrencyWallet} from 'airbitz-core-types'
 import {Actions} from 'react-native-router-flux'
 
 import type {GetState, Dispatch} from '../ReduxTypes'
-import {displayErrorAlert} from '../UI/components/ErrorAlert/actions'
 
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import * as ACCOUNT_API from '../Core/Account/api'
-import * as ACCOUNT_ACTIONS from '../Core/Account/action.js'
-import * as SETTINGS_ACTIONS from '../UI/Settings/action.js'
 import * as SETTINGS_API from '../Core/Account/settings.js'
-import * as WALLET_ACTIONS from '../UI/Wallets/action'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
-import * as ADD_TOKEN_ACTIONS from '../UI/scenes/AddToken/action.js'
 import s from '../../locales/strings.js'
-import {updateWalletsRequest} from '../Core/Wallets/action.js'
+// import {updateWalletsRequest} from '../Core/Wallets/action.js'
 import PushNotification from 'react-native-push-notification'
 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
@@ -32,85 +27,101 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
       }
     })
   }, 6000)
-  // set up the touch id stuff.. this will get combined with other items when we refactor this method to trim dispatches
-  dispatch(SETTINGS_ACTIONS.addTouchIdInfo(touchIdInfo))
-  // this needs to be refactored into single dispatch
-  dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: account.otpEnabled, otpKey: account.otpKey}))
-  // adding call to determine if we have OTP set up.
-  // console.log(optDetails)
-  CONTEXT_API.getCurrencyPlugins(context)
-    .then((currencyPlugins) => {
-      currencyPlugins.forEach((plugin) => {
-        plugin.currencyInfo.walletTypes.forEach((type) => {
-          currencyCodes[type] = plugin.currencyInfo.currencyCode
-        })
-        dispatch(SETTINGS_ACTIONS.addCurrencyPlugin(plugin))
+  const accountInitObject = {
+    account: account,
+    touchIdInfo: touchIdInfo,
+    loginStatus: true,
+    walletId: '',
+    currencyCode: '',
+    currencyPlugins: [],
+    otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey},
+    autoLogoutTimeInSeconds: '',
+    bluetoothMode: '',
+    pinMode: false,
+    otpMode: false,
+    customTokens: '',
+    defaultFiat: '',
+    merchantMode: '',
+    denominationKeys: [],
+    customTokensSettings: [],
+    activeWalletIds: [],
+    archivedWalletIds: [],
+    currencyWallets: {}
+
+  }
+  try {
+    const currencyPlugins = await CONTEXT_API.getCurrencyPlugins(context)
+    currencyPlugins.forEach((plugin) => {
+      plugin.currencyInfo.walletTypes.forEach((type) => {
+        currencyCodes[type] = plugin.currencyInfo.currencyCode
       })
+      const pluginName = plugin.pluginName
+      const walletTypes = plugin.currencyInfo.walletTypes
+      accountInitObject.currencyPlugins.push({pluginName, plugin, walletTypes})
+    })
 
-      dispatch(ACCOUNT_ACTIONS.addAccount(account))
-      dispatch(SETTINGS_ACTIONS.setLoginStatus(true))
-      // TODO: understand why this fails flow -paulvp
-
-      if (ACCOUNT_API.checkForExistingWallets(account)) {
-        const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
-        dispatch(WALLET_ACTIONS.selectWallet(walletId, currencyCode))
-        dispatch(loadSettings())
-        // $FlowFixMe
-        dispatch(updateWalletsRequest())
-        return
+    if (account.activeWalletIds.length < 1) {
+      // lets create the wallet
+      const walletName = s.strings.string_first_ethereum_wallet_name
+      const walletType = Constants.ETHEREUM_WALLET
+      const fiatCurrencyCode = Constants.USD_FIAT
+      const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {name: walletName, fiatCurrencyCode})
+      accountInitObject.walletId = abcWallet.id
+      accountInitObject.currencyCode = abcWallet.currencyInfo.currencyCode
+    } else {
+      // We have a wallet
+      const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+      accountInitObject.walletId = walletId
+      accountInitObject.currencyCode = currencyCode
+    }
+    const {activeWalletIds, archivedWalletIds, currencyWallets} = account
+    for (const walletId of Object.keys(currencyWallets)) {
+      const abcWallet:AbcCurrencyWallet = currencyWallets[walletId]
+      if (abcWallet.type === 'wallet:ethereum') {
+        if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
+          const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
+          abcWallet.enableTokens(enabledTokens)
+        }
       }
-      dispatch(createCurrencyWallet(
-        s.strings.string_first_ethereum_wallet_name,
-        Constants.ETHEREUM_WALLET,
-        Constants.USD_FIAT
-      ))
-      dispatch(loadSettings())
-      // $FlowFixMe
-      dispatch(updateWalletsRequest())
-    })
-}
+    }
+    accountInitObject.activeWalletIds = activeWalletIds
+    accountInitObject.archivedWalletIds = archivedWalletIds
+    accountInitObject.currencyWallets = currencyWallets
 
-const loadSettings = () => (dispatch: Dispatch, getState: GetState) => {
-  const {account} = getState().core
-  SETTINGS_API.getSyncedSettings(account)
-    .then((settings) => {
-      const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
-      const syncFinal = {...syncDefaults, ...settings}
-      const customTokens = settings ? settings.customTokens : []
-      // Add all the settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setAutoLogoutTimeInSeconds(syncFinal.autoLogoutTimeInSeconds))
-      dispatch(SETTINGS_ACTIONS.setDefaultFiat(syncFinal.defaultFiat))
-      dispatch(SETTINGS_ACTIONS.setMerchantMode(syncFinal.merchantMode))
-      dispatch(SETTINGS_ACTIONS.setCustomTokens(syncFinal.customTokens))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('BTC', syncFinal.BTC.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('BCH', syncFinal.BCH.denomination))
-      dispatch(SETTINGS_ACTIONS.setDenominationKey('ETH', syncFinal.ETH.denomination))
-      if (customTokens) {
-        customTokens.forEach((token) => {
-          dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
-          // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
-          dispatch(SETTINGS_ACTIONS.setDenominationKey(token.currencyCode, token.multiplier))
-        })
-      }
-    })
+    const settings = await SETTINGS_API.getSyncedSettings(account)
+    const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
+    const syncFinal = {...syncDefaults, ...settings}
+    const customTokens = settings ? settings.customTokens : []
+    accountInitObject.autoLogoutTimeInSeconds = syncFinal.autoLogoutTimeInSeconds
+    accountInitObject.defaultFiat = syncFinal.defaultFiat
+    accountInitObject.merchantMode = syncFinal.merchantMode
+    accountInitObject.customTokens = syncFinal.customTokens
+    accountInitObject.denominationKeys.push({currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination})
+    accountInitObject.denominationKeys.push({currencyCode: 'BCH', denominationKey: syncFinal.BCH.denomination})
+    accountInitObject.denominationKeys.push({currencyCode: 'ETH', denominationKey: syncFinal.ETH.denomination})
+    if (customTokens) {
+      customTokens.forEach((token) => {
+        // dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
+        accountInitObject.customTokensSettings.push(token)
+        // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
+        accountInitObject.denominationKeys.push({currencyCode: token.currencyCode, denominationKey: token.multiplier})
+      })
+    }
+    const localSettings = await SETTINGS_API.getLocalSettings(account)
+    const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
+    const localFinal = {...localDefaults, ...localSettings}
+    accountInitObject.bluetoothMode = localFinal.bluetoothMode
 
-  SETTINGS_API.getLocalSettings(account)
-    .then((settings) => {
-      const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
-
-      const localFinal = {...localDefaults, ...settings}
-      // Add all the local settings to UI/Settings
-      dispatch(SETTINGS_ACTIONS.setBluetoothMode(localFinal.bluetoothMode))
-    })
-
-  SETTINGS_API.getCoreSettings(account)
-    .then((settings) => {
-      const coreDefaults = SETTINGS_API.CORE_DEFAULTS
-
-      const coreFinal = {...coreDefaults, ...settings}
-      dispatch(SETTINGS_ACTIONS.setPINMode(coreFinal.pinMode))
-      dispatch(SETTINGS_ACTIONS.setOTPMode(coreFinal.otpMode))
-    })
+    const coreSettings = await SETTINGS_API.getCoreSettings(account)
+    const coreDefaults = SETTINGS_API.CORE_DEFAULTS
+    const coreFinal = {...coreDefaults, ...coreSettings}
+    accountInitObject.pinMode = coreFinal.pinMode
+    accountInitObject.otpMode = coreFinal.otpMode
+    dispatch(actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, accountInitObject))
+  } catch (e) {
+    console.log(e)
+    console.log(' The initialization blew up ')
+  }
 }
 
 export const logoutRequest = (username?: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -142,22 +153,3 @@ export const logout = (username?: string) => ({
   type: Constants.LOGOUT,
   data: {username}
 })
-
-const createCurrencyWallet = (
-  walletName: string,
-  walletType: string,
-  fiatCurrencyCode: string
-) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
-  dispatch(WALLET_ACTIONS.createWalletStart())
-
-  return ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {name: walletName, fiatCurrencyCode})
-  .then((abcWallet) => {
-    dispatch(WALLET_ACTIONS.createWalletSuccess())
-    dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
-  })
-  .catch((error) => {
-    dispatch(displayErrorAlert(error.message))
-  })
-}

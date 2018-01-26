@@ -22,10 +22,6 @@ export const getFirstActiveWalletInfo = (
   }
 }
 
-export const checkForExistingWallets = (account: AbcAccount) => {
-  return account.activeWalletIds.length > 0
-}
-
 export const createCurrencyWalletRequest = (
   account: AbcAccount,
   walletType: string,
