@@ -1,6 +1,6 @@
 // @flow
 
-import {AbcAccount, type AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcAccount, AbcCurrencyWallet} from 'airbitz-core-types'
 import {Actions} from 'react-native-router-flux'
 
 import type {GetState, Dispatch} from '../ReduxTypes'

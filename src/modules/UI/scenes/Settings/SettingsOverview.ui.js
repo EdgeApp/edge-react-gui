@@ -28,7 +28,7 @@ import styles from './style'
 import s from '../../../../locales/strings'
 
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
-import { AbcAccount } from 'airbitz-core-types'
+import type { AbcAccount } from 'airbitz-core-types'
 
 const DISABLE_TEXT = s.strings.string_disable
 
