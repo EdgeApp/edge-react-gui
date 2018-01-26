@@ -57,9 +57,6 @@ export const styles = {
     paddingBottom: 15,
     justifyContent: 'space-around'
   },
-  settingsRowDisabled: {
-    backgroundColor: 'rgba(0,0,0,0)'
-  },
   settingsRowTextRow: {
     flexDirection: 'row',
     justifyContent: 'space-between'
@@ -72,6 +69,10 @@ export const styles = {
   },
   settingsRowLeftText: {
     color: THEME.COLORS.GRAY_1,
+    fontSize: 16
+  },
+  settingsRowLeftTextDisabled: {
+    color: THEME.COLORS.GRAY_2,
     fontSize: 16
   },
   settingsRowRightArrow: {
