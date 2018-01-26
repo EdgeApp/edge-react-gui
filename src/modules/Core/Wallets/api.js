@@ -133,7 +133,7 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
   return wallet.resyncBlockchain()
 }
 
-export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): String => {
+export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): string => {
   return wallet.getDisplayPrivateSeed()
 }
 
