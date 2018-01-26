@@ -7,13 +7,13 @@ import {
 } from './action'
 
 import { walletRowOption } from './components/WalletOptions/action.js'
-
+import type { Dispatch, State } from '../../../ReduxTypes'
 import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 
-const mapStateToProps = (state: any): {} => {
+const mapStateToProps = (state: State) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const coreWallets = state.core.wallets.byId
@@ -23,6 +23,7 @@ const mapStateToProps = (state: any): {} => {
   const walletArchivesVisible = state.ui.scenes.walletList.walletArchivesVisible
   const walletName = state.ui.scenes.walletList.walletName
   const walletId = state.ui.scenes.walletList.walletId
+  // $FlowFixMe
   const walletOrder = state.ui.wallets.walletListOrder
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
@@ -42,10 +43,11 @@ const mapStateToProps = (state: any): {} => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Function): {} => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   setContactList: (contacts) => dispatch(setContactList(contacts)),
+  // $FlowFixMe
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived))
 })
 
