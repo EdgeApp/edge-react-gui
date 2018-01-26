@@ -143,7 +143,7 @@ type Props = {
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
-  urlRecived: string => void,
+  urlReceived: string => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -209,7 +209,7 @@ export default class Main extends Component<Props, State> {
     const nextString = splitArray[1]
     const finalArray = nextString.split('&')
     const token = finalArray[0]
-    this.props.urlRecived(token)
+    this.props.urlReceived(token)
   }
   handleOpenURL = (event: Object) => {
     this.doDeepLink(event.url)

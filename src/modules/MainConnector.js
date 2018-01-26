@@ -49,7 +49,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   setLocaleInfo: (localeInfo) => {
     return dispatch(setLocaleInfo(localeInfo))
   },
-  urlRecived: (backupKey) => {
+  urlReceived: (backupKey) => {
     return dispatch(actions.deepLinkLogout(backupKey))
   },
   contextCallbacks: makeContextCallbacks(dispatch)
