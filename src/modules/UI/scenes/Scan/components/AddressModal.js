@@ -13,7 +13,7 @@ import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
 import {AddressInput} from './AddressInput.js'
 import {AddressInputButtons} from './AddressInputButtons.js'
-import type {AbcCurrencyWallet, AbcParsedUri} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcParsedUri} from 'edge-login'
 import {colors} from '../../../../../theme/variables/airbitz.js'
 
 import styles from '../style'

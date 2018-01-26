@@ -41,8 +41,6 @@
   },
   "dependencies": {
     "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",
-    "airbitz-core-react-native": "^0.6.0",
-    "airbitz-core-types": "git://github.com/Airbitz/airbitz-core-types.git",
     "biggystring": "^3.0.1",
     "browserify-zlib": "^0.1.4",
     "buffer": "^5.0.8",
@@ -51,8 +49,9 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "^2.12.4",
-    "edge-currency-ethereum": "^0.7.4",
+    "edge-login": "^0.5.0",
+    "edge-currency-bitcoin": "^2.13.0",
+    "edge-currency-ethereum": "^0.7.5",
     "edge-exchange-plugins": "^0.1.1",
     "https-browserify": "0.0.1",
     "intl": "^1.2.5",
@@ -78,8 +77,9 @@
     "react-native-drawer": "^2.3.0",
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
+    "react-native-fast-crypto": "^1.5.3",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
-    "react-native-fs": "^2.1.0-rc.1",
+    "react-native-fs": "^2.9.7",
     "react-native-hockeyapp": "^0.5.1",
     "react-native-http": "git://github.com/tradle/react-native-http#834492d",
     "react-native-image-picker": "^0.26.4",
@@ -95,6 +95,7 @@
     "react-native-picker": "^4.3.0",
     "react-native-push-notification": "^3.0.2",
     "react-native-qrcode": "^0.2.3",
+    "react-native-randombytes": "git://github.com/Airbitz/react-native-randombytes.git",
     "react-native-router-flux": "git://github.com/aksonov/react-native-router-flux.git#37c6553c168b9fb6947a5e533df9bd37793f1f68",
     "react-native-share": "^1.0.21",
     "react-native-slider": "^0.11.0",
@@ -141,7 +142,7 @@
   "jest": {
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-navigation|mobx|airbitz-core-types)"
+      "node_modules/(?!(jest-)?react-native|react-navigation|mobx)"
     ],
     "setupFiles": [
       "./testSetup.js"

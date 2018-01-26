@@ -4,9 +4,9 @@ import type {
   AbcContextCallbacks,
   AbcCorePlugin,
   AbcContextOptions
-} from 'airbitz-core-types'
+} from 'edge-login'
 
-import {makeFakeContexts, makeReactNativeContext} from 'airbitz-core-react-native'
+import {makeFakeContexts, makeEdgeContext} from 'edge-login'
 import ENV from '../../env.json'
 const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 
@@ -23,7 +23,7 @@ function makeCoreContext (callbacks: AbcContextCallbacks = {}, pluginFactories: 
     return Promise.resolve(context)
   }
 
-  return makeReactNativeContext(opts)
+  return makeEdgeContext(opts)
 }
 
 export {makeCoreContext}

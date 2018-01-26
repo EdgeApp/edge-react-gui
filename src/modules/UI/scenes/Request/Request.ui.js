@@ -11,7 +11,7 @@ import {
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 
-import type {AbcCurrencyWallet, AbcEncodeUri} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcEncodeUri} from 'edge-login'
 
 import styles from './styles.js'
 import { ExchangedFlipInput, type ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'

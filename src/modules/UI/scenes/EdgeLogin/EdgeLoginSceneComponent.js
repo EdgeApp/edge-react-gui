@@ -4,7 +4,7 @@ import { View, Text, ActivityIndicator, Image } from 'react-native'
 import { PrimaryButton, SecondaryButton } from '../../components/Buttons/index'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import s from '../../../../locales/strings.js'
-import type { AbcLobby } from 'airbitz-core-types'
+import type { AbcLobby } from 'edge-login'
 import SafeAreaView from '../../components/SafeAreaView'
 type Props = {
   style: any,

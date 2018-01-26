@@ -3,7 +3,7 @@
 import {Platform} from 'react-native'
 import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'airbitz-core-types'
+import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'edge-login'
 import type {GuiDenomination, ExchangeData, GuiWallet, CustomTokenInfo} from '../types'
 import _ from 'lodash'
 import borderColors from '../theme/variables/css3Colors'

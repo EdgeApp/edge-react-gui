@@ -31,7 +31,7 @@ import platform from '../../../../theme/variables/platform.js'
 
 // import SearchBar from './components/SearchBar.ui'
 
-import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
+import type {AbcTransaction, AbcDenomination} from 'edge-login'
 import type {GuiWallet} from '../../../../types'
 
 import WalletListModal
