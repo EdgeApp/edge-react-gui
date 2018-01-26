@@ -6,11 +6,8 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as SEND_SELECTORS from './selectors'
-import type
- {
+import type {
   AbcParsedUri,
-  AbcMetadata,
-  AbcSpendInfo,
   AbcTransaction,
   AbcCurrencyWallet,
   AbcSpendTarget
@@ -18,29 +15,12 @@ import type
 
 const PREFIX = 'UI/SendConfimation/'
 
-export const UPDATE_AMOUNT_SATOSHI = PREFIX + 'UPDATE_AMOUNT_SATOSHI'
 export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
-export const UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO = PREFIX + 'UPDATE_MAX_AVAILABLE_TO_SPEND_IN_CRYPTO'
-export const ENABLE_SLIDER = PREFIX + 'ENABLE_SLIDER'
-export const UPDATE_DRAFT_STATUS = PREFIX + 'UPDATE_DRAFT_STATUS'
 export const UPDATE_IS_KEYBOARD_VISIBLE = PREFIX + 'UPDATE_IS_KEYBOARD_VISIBLE'
-export const UPDATE_FEE = PREFIX + 'UPDATE_FEE'
-export const UPDATE_MAX_SATOSHI = PREFIX + 'UPDATE_MAX_SATOSHI'
 export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
-
-export const UPDATE_WALLET_TRANSFER = PREFIX + 'UPDATE_WALLET_TRANSFER'
-export const UPDATE_PUBLIC_ADDRESS = PREFIX + 'UPDATE_PUBLIC_ADDRESS'
-export const UPDATE_SPEND_INFO = PREFIX + 'UPDATE_SPEND_INFO'
 export const RESET = PREFIX + 'RESET'
-
-export const UPDATE_CRYPTO_AMOUNT_REQUEST = PREFIX + 'UPDATE_CRYPTO_AMOUNT_REQUEST'
-export const USE_MAX_CRYPTO_AMOUNT = PREFIX + 'USE_MAX_CRYPTO_AMOUNT'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
-export const UPDATE_TRANSACTION_ERROR = PREFIX + 'UPDATE_TRANSACTION_ERROR'
-
-export const UPDATE_PARSED_URI_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
-export const UPDATE_PARSED_URI_METADATA = PREFIX + 'UPDATE_METADATA'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
 export type AbcMakeSpendInfo = {
@@ -53,29 +33,14 @@ export type AbcMakeSpendInfo = {
   spendTargets?: Array<AbcSpendTarget>
 }
 
-export const updateAmountSatoshi = (amountSatoshi: string) => ({
-  type: UPDATE_AMOUNT_SATOSHI,
-  data: {amountSatoshi}
-})
-
-export const updateTransaction = (transaction: ?AbcTransaction): any => ({
+export const updateTransaction = (transaction: ?AbcTransaction, error: ?Error): any => ({
   type: UPDATE_TRANSACTION,
-  data: {transaction}
-})
-
-export const updateTransactionError = (error: ?Error): any => ({
-  type: UPDATE_TRANSACTION_ERROR,
-  data: {error}
+  data: { transaction, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
   type: UPDATE_SPEND_PENDING,
   data: {pending}
-})
-
-export const updateNativeAmount = (nativeAmount: string) => ({
-  type: UPDATE_PARSED_URI_NATIVE_AMOUNT,
-  data: {nativeAmount}
 })
 
 export const signBroadcastAndSave = () => (dispatch: any, getState: any) => {
@@ -108,28 +73,6 @@ export const signBroadcastAndSave = () => (dispatch: any, getState: any) => {
       }
       dispatch(openABAlert(Constants.OPEN_AB_ALERT, errorInfo))
     })
-}
-
-export const updateMaxSatoshiRequest = () => (dispatch: any, getState: any) => {
-  const state = getState()
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
-
-  wallet.getMaxSpendable()
-    .then((amountSatoshi) => {
-      dispatch(updateMaxSatoshi(amountSatoshi))
-    })
-}
-
-export const updateMaxSatoshi = (maxSatoshi: string) => ({
-  type: UPDATE_MAX_SATOSHI,
-  data: {maxSatoshi}
-})
-
-export const useMaxSatoshi = () => (dispatch: any, getState: any) => {
-  const state = getState()
-  const {maxSatoshi} = state.ui.scenes.sendConfirmation
-  dispatch(updateAmountSatoshi(maxSatoshi))
 }
 
 export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: any) => {
@@ -193,11 +136,6 @@ export const makeSpendInfo = ({
 export const updateParsedURI = (parsedUri: AbcParsedUri) => ({
   type: UPDATE_PARSED_URI,
   data: {parsedUri}
-})
-
-export const updateMetadata = (metadata: AbcMetadata) => ({
-  type: UPDATE_PARSED_URI_METADATA,
-  data: {metadata}
 })
 
 export const updateLabel = (label: string) => ({

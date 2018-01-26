@@ -2,7 +2,7 @@
 
 import * as UI_SELECTORS from '../../selectors.js'
 import type { State } from '../../../ReduxTypes'
-import type {AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
+import type {AbcTransaction, AbcParsedUri, AbcMetadata} from 'airbitz-core-types'
 
 export const getScene = (state: State): any => UI_SELECTORS.getSceneState(state, 'sendConfirmation')
 
@@ -14,6 +14,7 @@ export const getParsedUri = (state: State): AbcParsedUri => getScene(state).pars
 export const getKeyboardIsVisible = (state: State): boolean => getScene(state).keyboardIsVisible
 export const getError = (state: State): Error => getScene(state).error
 export const getLabel = (state: State): string => getScene(state).label
-export const getPublicAddress = (state: State): any => getParsedUri(state).publicAddress
-export const getNativeAmount = (state: State): any => getParsedUri(state).nativeAmount
-export const getMetadata = (state: State): any => getParsedUri(state).metadata
+export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
+export const getNativeAmount = (state: State): ?string => getParsedUri(state).nativeAmount
+export const getMetadata = (state: State): ?AbcMetadata => getParsedUri(state).metadata
+export const getPublicAddress = (state: State): ?string => getParsedUri(state).publicAddress

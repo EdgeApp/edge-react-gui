@@ -119,25 +119,36 @@ test('initialState', () => {
           'selectedWalletListModalVisibility': false,
           'torchEnabled': false},
         'sendConfirmation': {
-          'displayAmount': undefined,
-          'draftStatus': 'under',
-          'error': null,
-          'customNetworkFee': {},
-          'networkFeeOption': 'standard',
-          'inputCurrencySelected': 'fiat',
-          'isKeyboardVisible': false,
-          'isPinEnabled': false,
-          'isSliderLocked': false,
           'label': '',
-          'maxSatoshi': 0,
-          'parsedUri': {
-            'nativeAmount': '',
-            'publicAddress': '',
-            'metadata': {}
-          },
           'pending': false,
-          'publicAddress': '',
-          'transaction': null
+          'isKeyboardVisible': false,
+          'networkFeeOption': 'standard',
+          'customNetworkFee': {},
+          'transaction': {
+            'txid': '',
+            'date': 0,
+            'currencyCode': '',
+            'blockHeight': -1,
+            'nativeAmount': '',
+            'networkFee': '',
+            'ourReceiveAddresses': [],
+            'signedTx': '',
+            'metadata': {},
+            'otherParams': {}
+          },
+          'parsedUri': {
+            'publicAddress': '',
+            'nativeAmount': '0',
+            'metadata': {
+              'payeeName': '',
+              'category': '',
+              'notes': '',
+              'amountFiat': 0,
+              'bizId': 0,
+              'miscJson': ''
+            }
+          },
+          'error': null
         },
         'sideMenu': {
           'view': false},

@@ -1,107 +1,76 @@
 // @flow
 import * as ACTION from './action'
-import * as Constants from '../../../../constants/indexConstants'
 import type { AbcTransaction, AbcParsedUri } from 'airbitz-core-types'
+import { isEqual } from 'lodash'
 
 export type SendConfirmationState = {
+  label: string,
+  pending: boolean,
+  isKeyboardVisible: boolean,
+  networkFeeOption: string,
+  customNetworkFee: any,
   transaction: AbcTransaction | null,
   parsedUri: AbcParsedUri,
-  error: Error | null,
-  displayAmount: number,
-  publicAddress: string,
-  label: string,
-  networkFeeOption: string,
-  customNetworkFee?: any,
-  inputCurrencySelected: string,
-  maxSatoshi: number,
-  isPinEnabled: boolean,
-  isSliderLocked: boolean,
-  draftStatus: string,
-  isKeyboardVisible: boolean,
-  pending: boolean
+  error: Error | null
 }
 
 export const initialState: SendConfirmationState = {
-  transaction: null,
-  parsedUri: {
-    publicAddress: '',
-    nativeAmount: '',
-    metadata: {}
+  'label': '',
+  'pending': false,
+  'isKeyboardVisible': false,
+  'networkFeeOption': 'standard',
+  'customNetworkFee': {},
+  'transaction': {
+    'txid': '',
+    'date': 0,
+    'currencyCode': '',
+    'blockHeight': -1,
+    'nativeAmount': '',
+    'networkFee': '',
+    'ourReceiveAddresses': [],
+    'signedTx': '',
+    'metadata': {},
+    'otherParams': {}
   },
-  error: null,
-  displayAmount: 0,
-  publicAddress: '',
-  label: '',
-  networkFeeOption: Constants.STANDARD_FEE,
-  customNetworkFee: {},
-  inputCurrencySelected: 'fiat',
-  maxSatoshi: 0,
-  isPinEnabled: false,
-  isSliderLocked: false,
-  draftStatus: 'under',
-  isKeyboardVisible: false,
-  pending: false
+  'parsedUri': {
+    'publicAddress': '',
+    'nativeAmount': '0',
+    'metadata': {
+      'payeeName': '',
+      'category': '',
+      'notes': '',
+      'amountFiat': 0,
+      'bizId': 0,
+      'miscJson': ''
+    }
+  },
+  'error': null
 }
 
 export const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
-      const { transaction } = data
+      const { transaction, error } = data
       return {
         ...state,
-        transaction
-      }
-    }
-    case ACTION.UPDATE_TRANSACTION_ERROR: {
-      const {error} = data
-      return {
-        ...state,
+        transaction,
         error
       }
     }
     case ACTION.UPDATE_PARSED_URI: {
-      const {parsedUri = {}} = data
-      const {publicAddress} = parsedUri
-      return {
-        ...state,
-        parsedUri,
-        publicAddress
+      const { parsedUri } = data
+      if (!parsedUri) return { ...state }
+      const { metadata, ...others } = parsedUri
+      if (!isEqual(state.parsedUri.metadata, metadata)) {
+        state.parsedUri.metadata = { ...metadata }
       }
-    }
-    case ACTION.UPDATE_DISPLAY_AMOUNT: {
-      const { displayAmount } = data
       return {
         ...state,
-        displayAmount
-      }
-    }
-    case ACTION.UPDATE_MAX_SATOSHI: {
-      const { maxSatoshi } = data
-      return {
-        ...state,
-        maxSatoshi
-      }
-    }
-    case ACTION.USE_MAX_SATOSHI: {
-      const { maxSatoshi } = data
-      return {
-        ...state,
-        maxSatoshi
-      }
-    }
-    case ACTION.UNLOCK_SLIDER: {
-      const { isSliderLocked } = data
-      return {
-        ...state,
-        isSliderLocked
-      }
-    }
-    case ACTION.UPDATE_DRAFT_STATUS: {
-      const { draftStatus } = data
-      return {
-        ...state,
-        draftStatus
+        parsedUri: {
+          ...state.parsedUri,
+          ...others
+        }
       }
     }
     case ACTION.UPDATE_IS_KEYBOARD_VISIBLE: {
@@ -121,30 +90,12 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
     case ACTION.RESET: {
       return initialState
     }
-    case ACTION.UPDATE_PARSED_URI_NATIVE_AMOUNT: {
-      const {nativeAmount} = data
-      const parsedUri = { ...state.parsedUri, nativeAmount }
-      return {
-        ...state,
-        parsedUri
-      }
-    }
-    case ACTION.UPDATE_PARSED_URI_METADATA: {
-      const {metadata} = data
-      const parsedUri = { ...state.parsedUri, metadata }
-      return {
-        ...state,
-        parsedUri
-      }
-    }
     case ACTION.CHANGE_MINING_FEE:
-      const {networkFeeOption, customNetworkFee} = data
-      if (!customNetworkFee) return { ...state, networkFeeOption }
-      return {
-        ...state,
-        networkFeeOption,
-        customNetworkFee
+      const { networkFeeOption, customNetworkFee } = data
+      if (customNetworkFee && !isEqual(state.customNetworkFee, customNetworkFee)) {
+        state.customNetworkFee = { ...customNetworkFee }
       }
+      return { ...state, networkFeeOption }
     default:
       return state
   }
