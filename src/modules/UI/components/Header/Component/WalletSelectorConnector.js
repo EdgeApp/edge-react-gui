@@ -1,36 +1,29 @@
+// @flow
+
 import {connect} from 'react-redux'
-import {TextAndIconButton} from '../../../components/Buttons/TextAndIconButton.ui'
+import type {State, Dispatch} from '../../../../ReduxTypes'
+import WalletSelector from './WalletSelector.ui'
+import type {StateProps, DispatchProps} from './WalletSelector.ui'
 import * as UI_SELECTORS from '../../../selectors'
+import s from '../../../../../locales/strings.js'
 import {
   toggleSelectedWalletListModal,
   toggleScanToWalletListModal
 } from '../../WalletListModal/action'
-import {sprintf} from 'sprintf-js'
-import s from '../../../../../locales/strings.js'
-import * as Constants from '../../../../../constants/indexConstants'
-import * as Styles from '../../../../../styles/indexStyles'
-const mapStateToProps = (state) => {
+
+const mapStateToProps = (state: State): StateProps => {
   const selectedWallet = UI_SELECTORS.getSelectedWallet(state)
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
-  const LOADING_TEXT = sprintf(s.strings.loading)
   const title = selectedWallet
   ? selectedWallet.name + ':' + selectedWalletCurrencyCode
-  : LOADING_TEXT
-  return {
-    title,
-    style: {...Styles.TextAndIconButtonStyle,
-      content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
-      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}},
-    icon: Constants.KEYBOARD_ARROW_DOWN,
-    iconType: Constants.MATERIAL_ICONS
-  }
+  : s.strings.loading
+
+  return { title }
 }
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
   onPress: () => {
     dispatch(toggleSelectedWalletListModal())
     dispatch(toggleScanToWalletListModal())
-    /* toggleSelectedWalletListModal: () => dispatch(toggleSelectedWalletListModal())
-    toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()) */
   }
 })
-export default connect(mapStateToProps, mapDispatchToProps)(TextAndIconButton)
+export default connect(mapStateToProps, mapDispatchToProps)(WalletSelector)

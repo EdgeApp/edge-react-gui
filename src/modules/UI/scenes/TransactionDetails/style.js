@@ -1,5 +1,6 @@
 import {StyleSheet, Platform} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
+import PLATFORM from '../../../../theme/variables/platform.js'
 
 export const styles = {
   container: {
@@ -223,7 +224,7 @@ export const styles = {
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
-    height: 700,
+    height: PLATFORM.deviceHeight * 1 / 3,
     paddingLeft: 15,
     paddingRight: 15
   },

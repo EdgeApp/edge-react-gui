@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {Text, View, Image} from 'react-native'
+import {Text, View} from 'react-native'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
 import s from '../../../../locales/strings.js'

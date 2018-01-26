@@ -1,10 +1,11 @@
 // @flow
 
+import { combineReducers } from 'redux'
+
 import * as ACTIONS from './actions'
-import {combineReducers} from 'redux'
 
 const displayAlert = (state = false, action = {}) => {
-  const {type} = action
+  const { type } = action
   switch (type) {
     case ACTIONS.DISPLAY_ERROR_ALERT:
       return true
@@ -27,7 +28,9 @@ const message = (state = '', action = {}) => {
   }
 }
 
-export default combineReducers({
+export const errorAlert = combineReducers({
   displayAlert,
   message
 })
+
+export default errorAlert

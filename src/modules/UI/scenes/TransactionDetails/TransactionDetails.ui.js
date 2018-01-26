@@ -383,8 +383,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
             if (err === 'denied') {
               // error
             } else {
-              contacts.sort((a, b) => a.givenName > b.givenName)
-              this.props.setContactList(contacts)
+              const filteredContacts = contacts
+              .filter(item => item.givenName)
+              .sort((a, b) =>
+                a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+              )
+              this.props.setContactList(filteredContacts)
             }
           })
         }
@@ -533,7 +537,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   />
                 </Animated.View>
             }
-            <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' /* alwaysBounceVertical={false} */ bounces={false} >
+            <ScrollView keyboardShouldPersistTaps='handled' style={UTILS.border()} ref='_scrollView' scrollEnabled={!this.state.subCategorySelectVisibility} overScrollMode='never' >
               <View style={[styles.container]}>
                 <View>
                   <Gradient style={[styles.expandedHeader]}>
