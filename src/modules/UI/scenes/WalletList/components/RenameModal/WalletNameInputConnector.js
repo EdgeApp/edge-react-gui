@@ -15,6 +15,7 @@ const updateRenameWalletInput = (renameWalletInput: string) => ({
 const mapStateToProps = (state: State) => ({
   currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,
   // /currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
+  // $FlowFixMe
   renameWalletVisible: state.ui.scenes.walletList.renameWalletVisible,
   renameWalletInput: state.ui.scenes.walletList.renameWalletInput
 })

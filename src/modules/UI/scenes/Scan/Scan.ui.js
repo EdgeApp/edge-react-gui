@@ -31,7 +31,6 @@ type Props = {
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,
-  scanFromWalletListModalVisibility: any,
   scanToWalletListModalVisibility: any,
   dispatchEnableScan(): void,
   dispatchDisableScan(): void,
@@ -63,17 +62,11 @@ export default class Scan extends Component<any, any> {
     }
   }
 
-  renderDropUp = () => {
-    if (this.props.showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />
-    }
-    return null
+  componentDidMount () {
+    PERMISSIONS.request('camera').then(resp => this.setCameraPermission(resp))
   }
 
   render () {
-    if (!this.state.cameraPermission) {
-      PERMISSIONS.request('camera').then(resp => this.setCameraPermission(resp))
-    }
     return (
       <SafeAreaView>
         <View style={{ flex: 1 }}>
@@ -141,6 +134,13 @@ export default class Scan extends Component<any, any> {
         </View>
       </SafeAreaView>
     )
+  }
+
+  renderDropUp = () => {
+    if (this.props.showToWalletModal) {
+      return <WalletListModal topDisplacement={Constants.SCAN_WALLET_DIALOG_TOP} type={Constants.FROM} />
+    }
+    return null
   }
 
   setCameraPermission = (cameraPermission: boolean) => {
