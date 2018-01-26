@@ -16,6 +16,9 @@ export const stylesRaw = {
   },
   helpModal: {
     flex: 1
+  },
+  footerTabStyles: {
+    height: THEME.FOOTER_TABS_HEIGHT
   }
 }
 

@@ -235,7 +235,7 @@ export default class Main extends Component<Props, State> {
                   <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
                     {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
                     <Scene hideNavBar>
-                      <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true}>
+                      <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true} tabBarStyle={styles.footerTabStyles}>
                         <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
                           <Scene
                             key={Constants.WALLET_LIST_SCENE}
