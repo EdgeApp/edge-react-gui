@@ -77,8 +77,8 @@ import { BitcoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory, Litecoi
 import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
-import { makeCoreContext } from '../util/makeContext.js'
-
+import {makeCoreContext} from '../util/makeContext.js'
+import * as URI from 'uri-js'
 const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
 pluginFactories.push(EthereumCurrencyPluginFactory)
 pluginFactories.push(BitcoinCurrencyPluginFactory)
@@ -140,7 +140,7 @@ type Props = {
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
-  urlRecived: string => void,
+  urlReceived: string => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -187,27 +187,28 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
-    if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(url => {
-        if (url) {
-          this.props.urlRecived(url)
-        }
-        // this.navigate(url);
-      })
-    } else {
-      Linking.addEventListener('url', this.handleOpenURL)
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        this.doDeepLink(url)
+      }
+      // this.navigate(url);
+    }).catch(err => console.log('error occurred ', err))
+    Linking.addEventListener('url', this.handleOpenURL)
+  }
+  doDeepLink (url: string) {
+    const parsedUri = URI.parse(url)
+    const query = parsedUri.query
+    if (!query.includes('token=')) {
+      return
     }
+    const splitArray = query.split('token=')
+    const nextString = splitArray[1]
+    const finalArray = nextString.split('&')
+    const token = finalArray[0]
+    this.props.urlReceived(token)
   }
   handleOpenURL = (event: Object) => {
-    // this.props.urlRecived(event.url)
-    const splitArray = event.url.split('recovery?token=')
-    if (splitArray.length === 2) {
-      // const state = getState()
-      /*
-      dispatch(actions.deepLinkLogout()) */
-      this.props.urlRecived(splitArray[1])
-    }
-    // if(event.)
+    this.doDeepLink(event.url)
   }
 
   render () {
