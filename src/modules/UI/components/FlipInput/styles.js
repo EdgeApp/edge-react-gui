@@ -2,6 +2,7 @@
 
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
+import PLATFORM from '../../../../theme/variables/platform.js'
 
 export const styles = StyleSheet.create({
   dev: {
@@ -101,6 +102,9 @@ export const bottom = StyleSheet.create({
     color: THEME.COLORS.WHITE,
     textAlign: 'left',
     backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  scrollviewAmount: {
+    width: PLATFORM.deviceWidth / 2
   },
   amount: {
     flex: 6,
