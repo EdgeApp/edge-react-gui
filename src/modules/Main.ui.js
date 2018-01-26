@@ -77,8 +77,8 @@ import { BitcoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory, Litecoi
 import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
-import { makeCoreContext } from '../util/makeContext.js'
-
+import {makeCoreContext} from '../util/makeContext.js'
+import * as URI from 'uri-js'
 const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
 pluginFactories.push(EthereumCurrencyPluginFactory)
 pluginFactories.push(BitcoinCurrencyPluginFactory)
@@ -133,16 +133,14 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 
 type Props = {
   username?: string,
-  addExchangeTimer: number => void,
   addCurrencyPlugin: AbcCurrencyPlugin => void,
   setKeyboardHeight: number => void,
   addContext: AbcContext => void,
   addUsernames: (Array<string>) => void,
-  setLocaleInfo: any => void,
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
-  urlRecived: string => void,
+  urlReceived: string => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -181,7 +179,6 @@ export default class Main extends Component<Props, State> {
       CONTEXT_API.listUsernames(context).then(usernames => {
         this.props.addUsernames(usernames)
       })
-      this.props.setLocaleInfo(localeInfo)
       setIntlLocale(localeInfo)
       selectLocale('enUS')
       SplashScreen.close({
@@ -190,27 +187,28 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
-    if (Platform.OS === 'android') {
-      Linking.getInitialURL().then(url => {
-        if (url) {
-          this.props.urlRecived(url)
-        }
-        // this.navigate(url);
-      })
-    } else {
-      Linking.addEventListener('url', this.handleOpenURL)
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        this.doDeepLink(url)
+      }
+      // this.navigate(url);
+    }).catch(err => console.log('error occurred ', err))
+    Linking.addEventListener('url', this.handleOpenURL)
+  }
+  doDeepLink (url: string) {
+    const parsedUri = URI.parse(url)
+    const query = parsedUri.query
+    if (!query.includes('token=')) {
+      return
     }
+    const splitArray = query.split('token=')
+    const nextString = splitArray[1]
+    const finalArray = nextString.split('&')
+    const token = finalArray[0]
+    this.props.urlReceived(token)
   }
   handleOpenURL = (event: Object) => {
-    // this.props.urlRecived(event.url)
-    const splitArray = event.url.split('recovery?token=')
-    if (splitArray.length === 2) {
-      // const state = getState()
-      /*
-      dispatch(actions.deepLinkLogout()) */
-      this.props.urlRecived(splitArray[1])
-    }
-    // if(event.)
+    this.doDeepLink(event.url)
   }
 
   render () {
@@ -394,6 +392,21 @@ export default class Main extends Component<Props, State> {
                           renderRightButton={this.renderHelpButton}
                         />
                       </Stack>
+
+                      <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
+                        <Scene key={Constants.MANAGE_TOKENS_NOT_USED} navTransparent={true}
+                          component={ManageTokens}
+                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+
+                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
+                          component={AddToken}
+                          renderTitle={this.renderTitle(ADD_TOKEN)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton} />
+                      </Stack>
+
                       <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
                         <Scene
                           key={Constants.SETTINGS_OVERVIEW}
@@ -448,7 +461,6 @@ export default class Main extends Component<Props, State> {
                     </Scene>
                   </Drawer>
                 </Stack>
-                {/* </Lightbox> */}
               </Modal>
             </Overlay>
           </RouterWithRedux>

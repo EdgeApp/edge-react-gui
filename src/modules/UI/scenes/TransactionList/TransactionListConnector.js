@@ -53,6 +53,7 @@ const mapStateToProps = (state: State) => {
   }
   const multiplier = denomination.multiplier
   const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  // $FlowFixMe
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
