@@ -26,12 +26,6 @@ export const getLoginStatus = (state: State): boolean => {
   return loginStatus
 }
 
-export const getExchangeTimer = (state: State): number => {
-  const settings = getSettings(state)
-  const exchangeTimer: number = settings.exchangeTimer
-  return exchangeTimer
-}
-
 export const getCurrencySettings = (state: State, currencyCode: string) => {
   const settings = getSettings(state)
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]

@@ -1,14 +1,14 @@
 import * as ACTION from './action'
-import {combineReducers} from 'redux'
+import { combineReducers } from 'redux'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 
 export const deleteTokenModalVisible = (state = false, action) => {
   switch (action.type) {
-    case ACTION.SHOW_DELETE_TOKEN_MODAL :
+    case ACTION.SHOW_DELETE_TOKEN_MODAL:
       return true
-    case ACTION.HIDE_DELETE_TOKEN_MODAL :
+    case ACTION.HIDE_DELETE_TOKEN_MODAL:
       return false
-    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_SUCCESS :
+    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_SUCCESS:
       return false
     default:
       return state
@@ -17,11 +17,11 @@ export const deleteTokenModalVisible = (state = false, action) => {
 
 export const deleteCustomTokenProcessing = (state = false, action) => {
   switch (action.type) {
-    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_START :
+    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_START:
       return true
-    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_SUCCESS :
+    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_SUCCESS:
       return false
-    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_FAILURE :
+    case WALLET_ACTIONS.DELETE_CUSTOM_TOKEN_FAILURE:
       return false
     default:
       return state
@@ -30,24 +30,24 @@ export const deleteCustomTokenProcessing = (state = false, action) => {
 
 export const editCustomTokenProcessing = (state = false, action) => {
   switch (action.type) {
-    case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_START :
+    case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_START:
       return true
-    case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_SUCCESS :
+    case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_SUCCESS:
       return false
-    case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_FAILURE :
+    case WALLET_ACTIONS.EDIT_CUSTOM_TOKEN_FAILURE:
       return false
-    case WALLET_ACTIONS.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS :
+    case WALLET_ACTIONS.ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS:
       return false
-    case WALLET_ACTIONS.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS :
+    case WALLET_ACTIONS.OVERWRITE_THEN_DELETE_TOKEN_SUCCESS:
       return false
-    case WALLET_ACTIONS.UPDATE_EXISTING_TOKEN_SUCCESS :
+    case WALLET_ACTIONS.UPDATE_EXISTING_TOKEN_SUCCESS:
       return false
-    default :
+    default:
       return state
   }
 }
 
-const editToken = combineReducers({
+export const editToken = combineReducers({
   deleteTokenModalVisible,
   deleteCustomTokenProcessing,
   editCustomTokenProcessing

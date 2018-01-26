@@ -3,7 +3,6 @@
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {
-  ActivityIndicator,
   Alert,
   View,
   Keyboard,
@@ -18,7 +17,6 @@ import SearchResults from '../../components/SearchResults'
 import * as Constants from '../../../../constants/indexConstants.js'
 import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
-import PLATFORM from '../../../../theme/variables/platform'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import * as UTILS from '../../../utils'
 import type {GuiWalletType, FlatListItem, DeviceDimensions} from '../../../../types'
@@ -112,8 +110,6 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
       return ((entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0) ||
               (entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0))
     })
-    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
-    const searchResultsHeight = PLATFORM.usableHeight - keyboardHeight - 50 - 58 // substract button area height and FormField height
 
     return (
       <SafeAreaView>
