@@ -34,7 +34,6 @@ export default class ChangeMiningFee extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      // fee: props.fee,
       feeSetting: props.feeSetting
     }
   }
