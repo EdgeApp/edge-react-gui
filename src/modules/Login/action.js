@@ -2,7 +2,7 @@
 
 import type {AbcAccount, AbcCurrencyWallet} from 'airbitz-core-types'
 import {Actions} from 'react-native-router-flux'
-
+import {Platform} from 'react-native'
 import type {GetState, Dispatch} from '../ReduxTypes'
 
 // Login/action.js
@@ -20,13 +20,13 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const currencyCodes = {}
-  setTimeout(() => {
+  if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
       onNotification: (notification) => {
         console.log('NOTIFICATION:', notification)
       }
     })
-  }, 6000)
+  }
   const accountInitObject = {
     account: account,
     touchIdInfo: touchIdInfo,
