@@ -10,7 +10,7 @@ import type {
   AbcMetadata
 } from 'airbitz-core-types'
 
-export type AbcMakeSpendInfo = {
+export type GuiMakeSpendInfo = {
   currencyCode?: string,
   networkFeeOption?: string,
   publicAddress?: string,
@@ -25,7 +25,7 @@ export type SendConfirmationState = {
   pending: boolean,
   isKeyboardVisible: boolean,
   transaction: AbcTransaction | null,
-  parsedUri: AbcMakeSpendInfo,
+  parsedUri: GuiMakeSpendInfo,
   error: Error | null
 }
 
@@ -70,7 +70,7 @@ export const getLabel = (state: State): string => getScene(state).label
 
 export const getTransaction = (state: State): AbcTransaction =>
   getScene(state).transaction || initialState.transaction
-export const getParsedUri = (state: State): AbcMakeSpendInfo =>
+export const getParsedUri = (state: State): GuiMakeSpendInfo =>
   getScene(state).parsedUri || initialState.parsedUri
 
 export const getNetworkFeeOption = (state: State): string =>
@@ -86,7 +86,7 @@ export const getNativeAmount = (state: State): string =>
 
 export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
 
-export const getSpendInfo = (state: State, newSpendInfo?: AbcMakeSpendInfo = {}): AbcSpendInfo => ({
+export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): AbcSpendInfo => ({
   currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
   metadata: newSpendInfo.metadata
     ? { ...getMetadata(state), ...newSpendInfo.metadata }

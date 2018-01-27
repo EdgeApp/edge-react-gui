@@ -7,7 +7,7 @@ import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
 import { convertDisplayToNative } from '../../../utils.js'
 import { bns } from 'biggystring'
-import { type AbcMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
+import { type GuiMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
 import {
   getMaxSpendable,
   signTransaction,
@@ -44,7 +44,7 @@ export const updateAmount = (
     dispatch(createTX({ nativeAmount, metadata }))
   }
 
-export const createTX = (parsedUri: AbcMakeSpendInfo | AbcParsedUri) =>
+export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri) =>
   (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const walletId = getSelectedWalletId(state)
