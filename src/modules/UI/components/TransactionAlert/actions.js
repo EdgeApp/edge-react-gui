@@ -1,5 +1,5 @@
 // @flow
-import {type AbcTransaction} from 'airbitz-core-types'
+import type {AbcTransaction} from 'airbitz-core-types'
 
 const PREFIX = 'UI/components/TransactionAlert/'
 export const DISPLAY_TRANSACTION_ALERT = PREFIX + 'DISPLAY_TRANSACTION_ALERT'

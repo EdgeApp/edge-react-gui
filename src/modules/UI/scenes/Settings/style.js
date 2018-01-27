@@ -48,6 +48,7 @@ export const styles = {
     // //// Beginning of Settings Row ///////
   settingsRowContainer: {
     height: 44,
+    backgroundColor: THEME.COLORS.GRAY_4,
     borderBottomWidth: 1,
     borderBottomColor: THEME.COLORS.GRAY_3,
     paddingLeft: 20,
@@ -70,6 +71,10 @@ export const styles = {
     color: THEME.COLORS.GRAY_1,
     fontSize: 16
   },
+  settingsRowLeftTextDisabled: {
+    color: THEME.COLORS.GRAY_2,
+    fontSize: 16
+  },
   settingsRowRightArrow: {
     fontSize: 18,
     color: THEME.COLORS.GRAY_1
@@ -88,6 +93,7 @@ export const styles = {
 
     // /////// End of Settings Row /////////
   debugArea: {
+    backgroundColor: THEME.COLORS.GRAY_4,
     padding: 20,
     flex: 1
   },
@@ -119,7 +125,7 @@ export const styles = {
     fontSize: 22
   },
   underlay: {
-    color: THEME.COLORS.GRAY_4
+    color: 'rgba(0,0,0,0)'
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS

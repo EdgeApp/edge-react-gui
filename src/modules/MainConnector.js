@@ -33,7 +33,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   addUsernames: (usernames) => {
     return dispatch(addUsernames(usernames))
   },
-  urlRecived: (backupKey) => {
+  // commented out since it was blowing up flow && doesnt seem to be called.. TODO remove
+  /* setLocaleInfo: (localeInfo) => {
+    return dispatch(setLocaleInfo(localeInfo))
+  }, */
+  urlReceived: (backupKey) => {
     return dispatch(actions.deepLinkLogout(backupKey))
   },
   contextCallbacks: makeContextCallbacks(dispatch)

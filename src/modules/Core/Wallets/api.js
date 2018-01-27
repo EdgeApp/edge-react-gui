@@ -28,8 +28,10 @@ const dummyAbcTransaction: AbcTransaction = {
 
 const dummyAbcReceiveAddress: AbcReceiveAddress = {
   publicAddress: '',
-  metadata: {},
-  nativeAmount: ''
+  nativeAmount: '0',
+  'metadata': {
+    'amountFiat': 0
+  }
 }
 
 export const setTransactionDetailsRequest = (wallet: AbcCurrencyWallet, txid: string, currencyCode: string, abcMetadata: AbcMetadata): Promise<void> => {
@@ -133,7 +135,7 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
   return wallet.resyncBlockchain()
 }
 
-export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): String => {
+export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): string => {
   return wallet.getDisplayPrivateSeed()
 }
 

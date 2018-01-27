@@ -13,7 +13,7 @@ import {
 
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../../selectors.js'
-import { changeFee } from '../../action'
+import { updateMiningFees } from '../../../SendConfirmation/action'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -30,7 +30,10 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onPositive: (customFees: any) => {
-    dispatch(changeFee('custom', customFees))
+    dispatch(updateMiningFees({
+      networkFeeOption: 'custom',
+      customFees
+    }))
     dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
     Actions.pop()
   },

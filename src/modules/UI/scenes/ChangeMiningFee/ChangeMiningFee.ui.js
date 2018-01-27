@@ -18,17 +18,16 @@ const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
 
 type Props = {
   feeSetting: string,
-  onSubmit: (feeSetting: string) => void,
+  onSubmit: (feeSetting: string) => Promise<void>
 }
 type State = {
-  feeSetting: string,
+  feeSetting: string
 }
 export class ChangeMiningFee extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
-      feeSetting: props.feeSetting,
-      fee: ''
+      feeSetting: props.feeSetting
     }
   }
 

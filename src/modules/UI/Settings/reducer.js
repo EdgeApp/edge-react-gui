@@ -4,6 +4,7 @@ import type { AbcCurrencyPlugin } from 'airbitz-core-types'
 import _ from 'lodash'
 
 import * as ACTION from './action.js'
+import * as Constants from '../../../constants/indexConstants.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import { SYNCED_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, CORE_DEFAULTS } from '../../Core/Account/settings.js'
@@ -70,10 +71,117 @@ type SettingsState = {
   }
 }
 
+const currencyPLuginUtil = (state, payloadData) => {
+  const { plugins } = state
+  const { supportedWalletTypes } = plugins
+  const { arrayPlugins } = plugins
+  const { pluginName, plugin, walletTypes } = payloadData
+  const currencyInfo = plugin.currencyInfo
+  // Build up object with all the information for the parent currency, accesible by the currencyCode
+  const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
+  const parentCurrencyInfo = {
+    [currencyInfo.currencyCode]: {
+      ...defaultParentCurrencyInfo,
+      currencyName: currencyInfo.currencyName,
+      currencyCode: currencyInfo.currencyCode,
+      denominations: currencyInfo.denominations,
+      symbolImage: currencyInfo.symbolImage,
+      symbolImageDarkMono: currencyInfo.symbolImageDarkMono
+    }
+  }
+
+  // Build up object with all the information for each metatoken, accessible by the token currencyCode
+  const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
+    const defaultMetatokenInfo = state[metatoken.currencyCode]
+    return {
+      ...acc,
+      [metatoken.currencyCode]: {
+        ...defaultMetatokenInfo,
+        currencyName: metatoken.currencyName,
+        currencyCode: metatoken.currencyCode,
+        denominations: metatoken.denominations,
+        symbolImage: metatoken.symbolImage,
+        symbolImageDarkMono: metatoken.symbolImageDarkMono
+      }
+    }
+  }, {})
+
+  // Build up object with all the currency information for each currency supported by the plugin, accessible by the currencyCode
+  const currencyInfos = {
+    ...parentCurrencyInfo,
+    ...metatokenCurrencyInfos
+  }
+
+  return {
+    ...state,
+    ...currencyInfos,
+    plugins: {
+      ...plugins,
+      [pluginName]: plugin,
+      arrayPlugins: [...arrayPlugins, plugin],
+      supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
+    }
+  }
+}
+
 export const settings = (state: SettingsState = initialState, action: Action) => {
   const { type, data = {} } = action
 
   switch (type) {
+    case Constants.ACCOUNT_INIT_COMPLETE: {
+      const {
+        loginStatus,
+        otpInfo,
+        currencyPlugins,
+        autoLogoutTimeInSeconds,
+        defaultFiat,
+        merchantMode,
+        customTokens,
+        bluetoothMode,
+        pinMode,
+        otpMode,
+        denominationKeys,
+        customTokensSettings
+       } = data
+
+      let newState = {
+        ...state,
+        loginStatus,
+        isOtpEnabled: otpInfo.enabled,
+        otpKey: otpInfo.otpKey,
+        autoLogoutTimeInSeconds,
+        defaultFiat,
+        merchantMode,
+        customTokens,
+        bluetoothMode,
+        pinMode,
+        otpMode
+      }
+      denominationKeys.forEach((key) => {
+        const currencyCode = key.currencyCode
+        const denomination = key.denominationKey
+        const currencyState = newState[currencyCode]
+        newState = {
+          ...newState,
+          [currencyCode]: {
+            ...currencyState,
+            denomination
+          }
+        }
+      })
+      currencyPlugins.forEach((key) => {
+        console.log(key)
+        newState = currencyPLuginUtil(newState, key)
+      })
+      customTokensSettings.forEach((key) => {
+        const { currencyCode } = key
+        newState = {
+          ...newState,
+          [currencyCode]: key
+        }
+      })
+      return newState
+    }
     case ACTION.SET_LOGIN_STATUS: {
       const { loginStatus } = data
       return {
@@ -316,56 +424,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     }
 
     case ACTION.ADD_CURRENCY_PLUGIN: {
-      const { plugins } = state
-      const { supportedWalletTypes } = plugins
-      const { arrayPlugins } = plugins
-      const { pluginName, plugin, walletTypes } = data
-      const currencyInfo = plugin.currencyInfo
-      // Build up object with all the information for the parent currency, accesible by the currencyCode
-      const defaultParentCurrencyInfo = state[currencyInfo.currencyCode]
-      const parentCurrencyInfo = {
-        [currencyInfo.currencyCode]: {
-          ...defaultParentCurrencyInfo,
-          currencyName: currencyInfo.currencyName,
-          currencyCode: currencyInfo.currencyCode,
-          denominations: currencyInfo.denominations,
-          symbolImage: currencyInfo.symbolImage,
-          symbolImageDarkMono: currencyInfo.symbolImageDarkMono
-        }
-      }
-
-      // Build up object with all the information for each metatoken, accessible by the token currencyCode
-      const metatokenCurrencyInfos = currencyInfo.metaTokens.reduce((acc, metatoken) => {
-        const defaultMetatokenInfo = state[metatoken.currencyCode]
-        return {
-          ...acc,
-          [metatoken.currencyCode]: {
-            ...defaultMetatokenInfo,
-            currencyName: metatoken.currencyName,
-            currencyCode: metatoken.currencyCode,
-            denominations: metatoken.denominations,
-            symbolImage: metatoken.symbolImage,
-            symbolImageDarkMono: metatoken.symbolImageDarkMono
-          }
-        }
-      }, {})
-
-      // Build up object with all the currency information for each currency supported by the plugin, accessible by the currencyCode
-      const currencyInfos = {
-        ...parentCurrencyInfo,
-        ...metatokenCurrencyInfos
-      }
-
-      return {
-        ...state,
-        ...currencyInfos,
-        plugins: {
-          ...plugins,
-          [pluginName]: plugin,
-          arrayPlugins: [...arrayPlugins, plugin],
-          supportedWalletTypes: [...supportedWalletTypes, ...walletTypes]
-        }
-      }
+      return currencyPLuginUtil(state, data)
     }
 
     case WALLET_ACTION.UPSERT_WALLET: {

@@ -128,6 +128,7 @@ const strings = {
   settings_title_currency: 'Default Currency',
   settings_title_pin_login: 'PIN Re-login',
   settings_title: 'Settings',
+  settings_alert_unlock: 'Please unlock your account settings',
   string_cancel_cap: 'Cancel',
   string_cancel: 'CANCEL',
   string_delete: 'Delete',

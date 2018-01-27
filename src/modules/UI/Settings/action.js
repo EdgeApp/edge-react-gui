@@ -39,11 +39,6 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 // tokens
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
 
-export const setLoginStatus = (loginStatus) => ({
-  type: SET_LOGIN_STATUS,
-  data: {loginStatus}
-})
-
 export const updateSettings = (settings) => ({
   type: UPDATE_SETTINGS,
   data: {settings}
