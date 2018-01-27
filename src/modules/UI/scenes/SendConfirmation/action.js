@@ -27,8 +27,6 @@ export const RESET = PREFIX + 'RESET'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
-export const updateWalletTransfer = (wallet: AbcCurrencyWallet) =>
-  (dispatch: any) => dispatch(updateLabel(wallet.name))
 
 export const updateParsedURI = (parsedUri: AbcParsedUri) =>
   async (disptach: any) => disptach(createTX({ ...parsedUri }))
