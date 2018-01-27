@@ -5,9 +5,9 @@ import { openABAlert } from '../../components/ABAlert/action'
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
-import { type AbcMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
 import { convertDisplayToNative } from '../../../utils.js'
 import { bns } from 'biggystring'
+import { type AbcMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
 import {
   getMaxSpendable,
   signTransaction,
@@ -53,10 +53,9 @@ export const createTX = (parsedUri: AbcMakeSpendInfo | AbcParsedUri) =>
     const spendInfo = getSpendInfo(state, parsedUriClone)
     makeSpend(abcWallet, spendInfo)
     .then(abcTransaction => {
-      dispatch(updateTransaction(abcTransaction, null))
-      dispatch(makeParsedURI(parsedUriClone))
+      dispatch(updateTransaction(abcTransaction, parsedUriClone, null))
     })
-    .catch(e => dispatch(updateTransaction(null, e)))
+    .catch(e => dispatch(updateTransaction(null, parsedUriClone, e)))
   }
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
@@ -114,14 +113,13 @@ export const reset = () => ({
   data: {}
 })
 
-export const makeParsedURI = (parsedUri: AbcParsedUri) => ({
-  type: UPDATE_PARSED_URI,
-  data: { parsedUri }
-})
-
-export const updateTransaction = (transaction: ?AbcTransaction, error: ?Error) => ({
+export const updateTransaction = (
+  transaction: ?AbcTransaction,
+  parsedUri: ?AbcParsedUri,
+  error: ?Error
+) => ({
   type: UPDATE_TRANSACTION,
-  data: { transaction, error }
+  data: { transaction, parsedUri, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
