@@ -1,50 +1,7 @@
 // @flow
 import * as ACTION from './action'
-import type { AbcTransaction } from 'airbitz-core-types'
-import type { AbcMakeSpendInfo } from './selectors'
+import { type SendConfirmationState, initialState } from './selectors'
 import { isEqual } from 'lodash'
-
-export type SendConfirmationState = {
-  label: string,
-  pending: boolean,
-  isKeyboardVisible: boolean,
-  transaction: AbcTransaction | null,
-  parsedUri: AbcMakeSpendInfo,
-  error: Error | null
-}
-
-export const initialState: SendConfirmationState = {
-  'label': '',
-  'pending': false,
-  'isKeyboardVisible': false,
-  'transaction': {
-    'txid': '',
-    'date': 0,
-    'currencyCode': '',
-    'blockHeight': -1,
-    'nativeAmount': '',
-    'networkFee': '',
-    'ourReceiveAddresses': [],
-    'signedTx': '',
-    'metadata': {},
-    'otherParams': {}
-  },
-  'parsedUri': {
-    'networkFeeOption': 'standard',
-    'customNetworkFee': {},
-    'publicAddress': '',
-    'nativeAmount': '0',
-    'metadata': {
-      'payeeName': '',
-      'category': '',
-      'notes': '',
-      'amountFiat': 0,
-      'bizId': 0,
-      'miscJson': ''
-    }
-  },
-  'error': null
-}
 
 export const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
   const { type, data = {} } = action
