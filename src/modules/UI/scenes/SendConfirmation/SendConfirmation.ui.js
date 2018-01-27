@@ -77,6 +77,11 @@ export class SendConfirmation extends Component<Props, State> {
     this.setState({overridePrimaryExchangeAmount})
   }
 
+  componentWillReceiveProps (nextProps: Props) {
+    const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+    this.setState({overridePrimaryExchangeAmount})
+  }
+
   componentWillUnmount () {
     this.props.reset()
   }
