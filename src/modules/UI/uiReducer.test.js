@@ -70,8 +70,6 @@ test('initialState', () => {
         'label': '',
         'pending': false,
         'isKeyboardVisible': false,
-        'networkFeeOption': 'standard',
-        'customNetworkFee': {},
         'transaction': {
           'txid': '',
           'date': 0,
@@ -85,6 +83,8 @@ test('initialState', () => {
           'otherParams': {}
         },
         'parsedUri': {
+          'networkFeeOption': 'standard',
+          'customNetworkFee': {},
           'publicAddress': '',
           'nativeAmount': '0',
           'metadata': {

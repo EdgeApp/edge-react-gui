@@ -1,16 +1,15 @@
 // @flow
 import * as ACTION from './action'
-import type { AbcTransaction, AbcParsedUri } from 'airbitz-core-types'
+import type { AbcTransaction } from 'airbitz-core-types'
+import type { AbcMakeSpendInfo } from './selectors'
 import { isEqual } from 'lodash'
 
 export type SendConfirmationState = {
   label: string,
   pending: boolean,
   isKeyboardVisible: boolean,
-  networkFeeOption: string,
-  customNetworkFee: any,
   transaction: AbcTransaction | null,
-  parsedUri: AbcParsedUri,
+  parsedUri: AbcMakeSpendInfo,
   error: Error | null
 }
 
@@ -18,8 +17,6 @@ export const initialState: SendConfirmationState = {
   'label': '',
   'pending': false,
   'isKeyboardVisible': false,
-  'networkFeeOption': 'standard',
-  'customNetworkFee': {},
   'transaction': {
     'txid': '',
     'date': 0,
@@ -33,6 +30,8 @@ export const initialState: SendConfirmationState = {
     'otherParams': {}
   },
   'parsedUri': {
+    'networkFeeOption': 'standard',
+    'customNetworkFee': {},
     'publicAddress': '',
     'nativeAmount': '0',
     'metadata': {
@@ -61,10 +60,14 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
     case ACTION.UPDATE_PARSED_URI: {
       const { parsedUri } = data
       if (!parsedUri) return { ...state }
-      const { metadata, ...others } = parsedUri
+      const { metadata, customNetworkFee, ...others } = parsedUri
       if (!isEqual(state.parsedUri.metadata, metadata)) {
-        state.parsedUri.metadata = { ...metadata }
+        state.parsedUri.metadata = { ...state.parsedUri.metadata, ...metadata }
       }
+      if (customNetworkFee && !isEqual(state.parsedUri.customNetworkFee, customNetworkFee)) {
+        state.parsedUri.customNetworkFee = customNetworkFee
+      }
+
       return {
         ...state,
         parsedUri: {
@@ -90,12 +93,6 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
     case ACTION.RESET: {
       return initialState
     }
-    case ACTION.CHANGE_MINING_FEE:
-      const { networkFeeOption, customNetworkFee } = data
-      if (customNetworkFee && !isEqual(state.customNetworkFee, customNetworkFee)) {
-        state.customNetworkFee = { ...customNetworkFee }
-      }
-      return { ...state, networkFeeOption }
     default:
       return state
   }
