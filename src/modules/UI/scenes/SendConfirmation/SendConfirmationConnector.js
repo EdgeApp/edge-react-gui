@@ -1,7 +1,6 @@
 // @flow
 import { connect } from 'react-redux'
 import SendConfirmation, {type StateProps, type DispatchProps} from './SendConfirmation.ui'
-import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet } from '../../../../types'
 import type { AbcTransaction } from 'airbitz-core-types'
@@ -21,15 +20,13 @@ import {
   getPublicAddress,
   getKeyboardIsVisible,
   getLabel,
-  getNetworkFee,
-  getNetworkFeeOption,
-  getCustomNetworkFee
+  getNetworkFee
 } from './selectors'
 import {
   signBroadcastAndSave,
   updateSpendPending,
   updateAmount,
-  updateMiningFees
+  reset
 } from './action.js'
 
 const mapStateToProps = (state: State): StateProps => {
@@ -67,8 +64,6 @@ const mapStateToProps = (state: State): StateProps => {
     secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
     secondaryExchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
     networkFee: getNetworkFee(state),
-    networkFeeOption: getNetworkFeeOption(state),
-    customNetworkFee: getCustomNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)
   }
@@ -87,10 +82,7 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
       primaryMultiplier,
       secondaryMultiplier
     )),
-  resetFees: () => dispatch(updateMiningFees({
-    networkFeeOption: (STANDARD_FEE: string),
-    customNetworkFee: {}
-  })),
+  reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
 })

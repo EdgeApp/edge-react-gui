@@ -47,7 +47,7 @@ export type StateProps = {
 export type DispatchProps = {
   updateSpendPending: (boolean) => any,
   signBroadcastAndSave: () => any,
-  resetFees: () => any,
+  reset: () => any,
   updateAmount: (
     primaryDisplayAmount: string,
     secondaryDisplayAmount: string,
@@ -86,9 +86,11 @@ export default class SendConfirmation extends Component<Props, State> {
     const secondaryDisplayDenomination = getDenomFromIsoCode(
       this.props.secondaryDisplayCurrencyCode
     )
-    this.setState({
-      secondaryDisplayDenomination
-    }, () => this.props.resetFees())
+    this.setState({ secondaryDisplayDenomination })
+  }
+
+  componentWillUnmount () {
+    this.props.reset()
   }
 
   render () {
