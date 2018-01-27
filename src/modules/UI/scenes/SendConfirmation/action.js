@@ -38,6 +38,10 @@ export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 export const UPDATE_NATIVE_AMOUNT = PREFIX + 'UPDATE_NATIVE_AMOUNT'
 export const CHANGE_MINING_FEE = PREFIX + 'CHANGE_MINING_FEE'
 
+export const UPDATE_SPEND_PENDING_START = 0
+export const UPDATE_SPEND_PENDING_FAIL = 1
+export const UPDATE_SPEND_PENDING_SUCCESS = 2
+
 export type UpdateTransactionAction = {
   type: typeof UPDATE_TRANSACTION,
   data: {
@@ -59,7 +63,7 @@ export const updateTransactionAction = (
     data: {parsedUri, transaction, error}
   })
 
-export const updateSpendPending = (pending: boolean) => ({
+export const updateSpendPending = (pending: number) => ({
   type: UPDATE_SPEND_PENDING,
   data: {pending}
 })
@@ -78,7 +82,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.broadcastTransaction(wallet, abcSignedTransaction))
     .then((abcSignedTransaction: AbcTransaction) => WALLET_API.saveTransaction(wallet, abcSignedTransaction))
     .then(() => {
-      dispatch(updateSpendPending(false))
+      dispatch(updateSpendPending(UPDATE_SPEND_PENDING_SUCCESS))
       Actions.pop()
       const successInfo = {
         success: true,
@@ -89,7 +93,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     })
     .catch((e) => {
       // console.log(e)
-      dispatch(updateSpendPending(false))
+      dispatch(updateSpendPending(UPDATE_SPEND_PENDING_FAIL))
       const errorInfo = {
         success: false,
         title: 'Transaction Failure',
