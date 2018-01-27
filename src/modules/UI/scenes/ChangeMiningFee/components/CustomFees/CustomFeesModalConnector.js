@@ -29,10 +29,10 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onPositive: (customFees: any) => {
+  onPositive: (customNetworkFee: any) => {
     dispatch(updateMiningFees({
-      networkFeeOption: 'custom',
-      customFees
+      networkFeeOption: Constants.CUSTOM_FEES,
+      customNetworkFee
     }))
     dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
     Actions.pop()
