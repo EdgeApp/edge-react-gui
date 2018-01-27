@@ -6,6 +6,8 @@ import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
 import { type AbcMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
+import { convertDisplayToNative } from '../../../utils.js'
+import { bns } from 'biggystring'
 import {
   getMaxSpendable,
   signTransaction,
@@ -19,6 +21,7 @@ import type {
 } from 'airbitz-core-types'
 
 const PREFIX = 'UI/SendConfimation/'
+const DIVIDE_PRECISION = 18
 
 export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
 export const UPDATE_IS_KEYBOARD_VISIBLE = PREFIX + 'UPDATE_IS_KEYBOARD_VISIBLE'
@@ -26,6 +29,20 @@ export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
 export const RESET = PREFIX + 'RESET'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
+
+export const updateAmount = (
+  primaryDisplayAmount: string,
+  secondaryDisplayAmount: string,
+  primaryMultiplier: string,
+  secondaryMultiplier: string
+) =>
+  (dispatch: Dispatch, getState: GetState) => {
+    const nativeAmount: string = convertDisplayToNative(primaryMultiplier)(primaryDisplayAmount)
+    const secondaryDisplayToExchangeRatio = bns.div(secondaryMultiplier, secondaryMultiplier, DIVIDE_PRECISION)
+    const secondaryExchangeAmount = bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
+    const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
+    dispatch(createTX({ nativeAmount, metadata }))
+  }
 
 export const createTX = (parsedUri: AbcMakeSpendInfo | AbcParsedUri) =>
   (dispatch: Dispatch, getState: GetState) => {

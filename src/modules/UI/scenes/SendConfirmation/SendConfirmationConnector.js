@@ -4,7 +4,7 @@ import SendConfirmation, {type StateProps, type DispatchProps} from './SendConfi
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet } from '../../../../types'
-import type { AbcTransaction, AbcMetadata } from 'airbitz-core-types'
+import type { AbcTransaction } from 'airbitz-core-types'
 import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
@@ -28,7 +28,7 @@ import {
 import {
   signBroadcastAndSave,
   updateSpendPending,
-  updateParsedURI,
+  updateAmount,
   updateMiningFees
 } from './action.js'
 
@@ -75,10 +75,22 @@ const mapStateToProps = (state: State): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updateAmount: (nativeAmount: string, metadata: AbcMetadata) => {
-    dispatch(updateParsedURI({ nativeAmount, metadata }))
-  },
-  resetFees: (): any => dispatch(updateMiningFees(STANDARD_FEE, {})),
+  updateAmount: (
+    primaryDisplayAmount: string,
+    secondaryDisplayAmount: string,
+    primaryMultiplier: string,
+    secondaryMultiplier: string
+  ) =>
+    dispatch(updateAmount(
+      primaryDisplayAmount,
+      secondaryDisplayAmount,
+      primaryMultiplier,
+      secondaryMultiplier
+    )),
+  resetFees: () => dispatch(updateMiningFees({
+    networkFeeOption: (STANDARD_FEE: string),
+    customNetworkFee: {}
+  })),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
 })
