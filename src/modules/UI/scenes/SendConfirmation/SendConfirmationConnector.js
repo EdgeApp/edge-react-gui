@@ -1,6 +1,6 @@
 // @flow
 import { connect } from 'react-redux'
-import SendConfirmation, {type StateProps, type DispatchProps} from './SendConfirmation.ui'
+import {SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet, GuiDenomination, GuiCurrencyInfo } from '../../../../types'
 import type { AbcTransaction, AbcMetadata } from 'airbitz-core-types'
@@ -33,7 +33,7 @@ import {
   getDenomFromIsoCode
 } from '../../../utils.js'
 
-const mapStateToProps = (state: State): StateProps => {
+const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
   const guiWallet: GuiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
@@ -90,7 +90,7 @@ const mapStateToProps = (state: State): StateProps => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
   updateAmount: (nativeAmount: string, metadata: AbcMetadata) =>
     dispatch(updateAmount(nativeAmount, metadata)),
   reset: () => dispatch(reset()),

@@ -27,7 +27,7 @@ import type { AbcMetadata } from 'airbitz-core-types'
 
 const DIVIDE_PRECISION = 18
 
-export type StateProps = {
+export type SendConfirmationStateProps = {
   currencyCode: string,
   nativeAmount: string,
   networkFee: string,
@@ -43,7 +43,7 @@ export type StateProps = {
   currencyConverter: CurrencyConverter
 }
 
-export type DispatchProps = {
+export type SendConfirmationDispatchProps = {
   updateSpendPending: (boolean) => any,
   signBroadcastAndSave: () => any,
   reset: () => any,
@@ -53,7 +53,7 @@ export type DispatchProps = {
   ) => any
 }
 
-export type Props = DispatchProps & StateProps
+type Props = SendConfirmationStateProps & SendConfirmationDispatchProps
 
 type State = {
   nativeAmount: string,
@@ -61,8 +61,8 @@ type State = {
   keyboardVisible: boolean
 }
 
-export default class SendConfirmation extends Component<Props, State> {
-  constructor (props: Props & DispatchProps) {
+export class SendConfirmation extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     const newState: State = {
       overridePrimaryExchangeAmount: '',
