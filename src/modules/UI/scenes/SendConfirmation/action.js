@@ -1,5 +1,6 @@
 // @flow
 import { Actions } from 'react-native-router-flux'
+import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { openABAlert } from '../../components/ABAlert/action'
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
@@ -14,8 +15,7 @@ import {
 } from '../../../Core/Wallets/api.js'
 import type {
   AbcParsedUri,
-  AbcTransaction,
-  AbcCurrencyWallet
+  AbcTransaction
 } from 'airbitz-core-types'
 
 const PREFIX = 'UI/SendConfimation/'
@@ -27,50 +27,35 @@ export const RESET = PREFIX + 'RESET'
 export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
+export const createTX = (parsedUri: AbcMakeSpendInfo | AbcParsedUri) =>
+  (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const walletId = getSelectedWalletId(state)
+    const abcWallet = getWallet(state, walletId)
+    const parsedUriClone = { ...parsedUri }
+    const spendInfo = getSpendInfo(state, parsedUriClone)
+    makeSpend(abcWallet, spendInfo)
+    .then(abcTransaction => {
+      dispatch(updateTransaction(abcTransaction, null))
+      dispatch(makeParsedURI(parsedUriClone))
+    })
+    .catch(e => dispatch(updateTransaction(null, e)))
+  }
 
-export const updateParsedURI = (parsedUri: AbcParsedUri) =>
-  async (disptach: any) => disptach(createTX({ ...parsedUri }))
-
-export const updateMiningFees = (networkFeeOption: string, customNetworkFee: any) =>
-  async (disptach: any) => disptach(createTX({ networkFeeOption, customNetworkFee }))
-
-export const updateMaxSpend = () => async (dispatch: any, getState: any) => {
+export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const abcWallet = getWallet(state, walletId)
   const spendInfo = getSpendInfo(state)
   getMaxSpendable(abcWallet, spendInfo)
-  .then(nativeAmount => dispatch(updateParsedURI({ nativeAmount })))
+  .then(nativeAmount => {
+    const amount: AbcParsedUri = { nativeAmount }
+    dispatch(createTX(amount))
+  })
   .catch(e => console.log(e))
 }
 
-export const createTX = (newParsedUri: AbcMakeSpendInfo) => async (dispatch: any, getState: any) => {
-  const state = getState()
-  const walletId = getSelectedWalletId(state)
-  const abcWallet = getWallet(state, walletId)
-  const spendInfo = getSpendInfo(state, newParsedUri)
-  makeSpend(abcWallet, spendInfo)
-  .then(abcTransaction => dispatch(updateTransaction(abcTransaction, null)))
-  .then(() => dispatch(makeParsedURI({ ...newParsedUri })))
-  .catch(e => dispatch(updateTransaction(null, e)))
-}
-
-export const makeParsedURI = (parsedUri: AbcParsedUri) => ({
-  type: UPDATE_PARSED_URI,
-  data: { parsedUri }
-})
-
-export const updateTransaction = (transaction: ?AbcTransaction, error: ?Error): any => ({
-  type: UPDATE_TRANSACTION,
-  data: { transaction, error }
-})
-
-export const updateSpendPending = (pending: boolean) => ({
-  type: UPDATE_SPEND_PENDING,
-  data: {pending}
-})
-
-export const signBroadcastAndSave = () => (dispatch: any, getState: any) => {
+export const signBroadcastAndSave = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
@@ -111,3 +96,23 @@ export const reset = () => ({
   type: RESET,
   data: {}
 })
+
+export const makeParsedURI = (parsedUri: AbcParsedUri) => ({
+  type: UPDATE_PARSED_URI,
+  data: { parsedUri }
+})
+
+export const updateTransaction = (transaction: ?AbcTransaction, error: ?Error) => ({
+  type: UPDATE_TRANSACTION,
+  data: { transaction, error }
+})
+
+export const updateSpendPending = (pending: boolean) => ({
+  type: UPDATE_SPEND_PENDING,
+  data: {pending}
+})
+
+export {
+  createTX as updateParsedURI,
+  createTX as updateMiningFees
+}
