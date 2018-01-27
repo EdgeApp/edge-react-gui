@@ -26,7 +26,9 @@ import type { AbcMetadata } from 'airbitz-core-types'
 const DIVIDE_PRECISION = 18
 
 export type StateProps = {
+  currencyCode: string,
   nativeAmount: string,
+  networkFee: string,
   publicAddress: string,
   pending: boolean,
   keyboardIsVisible: boolean,
@@ -35,12 +37,8 @@ export type StateProps = {
   primaryExchangeDenomination: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
   secondaryExchangeCurrencyCode: string,
-  networkFeeOption: string,
-  customNetworkFee: any,
-  networkFee: string,
   errorMsg: string | null,
   fiatPerCrypto: number,
-  currencyCode: string,
   sliderDisabled: boolean,
   currencyConverter: CurrencyConverter
 }
@@ -55,7 +53,6 @@ export type DispatchProps = {
 export type Props = DispatchProps & StateProps
 
 type State = {
-  nativeAmount: string,
   secondaryDisplayDenomination: any,
   keyboardVisible: boolean
 }
@@ -64,7 +61,6 @@ export default class SendConfirmation extends Component<Props, State> {
   constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
-      nativeAmount: props.nativeAmount,
       secondaryDisplayDenomination: { multiplier: '1' },
       keyboardVisible: false
     }
@@ -144,7 +140,7 @@ export default class SendConfirmation extends Component<Props, State> {
 
             <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
               <ExchangedFlipInput
-                primaryInfo={{...primaryInfo, nativeAmount: this.state.nativeAmount}}
+                primaryInfo={{...primaryInfo, nativeAmount: this.props.nativeAmount}}
                 secondaryInfo={secondaryInfo}
                 secondaryToPrimaryRatio={this.props.fiatPerCrypto}
                 onAmountsChange={this.onAmountsChange}
@@ -176,9 +172,7 @@ export default class SendConfirmation extends Component<Props, State> {
     const nativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
     const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
     const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
-    this.setState({ nativeAmount }, () => {
-      this.props.updateAmount(nativeAmount, metadata)
-    })
+    this.props.updateAmount(nativeAmount, metadata)
   }
 
   convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
