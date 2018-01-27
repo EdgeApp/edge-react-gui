@@ -1,10 +1,9 @@
 // @flow
 import { connect } from 'react-redux'
 import SendConfirmation, {type StateProps, type DispatchProps} from './SendConfirmation.ui'
-import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet } from '../../../../types'
-import type { AbcTransaction, AbcMetadata } from 'airbitz-core-types'
+import type { AbcTransaction } from 'airbitz-core-types'
 import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
@@ -21,15 +20,13 @@ import {
   getPublicAddress,
   getKeyboardIsVisible,
   getLabel,
-  getNetworkFee,
-  getNetworkFeeOption,
-  getCustomNetworkFee
+  getNetworkFee
 } from './selectors'
 import {
   signBroadcastAndSave,
   updateSpendPending,
-  updateParsedURI,
-  updateMiningFees
+  updateAmount,
+  reset
 } from './action.js'
 
 const mapStateToProps = (state: State): StateProps => {
@@ -67,18 +64,25 @@ const mapStateToProps = (state: State): StateProps => {
     secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
     secondaryExchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
     networkFee: getNetworkFee(state),
-    networkFeeOption: getNetworkFeeOption(state),
-    customNetworkFee: getCustomNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updateAmount: (nativeAmount: string, metadata: AbcMetadata) => {
-    dispatch(updateParsedURI({ nativeAmount, metadata }))
-  },
-  resetFees: (): any => dispatch(updateMiningFees(STANDARD_FEE, {})),
+  updateAmount: (
+    primaryDisplayAmount: string,
+    secondaryDisplayAmount: string,
+    primaryMultiplier: string,
+    secondaryMultiplier: string
+  ) =>
+    dispatch(updateAmount(
+      primaryDisplayAmount,
+      secondaryDisplayAmount,
+      primaryMultiplier,
+      secondaryMultiplier
+    )),
+  reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
 })

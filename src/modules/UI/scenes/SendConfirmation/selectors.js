@@ -1,8 +1,7 @@
 // @flow
 
-import { initialState } from './reducer'
-import { STANDARD_FEE } from '../../../../constants/FeeConstants'
 import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
 import type {
   AbcSpendTarget,
@@ -11,7 +10,7 @@ import type {
   AbcMetadata
 } from 'airbitz-core-types'
 
-export type AbcMakeSpendInfo = {
+export type GuiMakeSpendInfo = {
   currencyCode?: string,
   networkFeeOption?: string,
   publicAddress?: string,
@@ -21,31 +20,73 @@ export type AbcMakeSpendInfo = {
   spendTargets?: Array<AbcSpendTarget>
 }
 
-export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')
+export type SendConfirmationState = {
+  label: string,
+  pending: boolean,
+  isKeyboardVisible: boolean,
+  transaction: AbcTransaction | null,
+  parsedUri: GuiMakeSpendInfo,
+  error: Error | null
+}
 
-export const getTransaction = (state: State): AbcTransaction => getScene(state).transaction
+export const initialState = {
+  'label': '',
+  'pending': false,
+  'isKeyboardVisible': false,
+  'transaction': {
+    'txid': '',
+    'date': 0,
+    'currencyCode': '',
+    'blockHeight': -1,
+    'nativeAmount': '0',
+    'networkFee': '',
+    'ourReceiveAddresses': [],
+    'signedTx': '',
+    'metadata': {},
+    'otherParams': {}
+  },
+  'parsedUri': {
+    'networkFeeOption': (STANDARD_FEE: string),
+    'customNetworkFee': {},
+    'publicAddress': '',
+    'nativeAmount': '0',
+    'metadata': {
+      'payeeName': '',
+      'category': '',
+      'notes': '',
+      'amountFiat': 0,
+      'bizId': 0,
+      'miscJson': ''
+    }
+  },
+  'error': null
+}
+
+export const getScene = (state: State): any => getSceneState(state, 'sendConfirmation')
 export const getPending = (state: State): boolean => getScene(state).pending
 export const getError = (state: State): Error => getScene(state).error
-export const getParsedUri = (state: State): AbcMakeSpendInfo => getScene(state).parsedUri
 export const getKeyboardIsVisible = (state: State): boolean => getScene(state).keyboardIsVisible
 export const getLabel = (state: State): string => getScene(state).label
 
+export const getTransaction = (state: State): AbcTransaction =>
+  getScene(state).transaction || initialState.transaction
+export const getParsedUri = (state: State): GuiMakeSpendInfo =>
+  getScene(state).parsedUri || initialState.parsedUri
+
 export const getNetworkFeeOption = (state: State): string =>
-  getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || STANDARD_FEE
+  getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''
 export const getCustomNetworkFee = (state: State): any =>
   getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
-export const getNativeAmount = (state: State): string =>
-  getParsedUri(state).nativeAmount || initialState.parsedUri.nativeAmount || ''
 export const getMetadata = (state: State): AbcMetadata =>
   getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
 export const getPublicAddress = (state: State): string =>
   getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
-export const getNetworkFee = (state: State): string => {
-  const transaction = getTransaction(state)
-  if (transaction && transaction.networkFee) return transaction.networkFee
-  return initialState.parsedUri.nativeAmount || ''
-}
-export const getSpendInfo = (state: State, newSpendInfo?: AbcMakeSpendInfo = {}): AbcSpendInfo => ({
+export const getNativeAmount = (state: State): string =>
+  getParsedUri(state).nativeAmount || initialState.parsedUri.nativeAmount || ''
+
+export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
+
+export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): AbcSpendInfo => ({
   currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
   metadata: newSpendInfo.metadata
     ? { ...getMetadata(state), ...newSpendInfo.metadata }

@@ -12,7 +12,7 @@ test('initialState', () => {
       'date': 0,
       'currencyCode': '',
       'blockHeight': -1,
-      'nativeAmount': '',
+      'nativeAmount': '0',
       'networkFee': '',
       'ourReceiveAddresses': [],
       'signedTx': '',

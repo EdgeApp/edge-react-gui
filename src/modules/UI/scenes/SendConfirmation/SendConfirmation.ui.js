@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   View,
   ScrollView,
@@ -8,25 +8,28 @@ import {
 } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
-import {sprintf} from 'sprintf-js'
+import { sprintf } from 'sprintf-js'
 import s from '../../../../locales/strings.js'
 import styles from './styles.js'
-import {bns} from 'biggystring'
+import { bns } from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
-import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
+import type { FlipInputFieldInfo } from '../../components/FlipInput/FlipInput.ui'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
-
-import * as UTILS from '../../../utils.js'
-import type {CurrencyConverter, GuiDenomination} from '../../../../types'
-import type { AbcMetadata } from 'airbitz-core-types'
-
-const DIVIDE_PRECISION = 18
+import {
+  getDenomFromIsoCode,
+  convertNativeToExchange,
+  convertNativeToDisplay,
+  border
+} from '../../../utils.js'
+import type { CurrencyConverter, GuiDenomination } from '../../../../types'
 
 export type StateProps = {
+  currencyCode: string,
   nativeAmount: string,
+  networkFee: string,
   publicAddress: string,
   pending: boolean,
   keyboardIsVisible: boolean,
@@ -35,12 +38,8 @@ export type StateProps = {
   primaryExchangeDenomination: GuiDenomination,
   secondaryDisplayCurrencyCode: string,
   secondaryExchangeCurrencyCode: string,
-  networkFeeOption: string,
-  customNetworkFee: any,
-  networkFee: string,
   errorMsg: string | null,
   fiatPerCrypto: number,
-  currencyCode: string,
   sliderDisabled: boolean,
   currencyConverter: CurrencyConverter
 }
@@ -48,14 +47,18 @@ export type StateProps = {
 export type DispatchProps = {
   updateSpendPending: (boolean) => any,
   signBroadcastAndSave: () => any,
-  resetFees: () => any,
-  updateAmount: (nativeAmount: string, metadata: AbcMetadata) => any
+  reset: () => any,
+  updateAmount: (
+    primaryDisplayAmount: string,
+    secondaryDisplayAmount: string,
+    primaryMultiplier: string,
+    secondaryMultiplier: string
+  ) => any
 }
 
 export type Props = DispatchProps & StateProps
 
 type State = {
-  nativeAmount: string,
   secondaryDisplayDenomination: any,
   keyboardVisible: boolean
 }
@@ -64,29 +67,30 @@ export default class SendConfirmation extends Component<Props, State> {
   constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
-      nativeAmount: props.nativeAmount,
       secondaryDisplayDenomination: { multiplier: '1' },
       keyboardVisible: false
     }
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (nextProps['secondaryDisplayCurrencyCode'] !== this.props['secondaryDisplayCurrencyCode']) {
+    if (nextProps.secondaryDisplayCurrencyCode !== this.props.secondaryDisplayCurrencyCode) {
       this.setState({
-        secondaryDisplayDenomination: UTILS.getDenomFromIsoCode(
-          nextProps['secondaryDisplayCurrencyCode']
+        secondaryDisplayDenomination: getDenomFromIsoCode(
+          nextProps.secondaryDisplayCurrencyCode
         )
       })
     }
   }
 
   componentDidMount () {
-    const secondaryDisplayDenomination = UTILS.getDenomFromIsoCode(
+    const secondaryDisplayDenomination = getDenomFromIsoCode(
       this.props.secondaryDisplayCurrencyCode
     )
-    this.setState({
-      secondaryDisplayDenomination
-    }, () => this.props.resetFees())
+    this.setState({ secondaryDisplayDenomination })
+  }
+
+  componentWillUnmount () {
+    this.props.reset()
   }
 
   render () {
@@ -112,7 +116,7 @@ export default class SendConfirmation extends Component<Props, State> {
       const cryptoFeeAmount = this.convertPrimaryNativeToDisplay(this.props.networkFee)
       const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
-      const exchangeConvertor = UTILS.convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
+      const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
       const cryptoFeeExchangeAmount = exchangeConvertor(this.props.networkFee)
       const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
       const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
@@ -129,7 +133,7 @@ export default class SendConfirmation extends Component<Props, State> {
           <Gradient style={styles.gradient} />
           <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
 
-            <View style={[styles.exchangeRateContainer, UTILS.border()]}>
+            <View style={[styles.exchangeRateContainer, border()]}>
               {
                 this.props.errorMsg
                   ? <Text style={[styles.error]}>
@@ -142,9 +146,9 @@ export default class SendConfirmation extends Component<Props, State> {
               }
             </View>
 
-            <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <View style={[styles.main, border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
               <ExchangedFlipInput
-                primaryInfo={{...primaryInfo, nativeAmount: this.state.nativeAmount}}
+                primaryInfo={{...primaryInfo, nativeAmount: this.props.nativeAmount}}
                 secondaryInfo={secondaryInfo}
                 secondaryToPrimaryRatio={this.props.fiatPerCrypto}
                 onAmountsChange={this.onAmountsChange}
@@ -156,7 +160,7 @@ export default class SendConfirmation extends Component<Props, State> {
             </View>
             <View style={[styles.pendingSymbolArea]}>
               {this.props.pending &&
-                <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
+                <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, border()]} size={'small'} />
               }
             </View>
             <View style={[styles.sliderWrap]}>
@@ -172,31 +176,18 @@ export default class SendConfirmation extends Component<Props, State> {
   }
 
   onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
-    const primaryNativeToDenominationRatio = this.props.primaryDisplayDenomination.multiplier.toString()
-    const nativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
-    const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
-    this.setState({ nativeAmount }, () => {
-      this.props.updateAmount(nativeAmount, metadata)
-    })
+    this.props.updateAmount(
+      primaryDisplayAmount,
+      secondaryDisplayAmount,
+      this.props.primaryDisplayDenomination.multiplier.toString(),
+      this.state.secondaryDisplayDenomination.multiplier.toString()
+    )
   }
 
   convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
     if (!primaryNativeAmount) { return '' }
     const primaryNativeToDisplayRatio = this.props.primaryExchangeDenomination.multiplier
-    const primaryDisplayAmount = UTILS.convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
+    const primaryDisplayAmount = convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
     return primaryDisplayAmount
-  }
-
-  getPrimaryNativeToDisplayRatio = () => this.props.primaryDisplayDenomination.multiplier
-
-  convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
-    const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
-  }
-
-  getSecondaryDisplayToExchangeRatio = (): string => {
-    const displayMultiplier = this.state.secondaryDisplayDenomination.multiplier
-    return bns.div(displayMultiplier, displayMultiplier, DIVIDE_PRECISION)
   }
 }
