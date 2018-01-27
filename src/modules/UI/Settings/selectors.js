@@ -1,10 +1,16 @@
 // @flow
 
-import type {AbcCurrencyPlugin} from 'airbitz-core-types'
+import type { AbcCurrencyPlugin, AbcDenomination } from 'airbitz-core-types'
 
 import type {State} from '../../ReduxTypes'
 
 import isoFiatDenominations from './IsoFiatDenominations.js'
+
+const emptyAbcDenom: AbcDenomination = {
+  name: '',
+  multiplier: '',
+  symbol: ''
+}
 
 export const getSettings = (state: State) => {
   const settings = state.ui.settings
@@ -62,10 +68,15 @@ export const getDisplayDenominationFull = (state: State, currencyCode: string) =
   return selectedDenomination
 }
 
-export const getDisplayDenomination = (state: State, currencyCode: string) => {
+export const getDisplayDenomination = (state: State, currencyCode: string): AbcDenomination => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
+  let selectedDenomination: AbcDenomination = emptyAbcDenom
+  for (const d of denominations) {
+    if (d.multiplier === selectedDenominationKey) {
+      selectedDenomination = d
+    }
+  }
   return selectedDenomination
 }
 

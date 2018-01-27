@@ -2,8 +2,8 @@
 import { connect } from 'react-redux'
 import SendConfirmation, {type StateProps, type DispatchProps} from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
-import type { GuiWallet } from '../../../../types'
-import type { AbcTransaction } from 'airbitz-core-types'
+import type { GuiWallet, GuiDenomination, GuiCurrencyInfo } from '../../../../types'
+import type { AbcTransaction, AbcMetadata } from 'airbitz-core-types'
 import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
@@ -28,6 +28,10 @@ import {
   updateAmount,
   reset
 } from './action.js'
+import {
+  convertAbcToGuiDenomination,
+  getDenomFromIsoCode
+} from '../../../utils.js'
 
 const mapStateToProps = (state: State): StateProps => {
   let fiatPerCrypto = 0
@@ -49,6 +53,26 @@ const mapStateToProps = (state: State): StateProps => {
     errorMsg = error.message
   }
 
+  const primaryDisplayDenomination: GuiDenomination = convertAbcToGuiDenomination(getDisplayDenomination(state, currencyCode))
+  const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
+  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
+  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
+  const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
+  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.currencyCode ? secondaryExchangeDenomination.currencyCode : ''
+
+  const primaryCurrencyInfo: GuiCurrencyInfo = {
+    displayCurrencyCode: currencyCode,
+    displayDenomination: primaryDisplayDenomination,
+    exchangeCurrencyCode: primaryExchangeCurrencyCode,
+    exchangeDenomination: primaryExchangeDenomination
+  }
+  const secondaryCurrencyInfo: GuiCurrencyInfo = {
+    displayCurrencyCode: guiWallet.fiatCurrencyCode,
+    displayDenomination: secondaryDisplayDenomination,
+    exchangeCurrencyCode: secondaryExchangeCurrencyCode,
+    exchangeDenomination: secondaryExchangeDenomination
+  }
+
   return {
     nativeAmount,
     errorMsg,
@@ -58,11 +82,8 @@ const mapStateToProps = (state: State): StateProps => {
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
-    // $FlowFixMe
-    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
-    primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
-    secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
-    secondaryExchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
+    primaryCurrencyInfo,
+    secondaryCurrencyInfo,
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)
@@ -70,18 +91,8 @@ const mapStateToProps = (state: State): StateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updateAmount: (
-    primaryDisplayAmount: string,
-    secondaryDisplayAmount: string,
-    primaryMultiplier: string,
-    secondaryMultiplier: string
-  ) =>
-    dispatch(updateAmount(
-      primaryDisplayAmount,
-      secondaryDisplayAmount,
-      primaryMultiplier,
-      secondaryMultiplier
-    )),
+  updateAmount: (nativeAmount: string, metadata: AbcMetadata) =>
+    dispatch(updateAmount(nativeAmount, metadata)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())

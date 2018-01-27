@@ -5,8 +5,6 @@ import { openABAlert } from '../../components/ABAlert/action'
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
-import { convertDisplayToNative } from '../../../utils.js'
-import { bns } from 'biggystring'
 import { type GuiMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
 import {
   getMaxSpendable,
@@ -17,30 +15,23 @@ import {
 } from '../../../Core/Wallets/api.js'
 import type {
   AbcParsedUri,
-  AbcTransaction
+  AbcTransaction,
+  AbcMetadata
 } from 'airbitz-core-types'
 
 const PREFIX = 'UI/SendConfimation/'
-const DIVIDE_PRECISION = 18
 
 export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
 export const UPDATE_IS_KEYBOARD_VISIBLE = PREFIX + 'UPDATE_IS_KEYBOARD_VISIBLE'
 export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
 export const RESET = PREFIX + 'RESET'
-export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
 export const updateAmount = (
-  primaryDisplayAmount: string,
-  secondaryDisplayAmount: string,
-  primaryMultiplier: string,
-  secondaryMultiplier: string
+  nativeAmount: string,
+  metadata: AbcMetadata
 ) =>
-  (dispatch: Dispatch, getState: GetState) => {
-    const nativeAmount: string = convertDisplayToNative(primaryMultiplier)(primaryDisplayAmount)
-    const secondaryDisplayToExchangeRatio = bns.div(secondaryMultiplier, secondaryMultiplier, DIVIDE_PRECISION)
-    const secondaryExchangeAmount = bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
-    const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
+  (dispatch: Dispatch) => {
     dispatch(createTX({ nativeAmount, metadata }))
   }
 
