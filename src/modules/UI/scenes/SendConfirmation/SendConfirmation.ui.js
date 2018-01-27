@@ -73,10 +73,10 @@ export default class SendConfirmation extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (nextProps['secondaryDisplayCurrencyCode'] !== this.props['secondaryDisplayCurrencyCode']) {
+    if (nextProps.secondaryDisplayCurrencyCode !== this.props.secondaryDisplayCurrencyCode) {
       this.setState({
         secondaryDisplayDenomination: getDenomFromIsoCode(
-          nextProps['secondaryDisplayCurrencyCode']
+          nextProps.secondaryDisplayCurrencyCode
         )
       })
     }
