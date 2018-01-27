@@ -3,7 +3,7 @@
 import {connect} from 'react-redux'
 import type {State} from '../../../ReduxTypes'
 import ChangeMiningFee from './ChangeMiningFee.ui'
-import { changeFee } from '../../../../modules/UI/scenes/SendConfirmation/action'
+import { processChangeFee } from '../../../../modules/UI/scenes/SendConfirmation/action'
 
 export const mapStateToProps = (state: State) => ({
   // fee: state.ui.scenes.sendConfirmation.fee,
@@ -11,7 +11,7 @@ export const mapStateToProps = (state: State) => ({
 })
 
 export const mapDispatchToProps = ({
-  onSubmit: changeFee
+  onSubmit: processChangeFee
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangeMiningFee)

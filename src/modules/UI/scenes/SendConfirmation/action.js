@@ -191,3 +191,11 @@ export const changeFee = (feeSetting: string) => ({
   feeSetting
   // fee,
 })
+
+export const processChangeFee = (feeSetting: string) => (dispatch: any, getState: any) => {
+  const state = getState()
+  const sendConfirmation = UI_SELECTORS.getSceneState(state, 'sendConfirmation')
+  const parsedUri = sendConfirmation.parsedUri
+  dispatch(changeFee(feeSetting))
+  return dispatch(processParsedUri(parsedUri))
+}
