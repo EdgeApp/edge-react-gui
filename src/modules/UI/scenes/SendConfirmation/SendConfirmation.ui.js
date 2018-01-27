@@ -20,14 +20,12 @@ import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 import * as UTILS from '../../../utils.js'
-import type { AbcMakeSpendInfo } from './action'
 import type {CurrencyConverter, GuiDenomination} from '../../../../types'
 import type { AbcMetadata } from 'airbitz-core-types'
 
 const DIVIDE_PRECISION = 18
 
-export type Props = {
-  metadata: AbcMetadata,
+export type StateProps = {
   nativeAmount: string,
   publicAddress: string,
   pending: boolean,
@@ -50,20 +48,23 @@ export type Props = {
 export type DispatchProps = {
   updateSpendPending: (boolean) => any,
   signBroadcastAndSave: () => any,
-  makeSpend: (options: AbcMakeSpendInfo) => any,
   resetFees: () => any,
-  updateAmounts: (nativeAmount: string, metadata: AbcMetadata) => any
+  updateAmount: (nativeAmount: string, metadata: AbcMetadata) => any
 }
 
+export type Props = DispatchProps & StateProps
+
 type State = {
+  nativeAmount: string,
   secondaryDisplayDenomination: any,
   keyboardVisible: boolean
 }
 
-export default class SendConfirmation extends Component<Props & DispatchProps, State> {
+export default class SendConfirmation extends Component<Props, State> {
   constructor (props: Props & DispatchProps) {
     super(props)
     this.state = {
+      nativeAmount: props.nativeAmount,
       secondaryDisplayDenomination: { multiplier: '1' },
       keyboardVisible: false
     }
@@ -80,21 +81,15 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
   }
 
   componentDidMount () {
+    const secondaryDisplayDenomination = UTILS.getDenomFromIsoCode(
+      this.props.secondaryDisplayCurrencyCode
+    )
     this.setState({
-      secondaryDisplayDenomination: UTILS.getDenomFromIsoCode(
-        this.props.secondaryDisplayCurrencyCode
-      )
-    }, () => {
-      this.onAmountsChange({
-        primaryDisplayAmount: '0',
-        secondaryDisplayAmount: '0'
-      })
-      this.props.resetFees()
-    })
+      secondaryDisplayDenomination
+    }, () => this.props.resetFees())
   }
 
   render () {
-    this.props.makeSpend({ ...this.props })
     const primaryInfo: FlipInputFieldInfo = {
       displayCurrencyCode: this.props.currencyCode,
       exchangeCurrencyCode: this.props.currencyCode,
@@ -149,7 +144,7 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
 
             <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
               <ExchangedFlipInput
-                primaryInfo={{...primaryInfo, nativeAmount: this.props.nativeAmount}}
+                primaryInfo={{...primaryInfo, nativeAmount: this.state.nativeAmount}}
                 secondaryInfo={secondaryInfo}
                 secondaryToPrimaryRatio={this.props.fiatPerCrypto}
                 onAmountsChange={this.onAmountsChange}
@@ -181,11 +176,10 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
     const nativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
     const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
     const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
-
-    this.props.updateAmounts(nativeAmount, metadata)
+    this.setState({ nativeAmount }, () => {
+      this.props.updateAmount(nativeAmount, metadata)
+    })
   }
-
-  onMaxPress = () => {}
 
   convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
     if (!primaryNativeAmount) { return '' }
