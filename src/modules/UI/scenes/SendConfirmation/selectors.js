@@ -1,6 +1,7 @@
 // @flow
 
 import { getSceneState, getSelectedCurrencyCode } from '../../selectors.js'
+import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
 import type {
   AbcSpendTarget,
@@ -45,7 +46,7 @@ export const initialState = {
     'otherParams': {}
   },
   'parsedUri': {
-    'networkFeeOption': 'standard',
+    'networkFeeOption': (STANDARD_FEE: string),
     'customNetworkFee': {},
     'publicAddress': '',
     'nativeAmount': '0',
@@ -77,7 +78,7 @@ export const getNetworkFeeOption = (state: State): string =>
 export const getCustomNetworkFee = (state: State): any =>
   getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
 export const getMetadata = (state: State): AbcMetadata =>
-getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
+  getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
 export const getPublicAddress = (state: State): string =>
   getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
 export const getNativeAmount = (state: State): string =>
