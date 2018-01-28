@@ -168,3 +168,9 @@ export const getOtpKey = (state: State) => {
   const otpKey: string = settings.otpKey
   return otpKey
 }
+
+export const getOtpResetDate = (state: State) => {
+  const settings = getSettings(state)
+  const otpResetDate = settings.otpResetDate
+  return otpResetDate
+}
