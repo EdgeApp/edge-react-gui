@@ -12,10 +12,9 @@ import {fixFiatCurrencyCode} from '../../../utils'
 import Text from '../../components/FormattedText'
 import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 
-import styles, {styles as stylesRaw} from './style.js'
+import styles from './style.js'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import { createCurrencyWallet } from '../../../../actions/indexActions'
 import type { GuiWalletType, GuiFiatType } from '../../../../types'
 
 export type CreateWalletReviewOwnProps = {
@@ -46,7 +45,7 @@ export class CreateWalletReviewComponent extends Component<CreateWalletReviewCom
   }
 
   render () {
-    const {walletName, selectedWalletType, selectedFiat, isCreatingWallet} = this.props
+    const {isCreatingWallet} = this.props
     return (
       <SafeAreaView>
         <View style={styles.scene}>

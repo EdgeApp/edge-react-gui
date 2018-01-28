@@ -1,8 +1,8 @@
 // @flow
 
-import type {AbcContext} from 'airbitz-core-types'
+import type { AbcContext } from 'edge-login'
 
-import type {Action} from '../../ReduxTypes'
+import type { Action } from '../../ReduxTypes'
 import * as ACTION from './action.js'
 import * as Constants from '../../../constants/indexConstants.js'
 
@@ -29,7 +29,7 @@ export const context = (state: State = initialState, action: Action) => {
     }
 
     case ACTION.ADD_USERNAMES: {
-      const {usernames} = data
+      const { usernames } = data
       return {
         ...state,
         usernames
@@ -37,7 +37,7 @@ export const context = (state: State = initialState, action: Action) => {
     }
 
     case ACTION.DELETE_LOCAL_ACCOUNT_SUCCESS: {
-      const {usernames} = data
+      const { usernames } = data
       return {
         ...state,
         usernames
@@ -48,7 +48,7 @@ export const context = (state: State = initialState, action: Action) => {
       if (!data) {
         return state
       }
-      const {username} = data
+      const { username } = data
       return {
         ...state,
         nextUsername: username || ''

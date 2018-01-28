@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcCurrencyPlugin} from 'airbitz-core-types'
+import type {AbcCurrencyPlugin} from 'edge-login'
 
 import type {State} from '../../ReduxTypes'
 
@@ -24,12 +24,6 @@ export const getLoginStatus = (state: State): boolean => {
   const settings = getSettings(state)
   const loginStatus: boolean = settings.loginStatus
   return loginStatus
-}
-
-export const getExchangeTimer = (state: State): number => {
-  const settings = getSettings(state)
-  const exchangeTimer: number = settings.exchangeTimer
-  return exchangeTimer
 }
 
 export const getCurrencySettings = (state: State, currencyCode: string) => {

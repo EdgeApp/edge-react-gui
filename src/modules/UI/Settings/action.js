@@ -1,6 +1,3 @@
-import * as SETTINGS_SELECTORS from './selectors'
-
-// UI/Settings
 const PREFIX = 'UI/Settings/'
 
 export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
@@ -41,26 +38,6 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 
 // tokens
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
-
-export const setLoginStatus = (loginStatus) => ({
-  type: SET_LOGIN_STATUS,
-  data: {loginStatus}
-})
-
-export const addExchangeTimer = (exchangeTimer) => ({
-  type: ADD_EXCHANGE_TIMER,
-  data: {exchangeTimer}
-})
-
-export const removeExchangeTimer = () => (dispatch, getState) => {
-  const state = getState()
-  const exchangeTimer = SETTINGS_SELECTORS.getExchangeTimer(state)
-  clearInterval(exchangeTimer)
-
-  return {
-    type: 'REMOVE_EXCHANGE_TIMER'
-  }
-}
 
 export const updateSettings = (settings) => ({
   type: UPDATE_SETTINGS,

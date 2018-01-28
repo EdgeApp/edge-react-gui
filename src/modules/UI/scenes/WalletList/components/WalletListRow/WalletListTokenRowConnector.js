@@ -1,7 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-import type {AbcDenomination} from 'airbitz-core-types'
+import type {AbcDenomination} from 'edge-login'
 
 import type {Dispatch, State} from '../../../../../ReduxTypes'
 
@@ -11,6 +11,7 @@ import {selectWallet} from '../../../../Wallets/action'
 
 const mapStateToProps = (state: State, ownProps) => {
   const currencyCode: string = ownProps.currencyCode
+  // $FlowFixMe
   const displayDenomination: AbcDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
 
   return {

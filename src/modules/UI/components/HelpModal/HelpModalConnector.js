@@ -1,13 +1,17 @@
-import {connect} from 'react-redux'
-import HelpModal from './HelpModal.ui'
-import {closeHelpModal} from './actions.js'
+// @flow
 
-const mapStateToProps = (state) => ({
-  modal: state.ui.scenes.helpModal,
-  routes: state.routes
+import { connect } from 'react-redux'
+
+import HelpModal from './HelpModal.ui'
+import { closeHelpModal } from './actions.js'
+
+import type { Dispatch, State } from '../../../ReduxTypes'
+
+const mapStateToProps = (state: State) => ({
+  modal: state.ui.scenes.helpModal
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   closeModal: () => dispatch(closeHelpModal())
 })
 

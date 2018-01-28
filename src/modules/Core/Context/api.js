@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcContext} from 'airbitz-core-types'
+import type {AbcContext} from 'edge-login'
 
 export const getCurrencyPlugins = (context: AbcContext) => {
   return context.getCurrencyPlugins()

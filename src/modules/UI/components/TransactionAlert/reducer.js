@@ -3,7 +3,7 @@
 import * as ACTIONS from './actions'
 import {combineReducers} from 'redux'
 import type {Action} from '../../../ReduxTypes.js'
-import type {AbcTransaction} from 'airbitz-core-types'
+import type {AbcTransaction} from 'edge-login'
 
 const displayAlert = (state: boolean = false, action: Action) => {
   const {type} = action
@@ -33,7 +33,9 @@ const abcTransaction = (state: AbcTransactionState = '', action: Action) => {
   }
 }
 
-export default combineReducers({
+export const transactionAlert = combineReducers({
   displayAlert,
   abcTransaction
 })
+
+export default transactionAlert

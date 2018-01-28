@@ -37,4 +37,4 @@ export const PROCESS_ABC_LOGIN = 'setLobbyError'
 export const ERASE_DEEP_LINK = 'eraseDeepLink'
 export const DEEP_LINK_RECEIVED = 'deepLinkReceived'
 
-export const ADD_ACCOUNT = 'ADD_ACCOUNT'
+export const ACCOUNT_INIT_COMPLETE = 'accountInitComplete'

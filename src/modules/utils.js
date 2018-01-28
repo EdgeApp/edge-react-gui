@@ -3,7 +3,7 @@
 import {Platform} from 'react-native'
 import {div, mul, gte, eq, toFixed} from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'airbitz-core-types'
+import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'edge-login'
 import type {GuiDenomination, ExchangeData, GuiWallet, CustomTokenInfo} from '../types'
 import _ from 'lodash'
 import borderColors from '../theme/variables/css3Colors'
@@ -91,6 +91,7 @@ export const inputBottomPadding = () => {
 }
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
+// $FlowFixMe
 export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken | CustomTokenInfo>, abcMetaTokens: Array<CustomTokenInfo>) => {
   const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of abcMetaTokens) { // loops through the account-level array

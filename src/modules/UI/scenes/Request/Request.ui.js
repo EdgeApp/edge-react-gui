@@ -11,15 +11,14 @@ import {
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 
-import type {AbcCurrencyWallet, AbcEncodeUri} from 'airbitz-core-types'
+import type {AbcCurrencyWallet, AbcEncodeUri} from 'edge-login'
 
 import styles from './styles.js'
-import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
+import { ExchangedFlipInput, type ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
 import QRCode from '../../components/QRCode/index.js'
 import RequestStatus from '../../components/RequestStatus/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
-import * as UTILS from '../../../utils.js'
 import ContactsWrapper from 'react-native-contacts-wrapper'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
@@ -28,6 +27,7 @@ import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
+import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
 
 type State = {
   publicAddress: string,
@@ -35,42 +35,54 @@ type State = {
   loading: boolean,
   result: string
 }
-type Props = {
+
+export type RequestStateProps = {
   loading: boolean,
-  abcWallet: AbcCurrencyWallet,
-  currencyCode: string,
-  primaryInfo: any,
-  secondaryInfo: any,
-  secondaryToPrimaryRatio: number,
   request: any,
-  saveReceiveAddress(string): void,
+  abcWallet: AbcCurrencyWallet | null,
+  guiWallet: GuiWallet | null,
+  exchangeSecondaryToPrimaryRatio: number,
+  currencyCode: string,
+  primaryCurrencyInfo: GuiCurrencyInfo,
+  secondaryCurrencyInfo: GuiCurrencyInfo,
+  showToWalletModal: boolean
 }
 
-export default class Request extends Component<Props, State> {
+export type RequestDispatchProps = {
+  saveReceiveAddress(string): any,
+}
+
+type Props = RequestStateProps & RequestDispatchProps
+
+export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    this.state = {
+    const newState: State = {
       publicAddress: '',
       encodedURI: '',
       loading: props.loading,
       result: ''
     }
+    this.state = newState
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.abcWallet.id !== this.props.abcWallet.id) {
+    if (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id)) {
       const {abcWallet, currencyCode} = nextProps
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
         const abcEncodeUri: AbcEncodeUri = {publicAddress}
-        const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
+        const encodedURI = nextProps.abcWallet ? nextProps.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
           encodedURI,
           publicAddress
         })
       })
-      .catch((e) => console.log(e))
+      .catch((e) => {
+        this.setState({encodedURI: '', publicAddress: ''})
+        console.log(e)
+      })
     }
   }
 
@@ -82,29 +94,30 @@ export default class Request extends Component<Props, State> {
     .then((receiveAddress) => {
       const {publicAddress} = receiveAddress
       const abcEncodeUri: AbcEncodeUri = {publicAddress}
-      const encodedURI = this.props.abcWallet.encodeUri ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
+      const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
       this.setState({
         encodedURI,
         publicAddress
       })
     })
-    .catch((e) => console.log(e))
+    .catch((e) => {
+      this.setState({encodedURI: '', publicAddress: ''})
+      console.log(e)
+    })
   }
 
-  onAmountsChange = ({primaryDisplayAmount}: {primaryDisplayAmount: string}) => {
-    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
-    const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-
+  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     const parsedURI = {
       publicAddress: this.state.publicAddress,
-      nativeAmount: bns.gt(primaryNativeAmount, '0') ? primaryNativeAmount : null
+      nativeAmount: bns.gt(amounts.nativeAmount, '0') ? amounts.nativeAmount : null
     }
-    const encodedURI = this.props.abcWallet.encodeUri(parsedURI)
+    const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(parsedURI) : ''
 
     this.setState({
       encodedURI
     })
   }
+
   renderDropUp = () => {
     if (this.props.showToWalletModal) {
       return (
@@ -124,9 +137,9 @@ export default class Request extends Component<Props, State> {
 
     const color = 'white'
     const {
-      secondaryToPrimaryRatio,
-      primaryInfo,
-      secondaryInfo
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
+      exchangeSecondaryToPrimaryRatio
     } = this.props
     return (
       <SafeAreaView>
@@ -135,17 +148,18 @@ export default class Request extends Component<Props, State> {
 
           <View style={styles.exchangeRateContainer}>
             <ExchangedExchangeRate
-              primaryInfo={primaryInfo}
-              secondaryInfo={secondaryInfo}
-              secondaryToPrimaryRatio={secondaryToPrimaryRatio} />
+              primaryCurrencyInfo={primaryCurrencyInfo}
+              secondaryCurrencyInfo={secondaryCurrencyInfo}
+              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio} />
           </View>
 
           <View style={styles.main}>
             <ExchangedFlipInput
-              primaryInfo={primaryInfo}
-              secondaryInfo={secondaryInfo}
-              secondaryToPrimaryRatio={secondaryToPrimaryRatio}
-              onAmountsChange={this.onAmountsChange}
+              primaryCurrencyInfo={primaryCurrencyInfo}
+              secondaryCurrencyInfo={secondaryCurrencyInfo}
+              exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
+              overridePrimaryExchangeAmount={''}
+              onExchangeAmountChanged={this.onExchangeAmountChanged}
               color={color} />
 
             <QRCode value={this.state.encodedURI} />

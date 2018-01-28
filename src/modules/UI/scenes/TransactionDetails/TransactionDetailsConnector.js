@@ -1,10 +1,10 @@
 // @flow
 
 import {connect} from 'react-redux'
-import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
+import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'edge-login'
 
 import type {Dispatch, State} from '../../../ReduxTypes'
-import type {GuiWallet, GuiContact} from '../../../../types'
+import type {GuiContact} from '../../../../types'
 
 import * as UI_SELECTORS from '../../selectors'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
@@ -20,7 +20,7 @@ import {setContactList} from '../../contacts/action'
 import {TransactionDetails} from './TransactionDetails.ui'
 
 const mapStateToProps = (state: State, ownProps: any) => {
-  const wallets: Array<GuiWallet> = UI_SELECTORS.getWallets(state)
+  const wallets = UI_SELECTORS.getWallets(state)
   const contacts: Array<GuiContact> = state.ui.contacts.contactList
   const usableHeight: number = platform.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories

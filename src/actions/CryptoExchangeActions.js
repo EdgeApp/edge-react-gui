@@ -1,7 +1,7 @@
 // @flow
 
 import {Alert} from 'react-native'
-import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'edge-login'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 
@@ -206,6 +206,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
 
     if (isAboveLimit) {
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMax = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMax)
       const errorMessage = sprintf(s.strings.amount_above_limit, displayMax)
@@ -213,6 +214,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
     }
     if (isBelowLimit) {
       const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, fromCurrencyCode)
+      // $FlowFixMe
       const nativeToDisplayRatio = displayDenomination.multiplier
       const displayMin = UTILS.convertNativeToDisplay(nativeToDisplayRatio)(nativeMin)
       const errorMessage = sprintf(s.strings.amount_below_limit, displayMin)
@@ -228,6 +230,7 @@ export const selectToFromWallet = (type: string, wallet: GuiWallet, currencyCode
   let hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
   const cc = currencyCode || wallet.currencyCode
 
+  // $FlowFixMe
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, cc)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, cc, wallet)
   const primaryInfo: GuiCurrencyInfo = {

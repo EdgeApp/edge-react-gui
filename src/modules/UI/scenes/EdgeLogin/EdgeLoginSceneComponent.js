@@ -2,9 +2,10 @@
 import React, { Component } from 'react'
 import { View, Text, ActivityIndicator, Image } from 'react-native'
 import { PrimaryButton, SecondaryButton } from '../../components/Buttons/index'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import s from '../../../../locales/strings.js'
-import type { AbcLobby } from 'airbitz-core-types'
-
+import type { AbcLobby } from 'edge-login'
+import SafeAreaView from '../../components/SafeAreaView'
 type Props = {
   style: any,
   lobby?: AbcLobby,
@@ -35,27 +36,31 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
     }
     if (this.props.error) {
       return (
-        <View style={style.buttons}>
-          <SecondaryButton
-            style={style.cancelSolo}
-            onPressFunction={this.props.decline}
-            text={s.strings.string_cancel_cap}
-          />
+        <View style={style.buttonContainer} >
+          <View style={style.buttons}>
+            <SecondaryButton
+              style={style.cancelSolo}
+              onPressFunction={this.props.decline}
+              text={s.strings.string_cancel_cap}
+            />
+          </View>
         </View>
       )
     }
     return (
-      <View style={style.buttons}>
-        <SecondaryButton
-          style={style.cancel}
-          onPressFunction={this.props.decline}
-          text={s.strings.string_cancel_cap}
-        />
-        <PrimaryButton
-          style={style.submit}
-          onPressFunction={this.props.accept}
-          text={s.strings.accept_button_text}
-        />
+      <View style={style.buttonContainer} >
+        <View style={style.buttons}>
+          <SecondaryButton
+            style={style.cancel}
+            onPressFunction={this.props.decline}
+            text={s.strings.string_cancel_cap}
+          />
+          <PrimaryButton
+            style={style.submit}
+            onPressFunction={this.props.accept}
+            text={s.strings.accept_button_text}
+          />
+        </View>
       </View>
     )
   }
@@ -63,6 +68,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
       return <Image
         style={style.image}
+        resizeMode={'contain'}
         source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
@@ -100,11 +106,14 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
       )
     }
     return (
-      <View style={Style.container}>
-        {this.renderHeader(Style)}
-        {this.renderBody(Style)}
-        {this.renderButtons(Style)}
-      </View>
+      <SafeAreaView>
+        <Gradient style={Style.gradient} />
+        <View style={Style.container}>
+          {this.renderHeader(Style)}
+          {this.renderBody(Style)}
+          {this.renderButtons(Style)}
+        </View>
+      </SafeAreaView>
     )
   }
 }

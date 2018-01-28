@@ -9,7 +9,7 @@ import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import Gradient from '../Gradient/Gradient.ui'
 
 import Main from './Component/MainConnector'
-import ExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
+import ExchangedExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
 import styles from './style'
 import T from '../../components/FormattedText'
 
@@ -26,11 +26,9 @@ export default class ControlPanel extends Component {
   }
 
   render () {
-    const primaryDisplayAmount = '1'
     const {
       primaryInfo,
       secondaryInfo,
-      secondaryDisplayAmount,
       secondaryToPrimaryRatio
     } = this.props
 
@@ -43,12 +41,10 @@ export default class ControlPanel extends Component {
         <Gradient style={styles.container}>
           <View style={styles.bitcoin.container}>
             <T style={styles.bitcoin.icon} />
-            <ExchangeRate
-              primaryDisplayAmount={primaryDisplayAmount}
-              primaryInfo={primaryInfo}
-              secondaryDisplayAmount={secondaryDisplayAmount}
-              secondaryInfo={secondaryInfo}
-              secondaryToPrimaryRatio={secondaryToPrimaryRatio} />
+            <ExchangedExchangeRate
+              primaryCurrencyInfo={primaryInfo}
+              secondaryCurrencyInfo={secondaryInfo}
+              exchangeSecondaryToPrimaryRatio={secondaryToPrimaryRatio} />
           </View>
 
           <TouchableHighlight style={styles.user.container}

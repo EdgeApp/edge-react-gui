@@ -1,12 +1,11 @@
-// UI/selectors
 // @flow
 
-import type {AbcTransaction} from 'airbitz-core-types'
+import type {AbcTransaction} from 'edge-login'
+import _ from 'lodash'
 
 import type {State} from '../ReduxTypes'
 import type {GuiDenomination, GuiWallet} from '../../types'
 import * as SETTINGS_SELECTORS from './Settings/selectors'
-import _ from 'lodash'
 
 export const getWallets = (state: State) => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
@@ -56,6 +55,7 @@ export const getDenominations = (state: State, currencyCode: string) => {
   return denominations
 }
 
+// $FlowFixMe
 export const getExchangeDenomination = (state: State, currencyCode: string, specificWallet?: GuiWallet): GuiDenomination => {
   let wallet = getSelectedWallet(state)
   const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
@@ -91,9 +91,4 @@ export const getScenesState = (state: State) => {
 export const getSceneState = (state: State, sceneKey: string) => {
   const sceneState = getScenesState(state)[sceneKey]
   return sceneState
-}
-
-export const getDropdownAlertState = (state: State): {displayAlert: boolean, message: string} => {
-  const dropdownAlertState = getUIState(state).dropdownAlert
-  return dropdownAlertState
 }
