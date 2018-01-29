@@ -18,6 +18,7 @@ export type Props = {
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   fiatPerCrypto: number,
+  forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
   launchWalletSelector: () => void,
   onCryptoExchangeAmountChanged: (ExchangedFlipInputAmounts) => void
@@ -60,6 +61,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
       primaryCurrencyInfo,
       secondaryCurrencyInfo,
       fiatPerCrypto,
+      forceUpdateGuiCounter,
       overridePrimaryExchangeAmount
     } = this.props
 
@@ -94,6 +96,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
             secondaryCurrencyInfo={secondaryCurrencyInfo}
             exchangeSecondaryToPrimaryRatio={fiatPerCrypto}
             overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
+            forceUpdateGuiCounter={forceUpdateGuiCounter}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
           />
         </View>

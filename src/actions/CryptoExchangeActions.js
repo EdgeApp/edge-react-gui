@@ -35,10 +35,18 @@ function setWallet (type: string, data: any) {
   }
 }
 
-function setCryptoNativeDisplayAmount (type: string, data: {native: string, display: string}) {
+type SetCryptoExchangeAmounts = {
+  toNativeAmount?: string,
+  toDisplayAmount?: string,
+  fromNativeAmount?: string,
+  fromDisplayAmount?: string,
+  forceUpdateGui: boolean
+}
+
+function setCryptoExchangeAmounts (setAmounts: SetCryptoExchangeAmounts) {
   return {
-    type,
-    data
+    type: Constants.SET_CRYPTO_EXCHANGE_AMOUNTS,
+    data: setAmounts
   }
 }
 
@@ -53,10 +61,18 @@ function setShapeTransaction (type: string, data: {
   }
 }
 
-export const changeFee = (feeSetting: string) => ({
-  type: Constants.CHANGE_EXCHANGE_FEE,
-  feeSetting
-})
+export const changeFee = (feeSetting: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const data = { feeSetting }
+  dispatch({
+    type: Constants.CHANGE_EXCHANGE_FEE,
+    data
+  })
+  const state = getState()
+  const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
+  const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
+
+  makeShiftTransaction(dispatch, fromWallet, toWallet)
+}
 
 export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -87,10 +103,10 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
     fromPrimaryInfo: primaryInfo,
     toPrimaryInfo: state.cryptoExchange.toWalletPrimaryInfo
   }
-  dispatch(actions.setNativeAmount(setNativeAmountInfo))
+  dispatch(actions.setNativeAmount(setNativeAmountInfo, true))
 }
 
-export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: Dispatch, getState: GetState) => {
+export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: boolean = false) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
@@ -103,9 +119,15 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
   const toPrimaryInfo: GuiCurrencyInfo = state.cryptoExchange.toWalletPrimaryInfo
   const fromPrimaryInfo: GuiCurrencyInfo = state.cryptoExchange.fromWalletPrimaryInfo
 
+  const setAmounts: SetCryptoExchangeAmounts = {
+    forceUpdateGui
+  }
+
   if (whichWallet === Constants.FROM) {
     const fromDisplayAmount = bns.div(primaryNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: fromDisplayAmount}))
+    setAmounts.fromNativeAmount = primaryNativeAmount
+    setAmounts.fromDisplayAmount = fromDisplayAmount
+    // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: primaryNativeAmount, display: fromDisplayAmount, forceUpdateGui}))
     if (toWallet) {
       const toExchangeAmount = bns.mul(primaryExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3))
 
@@ -128,11 +150,16 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
       }
       const toDisplayAmountTemp = bns.div(toNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
       const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
-      dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount}))
+      setAmounts.toNativeAmount = toNativeAmount
+      setAmounts.toDisplayAmount = toDisplayAmount
+      // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: toNativeAmount, display: toDisplayAmount, forceUpdateGui}))
     }
   } else {
     const toDisplayAmount = bns.div(primaryNativeAmount, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
-    dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: toDisplayAmount}))
+
+    setAmounts.toNativeAmount = primaryNativeAmount
+    setAmounts.toDisplayAmount = toDisplayAmount
+    // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_TO_NATIVE_AMOUNT, {native: primaryNativeAmount, display: toDisplayAmount, forceUpdateGui}))
 
     const toNativeAmountWithFee = bns.add(primaryNativeAmount, state.cryptoExchange.minerFee)
     const toExchangeAmount = bns.div(toNativeAmountWithFee, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -155,11 +182,19 @@ export const setNativeAmount = (info: SetNativeAmountInfo) => async (dispatch: D
       const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)
       const fromDisplayAmountTemp = bns.div(fromNativeAmount, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
       const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
-      dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount}))
+
+      setAmounts.fromNativeAmount = fromNativeAmount
+      setAmounts.fromDisplayAmount = fromDisplayAmount
+      // dispatch(setCryptoNativeDisplayAmount(Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT, {native: fromNativeAmount, display: fromDisplayAmount, forceUpdateGui}))
     }
   }
+  dispatch(setCryptoExchangeAmounts(setAmounts))
 
   // make spend
+  makeShiftTransaction(dispatch, fromWallet, toWallet)
+}
+
+async function makeShiftTransaction (dispatch: Dispatch, fromWallet: GuiWallet | null, toWallet: GuiWallet | null) {
   if (fromWallet && toWallet) {
     try {
       await dispatch(getShiftTransaction(fromWallet, toWallet))
@@ -211,7 +246,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
   if (!fromCurrencyCode || !toCurrencyCode) { return }
   const spendInfo: AbcSpendInfo = {
-    networkFeeOption: Constants.STANDARD_FEE,
+    networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
     nativeAmount: fromNativeAmount,
     spendTargets: [

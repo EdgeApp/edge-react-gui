@@ -102,8 +102,8 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   componentWillReceiveProps (nextProps: Props) {
     if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
-        fromExchangeAmount: '0',
-        toExchangeAmount: '0',
+        fromExchangeAmount: nextProps.fromExchangeAmount,
+        toExchangeAmount: nextProps.toExchangeAmount,
         forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
       })
     } else {
@@ -141,6 +141,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               secondaryCurrencyInfo={this.props.fromSecondaryInfo}
               fiatPerCrypto={this.props.fromFiatToCrypto}
               overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
+              forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
               launchWalletSelector={this.launchFromWalletSelector}
               onCryptoExchangeAmountChanged={this.fromAmountChanged}
           />
@@ -161,6 +162,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               secondaryCurrencyInfo={this.props.toSecondaryInfo}
               fiatPerCrypto={this.props.toFiatToCrypto}
               overridePrimaryExchangeAmount={this.state.toExchangeAmount}
+              forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
               launchWalletSelector={this.launchToWalletSelector}
               onCryptoExchangeAmountChanged={this.toAmountChanged}
             />

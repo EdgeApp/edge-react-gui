@@ -42,6 +42,7 @@ const initialState = {
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
+  let forceUpdateGuiCounter
   switch (action.type) {
     case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
       return deepCopyState(state)
@@ -128,17 +129,23 @@ function cryptoExchangerReducer (state = initialState, action) {
       return { ...state, confirmTransactionModalVisible: false }
     case Constants.OPEN_CRYPTO_EXC_CONF_MODAL:
       return { ...state, confirmTransactionModalVisible: true }
-    case Constants.SET_CRYPTO_TO_NATIVE_AMOUNT:
-      return {
-        ...state,
-        toNativeAmount: action.data.native,
-        toDisplayAmount: action.data.display
+    case Constants.SET_CRYPTO_EXCHANGE_AMOUNTS:
+      forceUpdateGuiCounter = state.forceUpdateGuiCounter
+      if (action.data.forceUpdateGui) {
+        forceUpdateGuiCounter++
       }
-    case Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT:
+      const toNativeAmount = action.data.toNativeAmount || undefined
+      const toDisplayAmount = action.data.toDisplayAmount || undefined
+      const fromNativeAmount = action.data.fromNativeAmount || undefined
+      const fromDisplayAmount = action.data.fromDisplayAmount || undefined
+
       return {
         ...state,
-        fromNativeAmount: action.data.native,
-        fromDisplayAmount: action.data.display
+        toNativeAmount,
+        toDisplayAmount,
+        fromNativeAmount,
+        fromDisplayAmount,
+        forceUpdateGuiCounter
       }
     case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR:
       return {
@@ -154,7 +161,11 @@ function cryptoExchangerReducer (state = initialState, action) {
         genericShapeShiftError: action.data
       }
     case Constants.CHANGE_EXCHANGE_FEE:
-      return { ...state, feeSetting: action.feeSetting }
+      return {
+        ...state,
+        feeSetting: action.data.feeSetting,
+        forceUpdateGuiCounter: (state.forceUpdateGuiCounter + 1)
+      }
     default:
       return state
   }

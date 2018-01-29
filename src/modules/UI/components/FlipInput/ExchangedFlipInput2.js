@@ -23,6 +23,8 @@ export type ExchangedFlipInputOwnProps = {
   // Exchange rate
   exchangeSecondaryToPrimaryRatio: number,
 
+  forceUpdateGuiCounter: number,
+
   // Callback for when the `primaryAmount` changes. This returns both a `nativeAmount` and an `exchangeAmount`. Both
   // amounts are ONLY for the primary field. Parent will not be given values for the secondary field.
   onExchangeAmountChanged(amounts: ExchangedFlipInputAmounts): void
@@ -131,6 +133,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
         exchangeSecondaryToPrimaryRatio={this.state.exchangeSecondaryToPrimaryRatio}
         primaryInfo={this.state.primaryInfo}
         secondaryInfo={this.state.secondaryInfo}
+        forceUpdateGuiCounter={this.props.forceUpdateGuiCounter}
         onAmountChanged={this.onAmountChanged}
       />
     )
