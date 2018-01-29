@@ -8,13 +8,14 @@ import Main from './modules/MainConnector'
 import {logToServer, log} from './util/logger'
 import ENV from '../env.json'
 import RNFS from 'react-native-fs'
-import {Platform} from 'react-native'
+import {Platform, AsyncStorage} from 'react-native'
 import {makeCoreContext} from './util/makeContext.js'
 import './util/polyfills'
 import BackgroundTask from 'react-native-background-task'
 import PushNotification from 'react-native-push-notification'
 import {sprintf} from 'sprintf-js'
 import s from './locales/strings.js'
+import * as Constants from './constants/indexConstants.js'
 const store: {} = configureStore({})
 
 const perfTimers = {}
@@ -92,6 +93,16 @@ global.pcount = function (label: string) {
 }
 
 BackgroundTask.define(async () => {
+  const lastNotif = await AsyncStorage.getItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY)
+  const now = new Date()
+  if (lastNotif) {
+    const lastNotifDate = new Date(lastNotif).getTime() / 1000
+    const delta = (now.getTime() / 1000) - lastNotifDate
+    if (delta < Constants.PUSH_DELAY_SECONDS) {
+      BackgroundTask.finish()
+      return
+    }
+  }
   makeCoreContext()
     .then(async (context) => {
       try {
@@ -103,7 +114,7 @@ BackgroundTask.define(async () => {
           if (!result.hasOwnProperty(key)) continue
           const obj = result[key]
           if (obj.otpResetPending) {
-            if (Platform === 'ios') {
+            if (Platform.OS === Constants.IOS) {
               PushNotification.localNotificationSchedule({
                 title: s.strings.otp_notif_title,
                 message: sprintf(s.strings.otp_notif_body, key),
@@ -122,6 +133,7 @@ BackgroundTask.define(async () => {
         console.error(error)
       }
     })
+  await AsyncStorage.setItem(Constants.LOCAL_STORAGE_BACKGROUND_PUSH_KEY, now.toString())
   BackgroundTask.finish()
 })
 

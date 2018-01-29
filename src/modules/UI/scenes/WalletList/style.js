@@ -171,13 +171,12 @@ export const styles = {
   },
   fullList: {
     flex: 1,
-    position: 'absolute',
+    // position: 'absolute',
     height: platform.usableHeight - 130 - 50
   },
   rowContainer: {
     padding: 6,
     paddingLeft: 16,
-    marginRight: 4,
     flexDirection: 'row',
     backgroundColor: THEME.COLORS.WHITE
   },

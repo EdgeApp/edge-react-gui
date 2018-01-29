@@ -11,8 +11,8 @@ import {
 import {addTokenAsync} from '../scenes/AddToken/action'
 import {displayErrorAlert} from '../../UI/components/ErrorAlert/actions'
 import type {Dispatch, GetState} from '../../ReduxTypes'
-import type {GuiWallet, CustomTokenInfo} from '../../../types.js'
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {CustomTokenInfo} from '../../../types.js'
+import type {AbcCurrencyWallet} from 'edge-login'
 import * as UTILS from '../../utils'
 import * as WALLET_API from '../../Core/Wallets/api.js'
 import _ from 'lodash'
@@ -246,7 +246,7 @@ export const editCustomToken = (walletId: string, currencyName: string, currency
 export async function deleteCustomTokenAsync (walletId: string, currencyCode: string, getState: GetState) {
   const state = getState()
   const coreWallets = CORE_SELECTORS.getWallets(state)
-  const guiWallets: Array<GuiWallet> = state.ui.wallets.byId
+  const guiWallets = state.ui.wallets.byId
   const account = CORE_SELECTORS.getAccount(state)
   const coreWalletsToUpdate = []
   const receivedSyncSettings = await SETTINGS_API.getSyncedSettings(account)

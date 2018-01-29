@@ -1,13 +1,18 @@
 import THEME from '../../theme/variables/airbitz'
-// import platform from '../../theme/variables/platform'
+import platform from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'
 
 const EdgeLoginScreen = {
   container: {...Styles.SceneContainer,
-    height: '100%'
+    height: platform.deviceHeight - THEME.HEADER - (THEME.FOOTER_TABS_HEIGHT * 2)
+  },
+  gradient: {
+    height: THEME.HEADER,
+    width: '100%'
   },
   header: {
-    flex: 2,
+    position: 'relative',
+    flex: 3,
     flexDirection: 'column'
   },
   headerTopShim: {
@@ -20,8 +25,8 @@ const EdgeLoginScreen = {
 
   },
   image: {
-    width: 70,
-    height: 70
+    width: 80,
+    height: 80
   },
   headerTextRow: {
     flex: 3,
@@ -35,12 +40,18 @@ const EdgeLoginScreen = {
   headerBottomShim: {
     flex: 1
   },
-
   body: {
+    position: 'relative',
     flex: 4
   },
+  buttonContainer: {
+    position: 'relative',
+    flex: 3,
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'flex-end'
+  },
   buttons: {
-    flex: 1,
     marginRight: '5%',
     marginLeft: '5%',
     flexDirection: 'row',

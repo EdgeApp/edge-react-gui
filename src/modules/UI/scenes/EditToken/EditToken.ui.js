@@ -21,7 +21,7 @@ import DeleteTokenButtons from './components/DeleteTokenButtons.ui.js'
 import * as Constants from '../../../../constants/indexConstants'
 import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
 import * as UTILS from '../../../utils'
-import type {AbcMetaToken} from 'airbitz-core-types'
+import type {AbcMetaToken} from 'edge-login'
 import _ from 'lodash'
 
 export type DispatchProps = {
@@ -199,7 +199,6 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
   _onSave = () => {
     const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
     if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-      let tokenObj
       const {walletId} = this.props
       const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
       const indexInVisibleTokens = _.findIndex(visibleTokens, (token) => token.currencyCode === currencyCode)
@@ -215,8 +214,6 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
           }
         }
       } else {
-        const numberOfDecimalPlaces: number = parseInt(this.state.decimalPlaces)
-        const multiplier: string = '1' + '0'.repeat(numberOfDecimalPlaces)
         if (parseInt(decimalPlaces) !== 'NaN') {
           const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
           this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)

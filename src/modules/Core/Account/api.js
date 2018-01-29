@@ -1,6 +1,6 @@
 // @flow
 // Core/Account/api.js
-import {AbcAccount, AbcCreateCurrencyWalletOptions} from 'airbitz-core-types'
+import type {AbcAccount, AbcCreateCurrencyWalletOptions} from 'edge-login'
 
 export const logoutRequest = (account: AbcAccount) => {
   return account.logout()
@@ -20,10 +20,6 @@ export const getFirstActiveWalletInfo = (
     walletId,
     currencyCode
   }
-}
-
-export const checkForExistingWallets = (account: AbcAccount) => {
-  return account.activeWalletIds.length > 0
 }
 
 export const createCurrencyWalletRequest = (

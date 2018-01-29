@@ -1,5 +1,5 @@
 // @flow
-import type {AbcContextCallbacks} from 'airbitz-core-types'
+import type {AbcContextCallbacks} from 'edge-login'
 import type {Dispatch} from '../../ReduxTypes'
 
 import {displayErrorAlert} from '../../UI/components/ErrorAlert/actions'

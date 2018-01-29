@@ -24,6 +24,8 @@ export type FlipInputFieldInfo = GuiCurrencyInfo & {
 
 type State = {
   isToggled: boolean,
+  textInputFrontFocus: boolean,
+  textInputBackFocus: boolean,
   primaryDisplayAmount: string,
   secondaryDisplayAmount: string
 
@@ -41,6 +43,8 @@ type Props = {
 
 const getInitialState = (props: Props) => ({
   isToggled: false,
+  textInputFrontFocus: false,
+  textInputBackFocus: false,
   primaryDisplayAmount: props.primaryDisplayAmount || '',
   secondaryDisplayAmount: props.secondaryDisplayAmount || ''
 })
@@ -49,6 +53,10 @@ export default class FlipInput extends Component<Props, State> {
   animatedValue: Animated.Value
   frontInterpolate: Animated.Value
   backInterpolate: Animated.Value
+  androidFrontOpacityInterpolate: Animated.Value
+  androidBackOpacityInterpolate: Animated.Value
+  textInputFront: TextInput
+  textInputBack: TextInput
 
   constructor (props: Props) {
     super(props)
@@ -59,15 +67,22 @@ export default class FlipInput extends Component<Props, State> {
       isToggled: !this.state.isToggled
     })
     if (this.state.isToggled) {
+      if (this.state.textInputBackFocus) {
+        this.textInputFront.focus()
+      }
       Animated.spring(this.animatedValue, {
         toValue: 0,
         friction: 8,
         tension: 10
+
       }).start()
     }
     if (!this.state.isToggled) {
+      if (this.state.textInputFrontFocus) {
+        this.textInputBack.focus()
+      }
       Animated.spring(this.animatedValue, {
-        toValue: 180,
+        toValue: 1,
         friction: 8,
         tension: 10
       }).start()
@@ -76,13 +91,20 @@ export default class FlipInput extends Component<Props, State> {
   componentWillMount () {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 180],
+      inputRange: [0, 1],
       outputRange: ['0deg', '180deg']
     })
-
     this.backInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 180],
+      inputRange: [0, 1],
       outputRange: ['180deg', '360deg']
+    })
+    this.androidFrontOpacityInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 0.5, 0.5],
+      outputRange: [1, 1, 0]
+    })
+    this.androidBackOpacityInterpolate = this.animatedValue.interpolate({
+      inputRange: [0.5, 0.5, 1],
+      outputRange: [0, 1, 1]
     })
   }
 
@@ -97,6 +119,9 @@ export default class FlipInput extends Component<Props, State> {
       this.setState({
         secondaryDisplayAmount: UTILS.truncateDecimals(nextProps.secondaryDisplayAmount, 2)
       })
+    }
+    if (nextProps.primaryInfo.displayCurrencyCode !== this.props.primaryInfo.displayCurrencyCode) {
+      setTimeout(() => this.onPrimaryAmountChange('0'), 50)
     }
   }
 
@@ -125,7 +150,7 @@ export default class FlipInput extends Component<Props, State> {
     : intl.formatNumberInput(this.state.primaryDisplayAmount)
   bottomDisplayAmount = () => this.state.isToggled ? this.state.primaryDisplayAmount : this.state.secondaryDisplayAmount
 
-  topRow = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
+  topRowFront = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
     return (
       <View style={top.row} key={'top'}>
         <Text style={[top.symbol]}>
@@ -141,6 +166,36 @@ export default class FlipInput extends Component<Props, State> {
           selectionColor='white'
           returnKeyType='done'
           underlineColorAndroid={'transparent'}
+          ref={ (ref) => { this.textInputFront = ref } }
+          onFocus={ () => this.setState({ textInputFrontFocus: true }) }
+          onBlur={ () => this.setState({ textInputFrontFocus: false }) }
+        />
+        <Text style={[top.currencyCode]}>
+          {denominationInfo.displayDenomination.name}
+        </Text>
+      </View>
+    )
+  }
+
+  topRowBack = (denominationInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
+    return (
+      <View style={top.row} key={'top'}>
+        <Text style={[top.symbol]}>
+          {denominationInfo.displayDenomination.symbol}
+        </Text>
+        <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
+          placeholder={'0'}
+          placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
+          value={amount}
+          onChangeText={onChangeText}
+          autoCorrect={false}
+          keyboardType='numeric'
+          selectionColor='white'
+          returnKeyType='done'
+          underlineColorAndroid={'transparent'}
+          ref={ (ref) => { this.textInputBack = ref } }
+          onFocus={ () => this.setState({ textInputBackFocus: true }) }
+          onBlur={ () => this.setState({ textInputBackFocus: false }) }
         />
         <Text style={[top.currencyCode]}>
           {denominationInfo.displayDenomination.name}
@@ -159,7 +214,10 @@ export default class FlipInput extends Component<Props, State> {
           <Text style={[
             bottom.amount,
             !amount && bottom.alert
-          ]}>
+          ]}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+          >
           {amount || '0'}
         </Text>
         <Text style={[bottom.currencyCode]}>
@@ -167,22 +225,6 @@ export default class FlipInput extends Component<Props, State> {
         </Text>
       </View>
     </TouchableWithoutFeedback>
-    )
-  }
-
-  renderRows = (primaryInfo: FlipInputFieldInfo, secondaryInfo: FlipInputFieldInfo, isToggled: boolean) => {
-    return (
-      <View style={[styles.rows]}>
-        {isToggled
-          ? [
-            this.topRow(secondaryInfo, this.onSecondaryAmountChange, this.topDisplayAmount()),
-            this.bottomRow(primaryInfo, this.bottomDisplayAmount())
-          ]
-          : [
-            this.topRow(primaryInfo, this.onPrimaryAmountChange, this.topDisplayAmount()),
-            this.bottomRow(secondaryInfo, this.bottomDisplayAmount())
-          ]}
-      </View>
     )
   }
 
@@ -199,39 +241,34 @@ export default class FlipInput extends Component<Props, State> {
         { rotateX: this.backInterpolate }
       ]
     }
-    if (Platform.OS === 'ios') {
-      return (
-        <View style={[styles.container]}>
-          <Animated.View style={[styles.flipContainerFront, frontAnimatedStyle]} pointerEvents={isToggled ? 'none' : 'auto'}>
-            <View style={styles.flipButton}>
-              <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-            </View>
-            <View style={[styles.rows]}>
-              {this.topRow(primaryInfo, this.onPrimaryAmountChange, this.state.primaryDisplayAmount)}
-              {this.bottomRow(secondaryInfo, this.state.secondaryDisplayAmount)}
-            </View>
-            <View style={styles.spacer} />
-          </Animated.View>
-          <Animated.View style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle]} pointerEvents={isToggled ? 'auto' : 'none'}>
-            <View style={styles.flipButton}>
-              <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-            </View>
-            <View style={[styles.rows]}>
-              {this.topRow(secondaryInfo, this.onSecondaryAmountChange, this.state.secondaryDisplayAmount)}
-              {this.bottomRow(primaryInfo, this.state.primaryDisplayAmount)}
-            </View>
-            <View style={styles.spacer} />
-          </Animated.View>
-        </View>
-      )
-    }
     return (
       <View style={[styles.container]}>
-        <View style={styles.flipButton}>
-          <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
-        </View>
-        {this.renderRows(primaryInfo, secondaryInfo, isToggled)}
-        <View style={styles.spacer} />
+        <Animated.View
+          style={[styles.flipContainerFront, frontAnimatedStyle, {opacity: this.androidFrontOpacityInterpolate}]}
+          pointerEvents={isToggled ? 'none' : 'auto'}
+        >
+          <View style={styles.flipButton}>
+            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+          </View>
+          <View style={[styles.rows]}>
+            {this.topRowFront(primaryInfo, this.onPrimaryAmountChange, intl.formatNumberInput(this.state.primaryDisplayAmount))}
+            {this.bottomRow(secondaryInfo, intl.formatNumberInput(this.state.secondaryDisplayAmount))}
+          </View>
+          <View style={styles.spacer} />
+        </Animated.View>
+        <Animated.View
+          style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle, {opacity: this.androidBackOpacityInterpolate}]}
+          pointerEvents={isToggled ? 'auto' : 'none'}
+        >
+          <View style={styles.flipButton}>
+            <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
+          </View>
+          <View style={[styles.rows]}>
+            {this.topRowBack(secondaryInfo, this.onSecondaryAmountChange, intl.formatNumberInput(this.state.secondaryDisplayAmount))}
+            {this.bottomRow(primaryInfo, intl.formatNumberInput(this.state.primaryDisplayAmount))}
+          </View>
+          <View style={styles.spacer} />
+        </Animated.View>
       </View>
     )
   }

@@ -1,15 +1,17 @@
 // @flow
 
-import type {Action} from '../../ReduxTypes.js'
-import type {AbcAccount} from 'airbitz-core-types'
+import type { AbcAccount } from 'edge-login'
+
+import type { Action } from '../../ReduxTypes.js'
 import * as Constants from '../../../constants/indexConstants.js'
+
 type AccountReducerState = AbcAccount | {} | void
 
 export const initialState: AccountReducerState = {}
 
 const accountReducer = (state = initialState, action) => {
   switch (action.type) {
-    case Constants.ADD_ACCOUNT:
+    case Constants.ACCOUNT_INIT_COMPLETE:
       if (action.data) {
         return action.data.account
       }

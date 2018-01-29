@@ -1,11 +1,7 @@
 // @flow
 
-import {
-  StyleSheet,
-  Platform,
-  Image
-} from 'react-native'
-import platform from '../../../../theme/variables/platform.js'
+import {StyleSheet} from 'react-native'
+
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {

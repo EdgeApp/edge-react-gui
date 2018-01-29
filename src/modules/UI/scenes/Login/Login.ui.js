@@ -3,7 +3,7 @@
 import React, {Component} from 'react'
 import {Actions} from 'react-native-router-flux'
 import {LoginScreen} from 'airbitz-core-js-ui'
-import type {AbcAccount, AbcContext} from 'airbitz-core-types'
+import type {AbcAccount, AbcContext} from 'edge-login'
 
 import type {Dispatch} from '../../../ReduxTypes'
 
