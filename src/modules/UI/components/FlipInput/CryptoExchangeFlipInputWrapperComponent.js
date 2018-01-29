@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {View, Image, Text} from 'react-native'
 import ExchangedFlipInput from './ExchangedFlipInput'
 import {TextAndIconButton} from '../Buttons'
+import {WalletNameHeader} from '../Header/Component/WalletNameHeader.ui'
 import * as Constants from '../../../../constants/indexConstants'
 import * as UTILS from '../../../utils'
 import s from '../../../../locales/strings.js'
@@ -71,6 +72,10 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
             </View>
         </View>
     }
+    const {uiWallet: {name: uiWalletName}} = this.props
+    const titleComp = function (styles) {
+      return (<WalletNameHeader name={uiWalletName} selectedWalletCurrencyCode={currencyCode} styles={styles}/>)
+    }
 
     return (
       <View style={[style.containerNoFee, this.props.fee && style.container]}>
@@ -79,7 +84,7 @@ export default class CryptoExchangeFlipInputWrapperComponent extends Component {
               style={style.walletSelector}
               onPress={this.launchSelector}
               icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={this.props.uiWallet.name + ':' + currencyCode}
+              title={titleComp}
             />
           </View>
           {this.renderLogo(style, this.props.currencyLogo)}

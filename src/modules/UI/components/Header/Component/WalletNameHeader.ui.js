@@ -12,9 +12,10 @@ type Props = {
   selectedWalletCurrencyCode: string
 }
 
-class SelectedWalletNameHeader extends React.Component<Props> {
+class WalletNameHeader extends React.Component<Props> {
   render () {
-    const textStyles = this.props.styles.textStyles
+    const {styles = {}} = this.props
+    const textStyles = styles.textStyles || []
     const name = this.props.name
     const selectedWalletCurrencyCode = this.props.selectedWalletCurrencyCode
 
@@ -34,4 +35,4 @@ class SelectedWalletNameHeader extends React.Component<Props> {
     )
   }
 }
-export {SelectedWalletNameHeader}
+export {WalletNameHeader}
