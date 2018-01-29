@@ -213,7 +213,7 @@ export type State = {
     feeSetting: 'low' | 'standard' | 'high' | 'custom',
     walletListModalVisible: boolean,
     confirmTransactionModalVisible: boolean,
-    flippedCounter: number,
+    forceUpdateGuiCounter: number,
     shiftTransactionError: Error | null,
     genericShapeShiftError: Error | null,
     changeWallet: 'none',

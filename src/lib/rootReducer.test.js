@@ -53,7 +53,7 @@ test('initialState', () => {
       'toWallet': null,
       'toWalletPrimaryInfo': null,
       'transaction': null,
-      'flippedCounter': 0,
+      'forceUpdateGuiCounter': 0,
       'walletListModalVisible': false},
     'exchangeRates': 0,
     'ui': {

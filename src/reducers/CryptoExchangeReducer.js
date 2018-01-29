@@ -37,7 +37,7 @@ const initialState = {
   shiftTransactionError: null,
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
-  flippedCounter: 0,
+  forceUpdateGuiCounter: 0,
   transaction: null
 }
 
@@ -210,7 +210,7 @@ function deepCopyState (state) {
 
   deepCopy.minerFee = state.reverseMinerFee
   deepCopy.reverseMinerFee = state.minerFee
-  deepCopy.flippedCounter = state.flippedCounter + 1
+  deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
 
   deepCopy.insufficientError = false
 

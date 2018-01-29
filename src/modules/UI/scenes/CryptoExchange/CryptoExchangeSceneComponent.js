@@ -53,7 +53,7 @@ export type CryptoExchangeSceneComponentStateProps = {
   fee: string,
 
   // Number of times To and From wallets were flipped
-  flippedCounter: number,
+  forceUpdateGuiCounter: number,
 
   showNextButton: boolean,
   showWalletSelectModal: boolean,
@@ -77,7 +77,7 @@ type State = {
   whichWallet: string, // Which wallet selector dropdown was tapped
   whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
   fromExchangeAmount: string,
-  flippedCounter: number,
+  forceUpdateGuiCounter: number,
   toExchangeAmount: string
 }
 
@@ -87,7 +87,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     const newState: State = {
       whichWallet: Constants.FROM,
       whichWalletFocus: Constants.FROM,
-      flippedCounter: 0,
+      forceUpdateGuiCounter: 0,
       fromExchangeAmount: '',
       toExchangeAmount: ''
     }
@@ -100,12 +100,11 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (this.state.flippedCounter !== nextProps.flippedCounter) {
-      // Wallets were flipped. Set the amounts on both FlipInputs
+    if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
       this.setState({
         fromExchangeAmount: '0',
         toExchangeAmount: '0',
-        flippedCounter: nextProps.flippedCounter
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
       })
     } else {
       // Check which wallet we are currently editing.
