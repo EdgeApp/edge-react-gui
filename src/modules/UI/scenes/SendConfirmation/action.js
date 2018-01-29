@@ -49,6 +49,10 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri) =>
     .catch(e => dispatch(updateTransaction(null, parsedUriClone, e)))
   }
 
+export const updateParsedURI = (parsedUri: AbcParsedUri) => {
+  return updateTransaction(null, parsedUri, null)
+}
+
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
@@ -119,6 +123,5 @@ export const updateSpendPending = (pending: boolean) => ({
 })
 
 export {
-  createTX as updateParsedURI,
   createTX as updateMiningFees
 }
