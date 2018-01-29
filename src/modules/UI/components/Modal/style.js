@@ -41,6 +41,9 @@ export const styles = {
     justifyContent: 'center',
     zIndex: 200
   },
+  exitRowEmpty: {
+    height: 30
+  },
   exitButton: {
     backgroundColor: 'transparent',
     width: 40,

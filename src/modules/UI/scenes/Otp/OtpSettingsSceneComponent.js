@@ -9,26 +9,34 @@ import {PrimaryButton, TertiaryButton} from '../../components/Buttons/index'
 import s from '../../../../locales/strings.js'
 import {StaticModalComponent, TwoButtonTextModalComponent, ExpandableBoxComponent} from '../../../../components/indexComponents.js'
 import * as Constants from '../../../../constants/indexConstants.js'
-
+import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 type Props = {
   isOtpEnabled: boolean,
   otpKey?: string,
+  otpResetDate?: string,
   enableOtp(): void,
-  disableOtp(): void
+  disableOtp(): void,
+  keepOtp(): void
 }
 
 type State = {
   showMessageModal: boolean,
   messageModalMessage?: string,
-  showConfirmationModal: boolean
+  showConfirmationModal: boolean,
+  showResetDialog: boolean
 }
 
 export default class OtpSettingsSceneComponent extends Component<Props, State> {
   componentWillMount () {
+    let showResetDialog = false
+    if (this.props.otpResetDate) {
+      showResetDialog = true
+    }
     this.setState({
       showMessageModal: false,
       messageModalMessage: '',
-      showConfirmationModal: false
+      showConfirmationModal: false,
+      showResetDialog
     })
   }
   cancelStatic = () => {
@@ -60,9 +68,17 @@ export default class OtpSettingsSceneComponent extends Component<Props, State> {
     this.setState({
       showMessageModal: true,
       messageModalMessage: s.strings.otp_disabled_modal,
-      showConfirmationModal: false
+      showConfirmationModal: false,
+      showResetDialog: false
     })
     this.props.disableOtp()
+  }
+
+  keepOtp = () => {
+    this.setState({
+      showResetDialog: false
+    })
+    this.props.keepOtp()
   }
 
   renderButton = () => {
@@ -104,11 +120,24 @@ export default class OtpSettingsSceneComponent extends Component<Props, State> {
         showModal
         middleText={s.strings.otp_modal_body}
         icon={Constants.SWAP_HORIZ}
-        iconType={Constants.MATERIAL_ICONS}
+        iconImage={iconImage}
         cancelText={s.strings.string_cancel_cap}
         doneText={s.strings.otp_disable}
         onCancel={this.cancelConfirmModal}
         onDone={this.disableOtp}
+      />
+    }
+    if (this.state.showResetDialog) {
+      return <TwoButtonTextModalComponent
+        style={styles.showConfirmationModal}
+        headerText={s.strings.otp_modal_reset_headline}
+        showModal
+        middleText={''}
+        iconImage={iconImage}
+        cancelText={s.strings.otp_disable}
+        doneText={s.strings.otp_keep}
+        onCancel={this.disableOtp}
+        onDone={this.keepOtp}
       />
     }
     return null
