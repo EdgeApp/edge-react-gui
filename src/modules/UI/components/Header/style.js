@@ -2,6 +2,7 @@
 
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
+import * as Styles from '../../../../styles/indexStyles'
 
 export default StyleSheet.create({
   headerRoot: {
@@ -35,3 +36,9 @@ export default StyleSheet.create({
     color: THEME.COLORS.WHITE
   }
 })
+
+export const walletSelectorStyles = {
+  ...Styles.TextAndIconButtonStyle,
+  content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
+  centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}
+}
