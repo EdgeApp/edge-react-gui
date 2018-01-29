@@ -8,7 +8,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons'
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
 import Camera from 'react-native-camera'
-import type { AbcCurrencyWallet, AbcParsedUri } from 'airbitz-core-types'
+import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-login'
 
 import s from '../../../../locales/strings.js'
 import T from '../../components/FormattedText'

@@ -14,7 +14,7 @@ import type {
 
 import type {
   AbcTransaction
-} from 'airbitz-core-types'
+} from 'edge-login'
 
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'

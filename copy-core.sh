@@ -14,6 +14,4 @@ copy_build () {
   cp -r $path/$1/lib/ node_modules/$1/lib/
 }
 
-copy_build airbitz-core-js
-# copy_build airbitz-currency-shitcoin
-
+copy_build edge-login

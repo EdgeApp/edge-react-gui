@@ -1,7 +1,7 @@
 // @flow
 
 import {Alert} from 'react-native'
-import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'edge-login'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 

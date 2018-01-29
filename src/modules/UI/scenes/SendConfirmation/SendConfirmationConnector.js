@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet, GuiDenomination, GuiCurrencyInfo } from '../../../../types'
-import type { AbcTransaction, AbcMetadata } from 'airbitz-core-types'
+import type { AbcTransaction, AbcMetadata } from 'edge-login'
 import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
@@ -20,6 +20,7 @@ import {
   getPublicAddress,
   getKeyboardIsVisible,
   getLabel,
+  getForceUpdateGuiCounter,
   getNetworkFee
 } from './selectors'
 import {
@@ -73,12 +74,13 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     exchangeDenomination: secondaryExchangeDenomination
   }
 
-  return {
+  const out: SendConfirmationStateProps = {
     nativeAmount,
     errorMsg,
     fiatPerCrypto,
     currencyCode,
     pending,
+    forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
@@ -88,6 +90,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)
   }
+  return out
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({

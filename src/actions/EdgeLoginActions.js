@@ -1,6 +1,6 @@
 // @flow
 import * as actions from './indexActions'
-import type { AbcLobby } from 'airbitz-core-types'
+import type { AbcLobby } from 'edge-login'
 import * as Constants from '../constants/indexConstants'
 import {Actions} from 'react-native-router-flux'
 export function storeLobby (type: string, data: AbcLobby) {

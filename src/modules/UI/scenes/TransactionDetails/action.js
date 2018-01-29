@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcMetadata} from 'airbitz-core-types'
+import type {AbcMetadata} from 'edge-login'
 
 import type {Dispatch, GetState} from '../../../ReduxTypes'
 

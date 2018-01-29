@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin, AbcDenomination } from 'airbitz-core-types'
+import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-login'
 
 import type {State} from '../../ReduxTypes'
 

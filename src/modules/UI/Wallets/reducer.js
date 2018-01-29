@@ -1,7 +1,7 @@
 // @flow
 
 import { combineReducers } from 'redux'
-import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'airbitz-core-types'
+import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'edge-login'
 import _ from 'lodash'
 
 import type { GuiWallet } from '../../../types.js'

@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'airbitz-core-types'
+import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'edge-login'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcContext } from 'airbitz-core-types'
+import type { AbcContext } from 'edge-login'
 
 import type { Action } from '../../ReduxTypes'
 import * as ACTION from './action.js'
