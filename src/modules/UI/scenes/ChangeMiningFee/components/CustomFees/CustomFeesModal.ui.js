@@ -31,12 +31,16 @@ export default class CustomFeesModal extends Component<Props, State> {
   }
 
   _onFeeSettingInputChange = (feeSetting) => (input: string) => {
-    this.setState({ [feeSetting]: input })
+    let setting = '0'
+    if (!isNaN(input) && input !== '') {
+      setting = parseInt(input).toString()
+    }
+    this.setState({ [feeSetting]: setting })
   }
 
   _initState = () => {
     for (const feeSetting of this.props.customFeeSettings) {
-      this.setState({ [feeSetting]: '' })
+      this.setState({ [feeSetting]: '0' })
     }
   }
 
