@@ -146,7 +146,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         denominationKeys,
         customTokensSettings
        } = data
-      console.log(account.otpResetDate)
       let newState = {
         ...state,
         loginStatus,
