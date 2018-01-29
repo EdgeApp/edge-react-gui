@@ -5,7 +5,6 @@ const strings = {
   bitcoin_remaining: '%1$s Remaining…',
   calculator_done: 'Done',
   change_mining_fee_body: 'Warning: Low Fees may cause long delays in transaction confirmation',
-  change_mining_fee_title: 'Change Mining Fee',
   change_currency_fee: 'Change Currency',
   could_not_select: 'Could Not Select Wallet',
   dialog_title: 'Set Auto Logoff time',
