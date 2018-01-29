@@ -40,6 +40,7 @@ export type SendConfirmationStateProps = {
   errorMsg: string | null,
   fiatPerCrypto: number,
   sliderDisabled: boolean,
+  forceUpdateGuiCounter: number,
   currencyConverter: CurrencyConverter
 }
 
@@ -58,6 +59,7 @@ type Props = SendConfirmationStateProps & SendConfirmationDispatchProps
 type State = {
   nativeAmount: string,
   overridePrimaryExchangeAmount: string,
+  forceUpdateGuiCounter: number,
   keyboardVisible: boolean
 }
 
@@ -67,6 +69,7 @@ export class SendConfirmation extends Component<Props, State> {
     const newState: State = {
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
+      forceUpdateGuiCounter: 0,
       nativeAmount: props.nativeAmount
     }
     this.state = newState
@@ -75,6 +78,16 @@ export class SendConfirmation extends Component<Props, State> {
   componentDidMount () {
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
     this.setState({overridePrimaryExchangeAmount})
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+      this.setState({
+        overridePrimaryExchangeAmount,
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
+      })
+    }
   }
 
   componentWillUnmount () {

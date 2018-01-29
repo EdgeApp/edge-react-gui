@@ -35,7 +35,7 @@ export const updateAmount = (
     dispatch(createTX({ nativeAmount, metadata }))
   }
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri) =>
+export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = false) =>
   (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const walletId = getSelectedWalletId(state)
@@ -44,14 +44,10 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri) =>
     const spendInfo = getSpendInfo(state, parsedUriClone)
     makeSpend(abcWallet, spendInfo)
     .then(abcTransaction => {
-      dispatch(updateTransaction(abcTransaction, parsedUriClone, null))
+      dispatch(updateTransaction(abcTransaction, parsedUriClone, forceUpdateGui, null))
     })
-    .catch(e => dispatch(updateTransaction(null, parsedUriClone, e)))
+    .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
   }
-
-export const updateParsedURI = (parsedUri: AbcParsedUri) => {
-  return updateTransaction(null, parsedUri, null)
-}
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -61,7 +57,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   getMaxSpendable(abcWallet, spendInfo)
   .then(nativeAmount => {
     const amount: AbcParsedUri = { nativeAmount }
-    dispatch(createTX(amount))
+    dispatch(createTX(amount, true))
   })
   .catch(e => console.log(e))
 }
@@ -111,10 +107,11 @@ export const reset = () => ({
 export const updateTransaction = (
   transaction: ?AbcTransaction,
   parsedUri: ?AbcParsedUri,
+  forceUpdateGui: ?boolean,
   error: ?Error
 ) => ({
   type: UPDATE_TRANSACTION,
-  data: { transaction, parsedUri, error }
+  data: { transaction, parsedUri, forceUpdateGui, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
@@ -123,5 +120,6 @@ export const updateSpendPending = (pending: boolean) => ({
 })
 
 export {
-  createTX as updateMiningFees
+  createTX as updateMiningFees,
+  createTX as updateParsedURI
 }

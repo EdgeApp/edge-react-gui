@@ -24,6 +24,7 @@ export type SendConfirmationState = {
   label: string,
   pending: boolean,
   isKeyboardVisible: boolean,
+  forceUpdateGuiCounter: number,
   transaction: AbcTransaction | null,
   parsedUri: GuiMakeSpendInfo,
   error: Error | null
@@ -33,6 +34,7 @@ export const initialState = {
   'label': '',
   'pending': false,
   'isKeyboardVisible': false,
+  'forceUpdateGuiCounter': 0,
   'transaction': {
     'txid': '',
     'date': 0,
@@ -72,6 +74,8 @@ export const getTransaction = (state: State): AbcTransaction =>
   getScene(state).transaction || initialState.transaction
 export const getParsedUri = (state: State): GuiMakeSpendInfo =>
   getScene(state).parsedUri || initialState.parsedUri
+export const getForceUpdateGuiCounter = (state: State): number =>
+  getScene(state).forceUpdateGuiCounter
 
 export const getNetworkFeeOption = (state: State): string =>
   getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''

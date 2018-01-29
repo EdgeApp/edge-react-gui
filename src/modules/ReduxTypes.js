@@ -73,6 +73,7 @@ export type State = {
         networkFeeOption: 'low' | 'standard' | 'high' | 'custom',
         customNetworkFee: any,
         isKeyboardVisible: boolean,
+        forceUpdateGuiCounter: number,
         pending: boolean
       },
       transactionList: {

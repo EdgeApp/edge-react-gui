@@ -122,6 +122,7 @@ test('initialState', () => {
           'label': '',
           'pending': false,
           'isKeyboardVisible': false,
+          'forceUpdateGuiCounter': 0,
           'transaction': {
             'txid': '',
             'date': 0,
