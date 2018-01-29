@@ -15,3 +15,4 @@ copy_build () {
 }
 
 copy_build edge-login
+npm run postinstall

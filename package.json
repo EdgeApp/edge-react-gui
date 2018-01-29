@@ -53,7 +53,7 @@
     "edge-currency-bitcoin": "^2.13.0",
     "edge-currency-ethereum": "^0.7.5",
     "edge-exchange-plugins": "^0.1.1",
-    "edge-login": "^0.5.1",
+    "edge-login": "^0.5.2",
     "https-browserify": "0.0.1",
     "intl": "^1.2.5",
     "intl-locales-supported": "^1.0.0",
