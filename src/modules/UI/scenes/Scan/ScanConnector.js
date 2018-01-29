@@ -1,7 +1,7 @@
 // @flow
 
 import { connect } from 'react-redux'
-import type { AbcParsedUri, AbcCurrencyWallet } from 'airbitz-core-types'
+import type { AbcParsedUri, AbcCurrencyWallet } from 'edge-login'
 import { Actions } from 'react-native-router-flux'
 
 import Scan from './Scan.ui'

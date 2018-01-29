@@ -11,7 +11,7 @@ import type {
   AbcParsedUri,
   AbcReceiveAddress,
   AbcTransaction
- } from 'airbitz-core-types'
+ } from 'edge-login'
 
 import type {
   DeviceDimensions,

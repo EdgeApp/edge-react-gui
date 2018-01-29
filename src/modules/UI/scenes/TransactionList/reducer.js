@@ -3,7 +3,7 @@
 import * as ACTION from './action'
 import { combineReducers } from 'redux'
 import type { Action } from '../../../ReduxTypes.js'
-import type { AbcTransaction } from 'airbitz-core-types'
+import type { AbcTransaction } from 'edge-login'
 
 export type TransactionsState = Array<AbcTransaction>
 export type ContactsListState = Array<any>

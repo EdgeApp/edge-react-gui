@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcContext, AbcContextCallbacks, AbcCorePlugin, AbcCurrencyPlugin } from 'airbitz-core-types'
+import type { AbcContext, AbcContextCallbacks, AbcCorePlugin, AbcCurrencyPlugin } from 'edge-login'
 import SplashScreen from 'react-native-smart-splash-screen'
 import s, { selectLocale } from '../locales/strings.js'
 import { setIntlLocale } from '../locales/intl'

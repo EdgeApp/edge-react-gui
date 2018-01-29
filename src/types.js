@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
+import type {AbcDenomination, AbcMetaToken} from 'edge-login'
 
 export class GuiWallet {
   id: string

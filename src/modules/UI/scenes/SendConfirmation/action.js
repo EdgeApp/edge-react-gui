@@ -17,7 +17,7 @@ import type {
   AbcParsedUri,
   AbcTransaction,
   AbcMetadata
-} from 'airbitz-core-types'
+} from 'edge-login'
 
 const PREFIX = 'UI/SendConfimation/'
 

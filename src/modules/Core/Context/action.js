@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcContext} from 'airbitz-core-types'
+import type {AbcContext} from 'edge-login'
 
 const PREFIX = 'Core/Context/'
 

@@ -23,7 +23,7 @@ import {
   border
 } from '../../../utils.js'
 import type { CurrencyConverter, GuiCurrencyInfo } from '../../../../types'
-import type { AbcMetadata } from 'airbitz-core-types'
+import type { AbcMetadata } from 'edge-login'
 
 const DIVIDE_PRECISION = 18
 

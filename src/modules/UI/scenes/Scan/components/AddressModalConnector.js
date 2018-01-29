@@ -6,7 +6,7 @@ import * as UI_SELECTORS from '../../../selectors.js'
 import * as CORE_SELECTORS from '../../../../Core/selectors.js'
 import {updateParsedURI} from '../../SendConfirmation/action.js'
 import {loginWithEdge} from '../../../../../actions/indexActions'
-import type {AbcParsedUri, AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcParsedUri, AbcCurrencyWallet} from 'edge-login'
 import {Actions} from 'react-native-router-flux'
 import * as Constants from '../../../../../constants/indexConstants'
 const mapStateToProps = (state: any) => {
