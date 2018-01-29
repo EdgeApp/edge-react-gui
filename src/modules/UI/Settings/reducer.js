@@ -21,11 +21,13 @@ const initialState = {
     arrayPlugins: [],
     supportedWalletTypes: []
   },
+  account: null,
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
-  otpKey: null
+  otpKey: null,
+  otpResetDate: null
 }
 
 type SettingsState = {
@@ -50,6 +52,7 @@ type SettingsState = {
   WINGS: {
     denomination: string
   },
+  account: ?Object,
   autoLogoutTimeInSeconds: number,
   bluetoothMode: boolean,
   changesLocked: any,
@@ -63,6 +66,7 @@ type SettingsState = {
   otpKey: null,
   otpMode: boolean,
   pinMode: boolean,
+  otpResetDate: ?string,
   plugins: {
     arrayPlugins: Array<AbcCurrencyPlugin>,
     supportedWalletTypes: Array<string>
@@ -128,6 +132,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
   switch (type) {
     case Constants.ACCOUNT_INIT_COMPLETE: {
       const {
+        account,
         loginStatus,
         otpInfo,
         currencyPlugins,
@@ -141,7 +146,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         denominationKeys,
         customTokensSettings
        } = data
-
       let newState = {
         ...state,
         loginStatus,
@@ -153,7 +157,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         customTokens,
         bluetoothMode,
         pinMode,
-        otpMode
+        otpMode,
+        otpResetDate: account.otpResetDate
       }
       denominationKeys.forEach((key) => {
         const currencyCode = key.currencyCode
@@ -312,7 +317,12 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         }
       }
     }
-
+    case Constants.DISABLE_OTP_RESET: {
+      return {
+        ...state,
+        otpResetDate: null
+      }
+    }
     case ACTION.UPDATE_SETTINGS: {
       const { settings } = data
       return settings
