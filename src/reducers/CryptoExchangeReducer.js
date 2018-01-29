@@ -37,6 +37,7 @@ const initialState = {
   shiftTransactionError: null,
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
+  flippedCounter: 0,
   transaction: null
 }
 
@@ -104,7 +105,7 @@ function cryptoExchangerReducer (state = initialState, action) {
       return {
         ...state,
         transaction: action.data.abcTransaction,
-        fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
+        fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name : ' ',
         insufficientError: false,
         genericShapeShiftError: null
       }
@@ -184,16 +185,16 @@ function getLogoDark (wallet, currencyCode) {
 function deepCopyState (state) {
   const deepCopy = JSON.parse(JSON.stringify(state))
   deepCopy.toWallet = state.fromWallet
-  deepCopy.fromWallet = state.toWallet
   deepCopy.toCurrencyCode = state.fromCurrencyCode
-  deepCopy.toNativeAmount = state.fromNativeAmount
-  deepCopy.toDisplayAmount = state.fromDisplayAmount
+  deepCopy.toNativeAmount = '0'
+  deepCopy.toDisplayAmount = '0'
   deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
   deepCopy.toCurrencyIcon = state.fromCurrencyIcon
   deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
+  deepCopy.fromWallet = state.toWallet
   deepCopy.fromCurrencyCode = state.toCurrencyCode
-  deepCopy.fromNativeAmount = state.toNativeAmount
-  deepCopy.fromDisplayAmount = state.toDisplayAmount
+  deepCopy.fromNativeAmount = '0'
+  deepCopy.fromDisplayAmount = '0'
   deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
@@ -209,6 +210,7 @@ function deepCopyState (state) {
 
   deepCopy.minerFee = state.reverseMinerFee
   deepCopy.reverseMinerFee = state.minerFee
+  deepCopy.flippedCounter = state.flippedCounter + 1
 
   deepCopy.insufficientError = false
 

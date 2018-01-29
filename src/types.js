@@ -5,55 +5,22 @@
 // trying to trigger a build. .. will remove this line
 import type {AbcDenomination, AbcMetaToken} from 'airbitz-core-types'
 
-export class GuiWallet {
-  id: string
-  type: string
-  name: string
-  primaryNativeBalance: string
-  nativeBalances: { [currencyCode: string]: string }
-  currencyNames: { [currencyCode: string]: string }
-  currencyCode: string
-  isoFiatCurrencyCode: string
-  fiatCurrencyCode: string
-  denominations: Array<AbcDenomination>
-  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } }
-  symbolImage: string
-  symbolImageDarkMono: string
-  metaTokens: Array<AbcMetaToken>
+export type GuiWallet = {
+  id: string,
+  type: string,
+  name: string,
+  primaryNativeBalance: string,
+  nativeBalances: { [currencyCode: string]: string },
+  currencyNames: { [currencyCode: string]: string },
+  currencyCode: string,
+  isoFiatCurrencyCode: string,
+  fiatCurrencyCode: string,
+  denominations: Array<AbcDenomination>,
+  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
+  symbolImage: string,
+  symbolImageDarkMono: string,
+  metaTokens: Array<AbcMetaToken>,
   enabledTokens: Array<string>
-  constructor (
-    id: string,
-    type: string,
-    name: string,
-    primaryNativeBalance: string,
-    nativeBalances: { [currencyCode: string]: string },
-    currencyNames: { [currencyCode: string]: string },
-    currencyCode: string,
-    isoFiatCurrencyCode: string,
-    fiatCurrencyCode: string,
-    denominations: Array<AbcDenomination>,
-    allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
-    symbolImage: string,
-    symbolImageDarkMono: string,
-    metaTokens: Array<AbcMetaToken>,
-    enabledTokens: Array<string>
-  ) {
-    this.id = id
-    this.type = type
-    this.name = name
-    this.primaryNativeBalance = primaryNativeBalance
-    this.nativeBalances = nativeBalances
-    this.currencyNames = currencyNames
-    this.currencyCode = currencyCode
-    this.isoFiatCurrencyCode = isoFiatCurrencyCode
-    this.fiatCurrencyCode = fiatCurrencyCode
-    this.denominations = denominations
-    this.allDenominations = allDenominations
-    this.symbolImage = symbolImage
-    this.symbolImageDarkMono = symbolImageDarkMono
-    this.metaTokens = metaTokens
-    this.enabledTokens = enabledTokens
-  }
 }
 
 export type GuiDenomination = {
@@ -126,4 +93,36 @@ export type DeviceDimensions = {
 
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
+}
+
+export const emptyGuiWallet: GuiWallet = {
+  id: '',
+  type: '',
+  name: '',
+  primaryNativeBalance: '',
+  nativeBalances: {},
+  currencyNames: {},
+  currencyCode: '',
+  isoFiatCurrencyCode: '',
+  fiatCurrencyCode: '',
+  denominations: [],
+  allDenominations: {},
+  symbolImage: '',
+  symbolImageDarkMono: '',
+  metaTokens: [],
+  enabledTokens: []
+}
+
+export const emptyGuiDenomination: GuiDenomination = {
+  name: '',
+  symbol: '',
+  multiplier: '',
+  precision: 0,
+  currencyCode: ''
+}
+export const emptyCurrencyInfo: GuiCurrencyInfo = {
+  displayCurrencyCode: '',
+  exchangeCurrencyCode: '',
+  displayDenomination: emptyGuiDenomination,
+  exchangeDenomination: emptyGuiDenomination
 }
