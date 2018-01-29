@@ -1,7 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'airbitz-core-types'
+import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'edge-login'
 
 import type {Dispatch, State} from '../../../ReduxTypes'
 import type {GuiContact} from '../../../../types'

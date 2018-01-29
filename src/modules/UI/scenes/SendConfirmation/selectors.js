@@ -8,7 +8,7 @@ import type {
   AbcSpendInfo,
   AbcTransaction,
   AbcMetadata
-} from 'airbitz-core-types'
+} from 'edge-login'
 
 export type GuiMakeSpendInfo = {
   currencyCode?: string,

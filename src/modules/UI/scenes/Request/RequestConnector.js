@@ -10,7 +10,7 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import {saveReceiveAddress} from './action.js'
 import {getDenomFromIsoCode} from '../../../utils'
 
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcCurrencyWallet} from 'edge-login'
 import type {GuiDenomination, GuiWallet, GuiCurrencyInfo} from '../../../../types'
 import type {Dispatch, State} from '../../../ReduxTypes'
 

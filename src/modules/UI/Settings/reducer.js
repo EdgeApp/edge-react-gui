@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin } from 'airbitz-core-types'
+import type { AbcCurrencyPlugin } from 'edge-login'
 import _ from 'lodash'
 
 import * as ACTION from './action.js'

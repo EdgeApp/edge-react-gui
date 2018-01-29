@@ -1,7 +1,7 @@
 // @flow
 
 import { combineReducers } from 'redux'
-import { type AbcCurrencyWallet } from 'airbitz-core-types'
+import { type AbcCurrencyWallet } from 'edge-login'
 
 import * as ACTION from './action.js'
 import * as Constants from '../../../constants/indexConstants'

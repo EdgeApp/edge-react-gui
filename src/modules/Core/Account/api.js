@@ -1,6 +1,6 @@
 // @flow
 // Core/Account/api.js
-import type {AbcAccount, AbcCreateCurrencyWalletOptions} from 'airbitz-core-types'
+import type {AbcAccount, AbcCreateCurrencyWalletOptions} from 'edge-login'
 
 export const logoutRequest = (account: AbcAccount) => {
   return account.logout()

@@ -18,7 +18,7 @@ import {
 import type {
   AbcParsedUri,
   AbcTransaction
-} from 'airbitz-core-types'
+} from 'edge-login'
 
 const PREFIX = 'UI/SendConfimation/'
 const DIVIDE_PRECISION = 18

@@ -1,5 +1,5 @@
 // @flow
-import type {AbcCurrencyWallet} from 'airbitz-core-types'
+import type {AbcCurrencyWallet} from 'edge-login'
 import type {Dispatch, GetState} from '../../ReduxTypes'
 import * as CORE_SELECTORS from '../selectors'
 import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'

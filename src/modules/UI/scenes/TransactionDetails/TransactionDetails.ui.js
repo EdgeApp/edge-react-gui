@@ -27,7 +27,7 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'airbitz-core-types'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
