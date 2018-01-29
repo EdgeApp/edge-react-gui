@@ -183,6 +183,9 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         })
       }
     }
+    if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
+      setTimeout(() => this.onPrimaryAmountChange('0'), 50)
+    }
   }
 
   onPrimaryAmountChange = (displayAmount: string) => {
@@ -290,7 +293,10 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           <Text style={[
             bottom.amount,
             !amount && bottom.alert
-          ]}>
+          ]}
+            numberOfLines={1}
+            ellipsizeMode='tail'
+          >
           {amount || '0'}
         </Text>
         <Text style={[bottom.currencyCode]}>
