@@ -14,7 +14,12 @@ type Props = {
     right?: any,
     routeFunction(): void
 }
-export default class RowRoute extends Component<Props> {
+
+type State = {
+
+}
+
+export default class RowRoute extends Component<Props, State> {
   render () {
     return (
       <TouchableHighlight style={[styles.settingsRowContainer]}

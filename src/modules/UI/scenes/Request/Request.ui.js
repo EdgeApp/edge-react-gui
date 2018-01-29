@@ -28,6 +28,11 @@ import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
+import type {
+  GuiTransactionRequest,
+  FlipInputFieldInfo,
+  GuiReceiveAddress
+} from '../../../../types.js'
 
 type State = {
   publicAddress: string,
@@ -39,11 +44,11 @@ type Props = {
   loading: boolean,
   abcWallet: AbcCurrencyWallet,
   currencyCode: string,
-  primaryInfo: any,
-  secondaryInfo: any,
+  primaryInfo: FlipInputFieldInfo,
+  secondaryInfo: FlipInputFieldInfo,
   secondaryToPrimaryRatio: number,
-  request: any,
-  saveReceiveAddress(string): void,
+  request: GuiTransactionRequest,
+  saveReceiveAddress(GuiReceiveAddress): void,
 }
 
 export default class Request extends Component<Props, State> {

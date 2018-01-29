@@ -2,6 +2,7 @@
 import * as ACTION from './action'
 import * as Constants from '../../../../constants/indexConstants'
 import type { AbcTransaction, AbcParsedUri } from 'airbitz-core-types'
+import type {Action} from '../../../ReduxTypes.js'
 
 export type SendConfirmationState = {
   transaction: AbcTransaction | null,
@@ -50,7 +51,7 @@ export const initialState: SendConfirmationState = {
   pending: false
 }
 
-export const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
+export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {
@@ -137,12 +138,14 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
         }
       }
     }
-    case ACTION.CHANGE_MINING_FEE:
+    case ACTION.CHANGE_MINING_FEE: {
+      const { feeSetting } = data
       return {
         ...state,
         // fee: action.fee,
-        feeSetting: action.feeSetting
+        feeSetting: feeSetting
       }
+    }
     default:
       return state
   }

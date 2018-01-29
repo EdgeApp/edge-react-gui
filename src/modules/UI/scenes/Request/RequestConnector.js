@@ -11,7 +11,11 @@ import {saveReceiveAddress} from './action.js'
 import {getDenomFromIsoCode} from '../../../utils'
 
 import type {AbcCurrencyWallet} from 'airbitz-core-types'
-import type {GuiDenomination, GuiWallet} from '../../../../types'
+import type {
+  GuiDenomination,
+  GuiWallet,
+  GuiReceiveAddress
+} from '../../../../types'
 import type {Dispatch, State} from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => {
@@ -65,7 +69,7 @@ const mapStateToProps = (state: State) => {
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  saveReceiveAddress: (receiveAddress) => dispatch(saveReceiveAddress(receiveAddress))
+  saveReceiveAddress: (receiveAddress: GuiReceiveAddress) => dispatch(saveReceiveAddress(receiveAddress))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Request)

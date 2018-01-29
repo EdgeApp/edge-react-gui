@@ -138,6 +138,54 @@ export type GuiTouchIdInfo = {
   isTouchSupported: boolean
 }
 
+export type GuiReceiveAddressMetadata = {
+  amountFiat: number,
+  bizId?: any,
+  category: string,
+  miscJson: string,
+  notes: string,
+  payeeName: string
+}
+
+export type GuiReceiveAddress = {
+  amountSatoshi: number,
+  metaData: GuiReceiveAddressMetadata,
+  publicAddress: string
+}
+
+export type GuiTransactionRequest = {
+  inputCurrencySelected: string,
+  receiveAddress: GuiReceiveAddress
+}
+
+export type GuiRequestPrimaryInfo = {
+  displayCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  multiplier: string,
+  name: string,
+  symbol: string
+}
+
+export type GuiRequestSecondaryInfo = {
+  displayCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  exchangeDenomination: GuiDenomination,
+  multiplier: string,
+  name: string,
+  symbol: string
+}
+
+export type FlipInputFieldInfo = GuiCurrencyInfo & {
+  nativeAmount?: string,
+  displayAmount?: string
+}
+
+export type SubcategorySearchResultData = {
+  index: number,
+  item: string,
+  separators: Object
+}
+
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
 }

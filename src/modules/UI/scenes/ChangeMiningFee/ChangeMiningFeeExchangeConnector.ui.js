@@ -2,7 +2,10 @@
 
 import {connect} from 'react-redux'
 import type {State} from '../../../ReduxTypes'
-import ChangeMiningFee, {type ChangeMiningFeeStateProps, type ChangeMiningFeeDispatchProps} from './ChangeMiningFee.ui.js'
+import ChangeMiningFee, {
+  type ChangeMiningFeeStateProps,
+  type ChangeMiningFeeDispatchProps
+} from './ChangeMiningFee.ui.js'
 import { changeFee } from '../../../../actions/CryptoExchangeActions'
 
 export const mapStateToProps = (state: State): ChangeMiningFeeStateProps => ({

@@ -13,7 +13,7 @@ import {GuiWallet} from '../../../../types'
 import THEME from '../../../../theme/variables/airbitz'
 
 type CryptoExchangeConfirmTransactionModalOwnProps = {
-  style: any,
+  style: Object,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
   fromCurrencyIconDark?: string,

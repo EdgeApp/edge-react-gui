@@ -13,7 +13,7 @@ import {FormField} from '../../../../../components/indexComponents'
 import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
 
 type Props = {
-  style: any,
+  style: Object,
   headerText: string,
   showModal: boolean,
   onCancel(): void,
@@ -37,7 +37,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
   onDone = () => {
     this.props.onDone(this.state.confimPassword)
   }
-  renderMiddle = (style: any) => {
+  renderMiddle = (style: Object) => {
     const formStyle = {...MaterialInputOnWhite,
       container: {...MaterialInputOnWhite.container, width: 244}
     }

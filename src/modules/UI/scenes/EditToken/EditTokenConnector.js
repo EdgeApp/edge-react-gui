@@ -16,11 +16,12 @@ const mapStateToProps = (state: State): EditTokenStateProps => ({
   editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
 })
 const mapDispatchToProps = (dispatch: Dispatch): EditTokenDispatchProps => ({
-  showDeleteTokenModal: (): any => dispatch(EDIT_TOKEN_ACTIONS.showDeleteTokenModal()),
-  hideDeleteTokenModal: (): any => dispatch(EDIT_TOKEN_ACTIONS.hideDeleteTokenModal()),
-  deleteCustomToken: (walletId: string, currencyCode: string): any => dispatch(WALLET_ACTIONS.deleteCustomToken(walletId, currencyCode)),
-  editCustomToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string): any =>
+  showDeleteTokenModal: () => { dispatch(EDIT_TOKEN_ACTIONS.showDeleteTokenModal()) },
+  hideDeleteTokenModal: () => { dispatch(EDIT_TOKEN_ACTIONS.hideDeleteTokenModal()) },
+  deleteCustomToken: (walletId: string, currencyCode: string) => { dispatch(WALLET_ACTIONS.deleteCustomToken(walletId, currencyCode)) },
+  editCustomToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) => {
     dispatch(WALLET_ACTIONS.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, oldCurrencyCode))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditToken)

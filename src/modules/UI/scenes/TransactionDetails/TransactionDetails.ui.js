@@ -35,7 +35,7 @@ export type Props = {
   abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
-  settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
+  settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
   currencyInfo: AbcCurrencyInfo | null,
@@ -61,13 +61,12 @@ export type State = {
   amountFiat: string,
   direction: string,
   bizId: number,
-  miscJson: any,
+  miscJson: any, // core receives this as a string
   dateTimeSyntax: string,
   subCategorySelectVisibility: boolean,
   categorySelectVisibility: boolean,
   subCategory: string,
   contactSearchVisibility: boolean,
-  animation: any, // AnimatedValue
   payeeOpacity: any, // AnimatedValue
   subcategoryOpacity: any, // AnimatedValue
   payeeZIndex: number,
@@ -131,13 +130,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       amountFiat,
       bizId: 0,
       direction: (parseInt(props.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',
-      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : null,
+      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : '',
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
       subCategory: subCategory || '',
       contactSearchVisibility: false,
-      animation: new Animated.Value(0),
       payeeOpacity: new Animated.Value(0),
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,

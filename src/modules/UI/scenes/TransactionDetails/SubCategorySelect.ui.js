@@ -10,6 +10,7 @@ import SearchResults from '../../components/SearchResults/index'
 import styles from './style'
 import {colors} from '../../../../theme/variables/airbitz'
 import platform from '../../../../theme/variables/platform.js'
+import type {SubcategorySearchResultData} from '../../../../types.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -59,7 +60,7 @@ class SubCategorySelect extends Component<Props, State> {
     )
   }
 
-  renderSubcategory (data: any, onRegularSelectFxn: any) {
+  renderSubcategory (data: SubcategorySearchResultData, onRegularSelectFxn: Function) {
     return (
       <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>

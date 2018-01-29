@@ -27,14 +27,13 @@ const mapStateToProps = (state: State): {} => {
     walletArchivesVisible: state.ui.scenes.walletList.walletArchivesVisible,
     walletName: state.ui.scenes.walletList.walletName,
     walletId: state.ui.scenes.walletList.walletId,
-    walletOrder: state.ui.wallets.walletListOrder,
     currencyConverter,
     dimensions: state.ui.scenes.dimensions,
     customTokens: state.ui.settings.customTokens
   }
 }
 
-const mapDispatchToProps = (dispatch: Function): {} => ({
+const mapDispatchToProps = (dispatch: Dispatch): {} => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   setContactList: (contacts) => dispatch(setContactList(contacts)),

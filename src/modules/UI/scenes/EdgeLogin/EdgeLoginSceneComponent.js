@@ -8,7 +8,7 @@ import type { AbcLobby } from 'airbitz-core-types'
 import SafeAreaView from '../../components/SafeAreaView'
 
 type EdgeLoginSceneProps = {
-  style: any,
+  style: Object,
   lobby?: AbcLobby,
   error?: string,
   isProcessing: boolean,
@@ -17,7 +17,7 @@ type EdgeLoginSceneProps = {
 }
 
 export default class EdgeLoginSceneComponent extends Component<EdgeLoginSceneProps> {
-  renderBody (style: any) {
+  renderBody (style: Object) {
     let message = this.props.error
     if (!this.props.error) {
       message = s.strings.edge_description
@@ -28,7 +28,7 @@ export default class EdgeLoginSceneComponent extends Component<EdgeLoginScenePro
       </View>
     )
   }
-  renderButtons (style: any) {
+  renderButtons (style: Object) {
     if (this.props.isProcessing) {
       return (
         <View style={style.buttonsProcessing}>
@@ -62,7 +62,7 @@ export default class EdgeLoginSceneComponent extends Component<EdgeLoginScenePro
       </View>
     )
   }
-  renderImage (style: any) {
+  renderImage (style: Object) {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
       return <Image
         style={style.image}
@@ -70,7 +70,7 @@ export default class EdgeLoginSceneComponent extends Component<EdgeLoginScenePro
     }
     return null
   }
-  renderHeader (style: any) {
+  renderHeader (style: Object) {
     let title = ''
     if (this.props.lobby && this.props.lobby.loginRequest) {
       title = this.props.lobby.loginRequest.displayName ? this.props.lobby.loginRequest.displayName : ''

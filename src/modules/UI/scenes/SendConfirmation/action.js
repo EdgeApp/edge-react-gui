@@ -12,6 +12,7 @@ import type {
   AbcCurrencyWallet,
   AbcSpendTarget
 } from 'airbitz-core-types'
+import type { Dispatch, GetState } from '../../../ReduxTypes'
 
 const PREFIX = 'UI/SendConfimation/'
 
@@ -46,7 +47,7 @@ export type UpdateTransactionAction = {
   }
 }
 
-export const updateAmountSatoshi = (amountSatoshi: string) => ({
+export const updateAmountSatoshi = (amountSatoshi: number) => ({
   type: UPDATE_AMOUNT_SATOSHI,
   data: {amountSatoshi}
 })
@@ -54,7 +55,7 @@ export const updateAmountSatoshi = (amountSatoshi: string) => ({
 export const updateTransactionAction = (
   parsedUri: AbcParsedUri,
   transaction: AbcTransaction | null,
-  error: Error | null): UpdateTransactionAction => ({
+  error: Error | null) => ({
     type: UPDATE_TRANSACTION,
     data: {parsedUri, transaction, error}
   })
@@ -69,7 +70,7 @@ export const updateNativeAmount = (nativeAmount: string) => ({
   data: {nativeAmount}
 })
 
-export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: any, getState: any) => {
+export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
@@ -99,7 +100,7 @@ export const signBroadcastAndSave = (abcUnsignedTransaction: AbcTransaction) => 
     })
 }
 
-export const updateMaxSatoshiRequest = () => (dispatch: any, getState: any) => {
+export const updateMaxSatoshiRequest = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
@@ -115,17 +116,17 @@ export const updateMaxSatoshi = (maxSatoshi: string) => ({
   data: {maxSatoshi}
 })
 
-export const useMaxSatoshi = () => (dispatch: any, getState: any) => {
+export const useMaxSatoshi = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const {maxSatoshi} = state.ui.scenes.sendConfirmation
   dispatch(updateAmountSatoshi(maxSatoshi))
 }
 
-export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: any) => {
+export const updateWalletTransfer = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch) => {
   dispatch(updateLabel(wallet.name))
 }
 
-export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, getState: any) => {
+export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet = CORE_SELECTORS.getWallet(state, walletId)
@@ -142,7 +143,7 @@ export const processParsedUri = (parsedUri: AbcParsedUri) => (dispatch: any, get
   })
 }
 
-export const getMaxSpendable = () => (dispatch: any, getState: any) => {
+export const getMaxSpendable = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
 
   const parsedUri: AbcParsedUri = state.ui.scenes.sendConfirmation.parsedUri
@@ -188,6 +189,6 @@ const makeSpendInfo = (parsedUri: AbcParsedUri): AbcSpendInfo => {
 
 export const changeFee = (feeSetting: string) => ({
   type: CHANGE_MINING_FEE,
-  feeSetting
+  data: {feeSetting}
   // fee,
 })

@@ -1,10 +1,9 @@
 // @flow
 import {connect} from 'react-redux'
-import SendConfirmation, {type Props, type DispatchProps} from './SendConfirmation.ui'
-import type {FlipInputFieldInfo} from '../../components/FlipInput/FlipInput.ui'
+import SendConfirmation, {type Props} from './SendConfirmation.ui'
 
 import type {State, Dispatch} from '../../../ReduxTypes'
-import type {GuiWallet, GuiDenomination} from '../../../../types'
+import type {GuiWallet, GuiDenomination, FlipInputFieldInfo} from '../../../../types'
 import type {AbcCurrencyWallet, AbcTransaction, AbcParsedUri} from 'airbitz-core-types'
 
 import {bns} from 'biggystring'
@@ -85,10 +84,10 @@ const mapStateToProps = (state: State): Props => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  processParsedUri: (parsedUri: AbcParsedUri): any => dispatch(processParsedUri(parsedUri)),
-  updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
-  signBroadcastAndSave: (abcTransaction: AbcTransaction): any => dispatch(signBroadcastAndSave(abcTransaction))
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  processParsedUri: (parsedUri: AbcParsedUri) => dispatch(processParsedUri(parsedUri)),
+  updateSpendPending: (pending: boolean) => dispatch(updateSpendPending(pending)),
+  signBroadcastAndSave: (abcTransaction: AbcTransaction) => dispatch(signBroadcastAndSave(abcTransaction))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendConfirmation)
