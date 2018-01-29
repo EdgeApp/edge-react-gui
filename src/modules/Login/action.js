@@ -148,7 +148,9 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
   Actions.popTo(Constants.LOGIN, {username})
   dispatch(actions.dispatchActionString(Constants.DEEP_LINK_RECEIVED, backupKey))
   // dispatch(logout(Constants.DEEP_LINK_RECEIVED))
-  account.logout()
+  if (!account) {
+    account.logout()
+  }
 }
 
 export const logout = (username?: string) => ({
