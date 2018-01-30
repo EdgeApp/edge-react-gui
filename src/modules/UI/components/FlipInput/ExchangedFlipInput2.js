@@ -117,7 +117,7 @@ function propsToState (props: Props): State {
 
   // Convert overridePrimaryExchangeAmount => overridePrimaryDecimalAmount which goes from exchange to display
   // ie BTC to mBTC
-  const overridePrimaryDecimalAmount = bns.div(props.overridePrimaryExchangeAmount, primaryDisplayToExchangeRatio, DIVIDE_PRECISION)
+  const overridePrimaryDecimalAmount = bns.mul(props.overridePrimaryExchangeAmount, primaryDisplayToExchangeRatio)
 
   return {primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount}
 }

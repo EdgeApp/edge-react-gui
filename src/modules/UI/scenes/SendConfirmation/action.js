@@ -5,7 +5,6 @@ import { openABAlert } from '../../components/ABAlert/action'
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
-import { convertDisplayToNative } from '../../../utils.js'
 import { bns } from 'biggystring'
 import { type GuiMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
 import {
@@ -17,34 +16,31 @@ import {
 } from '../../../Core/Wallets/api.js'
 import type {
   AbcParsedUri,
-  AbcTransaction
+  AbcTransaction,
+  AbcMetadata
 } from 'edge-login'
 
 const PREFIX = 'UI/SendConfimation/'
-const DIVIDE_PRECISION = 18
 
 export const UPDATE_LABEL = PREFIX + 'UPDATE_LABEL'
 export const UPDATE_IS_KEYBOARD_VISIBLE = PREFIX + 'UPDATE_IS_KEYBOARD_VISIBLE'
 export const UPDATE_SPEND_PENDING = PREFIX + 'UPDATE_SPEND_PENDING'
 export const RESET = PREFIX + 'RESET'
-export const UPDATE_PARSED_URI = PREFIX + 'UPDATE_PARSED_URI'
 export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
 export const updateAmount = (
-  primaryDisplayAmount: string,
-  secondaryDisplayAmount: string,
-  primaryMultiplier: string,
-  secondaryMultiplier: string
-) =>
-  (dispatch: Dispatch, getState: GetState) => {
-    const nativeAmount: string = convertDisplayToNative(primaryMultiplier)(primaryDisplayAmount)
-    const secondaryDisplayToExchangeRatio = bns.div(secondaryMultiplier, secondaryMultiplier, DIVIDE_PRECISION)
-    const secondaryExchangeAmount = bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
-    const metadata = { amountFiat: parseFloat(secondaryExchangeAmount) }
-    dispatch(createTX({ nativeAmount, metadata }))
-  }
+  nativeAmount: string,
+  exchangeAmount: string,
+  fiatPerCrypto: string
+  ) =>
+(dispatch: Dispatch, getState: GetState) => {
+  const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
+  const amountFiat: number = parseFloat(amountFiatString)
+  const metadata: AbcMetadata = { amountFiat }
+  dispatch(createTX({ nativeAmount, metadata }, false))
+}
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri) =>
+export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = true) =>
   (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const walletId = getSelectedWalletId(state)
@@ -53,9 +49,9 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri) =>
     const spendInfo = getSpendInfo(state, parsedUriClone)
     makeSpend(abcWallet, spendInfo)
     .then(abcTransaction => {
-      dispatch(updateTransaction(abcTransaction, parsedUriClone, null))
+      dispatch(updateTransaction(abcTransaction, parsedUriClone, forceUpdateGui, null))
     })
-    .catch(e => dispatch(updateTransaction(null, parsedUriClone, e)))
+    .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
   }
 
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
@@ -66,7 +62,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   getMaxSpendable(abcWallet, spendInfo)
   .then(nativeAmount => {
     const amount: AbcParsedUri = { nativeAmount }
-    dispatch(createTX(amount))
+    dispatch(createTX(amount, true))
   })
   .catch(e => console.log(e))
 }
@@ -116,10 +112,11 @@ export const reset = () => ({
 export const updateTransaction = (
   transaction: ?AbcTransaction,
   parsedUri: ?AbcParsedUri,
+  forceUpdateGui: ?boolean,
   error: ?Error
 ) => ({
   type: UPDATE_TRANSACTION,
-  data: { transaction, parsedUri, error }
+  data: { transaction, parsedUri, forceUpdateGui, error }
 })
 
 export const updateSpendPending = (pending: boolean) => ({
@@ -128,6 +125,6 @@ export const updateSpendPending = (pending: boolean) => ({
 })
 
 export {
-  createTX as updateParsedURI,
-  createTX as updateMiningFees
+  createTX as updateMiningFees,
+  createTX as updateParsedURI
 }
