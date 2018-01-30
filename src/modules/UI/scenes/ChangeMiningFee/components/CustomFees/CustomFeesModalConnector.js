@@ -1,11 +1,12 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
 import _ from 'lodash'
 import CustomFeesModal from './CustomFeesModal.ui'
+import type { CustomFees } from './CustomFeesModal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
-import type {Dispatch, State} from '../../../../../ReduxTypes'
+import type { Dispatch, State } from '../../../../../ReduxTypes'
 import {
   VISIBLE_MODAL_NAME,
   CLOSE_MODAL_VALUE
@@ -29,7 +30,7 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onPositive: (customNetworkFee: any) => {
+  onPositive: (customNetworkFee: CustomFees) => {
     dispatch(updateMiningFees({
       networkFeeOption: Constants.CUSTOM_FEES,
       customNetworkFee

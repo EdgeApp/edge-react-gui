@@ -10,15 +10,19 @@ import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 import s from '../../../../../../locales/strings.js'
 
-type Props = {
+export type CustomFees = {
+  [feeSetting: string]: string
+}
+
+export type Props = {
   customFeeSettings: Array<string>,
   visibilityBoolean: boolean,
-  onPositive: (customFees: any) => any,
-  onDone: () => any,
+  onPositive: (customFees: CustomFees) => void,
+  onDone: () => void,
   handlePress: Function
 }
 
-type State = any
+type State = CustomFees
 
 export default class CustomFeesModal extends Component<Props, State> {
   constructor (props: Props) {
