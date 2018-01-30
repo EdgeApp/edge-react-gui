@@ -6,7 +6,7 @@ import {View} from 'react-native'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
-import type {AbcContext, AbcAccount} from 'airbitz-core-types'
+import type {AbcContext, AbcAccount} from 'edge-login'
 
 export type ChangePinOwnProps = {
   account: AbcAccount,

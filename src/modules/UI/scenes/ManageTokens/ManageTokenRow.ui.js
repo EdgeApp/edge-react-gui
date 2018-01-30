@@ -12,7 +12,7 @@ import styles, {styles as rawStyles} from './style.js'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import * as UTILS from '../../../utils.js'
 import type {CustomTokenInfo} from '../../../../types.js'
-import type {AbcMetaToken} from 'airbitz-core-types'
+import type {AbcMetaToken} from 'edge-login'
 import _ from 'lodash'
 
 // import THEME from '../../../../theme/variables/airbitz'

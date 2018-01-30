@@ -1,75 +1,76 @@
 // @flow
 import React, {Component} from 'react'
 import ExchangeRate from './ExchangeRate.ui.js'
+import type {GuiCurrencyInfo, GuiDenomination} from '../../../../types'
 
-import type {
-  AbcDenomination
-} from 'airbitz-core-types'
-
-type Props = {
-  secondaryToPrimaryRatio: number,
-  primaryInfo: Object,
-  secondaryInfo: Object
+type ExchangedExchangeRateOwnProps = {
+  exchangeSecondaryToPrimaryRatio: number,
+  primaryCurrencyInfo: GuiCurrencyInfo,
+  secondaryCurrencyInfo: GuiCurrencyInfo
 }
+
+type Props = ExchangedExchangeRateOwnProps
 
 export default class ExchangedExchangeRate extends Component<Props> {
   getSecondaryDisplayAmount () {
     const {
-      secondaryToPrimaryRatio,
-      primaryInfo
+      exchangeSecondaryToPrimaryRatio,
+      primaryCurrencyInfo
     } = this.props
-    if (!secondaryToPrimaryRatio || Object.keys(primaryInfo).length === 0) { return '0' }
+    if (!exchangeSecondaryToPrimaryRatio || Object.keys(primaryCurrencyInfo).length === 0) { return '0' }
 
     const secondaryDisplayAmount = (
       parseFloat(1) *
-      parseFloat(this.props.secondaryToPrimaryRatio) *
-      parseFloat(this.props.primaryInfo.displayDenomination.multiplier) /
-      parseFloat(this.props.primaryInfo.exchangeDenomination.multiplier)
+      parseFloat(this.props.exchangeSecondaryToPrimaryRatio) *
+      parseFloat(this.props.primaryCurrencyInfo.displayDenomination.multiplier) /
+      parseFloat(this.props.primaryCurrencyInfo.exchangeDenomination.multiplier)
     ).toString()
 
     return secondaryDisplayAmount
   }
 
-  isBits (primaryInfo: {displayDenomination: AbcDenomination}) {
-    return primaryInfo.displayDenomination.name === 'bits'
+  isBits (primaryCurrencyInfo: GuiCurrencyInfo) {
+    return primaryCurrencyInfo.displayDenomination.name === 'bits'
   }
 
   render () {
-    const emptyDenomination = {
+    const emptyDenomination: GuiDenomination = {
       name: '',
       symbol: '',
       multiplier: '',
-      precision: '0',
+      precision: 0,
       currencyCode: ''
     }
-    const emptyInfo = {
+    const emptyInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: '',
+      exchangeCurrencyCode: '',
       displayDenomination: emptyDenomination,
       exchangeDenomination: emptyDenomination
     }
 
-    const primaryInfo = Object.keys(this.props.primaryInfo).length === 0
+    const primaryCurrencyInfo = Object.keys(this.props.primaryCurrencyInfo).length === 0
       ? emptyInfo
-      : this.props.primaryInfo
+      : this.props.primaryCurrencyInfo
 
-    const primaryDisplayAmount = this.isBits(primaryInfo)
+    const primaryDisplayAmount = this.isBits(primaryCurrencyInfo)
       ? '1000'
       : '1'
 
-    const secondaryInfo = Object.keys(this.props.secondaryInfo).length === 0
+    const secondaryCurrencyInfo = Object.keys(this.props.secondaryCurrencyInfo).length === 0
       ? emptyInfo
-      : this.props.secondaryInfo
+      : this.props.secondaryCurrencyInfo
 
-    const secondaryDisplayAmount = this.isBits(primaryInfo)
+    const secondaryDisplayAmount = this.isBits(primaryCurrencyInfo)
       ? (parseFloat(this.getSecondaryDisplayAmount()) * 1000).toString()
       : this.getSecondaryDisplayAmount()
 
     return (
       <ExchangeRate
         primaryDisplayAmount={primaryDisplayAmount}
-        primaryInfo={primaryInfo}
+        primaryInfo={primaryCurrencyInfo}
 
         secondaryDisplayAmount={secondaryDisplayAmount}
-        secondaryInfo={secondaryInfo} />
+        secondaryInfo={secondaryCurrencyInfo} />
     )
   }
 }

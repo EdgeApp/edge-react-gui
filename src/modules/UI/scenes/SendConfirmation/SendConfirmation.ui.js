@@ -1,104 +1,153 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import {
   View,
-  ScrollView,
   ActivityIndicator
 } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
-import {sprintf} from 'sprintf-js'
+import { sprintf } from 'sprintf-js'
 import s from '../../../../locales/strings.js'
 import styles from './styles.js'
-import {bns} from 'biggystring'
+import { bns } from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
-import ExchangedFlipInput from '../../components/FlipInput/ExchangedFlipInput.js'
+import { ExchangedFlipInput, type ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Recipient from '../../components/Recipient/index.js'
 import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
-
-import * as UTILS from '../../../utils.js'
-
-import type {GuiWallet, CurrencyConverter, FlipInputFieldInfo} from '../../../../types'
-import type {AbcCurrencyWallet, AbcParsedUri, AbcTransaction} from 'airbitz-core-types'
-import type {SendConfirmationState} from './reducer'
+import {
+  convertNativeToExchange,
+  convertAbcToGuiDenomination,
+  getDenomFromIsoCode,
+  convertNativeToDisplay,
+  border
+} from '../../../utils.js'
+import type { AbcDenomination } from 'edge-login'
+import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
 
 const DIVIDE_PRECISION = 18
 
-export type Props = {
-  sendConfirmation: SendConfirmationState,
-  abcWallet: AbcCurrencyWallet,
+export type SendConfirmationStateProps = {
+  fiatCurrencyCode: string,
+  currencyCode: string,
   nativeAmount: string,
+  networkFee: string,
+  publicAddress: string,
+  pending: boolean,
+  keyboardIsVisible: boolean,
+  label: string,
+  primaryDisplayDenomination: AbcDenomination,
+  primaryExchangeDenomination: GuiDenomination,
+  secondaryeExchangeCurrencyCode: string,
   errorMsg: string | null,
   fiatPerCrypto: number,
-  guiWallet: GuiWallet,
-  currencyCode: string,
-  primaryInfo: FlipInputFieldInfo,
   sliderDisabled: boolean,
-  secondaryInfo: FlipInputFieldInfo,
+  forceUpdateGuiCounter: number,
   currencyConverter: CurrencyConverter
 }
 
-export type DispatchProps = {
-  processParsedUri: (AbcParsedUri) => void,
-  updateSpendPending: (boolean) => void,
-  signBroadcastAndSave: (AbcTransaction) => void
+export type SendConfirmationDispatchProps = {
+  updateSpendPending: (boolean) => any,
+  signBroadcastAndSave: () => any,
+  reset: () => any,
+  updateAmount: (
+    nativeAmount: string,
+    exchangeAmount: string,
+    fiatPerCrypto: string
+  ) => any
 }
 
+type Props = SendConfirmationStateProps & SendConfirmationDispatchProps
+
 type State = {
-  primaryNativeAmount: string,
-  secondaryNativeAmount: string,
+  secondaryDisplayDenomination: GuiDenomination,
+  nativeAmount: string,
+  overridePrimaryExchangeAmount: string,
+  forceUpdateGuiCounter: number,
   keyboardVisible: boolean
 }
 
-export default class SendConfirmation extends Component<Props & DispatchProps, State> {
-  constructor (props: Props & DispatchProps) {
+export class SendConfirmation extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
-    const amt = props.sendConfirmation.transaction ? props.sendConfirmation.transaction.nativeAmount : '0'
-
-    this.state = {
-      primaryNativeAmount: amt,
-      secondaryNativeAmount: '',
-      keyboardVisible: false
+    const newState: State = {
+      secondaryDisplayDenomination: {
+        name: '',
+        multiplier: '1',
+        symbol: ''
+      },
+      overridePrimaryExchangeAmount: '',
+      keyboardVisible: false,
+      forceUpdateGuiCounter: 0,
+      nativeAmount: props.nativeAmount
     }
+    this.state = newState
   }
 
   componentDidMount () {
-    this.props.processParsedUri(this.props.sendConfirmation.parsedUri)
+    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
+    const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
+    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount })
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    const newState = {}
+    if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
+      const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
+      newState.overridePrimaryExchangeAmount = overridePrimaryExchangeAmount
+      newState.forceUpdateGuiCounter = nextProps.forceUpdateGuiCounter
+    }
+    if (nextProps.fiatCurrencyCode !== this.props.fiatCurrencyCode) {
+      newState.secondaryDisplayDenomination = getDenomFromIsoCode(nextProps.fiatCurrencyCode)
+    }
+    this.setState(newState)
+  }
+
+  componentWillUnmount () {
+    this.props.reset()
   }
 
   render () {
-    let networkFee, cryptoFeeSymbol, cryptoFeeAmount, cryptoFeeString, fiatFeeSymbol, fiatFeeAmount
-    let fiatFeeAmountPretty, cryptoFeeExchangeAmount, fiatFeeAmountString, fiatFeeString, networkFeeSyntax
-    const {
-      label,
-      publicAddress,
-      transaction
+    const primaryDisplayDenomination = convertAbcToGuiDenomination(this.props.primaryDisplayDenomination)
 
-     } = this.props.sendConfirmation
-    const {
-      primaryInfo,
-      secondaryInfo,
-      fiatPerCrypto,
-      errorMsg,
-      nativeAmount,
-      currencyConverter,
-      currencyCode
-    } = this.props
-    const color = 'white'
+    const primaryInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: this.props.currencyCode,
+      displayDenomination: primaryDisplayDenomination,
+      exchangeCurrencyCode: this.props.primaryExchangeDenomination.name,
+      exchangeDenomination: this.props.primaryExchangeDenomination
+    }
 
-    if (transaction && bns.gt(transaction.networkFee, '0')) {
-      networkFee = transaction.networkFee
-      cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
-      cryptoFeeAmount = this.convertPrimaryNativeToDisplay(networkFee)
-      cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-      fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
-      cryptoFeeExchangeAmount = UTILS.convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)(transaction.networkFee)
-      fiatFeeAmount = currencyConverter.convertCurrency(currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
-      fiatFeeAmountString = fiatFeeAmount.toFixed(2)
-      fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
-      fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
+    let exchangeCurrencyCode = this.props.secondaryeExchangeCurrencyCode
+
+    if (this.props.secondaryeExchangeCurrencyCode === '') {
+      if (this.state.secondaryDisplayDenomination.currencyCode) {
+        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.currencyCode
+      }
+    }
+
+    const secondaryInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: this.props.fiatCurrencyCode,
+      displayDenomination: this.state.secondaryDisplayDenomination,
+      exchangeCurrencyCode: exchangeCurrencyCode,
+      exchangeDenomination: this.state.secondaryDisplayDenomination
+    }
+
+    let networkFeeSyntax
+    if (bns.gt(this.props.networkFee, '0')) {
+      const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
+      const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
+      const cryptoFeeAmount = this.props.networkFee
+        ? convertNativeToDisplay(cryptoFeeMultiplier)(this.props.networkFee)
+        : ''
+      const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
+      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+      const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
+      const cryptoFeeExchangeAmount = exchangeConvertor(this.props.networkFee)
+      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+      const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
+      const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
+      const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
       networkFeeSyntax = sprintf(s.strings.send_confirmation_fee_line, cryptoFeeString, fiatFeeString)
     } else {
       networkFeeSyntax = ''
@@ -108,115 +157,51 @@ export default class SendConfirmation extends Component<Props & DispatchProps, S
       <SafeAreaView>
         <Gradient style={[styles.view]}>
           <Gradient style={styles.gradient} />
-          <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
-
-            <View style={[styles.exchangeRateContainer, UTILS.border()]}>
+          <View style={[styles.mainScrollView]}>
+            <View style={[styles.exchangeRateContainer, border()]}>
               {
-                errorMsg
+                this.props.errorMsg
                   ? <Text style={[styles.error]}>
-                    {errorMsg}
+                    {this.props.errorMsg}
                   </Text>
                   : <ExchangeRate
                     secondaryDisplayAmount={this.props.fiatPerCrypto}
-                    primaryInfo={this.props.primaryInfo}
-                    secondaryInfo={this.props.secondaryInfo} />
+                    primaryInfo={primaryInfo}
+                    secondaryInfo={secondaryInfo} />
               }
             </View>
-
-            <View style={[styles.main, UTILS.border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <View style={[styles.main, border('yellow')]}>
               <ExchangedFlipInput
-                primaryInfo={{...primaryInfo, nativeAmount}}
-                secondaryInfo={secondaryInfo}
-                secondaryToPrimaryRatio={fiatPerCrypto}
-                onAmountsChange={this.onAmountsChange}
-                color={color} />
+                primaryCurrencyInfo={{ ...primaryInfo }}
+                secondaryCurrencyInfo={{ ...secondaryInfo }}
+                exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
+                overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
+                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+                onExchangeAmountChanged={this.onExchangeAmountChanged}
+              />
               <View style={[styles.feeArea]}>
                 <Text style={[styles.feeAreaText]}>{networkFeeSyntax}</Text>
               </View>
-              <Recipient label={label} link={''} publicAddress={publicAddress} style={styles.recipient} />
+              <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
             </View>
             <View style={[styles.pendingSymbolArea]}>
-              {this.props.sendConfirmation.pending &&
-                <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, UTILS.border()]} size={'small'} />
+              {this.props.pending &&
+                <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, border()]} size={'small'} />
               }
             </View>
             <View style={[styles.sliderWrap]}>
               <ABSlider
                 parentStyle={styles.sliderStyle}
-                onSlidingComplete={this.signBroadcastAndSave}
-                sliderDisabled={this.props.sliderDisabled || this.props.sendConfirmation.pending} />
+                onSlidingComplete={this.props.signBroadcastAndSave}
+                sliderDisabled={this.props.sliderDisabled} />
             </View>
-          </ScrollView>
+          </View>
         </Gradient>
       </SafeAreaView>
     )
   }
 
-  onAmountsChange = ({primaryDisplayAmount, secondaryDisplayAmount}: {primaryDisplayAmount: string, secondaryDisplayAmount: string}) => {
-    const primaryNativeToDenominationRatio = this.props.primaryInfo.displayDenomination.multiplier.toString()
-    const secondaryNativeToDenominationRatio = this.props.secondaryInfo.displayDenomination.multiplier.toString()
-
-    const primaryNativeAmount = UTILS.convertDisplayToNative(primaryNativeToDenominationRatio)(primaryDisplayAmount)
-    const secondaryNativeAmount = UTILS.convertDisplayToNative(secondaryNativeToDenominationRatio)(secondaryDisplayAmount)
-
-    const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
-
-    const parsedUri = this.props.sendConfirmation.parsedUri
-    parsedUri.metadata = {
-      amountFiat: parseFloat(secondaryExchangeAmount)
-    }
-    parsedUri.nativeAmount = primaryNativeAmount
-
-    this.props.processParsedUri(parsedUri)
-
-    this.setState({
-      primaryNativeAmount,
-      secondaryNativeAmount
-    })
-  }
-
-  signBroadcastAndSave = () => {
-    const abcTransaction: AbcTransaction | null = this.props.sendConfirmation.transaction
-    if (abcTransaction) {
-      this.props.updateSpendPending(true)
-      this.props.signBroadcastAndSave(abcTransaction)
-    }
-  }
-
-  getTopSpacer = () => {
-    if (this.props.sendConfirmation.keyboardIsVisible) {
-
-    } else {
-      return <View style={styles.spacer} />
-    }
-  }
-
-  getBottomSpacer = () => {
-    if (!this.props.sendConfirmation.keyboardIsVisible) {
-
-    } else {
-      return <View style={styles.spacer} />
-    }
-  }
-
-  onMaxPress = () => {}
-
-  convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
-    if (!primaryNativeAmount) { return '' }
-    const primaryNativeToDisplayRatio = this.props.primaryInfo.exchangeDenomination.multiplier
-    const primaryDisplayAmount = UTILS.convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
-    return primaryDisplayAmount
-  }
-
-  getPrimaryNativeToDisplayRatio = () => this.props.primaryInfo.displayDenomination.multiplier
-
-  convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
-    const secondaryDisplayToExchangeRatio = this.getSecondaryDisplayToExchangeRatio()
-    return bns.div(secondaryDisplayAmount, secondaryDisplayToExchangeRatio, DIVIDE_PRECISION)
-  }
-  getSecondaryDisplayToExchangeRatio = (): string => {
-    const displayMultiplier = this.props.secondaryInfo.displayDenomination.multiplier
-    const exchangeMultiplier = this.props.secondaryInfo.exchangeDenomination.multiplier
-    return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
+  onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+    this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
   }
 }

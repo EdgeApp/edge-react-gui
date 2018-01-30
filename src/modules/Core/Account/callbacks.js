@@ -1,7 +1,7 @@
 // @flow
 
 import type {Dispatch} from '../../ReduxTypes'
-import type {AbcTransaction, AbcAccountCallbacks} from 'airbitz-core-types'
+import type {AbcTransaction, AbcAccountCallbacks} from 'edge-login'
 
 import {updateWalletsRequest} from '../Wallets/action.js'
 import {refreshWallet} from '../../UI/Wallets/action.js'

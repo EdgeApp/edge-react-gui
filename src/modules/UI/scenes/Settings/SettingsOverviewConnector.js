@@ -12,7 +12,7 @@ import {setAutoLogoutTimeInMinutesRequest,
 import {sendLogs} from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
 import type {State, Dispatch} from '../../../../modules/ReduxTypes'
-import { AbcAccount } from 'airbitz-core-types'
+import type { AbcAccount } from 'edge-login'
 // settings_button_lock_settings, or //settings_button_unlock_settings
 const mapStateToProps = (state: State) => {
   const isLocked = SETTINGS_SELECTORS.getSettingsLock(state)

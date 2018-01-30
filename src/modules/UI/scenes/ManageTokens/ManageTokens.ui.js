@@ -5,7 +5,7 @@ import {View, FlatList, ActivityIndicator} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 import SafeAreaView from '../../components/SafeAreaView'
 
-import type {AbcMetaToken} from 'airbitz-core-types'
+import type {AbcMetaToken} from 'edge-login'
 import type { GuiWallet, CustomTokenInfo } from '../../../../types'
 
 import * as UTILS from '../../../utils'

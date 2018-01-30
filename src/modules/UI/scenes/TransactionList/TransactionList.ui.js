@@ -31,7 +31,7 @@ import platform from '../../../../theme/variables/platform.js'
 
 // import SearchBar from './components/SearchBar.ui'
 
-import type {AbcTransaction, AbcDenomination} from 'airbitz-core-types'
+import type {AbcTransaction, AbcDenomination} from 'edge-login'
 import type {GuiWallet} from '../../../../types'
 
 import WalletListModal
@@ -110,7 +110,9 @@ export default class TransactionList extends Component<Props, State> {
             } else {
               const filteredContacts = contacts
               .filter(item => item.givenName)
-              .sort((a, b) => a.givenName.toUpperCase() - b.givenName.toUpperCase())
+              .sort((a, b) =>
+                a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+              )
               this.props.setContactList(filteredContacts)
             }
           })

@@ -1,6 +1,6 @@
 // @flow
 import React, {Component} from 'react'
-import {View, Text} from 'react-native'
+import {View, Text, Image} from 'react-native'
 // import {sprintf} from 'sprintf-js'
 import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
 import {Icon} from '../../modules/UI/components/Icon/Icon.ui'
@@ -33,6 +33,16 @@ class TwoButtonTextModalComponent extends Component<Props, State> {
       <Text style={style.middle.text}>{this.props.middleText}</Text>
     </View>
   }
+  renderIcon = (style: any) => {
+    if (this.props.iconImage) {
+      return <Image source={this.props.iconImage} />
+    }
+    return <Icon
+      style={style.icon}
+      name={this.props.icon}
+      size={40}
+      type={this.props.iconType}/>
+  }
   render () {
     const modalBottom = <TwoButtonsComponent
       cancelText={this.props.cancelText}
@@ -41,11 +51,7 @@ class TwoButtonTextModalComponent extends Component<Props, State> {
       onCancel={this.props.onCancel} />
 
     const style = this.props.style
-    const icon = <Icon
-      style={style.icon}
-      name={this.props.icon}
-      size={40}
-      type={this.props.iconType}/>
+    const icon = this.renderIcon(style)
 
     return <StylizedModal
       visibilityBoolean={this.props.showModal}
@@ -54,7 +60,7 @@ class TwoButtonTextModalComponent extends Component<Props, State> {
       headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
       modalMiddle={this.renderMiddle(style)}
       modalBottom={modalBottom}
-      onExitButtonFxn={this.props.onCancel} />
+      onExitButtonFxn={this.props.onExitButtonFxn} />
   }
 }
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'airbitz-core-types'
+import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'edge-login'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -28,8 +28,10 @@ const dummyAbcTransaction: AbcTransaction = {
 
 const dummyAbcReceiveAddress: AbcReceiveAddress = {
   publicAddress: '',
-  metadata: {},
-  nativeAmount: ''
+  nativeAmount: '0',
+  'metadata': {
+    'amountFiat': 0
+  }
 }
 
 export const setTransactionDetailsRequest = (wallet: AbcCurrencyWallet, txid: string, currencyCode: string, abcMetadata: AbcMetadata): Promise<void> => {
@@ -133,7 +135,7 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
   return wallet.resyncBlockchain()
 }
 
-export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): String => {
+export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): string => {
   return wallet.getDisplayPrivateSeed()
 }
 

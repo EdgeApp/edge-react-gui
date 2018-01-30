@@ -67,24 +67,38 @@ test('initialState', () => {
         'selectedWalletListModalVisibility': false,
         'torchEnabled': false},
       'sendConfirmation': {
-        'displayAmount': undefined,
-        'draftStatus': 'under',
-        'error': null,
-        'feeSatoshi': 0,
-        'feeSetting': 'standard',
-        'inputCurrencySelected': 'fiat',
-        'isKeyboardVisible': false,
-        'isPinEnabled': false,
-        'isSliderLocked': false,
         'label': '',
-        'maxSatoshi': 0,
-        'parsedUri': {
-          'nativeAmount': '',
-          'publicAddress': ''
-        },
         'pending': false,
-        'publicAddress': '',
-        'transaction': null},
+        'isKeyboardVisible': false,
+        'forceUpdateGuiCounter': 0,
+        'transaction': {
+          'txid': '',
+          'date': 0,
+          'currencyCode': '',
+          'blockHeight': -1,
+          'nativeAmount': '0',
+          'networkFee': '',
+          'ourReceiveAddresses': [],
+          'signedTx': '',
+          'metadata': {},
+          'otherParams': {}
+        },
+        'parsedUri': {
+          'networkFeeOption': 'standard',
+          'customNetworkFee': {},
+          'publicAddress': '',
+          'nativeAmount': '0',
+          'metadata': {
+            'payeeName': '',
+            'category': '',
+            'notes': '',
+            'amountFiat': 0,
+            'bizId': 0,
+            'miscJson': ''
+          }
+        },
+        'error': null
+      },
       'sideMenu': {
         'view': false},
       'transactionAlert': {
@@ -140,6 +154,7 @@ test('initialState', () => {
       'WINGS': {
         'denomination': '1000000000000000000'
       },
+      'account': null,
       'autoLogoutTimeInSeconds': 3600,
       'bluetoothMode': false,
       'changesLocked': true,
@@ -152,6 +167,7 @@ test('initialState', () => {
       'merchantMode': false,
       'otpKey': null,
       'otpMode': false,
+      'otpResetDate': null,
       'pinMode': false,
       'plugins': {
         'arrayPlugins': [],

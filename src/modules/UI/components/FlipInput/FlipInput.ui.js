@@ -115,6 +115,9 @@ export default class FlipInput extends Component<Props, State> {
         secondaryDisplayAmount: UTILS.truncateDecimals(nextProps.secondaryDisplayAmount, 2)
       })
     }
+    if (nextProps.primaryInfo.displayCurrencyCode !== this.props.primaryInfo.displayCurrencyCode) {
+      setTimeout(() => this.onPrimaryAmountChange('0'), 50)
+    }
   }
 
   onPrimaryAmountChange = (primaryDisplayAmount: string) => {

@@ -13,7 +13,7 @@ import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
 export const mapStateToProps = (state: any) => {
   const data = [
     {
-      label: s.strings.change_mining_fee_title, // tie into
+      label: s.strings.title_change_mining_fee, // tie into
       value: Constants.CHANGE_MINING_FEE_VALUE
     },
     {

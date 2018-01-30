@@ -1,7 +1,7 @@
 // @flow
 
 import { connect } from 'react-redux'
-import type { AbcParsedUri, AbcCurrencyWallet } from 'airbitz-core-types'
+import type { AbcParsedUri, AbcCurrencyWallet } from 'edge-login'
 import { Actions } from 'react-native-router-flux'
 
 import Scan from './Scan.ui'
@@ -12,7 +12,7 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
 import { loginWithEdge } from '../../../../actions/indexActions'
 import { toggleEnableTorch, toggleAddressModal, disableScan, enableScan } from './action'
-import { updateParsedURI, updateWalletTransfer } from '../SendConfirmation/action.js'
+import { updateParsedURI, updateLabel } from '../SendConfirmation/action.js'
 
 import { toggleWalletListModal } from '../WalletTransferList/action'
 
@@ -39,7 +39,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),
   updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
-  updateWalletTransfer: wallet => dispatch(updateWalletTransfer(wallet)),
+  updateWalletTransfer: wallet => dispatch(updateLabel(wallet)),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   loginWithEdge: (url: string) => {
     Actions[Constants.EDGE_LOGIN]()

@@ -9,7 +9,7 @@ import StylizedModal from '../../components/Modal/Modal.ui'
 import {Icon} from '../../components/Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import {GuiWallet} from '../../../../types'
+import type { GuiWallet } from '../../../../types'
 import THEME from '../../../../theme/variables/airbitz'
 
 type CryptoExchangeConfirmTransactionModalOwnProps = {

@@ -54,7 +54,7 @@ class SubCategorySelect extends Component<Props, State> {
         usableHeight={this.props.usableHeight}
         style={[{width: platform.deviceWidth, height: platform.usableHeight}]}
         keyExtractor={this.keyExtractor}
-        height={this.props.usableHeight - 51}
+        height={this.props.usableHeight - 67}
         extraTopSpace={0}
       />
     )

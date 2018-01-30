@@ -27,7 +27,7 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
 import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'airbitz-core-types'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -372,7 +372,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const newAmountFiat = this.state.amountFiat
     const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
     const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
-    this.props.setTransactionDetails(txid, this.guiWallet.currencyCode, abcMetadata)
+    this.props.setTransactionDetails(txid, this.props.abcTransaction.currencyCode, abcMetadata)
   }
 
   componentDidMount () {
@@ -385,7 +385,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             } else {
               const filteredContacts = contacts
               .filter(item => item.givenName)
-              .sort((a, b) => a.givenName.toUpperCase() - b.givenName.toUpperCase())
+              .sort((a, b) =>
+                a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
+              )
               this.props.setContactList(filteredContacts)
             }
           })

@@ -1,10 +1,9 @@
 // @flow
 
 import {connect} from 'react-redux'
-import type {State} from '../../../ReduxTypes'
+import type {State, Dispatch} from '../../../ReduxTypes'
 import ChangeMiningFee, {
-  type ChangeMiningFeeStateProps,
-  type ChangeMiningFeeDispatchProps
+  type ChangeMiningFeeStateProps
 } from './ChangeMiningFee.ui.js'
 import { changeFee } from '../../../../actions/CryptoExchangeActions'
 
@@ -13,8 +12,8 @@ export const mapStateToProps = (state: State): ChangeMiningFeeStateProps => ({
   feeSetting: state.cryptoExchange.feeSetting
 })
 
-export const mapDispatchToProps = (dispatch: Dispatch): ChangeMiningFeeDispatchProps => ({
-  onSubmit: changeFee
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
+  onSubmit: (feeSetting: string) => dispatch(changeFee(feeSetting))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChangeMiningFee)

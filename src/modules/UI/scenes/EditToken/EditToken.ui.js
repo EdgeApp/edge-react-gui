@@ -20,9 +20,9 @@ import DeleteTokenButtons from './components/DeleteTokenButtons.ui.js'
 import * as Constants from '../../../../constants/indexConstants'
 import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
 import * as UTILS from '../../../utils'
-import type {AbcMetaToken} from 'airbitz-core-types'
 import type {CustomTokenInfo} from '../../../../types.js'
 
+import type {AbcMetaToken} from 'edge-login'
 import _ from 'lodash'
 
 export type EditTokenDispatchProps = {

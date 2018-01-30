@@ -2,7 +2,7 @@
 // import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
-import {ScrollView, Text, View} from 'react-native'
+import {ScrollView, Text, View, Alert} from 'react-native'
 import {Actions} from 'react-native-router-flux'
 
 import FAIcon from 'react-native-vector-icons/FontAwesome'
@@ -28,7 +28,7 @@ import styles from './style'
 import s from '../../../../locales/strings'
 
 import {ConfirmPasswordModalStyle} from '../../../../styles/indexStyles'
-import { AbcAccount } from 'airbitz-core-types'
+import type { AbcAccount } from 'edge-login'
 
 const DISABLE_TEXT = s.strings.string_disable
 
@@ -110,18 +110,18 @@ export default class SettingsOverview extends Component<Props, State> {
     // console.log('dummy routing')
   }
 
+  unlockSettingsAlert = () => Alert.alert(null, s.strings.settings_alert_unlock, [{text: s.strings.string_ok}])
   _onPressChangePasswordRouting = () => {
-    if (this.props.isLocked) return
-    Actions[Constants.CHANGE_PASSWORD]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PASSWORD]()
   }
-
   _onPressChangePinRouting = () => {
-    if (this.props.isLocked) return
-    Actions[Constants.CHANGE_PIN]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.CHANGE_PIN]()
+  }
+  _onPressOtp = () => {
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.OTP_SETUP]()
   }
   _onPressRecoverPasswordRouting = () => {
-    if (this.props.isLocked) return
-    Actions[Constants.RECOVER_PASSWORD]()
+    return this.props.isLocked ? this.unlockSettingsAlert() : Actions[Constants.RECOVER_PASSWORD]()
   }
 
   _onPressOpenLogoffTime = () => {
@@ -143,10 +143,6 @@ export default class SettingsOverview extends Component<Props, State> {
   _onToggleTouchIdOption = (bool: boolean) => {
     this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
     this.options.useTouchID.value = bool
-  }
-  _onPressOtp = () => {
-    if (this.props.isLocked) return
-    Actions[Constants.OTP_SETUP]()
   }
 
   _onPressDebug = () => {
@@ -197,6 +193,7 @@ export default class SettingsOverview extends Component<Props, State> {
           </Gradient>
           <RowRoute
             leftText={s.strings[this.props.lockButton]}
+            disabled={false}
             routeFunction={this.showConfirmPasswordModal}
             right={<Icon style={styles.settingsLocks}
               name={this.props.lockButtonIcon}
@@ -204,18 +201,22 @@ export default class SettingsOverview extends Component<Props, State> {
               type={Constants.ION_ICONS}/>} />
           <RowRoute
             leftText={s.strings.settings_button_change_password}
+            disabled={this.props.isLocked}
             routeFunction={this._onPressChangePasswordRouting}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
           <RowRoute
             leftText={s.strings.settings_button_pin}
+            disabled={this.props.isLocked}
             routeFunction={this._onPressChangePinRouting}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
           <RowRoute
             leftText={s.strings.settings_button_setup_two_factor}
+            disabled={this.props.isLocked}
             routeFunction={this._onPressOtp}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
           <RowRoute
             leftText={s.strings.settings_button_password_recovery}
+            disabled={this.props.isLocked}
             routeFunction={this._onPressRecoverPasswordRouting}
             right={<SimpleIcon style={styles.settingsRowRightArrow} name='arrow-right' />} />
 
@@ -236,6 +237,7 @@ export default class SettingsOverview extends Component<Props, State> {
               rightText={autoLogoutRightText} />
 
             <RowRoute
+              disabled={false}
               leftText={s.strings.settings_title_currency}
               routeFunction={Actions.defaultFiatSetting}
               right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
@@ -253,6 +255,7 @@ export default class SettingsOverview extends Component<Props, State> {
             {this.currencies.map(this.renderRowRoute)}
 
             <RowRoute
+              disabled={false}
               leftText={s.strings.settings_button_send_logs}
               scene={'changePassword'}
               routeFunction={this.showSendLogsModal} />
@@ -297,7 +300,7 @@ export default class SettingsOverview extends Component<Props, State> {
   hideConfirmPasswordModal = () => this.setState({showConfirmPasswordModal: false})
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
-  renderRowRoute = (x: Object, i: number) => <RowRoute key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
+  renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />
   renderRowSwitch = (x: string) => (
     <RowSwitch
       leftText={this.options[x] ? this.options[x].text : ''}

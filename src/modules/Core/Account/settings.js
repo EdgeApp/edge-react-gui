@@ -1,7 +1,5 @@
 // @flow
-import {
-  AbcAccount
-} from 'airbitz-core-types'
+import type { AbcAccount } from 'edge-login'
 
 import {
   categories

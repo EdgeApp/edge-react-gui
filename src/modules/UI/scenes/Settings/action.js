@@ -3,7 +3,7 @@
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
-import type { AbcAccount } from 'airbitz-core-types'
+import type { AbcAccount } from 'edge-login'
 import { enableTouchId, disableTouchId } from 'airbitz-core-js-ui'
 import type {
   GetState,

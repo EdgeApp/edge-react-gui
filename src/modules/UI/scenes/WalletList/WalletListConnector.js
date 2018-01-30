@@ -5,39 +5,50 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
-import type {State} from '../../../ReduxTypes'
+import type {State, Dispatch} from '../../../ReduxTypes'
 
 import { walletRowOption } from './components/WalletOptions/action.js'
-
 import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 
-const mapStateToProps = (state: State): {} => {
+const mapStateToProps = (state: State) => {
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
   const settings = SETTINGS_SELECTORS.getSettings(state)
-
+  const coreWallets = state.core.wallets.byId
+  const wallets = state.ui.wallets.byId
+  const activeWalletIds = UI_SELECTORS.getActiveWalletIds(state)
+  const archivedWalletIds = UI_SELECTORS.getArchivedWalletIds(state)
+  const walletArchivesVisible = state.ui.scenes.walletList.walletArchivesVisible
+  const walletName = state.ui.scenes.walletList.walletName
+  const walletId = state.ui.scenes.walletList.walletId
+  // $FlowFixMe
+  const walletOrder = state.ui.wallets.walletListOrder
+  const dimensions = state.ui.scenes.dimensions
+  const customTokens = state.ui.settings.customTokens
   return {
     settings,
-    coreWallets: state.core.wallets.byId,
-    wallets: state.ui.wallets.byId,
-    activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
-    archivedWalletIds: UI_SELECTORS.getArchivedWalletIds(state),
-    walletArchivesVisible: state.ui.scenes.walletList.walletArchivesVisible,
-    walletName: state.ui.scenes.walletList.walletName,
-    walletId: state.ui.scenes.walletList.walletId,
+    coreWallets,
+    wallets,
+    activeWalletIds,
+    archivedWalletIds,
+    walletArchivesVisible,
+    walletName,
+    walletId,
+    walletOrder,
     currencyConverter,
-    dimensions: state.ui.scenes.dimensions,
-    customTokens: state.ui.settings.customTokens
+    dimensions,
+    customTokens
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): {} => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
   setContactList: (contacts) => dispatch(setContactList(contacts)),
-  walletRowOption: (walletId: string, option: string, archived: boolean) => dispatch(walletRowOption(walletId, option, archived))
+  // $FlowFixMe
+  walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletList)

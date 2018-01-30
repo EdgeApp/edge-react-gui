@@ -1,11 +1,12 @@
 // @flow
 
 import { combineReducers } from 'redux'
-import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'airbitz-core-types'
+import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'edge-login'
 import _ from 'lodash'
 
-import { GuiWallet } from '../../../types.js'
+import type { GuiWallet } from '../../../types.js'
 import * as ACTION from './action'
+import * as Constants from '../../../constants/indexConstants.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import { UPDATE_WALLETS } from '../../Core/Wallets/action.js'
 import type { Action } from '../../ReduxTypes.js'
@@ -18,6 +19,23 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
   if (!action.data) return state
 
   switch (action.type) {
+    case Constants.ACCOUNT_INIT_COMPLETE: {
+      const wallets = action.data.currencyWallets
+      const out = {}
+      for (const walletId of Object.keys(wallets)) {
+        const tempWallet = schema(wallets[walletId])
+        if (state[walletId]) {
+          const enabledTokensOnWallet = state[walletId].enabledTokens
+          tempWallet.enabledTokens = enabledTokensOnWallet
+          enabledTokensOnWallet.forEach(customToken => {
+            tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
+          })
+        }
+        out[walletId] = tempWallet
+      }
+
+      return out
+    }
     case UPDATE_WALLETS: {
       const wallets = action.data.currencyWallets
       const out = {}
@@ -128,6 +146,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 }
 
 export const walletEnabledTokens = (state: any = {}, action: Action) => {
+  if (action.type === Constants.ACCOUNT_INIT_COMPLETE && action.data) {
+    return action.data.activeWalletIds
+  }
   if (action.type === UPDATE_WALLETS && action.data) {
     return action.data.activeWalletIds
   }
@@ -137,6 +158,9 @@ export const walletEnabledTokens = (state: any = {}, action: Action) => {
 
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
+  if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
+    return action.data.activeWalletIds
+  }
   if (action.type === UPDATE_WALLETS) {
     return action.data.activeWalletIds
   }
@@ -146,6 +170,9 @@ export const activeWalletIds = (state: WalletIds = [], action: Action) => {
 
 export const archivedWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
+  if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
+    return action.data.archivedWalletIds
+  }
   if (action.type === UPDATE_WALLETS) {
     return action.data.archivedWalletIds
   }
@@ -158,6 +185,11 @@ export const selectedWalletId = (state: WalletId = '', action: Action) => {
   switch (action.type) {
     case ACTION.SELECT_WALLET:
       return action.data.walletId
+    case Constants.ACCOUNT_INIT_COMPLETE:
+      if (action.data.walletId) {
+        return action.data.walletId
+      }
+      return state
     default:
       return state
   }
@@ -168,6 +200,11 @@ export const selectedCurrencyCode = (state: string = '', action: Action) => {
   switch (action.type) {
     case ACTION.SELECT_WALLET:
       return action.data.currencyCode
+    case Constants.ACCOUNT_INIT_COMPLETE:
+      if (action.data.currencyCode) {
+        return action.data.currencyCode
+      }
+      return state
     default:
       return state
   }
@@ -259,7 +296,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
 
-  const newWallet = new GuiWallet(
+  const newWallet: GuiWallet = {
     id,
     type,
     name,
@@ -275,7 +312,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
     symbolImageDarkMono,
     metaTokens,
     enabledTokens
-  )
+  }
 
   return newWallet
 }

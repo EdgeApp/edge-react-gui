@@ -54,7 +54,7 @@
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="peopleapp" android:host="people" /> // A
+        <data android:host="recovery.edgesecure.co" android:path="/recovery" android:scheme="https"></data>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
