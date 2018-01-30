@@ -386,6 +386,17 @@ export const getTimeInMinutes = (params: {measurement: string, value: number}): 
   return strategy(value)
 }
 
+export const convertAbcToGuiDenomination = (abcDenomination: AbcDenomination): GuiDenomination => {
+  const guiDenomination: GuiDenomination = {
+    name: abcDenomination.name,
+    currencyCode: abcDenomination.name,
+    symbol: abcDenomination.symbol ? abcDenomination.symbol : '',
+    multiplier: abcDenomination.multiplier,
+    precision: 0
+  }
+  return guiDenomination
+}
+
 export const noOp = (optionalArgument: any = null) => {
   return optionalArgument
 }
