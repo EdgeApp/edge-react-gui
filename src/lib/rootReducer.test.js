@@ -207,6 +207,7 @@ test('initialState', () => {
         'WINGS': {
           'denomination': '1000000000000000000'
         },
+        'account': null,
         'autoLogoutTimeInSeconds': 3600,
         'bluetoothMode': false,
         'changesLocked': true,
@@ -219,6 +220,7 @@ test('initialState', () => {
         'merchantMode': false,
         'otpKey': null,
         'otpMode': false,
+        'otpResetDate': null,
         'pinMode': false,
         'plugins': {
           'arrayPlugins': [],

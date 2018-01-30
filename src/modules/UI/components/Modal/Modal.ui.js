@@ -46,7 +46,7 @@ export default class StylizedModal extends Component<Props, State> {
         </TouchableOpacity>
       </View>
     }
-    return <View style={[styles.exitRow]} />
+    return <View style={[styles.exitRowEmpty]} />
   }
   render () {
     const {headerText, headerSubtext} = this.props

@@ -39,3 +39,6 @@ export const ERASE_DEEP_LINK = 'eraseDeepLink'
 export const DEEP_LINK_RECEIVED = 'deepLinkReceived'
 
 export const ACCOUNT_INIT_COMPLETE = 'accountInitComplete'
+
+// OTP
+export const DISABLE_OTP_RESET = 'disableOTPReset'

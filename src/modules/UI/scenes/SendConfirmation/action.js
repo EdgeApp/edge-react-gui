@@ -5,6 +5,7 @@ import { openABAlert } from '../../components/ABAlert/action'
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
+import { bns } from 'biggystring'
 import { type GuiMakeSpendInfo, getTransaction, getSpendInfo } from './selectors'
 import {
   getMaxSpendable,
@@ -29,13 +30,17 @@ export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 
 export const updateAmount = (
   nativeAmount: string,
-  metadata: AbcMetadata
-) =>
-  (dispatch: Dispatch) => {
-    dispatch(createTX({ nativeAmount, metadata }))
-  }
+  exchangeAmount: string,
+  fiatPerCrypto: string
+  ) =>
+(dispatch: Dispatch, getState: GetState) => {
+  const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
+  const amountFiat: number = parseFloat(amountFiatString)
+  const metadata: AbcMetadata = { amountFiat }
+  dispatch(createTX({ nativeAmount, metadata }, false))
+}
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = false) =>
+export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = true) =>
   (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const walletId = getSelectedWalletId(state)
