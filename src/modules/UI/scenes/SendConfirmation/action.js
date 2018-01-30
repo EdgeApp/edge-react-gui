@@ -35,7 +35,7 @@ export const updateAmount = (
     dispatch(createTX({ nativeAmount, metadata }))
   }
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = false) =>
+export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = true) =>
   (dispatch: Dispatch, getState: GetState) => {
     const state = getState()
     const walletId = getSelectedWalletId(state)
