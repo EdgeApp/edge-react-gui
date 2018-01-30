@@ -31,7 +31,7 @@ import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-export type Props = {
+export type TransactionDetailsOwnProps = {
   abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
@@ -43,7 +43,7 @@ export type Props = {
   wallets: Array<GuiWallet>
 }
 
-export type DispatchProps = {
+export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
   setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
@@ -52,7 +52,7 @@ export type DispatchProps = {
   displayDropdownAlert: (message: string, title: string) => void
 }
 
-export type State = {
+type State = {
   name: string, // remove commenting once metaData in Redux
   thumbnailPath: string,
   // hasThumbnail: boolean,
@@ -75,16 +75,18 @@ export type State = {
   walletDefaultDenomProps: AbcDenomination
 }
 
+type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
+
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
 const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
 const INCOME_TEXT = s.strings.fragment_transaction_income
 
-export class TransactionDetails extends Component<Props & DispatchProps, State> {
+export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   guiWallet: GuiWallet
   fiatSymbol: string
 
-  constructor (props: Props & DispatchProps) {
+  constructor (props: TransactionDetailsProps) {
     super(props)
     const dateTime = new Date(props.abcTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -346,7 +348,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     })
   }
 
-  onSelectCategory = (type: any) => {
+  onSelectCategory = (type: string) => {
     this.setState({type})
   }
 

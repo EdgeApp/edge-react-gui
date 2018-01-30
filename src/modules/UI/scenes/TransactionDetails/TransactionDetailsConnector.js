@@ -17,16 +17,16 @@ import {
 
 import {displayDropdownAlert} from '../../components/DropdownAlert/actions'
 import {setContactList} from '../../contacts/action'
-import {TransactionDetails} from './TransactionDetails.ui'
+import {TransactionDetails, type TransactionDetailsOwnProps} from './TransactionDetails.ui'
 
-const mapStateToProps = (state: State, ownProps: any) => {
+const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
   const wallets = UI_SELECTORS.getWallets(state)
   const contacts: Array<GuiContact> = state.ui.contacts.contactList
   const usableHeight: number = platform.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyCode: string = ownProps.abcTransaction.currencyCode
-  const plugins: any = SETTINGS_SELECTORS.getPlugins(state)
+  const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const arrayPlugins: Array<AbcCurrencyPlugin> = plugins.arrayPlugins
   const currencyInfo: AbcCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
 

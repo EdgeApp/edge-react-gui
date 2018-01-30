@@ -23,15 +23,14 @@ type GetSeedModalOwnProps = {
   onNegative: () => void,
   onDone: () => void,
   walletId: string,
-  getSeed: any,
+  getSeed: () => void,
   visibilityBoolean: boolean,
   onExitButtonFxn: () => void,
   privateSeedUnlocked: boolean
 }
 
 export type GetSeedModalStateProps = {
-  walletId: string,
-  getSeed: any
+  walletId: string
 }
 
 export type GetSeedModalDispatchProps = {
@@ -73,7 +72,7 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     this.props.onPositive(currentPassword)
   }
 
-  renderPasswordInput = (style: any) => {
+  renderPasswordInput = (style?: Object) => {
     const formStyle = {...MaterialInputOnWhite,
       container: {...MaterialInputOnWhite.container}
     }

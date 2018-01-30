@@ -5,7 +5,7 @@ import GetSeedModal, {
   type GetSeedModalDispatchProps,
   type GetSeedModalStateProps
 } from './GetSeedModal.ui'
-import type {Dispatch, GetState} from '../../../../../ReduxTypes'
+import type {State, Dispatch, GetState} from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import {CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME} from '../WalletOptions/action'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
@@ -20,7 +20,7 @@ const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, ge
   dispatch({ type: isPassword ? UNLOCK : LOCK })
 }
 
-const mapStateToProps = (state: any): GetSeedModalStateProps => {
+const mapStateToProps = (state: State): GetSeedModalStateProps => {
   const wallet = CORE_SELECTORS.getWallet(state, state.ui.scenes.walletList.walletId)
   const walletId = state.ui.scenes.walletList.walletId
 
