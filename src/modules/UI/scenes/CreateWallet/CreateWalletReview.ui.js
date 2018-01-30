@@ -30,9 +30,9 @@ export type CreateWalletReviewDispatchProps = {
   createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => void
 }
 
-export type CreateWalletReviewComponentProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps
+export type CreateWalletReviewProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps
 
-export class CreateWalletReviewComponent extends Component<CreateWalletReviewComponentProps> {
+export class CreateWalletReview extends Component<CreateWalletReviewProps> {
   onSubmit = (): void => {
     const { walletName, selectedWalletType, selectedFiat } = this.props
     this.props.createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value))

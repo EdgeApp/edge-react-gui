@@ -1,7 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
-import {AddTokenComponent,
+import {AddToken,
   type AddTokenOwnProps,
   type AddTokenDispatchProps,
   type AddTokenStateProps}
@@ -23,4 +23,4 @@ const mapDispatchToProps = (dispatch: Dispatch): AddTokenDispatchProps => ({
   }
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddTokenComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

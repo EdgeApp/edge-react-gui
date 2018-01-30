@@ -27,7 +27,7 @@ type CryptoExchangeConfirmTransactionModalOwnProps = {
   closeFunction(): void,
   confirmFunction(): void
 }
-export default class CryptoExchangeConfirmTransactionModalComponent extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
+export default class CryptoExchangeConfirmTransactionModal extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
   render () {
     const style = this.props.style
     const icon = <Icon

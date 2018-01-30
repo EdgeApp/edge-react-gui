@@ -2,7 +2,7 @@
 
 import {connect} from 'react-redux'
 import {
-  CreateWalletReviewComponent,
+  CreateWalletReview as CreateWalletReviewConnector,
   type CreateWalletReviewDispatchProps
 } from './CreateWalletReview.ui'
 
@@ -23,4 +23,4 @@ const mapDispatchToProps = (dispatch: Dispatch): CreateWalletReviewDispatchProps
   }
 })
 
-export const CreateWalletReview = connect(mapStateToProps, mapDispatchToProps)(CreateWalletReviewComponent)
+export const CreateWalletReview = connect(mapStateToProps, mapDispatchToProps)(CreateWalletReviewConnector)

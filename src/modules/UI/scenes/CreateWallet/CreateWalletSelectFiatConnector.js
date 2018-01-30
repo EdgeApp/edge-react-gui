@@ -2,7 +2,7 @@
 
 import {connect} from 'react-redux'
 import {
-  CreateWalletSelectFiatComponent,
+  CreateWalletSelectFiat as CreateWalletSelectFiatComponent,
   type CreateWalletSelectFiatStateProps
 } from './CreateWalletSelectFiat.ui'
 import type {State} from '../../../ReduxTypes'

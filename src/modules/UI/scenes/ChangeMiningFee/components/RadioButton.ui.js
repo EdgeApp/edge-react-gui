@@ -13,7 +13,7 @@ type RadioButtonOwnProps = {
   onPress: (value: string) => void,
 }
 
-export default class RadioButtonComponent extends Component<RadioButtonOwnProps> {
+export default class RadioButton extends Component<RadioButtonOwnProps> {
   handlePress = () => this.props.onPress(this.props.value)
 
   renderIcon () {

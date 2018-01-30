@@ -26,7 +26,7 @@ type State = {
   walletName: string
 }
 
-export class CreateWalletNameComponent extends Component<CreateWalletNameProps, State> {
+export class CreateWalletName extends Component<CreateWalletNameProps, State> {
   constructor (props: CreateWalletNameProps) {
     super(props)
     this.state = {

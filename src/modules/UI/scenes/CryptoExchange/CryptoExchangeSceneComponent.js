@@ -52,7 +52,7 @@ type CryptoExchangeSceneOwnProps = {
 type State = {
   whichWallet: string
 }
-export default class CryptoExchangeSceneComponent extends Component<CryptoExchangeSceneOwnProps, State> {
+export default class CryptoExchangeScene extends Component<CryptoExchangeSceneOwnProps, State> {
   componentWillMount () {
     this.setState({
       whichWallet: Constants.FROM

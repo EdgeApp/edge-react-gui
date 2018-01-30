@@ -12,7 +12,7 @@ import ModalButtons from './ModalButtons.ui'
 import {FormField} from '../../../../../components/indexComponents'
 import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
 
-type Props = {
+type ConfirmPasswordModalProps = {
   style: Object,
   headerText: string,
   showModal: boolean,
@@ -23,7 +23,7 @@ type Props = {
 type State = {
   confimPassword: string
 }
-export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props, State> {
+export default class CryptoExchangeConfirmTransactionModal extends Component<ConfirmPasswordModalProps, State> {
   componentWillMount () {
     this.setState({
       confimPassword: ''

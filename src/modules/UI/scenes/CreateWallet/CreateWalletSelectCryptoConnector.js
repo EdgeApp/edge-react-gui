@@ -2,7 +2,7 @@
 
 import {connect} from 'react-redux'
 import {
-  CreateWalletSelectCryptoComponent,
+  CreateWalletSelectCrypto as CreateWalletSelectCryptoComponent,
   type CreateWalletSelectCryptoStateProps
 } from './CreateWalletSelectCrypto.ui.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'

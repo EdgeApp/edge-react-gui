@@ -43,10 +43,10 @@ type State = {
   enabled?: boolean
 }
 
-export type AddTokenComponentProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
+export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
-export class AddTokenComponent extends Component<AddTokenComponentProps, State> {
-  constructor (props: AddTokenComponentProps) {
+export class AddToken extends Component<AddTokenProps, State> {
+  constructor (props: AddTokenProps) {
     super(props)
     this.state = {
       currencyName: '',

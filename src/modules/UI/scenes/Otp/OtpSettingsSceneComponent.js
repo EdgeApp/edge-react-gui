@@ -10,7 +10,7 @@ import s from '../../../../locales/strings.js'
 import {StaticModalComponent, TwoButtonTextModalComponent, ExpandableBoxComponent} from '../../../../components/indexComponents.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 
-type Props = {
+type OtpSettingsSceneProps = {
   isOtpEnabled: boolean,
   otpKey?: string,
   enableOtp(): void,
@@ -23,7 +23,7 @@ type State = {
   showConfirmationModal: boolean
 }
 
-export default class OtpSettingsSceneComponent extends Component<Props, State> {
+export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
   componentWillMount () {
     this.setState({
       showMessageModal: false,

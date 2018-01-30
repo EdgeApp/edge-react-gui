@@ -16,7 +16,7 @@ type EdgeLoginSceneProps = {
   decline(): void
 }
 
-export default class EdgeLoginSceneComponent extends Component<EdgeLoginSceneProps> {
+export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
   renderBody (style: Object) {
     let message = this.props.error
     if (!this.props.error) {
