@@ -50,7 +50,8 @@ export type SendConfirmationDispatchProps = {
   reset: () => any,
   updateAmount: (
     nativeAmount: string,
-    metadata: AbcMetadata
+    exchangeAmount: string,
+    fiatPerCrypto: string
   ) => any
 }
 
@@ -162,19 +163,12 @@ export class SendConfirmation extends Component<Props, State> {
     )
   }
 
-  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const amountFiatString: string = bns.mul(amounts.exchangeAmount, this.props.fiatPerCrypto.toString())
-    const amountFiat: number = parseFloat(amountFiatString)
-    const metadata: AbcMetadata = {amountFiat}
-    const nativeAmount: string = amounts.nativeAmount
-
-    this.props.updateAmount(nativeAmount, metadata)
-  }
-
   convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
     if (!primaryNativeAmount) { return '' }
     const primaryNativeToDisplayRatio = this.props.primaryCurrencyInfo.exchangeDenomination.multiplier
     const primaryDisplayAmount = convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
     return primaryDisplayAmount
+  onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
+    this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
   }
 }

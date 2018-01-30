@@ -94,8 +94,8 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
-  updateAmount: (nativeAmount: string, metadata: AbcMetadata) =>
-    dispatch(updateAmount(nativeAmount, metadata)),
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) =>
+    dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())
