@@ -22,19 +22,19 @@ import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConf
 import {IconButton} from '../../components/Buttons/IconButton.ui'
 import type { GuiWallet, GuiCurrencyInfo } from '../../../../types'
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
+import { getDenomFromIsoCode } from '../../../utils.js'
+import { emptyCurrencyInfo } from '../../../../types'
 
 export type CryptoExchangeSceneComponentStateProps = {
   // The following props are used to populate the CryptoExchangeFlipInputs
   fromWallet: GuiWallet,
   fromExchangeAmount: string,
   fromPrimaryInfo: GuiCurrencyInfo,
-  fromSecondaryInfo: GuiCurrencyInfo,
   fromButtonText: string,
   fromFiatToCrypto: number,
   toWallet: GuiWallet,
   toExchangeAmount: string,
   toPrimaryInfo: GuiCurrencyInfo,
-  toSecondaryInfo: GuiCurrencyInfo,
   toButtonText: string,
   toFiatToCrypto: number,
 
@@ -119,6 +119,29 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
 
   render () {
     const style = CryptoExchangeSceneStyle
+    let fromSecondaryInfo: GuiCurrencyInfo
+    if (this.props.fromWallet) {
+      fromSecondaryInfo = {
+        displayCurrencyCode: this.props.fromWallet.fiatCurrencyCode,
+        exchangeCurrencyCode: this.props.fromWallet.isoFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(this.props.fromWallet.fiatCurrencyCode),
+        exchangeDenomination: getDenomFromIsoCode(this.props.fromWallet.fiatCurrencyCode)
+      }
+    } else {
+      fromSecondaryInfo = emptyCurrencyInfo
+    }
+
+    let toSecondaryInfo: GuiCurrencyInfo
+    if (this.props.toWallet) {
+      toSecondaryInfo = {
+        displayCurrencyCode: this.props.toWallet.fiatCurrencyCode,
+        exchangeCurrencyCode: this.props.toWallet.isoFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(this.props.toWallet.fiatCurrencyCode),
+        exchangeDenomination: getDenomFromIsoCode(this.props.toWallet.fiatCurrencyCode)
+      }
+    } else {
+      toSecondaryInfo = emptyCurrencyInfo
+    }
 
     return (
       <SafeAreaView>
@@ -138,7 +161,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               buttonText={this.props.fromButtonText}
               currencyLogo={this.props.fromCurrencyIcon}
               primaryCurrencyInfo={this.props.fromPrimaryInfo}
-              secondaryCurrencyInfo={this.props.fromSecondaryInfo}
+              secondaryCurrencyInfo={fromSecondaryInfo}
               fiatPerCrypto={this.props.fromFiatToCrypto}
               overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
               forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
@@ -159,7 +182,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               buttonText={this.props.toButtonText}
               currencyLogo={this.props.toCurrencyIcon}
               primaryCurrencyInfo={this.props.toPrimaryInfo}
-              secondaryCurrencyInfo={this.props.toSecondaryInfo}
+              secondaryCurrencyInfo={toSecondaryInfo}
               fiatPerCrypto={this.props.toFiatToCrypto}
               overridePrimaryExchangeAmount={this.state.toExchangeAmount}
               forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
