@@ -40,6 +40,7 @@ export type SendConfirmationStateProps = {
   label: string,
   primaryDisplayDenomination: AbcDenomination,
   primaryExchangeDenomination: GuiDenomination,
+  secondaryeExchangeCurrencyCode: string,
   errorMsg: string | null,
   fiatPerCrypto: number,
   sliderDisabled: boolean,
@@ -118,10 +119,18 @@ export class SendConfirmation extends Component<Props, State> {
       exchangeDenomination: this.props.primaryExchangeDenomination
     }
 
+    let exchangeCurrencyCode = this.props.secondaryeExchangeCurrencyCode
+
+    if (this.props.secondaryeExchangeCurrencyCode === '') {
+      if (this.state.secondaryDisplayDenomination.currencyCode) {
+        exchangeCurrencyCode = this.state.secondaryDisplayDenomination.currencyCode
+      }
+    }
+
     const secondaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.fiatCurrencyCode,
       displayDenomination: this.state.secondaryDisplayDenomination,
-      exchangeCurrencyCode: this.state.secondaryDisplayDenomination.currencyCode ? this.state.secondaryDisplayDenomination.currencyCode : '',
+      exchangeCurrencyCode: exchangeCurrencyCode,
       exchangeDenomination: this.state.secondaryDisplayDenomination
     }
 

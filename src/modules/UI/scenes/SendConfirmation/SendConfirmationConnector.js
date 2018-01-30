@@ -32,12 +32,14 @@ import {
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
+  let secondaryeExchangeCurrencyCode = ''
   const guiWallet: GuiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    secondaryeExchangeCurrencyCode = isoFiatCurrencyCode
   }
 
   const transaction: AbcTransaction = getTransaction(state)
@@ -56,6 +58,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     fiatPerCrypto,
     currencyCode,
     pending,
+    secondaryeExchangeCurrencyCode,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
     primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
