@@ -2,8 +2,7 @@ import React, {Component} from 'react'
 import {
   View,
   TouchableHighlight,
-  Image,
-  KeyboardAvoidingView
+  Image
 } from 'react-native'
 import SearchResults from '../../components/SearchResults'
 import FormattedText from '../../components/FormattedText'
@@ -23,7 +22,7 @@ class ContactSearchResults extends Component {
         usableHeight={this.props.usableHeight}
         style={styles.SearchResults}
         keyExtractor={this.keyExtractor}
-        height={this.props.usableHeight - 32}
+        height={this.props.usableHeight - 60}
         extraTopSpace={-10}
       />
     )
@@ -33,7 +32,7 @@ class ContactSearchResults extends Component {
     const fullName = data.item.familyName ? data.item.givenName + ' ' + data.item.familyName : data.item.givenName
 
     return (
-      <KeyboardAvoidingView style={styles.singleContactWrap} behavior="height">
+      <View style={styles.singleContactWrap}>
         <TouchableHighlight style={[styles.singleContact]}
           onPress={() => onRegularSelectFxn(fullName, data.item.thumbnailPath)}
           underlayColor={styles.underlayColor.color}>
@@ -53,7 +52,7 @@ class ContactSearchResults extends Component {
             </View>
           </View>
         </TouchableHighlight>
-      </KeyboardAvoidingView>
+      </View>
     )
   }
 
