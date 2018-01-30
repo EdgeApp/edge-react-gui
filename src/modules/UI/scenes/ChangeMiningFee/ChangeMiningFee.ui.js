@@ -2,6 +2,7 @@
 
 import React, {Component} from 'react'
 import {View} from 'react-native'
+import SafeAreaView from '../../components/SafeAreaView'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 import RadioButton from './components/RadioButton.ui'
@@ -43,11 +44,12 @@ export class ChangeMiningFee extends Component<Props, State> {
     const { feeSetting } = this.state
 
     return (
-        <View style={styles.scene}>
+      <SafeAreaView>
+        <View style={styles.container}>
           <Gradient style={styles.gradient} />
 
           <View style={styles.content}>
-            <View key={FEE.HIGH_FEE} style={styles.row}>
+            <View style={styles.row}>
               <RadioButton
                 value={FEE.HIGH_FEE}
                 label={HIGH_FEE_TEXT}
@@ -56,7 +58,7 @@ export class ChangeMiningFee extends Component<Props, State> {
               />
             </View>
 
-            <View key={FEE.STANDARD_FEE} style={styles.row}>
+            <View style={styles.row}>
               <RadioButton
                 value={FEE.STANDARD_FEE}
                 label={STANDARD_FEE_TEXT}
@@ -65,7 +67,7 @@ export class ChangeMiningFee extends Component<Props, State> {
               />
             </View>
 
-            <View key={FEE.LOW_FEE} style={styles.row}>
+            <View style={styles.row}>
               <RadioButton
                 value={FEE.LOW_FEE}
                 label={LOW_FEE_TEXT}
@@ -76,6 +78,7 @@ export class ChangeMiningFee extends Component<Props, State> {
             <CustomFees handlePress={this.handlePress}/>
           </View>
         </View>
+      </SafeAreaView>
     )
   }
 }

@@ -4,13 +4,12 @@ import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = {
-
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
   },
   gradient: {
-    height: 66,
+    height: THEME.SPACER.HEADER,
     width: '100%',
     position: 'absolute'
   },
