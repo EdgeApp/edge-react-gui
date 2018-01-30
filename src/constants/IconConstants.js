@@ -16,6 +16,7 @@ export const RESYNC = 'refresh'
 export const SPLIT = 'code-fork'
 export const RENAME = 'edit'
 export const GET_SEED = 'user-secret'
+export const CUSTOM_FEES_ICON = 'wpexplorer'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'

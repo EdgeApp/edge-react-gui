@@ -84,6 +84,9 @@ test('initialState',
       },
       'error': null
     },
+    changeMiningFee: {
+      isCustomFeeVisible: false
+    },
     'sideMenu': {
       'view': false
     },
