@@ -19,15 +19,18 @@ import ABSlider from '../../components/Slider/index.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {
   convertNativeToExchange,
+  convertAbcToGuiDenomination,
+  getDenomFromIsoCode,
   convertNativeToDisplay,
   border
 } from '../../../utils.js'
-import type { CurrencyConverter, GuiCurrencyInfo } from '../../../../types'
-import type { AbcMetadata } from 'edge-login'
+import type { AbcDenomination } from 'edge-login'
+import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
 
 const DIVIDE_PRECISION = 18
 
 export type SendConfirmationStateProps = {
+  fiatCurrencyCode: string,
   currencyCode: string,
   nativeAmount: string,
   networkFee: string,
@@ -35,8 +38,8 @@ export type SendConfirmationStateProps = {
   pending: boolean,
   keyboardIsVisible: boolean,
   label: string,
-  primaryCurrencyInfo: GuiCurrencyInfo,
-  secondaryCurrencyInfo: GuiCurrencyInfo,
+  primaryDisplayDenomination: AbcDenomination,
+  primaryExchangeDenomination: GuiDenomination,
   errorMsg: string | null,
   fiatPerCrypto: number,
   sliderDisabled: boolean,
@@ -58,6 +61,7 @@ export type SendConfirmationDispatchProps = {
 type Props = SendConfirmationStateProps & SendConfirmationDispatchProps
 
 type State = {
+  secondaryDisplayDenomination: GuiDenomination,
   nativeAmount: string,
   overridePrimaryExchangeAmount: string,
   forceUpdateGuiCounter: number,
@@ -68,6 +72,11 @@ export class SendConfirmation extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     const newState: State = {
+      secondaryDisplayDenomination: {
+        name: '',
+        multiplier: '1',
+        symbol: ''
+      },
       overridePrimaryExchangeAmount: '',
       keyboardVisible: false,
       forceUpdateGuiCounter: 0,
@@ -77,18 +86,22 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   componentDidMount () {
-    const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-    this.setState({overridePrimaryExchangeAmount})
+    const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
+    const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
+    this.setState({ secondaryDisplayDenomination, overridePrimaryExchangeAmount })
   }
 
   componentWillReceiveProps (nextProps: Props) {
+    const newState = {}
     if (nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
-      const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-      this.setState({
-        overridePrimaryExchangeAmount,
-        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
-      })
+      const overridePrimaryExchangeAmount = bns.div(nextProps.nativeAmount, nextProps.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
+      newState.overridePrimaryExchangeAmount = overridePrimaryExchangeAmount
+      newState.forceUpdateGuiCounter = nextProps.forceUpdateGuiCounter
     }
+    if (nextProps.fiatCurrencyCode !== this.props.fiatCurrencyCode) {
+      newState.secondaryDisplayDenomination = getDenomFromIsoCode(nextProps.fiatCurrencyCode)
+    }
+    this.setState(newState)
   }
 
   componentWillUnmount () {
@@ -96,16 +109,34 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   render () {
-    let networkFeeSyntax
+    const primaryDisplayDenomination = convertAbcToGuiDenomination(this.props.primaryDisplayDenomination)
 
+    const primaryInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: this.props.currencyCode,
+      displayDenomination: primaryDisplayDenomination,
+      exchangeCurrencyCode: this.props.primaryExchangeDenomination.name,
+      exchangeDenomination: this.props.primaryExchangeDenomination
+    }
+
+    const secondaryInfo: GuiCurrencyInfo = {
+      displayCurrencyCode: this.props.fiatCurrencyCode,
+      displayDenomination: this.state.secondaryDisplayDenomination,
+      exchangeCurrencyCode: this.state.secondaryDisplayDenomination.currencyCode ? this.state.secondaryDisplayDenomination.currencyCode : '',
+      exchangeDenomination: this.state.secondaryDisplayDenomination
+    }
+
+    let networkFeeSyntax
     if (bns.gt(this.props.networkFee, '0')) {
-      const cryptoFeeSymbol = this.props.primaryCurrencyInfo.displayDenomination.symbol
-      const cryptoFeeAmount = this.convertPrimaryNativeToDisplay(this.props.networkFee)
+      const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
+      const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
+      const cryptoFeeAmount = this.props.networkFee
+        ? convertNativeToDisplay(cryptoFeeMultiplier)(this.props.networkFee)
+        : ''
       const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
-      const fiatFeeSymbol = this.props.secondaryCurrencyInfo.displayDenomination.symbol
-      const exchangeConvertor = convertNativeToExchange(this.props.primaryCurrencyInfo.exchangeDenomination.multiplier)
+      const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
+      const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
       const cryptoFeeExchangeAmount = exchangeConvertor(this.props.networkFee)
-      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, this.props.secondaryCurrencyInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+      const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
       const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
       const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
       const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
@@ -128,15 +159,15 @@ export class SendConfirmation extends Component<Props, State> {
                   </Text>
                   : <ExchangeRate
                     secondaryDisplayAmount={this.props.fiatPerCrypto}
-                    primaryInfo={this.props.primaryCurrencyInfo}
-                    secondaryInfo={this.props.secondaryCurrencyInfo} />
+                    primaryInfo={primaryInfo}
+                    secondaryInfo={secondaryInfo} />
               }
             </View>
 
             <View style={[styles.main, border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
               <ExchangedFlipInput
-                primaryCurrencyInfo={this.props.primaryCurrencyInfo}
-                secondaryCurrencyInfo={this.props.secondaryCurrencyInfo}
+                primaryCurrencyInfo={{ ...primaryInfo }}
+                secondaryCurrencyInfo={{ ...secondaryInfo }}
                 exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
                 overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
@@ -163,11 +194,6 @@ export class SendConfirmation extends Component<Props, State> {
     )
   }
 
-  convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
-    if (!primaryNativeAmount) { return '' }
-    const primaryNativeToDisplayRatio = this.props.primaryCurrencyInfo.exchangeDenomination.multiplier
-    const primaryDisplayAmount = convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
-    return primaryDisplayAmount
   onExchangeAmountChanged = ({ nativeAmount, exchangeAmount }: ExchangedFlipInputAmounts) => {
     this.props.updateAmount(nativeAmount, exchangeAmount, this.props.fiatPerCrypto.toString())
   }

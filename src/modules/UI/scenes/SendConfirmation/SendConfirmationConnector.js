@@ -2,8 +2,8 @@
 import { connect } from 'react-redux'
 import {SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
-import type { GuiWallet, GuiDenomination, GuiCurrencyInfo } from '../../../../types'
-import type { AbcTransaction, AbcMetadata } from 'edge-login'
+import type { GuiWallet } from '../../../../types'
+import type { AbcTransaction } from 'edge-login'
 import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
@@ -29,10 +29,6 @@ import {
   updateAmount,
   reset
 } from './action.js'
-import {
-  convertAbcToGuiDenomination,
-  getDenomFromIsoCode
-} from '../../../utils.js'
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
@@ -54,38 +50,19 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     errorMsg = error.message
   }
 
-  const primaryDisplayDenomination: GuiDenomination = convertAbcToGuiDenomination(getDisplayDenomination(state, currencyCode))
-  const primaryExchangeDenomination: GuiDenomination = getExchangeDenomination(state, currencyCode)
-  const secondaryExchangeDenomination: GuiDenomination = getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
-  const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
-  const primaryExchangeCurrencyCode: string = primaryExchangeDenomination.name
-  const secondaryExchangeCurrencyCode: string = secondaryExchangeDenomination.currencyCode ? secondaryExchangeDenomination.currencyCode : ''
-
-  const primaryCurrencyInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: currencyCode,
-    displayDenomination: primaryDisplayDenomination,
-    exchangeCurrencyCode: primaryExchangeCurrencyCode,
-    exchangeDenomination: primaryExchangeDenomination
-  }
-  const secondaryCurrencyInfo: GuiCurrencyInfo = {
-    displayCurrencyCode: guiWallet.fiatCurrencyCode,
-    displayDenomination: secondaryDisplayDenomination,
-    exchangeCurrencyCode: secondaryExchangeCurrencyCode,
-    exchangeDenomination: secondaryExchangeDenomination
-  }
-
   const out: SendConfirmationStateProps = {
     nativeAmount,
     errorMsg,
     fiatPerCrypto,
     currencyCode,
     pending,
+    fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
+    primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
     forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
-    primaryCurrencyInfo,
-    secondaryCurrencyInfo,
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)
