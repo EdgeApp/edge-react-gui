@@ -48,25 +48,19 @@ export default class CustomFeesModal extends Component<Props, State> {
     }
   }
 
-  renderModalMiddle = () => {
-    const rows = []
-    for (const feeSetting of this.props.customFeeSettings) {
-      rows.push(
-        <View style={[styles.feeInputWrap]} key={feeSetting}>
-          <FormField
-            keyboardType='numeric'
-            style={[styles.feeInput]}
-            placeholder={'0'}
-            onChangeText={this._onFeeSettingInputChange(feeSetting)}
-            value={this.state[feeSetting]}
-            label={s.strings[feeSetting] || feeSetting}
-            autoFocus
-          />
-        </View>
-      )
-    }
-    return rows
-  }
+  renderModalMiddle = () => this.props.customFeeSettings.map(feeSetting =>
+    <View style={[styles.feeInputWrap]} key={feeSetting}>
+      <FormField
+        keyboardType='numeric'
+        style={[styles.feeInput]}
+        placeholder={'0'}
+        onChangeText={this._onFeeSettingInputChange(feeSetting)}
+        value={this.state[feeSetting]}
+        label={s.strings[feeSetting] || feeSetting}
+        autoFocus
+      />
+    </View>
+  )
 
   render () {
     const modalMiddle = this.renderModalMiddle()
