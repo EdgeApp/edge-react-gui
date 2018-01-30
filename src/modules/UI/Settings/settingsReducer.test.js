@@ -28,7 +28,6 @@ test('initialState', () => {
     'autoLogoutTimeInSeconds': 3600,
     'bluetoothMode': false,
     'changesLocked': true,
-    'currencyInfos': {},
     'customTokens': [],
     'defaultFiat': 'USD',
     'isOtpEnabled': false,

@@ -212,7 +212,6 @@ test('initialState', () => {
         'bluetoothMode': false,
         'changesLocked': true,
         'customTokens': [],
-        'currencyInfos': {},
         'defaultFiat': 'USD',
         'isOtpEnabled': false,
         'isTouchEnabled': false,
