@@ -176,6 +176,7 @@ export class SendConfirmation extends Component<Props, State> {
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
                 exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
                 overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
+                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
               />
               <View style={[styles.feeArea]}>

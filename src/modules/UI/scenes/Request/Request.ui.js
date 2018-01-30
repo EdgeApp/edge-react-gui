@@ -159,6 +159,7 @@ export class Request extends Component<Props, State> {
               secondaryCurrencyInfo={secondaryCurrencyInfo}
               exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
               overridePrimaryExchangeAmount={''}
+              forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
               color={color} />
 
