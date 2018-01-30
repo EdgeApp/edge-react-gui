@@ -15,6 +15,7 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import ManageTokenRow from './ManageTokenRow.ui.js'
 import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
 import styles from './style.js'
+import _ from 'lodash'
 
 export type Props = {
   guiWallet: GuiWallet,
@@ -22,7 +23,6 @@ export type Props = {
   settingsCustomTokens: Array<CustomTokenInfo>
 }
 export type DispatchProps = {
-  getEnabledTokensList: (string) => void,
   setEnabledTokensList: (string, Array<string>, Array<string>) => void
 }
 export type State = {
@@ -103,11 +103,11 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
               <View style={[styles.buttonsArea]}>
                 <SecondaryButton
                   style={[styles.addButton]}
-                  text={'Add'}
+                  text={s.strings.addtoken_add}
                   onPressFunction={this.goToAddTokenScene}
                 />
                 <PrimaryButton
-                  text={'Save'}
+                  text={s.strings.string_save}
                   style={[styles.saveButton]}
                   onPressFunction={this.saveEnabledTokenList}
                   processingElement={<ActivityIndicator />}
@@ -136,9 +136,16 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
     )
   }
 
+  _onAddToken = (currencyCode: string) => {
+    const newEnabledList = _.union(this.state.enabledList, [currencyCode])
+    this.setState({
+      enabledList: newEnabledList
+    })
+  }
+
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions.addToken({walletId: id, metaTokens})
+    Actions.addToken({walletId: id, metaTokens, onAddToken: this._onAddToken})
   }
 
   goToEditTokenScene = (currencyCode: string) => {

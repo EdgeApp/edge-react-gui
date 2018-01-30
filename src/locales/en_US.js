@@ -33,6 +33,7 @@ const strings = {
   addtoken_invalid_information: 'Please enter valid token information and try again',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
+  addtoken_add: 'Add',
   edittoken_top_instructions: 'Fill out token info and tap \'Save\' to edit token:',
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
