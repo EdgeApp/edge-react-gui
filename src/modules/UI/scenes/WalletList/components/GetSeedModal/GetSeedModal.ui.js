@@ -100,7 +100,7 @@ export default class GetSeed extends Component<Props, State> {
       headerText={s.strings.fragment_wallets_get_seed_wallet}
       modalMiddle={modalMiddle}
       modalBottom={modalBottom}
-      modalBottomStyle={{height}}
+      modalBottomStyle={this.props.privateSeedUnlocked ? styles.getSeedModalBottomStyle : {height}}
       style={styles.getSeedModal}
       visibilityBoolean={this.props.visibilityBoolean}
       onExitButtonFxn={this.props.onExitButtonFxn}

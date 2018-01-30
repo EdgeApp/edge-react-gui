@@ -365,8 +365,10 @@ export const styles = {
   emptyRowUnderlay: {
     color: THEME.COLORS.ROW_PRESSED
   },
-  getSeedModal: {
-    top: platform.deviceHeight / 18
+  getSeedModal: {},
+  getSeedModalBottomStyle: {
+    marginTop: (Platform.OS === 'ios')
+      ? 44 : 15
   }
 }
 
