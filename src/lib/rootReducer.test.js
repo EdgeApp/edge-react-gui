@@ -150,6 +150,9 @@ test('initialState', () => {
           },
           'error': null
         },
+        changeMiningFee: {
+          isCustomFeeVisible: false
+        },
         'sideMenu': {
           'view': false},
         'transactionAlert': {
@@ -168,7 +171,6 @@ test('initialState', () => {
           'deleteWalletModalVisible': false,
           'getSeedWalletModalVisible': false,
           'privateSeedUnlocked': false,
-          'customWalletModalVisible': false,
           'renameWalletInput': '',
           'renameWalletModalVisible': false,
           'resyncWalletModalVisible': false,

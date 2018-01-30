@@ -8,7 +8,6 @@ import type { CustomFees } from './CustomFeesModal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import type { Dispatch, State } from '../../../../../ReduxTypes'
 import {
-  VISIBLE_MODAL_NAME,
   CLOSE_MODAL_VALUE
 } from '../../../WalletList/components/WalletOptions/action'
 
@@ -25,7 +24,7 @@ const mapStateToProps = (state: State) => {
   }
   return ({
     customFeeSettings: customFeeSettings,
-    visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.CUSTOM_FEES)]
+    visibilityBoolean: state.ui.scenes.changeMiningFee.isCustomFeeVisible
   })
 }
 

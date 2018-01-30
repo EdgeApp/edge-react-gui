@@ -83,6 +83,9 @@ test('initialState',
       },
       'error': null
     },
+    changeMiningFee: {
+      isCustomFeeVisible: false
+    },
     'sideMenu': {
       'view': false
     },
@@ -107,7 +110,6 @@ test('initialState',
       'renameWalletInput': '',
       'renameWalletModalVisible': false,
       'resyncWalletModalVisible': false,
-      'customWalletModalVisible': false,
       'splitWalletModalVisible': false,
       'walletArchivesVisible': false,
       'walletId': '',

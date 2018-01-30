@@ -35,12 +35,6 @@ export const WALLET_OPTIONS = {
     label: s.strings.string_split,
     modalVisible: true
   },
-  CUSTOM_FEES: {
-    value: 'custom',
-    currencyCode: 'NON',
-    label: s.strings.string_custom_fee,
-    modalVisible: true
-  },
   MANAGE_TOKENS: {
     value: 'manageTokens',
     currencyCode: 'ETH',
