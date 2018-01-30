@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {
   View,
-  ScrollView,
   ActivityIndicator
 } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -158,8 +157,7 @@ export class SendConfirmation extends Component<Props, State> {
       <SafeAreaView>
         <Gradient style={[styles.view]}>
           <Gradient style={styles.gradient} />
-          <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
-
+          <View style={[styles.mainScrollView]}>
             <View style={[styles.exchangeRateContainer, border()]}>
               {
                 this.props.errorMsg
@@ -172,8 +170,7 @@ export class SendConfirmation extends Component<Props, State> {
                     secondaryInfo={secondaryInfo} />
               }
             </View>
-
-            <View style={[styles.main, border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <View style={[styles.main, border('yellow')]}>
               <ExchangedFlipInput
                 primaryCurrencyInfo={{ ...primaryInfo }}
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
@@ -197,7 +194,7 @@ export class SendConfirmation extends Component<Props, State> {
                 onSlidingComplete={this.props.signBroadcastAndSave}
                 sliderDisabled={this.props.sliderDisabled} />
             </View>
-          </ScrollView>
+          </View>
         </Gradient>
       </SafeAreaView>
     )
