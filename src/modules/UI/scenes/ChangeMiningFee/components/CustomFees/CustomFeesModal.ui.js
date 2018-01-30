@@ -53,7 +53,6 @@ export default class CustomFeesModal extends Component<Props, State> {
       <FormField
         keyboardType='numeric'
         style={[styles.feeInput]}
-        placeholder={'0'}
         onChangeText={this._onFeeSettingInputChange(feeSetting)}
         value={this.state[feeSetting]}
         label={s.strings[feeSetting] || feeSetting}
