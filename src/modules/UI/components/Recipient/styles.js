@@ -6,7 +6,7 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 35,
+    marginVertical: 15,
     marginHorizontal: 35
   },
   text: {
