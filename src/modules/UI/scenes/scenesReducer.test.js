@@ -10,7 +10,6 @@ test('initialState',
       'view': false
     },
     'controlPanel': {
-      'selectedUser': null,
       'usersView': false
     },
     'createWallet': {
