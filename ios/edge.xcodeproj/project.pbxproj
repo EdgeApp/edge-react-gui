@@ -50,6 +50,7 @@
 		4F81D22B9DB543B0AE7F2FFD /* SourceSansPro-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5DB5F067BAB54454803A6B66 /* SourceSansPro-BlackItalic.ttf */; };
 		52C52276F2F94D9BB9320EBA /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC960AB014EF4BF1AA8168B3 /* MaterialCommunityIcons.ttf */; };
 		5753E201C6234F3D898201B7 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB5F84A172E9414BB03C915D /* rubicon-icon-font.ttf */; };
+		5BAA3C128D704DE69375C368 /* libRNHockeyApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1D1964B28B54AF899488F47 /* libRNHockeyApp.a */; };
 		5CF93FF4F18358DA303BFA57 /* libPods-edge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EB5B764809C6E2BDDD47714 /* libPods-edge.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		616C6CFF5A964D1EA3479259 /* libRCTLocale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 151AD25B74474F3FBA9C2417 /* libRCTLocale.a */; };
@@ -105,7 +106,6 @@
 		FD6D9F211FABEF8300D4998E /* libRCTSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD6D9F011FABEF3A00D4998E /* libRCTSplashScreen.a */; };
 		FD982BCA1FABFDF40057F035 /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = FD982BC91FABFDF40057F035 /* splash.png */; };
 		FD982BCC1FACDEF00057F035 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */; };
-		FDD9C0D41F1C46ED004372CA /* RNHockeyApp.m in Sources */ = {isa = PBXBuildFile; fileRef = FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -522,6 +522,27 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = AbcCoreJsUi;
 		};
+		DAEADA402022582100BB3EB4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 980AF5931F9907460014FACB /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2DCCC1751FDF4F93007C5315;
+			remoteInfo = "RNSound-tvOS";
+		};
+		DAEADA9B202259BE00BB3EB4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = AB971BC238EAE1A78A7A9DA638F59960;
+			remoteInfo = "HockeySDK-HockeySDKResources";
+		};
+		DAEADADC202259BE00BB3EB4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE88CAB61BF54DF185FC7866 /* RNHockeyApp.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 73DDCB891EF02ADD008888CA;
+			remoteInfo = RNHockeyApp;
+		};
 		E63A3C1B200DF08400142D79 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E63A3C01200DF08400142D79 /* RCTPushNotification.xcodeproj */;
@@ -563,13 +584,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 9F90C2241D619E9400F3E238;
 			remoteInfo = RCTSplashScreen;
-		};
-		FDD9C0A01F1C46BD004372CA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AB971BC238EAE1A78A7A9DA638F59960;
-			remoteInfo = "HockeySDK-HockeySDKResources";
 		};
 		FDD9C0A21F1C46BD004372CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -688,6 +702,7 @@
 		C97FCA27CAF047368D3B0458 /* libRNRandomBytes.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRandomBytes.a; sourceTree = "<group>"; };
 		CB5F84A172E9414BB03C915D /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		CC800BDD23974A43B61E2048 /* libRNDeviceInfo.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNDeviceInfo.a; sourceTree = "<group>"; };
+		D1D1964B28B54AF899488F47 /* libRNHockeyApp.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNHockeyApp.a; sourceTree = "<group>"; };
 		D508A63DA69244B691ABB3A5 /* AbcCoreJsUi.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AbcCoreJsUi.xcodeproj; path = "../node_modules/airbitz-core-js-ui/ios/AbcCoreJsUi.xcodeproj"; sourceTree = "<group>"; };
 		D55A245786234924ABF5C5DA /* libRNFastCrypto.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFastCrypto.a; sourceTree = "<group>"; };
 		D5DF84AD90B142838C4B352E /* libRNFS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNFS.a; sourceTree = "<group>"; };
@@ -702,14 +717,13 @@
 		E6DE0BE920054BF30004097A /* RNBackgroundFetch.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNBackgroundFetch.xcodeproj; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch.xcodeproj"; sourceTree = "<group>"; };
 		E938232DFFFF4A8283C2F074 /* libRNShare.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNShare.a; sourceTree = "<group>"; };
 		EBA591522D6147A6BF1354C4 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
+		EE88CAB61BF54DF185FC7866 /* RNHockeyApp.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNHockeyApp.xcodeproj; path = "../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp.xcodeproj"; sourceTree = "<group>"; };
 		F26E8A5C8E81402E91DB24A3 /* libUdpSockets.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libUdpSockets.a; sourceTree = "<group>"; };
 		F4D44BFC0C7E41B4BEBA4B07 /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = TcpSockets.xcodeproj; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; };
 		FD6D9EE51FABEF3A00D4998E /* RCTSplashScreen.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSplashScreen.xcodeproj; path = "../node_modules/react-native-smart-splash-screen/ios/RCTSplashScreen/RCTSplashScreen.xcodeproj"; sourceTree = "<group>"; };
 		FD982BC91FABFDF40057F035 /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = "<group>"; };
 		FD982BCB1FACDEF00057F035 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = Pods/Pods.xcodeproj; sourceTree = "<group>"; };
-		FDD9C0D21F1C46ED004372CA /* RNHockeyApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RNHockeyApp.h; path = "../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp.h"; sourceTree = "<group>"; };
-		FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNHockeyApp.m; path = "../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -764,6 +778,7 @@
 				823813F3F2D141698C85559A /* libRCTBEEPickerManager.a in Frameworks */,
 				2BF22CBA5CEB43CF94F2C2B1 /* libRNMail.a in Frameworks */,
 				E6DE0C2820054CCC0004097A /* libRNBackgroundFetch.a in Frameworks */,
+				5BAA3C128D704DE69375C368 /* libRNHockeyApp.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1130,8 +1145,6 @@
 				FD6D9EE51FABEF3A00D4998E /* RCTSplashScreen.xcodeproj */,
 				980AF5931F9907460014FACB /* RNSound.xcodeproj */,
 				255BC1B71F1EC87C008C57CC /* Secp256k1.framework */,
-				FDD9C0D21F1C46ED004372CA /* RNHockeyApp.h */,
-				FDD9C0D31F1C46ED004372CA /* RNHockeyApp.m */,
 				FDD9C0981F1C46BD004372CA /* Pods.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -1165,6 +1178,7 @@
 				D508A63DA69244B691ABB3A5 /* AbcCoreJsUi.xcodeproj */,
 				2BF0E6DD44C34212B790AA9C /* RCTBEEPickerManager.xcodeproj */,
 				D8A4F000025E4FB6B7D895BB /* RNMail.xcodeproj */,
+				EE88CAB61BF54DF185FC7866 /* RNHockeyApp.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1210,6 +1224,7 @@
 			isa = PBXGroup;
 			children = (
 				980AF5C91F9907460014FACB /* libRNSound.a */,
+				DAEADA412022582100BB3EB4 /* libRNSound-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1255,6 +1270,7 @@
 				3359707856FB42188A179E0E /* libAbcCoreJsUi.a */,
 				38CF5140901F4B05B5C578A1 /* libRCTBEEPickerManager.a */,
 				1D2ECF3DE430464283E42F9E /* libRNMail.a */,
+				D1D1964B28B54AF899488F47 /* libRNHockeyApp.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -1271,6 +1287,14 @@
 			isa = PBXGroup;
 			children = (
 				DACFA6C21F8817B6004F8BD9 /* libAbcCoreJsUi.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DAEADAD9202259BE00BB3EB4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DAEADADD202259BE00BB3EB4 /* libRNHockeyApp.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1328,7 +1352,7 @@
 		FDD9C0991F1C46BD004372CA /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FDD9C0A11F1C46BD004372CA /* HockeySDKResources.bundle */,
+				DAEADA9C202259BE00BB3EB4 /* HockeySDKResources.bundle */,
 				FDD9C0A31F1C46BD004372CA /* libPods-edge.a */,
 				FDD9C0A51F1C46BD004372CA /* libPods-edgeTests.a */,
 			);
@@ -1575,6 +1599,10 @@
 				{
 					ProductGroup = 6E1091421EB0512200947A0B /* Products */;
 					ProjectRef = 1B6A6174519B479885305633 /* RNFS.xcodeproj */;
+				},
+				{
+					ProductGroup = DAEADAD9202259BE00BB3EB4 /* Products */;
+					ProjectRef = EE88CAB61BF54DF185FC7866 /* RNHockeyApp.xcodeproj */;
 				},
 				{
 					ProductGroup = 6E10911A1EB0512100947A0B /* Products */;
@@ -2023,6 +2051,27 @@
 			remoteRef = DACFA6C11F8817B6004F8BD9 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		DAEADA412022582100BB3EB4 /* libRNSound-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSound-tvOS.a";
+			remoteRef = DAEADA402022582100BB3EB4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAEADA9C202259BE00BB3EB4 /* HockeySDKResources.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = HockeySDKResources.bundle;
+			remoteRef = DAEADA9B202259BE00BB3EB4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DAEADADD202259BE00BB3EB4 /* libRNHockeyApp.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNHockeyApp.a;
+			remoteRef = DAEADADC202259BE00BB3EB4 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		E63A3C1C200DF08400142D79 /* libRCTPushNotification.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -2063,13 +2112,6 @@
 			fileType = archive.ar;
 			path = libRCTSplashScreen.a;
 			remoteRef = FD6D9F001FABEF3A00D4998E /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		FDD9C0A11F1C46BD004372CA /* HockeySDKResources.bundle */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = HockeySDKResources.bundle;
-			remoteRef = FDD9C0A01F1C46BD004372CA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		FDD9C0A31F1C46BD004372CA /* libPods-edge.a */ = {
@@ -2297,7 +2339,6 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				FDD9C0D41F1C46ED004372CA /* RNHockeyApp.m in Sources */,
 				DABD017420086AAF00C51EF3 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2368,12 +2409,14 @@
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
+					"$(SRCROOT)/../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp",
 				);
 				INFOPLIST_FILE = edgeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2419,12 +2462,14 @@
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
+					"$(SRCROOT)/../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp",
 				);
 				INFOPLIST_FILE = edgeTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2480,6 +2525,7 @@
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
+					"$(SRCROOT)/../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -2535,6 +2581,7 @@
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
 					"$(SRCROOT)/../node_modules/react-native-background-fetch/ios/RNBackgroundFetch",
+					"$(SRCROOT)/../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp",
 				);
 				INFOPLIST_FILE = edge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
@@ -2587,11 +2634,14 @@
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
+					"$(SRCROOT)/../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp",
 				);
 				INFOPLIST_FILE = "edge-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2647,11 +2697,14 @@
 					"$(SRCROOT)/../node_modules/airbitz-core-js-ui/ios",
 					"$(SRCROOT)/../node_modules/react-native-picker/ios/RCTBEEPickerManager",
 					"$(SRCROOT)/../node_modules/react-native-mail/RNMail",
+					"$(SRCROOT)/../node_modules/react-native-hockeyapp/RNHockeyApp/RNHockeyApp",
 				);
 				INFOPLIST_FILE = "edge-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -2692,6 +2745,8 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.edge-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2716,6 +2771,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
