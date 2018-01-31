@@ -372,7 +372,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     const newAmountFiat = this.state.amountFiat
     const amountFiat:number = (!newAmountFiat) ? 0.00 : Number.parseFloat(newAmountFiat)
     const abcMetadata: AbcMetadata = {name, category, notes, amountFiat, bizId, miscJson}
-    this.props.setTransactionDetails(txid, this.guiWallet.currencyCode, abcMetadata)
+    this.props.setTransactionDetails(txid, this.props.abcTransaction.currencyCode, abcMetadata)
   }
 
   componentDidMount () {

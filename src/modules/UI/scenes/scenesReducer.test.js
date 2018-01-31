@@ -55,6 +55,7 @@ test('initialState',
       'label': '',
       'pending': false,
       'isKeyboardVisible': false,
+      'forceUpdateGuiCounter': 0,
       'transaction': {
         'txid': '',
         'date': 0,
@@ -82,6 +83,9 @@ test('initialState',
         }
       },
       'error': null
+    },
+    changeMiningFee: {
+      isCustomFeeVisible: false
     },
     'sideMenu': {
       'view': false

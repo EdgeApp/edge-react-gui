@@ -85,6 +85,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
           <View style={style.headerImageContainer} >
             {this.renderImage(style)}
           </View>
+          <View style={style.headerTopShim} />
           <View style={style.headerTextRow} >
             <Text style={style.bodyText}>
               {title}

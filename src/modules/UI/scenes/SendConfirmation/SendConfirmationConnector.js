@@ -1,6 +1,6 @@
 // @flow
 import { connect } from 'react-redux'
-import SendConfirmation, {type StateProps, type DispatchProps} from './SendConfirmation.ui'
+import {SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet } from '../../../../types'
 import type { AbcTransaction } from 'edge-login'
@@ -20,6 +20,7 @@ import {
   getPublicAddress,
   getKeyboardIsVisible,
   getLabel,
+  getForceUpdateGuiCounter,
   getNetworkFee
 } from './selectors'
 import {
@@ -29,14 +30,16 @@ import {
   reset
 } from './action.js'
 
-const mapStateToProps = (state: State): StateProps => {
+const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
+  let secondaryeExchangeCurrencyCode = ''
   const guiWallet: GuiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     fiatPerCrypto = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    secondaryeExchangeCurrencyCode = isoFiatCurrencyCode
   }
 
   const transaction: AbcTransaction = getTransaction(state)
@@ -49,39 +52,30 @@ const mapStateToProps = (state: State): StateProps => {
     errorMsg = error.message
   }
 
-  return {
+  const out: SendConfirmationStateProps = {
     nativeAmount,
     errorMsg,
     fiatPerCrypto,
     currencyCode,
     pending,
+    secondaryeExchangeCurrencyCode,
+    fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
+    primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
+    forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
-    // $FlowFixMe
-    primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
-    primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
-    secondaryDisplayCurrencyCode: guiWallet.fiatCurrencyCode,
-    secondaryExchangeCurrencyCode: guiWallet.isoFiatCurrencyCode,
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)
   }
+  return out
 }
 
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  updateAmount: (
-    primaryDisplayAmount: string,
-    secondaryDisplayAmount: string,
-    primaryMultiplier: string,
-    secondaryMultiplier: string
-  ) =>
-    dispatch(updateAmount(
-      primaryDisplayAmount,
-      secondaryDisplayAmount,
-      primaryMultiplier,
-      secondaryMultiplier
-    )),
+const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) =>
+    dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())

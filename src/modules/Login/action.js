@@ -13,7 +13,7 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-// import {updateWalletsRequest} from '../Core/Wallets/action.js'
+import {updateWalletsRequest} from '../Core/Wallets/action.js'
 import PushNotification from 'react-native-push-notification'
 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
@@ -118,6 +118,8 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
     dispatch(actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, accountInitObject))
+    // $FlowFixMe
+    dispatch(updateWalletsRequest())
   } catch (e) {
     console.log(e)
     console.log(' The initialization blew up ')
@@ -146,7 +148,9 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
   Actions.popTo(Constants.LOGIN, {username})
   dispatch(actions.dispatchActionString(Constants.DEEP_LINK_RECEIVED, backupKey))
   // dispatch(logout(Constants.DEEP_LINK_RECEIVED))
-  account.logout()
+  if (!account) {
+    account.logout()
+  }
 }
 
 export const logout = (username?: string) => ({
