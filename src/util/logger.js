@@ -38,8 +38,8 @@ async function writeLog (content) {
     } else {
       return await RNFS.writeFile(path, content)
     }
-  } catch (err) {
-    console.log((err && err.message) || err)
+  } catch (e) {
+    console.log((e && e.message) || e)
   }
 }
 

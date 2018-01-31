@@ -7,7 +7,7 @@ import s from '../../../../locales/strings.js'
 import {border} from '../../../utils'
 import styles from './styles'
 
-const CHANGE_MINING_FEE_TEXT = s.strings.change_mining_fee_title
+const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
 const CHANGE_CURRENCY_TEXT = s.strings.change_currency_fee
 const SEND_MAX_TEXT = s.strings.send_confirmation_max_button_title
 const HELP_TEXT = s.strings.string_help

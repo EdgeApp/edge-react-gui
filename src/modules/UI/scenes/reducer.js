@@ -4,6 +4,7 @@ import { combineReducers } from 'redux'
 
 import scan from './Scan/reducer'
 import sendConfirmation from './SendConfirmation/reducer'
+import changeMiningFee from './ChangeMiningFee/reducer'
 import transactionList from './TransactionList/reducer'
 import transactionDetails from './TransactionDetails/reducer'
 import walletList from './WalletList/reducer'
@@ -24,6 +25,7 @@ import dimensions from '../dimensions/reducer'
 export const scenes = combineReducers({
   scan,
   sendConfirmation,
+  changeMiningFee,
   transactionList,
   transactionDetails,
   controlPanel,

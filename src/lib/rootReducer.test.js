@@ -53,6 +53,7 @@ test('initialState', () => {
       'toWallet': null,
       'toWalletPrimaryInfo': null,
       'transaction': null,
+      'forceUpdateGuiCounter': 0,
       'walletListModalVisible': false},
     'exchangeRates': 0,
     'ui': {
@@ -150,6 +151,9 @@ test('initialState', () => {
             }
           },
           'error': null
+        },
+        changeMiningFee: {
+          isCustomFeeVisible: false
         },
         'sideMenu': {
           'view': false},

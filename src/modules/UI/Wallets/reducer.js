@@ -4,7 +4,7 @@ import { combineReducers } from 'redux'
 import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'edge-login'
 import _ from 'lodash'
 
-import { GuiWallet } from '../../../types.js'
+import type { GuiWallet } from '../../../types.js'
 import * as ACTION from './action'
 import * as Constants from '../../../constants/indexConstants.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
@@ -296,7 +296,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
 
-  const newWallet = new GuiWallet(
+  const newWallet: GuiWallet = {
     id,
     type,
     name,
@@ -312,7 +312,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
     symbolImageDarkMono,
     metaTokens,
     enabledTokens
-  )
+  }
 
   return newWallet
 }
