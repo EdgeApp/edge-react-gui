@@ -48,6 +48,7 @@ const strings = {
   fragment_excahnge_wallet_from_header_title: 'Choose a wallet to exchange funds from:',
   fragment_excahnge_wallet_to_header_title: 'Choose a wallet to exchange funds to:',
   fragment_insufficient_funds: 'insufficient funds',
+  fragmet_invalid_password: 'Invalid Password',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
   fragment_send_address_dialog_title: 'Send to Public Address',
