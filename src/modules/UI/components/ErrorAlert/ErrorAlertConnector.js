@@ -1,7 +1,11 @@
 // @flow
-import ErrorAlert from './ErrorAlert.ui'
+
 import {connect} from 'react-redux'
+
+import ErrorAlert from './ErrorAlert.ui'
 import {dismissErrorAlert} from './actions.js'
+
+import {getDisplayAlert, getMessage} from './selectors.js'
 
 import type {
   State,
@@ -9,8 +13,8 @@ import type {
 } from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => ({
-  displayAlert: state.ui.errorAlert.displayAlert,
-  message: state.ui.errorAlert.message
+  displayAlert: getDisplayAlert(state),
+  message: getMessage(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
