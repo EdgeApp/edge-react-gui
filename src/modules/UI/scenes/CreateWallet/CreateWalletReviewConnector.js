@@ -14,8 +14,10 @@ import type {State, Dispatch} from '../../../ReduxTypes'
 import {getSupportedFiats} from '../../../utils.js'
 import {getSupportedWalletTypes} from '../../Settings/selectors.js'
 
+import {getIsCreatingWallet} from './selectors.js'
+
 const mapStateToProps = (state: State) => ({
-  isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet,
+  isCreatingWallet: getIsCreatingWallet(state),
   supportedWalletTypes: getSupportedWalletTypes(state),
   supportedFiats: getSupportedFiats()
 })
