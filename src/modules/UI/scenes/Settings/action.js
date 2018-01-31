@@ -62,7 +62,7 @@ export const setDefaultFiatRequest = (defaultFiat: string) => (dispatch: Dispatc
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const onSuccess = () => dispatch(SETTINGS_ACTIONS.setDefaultFiat(defaultFiat))
-  const onError = (error) => console.log(error)
+  const onError = (e) => console.log(e)
 
   return ACCOUNT_SETTINGS.setDefaultFiatRequest(account, defaultFiat)
     .then(onSuccess)

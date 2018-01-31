@@ -40,7 +40,6 @@ export default class CurrencySettings extends Component<Props, State> {
   }
 
   selectDenomination = (key: string) => () => {
-    console.log('src/modules/UI/scences/Settings/CurrencySettings.ui.js/selectDenomination', key)
     return this.props.selectDenomination(key)
   }
 

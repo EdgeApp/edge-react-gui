@@ -202,7 +202,7 @@ export class Request extends Component<Props, State> {
     Share.share({
       message: this.state.encodedURI,
       title: sprintf(s.strings.request_qr_email_title, APP_NAME)
-    }, {dialogTitle: 'Share Airbitz Request'})
+    }, {dialogTitle: 'Share Edge Request'})
     .then(this.showResult)
     .catch((error) => this.setState({
       result: 'error: ' + error.message
@@ -215,9 +215,8 @@ export class Request extends Component<Props, State> {
       this.shareMessage()
       // console.log('shareViaEmail')
     })
-    .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
+    .catch((e) => {
+      console.log(e)
     })
   }
 
@@ -226,9 +225,8 @@ export class Request extends Component<Props, State> {
       this.shareMessage()
       // console.log('shareViaSMS')
     })
-    .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
+    .catch((e) => {
+      console.log(e)
     })
   }
 
