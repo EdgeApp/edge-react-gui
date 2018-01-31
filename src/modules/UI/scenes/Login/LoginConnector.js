@@ -5,14 +5,14 @@ import type {Dispatch, State} from '../../../ReduxTypes'
 import {connect} from 'react-redux'
 
 import Login from './Login.ui'
-import * as CORE_SELECTORS from '../../../Core/selectors'
+import {getContext, getAccount, getNextUsername} from '../../../Core/selectors'
 import {addUsernames} from '../../../Core/Context/action'
 import {initializeAccount} from '../../../Login/action'
 
 const mapStateToProps = (state: State) => ({
-  context: CORE_SELECTORS.getContext(state),
-  account: CORE_SELECTORS.getAccount(state),
-  username: CORE_SELECTORS.getNextUsername(state),
+  context: getContext(state),
+  account: getAccount(state),
+  username: getNextUsername(state),
   recoveryLogin: state.core.deepLinking.passwordRecoveryLink
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
