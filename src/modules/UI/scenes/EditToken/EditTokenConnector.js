@@ -1,17 +1,25 @@
 // @flow
 
 import {connect} from 'react-redux'
+
 import * as EDIT_TOKEN_ACTIONS from './action.js'
 import EditToken from './EditToken.ui'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 // import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import type {Dispatch, State} from '../../../ReduxTypes'
 
+import {getCustomTokens} from '../../Settings/selectors.js'
+import {
+  getDeleteTokenModalVisible,
+  getDeleteCustomTokenProcessing,
+  getEditCustomTokenProcessing
+} from './selectors.js'
+
 const mapStateToProps = (state: State) => ({
-  customTokens: state.ui.settings.customTokens,
-  deleteTokenModalVisible: state.ui.scenes.editToken.deleteTokenModalVisible,
-  deleteCustomTokenProcessing: state.ui.scenes.editToken.deleteCustomTokenProcessing,
-  editCustomTokenProcessing: state.ui.scenes.editToken.editCustomTokenProcessing
+  customTokens: getCustomTokens(state),
+  deleteTokenModalVisible: getDeleteTokenModalVisible(state),
+  deleteCustomTokenProcessing: getDeleteCustomTokenProcessing(state),
+  editCustomTokenProcessing: getEditCustomTokenProcessing(state)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatch,

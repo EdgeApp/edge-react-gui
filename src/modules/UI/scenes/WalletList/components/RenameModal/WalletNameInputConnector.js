@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import WalletNameInput from './WalletNameInput.ui'
 import type {State, Dispatch} from '../../../../../ReduxTypes'
+import {getWalletName, getRenameWalletInput, getRenameWalletModalVisible} from '../../selectors.js'
 
 export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 
@@ -13,11 +14,11 @@ const updateRenameWalletInput = (renameWalletInput: string) => ({
 })
 
 const mapStateToProps = (state: State) => ({
-  currentWalletBeingRenamed: state.ui.scenes.walletList.walletName,
+  currentWalletBeingRenamed: getWalletName(state),
   // /currentWalletRename:       state.ui.scenes.walletList.currentWalletRename,
   // $FlowFixMe
-  renameWalletVisible: state.ui.scenes.walletList.renameWalletVisible,
-  renameWalletInput: state.ui.scenes.walletList.renameWalletInput
+  renameWalletVisible: getRenameWalletModalVisible(state),
+  renameWalletInput: getRenameWalletInput(state)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateRenameWalletInput: (walletName) => dispatch(updateRenameWalletInput(walletName))

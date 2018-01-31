@@ -24,12 +24,6 @@ export const getNextUsername = (state: State) => {
   return nextUsername
 }
 
-export const getIO = (state: State) => {
-  const context = getContext(state)
-  const io = context.io
-  return io
-}
-
 // Account
 export const getAccount = (state: State) => {
   const core = getCore(state)
@@ -83,4 +77,22 @@ export const getBalanceInCrypto = (state: State, walletId: string, currencyCode:
   const wallet = getWallet(state, walletId)
   const balance = wallet.getBalance(currencyCode)
   return balance
+}
+
+// edgeLogin
+export const getIsProcessing = (state: State) => {
+  return state.core.edgeLogin.isProcessing
+}
+
+export const getLobby = (state: State) => {
+  return state.core.edgeLogin.lobby
+}
+
+export const getError = (state: State) => {
+  return state.core.edgeLogin.error
+}
+
+// deepLinking
+export const getPasswordRecoveryLink = (state: State) => {
+  return state.core.deepLinking.passwordRecoveryLink
 }

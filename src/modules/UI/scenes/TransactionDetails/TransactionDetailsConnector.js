@@ -4,31 +4,32 @@ import {connect} from 'react-redux'
 import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'edge-login'
 
 import type {Dispatch, State} from '../../../ReduxTypes'
-import type {GuiContact} from '../../../../types'
 
-import * as UI_SELECTORS from '../../selectors'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import {getWallets} from '../../selectors'
+import {getSettings, getArrayPlugins} from '../../Settings/selectors.js'
 import platform from '../../../../theme/variables/platform.js'
-import * as UTILS from '../../../utils'
+import {getCurrencyInfo} from '../../../utils'
 import {
   setTransactionDetails,
-  getSubcategories
+  getSubcategories as getSubcategoriesAction
 } from './action.js'
 
 import {displayDropdownAlert} from '../../components/DropdownAlert/actions'
 import {setContactList} from '../../contacts/action'
 import {TransactionDetails} from './TransactionDetails.ui'
 
-const mapStateToProps = (state: State, ownProps: any) => {
-  const wallets = UI_SELECTORS.getWallets(state)
-  const contacts: Array<GuiContact> = state.ui.contacts.contactList
-  const usableHeight: number = platform.usableHeight
-  const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
-  const settings = SETTINGS_SELECTORS.getSettings(state)
-  const currencyCode: string = ownProps.abcTransaction.currencyCode
-  const plugins: any = SETTINGS_SELECTORS.getPlugins(state)
-  const arrayPlugins: Array<AbcCurrencyPlugin> = plugins.arrayPlugins
-  const currencyInfo: AbcCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
+import {getContactList} from '../../contacts/selectors.js'
+import {getSubcategories} from './selectors.js'
+
+const mapStateToProps = (state: State, ownProps: Object) => {
+  const wallets = getWallets(state)
+  const contacts = getContactList(state)
+  const usableHeight = platform.usableHeight
+  const subcategoriesList = getSubcategories(state)
+  const settings = getSettings(state)
+  const currencyCode = ownProps.abcTransaction.currencyCode
+  const arrayPlugins: Array<AbcCurrencyPlugin> = getArrayPlugins(state)
+  const currencyInfo: AbcCurrencyInfo | void = getCurrencyInfo(arrayPlugins, currencyCode)
 
   return {
     contacts,
@@ -44,7 +45,7 @@ const mapStateToProps = (state: State, ownProps: any) => {
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => { dispatch(setTransactionDetails(txid, currencyCode, abcMetadata)) },
   setContactList: (contacts) => dispatch(setContactList(contacts)),
-  getSubcategories: () => dispatch(getSubcategories()),
+  getSubcategories: () => dispatch(getSubcategoriesAction()),
   displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({message, title}))
 })
 

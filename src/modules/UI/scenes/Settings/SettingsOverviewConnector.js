@@ -1,30 +1,40 @@
 // @flow
 // import HockeyApp from 'react-native-hockeyapp'
 import {connect} from 'react-redux'
-import SettingsOverview from './SettingsOverview.ui'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import * as CORE_SELECTORS from '../../../Core/selectors'
+import SettingsOverview from './SettingsOverview.ui'
+import {
+  getSettingsLock,
+  getIsTouchIdSupported,
+  getIsTouchIdEnabled,
+  getDefaultFiat,
+  getAutoLogoutTimeInMinutes
+} from '../../Settings/selectors'
+import {
+  getAccount,
+  getUsername
+} from '../../../Core/selectors'
 import {setAutoLogoutTimeInMinutesRequest,
   checkCurrentPassword,
   lockSettings,
   updateTouchIdEnabled} from './action'
 import {sendLogs} from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
+
 import type {State, Dispatch} from '../../../../modules/ReduxTypes'
 import type { AbcAccount } from 'edge-login'
-// settings_button_lock_settings, or //settings_button_unlock_settings
+
 const mapStateToProps = (state: State) => {
-  const isLocked = SETTINGS_SELECTORS.getSettingsLock(state)
+  const isLocked = getSettingsLock(state)
   const lockButtonIcon = isLocked ? Constants.LOCKED_ICON : Constants.UNLOCKED_ICON
   const lockButton = isLocked ? 'settings_button_unlock_settings' : 'settings_button_lock_settings'
-  const account = CORE_SELECTORS.getAccount(state)
-  const isTouchIdSupported = SETTINGS_SELECTORS.getIsTouchIdSupported(state)
-  const isTouchIdEnabled = SETTINGS_SELECTORS.getIsTouchIdEnabled(state)
+  const account = getAccount(state)
+  const isTouchIdSupported = getIsTouchIdSupported(state)
+  const isTouchIdEnabled = getIsTouchIdEnabled(state)
   return {
-    defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
-    autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
-    username: CORE_SELECTORS.getUsername(state),
+    defaultFiat: getDefaultFiat(state),
+    autoLogoutTimeInMinutes: getAutoLogoutTimeInMinutes(state),
+    username: getUsername(state),
     account,
     supportsTouchId: isTouchIdSupported,
     touchIdEnabled: isTouchIdEnabled,

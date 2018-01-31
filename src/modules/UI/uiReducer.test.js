@@ -30,7 +30,6 @@ test('initialState', () => {
         'syntax': {},
         'view': false},
       'controlPanel': {
-        'selectedUser': null,
         'usersView': false},
       'createWallet': {
         'isCreatingWallet': false},

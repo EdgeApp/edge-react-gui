@@ -1,15 +1,20 @@
-import {connect} from 'react-redux'
-import DefaultFiatSetting from './DefaultFiatSetting.ui'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import {setDefaultFiatRequest} from './action'
-import {Actions} from 'react-native-router-flux'
-import * as UTILS from '../../../utils'
+// @flow
 
-const mapStateToProps = (state) => ({
-  defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
-  supportedFiats: UTILS.getSupportedFiats()
+import {connect} from 'react-redux'
+import {Actions} from 'react-native-router-flux'
+
+import DefaultFiatSetting from './DefaultFiatSetting.ui'
+import {getDefaultFiat} from '../../Settings/selectors'
+import {setDefaultFiatRequest} from './action'
+import {getSupportedFiats} from '../../../utils'
+
+import type {Dispatch, State} from '../../../ReduxTypes'
+
+const mapStateToProps = (state: State) => ({
+  defaultFiat: getDefaultFiat(state),
+  supportedFiats: getSupportedFiats()
 })
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelectFiat: (selectedDefaultFiat) => {
     dispatch(setDefaultFiatRequest(selectedDefaultFiat))
     Actions.pop()
