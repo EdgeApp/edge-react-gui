@@ -1,14 +1,17 @@
 import {connect} from 'react-redux'
+
 import ControlPanel from './ControlPanel.ui'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import {getUsername, getExchangeRate} from '../../../Core/selectors.js'
+import {getSelectedWallet, getSelectedCurrencyCode, getExchangeDenomination} from '../../../UI/selectors.js'
+import {getDisplayDenominationFull} from '../../Settings/selectors.js'
 import {openSelectUser, closeSelectUser} from './action'
+
+import {getUsersView} from './selectors.js'
 
 const mapStateToProps = (state) => {
   let secondaryToPrimaryRatio = 0
-  const guiWallet = UI_SELECTORS.getSelectedWallet(state)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const guiWallet = getSelectedWallet(state)
+  const currencyCode = getSelectedCurrencyCode(state)
   let primaryDisplayDenomination = null
   let primaryExchangeDenomination = null
   let secondaryDisplayAmount = '0'
@@ -17,9 +20,9 @@ const mapStateToProps = (state) => {
   if (guiWallet && currencyCode) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
     secondaryDisplayCurrencyCode = guiWallet.fiatCurrencyCode
-    secondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-    primaryDisplayDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
-    primaryExchangeDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)
+    secondaryToPrimaryRatio = getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
+    primaryDisplayDenomination = getDisplayDenominationFull(state, currencyCode)
+    primaryExchangeDenomination = getExchangeDenomination(state, currencyCode)
     secondaryDisplayAmount =
       parseFloat(1) *
       parseFloat(secondaryToPrimaryRatio) *
@@ -35,8 +38,8 @@ const mapStateToProps = (state) => {
     secondaryDisplayCurrencyCode,
     secondaryDisplayAmount,
     secondaryToPrimaryRatio,
-    usersView: state.ui.scenes.controlPanel.usersView,
-    username: CORE_SELECTORS.getUsername(state)
+    usersView: getUsersView(state),
+    username: getUsername(state)
   }
 }
 const mapDispatchToProps = (dispatch) => ({
