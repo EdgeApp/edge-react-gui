@@ -1,10 +1,12 @@
 // @flow
+
 import { connect } from 'react-redux'
+import { bns } from 'biggystring'
+import type { AbcTransaction } from 'edge-login'
+
 import {SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet } from '../../../../types'
-import type { AbcTransaction } from 'edge-login'
-import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
 import {
