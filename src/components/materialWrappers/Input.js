@@ -21,6 +21,7 @@ type Props = {
   secureTextEntry: boolean,
   returnKeyType: string,
   keyboardType: string,
+  placeholder: string,
   onFocus(): void,
   onSubmitEditing(): void,
   onBlur(): void,
@@ -40,7 +41,8 @@ class Input extends Component<Props, State> {
     forceFocus: false,
     returnKeyType: 'go',
     onFocus: null,
-    keyboardType: 'default'
+    keyboardType: 'default',
+    placeholder: ''
   }
   textInput: TextField
   componentWillMount () {
@@ -105,6 +107,7 @@ class Input extends Component<Props, State> {
         onSubmitEditing={this.onSubmitEditing}
         labelHeight={26}
         keyboardType={this.props.keyboardType}
+        placeholder={this.props.placeholder}
       />
     )
   }
