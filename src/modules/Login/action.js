@@ -1,9 +1,9 @@
 // @flow
 
-import type {AbcAccount, AbcCurrencyWallet} from 'edge-login'
-import {Actions} from 'react-native-router-flux'
-import {Platform} from 'react-native'
-import type {GetState, Dispatch} from '../ReduxTypes'
+import type { AbcAccount, AbcCurrencyWallet } from 'edge-login'
+import { Actions } from 'react-native-router-flux'
+import { Platform } from 'react-native'
+import type { GetState, Dispatch } from '../ReduxTypes'
 
 // Login/action.js
 import * as CONTEXT_API from '../Core/Context/api'
@@ -13,7 +13,7 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import {updateWalletsRequest} from '../Core/Wallets/action.js'
+import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import PushNotification from 'react-native-push-notification'
 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
@@ -22,7 +22,7 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
-      onNotification: (notification) => {
+      onNotification: notification => {
         console.log('NOTIFICATION:', notification)
       }
     })
@@ -34,7 +34,7 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey},
+    otpInfo: { enabled: account.otpEnabled, otpKey: account.otpKey },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: '',
     pinMode: false,
@@ -47,17 +47,16 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     activeWalletIds: [],
     archivedWalletIds: [],
     currencyWallets: {}
-
   }
   try {
     const currencyPlugins = await CONTEXT_API.getCurrencyPlugins(context)
-    currencyPlugins.forEach((plugin) => {
-      plugin.currencyInfo.walletTypes.forEach((type) => {
+    currencyPlugins.forEach(plugin => {
+      plugin.currencyInfo.walletTypes.forEach(type => {
         currencyCodes[type] = plugin.currencyInfo.currencyCode
       })
       const pluginName = plugin.pluginName
       const walletTypes = plugin.currencyInfo.walletTypes
-      accountInitObject.currencyPlugins.push({pluginName, plugin, walletTypes})
+      accountInitObject.currencyPlugins.push({ pluginName, plugin, walletTypes })
     })
 
     if (account.activeWalletIds.length < 1) {
@@ -65,18 +64,18 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
       const walletName = s.strings.string_first_ethereum_wallet_name
       const walletType = Constants.ETHEREUM_WALLET
       const fiatCurrencyCode = Constants.USD_FIAT
-      const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, {name: walletName, fiatCurrencyCode})
+      const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, walletType, { name: walletName, fiatCurrencyCode })
       accountInitObject.walletId = abcWallet.id
       accountInitObject.currencyCode = abcWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
-      const {walletId, currencyCode} = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
+      const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
     }
-    const {activeWalletIds, archivedWalletIds, currencyWallets} = account
+    const { activeWalletIds, archivedWalletIds, currencyWallets } = account
     for (const walletId of Object.keys(currencyWallets)) {
-      const abcWallet:AbcCurrencyWallet = currencyWallets[walletId]
+      const abcWallet: AbcCurrencyWallet = currencyWallets[walletId]
       if (abcWallet.type === 'wallet:ethereum') {
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
@@ -90,31 +89,31 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
 
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
-    const syncFinal = {...syncDefaults, ...settings}
+    const syncFinal = { ...syncDefaults, ...settings }
     const customTokens = settings ? settings.customTokens : []
     accountInitObject.autoLogoutTimeInSeconds = syncFinal.autoLogoutTimeInSeconds
     accountInitObject.defaultFiat = syncFinal.defaultFiat
     accountInitObject.merchantMode = syncFinal.merchantMode
     accountInitObject.customTokens = syncFinal.customTokens
-    accountInitObject.denominationKeys.push({currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination})
-    accountInitObject.denominationKeys.push({currencyCode: 'BCH', denominationKey: syncFinal.BCH.denomination})
-    accountInitObject.denominationKeys.push({currencyCode: 'ETH', denominationKey: syncFinal.ETH.denomination})
+    accountInitObject.denominationKeys.push({ currencyCode: 'BTC', denominationKey: syncFinal.BTC.denomination })
+    accountInitObject.denominationKeys.push({ currencyCode: 'BCH', denominationKey: syncFinal.BCH.denomination })
+    accountInitObject.denominationKeys.push({ currencyCode: 'ETH', denominationKey: syncFinal.ETH.denomination })
     if (customTokens) {
-      customTokens.forEach((token) => {
+      customTokens.forEach(token => {
         // dispatch(ADD_TOKEN_ACTIONS.setTokenSettings(token))
         accountInitObject.customTokensSettings.push(token)
         // this second dispatch will be redundant if we set 'denomination' property upon customToken creation
-        accountInitObject.denominationKeys.push({currencyCode: token.currencyCode, denominationKey: token.multiplier})
+        accountInitObject.denominationKeys.push({ currencyCode: token.currencyCode, denominationKey: token.multiplier })
       })
     }
     const localSettings = await SETTINGS_API.getLocalSettings(account)
     const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
-    const localFinal = {...localDefaults, ...localSettings}
+    const localFinal = { ...localDefaults, ...localSettings }
     accountInitObject.bluetoothMode = localFinal.bluetoothMode
 
     const coreSettings = await SETTINGS_API.getCoreSettings(account)
     const coreDefaults = SETTINGS_API.CORE_DEFAULTS
-    const coreFinal = {...coreDefaults, ...coreSettings}
+    const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
     dispatch(actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, accountInitObject))
@@ -135,7 +134,7 @@ export const logoutRequest = (username?: string) => (dispatch: Dispatch, getStat
   const account = CORE_SELECTORS.getAccount(state)
   dispatch(logout(username))
   ACCOUNT_API.logoutRequest(account) */
-  Actions.popTo(Constants.LOGIN, {username})
+  Actions.popTo(Constants.LOGIN, { username })
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   dispatch(logout(username))
@@ -145,7 +144,7 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const username = account.username
-  Actions.popTo(Constants.LOGIN, {username})
+  Actions.popTo(Constants.LOGIN, { username })
   dispatch(actions.dispatchActionString(Constants.DEEP_LINK_RECEIVED, backupKey))
   // dispatch(logout(Constants.DEEP_LINK_RECEIVED))
   if (!account) {
@@ -155,5 +154,5 @@ export const deepLinkLogout = (backupKey: string) => (dispatch: Dispatch, getSta
 
 export const logout = (username?: string) => ({
   type: Constants.LOGOUT,
-  data: {username}
+  data: { username }
 })

@@ -1,9 +1,6 @@
 // @flow
 
-import {
-  StyleSheet,
-  Platform
-} from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz.js'
 import platform from '../../../../theme/variables/platform.js'
 
@@ -82,7 +79,7 @@ export const styles = {
     color: THEME.COLORS.WHITE,
     fontSize: 22,
     height: 18,
-    transform: [{scaleX: 1.2}]
+    transform: [{ scaleX: 1.2 }]
   },
   buttonWrap: {
     flex: 1,
@@ -93,7 +90,7 @@ export const styles = {
     color: THEME.COLORS.WHITE,
     fontSize: 16,
     height: 16,
-    transform: [{scaleX: -1.0}]
+    transform: [{ scaleX: -1.0 }]
   },
   cameraIcon: {
     color: THEME.COLORS.WHITE,
@@ -135,7 +132,7 @@ export const styles = {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     borderBottomColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: (Platform.OS === 'ios') ? 1 : 0
+    borderBottomWidth: Platform.OS === 'ios' ? 1 : 0
   },
   addressInput: {
     borderBottomColor: THEME.COLORS.GRAY_2,

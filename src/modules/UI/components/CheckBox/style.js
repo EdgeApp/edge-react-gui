@@ -1,8 +1,6 @@
 // @flow
 
-import {
-  StyleSheet
-} from 'react-native'
+import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
@@ -15,11 +13,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
-
   },
-  checkmark: {
-
-  }
+  checkmark: {}
 })
 
 export default styles

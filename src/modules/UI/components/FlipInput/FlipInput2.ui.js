@@ -1,24 +1,17 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
-  Platform,
-  Animated
-} from 'react-native'
-import {styles, top, bottom} from './styles.js'
+import React, { Component } from 'react'
+import { Text, TextInput, TouchableWithoutFeedback, View, Platform, Animated } from 'react-native'
+import { styles, top, bottom } from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
-import {bns} from 'biggystring'
+import { bns } from 'biggystring'
 import * as Constants from '../../../../constants/indexConstants'
-import {intl} from '../../../../locales/intl'
+import { intl } from '../../../../locales/intl'
 
 export type FlipInputFieldInfo = {
   currencyName: string,
-  currencySymbol: string,  // currency symbol of field
+  currencySymbol: string, // currency symbol of field
   currencyCode: string, // 3-5 digit currency code
 
   // Maximum number of decimals to allow the user to enter. FlipInput will automatically truncate use input to this
@@ -28,7 +21,7 @@ export type FlipInputFieldInfo = {
   // Maximum number of decimals to convert from the opposite field to this field.
   // ie If the user is typing into the fiat field, and this FlipInputFieldInfo refers to a BTC field, then this is the number of
   // decimals to use when converting the fiat value into this crypto field.
-  maxConversionDecimals: number,
+  maxConversionDecimals: number
 }
 
 type State = {
@@ -57,7 +50,7 @@ export type FlipInputOwnProps = {
 
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
-  onAmountChanged(decimalAmount: string): void,
+  onAmountChanged(decimalAmount: string): void
 }
 
 type Props = FlipInputOwnProps
@@ -77,7 +70,7 @@ function setPrimaryToSecondary (props: Props, primaryDecimalAmount: string) {
   const secondaryDisplayAmount = intl.formatNumberInput(secondaryDecimalAmount)
 
   // Set the state for display in render()
-  return {primaryDisplayAmount, secondaryDisplayAmount}
+  return { primaryDisplayAmount, secondaryDisplayAmount }
 }
 
 // Pretty much the same as setPrimaryToSecondary
@@ -86,7 +79,7 @@ function setSecondaryToPrimary (props: Props, secondaryDecimalAmount: string) {
   let primaryDecimalAmount = bns.div(secondaryDecimalAmount, props.exchangeSecondaryToPrimaryRatio, 18)
   primaryDecimalAmount = UTILS.truncateDecimals(primaryDecimalAmount, props.primaryInfo.maxConversionDecimals)
   const primaryDisplayAmount = intl.formatNumberInput(primaryDecimalAmount)
-  return {secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount}
+  return { secondaryDisplayAmount, primaryDisplayAmount, primaryDecimalAmount }
 }
 
 const getInitialState = (props: Props) => {
@@ -170,10 +163,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     // Check if primary changed first. Don't bother to check secondary if parent passed in a primary
-    if (
-      nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount ||
-      nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter
-    ) {
+    if (nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount || nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       const primaryDecimalAmount = UTILS.truncateDecimals(nextProps.overridePrimaryDecimalAmount, nextProps.primaryInfo.maxEntryDecimals)
       this.setState(setPrimaryToSecondary(nextProps, primaryDecimalAmount))
       this.setState({
@@ -209,12 +199,9 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     const decimalAmount = intl.formatToNativeNumber(formattedDisplayAmount)
 
     const result = setPrimaryToSecondary(this.props, decimalAmount)
-    this.setState(
-      result,
-      () => {
-        this.props.onAmountChanged(decimalAmount)
-      }
-    )
+    this.setState(result, () => {
+      this.props.onAmountChanged(decimalAmount)
+    })
   }
 
   onSecondaryAmountChange = (displayAmount: string) => {
@@ -239,56 +226,54 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     )
   }
 
-  topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
+  topRowFront = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
       <View style={top.row} key={'top'}>
-        <Text style={[top.symbol]}>
-          {fieldInfo.currencySymbol}
-        </Text>
-        <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
+        <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
+        <TextInput
+          style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
           placeholder={'0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
           value={amount}
           onChangeText={onChangeText}
           autoCorrect={false}
-          keyboardType='numeric'
-          selectionColor='white'
-          returnKeyType='done'
+          keyboardType="numeric"
+          selectionColor="white"
+          returnKeyType="done"
           underlineColorAndroid={'transparent'}
-          ref={ (ref) => { this.textInputFront = ref } }
-          onFocus={ () => this.setState({ textInputFrontFocus: true }) }
-          onBlur={ () => this.setState({ textInputFrontFocus: false }) }
+          ref={ref => {
+            this.textInputFront = ref
+          }}
+          onFocus={() => this.setState({ textInputFrontFocus: true })}
+          onBlur={() => this.setState({ textInputFrontFocus: false })}
         />
-        <Text style={[top.currencyCode]}>
-          {fieldInfo.currencyName}
-        </Text>
+        <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>
     )
   }
 
-  topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: ((string) => void), amount: string) => {
+  topRowBack = (fieldInfo: FlipInputFieldInfo, onChangeText: string => void, amount: string) => {
     return (
       <View style={top.row} key={'top'}>
-        <Text style={[top.symbol]}>
-          {fieldInfo.currencySymbol}
-        </Text>
-        <TextInput style={[top.amount, (Platform.OS === 'ios') ? {} : {paddingBottom: 2}]}
+        <Text style={[top.symbol]}>{fieldInfo.currencySymbol}</Text>
+        <TextInput
+          style={[top.amount, Platform.OS === 'ios' ? {} : { paddingBottom: 2 }]}
           placeholder={'0'}
           placeholderTextColor={'rgba(255, 255, 255, 0.60)'}
           value={amount}
           onChangeText={onChangeText}
           autoCorrect={false}
-          keyboardType='numeric'
-          selectionColor='white'
-          returnKeyType='done'
+          keyboardType="numeric"
+          selectionColor="white"
+          returnKeyType="done"
           underlineColorAndroid={'transparent'}
-          ref={ (ref) => { this.textInputBack = ref } }
-          onFocus={ () => this.setState({ textInputBackFocus: true }) }
-          onBlur={ () => this.setState({ textInputBackFocus: false }) }
+          ref={ref => {
+            this.textInputBack = ref
+          }}
+          onFocus={() => this.setState({ textInputBackFocus: true })}
+          onBlur={() => this.setState({ textInputBackFocus: false })}
         />
-        <Text style={[top.currencyCode]}>
-          {fieldInfo.currencyName}
-        </Text>
+        <Text style={[top.currencyCode]}>{fieldInfo.currencyName}</Text>
       </View>
     )
   }
@@ -297,45 +282,28 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     return (
       <TouchableWithoutFeedback onPress={this.onToggleFlipInput} key={'bottom'}>
         <View style={bottom.row}>
-          <Text style={[bottom.symbol]}>
-            {fieldInfo.currencySymbol}
+          <Text style={[bottom.symbol]}>{fieldInfo.currencySymbol}</Text>
+          <Text style={[bottom.amount, !amount && bottom.alert]} numberOfLines={1} ellipsizeMode="tail">
+            {amount || '0'}
           </Text>
-          <Text style={[
-            bottom.amount,
-            !amount && bottom.alert
-          ]}
-            numberOfLines={1}
-            ellipsizeMode='tail'
-          >
-          {amount || '0'}
-        </Text>
-        <Text style={[bottom.currencyCode]}>
-          {fieldInfo.currencyName}
-        </Text>
-      </View>
-    </TouchableWithoutFeedback>
+          <Text style={[bottom.currencyCode]}>{fieldInfo.currencyName}</Text>
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 
   render () {
-    const {primaryInfo, secondaryInfo} = this.props
-    const {isToggled} = this.state
+    const { primaryInfo, secondaryInfo } = this.props
+    const { isToggled } = this.state
     const frontAnimatedStyle = {
-      transform: [
-        { rotateX: this.frontInterpolate }
-      ]
+      transform: [{ rotateX: this.frontInterpolate }]
     }
     const backAnimatedStyle = {
-      transform: [
-        { rotateX: this.backInterpolate }
-      ]
+      transform: [{ rotateX: this.backInterpolate }]
     }
     return (
       <View style={[styles.container]}>
-        <Animated.View
-          style={[styles.flipContainerFront, frontAnimatedStyle, {opacity: this.androidFrontOpacityInterpolate}]}
-          pointerEvents={isToggled ? 'none' : 'auto'}
-        >
+        <Animated.View style={[styles.flipContainerFront, frontAnimatedStyle, { opacity: this.androidFrontOpacityInterpolate }]} pointerEvents={isToggled ? 'none' : 'auto'}>
           <View style={styles.flipButton}>
             <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
           </View>
@@ -345,10 +313,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
           </View>
           <View style={styles.spacer} />
         </Animated.View>
-        <Animated.View
-          style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle, {opacity: this.androidBackOpacityInterpolate}]}
-          pointerEvents={isToggled ? 'auto' : 'none'}
-        >
+        <Animated.View style={[styles.flipContainerFront, styles.flipContainerBack, backAnimatedStyle, { opacity: this.androidBackOpacityInterpolate }]} pointerEvents={isToggled ? 'auto' : 'none'}>
           <View style={styles.flipButton}>
             <FAIcon style={[styles.flipIcon]} onPress={this.onToggleFlipInput} name={Constants.SWAP_VERT} size={36} />
           </View>

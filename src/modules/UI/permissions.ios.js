@@ -1,6 +1,6 @@
 import Permissions from 'react-native-permissions'
 
-export const request = (request) => {
+export const request = request => {
   // console.log('Requesting permission')
   switch (request) {
     case 'camera':
@@ -9,5 +9,4 @@ export const request = (request) => {
   }
 }
 
-export const requestCameraPermission = () => Permissions.request('camera')
-  .then((permission) => permission === 'authorized')
+export const requestCameraPermission = () => Permissions.request('camera').then(permission => permission === 'authorized')

@@ -2,7 +2,7 @@
 
 import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
-import {Image} from 'react-native'
+import { Image } from 'react-native'
 const CryptoExchangeSceneStyle = {
   gradient: {
     height: THEME.SPACER.HEADER
@@ -126,9 +126,11 @@ const CryptoExchangeSceneStyle = {
       flexDirection: 'column',
       justifyContent: 'space-around'
     },
-    walletSelector: {...Styles.TextAndIconButtonStyle,
-      content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
-      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}},
+    walletSelector: {
+      ...Styles.TextAndIconButtonStyle,
+      content: { ...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%' },
+      centeredContent: { ...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%' }
+    },
     iconContainer: {
       position: 'absolute',
       top: 0,
@@ -175,4 +177,4 @@ const CryptoExchangeSceneStyle = {
   }
 }
 
-export {CryptoExchangeSceneStyle}
+export { CryptoExchangeSceneStyle }

@@ -15,13 +15,7 @@ export default class AutoCompleteInput extends Component {
   render () {
     return (
       <div>
-        <AutoComplete
-          hintText='Type anything'
-          dataSource={this.state.dataSource}
-          onUpdateInput={this.handleUpdateInput}
-          floatingLabelText='Full width'
-          fullWidth
-        />
+        <AutoComplete hintText="Type anything" dataSource={this.state.dataSource} onUpdateInput={this.handleUpdateInput} floatingLabelText="Full width" fullWidth />
       </div>
     )
   }

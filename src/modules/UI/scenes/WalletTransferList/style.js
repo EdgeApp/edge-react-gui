@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import platform from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
 

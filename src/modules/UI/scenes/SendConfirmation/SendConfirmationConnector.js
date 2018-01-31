@@ -1,34 +1,15 @@
 // @flow
 import { connect } from 'react-redux'
-import {SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps} from './SendConfirmation.ui'
+import { SendConfirmation, type SendConfirmationStateProps, type SendConfirmationDispatchProps } from './SendConfirmation.ui'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import type { GuiWallet } from '../../../../types'
 import type { AbcTransaction } from 'edge-login'
 import { bns } from 'biggystring'
 import { getExchangeRate, getCurrencyConverter } from '../../../Core/selectors.js'
 import { getDisplayDenomination } from '../../Settings/selectors.js'
-import {
-  getSelectedWallet,
-  getSelectedCurrencyCode,
-  getExchangeDenomination
-} from '../../selectors.js'
-import {
-  getTransaction,
-  getPending,
-  getNativeAmount,
-  getError,
-  getPublicAddress,
-  getKeyboardIsVisible,
-  getLabel,
-  getForceUpdateGuiCounter,
-  getNetworkFee
-} from './selectors'
-import {
-  signBroadcastAndSave,
-  updateSpendPending,
-  updateAmount,
-  reset
-} from './action.js'
+import { getSelectedWallet, getSelectedCurrencyCode, getExchangeDenomination } from '../../selectors.js'
+import { getTransaction, getPending, getNativeAmount, getError, getPublicAddress, getKeyboardIsVisible, getLabel, getForceUpdateGuiCounter, getNetworkFee } from './selectors'
+import { signBroadcastAndSave, updateSpendPending, updateAmount, reset } from './action.js'
 
 const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let fiatPerCrypto = 0
@@ -74,8 +55,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): SendConfirmationDispatchProps => ({
-  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) =>
-    dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto)),
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => dispatch(updateAmount(nativeAmount, exchangeAmount, fiatPerCrypto)),
   reset: () => dispatch(reset()),
   updateSpendPending: (pending: boolean): any => dispatch(updateSpendPending(pending)),
   signBroadcastAndSave: (): any => dispatch(signBroadcastAndSave())

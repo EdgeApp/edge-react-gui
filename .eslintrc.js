@@ -9,6 +9,7 @@ module.exports =
   'parser': 'babel-eslint',
   'plugins': ['flowtype', 'standard', 'react', 'react-native'],
   'rules': {
+    'max-len': ['error', { 'code': 200 }],
     'camelcase': 'error',
     'flowtype/generic-spacing': 'off',
     'no-throw-literal': 'error',

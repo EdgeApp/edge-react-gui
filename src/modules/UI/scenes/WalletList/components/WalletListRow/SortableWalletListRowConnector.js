@@ -1,4 +1,4 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import SortableWalletListRow from './SortableWalletListRow.ui'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 

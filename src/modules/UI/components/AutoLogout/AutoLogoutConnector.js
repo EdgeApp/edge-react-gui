@@ -1,11 +1,11 @@
 // @flow
 
-import type {State, Dispatch} from '../../../ReduxTypes'
+import type { State, Dispatch } from '../../../ReduxTypes'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import {logoutRequest} from '../../../Login/action'
+import { logoutRequest } from '../../../Login/action'
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import AutoLogout from './AutoLogout.ui.js'
 
 const mapStateToProps = (state: State) => ({

@@ -1,9 +1,9 @@
 // @flow
 
-import React, {Component} from 'react'
-import {FlipInput, type FlipInputFieldInfo} from './FlipInput2.ui.js'
-import {bns} from 'biggystring'
-import type {GuiCurrencyInfo} from '../../../../types'
+import React, { Component } from 'react'
+import { FlipInput, type FlipInputFieldInfo } from './FlipInput2.ui.js'
+import { bns } from 'biggystring'
+import type { GuiCurrencyInfo } from '../../../../types'
 import { precisionAdjust } from '../../../utils.js'
 
 const DIVIDE_PRECISION = 18
@@ -40,14 +40,14 @@ type State = {
 }
 
 function getPrimaryDisplayToExchangeRatio (props: Props): string {
-  const exchangeMultiplier:string = props.primaryCurrencyInfo.exchangeDenomination.multiplier
-  const displayMultiplier:string = props.primaryCurrencyInfo.displayDenomination.multiplier
+  const exchangeMultiplier: string = props.primaryCurrencyInfo.exchangeDenomination.multiplier
+  const displayMultiplier: string = props.primaryCurrencyInfo.displayDenomination.multiplier
   return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
 }
 
 function getSecondaryDisplayToExchangeRatio (props: Props): string {
-  const displayMultiplier:string = props.secondaryCurrencyInfo.displayDenomination.multiplier
-  const exchangeMultiplier:string = props.secondaryCurrencyInfo.exchangeDenomination.multiplier
+  const displayMultiplier: string = props.secondaryCurrencyInfo.displayDenomination.multiplier
+  const exchangeMultiplier: string = props.secondaryCurrencyInfo.exchangeDenomination.multiplier
   return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
 }
 
@@ -57,16 +57,9 @@ function propsToState (props: Props): State {
   // nextProps.exchangeSecondaryToPrimaryRatio // ie. 1/10000
   const primaryDisplayToExchangeRatio = getPrimaryDisplayToExchangeRatio(props) // 1/1000 for mBTC
   const secondaryDisplayToExchangeRatio = getSecondaryDisplayToExchangeRatio(props) // 1 for USD
-  let exchangeSecondaryToPrimaryRatio = bns.div(
-    props.exchangeSecondaryToPrimaryRatio.toString(),
-    primaryDisplayToExchangeRatio,
-    DIVIDE_PRECISION
-  ) // Should be 1/10
+  let exchangeSecondaryToPrimaryRatio = bns.div(props.exchangeSecondaryToPrimaryRatio.toString(), primaryDisplayToExchangeRatio, DIVIDE_PRECISION) // Should be 1/10
 
-  exchangeSecondaryToPrimaryRatio = bns.mul(
-    exchangeSecondaryToPrimaryRatio,
-    secondaryDisplayToExchangeRatio
-  ) // Noop usually for USD since we only ever use the same exchange and display multiplier
+  exchangeSecondaryToPrimaryRatio = bns.mul(exchangeSecondaryToPrimaryRatio, secondaryDisplayToExchangeRatio) // Noop usually for USD since we only ever use the same exchange and display multiplier
 
   // Calculate FlipInputFieldInfo from GuiCurrencyInfos
   const secondaryPrecision: number = bns.log10(props.secondaryCurrencyInfo.displayDenomination.multiplier)
@@ -107,7 +100,7 @@ function propsToState (props: Props): State {
   // ie BTC to mBTC
   const overridePrimaryDecimalAmount = bns.mul(props.overridePrimaryExchangeAmount, primaryDisplayToExchangeRatio)
 
-  return {primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount}
+  return { primaryInfo, secondaryInfo, exchangeSecondaryToPrimaryRatio, overridePrimaryDecimalAmount }
 }
 
 export class ExchangedFlipInput extends Component<Props, State> {
@@ -123,7 +116,7 @@ export class ExchangedFlipInput extends Component<Props, State> {
   onAmountChanged = (decimalAmount: string): void => {
     const exchangeAmount = bns.div(decimalAmount, getPrimaryDisplayToExchangeRatio(this.props), DIVIDE_PRECISION)
     const nativeAmount = bns.mul(exchangeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier)
-    this.props.onExchangeAmountChanged({exchangeAmount, nativeAmount})
+    this.props.onExchangeAmountChanged({ exchangeAmount, nativeAmount })
   }
 
   render () {

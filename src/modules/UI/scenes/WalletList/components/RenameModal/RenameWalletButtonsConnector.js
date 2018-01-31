@@ -1,16 +1,11 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import RenameWalletButtons, {type StateProps, type DispatchProps} from './RenameWalletButtons.ui'
-import type {State, Dispatch, GetState} from '../../../../../ReduxTypes'
+import RenameWalletButtons, { type StateProps, type DispatchProps } from './RenameWalletButtons.ui'
+import type { State, Dispatch, GetState } from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
-import {
-  CLOSE_MODAL_VALUE,
-  START_MODAL_VALUE,
-  SUCCESS_MODAL_VALUE,
-  wrap
-} from '../WalletOptions/action'
+import { CLOSE_MODAL_VALUE, START_MODAL_VALUE, SUCCESS_MODAL_VALUE, wrap } from '../WalletOptions/action'
 
 import * as WALLET_API from '../../../../../Core/Wallets/api.js'
 import * as UI_ACTIONS from '../../../../Wallets/action.js'
@@ -20,14 +15,14 @@ const renameWallet = (walletId: string, walletName: string) => (dispatch: Dispat
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-  dispatch(wrap(START_MODAL_VALUE(Constants.RENAME_VALUE), {walletId}))
+  dispatch(wrap(START_MODAL_VALUE(Constants.RENAME_VALUE), { walletId }))
 
   WALLET_API.renameWalletRequest(wallet, walletName)
     .then(() => {
-      dispatch(wrap(SUCCESS_MODAL_VALUE(Constants.RENAME_VALUE), {walletId}))
+      dispatch(wrap(SUCCESS_MODAL_VALUE(Constants.RENAME_VALUE), { walletId }))
       dispatch(UI_ACTIONS.refreshWallet(walletId))
     })
-    .catch((e) => console.log(e))
+    .catch(e => console.log(e))
 }
 
 const mapStateToProps = (state: State): StateProps => ({

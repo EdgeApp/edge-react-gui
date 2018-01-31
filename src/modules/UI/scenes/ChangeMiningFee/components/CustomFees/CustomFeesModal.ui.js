@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { View } from 'react-native'
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import { FormField } from '../../../../../../components/FormField.js'
@@ -34,7 +34,7 @@ export default class CustomFeesModal extends Component<Props, State> {
     this._initState()
   }
 
-  _onFeeSettingInputChange = (feeSetting) => (input: string) => {
+  _onFeeSettingInputChange = feeSetting => (input: string) => {
     let setting = '0'
     if (!isNaN(input) && input !== '') {
       setting = parseInt(input).toString()
@@ -48,39 +48,44 @@ export default class CustomFeesModal extends Component<Props, State> {
     }
   }
 
-  renderModalMiddle = () => this.props.customFeeSettings.map(feeSetting =>
-    <View style={[styles.feeInputWrap]} key={feeSetting}>
-      <FormField
-        keyboardType='numeric'
-        style={[styles.feeInput]}
-        onChangeText={this._onFeeSettingInputChange(feeSetting)}
-        value={this.state[feeSetting]}
-        label={s.strings[feeSetting] || feeSetting}
-        autoFocus
-      />
-    </View>
-  )
+  renderModalMiddle = () =>
+    this.props.customFeeSettings.map(feeSetting => (
+      <View style={[styles.feeInputWrap]} key={feeSetting}>
+        <FormField
+          keyboardType="numeric"
+          style={[styles.feeInput]}
+          onChangeText={this._onFeeSettingInputChange(feeSetting)}
+          value={this.state[feeSetting]}
+          label={s.strings[feeSetting] || feeSetting}
+          autoFocus
+        />
+      </View>
+    ))
 
   render () {
     const modalMiddle = this.renderModalMiddle()
     const height = 50 + (modalMiddle.length - 1) * 58
-    return <StylizedModal
-      featuredIcon={<OptionIcon iconName={Constants.CUSTOM_FEES_ICON}/>}
-      headerText={s.strings.fragment_wallets_set_custom_fees}
-      style={styles.modalBoxStyle}
-      modalMiddle={modalMiddle}
-      modalMiddleStyle={{ height, marginBottom: 10 }}
-      modalBottom={<OptionButtons
-        positiveText={s.strings.string_custom_fee}
-        onPositive={() => {
-          this.props.handlePress(Constants.CUSTOM_FEES, () => {
-            this.props.onPositive(this.state)
-          })
-        }}
-        onNegative={this.props.onDone}
-      />}
-      visibilityBoolean={this.props.visibilityBoolean}
-      onExitButtonFxn={this.props.onDone}
-    />
+    return (
+      <StylizedModal
+        featuredIcon={<OptionIcon iconName={Constants.CUSTOM_FEES_ICON} />}
+        headerText={s.strings.fragment_wallets_set_custom_fees}
+        style={styles.modalBoxStyle}
+        modalMiddle={modalMiddle}
+        modalMiddleStyle={{ height, marginBottom: 10 }}
+        modalBottom={
+          <OptionButtons
+            positiveText={s.strings.string_custom_fee}
+            onPositive={() => {
+              this.props.handlePress(Constants.CUSTOM_FEES, () => {
+                this.props.onPositive(this.state)
+              })
+            }}
+            onNegative={this.props.onDone}
+          />
+        }
+        visibilityBoolean={this.props.visibilityBoolean}
+        onExitButtonFxn={this.props.onDone}
+      />
+    )
   }
 }

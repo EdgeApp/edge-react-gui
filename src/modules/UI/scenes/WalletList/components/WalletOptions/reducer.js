@@ -1,8 +1,8 @@
 // @flow
 
 import * as ACTION from './action'
-import {combineReducers} from 'redux'
-import type {Action} from '../../../../../ReduxTypes.js'
+import { combineReducers } from 'redux'
+import type { Action } from '../../../../../ReduxTypes.js'
 import * as Constants from '../../../../../../constants/indexConstants'
 import { privateSeedUnlocked } from '../GetSeedModal/reducer'
 import { renameWalletInput, walletName } from '../RenameModal/reducer'
@@ -57,12 +57,14 @@ const walletArchivesVisible = (state: boolean = false, action: Action) => {
   }
 }
 
-const walletList = combineReducers(Object.assign(reducers, {
-  walletArchivesVisible,
-  renameWalletInput,
-  walletId,
-  walletName,
-  privateSeedUnlocked
-}))
+const walletList = combineReducers(
+  Object.assign(reducers, {
+    walletArchivesVisible,
+    renameWalletInput,
+    walletId,
+    walletName,
+    privateSeedUnlocked
+  })
+)
 
 export default walletList

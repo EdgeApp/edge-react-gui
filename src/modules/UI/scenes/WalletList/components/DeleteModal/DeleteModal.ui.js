@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'
@@ -17,16 +17,15 @@ type State = any
 
 export default class DeleteModal extends Component<Props, State> {
   render () {
-    return <StylizedModal
-      featuredIcon={<OptionIcon iconName={Constants.DELETE}/>}
-      headerText={s.strings.fragment_wallets_delete_wallet}
-      modalMiddle={<OptionSubtext
-        confirmationText={s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile}
-        label={s.strings.fragment_wallets_delete_wallet}
-      />}
-      modalBottom={<DeleteWalletButtons />}
-      visibilityBoolean={this.props.visibilityBoolean}
-      onExitButtonFxn={this.props.onExitButtonFxn}
-    />
+    return (
+      <StylizedModal
+        featuredIcon={<OptionIcon iconName={Constants.DELETE} />}
+        headerText={s.strings.fragment_wallets_delete_wallet}
+        modalMiddle={<OptionSubtext confirmationText={s.strings.fragmet_wallets_delete_wallet_first_confirm_message_mobile} label={s.strings.fragment_wallets_delete_wallet} />}
+        modalBottom={<DeleteWalletButtons />}
+        visibilityBoolean={this.props.visibilityBoolean}
+        onExitButtonFxn={this.props.onExitButtonFxn}
+      />
+    )
   }
 }

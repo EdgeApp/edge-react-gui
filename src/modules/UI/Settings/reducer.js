@@ -145,7 +145,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         denominationKeys,
         customTokensSettings
-       } = data
+      } = data
       let newState = {
         ...state,
         loginStatus,
@@ -160,7 +160,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         otpResetDate: account.otpResetDate
       }
-      denominationKeys.forEach((key) => {
+      denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
         const denomination = key.denominationKey
         const currencyState = newState[currencyCode]
@@ -172,11 +172,11 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
           }
         }
       })
-      currencyPlugins.forEach((key) => {
+      currencyPlugins.forEach(key => {
         console.log(key)
         newState = currencyPLuginUtil(newState, key)
       })
-      customTokensSettings.forEach((key) => {
+      customTokensSettings.forEach(key => {
         const { currencyCode } = key
         newState = {
           ...newState,

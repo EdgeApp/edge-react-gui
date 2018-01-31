@@ -1,7 +1,7 @@
 // @flow
 
-import React, {Component} from 'react'
-import {Text, View} from 'react-native'
+import React, { Component } from 'react'
+import { Text, View } from 'react-native'
 import styles from './styles.js'
 import Slider from 'react-native-slider'
 import s from '../../../../locales/strings.js'
@@ -35,12 +35,12 @@ export default class ABSlider extends Component<Props, State> {
     if (value <= 1) {
       this.props.onSlidingComplete()
     } else {
-      this.setState({value: 10})
+      this.setState({ value: 10 })
     }
-  };
+  }
 
   onValueChange = (value: number) => {
-    this.setState({value})
+    this.setState({ value })
   }
 
   render () {
@@ -57,13 +57,11 @@ export default class ABSlider extends Component<Props, State> {
           trackStyle={styles.track}
           thumbStyle={styles.thumb}
           thumbImage={leftArrowImg}
-          minimumTrackTintColor='transparent'
-          maximumTrackTintColor='transparent'
-          thumbTouchSize={{width: 160, height: 160}}
+          minimumTrackTintColor="transparent"
+          maximumTrackTintColor="transparent"
+          thumbTouchSize={{ width: 160, height: 160 }}
         />
-        <Text style={styles.textOverlay}>
-          {SLIDE_TO_COMPLETE_TEXT}
-        </Text>
+        <Text style={styles.textOverlay}>{SLIDE_TO_COMPLETE_TEXT}</Text>
       </View>
     )
   }

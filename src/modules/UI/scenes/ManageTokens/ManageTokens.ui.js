@@ -1,11 +1,11 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View, FlatList, ActivityIndicator} from 'react-native'
-import {Actions} from 'react-native-router-flux'
+import React, { Component } from 'react'
+import { View, FlatList, ActivityIndicator } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 import SafeAreaView from '../../components/SafeAreaView'
 
-import type {AbcMetaToken} from 'edge-login'
+import type { AbcMetaToken } from 'edge-login'
 import type { GuiWallet, CustomTokenInfo } from '../../../../types'
 
 import * as UTILS from '../../../utils'
@@ -13,7 +13,7 @@ import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import ManageTokenRow from './ManageTokenRow.ui.js'
-import {PrimaryButton, SecondaryButton} from '../../components/Buttons'
+import { PrimaryButton, SecondaryButton } from '../../components/Buttons'
 import styles from './style.js'
 
 export type Props = {
@@ -22,7 +22,7 @@ export type Props = {
   settingsCustomTokens: Array<CustomTokenInfo>
 }
 export type DispatchProps = {
-  getEnabledTokensList: (string) => void,
+  getEnabledTokensList: string => void,
   setEnabledTokensList: (string, Array<string>, Array<string>) => void
 }
 export type State = {
@@ -85,27 +85,24 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
             <View style={[styles.metaTokenListArea]}>
               <View style={[styles.metaTokenListWrap]}>
                 <FlatList
-                  keyExtractor={(item) => item.currencyCode}
+                  keyExtractor={item => item.currencyCode}
                   data={sortedTokenInfo}
-                  renderItem={(metaToken) =>
-                  <ManageTokenRow
-                    goToEditTokenScene={this.goToEditTokenScene}
-                    metaToken={metaToken}
-                    walletId={this.props.guiWallet.id}
-                    toggleToken={this.toggleToken}
-                    enabledList={this.state.enabledList}
-                    customTokensList={this.props.settingsCustomTokens}
-                    metaTokens={this.props.guiWallet.metaTokens}
-                  />}
+                  renderItem={metaToken => (
+                    <ManageTokenRow
+                      goToEditTokenScene={this.goToEditTokenScene}
+                      metaToken={metaToken}
+                      walletId={this.props.guiWallet.id}
+                      toggleToken={this.toggleToken}
+                      enabledList={this.state.enabledList}
+                      customTokensList={this.props.settingsCustomTokens}
+                      metaTokens={this.props.guiWallet.metaTokens}
+                    />
+                  )}
                   style={[styles.tokenList]}
                 />
               </View>
               <View style={[styles.buttonsArea]}>
-                <SecondaryButton
-                  style={[styles.addButton]}
-                  text={'Add'}
-                  onPressFunction={this.goToAddTokenScene}
-                />
+                <SecondaryButton style={[styles.addButton]} text={'Add'} onPressFunction={this.goToAddTokenScene} />
                 <PrimaryButton
                   text={'Save'}
                   style={[styles.saveButton]}
@@ -122,15 +119,13 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
   }
 
   header () {
-    const {name} = this.props.guiWallet
+    const { name } = this.props.guiWallet
     return (
       <Gradient style={[styles.headerRow]}>
         <View style={[styles.headerTextWrap]}>
           <View style={styles.leftArea}>
-            <Text style={styles.headerText}>
-              {name}
-            </Text>
-        </View>
+            <Text style={styles.headerText}>{name}</Text>
+          </View>
         </View>
       </Gradient>
     )
@@ -138,7 +133,7 @@ export default class ManageTokens extends Component<Props & DispatchProps, State
 
   goToAddTokenScene = () => {
     const { id, metaTokens } = this.props.guiWallet
-    Actions.addToken({walletId: id, metaTokens})
+    Actions.addToken({ walletId: id, metaTokens })
   }
 
   goToEditTokenScene = (currencyCode: string) => {

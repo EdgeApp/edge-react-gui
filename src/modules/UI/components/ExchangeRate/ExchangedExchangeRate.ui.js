@@ -1,7 +1,7 @@
 // @flow
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import ExchangeRate from './ExchangeRate.ui.js'
-import type {GuiCurrencyInfo, GuiDenomination} from '../../../../types'
+import type { GuiCurrencyInfo, GuiDenomination } from '../../../../types'
 
 type ExchangedExchangeRateOwnProps = {
   exchangeSecondaryToPrimaryRatio: number,
@@ -13,11 +13,10 @@ type Props = ExchangedExchangeRateOwnProps
 
 export default class ExchangedExchangeRate extends Component<Props> {
   getSecondaryDisplayAmount () {
-    const {
-      exchangeSecondaryToPrimaryRatio,
-      primaryCurrencyInfo
-    } = this.props
-    if (!exchangeSecondaryToPrimaryRatio || Object.keys(primaryCurrencyInfo).length === 0) { return '0' }
+    const { exchangeSecondaryToPrimaryRatio, primaryCurrencyInfo } = this.props
+    if (!exchangeSecondaryToPrimaryRatio || Object.keys(primaryCurrencyInfo).length === 0) {
+      return '0'
+    }
 
     const secondaryDisplayAmount = (
       parseFloat(1) *
@@ -48,29 +47,14 @@ export default class ExchangedExchangeRate extends Component<Props> {
       exchangeDenomination: emptyDenomination
     }
 
-    const primaryCurrencyInfo = Object.keys(this.props.primaryCurrencyInfo).length === 0
-      ? emptyInfo
-      : this.props.primaryCurrencyInfo
+    const primaryCurrencyInfo = Object.keys(this.props.primaryCurrencyInfo).length === 0 ? emptyInfo : this.props.primaryCurrencyInfo
 
-    const primaryDisplayAmount = this.isBits(primaryCurrencyInfo)
-      ? '1000'
-      : '1'
+    const primaryDisplayAmount = this.isBits(primaryCurrencyInfo) ? '1000' : '1'
 
-    const secondaryCurrencyInfo = Object.keys(this.props.secondaryCurrencyInfo).length === 0
-      ? emptyInfo
-      : this.props.secondaryCurrencyInfo
+    const secondaryCurrencyInfo = Object.keys(this.props.secondaryCurrencyInfo).length === 0 ? emptyInfo : this.props.secondaryCurrencyInfo
 
-    const secondaryDisplayAmount = this.isBits(primaryCurrencyInfo)
-      ? (parseFloat(this.getSecondaryDisplayAmount()) * 1000).toString()
-      : this.getSecondaryDisplayAmount()
+    const secondaryDisplayAmount = this.isBits(primaryCurrencyInfo) ? (parseFloat(this.getSecondaryDisplayAmount()) * 1000).toString() : this.getSecondaryDisplayAmount()
 
-    return (
-      <ExchangeRate
-        primaryDisplayAmount={primaryDisplayAmount}
-        primaryInfo={primaryCurrencyInfo}
-
-        secondaryDisplayAmount={secondaryDisplayAmount}
-        secondaryInfo={secondaryCurrencyInfo} />
-    )
+    return <ExchangeRate primaryDisplayAmount={primaryDisplayAmount} primaryInfo={primaryCurrencyInfo} secondaryDisplayAmount={secondaryDisplayAmount} secondaryInfo={secondaryCurrencyInfo} />
   }
 }

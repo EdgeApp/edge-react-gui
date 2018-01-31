@@ -4,8 +4,8 @@ import { errorAlert as errorAlertReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    'displayAlert': false,
-    'message': ''
+    displayAlert: false,
+    message: ''
   }
   const actual = errorAlertReducer(undefined, {})
 

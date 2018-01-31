@@ -1,13 +1,13 @@
 // @flow
 
-import {connect} from 'react-redux'
-import type {AbcDenomination} from 'edge-login'
+import { connect } from 'react-redux'
+import type { AbcDenomination } from 'edge-login'
 
-import type {Dispatch, State} from '../../../../../ReduxTypes'
+import type { Dispatch, State } from '../../../../../ReduxTypes'
 
 import WalletListTokenRow from './WalletListTokenRow.ui'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
-import {selectWallet} from '../../../../Wallets/action'
+import { selectWallet } from '../../../../Wallets/action'
 
 const mapStateToProps = (state: State, ownProps) => {
   const currencyCode: string = ownProps.currencyCode
