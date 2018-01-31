@@ -68,7 +68,9 @@ export class Request extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id)) {
-      const {abcWallet, currencyCode} = nextProps
+      const abcWallet: AbcCurrencyWallet | null = nextProps.abcWallet
+      const {currencyCode} = nextProps
+      if (!abcWallet) return
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
@@ -87,8 +89,9 @@ export class Request extends Component<Props, State> {
   }
 
   componentDidMount () {
-    const {abcWallet, currencyCode} = this.props
-    if (this.props.loading) return
+    const {currencyCode} = this.props
+    const abcWallet: AbcCurrencyWallet | null = this.props.abcWallet
+    if (!abcWallet || this.props.loading) return
 
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
@@ -107,9 +110,11 @@ export class Request extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const parsedURI = {
-      publicAddress: this.state.publicAddress,
-      nativeAmount: bns.gt(amounts.nativeAmount, '0') ? amounts.nativeAmount : null
+    const parsedURI: AbcEncodeUri = {
+      publicAddress: this.state.publicAddress
+    }
+    if (bns.gt(amounts.nativeAmount, '0')) {
+      parsedURI.nativeAmount = amounts.nativeAmount
     }
     const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(parsedURI) : ''
 
