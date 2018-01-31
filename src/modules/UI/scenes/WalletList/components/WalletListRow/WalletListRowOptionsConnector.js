@@ -1,14 +1,21 @@
-import {connect} from 'react-redux'
-import WalletListRowOptions from './WalletListRowOptions.ui'
-import {updateRenameWalletInput} from '../../action'
-import UI_SELECTORS from '../../../../selectors'
+// @flow
 
-const mapStateToProps = (state) => ({
-  wallets: UI_SELECTORS.getWallets(state),
+import {connect} from 'react-redux'
+
+import WalletListRowOptions from './WalletListRowOptions.ui'
+// $FlowFixMe
+import {updateRenameWalletInput} from '../../action'
+import {getWallets} from '../../../../selectors'
+
+import type {State, Dispatch} from '../../../../../ReduxTypes'
+
+const mapStateToProps = (state: State) => ({
+  wallets: getWallets(state),
+  // $FlowFixMe
   archives: state.ui.wallets.archives
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateRenameWalletInput: (input) => dispatch(updateRenameWalletInput(input))
 })
 

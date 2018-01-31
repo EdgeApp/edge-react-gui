@@ -6,7 +6,8 @@ import GetSeedModal from './GetSeedModal.ui'
 import type {Dispatch, GetState} from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import {CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME} from '../WalletOptions/action'
-import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
+import {getAccount, getWallet} from '../../../../../Core/selectors.js'
+import {getWalletId} from '../../selectors.js'
 
 export type StateProps = {
   walletId: string,
@@ -24,14 +25,14 @@ export const LOCK = 'LOCK_WALLET_SEED'
 
 const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const account = CORE_SELECTORS.getAccount(state)
+  const account = getAccount(state)
   const isPassword = await account.checkPassword(password)
   dispatch({ type: isPassword ? UNLOCK : LOCK })
 }
 
 const mapStateToProps = (state: any): StateProps => {
-  const wallet = CORE_SELECTORS.getWallet(state, state.ui.scenes.walletList.walletId)
-  const walletId = state.ui.scenes.walletList.walletId
+  const wallet = getWallet(state, state.ui.scenes.walletList.walletId)
+  const walletId = getWalletId(state)
 
   return {
     visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.GET_SEED_VALUE)],

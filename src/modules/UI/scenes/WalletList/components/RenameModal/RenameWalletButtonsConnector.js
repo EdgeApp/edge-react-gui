@@ -16,6 +16,8 @@ import * as WALLET_API from '../../../../../Core/Wallets/api.js'
 import * as UI_ACTIONS from '../../../../Wallets/action.js'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 
+import {getWalletId, getWalletName, getRenameWalletInput} from '../../selectors.js'
+
 const renameWallet = (walletId: string, walletName: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
@@ -31,9 +33,9 @@ const renameWallet = (walletId: string, walletName: string) => (dispatch: Dispat
 }
 
 const mapStateToProps = (state: State): StateProps => ({
-  walletId: state.ui.scenes.walletList.walletId,
-  renameWalletInput: state.ui.scenes.walletList.renameWalletInput,
-  walletName: state.ui.scenes.walletList.walletName
+  walletId: getWalletId(state),
+  renameWalletInput: getRenameWalletInput(state),
+  walletName: getWalletName(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
