@@ -59,7 +59,7 @@ type SettingsState = {
   customTokens: Array<CustomTokenInfo>,
   defaultFiat: string,
   isOtpEnabled: boolean,
-  isTouchEnabled: any,
+  isTouchEnabled: boolean,
   isTouchSupported: boolean,
   loginStatus: null,
   merchantMode: boolean,
@@ -132,6 +132,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
   switch (type) {
     case Constants.ACCOUNT_INIT_COMPLETE: {
       const {
+        touchIdInfo,
         account,
         loginStatus,
         otpInfo,
@@ -152,6 +153,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         isOtpEnabled: otpInfo.enabled,
         otpKey: otpInfo.otpKey,
         autoLogoutTimeInSeconds,
+        isTouchEnabled: touchIdInfo.isTouchEnabled,
+        isTouchSupported: touchIdInfo.isTouchSupported,
         defaultFiat,
         merchantMode,
         customTokens,
@@ -427,7 +430,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     case ACTION.CHANGE_TOUCH_ID_SETTINGS: {
       return {
         ...state,
-        isTouchEnabled: data
+        isTouchEnabled: data.isTouchEnabled
       }
     }
 
