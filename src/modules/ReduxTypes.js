@@ -77,6 +77,9 @@ export type State = {
         forceUpdateGuiCounter: number,
         pending: boolean
       },
+      changeMiningFee: {
+        isCustomFeeVisible: boolean
+      },
       transactionList: {
         transactions: Array<AbcTransaction>,
         contactsList: Array<GuiContact>,

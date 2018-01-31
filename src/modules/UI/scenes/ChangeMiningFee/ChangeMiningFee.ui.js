@@ -1,22 +1,21 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, Text} from 'react-native'
-
-import Gradient from '../../components/Gradient/Gradient.ui'
+import {View} from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
 
+import Gradient from '../../components/Gradient/Gradient.ui'
 import RadioButton from './components/RadioButton.ui'
+import CustomFees from './components/CustomFees/CustomFeesConnector.js'
+
 import * as FEE from '../../../../constants/FeeConstants'
 import s from '../../../../locales/strings.js'
 
-import style from './style'
+import styles from './style'
 
-const feeOptions = [
-  { value: FEE.LOW_FEE, label: 'mining_fee_low_label_choice' },
-  { value: FEE.STANDARD_FEE, label: 'mining_fee_standard_label_choice' },
-  { value: FEE.HIGH_FEE, label: 'mining_fee_high_label_choice' }
-]
+const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
+const STANDARD_FEE_TEXT = s.strings.mining_fee_standard_label_choice
+const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
 
 export type ChangeMiningFeeOwnProps = {
   // fee: string,
@@ -47,50 +46,50 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
   }
 
   componentWillUnmount () {
-    if (this.state.feeSetting !== this.props.feeSetting) {
-      this.props.onSubmit(this.state.feeSetting)
-    }
+    this.props.onSubmit(this.state.feeSetting)
   }
 
-  handlePress = (feeSetting: string) => this.setState({ feeSetting });
-  // handleChange = (fee: string) => this.setState({ fee: fee.replace(/\D/g, '') });
+  handlePress = (feeSetting: string, cb: any) => {
+    return this.setState({ feeSetting }, cb)
+  }
 
   render () {
     const { feeSetting } = this.state
 
     return (
       <SafeAreaView>
-        <View style={style.container}>
-          <Gradient style={style.gradient} />
-          <View style={style.headerContainer}>
-            <Text style={style.header} >
-              {s.strings.change_mining_fee_body}
-            </Text>
+        <View style={styles.container}>
+          <Gradient style={styles.gradient} />
+
+          <View style={styles.content}>
+            <View style={styles.row}>
+              <RadioButton
+                value={FEE.HIGH_FEE}
+                label={HIGH_FEE_TEXT}
+                onPress={this.handlePress}
+                isSelected={FEE.HIGH_FEE === feeSetting}
+              />
+            </View>
+
+            <View style={styles.row}>
+              <RadioButton
+                value={FEE.STANDARD_FEE}
+                label={STANDARD_FEE_TEXT}
+                onPress={this.handlePress}
+                isSelected={FEE.STANDARD_FEE === feeSetting}
+              />
+            </View>
+
+            <View style={styles.row}>
+              <RadioButton
+                value={FEE.LOW_FEE}
+                label={LOW_FEE_TEXT}
+                onPress={this.handlePress}
+                isSelected={FEE.LOW_FEE === feeSetting}
+              />
+            </View>
+            <CustomFees handlePress={this.handlePress}/>
           </View>
-          <View style={style.body}>
-            {feeOptions.map(({ value, label }) => (
-              <View key={value} style={style.row}>
-                <RadioButton
-                  value={value}
-                  label={s.strings[label]}
-                  onPress={this.handlePress}
-                  isSelected={value === feeSetting}
-                />
-              </View>
-            ))}
-          </View>
-          {/* feeSetting === FEE.CUSTOM_FEE
-          && <View>
-            <TextInput
-              style={style.input}
-              value={fee}
-              keyboardType='numeric'
-              placeholder='Satoshi per byte'
-              onChangeText={this.handleChange}
-              returnKeyType='done'
-            />
-          </View>
-          */}
         </View>
       </SafeAreaView>
     )
