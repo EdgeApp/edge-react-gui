@@ -10,17 +10,17 @@ import 'intl/locale-data/jsonp/ru-RU'
 
 const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
-  'localeIdentifier': 'en_US',
-  'decimalSeparator': '.',
-  'quotationBeginDelimiterKey': '“',
-  'quotationEndDelimiterKey': '”',
-  'groupingSeparator': ','
+  localeIdentifier: 'en_US',
+  decimalSeparator: '.',
+  quotationBeginDelimiterKey: '“',
+  quotationEndDelimiterKey: '”',
+  groupingSeparator: ','
 }
 let locale = EN_US_LOCALE
 
-declare var Intl: any;
+declare var Intl: any
 
-type IntlLocaleType = any;
+type IntlLocaleType = any
 type IntlNumberFormatOptionsType = {
   toFixed?: number,
   localeMatcher?: 'lookup' | 'best fit',
@@ -32,8 +32,8 @@ type IntlNumberFormatOptionsType = {
   minimumFractionDigits?: number,
   maximumFractionDigits?: number,
   minimumSignificantDigits?: number,
-  maximumSignificantDigits?: number,
-};
+  maximumSignificantDigits?: number
+}
 
 const intlHandler = {
   /**
@@ -81,7 +81,7 @@ const intlHandler = {
    * @returns {boolean}
    */
   isValidInput (value: string): boolean {
-    const {decimalSeparator, groupingSeparator} = locale
+    const { decimalSeparator, groupingSeparator } = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
     if (value === decimalSeparator) return true
@@ -111,7 +111,7 @@ const intlHandler = {
    * @returns {string}
    */
   truncateDecimals (input: string, precision?: number, allowBlank?: boolean = false): string {
-    const {decimalSeparator} = locale
+    const { decimalSeparator } = locale
 
     if (input === '') {
       if (allowBlank) {
@@ -121,7 +121,9 @@ const intlHandler = {
       }
     }
 
-    if (!input.includes(decimalSeparator)) { return input }
+    if (!input.includes(decimalSeparator)) {
+      return input
+    }
     const [integers, decimals] = input.split(decimalSeparator)
     return `${integers}${decimalSeparator}${decimals.slice(0, precision)}`
   },
@@ -133,7 +135,7 @@ const intlHandler = {
    * @returns {string}
    */
   formatToNativeNumber (value: string, options?: IntlNumberFormatOptionsType): string {
-    const {decimalSeparator, groupingSeparator} = locale
+    const { decimalSeparator, groupingSeparator } = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
     const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
 

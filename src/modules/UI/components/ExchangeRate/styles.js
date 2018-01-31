@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({

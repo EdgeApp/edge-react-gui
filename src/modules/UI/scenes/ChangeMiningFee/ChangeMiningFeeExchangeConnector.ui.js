@@ -1,6 +1,6 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import type { State, Dispatch } from '../../../ReduxTypes'
 import ChangeMiningFee from './ChangeMiningFee.ui'
 import { changeFee } from '../../../../actions/CryptoExchangeActions.js'

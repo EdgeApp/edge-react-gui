@@ -25,7 +25,7 @@ const strings = {
   fragmet_wallets_managetokens_option: 'Manage Tokens',
   managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
   manage_tokens_duplicate_currency_code: 'A token with that currency code already exists.',
-  addtoken_top_instructions: 'To add a token, please fill out the following form and press \'Save\'',
+  addtoken_top_instructions: "To add a token, please fill out the following form and press 'Save'",
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
@@ -33,7 +33,7 @@ const strings = {
   addtoken_invalid_information: 'Please enter valid token information and try again',
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
-  edittoken_top_instructions: 'Fill out token info and tap \'Save\' to edit token:',
+  edittoken_top_instructions: "Fill out token info and tap 'Save' to edit token:",
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
   edittoken_delete_title: 'Unable to Edit Token',
@@ -205,7 +205,8 @@ const strings = {
   // OTP
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
-  otp_description: '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
+  otp_description:
+    '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
   otp_enabled_description: 'You can scan a QR code or type in the authentication code to seamlessly authorize other devices.',
   otp_show_code: 'Show authentication code',
   otp_hide_code: 'Hide authentication code',

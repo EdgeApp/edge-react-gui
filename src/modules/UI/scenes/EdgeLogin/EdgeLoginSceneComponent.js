@@ -36,40 +36,25 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
     }
     if (this.props.error) {
       return (
-        <View style={style.buttonContainer} >
+        <View style={style.buttonContainer}>
           <View style={style.buttons}>
-            <SecondaryButton
-              style={style.cancelSolo}
-              onPressFunction={this.props.decline}
-              text={s.strings.string_cancel_cap}
-            />
+            <SecondaryButton style={style.cancelSolo} onPressFunction={this.props.decline} text={s.strings.string_cancel_cap} />
           </View>
         </View>
       )
     }
     return (
-      <View style={style.buttonContainer} >
+      <View style={style.buttonContainer}>
         <View style={style.buttons}>
-          <SecondaryButton
-            style={style.cancel}
-            onPressFunction={this.props.decline}
-            text={s.strings.string_cancel_cap}
-          />
-          <PrimaryButton
-            style={style.submit}
-            onPressFunction={this.props.accept}
-            text={s.strings.accept_button_text}
-          />
+          <SecondaryButton style={style.cancel} onPressFunction={this.props.decline} text={s.strings.string_cancel_cap} />
+          <PrimaryButton style={style.submit} onPressFunction={this.props.accept} text={s.strings.accept_button_text} />
         </View>
       </View>
     )
   }
   renderImage (style: any) {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
-      return <Image
-        style={style.image}
-        resizeMode={'contain'}
-        source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
+      return <Image style={style.image} resizeMode={'contain'} source={{ uri: this.props.lobby.loginRequest.displayImageUrl }} />
     }
     return null
   }
@@ -82,14 +67,10 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
       return (
         <View style={style.header}>
           <View style={style.headerTopShim} />
-          <View style={style.headerImageContainer} >
-            {this.renderImage(style)}
-          </View>
+          <View style={style.headerImageContainer}>{this.renderImage(style)}</View>
           <View style={style.headerTopShim} />
-          <View style={style.headerTextRow} >
-            <Text style={style.bodyText}>
-              {title}
-            </Text>
+          <View style={style.headerTextRow}>
+            <Text style={style.bodyText}>{title}</Text>
           </View>
           <View style={style.headerBottomShim} />
         </View>

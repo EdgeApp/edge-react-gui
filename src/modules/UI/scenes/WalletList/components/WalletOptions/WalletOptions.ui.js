@@ -1,7 +1,7 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 
 import DeleteModal from '../DeleteModal/DeleteModalConnector'
 import RenameModal from '../RenameModal/RenameModalConnector'
@@ -14,12 +14,14 @@ type State = any
 
 export default class WalletOptions extends Component<Props, State> {
   render () {
-    return <View>
-      <DeleteModal />
-      <RenameModal />
-      <ResyncModal />
-      <SplitModal />
-      <GetSeedModal />
-    </View>
+    return (
+      <View>
+        <DeleteModal />
+        <RenameModal />
+        <ResyncModal />
+        <SplitModal />
+        <GetSeedModal />
+      </View>
+    )
   }
 }

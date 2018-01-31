@@ -1,7 +1,7 @@
 // @flow
 
-import {combineReducers} from 'redux'
-import type {Action} from '../../../../../ReduxTypes.js'
+import { combineReducers } from 'redux'
+import type { Action } from '../../../../../ReduxTypes.js'
 import * as Constants from '../../../../../../constants/indexConstants'
 import { OPEN_MODAL_VALUE, CLOSE_MODAL_VALUE } from '../WalletOptions/action'
 import { UPDATE_RENAME_WALLET_INPUT } from './WalletNameInputConnector'

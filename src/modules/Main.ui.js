@@ -6,8 +6,8 @@ import s, { selectLocale } from '../locales/strings.js'
 import { setIntlLocale } from '../locales/intl'
 
 import HockeyApp from 'react-native-hockeyapp'
-import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking} from 'react-native'
+import React, { Component } from 'react'
+import { Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking } from 'react-native'
 import T from './UI/components/FormattedText'
 import { connect } from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
@@ -77,7 +77,7 @@ import { BitcoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory, Litecoi
 import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
-import {makeCoreContext} from '../util/makeContext.js'
+import { makeCoreContext } from '../util/makeContext.js'
 import * as URI from 'uri-js'
 const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
 pluginFactories.push(EthereumCurrencyPluginFactory)
@@ -187,12 +187,14 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
-    Linking.getInitialURL().then(url => {
-      if (url) {
-        this.doDeepLink(url)
-      }
-      // this.navigate(url);
-    }).catch(err => console.log('error occurred ', err))
+    Linking.getInitialURL()
+      .then(url => {
+        if (url) {
+          this.doDeepLink(url)
+        }
+        // this.navigate(url);
+      })
+      .catch(err => console.log('error occurred ', err))
     Linking.addEventListener('url', this.handleOpenURL)
   }
   doDeepLink (url: string) {
@@ -394,17 +396,23 @@ export default class Main extends Component<Props, State> {
                       </Stack>
 
                       <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
-                        <Scene key={Constants.MANAGE_TOKENS_NOT_USED} navTransparent={true}
+                        <Scene
+                          key={Constants.MANAGE_TOKENS_NOT_USED}
+                          navTransparent={true}
                           component={ManageTokens}
                           renderTitle={this.renderTitle(MANAGE_TOKENS)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
+                          renderRightButton={this.renderEmptyButton}
+                        />
 
-                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
+                        <Scene
+                          key={Constants.ADD_TOKEN}
+                          navTransparent={true}
                           component={AddToken}
                           renderTitle={this.renderTitle(ADD_TOKEN)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
+                          renderRightButton={this.renderEmptyButton}
+                        />
                       </Stack>
 
                       <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
@@ -515,9 +523,11 @@ export default class Main extends Component<Props, State> {
   }
 
   renderMenuButton = () => {
-    return <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
-      <Image source={MenuIcon} />
-    </TouchableWithoutFeedback>
+    return (
+      <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
+        <Image source={MenuIcon} />
+      </TouchableWithoutFeedback>
+    )
   }
 
   renderExchangeButton = () => {
@@ -528,7 +538,7 @@ export default class Main extends Component<Props, State> {
     return <SendConfirmationOptions />
   }
 
-  icon = (tabName: string) => (props: {focused: boolean}) => {
+  icon = (tabName: string) => (props: { focused: boolean }) => {
     if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
       throw new Error('Invalid tabbar name')
     }

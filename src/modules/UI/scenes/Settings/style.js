@@ -1,6 +1,6 @@
 // @flow
 
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -45,7 +45,7 @@ export const styles = {
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
 
-    // //// Beginning of Settings Row ///////
+  // //// Beginning of Settings Row ///////
   settingsRowContainer: {
     height: 44,
     backgroundColor: THEME.COLORS.GRAY_4,
@@ -91,7 +91,7 @@ export const styles = {
     fontWeight: 'bold'
   },
 
-    // /////// End of Settings Row /////////
+  // /////// End of Settings Row /////////
   debugArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     padding: 20,
@@ -103,7 +103,7 @@ export const styles = {
     flex: 1
   },
 
-    // //////// Start of Currency Settings//////
+  // //////// Start of Currency Settings//////
   bitcoinSettings: {
     flex: 1
   },

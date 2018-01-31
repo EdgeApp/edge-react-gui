@@ -1,10 +1,10 @@
 // @flow
-import {connect} from 'react-redux'
-import type {Dispatch, State} from '../../modules/ReduxTypes'
+import { connect } from 'react-redux'
+import type { Dispatch, State } from '../../modules/ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../modules/UI/Settings/selectors.js'
 import OtpSettingsSceneComponent from '../../modules/UI/scenes/Otp/OtpSettingsSceneComponent.js'
 // import * as Constants from '../../constants/indexConstants.js'
-import {enableOtp, disableOtp, keepOtp} from '../../actions/indexActions.js'
+import { enableOtp, disableOtp, keepOtp } from '../../actions/indexActions.js'
 export const mapStateToProps = (state: State) => ({
   isOtpEnabled: SETTINGS_SELECTORS.getIsOtpEnabled(state),
   otpKey: SETTINGS_SELECTORS.getOtpKey(state),

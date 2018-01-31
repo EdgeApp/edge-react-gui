@@ -4,7 +4,7 @@ import { contacts as contactsReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    'contactList': []
+    contactList: []
   }
   const actual = contactsReducer(undefined, {})
 

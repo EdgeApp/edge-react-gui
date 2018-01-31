@@ -1,18 +1,11 @@
-import React, {Component} from 'react'
-import {
-    View,
-    TextInput,
-    TouchableOpacity,
-    Keyboard,
-    TouchableWithoutFeedback,
-    Linking
-} from 'react-native'
-import {abs, sub} from 'biggystring'
-import {sprintf} from 'sprintf-js'
+import React, { Component } from 'react'
+import { View, TextInput, TouchableOpacity, Keyboard, TouchableWithoutFeedback, Linking } from 'react-native'
+import { abs, sub } from 'biggystring'
+import { sprintf } from 'sprintf-js'
 import s from '../../../../locales/strings.js'
 import Picker from 'react-native-picker'
 import FormattedText from '../../components/FormattedText'
-import {PrimaryButton} from '../../components/Buttons'
+import { PrimaryButton } from '../../components/Buttons'
 import styles from './style'
 import THEME from '../../../../theme/variables/airbitz'
 import * as UTILS from '../../../utils'
@@ -21,7 +14,7 @@ const categories = ['income', 'expense', 'exchange', 'transfer']
 
 const pickerValues = []
 
-categories.map((key) => {
+categories.map(key => {
   return pickerValues.push(s.strings['fragment_transaction_' + key])
 })
 
@@ -33,7 +26,7 @@ class AmountArea extends Component {
     }
     Picker.init({
       pickerData: pickerValues,
-      onPickerConfirm: (data) => {
+      onPickerConfirm: data => {
         const categoryIndex = pickerValues.indexOf(data[0])
         const categoryKey = categories[categoryIndex]
         this.props.onSelectCategory(categoryKey)
@@ -51,7 +44,7 @@ class AmountArea extends Component {
   }
 
   handleClick = () => {
-    Linking.canOpenURL(this.props.txExplorerUrl).then((supported) => {
+    Linking.canOpenURL(this.props.txExplorerUrl).then(supported => {
       if (supported) {
         Linking.openURL(this.props.txExplorerUrl)
       } else {
@@ -65,7 +58,7 @@ class AmountArea extends Component {
     this.Picker.show()
   }
 
-  onPickerSelect = (input) => {
+  onPickerSelect = input => {
     this.props.selectCategory(input)
   }
 
@@ -82,8 +75,10 @@ class AmountArea extends Component {
         color: THEME.COLORS.ACCENT_GREEN,
         syntax: s.strings.fragment_transaction_income
       }
-    } else { // send tx
-      if (this.props.abcTransaction.networkFee) { // stub, check BTC vs. ETH (parent currency)
+    } else {
+      // send tx
+      if (this.props.abcTransaction.networkFee) {
+        // stub, check BTC vs. ETH (parent currency)
         convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
         const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.networkFee) // convert fee to correct denomination
         const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
@@ -93,19 +88,23 @@ class AmountArea extends Component {
         feeSyntax = sprintf(s.strings.fragment_tx_detail_mining_fee, feeString)
         leftData = {
           color: THEME.COLORS.ACCENT_RED,
-          syntax: s.strings.fragment_transaction_expense}
-      } else { // do not show fee, because token
+          syntax: s.strings.fragment_transaction_expense
+        }
+      } else {
+        // do not show fee, because token
         amountString = absoluteAmount
         feeSyntax = ''
         leftData = {
           color: THEME.COLORS.ACCENT_RED,
-          syntax: s.strings.fragment_transaction_expense}
+          syntax: s.strings.fragment_transaction_expense
+        }
       }
     }
 
     let notes = this.props.abcTransaction.metadata ? this.props.abcTransaction.metadata.notes : ''
-    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.abcTransaction.currencyCode)) { // if it is the parent crypto
-      symbolString = this.props.walletDefaultDenomProps.symbol ? (this.props.walletDefaultDenomProps.symbol + ' ') : ''
+    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.abcTransaction.currencyCode)) {
+      // if it is the parent crypto
+      symbolString = this.props.walletDefaultDenomProps.symbol ? this.props.walletDefaultDenomProps.symbol + ' ' : ''
     } else {
       symbolString = ''
     }
@@ -116,11 +115,14 @@ class AmountArea extends Component {
       <View style={[styles.amountAreaContainer]}>
         <View style={[styles.amountAreaCryptoRow]}>
           <View style={[styles.amountAreaLeft]}>
-            <FormattedText style={[styles.amountAreaLeftText, {color: leftData.color}]}>{s.strings['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
+            <FormattedText style={[styles.amountAreaLeftText, { color: leftData.color }]}>{s.strings['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
           </View>
           <View style={[styles.amountAreaMiddle]}>
             <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{symbolString}{amountString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>
+                {symbolString}
+                {amountString}
+              </FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{feeSyntax}</FormattedText>
@@ -138,13 +140,13 @@ class AmountArea extends Component {
             <FormattedText style={styles.fiatSymbol}>{this.props.fiatCurrencySymbol}</FormattedText>
             <TextInput
               underlineColorAndroid={'transparent'}
-              returnKeyType='done'
-              autoCapitalize='none'
+              returnKeyType="done"
+              autoCapitalize="none"
               autoCorrect={false}
               onFocus={this.props.onFocusFiatAmount}
               onChangeText={this.props.onChangeFiatFxn}
               style={[styles.editableFiat, UTILS.inputBottomPadding()]}
-              keyboardType='numeric'
+              keyboardType="numeric"
               placeholder={''}
               value={UTILS.truncateDecimals(this.props.fiatAmount.toString().replace('-', ''), 2, true)}
               defaultValue={''}
@@ -157,14 +159,14 @@ class AmountArea extends Component {
           </View>
         </View>
         <View style={[styles.categoryRow]}>
-          <TouchableOpacity style={[styles.categoryLeft, {borderColor: this.props.color}]} onPress={this.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
-            <FormattedText style={[{color: this.props.color}, styles.categoryLeftText]}>{this.props.type.syntax}</FormattedText>
+          <TouchableOpacity style={[styles.categoryLeft, { borderColor: this.props.color }]} onPress={this.onEnterCategories} disabled={this.props.subCategorySelectVisibility}>
+            <FormattedText style={[{ color: this.props.color }, styles.categoryLeftText]}>{this.props.type.syntax}</FormattedText>
           </TouchableOpacity>
           <View style={[styles.categoryInputArea]}>
             <TextInput
               underlineColorAndroid={'transparent'}
               blurOnSubmit
-              autoCapitalize='words'
+              autoCapitalize="words"
               placeholderTextColor={THEME.COLORS.GRAY_}
               onFocus={this.props.onEnterSubcategories}
               onChangeText={this.props.onChangeSubcategoryFxn}
@@ -177,7 +179,7 @@ class AmountArea extends Component {
           </View>
         </View>
         <View style={[styles.notesRow]}>
-          <View style={[styles.notesInputWrap]} >
+          <View style={[styles.notesInputWrap]}>
             <TextInput
               underlineColorAndroid={'transparent'}
               onChangeText={this.props.onChangeNotesFxn}
@@ -187,7 +189,7 @@ class AmountArea extends Component {
               style={[styles.notesInput, UTILS.inputBottomPadding()]}
               placeholderTextColor={THEME.COLORS.GRAY_}
               placeholder={s.strings.transaction_details_notes_title}
-              autoCapitalize='sentences'
+              autoCapitalize="sentences"
               autoCorrect={false}
               onFocus={this.props.onFocusNotes}
               onBlur={this.props.onBlurNotes}
@@ -201,14 +203,11 @@ class AmountArea extends Component {
           <View style={[styles.buttonArea]}>
             <PrimaryButton text={s.strings.string_save} style={[styles.saveButton]} onPressFunction={this.props.onPressFxn} />
           </View>
-          {
-            this.props.txExplorerUrl
-              ? (
-                <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
-                  <FormattedText style={[styles.advancedTxText]}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
-                </TouchableWithoutFeedback>
-              ) : null
-          }
+          {this.props.txExplorerUrl ? (
+            <TouchableWithoutFeedback onPress={() => this.handleClick()} style={[styles.advancedTxArea]}>
+              <FormattedText style={[styles.advancedTxText]}>{s.strings.transaction_details_view_advanced_data}</FormattedText>
+            </TouchableWithoutFeedback>
+          ) : null}
         </View>
       </View>
     )

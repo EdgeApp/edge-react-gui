@@ -1,10 +1,10 @@
 // @flow
 
-import React, {Component} from 'react'
-import FlipInput, {type FlipInputFieldInfo} from './FlipInput.ui.js'
+import React, { Component } from 'react'
+import FlipInput, { type FlipInputFieldInfo } from './FlipInput.ui.js'
 import * as UTILS from '../../../utils.js'
-import {intl} from '../../../../locales/intl'
-import {bns} from 'biggystring'
+import { intl } from '../../../../locales/intl'
+import { bns } from 'biggystring'
 
 const DIVIDE_PRECISION = 18
 const LC_UNDEFINED = 0
@@ -21,7 +21,7 @@ type Props = {
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
   secondaryToPrimaryRatio: number,
-  onAmountsChange: (FlipInputAmountsChanged) => void
+  onAmountsChange: FlipInputAmountsChanged => void
 }
 
 type State = {
@@ -32,7 +32,7 @@ type State = {
 }
 
 function precisionAdjust (props: Props) {
-  const order = Math.floor((Math.log(props.secondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
+  const order = Math.floor(Math.log(props.secondaryToPrimaryRatio) / Math.LN10 + 0.000000001) // because float math sucks like that
   const exchangeRateOrderOfMagnitude = Math.pow(10, order)
 
   // Get the exchange rate in pennies
@@ -42,7 +42,7 @@ function precisionAdjust (props: Props) {
 
   if (bns.lt(precisionAdjust, '1')) {
     const fPrecisionAdject = parseFloat(precisionAdjust)
-    let order = 2 + Math.floor((Math.log(fPrecisionAdject) / Math.LN10) - 0.000000001) // because float math sucks like that
+    let order = 2 + Math.floor(Math.log(fPrecisionAdject) / Math.LN10 - 0.000000001) // because float math sucks like that
     order = Math.abs(order)
     if (order > 0) {
       return order
@@ -153,7 +153,9 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   }
 
   convertPrimaryDisplayToSecondaryDisplay = (primaryDisplayAmount: string): string => {
-    if (primaryDisplayAmount === '') { return '' }
+    if (primaryDisplayAmount === '') {
+      return ''
+    }
 
     const primaryExchangeAmount = this.convertPrimaryDisplayToPrimaryExchange(primaryDisplayAmount)
     const secondaryExchangeAmount = this.convertPrimaryExchangeToSecondaryExchange(primaryExchangeAmount)
@@ -162,7 +164,9 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   }
 
   convertSecondaryDisplayToPrimaryDisplay = (secondaryDisplayAmount: string): string => {
-    if (secondaryDisplayAmount === '') { return '' }
+    if (secondaryDisplayAmount === '') {
+      return ''
+    }
 
     const secondaryExchangeAmount = this.convertSecondaryDisplayToSecondaryExchange(secondaryDisplayAmount)
     const primaryExchangeAmount = this.convertSecondaryExchangeToPrimaryExchange(secondaryExchangeAmount)
@@ -184,19 +188,20 @@ export default class ExchangedFlipInput extends Component<Props, State> {
       <FlipInput
         color={this.props.color}
         isValidInput={intl.isValidInput}
-
         primaryDisplayAmount={this.state.primaryDisplayAmount}
         primaryInfo={primaryInfo}
         onPrimaryAmountChange={this.onPrimaryAmountChange}
-
         secondaryDisplayAmount={this.state.secondaryDisplayAmount}
         secondaryInfo={secondaryInfo}
-        onSecondaryAmountChange={this.onSecondaryAmountChange} />
+        onSecondaryAmountChange={this.onSecondaryAmountChange}
+      />
     )
   }
 
   convertPrimaryNativeToDisplay = (primaryNativeAmount: string): string => {
-    if (!primaryNativeAmount) { return '' }
+    if (!primaryNativeAmount) {
+      return ''
+    }
     const primaryNativeToDisplayRatio = this.getPrimaryNativeToDisplayRatio()
     const primaryDisplayAmount = UTILS.convertNativeToDisplay(primaryNativeToDisplayRatio)(primaryNativeAmount)
     return primaryDisplayAmount
@@ -205,18 +210,18 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   getPrimaryNativeToDisplayRatio = () => this.props.primaryInfo.displayDenomination.multiplier
 
   getPrimaryDisplayToExchangeRatio = (): string => {
-    const exchangeMultiplier:string = this.props.primaryInfo.exchangeDenomination.multiplier
-    const displayMultiplier:string = this.props.primaryInfo.displayDenomination.multiplier
+    const exchangeMultiplier: string = this.props.primaryInfo.exchangeDenomination.multiplier
+    const displayMultiplier: string = this.props.primaryInfo.displayDenomination.multiplier
     return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
   }
   getSecondaryDisplayToExchangeRatio = (): string => {
-    const displayMultiplier:string = this.props.secondaryInfo.displayDenomination.multiplier
-    const exchangeMultiplier:string = this.props.secondaryInfo.exchangeDenomination.multiplier
+    const displayMultiplier: string = this.props.secondaryInfo.displayDenomination.multiplier
+    const exchangeMultiplier: string = this.props.secondaryInfo.exchangeDenomination.multiplier
     return bns.div(exchangeMultiplier, displayMultiplier, DIVIDE_PRECISION)
   }
 
   convertPrimaryDisplayToPrimaryExchange = (primaryDisplayAmount: string): string => {
-    const primaryDisplayToExchangeRatio:string = this.getPrimaryDisplayToExchangeRatio()
+    const primaryDisplayToExchangeRatio: string = this.getPrimaryDisplayToExchangeRatio()
     return bns.div(primaryDisplayAmount, primaryDisplayToExchangeRatio, DIVIDE_PRECISION)
   }
   convertSecondaryDisplayToSecondaryExchange = (secondaryDisplayAmount: string): string => {
@@ -225,21 +230,21 @@ export default class ExchangedFlipInput extends Component<Props, State> {
   }
 
   convertPrimaryExchangeToSecondaryExchange = (primaryExchangeAmount: string): string => {
-    const secondaryToPrimaryRatio:string = this.props.secondaryToPrimaryRatio.toString()
+    const secondaryToPrimaryRatio: string = this.props.secondaryToPrimaryRatio.toString()
     return bns.mul(secondaryToPrimaryRatio, primaryExchangeAmount)
   }
   convertSecondaryExchangeToPrimaryExchange = (secondaryExchangeAmount: string): string => {
-    const secondaryToPrimaryRatio:number = this.props.secondaryToPrimaryRatio
-    const primaryToSecondaryRatio:string = secondaryToPrimaryRatio ? `${1 / secondaryToPrimaryRatio}` : '0'
+    const secondaryToPrimaryRatio: number = this.props.secondaryToPrimaryRatio
+    const primaryToSecondaryRatio: string = secondaryToPrimaryRatio ? `${1 / secondaryToPrimaryRatio}` : '0'
     return bns.mul(primaryToSecondaryRatio, secondaryExchangeAmount)
   }
 
   convertPrimaryExchangeToPrimaryDisplay = (primaryExchangeAmount: string): string => {
-    const primaryDisplayToExchangeRatio:string = this.getPrimaryDisplayToExchangeRatio()
+    const primaryDisplayToExchangeRatio: string = this.getPrimaryDisplayToExchangeRatio()
     return bns.mul(primaryDisplayToExchangeRatio, primaryExchangeAmount)
   }
   convertSecondaryExchangeToSecondaryDisplay = (secondaryExchangeAmount: string): string => {
-    const secondaryExchangeToDisplayRatio:string = this.getSecondaryDisplayToExchangeRatio()
+    const secondaryExchangeToDisplayRatio: string = this.getSecondaryDisplayToExchangeRatio()
     return bns.mul(secondaryExchangeToDisplayRatio, secondaryExchangeAmount)
   }
 }

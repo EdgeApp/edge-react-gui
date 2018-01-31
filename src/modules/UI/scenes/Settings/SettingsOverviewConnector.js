@@ -1,17 +1,14 @@
 // @flow
 // import HockeyApp from 'react-native-hockeyapp'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import SettingsOverview from './SettingsOverview.ui'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as CORE_SELECTORS from '../../../Core/selectors'
-import {setAutoLogoutTimeInMinutesRequest,
-  checkCurrentPassword,
-  lockSettings,
-  updateTouchIdEnabled} from './action'
-import {sendLogs} from '../../../Logs/action'
+import { setAutoLogoutTimeInMinutesRequest, checkCurrentPassword, lockSettings, updateTouchIdEnabled } from './action'
+import { sendLogs } from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
-import type {State, Dispatch} from '../../../../modules/ReduxTypes'
+import type { State, Dispatch } from '../../../../modules/ReduxTypes'
 import type { AbcAccount } from 'edge-login'
 // settings_button_lock_settings, or //settings_button_unlock_settings
 const mapStateToProps = (state: State) => {

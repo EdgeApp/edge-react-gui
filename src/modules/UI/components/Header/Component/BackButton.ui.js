@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {TouchableOpacity, Platform} from 'react-native'
+import React, { Component } from 'react'
+import { TouchableOpacity, Platform } from 'react-native'
 
 import T from '../../../components/FormattedText'
 import styles from '../style'

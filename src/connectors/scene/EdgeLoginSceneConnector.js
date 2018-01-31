@@ -1,11 +1,10 @@
 // @flow
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 // import * as Constants from '../../constants/indexConstants'
 import * as actions from '../../actions/indexActions'
-import LinkedComponent
-  from '../../modules/UI/scenes/EdgeLogin/EdgeLoginSceneComponent'
-import {EdgeLoginScreen} from '../../styles/indexStyles'
-import {Actions} from 'react-native-router-flux'
+import LinkedComponent from '../../modules/UI/scenes/EdgeLogin/EdgeLoginSceneComponent'
+import { EdgeLoginScreen } from '../../styles/indexStyles'
+import { Actions } from 'react-native-router-flux'
 export const mapStateToProps = (state: any) => ({
   style: EdgeLoginScreen,
   lobby: state.core.edgeLogin.lobby,
@@ -14,10 +13,11 @@ export const mapStateToProps = (state: any) => ({
 })
 
 export const mapDispatchToProps = (dispatch: any) => ({
-  accept: () => dispatch(actions.lobbyLogin()).catch((e) => {
-    console.log('Failue to login with edge ')
-    console.log(e)
-  }),
+  accept: () =>
+    dispatch(actions.lobbyLogin()).catch(e => {
+      console.log('Failue to login with edge ')
+      console.log(e)
+    }),
   decline: () => Actions.pop()
 })
 

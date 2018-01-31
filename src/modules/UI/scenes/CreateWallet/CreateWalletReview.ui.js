@@ -1,16 +1,12 @@
 // @flow
 
-import React, {Component} from 'react'
-import {Actions} from 'react-native-router-flux'
-import {
-  ActivityIndicator,
-  View,
-  Keyboard
-} from 'react-native'
+import React, { Component } from 'react'
+import { Actions } from 'react-native-router-flux'
+import { ActivityIndicator, View, Keyboard } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
-import {fixFiatCurrencyCode} from '../../../utils'
+import { fixFiatCurrencyCode } from '../../../utils'
 import Text from '../../components/FormattedText'
-import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
+import { SecondaryButton, PrimaryButton } from '../../components/Buttons'
 
 import styles from './style.js'
 import s from '../../../../locales/strings.js'
@@ -45,7 +41,7 @@ export class CreateWalletReviewComponent extends Component<CreateWalletReviewCom
   }
 
   render () {
-    const {isCreatingWallet} = this.props
+    const { isCreatingWallet } = this.props
     return (
       <SafeAreaView>
         <View style={styles.scene}>
@@ -55,22 +51,20 @@ export class CreateWalletReviewComponent extends Component<CreateWalletReviewCom
               <Text style={styles.instructionalText}>{s.strings.create_wallet_top_instructions}</Text>
             </View>
             <View style={styles.reviewArea}>
-              <Text style={styles.reviewAreaText}>{s.strings.create_wallet_name_label} {this.props.walletName}</Text>
-              <Text style={styles.reviewAreaText}>{s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.label} - {this.props.selectedWalletType.currencyCode}</Text>
-              <Text style={styles.reviewAreaText}>{s.strings.create_wallet_fiat_type_label} {this.props.selectedFiat.label}</Text>
+              <Text style={styles.reviewAreaText}>
+                {s.strings.create_wallet_name_label} {this.props.walletName}
+              </Text>
+              <Text style={styles.reviewAreaText}>
+                {s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.label} - {this.props.selectedWalletType.currencyCode}
+              </Text>
+              <Text style={styles.reviewAreaText}>
+                {s.strings.create_wallet_fiat_type_label} {this.props.selectedFiat.label}
+              </Text>
             </View>
             <View style={[styles.buttons]}>
-              <SecondaryButton
-                style={[styles.cancel]}
-                onPressFunction={this.onBack}
-                text={s.strings.title_back} />
+              <SecondaryButton style={[styles.cancel]} onPressFunction={this.onBack} text={s.strings.title_back} />
 
-              <PrimaryButton
-                onPressFunction={this.onSubmit}
-                text={s.strings.fragment_create_wallet_create_wallet}
-                processingFlag={isCreatingWallet}
-                processingElement={<ActivityIndicator />}
-              />
+              <PrimaryButton onPressFunction={this.onSubmit} text={s.strings.fragment_create_wallet_create_wallet} processingFlag={isCreatingWallet} processingElement={<ActivityIndicator />} />
             </View>
           </View>
         </View>

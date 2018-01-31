@@ -1,6 +1,4 @@
-import {
-  Platform
-} from 'react-native'
+import { Platform } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const platform = Platform.OS
@@ -87,7 +85,7 @@ export default {
     },
     icon: {
       flex: 1,
-      fontSize: (platform !== 'ios') ? 26 : 32,
+      fontSize: platform !== 'ios' ? 26 : 32,
       paddingHorizontal: 23,
       backgroundColor: THEME.COLORS.TRANSPARENT,
       color: '#FFF'
@@ -136,7 +134,7 @@ export default {
     },
     icon: {
       flex: 1,
-      fontSize: (platform !== 'ios') ? 26 : 32,
+      fontSize: platform !== 'ios' ? 26 : 32,
       paddingHorizontal: 23,
       backgroundColor: THEME.COLORS.TRANSPARENT,
       color: THEME.COLORS.WHITE

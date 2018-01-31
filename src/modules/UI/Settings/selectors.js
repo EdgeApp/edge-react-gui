@@ -2,7 +2,7 @@
 
 import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-login'
 
-import type {State} from '../../ReduxTypes'
+import type { State } from '../../ReduxTypes'
 
 import isoFiatDenominations from './IsoFiatDenominations.js'
 
@@ -55,7 +55,7 @@ export const getDisplayDenominationFromSettings = (settings: any, currencyCode: 
   const currencySettings = settings[currencyCode] || isoFiatDenominations[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
-  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
+  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
   return selectedDenomination
 }
 
@@ -64,7 +64,7 @@ export const getDisplayDenominationFull = (state: State, currencyCode: string) =
   const currencySettings = settings[currencyCode]
   const selectedDenominationKey = currencySettings.denomination
   const denominations = currencySettings.denominations
-  const selectedDenomination = denominations.find((denomination) => denomination.multiplier === selectedDenominationKey)
+  const selectedDenomination = denominations.find(denomination => denomination.multiplier === selectedDenominationKey)
   return selectedDenomination
 }
 
@@ -82,7 +82,7 @@ export const getDisplayDenomination = (state: State, currencyCode: string): AbcD
 
 export const getExchangeDenomination = (state: State, currencyCode: string) => {
   const denominations = getDenominations(state, currencyCode)
-  const exchangeDenomination = denominations.find((denomination) => denomination.name === currencyCode)
+  const exchangeDenomination = denominations.find(denomination => denomination.name === currencyCode)
   return exchangeDenomination
 }
 

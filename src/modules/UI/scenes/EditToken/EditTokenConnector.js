@@ -1,11 +1,11 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import * as EDIT_TOKEN_ACTIONS from './action.js'
 import EditToken from './EditToken.ui'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 // import * as WALLET_ACTIONS from '../../Wallets/action.js'
-import type {Dispatch, State} from '../../../ReduxTypes'
+import type { Dispatch, State } from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => ({
   customTokens: state.ui.settings.customTokens,

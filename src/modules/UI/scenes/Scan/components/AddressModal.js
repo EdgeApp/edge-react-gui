@@ -1,20 +1,17 @@
 // @flow
-import React, {Component} from 'react'
-import {
-  Alert,
-  Clipboard
-} from 'react-native'
+import React, { Component } from 'react'
+import { Alert, Clipboard } from 'react-native'
 import * as Constants from '../../../../../constants/indexConstants'
 import s from '../../../../../locales/strings.js'
-import {sprintf} from 'sprintf-js'
+import { sprintf } from 'sprintf-js'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
-import {Actions} from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux'
 import StylizedModal from '../../../components/Modal/Modal.ui'
 import * as WALLET_API from '../../../../Core/Wallets/api.js'
-import {AddressInput} from './AddressInput.js'
-import {AddressInputButtons} from './AddressInputButtons.js'
-import type {AbcCurrencyWallet, AbcParsedUri} from 'edge-login'
-import {colors} from '../../../../../theme/variables/airbitz.js'
+import { AddressInput } from './AddressInput.js'
+import { AddressInputButtons } from './AddressInputButtons.js'
+import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-login'
+import { colors } from '../../../../../theme/variables/airbitz.js'
 
 import styles from '../style'
 
@@ -22,8 +19,8 @@ type Props = {
   coreWallet: AbcCurrencyWallet,
   currencyCode: string,
   addressModalVisible: boolean,
-  toggleAddressModal():void,
-  updateParsedURI(AbcParsedUri):void,
+  toggleAddressModal(): void,
+  updateParsedURI(AbcParsedUri): void,
   loginWithEdge(string): void,
   onExitButtonFxn: void
 }
@@ -34,17 +31,15 @@ type State = {
 
 export default class AddressModal extends Component<Props, State> {
   componentWillMount () {
-    this.setState(
-      {
-        uri: '',
-        clipboard: ''
-      }
-    )
+    this.setState({
+      uri: '',
+      clipboard: ''
+    })
   }
 
   _setClipboard (props: Props) {
     const coreWallet = props.coreWallet
-    Clipboard.getString().then((uri) => {
+    Clipboard.getString().then(uri => {
       try {
         // Will throw in case uri is invalid
         WALLET_API.parseURI(coreWallet, uri)
@@ -79,24 +74,12 @@ export default class AddressModal extends Component<Props, State> {
   }
 
   render () {
-    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={colors.primary}
-      style={styles.icon} />
+    const icon = <FAIcon name={Constants.ADDRESS_BOOK_O} size={24} color={colors.primary} style={styles.icon} />
 
-    const copyMessage =
-      this.state.clipboard
-      ? sprintf(s.strings.string_paste_address, this.state.clipboard)
-      : null
-    const middle = <AddressInput
-      copyMessage={copyMessage}
-      onChangeText={this.onChangeText}
-      onSubmit={this.onSubmit}
-      onPaste={this.onPasteFromClipboard}
-      uri={this.state.uri}
-      />
+    const copyMessage = this.state.clipboard ? sprintf(s.strings.string_paste_address, this.state.clipboard) : null
+    const middle = <AddressInput copyMessage={copyMessage} onChangeText={this.onChangeText} onSubmit={this.onSubmit} onPaste={this.onPasteFromClipboard} uri={this.state.uri} />
 
-    const bottom = <AddressInputButtons
-      onSubmit={this.onSubmit}
-      onCancel={this.onCancel} />
+    const bottom = <AddressInputButtons onSubmit={this.onSubmit} onCancel={this.onCancel} />
 
     return (
       <StylizedModal
@@ -112,7 +95,7 @@ export default class AddressModal extends Component<Props, State> {
   }
 
   onPasteFromClipboard = () => {
-    this.setState({uri: this.state.clipboard}, this.onSubmit)
+    this.setState({ uri: this.state.clipboard }, this.onSubmit)
   }
 
   onSubmit = () => {
@@ -134,10 +117,7 @@ export default class AddressModal extends Component<Props, State> {
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
     } catch (e) {
-      Alert.alert(
-        'Invalid Address',
-        'The address you input is not a valid address.'
-      )
+      Alert.alert('Invalid Address', 'The address you input is not a valid address.')
       // console.log(e)
     }
   }
@@ -146,6 +126,6 @@ export default class AddressModal extends Component<Props, State> {
   }
 
   onChangeText = (uri: string) => {
-    this.setState({uri})
+    this.setState({ uri })
   }
 }

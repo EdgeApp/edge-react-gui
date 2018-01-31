@@ -1,12 +1,12 @@
 // @flow
 
-import {Alert} from 'react-native'
-import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'edge-login'
-import {bns} from 'biggystring'
-import {sprintf} from 'sprintf-js'
+import { Alert } from 'react-native'
+import type { AbcSpendInfo, AbcTransaction, AbcCurrencyWallet } from 'edge-login'
+import { bns } from 'biggystring'
+import { sprintf } from 'sprintf-js'
 
-import type {Dispatch, GetState} from '../modules/ReduxTypes'
-import type {GuiWallet, GuiDenomination, GuiCurrencyInfo} from '../types'
+import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import type { GuiWallet, GuiDenomination, GuiCurrencyInfo } from '../types'
 import * as Constants from '../constants/indexConstants'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as UI_SELECTORS from '../modules/UI/selectors'
@@ -15,7 +15,7 @@ import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as actions from './indexActions'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import s from '../locales/strings.js'
-import {checkShiftTokenAvailability} from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
+import { checkShiftTokenAvailability } from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
 import * as CONTEXT_API from '../modules/Core/Context/api'
 
 const DIVIDE_PRECISION = 18
@@ -50,11 +50,14 @@ function setCryptoExchangeAmounts (setAmounts: SetCryptoExchangeAmounts) {
   }
 }
 
-function setShapeTransaction (type: string, data: {
-  abcTransaction: AbcTransaction,
-  networkFee: string,
-  displayAmount: string
-}) {
+function setShapeTransaction (
+  type: string,
+  data: {
+    abcTransaction: AbcTransaction,
+    networkFee: string,
+    displayAmount: string
+  }
+) {
   return {
     type,
     data
@@ -110,11 +113,7 @@ export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: bool
   const state = getState()
   const fromWallet: GuiWallet | null = state.cryptoExchange.fromWallet
   const toWallet: GuiWallet | null = state.cryptoExchange.toWallet
-  const {
-    whichWallet,
-    primaryExchangeAmount,
-    primaryNativeAmount
-  } = info
+  const { whichWallet, primaryExchangeAmount, primaryNativeAmount } = info
 
   const toPrimaryInfo: GuiCurrencyInfo = state.cryptoExchange.toWalletPrimaryInfo
   const fromPrimaryInfo: GuiCurrencyInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -213,10 +212,14 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
   const state = getState()
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
-  if (!fromWallet || !toWallet) { return }
+  if (!fromWallet || !toWallet) {
+    return
+  }
   const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
-  if (!srcWallet) { return }
+  if (!srcWallet) {
+    return
+  }
   if (!state.cryptoExchange.transaction) {
     getShiftTransaction(fromWallet, toWallet)
     return
@@ -229,10 +232,14 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
       console.log(savedTransaction)
-      setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
+      setTimeout(() => {
+        Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
+      }, 1)
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
-      setTimeout(() => { Alert.alert(s.strings.exchange_failed, error.message) }, 1)
+      setTimeout(() => {
+        Alert.alert(s.strings.exchange_failed, error.message)
+      }, 1)
     }
   }
 }
@@ -244,7 +251,9 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   const { fromNativeAmount, nativeMax, nativeMin } = state.cryptoExchange
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
-  if (!fromCurrencyCode || !toCurrencyCode) { return }
+  if (!fromCurrencyCode || !toCurrencyCode) {
+    return
+  }
   const spendInfo: AbcSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
@@ -356,28 +365,30 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   CONTEXT_API.getExchangeSwapInfo(context, fromCurrencyCode, toCurrencyCode)
-  .then((response) => {
-    dispatch(actions.dispatchActionObject(Constants.UPDATE_CRYPTO_EXCHANGE_INFO, response))
-    return response
-  })
-  .catch((e) => {
-    console.log(e)
-  })
+    .then(response => {
+      dispatch(actions.dispatchActionObject(Constants.UPDATE_CRYPTO_EXCHANGE_INFO, response))
+      return response
+    })
+    .catch(e => {
+      console.log(e)
+    })
 
   CONTEXT_API.getExchangeSwapInfo(context, toCurrencyCode, fromCurrencyCode)
-  .then((response) => {
-    dispatch(actions.dispatchActionObject(Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO, response))
-    return response
-  })
-  .catch((e) => {
-    console.log(e)
-  })
+    .then(response => {
+      dispatch(actions.dispatchActionObject(Constants.UPDATE_CRYPTO_REVERSE_EXCHANGE_INFO, response))
+      return response
+    })
+    .catch(e => {
+      console.log(e)
+    })
 }
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   // This is a hack .. if the currecy code is not supported then we cant do the exchange
   if (!checkShiftTokenAvailability(currencyCode)) {
-    setTimeout(() => { Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported) }, 1)
+    setTimeout(() => {
+      Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported)
+    }, 1)
     return
   }
 

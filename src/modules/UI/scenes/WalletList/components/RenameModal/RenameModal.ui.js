@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
@@ -15,17 +15,15 @@ type State = any
 
 export default class RenameModal extends Component<Props, State> {
   render () {
-    return <StylizedModal
-      featuredIcon={<OptionIcon iconName={Constants.RENAME}/>}
-      headerText={s.strings.fragment_wallets_rename_wallet}
-      modalMiddle={<WalletNameInput
-        label={s.strings.fragment_wallets_rename_wallet}
-        walletName={this.props.walletName}
-        currentWalletNameInput={this.props.renameWalletInput}
-      />}
-      modalBottom={<RenameWalletButtons />}
-      visibilityBoolean={this.props.visibilityBoolean}
-      onExitButtonFxn={this.props.onExitButtonFxn}
-    />
+    return (
+      <StylizedModal
+        featuredIcon={<OptionIcon iconName={Constants.RENAME} />}
+        headerText={s.strings.fragment_wallets_rename_wallet}
+        modalMiddle={<WalletNameInput label={s.strings.fragment_wallets_rename_wallet} walletName={this.props.walletName} currentWalletNameInput={this.props.renameWalletInput} />}
+        modalBottom={<RenameWalletButtons />}
+        visibilityBoolean={this.props.visibilityBoolean}
+        onExitButtonFxn={this.props.onExitButtonFxn}
+      />
+    )
   }
 }

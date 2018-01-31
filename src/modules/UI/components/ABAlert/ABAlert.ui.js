@@ -1,12 +1,12 @@
 // @flow
-import {Component} from 'react'
-import {Alert} from 'react-native'
+import { Component } from 'react'
+import { Alert } from 'react-native'
 
 type Props = {
   view: boolean,
   title: string,
   message: string,
-  buttons: Array<{title: string, message: string}>,
+  buttons: Array<{ title: string, message: string }>,
   closeAlert: Function
 }
 
@@ -23,18 +23,15 @@ export default class ABAlert extends Component<Props> {
   }
 
   openAlert = (props: Props) => {
-    const defaultButtons = [{
-      text: 'OK',
-      onPress: this.props.closeAlert,
-      style: 'cancel'
-    }]
+    const defaultButtons = [
+      {
+        text: 'OK',
+        onPress: this.props.closeAlert,
+        style: 'cancel'
+      }
+    ]
 
-    Alert.alert(
-      props.title,
-      props.message,
-      props.buttons || defaultButtons,
-      {onDismiss: this.props.closeAlert}
-    )
+    Alert.alert(props.title, props.message, props.buttons || defaultButtons, { onDismiss: this.props.closeAlert })
   }
 
   render () {

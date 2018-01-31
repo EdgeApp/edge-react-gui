@@ -1,29 +1,21 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {TouchableHighlight, View} from 'react-native'
+import { TouchableHighlight, View } from 'react-native'
 import T from '../../../components/FormattedText'
-import styles, {styles as styleRaw} from '../style'
-import {border as b} from '../../../../utils'
+import styles, { styles as styleRaw } from '../style'
+import { border as b } from '../../../../utils'
 
 export default class RowModal extends Component {
   render () {
     return (
-      <TouchableHighlight style={[styles.settingsRowContainer]} disabled={false}
-        underlayColor={styleRaw.underlay.color}
-        onPress={this.props.onPress}>
-
+      <TouchableHighlight style={[styles.settingsRowContainer]} disabled={false} underlayColor={styleRaw.underlay.color} onPress={this.props.onPress}>
         <View style={[styles.settingsRowTextRow, b('red')]}>
           <View style={[styles.settingsRowLeftContainer, b('blue')]}>
-            <T style={[styles.settingsRowLeftText, b('green')]}>
-              {this.props.leftText}
-            </T>
+            <T style={[styles.settingsRowLeftText, b('green')]}>{this.props.leftText}</T>
           </View>
 
-          <T style={styles.modalRightText}>
-            {this.props.rightText}
-          </T>
+          <T style={styles.modalRightText}>{this.props.rightText}</T>
         </View>
-
       </TouchableHighlight>
     )
   }

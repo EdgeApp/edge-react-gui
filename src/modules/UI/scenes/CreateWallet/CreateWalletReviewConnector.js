@@ -1,18 +1,14 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 // eslint-disable-next-line no-duplicate-imports
-import {
-  CreateWalletReviewComponent
-} from './CreateWalletReview.ui'
+import { CreateWalletReviewComponent } from './CreateWalletReview.ui'
 // eslint-disable-next-line no-duplicate-imports
-import type {
-  CreateWalletReviewDispatchProps
-} from './CreateWalletReview.ui'
-import {createCurrencyWallet} from './action'
-import type {State, Dispatch} from '../../../ReduxTypes'
-import {getSupportedFiats} from '../../../utils.js'
-import {getSupportedWalletTypes} from '../../Settings/selectors.js'
+import type { CreateWalletReviewDispatchProps } from './CreateWalletReview.ui'
+import { createCurrencyWallet } from './action'
+import type { State, Dispatch } from '../../../ReduxTypes'
+import { getSupportedFiats } from '../../../utils.js'
+import { getSupportedWalletTypes } from '../../Settings/selectors.js'
 
 const mapStateToProps = (state: State) => ({
   isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet,

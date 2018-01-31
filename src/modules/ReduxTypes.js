@@ -1,23 +1,9 @@
 // @flow
 
 import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux'
-import type {
-  AbcAccount,
-  AbcContext,
-  AbcCurrencyPlugin,
-  AbcCurrencyWallet,
-  AbcDenomination,
-  AbcLobby,
-  AbcParsedUri,
-  AbcReceiveAddress,
-  AbcTransaction
- } from 'edge-login'
+import type { AbcAccount, AbcContext, AbcCurrencyPlugin, AbcCurrencyWallet, AbcDenomination, AbcLobby, AbcParsedUri, AbcReceiveAddress, AbcTransaction } from 'edge-login'
 
-import type {
-  DeviceDimensions,
-  GuiContact, GuiCurrencyInfo,
-  GuiWallet
-} from '../types'
+import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet } from '../types'
 
 export type Action = { type: string, data?: any }
 
@@ -141,12 +127,12 @@ export type State = {
         syntax: {
           title: string,
           message: string,
-          buttons: Array<{title: string, message: string}>
+          buttons: Array<{ title: string, message: string }>
         }
-      },
+      }
     },
     wallets: {
-      byId: {[walletId: Id]: GuiWallet},
+      byId: { [walletId: Id]: GuiWallet },
       activeWalletIds: Array<Id>,
       archivedWalletIds: Array<Id>,
       selectedWalletId: string,

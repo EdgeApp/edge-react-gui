@@ -1,6 +1,6 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import TransactionList from './TransactionList.ui'
 import {
@@ -8,14 +8,14 @@ import {
   // transactionsSearchHidden,
   getTransactionsRequest
 } from './action'
-import {setContactList} from '../../contacts/action'
-import {updateExchangeRates} from '../../components/ExchangeRate/action'
+import { setContactList } from '../../contacts/action'
+import { updateExchangeRates } from '../../components/ExchangeRate/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
 import _ from 'lodash'
-import type {Dispatch, State} from '../../../ReduxTypes'
+import type { Dispatch, State } from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -42,9 +42,10 @@ const mapStateToProps = (state: State) => {
   let denomination
   if (denominationsOnWallet) {
     denomination = denominationsOnWallet[index]
-  } else { // if it is a token
+  } else {
+    // if it is a token
     const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
-    const customTokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === currencyCode)
+    const customTokenIndex = _.findIndex(customTokens, item => item.currencyCode === currencyCode)
     denomination = {
       ...customTokens[customTokenIndex].denominations[0],
       name: currencyCode,
@@ -82,7 +83,7 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactList: (contacts) => dispatch(setContactList(contacts))
+  setContactList: contacts => dispatch(setContactList(contacts))
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })

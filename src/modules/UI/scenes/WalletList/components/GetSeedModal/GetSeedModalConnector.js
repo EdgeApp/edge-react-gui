@@ -1,11 +1,11 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
 import GetSeedModal from './GetSeedModal.ui'
-import type {Dispatch, GetState} from '../../../../../ReduxTypes'
+import type { Dispatch, GetState } from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
-import {CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME} from '../WalletOptions/action'
+import { CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME } from '../WalletOptions/action'
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 
 export type StateProps = {
@@ -44,15 +44,15 @@ const mapStateToProps = (state: any): StateProps => {
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => {
   const close = () => {
     dispatch({ type: CLOSE_MODAL_VALUE(Constants.GET_SEED_VALUE) })
-    dispatch(({ type: LOCK }))
+    dispatch({ type: LOCK })
   }
 
-  return ({
+  return {
     onExitButtonFxn: close,
     onNegative: () => dispatch({ type: LOCK }),
     onPositive: (password: string) => dispatch(checkCurrentPassword(password)),
     onDone: close
-  })
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GetSeedModal)

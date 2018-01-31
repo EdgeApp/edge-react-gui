@@ -1,25 +1,21 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import s from '../../../../locales/strings.js'
 import * as Constants from '../../../../constants/indexConstants'
 import Gradient from '../../../UI/components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
-import CryptoExchangeConnector
-  from '../../../../connectors/components/CryptoExchangeRateConnector'
-import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
-import { CryptoExchangeFlipInputWrapperComponent }
-  from '../../components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
-import type { ExchangedFlipInputAmounts }
-  from '../../components/FlipInput/ExchangedFlipInput2'
-import {PrimaryButton} from '../../components/Buttons/index'
-import WalletListModal
-  from '../../../UI/components/WalletListModal/WalletListModalConnector'
+import CryptoExchangeConnector from '../../../../connectors/components/CryptoExchangeRateConnector'
+import { CryptoExchangeSceneStyle } from '../../../../styles/indexStyles'
+import { CryptoExchangeFlipInputWrapperComponent } from '../../components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
+import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2'
+import { PrimaryButton } from '../../components/Buttons/index'
+import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
-import {IconButton} from '../../components/Buttons/IconButton.ui'
+import { IconButton } from '../../components/Buttons/IconButton.ui'
 import type { GuiWallet, GuiCurrencyInfo } from '../../../../types'
 import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
 import { getDenomFromIsoCode } from '../../../utils.js'
@@ -110,9 +106,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       // Check which wallet we are currently editing.
       // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
       if (this.state.whichWalletFocus === Constants.FROM) {
-        this.setState({toExchangeAmount: nextProps.toExchangeAmount})
+        this.setState({ toExchangeAmount: nextProps.toExchangeAmount })
       } else if (this.state.whichWalletFocus === Constants.TO) {
-        this.setState({fromExchangeAmount: nextProps.fromExchangeAmount})
+        this.setState({ fromExchangeAmount: nextProps.fromExchangeAmount })
       }
     }
   }
@@ -147,11 +143,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       <SafeAreaView>
         <Gradient style={[style.scene]}>
           <Gradient style={style.gradient} />
-          <KeyboardAwareScrollView
-            style={[style.mainScrollView]}
-            keyboardShouldPersistTaps={Constants.ALWAYS}
-            contentContainerStyle={style.scrollViewContentContainer}
-          >
+          <KeyboardAwareScrollView style={[style.mainScrollView]} keyboardShouldPersistTaps={Constants.ALWAYS} contentContainerStyle={style.scrollViewContentContainer}>
             <CryptoExchangeConnector style={style.exchangeRateBanner} />
             <View style={style.shim} />
             <CryptoExchangeFlipInputWrapperComponent
@@ -167,13 +159,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
               launchWalletSelector={this.launchFromWalletSelector}
               onCryptoExchangeAmountChanged={this.fromAmountChanged}
-          />
-            <View style={style.shim} />
-            <IconButton
-              style={style.flipButton}
-              icon={Constants.SWAP_VERT}
-              onPress={this.flipThis}
             />
+            <View style={style.shim} />
+            <IconButton style={style.flipButton} icon={Constants.SWAP_VERT} onPress={this.flipThis} />
             <View style={style.shim} />
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
@@ -190,9 +178,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
               onCryptoExchangeAmountChanged={this.toAmountChanged}
             />
             <View style={style.shim} />
-            <View style={style.actionButtonContainer} >
-              {this.renderButton()}
-            </View>
+            <View style={style.actionButtonContainer}>{this.renderButton()}</View>
           </KeyboardAwareScrollView>
           {this.renderDropUp()}
           {this.renderConfirmation(style.confirmModal)}
@@ -232,7 +218,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       primaryExchangeAmount: amounts.exchangeAmount,
       primaryNativeAmount: amounts.nativeAmount
     }
-    this.setState({whichWalletFocus: Constants.FROM})
+    this.setState({ whichWalletFocus: Constants.FROM })
     this.props.setNativeAmount(data)
   }
 
@@ -242,19 +228,13 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       primaryExchangeAmount: amounts.exchangeAmount,
       primaryNativeAmount: amounts.nativeAmount
     }
-    this.setState({whichWalletFocus: Constants.TO})
+    this.setState({ whichWalletFocus: Constants.TO })
     this.props.setNativeAmount(data)
   }
 
   renderDropUp = () => {
     if (this.props.showWalletSelectModal) {
-      return (
-        <WalletListModal
-          topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP}
-          type={Constants.CRYPTO_EXCHANGE}
-          whichWallet={this.state.whichWallet}
-        />
-      )
+      return <WalletListModal topDisplacement={Constants.CRYPTO_EXCHANGE_WALLET_DIALOG_TOP} type={Constants.CRYPTO_EXCHANGE} whichWallet={this.state.whichWallet} />
     }
     return null
   }

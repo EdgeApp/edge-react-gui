@@ -23,14 +23,10 @@ const styles = {
     marginTop: 0,
     marginBottom: 0,
     borderBottomColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: (Platform.OS === 'ios')
-      ? 1
-      : 0
+    borderBottomWidth: Platform.OS === 'ios' ? 1 : 0
   },
   feeInput: {
-    height: (Platform.OS === 'ios')
-      ? 26
-      : 46,
+    height: Platform.OS === 'ios' ? 26 : 46,
     textAlign: 'center',
     fontSize: 20,
     color: THEME.COLORS.GRAY_1

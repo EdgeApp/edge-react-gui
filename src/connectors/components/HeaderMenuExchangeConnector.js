@@ -1,14 +1,13 @@
 // @flow
-import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
-import LinkedComponent
-  from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
+import { connect } from 'react-redux'
+import { Actions } from 'react-native-router-flux'
+import LinkedComponent from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
 import * as Styles from '../../styles/indexStyles'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz'
-import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
+import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
 
 export const mapStateToProps = (state: any) => {
   const data = [
@@ -26,8 +25,9 @@ export const mapStateToProps = (state: any) => {
     }
   ]
   return {
-    style: { ...Styles.MenuDropDownStyleHeader,
-      icon: {...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE}
+    style: {
+      ...Styles.MenuDropDownStyleHeader,
+      icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
     },
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,

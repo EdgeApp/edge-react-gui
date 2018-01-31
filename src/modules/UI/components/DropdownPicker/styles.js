@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
@@ -70,7 +70,8 @@ const styles = StyleSheet.create({
     borderRadius: 3
   },
   row: {
-    backgroundColor: THEME.COLORS.WHITE, padding: 10
+    backgroundColor: THEME.COLORS.WHITE,
+    padding: 10
   }
 })
 

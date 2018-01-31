@@ -57,7 +57,6 @@ const StaticModalStyle = {
     color: THEME.COLORS.WHITE
   },
   iconSize: 36
-
 }
 
-export {StaticModalStyle}
+export { StaticModalStyle }

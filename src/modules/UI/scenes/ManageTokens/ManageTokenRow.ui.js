@@ -1,17 +1,13 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-  View,
-  TouchableWithoutFeedback,
-  TouchableHighlight
-} from 'react-native'
+import React, { Component } from 'react'
+import { View, TouchableWithoutFeedback, TouchableHighlight } from 'react-native'
 import Text from '../../components/FormattedText'
 import CheckBox from '../../components/CheckBox'
-import styles, {styles as rawStyles} from './style.js'
+import styles, { styles as rawStyles } from './style.js'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import * as UTILS from '../../../utils.js'
-import type {CustomTokenInfo} from '../../../../types.js'
+import type { CustomTokenInfo } from '../../../../types.js'
 import _ from 'lodash'
 
 // import THEME from '../../../../theme/variables/airbitz'
@@ -21,11 +17,11 @@ export type State = {
 }
 
 export type Props = {
-  toggleToken: (string) => void,
+  toggleToken: string => void,
   metaToken: any,
   enabled?: boolean,
   enabledList: Array<string>,
-  goToEditTokenScene: (string) => void,
+  goToEditTokenScene: string => void,
   customTokensList: Array<CustomTokenInfo>
 }
 
@@ -44,36 +40,27 @@ class ManageTokenRow extends Component<Props, State> {
       enabled = true
     }
 
-    const isEditable: boolean = (_.findIndex(this.props.customTokensList, (token) => token.currencyCode === item.currencyCode) !== -1)
+    const isEditable: boolean = _.findIndex(this.props.customTokensList, token => token.currencyCode === item.currencyCode) !== -1
     const onPress = isEditable ? this.props.goToEditTokenScene : UTILS.noOp
 
     return (
-
-    <TouchableHighlight
-      onPress={() => onPress(item.currencyCode)}
-      underlayColor={rawStyles.underlay.color}
-      style={[styles.manageTokenRow]}
-    >
-      <View style={[styles.manageTokenRowInterior]}>
-        <View style={styles.rowLeftArea}>
-          <TouchableWithoutFeedback
-            onPress={() => this.props.toggleToken(item.currencyCode)}
-            isVisible={item.isVisible}
-            enabled={enabled}
-          >
-            <View style={[styles.touchableCheckboxInterior]}>
-              <CheckBox style={styles.checkBox} enabled={enabled} />
+      <TouchableHighlight onPress={() => onPress(item.currencyCode)} underlayColor={rawStyles.underlay.color} style={[styles.manageTokenRow]}>
+        <View style={[styles.manageTokenRowInterior]}>
+          <View style={styles.rowLeftArea}>
+            <TouchableWithoutFeedback onPress={() => this.props.toggleToken(item.currencyCode)} isVisible={item.isVisible} enabled={enabled}>
+              <View style={[styles.touchableCheckboxInterior]}>
+                <CheckBox style={styles.checkBox} enabled={enabled} />
+              </View>
+            </TouchableWithoutFeedback>
+            <View style={[styles.tokenNameArea]}>
+              <Text style={[styles.tokenNameText]}>
+                {item.currencyName} ({item.currencyCode})
+              </Text>
             </View>
-          </TouchableWithoutFeedback>
-          <View style={[styles.tokenNameArea]}>
-            <Text style={[styles.tokenNameText]}>{item.currencyName} ({item.currencyCode})</Text>
           </View>
+          <View>{isEditable && <Icon style={styles.rowRightArrow} name="arrow-right" />}</View>
         </View>
-        <View>
-          {isEditable && <Icon style={styles.rowRightArrow} name='arrow-right' />}
-        </View>
-      </View>
-    </TouchableHighlight>
+      </TouchableHighlight>
     )
   }
 }

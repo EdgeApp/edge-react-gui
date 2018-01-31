@@ -1,7 +1,7 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -50,32 +50,17 @@ export class ChangeMiningFee extends Component<Props, State> {
 
           <View style={styles.content}>
             <View style={styles.row}>
-              <RadioButton
-                value={FEE.HIGH_FEE}
-                label={HIGH_FEE_TEXT}
-                onPress={this.handlePress}
-                isSelected={FEE.HIGH_FEE === feeSetting}
-              />
+              <RadioButton value={FEE.HIGH_FEE} label={HIGH_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.HIGH_FEE === feeSetting} />
             </View>
 
             <View style={styles.row}>
-              <RadioButton
-                value={FEE.STANDARD_FEE}
-                label={STANDARD_FEE_TEXT}
-                onPress={this.handlePress}
-                isSelected={FEE.STANDARD_FEE === feeSetting}
-              />
+              <RadioButton value={FEE.STANDARD_FEE} label={STANDARD_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.STANDARD_FEE === feeSetting} />
             </View>
 
             <View style={styles.row}>
-              <RadioButton
-                value={FEE.LOW_FEE}
-                label={LOW_FEE_TEXT}
-                onPress={this.handlePress}
-                isSelected={FEE.LOW_FEE === feeSetting}
-              />
+              <RadioButton value={FEE.LOW_FEE} label={LOW_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.LOW_FEE === feeSetting} />
             </View>
-            <CustomFees handlePress={this.handlePress}/>
+            <CustomFees handlePress={this.handlePress} />
           </View>
         </View>
       </SafeAreaView>
