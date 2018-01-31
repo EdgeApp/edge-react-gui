@@ -47,7 +47,6 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   sliderWrap: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },

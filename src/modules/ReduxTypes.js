@@ -15,7 +15,7 @@ import type {
 
 import type {
   DeviceDimensions,
-  GuiContact,
+  GuiContact, GuiCurrencyInfo,
   GuiWallet
 } from '../types'
 
@@ -75,6 +75,9 @@ export type State = {
         isKeyboardVisible: boolean,
         forceUpdateGuiCounter: number,
         pending: boolean
+      },
+      changeMiningFee: {
+        isCustomFeeVisible: boolean
       },
       transactionList: {
         transactions: Array<AbcTransaction>,
@@ -195,24 +198,25 @@ export type State = {
     reverseNativeMax: string,
     reverseNativeMin: string,
     reverseMinerFee: string,
-    fromWallet: any, // GuiWallet | null,
-    fromCurrencyCode: any, // CurrencyCode | null,
+    fromWallet: GuiWallet | null,
+    fromCurrencyCode: string | null,
     fromNativeAmount: string,
     fromDisplayAmount: string,
-    fromWalletPrimaryInfo: any, // AbcCurrencyInfo | null,
+    fromWalletPrimaryInfo: GuiCurrencyInfo, // AbcCurrencyInfo | null,
     fromCurrencyIcon: string | null,
     fromCurrencyIconDark: string | null,
-    toWallet: any, // GuiWallet | null,
-    toCurrencyCode: any, // CurrencyCode | null,
+    toWallet: GuiWallet | null,
+    toCurrencyCode: string | null,
     toNativeAmount: string,
     toDisplayAmount: string,
-    toWalletPrimaryInfo: any, // AbcCurrencyInfo | null,
+    toWalletPrimaryInfo: GuiCurrencyInfo, // AbcCurrencyInfo | null,
     toCurrencyIcon: string | null,
     toCurrencyIconDark: string | null,
     insufficientError: boolean,
     feeSetting: 'low' | 'standard' | 'high' | 'custom',
     walletListModalVisible: boolean,
     confirmTransactionModalVisible: boolean,
+    forceUpdateGuiCounter: number,
     shiftTransactionError: Error | null,
     genericShapeShiftError: Error | null,
     changeWallet: 'none',

@@ -1,7 +1,7 @@
 // @flow
 
 import {Platform} from 'react-native'
-import {div, mul, gte, eq, toFixed} from 'biggystring'
+import { div, mul, gte, eq, toFixed, bns } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'edge-login'
 import type {GuiDenomination, ExchangeData, GuiWallet, CustomTokenInfo} from '../types'
@@ -395,6 +395,32 @@ export const convertAbcToGuiDenomination = (abcDenomination: AbcDenomination): G
     precision: 0
   }
   return guiDenomination
+}
+
+export type PrecisionAdjustParams = {
+  exchangeSecondaryToPrimaryRatio: number,
+  secondaryExchangeMultiplier: string,
+  primaryExchangeMultiplier: string
+}
+
+export function precisionAdjust (params: PrecisionAdjustParams): number {
+  const order = Math.floor((Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
+  const exchangeRateOrderOfMagnitude = Math.pow(10, order)
+
+  // Get the exchange rate in pennies
+  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), params.secondaryExchangeMultiplier)
+
+  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
+
+  if (bns.lt(precisionAdjust, '1')) {
+    const fPrecisionAdject = parseFloat(precisionAdjust)
+    let order = 2 + Math.floor((Math.log(fPrecisionAdject) / Math.LN10) - 0.000000001) // because float math sucks like that
+    order = Math.abs(order)
+    if (order > 0) {
+      return order
+    }
+  }
+  return 0
 }
 
 export const noOp = (optionalArgument: any = null) => {

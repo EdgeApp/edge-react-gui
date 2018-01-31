@@ -36,6 +36,7 @@ type State = {
   textInputFrontFocus: boolean,
   textInputBackFocus: boolean,
   overridePrimaryDecimalAmount: string,
+  forceUpdateGuiCounter: number,
   primaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   secondaryDisplayAmount: string // Actual display amount including 1000s separator and localized for region
 }
@@ -51,6 +52,8 @@ export type FlipInputOwnProps = {
   // Information regarding the primary and secondary field. Mostly related to currency name, code, and denominations
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
+
+  forceUpdateGuiCounter: number,
 
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
@@ -93,6 +96,7 @@ const getInitialState = (props: Props) => {
     textInputBackFocus: false,
     overridePrimaryDecimalAmount: '',
     primaryDisplayAmount: '',
+    forceUpdateGuiCounter: 0,
     secondaryDisplayAmount: ''
   }
 
@@ -166,10 +170,16 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     // Check if primary changed first. Don't bother to check secondary if parent passed in a primary
-    if (nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount) {
+    if (
+      nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount ||
+      nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter
+    ) {
       const primaryDecimalAmount = UTILS.truncateDecimals(nextProps.overridePrimaryDecimalAmount, nextProps.primaryInfo.maxEntryDecimals)
       this.setState(setPrimaryToSecondary(nextProps, primaryDecimalAmount))
-      this.setState({overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount})
+      this.setState({
+        overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount,
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
+      })
     } else {
       if (!this.state.isToggled) {
         const decimalAmount = intl.formatToNativeNumber(this.state.primaryDisplayAmount)
