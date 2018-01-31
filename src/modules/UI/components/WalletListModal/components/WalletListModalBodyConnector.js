@@ -10,8 +10,8 @@ import {
 import * as UI_ACTIONS from '../../../Wallets/action.js'
 import * as Constants from '../../../../../constants/indexConstants'
 import {getTransactionsRequest} from '../../../../UI/scenes/TransactionList/action.js'
-import * as UI_SELECTORS from '../../../selectors'
-import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
+import {getWallets, getActiveWalletIds, getSelectedWalletId} from '../../../selectors'
+import {getSettings} from '../../../Settings/selectors'
 import * as actions from '../../../../../actions/indexActions'
 import {updateReceiveAddress} from '../../../scenes/Request/action.js'
 import type {
@@ -21,10 +21,10 @@ import type {
 
 const mapStateToProps = (state: State, ownProps: {type: string}): {} => ({
   type: ownProps.type,
-  walletList: UI_SELECTORS.getWallets(state),
-  activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),
-  selectedWalletId: UI_SELECTORS.getSelectedWalletId(state),
-  settings: SETTINGS_SELECTORS.getSettings(state)
+  walletList: getWallets(state),
+  activeWalletIds: getActiveWalletIds(state),
+  selectedWalletId: getSelectedWalletId(state),
+  settings: getSettings(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): {} => ({
