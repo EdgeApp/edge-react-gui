@@ -7,8 +7,10 @@ import { closeHelpModal } from './actions.js'
 
 import type { Dispatch, State } from '../../../ReduxTypes'
 
+import {getHelpModal} from './selectors.js'
+
 const mapStateToProps = (state: State) => ({
-  modal: state.ui.scenes.helpModal
+  modal: getHelpModal(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
