@@ -19,6 +19,11 @@ import {checkShiftTokenAvailability} from '../modules/UI/scenes/CryptoExchange/C
 import * as CONTEXT_API from '../modules/Core/Context/api'
 
 const DIVIDE_PRECISION = 18
+const holderObject = {
+  newAmount: '',
+  processingAmount: '',
+  status: 'finished'
+}
 
 export type SetNativeAmountInfo = {
   whichWallet: string,
@@ -199,14 +204,19 @@ async function makeShiftTransaction (dispatch: Dispatch, fromWallet: GuiWallet |
     try {
       await dispatch(getShiftTransaction(fromWallet, toWallet))
     } catch (e) {
-      console.log(e)
-      if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
-        dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
-        return
-      }
-      dispatch(actions.dispatchActionString(Constants.GENERIC_SHAPE_SHIFT_ERROR, e.message))
+      dispatch(processMakeSpendError(e))
     }
   }
+}
+const processMakeSpendError = (e) => (dispatch: Dispatch, getState: GetState) => {
+  console.log(e)
+  holderObject.status = 'finished'
+  holderObject.processingAmount = ''
+  if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
+    dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
+    return
+  }
+  dispatch(actions.dispatchActionString(Constants.GENERIC_SHAPE_SHIFT_ERROR, e.message))
 }
 
 export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: GetState) => {
@@ -259,8 +269,43 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   const srcCurrencyCode = spendInfo.currencyCode
   const destCurrencyCode = spendInfo.spendTargets[0].currencyCode
 
+  if (fromNativeAmount === '0') {
+    // there is no reason to get a transaction when the amount is 0
+    return
+  }
+  holderObject.newAmount = fromNativeAmount
+  if (holderObject.status === 'pending') {
+    //  we are still waiting on the previous make spend to return
+    return
+  }
+  if (holderObject.newAmount === holderObject.processingAmount) {
+    //  there is no new typing from when we returned.
+    return
+  }
   if (srcCurrencyCode !== destCurrencyCode) {
+    holderObject.status = 'pending'
+    holderObject.processingAmount = fromNativeAmount
     const abcTransaction = await srcWallet.makeSpend(spendInfo)
+    holderObject.status = 'finished'
+    if (holderObject.newAmount !== holderObject.processingAmount) {
+      // If there is the user has typed something different in the time it took to
+      // get back the transaction, there is no point in going on,
+      // we need to re-run the transaction
+      holderObject.processingAmount = ''
+      try {
+        await dispatch(getShiftTransaction(fromWallet, toWallet))
+      } catch (e) {
+        dispatch(processMakeSpendError(e))
+        /* console.log(e)
+        if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
+          holderObject.status = 'finished'
+          dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
+          return
+        }
+        dispatch(actions.dispatchActionString(Constants.GENERIC_SHAPE_SHIFT_ERROR, e.message)) */
+      }
+      return
+    }
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     const ratio = primaryInfo.displayDenomination.multiplier.toString()
     const networkFee = UTILS.convertNativeToDenomination(ratio)(abcTransaction.networkFee)
