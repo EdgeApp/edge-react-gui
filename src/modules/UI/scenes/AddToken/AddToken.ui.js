@@ -42,7 +42,8 @@ export type Props = {
   addTokenPending: Function,
   addNewToken: Function,
   currentCustomTokens: Array<CustomTokenInfo>,
-  wallet: GuiWallet
+  wallet: GuiWallet,
+  onAddToken: (string) => void
 }
 
 class AddToken extends Component<Props, State> {
@@ -166,6 +167,7 @@ class AddToken extends Component<Props, State> {
       if (currencyName && currencyCode && decimalPlaces && contractAddress) {
         const denomination = decimalPlacesToDenomination(decimalPlaces)
         this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
+        this.props.onAddToken(currencyCode)
       } else {
         Alert.alert(s.strings.addtoken_invalid_information)
       }
