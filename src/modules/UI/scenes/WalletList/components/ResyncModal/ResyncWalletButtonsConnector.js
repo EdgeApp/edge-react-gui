@@ -14,11 +14,12 @@ import {
 
 import * as WALLET_API from '../../../../../Core/Wallets/api.js'
 import * as UI_ACTIONS from '../../../../Wallets/action.js'
-import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
+import {getWallet} from '../../../../../Core/selectors.js'
+import {getWalletId} from '../../selectors.js'
 
 const resyncWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
+  const wallet = getWallet(state, walletId)
 
   dispatch(wrap(START_MODAL_VALUE(Constants.RESYNC_VALUE), {walletId}))
 
@@ -41,7 +42,7 @@ export type DispatchProps = {
 }
 
 const mapStateToProps = (state: State): StateProps => ({
-  walletId: state.ui.scenes.walletList.walletId
+  walletId: getWalletId(state)
 })
 
 const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({

@@ -15,6 +15,8 @@ import {
 import * as CORE_SELECTORS from '../../../../../Core/selectors.js'
 import * as ACCOUNT_API from '../../../../../Core/Account/api.js'
 
+import {getWalletId} from '../../selectors.js'
+
 const deleteWallet = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
@@ -29,7 +31,7 @@ const deleteWallet = (walletId: string) => (dispatch: Dispatch, getState: GetSta
 }
 
 const mapStateToProps = (state: State) => ({
-  walletId: state.ui.scenes.walletList.walletId
+  walletId: getWalletId(state)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onNegative: () => {},
