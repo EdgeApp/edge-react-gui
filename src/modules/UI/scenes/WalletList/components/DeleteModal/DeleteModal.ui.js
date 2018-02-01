@@ -10,7 +10,7 @@ import DeleteWalletButtons from './DeleteWalletButtonsConnector'
 
 type Props = {
   visibilityBoolean: boolean,
-  onExitButtonFxn: Function
+  onExitButtonFxn: () => void
 }
 
 type State = any

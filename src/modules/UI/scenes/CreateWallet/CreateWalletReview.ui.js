@@ -21,19 +21,18 @@ export type CreateWalletReviewOwnProps = {
   walletName: string,
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType,
-  createCurrencyWallet: Function,
   isCreatingWallet: boolean,
   supportedWalletTypes: Array<GuiWalletType>,
   supportedFiats: Array<GuiFiatType>
 }
 
 export type CreateWalletReviewDispatchProps = {
-  createCurrencyWallet: (string, string, string) => void
+  createCurrencyWallet: (walletName: string, walletType: string, fiatCurrencyCode: string) => void
 }
 
-export type CreateWalletReviewComponentProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps
+export type CreateWalletReviewProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps
 
-export class CreateWalletReviewComponent extends Component<CreateWalletReviewComponentProps> {
+export class CreateWalletReview extends Component<CreateWalletReviewProps> {
   onSubmit = (): void => {
     const { walletName, selectedWalletType, selectedFiat } = this.props
     this.props.createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value))

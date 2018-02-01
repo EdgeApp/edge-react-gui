@@ -38,7 +38,7 @@ export type FullWalletRowProps = {
   sortableMode: boolean,
   customTokens: Array<CustomTokenInfo>,
   sortHandlers: any,
-  settings: any
+  settings: Object
 }
 
 type InternalProps = {

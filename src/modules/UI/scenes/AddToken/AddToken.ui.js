@@ -1,7 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {
   View,
   ActivityIndicator,
@@ -17,27 +16,10 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
-import * as ADD_TOKEN_ACTIONS from './action.js'
 import {decimalPlacesToDenomination} from '../../../utils.js'
 import type { CustomTokenInfo, GuiWallet } from '../../../../types'
-import {
-  getWallet
-} from '../../selectors'
 
-export type DispatchProps = {
-  addNewToken: (string, string, string, string, string) => void
-}
-
-export type State = {
-  currencyName: string,
-  currencyCode: string,
-  contractAddress: string,
-  decimalPlaces: string,
-  multiplier: string,
-  enabled?: boolean
-}
-
-export type Props = {
+export type AddTokenOwnProps = {
   walletId: string,
   addTokenPending: Function,
   addNewToken: Function,
@@ -46,8 +28,28 @@ export type Props = {
   onAddToken: (string) => void
 }
 
-class AddToken extends Component<Props, State> {
-  constructor (props: Props) {
+export type AddTokenDispatchProps = {
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => void
+}
+
+export type AddTokenStateProps = {
+  addTokenPending: boolean,
+  wallet: GuiWallet
+}
+
+type State = {
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string,
+  multiplier: string,
+  enabled?: boolean
+}
+
+export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
+
+export class AddToken extends Component<AddTokenProps, State> {
+  constructor (props: AddTokenProps) {
     super(props)
     this.state = {
       currencyName: '',
@@ -174,17 +176,3 @@ class AddToken extends Component<Props, State> {
     }
   }
 }
-
-const mapStateToProps = (state: any, ownProps: any) => ({
-  addTokenPending: state.ui.wallets.addTokenPending,
-  walletId: ownProps.walletId,
-  currentCustomTokens: state.ui.settings.customTokens,
-  wallet: getWallet(state, ownProps.walletId)
-})
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  dispatch,
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

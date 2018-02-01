@@ -10,7 +10,8 @@ import type {
   AbcLobby,
   AbcParsedUri,
   AbcReceiveAddress,
-  AbcTransaction
+  AbcTransaction,
+  EdgeReceiveAddress
  } from 'edge-login'
 
 import type {
@@ -124,7 +125,7 @@ export type State = {
       },
       request: {
         inputCurrencySelected: string,
-        receiveAddress: AbcReceiveAddress
+        receiveAddress: EdgeReceiveAddress
       },
       dimensions: DeviceDimensions,
       helpModal: boolean,

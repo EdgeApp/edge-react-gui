@@ -27,7 +27,12 @@ import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
-import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
+import type {
+  GuiTransactionRequest,
+  GuiCurrencyInfo,
+  GuiWallet,
+  GuiReceiveAddress
+} from '../../../../types.js'
 
 type State = {
   publicAddress: string,
@@ -38,7 +43,9 @@ type State = {
 
 export type RequestStateProps = {
   loading: boolean,
-  request: any,
+  currencyCode: string,
+  // next line will need review
+  request: GuiTransactionRequest | Object,
   abcWallet: AbcCurrencyWallet | null,
   guiWallet: GuiWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
@@ -49,7 +56,7 @@ export type RequestStateProps = {
 }
 
 export type RequestDispatchProps = {
-  saveReceiveAddress(string): any,
+  saveReceiveAddress(GuiReceiveAddress): any,
 }
 
 type Props = RequestStateProps & RequestDispatchProps

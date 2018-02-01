@@ -1,11 +1,32 @@
+// @flow
+
 import React, {Component} from 'react'
 import {View} from 'react-native'
 import {ChangePasswordScreen} from 'airbitz-core-js-ui'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
+import type {AbcContext, AbcAccount} from 'edge-login'
 
-export default class ChangePassword extends Component {
+export type ChangePasswordOwnProps = {
+  account: AbcAccount,
+  context: AbcContext,
+  showHeader: boolean
+}
+
+export type ChangePasswordDispatchProps = {
+  onComplete: () => void
+}
+
+export type ChangePasswordStateProps = {
+  context: AbcContext,
+  account: AbcAccount,
+  showHeader: boolean
+}
+
+type ChangePasswordComponent = ChangePasswordOwnProps & ChangePasswordDispatchProps & ChangePasswordStateProps
+
+export default class ChangePassword extends Component<ChangePasswordComponent> {
   onComplete = () => {
     this.props.onComplete()
   }

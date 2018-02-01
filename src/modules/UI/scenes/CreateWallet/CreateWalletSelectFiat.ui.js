@@ -38,10 +38,10 @@ export type CreateWalletSelectFiatStateProps = {
   supportedFiats: Array<GuiFiatType>
 }
 
-export type CreateWalletSelectFiatComponentProps = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
+export type CreateWalletSelectFiatProps = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
 
-export class CreateWalletSelectFiatComponent extends Component<CreateWalletSelectFiatComponentProps, State> {
-  constructor (props: CreateWalletSelectFiatComponentProps & State) {
+export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProps, State> {
+  constructor (props: CreateWalletSelectFiatProps & State) {
     super(props)
     this.state = {
       walletName: this.props.walletName || '',

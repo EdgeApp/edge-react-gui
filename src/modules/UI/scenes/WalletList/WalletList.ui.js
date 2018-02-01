@@ -60,11 +60,11 @@ type Props = {
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, string, boolean) => void,
+  walletRowOption: (walletId: string, option: string, archived: boolean) => void
 }
 
 export default class WalletList extends Component<Props, State> {
-  constructor (props: any) {
+  constructor (props: Props) {
     super(props)
     this.state = {
       sortableMode: false,

@@ -10,7 +10,8 @@ import s from '../../../../locales/strings.js'
 import {StaticModalComponent, TwoButtonTextModalComponent, ExpandableBoxComponent} from '../../../../components/indexComponents.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
-type Props = {
+
+type OtpSettingsSceneProps = {
   isOtpEnabled: boolean,
   otpKey?: string,
   otpResetDate?: string,
@@ -26,7 +27,7 @@ type State = {
   showResetDialog: boolean
 }
 
-export default class OtpSettingsSceneComponent extends Component<Props, State> {
+export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
   componentWillMount () {
     let showResetDialog = false
     if (this.props.otpResetDate) {

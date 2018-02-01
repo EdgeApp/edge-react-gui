@@ -3,7 +3,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import T from '../../../components/FormattedText/FormattedText.ui'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import styles, {styles as styleRaw} from '../style'
 import {border as b} from '../../../../utils'
@@ -35,7 +34,7 @@ export default class RowRadio extends Component {
 
       <View style={[styles.rowTextRow, b('red')]}>
         <View style={[styles.rowLeftContainer, b('blue')]}>
-          <T style={[styles.rowLeftText, b('green')]}>{left}</T>
+          {left}
         </View>
         {icon}
       </View>

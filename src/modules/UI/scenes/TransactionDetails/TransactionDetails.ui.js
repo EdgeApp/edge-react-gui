@@ -31,11 +31,11 @@ import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-export type Props = {
+export type TransactionDetailsOwnProps = {
   abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
-  settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
+  settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
   currencyInfo: AbcCurrencyInfo | null,
@@ -43,16 +43,16 @@ export type Props = {
   wallets: Array<GuiWallet>
 }
 
-export type DispatchProps = {
+export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (string, string, AbcMetadata) => void,
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
   setContactList: (Array<GuiContact>) => void,
   getSubcategories: () => void,
-  displayDropdownAlert: (string, string) => void
+  displayDropdownAlert: (message: string, title: string) => void
 }
 
-export type State = {
+type State = {
   name: string, // remove commenting once metaData in Redux
   thumbnailPath: string,
   // hasThumbnail: boolean,
@@ -61,13 +61,12 @@ export type State = {
   amountFiat: string,
   direction: string,
   bizId: number,
-  miscJson: any,
+  miscJson: any, // core receives this as a string
   dateTimeSyntax: string,
   subCategorySelectVisibility: boolean,
   categorySelectVisibility: boolean,
   subCategory: string,
   contactSearchVisibility: boolean,
-  animation: any, // AnimatedValue
   payeeOpacity: any, // AnimatedValue
   subcategoryOpacity: any, // AnimatedValue
   payeeZIndex: number,
@@ -76,16 +75,18 @@ export type State = {
   walletDefaultDenomProps: AbcDenomination
 }
 
+type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
+
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
 const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
 const INCOME_TEXT = s.strings.fragment_transaction_income
 
-export class TransactionDetails extends Component<Props & DispatchProps, State> {
+export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   guiWallet: GuiWallet
   fiatSymbol: string
 
-  constructor (props: Props & DispatchProps) {
+  constructor (props: TransactionDetailsProps) {
     super(props)
     const dateTime = new Date(props.abcTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -131,13 +132,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       amountFiat,
       bizId: 0,
       direction: (parseInt(props.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',
-      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : null,
+      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : '',
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
       subCategory: subCategory || '',
       contactSearchVisibility: false,
-      animation: new Animated.Value(0),
       payeeOpacity: new Animated.Value(0),
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,
@@ -348,7 +348,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     })
   }
 
-  onSelectCategory = (type: any) => {
+  onSelectCategory = (type: string) => {
     this.setState({type})
   }
 

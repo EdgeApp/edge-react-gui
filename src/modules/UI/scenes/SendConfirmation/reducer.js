@@ -2,8 +2,9 @@
 import * as ACTION from './action'
 import { type SendConfirmationState, initialState } from './selectors'
 import { isEqual } from 'lodash'
+import type {Action} from '../../../ReduxTypes.js'
 
-export const sendConfirmation = (state: SendConfirmationState = initialState, action: any) => {
+export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
   const { type, data = {} } = action
   switch (type) {
     case ACTION.UPDATE_TRANSACTION: {

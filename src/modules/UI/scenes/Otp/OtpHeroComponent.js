@@ -4,12 +4,12 @@ import { View, Image, Text } from 'react-native'
 import iconImage from '../../../../assets/images/otp/OTP-badge.png'
 import s from '../../../../locales/strings.js'
 
-type Props= {
+type OtpHeroProps= {
   style: Object,
   enabled: boolean
 }
 
-export default class OtpHeroComponent extends Component<Props> {
+export default class OtpHero extends Component<OtpHeroProps> {
   renderText = (style: Object) => {
     if (this.props.enabled) {
       return <Text style={style.bodyText} >

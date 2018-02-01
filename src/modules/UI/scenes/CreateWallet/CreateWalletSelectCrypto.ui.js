@@ -36,10 +36,10 @@ type State = {
   searchTerm: string
 }
 
-export type CreateWalletSelectCryptoComponentProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
+export type CreateWalletSelectCryptoProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
 
-export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSelectCryptoComponentProps, State> {
-  constructor (props: CreateWalletSelectCryptoComponentProps & State) {
+export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCryptoProps, State> {
+  constructor (props: CreateWalletSelectCryptoProps & State) {
     super(props)
     this.state = {
       selectedWalletType: '',

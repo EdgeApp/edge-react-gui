@@ -12,6 +12,7 @@ import styles, {styles as rawStyles} from './style.js'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 import * as UTILS from '../../../utils.js'
 import type {CustomTokenInfo} from '../../../../types.js'
+import type {AbcMetaToken} from 'edge-login'
 import _ from 'lodash'
 
 // import THEME from '../../../../theme/variables/airbitz'
@@ -22,7 +23,10 @@ export type State = {
 
 export type Props = {
   toggleToken: (string) => void,
-  metaToken: any,
+  // this is an stange case that needs to be looked at later
+  metaToken: AbcMetaToken & {
+    item: any
+  },
   enabled?: boolean,
   enabledList: Array<string>,
   goToEditTokenScene: (string) => void,
