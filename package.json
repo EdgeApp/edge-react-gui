@@ -50,7 +50,7 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "git://github.com/Airbitz/edge-currency-bitcoin.git#20df3d61f379b973bbfceb740373893cdbf2cdf3",
+    "edge-currency-bitcoin": "git://github.com/Airbitz/edge-currency-bitcoin.git#319c4807043ef1f95323df7a82f490353d73f23f",
     "edge-currency-ethereum": "git://github.com/Airbitz/edge-currency-ethereum.git#f2281e6a7d63482627cb938be265786a8c2fc171",
     "edge-exchange-plugins": "^0.1.1",
     "edge-login": "^0.5.2",
