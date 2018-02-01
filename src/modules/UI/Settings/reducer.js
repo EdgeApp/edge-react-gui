@@ -176,7 +176,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         }
       })
       currencyPlugins.forEach((key) => {
-        console.log(key)
         newState = currencyPLuginUtil(newState, key)
       })
       customTokensSettings.forEach((key) => {

@@ -28,8 +28,7 @@ export default class AutoLogout extends Component<Props, State> {
   }
 
   handleAppStateChange = (nextAppState: AppStateType) => {
-    console.log('APP STATE CHANGED')
-    console.log(`${this.state.appState} -> ${nextAppState}`)
+    console.log(`APP STATE CHANGED ${this.state.appState} -> ${nextAppState}`)
     const newTimestamp = new Date()
     const oldTimeStamp = this.state.timestamp
     const durationInSeconds = this.props.autoLogoutTimeInSeconds || Infinity

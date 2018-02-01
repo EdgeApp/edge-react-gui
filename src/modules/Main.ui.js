@@ -192,7 +192,7 @@ export default class Main extends Component<Props, State> {
         this.doDeepLink(url)
       }
       // this.navigate(url);
-    }).catch(err => console.log('error occurred ', err))
+    }).catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
   }
   doDeepLink (url: string) {

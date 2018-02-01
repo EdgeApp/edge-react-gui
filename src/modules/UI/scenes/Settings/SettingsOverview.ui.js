@@ -1,5 +1,4 @@
 // @flow
-// import HockeyApp from 'react-native-hockeyapp'
 
 import React, {Component} from 'react'
 import {ScrollView, Text, View, Alert} from 'react-native'
@@ -107,7 +106,6 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   _onPressDummyRouting = () => {
-    // console.log('dummy routing')
   }
 
   unlockSettingsAlert = () => Alert.alert(null, s.strings.settings_alert_unlock, [{text: s.strings.string_ok}])
@@ -125,19 +123,15 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   _onPressOpenLogoffTime = () => {
-    // console.log('opening auto log off modal')
   }
 
   _onPressOpenDefaultCurrency = () => {
-    // console.log('opening default currency modal?')
   }
 
   _onPressOpenChangeCategories = () => {
-    // console.log('open change categories thingy')
   }
 
   _onToggleOption = (property: string) => {
-    console.log('Allen toggling option: ', property)
   }
 
   _onToggleTouchIdOption = (bool: boolean) => {
@@ -146,7 +140,6 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   _onPressDebug = () => {
-    // HockeyApp.generateTestCrash()
   }
 
   onDoneAutoLogoutModal = (autoLogoutTimeInMinutes: number) => {

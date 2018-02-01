@@ -172,16 +172,13 @@ export const setNativeAmount = (info: SetNativeAmountInfo, forceUpdateGui?: bool
       const fromExchangeAmount = bns.div(toExchangeAmount, state.cryptoExchange.exchangeRate.toFixed(3), DIVIDE_PRECISION)
 
       // let exchangePrecision = bns.log10(fromPrimaryInfo.displayDenomination.multiplier)
-      // console.log('exchangePrecision: ' + exchangePrecision.toString())
       // const precisionAdjust = UTILS.precisionAdjust({
       //   primaryExchangeMultiplier: toPrimaryInfo.exchangeDenomination.multiplier,
       //   secondaryExchangeMultiplier: '100',
       //   exchangeSecondaryToPrimaryRatio: state.cryptoExchange.exchangeRate
       // })
-      // console.log('precisionAdjust: ' + precisionAdjust.toString())
       //
       // exchangePrecision = exchangePrecision - precisionAdjust
-      // console.log('exchangePrecision: ' + exchangePrecision.toString())
       // fromExchangeAmount = bns.toFixed(fromExchangeAmount, 0, exchangePrecision)
 
       const fromNativeAmount = bns.mul(fromExchangeAmount, fromPrimaryInfo.exchangeDenomination.multiplier)

@@ -37,18 +37,14 @@ export const mapStateToProps = (state: any) => {
 
 export const mapDispatchToProps = (dispatch: any) => ({
   onSelect: (value: string) => {
-    console.log(value)
     switch (value) {
       case Constants.HELP_VALUE:
-        console.log('HELP MENU CLICK ')
         dispatch(openHelpModal())
         break
       case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
-        console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
         dispatch(actions.exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
-        console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
         Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]()
         break
     }

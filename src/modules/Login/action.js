@@ -122,7 +122,6 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     dispatch(updateWalletsRequest())
   } catch (e) {
     console.log(e)
-    console.log(' The initialization blew up ')
   }
 }
 

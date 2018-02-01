@@ -53,7 +53,7 @@ class TextAndIconButton extends Component<Props, State> {
         />
       )
     } catch (e) {
-      console.log('Error')
+      console.log(e)
     }
   }
 
