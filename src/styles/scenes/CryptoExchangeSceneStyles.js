@@ -118,21 +118,33 @@ const CryptoExchangeSceneStyle = {
     },
     containerNoFee: {
       width: '90%',
-      height: 144,
       backgroundColor: THEME.COLORS.SECONDARY
+    },
+    containerNoWalletSelected: {
+      paddingVertical: 10,
+      justifyContent: 'space-around'
     },
     topRow: {
       height: 34,
       flexDirection: 'column',
       justifyContent: 'space-around'
     },
-    walletSelector: {...Styles.TextAndIconButtonStyle,
-      content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
-      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}},
+    walletSelector: Styles.TextAndIconButtonStyle,
+    noWalletSelected: {
+      ...Styles.TextAndIconButtonStyle,
+      textContainer: {
+        paddingLeft: 32
+      },
+      inner: {
+        ...Styles.TextAndIconButtonStyle.inner,
+        width: '100%',
+        justifyContent: 'space-around'
+      }
+    },
     iconContainer: {
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: 3,
+      left: 3,
       height: 29,
       width: 29,
       backgroundColor: THEME.COLORS.TRANSPARENT,

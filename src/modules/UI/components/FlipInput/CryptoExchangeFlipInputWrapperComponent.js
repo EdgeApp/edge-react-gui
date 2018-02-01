@@ -67,10 +67,10 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
     } = this.props
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
-      return <View style={[style.containerNoFee, this.props.fee && style.container]}>
+      return <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
         <View style={style.topRow}>
               <TextAndIconButton
-                style={style.walletSelector}
+                style={style.noWalletSelected}
                 onPress={this.launchSelector}
                 icon={Constants.KEYBOARD_ARROW_DOWN}
                 title={this.props.buttonText}
