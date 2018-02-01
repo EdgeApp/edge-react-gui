@@ -56,23 +56,31 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case ACTION.UPDATE_WALLET_ENABLED_TOKENS: {
       const { walletId, tokens } = action.data
-      return {
-        ...state,
-        [walletId]: {
-          ...state[walletId],
-          enabledTokens: tokens
+      if (state[walletId] !== undefined) {
+        return {
+          ...state,
+          [walletId]: {
+            ...state[walletId],
+            enabledTokens: tokens
+          }
         }
+      } else {
+        return state
       }
     }
 
     case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
       const { enabledTokens, walletId } = action.data
-      return {
-        ...state,
-        [walletId]: {
-          ...state[walletId],
-          enabledTokens
+      if (state[walletId] !== undefined) {
+        return {
+          ...state,
+          [walletId]: {
+            ...state[walletId],
+            enabledTokens
+          }
         }
+      } else {
+        return state
       }
     }
 
