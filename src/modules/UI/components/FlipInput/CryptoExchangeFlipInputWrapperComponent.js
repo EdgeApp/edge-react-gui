@@ -65,11 +65,6 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
       overridePrimaryExchangeAmount
     } = this.props
 
-// <<<<<<< HEAD
-//     if (!this.props.uiWallet) {
-//       const buttonText = this.props.whichWallet === Constants.TO ? s.strings.select_recv_wallet : s.strings.select_src_wallet
-//       return <View style={[style.containerNoFee, style.containerNoWalletSelected]}>
-// =======
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
         <View style={style.topRow}>
