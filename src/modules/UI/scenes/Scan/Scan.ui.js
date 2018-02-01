@@ -31,14 +31,21 @@ type Props = {
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,
-  scanToWalletListModalVisibility: any,
+  scanToWalletListModalVisibility: boolean,
+  scanFromWalletListModalVisibility: boolean,
+  scanToWalletListModalVisibility: boolean,
   dispatchEnableScan(): void,
   dispatchDisableScan(): void,
   toggleEnableTorch(): void,
   toggleAddressModal(): void,
   toggleWalletListModal(): void,
+  toggleScanToWalletListModal(): void,
   updateParsedURI(AbcParsedUri): void,
   loginWithEdge(string): void
+}
+
+type State = {
+  cameraPermission?: boolean
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -49,12 +56,7 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 // const PHOTOS_TEXT   = s.strings.fragment_send_photos
 const FLASH_TEXT = s.strings.fragment_send_flash
 
-export default class Scan extends Component<any, any> {
-  static defaultProps: any
-  state: {
-    cameraPermission?: boolean
-  }
-
+export default class Scan extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -162,7 +164,7 @@ export default class Scan extends Component<any, any> {
     this.props.toggleScanToWalletListModal()
   }
 
-  onBarCodeRead = (scan: { data: any }) => {
+  onBarCodeRead = (scan: { data: string }) => {
     if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
@@ -194,7 +196,6 @@ export default class Scan extends Component<any, any> {
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         // TODO: make edgelogin work with image picker -paulvp
         /* if (/^airbitz:\/\/edge\//.test(uri)) {
-          console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
           return
         } */
         Actions.sendConfirmation()

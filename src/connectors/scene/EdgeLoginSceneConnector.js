@@ -14,10 +14,7 @@ export const mapStateToProps = (state: any) => ({
 })
 
 export const mapDispatchToProps = (dispatch: any) => ({
-  accept: () => dispatch(actions.lobbyLogin()).catch((e) => {
-    console.log('Failue to login with edge ')
-    console.log(e)
-  }),
+  accept: () => dispatch(actions.lobbyLogin()).catch((e) => { console.log(e) }),
   decline: () => Actions.pop()
 })
 

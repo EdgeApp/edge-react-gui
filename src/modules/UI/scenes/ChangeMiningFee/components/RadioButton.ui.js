@@ -6,14 +6,14 @@ import T from '../../../components/FormattedText'
 
 import style from '../style'
 
-type Props = {
+type RadioButtonOwnProps = {
   value: string,
   label: string,
   isSelected: boolean,
   onPress: (value: string) => void,
 }
 
-export default class RadioButton extends Component<Props> {
+export default class RadioButton extends Component<RadioButtonOwnProps> {
   handlePress = () => this.props.onPress(this.props.value)
 
   renderIcon () {

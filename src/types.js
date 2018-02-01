@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type {AbcDenomination, AbcMetaToken} from 'edge-login'
+import type {AbcDenomination, AbcMetaToken, EdgeMetadata} from 'edge-login'
 
 export type GuiWallet = {
   id: string,
@@ -89,6 +89,69 @@ export type FlatListItem = {
 
 export type DeviceDimensions = {
   keyboardHeight?: number
+}
+
+export type ExchangePair = {
+  rate: string,
+  limit: number,
+  pair: string,
+  maxLimit: number,
+  min: number,
+  minerFee: number
+}
+
+export type GuiTouchIdInfo = {
+  isTouchEnabled: boolean,
+  isTouchSupported: boolean
+}
+
+export type GuiReceiveAddressMetadata = {
+  amountFiat: number,
+  bizId?: any,
+  category: string,
+  miscJson: string,
+  notes: string,
+  payeeName: string
+}
+
+export type GuiReceiveAddress = {
+  metadata: EdgeMetadata,
+  publicAddress: string,
+  segwitAddress?: string,
+  nativeAmount: string
+}
+
+export type GuiTransactionRequest = {
+  inputCurrencySelected: string,
+  receiveAddress: GuiReceiveAddress
+}
+
+export type GuiRequestPrimaryInfo = {
+  displayCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  multiplier: string,
+  name: string,
+  symbol: string
+}
+
+export type GuiRequestSecondaryInfo = {
+  displayCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  exchangeDenomination: GuiDenomination,
+  multiplier: string,
+  name: string,
+  symbol: string
+}
+
+export type FlipInputFieldInfo = GuiCurrencyInfo & {
+  nativeAmount?: string,
+  displayAmount?: string
+}
+
+export type SubcategorySearchResultData = {
+  index: number,
+  item: string,
+  separators: Object
 }
 
 export type CurrencyConverter = {

@@ -158,7 +158,7 @@ export class SendConfirmation extends Component<Props, State> {
         <Gradient style={[styles.view]}>
           <Gradient style={styles.gradient} />
           <View style={[styles.mainScrollView]}>
-            <View style={[styles.exchangeRateContainer, border()]}>
+            <View style={[styles.exchangeRateContainer, styles.error]}>
               {
                 this.props.errorMsg
                   ? <Text style={[styles.error]}>

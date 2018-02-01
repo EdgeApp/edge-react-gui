@@ -17,15 +17,28 @@ const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
 const STANDARD_FEE_TEXT = s.strings.mining_fee_standard_label_choice
 const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
 
-type Props = {
+export type ChangeMiningFeeOwnProps = {
+  // fee: string,
   feeSetting: string,
   onSubmit: (feeSetting: string) => Promise<void>
 }
+
+export type ChangeMiningFeeStateProps = {
+  feeSetting: string
+}
+
+export type ChangeMiningFeeDispatchProps = {
+
+}
+
 type State = {
   feeSetting: string
 }
-export class ChangeMiningFee extends Component<Props, State> {
-  constructor (props: Props) {
+
+export type ChangeMiningFeeProps = ChangeMiningFeeOwnProps & ChangeMiningFeeDispatchProps & ChangeMiningFeeStateProps
+
+export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, State> {
+  constructor (props: ChangeMiningFeeProps) {
     super(props)
     this.state = {
       feeSetting: props.feeSetting
@@ -82,5 +95,3 @@ export class ChangeMiningFee extends Component<Props, State> {
     )
   }
 }
-
-export default ChangeMiningFee

@@ -11,7 +11,7 @@ type Props = {
   icon: string,
   style: any,
   onPress: Function,
-  title: string,
+  title: string | Function,
   iconType: string
 }
 type State = {
@@ -23,7 +23,10 @@ class TextAndIconButton extends Component<Props, State> {
     icon: PropTypes.string.isRequired,
     style: PropTypes.object.isRequired,
     onPress: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.oneOfType([
+      PropTypes.string.isRequired,
+      PropTypes.func.isRequired
+    ])
   }
   componentWillMount () {
     this.setState({
@@ -53,7 +56,7 @@ class TextAndIconButton extends Component<Props, State> {
         />
       )
     } catch (e) {
-      console.log('Error')
+      console.log(e)
     }
   }
 
@@ -82,13 +85,18 @@ class TextAndIconButton extends Component<Props, State> {
         <View style={centeredContent}>
           <View style={inner}>
             <View style={textContainer} >
-              <Text
-                style={[styles.text, text, this.state.pressed && textPressed]}
-                ellipsizeMode={'middle'}
-                numberOfLines={1}
-              >
-                {this.props.title + ' '}
-              </Text>
+              {typeof this.props.title === 'string' &&
+                <Text
+                  style={[styles.text, text, this.state.pressed && textPressed]}
+                  ellipsizeMode={'middle'}
+                  numberOfLines={1}
+                >
+                  {this.props.title + ' '}
+                </Text>
+              }
+              {typeof this.props.title === 'function' &&
+                this.props.title({textStyles: [styles.text, text, this.state.pressed && textPressed]})
+              }
             </View>
             <View style={iconContainer}>
               {this.renderIcon(icon, iconPressed, iconSize)}

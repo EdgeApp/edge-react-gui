@@ -135,7 +135,7 @@ export const addTouchIdInfo = (touchIdInfo) => {
 export const updateTouchIdEnabled = (bool) => {
   return {
     type: CHANGE_TOUCH_ID_SETTINGS,
-    data: bool
+    data: { isTouchEnabled: bool }
   }
 }
 

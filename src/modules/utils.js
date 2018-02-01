@@ -21,7 +21,6 @@ export const cutOffText = (str: string, lng: number) => {
 }
 
 export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: string) => {
-  // console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -30,7 +29,6 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
 }
 
 export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): AbcDenomination => {
-  // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
   const allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode
   if (currencyCode) { // if metaToken
@@ -46,12 +44,10 @@ export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object
     // This is likely a custom token which has no denom setup in allWalletDenominations
     denomProperties = currencySettings.denominations[0]
   }
-  // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
   return denomProperties
 }
 
 export const getFiatSymbol = (code: string) => {
-  // console.log('inside utils.getFiatSymbol, code is: ', code)
   code = code.replace('iso:', '')
   return getSymbolFromCurrency(code)
 }

@@ -26,7 +26,7 @@ type State = {
   walletName: string
 }
 
-export class CreateWalletNameComponent extends Component<CreateWalletNameProps, State> {
+export class CreateWalletName extends Component<CreateWalletNameProps, State> {
   constructor (props: CreateWalletNameProps) {
     super(props)
     this.state = {
@@ -94,7 +94,7 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
 export type WalletNameInputProps = {
   value: string,
   placeholder: string,
-  onChangeText: Function
+  onChangeText: (walletName: string) => void
 }
 
 class WalletNameInput extends Component<WalletNameInputProps> {

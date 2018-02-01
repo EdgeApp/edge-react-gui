@@ -12,8 +12,8 @@ import s from '../../../../locales/strings.js'
 import type { GuiWallet } from '../../../../types'
 import THEME from '../../../../theme/variables/airbitz'
 
-type Props = {
-  style: any,
+type CryptoExchangeConfirmTransactionModalOwnProps = {
+  style: Object,
   fromWallet: GuiWallet,
   toWallet: GuiWallet,
   fromCurrencyIconDark?: string,
@@ -27,7 +27,7 @@ type Props = {
   closeFunction(): void,
   confirmFunction(): void
 }
-export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props> {
+export default class CryptoExchangeConfirmTransactionModal extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
   render () {
     const style = this.props.style
     const icon = <Icon

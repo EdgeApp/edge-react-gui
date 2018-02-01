@@ -54,7 +54,7 @@ export default StyleSheet.create({
     width: 270
   },
   error: {
-    flex: 1,
+    height: 20,
     color: THEME.COLORS.ACCENT_RED,
     textAlign: 'left',
     marginRight: 5,
