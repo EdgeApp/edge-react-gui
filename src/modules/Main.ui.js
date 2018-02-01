@@ -21,7 +21,7 @@ import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'rea
 import { StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
 import getTheme from '../theme/components'
-import platform from '../theme/variables/platform'
+import { PLATFORM } from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 import * as Constants from '../constants/indexConstants'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
@@ -233,7 +233,7 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <StyleProvider style={getTheme(platform)}>
+      <StyleProvider style={getTheme(PLATFORM)}>
         <MenuContext style={styles.mainMenuContext}>
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
