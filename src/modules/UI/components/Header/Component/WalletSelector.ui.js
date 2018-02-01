@@ -7,7 +7,7 @@ import * as Constants from '../../../../../constants/indexConstants'
 import { CryptoExchangeSceneStyle } from '../../../../../styles/scenes/CryptoExchangeSceneStyles'
 
 export type StateProps = {
-  title: string
+  title: string | Function
 }
 
 export type DispatchProps = {
