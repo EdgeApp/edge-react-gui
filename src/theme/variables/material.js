@@ -2,8 +2,8 @@ import color from 'color';
 
 import { Platform, PixelRatio } from 'react-native';
 
-const deviceHeight = platform.deviceHeight;
-const deviceWidth = platform.deviceWidth;
+const deviceHeight = PLATFORM.deviceHeight;
+const deviceWidth = PLATFORM.deviceWidth;
 const platform = Platform.OS;
 const platformStyle = 'material';
 

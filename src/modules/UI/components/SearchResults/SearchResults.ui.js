@@ -5,7 +5,7 @@ import {
 } from 'react-native'
 
 import style from './styles'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export default class SearchResults extends Component {
   constructor (props) {
@@ -23,7 +23,7 @@ export default class SearchResults extends Component {
   render () {
     let searchResultsHeight
     if (this.props.dimensions.keyboardHeight) {
-      searchResultsHeight = this.props.height + platform.toolbarHeight - this.props.dimensions.keyboardHeight
+      searchResultsHeight = this.props.height + PLATFORM.toolbarHeight - this.props.dimensions.keyboardHeight
     } else {
       searchResultsHeight = this.props.height
     }
@@ -32,8 +32,8 @@ export default class SearchResults extends Component {
         style.searchResultsContainer,
         {
           height: searchResultsHeight,
-          width: platform.deviceWidth,
-          top: platform.toolbarHeight + this.props.extraTopSpace,
+          width: PLATFORM.deviceWidth,
+          top: PLATFORM.toolbarHeight + this.props.extraTopSpace,
           zIndex: 999
         },
         this.props.containerStyle]}>

@@ -1,10 +1,10 @@
 import color from 'color';
 
 import { Platform, Dimensions, PixelRatio } from 'react-native'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
-const deviceHeight = platform.deviceHight;
-const deviceWidth = platform.deviceWidth;
+const deviceHeight = PLATFORM.deviceHight;
+const deviceWidth = PLATFORM.deviceWidth;
 const platform = Platform.OS;
 const platformStyle = undefined;
 

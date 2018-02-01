@@ -8,7 +8,7 @@ const deviceWidth = Dimensions.get('window').width;
 const platform = Platform.OS;
 const platformStyle = undefined;
 
-export default {
+const PLATFORM = {
   platformStyle,
   platform,
     // AndroidRipple
@@ -299,4 +299,6 @@ export default {
 
     // New Variable
   inputGroupRoundedBorderRadius: 30
-};
+}
+
+export {PLATFORM}

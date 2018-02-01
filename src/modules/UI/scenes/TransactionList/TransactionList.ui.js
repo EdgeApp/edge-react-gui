@@ -27,7 +27,7 @@ import requestImage from '../../../../assets/images/transactions/transactions-re
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 // import SearchBar from './components/SearchBar.ui'
 
@@ -271,7 +271,7 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
+        <View style={[{width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight}, UTILS.border()]}>
           <Gradient style={styles.gradient} />
           <ScrollView style={[UTILS.border(), styles.scrollView]}>
             <View style={[styles.container, UTILS.border()]}>

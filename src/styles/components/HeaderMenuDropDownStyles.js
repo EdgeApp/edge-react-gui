@@ -1,10 +1,10 @@
-import platform from '../../theme/variables/platform'
+import { PLATFORM } from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
 const HeaderMenuRightSideStyle = {
   menuContainer: {
     width: 300,
-    height: platform.deviceHeight,
+    height: PLATFORM.deviceHeight,
     backgroundColor: 'rgba(255,255,255,.8)'
   },
   buttonContainer: {

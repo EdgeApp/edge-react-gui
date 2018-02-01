@@ -28,7 +28,7 @@ import {
   getEnabledTokens
 } from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
-import platform from '../../../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../../../theme/variables/platform.js'
 import type {GuiDenomination, CustomTokenInfo} from '../../../../../../types'
 
 const DIVIDE_PRECISION = 18
@@ -122,7 +122,7 @@ class FullWalletListRow extends Component<Props, State> {
     }
 
     return (
-      <View style={[{width: platform.deviceWidth}, b()]}>
+      <View style={[{width: PLATFORM.deviceWidth}, b()]}>
           <View>
             <TouchableHighlight
               style={[styles.rowContainer]}
