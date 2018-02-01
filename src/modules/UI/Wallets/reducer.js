@@ -248,11 +248,12 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
   const currencyCode: string = wallet.currencyInfo.currencyCode
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
-  const symbolImage: string = wallet.currencyInfo.symbolImage
-  const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
+  const symbolImage = wallet.currencyInfo.symbolImage
+  const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
-  const enabledTokens: Array<string> = wallet.enabledTokens || []
+  // TODO: Fetch the token list asynchonously before dispatching `schema`:
+  const enabledTokens: Array<string> = []
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }

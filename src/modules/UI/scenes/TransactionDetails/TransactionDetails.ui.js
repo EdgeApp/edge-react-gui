@@ -40,7 +40,7 @@ export type TransactionDetailsOwnProps = {
   thumbnailPath: string,
   currencyInfo: AbcCurrencyInfo | null,
   currencyCode: string,
-  wallets: Array<GuiWallet>
+  wallets: { [walletId: string]: GuiWallet }
 }
 
 export type TransactionDetailsDispatchProps = {

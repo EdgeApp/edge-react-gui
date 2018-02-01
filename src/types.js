@@ -17,8 +17,8 @@ export type GuiWallet = {
   fiatCurrencyCode: string,
   denominations: Array<AbcDenomination>,
   allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
-  symbolImage: string,
-  symbolImageDarkMono: string,
+  symbolImage: string | void,
+  symbolImageDarkMono: string | void,
   metaTokens: Array<AbcMetaToken>,
   enabledTokens: Array<string>
 }

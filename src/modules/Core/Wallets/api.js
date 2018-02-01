@@ -135,7 +135,7 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
 }
 
 export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): string => {
-  return wallet.getDisplayPrivateSeed()
+  return wallet.getDisplayPrivateSeed() || 'receive-only wallet'
 }
 
 // Documented but not implemented in the core
