@@ -112,7 +112,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
       return <StaticModalComponent
         cancel={this.cancelStatic}
         body={this.state.messageModalMessage}
-        modalDismissTimerSeconds={4} />
+        modalDismissTimerSeconds={8} />
     }
     if (this.state.showConfirmationModal) {
       return <TwoButtonTextModalComponent

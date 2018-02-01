@@ -21,8 +21,11 @@ import type { CustomTokenInfo, GuiWallet } from '../../../../types'
 
 export type AddTokenOwnProps = {
   walletId: string,
+  addTokenPending: Function,
+  addNewToken: Function,
   currentCustomTokens: Array<CustomTokenInfo>,
-  wallet: GuiWallet
+  wallet: GuiWallet,
+  onAddToken: (string) => void
 }
 
 export type AddTokenDispatchProps = {
@@ -166,6 +169,7 @@ export class AddToken extends Component<AddTokenProps, State> {
       if (currencyName && currencyCode && decimalPlaces && contractAddress) {
         const denomination = decimalPlacesToDenomination(decimalPlaces)
         this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
+        this.props.onAddToken(currencyCode)
       } else {
         Alert.alert(s.strings.addtoken_invalid_information)
       }

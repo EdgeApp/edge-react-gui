@@ -6,7 +6,7 @@ import ManageTokens, {
   type ManageTokensDispatchProps,
   type ManageTokensStateProps
 } from './ManageTokens.ui.js'
-import {getEnabledTokens, setEnabledTokens} from '../../Wallets/action.js'
+import {setEnabledTokens} from '../../Wallets/action.js'
 import type {State} from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State, ownProps: ManageTokensOwnProps): ManageTokensStateProps => ({
@@ -15,7 +15,6 @@ const mapStateToProps = (state: State, ownProps: ManageTokensOwnProps): ManageTo
   settingsCustomTokens: state.ui.settings.customTokens
 })
 const mapDispatchToProps = (dispatch: Dispatch): ManageTokensDispatchProps => ({
-  getEnabledTokensList: (walletId: string) => dispatch(getEnabledTokens(walletId)),
   setEnabledTokensList: (walletId: string, enabledTokens: Array<string>, oldEnabledTokensList: Array<string>) => dispatch(setEnabledTokens(walletId, enabledTokens, oldEnabledTokensList))
 })
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTokens)
