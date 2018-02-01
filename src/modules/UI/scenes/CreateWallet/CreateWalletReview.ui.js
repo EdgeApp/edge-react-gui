@@ -54,9 +54,9 @@ export class CreateWalletReview extends Component<CreateWalletReviewProps> {
               <Text style={styles.instructionalText}>{s.strings.create_wallet_top_instructions}</Text>
             </View>
             <View style={styles.reviewArea}>
-              <Text style={styles.reviewAreaText}>{s.strings.create_wallet_name_label} {this.props.walletName}</Text>
               <Text style={styles.reviewAreaText}>{s.strings.create_wallet_crypto_type_label} {this.props.selectedWalletType.label} - {this.props.selectedWalletType.currencyCode}</Text>
               <Text style={styles.reviewAreaText}>{s.strings.create_wallet_fiat_type_label} {this.props.selectedFiat.label}</Text>
+              <Text style={styles.reviewAreaText}>{s.strings.create_wallet_name_label} {this.props.walletName}</Text>
             </View>
             <View style={[styles.buttons]}>
               <SecondaryButton
