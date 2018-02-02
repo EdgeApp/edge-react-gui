@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View} from 'react-native'
+import {View, ActivityIndicator} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import s from '../../../../locales/strings.js'
@@ -57,7 +57,8 @@ export type CryptoExchangeSceneComponentStateProps = {
 
   showNextButton: boolean,
   showWalletSelectModal: boolean,
-  showConfirmShiftModal: boolean
+  showConfirmShiftModal: boolean,
+  gettingTransaction: boolean
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -191,7 +192,11 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             />
             <View style={style.shim} />
             <View style={style.actionButtonContainer} >
-              {this.renderButton()}
+            <PrimaryButton
+              text={s.strings.string_next}
+              onPressFunction={this.props.openConfirmation}
+              processingFlag={this.props.gettingTransaction}
+              processingElement={<ActivityIndicator />} />
             </View>
           </KeyboardAwareScrollView>
           {this.renderDropUp()}
@@ -199,13 +204,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
         </Gradient>
       </SafeAreaView>
     )
-  }
-
-  renderButton = () => {
-    if (this.props.showNextButton) {
-      return <PrimaryButton text={s.strings.string_next} onPressFunction={this.props.openConfirmation} />
-    }
-    return null
   }
 
   flipThis = () => {

@@ -77,7 +77,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
   }
 
   const showNextButton: boolean = !!state.cryptoExchange.transaction && state.cryptoExchange.transaction.nativeAmount !== '0'
-
   return {
     fromWallet: fromWallet || emptyGuiWallet,
     fromExchangeAmount,
@@ -102,7 +101,11 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
-    showNextButton
+    showNextButton,
+    // Not Sure why flow does not like the gettingTransaction type.
+    // There is no reason to fail it.
+    // $FlowFixMe
+    gettingTransaction: state.cryptoExchange.gettingTransaction
   }
 }
 
