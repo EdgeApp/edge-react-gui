@@ -17,12 +17,14 @@ import { updateParsedURI, updateLabel } from '../SendConfirmation/action.js'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 
 import type { Dispatch, State } from '../../../ReduxTypes'
+import {getCameraPermission} from '../../../../reducers/permissions/selectors'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
 
   return {
+    cameraPermission: getCameraPermission(state),
     abcWallet,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,

@@ -80,6 +80,9 @@ import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import ENV from '../../env.json'
 import {makeCoreContext} from '../util/makeContext.js'
 import * as URI from 'uri-js'
+
+import {CAMERA, type Permission} from './UI/permissions.js'
+
 const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
 pluginFactories.push(EthereumCurrencyPluginFactory)
 pluginFactories.push(BitcoinCurrencyPluginFactory)
@@ -133,6 +136,7 @@ const OTP = s.strings.title_otp
 const DEFAULT_FIAT = s.strings.title_default_fiat
 
 type Props = {
+  requestPermission: (permission: Permission) => void,
   username?: string,
   addCurrencyPlugin: AbcCurrencyPlugin => void,
   setKeyboardHeight: number => void,
@@ -336,7 +340,10 @@ export default class Main extends Component<Props, State> {
                           <Scene
                             key={Constants.SCAN_NOT_USED}
                             navTransparent={true}
-                            onEnter={this.props.dispatchEnableScan}
+                            onEnter={() => {
+                              this.props.requestPermission(CAMERA)
+                              this.props.dispatchEnableScan()
+                            }}
                             onExit={this.props.dispatchDisableScan}
                             component={Scan}
                             renderTitle={this.renderWalletListNavBar()}

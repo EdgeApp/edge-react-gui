@@ -20,11 +20,19 @@ import type {
   GuiWallet
 } from '../types'
 
+import type {PermissionsState} from '../reducers/permissions/permissionsReducer.js'
+import type {PermissionStatus, Permission} from './UI/permissions.js'
+
 export type Action = { type: string, data?: any }
 
 export type CurrencyCode = string
 export type Id = string
 export type Username = string
+export type {
+  PermissionsState,
+  PermissionStatus,
+  Permission
+}
 
 export type State = {
   core: {
@@ -224,7 +232,8 @@ export type State = {
     transaction: AbcTransaction | null,
     fee: any
   },
-  exchangeRates: number
+  exchangeRates: number,
+  permissions: PermissionsState
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A

@@ -15,8 +15,7 @@ import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import AddressModal from './components/AddressModalConnector'
-// $FlowFixMe Doesn't know how to find platform specific imports
-import * as PERMISSIONS from '../../permissions'
+import { AUTHORIZED, DENIED } from '../../permissions'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as UTILS from '../../../utils.js'
 
@@ -26,7 +25,10 @@ import ABAlert from '../../components/ABAlert/indexABAlert'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as Constants from '../../../../constants/indexConstants'
 
+import type {PermissionStatus} from '../../../ReduxTypes'
+
 type Props = {
+  cameraPermission: PermissionStatus,
   abcWallet: AbcCurrencyWallet,
   torchEnabled: boolean,
   scanEnabled: boolean,
@@ -44,10 +46,6 @@ type Props = {
   loginWithEdge(string): void
 }
 
-type State = {
-  cameraPermission?: boolean
-}
-
 const HEADER_TEXT = s.strings.send_scan_header_text
 
 const DENIED_PERMISSION_TEXT = '' // blank string because way off-centered (not sure reason why)
@@ -56,49 +54,28 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 // const PHOTOS_TEXT   = s.strings.fragment_send_photos
 const FLASH_TEXT = s.strings.fragment_send_flash
 
-export default class Scan extends Component<Props, State> {
-  constructor (props: Props) {
-    super(props)
-    this.state = {
-      cameraPermission: undefined
-    }
-  }
-
-  componentDidMount () {
-    PERMISSIONS.request('camera').then(resp => this.setCameraPermission(resp))
-  }
-
+export default class Scan extends Component<Props> {
   render () {
     return (
       <SafeAreaView>
         <View style={{ flex: 1 }}>
           <Gradient style={styles.gradient} />
           <View style={styles.topSpacer} />
+
           <View style={styles.container}>
             {this.renderCamera()}
+
             <View style={[styles.overlay, UTILS.border()]}>
+
               <AddressModal onExitButtonFxn={this._onToggleAddressModal} />
 
               <View style={[styles.overlayTop]}>
                 <T style={[styles.overlayTopText]}>{HEADER_TEXT}</T>
               </View>
+
               <View style={[styles.overlayBlank]} />
 
               <Gradient style={[styles.overlayButtonAreaWrap]}>
-                {/* <TouchableHighlight style={styles.bottomButton}
-                  onPress={this._onToggleWalletListModal}
-                  underlayColor={styleRaw.underlay.color}>
-                  <View style={styles.bottomButtonTextWrap}>
-
-                    <Ionicon style={[styles.transferArrowIcon]}
-                      name='ios-arrow-round-forward'
-                      size={24} />
-                    <T style={[styles.transferButtonText, styles.bottomButtonText]}>
-                      {TRANSFER_TEXT}
-                    </T>
-
-                  </View>
-                </TouchableHighlight> */}
 
                 <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleAddressModal} underlayColor={styleRaw.underlay.color}>
                   <View style={styles.bottomButtonTextWrap}>
@@ -107,27 +84,13 @@ export default class Scan extends Component<Props, State> {
                   </View>
                 </TouchableHighlight>
 
-                {/* <TouchableHighlight style={styles.bottomButton}
-                  onPress={this.selectPhotoTapped}
-                  underlayColor={styleRaw.underlay.color}>
-                  <View style={styles.bottomButtonTextWrap}>
-
-                    <Ionicon style={[styles.cameraIcon]}
-                      name='ios-camera-outline'
-                      size={24} />
-                    <T style={[styles.bottomButtonText]}>
-                      {PHOTOS_TEXT}
-                    </T>
-
-                  </View>
-                </TouchableHighlight> */}
-
                 <TouchableHighlight style={styles.bottomButton} onPress={this._onToggleTorch} underlayColor={styleRaw.underlay.color}>
                   <View style={styles.bottomButtonTextWrap}>
                     <Ionicon style={[styles.flashIcon]} name="ios-flash-outline" size={24} />
                     <T style={[styles.flashButtonText, styles.bottomButtonText]}>{FLASH_TEXT}</T>
                   </View>
                 </TouchableHighlight>
+
               </Gradient>
             </View>
             <ABAlert />
@@ -145,15 +108,8 @@ export default class Scan extends Component<Props, State> {
     return null
   }
 
-  setCameraPermission = (cameraPermission: boolean) => {
-    this.setState({
-      cameraPermission
-    })
-  }
-
   _onToggleTorch = () => {
     this.props.toggleEnableTorch()
-    PERMISSIONS.request('camera').then(this.setCameraPermission)
   }
 
   _onToggleAddressModal = () => {
@@ -176,7 +132,6 @@ export default class Scan extends Component<Props, State> {
         this.props.loginWithEdge(uri)
         return
       }
-      // console.log('uri', uri)
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation()
@@ -204,11 +159,14 @@ export default class Scan extends Component<Props, State> {
   }
 
   renderCamera = () => {
-    if (this.state.cameraPermission === true) {
+    if (this.props.cameraPermission === AUTHORIZED) {
       const torchMode = this.props.torchEnabled ? Camera.constants.TorchMode.on : Camera.constants.TorchMode.off
 
-      return <Camera torchMode={torchMode} style={styles.preview} onBarCodeRead={this.onBarCodeRead} ref="cameraCapture" />
-    } else if (this.state.cameraPermission === false) {
+      return <Camera style={styles.preview}
+        ref="cameraCapture"
+        torchMode={torchMode}
+        onBarCodeRead={this.onBarCodeRead} />
+    } else if (this.props.cameraPermission === DENIED) {
       return (
         <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }, UTILS.border()]}>
           <Text>{DENIED_PERMISSION_TEXT}</Text>
