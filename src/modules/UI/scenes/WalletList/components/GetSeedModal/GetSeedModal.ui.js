@@ -48,39 +48,44 @@ type State = {
 
 export default class GetSeed extends Component<GetSeedModalComponentProps, State> {
   componentWillMount () {
-    this.setState((prevState, props) => ({ confimPassword: '', error: '' }))
+    this.setState(() => ({ confimPassword: '', error: '' }))
   }
 
   componentWillReceiveProps () {
     if (this.props.privateSeedUnlocked) {
-      this.setState((prevState, props) => ({ confimPassword: '', error: '' }))
+      this.setState(() => ({ confimPassword: '', error: '' }))
     }
   }
 
   textChange = (value: string) => {
-    this.setState((prevState, props) => {
+    this.setState(() => {
       return { confimPassword: value }
     })
   }
 
   onDone = () => {
     this.props.onDone()
-    this.setState((prevState, props) => ({ confimPassword: '', error: '' }))
+    this.setState(() => ({ confimPassword: '', error: '' }))
   }
 
   onNegative = () => {
     this.props.onNegative()
     this.props.onDone()
-    this.setState((prevState, props) => ({ confimPassword: '', error: '' }))
+    this.setState(() => ({ confimPassword: '', error: '' }))
   }
 
   onPositive = () => {
     const currentPassword = this.state.confimPassword
     this.props.onPositive(currentPassword)
-    this.setState((prevState, props) => ({
+    this.setState(() => ({
       confimPassword: '',
       error: this.props.privateSeedUnlocked ? '' : s.strings.fragmet_invalid_password
     }))
+  }
+
+  onDismiss = () => {
+    this.onDone()
+    this.props.onExitButtonFxn()
   }
 
   renderPasswordInput = (style?: Object) => {
@@ -106,6 +111,7 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
       />
       {this.renderPasswordInput()}
     </View>
+
     let modalBottom = <OptionButtons
       positiveText={s.strings.string_get_seed}
       onPositive={this.onPositive}
@@ -124,7 +130,7 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
       modalBottom={modalBottom}
       style={styles.getSeedModal}
       visibilityBoolean={this.props.visibilityBoolean}
-      onExitButtonFxn={this.props.onExitButtonFxn}
+      onExitButtonFxn={this.onDismiss}
     />
   }
 }
