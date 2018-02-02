@@ -18,7 +18,7 @@ const mapStateToProps = (state: State): StateProps => {
   const selectedWalletCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
   const title = selectedWallet
     ? function HeaderComp (styles) {
-      return (<WalletNameHeader name={selectedWallet.name} selectedWalletCurrencyCode={selectedWalletCurrencyCode} styles={styles}/>)
+      return (<WalletNameHeader name={selectedWallet.name} denomination={selectedWalletCurrencyCode} styles={styles}/>)
     }
   : s.strings.loading
   return { title }

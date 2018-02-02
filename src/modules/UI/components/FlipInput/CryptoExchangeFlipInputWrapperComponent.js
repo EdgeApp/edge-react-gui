@@ -78,9 +78,10 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
             </View>
         </View>
     }
-    const {guiWallet: {name: guiWalletName, currencyCode}} = this.props
+    const {guiWallet: {name: guiWalletName},
+      primaryCurrencyInfo: {displayDenomination: { name: displayDenomination }}} = this.props
     const titleComp = function (styles) {
-      return (<WalletNameHeader name={guiWalletName} selectedWalletCurrencyCode={currencyCode} styles={styles}/>)
+      return (<WalletNameHeader name={guiWalletName} denomination={displayDenomination} styles={styles}/>)
     }
 
     return (
