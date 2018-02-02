@@ -122,7 +122,8 @@ test('initialState',
     'walletTransferList': {
       'walletListModalVisible': false,
       'walletTransferList': []
-    }
+    },
+    'sliderError': false
   }
   const actual = scenesReducer(undefined, {})
 

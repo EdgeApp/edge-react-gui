@@ -21,6 +21,7 @@ import transactionAlert from '../components/TransactionAlert/reducer.js'
 import walletListModal from '../components/WalletListModal/reducer'
 import exchangeRate from '../components/ExchangeRate/reducer.js'
 import dimensions from '../dimensions/reducer'
+import { sliderError } from '../components/Slider/reducer.js'
 
 export const scenes = combineReducers({
   scan,
@@ -40,5 +41,6 @@ export const scenes = combineReducers({
   helpModal,
   transactionAlert,
   exchangeRate,
-  ABAlert
+  ABAlert,
+  sliderError
 })

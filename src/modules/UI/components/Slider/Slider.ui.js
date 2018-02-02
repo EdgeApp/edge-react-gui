@@ -13,7 +13,9 @@ const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
 type Props = {
   sliderDisabled: boolean,
   onSlidingComplete: () => {},
-  parentStyle: any
+  parentStyle: any,
+  clearError: () => {},
+  error: boolean
 }
 
 type State = {
@@ -31,8 +33,15 @@ export default class ABSlider extends Component<Props, State> {
     }
   }
 
+  componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.error) {
+      this.setState({value: 10})
+      this.props.clearError()
+    }
+  }
+
   onSlidingComplete = (value: number) => {
-    if (value <= 1) {
+    if (value === 0) {
       this.props.onSlidingComplete()
     } else {
       this.setState({value: 10})
@@ -60,6 +69,8 @@ export default class ABSlider extends Component<Props, State> {
           minimumTrackTintColor='transparent'
           maximumTrackTintColor='transparent'
           thumbTouchSize={{width: 160, height: 160}}
+          animateTransitions={true}
+          animationType='spring'
         />
         <Text style={styles.textOverlay}>
           {SLIDE_TO_COMPLETE_TEXT}
