@@ -30,7 +30,7 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
     })
   }
   componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
-    if (nextProps.showModal) {
+    if (!nextProps.showModal) {
       this.setState({
         confimPassword: ''
       })
