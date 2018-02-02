@@ -1,12 +1,15 @@
 // @flow
 
 import {connect} from 'react-redux'
+
 import Main from './Main'
 import {logoutRequest} from '../../../../Login/action'
 import type {State, Dispatch} from '../../../../ReduxTypes'
 
+import {getUsersView} from '../selectors.js'
+
 const mapStateToProps = (state: State) => ({
-  usersView: state.ui.scenes.controlPanel.usersView
+  usersView: getUsersView(state)
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   logout: (username?: string) => dispatch(logoutRequest(username))

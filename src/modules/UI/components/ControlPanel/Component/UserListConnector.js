@@ -7,7 +7,7 @@ import type {State, Dispatch} from '../../../../ReduxTypes'
 import UserList from './UserList'
 import {logoutRequest} from '../../../../Login/action'
 
-import * as CORE_SELECTORS from '../../../../Core/selectors.js'
+import {getUsername, getUsernames} from '../../../../Core/selectors.js'
 
 import {deleteLocalAccount} from '../action'
 
@@ -18,8 +18,8 @@ type DispatchProps = {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-  const currentUsername = CORE_SELECTORS.getUsername(state)
-  const allUsernames = CORE_SELECTORS.getUsernames(state)
+  const currentUsername = getUsername(state)
+  const allUsernames = getUsernames(state)
   const usernames = _.filter(allUsernames, (username) => username !== currentUsername)
   return {
     usernames

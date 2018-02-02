@@ -15,20 +15,8 @@ const usersView = (state = false, action) => {
   }
 }
 
-const selectedUser = (state = null, action) => {
-  switch (action.type) {
-    case ACTION.LIST_USERS_SIDE_MENU:
-      return action.data[0]
-    case ACTION.SELECT_USERS_SIDE_MENU:
-      return action.id
-    default:
-      return state
-  }
-}
-
 export const controlPanel = combineReducers({
-  usersView,
-  selectedUser
+  usersView
 })
 
 export default controlPanel

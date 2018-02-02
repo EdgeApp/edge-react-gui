@@ -6,8 +6,8 @@ import { Actions } from 'react-native-router-flux'
 
 import Scan from './Scan.ui'
 import * as Constants from '../../../../constants/indexConstants'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import {getSelectedWalletId} from '../../selectors.js'
+import {getWallet} from '../../../Core/selectors.js'
 
 import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
 import { loginWithEdge } from '../../../../actions/indexActions'
@@ -19,18 +19,25 @@ import { toggleWalletListModal } from '../WalletTransferList/action'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import {getCameraPermission} from '../../../../reducers/permissions/selectors'
 
+import {getIsWalletTransferModalVisible} from '../WalletTransferList/selectors'
+import {
+  getIsScanToWalletListModalVisibile,
+  getIsTorchEnabled,
+  getIsScanEnabled
+} from './selectors'
+
 const mapStateToProps = (state: State) => {
-  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const walletId: string = getSelectedWalletId(state)
+  const abcWallet: AbcCurrencyWallet = getWallet(state, walletId)
 
   return {
     cameraPermission: getCameraPermission(state),
     abcWallet,
-    torchEnabled: state.ui.scenes.scan.torchEnabled,
-    scanEnabled: state.ui.scenes.scan.scanEnabled,
-    walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+    torchEnabled: getIsTorchEnabled(state),
+    scanEnabled: getIsScanEnabled(state),
+    walletListModalVisible: getIsWalletTransferModalVisible(state),
+    scanToWalletListModalVisibility: getIsScanToWalletListModalVisibile(state),
+    showToWalletModal: getIsScanToWalletListModalVisibile(state)
   }
 }
 

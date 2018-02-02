@@ -1,6 +1,7 @@
 // @flow
 
 import {connect} from 'react-redux'
+import _ from 'lodash'
 
 import TransactionList from './TransactionList.ui'
 import {
@@ -11,39 +12,50 @@ import {
 import {setContactList} from '../../contacts/action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../selectors.js'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
+import {
+  getSelectedWalletId,
+  getSelectedWallet,
+  getSelectedCurrencyCode,
+  getTransactions
+} from '../../selectors.js'
+import {
+  getSettings,
+  getDisplayDenominationKey,
+  getCustomTokens,
+  getExchangeDenomination,
+  getDisplayDenomination
+} from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
-import _ from 'lodash'
+
 import type {Dispatch, State} from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => {
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const wallet = UI_SELECTORS.getSelectedWallet(state)
+  const selectedWalletId = getSelectedWalletId(state)
+  const wallet = getSelectedWallet(state)
   if (!wallet) {
     return {
       loading: true
     }
   }
 
-  const fiatSymbol = UTILS.getFiatSymbol(UI_SELECTORS.getSelectedWallet(state).fiatCurrencyCode)
-  const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
+  const fiatSymbol = UTILS.getFiatSymbol(getSelectedWallet(state).fiatCurrencyCode)
+  const currencyCode = getSelectedCurrencyCode(state)
   const isoFiatCurrencyCode = wallet.isoFiatCurrencyCode
   const fiatCurrencyCode = wallet.fiatCurrencyCode
   const balanceInCrypto = wallet.nativeBalances[currencyCode]
 
-  const settings = SETTINGS_SELECTORS.getSettings(state)
+  const settings = getSettings(state)
   const currencyConverter = CORE_SELECTORS.getCurrencyConverter(state)
 
-  const transactions = UI_SELECTORS.getTransactions(state)
+  const transactions = getTransactions(state)
 
-  const index = SETTINGS_SELECTORS.getDisplayDenominationKey(state, currencyCode)
+  const index = getDisplayDenominationKey(state, currencyCode)
   const denominationsOnWallet = wallet.allDenominations[currencyCode]
   let denomination
   if (denominationsOnWallet) {
     denomination = denominationsOnWallet[index]
   } else { // if it is a token
-    const customTokens = SETTINGS_SELECTORS.getCustomTokens(state)
+    const customTokens = getCustomTokens(state)
     const customTokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === currencyCode)
     denomination = {
       ...customTokens[customTokenIndex].denominations[0],
@@ -52,11 +64,11 @@ const mapStateToProps = (state: State) => {
     }
   }
   const multiplier = denomination.multiplier
-  const exchangeDenomination = SETTINGS_SELECTORS.getExchangeDenomination(state, currencyCode)
+  const exchangeDenomination = getExchangeDenomination(state, currencyCode)
   // $FlowFixMe
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
-  const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+  const displayDenomination = getDisplayDenomination(state, currencyCode)
   return {
     displayDenomination,
     updatingBalance: false,

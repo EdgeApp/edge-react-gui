@@ -97,6 +97,12 @@ export const getPlugins = (state: State) => {
   return plugins
 }
 
+export const getArrayPlugins = (state: State) => {
+  const settings = getSettings(state)
+  const arrayPlugins = settings.plugins.arrayPlugins
+  return arrayPlugins
+}
+
 export const getPlugin = (state: State, type: string): AbcCurrencyPlugin => {
   const plugins = getPlugins(state)
   const plugin: AbcCurrencyPlugin = plugins[type.toLowerCase()]
