@@ -13,7 +13,7 @@ export const sendConfirmation = (state: SendConfirmationState = initialState, ac
       if (forceUpdateGui) {
         forceUpdateGuiCounter++
       }
-      if (!parsedUri) return { ...state, error, transaction }
+      if (!parsedUri) return { ...state, forceUpdateGuiCounter, error, transaction }
       const { metadata, customNetworkFee, ...others } = parsedUri
       if (!isEqual(state.parsedUri.metadata, metadata)) {
         state.parsedUri.metadata = { ...state.parsedUri.metadata, ...metadata }
