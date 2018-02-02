@@ -23,11 +23,18 @@ type ConfirmPasswordModalProps = {
 type State = {
   confimPassword: string
 }
-export default class CryptoExchangeConfirmTransactionModal extends Component<ConfirmPasswordModalProps, State> {
+export default class ConfirmPasswordModal extends Component<ConfirmPasswordModalProps, State> {
   componentWillMount () {
     this.setState({
       confimPassword: ''
     })
+  }
+  componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
+    if (nextProps.showModal) {
+      this.setState({
+        confimPassword: ''
+      })
+    }
   }
   textChange = (value: string) => {
     this.setState({
