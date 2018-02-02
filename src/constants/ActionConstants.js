@@ -42,3 +42,7 @@ export const ACCOUNT_INIT_COMPLETE = 'accountInitComplete'
 
 // OTP
 export const DISABLE_OTP_RESET = 'disableOTPReset'
+
+// SLIDER ERROR
+export const SET_SLIDER_ERROR = 'SET_SLIDER_ERROR'
+export const CLEAR_SLIDER_ERROR = 'CLEAR_SLIDER_ERROR'

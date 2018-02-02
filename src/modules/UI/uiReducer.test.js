@@ -133,7 +133,8 @@ test('initialState', () => {
       'walletTransferList': {
         'walletListModalVisible': false,
         'walletTransferList': []
-      }
+      },
+      'sliderError': false
     },
     'settings': {
       'BCH': {

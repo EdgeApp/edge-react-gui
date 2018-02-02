@@ -145,6 +145,7 @@ export type State = {
           buttons: Array<{title: string, message: string}>
         }
       },
+      sliderError: boolean
     },
     wallets: {
       byId: {[walletId: Id]: GuiWallet},

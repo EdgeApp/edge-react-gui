@@ -13,6 +13,7 @@ import * as UI_SELECTORS from '../modules/UI/selectors'
 import * as UTILS from '../modules/utils'
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as actions from './indexActions'
+import { setSliderError } from '../modules/UI/components/Slider/action.js'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import s from '../locales/strings.js'
 import {checkShiftTokenAvailability} from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
@@ -239,6 +240,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
       setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
+      dispatch(setSliderError())
       setTimeout(() => { Alert.alert(s.strings.exchange_failed, error.message) }, 1)
     }
   }

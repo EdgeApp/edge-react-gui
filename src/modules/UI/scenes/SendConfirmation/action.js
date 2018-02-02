@@ -2,6 +2,7 @@
 import { Actions } from 'react-native-router-flux'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { openABAlert } from '../../components/ABAlert/action'
+import { setSliderError } from '../../components/Slider/action'
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
 import { getWallet } from '../../../Core/selectors.js'
 import { getSelectedWalletId } from '../../selectors.js'
@@ -96,6 +97,7 @@ export const signBroadcastAndSave = () => (dispatch: Dispatch, getState: GetStat
         message: e.message
       }
       dispatch(openABAlert(OPEN_AB_ALERT, errorInfo))
+      dispatch(setSliderError())
     })
 }
 

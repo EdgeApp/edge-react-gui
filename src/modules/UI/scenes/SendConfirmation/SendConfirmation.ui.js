@@ -14,7 +14,7 @@ import { bns } from 'biggystring'
 import ExchangeRate from '../../components/ExchangeRate/index.js'
 import { ExchangedFlipInput, type ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
 import Recipient from '../../components/Recipient/index.js'
-import ABSlider from '../../components/Slider/index.js'
+import ABSlider from '../../components/Slider/SliderConnector.js'
 import Gradient from '../../components/Gradient/Gradient.ui'
 import {
   convertNativeToExchange,
