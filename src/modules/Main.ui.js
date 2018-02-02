@@ -50,6 +50,7 @@ import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSetting
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
+import {HwBackButtonHandler} from './UI/scenes/WalletList/components/HwBackButtonHandler'
 
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
@@ -555,9 +556,13 @@ export default class Main extends Component<Props, State> {
   }
 
   handleBack = () => {
-    if (!this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
-      Actions.pop()
+    if (this.isCurrentScene(Constants.LOGIN)) {
+      return false
     }
+    if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
+      return HwBackButtonHandler()
+    }
+    Actions.pop()
     return true
   }
 }
