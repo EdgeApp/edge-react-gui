@@ -191,7 +191,7 @@ export const editCustomToken = (walletId: string, currencyName: string, currency
     const guiWallet = UI_SELECTORS.getWallet(state, walletId)
     const allTokens = UTILS.mergeTokens(guiWallet.metaTokens, customTokens)
     const indexInAllTokens = _.findIndex(allTokens, (token) => token.currencyCode === currencyCode)
-    const tokenObj = assembleCustomToken(currencyName, currencyCode, denomination, contractAddress)
+    const tokenObj = assembleCustomToken(currencyName, currencyCode, contractAddress, denomination)
     if (indexInAllTokens >= 0) { // currently exists in some form
       if (currencyCode === oldCurrencyCode) { // just updating same token, CASE 1
         addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
