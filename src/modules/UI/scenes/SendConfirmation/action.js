@@ -67,36 +67,35 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   .catch(e => console.log(e))
 }
 
-export const signBroadcastAndSave = () => (dispatch: Dispatch, getState: GetState) => {
+export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
   const abcUnsignedTransaction = getTransaction(state)
-
+  let abcSignedTransaction = abcUnsignedTransaction
   dispatch(updateSpendPending(true))
-
-  signTransaction(wallet, abcUnsignedTransaction)
-    .then((abcSignedTransaction: AbcTransaction) => broadcastTransaction(wallet, abcSignedTransaction))
-    .then((abcSignedTransaction: AbcTransaction) => saveTransaction(wallet, abcSignedTransaction))
-    .then(() => {
-      dispatch(updateSpendPending(false))
-      Actions.pop()
-      const successInfo = {
-        success: true,
-        title: 'Transaction Sent',
-        message: 'Your transaction has been successfully sent.'
-      }
-      dispatch(openABAlert(OPEN_AB_ALERT, successInfo))
-    })
-    .catch((e) => {
-      dispatch(updateSpendPending(false))
-      const errorInfo = {
-        success: false,
-        title: 'Transaction Failure',
-        message: e.message
-      }
-      dispatch(openABAlert(OPEN_AB_ALERT, errorInfo))
-    })
+  try {
+    abcSignedTransaction = await signTransaction(wallet, abcUnsignedTransaction)
+    abcSignedTransaction = await broadcastTransaction(wallet, abcSignedTransaction)
+    await saveTransaction(wallet, abcSignedTransaction)
+    dispatch(updateSpendPending(false))
+    Actions.pop()
+    const successInfo = {
+      success: true,
+      title: 'Transaction Sent',
+      message: 'Your transaction has been successfully sent.'
+    }
+    dispatch(openABAlert(OPEN_AB_ALERT, successInfo))
+  } catch (e) {
+    dispatch(updateSpendPending(false))
+    const errorInfo = {
+      success: false,
+      title: 'Transaction Failure',
+      message: e.message
+    }
+    dispatch(updateTransaction(abcSignedTransaction, null, true, new Error('broadcastError')))
+    dispatch(openABAlert(OPEN_AB_ALERT, errorInfo))
+  }
 }
 
 export const updateLabel = (label: string) => ({
