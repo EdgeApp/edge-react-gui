@@ -17,7 +17,7 @@ export const styles = {
   },
   view: {
     position: 'relative',
-    top: 66,
+    top: THEME.HEADER,
     paddingHorizontal: 20,
     paddingVertical: 5
   },
