@@ -102,7 +102,15 @@ const CryptoExchangeSceneStyle = {
       }
     },
     bottom: {
-      width: '100%'
+      justifyContent: 'center',
+      alignSelf: 'center',
+      alignItem: 'center',
+      height: 35,
+      marginBottom: 10
+    },
+    bottomButton: {
+      color: THEME.COLORS.GRAY_2,
+      fontSize: 17
     },
     icon: {
       color: THEME.COLORS.SECONDARY,

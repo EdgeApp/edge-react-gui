@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, Image, Text} from 'react-native'
+import {View, Image, Text, TouchableOpacity} from 'react-native'
 import {sprintf} from 'sprintf-js'
 
 import Slider from '../../components/Slider'
@@ -42,9 +42,8 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
       headerText={s.strings.title_confirm_exchange}
       headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
       modalMiddle={this.renderMiddle(style)}
-      modalMiddleStyle={{paddingBottom: 40}}
       modalBottom={this.renderBottom(style)}
-      modalBottomStyle={{paddingBottom: 8}}
+      modalBottomStyle={style.bottom}
       onExitButtonFxn={this.props.closeFunction} />
   }
 
@@ -100,11 +99,6 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
         <View style={shim} />
       </View>
 
-    </View>
-  }
-
-  renderBottom = (style: Object) => {
-    return <View style={style.bottom}>
       <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={false}
         parentStyle={{
           backgroundColor: THEME.COLORS.SECONDARY,
@@ -114,5 +108,9 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
           marginRight: 0
         }} />
     </View>
+  }
+
+  renderBottom = (style: Object) => {
+    return <TouchableOpacity><Text style={style.bottomButton} onPress={this.props.closeFunction}>Cancel</Text></TouchableOpacity>
   }
 }
