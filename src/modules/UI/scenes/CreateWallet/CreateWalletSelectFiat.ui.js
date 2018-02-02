@@ -5,13 +5,11 @@ import {Actions} from 'react-native-router-flux'
 import {
   Alert,
   View,
-  Keyboard,
   TouchableHighlight
 } from 'react-native'
 
 import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
-import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import SearchResults from '../../components/SearchResults'
 import * as Constants from '../../../../constants/indexConstants.js'
@@ -22,7 +20,6 @@ import * as UTILS from '../../../utils'
 import type {GuiFiatType, FlatListItem, DeviceDimensions} from '../../../../types'
 
 export type CreateWalletSelectFiatOwnProps = {
-  walletName: string,
   selectedWalletType: string,
   supportedFiats: Array<GuiFiatType>,
   dimensions: DeviceDimensions
@@ -44,7 +41,6 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
   constructor (props: CreateWalletSelectFiatProps & State) {
     super(props)
     this.state = {
-      walletName: this.props.walletName || '',
       searchTerm: '',
       selectedFiat: ''
     }
@@ -67,19 +63,13 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
 
   onNext = (): void => {
     if (this.isValidFiatType()) {
-      Actions[Constants.CREATE_WALLET_REVIEW]({
-        walletName: this.props.walletName,
+      Actions[Constants.CREATE_WALLET_NAME]({
         selectedWalletType: this.props.selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat)
       })
     } else {
       Alert.alert(s.strings.create_wallet_invalid_input, s.strings.create_wallet_select_valid_fiat)
     }
-  }
-
-  onBack = (): void => {
-    Keyboard.dismiss()
-    Actions.pop() // redirect to the list of crypto types
   }
 
   handleSearchTermChange = (searchTerm: string): void => {
@@ -95,7 +85,7 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
       this.setState({
         selectedFiat: selectedFiat.value,
         searchTerm: selectedFiat.label
-      })
+      }, this.onNext)
     }
   }
 
@@ -111,47 +101,37 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
     const filteredArray = this.props.supportedFiats.filter((entry) => {
       return (entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0)
     })
-
+    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
+    const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 50 // substract button area height and FormField height
     return (
       <SafeAreaView>
-      <View style={styles.scene}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.view}>
-          <FormField style={styles.picker}
-            autoFocus
-            clearButtonMode={'while-editing'}
-            onFocus={this.handleOnFocus}
-            onBlur={this.handleOnBlur}
-            autoCorrect={false}
-            autoCapitalize={'words'}
-            onChangeText={this.handleSearchTermChange}
-            value={this.state.searchTerm}
-            label={s.strings.fragment_wallets_addwallet_fiat_hint}
-          />
-          <SearchResults
-            renderRegularResultFxn={this.renderFiatTypeResult}
-            onRegularSelectFxn={this.handleSelectFiatType}
-            regularArray={filteredArray}
-            style={[styles.SearchResults]}
-            containerStyle={[styles.searchContainer]}
-            keyExtractor={this.keyExtractor}
-            initialNumToRender={30}
-            scrollRenderAheadDistance={1600}
-          />
-          <View style={[styles.buttons]}>
-            <SecondaryButton
-              style={[styles.cancel]}
-              onPressFunction={this.onBack}
-              text={s.strings.title_back} />
-
-            <PrimaryButton
-              style={[styles.next]}
-              onPressFunction={this.onNext}
-              text={s.strings.string_next_capitalized}
+        <View style={styles.scene}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.view}>
+            <FormField style={styles.picker}
+              autoFocus
+              clearButtonMode={'while-editing'}
+              onFocus={this.handleOnFocus}
+              onBlur={this.handleOnBlur}
+              autoCorrect={false}
+              autoCapitalize={'words'}
+              onChangeText={this.handleSearchTermChange}
+              value={this.state.searchTerm}
+              label={s.strings.fragment_wallets_addwallet_fiat_hint}
+              returnKeyType={'search'}
+            />
+            <SearchResults
+              renderRegularResultFxn={this.renderFiatTypeResult}
+              onRegularSelectFxn={this.handleSelectFiatType}
+              regularArray={filteredArray}
+              style={[styles.SearchResults]}
+              containerStyle={[styles.searchContainer, {height: searchResultsHeight}]}
+              keyExtractor={this.keyExtractor}
+              initialNumToRender={30}
+              scrollRenderAheadDistance={1600}
             />
           </View>
         </View>
-      </View>
       </SafeAreaView>
     )
   }
