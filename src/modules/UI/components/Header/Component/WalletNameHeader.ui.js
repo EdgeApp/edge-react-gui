@@ -9,7 +9,7 @@ type Props = {
     textStyles: Array<{}>
   },
   name: string,
-  selectedWalletCurrencyCode: string
+  denomination: string
 }
 
 class WalletNameHeader extends React.Component<Props> {
@@ -17,7 +17,7 @@ class WalletNameHeader extends React.Component<Props> {
     const {styles = {}} = this.props
     const textStyles = styles.textStyles || []
     const name = this.props.name
-    const selectedWalletCurrencyCode = this.props.selectedWalletCurrencyCode
+    const denomination = this.props.denomination
 
     return (
       <View style={style.headerNameContainer}>
@@ -28,7 +28,7 @@ class WalletNameHeader extends React.Component<Props> {
         >
           {name}:
           <Text style={[style.cCode, ...textStyles]}>
-            {selectedWalletCurrencyCode}
+            {denomination}
           </Text>
         </Text>
       </View>
