@@ -1,6 +1,6 @@
 // @flow
 
-import {default as RNPermissions} from 'react-native-permissions'
+import RNPermissions from 'react-native-permissions'
 
 export type Permission = 'bluetooth' | 'camera' | 'contacts' | 'photos'
 export type MultiPermission = Array<Permission>
