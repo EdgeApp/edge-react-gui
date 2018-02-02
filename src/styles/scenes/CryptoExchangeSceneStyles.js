@@ -106,9 +106,11 @@ const CryptoExchangeSceneStyle = {
     },
     icon: {
       color: THEME.COLORS.SECONDARY,
-      backgroundColor: THEME.COLORS.TRANSPARENT
+      backgroundColor: THEME.COLORS.TRANSPARENT,
+      width: 26,
+      height: 26
     },
-    iconSize: 48
+    iconSize: 26
   },
   flipWrapper: {
     container: {

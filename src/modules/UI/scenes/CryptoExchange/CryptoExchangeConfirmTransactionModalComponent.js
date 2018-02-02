@@ -34,7 +34,7 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
       style={style.icon}
       name={Constants.EXCHANGE_ICON}
       size={style.iconSize}
-      type={Constants.ION_ICONS}/>
+      type={Constants.FONT_AWESOME}/>
 
     return <StylizedModal
       visibilityBoolean={true}
