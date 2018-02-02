@@ -43,6 +43,7 @@ export type SendConfirmationStateProps = {
   errorMsg: string | null,
   fiatPerCrypto: number,
   sliderDisabled: boolean,
+  resetSlider: boolean,
   forceUpdateGuiCounter: number,
   currencyConverter: CurrencyConverter
 }
@@ -191,6 +192,8 @@ export class SendConfirmation extends Component<Props, State> {
             </View>
             <View style={[styles.sliderWrap]}>
               <ABSlider
+                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+                resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.props.signBroadcastAndSave}
                 sliderDisabled={this.props.sliderDisabled} />
