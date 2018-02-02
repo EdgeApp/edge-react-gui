@@ -2,6 +2,8 @@
 
 import { rootReducer } from './rootReducer.js'
 
+import {initialState as permissionsInitialState} from '../reducers/permissions/indexPermissions.js'
+
 test('initialState', () => {
   const expected = {
     'core': {
@@ -238,7 +240,8 @@ test('initialState', () => {
         'selectedCurrencyCode': '',
         'selectedWalletId': ''
       }
-    }
+    },
+    permissions: permissionsInitialState
   }
   const actual = rootReducer(undefined, {})
 
