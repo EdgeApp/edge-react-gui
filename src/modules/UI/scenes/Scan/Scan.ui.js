@@ -108,7 +108,9 @@ export default class Scan extends Component<Props> {
     return null
   }
 
-  _onToggleTorch = () => {}
+  _onToggleTorch = () => {
+    this.props.toggleEnableTorch()
+  }
 
   _onToggleAddressModal = () => {
     this.props.toggleAddressModal()
