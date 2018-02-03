@@ -8,7 +8,6 @@ import {
   // transactionsSearchHidden,
   getTransactionsRequest
 } from './action'
-import {setContactList} from '../../contacts/action'
 import {updateExchangeRates} from '../../components/ExchangeRate/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
@@ -16,6 +15,8 @@ import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import * as UTILS from '../../../utils'
 import _ from 'lodash'
 import type {Dispatch, State} from '../../../ReduxTypes'
+import {getContactsPermission} from '../../../../reducers/permissions/selectors.js'
+import {getContacts} from '../../../../reducers/contacts/selectors.js'
 
 const mapStateToProps = (state: State) => {
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -58,11 +59,11 @@ const mapStateToProps = (state: State) => {
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   return {
+    contactsPermission: getContactsPermission(state),
     displayDenomination,
     updatingBalance: false,
     transactions,
     searchVisible: state.ui.scenes.transactionList.searchVisible,
-    contactsList: state.ui.scenes.transactionList.contactsList,
     selectedWalletId,
     selectedCurrencyCode: currencyCode,
     isoFiatCurrencyCode,
@@ -73,7 +74,7 @@ const mapStateToProps = (state: State) => {
     balanceInFiat,
     currencyConverter,
     multiplier,
-    contacts: state.ui.contacts.contactList,
+    contacts: getContacts(state),
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
@@ -81,8 +82,7 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
-  updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactList: (contacts) => dispatch(setContactList(contacts))
+  updateExchangeRates: () => dispatch(updateExchangeRates())
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })

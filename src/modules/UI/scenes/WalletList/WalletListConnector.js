@@ -8,7 +8,6 @@ import {
 import type {State, Dispatch} from '../../../ReduxTypes'
 
 import { walletRowOption } from './components/WalletOptions/action.js'
-import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
@@ -46,7 +45,6 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateActiveWalletsOrder: (activeWalletIds) => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: (archivedWalletIds) => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
-  setContactList: (contacts) => dispatch(setContactList(contacts)),
   // $FlowFixMe
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived))
 })
