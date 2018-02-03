@@ -81,7 +81,9 @@ import ENV from '../../env.json'
 import {makeCoreContext} from '../util/makeContext.js'
 import * as URI from 'uri-js'
 
-import {CAMERA, type Permission} from './UI/permissions.js'
+import {CAMERA, CONTACTS, type Permission} from './UI/permissions.js'
+
+import {ContactsLoaderConnecter as ContactsLoader} from './UI/components/ContactsLoader/indexContactsLoader.js'
 
 const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
 pluginFactories.push(EthereumCurrencyPluginFactory)
@@ -227,8 +229,11 @@ export default class Main extends Component<Props, State> {
                 <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
                   <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
-                  <Scene
-                    key={Constants.TRANSACTION_DETAILS}
+                  <Scene key={Constants.TRANSACTION_DETAILS}
+                    onEnter={() => {
+                      this.props.requestPermission(CONTACTS)
+                      this.props.dispatchEnableScan()
+                    }}
                     navTransparent={true}
                     clone
                     component={TransactionDetails}
@@ -287,8 +292,10 @@ export default class Main extends Component<Props, State> {
                             renderRightButton={this.renderEmptyButton()}
                           />
 
-                          <Scene
-                            key={Constants.TRANSACTION_LIST}
+                          <Scene key={Constants.TRANSACTION_LIST}
+                            onEnter={() => {
+                              this.props.requestPermission(CONTACTS)
+                            }}
                             navTransparent={true}
                             component={TransactionListConnector}
                             renderTitle={this.renderWalletListNavBar()}
@@ -476,6 +483,8 @@ export default class Main extends Component<Props, State> {
           <ErrorAlert />
           <TransactionAlert />
           <AutoLogout />
+
+          <ContactsLoader />
         </MenuContext>
       </StyleProvider>
     )
