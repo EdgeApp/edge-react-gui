@@ -16,12 +16,13 @@ import type {
 
 import type {
   DeviceDimensions,
-  GuiContact, GuiCurrencyInfo,
+  GuiCurrencyInfo,
   GuiWallet
 } from '../types'
 
 import type {PermissionsState} from '../reducers/permissions/permissionsReducer.js'
 import type {PermissionStatus, Permission} from './UI/permissions.js'
+import type {ContactsState} from '../reducers/contacts/contactsReducer.js'
 
 export type Action = { type: string, data?: any }
 
@@ -90,7 +91,6 @@ export type State = {
       },
       transactionList: {
         transactions: Array<AbcTransaction>,
-        contactsList: Array<GuiContact>,
         updatingBalance: boolean,
         searchVisible: boolean
       },
@@ -194,9 +194,6 @@ export type State = {
         [pluginName: string]: AbcCurrencyPlugin
       }
     },
-    contacts: {
-      contactList: Array<GuiContact>
-    }
   },
   cryptoExchange: {
     exchangeRate: number,
@@ -233,7 +230,8 @@ export type State = {
     fee: any
   },
   exchangeRates: number,
-  permissions: PermissionsState
+  permissions: PermissionsState,
+  contacts: ContactsState
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A

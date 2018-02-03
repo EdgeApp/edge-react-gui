@@ -3,6 +3,7 @@
 import { rootReducer } from './rootReducer.js'
 
 import {initialState as permissionsInitialState} from '../reducers/permissions/indexPermissions.js'
+import {initialState as contactsInitialState} from '../reducers/contacts/indexContacts.js'
 
 test('initialState', () => {
   const expected = {
@@ -56,12 +57,10 @@ test('initialState', () => {
       'toWalletPrimaryInfo': null,
       'transaction': null,
       'forceUpdateGuiCounter': 0,
-      'walletListModalVisible': false},
+      'walletListModalVisible': false
+    },
     'exchangeRates': 0,
     'ui': {
-      'contacts': {
-        'contactList': []
-      },
       'errorAlert': {
         'displayAlert': false,
         'message': ''
@@ -83,18 +82,22 @@ test('initialState', () => {
       'scenes': {
         'ABAlert': {
           'syntax': {},
-          'view': false},
+          'view': false
+        },
         'controlPanel': {
           'selectedUser': null,
-          'usersView': false},
+          'usersView': false
+        },
         'createWallet': {
-          'isCreatingWallet': false},
+          'isCreatingWallet': false
+        },
         'dimensions': {
           'keyboardHeight': 0},
         'editToken': {
           'deleteCustomTokenProcessing': false,
           'deleteTokenModalVisible': false,
-          'editCustomTokenProcessing': false},
+          'editCustomTokenProcessing': false
+        },
         'exchangeRate': {
           'exchangeRates': {}
         },
@@ -120,7 +123,8 @@ test('initialState', () => {
           'scanEnabled': false,
           'scanToWalletListModalVisibility': false,
           'selectedWalletListModalVisibility': false,
-          'torchEnabled': false},
+          'torchEnabled': false
+        },
         'sendConfirmation': {
           'label': '',
           'pending': false,
@@ -158,19 +162,21 @@ test('initialState', () => {
           isCustomFeeVisible: false
         },
         'sideMenu': {
-          'view': false},
+          'view': false
+        },
         'transactionAlert': {
           'abcTransaction': '',
-          'displayAlert': false},
+          'displayAlert': false
+        },
         'transactionDetails': {
           'subcategories': []
         },
         'transactionList': {
-          'contactsList': [],
           'searchVisible': false,
           'transactions': [],
           'transactionsWalletListModalVisibility': false,
-          'updatingBalance': true},
+          'updatingBalance': true
+        },
         'walletList': {
           'deleteWalletModalVisible': false,
           'getSeedWalletModalVisible': false,
@@ -184,7 +190,8 @@ test('initialState', () => {
           'walletName': ''
         },
         'walletListModal': {
-          'walletListModalVisible': false},
+          'walletListModalVisible': false
+        },
         'walletTransferList': {
           'walletListModalVisible': false,
           'walletTransferList': []
@@ -234,7 +241,8 @@ test('initialState', () => {
       },
       'transactionAlert': {
         'abcTransaction': '',
-        'displayAlert': false},
+        'displayAlert': false
+      },
       'wallets': {
         'activeWalletIds': [],
         'addTokenPending': false,
@@ -245,7 +253,8 @@ test('initialState', () => {
         'selectedWalletId': ''
       }
     },
-    permissions: permissionsInitialState
+    permissions: permissionsInitialState,
+    contacts: contactsInitialState
   }
   const actual = rootReducer(undefined, {})
 

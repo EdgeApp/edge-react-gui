@@ -7,7 +7,6 @@ import {scenes} from './scenes/reducer.js'
 import {wallets} from './Wallets/reducer.js'
 import {request} from './Request/reducer.js'
 import {settings} from './Settings/reducer.js'
-import contacts from './contacts/reducer'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
 import * as Constants from '../../constants/indexConstants'
@@ -18,8 +17,7 @@ export const uiReducer = combineReducers({
   scenes,
   wallets,
   request,
-  settings,
-  contacts
+  settings
 })
 
 export const ui = (state: $PropertyType<State, 'ui'>, action: any) => {

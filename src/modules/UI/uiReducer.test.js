@@ -4,9 +4,6 @@ import { uiReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    'contacts': {
-      'contactList': []
-    },
     'errorAlert': {
       'displayAlert': false,
       'message': ''
@@ -111,7 +108,6 @@ test('initialState', () => {
         'subcategories': []
       },
       'transactionList': {
-        'contactsList': [],
         'searchVisible': false,
         'transactions': [],
         'transactionsWalletListModalVisibility': false,
