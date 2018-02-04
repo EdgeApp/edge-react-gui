@@ -1,4 +1,4 @@
-package co.edgesecure.wallet;
+package co.edgesecure.app;
 
 import android.app.Application;
 
