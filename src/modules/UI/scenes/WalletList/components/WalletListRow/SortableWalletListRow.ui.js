@@ -73,7 +73,7 @@ class SortableWalletListRow extends Component<Props, State> {
                     {cryptoCurrencyName}
                   </T>
                   <T> (</T>
-                  <T style={[styles.rowBalanceDenominationText]}>
+                  <T style={[styles.rowBalanceDenominationText, styles.symbol]}>
                     {symbol || ''}
                   </T>
                   <T>)</T>
