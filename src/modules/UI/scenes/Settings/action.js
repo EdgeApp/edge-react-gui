@@ -1,5 +1,6 @@
 // @flow
 // UI/Scenes/Settings
+import { Alert } from 'react-native'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
@@ -9,6 +10,7 @@ import type {
   GetState,
   Dispatch
 } from '../../../../../src/modules/ReduxTypes.js'
+import s from '../../../../locales/strings.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 
@@ -94,6 +96,9 @@ export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, 
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(arg)
   dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
+  if (!isPassword) {
+    setTimeout(() => Alert.alert(s.strings.fragmet_invalid_password), 200)
+  }
 }
 
 export const lockSettings = () => async (dispatch: Dispatch) => {
