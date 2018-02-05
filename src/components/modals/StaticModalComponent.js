@@ -16,12 +16,16 @@ type Props = {
   cancel(): void
 }
 class StaticModalComponent extends Component<Props> {
+  reset: number
   componentDidMount () {
     if (this.props.modalDismissTimerSeconds) {
-      setTimeout(() => {
+      this.reset = setTimeout(() => {
         this.props.cancel()
       }, this.props.modalDismissTimerSeconds * 1000)
     }
+  }
+  componentWillUnmount () {
+    clearInterval(this.reset)
   }
   render () {
     const styles = StaticModalStyle
