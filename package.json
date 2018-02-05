@@ -34,7 +34,7 @@
     "lint:fix": "npm run lint -- --fix",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
-    "test": "npm run lint && npm run flow && jest",
+    "test": "npm run lint && npm run flow",
     "tron": "node_modules/.bin/reactotron",
     "updot": "updot",
     "watch": "npm test -- --watch"
@@ -103,7 +103,7 @@
     "react-native-smart-splash-screen": "^2.3.5",
     "react-native-sortable-listview": "^0.2.7",
     "react-native-sound": "^0.10.4",
-    "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git",
+    "react-native-tcp": "git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7",
     "react-native-udp": "^2.0.0",
     "react-native-vector-icons": "^4.2.0",
     "react-redux": "^5.0.5",
