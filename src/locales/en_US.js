@@ -141,6 +141,7 @@ const strings = {
   string_done_cap: 'Done',
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
+  string_first_bitcoin_wallet_name: 'My Bitcoin',
   my_crypto_wallet_name: 'My %s',
 
   // Exchange
