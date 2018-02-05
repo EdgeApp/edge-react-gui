@@ -46,7 +46,7 @@
     "buffer": "^5.0.8",
     "console-browserify": "^1.1.0",
     "constants-browserify": "0.0.1",
-    "core-js": "^2.5.3",
+    "core-js": "2.5.2",
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
