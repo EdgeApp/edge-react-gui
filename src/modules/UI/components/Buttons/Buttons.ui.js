@@ -18,11 +18,16 @@ class PrimaryButton extends Component {
       }
     }
   }
+  onPress = () => {
+    if (!this.props.processingFlag) {
+      this.props.onPressFunction()
+    }
+  }
 
   render () {
     return (
       <TouchableHighlight {...this.props}
-        onPress={this.props.onPressFunction}
+        onPress={this.onPress}
         underlayColor={styleRaw.primaryUnderlay.color}
         style={[
           styles.primaryButtonWrap,
