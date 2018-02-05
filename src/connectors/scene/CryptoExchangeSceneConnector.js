@@ -102,9 +102,6 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
     showNextButton,
-    // Not Sure why flow does not like the gettingTransaction type.
-    // There is no reason to fail it.
-    // $FlowFixMe
     gettingTransaction: state.cryptoExchange.gettingTransaction
   }
 }
