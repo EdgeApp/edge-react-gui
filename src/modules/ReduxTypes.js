@@ -230,7 +230,8 @@ export type State = {
     genericShapeShiftError: Error | null,
     changeWallet: 'none',
     transaction: AbcTransaction | null,
-    fee: any
+    fee: any,
+    gettingTransaction: boolean
   },
   exchangeRates: number,
   permissions: PermissionsState
