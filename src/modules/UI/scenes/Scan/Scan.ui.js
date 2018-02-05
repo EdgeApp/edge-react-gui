@@ -43,7 +43,8 @@ type Props = {
   toggleWalletListModal(): void,
   toggleScanToWalletListModal(): void,
   updateParsedURI(AbcParsedUri): void,
-  loginWithEdge(string): void
+  loginWithEdge(string): void,
+  toggleScanToWalletListModal: () => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text

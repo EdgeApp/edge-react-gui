@@ -1865,11 +1865,15 @@ cookiejar@^2.0.6:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/cookiejar/-/cookiejar-2.1.1.tgz#41ad57b1b555951ec171412a81942b1e8200d34a"
 
+core-js@2.5.2:
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.2.tgz#bc4648656e7dc9dc80d7d3c7bbc172d96e744e63"
+
 core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
 
-core-js@^2.2.2, core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0, core-js@^2.5.3:
+core-js@^2.2.2, core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0:
   version "2.5.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.3.tgz#8acc38345824f16d8365b7c9b4259168e8ed603e"
 
@@ -6070,9 +6074,9 @@ react-native-tab-view@^0.0.70:
   dependencies:
     prop-types "^15.5.10"
 
-"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git":
+"react-native-tcp@git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7":
   version "3.2.2"
-  resolved "git://github.com/Airbitz/react-native-tcp.git#f86fdce98c82c8bcbb89f2b27034d6148b133271"
+  resolved "git://github.com/Airbitz/react-native-tcp.git#b27f3825e127947c52b14146de01b995338994e7"
   dependencies:
     base64-js "0.0.8"
     buffer "^5.0.0"
