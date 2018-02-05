@@ -127,7 +127,7 @@ export const getSupportedWalletTypes = (state: State) => {
         currencyCode: plugin.currencyInfo.currencyCode
       })
       supportedWalletTypes.push({
-        label: 'Bitcoin',
+        label: 'Bitcoin (no Segwit)',
         value: 'wallet:bitcoin-bip44',
         symbolImage: plugin.currencyInfo.symbolImage,
         symbolImageDarkMono: plugin.currencyInfo.symbolImageDarkMono,
