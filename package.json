@@ -34,7 +34,7 @@
     "lint:fix": "npm run lint -- --fix",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
-    "test": "npm run lint && npm run flow && jest",
+    "test": "npm run lint && npm run flow",
     "tron": "node_modules/.bin/reactotron",
     "updot": "updot",
     "watch": "npm test -- --watch"
@@ -97,7 +97,7 @@
     "react-native-push-notification": "^3.0.2",
     "react-native-qrcode": "^0.2.3",
     "react-native-randombytes": "git://github.com/Airbitz/react-native-randombytes.git",
-    "react-native-router-flux": "git://github.com/aksonov/react-native-router-flux.git#37c6553c168b9fb6947a5e533df9bd37793f1f68",
+    "react-native-router-flux": "4.0.0-beta.28",
     "react-native-share": "^1.0.21",
     "react-native-slider": "^0.11.0",
     "react-native-smart-splash-screen": "^2.3.5",
