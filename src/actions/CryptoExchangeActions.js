@@ -207,6 +207,7 @@ async function makeShiftTransaction (dispatch: Dispatch, fromWallet: GuiWallet |
 }
 const processMakeSpendError = (e) => (dispatch: Dispatch, getState: GetState) => {
   console.log(e)
+  dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
   holderObject.status = 'finished'
   holderObject.processingAmount = ''
   if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
@@ -226,6 +227,9 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
   if (!srcWallet) { return }
   if (!state.cryptoExchange.transaction) {
     getShiftTransaction(fromWallet, toWallet)
+    return
+  }
+  if (holderObject.status !== 'finished') {
     return
   }
   if (srcWallet) {
@@ -282,8 +286,10 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   if (srcCurrencyCode !== destCurrencyCode) {
     holderObject.status = 'pending'
     holderObject.processingAmount = fromNativeAmount
+    dispatch(actions.dispatchAction(Constants.START_MAKE_SPEND))
     const abcTransaction = await srcWallet.makeSpend(spendInfo)
     holderObject.status = 'finished'
+    dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
     if (holderObject.newAmount !== holderObject.processingAmount) {
       // If there is the user has typed something different in the time it took to
       // get back the transaction, there is no point in going on,

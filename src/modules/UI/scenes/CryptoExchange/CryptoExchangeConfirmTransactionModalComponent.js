@@ -98,19 +98,20 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
         <View style={shim} />
         <View style={shim} />
       </View>
-
       <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={false}
         parentStyle={{
           backgroundColor: THEME.COLORS.SECONDARY,
           borderRadius: 40,
           marginBottom: 10,
           marginLeft: 0,
-          marginRight: 0
+          marginRight: 0,
+          width: 270,
+          alignSelf: 'center'
         }} />
     </View>
   }
 
   renderBottom = (style: Object) => {
-    return <TouchableOpacity><Text style={style.bottomButton} onPress={this.props.closeFunction}>Cancel</Text></TouchableOpacity>
+    return <TouchableOpacity><Text style={style.bottomButton} onPress={this.props.closeFunction}>{s.strings.string_cancel_cap}</Text></TouchableOpacity>
   }
 }

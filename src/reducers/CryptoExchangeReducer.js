@@ -38,7 +38,8 @@ const initialState = {
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
   forceUpdateGuiCounter: 0,
-  transaction: null
+  transaction: null,
+  gettingTransaction: false
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
@@ -166,6 +167,10 @@ function cryptoExchangerReducer (state = initialState, action) {
         feeSetting: action.data.feeSetting,
         forceUpdateGuiCounter: (state.forceUpdateGuiCounter + 1)
       }
+    case Constants.START_MAKE_SPEND:
+      return { ...state, gettingTransaction: true }
+    case Constants.DONE_MAKE_SPEND:
+      return { ...state, gettingTransaction: false }
     default:
       return state
   }
