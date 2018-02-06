@@ -5,6 +5,7 @@ import {
     View,
     TouchableHighlight
 } from 'react-native'
+
 import FormattedText from '../../components/FormattedText'
 import SearchResults from '../../components/SearchResults/index'
 import styles from './style'

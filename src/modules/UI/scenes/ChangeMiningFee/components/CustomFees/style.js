@@ -1,6 +1,7 @@
 // @flow
 
 import { StyleSheet, Platform } from 'react-native'
+
 import THEME from '../../../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../../../theme/variables/platform'
 

@@ -1,7 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../locales/strings.js'
 import {
   Animated,
   Easing,
@@ -15,6 +14,9 @@ import Permissions from 'react-native-permissions'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
+
+import s from '../../../../locales/strings.js'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -27,7 +29,6 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 

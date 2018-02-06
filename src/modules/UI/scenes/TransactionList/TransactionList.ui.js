@@ -1,8 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../locales/strings.js'
-import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   ActivityIndicator,
@@ -14,12 +12,16 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-import T from '../../components/FormattedText'
-import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
+import type {AbcTransaction, AbcDenomination} from 'edge-login'
+
+import s from '../../../../locales/strings.js'
+import {intl} from '../../../../locales/intl'
+import SafeAreaView from '../../components/SafeAreaView'
+import T from '../../components/FormattedText'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import styles, {styles as styleRaw} from './style'
 import * as UTILS from '../../../utils'
 
@@ -31,7 +33,6 @@ import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 // import SearchBar from './components/SearchBar.ui'
 
-import type {AbcTransaction, AbcDenomination} from 'edge-login'
 import type {GuiWallet} from '../../../../types'
 
 import WalletListModal

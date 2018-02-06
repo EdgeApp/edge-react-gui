@@ -9,15 +9,16 @@ import {
   FlatList,
   Image
 } from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView/index.js'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
+import {Actions} from 'react-native-router-flux'
+import SortableListView from 'react-native-sortable-listview'
+
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {Actions} from 'react-native-router-flux'
 import styles from './style'
-import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'

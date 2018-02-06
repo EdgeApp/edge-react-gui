@@ -1,3 +1,5 @@
+// @flow
+
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'

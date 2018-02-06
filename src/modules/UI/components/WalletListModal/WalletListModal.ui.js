@@ -1,6 +1,8 @@
 // @flow
+
 import React, {Component} from 'react'
 import {ScrollView} from 'react-native'
+
 import styles from './style'
 import * as Animatable from 'react-native-animatable'
 import {border as b} from '../../../utils'
