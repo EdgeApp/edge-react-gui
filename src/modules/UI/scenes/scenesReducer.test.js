@@ -98,7 +98,6 @@ test('initialState',
       'subcategories': []
     },
     'transactionList': {
-      'contactsList': [],
       'searchVisible': false,
       'transactions': [],
       'transactionsWalletListModalVisibility': false,

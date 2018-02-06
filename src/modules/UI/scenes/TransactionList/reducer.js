@@ -6,7 +6,7 @@ import type { Action } from '../../../ReduxTypes.js'
 import type { AbcTransaction } from 'edge-login'
 
 export type TransactionsState = Array<AbcTransaction>
-export type ContactsListState = Array<any>
+export type ContactsState = Array<any>
 
 const transactions = (state: TransactionsState = [], action: Action) => {
   let transactions
@@ -31,15 +31,6 @@ const searchVisible = (state: boolean = false, action: Action) => {
       return true
     case ACTION.TRANSACTIONS_SEARCH_HIDDEN:
       return false
-    default:
-      return state
-  }
-}
-
-const contactsList = (state: ContactsListState = [], action: Action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_CONTACTS_LIST:
-      return action.data
     default:
       return state
   }
@@ -70,7 +61,6 @@ const transactionsWalletListModalVisibility = (state = false, action) => {
 export const transactionList = combineReducers({
   transactions,
   searchVisible,
-  contactsList,
   updatingBalance,
   transactionsWalletListModalVisibility
 })

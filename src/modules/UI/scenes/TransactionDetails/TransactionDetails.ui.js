@@ -11,10 +11,8 @@ import {
   TouchableOpacity,
   Keyboard
 } from 'react-native'
-import Permissions from 'react-native-permissions'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
-import Contacts from 'react-native-contacts'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -47,7 +45,7 @@ export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
   setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
-  setContactList: (Array<GuiContact>) => void,
+  loadContacts: (Array<GuiContact>) => void,
   getSubcategories: () => void,
   displayDropdownAlert: (message: string, title: string) => void
 }
@@ -376,24 +374,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   componentDidMount () {
-    if (!this.props.contacts) {
-      Permissions.check('contacts').then((response) => {
-        if (response === 'authorized') {
-          Contacts.getAll((err, contacts) => {
-            if (err === 'denied') {
-              // error
-            } else {
-              const filteredContacts = contacts
-              .filter(item => item.givenName)
-              .sort((a, b) =>
-                a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase())
-              )
-              this.props.setContactList(filteredContacts)
-            }
-          })
-        }
-      })
-    }
     this.props.getSubcategories()
   }
 

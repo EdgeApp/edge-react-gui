@@ -10,8 +10,6 @@ import {
   Image
 } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
-import Permissions from 'react-native-permissions'
-import Contacts from 'react-native-contacts'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -28,8 +26,6 @@ import * as UTILS from '../../../utils'
 
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import platform from '../../../../theme/variables/platform.js'
-
-import type {GuiContact} from '../../../../types'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
@@ -57,7 +53,6 @@ type Props = {
   walletName: string,
   wallets: any,
   renameWalletInput: string,
-  setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void
@@ -76,21 +71,6 @@ export default class WalletList extends Component<Props, State> {
       fullListExists: true,
       balanceBoxVisible: true
     }
-  }
-
-  componentDidMount () {
-    Permissions.request('contacts').then((response) => {
-      if (response === 'authorized') {
-        Contacts.getAll((err, contacts) => {
-          if (err === 'denied') {
-            // error
-          } else {
-            contacts.sort((a, b) => a.givenName > b.givenName)
-            this.props.setContactList(contacts)
-          }
-        })
-      }
-    })
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {
