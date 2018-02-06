@@ -131,7 +131,6 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
             renderRegularResultFxn={this.renderWalletTypeResult}
             onRegularSelectFxn={this.handleSelectWalletType}
             regularArray={filteredArray}
-            style={[styles.SearchResults]}
             containerStyle={[styles.searchContainer] }
             keyExtractor={this.keyExtractor}
           />

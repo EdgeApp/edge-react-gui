@@ -132,7 +132,6 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
             renderRegularResultFxn={this.renderFiatTypeResult}
             onRegularSelectFxn={this.handleSelectFiatType}
             regularArray={filteredArray}
-            style={[styles.SearchResults]}
             containerStyle={[styles.searchContainer]}
             keyExtractor={this.keyExtractor}
             initialNumToRender={30}
