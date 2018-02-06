@@ -1,8 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../../../locales/strings.js'
-import {intl} from '../../../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   View,
@@ -13,6 +11,9 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
+
+import s from '../../../../../../locales/strings.js'
+import {intl} from '../../../../../../locales/intl'
 import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'

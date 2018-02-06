@@ -1,6 +1,10 @@
+// @flow
+
 import { PLATFORM } from '../../theme/variables/platform'
+
 import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
+
 const HeaderMenuRightSideStyle = {
   menuContainer: {
     width: 300,
