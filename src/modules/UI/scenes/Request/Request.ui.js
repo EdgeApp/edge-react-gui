@@ -173,6 +173,7 @@ export class Request extends Component<Props, State> {
               overridePrimaryExchangeAmount={''}
               forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
+              keyboardVisible={false}
               color={color} />
 
             <QRCode value={this.state.encodedURI} />

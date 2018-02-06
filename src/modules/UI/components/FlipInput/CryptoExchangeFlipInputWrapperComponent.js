@@ -104,6 +104,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
             overridePrimaryExchangeAmount={overridePrimaryExchangeAmount}
             forceUpdateGuiCounter={forceUpdateGuiCounter}
             onExchangeAmountChanged={this.onExchangeAmountChanged}
+            keyboardVisible={false}
           />
         </View>
         {this.renderFee(style)}
