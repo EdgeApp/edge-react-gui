@@ -55,10 +55,12 @@ export default StyleSheet.create({
   },
   error: {
     height: 20,
-    color: THEME.COLORS.ACCENT_RED,
-    textAlign: 'left',
     marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  errorText: {
+    textAlign: 'left',
+    color: THEME.COLORS.ACCENT_RED
   },
   menuTrigger: {
     paddingHorizontal: 8,

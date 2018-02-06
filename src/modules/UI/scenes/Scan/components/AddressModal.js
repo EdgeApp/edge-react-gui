@@ -132,7 +132,7 @@ export default class AddressModal extends Component<Props, State> {
       // console.log('AddressModal parsedURI', parsedURI)
       this.props.toggleAddressModal()
       this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation()
+      Actions.sendConfirmation('fromScan')
     } catch (e) {
       Alert.alert(
         'Invalid Address',
