@@ -1,6 +1,11 @@
 // @flow
 
-import type { AbcContext, AbcContextCallbacks, AbcCorePlugin, AbcCurrencyPlugin } from 'edge-login'
+import type {
+  AbcContext,
+  AbcContextCallbacks,
+  EdgeCorePluginFactory,
+  AbcCurrencyPlugin
+} from 'edge-login'
 import SplashScreen from 'react-native-smart-splash-screen'
 import s, { selectLocale } from '../locales/strings.js'
 import { setIntlLocale } from '../locales/intl'
@@ -74,8 +79,13 @@ import { styles } from './style.js'
 import * as CONTEXT_API from './Core/Context/api'
 
 import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import { BitcoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory, LitecoinCurrencyPluginFactory, DashCurrencyPluginFactory } from 'edge-currency-bitcoin'
-import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
+import {
+  bitcoinCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
+  dashCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
+import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
 import {makeCoreContext} from '../util/makeContext.js'
@@ -83,12 +93,17 @@ import * as URI from 'uri-js'
 
 import {CAMERA, type Permission} from './UI/permissions.js'
 
-const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
-pluginFactories.push(EthereumCurrencyPluginFactory)
-pluginFactories.push(BitcoinCurrencyPluginFactory)
-pluginFactories.push(BitcoincashCurrencyPluginFactory)
-pluginFactories.push(LitecoinCurrencyPluginFactory)
-pluginFactories.push(DashCurrencyPluginFactory)
+const pluginFactories: Array<EdgeCorePluginFactory> = [
+  // Exchanges:
+  coinbasePlugin,
+  shapeshiftPlugin,
+  // Currencies:
+  bitcoincashCurrencyPluginFactory,
+  bitcoinCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
+  ethereumCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory
+]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
