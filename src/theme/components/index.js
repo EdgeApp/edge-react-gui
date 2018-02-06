@@ -34,9 +34,9 @@ import cardItemTheme from './CardItem';
 import listItemTheme from './ListItem';
 import formTheme from './Form';
 import separatorTheme from './Separator';
-import variable from './../variables/platform';
+import PLATFORM from './../variables/platform';
 
-export default (variables = variable) => {
+export default (variables = PLATFORM) => {
   const theme = {
     variables,
     'NativeBase.Left': {

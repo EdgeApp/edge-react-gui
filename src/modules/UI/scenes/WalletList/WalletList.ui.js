@@ -27,7 +27,7 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import * as UTILS from '../../../utils'
 
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 import type {GuiContact} from '../../../../types'
 
@@ -212,7 +212,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
-    const {width} = platform.deviceWidth
+    const {width} = PLATFORM.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
         {this.state.sortableListExists && (

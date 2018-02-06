@@ -1,6 +1,6 @@
 import {StyleSheet, Platform} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
-import PLATFORM from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export const styles = {
   container: {

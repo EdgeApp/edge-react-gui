@@ -5,7 +5,7 @@ import {
   Platform,
   Image
 } from 'react-native'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -157,10 +157,10 @@ export const styles = {
   sortableList: {
     flex: 1,
     position: 'absolute',
-    height: platform.usableHeight - 130 - 50
+    height: PLATFORM.usableHeight - 130 - 50
   },
   sortableWalletListRow: {
-    width: platform.deviceWidth,
+    width: PLATFORM.deviceWidth,
     height: 50,
     backgroundColor: THEME.COLORS.WHITE,
     paddingVertical: 6,
@@ -172,7 +172,7 @@ export const styles = {
   fullList: {
     flex: 1,
     // position: 'absolute',
-    height: platform.usableHeight - 130 - 50
+    height: PLATFORM.usableHeight - 130 - 50
   },
   rowContainer: {
     padding: 6,
@@ -366,7 +366,7 @@ export const styles = {
     color: THEME.COLORS.ROW_PRESSED
   },
   getSeedModal: {
-    top: platform.deviceHeight / 18
+    top: PLATFORM.deviceHeight / 18
   }
 }
 
