@@ -23,7 +23,7 @@ export default class MenuDropDown extends Component<Props> {
       <MenuOption
         style={style.menuOption}
         value={item.value}
-        key={'ld' + item.value}
+        key={'ld' + (item.key || item.value)}
       >
         <View style={[style.menuOptionItem]}>
           <Text style={[style.optionText]}>
