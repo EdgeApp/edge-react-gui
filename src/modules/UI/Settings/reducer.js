@@ -2,7 +2,6 @@
 
 import type { AbcCurrencyPlugin } from 'edge-login'
 import _ from 'lodash'
-import {propOr} from 'ramda'
 
 import * as ACTION from './action.js'
 import * as Constants from '../../../constants/indexConstants.js'
@@ -154,8 +153,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         isOtpEnabled: otpInfo.enabled,
         otpKey: otpInfo.otpKey,
         autoLogoutTimeInSeconds,
-        isTouchEnabled: propOr(false, initialState.isTouchEnabled, touchIdInfo),
-        isTouchSupported: propOr(false, initialState.isTouchSupported, touchIdInfo),
+        isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
+        isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
         defaultFiat,
         merchantMode,
         customTokens,
