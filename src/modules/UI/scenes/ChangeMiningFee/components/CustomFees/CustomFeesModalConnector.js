@@ -16,8 +16,8 @@ import * as UI_SELECTORS from '../../../../selectors.js'
 import { updateMiningFees } from '../../../SendConfirmation/action'
 
 const mapStateToProps = (state: State) => {
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-  const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
+  const sourceWalletId: string = UI_SELECTORS.getFromWalletId(state, Actions.currentScene)
+  const wallet = CORE_SELECTORS.getWallet(state, sourceWalletId)
   let customFeeSettings = []
   if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
     customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings

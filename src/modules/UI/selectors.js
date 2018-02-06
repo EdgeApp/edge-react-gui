@@ -6,6 +6,10 @@ import _ from 'lodash'
 import type {State} from '../ReduxTypes'
 import type {GuiDenomination, GuiWallet} from '../../types'
 import * as SETTINGS_SELECTORS from './Settings/selectors'
+import {
+  CHANGE_MINING_FEE_EXCHANGE,
+  CHANGE_MINING_FEE_SEND_CONFIRMATION
+} from '../../constants/SceneKeys.js'
 
 export const getWallets = (state: State) => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
@@ -21,6 +25,21 @@ export const getWallet = (state: State, walletId: string) => {
 export const getSelectedWalletId = (state: State): string => {
   const selectedWalletId = state.ui.wallets.selectedWalletId
   return selectedWalletId
+}
+
+export const getFromWalletId = (state: State, sceneKey: string): string => {
+  let id = ''
+  switch (sceneKey) {
+    case CHANGE_MINING_FEE_EXCHANGE :
+      if (state.cryptoExchange.fromWallet) {
+        id = state.cryptoExchange.fromWallet.id
+      }
+      break
+    case CHANGE_MINING_FEE_SEND_CONFIRMATION :
+      id = state.ui.wallets.selectedWalletId
+      break
+  }
+  return id
 }
 
 export const getSelectedCurrencyCode = (state: State): string => {

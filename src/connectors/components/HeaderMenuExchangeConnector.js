@@ -9,8 +9,9 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz'
 import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
+import type {State, Dispatch} from '../../modules/ReduxTypes.js'
 
-export const mapStateToProps = (state: any) => {
+export const mapStateToProps = (state: State) => {
   const data = [
     {
       label: s.strings.title_change_mining_fee, // tie into
@@ -35,7 +36,7 @@ export const mapStateToProps = (state: any) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: any) => ({
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: string) => {
     switch (value) {
       case Constants.HELP_VALUE:
