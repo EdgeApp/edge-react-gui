@@ -27,6 +27,8 @@
 .*/node_modules/react-native-fs/.*
 .*/node_modules/metro-bundler/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
+.*/node_modules/react-native-dropdownalert/.*
+.*/node_modules/react-native-dropdown/.*
 
 [include]
 
