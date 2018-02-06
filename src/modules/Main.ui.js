@@ -82,7 +82,7 @@ import {makeCoreContext} from '../util/makeContext.js'
 import * as URI from 'uri-js'
 
 import {CAMERA, type Permission} from './UI/permissions.js'
-
+// $FlowFixMe
 const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
 pluginFactories.push(EthereumCurrencyPluginFactory)
 pluginFactories.push(BitcoinCurrencyPluginFactory)
