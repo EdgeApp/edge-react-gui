@@ -1,4 +1,7 @@
+// @flow
+
 import {StyleSheet, Platform} from 'react-native'
+
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
@@ -352,7 +355,7 @@ export const styles = {
     color: THEME.COLORS.ACCENT_RED
   },
   typeTransfer: {
-    color: THEME.COLORS.ACCENT_PRIMARY
+    color: THEME.COLORS.PRIMARY
   },
   typeIncome: {
     color: THEME.COLORS.ACCENT_GREEN

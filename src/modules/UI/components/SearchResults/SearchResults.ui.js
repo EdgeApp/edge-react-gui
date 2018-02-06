@@ -1,3 +1,5 @@
+// @flow
+
 import React, {Component} from 'react'
 import {
   FlatList,
@@ -6,15 +8,32 @@ import {
 
 import style from './styles'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+import type {DeviceDimensions} from '../../../../types.js'
 
-export default class SearchResults extends Component {
-  constructor (props) {
+export type Props = {
+  regularArray: Array<any>,
+  dimensions: DeviceDimensions,
+  height: number,
+  extraTopSpace: number,
+  containerStyle: Object,
+  onRegularSelectFxn: (string) => void,
+  scrollRenderAheadDistance: number,
+  renderRegularResultFxn: (rowData: any, onRegularSelectFxn: (any) => void) => void,
+  keyExtractor: (Object) => number,
+  regularResult: (data: Object, onPressFxn: () => void) => void
+}
+export type State = {
+  dataSource: Array<Object>
+}
+export default class SearchResults extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     const completedDataList = this.props.regularArray.map((x, i) => {
       const newValue = x
       newValue.key = i
       return newValue
     })
+
     this.state = {
       dataSource: completedDataList
     }
@@ -51,5 +70,5 @@ export default class SearchResults extends Component {
     )
   }
 
-  renderRegularRow = (data, onPressFxn) => this.props.regularResult(data, onPressFxn)
+  renderRegularRow = (data: Object, onPressFxn: () => void) => this.props.regularResult(data, onPressFxn)
 }
