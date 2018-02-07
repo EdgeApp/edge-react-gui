@@ -82,6 +82,9 @@ export const styles = {
   },
   underlay: {
     color: THEME.COLORS.ROW_PRESSED
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   }
     // end of token rows //
 }
