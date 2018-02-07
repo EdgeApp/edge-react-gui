@@ -2,7 +2,7 @@
 
 import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
-import PLATFORM from '../../../../theme/variables/platform'
+import {PLATFORM} from '../../../../theme/variables/platform'
 
 export const styles = {
   usableHeight: PLATFORM.usableHeight,
