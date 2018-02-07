@@ -123,7 +123,7 @@ const strings = {
   settings_minutes: 'Minute(s)',
   settings_modal_send_logs_title: 'Send logs?',
   settings_modal_send_logs_loading: 'Sending logs is in progress',
-  settings_modal_send_logs_success: 'Logs has been sent',
+  settings_modal_send_logs_success: 'Logs have been sent',
   settings_modal_send_logs_failure: 'Sending logs has failed',
   settings_options_title_cap: 'Options',
   settings_seconds: 'Second(s)',
