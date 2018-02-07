@@ -359,6 +359,9 @@ export const styles = {
   },
   underlayColor: {
     color: THEME.COLORS.GRAY_4
+  },
+  symbol: {
+    fontFamily: THEME.FONTS.SYMBOLS
   }
 }
 
