@@ -133,10 +133,9 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
                 {UTILS.cutOffText(guiWallet.name, 34)}
               </T>
             </View>
-            <View style={styles.rowBalanceTextWrap}>
-              <T style={styles.currencyRowText}>
-                {symbol || ''} {denomAmount}
-              </T>
+            <View style={[styles.rowBalanceTextWrap, {flexDirection: 'row'}]}>
+              <T style={[styles.currencyRowText, styles.symbol]}>{symbol || ''}</T>
+              <T style={styles.currencyRowText}>{denomAmount}</T>
             </View>
           </View>
         </TouchableHighlight>
