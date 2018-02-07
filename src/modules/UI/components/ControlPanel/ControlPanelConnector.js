@@ -1,11 +1,15 @@
+// @flow
+
 import {connect} from 'react-redux'
+
 import ControlPanel from './ControlPanel.ui'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import {openSelectUser, closeSelectUser} from './action'
+import type {State, Dispatch} from '../../../ReduxTypes.js'
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: State) => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -23,6 +27,7 @@ const mapStateToProps = (state) => {
     secondaryDisplayAmount =
       parseFloat(1) *
       parseFloat(secondaryToPrimaryRatio) *
+      // $FlowFixMe
       parseFloat(primaryDisplayDenomination.multiplier) /
       parseFloat(primaryExchangeDenomination.multiplier)
   }
@@ -39,7 +44,7 @@ const mapStateToProps = (state) => {
     username: CORE_SELECTORS.getUsername(state)
   }
 }
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   openSelectUser: () => dispatch(openSelectUser()),
   closeSelectUser: () => dispatch(closeSelectUser())
 })

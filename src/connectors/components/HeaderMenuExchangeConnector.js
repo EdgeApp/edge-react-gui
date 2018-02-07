@@ -1,6 +1,8 @@
 // @flow
+
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
+
 import LinkedComponent
   from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
 import * as Styles from '../../styles/indexStyles'
@@ -11,7 +13,9 @@ import THEME from '../../theme/variables/airbitz'
 import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 
-export const mapStateToProps = (state: any) => {
+import type {State, Dispatch} from '../../modules/ReduxTypes.js'
+
+export const mapStateToProps = (state: State) => {
   let sourceWalletId, sourceWallet
   if (state.cryptoExchange && state.cryptoExchange.fromWallet) {
     sourceWalletId = state.cryptoExchange.fromWallet.id
@@ -56,7 +60,7 @@ export const mapStateToProps = (state: any) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: any) => ({
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: Object) => {
     switch (value.title) {
       case Constants.HELP_VALUE:
