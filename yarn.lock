@@ -89,7 +89,7 @@ after@0.8.2:
 
 "airbitz-core-js-ui@git://github.com/Airbitz/airbitz-core-js-ui.git#react-native":
   version "0.1.5"
-  resolved "git://github.com/Airbitz/airbitz-core-js-ui.git#0aa2706c0918564249837ccb8a3fb24ca2b382fa"
+  resolved "git://github.com/Airbitz/airbitz-core-js-ui.git#d7e5a6247b7487969b6ad7201d305d856f63a04d"
   dependencies:
     async "~2.0.1"
     babel-preset-stage-2 "^6.24.1"
@@ -4872,14 +4872,14 @@ mkdirp@0.5.1, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1:
     minimist "0.0.8"
 
 mobx-react@^4.3.4:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-4.4.0.tgz#4f9ecea2d2ba453b41927d26a81c844b89f77f95"
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/mobx-react/-/mobx-react-4.4.1.tgz#7cc793b55bbb7485f1febd18c1913c581c124edc"
   dependencies:
     hoist-non-react-statics "^2.3.1"
 
 mobx@^3.3.1:
-  version "3.4.1"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.4.1.tgz#37abe5ee882d401828d9f26c6c1a2f47614bbbef"
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.5.1.tgz#8e682ec535cf44e04005b9e37e2df66acc975a42"
 
 mocha@^3.5.0:
   version "3.5.3"
