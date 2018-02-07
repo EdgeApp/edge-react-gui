@@ -1,10 +1,12 @@
+// @flow
+
 import THEME from '../../theme/variables/airbitz'
-import platform from '../../theme/variables/platform'
+import { PLATFORM } from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'
 
 const EdgeLoginScreen = {
   container: {...Styles.SceneContainer,
-    height: platform.deviceHeight - THEME.HEADER - (THEME.FOOTER_TABS_HEIGHT * 2)
+    height: PLATFORM.deviceHeight - THEME.HEADER - (THEME.FOOTER_TABS_HEIGHT * 2)
   },
   gradient: {
     height: THEME.HEADER,

@@ -18,10 +18,7 @@ import { connect } from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 
 import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'react-native-router-flux'
-import { StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
-import getTheme from '../theme/components'
-import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 import * as Constants from '../constants/indexConstants'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
@@ -233,7 +230,6 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <StyleProvider style={getTheme(platform)}>
         <MenuContext style={styles.mainMenuContext}>
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
@@ -492,7 +488,6 @@ export default class Main extends Component<Props, State> {
           <TransactionAlert />
           <AutoLogout />
         </MenuContext>
-      </StyleProvider>
     )
   }
 

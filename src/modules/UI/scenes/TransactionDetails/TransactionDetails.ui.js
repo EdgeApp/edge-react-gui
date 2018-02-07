@@ -1,7 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../locales/strings.js'
 import {
   Animated,
   Easing,
@@ -15,6 +14,9 @@ import Permissions from 'react-native-permissions'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
+
+import s from '../../../../locales/strings.js'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -26,8 +28,7 @@ import AmountArea from './AmountArea.ui.js'
 import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
-import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -450,7 +451,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
     return (
       <SafeAreaView>
-        <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
+        <View style={[{width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight}, UTILS.border()]}>
           <Gradient style={styles.headerGradient} />
           <View style={{position: 'relative', top: 66}}>
             {this.state.contactSearchVisibility &&
@@ -461,7 +462,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   backgroundColor: THEME.COLORS.WHITE,
                   position: 'absolute',
                   top: 4,
-                  height: platform.usableHeight,
+                  height: PLATFORM.usableHeight,
                   zIndex: 99999
                 }]}>
                 <View style={[styles.payeeNameArea]}>
@@ -486,9 +487,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   onChangePayee={this.onSelectPayee}
                   contacts={this.props.contacts}
                   style={[{width: '100%'}]}
-                  usableHeight={platform.usableHeight}
+                  usableHeight={PLATFORM.usableHeight}
                   currentPayeeText={this.state.name || ''}
-                  dimensions={platform.dimensions}
+                  dimensions={PLATFORM.dimensions}
                   onSelectPayee={this.onSelectPayee}
                   blurOnSubmit
                   onBlur={this.onBlurPayee}
@@ -502,7 +503,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     width: '100%',
                     backgroundColor: THEME.COLORS.WHITE,
                     position: 'absolute',
-                    height: platform.usableHeight,
+                    height: PLATFORM.usableHeight,
                     zIndex: 99999
                   }]}
                 >
@@ -532,7 +533,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   <SubCategorySelect
                     onPressFxn={this.onSelectSubCategory}
                     enteredSubcategory={this.state.subCategory}
-                    usableHeight={platform.usableHeight}
+                    usableHeight={PLATFORM.usableHeight}
                     subcategoriesList={sortedSubcategories}
                   />
                 </Animated.View>
@@ -582,9 +583,9 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     type={type}
                     onEnterCategories={this.onEnterCategories}
                     onExitCategories={this.onExitCategories}
-                    usableHeight={platform.usableHeight}
+                    usableHeight={PLATFORM.usableHeight}
                     onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
-                    dimensions={platform.dimensions}
+                    dimensions={PLATFORM.dimensions}
                     onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                     onFocusNotes={this.onFocusNotes}
                     onBlurNotes={this.onBlurNotes}
