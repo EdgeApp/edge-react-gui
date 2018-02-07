@@ -99,6 +99,7 @@ export default {
     GRAY_4: '#F4F5F6',
     WHITE:  '#FFFFFF',
     CLEAR:  'rgba(0, 0, 0, 0)',
+    OPACITY_WHITE:  'rgba(255, 255, 255, 0.1)',
 
     TRANSPARENT: 'transparent',
     MODAL_BOX: 'rgba(0, 0, 0, .6)',

@@ -16,21 +16,24 @@ import styles from './style.js'
 import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
+import {sprintf} from 'sprintf-js'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import type {GuiFiatType, GuiWalletType} from '../../../../types.js'
 
-export type CreateWalletNameProps = {
-
+export type CreateWalletNameOwnProps = {
+  selectedFiat: GuiFiatType,
+  selectedWalletType: GuiWalletType,
 }
 
 type State = {
   walletName: string
 }
 
-export class CreateWalletNameComponent extends Component<CreateWalletNameProps, State> {
-  constructor (props: CreateWalletNameProps) {
+export class CreateWalletName extends Component<CreateWalletNameOwnProps, State> {
+  constructor (props: CreateWalletNameOwnProps) {
     super(props)
     this.state = {
-      walletName: ''
+      walletName: sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.label)
     }
   }
 
@@ -43,13 +46,17 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
 
   onNext = (): void => {
     if (this.isValidWalletName()) {
-      Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]({walletName: this.state.walletName})
+      Actions[Constants.CREATE_WALLET_REVIEW]({
+        walletName: this.state.walletName,
+        selectedFiat: this.props.selectedFiat,
+        selectedWalletType: this.props.selectedWalletType
+      })
     } else {
       Alert.alert(s.strings.create_wallet_invalid_name, s.strings.create_wallet_enter_valid_name)
     }
   }
 
-  onCancel = (): void => {
+  onBack = (): void => {
     Keyboard.dismiss()
     Actions.pop() // redirect to the list of wallets
   }
@@ -68,12 +75,13 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
               onChangeText={this.handleChangeWalletName}
               value={this.state.walletName}
               placeholder={s.strings.fragment_wallets_addwallet_name_hint}
+              onNext={this.onNext}
             />
              <View style={styles.buttons}>
                 <SecondaryButton
-                  style={[styles.cancel]}
-                  onPressFunction={this.onCancel}
-                  text={s.strings.string_cancel_cap} />
+                  style={[styles.back]}
+                  onPressFunction={this.onBack}
+                  text={s.strings.title_back} />
 
                 <PrimaryButton
                   style={[styles.next]}
@@ -94,7 +102,8 @@ export class CreateWalletNameComponent extends Component<CreateWalletNameProps, 
 export type WalletNameInputProps = {
   value: string,
   placeholder: string,
-  onChangeText: Function
+  onChangeText: (walletName: string) => void,
+  onNext: () => void
 }
 
 class WalletNameInput extends Component<WalletNameInputProps> {
@@ -102,12 +111,15 @@ class WalletNameInput extends Component<WalletNameInputProps> {
     return (
       <View style={styles.pickerView}>
         <FormField style={MaterialInputOnWhite}
+          autoFocus
           clearButtonMode={'while-editing'}
           autoCorrect={false}
           placeholder={this.props.placeholder}
           onChangeText={this.props.onChangeText}
           label={s.strings.fragment_wallets_addwallet_name_hint}
           value={this.props.value}
+          returnKeyType={'next'}
+          onSubmitEditing={this.props.onNext}
         />
       </View>
     )

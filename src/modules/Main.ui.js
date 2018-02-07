@@ -1,6 +1,11 @@
 // @flow
 
-import type { AbcContext, AbcContextCallbacks, AbcCorePlugin, AbcCurrencyPlugin } from 'edge-login'
+import type {
+  AbcContext,
+  AbcContextCallbacks,
+  EdgeCorePluginFactory,
+  AbcCurrencyPlugin
+} from 'edge-login'
 import SplashScreen from 'react-native-smart-splash-screen'
 import s, { selectLocale } from '../locales/strings.js'
 import { setIntlLocale } from '../locales/intl'
@@ -13,10 +18,7 @@ import { connect } from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 
 import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'react-native-router-flux'
-import { StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
-import getTheme from '../theme/components'
-import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 import * as Constants from '../constants/indexConstants'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
@@ -36,13 +38,13 @@ import SendConfirmation from './UI/scenes/SendConfirmation/index'
 import Scan from './UI/scenes/Scan/ScanConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import { CreateWalletNameComponent } from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
+import {CreateWalletName} from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
 import { CreateWalletSelectCrypto } from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
 import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
 import { CreateWalletReview } from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
 import ManageTokens from './UI/scenes/ManageTokens'
 
-import AddToken from './UI/scenes/AddToken'
+import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import EditToken from './UI/scenes/EditToken'
 import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
 import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
@@ -50,6 +52,7 @@ import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSetting
 import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
+import {HwBackButtonHandler} from './UI/scenes/WalletList/components/HwBackButtonHandler'
 
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
@@ -73,8 +76,13 @@ import { styles } from './style.js'
 import * as CONTEXT_API from './Core/Context/api'
 
 import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import { BitcoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory, LitecoinCurrencyPluginFactory, DashCurrencyPluginFactory } from 'edge-currency-bitcoin'
-import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
+import {
+  bitcoinCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
+  dashCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
+import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
 import {makeCoreContext} from '../util/makeContext.js'
@@ -82,12 +90,17 @@ import * as URI from 'uri-js'
 
 import {CAMERA, type Permission} from './UI/permissions.js'
 
-const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
-pluginFactories.push(EthereumCurrencyPluginFactory)
-pluginFactories.push(BitcoinCurrencyPluginFactory)
-pluginFactories.push(BitcoincashCurrencyPluginFactory)
-pluginFactories.push(LitecoinCurrencyPluginFactory)
-pluginFactories.push(DashCurrencyPluginFactory)
+const pluginFactories: Array<EdgeCorePluginFactory> = [
+  // Exchanges:
+  coinbasePlugin,
+  shapeshiftPlugin,
+  // Currencies:
+  bitcoincashCurrencyPluginFactory,
+  bitcoinCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
+  ethereumCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory
+]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -196,7 +209,7 @@ export default class Main extends Component<Props, State> {
         this.doDeepLink(url)
       }
       // this.navigate(url);
-    }).catch(err => console.log('error occurred ', err))
+    }).catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
   }
   doDeepLink (url: string) {
@@ -217,7 +230,6 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <StyleProvider style={getTheme(platform)}>
         <MenuContext style={styles.mainMenuContext}>
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
@@ -233,7 +245,7 @@ export default class Main extends Component<Props, State> {
                     component={TransactionDetails}
                     renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
                     renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton}
+                    renderRightButton={this.renderMenuButton()}
                   />
 
                   <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
@@ -246,17 +258,17 @@ export default class Main extends Component<Props, State> {
                             navTransparent={true}
                             component={WalletList}
                             renderTitle={this.renderTitle(WALLETS)}
-                            renderLeftButton={this.renderHelpButton}
-                            renderRightButton={this.renderMenuButton}
+                            renderLeftButton={this.renderHelpButton()}
+                            renderRightButton={this.renderMenuButton()}
                           />
 
                           <Scene
                             key={Constants.CREATE_WALLET_NAME}
                             navTransparent={true}
-                            component={CreateWalletNameComponent}
+                            component={CreateWalletName}
                             renderTitle={this.renderTitle(CREATE_WALLET)}
                             renderLeftButton={this.renderBackButton(WALLETS)}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                           />
 
                           <Scene
@@ -265,7 +277,7 @@ export default class Main extends Component<Props, State> {
                             component={CreateWalletSelectCrypto}
                             renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                             renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                           />
 
                           <Scene
@@ -274,7 +286,7 @@ export default class Main extends Component<Props, State> {
                             component={CreateWalletSelectFiat}
                             renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
                             renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                           />
 
                           <Scene
@@ -283,16 +295,16 @@ export default class Main extends Component<Props, State> {
                             component={CreateWalletReview}
                             renderTitle={this.renderTitle(CREATE_WALLET)}
                             renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                           />
 
                           <Scene
                             key={Constants.TRANSACTION_LIST}
                             navTransparent={true}
                             component={TransactionListConnector}
-                            renderTitle={this.renderWalletListNavBar}
+                            renderTitle={this.renderWalletListNavBar()}
                             renderLeftButton={this.renderBackButton(WALLETS)}
-                            renderRightButton={this.renderMenuButton}
+                            renderRightButton={this.renderMenuButton()}
                           />
 
                           <Scene
@@ -301,7 +313,7 @@ export default class Main extends Component<Props, State> {
                             navTransparent={true}
                             component={ManageTokens}
                             renderTitle={this.renderTitle(MANAGE_TOKENS)}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                             animation={'fade'}
                             duration={600}
                           />
@@ -311,7 +323,7 @@ export default class Main extends Component<Props, State> {
                             navTransparent={true}
                             onLeft={Actions.pop}
                             renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                             renderTitle={this.renderTitle(ADD_TOKEN)}
                           />
                           <Scene
@@ -319,7 +331,7 @@ export default class Main extends Component<Props, State> {
                             component={EditToken}
                             navTransparent={true}
                             renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton}
+                            renderRightButton={this.renderEmptyButton()}
                             renderTitle={this.renderTitle(EDIT_TOKEN)}
                           />
                         </Stack>
@@ -330,9 +342,9 @@ export default class Main extends Component<Props, State> {
                           icon={this.icon(Constants.REQUEST)}
                           tabBarLabel={REQUEST}
                           component={Request}
-                          renderTitle={this.renderWalletListNavBar}
-                          renderLeftButton={this.renderHelpButton}
-                          renderRightButton={this.renderMenuButton}
+                          renderTitle={this.renderWalletListNavBar()}
+                          renderLeftButton={this.renderHelpButton()}
+                          renderRightButton={this.renderMenuButton()}
                         />
 
                         <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
@@ -345,17 +357,17 @@ export default class Main extends Component<Props, State> {
                             }}
                             onExit={this.props.dispatchDisableScan}
                             component={Scan}
-                            renderTitle={this.renderWalletListNavBar}
-                            renderLeftButton={this.renderHelpButton}
-                            renderRightButton={this.renderMenuButton}
+                            renderTitle={this.renderWalletListNavBar()}
+                            renderLeftButton={this.renderHelpButton()}
+                            renderRightButton={this.renderMenuButton()}
                           />
                           <Scene
                             key={Constants.EDGE_LOGIN}
                             navTransparent={true}
                             component={EdgeLoginSceneConnector}
                             renderTitle={this.renderTitle(EDGE_LOGIN)}
-                            renderLeftButton={this.renderHelpButton}
-                            renderRightButton={this.renderEmptyButton}
+                            renderLeftButton={this.renderHelpButton()}
+                            renderRightButton={this.renderEmptyButton()}
                           />
                         </Stack>
 
@@ -365,8 +377,8 @@ export default class Main extends Component<Props, State> {
                             navTransparent={true}
                             component={ExchangeConnector}
                             renderTitle={this.renderTitle(EXCHANGE)}
-                            renderLeftButton={this.renderExchangeButton}
-                            renderRightButton={this.renderMenuButton}
+                            renderLeftButton={this.renderExchangeButton()}
+                            renderRightButton={this.renderMenuButton()}
                           />
                           <Scene
                             key={Constants.CHANGE_MINING_FEE_EXCHANGE}
@@ -374,7 +386,7 @@ export default class Main extends Component<Props, State> {
                             component={ChangeMiningFeeExchange}
                             renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                             renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderHelpButton}
+                            renderRightButton={this.renderHelpButton()}
                           />
                         </Stack>
                       </Tabs>
@@ -388,7 +400,7 @@ export default class Main extends Component<Props, State> {
                           component={SendConfirmation}
                           renderTitle={this.renderTitle(SEND_CONFIRMATION)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderSendConfirmationButton}
+                          renderRightButton={this.renderSendConfirmationButton()}
                         />
                         <Scene
                           key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
@@ -396,7 +408,7 @@ export default class Main extends Component<Props, State> {
                           component={ChangeMiningFeeSendConfirmation}
                           renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderHelpButton}
+                          renderRightButton={this.renderHelpButton()}
                         />
                       </Stack>
 
@@ -405,13 +417,13 @@ export default class Main extends Component<Props, State> {
                           component={ManageTokens}
                           renderTitle={this.renderTitle(MANAGE_TOKENS)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
+                          renderRightButton={this.renderEmptyButton()} />
 
                         <Scene key={Constants.ADD_TOKEN} navTransparent={true}
                           component={AddToken}
                           renderTitle={this.renderTitle(ADD_TOKEN)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton} />
+                          renderRightButton={this.renderEmptyButton()} />
                       </Stack>
 
                       <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
@@ -421,7 +433,7 @@ export default class Main extends Component<Props, State> {
                           component={SettingsOverview}
                           renderTitle={this.renderTitle(SETTINGS)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                         <Scene
                           key={Constants.CHANGE_PASSWORD}
@@ -429,7 +441,7 @@ export default class Main extends Component<Props, State> {
                           component={ChangePasswordConnector}
                           renderTitle={this.renderTitle(CHANGE_PASSWORD)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                         <Scene
                           key={Constants.CHANGE_PIN}
@@ -437,7 +449,7 @@ export default class Main extends Component<Props, State> {
                           component={ChangePinConnector}
                           renderTitle={this.renderTitle(CHANGE_PIN)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                         <Scene
                           key={Constants.OTP_SETUP}
@@ -445,7 +457,7 @@ export default class Main extends Component<Props, State> {
                           component={OtpSettingsSceneConnector}
                           renderTitle={this.renderTitle(OTP)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                         <Scene
                           key={Constants.RECOVER_PASSWORD}
@@ -453,7 +465,7 @@ export default class Main extends Component<Props, State> {
                           component={PasswordRecoveryConnector}
                           renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                         {this.renderCurrencySettings()}
                         <Scene
@@ -462,7 +474,7 @@ export default class Main extends Component<Props, State> {
                           component={DefaultFiatSettingConnector}
                           renderTitle={this.renderTitle(DEFAULT_FIAT)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton}
+                          renderRightButton={this.renderEmptyButton()}
                         />
                       </Stack>
                     </Scene>
@@ -476,7 +488,6 @@ export default class Main extends Component<Props, State> {
           <TransactionAlert />
           <AutoLogout />
         </MenuContext>
-      </StyleProvider>
     )
   }
 
@@ -494,7 +505,7 @@ export default class Main extends Component<Props, State> {
           component={CurrencySettings}
           renderTitle={this.renderTitle(title || pluginName)}
           renderLeftButton={this.renderBackButton()}
-          renderRightButton={this.renderEmptyButton}
+          renderRightButton={this.renderEmptyButton()}
         />
       )
     }
@@ -505,7 +516,7 @@ export default class Main extends Component<Props, State> {
     return <Header />
   }
 
-  renderEmptyButton = () => () => {
+  renderEmptyButton = () => {
     return <BackButton />
   }
 
@@ -513,7 +524,7 @@ export default class Main extends Component<Props, State> {
     return <HelpButton />
   }
 
-  renderBackButton = (label: string = BACK) => () => {
+  renderBackButton = (label: string = BACK) => {
     return <BackButton withArrow onPress={this.handleBack} label={label} />
   }
 
@@ -562,9 +573,13 @@ export default class Main extends Component<Props, State> {
   }
 
   handleBack = () => {
-    if (!this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
-      Actions.pop()
+    if (this.isCurrentScene(Constants.LOGIN)) {
+      return false
     }
+    if (this.isCurrentScene(Constants.WALLET_LIST_SCENE)) {
+      return HwBackButtonHandler()
+    }
+    Actions.pop()
     return true
   }
 }

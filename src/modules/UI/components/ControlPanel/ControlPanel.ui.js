@@ -14,6 +14,8 @@ import styles from './style'
 import T from '../../components/FormattedText'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
+import { emptyGuiDenomination } from '../../../../types'
+import { getDenomFromIsoCode } from '../../../utils.js'
 
 export default class ControlPanel extends Component {
   _handlePressUserList = () => {
@@ -27,10 +29,25 @@ export default class ControlPanel extends Component {
 
   render () {
     const {
-      primaryInfo,
-      secondaryInfo,
+      primaryDisplayCurrencyCode,
+      primaryDisplayDenomination,
+      primaryExchangeDenomination,
+      secondaryDisplayCurrencyCode,
       secondaryToPrimaryRatio
     } = this.props
+
+    const secondaryExchangeDenomination = secondaryDisplayCurrencyCode ? getDenomFromIsoCode(secondaryDisplayCurrencyCode) : ''
+
+    const primaryInfo = {
+      displayCurrencyCode: primaryDisplayCurrencyCode,
+      displayDenomination: primaryDisplayDenomination || emptyGuiDenomination,
+      exchangeDenomination: primaryExchangeDenomination || emptyGuiDenomination
+    }
+    const secondaryInfo = {
+      displayCurrencyCode: secondaryDisplayCurrencyCode,
+      displayDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
+      exchangeDenomination: secondaryExchangeDenomination || emptyGuiDenomination
+    }
 
     const arrowIcon = this.props.usersView
       ? 'keyboard-arrow-up'

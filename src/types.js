@@ -3,57 +3,24 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type {AbcDenomination, AbcMetaToken} from 'edge-login'
+import type {AbcDenomination, AbcMetaToken, EdgeMetadata} from 'edge-login'
 
-export class GuiWallet {
-  id: string
-  type: string
-  name: string
-  primaryNativeBalance: string
-  nativeBalances: { [currencyCode: string]: string }
-  currencyNames: { [currencyCode: string]: string }
-  currencyCode: string
-  isoFiatCurrencyCode: string
-  fiatCurrencyCode: string
-  denominations: Array<AbcDenomination>
-  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } }
-  symbolImage: string
-  symbolImageDarkMono: string
-  metaTokens: Array<AbcMetaToken>
+export type GuiWallet = {
+  id: string,
+  type: string,
+  name: string,
+  primaryNativeBalance: string,
+  nativeBalances: { [currencyCode: string]: string },
+  currencyNames: { [currencyCode: string]: string },
+  currencyCode: string,
+  isoFiatCurrencyCode: string,
+  fiatCurrencyCode: string,
+  denominations: Array<AbcDenomination>,
+  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
+  symbolImage: string | void,
+  symbolImageDarkMono: string | void,
+  metaTokens: Array<AbcMetaToken>,
   enabledTokens: Array<string>
-  constructor (
-    id: string,
-    type: string,
-    name: string,
-    primaryNativeBalance: string,
-    nativeBalances: { [currencyCode: string]: string },
-    currencyNames: { [currencyCode: string]: string },
-    currencyCode: string,
-    isoFiatCurrencyCode: string,
-    fiatCurrencyCode: string,
-    denominations: Array<AbcDenomination>,
-    allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
-    symbolImage: string,
-    symbolImageDarkMono: string,
-    metaTokens: Array<AbcMetaToken>,
-    enabledTokens: Array<string>
-  ) {
-    this.id = id
-    this.type = type
-    this.name = name
-    this.primaryNativeBalance = primaryNativeBalance
-    this.nativeBalances = nativeBalances
-    this.currencyNames = currencyNames
-    this.currencyCode = currencyCode
-    this.isoFiatCurrencyCode = isoFiatCurrencyCode
-    this.fiatCurrencyCode = fiatCurrencyCode
-    this.denominations = denominations
-    this.allDenominations = allDenominations
-    this.symbolImage = symbolImage
-    this.symbolImageDarkMono = symbolImageDarkMono
-    this.metaTokens = metaTokens
-    this.enabledTokens = enabledTokens
-  }
 }
 
 export type GuiDenomination = {
@@ -124,6 +91,101 @@ export type DeviceDimensions = {
   keyboardHeight?: number
 }
 
+export type ExchangePair = {
+  rate: string,
+  limit: number,
+  pair: string,
+  maxLimit: number,
+  min: number,
+  minerFee: number
+}
+
+export type GuiTouchIdInfo = {
+  isTouchEnabled: boolean,
+  isTouchSupported: boolean
+}
+
+export type GuiReceiveAddressMetadata = {
+  amountFiat: number,
+  bizId?: any,
+  category: string,
+  miscJson: string,
+  notes: string,
+  payeeName: string
+}
+
+export type GuiReceiveAddress = {
+  metadata: EdgeMetadata,
+  publicAddress: string,
+  segwitAddress?: string,
+  nativeAmount: string
+}
+
+export type GuiTransactionRequest = {
+  inputCurrencySelected: string,
+  receiveAddress: GuiReceiveAddress
+}
+
+export type GuiRequestPrimaryInfo = {
+  displayCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  multiplier: string,
+  name: string,
+  symbol: string
+}
+
+export type GuiRequestSecondaryInfo = {
+  displayCurrencyCode: string,
+  displayDenomination: GuiDenomination,
+  exchangeDenomination: GuiDenomination,
+  multiplier: string,
+  name: string,
+  symbol: string
+}
+
+export type FlipInputFieldInfo = GuiCurrencyInfo & {
+  nativeAmount?: string,
+  displayAmount?: string
+}
+
+export type SubcategorySearchResultData = {
+  index: number,
+  item: string,
+  separators: Object
+}
+
 export type CurrencyConverter = {
   convertCurrency: (currencyCode: string, isoFiatCurrencyCode: string, balanceInCryptoDisplay: string) => number
+}
+
+export const emptyGuiWallet: GuiWallet = {
+  id: '',
+  type: '',
+  name: '',
+  primaryNativeBalance: '',
+  nativeBalances: {},
+  currencyNames: {},
+  currencyCode: '',
+  isoFiatCurrencyCode: '',
+  fiatCurrencyCode: '',
+  denominations: [],
+  allDenominations: {},
+  symbolImage: '',
+  symbolImageDarkMono: '',
+  metaTokens: [],
+  enabledTokens: []
+}
+
+export const emptyGuiDenomination: GuiDenomination = {
+  name: '',
+  symbol: '',
+  multiplier: '',
+  precision: 0,
+  currencyCode: ''
+}
+export const emptyCurrencyInfo: GuiCurrencyInfo = {
+  displayCurrencyCode: '',
+  exchangeCurrencyCode: '',
+  displayDenomination: emptyGuiDenomination,
+  exchangeDenomination: emptyGuiDenomination
 }

@@ -16,11 +16,12 @@ export const RESYNC = 'refresh'
 export const SPLIT = 'code-fork'
 export const RENAME = 'edit'
 export const GET_SEED = 'user-secret'
+export const CUSTOM_FEES_ICON = 'wpexplorer'
+export const EXCHANGE_ICON = 'exchange'
 
 // Ionic
 export const ION_ICONS = 'ionIcons'
 export const CLOSE_ICON = 'close'
-export const EXCHANGE_ICON = 'ios-swap'
 export const UNLOCKED_ICON = 'ios-unlock-outline'
 export const LOCKED_ICON = 'ios-lock-outline'
 

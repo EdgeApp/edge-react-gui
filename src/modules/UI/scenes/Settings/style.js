@@ -2,13 +2,16 @@
 
 import {StyleSheet} from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
+import {PLATFORM} from '../../../../theme/variables/platform'
 
 export const styles = {
+  usableHeight: PLATFORM.usableHeight,
   gradient: {
     height: THEME.HEADER
   },
   body: {
-    padding: 18
+    paddingHorizontal: 20,
+    paddingVertical: 5
   },
   container: {
     position: 'relative',
@@ -129,6 +132,54 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
+  },
+
+  /// //// beginning of default fiat area ////////
+  searchContainer: {
+    marginTop: 8,
+    position: 'relative',
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    width: '100%'
+  },
+
+  singleFiatType: {
+    height: 60,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    paddingVertical: 10,
+    paddingHorizontal: 15
+  },
+  singleFiatTypeWrap: {
+    flexDirection: 'column',
+    flex: 1
+  },
+  fiatTypeInfoWrap: {
+    flexDirection: 'row',
+    height: 40,
+    flex: 1,
+    justifyContent: 'space-between'
+  },
+  fiatTypeLeft: {
+    flexDirection: 'row'
+  },
+  fiatTypeLogo: {
+    width: 40,
+    height: 40,
+    marginRight: 10
+  },
+  fiatTypeLeftTextWrap: {
+    justifyContent: 'center'
+  },
+  fiatTypeName: {
+    fontSize: 16,
+    color: THEME.COLORS.GRAY_1,
+    textAlignVertical: 'center'
+  },
+  underlayColor: {
+    color: THEME.COLORS.GRAY_4
   }
+  /// ////// end of default fiat area //////////
 }
 export default StyleSheet.create(styles)

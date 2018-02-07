@@ -12,8 +12,8 @@ import ModalButtons from './ModalButtons.ui'
 import {FormField} from '../../../../../components/indexComponents'
 import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
 
-type Props = {
-  style: any,
+type ConfirmPasswordModalProps = {
+  style: Object,
   headerText: string,
   showModal: boolean,
   onCancel(): void,
@@ -23,11 +23,18 @@ type Props = {
 type State = {
   confimPassword: string
 }
-export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props, State> {
+export default class ConfirmPasswordModal extends Component<ConfirmPasswordModalProps, State> {
   componentWillMount () {
     this.setState({
       confimPassword: ''
     })
+  }
+  componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
+    if (!nextProps.showModal) {
+      this.setState({
+        confimPassword: ''
+      })
+    }
   }
   textChange = (value: string) => {
     this.setState({
@@ -37,7 +44,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
   onDone = () => {
     this.props.onDone(this.state.confimPassword)
   }
-  renderMiddle = (style: any) => {
+  renderMiddle = (style: Object) => {
     const formStyle = {...MaterialInputOnWhite,
       container: {...MaterialInputOnWhite.container, width: 244}
     }

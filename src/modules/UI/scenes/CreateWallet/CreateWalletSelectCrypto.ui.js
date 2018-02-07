@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
 import Text from '../../components/FormattedText'
-import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 import SearchResults from '../../components/SearchResults'
 import * as Constants from '../../../../constants/indexConstants.js'
@@ -22,7 +21,6 @@ import * as UTILS from '../../../utils'
 import type {GuiWalletType, FlatListItem, DeviceDimensions} from '../../../../types'
 
 export type CreateWalletSelectCryptoOwnProps = {
-  walletName: string,
   dimensions: DeviceDimensions,
   supportedWalletTypes: Array<GuiWalletType>
 }
@@ -36,10 +34,10 @@ type State = {
   searchTerm: string
 }
 
-export type CreateWalletSelectCryptoComponentProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
+export type CreateWalletSelectCryptoProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
 
-export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSelectCryptoComponentProps, State> {
-  constructor (props: CreateWalletSelectCryptoComponentProps & State) {
+export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCryptoProps, State> {
+  constructor (props: CreateWalletSelectCryptoProps & State) {
     super(props)
     this.state = {
       selectedWalletType: '',
@@ -68,7 +66,6 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
   onNext = (): void => {
     if (this.isValidWalletType()) {
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
-        walletName: this.props.walletName,
         selectedWalletType: this.getWalletType(this.state.selectedWalletType)
       })
     } else {
@@ -93,7 +90,7 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
       this.setState({
         selectedWalletType: selectedWalletType.value,
         searchTerm: selectedWalletType.label
-      })
+      }, this.onNext)
     }
   }
 
@@ -110,45 +107,34 @@ export class CreateWalletSelectCryptoComponent extends Component<CreateWalletSel
       return ((entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0) ||
               (entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0))
     })
-
+    const keyboardHeight = this.props.dimensions.keyboardHeight || 0
+    const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 50 // substract button area height and FormField height
     return (
       <SafeAreaView>
-      <View style={styles.scene}>
-        <Gradient style={styles.gradient} />
-        <View style={styles.view}>
-          <FormField style={styles.picker}
-            autoFocus
-            clearButtonMode={'while-editing'}
-            onFocus={this.handleOnFocus}
-            onBlur={this.handleOnBlur}
-            autoCorrect={false}
-            autoCapitalize={'words'}
-            onChangeText={this.handleSearchTermChange}
-            value={this.state.searchTerm}
-            label={s.strings.create_wallet_choose_crypto}
-          />
-          <SearchResults
-            renderRegularResultFxn={this.renderWalletTypeResult}
-            onRegularSelectFxn={this.handleSelectWalletType}
-            regularArray={filteredArray}
-            style={[styles.SearchResults]}
-            containerStyle={[styles.searchContainer] }
-            keyExtractor={this.keyExtractor}
-          />
-          <View style={[styles.buttons]}>
-            <SecondaryButton
-              style={[styles.cancel]}
-              onPressFunction={this.onBack}
-              text={s.strings.title_back} />
-
-            <PrimaryButton
-              style={[styles.next]}
-              onPressFunction={this.onNext}
-              text={s.strings.string_next_capitalized}
+        <View style={styles.scene}>
+          <Gradient style={styles.gradient} />
+          <View style={styles.view}>
+            <FormField style={styles.picker}
+              clearButtonMode={'while-editing'}
+              onFocus={this.handleOnFocus}
+              onBlur={this.handleOnBlur}
+              autoCorrect={false}
+              autoCapitalize={'words'}
+              onChangeText={this.handleSearchTermChange}
+              value={this.state.searchTerm}
+              label={s.strings.create_wallet_choose_crypto}
+              returnKeyType={'search'}
+            />
+            <SearchResults
+              renderRegularResultFxn={this.renderWalletTypeResult}
+              onRegularSelectFxn={this.handleSelectWalletType}
+              regularArray={filteredArray}
+              style={[styles.SearchResults]}
+              containerStyle={[styles.searchContainer, {height: searchResultsHeight}] }
+              keyExtractor={this.keyExtractor}
             />
           </View>
         </View>
-      </View>
       </SafeAreaView>
     )
   }

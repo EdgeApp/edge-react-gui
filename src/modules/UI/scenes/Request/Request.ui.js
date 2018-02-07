@@ -27,7 +27,12 @@ import WalletListModal
 from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as Constants from '../../../../constants/indexConstants'
-import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
+import type {
+  GuiTransactionRequest,
+  GuiCurrencyInfo,
+  GuiWallet,
+  GuiReceiveAddress
+} from '../../../../types.js'
 
 type State = {
   publicAddress: string,
@@ -38,7 +43,9 @@ type State = {
 
 export type RequestStateProps = {
   loading: boolean,
-  request: any,
+  currencyCode: string,
+  // next line will need review
+  request: GuiTransactionRequest | Object,
   abcWallet: AbcCurrencyWallet | null,
   guiWallet: GuiWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
@@ -49,7 +56,7 @@ export type RequestStateProps = {
 }
 
 export type RequestDispatchProps = {
-  saveReceiveAddress(string): any,
+  saveReceiveAddress(GuiReceiveAddress): any,
 }
 
 type Props = RequestStateProps & RequestDispatchProps
@@ -68,7 +75,9 @@ export class Request extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id)) {
-      const {abcWallet, currencyCode} = nextProps
+      const abcWallet: AbcCurrencyWallet | null = nextProps.abcWallet
+      const {currencyCode} = nextProps
+      if (!abcWallet) return
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then((receiveAddress) => {
         const {publicAddress} = receiveAddress
@@ -87,8 +96,9 @@ export class Request extends Component<Props, State> {
   }
 
   componentDidMount () {
-    const {abcWallet, currencyCode} = this.props
-    if (this.props.loading) return
+    const {currencyCode} = this.props
+    const abcWallet: AbcCurrencyWallet | null = this.props.abcWallet
+    if (!abcWallet || this.props.loading) return
 
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
     .then((receiveAddress) => {
@@ -107,9 +117,11 @@ export class Request extends Component<Props, State> {
   }
 
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const parsedURI = {
-      publicAddress: this.state.publicAddress,
-      nativeAmount: bns.gt(amounts.nativeAmount, '0') ? amounts.nativeAmount : null
+    const parsedURI: AbcEncodeUri = {
+      publicAddress: this.state.publicAddress
+    }
+    if (bns.gt(amounts.nativeAmount, '0')) {
+      parsedURI.nativeAmount = amounts.nativeAmount
     }
     const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(parsedURI) : ''
 
@@ -159,7 +171,9 @@ export class Request extends Component<Props, State> {
               secondaryCurrencyInfo={secondaryCurrencyInfo}
               exchangeSecondaryToPrimaryRatio={exchangeSecondaryToPrimaryRatio}
               overridePrimaryExchangeAmount={''}
+              forceUpdateGuiCounter={0}
               onExchangeAmountChanged={this.onExchangeAmountChanged}
+              keyboardVisible={false}
               color={color} />
 
             <QRCode value={this.state.encodedURI} />
@@ -201,7 +215,7 @@ export class Request extends Component<Props, State> {
     Share.share({
       message: this.state.encodedURI,
       title: sprintf(s.strings.request_qr_email_title, APP_NAME)
-    }, {dialogTitle: 'Share Airbitz Request'})
+    }, {dialogTitle: 'Share Edge Request'})
     .then(this.showResult)
     .catch((error) => this.setState({
       result: 'error: ' + error.message
@@ -214,9 +228,8 @@ export class Request extends Component<Props, State> {
       this.shareMessage()
       // console.log('shareViaEmail')
     })
-    .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
+    .catch((e) => {
+      console.log(e)
     })
   }
 
@@ -225,9 +238,8 @@ export class Request extends Component<Props, State> {
       this.shareMessage()
       // console.log('shareViaSMS')
     })
-    .catch(() => {
-      // console.log('ERROR CODE: ', error.code)
-      // console.log('ERROR MESSAGE: ', error.message)
+    .catch((e) => {
+      console.log(e)
     })
   }
 

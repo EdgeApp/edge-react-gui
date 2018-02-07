@@ -36,6 +36,7 @@ type State = {
   textInputFrontFocus: boolean,
   textInputBackFocus: boolean,
   overridePrimaryDecimalAmount: string,
+  forceUpdateGuiCounter: number,
   primaryDisplayAmount: string, // Actual display amount including 1000s separator and localized for region
   secondaryDisplayAmount: string // Actual display amount including 1000s separator and localized for region
 }
@@ -52,9 +53,11 @@ export type FlipInputOwnProps = {
   primaryInfo: FlipInputFieldInfo,
   secondaryInfo: FlipInputFieldInfo,
 
+  forceUpdateGuiCounter: number,
+
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
-  onAmountChanged(decimalAmount: string): void,
+  onAmountChanged(decimalAmount: string): void
 }
 
 type Props = FlipInputOwnProps
@@ -93,6 +96,7 @@ const getInitialState = (props: Props) => {
     textInputBackFocus: false,
     overridePrimaryDecimalAmount: '',
     primaryDisplayAmount: '',
+    forceUpdateGuiCounter: 0,
     secondaryDisplayAmount: ''
   }
 
@@ -118,6 +122,65 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     super(props)
     this.state = getInitialState(props)
   }
+  componentWillMount () {
+    this.animatedValue = new Animated.Value(0)
+    this.frontInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '180deg']
+    })
+
+    this.backInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['180deg', '360deg']
+    })
+    this.androidFrontOpacityInterpolate = this.animatedValue.interpolate({
+      inputRange: [0, 0.5, 0.5],
+      outputRange: [1, 1, 0]
+    })
+    this.androidBackOpacityInterpolate = this.animatedValue.interpolate({
+      inputRange: [0.5, 0.5, 1],
+      outputRange: [0, 1, 1]
+    })
+  }
+
+  componentDidMount () {
+    setTimeout(() => {
+      if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0') {
+        this.textInputFront.focus()
+      }
+    }, 400)
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    // Check if primary changed first. Don't bother to check secondary if parent passed in a primary
+    if (
+      nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount ||
+      nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter
+    ) {
+      const primaryDecimalAmount = UTILS.truncateDecimals(nextProps.overridePrimaryDecimalAmount, nextProps.primaryInfo.maxEntryDecimals)
+      this.setState(setPrimaryToSecondary(nextProps, primaryDecimalAmount))
+      this.setState({
+        overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount,
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
+      })
+    } else {
+      if (!this.state.isToggled) {
+        const decimalAmount = intl.formatToNativeNumber(this.state.primaryDisplayAmount)
+        this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
+      } else {
+        const decimalAmount = intl.formatToNativeNumber(this.state.secondaryDisplayAmount)
+        const newState = setSecondaryToPrimary(nextProps, decimalAmount)
+        this.setState({
+          primaryDisplayAmount: newState.primaryDisplayAmount,
+          secondaryDisplayAmount: newState.secondaryDisplayAmount
+        })
+      }
+    }
+    if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
+      setTimeout(() => this.onPrimaryAmountChange('0'), 50)
+    }
+  }
+
   onToggleFlipInput = () => {
     this.setState({
       isToggled: !this.state.isToggled
@@ -141,50 +204,6 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         friction: 8,
         tension: 10
       }).start()
-    }
-  }
-  componentWillMount () {
-    this.animatedValue = new Animated.Value(0)
-    this.frontInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '180deg']
-    })
-
-    this.backInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['180deg', '360deg']
-    })
-    this.androidFrontOpacityInterpolate = this.animatedValue.interpolate({
-      inputRange: [0, 0.5, 0.5],
-      outputRange: [1, 1, 0]
-    })
-    this.androidBackOpacityInterpolate = this.animatedValue.interpolate({
-      inputRange: [0.5, 0.5, 1],
-      outputRange: [0, 1, 1]
-    })
-  }
-
-  componentWillReceiveProps (nextProps: Props) {
-    // Check if primary changed first. Don't bother to check secondary if parent passed in a primary
-    if (nextProps.overridePrimaryDecimalAmount !== this.state.overridePrimaryDecimalAmount) {
-      const primaryDecimalAmount = UTILS.truncateDecimals(nextProps.overridePrimaryDecimalAmount, nextProps.primaryInfo.maxEntryDecimals)
-      this.setState(setPrimaryToSecondary(nextProps, primaryDecimalAmount))
-      this.setState({overridePrimaryDecimalAmount: nextProps.overridePrimaryDecimalAmount})
-    } else {
-      if (!this.state.isToggled) {
-        const decimalAmount = intl.formatToNativeNumber(this.state.primaryDisplayAmount)
-        this.setState(setPrimaryToSecondary(nextProps, decimalAmount))
-      } else {
-        const decimalAmount = intl.formatToNativeNumber(this.state.secondaryDisplayAmount)
-        const newState = setSecondaryToPrimary(nextProps, decimalAmount)
-        this.setState({
-          primaryDisplayAmount: newState.primaryDisplayAmount,
-          secondaryDisplayAmount: newState.secondaryDisplayAmount
-        })
-      }
-    }
-    if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
-      setTimeout(() => this.onPrimaryAmountChange('0'), 50)
     }
   }
 

@@ -4,7 +4,7 @@ import { combineReducers } from 'redux'
 import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'edge-login'
 import _ from 'lodash'
 
-import { GuiWallet } from '../../../types.js'
+import type { GuiWallet } from '../../../types.js'
 import * as ACTION from './action'
 import * as Constants from '../../../constants/indexConstants.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
@@ -256,11 +256,12 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
   const currencyCode: string = wallet.currencyInfo.currencyCode
   const fiatCurrencyCode: string = wallet.fiatCurrencyCode.replace('iso:', '')
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
-  const symbolImage: string = wallet.currencyInfo.symbolImage
-  const symbolImageDarkMono: string = wallet.currencyInfo.symbolImageDarkMono
+  const symbolImage = wallet.currencyInfo.symbolImage
+  const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
   const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
-  const enabledTokens: Array<string> = wallet.enabledTokens || []
+  // TODO: Fetch the token list asynchonously before dispatching `schema`:
+  const enabledTokens: Array<string> = []
 
   const allDenominations: {
     [currencyCode: string]: { [denomination: string]: AbcDenomination }
@@ -304,7 +305,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
 
   const primaryNativeBalance: string = nativeBalances[currencyCode]
 
-  const newWallet = new GuiWallet(
+  const newWallet: GuiWallet = {
     id,
     type,
     name,
@@ -320,7 +321,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
     symbolImageDarkMono,
     metaTokens,
     enabledTokens
-  )
+  }
 
   return newWallet
 }

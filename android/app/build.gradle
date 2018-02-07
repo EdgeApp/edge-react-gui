@@ -87,7 +87,7 @@ android {
     buildToolsVersion "25.0.3"
 
     defaultConfig {
-        applicationId "co.edgesecure.wallet"
+        applicationId "co.edgesecure.app"
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 21000000
@@ -101,10 +101,6 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("airbitz.keystore")
-            storePassword "password"
-            keyAlias "airbitz"
-            keyPassword "password"
         }
     }
     splits {
@@ -139,6 +135,21 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+// specify signing properties on the command line
+if (hasProperty('storeFile')) {
+    println 'Generating a signed package'
+    android.signingConfigs.release.storeFile     = file(storeFile)
+    android.signingConfigs.release.storePassword = storePassword
+    android.signingConfigs.release.keyAlias      = keyAlias
+    android.signingConfigs.release.keyPassword   = keyPassword
+} else {
+    println 'Generating a debug package'
+    android.signingConfigs.release.storeFile     = file("airbitz.keystore")
+    android.signingConfigs.release.storePassword = "password"
+    android.signingConfigs.release.keyAlias      = "airbitz"
+    android.signingConfigs.release.keyPassword   = "password"
 }
 
 dependencies {

@@ -40,7 +40,6 @@ export default class CurrencySettings extends Component<Props, State> {
   }
 
   selectDenomination = (key: string) => () => {
-    console.log('src/modules/UI/scences/Settings/CurrencySettings.ui.js/selectDenomination', key)
     return this.props.selectDenomination(key)
   }
 
@@ -56,14 +55,15 @@ export default class CurrencySettings extends Component<Props, State> {
                 this.props.denominations.map((denomination) => {
                   const key = denomination.multiplier
                   const left = <View style={{flexDirection: 'row'}}><T style={styles.symbol}>{denomination.symbol}</T><T> - {denomination.name}</T></View>
-                  const right = 'Right'
                   const isSelected = key === this.props.selectedDenominationKey
                   const onPress = this.selectDenomination(key)
-                  return <Row key={denomination.multiplier}
-                    denomination={denomination}
-                    left={left} right={right}
-                    isSelected={isSelected}
-                    onPress={onPress} />
+                  return (
+                    <Row key={denomination.multiplier}
+                      denomination={denomination}
+                      left={left}
+                      isSelected={isSelected}
+                      onPress={onPress} />
+                  )
                 })
               }
             </RadioRows>

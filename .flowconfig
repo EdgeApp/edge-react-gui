@@ -15,6 +15,8 @@
 .*/Libraries/react-native/ReactNative.js
 
 .*/node_modules/react-native/.*
+.*/node_modules/react-native-dropdown/.*
+.*/node_modules/react-native-dropdownalert/.*
 .*/node_modules/react-native-experimental-navigation/.*
 .*/node_modules/react-native-linear-gradient/.*
 .*/node_modules/react-navigation/.*
@@ -27,6 +29,8 @@
 .*/node_modules/react-native-fs/.*
 .*/node_modules/metro-bundler/.*
 .*/node_modules/react-native-keyboard-aware-scroll-view/.*
+.*/node_modules/react-native-dropdownalert/.*
+.*/node_modules/react-native-dropdown/.*
 
 [include]
 

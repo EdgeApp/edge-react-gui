@@ -13,14 +13,9 @@ import {styles, top, bottom} from './styles.js'
 import FAIcon from 'react-native-vector-icons/MaterialIcons'
 import * as UTILS from '../../../utils.js'
 import {bns} from 'biggystring'
-import type {GuiCurrencyInfo} from '../../../../types'
+import type {FlipInputFieldInfo} from '../../../../types'
 import * as Constants from '../../../../constants/indexConstants'
 import {intl} from '../../../../locales/intl'
-
-export type FlipInputFieldInfo = GuiCurrencyInfo & {
-  nativeAmount?: string,
-  displayAmount?: string
-}
 
 type State = {
   isToggled: boolean,

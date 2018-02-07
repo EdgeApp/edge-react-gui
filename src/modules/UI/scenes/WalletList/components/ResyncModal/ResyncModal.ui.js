@@ -10,12 +10,10 @@ import ResyncWalletButtons from './ResyncWalletButtonsConnector'
 
 type Props = {
   visibilityBoolean: boolean,
-  onExitButtonFxn: Function
+  onExitButtonFxn: () => void
 }
 
-type State = any
-
-export default class ResyncModal extends Component<Props, State> {
+export default class ResyncModal extends Component<Props> {
   render () {
     return <StylizedModal
       featuredIcon={<OptionIcon iconName={Constants.RESYNC}/>}

@@ -1,7 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../locales/strings.js'
 import {
   Animated,
   Easing,
@@ -15,6 +14,9 @@ import Permissions from 'react-native-permissions'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 import Contacts from 'react-native-contacts'
+import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
+
+import s from '../../../../locales/strings.js'
 import ContactSearchResults from './ContactSearchResults.ui.js'
 import FormattedText from '../../components/FormattedText/index'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -26,33 +28,32 @@ import AmountArea from './AmountArea.ui.js'
 import SubCategorySelect from './SubCategorySelect.ui.js'
 import PayeeIcon from '../../components/PayeeIcon/PayeeIcon.ui.js'
 import type {GuiContact, GuiWallet} from '../../../../types.js'
-import platform from '../../../../theme/variables/platform.js'
-import type {AbcDenomination, AbcTransaction, AbcMetadata, AbcCurrencyInfo} from 'edge-login'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
-export type Props = {
+export type TransactionDetailsOwnProps = {
   abcTransaction: AbcTransaction,
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
-  settings: any, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
+  settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
   currencyInfo: AbcCurrencyInfo | null,
   currencyCode: string,
-  wallets: Array<GuiWallet>
+  wallets: { [walletId: string]: GuiWallet }
 }
 
-export type DispatchProps = {
+export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (string, string, AbcMetadata) => void,
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
   setContactList: (Array<GuiContact>) => void,
   getSubcategories: () => void,
-  displayDropdownAlert: (string, string) => void
+  displayDropdownAlert: (message: string, title: string) => void
 }
 
-export type State = {
+type State = {
   name: string, // remove commenting once metaData in Redux
   thumbnailPath: string,
   // hasThumbnail: boolean,
@@ -61,13 +62,12 @@ export type State = {
   amountFiat: string,
   direction: string,
   bizId: number,
-  miscJson: any,
+  miscJson: any, // core receives this as a string
   dateTimeSyntax: string,
   subCategorySelectVisibility: boolean,
   categorySelectVisibility: boolean,
   subCategory: string,
   contactSearchVisibility: boolean,
-  animation: any, // AnimatedValue
   payeeOpacity: any, // AnimatedValue
   subcategoryOpacity: any, // AnimatedValue
   payeeZIndex: number,
@@ -76,16 +76,18 @@ export type State = {
   walletDefaultDenomProps: AbcDenomination
 }
 
+type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
+
 const EXCHANGE_TEXT = s.strings.fragment_transaction_exchange
 const EXPENSE_TEXT = s.strings.fragment_transaction_expense
 const TRANSFER_TEXT = s.strings.fragment_transaction_transfer
 const INCOME_TEXT = s.strings.fragment_transaction_income
 
-export class TransactionDetails extends Component<Props & DispatchProps, State> {
+export class TransactionDetails extends Component<TransactionDetailsProps, State> {
   guiWallet: GuiWallet
   fiatSymbol: string
 
-  constructor (props: Props & DispatchProps) {
+  constructor (props: TransactionDetailsProps) {
     super(props)
     const dateTime = new Date(props.abcTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', {month: 'short', day: '2-digit', year: 'numeric'})
@@ -131,13 +133,12 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
       amountFiat,
       bizId: 0,
       direction: (parseInt(props.abcTransaction.nativeAmount) >= 0) ? 'receive' : 'send',
-      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : null,
+      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : '',
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
       subCategory: subCategory || '',
       contactSearchVisibility: false,
-      animation: new Animated.Value(0),
       payeeOpacity: new Animated.Value(0),
       subcategoryOpacity: new Animated.Value(0),
       payeeZIndex: 0,
@@ -348,7 +349,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     })
   }
 
-  onSelectCategory = (type: any) => {
+  onSelectCategory = (type: string) => {
     this.setState({type})
   }
 
@@ -450,7 +451,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
     }
     return (
       <SafeAreaView>
-        <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
+        <View style={[{width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight}, UTILS.border()]}>
           <Gradient style={styles.headerGradient} />
           <View style={{position: 'relative', top: 66}}>
             {this.state.contactSearchVisibility &&
@@ -461,7 +462,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   backgroundColor: THEME.COLORS.WHITE,
                   position: 'absolute',
                   top: 4,
-                  height: platform.usableHeight,
+                  height: PLATFORM.usableHeight,
                   zIndex: 99999
                 }]}>
                 <View style={[styles.payeeNameArea]}>
@@ -486,9 +487,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   onChangePayee={this.onSelectPayee}
                   contacts={this.props.contacts}
                   style={[{width: '100%'}]}
-                  usableHeight={platform.usableHeight}
+                  usableHeight={PLATFORM.usableHeight}
                   currentPayeeText={this.state.name || ''}
-                  dimensions={platform.dimensions}
+                  dimensions={PLATFORM.dimensions}
                   onSelectPayee={this.onSelectPayee}
                   blurOnSubmit
                   onBlur={this.onBlurPayee}
@@ -502,7 +503,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                     width: '100%',
                     backgroundColor: THEME.COLORS.WHITE,
                     position: 'absolute',
-                    height: platform.usableHeight,
+                    height: PLATFORM.usableHeight,
                     zIndex: 99999
                   }]}
                 >
@@ -532,7 +533,7 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                   <SubCategorySelect
                     onPressFxn={this.onSelectSubCategory}
                     enteredSubcategory={this.state.subCategory}
-                    usableHeight={platform.usableHeight}
+                    usableHeight={PLATFORM.usableHeight}
                     subcategoriesList={sortedSubcategories}
                   />
                 </Animated.View>
@@ -582,9 +583,9 @@ export class TransactionDetails extends Component<Props & DispatchProps, State> 
                     type={type}
                     onEnterCategories={this.onEnterCategories}
                     onExitCategories={this.onExitCategories}
-                    usableHeight={platform.usableHeight}
+                    usableHeight={PLATFORM.usableHeight}
                     onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
-                    dimensions={platform.dimensions}
+                    dimensions={PLATFORM.dimensions}
                     onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                     onFocusNotes={this.onFocusNotes}
                     onBlurNotes={this.onBlurNotes}

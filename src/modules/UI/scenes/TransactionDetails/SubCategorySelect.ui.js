@@ -5,11 +5,13 @@ import {
     View,
     TouchableHighlight
 } from 'react-native'
+
 import FormattedText from '../../components/FormattedText'
 import SearchResults from '../../components/SearchResults/index'
 import styles from './style'
 import {colors} from '../../../../theme/variables/airbitz'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
+import type {SubcategorySearchResultData} from '../../../../types.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -22,7 +24,7 @@ type Props = {
   subcategoriesList: Array<string>,
   enteredSubcategory: string,
   usableHeight: number,
-  onPressFxn: Function
+  onPressFxn: (input: string) => void
 }
 
 class SubCategorySelect extends Component<Props, State> {
@@ -33,7 +35,7 @@ class SubCategorySelect extends Component<Props, State> {
       filteredSubcategories: this.props.subcategoriesList.sort(),
       enteredSubcategory: this.props.enteredSubcategory
     }
-    // this.props.usableHight = platform.usableHeight
+    // this.props.usableHight = PLATFORM.usableHeight
   }
 
   render () {
@@ -51,15 +53,15 @@ class SubCategorySelect extends Component<Props, State> {
         onRegularSelectFxn={this.props.onPressFxn}
         regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         usableHeight={this.props.usableHeight}
-        style={[{width: platform.deviceWidth, height: platform.usableHeight}]}
+        style={[{width: PLATFORM.deviceWidth, height: PLATFORM.usableHeight}]}
         keyExtractor={this.keyExtractor}
-        height={this.props.usableHeight - 51}
+        height={this.props.usableHeight - 67}
         extraTopSpace={0}
       />
     )
   }
 
-  renderSubcategory (data: any, onRegularSelectFxn: any) {
+  renderSubcategory (data: SubcategorySearchResultData, onRegularSelectFxn: Function) {
     return (
       <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>

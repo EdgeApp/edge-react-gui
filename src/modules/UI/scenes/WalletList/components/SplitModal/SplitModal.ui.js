@@ -8,14 +8,12 @@ import OptionSubtext from '../../../../components/OptionSubtext/OptionSubtextCon
 import s from '../../../../../../locales/strings.js'
 import SplitWalletButtons from './SplitWalletButtonsConnector'
 
-type Props = {
+type SplitModalOwnProps = {
   visibilityBoolean: boolean,
-  onExitButtonFxn: Function
+  onExitButtonFxn: () => void
 }
 
-type State = any
-
-export default class SplitModal extends Component<Props, State> {
+export default class SplitModal extends Component<SplitModalOwnProps> {
   render () {
     return <StylizedModal
       featuredIcon={<OptionIcon iconName={Constants.SPLIT}/>}

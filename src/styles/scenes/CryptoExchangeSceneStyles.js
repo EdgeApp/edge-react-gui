@@ -102,13 +102,23 @@ const CryptoExchangeSceneStyle = {
       }
     },
     bottom: {
-      width: '100%'
+      justifyContent: 'center',
+      alignSelf: 'center',
+      alignItem: 'center',
+      height: 35,
+      marginBottom: 10
+    },
+    bottomButton: {
+      color: THEME.COLORS.GRAY_2,
+      fontSize: 17
     },
     icon: {
       color: THEME.COLORS.SECONDARY,
-      backgroundColor: THEME.COLORS.TRANSPARENT
+      backgroundColor: THEME.COLORS.TRANSPARENT,
+      width: 26,
+      height: 26
     },
-    iconSize: 48
+    iconSize: 26
   },
   flipWrapper: {
     container: {
@@ -118,21 +128,33 @@ const CryptoExchangeSceneStyle = {
     },
     containerNoFee: {
       width: '90%',
-      height: 144,
       backgroundColor: THEME.COLORS.SECONDARY
+    },
+    containerNoWalletSelected: {
+      paddingVertical: 10,
+      justifyContent: 'space-around'
     },
     topRow: {
       height: 34,
       flexDirection: 'column',
       justifyContent: 'space-around'
     },
-    walletSelector: {...Styles.TextAndIconButtonStyle,
-      content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
-      centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}},
+    walletSelector: Styles.TextAndIconButtonStyle,
+    noWalletSelected: {
+      ...Styles.TextAndIconButtonStyle,
+      textContainer: {
+        paddingLeft: 32
+      },
+      inner: {
+        ...Styles.TextAndIconButtonStyle.inner,
+        width: '100%',
+        justifyContent: 'space-around'
+      }
+    },
     iconContainer: {
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: 3,
+      left: 3,
       height: 29,
       width: 29,
       backgroundColor: THEME.COLORS.TRANSPARENT,
