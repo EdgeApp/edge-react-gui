@@ -12,13 +12,14 @@ import type {DeviceDimensions} from '../../../../types.js'
 
 export type Props = {
   regularArray: Array<any>,
+  filterArray: Array<any>,
   dimensions: DeviceDimensions,
   height: number,
   extraTopSpace: number,
   containerStyle: Object,
   onRegularSelectFxn: (string) => void,
   scrollRenderAheadDistance: number,
-  renderRegularResultFxn: (rowData: any, onRegularSelectFxn: (any) => void) => void,
+  renderRegularResultFxn: (rowData: any, onRegularSelectFxn: (any) => void, filterArray: Array<any>) => void,
   keyExtractor: (Object) => number,
   regularResult: (data: Object, onPressFxn: () => void) => void
 }
@@ -59,7 +60,7 @@ export default class SearchResults extends Component<Props, State> {
           <FlatList
             style={[{width: '100%'}]}
             data={this.props.regularArray}
-            renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn)}
+            renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn, this.props.filterArray)}
             initialNumToRender={this.props.initialNumToRender || 12}
             scrollRenderAheadDistance={this.props.scrollRenderAheadDistance || 800}
             keyExtractor={this.props.keyExtractor}
