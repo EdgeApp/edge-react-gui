@@ -160,6 +160,7 @@ const strings = {
   string_share: 'Share',
   string_show_balance: 'Show Balance',
   string_to_exchange_info: 'and deposit %1$s %2$s\n to %3$s',
+  exchange_notes_metadata: 'Exchanged %1$s %2$s from %3$s to %4$s %5$s in %6$s. \n\nFor assistance, please contact support@shapeshift.io.',
   title_add_tokens: 'Add Tokens',
   title_create_wallet_select_crypto: 'Select Type',
   title_create_wallet_select_fiat: 'Select Fiat',
@@ -224,7 +225,9 @@ const strings = {
   otp_modal_reset_headline: '2FA reset requested by another device',
   otp_modal_body: '2FA is recommended to keep your device secure from unauthorized access from other devices.',
   otp_notif_title: '2FA disable has been requested by another device',
-  otp_notif_body: 'If you did not create this request, log in as %1$s and change your password'
+  otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
+
+  word_to_in_convert_from_to_string: 'to'
 }
 
 export default strings
