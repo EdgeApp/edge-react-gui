@@ -1,10 +1,11 @@
 // @flow
 // UI/Scenes/Settings
-import { Alert } from 'react-native'
+import * as Constants from '../../../../constants/indexConstants.js'
 import * as CORE_SELECTORS from '../../../Core/selectors'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
 import * as SETTINGS_ACTIONS from '../../Settings/action.js'
 import type { AbcAccount } from 'edge-login'
+import * as actions from '../../../../actions/indexActions.js'
 import { enableTouchId, disableTouchId } from 'airbitz-core-js-ui'
 import type {
   GetState,
@@ -92,12 +93,14 @@ export const setBluetoothModeRequest = (bluetoothMode: boolean) => (dispatch: Di
 }
 
 export const checkCurrentPassword = (arg: string) => async (dispatch: Dispatch, getState: GetState) => {
+  const clearPasswordError = {confirmPasswordError: ''}
+  dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, clearPasswordError))
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   const isPassword = await account.checkPassword(arg)
   dispatch(SETTINGS_ACTIONS.setSettingsLock(!isPassword))
   if (!isPassword) {
-    setTimeout(() => Alert.alert(s.strings.fragmet_invalid_password), 200)
+    dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, {confirmPasswordError: s.strings.fragmet_invalid_password}))
   }
 }
 

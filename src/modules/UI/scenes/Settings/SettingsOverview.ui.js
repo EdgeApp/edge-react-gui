@@ -41,11 +41,13 @@ type Props = {
   lockButton: string,
   lockButtonIcon: string,
   isLocked: boolean,
+  confirmPasswordError: string,
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
   dispatchUpdateEnableTouchIdEnable(boolean, AbcAccount): void,
-  sendLogs(string): void
+  sendLogs(string): void,
+  resetConfirmPasswordError(Object): void
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -104,7 +106,12 @@ export default class SettingsOverview extends Component<Props, State> {
       })
     }
   }
-
+  componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.isLocked !== this.props.isLocked && this.state.showConfirmPasswordModal) {
+      this.setState({showConfirmPasswordModal: false})
+      this.props.resetConfirmPasswordError({confirmPasswordError: ''})
+    }
+  }
   _onPressDummyRouting = () => {
   }
 
@@ -271,6 +278,7 @@ export default class SettingsOverview extends Component<Props, State> {
           <ConfirmPasswordModal
             style={ConfirmPasswordModalStyle}
             headerText={''}
+            error={this.props.confirmPasswordError}
             showModal={this.state.showConfirmPasswordModal}
             onDone={this.confirmPassword}
             onCancel={this.hideConfirmPasswordModal} />
@@ -279,7 +287,7 @@ export default class SettingsOverview extends Component<Props, State> {
     )
   }
   confirmPassword = (arg: string) => {
-    this.setState({showConfirmPasswordModal: false})
+    // this.setState({showConfirmPasswordModal: false})
     this.props.confirmPassword(arg)
   }
   showConfirmPasswordModal = () => {
@@ -290,7 +298,10 @@ export default class SettingsOverview extends Component<Props, State> {
     this.setState({showConfirmPasswordModal: true})
   }
 
-  hideConfirmPasswordModal = () => this.setState({showConfirmPasswordModal: false})
+  hideConfirmPasswordModal = () => {
+    this.props.resetConfirmPasswordError({confirmPasswordError: ''})
+    this.setState({showConfirmPasswordModal: false})
+  }
   showAutoLogoutModal = () => this.setState({showAutoLogoutModal: true})
   showSendLogsModal = () => this.setState({showSendLogsModal: true})
   renderRowRoute = (x: Object, i: number) => <RowRoute disabled={false} key={i} leftText={x.text} routeFunction={x.routeFunction} right={x.right} />

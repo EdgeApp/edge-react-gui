@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View} from 'react-native'
+import {View, ActivityIndicator} from 'react-native'
 import s from '../../../../../locales/strings.js'
 
 import StylizedModal from '../../../components/Modal/Modal.ui'
@@ -15,24 +15,33 @@ import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
 type ConfirmPasswordModalProps = {
   style: Object,
   headerText: string,
+  error: string,
   showModal: boolean,
   onCancel(): void,
   onDone(string): void
 }
 
 type State = {
-  confimPassword: string
+  confimPassword: string,
+  isThinking: boolean
 }
 export default class ConfirmPasswordModal extends Component<ConfirmPasswordModalProps, State> {
   componentWillMount () {
     this.setState({
-      confimPassword: ''
+      confimPassword: '',
+      isThinking: false
     })
   }
   componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
     if (!nextProps.showModal) {
       this.setState({
-        confimPassword: ''
+        confimPassword: '',
+        isThinking: false
+      })
+    }
+    if (nextProps.error !== '') {
+      this.setState({
+        isThinking: false
       })
     }
   }
@@ -42,6 +51,9 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
     })
   }
   onDone = () => {
+    this.setState({
+      isThinking: true
+    })
     this.props.onDone(this.state.confimPassword)
   }
   renderMiddle = (style: Object) => {
@@ -53,17 +65,23 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
         style={formStyle}
         label={s.strings.confirm_password_text}
         value={this.state.confimPassword}
+        error={this.props.error}
         secureTextEntry
         returnKeyType={'done'}
         onSubmitEditing={this.onDone}
         autoFocus/>
+        <View style={style.middle.clearShim} />
     </View>
   }
-  render () {
-    const modalBottom = <ModalButtons
+  renderBottom (style: Object) {
+    if (this.state.isThinking) {
+      return <View style={style.bottomActivity} ><ActivityIndicator /></View>
+    }
+    return <ModalButtons
       onDone={this.onDone}
       onCancel={this.props.onCancel} />
-
+  }
+  render () {
     const style = this.props.style
     const icon = <Icon
       style={style.icon}
@@ -77,7 +95,7 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
       headerText={this.props.headerText}
       headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
       modalMiddle={this.renderMiddle(style)}
-      modalBottom={modalBottom}
+      modalBottom={this.renderBottom(style)}
       onExitButtonFxn={this.props.onCancel} />
   }
 }
