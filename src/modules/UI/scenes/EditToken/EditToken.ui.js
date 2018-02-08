@@ -184,6 +184,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   }
 
   onChangeCurrencyCode = (input: string) => {
+    input.toUpperCase()
     this.setState({
       currencyCode: input.substring(0, 5)
     })
