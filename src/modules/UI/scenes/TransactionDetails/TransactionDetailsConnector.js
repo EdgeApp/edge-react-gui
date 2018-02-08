@@ -8,7 +8,7 @@ import type {GuiContact} from '../../../../types'
 
 import * as UI_SELECTORS from '../../selectors'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import {
   setTransactionDetails,
@@ -22,7 +22,7 @@ import {TransactionDetails, type TransactionDetailsOwnProps} from './Transaction
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
   const wallets = UI_SELECTORS.getWallets(state)
   const contacts: Array<GuiContact> = state.ui.contacts.contactList
-  const usableHeight: number = platform.usableHeight
+  const usableHeight: number = PLATFORM.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
   const settings = SETTINGS_SELECTORS.getSettings(state)
   const currencyCode: string = ownProps.abcTransaction.currencyCode

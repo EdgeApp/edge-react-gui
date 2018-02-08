@@ -135,7 +135,7 @@ export default class Scan extends Component<Props> {
       }
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation()
+      Actions.sendConfirmation('fromScan')
     } catch (error) {
       this.props.dispatchDisableScan()
       Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [{ text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan() }])

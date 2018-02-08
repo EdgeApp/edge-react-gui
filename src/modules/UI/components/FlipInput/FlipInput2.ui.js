@@ -57,7 +57,7 @@ export type FlipInputOwnProps = {
 
   // Callback when primaryDecimalAmount changes. **This is only called when the user types into a field or if
   // exchangeSecondaryToPrimaryRatio changes. This does NOT get called when overridePrimaryDecimalAmount is changed by the parent
-  onAmountChanged(decimalAmount: string): void,
+  onAmountChanged(decimalAmount: string): void
 }
 
 type Props = FlipInputOwnProps
@@ -122,31 +122,6 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     super(props)
     this.state = getInitialState(props)
   }
-  onToggleFlipInput = () => {
-    this.setState({
-      isToggled: !this.state.isToggled
-    })
-    if (this.state.isToggled) {
-      if (this.state.textInputBackFocus) {
-        this.textInputFront.focus()
-      }
-      Animated.spring(this.animatedValue, {
-        toValue: 0,
-        friction: 8,
-        tension: 10
-      }).start()
-    }
-    if (!this.state.isToggled) {
-      if (this.state.textInputFrontFocus) {
-        this.textInputBack.focus()
-      }
-      Animated.spring(this.animatedValue, {
-        toValue: 1,
-        friction: 8,
-        tension: 10
-      }).start()
-    }
-  }
   componentWillMount () {
     this.animatedValue = new Animated.Value(0)
     this.frontInterpolate = this.animatedValue.interpolate({
@@ -166,6 +141,14 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
       inputRange: [0.5, 0.5, 1],
       outputRange: [0, 1, 1]
     })
+  }
+
+  componentDidMount () {
+    setTimeout(() => {
+      if (this.props.keyboardVisible && this.props.overridePrimaryDecimalAmount === '0') {
+        this.textInputFront.focus()
+      }
+    }, 400)
   }
 
   componentWillReceiveProps (nextProps: Props) {
@@ -195,6 +178,32 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
     }
     if (nextProps.primaryInfo.currencyCode !== this.props.primaryInfo.currencyCode) {
       setTimeout(() => this.onPrimaryAmountChange('0'), 50)
+    }
+  }
+
+  onToggleFlipInput = () => {
+    this.setState({
+      isToggled: !this.state.isToggled
+    })
+    if (this.state.isToggled) {
+      if (this.state.textInputBackFocus) {
+        this.textInputFront.focus()
+      }
+      Animated.spring(this.animatedValue, {
+        toValue: 0,
+        friction: 8,
+        tension: 10
+      }).start()
+    }
+    if (!this.state.isToggled) {
+      if (this.state.textInputFrontFocus) {
+        this.textInputBack.focus()
+      }
+      Animated.spring(this.animatedValue, {
+        toValue: 1,
+        friction: 8,
+        tension: 10
+      }).start()
     }
   }
 

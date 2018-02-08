@@ -2,7 +2,7 @@
 import type {
   AbcContext,
   AbcContextCallbacks,
-  AbcCorePlugin,
+  EdgeCorePluginFactory,
   AbcContextOptions
 } from 'edge-login'
 
@@ -10,7 +10,10 @@ import {makeFakeContexts, makeEdgeContext} from 'edge-login'
 import ENV from '../../env.json'
 const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 
-function makeCoreContext (callbacks: AbcContextCallbacks = {}, pluginFactories: Array<AbcCorePlugin> = []): Promise<AbcContext> {
+function makeCoreContext (
+  callbacks: AbcContextCallbacks = {},
+  pluginFactories: Array<EdgeCorePluginFactory> = []
+): Promise<AbcContext> {
   const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,

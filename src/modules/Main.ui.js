@@ -1,6 +1,11 @@
 // @flow
 
-import type { AbcContext, AbcContextCallbacks, AbcCorePlugin, AbcCurrencyPlugin } from 'edge-login'
+import type {
+  AbcContext,
+  AbcContextCallbacks,
+  EdgeCorePluginFactory,
+  AbcCurrencyPlugin
+} from 'edge-login'
 import SplashScreen from 'react-native-smart-splash-screen'
 import s, { selectLocale } from '../locales/strings.js'
 import { setIntlLocale } from '../locales/intl'
@@ -13,10 +18,7 @@ import { connect } from 'react-redux'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 
 import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'react-native-router-flux'
-import { StyleProvider } from 'native-base'
 import { MenuContext } from 'react-native-menu'
-import getTheme from '../theme/components'
-import platform from '../theme/variables/platform'
 import Locale from 'react-native-locale'
 import * as Constants from '../constants/indexConstants'
 import LoginConnector from './UI/scenes/Login/LoginConnector'
@@ -74,21 +76,31 @@ import { styles } from './style.js'
 import * as CONTEXT_API from './Core/Context/api'
 
 import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import { BitcoinCurrencyPluginFactory, BitcoincashCurrencyPluginFactory, LitecoinCurrencyPluginFactory, DashCurrencyPluginFactory } from 'edge-currency-bitcoin'
-import { EthereumCurrencyPluginFactory } from 'edge-currency-ethereum'
+import {
+  bitcoinCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
+  dashCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
+import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 
 import ENV from '../../env.json'
 import {makeCoreContext} from '../util/makeContext.js'
 import * as URI from 'uri-js'
 
 import {CAMERA, type Permission} from './UI/permissions.js'
-// $FlowFixMe
-const pluginFactories: Array<AbcCorePlugin> = [coinbasePlugin, shapeshiftPlugin]
-pluginFactories.push(EthereumCurrencyPluginFactory)
-pluginFactories.push(BitcoinCurrencyPluginFactory)
-pluginFactories.push(BitcoincashCurrencyPluginFactory)
-pluginFactories.push(LitecoinCurrencyPluginFactory)
-pluginFactories.push(DashCurrencyPluginFactory)
+
+const pluginFactories: Array<EdgeCorePluginFactory> = [
+  // Exchanges:
+  coinbasePlugin,
+  shapeshiftPlugin,
+  // Currencies:
+  bitcoincashCurrencyPluginFactory,
+  bitcoinCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
+  ethereumCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory
+]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -218,7 +230,6 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <StyleProvider style={getTheme(platform)}>
         <MenuContext style={styles.mainMenuContext}>
           <RouterWithRedux backAndroidHandler={this.handleBack}>
             <Overlay>
@@ -477,7 +488,6 @@ export default class Main extends Component<Props, State> {
           <TransactionAlert />
           <AutoLogout />
         </MenuContext>
-      </StyleProvider>
     )
   }
 
