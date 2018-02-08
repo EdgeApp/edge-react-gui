@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, ActivityIndicator} from 'react-native'
+import {View} from 'react-native'
 import s from '../../../../../locales/strings.js'
 
 import StylizedModal from '../../../components/Modal/Modal.ui'
@@ -74,11 +74,9 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
     </View>
   }
   renderBottom (style: Object) {
-    if (this.state.isThinking) {
-      return <View style={style.bottomActivity} ><ActivityIndicator /></View>
-    }
     return <ModalButtons
       onDone={this.onDone}
+      doneButtonActivityFlag={this.state.isThinking}
       onCancel={this.props.onCancel} />
   }
   render () {
