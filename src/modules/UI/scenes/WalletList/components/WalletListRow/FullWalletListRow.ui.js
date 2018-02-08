@@ -146,7 +146,10 @@ class FullWalletListRow extends Component<Props, State> {
                   (
                     <View style={[styles.rowNameTextWrapAndroid, b()]}>
                     {symbolImageDarkMono &&
-                      <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
+                      <Image
+                        style={[styles.rowCurrencyLogoAndroid, b()]}
+                        source={{uri: symbolImageDarkMono}}
+                        resizeMode='cover' />
                     }
                     <T style={[styles.rowNameText, b()]} numberOfLines={1}>
                       {cutOffText(name, 34)}</T>
