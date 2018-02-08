@@ -368,6 +368,9 @@ export const styles = {
   },
   getSeedModal: {
     top: PLATFORM.deviceHeight / 18
+  },
+  seedText: {
+    textAlign: 'center'
   }
 }
 
