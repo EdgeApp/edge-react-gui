@@ -102,7 +102,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
     showNextButton,
-    gettingTransaction: state.cryptoExchange.gettingTransaction
+    gettingTransaction: state.cryptoExchange.gettingTransaction,
+    shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction
   }
 }
 

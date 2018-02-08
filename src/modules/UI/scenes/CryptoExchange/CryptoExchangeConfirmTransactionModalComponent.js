@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View, Image, Text, TouchableOpacity} from 'react-native'
+import {View, Image, Text, TouchableOpacity, ActivityIndicator} from 'react-native'
 import {sprintf} from 'sprintf-js'
 
 import Slider from '../../components/Slider'
@@ -25,7 +25,8 @@ type CryptoExchangeConfirmTransactionModalOwnProps = {
   fromCurrencyCode?: string,
   fee: string,
   closeFunction(): void,
-  confirmFunction(): void
+  confirmFunction(): void,
+  pending: boolean
 }
 export default class CryptoExchangeConfirmTransactionModal extends Component<CryptoExchangeConfirmTransactionModalOwnProps> {
   render () {
@@ -44,7 +45,7 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
       modalMiddle={this.renderMiddle(style)}
       modalBottom={this.renderBottom(style)}
       modalBottomStyle={style.bottom}
-      onExitButtonFxn={this.props.closeFunction} />
+      onExitButtonFxn={this.props.pending ? null : this.props.closeFunction} />
   }
 
   renderLogo = (style: Object, logo?: string) => {
@@ -98,7 +99,8 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
         <View style={shim} />
         <View style={shim} />
       </View>
-      <Slider onSlidingComplete={this.props.confirmFunction} sliderDisabled={false}
+      <Slider onSlidingComplete={this.props.confirmFunction}
+        sliderDisabled={this.props.pending}
         parentStyle={{
           backgroundColor: THEME.COLORS.SECONDARY,
           borderRadius: 40,
@@ -112,6 +114,11 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
   }
 
   renderBottom = (style: Object) => {
+    if (this.props.pending) {
+      return (
+        <ActivityIndicator style={{flex: 1, alignSelf: 'center'}} size={'small'} />
+      )
+    }
     return <TouchableOpacity><Text style={style.bottomButton} onPress={this.props.closeFunction}>{s.strings.string_cancel_cap}</Text></TouchableOpacity>
   }
 }

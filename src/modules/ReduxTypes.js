@@ -231,7 +231,8 @@ export type State = {
     changeWallet: 'none',
     transaction: AbcTransaction | null,
     fee: any,
-    gettingTransaction: boolean
+    gettingTransaction: boolean,
+    shiftPendingTransaction: boolean
   },
   exchangeRates: number,
   permissions: PermissionsState

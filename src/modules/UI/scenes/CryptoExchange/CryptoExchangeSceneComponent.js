@@ -58,7 +58,8 @@ export type CryptoExchangeSceneComponentStateProps = {
   showNextButton: boolean,
   showWalletSelectModal: boolean,
   showConfirmShiftModal: boolean,
-  gettingTransaction: boolean
+  gettingTransaction: boolean,
+  shiftPendingTransaction: boolean
 }
 
 export type CryptoExchangeSceneComponentDispatchProps = {
@@ -144,6 +145,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       toSecondaryInfo = emptyCurrencyInfo
     }
 
+    console.log(this.props.shiftPendingTransaction)
     return (
       <SafeAreaView>
         <Gradient style={[style.scene]}>
@@ -273,6 +275,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
           toCurrencyCode={this.props.toCurrencyCode}
           fee={this.props.fee}
           confirmFunction={this.props.shift}
+          pending={this.props.shiftPendingTransaction}
         />
       )
     }
