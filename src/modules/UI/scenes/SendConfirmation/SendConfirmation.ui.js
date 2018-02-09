@@ -3,7 +3,6 @@
 import React, { Component } from 'react'
 import {
   View,
-  ScrollView,
   ActivityIndicator
 } from 'react-native'
 import SafeAreaView from '../../components/SafeAreaView'
@@ -44,6 +43,7 @@ export type SendConfirmationStateProps = {
   errorMsg: string | null,
   fiatPerCrypto: number,
   sliderDisabled: boolean,
+  resetSlider: boolean,
   forceUpdateGuiCounter: number,
   currencyConverter: CurrencyConverter
 }
@@ -59,7 +59,11 @@ export type SendConfirmationDispatchProps = {
   ) => any
 }
 
-type Props = SendConfirmationStateProps & SendConfirmationDispatchProps
+type routerParam = {
+  data: string // This is passed by the react-native-router-flux when you put a parameter on Action.route()
+}
+
+type Props = SendConfirmationStateProps & SendConfirmationDispatchProps & routerParam
 
 type State = {
   secondaryDisplayDenomination: GuiDenomination,
@@ -86,6 +90,9 @@ export class SendConfirmation extends Component<Props, State> {
     this.state = newState
   }
 
+  componentWillMount () {
+    this.setState({keyboardVisible: this.props.data === 'fromScan'})
+  }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
     const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryExchangeDenomination.multiplier, DIVIDE_PRECISION)
@@ -158,12 +165,11 @@ export class SendConfirmation extends Component<Props, State> {
       <SafeAreaView>
         <Gradient style={[styles.view]}>
           <Gradient style={styles.gradient} />
-          <ScrollView style={[styles.mainScrollView]} keyboardShouldPersistTaps={'always'}>
-
-            <View style={[styles.exchangeRateContainer, border()]}>
+          <View style={[styles.mainScrollView]}>
+            <View style={[styles.exchangeRateContainer, styles.error]}>
               {
                 this.props.errorMsg
-                  ? <Text style={[styles.error]}>
+                  ? <Text style={[styles.error, styles.errorText]}>
                     {this.props.errorMsg}
                   </Text>
                   : <ExchangeRate
@@ -172,14 +178,15 @@ export class SendConfirmation extends Component<Props, State> {
                     secondaryInfo={secondaryInfo} />
               }
             </View>
-
-            <View style={[styles.main, border('yellow'), {flex: this.state.keyboardVisible ? 0 : 1}]}>
+            <View style={[styles.main, border('yellow')]}>
               <ExchangedFlipInput
                 primaryCurrencyInfo={{ ...primaryInfo }}
                 secondaryCurrencyInfo={{ ...secondaryInfo }}
                 exchangeSecondaryToPrimaryRatio={this.props.fiatPerCrypto}
                 overridePrimaryExchangeAmount={this.state.overridePrimaryExchangeAmount}
+                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
                 onExchangeAmountChanged={this.onExchangeAmountChanged}
+                keyboardVisible={this.state.keyboardVisible}
               />
               <View style={[styles.feeArea]}>
                 <Text style={[styles.feeAreaText]}>{networkFeeSyntax}</Text>
@@ -193,11 +200,13 @@ export class SendConfirmation extends Component<Props, State> {
             </View>
             <View style={[styles.sliderWrap]}>
               <ABSlider
+                forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+                resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.props.signBroadcastAndSave}
                 sliderDisabled={this.props.sliderDisabled} />
             </View>
-          </ScrollView>
+          </View>
         </Gradient>
       </SafeAreaView>
     )

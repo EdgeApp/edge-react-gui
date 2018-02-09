@@ -9,15 +9,16 @@ import {
   FlatList,
   Image
 } from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView/index.js'
 import Permissions from 'react-native-permissions'
 import Contacts from 'react-native-contacts'
+import {Actions} from 'react-native-router-flux'
+import SortableListView from 'react-native-sortable-listview'
+
+import SafeAreaView from '../../components/SafeAreaView/index.js'
 import T from '../../components/FormattedText'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import {Actions} from 'react-native-router-flux'
 import styles from './style'
-import SortableListView from 'react-native-sortable-listview'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
@@ -27,7 +28,7 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import * as UTILS from '../../../utils'
 
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 import type {GuiContact} from '../../../../types'
 
@@ -60,11 +61,11 @@ type Props = {
   setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, string, boolean) => void,
+  walletRowOption: (walletId: string, option: string, archived: boolean) => void
 }
 
 export default class WalletList extends Component<Props, State> {
-  constructor (props: any) {
+  constructor (props: Props) {
     super(props)
     this.state = {
       sortableMode: false,
@@ -193,7 +194,7 @@ export default class WalletList extends Component<Props, State> {
                   styles.walletsBoxHeaderAddWallet,
                   {width: 41}
                 ]}
-                  onPress={Actions[Constants.CREATE_WALLET_NAME]}>
+                  onPress={Actions[Constants.CREATE_WALLET_SELECT_CRYPTO]}>
                   <Ionicon name='md-add' style={[styles.dropdownIcon]} size={28} color='white' />
                 </TouchableOpacity>
               </Animated.View>
@@ -212,7 +213,7 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
-    const {width} = platform.deviceWidth
+    const {width} = PLATFORM.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
         {this.state.sortableListExists && (

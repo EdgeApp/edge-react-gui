@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30
   },
   slider: {
-    backgroundColor: `${THEME.COLORS.PRIMARY}${THEME.ALPHA.LOW}`,
+    backgroundColor: THEME.COLORS.OPACITY_WHITE,
     overflow: 'hidden',
     borderRadius: 26,
     height: 52
@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 18,
+    fontSize: 16,
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: 17,
+    top: 15,
     zIndex: -100
   }
 })

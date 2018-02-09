@@ -1,8 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../../../locales/strings.js'
-import {intl} from '../../../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   View,
@@ -13,6 +11,9 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
+
+import s from '../../../../../../locales/strings.js'
+import {intl} from '../../../../../../locales/intl'
 import styles, {styles as styleRaw} from '../../style.js'
 import T from '../../../../components/FormattedText'
 import RowOptions from './WalletListRowOptions.ui'
@@ -28,7 +29,7 @@ import {
   getEnabledTokens
 } from '../../../../Wallets/action.js'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
-import platform from '../../../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../../../theme/variables/platform.js'
 import type {GuiDenomination, CustomTokenInfo} from '../../../../../../types'
 
 const DIVIDE_PRECISION = 18
@@ -38,7 +39,7 @@ export type FullWalletRowProps = {
   sortableMode: boolean,
   customTokens: Array<CustomTokenInfo>,
   sortHandlers: any,
-  settings: any
+  settings: Object
 }
 
 type InternalProps = {
@@ -122,7 +123,7 @@ class FullWalletListRow extends Component<Props, State> {
     }
 
     return (
-      <View style={[{width: platform.deviceWidth}, b()]}>
+      <View style={[{width: PLATFORM.deviceWidth}, b()]}>
           <View>
             <TouchableHighlight
               style={[styles.rowContainer]}
@@ -145,7 +146,10 @@ class FullWalletListRow extends Component<Props, State> {
                   (
                     <View style={[styles.rowNameTextWrapAndroid, b()]}>
                     {symbolImageDarkMono &&
-                      <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{uri: symbolImageDarkMono}} />
+                      <Image
+                        style={[styles.rowCurrencyLogoAndroid, b()]}
+                        source={{uri: symbolImageDarkMono}}
+                        resizeMode='cover' />
                     }
                     <T style={[styles.rowNameText, b()]} numberOfLines={1}>
                       {cutOffText(name, 34)}</T>

@@ -1,8 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import s from '../../../../locales/strings.js'
-import {intl} from '../../../../locales/intl'
 import {bns} from 'biggystring'
 import {
   ActivityIndicator,
@@ -14,12 +12,16 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-import T from '../../components/FormattedText'
-import Gradient from '../../components/Gradient/Gradient.ui'
 import {Actions} from 'react-native-router-flux'
 import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
+import type {AbcTransaction, AbcDenomination} from 'edge-login'
+
+import s from '../../../../locales/strings.js'
+import {intl} from '../../../../locales/intl'
+import SafeAreaView from '../../components/SafeAreaView'
+import T from '../../components/FormattedText'
+import Gradient from '../../components/Gradient/Gradient.ui'
 import styles, {styles as styleRaw} from './style'
 import * as UTILS from '../../../utils'
 
@@ -27,11 +29,10 @@ import requestImage from '../../../../assets/images/transactions/transactions-re
 import sendImage from '../../../../assets/images/transactions/transactions-send.png'
 import sentTypeImage from '../../../../assets/images/transactions/transaction-type-sent.png'
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
-import platform from '../../../../theme/variables/platform.js'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 // import SearchBar from './components/SearchBar.ui'
 
-import type {AbcTransaction, AbcDenomination} from 'edge-login'
 import type {GuiWallet} from '../../../../types'
 
 import WalletListModal
@@ -271,7 +272,7 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={[{width: '100%', height: platform.usableHeight + platform.toolbarHeight}, UTILS.border()]}>
+        <View style={[{width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight}, UTILS.border()]}>
           <Gradient style={styles.gradient} />
           <ScrollView style={[UTILS.border(), styles.scrollView]}>
             <View style={[styles.container, UTILS.border()]}>
@@ -508,7 +509,7 @@ export default class TransactionList extends Component<Props, State> {
             </View>
 
             <View style={[styles.transactionRight, UTILS.border()]}>
-              <T style={[styles.transactionBitAmount, txColorStyle]}>
+              <T style={[styles.transactionBitAmount, txColorStyle, styles.symbol]}>
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>

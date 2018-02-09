@@ -16,12 +16,16 @@ type Props = {
   cancel(): void
 }
 class StaticModalComponent extends Component<Props> {
+  reset: number
   componentDidMount () {
     if (this.props.modalDismissTimerSeconds) {
-      setTimeout(() => {
+      this.reset = setTimeout(() => {
         this.props.cancel()
       }, this.props.modalDismissTimerSeconds * 1000)
     }
+  }
+  componentWillUnmount () {
+    clearInterval(this.reset)
   }
   render () {
     const styles = StaticModalStyle
@@ -50,7 +54,7 @@ class StaticModalComponent extends Component<Props> {
           </LinearGradient>
           <View style={styles.bottom}>
             <View style={styles.bodyRow} >
-              <Text>{this.props.body}</Text>
+              <Text style={styles.bodyText}>{this.props.body}</Text>
             </View>
           </View>
         </View>

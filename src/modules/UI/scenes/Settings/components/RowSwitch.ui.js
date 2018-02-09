@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import PropTypes from 'prop-types'
 import {
   Switch,
   TouchableHighlight,
@@ -43,13 +42,7 @@ export default class RowSwitch extends Component {
     </TouchableHighlight>
   }
 }
-// make sure onToggle becomes required
-RowSwitch.propTypes = {
-  value: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired,
-  leftText: PropTypes.string,
-  property: PropTypes.string
-}
+
 RowSwitch.defaultProps = {
   value: false
 }

@@ -4,6 +4,12 @@ import type { AbcCurrencyPlugin } from 'edge-login'
 import _ from 'lodash'
 
 import * as ACTION from './action.js'
+import {
+  SEND_LOGS_REQUEST,
+  SEND_LOGS_FAILURE,
+  SEND_LOGS_SUCCESS,
+  SEND_LOGS_PENDING
+} from '../../Logs/action'
 import * as Constants from '../../../constants/indexConstants.js'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
@@ -21,13 +27,16 @@ const initialState = {
     arrayPlugins: [],
     supportedWalletTypes: []
   },
+  pinLoginEnabled: false,
   account: null,
   loginStatus: null,
   isTouchSupported: false,
   isTouchEnabled: false,
   isOtpEnabled: false,
   otpKey: null,
-  otpResetDate: null
+  otpResetDate: null,
+  confirmPasswordError: '',
+  sendLogsStatus: Constants.REQUEST_STATUS.PENDING
 }
 
 type SettingsState = {
@@ -59,18 +68,21 @@ type SettingsState = {
   customTokens: Array<CustomTokenInfo>,
   defaultFiat: string,
   isOtpEnabled: boolean,
-  isTouchEnabled: any,
+  isTouchEnabled: boolean,
   isTouchSupported: boolean,
   loginStatus: null,
   merchantMode: boolean,
   otpKey: null,
   otpMode: boolean,
   pinMode: boolean,
+  pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
     arrayPlugins: Array<AbcCurrencyPlugin>,
     supportedWalletTypes: Array<string>
-  }
+  },
+  confirmPasswordError: string,
+  sendLogsStatus: string
 }
 
 const currencyPLuginUtil = (state, payloadData) => {
@@ -132,6 +144,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
   switch (type) {
     case Constants.ACCOUNT_INIT_COMPLETE: {
       const {
+        touchIdInfo,
         account,
         loginStatus,
         otpInfo,
@@ -142,6 +155,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         customTokens,
         bluetoothMode,
         pinMode,
+        pinLoginEnabled,
         otpMode,
         denominationKeys,
         customTokensSettings
@@ -152,11 +166,14 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         isOtpEnabled: otpInfo.enabled,
         otpKey: otpInfo.otpKey,
         autoLogoutTimeInSeconds,
+        isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
+        isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
         defaultFiat,
         merchantMode,
         customTokens,
         bluetoothMode,
         pinMode,
+        pinLoginEnabled,
         otpMode,
         otpResetDate: account.otpResetDate
       }
@@ -173,7 +190,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         }
       })
       currencyPlugins.forEach((key) => {
-        console.log(key)
         newState = currencyPLuginUtil(newState, key)
       })
       customTokensSettings.forEach((key) => {
@@ -185,11 +201,23 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       })
       return newState
     }
+    case Constants.SET_CONFIRM_PASSWORD_ERROR: {
+      const { confirmPasswordError } = data
+      return {...state, confirmPasswordError: confirmPasswordError}
+    }
     case ACTION.SET_LOGIN_STATUS: {
       const { loginStatus } = data
       return {
         ...state,
         loginStatus
+      }
+    }
+
+    case ACTION.TOGGLE_PIN_LOGIN_ENABLED: {
+      const { pinLoginEnabled } = data
+      return {
+        ...state,
+        pinLoginEnabled
       }
     }
 
@@ -357,6 +385,29 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       }
     }
 
+    case SEND_LOGS_REQUEST: {
+      return {
+        ...state,
+        sendLogsStatus: Constants.REQUEST_STATUS.LOADING
+      }
+    }
+    case SEND_LOGS_FAILURE:
+      return {
+        ...state,
+        sendLogsStatus: Constants.REQUEST_STATUS.FAILURE
+      }
+
+    case SEND_LOGS_SUCCESS:
+      return {
+        ...state,
+        sendLogsStatus: Constants.REQUEST_STATUS.SUCCESS
+      }
+    case SEND_LOGS_PENDING:
+      return {
+        ...state,
+        sendLogsStatus: Constants.REQUEST_STATUS.PENDING
+      }
+
     case ACTION.SET_DEFAULT_FIAT: {
       const { defaultFiat } = data
       return {
@@ -427,7 +478,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     case ACTION.CHANGE_TOUCH_ID_SETTINGS: {
       return {
         ...state,
-        isTouchEnabled: data
+        isTouchEnabled: data.isTouchEnabled
       }
     }
 

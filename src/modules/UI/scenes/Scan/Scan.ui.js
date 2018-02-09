@@ -33,12 +33,15 @@ type Props = {
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,
-  scanToWalletListModalVisibility: any,
+  scanToWalletListModalVisibility: boolean,
+  scanFromWalletListModalVisibility: boolean,
+  scanToWalletListModalVisibility: boolean,
   dispatchEnableScan(): void,
   dispatchDisableScan(): void,
   toggleEnableTorch(): void,
   toggleAddressModal(): void,
   toggleWalletListModal(): void,
+  toggleScanToWalletListModal(): void,
   updateParsedURI(AbcParsedUri): void,
   loginWithEdge(string): void,
   toggleScanToWalletListModal: () => void
@@ -118,7 +121,7 @@ export default class Scan extends Component<Props> {
     this.props.toggleScanToWalletListModal()
   }
 
-  onBarCodeRead = (scan: { data: any }) => {
+  onBarCodeRead = (scan: { data: string }) => {
     if (!this.props.scanEnabled) return
     const uri = scan.data
     this.parseURI(uri)
@@ -132,7 +135,7 @@ export default class Scan extends Component<Props> {
       }
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
       this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation()
+      Actions.sendConfirmation('fromScan')
     } catch (error) {
       this.props.dispatchDisableScan()
       Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [{ text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan() }])
@@ -149,7 +152,6 @@ export default class Scan extends Component<Props> {
         // let source = { uri: 'data:image/jpeg;base64,' + response.data };
         // TODO: make edgelogin work with image picker -paulvp
         /* if (/^airbitz:\/\/edge\//.test(uri)) {
-          console.log('EDGE LOGIN THIS IS A EDGE LOGIN , do the login stuff. ')
           return
         } */
         Actions.sendConfirmation()

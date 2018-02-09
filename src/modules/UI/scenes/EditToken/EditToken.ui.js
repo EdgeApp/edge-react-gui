@@ -15,20 +15,35 @@ import styles from './style.js'
 import {PrimaryButton, TertiaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
 // import * as WALLET_ACTIONS from '../../Wallets/action.js'
-import type {CustomTokenInfo} from '../../../../types.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
 import DeleteTokenButtons from './components/DeleteTokenButtons.ui.js'
 import * as Constants from '../../../../constants/indexConstants'
 import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
 import * as UTILS from '../../../utils'
+import type {CustomTokenInfo} from '../../../../types.js'
+
 import type {AbcMetaToken} from 'edge-login'
 import _ from 'lodash'
 
-export type DispatchProps = {
+export type EditTokenDispatchProps = {
   showDeleteTokenModal: () => void,
   hideDeleteTokenModal: () => void,
-  deleteCustomToken: (string, string) => void,
-  editCustomToken: (string, string, string, string, string, string) => void
+  deleteCustomToken: (walletId: string, currencyCode: string) => void,
+  editCustomToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) => void
+}
+
+export type EditTokenStateProps = {
+  customTokens: Array<CustomTokenInfo>,
+  deleteTokenModalVisible: boolean,
+  editCustomTokenProcessing: boolean,
+  deleteCustomTokenProcessing: boolean
+}
+
+export type EditTokenOwnProps = {
+  walletId: string,
+  addTokenPending: boolean,
+  currencyCode: string,
+  metaTokens: Array<AbcMetaToken>
 }
 
 type State = {
@@ -41,20 +56,10 @@ type State = {
   enabled?: boolean
 }
 
-type Props = {
-  walletId: string,
-  addTokenPending: Function,
-  addToken: Function,
-  currencyCode: string,
-  customTokens: Array<CustomTokenInfo>,
-  deleteTokenModalVisible: boolean,
-  editCustomTokenProcessing: boolean,
-  deleteCustomTokenProcessing: boolean,
-  metaTokens: Array<AbcMetaToken>
-}
+export type EditTokenComponentProps = EditTokenDispatchProps & EditTokenOwnProps & EditTokenStateProps
 
-export default class EditToken extends Component<Props & DispatchProps, State> {
-  constructor (props: Props & DispatchProps) {
+export default class EditToken extends Component<EditTokenComponentProps, State> {
+  constructor (props: EditTokenComponentProps) {
     super(props)
     const tokenInfoIndex = _.findIndex(props.customTokens, (item) => item.currencyCode === props.currencyCode)
     if (tokenInfoIndex >= 0) {
@@ -179,8 +184,12 @@ export default class EditToken extends Component<Props & DispatchProps, State> {
   }
 
   onChangeCurrencyCode = (input: string) => {
+    const forcedUpperCase = input.toUpperCase()
+    /* forcedUpperCase needed to defend against React Native bug
+      https://github.com/facebook/react-native/issues/11776
+    */
     this.setState({
-      currencyCode: input.substring(0, 5)
+      currencyCode: forcedUpperCase.substring(0, 5)
     })
   }
 

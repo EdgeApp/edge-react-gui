@@ -1,7 +1,7 @@
 // @flow
 
 import React, {Component} from 'react'
-import {View} from 'react-native'
+import {View, ActivityIndicator} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import s from '../../../../locales/strings.js'
@@ -11,56 +11,139 @@ import SafeAreaView from '../../components/SafeAreaView'
 import CryptoExchangeConnector
   from '../../../../connectors/components/CryptoExchangeRateConnector'
 import {CryptoExchangeSceneStyle} from '../../../../styles/indexStyles'
-import CryptoExchangeFlipConnector
-  from '../../../../connectors/components/CryptoExchangeFlipConnector'
+import { CryptoExchangeFlipInputWrapperComponent }
+  from '../../components/FlipInput/CryptoExchangeFlipInputWrapperComponent.js'
+import type { ExchangedFlipInputAmounts }
+  from '../../components/FlipInput/ExchangedFlipInput2'
 import {PrimaryButton} from '../../components/Buttons/index'
 import WalletListModal
   from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import CryptoExchangeConfirmTransactionModalComponent from './CryptoExchangeConfirmTransactionModalComponent'
 import {IconButton} from '../../components/Buttons/IconButton.ui'
-import {GuiWallet} from '../../../../types'
+import type { GuiWallet, GuiCurrencyInfo } from '../../../../types'
+import type { SetNativeAmountInfo } from '../../../../actions/CryptoExchangeActions.js'
+import { getDenomFromIsoCode } from '../../../utils.js'
+import { emptyCurrencyInfo } from '../../../../types'
 
-type Props = {
-  exchangeRate: number,
-  wallets: Array<GuiWallet>,
-  intialWalletOne: GuiWallet,
-  intialWalletTwo: GuiWallet,
+export type CryptoExchangeSceneComponentStateProps = {
+  // The following props are used to populate the CryptoExchangeFlipInputs
   fromWallet: GuiWallet,
+  fromExchangeAmount: string,
+  fromPrimaryInfo: GuiCurrencyInfo,
+  fromButtonText: string,
+  fromFiatToCrypto: number,
   toWallet: GuiWallet,
+  toExchangeAmount: string,
+  toPrimaryInfo: GuiCurrencyInfo,
+  toButtonText: string,
+  toFiatToCrypto: number,
+
+  // Exchange rate between crypto to crypto
+  exchangeRate: number,
+
+  // The following props are used to populate the confirmation modal
   fromCurrencyCode: string,
   fromCurrencyIcon: string,
   fromCurrencyIconDark: string,
+  fromDisplayAmount: string,
   toCurrencyIcon: string,
   toCurrencyIconDark: string,
   toCurrencyCode: string,
   toDisplayAmount: string,
-  fromDisplayAmount: string,
-  fromAmountNative: string,
-  toAmountNative: number,
   fee: string,
-  showNextButton?: string,
+
+  // Number of times To and From wallets were flipped
+  forceUpdateGuiCounter: number,
+
+  showNextButton: boolean,
   showWalletSelectModal: boolean,
   showConfirmShiftModal: boolean,
-  selectFromWallet: Function,
-  selectToWallet: Function,
-  swapFromAndToWallets: Function,
-  openModal: Function,
-  shift: Function,
-  openConfirmation: Function,
-  closeConfirmation: Function
+  gettingTransaction: boolean
 }
+
+export type CryptoExchangeSceneComponentDispatchProps = {
+  swapFromAndToWallets: () => any,
+
+  // Opens the wallet selector
+  openModal: (data: string) => any,
+  shift: () => any,
+  closeConfirmation: () => any,
+  openConfirmation: () => any,
+  setNativeAmount: (data: SetNativeAmountInfo) => any
+}
+
+type Props = CryptoExchangeSceneComponentStateProps & CryptoExchangeSceneComponentDispatchProps
+
 type State = {
-  whichWallet: string
+  whichWallet: string, // Which wallet selector dropdown was tapped
+  whichWalletFocus: string, // Which wallet FlipInput was last focused and edited
+  fromExchangeAmount: string,
+  forceUpdateGuiCounter: number,
+  toExchangeAmount: string
 }
-export default class CryptoExchangeSceneComponent extends Component<Props, State> {
-  componentWillMount () {
-    this.setState({
-      whichWallet: Constants.FROM
-    })
+
+export class CryptoExchangeSceneComponent extends Component<Props, State> {
+  constructor (props: Props) {
+    super(props)
+    const newState: State = {
+      whichWallet: Constants.FROM,
+      whichWalletFocus: Constants.FROM,
+      forceUpdateGuiCounter: 0,
+      fromExchangeAmount: '',
+      toExchangeAmount: ''
+    }
+    this.state = newState
+  }
+
+  componentDidMount () {
+    // const overridePrimaryExchangeAmount = bns.div(this.props.nativeAmount, this.props.primaryCurrencyInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+    // this.setState({overridePrimaryExchangeAmount})
+  }
+
+  componentWillReceiveProps (nextProps: Props) {
+    if (this.state.forceUpdateGuiCounter !== nextProps.forceUpdateGuiCounter) {
+      this.setState({
+        fromExchangeAmount: nextProps.fromExchangeAmount,
+        toExchangeAmount: nextProps.toExchangeAmount,
+        forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
+      })
+    } else {
+      // Check which wallet we are currently editing.
+      // Only change the exchangeAmount of the opposite wallet to prevent feedback loops
+      if (this.state.whichWalletFocus === Constants.FROM) {
+        this.setState({toExchangeAmount: nextProps.toExchangeAmount})
+      } else if (this.state.whichWalletFocus === Constants.TO) {
+        this.setState({fromExchangeAmount: nextProps.fromExchangeAmount})
+      }
+    }
   }
 
   render () {
     const style = CryptoExchangeSceneStyle
+    let fromSecondaryInfo: GuiCurrencyInfo
+    if (this.props.fromWallet) {
+      fromSecondaryInfo = {
+        displayCurrencyCode: this.props.fromWallet.fiatCurrencyCode,
+        exchangeCurrencyCode: this.props.fromWallet.isoFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(this.props.fromWallet.fiatCurrencyCode),
+        exchangeDenomination: getDenomFromIsoCode(this.props.fromWallet.fiatCurrencyCode)
+      }
+    } else {
+      fromSecondaryInfo = emptyCurrencyInfo
+    }
+
+    let toSecondaryInfo: GuiCurrencyInfo
+    if (this.props.toWallet) {
+      toSecondaryInfo = {
+        displayCurrencyCode: this.props.toWallet.fiatCurrencyCode,
+        exchangeCurrencyCode: this.props.toWallet.isoFiatCurrencyCode,
+        displayDenomination: getDenomFromIsoCode(this.props.toWallet.fiatCurrencyCode),
+        exchangeDenomination: getDenomFromIsoCode(this.props.toWallet.fiatCurrencyCode)
+      }
+    } else {
+      toSecondaryInfo = emptyCurrencyInfo
+    }
+
     return (
       <SafeAreaView>
         <Gradient style={[style.scene]}>
@@ -72,14 +155,20 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
           >
             <CryptoExchangeConnector style={style.exchangeRateBanner} />
             <View style={style.shim} />
-            <CryptoExchangeFlipConnector
+            <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
-              uiWallet={this.props.fromWallet}
-              currencyCode={this.props.fromCurrencyCode}
-              whichWallet={Constants.FROM}
-              launchWalletSelector={this.launchWalletSelector}
+              guiWallet={this.props.fromWallet}
               fee={this.props.fee}
-            />
+              buttonText={this.props.fromButtonText}
+              currencyLogo={this.props.fromCurrencyIcon}
+              primaryCurrencyInfo={this.props.fromPrimaryInfo}
+              secondaryCurrencyInfo={fromSecondaryInfo}
+              fiatPerCrypto={this.props.fromFiatToCrypto}
+              overridePrimaryExchangeAmount={this.state.fromExchangeAmount}
+              forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+              launchWalletSelector={this.launchFromWalletSelector}
+              onCryptoExchangeAmountChanged={this.fromAmountChanged}
+          />
             <View style={style.shim} />
             <IconButton
               style={style.flipButton}
@@ -87,12 +176,19 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
               onPress={this.flipThis}
             />
             <View style={style.shim} />
-            <CryptoExchangeFlipConnector
+            <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
-              uiWallet={this.props.toWallet}
-              currencyCode={this.props.toCurrencyCode}
-              whichWallet={Constants.TO}
-              launchWalletSelector={this.launchWalletSelector}
+              guiWallet={this.props.toWallet}
+              fee={null}
+              buttonText={this.props.toButtonText}
+              currencyLogo={this.props.toCurrencyIcon}
+              primaryCurrencyInfo={this.props.toPrimaryInfo}
+              secondaryCurrencyInfo={toSecondaryInfo}
+              fiatPerCrypto={this.props.toFiatToCrypto}
+              overridePrimaryExchangeAmount={this.state.toExchangeAmount}
+              forceUpdateGuiCounter={this.state.forceUpdateGuiCounter}
+              launchWalletSelector={this.launchToWalletSelector}
+              onCryptoExchangeAmountChanged={this.toAmountChanged}
             />
             <View style={style.shim} />
             <View style={style.actionButtonContainer} >
@@ -108,20 +204,50 @@ export default class CryptoExchangeSceneComponent extends Component<Props, State
 
   renderButton = () => {
     if (this.props.showNextButton) {
-      return <PrimaryButton text={s.strings.string_next} onPressFunction={this.props.openConfirmation} />
+      return <PrimaryButton
+        text={s.strings.string_next}
+        onPressFunction={this.props.openConfirmation}
+        processingFlag={this.props.gettingTransaction}
+        processingElement={<ActivityIndicator />} />
     }
     return null
   }
-
   flipThis = () => {
     this.props.swapFromAndToWallets()
   }
 
-  launchWalletSelector = (arg: string) => {
-    this.props.openModal(arg)
+  launchFromWalletSelector = () => {
+    this.props.openModal(Constants.FROM)
     this.setState({
-      whichWallet: arg
+      whichWallet: Constants.FROM
     })
+  }
+
+  launchToWalletSelector = () => {
+    this.props.openModal(Constants.TO)
+    this.setState({
+      whichWallet: Constants.TO
+    })
+  }
+
+  fromAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+    const data: SetNativeAmountInfo = {
+      whichWallet: Constants.FROM,
+      primaryExchangeAmount: amounts.exchangeAmount,
+      primaryNativeAmount: amounts.nativeAmount
+    }
+    this.setState({whichWalletFocus: Constants.FROM})
+    this.props.setNativeAmount(data)
+  }
+
+  toAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+    const data: SetNativeAmountInfo = {
+      whichWallet: Constants.TO,
+      primaryExchangeAmount: amounts.exchangeAmount,
+      primaryNativeAmount: amounts.nativeAmount
+    }
+    this.setState({whichWalletFocus: Constants.TO})
+    this.props.setNativeAmount(data)
   }
 
   renderDropUp = () => {

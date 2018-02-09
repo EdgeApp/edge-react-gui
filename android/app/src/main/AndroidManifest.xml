@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="co.edgesecure.wallet"
+  package="co.edgesecure.app"
   android:versionCode="1"
   android:versionName="1.0">
 
@@ -23,9 +23,9 @@
   <uses-feature android:name="android.hardware.location" android:required="false" />
   <uses-permission android:name="android.permission.WAKE_LOCK" />
     <permission
-        android:name="co.edgesecure.wallet.permission.C2D_MESSAGE"
+        android:name="co.edgesecure.app.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-  <uses-permission android:name="co.edgesecure.wallet.permission.C2D_MESSAGE" />
+  <uses-permission android:name="co.edgesecure.app.permission.C2D_MESSAGE" />
   <uses-permission android:name="android.permission.VIBRATE" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-sdk
@@ -50,7 +50,7 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-      <intent-filter android:label="filter_react_native">
+      <intent-filter android:label="Edge">
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
@@ -64,7 +64,7 @@
       android:permission="com.google.android.c2dm.permission.SEND" >
       <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-          <category android:name="co.edgesecure.wallet" />
+          <category android:name="co.edgesecure.app" />
       </intent-filter>
     </receiver>
 

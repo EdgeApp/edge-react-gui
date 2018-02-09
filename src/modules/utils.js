@@ -1,7 +1,7 @@
 // @flow
 
 import {Platform} from 'react-native'
-import {div, mul, gte, eq, toFixed} from 'biggystring'
+import { div, mul, gte, eq, toFixed, bns } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
 import type {AbcDenomination, AbcCurrencyInfo, AbcCurrencyPlugin, AbcTransaction, AbcMetaToken} from 'edge-login'
 import type {GuiDenomination, ExchangeData, GuiWallet, CustomTokenInfo} from '../types'
@@ -21,7 +21,6 @@ export const cutOffText = (str: string, lng: number) => {
 }
 
 export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: string) => {
-  // console.log('in findDenominationSymbol, denoms is: ', denoms, ' , and value is : ', value)
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -30,7 +29,6 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
 }
 
 export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): AbcDenomination => {
-  // console.log('in getWalletDefaultDenomProps, wallet is: ', wallet, ' , and settingsState is: ', settingsState)
   const allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode
   if (currencyCode) { // if metaToken
@@ -46,12 +44,10 @@ export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object
     // This is likely a custom token which has no denom setup in allWalletDenominations
     denomProperties = currencySettings.denominations[0]
   }
-  // console.log('in getWalletDefaultDenomProps, denomProperties is: ', denomProperties)
   return denomProperties
 }
 
 export const getFiatSymbol = (code: string) => {
-  // console.log('inside utils.getFiatSymbol, code is: ', code)
   code = code.replace('iso:', '')
   return getSymbolFromCurrency(code)
 }
@@ -395,6 +391,32 @@ export const convertAbcToGuiDenomination = (abcDenomination: AbcDenomination): G
     precision: 0
   }
   return guiDenomination
+}
+
+export type PrecisionAdjustParams = {
+  exchangeSecondaryToPrimaryRatio: number,
+  secondaryExchangeMultiplier: string,
+  primaryExchangeMultiplier: string
+}
+
+export function precisionAdjust (params: PrecisionAdjustParams): number {
+  const order = Math.floor((Math.log(params.exchangeSecondaryToPrimaryRatio) / Math.LN10) + 0.000000001) // because float math sucks like that
+  const exchangeRateOrderOfMagnitude = Math.pow(10, order)
+
+  // Get the exchange rate in pennies
+  const exchangeRateString = bns.mul(exchangeRateOrderOfMagnitude.toString(), params.secondaryExchangeMultiplier)
+
+  const precisionAdjust = bns.div(exchangeRateString, params.primaryExchangeMultiplier, DIVIDE_PRECISION)
+
+  if (bns.lt(precisionAdjust, '1')) {
+    const fPrecisionAdject = parseFloat(precisionAdjust)
+    let order = 2 + Math.floor((Math.log(fPrecisionAdject) / Math.LN10) - 0.000000001) // because float math sucks like that
+    order = Math.abs(order)
+    if (order > 0) {
+      return order
+    }
+  }
+  return 0
 }
 
 export const noOp = (optionalArgument: any = null) => {

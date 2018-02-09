@@ -39,8 +39,8 @@ export const saveReceiveAddress = (receiveAddress) => (dispatch, getState) => {
   const onSuccess = () => {
     dispatch(updateReceiveAddress())
   }
-  const onError = (error) => {
-    console.log('Core Error', error)
+  const onError = (e) => {
+    console.log(e)
   }
 
   wallet.saveReceiveAddress(receiveAddress)

@@ -1,53 +1,118 @@
 // @flow
 
 import type {Dispatch, State} from '../../modules/ReduxTypes'
-import {GuiWallet} from '../../types'
 import {connect} from 'react-redux'
-import LinkedComponent from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
+import {
+  CryptoExchangeSceneComponent,
+  type CryptoExchangeSceneComponentStateProps,
+  type CryptoExchangeSceneComponentDispatchProps
+} from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
+import { getExchangeRate } from '../../modules/Core/selectors.js'
+import s from '../../locales/strings.js'
+import { bns } from 'biggystring'
+import { emptyCurrencyInfo, emptyGuiWallet, type GuiCurrencyInfo } from '../../types.js'
+import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 
-export const mapStateToProps = (state: State) => {
-  const wallets = []
-  for (const wallet in state.ui.wallets.byId) {
-    wallets.push(state.ui.wallets.byId[wallet])
+const DIVIDE_PRECISION = 18
+
+export const mapStateToProps = (state: State): CryptoExchangeSceneComponentStateProps => {
+  const fromWallet = state.cryptoExchange.fromWallet
+  const toWallet = state.cryptoExchange.toWallet
+
+  let exchangeRate = 1
+  let fromCurrencyCode,
+    fromPrimaryInfo: GuiCurrencyInfo,
+    fromButtonText: string,
+    fromNativeAmount: string,
+    fromExchangeAmount: string,
+    fromFiatToCrypto: number
+  if (fromWallet) {
+    fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
+    fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
+    fromNativeAmount = state.cryptoExchange.fromNativeAmount
+    fromButtonText = fromWallet.name + ':' + fromCurrencyCode
+    fromExchangeAmount = bns.div(fromNativeAmount, fromPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+    fromFiatToCrypto = getExchangeRate(
+      state,
+      fromPrimaryInfo.exchangeCurrencyCode,
+      fromWallet.isoFiatCurrencyCode
+    )
+  } else {
+    fromCurrencyCode = ''
+    fromExchangeAmount = ''
+    fromPrimaryInfo = emptyCurrencyInfo
+    fromButtonText = s.strings.select_src_wallet
+    fromFiatToCrypto = 1
   }
-  const exchangeRate = state.cryptoExchange.exchangeRate
-  const fromAmountNative = '.01'
-  const toAmountNative = Number(fromAmountNative) * exchangeRate // TODO: math with exchange rate. ( from )
 
+  let toCurrencyCode,
+    toPrimaryInfo: GuiCurrencyInfo,
+    toButtonText: string,
+    toNativeAmount: string,
+    toExchangeAmount: string,
+    toFiatToCrypto: number
+  if (toWallet) {
+    toCurrencyCode = state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name
+    toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
+    toNativeAmount = state.cryptoExchange.toNativeAmount
+    toButtonText = toWallet.name + ':' + toCurrencyCode
+    toExchangeAmount = bns.div(toNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
+    toFiatToCrypto = getExchangeRate(
+      state,
+      toPrimaryInfo.exchangeCurrencyCode,
+      toWallet.isoFiatCurrencyCode
+    )
+  } else {
+    toCurrencyCode = ''
+    toExchangeAmount = ''
+    toPrimaryInfo = emptyCurrencyInfo
+    toButtonText = s.strings.select_recv_wallet
+    toFiatToCrypto = 1
+  }
+
+  if (fromWallet && toWallet) {
+    exchangeRate = state.cryptoExchange.exchangeRate
+  }
+
+  const showNextButton: boolean = !!state.cryptoExchange.transaction && state.cryptoExchange.transaction.nativeAmount !== '0'
   return {
+    fromWallet: fromWallet || emptyGuiWallet,
+    fromExchangeAmount,
+    fromCurrencyCode,
+    fromPrimaryInfo,
+    fromButtonText,
+    fromFiatToCrypto,
+    toWallet: toWallet || emptyGuiWallet,
+    toExchangeAmount,
+    toCurrencyCode,
+    toPrimaryInfo,
+    toButtonText,
+    toFiatToCrypto,
     exchangeRate,
-    wallets: wallets,
-    intialWalletOne: wallets.length > 0 ? wallets[0] : null,
-    intialWalletTwo: wallets.length > 1 ? wallets[1] : null,
-    fromWallet: state.cryptoExchange.fromWallet,
-    toWallet: state.cryptoExchange.toWallet,
-    fromCurrencyCode: state.cryptoExchange.fromCurrencyCode,
-    toCurrencyCode: state.cryptoExchange.toCurrencyCode,
     fromDisplayAmount: state.cryptoExchange.fromDisplayAmount,
     toDisplayAmount: state.cryptoExchange.toDisplayAmount,
-    fromAmountNative,
-    toAmountNative,
-    fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon,
-    fromCurrencyIconDark: state.cryptoExchange.fromCurrencyIconDark,
-    toCurrencyIcon: state.cryptoExchange.toCurrencyIcon,
-    toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark,
+    fromCurrencyIcon: state.cryptoExchange.fromCurrencyIcon || '',
+    fromCurrencyIconDark: state.cryptoExchange.fromCurrencyIconDark || '',
+    toCurrencyIcon: state.cryptoExchange.toCurrencyIcon || '',
+    toCurrencyIconDark: state.cryptoExchange.toCurrencyIconDark || '',
     fee: state.cryptoExchange.fee,
+    forceUpdateGuiCounter: state.cryptoExchange.forceUpdateGuiCounter,
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
-    showNextButton: state.cryptoExchange.transaction
+    showNextButton,
+    gettingTransaction: state.cryptoExchange.gettingTransaction
   }
 }
 
-export const mapDispatchToProps = (dispatch: Dispatch) => ({
-  selectFromWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, data)),
-  selectToWallet: (data: GuiWallet) => dispatch(actions.selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, data)),
+export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneComponentDispatchProps => ({
   swapFromAndToWallets: () => dispatch(actions.dispatchAction(Constants.SWAP_FROM_TO_CRYPTO_WALLETS)),
   openModal: (data: string) => dispatch(actions.dispatchActionString(Constants.OPEN_WALLET_SELECTOR_MODAL, data)),
   shift: () => dispatch(actions.shiftCryptoCurrency()),
   closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
-  openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL))
+  openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL)),
+  setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeSceneComponent)

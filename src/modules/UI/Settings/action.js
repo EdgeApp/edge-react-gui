@@ -15,6 +15,7 @@ export const SET_PIN_MODE = PREFIX + 'SET_PIN_MODE'
 export const SET_PIN = PREFIX + 'SET_PIN'
 export const SET_OTP_MODE = PREFIX + 'SET_OTP_MODE'
 export const SET_OTP = PREFIX + 'SET_OTP'
+export const TOGGLE_PIN_LOGIN_ENABLED = PREFIX + 'TOGGLE_PIN_LOGIN_ENABLED'
 
 // Synced Account Settings
 export const SET_AUTO_LOGOUT_TIME = PREFIX + 'SET_AUTO_LOGOUT_TIME'
@@ -79,6 +80,11 @@ export const setDefaultFiat = (defaultFiat) => ({
   data: {defaultFiat}
 })
 
+export const togglePinLoginEnabled = (pinLoginEnabled) => ({
+  type: TOGGLE_PIN_LOGIN_ENABLED,
+  data: {pinLoginEnabled}
+})
+
 export const setMerchantMode = (merchantMode) => ({
   type: SET_MERCHANT_MODE,
   data: {merchantMode}
@@ -135,7 +141,7 @@ export const addTouchIdInfo = (touchIdInfo) => {
 export const updateTouchIdEnabled = (bool) => {
   return {
     type: CHANGE_TOUCH_ID_SETTINGS,
-    data: bool
+    data: { isTouchEnabled: bool }
   }
 }
 

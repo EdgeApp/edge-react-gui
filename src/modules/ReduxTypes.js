@@ -10,12 +10,13 @@ import type {
   AbcLobby,
   AbcParsedUri,
   AbcReceiveAddress,
-  AbcTransaction
+  AbcTransaction,
+  EdgeReceiveAddress
  } from 'edge-login'
 
 import type {
   DeviceDimensions,
-  GuiContact,
+  GuiContact, GuiCurrencyInfo,
   GuiWallet
 } from '../types'
 
@@ -84,6 +85,9 @@ export type State = {
         forceUpdateGuiCounter: number,
         pending: boolean
       },
+      changeMiningFee: {
+        isCustomFeeVisible: boolean
+      },
       transactionList: {
         transactions: Array<AbcTransaction>,
         contactsList: Array<GuiContact>,
@@ -129,7 +133,7 @@ export type State = {
       },
       request: {
         inputCurrencySelected: string,
-        receiveAddress: AbcReceiveAddress
+        receiveAddress: EdgeReceiveAddress
       },
       dimensions: DeviceDimensions,
       helpModal: boolean,
@@ -170,6 +174,7 @@ export type State = {
       bluetoothMode: boolean,
       otpMode: boolean,
       pinMode: boolean,
+      pinLoginEnabled: boolean,
       changesLocked: true,
       loginStatus: true,
       isTouchSupported: boolean,
@@ -203,29 +208,31 @@ export type State = {
     reverseNativeMax: string,
     reverseNativeMin: string,
     reverseMinerFee: string,
-    fromWallet: any, // GuiWallet | null,
-    fromCurrencyCode: any, // CurrencyCode | null,
+    fromWallet: GuiWallet | null,
+    fromCurrencyCode: string | null,
     fromNativeAmount: string,
     fromDisplayAmount: string,
-    fromWalletPrimaryInfo: any, // AbcCurrencyInfo | null,
+    fromWalletPrimaryInfo: GuiCurrencyInfo, // AbcCurrencyInfo | null,
     fromCurrencyIcon: string | null,
     fromCurrencyIconDark: string | null,
-    toWallet: any, // GuiWallet | null,
-    toCurrencyCode: any, // CurrencyCode | null,
+    toWallet: GuiWallet | null,
+    toCurrencyCode: string | null,
     toNativeAmount: string,
     toDisplayAmount: string,
-    toWalletPrimaryInfo: any, // AbcCurrencyInfo | null,
+    toWalletPrimaryInfo: GuiCurrencyInfo, // AbcCurrencyInfo | null,
     toCurrencyIcon: string | null,
     toCurrencyIconDark: string | null,
     insufficientError: boolean,
     feeSetting: 'low' | 'standard' | 'high' | 'custom',
     walletListModalVisible: boolean,
     confirmTransactionModalVisible: boolean,
+    forceUpdateGuiCounter: number,
     shiftTransactionError: Error | null,
     genericShapeShiftError: Error | null,
     changeWallet: 'none',
     transaction: AbcTransaction | null,
-    fee: any
+    fee: any,
+    gettingTransaction: boolean
   },
   exchangeRates: number,
   permissions: PermissionsState

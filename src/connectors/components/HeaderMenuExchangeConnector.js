@@ -9,20 +9,40 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz'
 import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
+import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 
 export const mapStateToProps = (state: any) => {
+  let sourceWalletId, sourceWallet
+  if (state.cryptoExchange && state.cryptoExchange.fromWallet) {
+    sourceWalletId = state.cryptoExchange.fromWallet.id
+    sourceWallet = CORE_SELECTORS.getWallet(state, sourceWalletId)
+  } else {
+    sourceWalletId = ''
+    sourceWallet = null
+  }
+
   const data = [
     {
-      label: s.strings.change_mining_fee_title, // tie into
-      value: Constants.CHANGE_MINING_FEE_VALUE
+      label: s.strings.title_change_mining_fee, // tie into,
+      key: s.strings.title_change_mining_fee,
+      value: {
+        title: Constants.CHANGE_MINING_FEE_VALUE,
+        sourceWallet
+      }
     },
     {
       label: s.strings.dropdown_exchange_max_amount,
-      value: Constants.EXCHANGE_MAX_AMOUNT_VALUE
+      key: s.strings.dropdown_exchange_max_amount,
+      value: {
+        title: Constants.EXCHANGE_MAX_AMOUNT_VALUE
+      }
     },
     {
       label: s.strings.string_help,
-      value: Constants.HELP_VALUE
+      key: s.strings.string_help,
+      value: {
+        title: Constants.HELP_VALUE
+      }
     }
   ]
   return {
@@ -31,25 +51,22 @@ export const mapStateToProps = (state: any) => {
     },
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,
-    rightSide: true
+    rightSide: true,
+    sourceWallet
   }
 }
 
 export const mapDispatchToProps = (dispatch: any) => ({
-  onSelect: (value: string) => {
-    console.log(value)
-    switch (value) {
+  onSelect: (value: Object) => {
+    switch (value.title) {
       case Constants.HELP_VALUE:
-        console.log('HELP MENU CLICK ')
         dispatch(openHelpModal())
         break
       case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
-        console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
         dispatch(actions.exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
-        console.log('EXCHANGE_MAX_AMOUNT_VALUE MENU CLICK ')
-        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]()
+        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({sourceWallet: value.sourceWallet})
         break
     }
   }

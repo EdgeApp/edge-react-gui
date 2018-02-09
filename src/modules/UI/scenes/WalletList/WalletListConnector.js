@@ -5,9 +5,9 @@ import {
   updateActiveWalletsOrder,
   updateArchivedWalletsOrder
 } from './action'
+import type {State, Dispatch} from '../../../ReduxTypes'
 
 import { walletRowOption } from './components/WalletOptions/action.js'
-import type { Dispatch, State } from '../../../ReduxTypes'
 import {setContactList} from '../../contacts/action'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../selectors.js'

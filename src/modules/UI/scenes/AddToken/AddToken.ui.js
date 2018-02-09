@@ -1,7 +1,6 @@
 // @flow
 
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {
   View,
   ActivityIndicator,
@@ -17,18 +16,28 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import styles from './style.js'
 import {PrimaryButton} from '../../components/Buttons'
 import {FormField} from '../../../../components/FormField.js'
-import * as ADD_TOKEN_ACTIONS from './action.js'
 import {decimalPlacesToDenomination} from '../../../utils.js'
 import type { CustomTokenInfo, GuiWallet } from '../../../../types'
-import {
-  getWallet
-} from '../../selectors'
 
-export type DispatchProps = {
-  addNewToken: (string, string, string, string, string) => void
+export type AddTokenOwnProps = {
+  walletId: string,
+  addTokenPending: Function,
+  addNewToken: Function,
+  currentCustomTokens: Array<CustomTokenInfo>,
+  wallet: GuiWallet,
+  onAddToken: (string) => void
 }
 
-export type State = {
+export type AddTokenDispatchProps = {
+  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => void
+}
+
+export type AddTokenStateProps = {
+  addTokenPending: boolean,
+  wallet: GuiWallet
+}
+
+type State = {
   currencyName: string,
   currencyCode: string,
   contractAddress: string,
@@ -37,16 +46,10 @@ export type State = {
   enabled?: boolean
 }
 
-export type Props = {
-  walletId: string,
-  addTokenPending: Function,
-  addNewToken: Function,
-  currentCustomTokens: Array<CustomTokenInfo>,
-  wallet: GuiWallet
-}
+export type AddTokenProps = AddTokenOwnProps & AddTokenStateProps & AddTokenDispatchProps
 
-class AddToken extends Component<Props, State> {
-  constructor (props: Props) {
+export class AddToken extends Component<AddTokenProps, State> {
+  constructor (props: AddTokenProps) {
     super(props)
     this.state = {
       currencyName: '',
@@ -135,8 +138,12 @@ class AddToken extends Component<Props, State> {
   }
 
   onChangeCurrencyCode = (input: string) => {
+    const forcedUpperCase = input.toUpperCase()
+    /* forcedUpperCase needed to defend against React Native bug
+      https://github.com/facebook/react-native/issues/11776
+    */
     this.setState({
-      currencyCode: input.substring(0, 5)
+      currencyCode: forcedUpperCase.substring(0, 5)
     })
   }
 
@@ -166,23 +173,10 @@ class AddToken extends Component<Props, State> {
       if (currencyName && currencyCode && decimalPlaces && contractAddress) {
         const denomination = decimalPlacesToDenomination(decimalPlaces)
         this.props.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination)
+        this.props.onAddToken(currencyCode)
       } else {
         Alert.alert(s.strings.addtoken_invalid_information)
       }
     }
   }
 }
-
-const mapStateToProps = (state: any, ownProps: any) => ({
-  addTokenPending: state.ui.wallets.addTokenPending,
-  walletId: ownProps.walletId,
-  currentCustomTokens: state.ui.settings.customTokens,
-  wallet: getWallet(state, ownProps.walletId)
-})
-
-const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
-  dispatch,
-  addNewToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string) => dispatch(ADD_TOKEN_ACTIONS.addNewToken(walletId, currencyName, currencyCode, contractAddress, denomination))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddToken)

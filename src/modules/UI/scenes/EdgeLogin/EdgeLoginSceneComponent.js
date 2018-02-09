@@ -6,16 +6,18 @@ import Gradient from '../../components/Gradient/Gradient.ui'
 import s from '../../../../locales/strings.js'
 import type { AbcLobby } from 'edge-login'
 import SafeAreaView from '../../components/SafeAreaView'
-type Props = {
-  style: any,
+
+type EdgeLoginSceneProps = {
+  style: Object,
   lobby?: AbcLobby,
   error?: string,
   isProcessing: boolean,
   accept(): void,
   decline(): void
 }
-export default class EdgeLoginSceneComponent extends Component<Props> {
-  renderBody (style: any) {
+
+export default class EdgeLoginScene extends Component<EdgeLoginSceneProps> {
+  renderBody (style: Object) {
     let message = this.props.error
     if (!this.props.error) {
       message = s.strings.edge_description
@@ -26,7 +28,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
       </View>
     )
   }
-  renderButtons (style: any) {
+  renderButtons (style: Object) {
     if (this.props.isProcessing) {
       return (
         <View style={style.buttonsProcessing}>
@@ -64,7 +66,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
       </View>
     )
   }
-  renderImage (style: any) {
+  renderImage (style: Object) {
     if (this.props.lobby && this.props.lobby.loginRequest && this.props.lobby.loginRequest.displayImageUrl) {
       return <Image
         style={style.image}
@@ -73,7 +75,7 @@ export default class EdgeLoginSceneComponent extends Component<Props> {
     }
     return null
   }
-  renderHeader (style: any) {
+  renderHeader (style: Object) {
     let title = ''
     if (this.props.lobby && this.props.lobby.loginRequest) {
       title = this.props.lobby.loginRequest.displayName ? this.props.lobby.loginRequest.displayName : ''

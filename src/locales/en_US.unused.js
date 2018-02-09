@@ -132,7 +132,6 @@ const strings = {
   category_or_business_name_initial: 'Search',
   category_or_business_name: 'Business Name or Category',
   change_mining_fee_custom_hint: 'Custom fee in satoshis/byte',
-  change_mining_fee_custom_title: 'Set Custom Mining Fee',
   city_state_county: 'City, State/Province, or Country',
   coffee_and_tea: 'Coffee &amp; Tea',
   company_location: 'San Diego, California, USA',

@@ -67,8 +67,17 @@ class SortableWalletListRow extends Component<Props, State> {
                 <T style={[styles.rowBalanceAmountText, b()]}>
                   {finalCryptoAmount}
                 </T>
-                <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}
-                  ({symbol || ''})</T>
+
+                <View style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
+                  <T style={[styles.rowBalanceDenominationText]}>
+                    {cryptoCurrencyName}
+                  </T>
+                  <T> (</T>
+                  <T style={[styles.rowBalanceDenominationText, styles.symbol]}>
+                    {symbol || ''}
+                  </T>
+                  <T>)</T>
+                </View>
               </View>
               <View style={[styles.rowDragArea, b()]}>
                 <Image

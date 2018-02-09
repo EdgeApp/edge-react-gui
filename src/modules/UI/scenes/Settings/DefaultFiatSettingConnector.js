@@ -7,7 +7,8 @@ import * as UTILS from '../../../utils'
 
 const mapStateToProps = (state) => ({
   defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
-  supportedFiats: UTILS.getSupportedFiats()
+  supportedFiats: UTILS.getSupportedFiats(),
+  dimensions: state.ui.scenes.dimensions
 })
 const mapDispatchToProps = (dispatch) => ({
   onSelectFiat: (selectedDefaultFiat) => {

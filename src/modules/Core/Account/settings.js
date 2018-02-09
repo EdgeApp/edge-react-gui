@@ -137,7 +137,7 @@ export async function setSyncedSubcategories (account: AbcAccount, subcategories
   try {
     await SubcategoriesFile.setText(stringifiedSubcategories)
   } catch (e) {
-    console.log('error: ', e)
+    console.log(e)
   }
 }
 
@@ -148,7 +148,6 @@ export const getSyncedSubcategories = (account: AbcAccount) =>
     return categoriesText.categories
   })
   .catch(() =>
-    // console.log('error: ', e)
     // If Categories.json doesn't exist yet, create it, and return it
      setSyncedSubcategories(account, SYNCED_SUBCATEGORIES_DEFAULTS)
     .then(() => SYNCED_SUBCATEGORIES_DEFAULTS))
@@ -182,7 +181,6 @@ export const getCoreSettings = (account: AbcAccount): Promise<{otpMode: boolean,
 export const getSyncedSettingsFile = (account: AbcAccount) => {
   // $FlowFixMe folder not found on AbcAccount type
   const folder = account.folder
-//   console.log(folder)
   return folder.file(SYNCHED_SETTINGS_FILENAME)
 }
 

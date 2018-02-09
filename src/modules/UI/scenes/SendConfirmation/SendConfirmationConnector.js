@@ -45,9 +45,14 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   const transaction: AbcTransaction = getTransaction(state)
   const pending = getPending(state)
   const nativeAmount = getNativeAmount(state)
-  const error = getError(state)
+  let error = getError(state)
 
   let errorMsg = null
+  let resetSlider = false
+  if (error && error.message === 'broadcastError') {
+    error = null
+    resetSlider = true
+  }
   if (error && nativeAmount && bns.gt(nativeAmount, '0')) {
     errorMsg = error.message
   }
@@ -59,6 +64,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     currencyCode,
     pending,
     secondaryeExchangeCurrencyCode,
+    resetSlider,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
     primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),

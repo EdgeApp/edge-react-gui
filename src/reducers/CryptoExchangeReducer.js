@@ -37,10 +37,13 @@ const initialState = {
   shiftTransactionError: null,
   genericShapeShiftError: null,
   changeWallet: Constants.NONE,
-  transaction: null
+  forceUpdateGuiCounter: 0,
+  transaction: null,
+  gettingTransaction: false
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
+  let forceUpdateGuiCounter
   switch (action.type) {
     case Constants.SWAP_FROM_TO_CRYPTO_WALLETS:
       return deepCopyState(state)
@@ -104,7 +107,7 @@ function cryptoExchangerReducer (state = initialState, action) {
       return {
         ...state,
         transaction: action.data.abcTransaction,
-        fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromCurrencyCode : ' ',
+        fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name : ' ',
         insufficientError: false,
         genericShapeShiftError: null
       }
@@ -127,17 +130,23 @@ function cryptoExchangerReducer (state = initialState, action) {
       return { ...state, confirmTransactionModalVisible: false }
     case Constants.OPEN_CRYPTO_EXC_CONF_MODAL:
       return { ...state, confirmTransactionModalVisible: true }
-    case Constants.SET_CRYPTO_TO_NATIVE_AMOUNT:
-      return {
-        ...state,
-        toNativeAmount: action.data.native,
-        toDisplayAmount: action.data.display
+    case Constants.SET_CRYPTO_EXCHANGE_AMOUNTS:
+      forceUpdateGuiCounter = state.forceUpdateGuiCounter
+      if (action.data.forceUpdateGui) {
+        forceUpdateGuiCounter++
       }
-    case Constants.SET_CRYPTO_FROM_NATIVE_AMOUNT:
+      const toNativeAmount = action.data.toNativeAmount || undefined
+      const toDisplayAmount = action.data.toDisplayAmount || undefined
+      const fromNativeAmount = action.data.fromNativeAmount || undefined
+      const fromDisplayAmount = action.data.fromDisplayAmount || undefined
+
       return {
         ...state,
-        fromNativeAmount: action.data.native,
-        fromDisplayAmount: action.data.display
+        toNativeAmount,
+        toDisplayAmount,
+        fromNativeAmount,
+        fromDisplayAmount,
+        forceUpdateGuiCounter
       }
     case Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR:
       return {
@@ -153,7 +162,15 @@ function cryptoExchangerReducer (state = initialState, action) {
         genericShapeShiftError: action.data
       }
     case Constants.CHANGE_EXCHANGE_FEE:
-      return { ...state, feeSetting: action.feeSetting }
+      return {
+        ...state,
+        feeSetting: action.data.feeSetting,
+        forceUpdateGuiCounter: (state.forceUpdateGuiCounter + 1)
+      }
+    case Constants.START_MAKE_SPEND:
+      return { ...state, gettingTransaction: true }
+    case Constants.DONE_MAKE_SPEND:
+      return { ...state, gettingTransaction: false }
     default:
       return state
   }
@@ -184,16 +201,16 @@ function getLogoDark (wallet, currencyCode) {
 function deepCopyState (state) {
   const deepCopy = JSON.parse(JSON.stringify(state))
   deepCopy.toWallet = state.fromWallet
-  deepCopy.fromWallet = state.toWallet
   deepCopy.toCurrencyCode = state.fromCurrencyCode
-  deepCopy.toNativeAmount = state.fromNativeAmount
-  deepCopy.toDisplayAmount = state.fromDisplayAmount
+  deepCopy.toNativeAmount = '0'
+  deepCopy.toDisplayAmount = '0'
   deepCopy.toWalletPrimaryInfo = state.fromWalletPrimaryInfo
   deepCopy.toCurrencyIcon = state.fromCurrencyIcon
   deepCopy.toCurrencyIconDark = state.fromCurrencyIconDark
+  deepCopy.fromWallet = state.toWallet
   deepCopy.fromCurrencyCode = state.toCurrencyCode
-  deepCopy.fromNativeAmount = state.toNativeAmount
-  deepCopy.fromDisplayAmount = state.toDisplayAmount
+  deepCopy.fromNativeAmount = '0'
+  deepCopy.fromDisplayAmount = '0'
   deepCopy.fromWalletPrimaryInfo = state.toWalletPrimaryInfo
   deepCopy.fromCurrencyIcon = state.toCurrencyIcon
   deepCopy.fromCurrencyIconDark = state.toCurrencyIconDark
@@ -209,6 +226,7 @@ function deepCopyState (state) {
 
   deepCopy.minerFee = state.reverseMinerFee
   deepCopy.reverseMinerFee = state.minerFee
+  deepCopy.forceUpdateGuiCounter = state.forceUpdateGuiCounter + 1
 
   deepCopy.insufficientError = false
 

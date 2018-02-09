@@ -12,22 +12,38 @@ import ModalButtons from './ModalButtons.ui'
 import {FormField} from '../../../../../components/indexComponents'
 import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
 
-type Props = {
-  style: any,
+type ConfirmPasswordModalProps = {
+  style: Object,
   headerText: string,
+  error: string,
   showModal: boolean,
   onCancel(): void,
   onDone(string): void
 }
 
 type State = {
-  confimPassword: string
+  confimPassword: string,
+  isThinking: boolean
 }
-export default class CryptoExchangeConfirmTransactionModalComponent extends Component<Props, State> {
+export default class ConfirmPasswordModal extends Component<ConfirmPasswordModalProps, State> {
   componentWillMount () {
     this.setState({
-      confimPassword: ''
+      confimPassword: '',
+      isThinking: false
     })
+  }
+  componentWillReceiveProps (nextProps: ConfirmPasswordModalProps) {
+    if (!nextProps.showModal) {
+      this.setState({
+        confimPassword: '',
+        isThinking: false
+      })
+    }
+    if (nextProps.error !== '') {
+      this.setState({
+        isThinking: false
+      })
+    }
   }
   textChange = (value: string) => {
     this.setState({
@@ -35,9 +51,12 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
     })
   }
   onDone = () => {
+    this.setState({
+      isThinking: true
+    })
     this.props.onDone(this.state.confimPassword)
   }
-  renderMiddle = (style: any) => {
+  renderMiddle = (style: Object) => {
     const formStyle = {...MaterialInputOnWhite,
       container: {...MaterialInputOnWhite.container, width: 244}
     }
@@ -46,17 +65,21 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
         style={formStyle}
         label={s.strings.confirm_password_text}
         value={this.state.confimPassword}
+        error={this.props.error}
         secureTextEntry
         returnKeyType={'done'}
         onSubmitEditing={this.onDone}
         autoFocus/>
+        <View style={style.middle.clearShim} />
     </View>
   }
-  render () {
-    const modalBottom = <ModalButtons
+  renderBottom (style: Object) {
+    return <ModalButtons
       onDone={this.onDone}
+      doneButtonActivityFlag={this.state.isThinking}
       onCancel={this.props.onCancel} />
-
+  }
+  render () {
     const style = this.props.style
     const icon = <Icon
       style={style.icon}
@@ -70,7 +93,7 @@ export default class CryptoExchangeConfirmTransactionModalComponent extends Comp
       headerText={this.props.headerText}
       headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
       modalMiddle={this.renderMiddle(style)}
-      modalBottom={modalBottom}
+      modalBottom={this.renderBottom(style)}
       onExitButtonFxn={this.props.onCancel} />
   }
 }

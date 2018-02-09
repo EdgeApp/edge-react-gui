@@ -108,7 +108,6 @@ export async function updateEnabledTokens (wallet: AbcCurrencyWallet, tokensToEn
     const finalTokensToEnable = _.difference(tokensWithNewTokens, tokensToDisable)
     await enableTokens(wallet, finalTokensToEnable)
     await disableTokens(wallet, tokensToDisable)
-    console.log('updateEnabledTokens setText', finalTokensToEnable)
     await tokensFile.setText(JSON.stringify(finalTokensToEnable))
   } catch (e) {
     console.log(e)
@@ -136,7 +135,7 @@ export const resyncWallet = (wallet: AbcCurrencyWallet): Promise<void> => {
 }
 
 export const getDisplayPrivateSeed = (wallet: AbcCurrencyWallet): string => {
-  return wallet.getDisplayPrivateSeed()
+  return wallet.getDisplayPrivateSeed() || 'receive-only wallet'
 }
 
 // Documented but not implemented in the core

@@ -52,6 +52,11 @@ const StaticModalStyle = {
     width: '100%',
     padding: 15
   },
+  bodyText: {
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: THEME.FONTS.DEFAULT
+  },
   shim: 20, // Styles.Shim.height,
   icon: {
     color: THEME.COLORS.WHITE

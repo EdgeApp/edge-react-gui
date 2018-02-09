@@ -3,9 +3,6 @@
 import type {Dispatch, GetState} from '../../../ReduxTypes'
 
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
-import * as UI_ACTIONS from '../../Wallets/action.js'
-
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
 
 export const TOGGLE_ARCHIVE_VISIBILITY = 'TOGGLE_ARCHIVE_VISIBILITY'
 
@@ -26,13 +23,6 @@ export const updateActiveWalletsOrder = (activeWalletIds: Array<string>) => (dis
       dispatch(wrap(UPDATE_ACTIVE_WALLETS_ORDER_SUCCESS, {activeWalletIds}))
     })
     .catch((e) => console.log(e))
-}
-
-export const updateIndividualWalletSortIndex = (walletId: string, sortIndex: number) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-  wallet.sortIndex = sortIndex
-  return dispatch(UI_ACTIONS.upsertWallet(wallet))
 }
 
 export const updateArchivedWalletsOrder = (archivedWalletIds: Array<string>) => (dispatch: Dispatch, getState: GetState) => {

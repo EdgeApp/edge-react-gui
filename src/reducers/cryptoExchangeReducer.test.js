@@ -36,7 +36,9 @@ test('initialState', () => {
     shiftTransactionError: null,
     genericShapeShiftError: null,
     changeWallet: 'none',
-    transaction: null
+    forceUpdateGuiCounter: 0,
+    transaction: null,
+    gettingTransaction: false
   }
   const actual = cryptoExchangerReducer(undefined, {})
 

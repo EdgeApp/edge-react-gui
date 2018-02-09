@@ -2,6 +2,7 @@
 import React from 'react'
 import { SafeAreaView } from 'react-native'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import THEME from '../../../../theme/variables/airbitz.js'
 
 type props = {
   style: any,
@@ -18,7 +19,7 @@ const SafeAreaViewComponent = ({ style, children }: props) => {
         top: 0,
         right: 0,
         left: 0,
-        height: 45,
+        height: THEME.HEADER,
         zIndex: -1000
       }}/>
   </SafeAreaView>

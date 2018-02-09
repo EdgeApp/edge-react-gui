@@ -1,7 +1,7 @@
 // @flow
 
 // Crypto Exchange
-export const SELECT_FROM_WALLET_CRYPTO_EXCHANGE = 'selectFromWalletCryptoExchange_ALLENROCKS'
+export const SELECT_FROM_WALLET_CRYPTO_EXCHANGE = 'selectFromWalletCryptoExchange'
 export const SELECT_TO_WALLET_CRYPTO_EXCHANGE = 'selectToWalletCryptoExchange'
 export const SWAP_FROM_TO_CRYPTO_WALLETS = 'swapFromToCryptoWallets'
 export const OPEN_WALLET_SELECTOR_MODAL = 'openWalletSelectorModal'
@@ -16,8 +16,9 @@ export const SHIFT_COMPLETE = 'shiftComplete'
 export const SHIFT_ERROR = 'shiftError'
 export const OPEN_CRYPTO_EXC_CONF_MODAL = 'openCryptoExecConfModal'
 export const CLOSE_CRYPTO_EXC_CONF_MODAL = 'closeCryptoExecConfModal'
-export const SET_CRYPTO_FROM_NATIVE_AMOUNT = 'setCryptoFromNativeAmount'
-export const SET_CRYPTO_TO_NATIVE_AMOUNT = 'setCryptoToNativeAmount'
+export const START_MAKE_SPEND = 'startMakeSpendCrypto'
+export const DONE_MAKE_SPEND = 'doneMakeSpendCrypto'
+export const SET_CRYPTO_EXCHANGE_AMOUNTS = 'setCryptoExchangeAmounts'
 export const RECEIVED_TRANSACTION_ERROR = 'receivedTRansactionError'
 export const RECEIVED_INSUFFICIENT_FUNDS_ERROR = 'receivedInsufficentFundsError'
 export const GENERIC_SHAPE_SHIFT_ERROR = 'genericShapeShiftError'
@@ -41,3 +42,6 @@ export const ACCOUNT_INIT_COMPLETE = 'accountInitComplete'
 
 // OTP
 export const DISABLE_OTP_RESET = 'disableOTPReset'
+
+// Settings
+export const SET_CONFIRM_PASSWORD_ERROR = 'setConfirmPasswordError'

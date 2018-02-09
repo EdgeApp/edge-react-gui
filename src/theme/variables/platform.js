@@ -1,4 +1,5 @@
 import color from 'color';
+import { isIphoneX } from '../../lib/isIphoneX.js'
 
 import { Platform, Dimensions, PixelRatio } from 'react-native';
 
@@ -7,7 +8,7 @@ const deviceWidth = Dimensions.get('window').width;
 const platform = Platform.OS;
 const platformStyle = undefined;
 
-export default {
+const PLATFORM = {
   platformStyle,
   platform,
     // AndroidRipple
@@ -164,7 +165,7 @@ export default {
   toolbarDefaultBg: (platform === 'ios') ? '#F8F8F8' : '#3F51B5',
   toolbarHeight: (platform === 'ios') ? 44 : 56,
   // based on footerHeight, toolbarHeight, and deviceHeight
-  usableHeight: deviceHeight - ((platform === 'ios') ? 44 : 56) - 50,  // device - toolbar - footer
+  usableHeight: deviceHeight - ((platform === 'ios') ? 44 : 62) - 69 - (isIphoneX ? 57 : 0),  // device - toolbar - footer
 
   toolbarIconSize: (platform === 'ios') ? 20 : 22,
   toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
@@ -298,4 +299,6 @@ export default {
 
     // New Variable
   inputGroupRoundedBorderRadius: 30
-};
+}
+
+export {PLATFORM}

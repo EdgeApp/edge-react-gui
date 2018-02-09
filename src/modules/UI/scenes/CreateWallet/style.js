@@ -2,8 +2,10 @@
 
 import { StyleSheet } from 'react-native'
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform'
 
 export const styles = {
+  usableHeight: PLATFORM.usableHeight,
   scene: {
     flex: 1,
     backgroundColor: THEME.COLORS.WHITE
@@ -15,7 +17,7 @@ export const styles = {
   },
   view: {
     position: 'relative',
-    top: 66,
+    top: THEME.HEADER,
     paddingHorizontal: 20,
     paddingVertical: 5
   },

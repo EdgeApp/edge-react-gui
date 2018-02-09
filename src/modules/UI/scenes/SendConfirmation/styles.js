@@ -47,7 +47,6 @@ export default StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   sliderWrap: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -55,11 +54,13 @@ export default StyleSheet.create({
     width: 270
   },
   error: {
-    flex: 1,
-    color: THEME.COLORS.ACCENT_RED,
-    textAlign: 'left',
+    height: 20,
     marginRight: 5,
     backgroundColor: THEME.COLORS.TRANSPARENT
+  },
+  errorText: {
+    textAlign: 'left',
+    color: THEME.COLORS.ACCENT_RED
   },
   menuTrigger: {
     paddingHorizontal: 8,

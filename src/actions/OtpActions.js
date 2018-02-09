@@ -9,7 +9,6 @@ export const enableOtp = () => async (dispatch: Dispatch, getState: GetState) =>
   const account = CORE_SELECTORS.getAccount(state)
   try {
     await account.enableOtp()
-    // console.log(account.otpKey)
     dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: true, otpKey: account.otpKey}))
   } catch (e) {
     console.log(e)

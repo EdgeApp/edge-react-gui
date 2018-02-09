@@ -5,6 +5,7 @@ import {Actions} from 'react-native-router-flux'
 import * as WALLET_ACTIONS from '../../Wallets/action'
 import * as Constants from '../../../../constants/indexConstants.js'
 import {displayErrorAlert} from '../../components/ErrorAlert/actions'
+import type {Dispatch, GetState} from '../../../ReduxTypes'
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
 export const SELECT_WALLET_TYPE = 'SELECT_WALLET_TYPE'
@@ -31,7 +32,7 @@ export const createCurrencyWallet = (
   fiatCurrencyCode: string,
   popScene: boolean = true,
   selectWallet: boolean = false
-) => (dispatch: any, getState: any) => {
+) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
 

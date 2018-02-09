@@ -3,10 +3,8 @@
 import 'intl'
 import areIntlLocalesSupported from 'intl-locales-supported'
 
-// Polyfills for Android. Now support only these locales. en-US is fallback
-import 'intl/locale-data/jsonp/en-US'
-import 'intl/locale-data/jsonp/de-DE'
-import 'intl/locale-data/jsonp/ru-RU'
+// Polyfill for Android
+import {localeData} from './intl-locale-data/' // eslint-disable-line no-unused-vars
 
 const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
