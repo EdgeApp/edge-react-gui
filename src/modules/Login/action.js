@@ -40,6 +40,7 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey},
     autoLogoutTimeInSeconds: '',
     bluetoothMode: '',
+    pinLoginEnabled: false,
     pinMode: false,
     otpMode: false,
     customTokens: '',
@@ -50,7 +51,6 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     activeWalletIds: [],
     archivedWalletIds: [],
     currencyWallets: {}
-
   }
   try {
     const currencyPlugins = await CONTEXT_API.getCurrencyPlugins(context)
@@ -124,6 +124,8 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     const localDefaults = SETTINGS_API.LOCAL_ACCOUNT_DEFAULTS
     const localFinal = {...localDefaults, ...localSettings}
     accountInitObject.bluetoothMode = localFinal.bluetoothMode
+
+    accountInitObject.pinLoginEnabled = await context.pinLoginEnabled(account.username)
 
     const coreSettings = await SETTINGS_API.getCoreSettings(account)
     const coreDefaults = SETTINGS_API.CORE_DEFAULTS

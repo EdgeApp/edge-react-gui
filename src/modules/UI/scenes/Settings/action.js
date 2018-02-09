@@ -11,6 +11,7 @@ import type {
   Dispatch
 } from '../../../../../src/modules/ReduxTypes.js'
 import s from '../../../../locales/strings.js'
+import {displayErrorAlert} from '../../components/ErrorAlert/actions.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 
@@ -164,6 +165,25 @@ const setBitcoinOverrideServerStart = (overrideServer: string) => ({
   type: SET_BITCOIN_OVERRIDE_SERVER_START,
   data: {overrideServer}
 })
+
+export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    const state = getState()
+    const context = CORE_SELECTORS.getContext(state)
+    const account = CORE_SELECTORS.getAccount(state)
+
+    dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
+    return account
+      .changePin({ enableLogin: pinLoginEnabled })
+      .catch(async e => {
+        const pinLoginEnabled = await context.pinLoginEnabled(account.username)
+
+        // TODO: Make a proper error action so we can avoid the double dispatch:
+        dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
+        dispatch(displayErrorAlert(e.message))
+      })
+  }
+}
 
 // Settings
 
