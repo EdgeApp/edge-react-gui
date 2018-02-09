@@ -138,8 +138,12 @@ export class AddToken extends Component<AddTokenProps, State> {
   }
 
   onChangeCurrencyCode = (input: string) => {
+    const forcedUpperCase = input.toUpperCase()
+    /* forcedUpperCase needed to defend against React Native bug
+      https://github.com/facebook/react-native/issues/11776
+    */
     this.setState({
-      currencyCode: input.substring(0, 5)
+      currencyCode: forcedUpperCase.substring(0, 5)
     })
   }
 
