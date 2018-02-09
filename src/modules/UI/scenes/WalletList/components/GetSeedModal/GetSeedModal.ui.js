@@ -120,7 +120,7 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
 
     if (this.props.privateSeedUnlocked) {
       modalBottom = null
-      modalMiddle = <T> {this.props.getSeed()} </T>
+      modalMiddle = <T>{this.props.getSeed()}</T>
     }
 
     return <StylizedModal
