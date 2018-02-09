@@ -119,8 +119,9 @@ class AmountArea extends Component {
             <FormattedText style={[styles.amountAreaLeftText, {color: leftData.color}]}>{s.strings['fragment_transaction_' + this.props.direction + '_past']}</FormattedText>
           </View>
           <View style={[styles.amountAreaMiddle]}>
-            <View style={[styles.amountAreaMiddleTop]}>
-              <FormattedText style={[styles.amountAreaMiddleTopText]}>{symbolString}{amountString}</FormattedText>
+            <View style={[styles.amountAreaMiddleTop, {flexDirection: 'row'}]}>
+              <FormattedText style={[styles.amountAreaMiddleTopText, styles.symbol]}>{symbolString}</FormattedText>
+              <FormattedText style={[styles.amountAreaMiddleTopText]}>{amountString}</FormattedText>
             </View>
             <View style={[styles.amountAreaMiddleBottom]}>
               <FormattedText style={[styles.amountAreaMiddleBottomText]}>{feeSyntax}</FormattedText>

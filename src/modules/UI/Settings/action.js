@@ -15,6 +15,7 @@ export const SET_PIN_MODE = PREFIX + 'SET_PIN_MODE'
 export const SET_PIN = PREFIX + 'SET_PIN'
 export const SET_OTP_MODE = PREFIX + 'SET_OTP_MODE'
 export const SET_OTP = PREFIX + 'SET_OTP'
+export const TOGGLE_PIN_LOGIN_ENABLED = PREFIX + 'TOGGLE_PIN_LOGIN_ENABLED'
 
 // Synced Account Settings
 export const SET_AUTO_LOGOUT_TIME = PREFIX + 'SET_AUTO_LOGOUT_TIME'
@@ -77,6 +78,11 @@ export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds) => ({
 export const setDefaultFiat = (defaultFiat) => ({
   type: SET_DEFAULT_FIAT,
   data: {defaultFiat}
+})
+
+export const togglePinLoginEnabled = (pinLoginEnabled) => ({
+  type: TOGGLE_PIN_LOGIN_ENABLED,
+  data: {pinLoginEnabled}
 })
 
 export const setMerchantMode = (merchantMode) => ({

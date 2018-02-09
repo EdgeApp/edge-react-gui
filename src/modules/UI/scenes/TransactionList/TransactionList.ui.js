@@ -509,7 +509,7 @@ export default class TransactionList extends Component<Props, State> {
             </View>
 
             <View style={[styles.transactionRight, UTILS.border()]}>
-              <T style={[styles.transactionBitAmount, txColorStyle]}>
+              <T style={[styles.transactionBitAmount, txColorStyle, styles.symbol]}>
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
               <T style={[styles.transactionDollarAmount, txColorStyle]}>

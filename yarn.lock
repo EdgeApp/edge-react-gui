@@ -89,7 +89,7 @@ after@0.8.2:
 
 "airbitz-core-js-ui@git://github.com/Airbitz/airbitz-core-js-ui.git#react-native":
   version "0.1.5"
-  resolved "git://github.com/Airbitz/airbitz-core-js-ui.git#d7e5a6247b7487969b6ad7201d305d856f63a04d"
+  resolved "git://github.com/Airbitz/airbitz-core-js-ui.git#478f4df1bdac9dd6538f9f0c5b9376b3ff65ab6e"
   dependencies:
     async "~2.0.1"
     babel-preset-stage-2 "^6.24.1"
@@ -1262,7 +1262,7 @@ blueimp-md5@^2.5.0:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/blueimp-md5/-/blueimp-md5-2.10.0.tgz#02f0843921f90dca14f5b8920a38593201d6964d"
 
-bn.js@4.11.8, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.10.0, bn.js@^4.11.3, bn.js@^4.11.7, bn.js@^4.11.8, bn.js@^4.4.0, bn.js@^4.8.0:
+bn.js@4.11.8, bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.10.0, bn.js@^4.11.0, bn.js@^4.11.3, bn.js@^4.11.7, bn.js@^4.11.8, bn.js@^4.4.0, bn.js@^4.8.0:
   version "4.11.8"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
 
@@ -1327,8 +1327,8 @@ bplist-parser@0.1.1:
     big-integer "^1.6.7"
 
 brace-expansion@^1.1.7:
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.8.tgz#c07b211c7c952ec1f8efd51a77ef0d1d3990a292"
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.9.tgz#acdc7dde0e939fb3b32fe933336573e2a7dc2b7c"
   dependencies:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
@@ -2250,10 +2250,9 @@ edge-exchange-plugins@^0.1.1:
   dependencies:
     iso4217 "^0.2.0"
 
-
-edge-login@^0.5.0, edge-login@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/edge-login/-/edge-login-0.5.3.tgz#255944fade2f197119f26be25eb234bf12c71aff"
+edge-login@^0.5.0, edge-login@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/edge-login/-/edge-login-0.5.5.tgz#58906b01673841c45e847bb724f3b6b333a24769"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2269,7 +2268,7 @@ edge-login@^0.5.0, edge-login@^0.5.3:
     node-fetch "^1.7.3"
     redux "^3.6.0"
     redux-keto "^0.3.2"
-    redux-pixies "^0.3.3"
+    redux-pixies "^0.3.4"
     redux-thunk "^2.2.0"
     regenerator-runtime "^0.11.1"
     rfc4648 "^1.0.0"
@@ -2698,10 +2697,10 @@ ethereumjs-util@^4.3.0, ethereumjs-util@^4.4.0:
     secp256k1 "^3.0.1"
 
 ethereumjs-util@^5.0.0, ethereumjs-util@^5.1.2:
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.1.3.tgz#0c1f6efb1da9c5b6720a65697859fc0be6672df0"
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.1.4.tgz#d1a4a9be31eaf8b33aad399894f854fdafda2469"
   dependencies:
-    bn.js "^4.8.0"
+    bn.js "^4.11.0"
     create-hash "^1.1.2"
     ethjs-util "^0.1.3"
     keccak "^1.0.2"
@@ -5913,8 +5912,8 @@ react-native-fast-crypto@^1.5.3:
   resolved "git://github.com/Airbitz/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
 react-native-fs@^2.5.1:
-  version "2.9.9"
-  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.9.9.tgz#1c4917459cc7e8737877d55b1e6f382ca5cb6498"
+  version "2.9.10"
+  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.9.10.tgz#946ec8c9f07203226bd58bfae41f917063e6c940"
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
@@ -6376,9 +6375,9 @@ redux-logger@~2.7.4:
   dependencies:
     deep-diff "0.3.4"
 
-redux-pixies@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.3.tgz#8e7b95271328a4c1eee520cca8c2cb6503f6b85c"
+redux-pixies@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.4.tgz#e9b88f059c246931a6a17fc63392cbbd30724954"
 
 redux-thunk@^2.2.0:
   version "2.2.0"

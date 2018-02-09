@@ -10,6 +10,7 @@ import CustomFees from './components/CustomFees/CustomFeesConnector.js'
 
 import * as FEE from '../../../../constants/FeeConstants'
 import s from '../../../../locales/strings.js'
+import type {EdgeCurrencyWallet} from 'edge-login'
 
 import styles from './style'
 
@@ -20,7 +21,8 @@ const LOW_FEE_TEXT = s.strings.mining_fee_low_label_choice
 export type ChangeMiningFeeOwnProps = {
   // fee: string,
   feeSetting: string,
-  onSubmit: (feeSetting: string) => Promise<void>
+  onSubmit: (feeSetting: string) => Promise<void>,
+  sourceWallet: EdgeCurrencyWallet
 }
 
 export type ChangeMiningFeeStateProps = {
@@ -88,7 +90,7 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
                 isSelected={FEE.LOW_FEE === feeSetting}
               />
             </View>
-            <CustomFees handlePress={this.handlePress}/>
+            <CustomFees handlePress={this.handlePress} sourceWallet={this.props.sourceWallet} />
           </View>
         </View>
       </SafeAreaView>

@@ -36,18 +36,22 @@ type Props = {
   autoLogoutTimeInMinutes: number,
   username: string,
   account: AbcAccount,
+  pinLoginEnabled: boolean,
   supportsTouchId: boolean,
   touchIdEnabled: boolean,
   lockButton: string,
   lockButtonIcon: string,
   isLocked: boolean,
   confirmPasswordError: string,
+  sendLogsStatus: string,
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
   dispatchUpdateEnableTouchIdEnable(boolean, AbcAccount): void,
   sendLogs(string): void,
-  resetConfirmPasswordError(Object): void
+  resetConfirmPasswordError(Object): void,
+  resetSendLogsStatus(): void,
+  onTogglePinLoginEnabled(enableLogin: boolean): void
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -68,26 +72,17 @@ export default class SettingsOverview extends Component<Props, State> {
       showConfirmPasswordModal: false,
       autoLogoutTimeInMinutes: props.autoLogoutTimeInMinutes
     }
-    const pinRelogin = {
-      text: s.strings.settings_title_pin_login,
-      key: 'pinRelogin',
-      routeFunction: this._onToggleOption,
-      value: false
-    }
+
     const useTouchID = this.props.supportsTouchId ? {
       text: s.strings.settings_button_use_touchID,
       key: 'useTouchID',
       routeFunction: this._onToggleTouchIdOption,
       value: this.props.touchIdEnabled
     } : null
-
     if (useTouchID) {
-      this.options = {
-        pinRelogin,
-        useTouchID
-      }
+      this.options = { useTouchID }
     } else {
-      this.options = { pinRelogin }
+      this.options = {}
     }
 
     this.optionModals = [
@@ -138,9 +133,6 @@ export default class SettingsOverview extends Component<Props, State> {
   _onPressOpenChangeCategories = () => {
   }
 
-  _onToggleOption = (property: string) => {
-  }
-
   _onToggleTouchIdOption = (bool: boolean) => {
     this.props.dispatchUpdateEnableTouchIdEnable(bool, this.props.account)
     this.options.useTouchID.value = bool
@@ -162,12 +154,12 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   onDoneSendLogsModal = (text: string) => {
-    this.setState({showSendLogsModal: false})
     this.props.sendLogs(text)
   }
 
   onCancelSendLogsModal = () => {
     this.setState({showSendLogsModal: false})
+    this.props.resetSendLogsStatus()
   }
 
   render () {
@@ -242,6 +234,12 @@ export default class SettingsOverview extends Component<Props, State> {
               routeFunction={Actions.defaultFiatSetting}
               right={<Text>{this.props.defaultFiat.replace('iso:', '')}</Text>} />
 
+            <RowSwitch
+              leftText={s.strings.settings_title_pin_login}
+              key='pinRelogin'
+              onToggle={this.props.onTogglePinLoginEnabled}
+              value={this.props.pinLoginEnabled} />
+
             {
               Object.keys(this.options)
                 .filter((optionName) => {
@@ -272,7 +270,9 @@ export default class SettingsOverview extends Component<Props, State> {
             showModal={this.state.showAutoLogoutModal}
             onDone={this.onDoneAutoLogoutModal}
             onCancel={this.onCancelAutoLogoutModal} />
-          <SendLogsModal showModal={this.state.showSendLogsModal}
+          <SendLogsModal
+            showModal={this.state.showSendLogsModal}
+            sendLogsStatus={this.props.sendLogsStatus}
             onDone={this.onDoneSendLogsModal}
             onCancel={this.onCancelSendLogsModal} />
           <ConfirmPasswordModal
