@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import SplitWalletButtons from './SplitWalletButtons.ui'
 import type {State, Dispatch, GetState} from '../../../../../ReduxTypes'
 import * as Constants from '../../../../../../constants/indexConstants.js'
+import {displayErrorAlert} from '../../../../components/ErrorAlert/actions.js'
 
 import {
   CLOSE_MODAL_VALUE,
@@ -29,7 +30,10 @@ const splitWallet = (walletId: string) => (dispatch: Dispatch, getState: GetStat
       dispatch(wrap(SUCCESS_MODAL_VALUE(Constants.SPLIT_VALUE), {walletId}))
       dispatch(UI_ACTIONS.refreshWallet(walletId))
     })
-    .catch((e) => console.log(e))
+    .catch((e) => {
+      console.log(e)
+      dispatch(displayErrorAlert(e.message))
+    })
 }
 
 export type StateProps = {
