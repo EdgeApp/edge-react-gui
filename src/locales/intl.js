@@ -1,10 +1,5 @@
 // @flow
-/* global Intl */
-import 'intl'
-import areIntlLocalesSupported from 'intl-locales-supported'
-
-// Polyfill for Android
-import {localeData} from './intl-locale-data/' // eslint-disable-line no-unused-vars
+import { toFixed } from 'biggystring'
 
 const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
@@ -16,21 +11,9 @@ const EN_US_LOCALE = {
 }
 let locale = EN_US_LOCALE
 
-declare var Intl: any;
-
 type IntlLocaleType = any;
 type IntlNumberFormatOptionsType = {
-  toFixed?: number,
-  localeMatcher?: 'lookup' | 'best fit',
-  style?: 'decimal' | 'currency' | 'percent',
-  currency?: string,
-  currencyDisplay?: string,
-  useGrouping?: boolean,
-  minimumIntegerDigits?: number,
-  minimumFractionDigits?: number,
-  maximumFractionDigits?: number,
-  minimumSignificantDigits?: number,
-  maximumSignificantDigits?: number,
+  toFixed?: number
 };
 
 const intlHandler = {
@@ -64,13 +47,11 @@ const intlHandler = {
    * @return {string}
    */
   formatNumber (number: number | string, options?: IntlNumberFormatOptionsType): string {
-    const _options = {}
+    let stringify = String(number)
     if (options && options.toFixed) {
-      _options.minimumFractionDigits = options.toFixed
-      _options.maximumFractionDigits = options.toFixed
+      stringify = toFixed(stringify, options.toFixed, options.toFixed)
     }
-    Object.assign(_options, options)
-    return new Intl.NumberFormat(locale.localeIdentifier.replace('_', '-'), _options).format(number)
+    return stringify.replace('.', locale.decimalSeparator)
   },
 
   /**
@@ -144,10 +125,10 @@ const intlHandler = {
 }
 
 export const setIntlLocale = (l: IntlLocaleType) => {
-  if (!locale) throw new Error('Please select locale for internationalization')
-  const localeIdentifier = l.localeIdentifier.replace('_', '-')
+  if (!l) throw new Error('Please select locale for internationalization')
 
-  if (!areIntlLocalesSupported(localeIdentifier)) {
+  if (!l.decimalSeparator || !l.groupingSeparator || !l.localeIdentifier) {
+    console.warn('Cannot recognize user locale preferences. Default will be used.')
     locale = EN_US_LOCALE
   } else {
     locale = l

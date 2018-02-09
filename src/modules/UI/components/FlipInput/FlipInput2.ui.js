@@ -243,7 +243,7 @@ export class FlipInput extends Component<FlipInputOwnProps, State> {
         secondaryDisplayAmount: result.secondaryDisplayAmount
       },
       () => {
-        this.props.onAmountChanged(result.primaryDisplayAmount)
+        this.props.onAmountChanged(decimalAmount)
       }
     )
   }
