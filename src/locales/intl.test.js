@@ -322,10 +322,10 @@ describe('formatNumber', function () {
       const actual = intl.formatNumber(input)
       expect(actual).toBe(expected)
     })
-    test('toFixed option 1.237 => 1.24', function () {
+    test('toFixed option 1.237 => 1.23', function () {
       const input = '1.237'
       const options = {toFixed: 2}
-      const expected = '1.24'
+      const expected = '1.23'
       const actual = intl.formatNumber(input, options)
       expect(actual).toBe(expected)
     })
