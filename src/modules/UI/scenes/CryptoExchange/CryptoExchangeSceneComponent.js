@@ -210,6 +210,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
         processingFlag={this.props.gettingTransaction}
         processingElement={<ActivityIndicator />} />
     }
+    if (this.props.gettingTransaction) {
+      return <ActivityIndicator />
+    }
     return null
   }
   flipThis = () => {

@@ -168,7 +168,11 @@ function cryptoExchangerReducer (state = initialState, action) {
         forceUpdateGuiCounter: (state.forceUpdateGuiCounter + 1)
       }
     case Constants.START_MAKE_SPEND:
-      return { ...state, gettingTransaction: true }
+      return { ...state,
+        gettingTransaction: true,
+        insufficientError: false,
+        genericShapeShiftError: null
+      }
     case Constants.DONE_MAKE_SPEND:
       return { ...state, gettingTransaction: false }
     default:
