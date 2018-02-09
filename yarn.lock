@@ -2250,10 +2250,9 @@ edge-exchange-plugins@^0.1.1:
   dependencies:
     iso4217 "^0.2.0"
 
-
-edge-login@^0.5.0, edge-login@^0.5.3:
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/edge-login/-/edge-login-0.5.3.tgz#255944fade2f197119f26be25eb234bf12c71aff"
+edge-login@^0.5.0, edge-login@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/edge-login/-/edge-login-0.5.4.tgz#df84ed71ef77d52ae30a1670a172a6fb4c028abf"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2269,7 +2268,7 @@ edge-login@^0.5.0, edge-login@^0.5.3:
     node-fetch "^1.7.3"
     redux "^3.6.0"
     redux-keto "^0.3.2"
-    redux-pixies "^0.3.3"
+    redux-pixies "^0.3.4"
     redux-thunk "^2.2.0"
     regenerator-runtime "^0.11.1"
     rfc4648 "^1.0.0"
@@ -5913,8 +5912,8 @@ react-native-fast-crypto@^1.5.3:
   resolved "git://github.com/Airbitz/react-native-flip-view.git#9796c6469385559da6689a4f56f540fc6f3d003a"
 
 react-native-fs@^2.5.1:
-  version "2.9.9"
-  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.9.9.tgz#1c4917459cc7e8737877d55b1e6f382ca5cb6498"
+  version "2.9.10"
+  resolved "https://registry.yarnpkg.com/react-native-fs/-/react-native-fs-2.9.10.tgz#946ec8c9f07203226bd58bfae41f917063e6c940"
   dependencies:
     base-64 "^0.1.0"
     utf8 "^2.1.1"
@@ -6376,9 +6375,9 @@ redux-logger@~2.7.4:
   dependencies:
     deep-diff "0.3.4"
 
-redux-pixies@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.3.tgz#8e7b95271328a4c1eee520cca8c2cb6503f6b85c"
+redux-pixies@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/redux-pixies/-/redux-pixies-0.3.4.tgz#e9b88f059c246931a6a17fc63392cbbd30724954"
 
 redux-thunk@^2.2.0:
   version "2.2.0"
