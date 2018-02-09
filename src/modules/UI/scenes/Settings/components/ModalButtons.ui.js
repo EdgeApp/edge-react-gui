@@ -1,6 +1,11 @@
-import React, {Component} from 'react'
-import {TouchableHighlight, View} from 'react-native'
+// @flow
 
+import React, {Component} from 'react'
+import {
+  TouchableHighlight,
+  View,
+  ActivityIndicator
+} from 'react-native'
 import s from '../../../../../locales/strings.js'
 import FormattedText from '../../../components/FormattedText/FormattedText.ui'
 
@@ -9,13 +14,25 @@ import styles, {styles as styleRaw} from '../../../components/Modal/style'
 const CANCEL_TEXT = s.strings.string_cancel_cap
 const DONE_TEXT = s.strings.calculator_done
 
-export default class ModalButtons extends Component {
+type ModalButtonsOwnProps = {
+  onDone: Function,
+  onCancel: Function,
+  doneButtonActivityFlag: boolean
+}
+
+export default class ModalButtons extends Component<ModalButtonsOwnProps> {
   render () {
     const {
       onDone,
-      onCancel
+      onCancel,
+      doneButtonActivityFlag
     } = this.props
-
+    let doneButtonContent
+    if (!doneButtonActivityFlag) {
+      doneButtonContent = <FormattedText style={[styles.stylizedButtonText]}>{DONE_TEXT}</FormattedText>
+    } else {
+      doneButtonContent = <ActivityIndicator />
+    }
     return <View style={[styles.buttonsWrap]}>
       <TouchableHighlight style={[styles.cancelButtonWrap, styles.stylizedButton]}
         underlayColor={styleRaw.cancelUnderlay.color}
@@ -31,9 +48,7 @@ export default class ModalButtons extends Component {
         underlayColor={styleRaw.doneUnderlay.color}
         onPress={onDone}>
         <View style={styles.stylizedButtonTextWrap}>
-          <FormattedText style={[styles.stylizedButtonText]}>
-            {DONE_TEXT}
-          </FormattedText>
+          {doneButtonContent}
         </View>
       </TouchableHighlight>
     </View>

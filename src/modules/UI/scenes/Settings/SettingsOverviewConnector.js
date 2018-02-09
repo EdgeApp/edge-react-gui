@@ -16,6 +16,8 @@ import {resetSendLogsStatus, sendLogs} from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
 import type {State, Dispatch} from '../../../../modules/ReduxTypes'
 import type { AbcAccount } from 'edge-login'
+import * as actions from '../../../../actions/indexActions.js'
+
 // settings_button_lock_settings, or //settings_button_unlock_settings
 
 const mapStateToProps = (state: State) => {
@@ -25,6 +27,7 @@ const mapStateToProps = (state: State) => {
   const account = CORE_SELECTORS.getAccount(state)
   const isTouchIdSupported = SETTINGS_SELECTORS.getIsTouchIdSupported(state)
   const isTouchIdEnabled = SETTINGS_SELECTORS.getIsTouchIdEnabled(state)
+  const confirmPasswordError = SETTINGS_SELECTORS.getConfirmPasswordErrorMessage(state)
   const sendLogsStatus = SETTINGS_SELECTORS.getSendLogsStatus(state)
   const pinLoginEnabled = SETTINGS_SELECTORS.getPinLoginEnabled(state)
   return {
@@ -37,6 +40,7 @@ const mapStateToProps = (state: State) => {
     lockButton,
     lockButtonIcon,
     isLocked,
+    confirmPasswordError,
     sendLogsStatus,
     pinLoginEnabled
   }
@@ -47,6 +51,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   lockSettings: () => dispatch(lockSettings()),
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: AbcAccount) => dispatch(updateTouchIdEnabled(arg, account)),
   sendLogs: (text: string) => dispatch(sendLogs(text)),
+  resetConfirmPasswordError: (arg: Object) => dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, arg)),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
   onTogglePinLoginEnabled: (enableLogin: boolean) =>
     dispatch(togglePinLoginEnabled(enableLogin))

@@ -35,6 +35,7 @@ const initialState = {
   isOtpEnabled: false,
   otpKey: null,
   otpResetDate: null,
+  confirmPasswordError: '',
   sendLogsStatus: Constants.REQUEST_STATUS.PENDING
 }
 
@@ -80,7 +81,8 @@ type SettingsState = {
     arrayPlugins: Array<AbcCurrencyPlugin>,
     supportedWalletTypes: Array<string>
   },
-  sendLogsStatus: string,
+  confirmPasswordError: string,
+  sendLogsStatus: string
 }
 
 const currencyPLuginUtil = (state, payloadData) => {
@@ -198,6 +200,10 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         }
       })
       return newState
+    }
+    case Constants.SET_CONFIRM_PASSWORD_ERROR: {
+      const { confirmPasswordError } = data
+      return {...state, confirmPasswordError: confirmPasswordError}
     }
     case ACTION.SET_LOGIN_STATUS: {
       const { loginStatus } = data

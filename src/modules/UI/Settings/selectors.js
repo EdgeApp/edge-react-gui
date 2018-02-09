@@ -186,6 +186,11 @@ export const getOtpResetDate = (state: State) => {
   return otpResetDate
 }
 
+export const getConfirmPasswordErrorMessage = (state: State) => {
+  const settings = getSettings(state)
+  return settings.confirmPasswordError
+}
+
 export const getSendLogsStatus = (state: State) => {
   const settings = getSettings(state)
   const sendLogsStatus = settings.sendLogsStatus
