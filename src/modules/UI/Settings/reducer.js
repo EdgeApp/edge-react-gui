@@ -27,6 +27,7 @@ const initialState = {
     arrayPlugins: [],
     supportedWalletTypes: []
   },
+  pinLoginEnabled: false,
   account: null,
   loginStatus: null,
   isTouchSupported: false,
@@ -73,6 +74,7 @@ type SettingsState = {
   otpKey: null,
   otpMode: boolean,
   pinMode: boolean,
+  pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
     arrayPlugins: Array<AbcCurrencyPlugin>,
@@ -151,6 +153,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         customTokens,
         bluetoothMode,
         pinMode,
+        pinLoginEnabled,
         otpMode,
         denominationKeys,
         customTokensSettings
@@ -168,6 +171,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         customTokens,
         bluetoothMode,
         pinMode,
+        pinLoginEnabled,
         otpMode,
         otpResetDate: account.otpResetDate
       }
@@ -200,6 +204,14 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       return {
         ...state,
         loginStatus
+      }
+    }
+
+    case ACTION.TOGGLE_PIN_LOGIN_ENABLED: {
+      const { pinLoginEnabled } = data
+      return {
+        ...state,
+        pinLoginEnabled
       }
     }
 

@@ -11,6 +11,7 @@ import type {
   Dispatch
 } from '../../../../../src/modules/ReduxTypes.js'
 import s from '../../../../locales/strings.js'
+import {displayErrorAlert} from '../../components/ErrorAlert/actions.js'
 
 const PREFIX = 'UI/Scenes/Settings/'
 
@@ -164,6 +165,18 @@ const setBitcoinOverrideServerStart = (overrideServer: string) => ({
   type: SET_BITCOIN_OVERRIDE_SERVER_START,
   data: {overrideServer}
 })
+
+export function togglePinLoginEnabled (pinLoginEnabled: boolean) {
+  return (dispatch: Dispatch, getState: GetState) => {
+    dispatch(SETTINGS_ACTIONS.togglePinLoginEnabled(pinLoginEnabled))
+    const account = CORE_SELECTORS.getAccount(getState())
+    account
+      .changePin({ enableLogin: pinLoginEnabled })
+      .catch(e => {
+        dispatch(displayErrorAlert(e.message))
+      })
+  }
+}
 
 // Settings
 
