@@ -41,11 +41,13 @@ type Props = {
   lockButton: string,
   lockButtonIcon: string,
   isLocked: boolean,
+  sendLogsStatus: string,
   setAutoLogoutTimeInMinutes(number): void,
   confirmPassword(string): void,
   lockSettings(): void,
   dispatchUpdateEnableTouchIdEnable(boolean, AbcAccount): void,
-  sendLogs(string): void
+  sendLogs(string): void,
+  resetSendLogsStatus(): void,
 }
 type State = {
   showAutoLogoutModal: boolean,
@@ -155,12 +157,12 @@ export default class SettingsOverview extends Component<Props, State> {
   }
 
   onDoneSendLogsModal = (text: string) => {
-    this.setState({showSendLogsModal: false})
     this.props.sendLogs(text)
   }
 
   onCancelSendLogsModal = () => {
     this.setState({showSendLogsModal: false})
+    this.props.resetSendLogsStatus()
   }
 
   render () {
@@ -265,7 +267,9 @@ export default class SettingsOverview extends Component<Props, State> {
             showModal={this.state.showAutoLogoutModal}
             onDone={this.onDoneAutoLogoutModal}
             onCancel={this.onCancelAutoLogoutModal} />
-          <SendLogsModal showModal={this.state.showSendLogsModal}
+          <SendLogsModal
+            showModal={this.state.showSendLogsModal}
+            sendLogsStatus={this.props.sendLogsStatus}
             onDone={this.onDoneSendLogsModal}
             onCancel={this.onCancelSendLogsModal} />
           <ConfirmPasswordModal

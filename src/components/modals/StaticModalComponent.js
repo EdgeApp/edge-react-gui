@@ -54,7 +54,7 @@ class StaticModalComponent extends Component<Props> {
           </LinearGradient>
           <View style={styles.bottom}>
             <View style={styles.bodyRow} >
-              <Text>{this.props.body}</Text>
+              <Text style={styles.bodyText}>{this.props.body}</Text>
             </View>
           </View>
         </View>

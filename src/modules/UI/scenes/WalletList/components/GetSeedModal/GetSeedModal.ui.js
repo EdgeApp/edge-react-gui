@@ -116,11 +116,12 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
       positiveText={s.strings.string_get_seed}
       onPositive={this.onPositive}
       onNegative={this.onNegative}
+
     />
 
     if (this.props.privateSeedUnlocked) {
       modalBottom = null
-      modalMiddle = <T>{this.props.getSeed()}</T>
+      modalMiddle = <T style={styles.seedText}>{this.props.getSeed()}</T>
     }
 
     return <StylizedModal
