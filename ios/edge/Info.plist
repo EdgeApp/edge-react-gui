@@ -75,7 +75,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) uses your camera to scan QR Codes</string>
 	<key>NSContactsUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions.</string>
+	<string>$(PRODUCT_NAME) uses your contacts to add useful information to your transactions. No contact information leaves your device and no-one, including $(PRODUCT_NAME), has access to the contact information used.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Some description</string>
 	<key>NSPhotoLibraryUsageDescription</key>

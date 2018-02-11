@@ -2215,9 +2215,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-currency-bitcoin@2.14.1:
-  version "2.14.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.14.1.tgz#104cf02b223922fa531339005f350fd0d7095072"
+edge-currency-bitcoin@2.14.2:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.14.2.tgz#6cea4bc2941476b26f8f5316e34504482afc8d98"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
