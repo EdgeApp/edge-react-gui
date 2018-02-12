@@ -191,7 +191,7 @@ export class Request extends Component<Props, State> {
 
   copyToClipboard = () => {
     Clipboard.setString(this.state.publicAddress)
-    Alert.alert('Request copied to clipboard')
+    Alert.alert(s.strings.fragment_request_address_copied)
   }
 
   showResult = (result: {activityType: string}) => {
@@ -211,11 +211,10 @@ export class Request extends Component<Props, State> {
   }
 
   shareMessage = () => {
-    const APP_NAME = 'Edge Wallet'
     Share.share({
       message: this.state.encodedURI,
-      title: sprintf(s.strings.request_qr_email_title, APP_NAME)
-    }, {dialogTitle: 'Share Edge Request'})
+      title: sprintf(s.strings.request_qr_email_title, s.strings.app_name)
+    }, {dialogTitle: s.strings.request_share_edge_request})
     .then(this.showResult)
     .catch((error) => this.setState({
       result: 'error: ' + error.message
