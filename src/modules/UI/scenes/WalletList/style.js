@@ -371,6 +371,17 @@ export const styles = {
   },
   seedText: {
     textAlign: 'center'
+  },
+  copyButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.SECONDARY
+  },
+  seedSecondLayer: {
+    marginTop: 12,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
   }
 }
 

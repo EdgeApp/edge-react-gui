@@ -191,7 +191,7 @@ export class Request extends Component<Props, State> {
 
   copyToClipboard = () => {
     Clipboard.setString(this.state.publicAddress)
-    Alert.alert('Request copied to clipboard')
+    Alert.alert(s.strings.fragment_request_address_copied)
   }
 
   showResult = (result: {activityType: string}) => {

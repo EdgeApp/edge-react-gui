@@ -44,7 +44,6 @@ export const styles = {
   secondaryUnderlay: {
     color: THEME.COLORS.GRAY_1
   },
-
   tertiaryButtonWrap: {
     backgroundColor: THEME.COLORS.WHITE,
     borderWidth: 1,
