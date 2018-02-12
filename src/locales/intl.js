@@ -1,37 +1,20 @@
 // @flow
-/* global Intl */
-import 'intl'
-import areIntlLocalesSupported from 'intl-locales-supported'
-
-// Polyfill for Android
-import {localeData} from './intl-locale-data/' // eslint-disable-line no-unused-vars
+import { toFixed } from 'biggystring'
 
 const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
-  'localeIdentifier': 'en_US',
-  'decimalSeparator': '.',
-  'quotationBeginDelimiterKey': '“',
-  'quotationEndDelimiterKey': '”',
-  'groupingSeparator': ','
+  localeIdentifier: 'en_US',
+  decimalSeparator: '.',
+  quotationBeginDelimiterKey: '“',
+  quotationEndDelimiterKey: '”',
+  groupingSeparator: ','
 }
 let locale = EN_US_LOCALE
 
-declare var Intl: any;
-
-type IntlLocaleType = any;
+type IntlLocaleType = any
 type IntlNumberFormatOptionsType = {
-  toFixed?: number,
-  localeMatcher?: 'lookup' | 'best fit',
-  style?: 'decimal' | 'currency' | 'percent',
-  currency?: string,
-  currencyDisplay?: string,
-  useGrouping?: boolean,
-  minimumIntegerDigits?: number,
-  minimumFractionDigits?: number,
-  maximumFractionDigits?: number,
-  minimumSignificantDigits?: number,
-  maximumSignificantDigits?: number,
-};
+  toFixed?: number
+}
 
 const intlHandler = {
   /**
@@ -64,13 +47,11 @@ const intlHandler = {
    * @return {string}
    */
   formatNumber (number: number | string, options?: IntlNumberFormatOptionsType): string {
-    const _options = {}
+    let stringify = String(number)
     if (options && options.toFixed) {
-      _options.minimumFractionDigits = options.toFixed
-      _options.maximumFractionDigits = options.toFixed
+      stringify = toFixed(stringify, options.toFixed, options.toFixed)
     }
-    Object.assign(_options, options)
-    return new Intl.NumberFormat(locale.localeIdentifier.replace('_', '-'), _options).format(number)
+    return stringify.replace('.', locale.decimalSeparator)
   },
 
   /**
@@ -79,7 +60,7 @@ const intlHandler = {
    * @returns {boolean}
    */
   isValidInput (value: string): boolean {
-    const {decimalSeparator, groupingSeparator} = locale
+    const { decimalSeparator, groupingSeparator } = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
 
     if (value === decimalSeparator) return true
@@ -109,7 +90,7 @@ const intlHandler = {
    * @returns {string}
    */
   truncateDecimals (input: string, precision?: number, allowBlank?: boolean = false): string {
-    const {decimalSeparator} = locale
+    const { decimalSeparator } = locale
 
     if (input === '') {
       if (allowBlank) {
@@ -119,7 +100,9 @@ const intlHandler = {
       }
     }
 
-    if (!input.includes(decimalSeparator)) { return input }
+    if (!input.includes(decimalSeparator)) {
+      return input
+    }
     const [integers, decimals] = input.split(decimalSeparator)
     return `${integers}${decimalSeparator}${decimals.slice(0, precision)}`
   },
@@ -131,7 +114,7 @@ const intlHandler = {
    * @returns {string}
    */
   formatToNativeNumber (value: string, options?: IntlNumberFormatOptionsType): string {
-    const {decimalSeparator, groupingSeparator} = locale
+    const { decimalSeparator, groupingSeparator } = locale
     const groupingSeparatorRegExp = new RegExp('\\' + groupingSeparator, 'g')
     const standartized = value.replace(groupingSeparatorRegExp, '').replace(decimalSeparator, '.')
 
@@ -144,10 +127,10 @@ const intlHandler = {
 }
 
 export const setIntlLocale = (l: IntlLocaleType) => {
-  if (!locale) throw new Error('Please select locale for internationalization')
-  const localeIdentifier = l.localeIdentifier.replace('_', '-')
+  if (!l) throw new Error('Please select locale for internationalization')
 
-  if (!areIntlLocalesSupported(localeIdentifier)) {
+  if (!l.decimalSeparator || !l.groupingSeparator || !l.localeIdentifier) {
+    console.warn('Cannot recognize user locale preferences. Default will be used.')
     locale = EN_US_LOCALE
   } else {
     locale = l

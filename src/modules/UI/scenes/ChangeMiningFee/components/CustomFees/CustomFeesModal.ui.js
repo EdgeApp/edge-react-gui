@@ -9,23 +9,25 @@ import styles from './style'
 import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 import s from '../../../../../../locales/strings.js'
+import type {EdgeCurrencyWallet} from 'edge-login'
 
 export type CustomFees = {
   [feeSetting: string]: string
 }
 
-export type Props = {
+export type CustomFeesModalOwnProps = {
   customFeeSettings: Array<string>,
   visibilityBoolean: boolean,
   onPositive: (customFees: CustomFees) => void,
   onDone: () => void,
-  handlePress: Function
+  handlePress: Function,
+  sourceWallet: EdgeCurrencyWallet
 }
 
 type State = CustomFees
 
-export default class CustomFeesModal extends Component<Props, State> {
-  constructor (props: Props) {
+export default class CustomFeesModal extends Component<CustomFeesModalOwnProps, State> {
+  constructor (props: CustomFeesModalOwnProps) {
     super(props)
     this.state = {}
   }

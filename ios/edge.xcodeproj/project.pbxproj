@@ -536,6 +536,13 @@
 			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
 			remoteInfo = "RCTPushNotification-tvOS";
 		};
+		E6BC4CC1202A071E00891020 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 980AF5931F9907460014FACB /* RNSound.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2DCCC1751FDF4F93007C5315;
+			remoteInfo = "RNSound-tvOS";
+		};
 		E6CBD1EC2008075200A967E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D8A4F000025E4FB6B7D895BB /* RNMail.xcodeproj */;
@@ -1210,6 +1217,7 @@
 			isa = PBXGroup;
 			children = (
 				980AF5C91F9907460014FACB /* libRNSound.a */,
+				E6BC4CC2202A071E00891020 /* libRNSound-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2035,6 +2043,13 @@
 			fileType = archive.ar;
 			path = "libRCTPushNotification-tvOS.a";
 			remoteRef = E63A3C1D200DF08400142D79 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		E6BC4CC2202A071E00891020 /* libRNSound-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRNSound-tvOS.a";
+			remoteRef = E6BC4CC1202A071E00891020 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		E6CBD1ED2008075200A967E7 /* libRNMail.a */ = {

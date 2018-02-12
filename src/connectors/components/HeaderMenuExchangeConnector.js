@@ -1,6 +1,8 @@
 // @flow
+
 import {connect} from 'react-redux'
 import {Actions} from 'react-native-router-flux'
+
 import LinkedComponent
   from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
 import * as Styles from '../../styles/indexStyles'
@@ -9,20 +11,42 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import THEME from '../../theme/variables/airbitz'
 import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
+import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 
-export const mapStateToProps = (state: any) => {
+import type {State, Dispatch} from '../../modules/ReduxTypes.js'
+
+export const mapStateToProps = (state: State) => {
+  let sourceWalletId, sourceWallet
+  if (state.cryptoExchange && state.cryptoExchange.fromWallet) {
+    sourceWalletId = state.cryptoExchange.fromWallet.id
+    sourceWallet = CORE_SELECTORS.getWallet(state, sourceWalletId)
+  } else {
+    sourceWalletId = ''
+    sourceWallet = null
+  }
+
   const data = [
     {
-      label: s.strings.title_change_mining_fee, // tie into
-      value: Constants.CHANGE_MINING_FEE_VALUE
+      label: s.strings.title_change_mining_fee, // tie into,
+      key: s.strings.title_change_mining_fee,
+      value: {
+        title: Constants.CHANGE_MINING_FEE_VALUE,
+        sourceWallet
+      }
     },
     {
       label: s.strings.dropdown_exchange_max_amount,
-      value: Constants.EXCHANGE_MAX_AMOUNT_VALUE
+      key: s.strings.dropdown_exchange_max_amount,
+      value: {
+        title: Constants.EXCHANGE_MAX_AMOUNT_VALUE
+      }
     },
     {
       label: s.strings.string_help,
-      value: Constants.HELP_VALUE
+      key: s.strings.string_help,
+      value: {
+        title: Constants.HELP_VALUE
+      }
     }
   ]
   return {
@@ -31,13 +55,14 @@ export const mapStateToProps = (state: any) => {
     },
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,
-    rightSide: true
+    rightSide: true,
+    sourceWallet
   }
 }
 
-export const mapDispatchToProps = (dispatch: any) => ({
-  onSelect: (value: string) => {
-    switch (value) {
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
+  onSelect: (value: Object) => {
+    switch (value.title) {
       case Constants.HELP_VALUE:
         dispatch(openHelpModal())
         break
@@ -45,7 +70,7 @@ export const mapDispatchToProps = (dispatch: any) => ({
         dispatch(actions.exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
-        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]()
+        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({sourceWallet: value.sourceWallet})
         break
     }
   }

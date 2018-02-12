@@ -5,15 +5,21 @@ import SettingsOverview from './SettingsOverview.ui'
 
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import * as CORE_SELECTORS from '../../../Core/selectors'
-import {setAutoLogoutTimeInMinutesRequest,
+import {
   checkCurrentPassword,
   lockSettings,
-  updateTouchIdEnabled} from './action'
-import {sendLogs} from '../../../Logs/action'
+  setAutoLogoutTimeInMinutesRequest,
+  togglePinLoginEnabled,
+  updateTouchIdEnabled
+} from './action'
+import {resetSendLogsStatus, sendLogs} from '../../../Logs/action'
 import * as Constants from '../../../../constants/indexConstants'
 import type {State, Dispatch} from '../../../../modules/ReduxTypes'
 import type { AbcAccount } from 'edge-login'
+import * as actions from '../../../../actions/indexActions.js'
+
 // settings_button_lock_settings, or //settings_button_unlock_settings
+
 const mapStateToProps = (state: State) => {
   const isLocked = SETTINGS_SELECTORS.getSettingsLock(state)
   const lockButtonIcon = isLocked ? Constants.LOCKED_ICON : Constants.UNLOCKED_ICON
@@ -21,6 +27,9 @@ const mapStateToProps = (state: State) => {
   const account = CORE_SELECTORS.getAccount(state)
   const isTouchIdSupported = SETTINGS_SELECTORS.getIsTouchIdSupported(state)
   const isTouchIdEnabled = SETTINGS_SELECTORS.getIsTouchIdEnabled(state)
+  const confirmPasswordError = SETTINGS_SELECTORS.getConfirmPasswordErrorMessage(state)
+  const sendLogsStatus = SETTINGS_SELECTORS.getSendLogsStatus(state)
+  const pinLoginEnabled = SETTINGS_SELECTORS.getPinLoginEnabled(state)
   return {
     defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
     autoLogoutTimeInMinutes: SETTINGS_SELECTORS.getAutoLogoutTimeInMinutes(state),
@@ -30,7 +39,10 @@ const mapStateToProps = (state: State) => {
     touchIdEnabled: isTouchIdEnabled,
     lockButton,
     lockButtonIcon,
-    isLocked
+    isLocked,
+    confirmPasswordError,
+    sendLogsStatus,
+    pinLoginEnabled
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -38,7 +50,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   confirmPassword: (arg: string) => dispatch(checkCurrentPassword(arg)),
   lockSettings: () => dispatch(lockSettings()),
   dispatchUpdateEnableTouchIdEnable: (arg: boolean, account: AbcAccount) => dispatch(updateTouchIdEnabled(arg, account)),
-  sendLogs: (text: string) => dispatch(sendLogs(text))
+  sendLogs: (text: string) => dispatch(sendLogs(text)),
+  resetConfirmPasswordError: (arg: Object) => dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, arg)),
+  resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
+  onTogglePinLoginEnabled: (enableLogin: boolean) =>
+    dispatch(togglePinLoginEnabled(enableLogin))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

@@ -174,6 +174,7 @@ export type State = {
       bluetoothMode: boolean,
       otpMode: boolean,
       pinMode: boolean,
+      pinLoginEnabled: boolean,
       changesLocked: true,
       loginStatus: true,
       isTouchSupported: boolean,

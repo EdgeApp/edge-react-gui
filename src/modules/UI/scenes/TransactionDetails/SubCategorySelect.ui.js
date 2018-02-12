@@ -57,20 +57,29 @@ class SubCategorySelect extends Component<Props, State> {
         keyExtractor={this.keyExtractor}
         height={this.props.usableHeight - 67}
         extraTopSpace={0}
+        filterArray={newPotentialSubCategoriesFiltered}
       />
     )
   }
 
-  renderSubcategory (data: SubcategorySearchResultData, onRegularSelectFxn: Function) {
+  renderSubcategory (data: SubcategorySearchResultData, onRegularSelectFxn: Function, filterArray: Array<any>) {
+    const renderAdd = () => {
+      if (filterArray.find(item => item === data.item)) {
+        return (
+          <View style={[styles.rowPlusWrap]}>
+            <FormattedText style={[styles.rowPlus]}>+</FormattedText>
+          </View>
+        )
+      }
+    }
+
     return (
       <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
         <View style={[styles.rowContent]}>
           <View style={[styles.rowCategoryTextWrap]}>
             <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>{data.item}</FormattedText>
           </View>
-          <View style={[styles.rowPlusWrap]}>
-            <FormattedText style={[styles.rowPlus]}>+</FormattedText>
-          </View>
+          { renderAdd() }
         </View>
       </TouchableHighlight>
     )

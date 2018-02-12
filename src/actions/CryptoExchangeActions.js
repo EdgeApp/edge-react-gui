@@ -1,7 +1,7 @@
 // @flow
 
 import {Alert} from 'react-native'
-import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet} from 'edge-login'
+import type {AbcSpendInfo, AbcTransaction, AbcCurrencyWallet, EdgeMetadata} from 'edge-login'
 import {bns} from 'biggystring'
 import {sprintf} from 'sprintf-js'
 
@@ -245,10 +245,35 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
     try {
       const signedTransaction = await WALLET_API.signTransaction(srcWallet, state.cryptoExchange.transaction)
       const broadcastedTransaction = await WALLET_API.broadcastTransaction(srcWallet, signedTransaction)
-      const savedTransaction = await WALLET_API.saveTransaction(srcWallet, signedTransaction)
+      await WALLET_API.saveTransaction(srcWallet, signedTransaction)
+      const category = sprintf(
+        '%s:%s %s %s',
+        s.strings.fragment_transaction_exchange,
+        state.cryptoExchange.fromCurrencyCode,
+        s.strings.word_to_in_convert_from_to_string,
+        state.cryptoExchange.toCurrencyCode
+      )
+
+      const notes = sprintf(
+        s.strings.exchange_notes_metadata,
+        state.cryptoExchange.fromDisplayAmount,
+        state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name,
+        fromWallet.name,
+        state.cryptoExchange.toDisplayAmount,
+        state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name,
+        toWallet.name
+      )
+
+      const edgeMetaData: EdgeMetadata = {
+        name: 'ShapeShift',
+        category,
+        notes
+      }
+
+      await WALLET_API.setTransactionDetailsRequest(srcWallet, broadcastedTransaction.txid, broadcastedTransaction.currencyCode, edgeMetaData)
+
       dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
-      console.log(savedTransaction)
       dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
       setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
     } catch (error) {

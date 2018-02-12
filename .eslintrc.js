@@ -11,6 +11,7 @@ module.exports =
   'rules': {
     'camelcase': 'error',
     'flowtype/generic-spacing': 'off',
+    'flowtype/semi': [2, 'never'],
     'no-throw-literal': 'error',
     'no-var': 'error',
     'prefer-const': 'error',

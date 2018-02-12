@@ -194,11 +194,7 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             />
             <View style={style.shim} />
             <View style={style.actionButtonContainer} >
-            <PrimaryButton
-              text={s.strings.string_next}
-              onPressFunction={this.props.openConfirmation}
-              processingFlag={this.props.gettingTransaction}
-              processingElement={<ActivityIndicator />} />
+              {this.renderButton()}
             </View>
           </KeyboardAwareScrollView>
           {this.renderDropUp()}
@@ -208,6 +204,19 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
     )
   }
 
+  renderButton = () => {
+    if (this.props.showNextButton) {
+      return <PrimaryButton
+        text={s.strings.string_next}
+        onPressFunction={this.props.openConfirmation}
+        processingFlag={this.props.gettingTransaction}
+        processingElement={<ActivityIndicator />} />
+    }
+    if (this.props.gettingTransaction) {
+      return <ActivityIndicator />
+    }
+    return null
+  }
   flipThis = () => {
     this.props.swapFromAndToWallets()
   }
