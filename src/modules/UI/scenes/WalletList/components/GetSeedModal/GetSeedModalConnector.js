@@ -26,7 +26,7 @@ const mapStateToProps = (state: State): GetSeedModalStateProps => {
 
   return {
     visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.GET_SEED_VALUE)],
-    getSeed: wallet ? wallet.getDisplayPrivateSeed : () => {},
+    getSeed: wallet ? wallet.getDisplayPrivateSeed : () => null,
     walletId: walletId,
     privateSeedUnlocked: state.ui.scenes.walletList.privateSeedUnlocked
   }

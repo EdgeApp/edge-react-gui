@@ -34,7 +34,7 @@ class PrimaryButton extends Component {
           styles.stylizedButton,
           this.props.style]}
       >
-        <View style={styles.stylizedButtonTextWrap}>
+        <View>
           {this.props.processingFlag
             ? (this.props.processingElement)
             : (<T style={[styles.primaryButtonText, styles.stylizedButtonText]}>
@@ -64,7 +64,7 @@ class SecondaryButton extends Component {
         onPress={this.props.onPressFunction}
         disabled={this.props.disabled}
         underlayColor={styleRaw.secondaryUnderlay.color}>
-        <View style={styles.stylizedButtonTextWrap}>
+        <View>
           <T style={[styles.secondaryButtonText, styles.stylizedButtonText]}>
             {this.props.text || CANCEL_TEXT}
           </T>
@@ -85,7 +85,7 @@ class TertiaryButton extends Component {
         onPress={this.props.onPressFunction}
         disabled={this.props.disabled}
         underlayColor={styleRaw.tertiaryUnderlay.color}>
-        <View style={[styles.stylizedButtonTextWrap]}>
+        <View>
           <T style={[styles.tertiaryButtonText, this.props.textStyle]} {...this.props}>
             {this.props.text}
           </T>
