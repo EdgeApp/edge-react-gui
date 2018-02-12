@@ -3,8 +3,8 @@
 import React, {Component} from 'react'
 import {
   View,
-  Clipboard,
-  Alert} from 'react-native'
+  Share
+} from 'react-native'
 import {MaterialInputOnWhite, ConfirmPasswordModalStyle} from '../../../../../../styles/indexStyles'
 import {FormField} from '../../../../../../components/indexComponents'
 import {TertiaryButton} from '../../../../components/Buttons'
@@ -17,6 +17,7 @@ import OptionSubtext from '../../../../components/OptionSubtext/OptionSubtextCon
 import T from '../../../../components/FormattedText/FormattedText.ui'
 import styles from '../../style'
 import s from '../../../../../../locales/strings.js'
+import {sprintf} from 'sprintf-js'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 
 export const GET_SEED_WALLET_START = 'GET_SEED_WALLET_START'
@@ -34,7 +35,8 @@ type GetSeedModalOwnProps = {
 
 export type GetSeedModalStateProps = {
   walletId: string,
-  getSeed: () => string | null
+  getSeed: () => string | null,
+  walletName: string
 }
 
 export type GetSeedModalDispatchProps = {
@@ -107,16 +109,16 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     </View>
   }
 
-  setClipboard = (clipboardText: string) => {
-    Clipboard.setString(clipboardText)
-    Alert.alert(
-      s.strings.fragment_wallets_seed_copied_title,
-      s.strings.fragment_wallets_seed_copied_message,
-      [{
-        text: s.strings.string_ok,
-        onPress: () => { this.onDismiss() }
-      }]
-    )
+  shareSeed = (shareText: string) => {
+    const shareTitle = sprintf(s.strings.fragment_wallets_seed_share_title, this.props.walletName)
+    Share.share({
+      message: shareText,
+      title: shareTitle,
+      url: undefined
+    }, {dialogTitle: shareTitle})
+    .then(() => {
+      this.onDismiss()
+    })
   }
 
   renderRevealedSeedArea = (seed: string) => {
@@ -125,8 +127,8 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
           <T style={styles.seedText}>{seed}</T>
           <View style={styles.seedSecondLayer}>
             <TertiaryButton
-              onPressFunction={() => this.setClipboard(seed)}
-              text={s.strings.fragment_request_copy_title}
+              onPressFunction={() => this.shareSeed(seed)}
+              text={s.strings.string_share}
               style={styles.copyButton}
             />
           </View>
