@@ -12,6 +12,7 @@ import {
 } from '../../../WalletList/components/WalletOptions/action'
 
 import { updateMiningFees } from '../../../SendConfirmation/action'
+import {getCustomNetworkFee} from '../../../SendConfirmation/selectors.js'
 
 const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
   const wallet = ownProps.sourceWallet
@@ -19,7 +20,9 @@ const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
   if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
     customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings
   }
+
   return ({
+    customNetworkFee: getCustomNetworkFee(state),
     customFeeSettings: customFeeSettings,
     visibilityBoolean: state.ui.scenes.changeMiningFee.isCustomFeeVisible
   })
