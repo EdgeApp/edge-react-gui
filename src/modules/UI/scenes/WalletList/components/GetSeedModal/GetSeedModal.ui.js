@@ -116,9 +116,8 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
       title: shareTitle,
       url: undefined
     }, {dialogTitle: shareTitle})
-    .then(() => {
-      this.onDismiss()
-    })
+    .then(() => { this.onDismiss() })
+    .catch(() => {})
   }
 
   renderRevealedSeedArea = (seed: string) => {
