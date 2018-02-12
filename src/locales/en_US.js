@@ -1,6 +1,7 @@
 // @flow
 
 const strings = {
+  app_name: 'Edge Wallet',
   bitcoin_received: '%1$s Received',
   bitcoin_remaining: '%1$s Remaining…',
   calculator_done: 'Done',
@@ -101,6 +102,7 @@ const strings = {
   mining_fee_standard_label_choice: 'Standard',
   request_qr_email_title: '%1$s Bitcoin Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
+  request_share_edge_request: 'Share Edge Request',
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
   send_confirmation_fee_line: 'Fee: + %s (%s)',
