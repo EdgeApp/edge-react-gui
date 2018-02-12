@@ -2,6 +2,7 @@
 
 import { connect } from 'react-redux'
 import { Actions } from 'react-native-router-flux'
+
 import SendConfirmationOptions from './SendConfirmationOptions'
 
 import { CHANGE_MINING_FEE_SEND_CONFIRMATION } from '../../../../constants/indexConstants'
