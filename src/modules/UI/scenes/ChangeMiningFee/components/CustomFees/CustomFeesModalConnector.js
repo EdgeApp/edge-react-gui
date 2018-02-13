@@ -12,7 +12,7 @@ import {
 } from '../../../WalletList/components/WalletOptions/action'
 
 import { updateMiningFees } from '../../../SendConfirmation/action'
-import {getCustomNetworkFee} from '../../../SendConfirmation/selectors.js'
+import { getCustomNetworkFee } from '../../../SendConfirmation/selectors.js'
 
 const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
   const wallet = ownProps.sourceWallet
