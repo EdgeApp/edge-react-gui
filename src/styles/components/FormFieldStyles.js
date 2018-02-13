@@ -1,9 +1,10 @@
 import THEME from '../../theme/variables/airbitz'
+import { PLATFORM } from '../../theme/variables/platform.js'
 
 const MaterialInput = {
   container: {
     position: 'relative',
-    width: 230,
+    width: PLATFORM.deviceWidth / 1.52,
     minHeight: 60
   },
   baseColor: THEME.COLORS.WHITE,
@@ -21,7 +22,7 @@ const MaterialInput = {
 const MaterialInputOnWhite = {
   container: {
     position: 'relative',
-    width: 230,
+    width: PLATFORM.deviceWidth / 1.52,
     height: 60
   },
   baseColor: THEME.COLORS.PRIMARY,
