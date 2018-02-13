@@ -17,6 +17,7 @@ export type CustomFees = {
 
 export type CustomFeesModalOwnProps = {
   customFeeSettings: Array<string>,
+  customNetworkFee: Object,
   visibilityBoolean: boolean,
   onPositive: (customFees: CustomFees) => void,
   onDone: () => void,
@@ -46,7 +47,9 @@ export default class CustomFeesModal extends Component<CustomFeesModalOwnProps, 
 
   _initState = () => {
     for (const feeSetting of this.props.customFeeSettings) {
-      this.setState({ [feeSetting]: '0' })
+      this.setState({
+        [feeSetting]: this.props.customNetworkFee[feeSetting] || '0'
+      })
     }
   }
 
