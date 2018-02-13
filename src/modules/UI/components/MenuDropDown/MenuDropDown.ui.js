@@ -69,27 +69,20 @@ export default class MenuDropDown extends Component<Props, State> {
   }
 
   render () {
-    const deviceHeight = PLATFORM.deviceHeight
-    const verticalBuffer = ((this.state.pageY + this.state.height - 8) > PLATFORM.deviceHeight) ? 12 : 0
-    const lowerLimitOfMenu = this.state.pageY + this.state.height
-    const offset = lowerLimitOfMenu - deviceHeight
-    const newPageY = this.state.pageY - offset - verticalBuffer
-    let optionsStyle = {}
-    if (this.props.rightSide) {
-      optionsStyle = {
-        left: '1%',
-        top: this.state.pageY
-      }
-    }
-    const style = this.props.style
-    if (lowerLimitOfMenu > deviceHeight) {
-      optionsStyle.top = newPageY
+    const { pageY, height } = this.state
+    const { rightSide, style, onSelect } = this.props
+    const { deviceHeight } = PLATFORM
+    const optionsStyle = rightSide ? { left: '1%', top: pageY } : {}
+    const lowLimit = pageY + height
+    if (lowLimit > deviceHeight) {
+      const verticalBuffer = ((lowLimit - 8) > deviceHeight) ? 12 : 0
+      optionsStyle.top = deviceHeight - verticalBuffer - height
     }
     return (
       <View style={[style.container]}>
         <Menu
           style={[style.menuButton]}
-          onSelect={(value) => this.props.onSelect(value)}
+          onSelect={(value) => onSelect(value)}
         >
           <MenuTrigger style={[style.menuTrigger]}>
             {this.renderMenuIcon(style)}
