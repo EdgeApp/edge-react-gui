@@ -12,6 +12,16 @@ import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
 import * as Constants from '../../constants/indexConstants'
 
+export {
+  errorAlert,
+  transactionAlert,
+  scenes,
+  wallets,
+  request,
+  settings,
+  contacts
+}
+
 export const uiReducer = combineReducers({
   errorAlert,
   transactionAlert,

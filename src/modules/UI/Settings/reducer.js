@@ -18,7 +18,7 @@ import { SYNCED_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, CORE_DEFAULTS } from '
 import type { Action } from '../../ReduxTypes'
 import type { CustomTokenInfo } from '../../../types'
 
-const initialState = {
+export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,

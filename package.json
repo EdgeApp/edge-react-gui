@@ -34,7 +34,7 @@
     "lint:fix": "npm run lint -- --fix",
     "server": "node ./loggingServer.js",
     "start": "node --max_old_space_size=4000 node_modules/react-native/local-cli/cli.js start ",
-    "test": "npm run lint && npm run flow",
+    "test": "npm run lint && npm run flow && npm run jest",
     "tron": "node_modules/.bin/reactotron",
     "updot": "updot",
     "watch": "npm test -- --watch"
@@ -120,7 +120,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^7.1.1",
-    "babel-jest": "^20.0.3",
     "babel-preset-react-native": "^1.9.0",
     "body-parser": "^1.18.2",
     "eslint": "^3.11.1",
@@ -144,7 +143,7 @@
   "jest": {
     "preset": "react-native",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-navigation|mobx)"
+      "node_modules/mobx-react"
     ],
     "setupFiles": [
       "./testSetup.js"
