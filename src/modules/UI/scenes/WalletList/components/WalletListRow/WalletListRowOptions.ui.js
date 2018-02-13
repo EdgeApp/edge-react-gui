@@ -37,9 +37,11 @@ export default class WalletListRowOptions extends Component<Props, State> {
 
   render () {
     return (
-      <MenuDropDown style={MenuDropDownStyle}
+      <MenuDropDown
+        style={MenuDropDownStyle}
         onSelect={this.optionAction}
-        data={this.options} />
+        data={this.options}
+      />
     )
   }
 }
