@@ -1,14 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View, Image, WebView, Text, Linking, Platform } from 'react-native'
+import { Image, Linking, Platform, Text, View, WebView } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 
-import s from '../../../../locales/strings.js'
-import styles from './style.js'
-import StylizedModal from '../Modal/index.js'
-import THEME from '../../../../theme/variables/airbitz.js'
 import helpImage from '../../../../assets/images/modal/help.png'
+import s from '../../../../locales/strings.js'
+import THEME from '../../../../theme/variables/airbitz.js'
+import StylizedModal from '../Modal/index.js'
+import styles from './style.js'
 
 const buildNumber = DeviceInfo.getBuildNumber()
 const versionNumber = DeviceInfo.getVersion()
@@ -28,22 +28,26 @@ export default class HelpModal extends Component<Props, State> {
         visibilityBoolean={this.props.modal}
         onExitButtonFxn={this.props.closeModal}
         headerText={s.strings.help_modal_title}
-        modalMiddle={<WebView
-          // $FlowFixMe
-          ref={(ref) => { this.webview = ref }}
-          scalesPageToFit={contentScaling}
-          style={styles.webView}
-          source={{uri: CONTENT_URI}}
-          onNavigationStateChange={(event) => {
-            if (!event.url.includes('info.html')) {
-              // if NOT initial URL
+        modalMiddle={
+          <WebView
+            ref={ref => {
               // $FlowFixMe
-              this.webview.stopLoading() // do not load in WebView
-              Linking.openURL(event.url) // load externally
-              this.props.closeModal()
-            }
-          }}
-        />}
+              this.webview = ref
+            }}
+            scalesPageToFit={contentScaling}
+            style={styles.webView}
+            source={{ uri: CONTENT_URI }}
+            onNavigationStateChange={event => {
+              if (!event.url.includes('info.html')) {
+                // if NOT initial URL
+                // $FlowFixMe
+                this.webview.stopLoading() // do not load in WebView
+                Linking.openURL(event.url) // load externally
+                this.props.closeModal()
+              }
+            }}
+          />
+        }
         style={styles.stylizedModal}
         modalHeaderIcon={styles.modalHeaderIcon}
         modalBodyStyle={styles.modalBodyStyle}

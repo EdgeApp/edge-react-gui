@@ -1,19 +1,17 @@
 // @flow
 
-import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
-import LinkedComponent
-  from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
-import * as Styles from '../../styles/indexStyles'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
-import THEME from '../../theme/variables/airbitz'
-import {openHelpModal} from '../../modules/UI/components/HelpModal/actions'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-
-import type {State, Dispatch} from '../../modules/ReduxTypes.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes.js'
+import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
+import LinkedComponent from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
+import * as Styles from '../../styles/indexStyles'
+import THEME from '../../theme/variables/airbitz'
 
 export const mapStateToProps = (state: State) => {
   let sourceWalletId, sourceWallet
@@ -50,8 +48,9 @@ export const mapStateToProps = (state: State) => {
     }
   ]
   return {
-    style: { ...Styles.MenuDropDownStyleHeader,
-      icon: {...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE}
+    style: {
+      ...Styles.MenuDropDownStyleHeader,
+      icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
     },
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,
@@ -70,7 +69,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch(actions.exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
-        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({sourceWallet: value.sourceWallet})
+        Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({ sourceWallet: value.sourceWallet })
         break
     }
   }

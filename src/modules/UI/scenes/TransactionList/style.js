@@ -1,6 +1,7 @@
 // @flow
 
-import {StyleSheet} from 'react-native'
+import { StyleSheet } from 'react-native'
+
 import THEME from '../../../../theme/variables/airbitz'
 
 export const styles = {
@@ -74,7 +75,8 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center'
   },
-  currentBalanceWrap: { // one
+  currentBalanceWrap: {
+    // one
     flex: 3,
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
@@ -83,12 +85,14 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center'
   },
-  iconWrap: { // two
+  iconWrap: {
+    // two
     flex: 3,
     justifyContent: 'flex-start',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
-  currentBalanceBoxBitssWrap: { // two
+  currentBalanceBoxBitssWrap: {
+    // two
     flex: 4,
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -103,7 +107,8 @@ export const styles = {
     flex: 4,
     paddingTop: 4
   },
-  currentBalanceBoxDollars: { // two
+  currentBalanceBoxDollars: {
+    // two
     color: THEME.COLORS.WHITE,
     fontSize: 20
   },
@@ -117,7 +122,8 @@ export const styles = {
     color: THEME.COLORS.WHITE,
     fontSize: 36
   },
-  requestSendRow: { // two
+  requestSendRow: {
+    // two
     height: 50,
     flexDirection: 'row'
   },

@@ -1,15 +1,15 @@
-// @flow
-import type {Dispatch, GetState} from '../modules/ReduxTypes'
-import * as SETTINGS_ACTIONS from '../modules/UI/Settings/action.js'
-import * as CORE_SELECTORS from '../modules/Core/selectors'
-import * as Constants from '../constants/indexConstants'
 import * as actions from '../actions/indexActions'
+import * as Constants from '../constants/indexConstants'
+import * as CORE_SELECTORS from '../modules/Core/selectors'
+// @flow
+import type { Dispatch, GetState } from '../modules/ReduxTypes'
+import * as SETTINGS_ACTIONS from '../modules/UI/Settings/action.js'
 export const enableOtp = () => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const account = CORE_SELECTORS.getAccount(state)
   try {
     await account.enableOtp()
-    dispatch(SETTINGS_ACTIONS.updateOtpInfo({enabled: true, otpKey: account.otpKey}))
+    dispatch(SETTINGS_ACTIONS.updateOtpInfo({ enabled: true, otpKey: account.otpKey }))
   } catch (e) {
     console.log(e)
   }

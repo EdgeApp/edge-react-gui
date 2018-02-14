@@ -1,6 +1,5 @@
 // @flow
 
-import type { Store as ReduxStore, Dispatch as ReduxDispatch } from 'redux'
 import type {
   AbcAccount,
   AbcContext,
@@ -12,27 +11,19 @@ import type {
   AbcReceiveAddress,
   AbcTransaction,
   EdgeReceiveAddress
- } from 'edge-login'
+} from 'edge-login'
+import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
-import type {
-  DeviceDimensions,
-  GuiContact, GuiCurrencyInfo,
-  GuiWallet
-} from '../types'
-
-import type {PermissionsState} from '../reducers/permissions/permissionsReducer.js'
-import type {PermissionStatus, Permission} from './UI/permissions.js'
+import type { PermissionsState } from '../reducers/permissions/permissionsReducer.js'
+import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet } from '../types'
+import type { Permission, PermissionStatus } from './UI/permissions.js'
 
 export type Action = { type: string, data?: any }
 
 export type CurrencyCode = string
 export type Id = string
 export type Username = string
-export type {
-  PermissionsState,
-  PermissionStatus,
-  Permission
-}
+export type { PermissionsState, PermissionStatus, Permission }
 
 export type State = {
   core: {
@@ -150,12 +141,12 @@ export type State = {
         syntax: {
           title: string,
           message: string,
-          buttons: Array<{title: string, message: string}>
+          buttons: Array<{ title: string, message: string }>
         }
-      },
+      }
     },
     wallets: {
-      byId: {[walletId: Id]: GuiWallet},
+      byId: { [walletId: Id]: GuiWallet },
       activeWalletIds: Array<Id>,
       archivedWalletIds: Array<Id>,
       selectedWalletId: string,

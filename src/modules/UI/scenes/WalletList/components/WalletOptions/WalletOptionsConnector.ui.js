@@ -1,9 +1,9 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../../../ReduxTypes'
 import WalletOptions from './WalletOptions.ui'
-import type {Dispatch, State} from '../../../../../ReduxTypes'
 
 const mapStateToProps = (state: State): {} => ({})
 const mapDispatchToProps = (dispatch: Dispatch): {} => ({})

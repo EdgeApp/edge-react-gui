@@ -1,28 +1,24 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-  Alert,
-  Keyboard,
-  View,
-  TouchableHighlight
-} from 'react-native'
-import Text from '../../components/FormattedText'
-import {FormField} from '../../../../components/FormField.js'
-import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
-import SearchResults from '../../components/SearchResults'
+import React, { Component } from 'react'
+import { Alert, Keyboard, TouchableHighlight, View } from 'react-native'
+
+import { FormField } from '../../../../components/FormField.js'
 import s from '../../../../locales/strings.js'
-import SafeAreaView from '../../components/SafeAreaView'
+import { MaterialInputOnWhite } from '../../../../styles/components/FormFieldStyles.js'
+import type { DeviceDimensions, FlatListItem, GuiFiatType } from '../../../../types'
+import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import styles, {styles as stylesRaw} from './style.js'
-import type {GuiFiatType, FlatListItem, DeviceDimensions} from '../../../../types'
+import SafeAreaView from '../../components/SafeAreaView'
+import SearchResults from '../../components/SearchResults'
+import styles, { styles as stylesRaw } from './style.js'
 
 const DEFAULT_FIAT_PICKER_PLACEHOLDER = s.strings.settings_select_currency
 const INVALID_DATA_TEXT = s.strings.fragment_create_wallet_select_valid
 
 type Props = {
   supportedFiats: Array<GuiFiatType>,
-  onSelectFiat: (string) => void,
+  onSelectFiat: string => void,
   dimensions: DeviceDimensions
 }
 type State = {
@@ -47,8 +43,8 @@ export default class DefaultFiatSetting extends Component<Props, State> {
   }
 
   render () {
-    const filteredArray = this.props.supportedFiats.filter((entry) => {
-      return (entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0)
+    const filteredArray = this.props.supportedFiats.filter(entry => {
+      return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
     const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 34 // FormField height
@@ -71,7 +67,7 @@ export default class DefaultFiatSetting extends Component<Props, State> {
             renderRegularResultFxn={this.renderFiatTypeResult}
             onRegularSelectFxn={this.onSelectFiat}
             regularArray={filteredArray}
-            containerStyle={[styles.searchContainer, {height: searchResultsHeight}]}
+            containerStyle={[styles.searchContainer, { height: searchResultsHeight }]}
             keyExtractor={this.keyExtractor}
             initialNumToRender={30}
             scrollRenderAheadDistance={1600}
@@ -81,33 +77,28 @@ export default class DefaultFiatSetting extends Component<Props, State> {
     )
   }
 
-  onSelectFiat = ({value: selectedFiat}: {value: string}) => {
+  onSelectFiat = ({ value: selectedFiat }: { value: string }) => {
     if (!this.isValidFiat(selectedFiat)) {
       Alert.alert(INVALID_DATA_TEXT)
     } else {
-      this.setState({selectedFiat})
+      this.setState({ selectedFiat })
       Keyboard.dismiss()
       this.props.onSelectFiat(selectedFiat)
     }
   }
 
   isValidFiat = (selectedFiat: string) => {
-    const {
-      supportedFiats
-    } = this.state
+    const { supportedFiats } = this.state
 
-    const isValid = supportedFiats
-      .find((fiat) => fiat.value === selectedFiat)
+    const isValid = supportedFiats.find(fiat => fiat.value === selectedFiat)
 
     return isValid
   }
 
   renderFiatTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
-      <View style={[styles.singleFiatTypeWrap, (data.item.value === this.state.selectedFiat) && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleFiatType]}
-          onPress={() => onRegularSelect(data.item)}
-          underlayColor={stylesRaw.underlayColor.color}>
+      <View style={[styles.singleFiatTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
+        <TouchableHighlight style={[styles.singleFiatType]} onPress={() => onRegularSelect(data.item)} underlayColor={stylesRaw.underlayColor.color}>
           <View style={[styles.fiatTypeInfoWrap]}>
             <View style={styles.fiatTypeLeft}>
               <View style={[styles.fiatTypeLeftTextWrap]}>

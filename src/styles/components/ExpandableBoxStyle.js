@@ -1,6 +1,6 @@
-import THEME from '../../theme/variables/airbitz.js'
 // import * as Constants from '../../constants/indexConstants.js'
 import * as Styles from '../../styles/indexStyles'
+import THEME from '../../theme/variables/airbitz.js'
 const ExpandableBoxStyle = {
   container: {
     flex: 1,

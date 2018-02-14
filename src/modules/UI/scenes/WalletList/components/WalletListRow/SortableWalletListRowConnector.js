@@ -1,6 +1,7 @@
-import {connect} from 'react-redux'
-import SortableWalletListRow from './SortableWalletListRow.ui'
+import { connect } from 'react-redux'
+
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
+import SortableWalletListRow from './SortableWalletListRow.ui'
 
 const mapStateToProps = (state, ownProps) => {
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, ownProps.data.currencyCode)

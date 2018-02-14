@@ -1,6 +1,6 @@
+import THEME from '../../theme/variables/airbitz'
 // @flow
 import * as Styles from '../indexStyles.js'
-import THEME from '../../theme/variables/airbitz'
 // import {Image} from 'react-native'
 
 const OtpSettingsScreenStyles = {
@@ -22,8 +22,7 @@ const OtpSettingsScreenStyles = {
       alignItems: 'center',
       backgroundColor: THEME.COLORS.TRANSPARENT
     },
-    icon: {
-    },
+    icon: {},
     shim: {
       height: 10
     },
@@ -64,4 +63,4 @@ const OtpSettingsScreenStyles = {
   showConfirmationModal: Styles.TwoButtonModalStyle
 }
 
-export {OtpSettingsScreenStyles}
+export { OtpSettingsScreenStyles }

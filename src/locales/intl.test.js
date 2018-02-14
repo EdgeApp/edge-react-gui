@@ -1,27 +1,27 @@
+import { truncateDecimals } from '../../src/modules/utils'
 /* globals describe test expect beforeEach jest */
 /* eslint-disable import/first */
-import {intl, setIntlLocale} from './intl'
-import { truncateDecimals } from '../../src/modules/utils'
+import { intl, setIntlLocale } from './intl'
 
-jest.mock('intl-locales-supported', () => () => (true))
+jest.mock('intl-locales-supported', () => () => true)
 
 const EN_US_LOCALE = {
-  'localeIdentifier': 'en_US',
-  'decimalSeparator': '.',
-  'quotationBeginDelimiterKey': '“',
-  'quotationEndDelimiterKey': '”',
-  'currencySymbol': '$',
-  'currencyCode': 'USD',
-  'groupingSeparator': ','
+  localeIdentifier: 'en_US',
+  decimalSeparator: '.',
+  quotationBeginDelimiterKey: '“',
+  quotationEndDelimiterKey: '”',
+  currencySymbol: '$',
+  currencyCode: 'USD',
+  groupingSeparator: ','
 }
 const DE_DE_LOCALE = {
-  'localeIdentifier': 'de_DE',
-  'decimalSeparator': ',',
-  'quotationBeginDelimiterKey': '“',
-  'quotationEndDelimiterKey': '”',
-  'currencySymbol': 'DKK',
-  'currencyCode': 'DKK',
-  'groupingSeparator': '.'
+  localeIdentifier: 'de_DE',
+  decimalSeparator: ',',
+  quotationBeginDelimiterKey: '“',
+  quotationEndDelimiterKey: '”',
+  currencySymbol: 'DKK',
+  currencyCode: 'DKK',
+  groupingSeparator: '.'
 }
 
 describe('Intl numbers', function () {
@@ -247,7 +247,7 @@ describe('Integration with functionality', function () {
       expect(intl.truncateDecimals(input, precision)).toBe(expected)
     })
 
-    test('allowBlank=true \'\' => \'\'', function () {
+    test("allowBlank=true '' => ''", function () {
       const input = ''
       const precision = 1
       const expected = ''
@@ -256,7 +256,7 @@ describe('Integration with functionality', function () {
       expect(actual).toBe(expected)
       expect(intl.truncateDecimals(input, precision, allowBlank)).toBe(expected)
     })
-    test('allowBlank=false \'\' => 0', function () {
+    test("allowBlank=false '' => 0", function () {
       const input = ''
       const precision = 1
       const expected = '0'
@@ -324,14 +324,14 @@ describe('formatNumber', function () {
     })
     test('toFixed option 1.237 => 1.23', function () {
       const input = '1.237'
-      const options = {toFixed: 2}
+      const options = { toFixed: 2 }
       const expected = '1.23'
       const actual = intl.formatNumber(input, options)
       expect(actual).toBe(expected)
     })
     test('toFixed option 1 => 1.00', function () {
       const input = '1'
-      const options = {toFixed: 2}
+      const options = { toFixed: 2 }
       const expected = '1.00'
       const actual = intl.formatNumber(input, options)
       expect(actual).toBe(expected)

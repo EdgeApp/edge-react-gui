@@ -1,10 +1,10 @@
+import { Actions } from 'react-native-router-flux'
 // @flow
-import {connect} from 'react-redux'
-import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
-import {Actions} from 'react-native-router-flux'
-import PasswordRecoveryComponent from '../../modules/UI/scenes/PasswordRecovery/PasswordRecoveryComponent.ui.js'
+import { connect } from 'react-redux'
 
-import type {State} from '../../modules/ReduxTypes'
+import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
+import type { State } from '../../modules/ReduxTypes'
+import PasswordRecoveryComponent from '../../modules/UI/scenes/PasswordRecovery/PasswordRecoveryComponent.ui.js'
 
 export const mapStateToProps = (state: State) => ({
   context: CORE_SELECTORS.getContext(state),

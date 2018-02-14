@@ -1,10 +1,11 @@
 // @flow
-import {connect} from 'react-redux'
-import WalletListModalHeader from './WalletListModalHeader.ui'
-import {disableWalletListModalVisibility} from '../action'
-import * as Constants from '../../../../../constants/indexConstants'
+import { connect } from 'react-redux'
 
-const mapStateToProps = (state?: any, ownProps: any): {type: string, whichWallet: string} => {
+import * as Constants from '../../../../../constants/indexConstants'
+import { disableWalletListModalVisibility } from '../action'
+import WalletListModalHeader from './WalletListModalHeader.ui'
+
+const mapStateToProps = (state?: any, ownProps: any): { type: string, whichWallet: string } => {
   // console.log(state.ui.scenes.dimensions)
   const walletType = ownProps.type ? ownProps.type : Constants.FROM
   return {

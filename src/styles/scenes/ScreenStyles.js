@@ -5,4 +5,4 @@ const SceneContainer = {
   alignItems: 'stretch'
 }
 
-export {SceneContainer}
+export { SceneContainer }

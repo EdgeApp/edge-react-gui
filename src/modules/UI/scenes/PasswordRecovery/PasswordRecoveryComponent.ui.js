@@ -1,8 +1,9 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
-import {PasswordRecoveryScreen} from 'airbitz-core-js-ui'
+import { PasswordRecoveryScreen } from 'airbitz-core-js-ui'
+import React, { Component } from 'react'
+import { View } from 'react-native'
+
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'

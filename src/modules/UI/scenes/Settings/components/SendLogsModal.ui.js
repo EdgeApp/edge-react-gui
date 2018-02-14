@@ -1,33 +1,33 @@
-import React, {Component} from 'react'
-import {ActivityIndicator} from 'react-native'
+import React, { Component } from 'react'
+import { ActivityIndicator } from 'react-native'
+import IonIcon from 'react-native-vector-icons/Ionicons'
 
 import * as Constants from '../../../../../../src/constants/indexConstants'
+import { FormField } from '../../../../../components/FormField.js'
 import s from '../../../../../locales/strings.js'
-import IonIcon from 'react-native-vector-icons/Ionicons'
-import {FormField} from '../../../../../components/FormField.js'
-import ModalButtons from './ModalButtons.ui'
-import {PrimaryButton} from '../../../components/Buttons'
+import THEME, { colors } from '../../../../../theme/variables/airbitz'
+import { PrimaryButton } from '../../../components/Buttons'
 import StylizedModal from '../../../components/Modal/Modal.ui'
+import ModalButtons from './ModalButtons.ui'
 import styles from './styles'
-import THEME, {colors} from '../../../../../theme/variables/airbitz'
 
 export default class SendLogsModal extends Component {
   state = {
     text: ''
-  };
+  }
 
   onDone = () => {
     this.props.onDone(this.state.text)
-    this.setState({text: ''})
+    this.setState({ text: '' })
   }
 
   onCancel = () => {
     this.props.onCancel()
-    this.setState({text: ''})
+    this.setState({ text: '' })
   }
 
-  onChangeText = (text) => {
-    this.setState({text})
+  onChangeText = text => {
+    this.setState({ text })
   }
 
   getModalHeaderText = () => {
@@ -54,15 +54,11 @@ export default class SendLogsModal extends Component {
 
     switch (status) {
       case PENDING:
-        return <FormField
-          style={styles.sendLogsModalInput}
-          label='Type some text'
-          value={this.state.text}
-          onChangeText={this.onChangeText}
-          returnKeyType='done'
-        />
+        return (
+          <FormField style={styles.sendLogsModalInput} label="Type some text" value={this.state.text} onChangeText={this.onChangeText} returnKeyType="done" />
+        )
       case LOADING:
-        return <ActivityIndicator/>
+        return <ActivityIndicator />
       default:
         return null
     }
@@ -74,32 +70,41 @@ export default class SendLogsModal extends Component {
 
     switch (status) {
       case SUCCESS:
-        return ((<PrimaryButton text={s.strings.string_ok} onPressFunction={this.onCancel}/>))
+        return <PrimaryButton text={s.strings.string_ok} onPressFunction={this.onCancel} />
       case FAILURE:
-        return (<PrimaryButton text={s.strings.string_ok} onPressFunction={this.onCancel}/>)
+        return <PrimaryButton text={s.strings.string_ok} onPressFunction={this.onCancel} />
       case PENDING:
-        return <ModalButtons
-          onDone={this.onDone}
-          onCancel={this.onCancel} />
+        return <ModalButtons onDone={this.onDone} onCancel={this.onCancel} />
       default:
         return null
     }
   }
 
   render () {
-    const icon = <IonIcon name='ios-paper-plane-outline' size={24} color={colors.primary}
-      style={[{
-        backgroundColor: THEME.COLORS.TRANSPARENT,
-        zIndex: 1015,
-        elevation: 1015}]} />
+    const icon = (
+      <IonIcon
+        name="ios-paper-plane-outline"
+        size={24}
+        color={colors.primary}
+        style={[
+          {
+            backgroundColor: THEME.COLORS.TRANSPARENT,
+            zIndex: 1015,
+            elevation: 1015
+          }
+        ]}
+      />
+    )
 
-    return <StylizedModal
-      visibilityBoolean={this.props.showModal}
-      featuredIcon={icon}
-      headerText={this.getModalHeaderText()}
-      modalMiddle={this.getModalMiddle()}
-      modalBottom={this.getModalBotton()}
-      onExitButtonFxn={this.onCancel}
-    />
+    return (
+      <StylizedModal
+        visibilityBoolean={this.props.showModal}
+        featuredIcon={icon}
+        headerText={this.getModalHeaderText()}
+        modalMiddle={this.getModalMiddle()}
+        modalBottom={this.getModalBotton()}
+        onExitButtonFxn={this.onCancel}
+      />
+    )
   }
 }

@@ -1,15 +1,15 @@
 // @flow
 
-import { combineReducers } from 'redux'
-import type { AbcDenomination, AbcMetaToken, AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-login'
 import _ from 'lodash'
+import { combineReducers } from 'redux'
 
-import type { GuiWallet } from '../../../types.js'
-import * as ACTION from './action'
 import * as Constants from '../../../constants/indexConstants.js'
-import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
+import type { GuiWallet } from '../../../types.js'
 import { UPDATE_WALLETS } from '../../Core/Wallets/action.js'
 import type { Action } from '../../ReduxTypes.js'
+import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
+import * as ACTION from './action'
 
 export type WalletId = string
 export type WalletIds = Array<WalletId>

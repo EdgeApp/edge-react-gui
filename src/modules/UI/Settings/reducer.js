@@ -3,20 +3,14 @@
 import type { AbcCurrencyPlugin } from 'edge-login'
 import _ from 'lodash'
 
-import * as ACTION from './action.js'
-import {
-  SEND_LOGS_REQUEST,
-  SEND_LOGS_FAILURE,
-  SEND_LOGS_SUCCESS,
-  SEND_LOGS_PENDING
-} from '../../Logs/action'
 import * as Constants from '../../../constants/indexConstants.js'
+import type { CustomTokenInfo } from '../../../types'
+import { CORE_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, SYNCED_ACCOUNT_DEFAULTS } from '../../Core/Account/settings.js'
+import { SEND_LOGS_FAILURE, SEND_LOGS_PENDING, SEND_LOGS_REQUEST, SEND_LOGS_SUCCESS } from '../../Logs/action'
+import type { Action } from '../../ReduxTypes'
 import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
-import { SYNCED_ACCOUNT_DEFAULTS, LOCAL_ACCOUNT_DEFAULTS, CORE_DEFAULTS } from '../../Core/Account/settings.js'
-
-import type { Action } from '../../ReduxTypes'
-import type { CustomTokenInfo } from '../../../types'
+import * as ACTION from './action.js'
 
 export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
@@ -161,7 +155,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         denominationKeys,
         customTokensSettings
-       } = data
+      } = data
       let newState = {
         ...state,
         loginStatus,
@@ -180,7 +174,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         otpResetDate: account.otpResetDate
       }
-      denominationKeys.forEach((key) => {
+      denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
         const denomination = key.denominationKey
         const currencyState = newState[currencyCode]
@@ -192,10 +186,10 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
           }
         }
       })
-      currencyPlugins.forEach((key) => {
+      currencyPlugins.forEach(key => {
         newState = currencyPLuginUtil(newState, key)
       })
-      customTokensSettings.forEach((key) => {
+      customTokensSettings.forEach(key => {
         const { currencyCode } = key
         newState = {
           ...newState,
@@ -206,7 +200,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     }
     case Constants.SET_CONFIRM_PASSWORD_ERROR: {
       const { confirmPasswordError } = data
-      return {...state, confirmPasswordError: confirmPasswordError}
+      return { ...state, confirmPasswordError: confirmPasswordError }
     }
     case ACTION.SET_LOGIN_STATUS: {
       const { loginStatus } = data

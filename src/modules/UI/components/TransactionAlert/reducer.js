@@ -1,12 +1,13 @@
 // @flow
 
+import type { AbcTransaction } from 'edge-login'
+import { combineReducers } from 'redux'
+
+import type { Action } from '../../../ReduxTypes.js'
 import * as ACTIONS from './actions'
-import {combineReducers} from 'redux'
-import type {Action} from '../../../ReduxTypes.js'
-import type {AbcTransaction} from 'edge-login'
 
 const displayAlert = (state: boolean = false, action: Action) => {
-  const {type} = action
+  const { type } = action
   switch (type) {
     case ACTIONS.DISPLAY_TRANSACTION_ALERT:
       return true

@@ -1,6 +1,6 @@
 // @flow
 
-import type {Permission, State} from '../../modules/ReduxTypes'
+import type { Permission, State } from '../../modules/ReduxTypes'
 
 export const getBluetoothPermission = (state: State) => {
   return state.permissions.bluetooth

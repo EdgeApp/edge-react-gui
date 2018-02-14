@@ -1,5 +1,6 @@
-import {Text} from 'react-native'
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import { Text } from 'react-native'
+
 import styles from './style'
 
 export default class FormattedText extends Component {
@@ -22,7 +23,7 @@ export default class FormattedText extends Component {
 
   render () {
     return (
-      <Text {...this.props} allowFontScaling style={[this.style, this.props.style]} ref={'nativeForward'} >
+      <Text {...this.props} allowFontScaling style={[this.style, this.props.style]} ref={'nativeForward'}>
         {this.props.children}
       </Text>
     )

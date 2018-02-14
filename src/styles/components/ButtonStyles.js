@@ -40,7 +40,6 @@ const TextAndIconButtonStyle = {
     height: '100%',
     flexDirection: 'column',
     alignItems: 'center'
-
   },
   text: {
     color: THEME.COLORS.WHITE,
@@ -60,5 +59,5 @@ const TextAndIconButtonStyle = {
   underlayColor: THEME.COLORS.TRANSPARENT
 }
 
-export {IconButtonStyle}
-export {TextAndIconButtonStyle}
+export { IconButtonStyle }
+export { TextAndIconButtonStyle }
