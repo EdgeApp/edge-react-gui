@@ -189,3 +189,12 @@ export const emptyCurrencyInfo: GuiCurrencyInfo = {
   displayDenomination: emptyGuiDenomination,
   exchangeDenomination: emptyGuiDenomination
 }
+
+export type ComponentLayoutMeasurements = {
+  x: Number,
+  y: Number,
+  width: Number,
+  height: Number,
+  pageX: Number,
+  pageY: Number
+}
