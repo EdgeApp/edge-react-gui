@@ -1,11 +1,12 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+
 import s from '../../../../../../locales/strings.js'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 
 export type JsxProps = {
-  walletName: string,
+  walletName: string
 }
 
 export type StateProps = {
@@ -22,7 +23,7 @@ export type DispatchProps = {
 
 type Props = JsxProps & StateProps & DispatchProps
 
-export default class RenameWalletButtons extends Component <Props> {
+export default class RenameWalletButtons extends Component<Props> {
   onPositive = () => {
     if (this.props.renameWalletInput) {
       this.props.onPositive(this.props.walletId, this.props.renameWalletInput)
@@ -38,10 +39,6 @@ export default class RenameWalletButtons extends Component <Props> {
   }
 
   render () {
-    return <OptionButtons
-      positiveText={s.strings.calculator_done}
-      onPositive={this.onPositive}
-      onNegative={this.onNegative}
-    />
+    return <OptionButtons positiveText={s.strings.calculator_done} onPositive={this.onPositive} onNegative={this.onNegative} />
   }
 }

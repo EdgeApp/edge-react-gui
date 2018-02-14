@@ -1,10 +1,9 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
+import type { State } from '../../../ReduxTypes.js'
 import WalletListModal from './WalletListModal.ui'
-
-import type {State} from '../../../ReduxTypes.js'
 
 const mapStateToProps = (state: State, ownProps: any) => {
   const topDisplacement = ownProps.topDisplacement ? ownProps.topDisplacement : 68

@@ -1,23 +1,17 @@
 // @flow
 
-import {connect} from 'react-redux'
-import { type RequestStateProps, type RequestDispatchProps, Request } from './Request.ui'
+import type { AbcCurrencyWallet } from 'edge-login'
+import { connect } from 'react-redux'
 
+import type { GuiCurrencyInfo, GuiDenomination, GuiReceiveAddress, GuiWallet } from '../../../../types'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { getDenomFromIsoCode } from '../../../utils'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-
-import {saveReceiveAddress} from './action.js'
-import {getDenomFromIsoCode} from '../../../utils'
-
-import type {AbcCurrencyWallet} from 'edge-login'
-import type {
-  GuiDenomination,
-  GuiWallet,
-  GuiReceiveAddress,
-  GuiCurrencyInfo
-} from '../../../../types'
-import type {Dispatch, State} from '../../../ReduxTypes'
+import { saveReceiveAddress } from './action.js'
+import { Request } from './Request.ui'
+import type { RequestDispatchProps, RequestStateProps } from './Request.ui'
 
 const emptyDenomination: GuiDenomination = {
   name: '',

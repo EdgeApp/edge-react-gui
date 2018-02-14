@@ -1,12 +1,13 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
-import {ChangePasswordScreen} from 'airbitz-core-js-ui'
+import { ChangePasswordScreen } from 'airbitz-core-js-ui'
+import type { AbcAccount, AbcContext } from 'edge-login'
+import React, { Component } from 'react'
+import { View } from 'react-native'
+
 import Gradient from '../../components/Gradient/Gradient.ui'
 import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
-import type {AbcContext, AbcAccount} from 'edge-login'
 
 export type ChangePasswordOwnProps = {
   account: AbcAccount,

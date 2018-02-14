@@ -1,9 +1,10 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View, Image} from 'react-native'
-import styles from './style'
+import React, { Component } from 'react'
+import { Image, View } from 'react-native'
+
 import Checkmark from '../../../../assets/images/manageTokens/check_mark.png'
+import styles from './style'
 
 export type Props = {
   enabled: boolean
@@ -13,11 +14,7 @@ class CheckBox extends Component<Props> {
   render () {
     const { enabled } = this.props
 
-    return (
-      <View style={styles.checkBoxOutline}>
-        {enabled && <Image source={Checkmark} style={styles.checkmark} />}
-      </View>
-    )
+    return <View style={styles.checkBoxOutline}>{enabled && <Image source={Checkmark} style={styles.checkmark} />}</View>
   }
 }
 

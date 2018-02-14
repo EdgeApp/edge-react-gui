@@ -1,15 +1,12 @@
 // @flow
 
-import {connect} from 'react-redux'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import {Actions} from 'react-native-router-flux'
-import ChangePinComponent, {
-  type ChangePinOwnProps,
-  type ChangePinStateProps,
-  type ChangePinDispatchProps
-} from './ChangePinComponent.ui'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
-import type {State} from '../../../ReduxTypes'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type { State } from '../../../ReduxTypes'
+import ChangePinComponent from './ChangePinComponent.ui'
+import type { ChangePinDispatchProps, ChangePinOwnProps, ChangePinStateProps } from './ChangePinComponent.ui'
 
 export const mapStateToProps = (state: State, ownProps: ChangePinOwnProps): ChangePinStateProps => ({
   context: CORE_SELECTORS.getContext(state),

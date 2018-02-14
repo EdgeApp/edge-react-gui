@@ -1,16 +1,13 @@
-// @flow
-import React, {Component} from 'react'
-import {
-  View,
-  LayoutAnimation,
-  TouchableHighlight
-} from 'react-native'
-import T from '../../../components/FormattedText'
-import styles, {styles as styleRaw} from '../style'
-import * as UTILS from '../../../../utils'
-import {bns} from 'biggystring'
-import type {GuiWallet} from '../../../../../types'
+import { bns } from 'biggystring'
 import _ from 'lodash'
+// @flow
+import React, { Component } from 'react'
+import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
+
+import type { GuiWallet } from '../../../../../types'
+import * as UTILS from '../../../../utils'
+import T from '../../../components/FormattedText'
+import styles, { styles as styleRaw } from '../style'
 
 const DIVIDE_PRECISION = 18
 
@@ -43,7 +40,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const tokens = []
     for (const property in metaTokenBalances) {
       if (property !== code) {
-        const index = _.findIndex(combinedTokens, (token) => token.currencyCode === property)
+        const index = _.findIndex(combinedTokens, token => token.currencyCode === property)
         if (index !== -1) {
           tokens.push(this.renderTokenRowContent(walletId, property, metaTokenBalances[property]))
         }
@@ -58,7 +55,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     if (denomination) {
       multiplier = denomination[this.props.settings[currencyCode].denomination].multiplier
     } else {
-      const customDenom = _.find(this.props.settings.customTokens, (item) => item.currencyCode === currencyCode)
+      const customDenom = _.find(this.props.settings.customTokens, item => item.currencyCode === currencyCode)
       if (customDenom && customDenom.denominations && customDenom.denominations[0]) {
         multiplier = customDenom.denominations[0].multiplier
       } else {
@@ -68,24 +65,23 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const cryptoAmount = bns.div(balance, multiplier, DIVIDE_PRECISION)
     const walletId = parentId
     return (
-      <TouchableHighlight style={styles.tokenRowContainer}
+      <TouchableHighlight
+        style={styles.tokenRowContainer}
         underlayColor={styleRaw.underlay.color}
-        key={currencyCode} onPress={() => {
+        key={currencyCode}
+        onPress={() => {
           this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(walletId, currencyCode, this.props.type)
           this.props.updateReceiveAddress(parentId, currencyCode)
-        }}>
+        }}
+      >
         <View style={styles.currencyRowContent}>
           <View style={styles.currencyRowNameTextWrap}>
-            <T style={styles.currencyRowText}>
-              {currencyCode}
-            </T>
+            <T style={styles.currencyRowText}>{currencyCode}</T>
           </View>
           <View style={styles.currencyRowBalanceTextWrap}>
-            <T style={styles.currencyRowText}>
-              {cryptoAmount}
-            </T>
+            <T style={styles.currencyRowText}>{cryptoAmount}</T>
           </View>
         </View>
       </TouchableHighlight>
@@ -93,15 +89,9 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
   }
 
   renderWalletRow = (guiWallet: GuiWallet) => {
-    const multiplier =
-      guiWallet
-      .allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination]
-      .multiplier
-    const symbol =
-      guiWallet
-      .allDenominations[guiWallet.currencyCode][multiplier]
-      .symbol
-    const denomAmount:string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
+    const multiplier = guiWallet.allDenominations[guiWallet.currencyCode][this.props.settings[guiWallet.currencyCode].denomination].multiplier
+    const symbol = guiWallet.allDenominations[guiWallet.currencyCode][multiplier].symbol
+    const denomAmount: string = bns.div(guiWallet.primaryNativeBalance, multiplier, DIVIDE_PRECISION)
     const walletId = guiWallet.id
     const currencyCode = guiWallet.currencyCode
 
@@ -110,7 +100,7 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
     const enabledTokens = guiWallet.enabledTokens
 
     for (const prop in guiWallet.nativeBalances) {
-      if ((prop !== currencyCode) && (enabledTokens.includes(prop))) {
+      if (prop !== currencyCode && enabledTokens.includes(prop)) {
         enabledNativeBalances[prop] = guiWallet.nativeBalances[prop]
       }
     }
@@ -119,21 +109,21 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
 
     return (
       <View key={guiWallet.id}>
-        <TouchableHighlight style={styles.rowContainer}
+        <TouchableHighlight
+          style={styles.rowContainer}
           underlayColor={styleRaw.underlay.color}
           onPress={() => {
             this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
             this.props.selectWallet(walletId, currencyCode, this.props.type)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
-          }}>
+          }}
+        >
           <View style={styles.currencyRowContent}>
             <View style={styles.currencyRowNameTextWrap}>
-              <T style={styles.currencyRowText}>
-                {UTILS.cutOffText(guiWallet.name, 34)}
-              </T>
+              <T style={styles.currencyRowText}>{UTILS.cutOffText(guiWallet.name, 34)}</T>
             </View>
-            <View style={[styles.rowBalanceTextWrap, {flexDirection: 'row'}]}>
+            <View style={[styles.rowBalanceTextWrap, { flexDirection: 'row' }]}>
               <T style={[styles.currencyRowText, styles.symbol]}>{symbol || ''}</T>
               <T style={styles.currencyRowText}>{denomAmount}</T>
             </View>
@@ -158,8 +148,6 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
 
   render () {
     // console.log('rendering dropdown', this.props.selectedWalletId)
-    return (
-      <View>{this.renderWalletRows()}</View>
-    )
+    return <View>{this.renderWalletRows()}</View>
   }
 }

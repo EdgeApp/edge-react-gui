@@ -1,10 +1,10 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../ReduxTypes.js'
+import { toggleWalletListModal } from './action'
 import WalletTransferList from './WalletTransferList.ui'
-import {toggleWalletListModal} from './action'
-import type {State, Dispatch} from '../../../ReduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   walletTransferList: state.ui.scenes.walletTransferList.walletTransferList,

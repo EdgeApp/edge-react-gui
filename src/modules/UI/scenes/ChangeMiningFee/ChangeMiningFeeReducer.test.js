@@ -2,8 +2,7 @@
 
 import { changeMiningFee as changeMiningFeeReducer } from './reducer.js'
 
-test('initialState',
-() => {
+test('initialState', () => {
   const expected = {
     isCustomFeeVisible: false
   }

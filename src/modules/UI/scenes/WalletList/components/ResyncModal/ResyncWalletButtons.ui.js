@@ -1,6 +1,7 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+
 import s from '../../../../../../locales/strings.js'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 
@@ -22,10 +23,6 @@ export default class ResyncWalletButtons extends Component<Props, State> {
   }
 
   render () {
-    return <OptionButtons
-      positiveText={s.strings.string_resync}
-      onPositive={this.onPositive}
-      onNegative={this.onNegative}
-    />
+    return <OptionButtons positiveText={s.strings.string_resync} onPositive={this.onPositive} onNegative={this.onNegative} />
   }
 }

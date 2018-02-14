@@ -1,15 +1,6 @@
 /* globals test expect */
 
-import {
-  uiReducer,
-  errorAlert,
-  transactionAlert,
-  scenes,
-  wallets,
-  request,
-  settings,
-  contacts
-} from './reducer.js'
+import { contacts, errorAlert, request, scenes, settings, transactionAlert, uiReducer, wallets } from './reducer.js'
 
 test('initialState', () => {
   const initialState = {

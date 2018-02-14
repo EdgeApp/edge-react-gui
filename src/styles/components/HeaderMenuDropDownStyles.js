@@ -1,9 +1,8 @@
 // @flow
 
-import { PLATFORM } from '../../theme/variables/platform'
-
-import * as Styles from '../indexStyles'
 import THEME from '../../theme/variables/airbitz'
+import { PLATFORM } from '../../theme/variables/platform'
+import * as Styles from '../indexStyles'
 
 const HeaderMenuRightSideStyle = {
   menuContainer: {
@@ -16,7 +15,7 @@ const HeaderMenuRightSideStyle = {
     height: 35,
     backgroundColor: 'rgba(255,255,255,0)'
   },
-  iconButton: {...Styles.IconButtonStyle, iconSize: 15}
+  iconButton: { ...Styles.IconButtonStyle, iconSize: 15 }
 }
 
 const MenuDropDownStyle = {
@@ -24,8 +23,7 @@ const MenuDropDownStyle = {
     flexDirection: 'row',
     width: 46
   },
-  menuButton: {
-  },
+  menuButton: {},
   menuOption: {
     borderBottomColor: THEME.COLORS.GRAY_3,
     borderBottomWidth: 1,
@@ -61,6 +59,6 @@ const MenuDropDownStyleHeader = {
   }
 }
 
-export {HeaderMenuRightSideStyle}
-export {MenuDropDownStyle}
-export {MenuDropDownStyleHeader}
+export { HeaderMenuRightSideStyle }
+export { MenuDropDownStyle }
+export { MenuDropDownStyleHeader }

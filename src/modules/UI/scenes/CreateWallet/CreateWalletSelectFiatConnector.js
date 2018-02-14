@@ -1,12 +1,11 @@
 // @flow
 
-import {connect} from 'react-redux'
-import {
-  CreateWalletSelectFiat as CreateWalletSelectFiatComponent,
-  type CreateWalletSelectFiatStateProps
-} from './CreateWalletSelectFiat.ui'
-import type {State} from '../../../ReduxTypes'
+import { connect } from 'react-redux'
+
+import type { State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
+import { CreateWalletSelectFiat as CreateWalletSelectFiatComponent } from './CreateWalletSelectFiat.ui'
+import type { CreateWalletSelectFiatStateProps } from './CreateWalletSelectFiat.ui'
 
 const mapStateToProps = (state: State): CreateWalletSelectFiatStateProps => ({
   supportedFiats: UTILS.getSupportedFiats(),

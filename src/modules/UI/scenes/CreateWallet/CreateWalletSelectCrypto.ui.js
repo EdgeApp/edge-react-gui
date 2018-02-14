@@ -1,24 +1,19 @@
 // @flow
 
-import React, {Component} from 'react'
-import {Actions} from 'react-native-router-flux'
-import {
-  Alert,
-  View,
-  Keyboard,
-  TouchableHighlight,
-  Image
-} from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-import Text from '../../components/FormattedText'
-import {FormField} from '../../../../components/FormField.js'
-import SearchResults from '../../components/SearchResults'
+import React, { Component } from 'react'
+import { Alert, Image, Keyboard, TouchableHighlight, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+
+import { FormField } from '../../../../components/FormField.js'
 import * as Constants from '../../../../constants/indexConstants.js'
-import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
-import Gradient from '../../components/Gradient/Gradient.ui'
+import type { DeviceDimensions, FlatListItem, GuiWalletType } from '../../../../types'
 import * as UTILS from '../../../utils'
-import type {GuiWalletType, FlatListItem, DeviceDimensions} from '../../../../types'
+import Text from '../../components/FormattedText'
+import Gradient from '../../components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView'
+import SearchResults from '../../components/SearchResults'
+import styles, { styles as stylesRaw } from './style.js'
 
 export type CreateWalletSelectCryptoOwnProps = {
   dimensions: DeviceDimensions,
@@ -46,18 +41,17 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
   }
 
   isValidWalletType = (): boolean => {
-    const {selectedWalletType} = this.state
-    const {supportedWalletTypes} = this.props
-    const walletTypeValue = supportedWalletTypes
-      .findIndex((walletType) => walletType.value === selectedWalletType)
+    const { selectedWalletType } = this.state
+    const { supportedWalletTypes } = this.props
+    const walletTypeValue = supportedWalletTypes.findIndex(walletType => walletType.value === selectedWalletType)
 
     const isValid: boolean = walletTypeValue >= 0
     return isValid
   }
 
   getWalletType = (walletTypeValue: string): GuiWalletType => {
-    const {supportedWalletTypes} = this.props
-    const foundValueIndex = supportedWalletTypes.findIndex((walletType) => walletType.value === walletTypeValue)
+    const { supportedWalletTypes } = this.props
+    const foundValueIndex = supportedWalletTypes.findIndex(walletType => walletType.value === walletTypeValue)
     const foundValue = supportedWalletTypes[foundValueIndex]
 
     return foundValue
@@ -85,12 +79,15 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
   }
 
   handleSelectWalletType = (item: GuiWalletType): void => {
-    const selectedWalletType = this.props.supportedWalletTypes.find((type) => type.value === item.value)
+    const selectedWalletType = this.props.supportedWalletTypes.find(type => type.value === item.value)
     if (selectedWalletType) {
-      this.setState({
-        selectedWalletType: selectedWalletType.value,
-        searchTerm: selectedWalletType.label
-      }, this.onNext)
+      this.setState(
+        {
+          selectedWalletType: selectedWalletType.value,
+          searchTerm: selectedWalletType.label
+        },
+        this.onNext
+      )
     }
   }
 
@@ -103,9 +100,11 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
   }
 
   render () {
-    const filteredArray = this.props.supportedWalletTypes.filter((entry) => {
-      return ((entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0) ||
-              (entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0))
+    const filteredArray = this.props.supportedWalletTypes.filter(entry => {
+      return (
+        entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0 ||
+        entry.currencyCode.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
+      )
     })
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
     const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 36 // substract button area height and FormField height
@@ -114,7 +113,8 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.view}>
-            <FormField style={styles.picker}
+            <FormField
+              style={styles.picker}
               clearButtonMode={'while-editing'}
               onFocus={this.handleOnFocus}
               onBlur={this.handleOnBlur}
@@ -130,7 +130,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
               onRegularSelectFxn={this.handleSelectWalletType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, {height: searchResultsHeight}] }
+              containerStyle={[styles.searchContainer, { height: searchResultsHeight }]}
               keyExtractor={this.keyExtractor}
             />
           </View>
@@ -141,22 +141,21 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
 
   renderWalletTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
-      <View style={[styles.singleCryptoTypeWrap, (data.item.value === this.state.selectedWalletType) && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleCryptoType]}
-          onPress={() => onRegularSelect(data.item)}
-          underlayColor={stylesRaw.underlayColor.color}>
+      <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedWalletType && styles.selectedItem]}>
+        <TouchableHighlight style={[styles.singleCryptoType]} onPress={() => onRegularSelect(data.item)} underlayColor={stylesRaw.underlayColor.color}>
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
-              <View style={[styles.cryptoTypeLogo]} >
-                {
-                  data.item.symbolImageDarkMono
-                  ? <Image source={{uri: data.item.symbolImageDarkMono}} style={[styles.cryptoTypeLogo, {borderRadius: 20}]} />
-                  : <View style={styles.cryptoTypeLogo} />
-                }
-
+              <View style={[styles.cryptoTypeLogo]}>
+                {data.item.symbolImageDarkMono ? (
+                  <Image source={{ uri: data.item.symbolImageDarkMono }} style={[styles.cryptoTypeLogo, { borderRadius: 20 }]} />
+                ) : (
+                  <View style={styles.cryptoTypeLogo} />
+                )}
               </View>
               <View style={[styles.cryptoTypeLeftTextWrap]}>
-                <Text style={[styles.cryptoTypeName]}>{data.item.label} - {data.item.currencyCode}</Text>
+                <Text style={[styles.cryptoTypeName]}>
+                  {data.item.label} - {data.item.currencyCode}
+                </Text>
               </View>
             </View>
           </View>

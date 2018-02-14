@@ -1,35 +1,37 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-  View,
-  ActivityIndicator,
-  ScrollView,
-  Alert
-} from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-import Text from '../../components/FormattedText'
+import type { AbcMetaToken } from 'edge-login'
+import _ from 'lodash'
+import React, { Component } from 'react'
+import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
+
+import { FormField } from '../../../../components/FormField.js'
+import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
+import type { CustomTokenInfo } from '../../../../types.js'
+import * as UTILS from '../../../utils'
+import { PrimaryButton, TertiaryButton } from '../../components/Buttons'
+import Text from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import styles from './style.js'
-import {PrimaryButton, TertiaryButton} from '../../components/Buttons'
-import {FormField} from '../../../../components/FormField.js'
 // import * as WALLET_ACTIONS from '../../Wallets/action.js'
 import StylizedModal from '../../components/Modal/Modal.ui'
-import DeleteTokenButtons from './components/DeleteTokenButtons.ui.js'
-import * as Constants from '../../../../constants/indexConstants'
 import OptionIcon from '../../components/OptionIcon/OptionIcon.ui'
-import * as UTILS from '../../../utils'
-import type {CustomTokenInfo} from '../../../../types.js'
-
-import type {AbcMetaToken} from 'edge-login'
-import _ from 'lodash'
+import SafeAreaView from '../../components/SafeAreaView'
+import DeleteTokenButtons from './components/DeleteTokenButtons.ui.js'
+import styles from './style.js'
 
 export type EditTokenDispatchProps = {
   showDeleteTokenModal: () => void,
   hideDeleteTokenModal: () => void,
   deleteCustomToken: (walletId: string, currencyCode: string) => void,
-  editCustomToken: (walletId: string, currencyName: string, currencyCode: string, contractAddress: string, denomination: string, oldCurrencyCode: string) => void
+  editCustomToken: (
+    walletId: string,
+    currencyName: string,
+    currencyCode: string,
+    contractAddress: string,
+    denomination: string,
+    oldCurrencyCode: string
+  ) => void
 }
 
 export type EditTokenStateProps = {
@@ -61,7 +63,7 @@ export type EditTokenComponentProps = EditTokenDispatchProps & EditTokenOwnProps
 export default class EditToken extends Component<EditTokenComponentProps, State> {
   constructor (props: EditTokenComponentProps) {
     super(props)
-    const tokenInfoIndex = _.findIndex(props.customTokens, (item) => item.currencyCode === props.currencyCode)
+    const tokenInfoIndex = _.findIndex(props.customTokens, item => item.currencyCode === props.currencyCode)
     if (tokenInfoIndex >= 0) {
       const tokenInfo = props.customTokens[tokenInfoIndex]
       const { currencyName, contractAddress, denomination } = tokenInfo
@@ -88,11 +90,13 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
             headerText={s.strings.edittoken_delete_prompt}
             visibilityBoolean={this.props.deleteTokenModalVisible}
             featuredIcon={<OptionIcon iconName={Constants.DELETE} style={styles.deleteIcon} />}
-            modalBottom={<DeleteTokenButtons
-              onPressDelete={this.deleteToken}
-              onPressCancel={() => this.props.hideDeleteTokenModal()}
-              processingFlag={this.props.deleteCustomTokenProcessing}
-            />}
+            modalBottom={
+              <DeleteTokenButtons
+                onPressDelete={this.deleteToken}
+                onPressCancel={() => this.props.hideDeleteTokenModal()}
+                processingFlag={this.props.deleteCustomTokenProcessing}
+              />
+            }
             onExitButtonFxn={() => this.props.hideDeleteTokenModal()}
           />
           <ScrollView style={styles.container}>
@@ -148,11 +152,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
               <Text style={styles.errorMessageText}>{this.state.errorMessage}</Text>
             </View>
             <View style={[styles.buttonsArea]}>
-              <TertiaryButton
-                text={s.strings.edittoken_delete_token}
-                onPressFunction={this.props.showDeleteTokenModal}
-                buttonStyle={styles.deleteButton}
-              />
+              <TertiaryButton text={s.strings.edittoken_delete_token} onPressFunction={this.props.showDeleteTokenModal} buttonStyle={styles.deleteButton} />
               <PrimaryButton
                 text={s.strings.string_save}
                 style={[styles.saveButton, styles.button]}
@@ -173,7 +173,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   }
 
   deleteToken = () => {
-    const {walletId, currencyCode} = this.props
+    const { walletId, currencyCode } = this.props
     this.props.deleteCustomToken(walletId, currencyCode)
   }
 
@@ -206,15 +206,18 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   }
 
   _onSave = () => {
-    const {currencyName, currencyCode, decimalPlaces, contractAddress} = this.state
+    const { currencyName, currencyCode, decimalPlaces, contractAddress } = this.state
     if (currencyName && currencyCode && decimalPlaces && contractAddress) {
-      const {walletId} = this.props
+      const { walletId } = this.props
       const visibleTokens = UTILS.mergeTokensRemoveInvisible(this.props.metaTokens, this.props.customTokens)
-      const indexInVisibleTokens = _.findIndex(visibleTokens, (token) => token.currencyCode === currencyCode)
-      if (currencyCode !== this.props.currencyCode) { // if the currencyCode will change
-        if (indexInVisibleTokens >= 0) { // if the new currency code is already taken / visible
+      const indexInVisibleTokens = _.findIndex(visibleTokens, token => token.currencyCode === currencyCode)
+      if (currencyCode !== this.props.currencyCode) {
+        // if the currencyCode will change
+        if (indexInVisibleTokens >= 0) {
+          // if the new currency code is already taken / visible
           Alert.alert(s.strings.edittoken_delete_title, s.strings.edittoken_duplicate_currency_code)
-        } else { // not in the array of visible tokens, CASE 3
+        } else {
+          // not in the array of visible tokens, CASE 3
           if (parseInt(decimalPlaces) !== 'NaN') {
             const denomination = UTILS.decimalPlacesToDenomination(decimalPlaces)
             this.props.editCustomToken(walletId, currencyName, currencyCode, contractAddress, denomination, this.props.currencyCode)

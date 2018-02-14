@@ -1,6 +1,6 @@
 // @flow
 
-import type {AbcContext} from 'edge-login'
+import type { AbcContext } from 'edge-login'
 
 export const getCurrencyPlugins = (context: AbcContext) => {
   return context.getCurrencyPlugins()

@@ -1,16 +1,16 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
-import s from '../../../../../locales/strings.js'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 
-import StylizedModal from '../../../components/Modal/Modal.ui'
-import {Icon} from '../../../components/Icon/Icon.ui'
+import { FormField } from '../../../../../components/indexComponents'
 import * as Constants from '../../../../../constants/indexConstants'
+import s from '../../../../../locales/strings.js'
+import { MaterialInputOnWhite } from '../../../../../styles/indexStyles'
 import THEME from '../../../../../theme/variables/airbitz'
+import { Icon } from '../../../components/Icon/Icon.ui'
+import StylizedModal from '../../../components/Modal/Modal.ui'
 import ModalButtons from './ModalButtons.ui'
-import {FormField} from '../../../../../components/indexComponents'
-import {MaterialInputOnWhite} from '../../../../../styles/indexStyles'
 
 type ConfirmPasswordModalProps = {
   style: Object,
@@ -57,43 +57,44 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
     this.props.onDone(this.state.confimPassword)
   }
   renderMiddle = (style: Object) => {
-    const formStyle = {...MaterialInputOnWhite,
-      container: {...MaterialInputOnWhite.container}
+    const formStyle = {
+      ...MaterialInputOnWhite,
+      container: { ...MaterialInputOnWhite.container }
     }
-    return <View style={style.middle.container} >
-      <FormField onChangeText={this.textChange}
-        style={formStyle}
-        label={s.strings.confirm_password_text}
-        value={this.state.confimPassword}
-        error={this.props.error}
-        secureTextEntry
-        returnKeyType={'done'}
-        onSubmitEditing={this.onDone}
-        autoFocus/>
+    return (
+      <View style={style.middle.container}>
+        <FormField
+          onChangeText={this.textChange}
+          style={formStyle}
+          label={s.strings.confirm_password_text}
+          value={this.state.confimPassword}
+          error={this.props.error}
+          secureTextEntry
+          returnKeyType={'done'}
+          onSubmitEditing={this.onDone}
+          autoFocus
+        />
         <View style={style.middle.clearShim} />
-    </View>
+      </View>
+    )
   }
   renderBottom (style: Object) {
-    return <ModalButtons
-      onDone={this.onDone}
-      doneButtonActivityFlag={this.state.isThinking}
-      onCancel={this.props.onCancel} />
+    return <ModalButtons onDone={this.onDone} doneButtonActivityFlag={this.state.isThinking} onCancel={this.props.onCancel} />
   }
   render () {
     const style = this.props.style
-    const icon = <Icon
-      style={style.icon}
-      name={Constants.LOCKED_ICON}
-      size={40}
-      type={Constants.ION_ICONS}/>
+    const icon = <Icon style={style.icon} name={Constants.LOCKED_ICON} size={40} type={Constants.ION_ICONS} />
 
-    return <StylizedModal
-      visibilityBoolean={this.props.showModal}
-      featuredIcon={icon}
-      headerText={this.props.headerText}
-      headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
-      modalMiddle={this.renderMiddle(style)}
-      modalBottom={this.renderBottom(style)}
-      onExitButtonFxn={this.props.onCancel} />
+    return (
+      <StylizedModal
+        visibilityBoolean={this.props.showModal}
+        featuredIcon={icon}
+        headerText={this.props.headerText}
+        headerTextStyle={{ color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10 }}
+        modalMiddle={this.renderMiddle(style)}
+        modalBottom={this.renderBottom(style)}
+        onExitButtonFxn={this.props.onCancel}
+      />
+    )
   }
 }

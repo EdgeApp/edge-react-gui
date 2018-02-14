@@ -1,8 +1,9 @@
+import { isEqual } from 'lodash'
+
+import type { Action } from '../../../ReduxTypes.js'
 // @flow
 import * as ACTION from './action'
-import { type SendConfirmationState, initialState } from './selectors'
-import { isEqual } from 'lodash'
-import type {Action} from '../../../ReduxTypes.js'
+import { SendConfirmationState, initialState } from './selectors'
 
 export const sendConfirmation = (state: SendConfirmationState = initialState, action: Action) => {
   const { type, data = {} } = action

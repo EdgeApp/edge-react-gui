@@ -1,13 +1,11 @@
 // @flow
 
 import { connect } from 'react-redux'
-import type { State } from '../../../../../ReduxTypes'
+
 import * as Constants from '../../../../../../constants/indexConstants.js'
+import type { State } from '../../../../../ReduxTypes'
+import { OPEN_MODAL_VALUE, wrap } from '../../../WalletList/components/WalletOptions/action'
 import CustomFees from './CustomFees.ui'
-import {
-  OPEN_MODAL_VALUE,
-  wrap
-} from '../../../WalletList/components/WalletOptions/action'
 
 export const mapStateToProps = (state: State) => ({})
 

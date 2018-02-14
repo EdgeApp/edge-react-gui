@@ -1,3 +1,3 @@
 import HwBackButtonHandler from './HwBackButtonHandler'
 
-export {HwBackButtonHandler}
+export { HwBackButtonHandler }

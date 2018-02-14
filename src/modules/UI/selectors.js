@@ -1,13 +1,14 @@
 // @flow
 
-import type {AbcTransaction} from 'edge-login'
+import type { AbcTransaction } from 'edge-login'
 import _ from 'lodash'
 
-import type {State} from '../ReduxTypes'
-import type {GuiDenomination, GuiWallet} from '../../types'
+import type { GuiDenomination, GuiWallet } from '../../types'
+import type { State } from '../ReduxTypes'
 import * as SETTINGS_SELECTORS from './Settings/selectors'
 
-export const getWallets = (state: State) => { // returns an object with GUI Wallets as Keys Not sure how to tpye that
+export const getWallets = (state: State) => {
+  // returns an object with GUI Wallets as Keys Not sure how to tpye that
   const wallets = state.ui.wallets.byId
   return wallets
 }
@@ -68,7 +69,7 @@ export const getExchangeDenomination = (state: State, currencyCode: string, spec
       if (denomination.name === currencyCode) return denomination
     }
   } else {
-    const customToken = _.find(customTokens, (item) => item.currencyCode === currencyCode)
+    const customToken = _.find(customTokens, item => item.currencyCode === currencyCode)
     if (customToken && customToken.denomination && customToken.denomination[0]) {
       const denomination = customToken.denominations[0]
       return denomination

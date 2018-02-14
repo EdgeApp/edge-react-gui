@@ -1,7 +1,7 @@
 // @flow
 
-import * as ACTION from './action'
 import type { Action } from '../../ReduxTypes'
+import * as ACTION from './action'
 
 type DimensionsState = {
   keyboardHeight: number
