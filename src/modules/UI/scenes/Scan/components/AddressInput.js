@@ -1,18 +1,19 @@
-import React, {Component} from 'react'
-import {
-  View
-} from 'react-native'
-import {TertiaryButton} from '../../../components/Buttons'
-import styles from '../style.js'
-import s from '../../../../../locales/strings.js'
-import {FormField} from '../../../../../components/FormField.js'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 
-export class AddressInput extends Component { // this component is for the input area of the Recipient Address Modal
+import { FormField } from '../../../../../components/FormField.js'
+import s from '../../../../../locales/strings.js'
+import { TertiaryButton } from '../../../components/Buttons'
+import styles from '../style.js'
+
+export class AddressInput extends Component {
+  // this component is for the input area of the Recipient Address Modal
   render () {
     return (
       <View>
         <View style={[styles.addressInputWrap]}>
-          <FormField style={[styles.addressInput]}
+          <FormField
+            style={[styles.addressInput]}
             value={this.props.uri}
             onChangeText={this.props.onChangeText}
             autoCapitalize={'none'}
@@ -23,14 +24,11 @@ export class AddressInput extends Component { // this component is for the input
             onSubmitEditing={this.props.onSubmit}
           />
         </View>
-        {this.props.copyMessage &&
+        {this.props.copyMessage && (
           <View style={styles.pasteButtonRow}>
-            <TertiaryButton text={this.props.copyMessage}
-              ellipsizeMode={'middle'}
-              onPressFunction={this.props.onPaste}
-              numberOfLines={1} />
+            <TertiaryButton text={this.props.copyMessage} ellipsizeMode={'middle'} onPressFunction={this.props.onPaste} numberOfLines={1} />
           </View>
-        }
+        )}
       </View>
     )
   }

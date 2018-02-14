@@ -1,5 +1,6 @@
 import { ToastAndroid } from 'react-native'
-import {Actions} from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux'
+
 import s from '../../../../../../locales/strings'
 
 const ANDROID_TIME_INTERVAL_BACK_BUTTON = 2000

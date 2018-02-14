@@ -1,28 +1,23 @@
 // @flow
 
-import React, {Component} from 'react'
-import {Actions} from 'react-native-router-flux'
-import {
-  ActivityIndicator,
-  Alert,
-  View,
-  Keyboard
-} from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-import {SecondaryButton, PrimaryButton} from '../../components/Buttons'
-import {FormField} from '../../../../components/FormField.js'
+import React, { Component } from 'react'
+import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
+import { sprintf } from 'sprintf-js'
 
-import styles from './style.js'
-import {MaterialInputOnWhite} from '../../../../styles/components/FormFieldStyles.js'
+import { FormField } from '../../../../components/FormField.js'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
-import {sprintf} from 'sprintf-js'
+import { MaterialInputOnWhite } from '../../../../styles/components/FormFieldStyles.js'
+import type { GuiFiatType, GuiWalletType } from '../../../../types.js'
+import { PrimaryButton, SecondaryButton } from '../../components/Buttons'
 import Gradient from '../../components/Gradient/Gradient.ui'
-import type {GuiFiatType, GuiWalletType} from '../../../../types.js'
+import SafeAreaView from '../../components/SafeAreaView'
+import styles from './style.js'
 
 export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
-  selectedWalletType: GuiWalletType,
+  selectedWalletType: GuiWalletType
 }
 
 type State = {
@@ -38,7 +33,7 @@ export class CreateWalletName extends Component<CreateWalletNameOwnProps, State>
   }
 
   isValidWalletName = (): boolean => {
-    const {walletName} = this.state
+    const { walletName } = this.state
     const isValid: boolean = walletName.length > 0
 
     return isValid
@@ -62,7 +57,7 @@ export class CreateWalletName extends Component<CreateWalletNameOwnProps, State>
   }
 
   handleChangeWalletName = (walletName: string) => {
-    this.setState({walletName})
+    this.setState({ walletName })
   }
 
   render () {
@@ -77,19 +72,16 @@ export class CreateWalletName extends Component<CreateWalletNameOwnProps, State>
               placeholder={s.strings.fragment_wallets_addwallet_name_hint}
               onNext={this.onNext}
             />
-             <View style={styles.buttons}>
-                <SecondaryButton
-                  style={[styles.back]}
-                  onPressFunction={this.onBack}
-                  text={s.strings.title_back} />
+            <View style={styles.buttons}>
+              <SecondaryButton style={[styles.back]} onPressFunction={this.onBack} text={s.strings.title_back} />
 
-                <PrimaryButton
-                  style={[styles.next]}
-                  onPressFunction={this.onNext}
-                  text={s.strings.string_next_capitalized}
-                  processingElement={<ActivityIndicator />}
-                />
-             </View>
+              <PrimaryButton
+                style={[styles.next]}
+                onPressFunction={this.onNext}
+                text={s.strings.string_next_capitalized}
+                processingElement={<ActivityIndicator />}
+              />
+            </View>
           </View>
         </View>
       </SafeAreaView>
@@ -110,7 +102,8 @@ class WalletNameInput extends Component<WalletNameInputProps> {
   render () {
     return (
       <View style={styles.pickerView}>
-        <FormField style={MaterialInputOnWhite}
+        <FormField
+          style={MaterialInputOnWhite}
           autoFocus
           clearButtonMode={'while-editing'}
           autoCorrect={false}

@@ -1,10 +1,11 @@
 // @flow
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+
 import * as Constants from '../../../../../../constants/indexConstants'
 import s from '../../../../../../locales/strings.js'
+import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
 import MenuDropDown from '../../../../components/MenuDropDown/MenuDropDown.ui'
-import {MenuDropDownStyle} from '../../../../../../styles/indexStyles'
 
 type Props = {
   walletKey: string,
@@ -12,7 +13,7 @@ type Props = {
 }
 type State = {}
 export default class WalletListRowOptions extends Component<Props, State> {
-  options: Array<{value: string, label: string}>
+  options: Array<{ value: string, label: string }>
   constructor (props: Props) {
     super(props)
     this.state = {
@@ -36,10 +37,6 @@ export default class WalletListRowOptions extends Component<Props, State> {
   }
 
   render () {
-    return (
-      <MenuDropDown style={MenuDropDownStyle}
-        onSelect={this.optionAction}
-        data={this.options} />
-    )
+    return <MenuDropDown style={MenuDropDownStyle} onSelect={this.optionAction} data={this.options} />
   }
 }

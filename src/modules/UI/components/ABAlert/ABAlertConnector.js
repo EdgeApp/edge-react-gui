@@ -1,11 +1,11 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import ABAlert from './ABAlert.ui'
 import * as actions from '../../../../actions/indexActions'
 import * as Constants from '../../../../constants/indexConstants'
-import type {State, Dispatch} from '../../../ReduxTypes.js'
+import type { Dispatch, State } from '../../../ReduxTypes.js'
+import ABAlert from './ABAlert.ui'
 
 const mapStateToProps = (state: State) => ({
   view: state.ui.scenes.ABAlert.view,

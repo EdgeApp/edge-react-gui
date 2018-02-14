@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { TouchableOpacity } from 'react-native'
 
 import s from '../../../../../locales/strings.js'
-
 import T from '../../../components/FormattedText'
 import styles from '../style'
 

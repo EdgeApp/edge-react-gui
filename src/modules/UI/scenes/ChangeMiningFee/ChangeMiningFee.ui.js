@@ -1,17 +1,15 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-
-import Gradient from '../../components/Gradient/Gradient.ui'
-import RadioButton from './components/RadioButton.ui'
-import CustomFees from './components/CustomFees/CustomFeesConnector.js'
+import type { EdgeCurrencyWallet } from 'edge-login'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 
 import * as FEE from '../../../../constants/FeeConstants'
 import s from '../../../../locales/strings.js'
-import type {EdgeCurrencyWallet} from 'edge-login'
-
+import Gradient from '../../components/Gradient/Gradient.ui'
+import SafeAreaView from '../../components/SafeAreaView'
+import CustomFees from './components/CustomFees/CustomFeesConnector.js'
+import RadioButton from './components/RadioButton.ui'
 import styles from './style'
 
 const HIGH_FEE_TEXT = s.strings.mining_fee_high_label_choice
@@ -29,9 +27,7 @@ export type ChangeMiningFeeStateProps = {
   feeSetting: string
 }
 
-export type ChangeMiningFeeDispatchProps = {
-
-}
+export type ChangeMiningFeeDispatchProps = {}
 
 type State = {
   feeSetting: string
@@ -65,30 +61,15 @@ export default class ChangeMiningFee extends Component<ChangeMiningFeeProps, Sta
 
           <View style={styles.content}>
             <View style={styles.row}>
-              <RadioButton
-                value={FEE.HIGH_FEE}
-                label={HIGH_FEE_TEXT}
-                onPress={this.handlePress}
-                isSelected={FEE.HIGH_FEE === feeSetting}
-              />
+              <RadioButton value={FEE.HIGH_FEE} label={HIGH_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.HIGH_FEE === feeSetting} />
             </View>
 
             <View style={styles.row}>
-              <RadioButton
-                value={FEE.STANDARD_FEE}
-                label={STANDARD_FEE_TEXT}
-                onPress={this.handlePress}
-                isSelected={FEE.STANDARD_FEE === feeSetting}
-              />
+              <RadioButton value={FEE.STANDARD_FEE} label={STANDARD_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.STANDARD_FEE === feeSetting} />
             </View>
 
             <View style={styles.row}>
-              <RadioButton
-                value={FEE.LOW_FEE}
-                label={LOW_FEE_TEXT}
-                onPress={this.handlePress}
-                isSelected={FEE.LOW_FEE === feeSetting}
-              />
+              <RadioButton value={FEE.LOW_FEE} label={LOW_FEE_TEXT} onPress={this.handlePress} isSelected={FEE.LOW_FEE === feeSetting} />
             </View>
             <CustomFees handlePress={this.handlePress} sourceWallet={this.props.sourceWallet} />
           </View>

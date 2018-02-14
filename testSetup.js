@@ -10,7 +10,8 @@ jest.mock('Linking', () => {
     getInitialURL: jest.fn()
   }
 })
-jest.mock('react-native-fs', () => { // https://github.com/itinance/react-native-fs/issues/404
+jest.mock('react-native-fs', () => {
+  // https://github.com/itinance/react-native-fs/issues/404
   return {
     mkdir: jest.fn(),
     moveFile: jest.fn(),

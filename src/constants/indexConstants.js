@@ -8,7 +8,7 @@ export * from './DropDownValueConstants'
 export * from './WalletAndCurrencyConstants'
 export * from './FeeConstants'
 export * from './ErrorConstants'
-export {REQUEST_STATUS} from './RequestStatusConstants'
+export { REQUEST_STATUS } from './RequestStatusConstants'
 
 export const LEFT_TO_RIGHT = 'leftToRight'
 export const RIGHT_TO_LEFT = 'rightToLeft'

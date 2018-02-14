@@ -40,112 +40,113 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 // tokens
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
 
-export const updateSettings = (settings) => ({
+export const updateSettings = settings => ({
   type: UPDATE_SETTINGS,
-  data: {settings}
+  data: { settings }
 })
 
-export const loadSettings = (settings) => ({
+export const loadSettings = settings => ({
   type: LOAD_SETTINGS,
-  data: {settings}
+  data: { settings }
 })
 
-export const setPINMode = (pinMode) => ({
+export const setPINMode = pinMode => ({
   type: SET_PIN_MODE,
-  data: {pinMode}
+  data: { pinMode }
 })
 
-export const setPIN = (pin) => ({
+export const setPIN = pin => ({
   type: SET_PIN,
-  data: {pin}
+  data: { pin }
 })
 
-export const setOTPMode = (otpMode) => ({
+export const setOTPMode = otpMode => ({
   type: SET_OTP_MODE,
-  data: {otpMode}
+  data: { otpMode }
 })
 
-export const setOTP = (otp) => ({
+export const setOTP = otp => ({
   type: SET_OTP,
-  data: {otp}
+  data: { otp }
 })
 
-export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds) => ({
+export const setAutoLogoutTimeInSeconds = autoLogoutTimeInSeconds => ({
   type: SET_AUTO_LOGOUT_TIME,
-  data: {autoLogoutTimeInSeconds}
+  data: { autoLogoutTimeInSeconds }
 })
 
-export const setDefaultFiat = (defaultFiat) => ({
+export const setDefaultFiat = defaultFiat => ({
   type: SET_DEFAULT_FIAT,
-  data: {defaultFiat}
+  data: { defaultFiat }
 })
 
-export const togglePinLoginEnabled = (pinLoginEnabled) => ({
+export const togglePinLoginEnabled = pinLoginEnabled => ({
   type: TOGGLE_PIN_LOGIN_ENABLED,
-  data: {pinLoginEnabled}
+  data: { pinLoginEnabled }
 })
 
-export const setMerchantMode = (merchantMode) => ({
+export const setMerchantMode = merchantMode => ({
   type: SET_MERCHANT_MODE,
-  data: {merchantMode}
+  data: { merchantMode }
 })
 
-export const setBluetoothMode = (bluetoothMode) => ({
+export const setBluetoothMode = bluetoothMode => ({
   type: SET_BLUETOOTH_MODE,
-  data: {bluetoothMode}
+  data: { bluetoothMode }
 })
 // settings lock
-export const setSettingsLock = (bool) => ({
+export const setSettingsLock = bool => ({
   type: SET_SETTINGS_LOCK,
   data: bool
 })
 // BTC Settings
-export const setBitcoinOverrideServer = (overrideServer) => ({
+export const setBitcoinOverrideServer = overrideServer => ({
   type: SET_BITCOIN_OVERRIDE_SERVER,
-  data: {overrideServer}
+  data: { overrideServer }
 })
 
 // Denomination
 export const setDenominationKey = (currencyCode, denominationKey) => ({
   type: SET_DENOMINATION_KEY,
-  data: {currencyCode, denominationKey}
+  data: { currencyCode, denominationKey }
 })
 
 // Plugins
-export const addCurrencyPlugin = (plugin) => {
+export const addCurrencyPlugin = plugin => {
   const pluginName = plugin.pluginName
   const walletTypes = plugin.currencyInfo.walletTypes
   return {
     type: ADD_CURRENCY_PLUGIN,
-    data: {pluginName, plugin, walletTypes}
+    data: { pluginName, plugin, walletTypes }
   }
 }
 
 // tokens
 
-export const setCustomTokens = (customTokens) => {
+export const setCustomTokens = customTokens => {
   return {
     type: SET_CUSTOM_TOKENS,
-    data: {customTokens}
+    data: { customTokens }
   }
 }
 
 // touch id settings
-export const addTouchIdInfo = (touchIdInfo) => {
+export const addTouchIdInfo = touchIdInfo => {
   return {
     type: TOUCH_ID_SETTINGS,
     data: touchIdInfo
   }
 }
 
-export const updateTouchIdEnabled = (bool) => {
+export const updateTouchIdEnabled = bool => {
   return {
     type: CHANGE_TOUCH_ID_SETTINGS,
     data: { isTouchEnabled: bool }
   }
 }
 
-export const updateOtpInfo = (otpInfo) => { // {enabled}
+export const updateOtpInfo = otpInfo => {
+  // {enabled}
   return {
     type: OTP_SETTINGS,
     data: otpInfo

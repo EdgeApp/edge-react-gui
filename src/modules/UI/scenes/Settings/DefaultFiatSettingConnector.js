@@ -1,14 +1,13 @@
 // @flow
 
-import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
-import DefaultFiatSetting from './DefaultFiatSetting.ui'
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import {setDefaultFiatRequest} from './action'
+import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UTILS from '../../../utils'
-
-import type {State, Dispatch} from '../../../ReduxTypes.js'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors'
+import { setDefaultFiatRequest } from './action'
+import DefaultFiatSetting from './DefaultFiatSetting.ui'
 
 const mapStateToProps = (state: State) => ({
   defaultFiat: SETTINGS_SELECTORS.getDefaultFiat(state),
@@ -16,7 +15,7 @@ const mapStateToProps = (state: State) => ({
   dimensions: state.ui.scenes.dimensions
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onSelectFiat: (selectedDefaultFiat) => {
+  onSelectFiat: selectedDefaultFiat => {
     dispatch(setDefaultFiatRequest(selectedDefaultFiat))
     Actions.pop()
   }

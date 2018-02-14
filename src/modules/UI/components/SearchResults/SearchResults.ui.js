@@ -1,14 +1,11 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-  FlatList,
-  View
-} from 'react-native'
+import React, { Component } from 'react'
+import { FlatList, View } from 'react-native'
 
-import style from './styles'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type {DeviceDimensions} from '../../../../types.js'
+import type { DeviceDimensions } from '../../../../types.js'
+import style from './styles'
 
 export type Props = {
   regularArray: Array<any>,
@@ -17,10 +14,10 @@ export type Props = {
   height: number,
   extraTopSpace: number,
   containerStyle: Object,
-  onRegularSelectFxn: (string) => void,
+  onRegularSelectFxn: string => void,
   scrollRenderAheadDistance: number,
   renderRegularResultFxn: (rowData: any, onRegularSelectFxn: (any) => void, filterArray: Array<any>) => void,
-  keyExtractor: (Object) => number,
+  keyExtractor: Object => number,
   regularResult: (data: Object, onPressFxn: () => void) => void
 }
 export type State = {
@@ -48,24 +45,27 @@ export default class SearchResults extends Component<Props, State> {
       searchResultsHeight = this.props.height
     }
     return (
-      <View style={[
-        style.searchResultsContainer,
-        {
-          height: searchResultsHeight,
-          width: PLATFORM.deviceWidth,
-          top: PLATFORM.toolbarHeight + this.props.extraTopSpace,
-          zIndex: 999
-        },
-        this.props.containerStyle]}>
-          <FlatList
-            style={[{width: '100%'}]}
-            data={this.props.regularArray}
-            renderItem={(rowData) => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn, this.props.filterArray)}
-            initialNumToRender={this.props.initialNumToRender || 12}
-            scrollRenderAheadDistance={this.props.scrollRenderAheadDistance || 800}
-            keyExtractor={this.props.keyExtractor}
-            overScrollMode='never'
-            keyboardShouldPersistTaps='handled'
+      <View
+        style={[
+          style.searchResultsContainer,
+          {
+            height: searchResultsHeight,
+            width: PLATFORM.deviceWidth,
+            top: PLATFORM.toolbarHeight + this.props.extraTopSpace,
+            zIndex: 999
+          },
+          this.props.containerStyle
+        ]}
+      >
+        <FlatList
+          style={[{ width: '100%' }]}
+          data={this.props.regularArray}
+          renderItem={rowData => this.props.renderRegularResultFxn(rowData, this.props.onRegularSelectFxn, this.props.filterArray)}
+          initialNumToRender={this.props.initialNumToRender || 12}
+          scrollRenderAheadDistance={this.props.scrollRenderAheadDistance || 800}
+          keyExtractor={this.props.keyExtractor}
+          overScrollMode="never"
+          keyboardShouldPersistTaps="handled"
         />
       </View>
     )

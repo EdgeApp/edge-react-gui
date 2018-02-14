@@ -1,6 +1,6 @@
 /* globals test expect */
 
-import { settings as settingsReducer, initialState } from './reducer.js'
+import { initialState, settings as settingsReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = initialState

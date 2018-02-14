@@ -1,13 +1,13 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import ControlPanel from './ControlPanel.ui'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import {openSelectUser, closeSelectUser} from './action'
-import type {State, Dispatch} from '../../../ReduxTypes.js'
+import { closeSelectUser, openSelectUser } from './action'
+import ControlPanel from './ControlPanel.ui'
 
 const mapStateToProps = (state: State) => {
   let secondaryToPrimaryRatio = 0

@@ -1,13 +1,14 @@
 // @flow
 
+import { isIphoneX } from '../../lib/isIphoneX.js'
 import THEME from '../../theme/variables/airbitz'
 import { PLATFORM } from '../../theme/variables/platform'
 import * as Styles from '../indexStyles'
-import { isIphoneX } from '../../lib/isIphoneX.js'
 
 const EdgeLoginScreen = {
-  container: {...Styles.SceneContainer,
-    height: PLATFORM.deviceHeight - THEME.HEADER - (THEME.FOOTER_TABS_HEIGHT * 2) - (isIphoneX ? 68 : 0)
+  container: {
+    ...Styles.SceneContainer,
+    height: PLATFORM.deviceHeight - THEME.HEADER - THEME.FOOTER_TABS_HEIGHT * 2 - (isIphoneX ? 68 : 0)
   },
   gradient: {
     height: THEME.HEADER,
@@ -25,7 +26,6 @@ const EdgeLoginScreen = {
     flex: 4,
     alignItems: 'center',
     justifyContent: 'space-around'
-
   },
   image: {
     width: 80,
@@ -101,4 +101,4 @@ const EdgeLoginScreen = {
   }
 }
 
-export {EdgeLoginScreen}
+export { EdgeLoginScreen }
