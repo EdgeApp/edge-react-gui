@@ -1,6 +1,7 @@
-import * as ACTION from './action'
 import { combineReducers } from 'redux'
+
 import * as WALLET_ACTIONS from '../../Wallets/action'
+import * as ACTION from './action'
 
 export const deleteTokenModalVisible = (state = false, action) => {
   switch (action.type) {

@@ -1,13 +1,12 @@
 // @flow
 
-import type {Dispatch, State} from '../../../ReduxTypes'
+import { connect } from 'react-redux'
 
-import {connect} from 'react-redux'
-
-import Login from './Login.ui'
+import { addUsernames } from '../../../Core/Context/action'
 import * as CORE_SELECTORS from '../../../Core/selectors'
-import {addUsernames} from '../../../Core/Context/action'
-import {initializeAccount} from '../../../Login/action'
+import { initializeAccount } from '../../../Login/action'
+import type { Dispatch, State } from '../../../ReduxTypes'
+import Login from './Login.ui'
 
 const mapStateToProps = (state: State) => ({
   context: CORE_SELECTORS.getContext(state),
@@ -17,7 +16,7 @@ const mapStateToProps = (state: State) => ({
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   dispatch,
-  addUsernames: (usernames) => dispatch(addUsernames(usernames)),
+  addUsernames: usernames => dispatch(addUsernames(usernames)),
   initializeAccount: (account, touchIdInfo) => dispatch(initializeAccount(account, touchIdInfo))
 })
 

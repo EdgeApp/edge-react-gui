@@ -1,9 +1,10 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+
+import { logoutRequest } from '../../../../Login/action'
+import type { Dispatch, State } from '../../../../ReduxTypes'
 import Main from './Main'
-import {logoutRequest} from '../../../../Login/action'
-import type {State, Dispatch} from '../../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => ({
   usersView: state.ui.scenes.controlPanel.usersView

@@ -1,11 +1,12 @@
-import {connect} from 'react-redux'
-import SideMenu from './SideMenu.ui'
-import {openSideMenu, closeSideMenu} from './action'
+import { connect } from 'react-redux'
 
-const mapStateToProps = (state) => ({
+import { closeSideMenu, openSideMenu } from './action'
+import SideMenu from './SideMenu.ui'
+
+const mapStateToProps = state => ({
   view: state.ui.scenes.sideMenu.view
 })
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   open: () => dispatch(openSideMenu()),
   close: () => dispatch(closeSideMenu())
 })

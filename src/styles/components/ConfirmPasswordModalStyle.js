@@ -59,4 +59,4 @@ const ConfirmPasswordModalStyle = {
   iconSize: 48
 }
 
-export {ConfirmPasswordModalStyle}
+export { ConfirmPasswordModalStyle }

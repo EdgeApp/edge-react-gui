@@ -1,16 +1,16 @@
 // @flow
 
-import React, {Component} from 'react'
-import {TouchableWithoutFeedback, View} from 'react-native'
-import T from '../../../components/FormattedText'
+import React, { Component } from 'react'
+import { TouchableWithoutFeedback, View } from 'react-native'
 
+import T from '../../../components/FormattedText'
 import style from '../style'
 
 type RadioButtonOwnProps = {
   value: string,
   label: string,
   isSelected: boolean,
-  onPress: (value: string) => void,
+  onPress: (value: string) => void
 }
 
 export default class RadioButton extends Component<RadioButtonOwnProps> {
@@ -19,9 +19,7 @@ export default class RadioButton extends Component<RadioButtonOwnProps> {
   renderIcon () {
     const { isSelected } = this.props
 
-    return (
-      <View style={[style.radio, (isSelected ? style.selected : null)]} />
-    )
+    return <View style={[style.radio, isSelected ? style.selected : null]} />
   }
 
   render () {
@@ -30,9 +28,7 @@ export default class RadioButton extends Component<RadioButtonOwnProps> {
         <View style={style.column}>
           {this.renderIcon()}
           <View>
-            <T style={style.label}>
-              {this.props.label}
-            </T>
+            <T style={style.label}>{this.props.label}</T>
           </View>
         </View>
       </TouchableWithoutFeedback>

@@ -1,13 +1,9 @@
 // @flow
 
-import {
-  StyleSheet,
-  Platform,
-  Image
-} from 'react-native'
+import { Image, Platform, StyleSheet } from 'react-native'
 
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export const styles = {
   gradient: {
@@ -17,7 +13,8 @@ export const styles = {
     flex: 1,
     alignItems: 'stretch'
   },
-  totalBalanceBox: { // one
+  totalBalanceBox: {
+    // one
     height: 111,
     justifyContent: 'center'
   },
@@ -57,7 +54,8 @@ export const styles = {
     flex: 1
   },
   // bottom major portion of screen
-  walletsBox: { // one
+  walletsBox: {
+    // one
     flex: 1
   },
   walletsBoxHeaderWrap: {
@@ -130,9 +128,7 @@ export const styles = {
     justifyContent: 'space-between',
     height: 50
   },
-  archiveBoxHeaderTextWrap: {
-
-  },
+  archiveBoxHeaderTextWrap: {},
   archiveIcon: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     fontSize: 28
@@ -269,14 +265,10 @@ export const styles = {
     marginTop: 0,
     marginBottom: 0,
     borderBottomColor: THEME.COLORS.GRAY_4,
-    borderBottomWidth: (Platform.OS === 'ios')
-      ? 1
-      : 0
+    borderBottomWidth: Platform.OS === 'ios' ? 1 : 0
   },
   nameInput: {
-    height: (Platform.OS === 'ios')
-      ? 26
-      : 46,
+    height: Platform.OS === 'ios' ? 26 : 46,
     textAlign: 'center',
     fontSize: 20,
     color: THEME.COLORS.GRAY_1

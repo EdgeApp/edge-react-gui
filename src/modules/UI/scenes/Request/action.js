@@ -1,6 +1,6 @@
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
 
 export const UPDATE_RECEIVE_ADDRESS = 'UPDATE_RECEIVE_ADDRESS'
 export const UPDATE_RECEIVE_ADDRESS_START = 'UPDATE_RECEIVE_ADDRESS_START'
@@ -13,10 +13,10 @@ export const updateReceiveAddress = (walletId, currencyCode) => (dispatch, getSt
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
-  const onSuccess = (receiveAddress) => {
+  const onSuccess = receiveAddress => {
     dispatch(updateReceiveAddressSuccess(receiveAddress))
   }
-  const onError = (error) => {
+  const onError = error => {
     // console.log('Core Error', error)
     dispatch(updateReceiveAddressError(error))
   }
@@ -26,12 +26,12 @@ export const updateReceiveAddress = (walletId, currencyCode) => (dispatch, getSt
     .catch(onError)
 }
 
-export const updateInputCurrencySelected = (inputCurrencySelected) => ({
+export const updateInputCurrencySelected = inputCurrencySelected => ({
   type: UPDATE_INPUT_CURRENCY_SELECTED,
-  data: {inputCurrencySelected}
+  data: { inputCurrencySelected }
 })
 
-export const saveReceiveAddress = (receiveAddress) => (dispatch, getState) => {
+export const saveReceiveAddress = receiveAddress => (dispatch, getState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const wallet = CORE_SELECTORS.getWallet(state, selectedWalletId)
@@ -39,41 +39,42 @@ export const saveReceiveAddress = (receiveAddress) => (dispatch, getState) => {
   const onSuccess = () => {
     dispatch(updateReceiveAddress())
   }
-  const onError = (e) => {
+  const onError = e => {
     console.log(e)
   }
 
-  wallet.saveReceiveAddress(receiveAddress)
+  wallet
+    .saveReceiveAddress(receiveAddress)
     .then(onSuccess)
     .catch(onError)
 }
 
-export const updateReceiveAddressSuccess = (receiveAddress) => ({
+export const updateReceiveAddressSuccess = receiveAddress => ({
   type: UPDATE_RECEIVE_ADDRESS_SUCCESS,
-  data: {receiveAddress}
+  data: { receiveAddress }
 })
 
-export const updateReceiveAddressError = (error) => ({
+export const updateReceiveAddressError = error => ({
   type: UPDATE_RECEIVE_ADDRESS_ERROR,
-  data: {error}
+  data: { error }
 })
 
 export const UPDATE_AMOUNT_REQUESTED_IN_CRYPTO = 'UPDATE_AMOUNT_REQUESTED_IN_CRYPTO'
-export const updateAmountRequestedInCrypto = (amountRequestedInCrypto) => ({
+export const updateAmountRequestedInCrypto = amountRequestedInCrypto => ({
   type: UPDATE_AMOUNT_REQUESTED_IN_CRYPTO,
-  data: {amountRequestedInCrypto}
+  data: { amountRequestedInCrypto }
 })
 
 export const UPDATE_AMOUNT_RECEIVED_IN_CRYPTO = 'UPDATE_AMOUNT_RECEIVED_IN_CRYPTO'
-export const updateAmountReceivedInCrypto = (amountReceivedInCrypto) => ({
+export const updateAmountReceivedInCrypto = amountReceivedInCrypto => ({
   type: UPDATE_AMOUNT_RECEIVED_IN_CRYPTO,
-  data: {amountReceivedInCrypto}
+  data: { amountReceivedInCrypto }
 })
 
 export const UPDATE_AMOUNT_REQUESTED_IN_FIAT = 'UPDATE_AMOUNT_REQUESTED_IN_FIAT'
-export const updateAmountRequestedInFiat = (amountRequestedInFiat) => ({
+export const updateAmountRequestedInFiat = amountRequestedInFiat => ({
   type: UPDATE_AMOUNT_REQUESTED_IN_FIAT,
-  data: {amountRequestedInFiat}
+  data: { amountRequestedInFiat }
 })
 
 export const UPDATE_METADATA = 'UPDATE_METADATA'

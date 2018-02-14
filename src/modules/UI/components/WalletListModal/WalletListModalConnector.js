@@ -1,5 +1,6 @@
 // @flow
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+
 import WalletListModal from './WalletListModal.ui'
 
 const mapStateToProps = (state: any, ownProps: any) => {

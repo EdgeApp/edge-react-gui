@@ -1,8 +1,9 @@
 // @flow
 
 import { combineReducers } from 'redux'
-import * as ACTION from '../../Wallets/action'
+
 import type { Action } from '../../../ReduxTypes.js'
+import * as ACTION from '../../Wallets/action'
 
 export type IsCreatingWallet = boolean
 

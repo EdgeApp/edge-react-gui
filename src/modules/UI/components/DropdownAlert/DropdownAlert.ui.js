@@ -1,6 +1,7 @@
 // @flow
 
-import React, {Component, type Node} from 'react'
+import React, { Component } from 'react'
+import type { Node } from 'react'
 import RNDropdownAlert from 'react-native-dropdownalert'
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
 }
 
 export default class DropdownAlert extends Component<Props> {
-  dropdownAlert: ?{alert: Function}
+  dropdownAlert: ?{ alert: Function }
   componentWillReceiveProps (nextProps: Props) {
     if (this.shouldDisplay(this.props, nextProps)) {
       if (this.dropdownAlert) this.dropdownAlert.alert()
@@ -19,17 +20,23 @@ export default class DropdownAlert extends Component<Props> {
   }
 
   render () {
-    const {children, onClose, onPress} = this.props
+    const { children, onClose, onPress } = this.props
 
-    return (<RNDropdownAlert ref={(ref) => { this.dropdownAlert = ref }}
-      onPress={onPress}
-      panResponderEnabled={false}
-      updateStatusBar={false}
-      endDelta={20}
-      onClose={onClose}>
-      {children}
-    </RNDropdownAlert>)
+    return (
+      <RNDropdownAlert
+        ref={ref => {
+          this.dropdownAlert = ref
+        }}
+        onPress={onPress}
+        panResponderEnabled={false}
+        updateStatusBar={false}
+        endDelta={20}
+        onClose={onClose}
+      >
+        {children}
+      </RNDropdownAlert>
+    )
   }
 
-  shouldDisplay = (current: Props, next: Props) => (!current.visible && next.visible)
+  shouldDisplay = (current: Props, next: Props) => !current.visible && next.visible
 }

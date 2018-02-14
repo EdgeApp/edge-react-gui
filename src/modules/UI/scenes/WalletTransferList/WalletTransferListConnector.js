@@ -1,13 +1,14 @@
-import {connect} from 'react-redux'
-import WalletTransferList from './WalletTransferList.ui'
-import {toggleWalletListModal} from './action'
+import { connect } from 'react-redux'
 
-const mapStateToProps = (state) => ({
+import { toggleWalletListModal } from './action'
+import WalletTransferList from './WalletTransferList.ui'
+
+const mapStateToProps = state => ({
   walletTransferList: state.ui.scenes.walletTransferList.walletTransferList,
   walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   toggleWalletListModal: () => dispatch(toggleWalletListModal())
 })
 

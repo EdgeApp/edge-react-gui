@@ -2,10 +2,9 @@
 
 import { connect } from 'react-redux'
 
-import HelpModal from './HelpModal.ui'
-import { closeHelpModal } from './actions.js'
-
 import type { Dispatch, State } from '../../../ReduxTypes'
+import { closeHelpModal } from './actions.js'
+import HelpModal from './HelpModal.ui'
 
 const mapStateToProps = (state: State) => ({
   modal: state.ui.scenes.helpModal

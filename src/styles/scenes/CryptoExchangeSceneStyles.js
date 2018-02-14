@@ -1,8 +1,10 @@
 // @flow
 
-import * as Styles from '../indexStyles'
+import { Image } from 'react-native'
+
 import THEME from '../../theme/variables/airbitz'
-import {Image} from 'react-native'
+import * as Styles from '../indexStyles'
+
 const CryptoExchangeSceneStyle = {
   gradient: {
     height: THEME.SPACER.HEADER
@@ -197,4 +199,4 @@ const CryptoExchangeSceneStyle = {
   }
 }
 
-export {CryptoExchangeSceneStyle}
+export { CryptoExchangeSceneStyle }

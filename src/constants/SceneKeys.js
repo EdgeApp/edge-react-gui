@@ -36,23 +36,23 @@ export const EXCHANGE_NOT_USED = 'exchange_notused'
 export const CREATE_WALLET = 'createWallet'
 
 export const CURRENCY_SETTINGS = {
-  'btcSettings': {
+  btcSettings: {
     pluginName: 'bitcoin',
     currencyCode: 'BTC'
   },
-  'bchSettings': {
+  bchSettings: {
     pluginName: 'bitcoinCash',
     currencyCode: 'BCH'
   },
-  'ethSettings': {
+  ethSettings: {
     pluginName: 'ethereum',
     currencyCode: 'ETH'
   },
-  'ltcSettings': {
+  ltcSettings: {
     pluginName: 'litecoin',
     currencyCode: 'LTC'
   },
-  'dashSettings': {
+  dashSettings: {
     pluginName: 'dash',
     currencyCode: 'DASH'
   }

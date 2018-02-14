@@ -1,9 +1,10 @@
 // @flow
 
-import * as ACTION from '../WalletList/components/WalletOptions/action'
 import { combineReducers } from 'redux'
-import type { Action } from '../../../ReduxTypes.js'
+
 import * as Constants from '../../../../constants/indexConstants'
+import type { Action } from '../../../ReduxTypes.js'
+import * as ACTION from '../WalletList/components/WalletOptions/action'
 
 const isCustomFeeVisible = (state: boolean = false, action: Action) => {
   switch (action.type) {

@@ -1,11 +1,12 @@
-// @flow
-import ABAlert from './ABAlert.ui'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+
 import * as actions from '../../../../actions/indexActions'
 import * as Constants from '../../../../constants/indexConstants'
-import type {
-  State
-} from '../../../ReduxTypes.js' // Dispatch was left out beacuse it causes a cascade
+import type { State } from '../../../ReduxTypes.js'
+// @flow
+import ABAlert from './ABAlert.ui'
+
+// Dispatch was left out beacuse it causes a cascade
 // of problems
 
 const mapStateToProps = (state: State) => ({

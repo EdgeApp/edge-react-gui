@@ -1,12 +1,8 @@
-import React, {Component} from 'react'
-import {
-  KeyboardAvoidingView,
-  ListView,
-  TouchableOpacity,
-  View
-} from 'react-native'
+import React, { Component } from 'react'
+import { KeyboardAvoidingView, ListView, TouchableOpacity, View } from 'react-native'
+
+import { FormField } from '../../../../components/FormField.js'
 import T from '../../components/FormattedText'
-import {FormField} from '../../../../components/FormField.js'
 import styles from './styles.js'
 
 export default class DropdownPicker extends Component {
@@ -20,39 +16,37 @@ export default class DropdownPicker extends Component {
     }
   }
 
-  handleSelectListItem = (item) => {
+  handleSelectListItem = item => {
     this.setState({
       searchTerm: item.label,
       isListVisible: false
     })
     this.props.onSelect(item)
   }
-  handleSearchTermChange = (searchTerm) => {
+  handleSearchTermChange = searchTerm => {
     this.setState({
       isListVisible: true,
       searchTerm
     })
   }
   handleOnFocus = () => {
-    this.setState({isListVisible: true})
+    this.setState({ isListVisible: true })
   }
   handleOnBlur = () => {
-    this.setState({isListVisible: false})
+    this.setState({ isListVisible: false })
   }
 
   getMatchingListItems = () => {
-    const {searchTerm} = this.state
+    const { searchTerm } = this.state
     const normalizedSearchTerm = searchTerm.toLowerCase()
-    return this.props.listItems.filter((listItem) =>
-      listItem.label
-      .toLowerCase()
-      .includes(normalizedSearchTerm))
+    return this.props.listItems.filter(listItem => listItem.label.toLowerCase().includes(normalizedSearchTerm))
   }
 
   render () {
     return (
       <View style={styles.pickerView}>
-        <FormField style={styles.picker}
+        <FormField
+          style={styles.picker}
           autoFocus={this.props.autoFocus}
           clearButtonMode={'while-editing'}
           onFocus={this.handleOnFocus}
@@ -61,13 +55,10 @@ export default class DropdownPicker extends Component {
           autoCapitalize={'words'}
           onChangeText={this.handleSearchTermChange}
           value={this.state.searchTerm}
-          label={this.props.placeholder} />
+          label={this.props.placeholder}
+        />
 
-          {this.state.isListVisible &&
-            <DropdownList
-              style={this.props.listStyle}
-              dataSource={this.getMatchingListItems()}
-              onPress={this.handleSelectListItem} />}
+        {this.state.isListVisible && <DropdownList style={this.props.listStyle} dataSource={this.getMatchingListItems()} onPress={this.handleSelectListItem} />}
       </View>
     )
   }
@@ -75,20 +66,19 @@ export default class DropdownPicker extends Component {
 
 // //////////////////////////// DropdownList ///////////////////////////////////
 
-const DropdownList = (props) => {
-  const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+const DropdownList = props => {
+  const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 })
   const dataSource = ds.cloneWithRows(props.dataSource)
-  const onPress = (item) => () => props.onPress(item)
-  const renderRow = (item) => <TouchableOpacity style={styles.row}
-    onPress={onPress(item)}>
-    <T>{item.label}</T>
-  </TouchableOpacity>
+  const onPress = item => () => props.onPress(item)
+  const renderRow = item => (
+    <TouchableOpacity style={styles.row} onPress={onPress(item)}>
+      <T>{item.label}</T>
+    </TouchableOpacity>
+  )
 
-  return <KeyboardAvoidingView keyboardVerticalOffset={60} contentContainerStyle={props.style} behavior={'height'}>
-    <ListView
-      keyboardShouldPersistTaps={'always'}
-      style={props.style}
-      dataSource={dataSource}
-      renderRow={renderRow} />
-  </KeyboardAvoidingView>
+  return (
+    <KeyboardAvoidingView keyboardVerticalOffset={60} contentContainerStyle={props.style} behavior={'height'}>
+      <ListView keyboardShouldPersistTaps={'always'} style={props.style} dataSource={dataSource} renderRow={renderRow} />
+    </KeyboardAvoidingView>
+  )
 }

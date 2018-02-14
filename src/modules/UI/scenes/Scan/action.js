@@ -12,7 +12,7 @@ export const toggleAddressModal = () => ({
   type: TOGGLE_ADDRESS_MODAL_VISIBILITY
 })
 
-export const updateRecipientAddress = (data) => ({
+export const updateRecipientAddress = data => ({
   type: UPDATE_RECIPIENT_ADDRESS,
   data
 })

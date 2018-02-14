@@ -1,7 +1,8 @@
-import * as ACTION from './action'
+import { combineReducers } from 'redux'
+
 import * as Constants from '../../../../constants/indexConstants'
 import * as WALLET_LIST_MODAL_ACTION from '../../components/WalletListModal/action'
-import { combineReducers } from 'redux'
+import * as ACTION from './action'
 
 const torchEnabled = (state = false, action) => {
   switch (action.type) {

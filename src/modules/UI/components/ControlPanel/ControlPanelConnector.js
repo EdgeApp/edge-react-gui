@@ -1,11 +1,12 @@
-import {connect} from 'react-redux'
-import ControlPanel from './ControlPanel.ui'
+import { connect } from 'react-redux'
+
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import {openSelectUser, closeSelectUser} from './action'
+import { closeSelectUser, openSelectUser } from './action'
+import ControlPanel from './ControlPanel.ui'
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   let secondaryToPrimaryRatio = 0
   const guiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -39,7 +40,7 @@ const mapStateToProps = (state) => {
     username: CORE_SELECTORS.getUsername(state)
   }
 }
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   openSelectUser: () => dispatch(openSelectUser()),
   closeSelectUser: () => dispatch(closeSelectUser())
 })

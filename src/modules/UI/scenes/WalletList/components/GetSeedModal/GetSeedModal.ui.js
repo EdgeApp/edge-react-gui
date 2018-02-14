@@ -1,19 +1,18 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
-import {MaterialInputOnWhite, ConfirmPasswordModalStyle} from '../../../../../../styles/indexStyles'
-import {FormField} from '../../../../../../components/indexComponents'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 
-import StylizedModal from '../../../../components/Modal/Modal.ui'
+import { FormField } from '../../../../../../components/indexComponents'
 import * as Constants from '../../../../../../constants/indexConstants.js'
+import s from '../../../../../../locales/strings.js'
+import { ConfirmPasswordModalStyle, MaterialInputOnWhite } from '../../../../../../styles/indexStyles'
+import T from '../../../../components/FormattedText/FormattedText.ui'
+import StylizedModal from '../../../../components/Modal/Modal.ui'
+import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 import OptionIcon from '../../../../components/OptionIcon/OptionIcon.ui'
 import OptionSubtext from '../../../../components/OptionSubtext/OptionSubtextConnector.js'
-
-import T from '../../../../components/FormattedText/FormattedText.ui'
 import styles from '../../style'
-import s from '../../../../../../locales/strings.js'
-import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
 
 export const GET_SEED_WALLET_START = 'GET_SEED_WALLET_START'
 export const GET_SEED_WALLET_SUCCESS = 'GET_SEED_WALLET_SUCCESS'
@@ -89,49 +88,53 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
   }
 
   renderPasswordInput = (style?: Object) => {
-    const formStyle = {...MaterialInputOnWhite,
-      container: {...MaterialInputOnWhite.container}
+    const formStyle = {
+      ...MaterialInputOnWhite,
+      container: { ...MaterialInputOnWhite.container }
     }
-    return <View style={[ConfirmPasswordModalStyle.middle.container, {paddingTop: 10, paddingBottom: 25}]} >
-      <FormField onChangeText={this.textChange}
-        style={formStyle}
-        label={s.strings.confirm_password_text}
-        value={this.state.confimPassword}
-        error={this.state.error}
-        secureTextEntry
-        autoFocus/>
-    </View>
+    return (
+      <View style={[ConfirmPasswordModalStyle.middle.container, { paddingTop: 10, paddingBottom: 25 }]}>
+        <FormField
+          onChangeText={this.textChange}
+          style={formStyle}
+          label={s.strings.confirm_password_text}
+          value={this.state.confimPassword}
+          error={this.state.error}
+          secureTextEntry
+          autoFocus
+        />
+      </View>
+    )
   }
 
   render () {
-    let modalMiddle = <View style={[styles.container, {flexDirection: 'column'}]}>
-      <OptionSubtext
-        confirmationText={s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
-        label={s.strings.fragment_wallets_get_seed_wallet}
-      />
-      {this.renderPasswordInput()}
-    </View>
+    let modalMiddle = (
+      <View style={[styles.container, { flexDirection: 'column' }]}>
+        <OptionSubtext
+          confirmationText={s.strings.fragment_wallets_get_seed_wallet_first_confirm_message_mobile}
+          label={s.strings.fragment_wallets_get_seed_wallet}
+        />
+        {this.renderPasswordInput()}
+      </View>
+    )
 
-    let modalBottom = <OptionButtons
-      positiveText={s.strings.string_get_seed}
-      onPositive={this.onPositive}
-      onNegative={this.onNegative}
-
-    />
+    let modalBottom = <OptionButtons positiveText={s.strings.string_get_seed} onPositive={this.onPositive} onNegative={this.onNegative} />
 
     if (this.props.privateSeedUnlocked) {
       modalBottom = null
       modalMiddle = <T style={styles.seedText}>{this.props.getSeed()}</T>
     }
 
-    return <StylizedModal
-      featuredIcon={<OptionIcon iconName={Constants.GET_SEED}/>}
-      headerText={s.strings.fragment_wallets_get_seed_wallet}
-      modalMiddle={modalMiddle}
-      modalBottom={modalBottom}
-      style={styles.getSeedModal}
-      visibilityBoolean={this.props.visibilityBoolean}
-      onExitButtonFxn={this.onDismiss}
-    />
+    return (
+      <StylizedModal
+        featuredIcon={<OptionIcon iconName={Constants.GET_SEED} />}
+        headerText={s.strings.fragment_wallets_get_seed_wallet}
+        modalMiddle={modalMiddle}
+        modalBottom={modalBottom}
+        style={styles.getSeedModal}
+        visibilityBoolean={this.props.visibilityBoolean}
+        onExitButtonFxn={this.onDismiss}
+      />
+    )
   }
 }

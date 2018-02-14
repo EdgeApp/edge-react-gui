@@ -1,22 +1,16 @@
+import type { AbcAccount } from 'edge-login'
 // @flow
 // import HockeyApp from 'react-native-hockeyapp'
-import {connect} from 'react-redux'
-import SettingsOverview from './SettingsOverview.ui'
+import { connect } from 'react-redux'
 
-import * as SETTINGS_SELECTORS from '../../Settings/selectors'
-import * as CORE_SELECTORS from '../../../Core/selectors'
-import {
-  checkCurrentPassword,
-  lockSettings,
-  setAutoLogoutTimeInMinutesRequest,
-  togglePinLoginEnabled,
-  updateTouchIdEnabled
-} from './action'
-import {resetSendLogsStatus, sendLogs} from '../../../Logs/action'
-import * as Constants from '../../../../constants/indexConstants'
-import type {State, Dispatch} from '../../../../modules/ReduxTypes'
-import type { AbcAccount } from 'edge-login'
 import * as actions from '../../../../actions/indexActions.js'
+import * as Constants from '../../../../constants/indexConstants'
+import type { Dispatch, State } from '../../../../modules/ReduxTypes'
+import * as CORE_SELECTORS from '../../../Core/selectors'
+import { resetSendLogsStatus, sendLogs } from '../../../Logs/action'
+import * as SETTINGS_SELECTORS from '../../Settings/selectors'
+import { checkCurrentPassword, lockSettings, setAutoLogoutTimeInMinutesRequest, togglePinLoginEnabled, updateTouchIdEnabled } from './action'
+import SettingsOverview from './SettingsOverview.ui'
 
 // settings_button_lock_settings, or //settings_button_unlock_settings
 
@@ -53,8 +47,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   sendLogs: (text: string) => dispatch(sendLogs(text)),
   resetConfirmPasswordError: (arg: Object) => dispatch(actions.dispatchActionObject(Constants.SET_CONFIRM_PASSWORD_ERROR, arg)),
   resetSendLogsStatus: () => dispatch(resetSendLogsStatus()),
-  onTogglePinLoginEnabled: (enableLogin: boolean) =>
-    dispatch(togglePinLoginEnabled(enableLogin))
+  onTogglePinLoginEnabled: (enableLogin: boolean) => dispatch(togglePinLoginEnabled(enableLogin))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SettingsOverview)

@@ -1,5 +1,6 @@
-import * as ACTION from './action.js'
 import { combineReducers } from 'redux'
+
+import * as ACTION from './action.js'
 
 export const subcategories = (state = [], action) => {
   switch (action.type) {

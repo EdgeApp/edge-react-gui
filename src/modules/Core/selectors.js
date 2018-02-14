@@ -1,7 +1,8 @@
 // @flow
 
-import type {AbcCurrencyWallet} from 'edge-login'
-import type {State} from '../ReduxTypes'
+import type { AbcCurrencyWallet } from 'edge-login'
+
+import type { State } from '../ReduxTypes'
 
 export const getCore = (state: State) => state.core
 
@@ -58,13 +59,11 @@ export const getExchangeRate = (state: State, fromCurrencyCode: string, toCurren
 export const getFakeExchangeRate = (state: State, fromCurrencyCode: string, toCurrencyCode: string) => {
   const currencyConverter = getCurrencyConverter(state)
   const exchangeRate = currencyConverter.convertCurrency(fromCurrencyCode, toCurrencyCode, 1)
-  return exchangeRate + (Math.random() * 10)
+  return exchangeRate + Math.random() * 10
 }
 
 // Wallets
-export const getWallets = (
-  state: State
-): { [walletId: string]: AbcCurrencyWallet } => {
+export const getWallets = (state: State): { [walletId: string]: AbcCurrencyWallet } => {
   const core = getCore(state)
   const wallets = core.wallets.byId
   return wallets

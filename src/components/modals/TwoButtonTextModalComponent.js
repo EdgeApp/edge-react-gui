@@ -1,9 +1,10 @@
 // @flow
-import React, {Component} from 'react'
-import {View, Text, Image} from 'react-native'
+import React, { Component } from 'react'
+import { Image, Text, View } from 'react-native'
+
+import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 // import {sprintf} from 'sprintf-js'
 import StylizedModal from '../../modules/UI/components/Modal/Modal.ui'
-import {Icon} from '../../modules/UI/components/Icon/Icon.ui'
 // import strings from '../../../../../locales/default'
 import THEME from '../../theme/variables/airbitz'
 import TwoButtonsComponent from './TwoButtonsComponent.js'
@@ -22,45 +23,43 @@ type Props = {
   onExitButtonFxn(): void
 }
 
-type State = {
-}
+type State = {}
 class TwoButtonTextModalComponent extends Component<Props, State> {
   onDone = () => {
     this.props.onDone()
   }
   renderMiddle = (style: any) => {
-    return <View style={style.middle.container} >
-      <Text style={style.middle.text}>{this.props.middleText}</Text>
-    </View>
+    return (
+      <View style={style.middle.container}>
+        <Text style={style.middle.text}>{this.props.middleText}</Text>
+      </View>
+    )
   }
   renderIcon = (style: any) => {
     if (this.props.iconImage) {
       return <Image source={this.props.iconImage} />
     }
-    return <Icon
-      style={style.icon}
-      name={this.props.icon}
-      size={40}
-      type={this.props.iconType}/>
+    return <Icon style={style.icon} name={this.props.icon} size={40} type={this.props.iconType} />
   }
   render () {
-    const modalBottom = <TwoButtonsComponent
-      cancelText={this.props.cancelText}
-      doneText={this.props.doneText}
-      onDone={this.onDone}
-      onCancel={this.props.onCancel} />
+    const modalBottom = (
+      <TwoButtonsComponent cancelText={this.props.cancelText} doneText={this.props.doneText} onDone={this.onDone} onCancel={this.props.onCancel} />
+    )
 
     const style = this.props.style
     const icon = this.renderIcon(style)
 
-    return <StylizedModal
-      visibilityBoolean={this.props.showModal}
-      featuredIcon={icon}
-      headerText={this.props.headerText}
-      headerTextStyle={{color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10}}
-      modalMiddle={this.renderMiddle(style)}
-      modalBottom={modalBottom}
-      onExitButtonFxn={this.props.onExitButtonFxn} />
+    return (
+      <StylizedModal
+        visibilityBoolean={this.props.showModal}
+        featuredIcon={icon}
+        headerText={this.props.headerText}
+        headerTextStyle={{ color: THEME.COLORS.PRIMARY, marginTop: -10, marginBottom: 10 }}
+        modalMiddle={this.renderMiddle(style)}
+        modalBottom={modalBottom}
+        onExitButtonFxn={this.props.onExitButtonFxn}
+      />
+    )
   }
 }
 

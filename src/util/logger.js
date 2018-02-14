@@ -1,8 +1,9 @@
 // @flow
 
-import RNFS from 'react-native-fs'
-import ENV from '../../env.json'
 import dateFormat from 'dateformat'
+import RNFS from 'react-native-fs'
+
+import ENV from '../../env.json'
 
 const path1 = RNFS.DocumentDirectoryPath + '/logs1.txt'
 const path2 = RNFS.DocumentDirectoryPath + '/logs2.txt'
@@ -15,8 +16,7 @@ const getTime = () => new Date().toISOString()
 
 const isObject = (item: any) => typeof item === 'object' && item !== null
 
-const normalize = (...info: Array<any>) =>
-  `${getTime()} | ${info.map((item) => isObject(item) ? JSON.stringify(item) : item).join(' ')}`
+const normalize = (...info: Array<any>) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
 
 // function saveToBuffer (log: string) {
 //   buffer = buffer !== '' ? buffer + '\n' + log : log
@@ -50,15 +50,15 @@ export async function readLogs () {
 
     exists = await RNFS.exists(path3)
     if (exists) {
-      log = log + await RNFS.readFile(path3)
+      log = log + (await RNFS.readFile(path3))
     }
     exists = await RNFS.exists(path2)
     if (exists) {
-      log = log + await RNFS.readFile(path2)
+      log = log + (await RNFS.readFile(path2))
     }
     exists = await RNFS.exists(path1)
     if (exists) {
-      log = log + await RNFS.readFile(path1)
+      log = log + (await RNFS.readFile(path1))
     }
     return log
   } catch (err) {
@@ -88,10 +88,10 @@ async function request (data: string) {
   return global.fetch(`${ENV.LOG_SERVER.host}:${ENV.LOG_SERVER.port}/log`, {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({data})
+    body: JSON.stringify({ data })
   })
 }
 

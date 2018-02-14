@@ -1,7 +1,8 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+
 import SearchResults from './SearchResults.ui'
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   dimensions: state.ui.scenes.dimensions
 })
 

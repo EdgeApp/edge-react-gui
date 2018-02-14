@@ -1,12 +1,9 @@
+import { connect } from 'react-redux'
+
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { dismissErrorAlert } from './actions.js'
 // @flow
 import ErrorAlert from './ErrorAlert.ui'
-import {connect} from 'react-redux'
-import {dismissErrorAlert} from './actions.js'
-
-import type {
-  State,
-  Dispatch
-} from '../../../ReduxTypes'
 
 const mapStateToProps = (state: State) => ({
   displayAlert: state.ui.errorAlert.displayAlert,

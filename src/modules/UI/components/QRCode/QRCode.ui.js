@@ -1,10 +1,10 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 import QrCode from 'react-native-qrcode'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 import styles from './styles'
 
 export type Props = {
@@ -20,7 +20,8 @@ export default class QRCode extends Component<Props, State> {
           value={this.props.value}
           bgColor={styles.qrCodeBackground.color}
           fgColor={styles.qrCodeForeground.color}
-          size={PLATFORM.deviceHeight / 4} />
+          size={PLATFORM.deviceHeight / 4}
+        />
       </View>
     )
   }

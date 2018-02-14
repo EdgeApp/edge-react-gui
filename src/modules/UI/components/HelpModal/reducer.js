@@ -1,8 +1,7 @@
 // @flow
 
-import * as ACTION from './actions.js'
-
 import type { Action } from '../../../ReduxTypes'
+import * as ACTION from './actions.js'
 
 type HelpModalState = boolean
 export const helpModal = (state: HelpModalState = false, action: Action) => {

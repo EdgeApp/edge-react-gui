@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+
 // import * as Constants from '../../../common/constants'
 import { Input } from './materialWrappers/indexMaterial'
 
@@ -41,24 +42,14 @@ class FormField extends Component {
     keyboardType: 'default'
   }
   componentWillMount () {
-    const secure = this.props.secureTextEntry
-      ? this.props.secureTextEntry
-      : false
+    const secure = this.props.secureTextEntry ? this.props.secureTextEntry : false
     this.setState({
       secure: secure,
       autoFocus: this.props.autoFocus
     })
   }
   render () {
-    const {
-      container,
-      baseColor,
-      tintColor,
-      textColor,
-      errorColor,
-      titleTextStyle
-
-    } = this.props.style
+    const { container, baseColor, tintColor, textColor, errorColor, titleTextStyle } = this.props.style
     return (
       <Input
         label={this.props.label}

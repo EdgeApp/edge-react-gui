@@ -1,14 +1,11 @@
 // @flow
 
-import type {Dispatch} from '../../ReduxTypes'
-import type {AbcTransaction, AbcAccountCallbacks} from 'edge-login'
+import type { AbcAccountCallbacks, AbcTransaction } from 'edge-login'
 
-import {updateWalletsRequest} from '../Wallets/action.js'
-import {refreshWallet} from '../../UI/Wallets/action.js'
-import {
-  newTransactionsRequest,
-  refreshTransactionsRequest
-} from '../../UI/scenes/TransactionList/action.js'
+import type { Dispatch } from '../../ReduxTypes'
+import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
+import { refreshWallet } from '../../UI/Wallets/action.js'
+import { updateWalletsRequest } from '../Wallets/action.js'
 
 const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
   const callbacks = {
