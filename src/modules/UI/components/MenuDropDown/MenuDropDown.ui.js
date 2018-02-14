@@ -74,13 +74,7 @@ export default class MenuDropDown extends Component<Props, State> {
     const lowerLimitOfMenu = this.state.pageY + this.state.height
     const offset = lowerLimitOfMenu - deviceHeight
     const newPageY = this.state.pageY - offset - verticalBuffer
-    let optionsStyle = {}
-    if (this.props.rightSide) {
-      optionsStyle = {
-        left: '1%',
-        top: this.state.pageY
-      }
-    }
+    const optionsStyle = {}
     const style = this.props.style
     if (lowerLimitOfMenu > deviceHeight) {
       optionsStyle.top = newPageY
