@@ -22,6 +22,13 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
+  const accounts = await context.fetchLoginMessages()
+  let otpResetPending = false
+  for (const key in accounts) {
+    if (key === account.username) {
+      otpResetPending = accounts[key].otpResetPending
+    }
+  }
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
     PushNotification.configure({
@@ -37,7 +44,7 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey},
+    otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey, otpResetPending},
     autoLogoutTimeInSeconds: '',
     bluetoothMode: '',
     pinLoginEnabled: false,

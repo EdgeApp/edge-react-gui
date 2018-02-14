@@ -16,28 +16,21 @@ type OtpSettingsSceneProps = {
   otpKey?: string,
   otpResetDate?: string,
   enableOtp(): void,
-  disableOtp(): void,
-  keepOtp(): void
+  disableOtp(): void
 }
 
 type State = {
   showMessageModal: boolean,
   messageModalMessage?: string,
-  showConfirmationModal: boolean,
-  showResetDialog: boolean
+  showConfirmationModal: boolean
 }
 
 export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
   componentWillMount () {
-    let showResetDialog = false
-    if (this.props.otpResetDate) {
-      showResetDialog = true
-    }
     this.setState({
       showMessageModal: false,
       messageModalMessage: '',
-      showConfirmationModal: false,
-      showResetDialog
+      showConfirmationModal: false
     })
   }
   cancelStatic = () => {
@@ -69,17 +62,9 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     this.setState({
       showMessageModal: true,
       messageModalMessage: s.strings.otp_disabled_modal,
-      showConfirmationModal: false,
-      showResetDialog: false
+      showConfirmationModal: false
     })
     this.props.disableOtp()
-  }
-
-  keepOtp = () => {
-    this.setState({
-      showResetDialog: false
-    })
-    this.props.keepOtp()
   }
 
   renderButton = () => {
@@ -126,19 +111,6 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
         doneText={s.strings.otp_disable}
         onCancel={this.cancelConfirmModal}
         onDone={this.disableOtp}
-      />
-    }
-    if (this.state.showResetDialog) {
-      return <TwoButtonTextModalComponent
-        style={styles.showConfirmationModal}
-        headerText={s.strings.otp_modal_reset_headline}
-        showModal
-        middleText={''}
-        iconImage={iconImage}
-        cancelText={s.strings.otp_disable}
-        doneText={s.strings.otp_keep}
-        onCancel={this.disableOtp}
-        onDone={this.keepOtp}
       />
     }
     return null
