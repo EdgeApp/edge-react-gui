@@ -1,6 +1,7 @@
 // @flow
 
 const strings = {
+  app_name: 'Edge Wallet',
   bitcoin_received: '%1$s Received',
   bitcoin_remaining: '%1$s Remaining…',
   calculator_done: 'Done',
@@ -25,7 +26,7 @@ const strings = {
   fragmet_wallets_managetokens_option: 'Manage Tokens',
   managetokens_top_instructions: 'Please select which tokens you would like displayed within the wallet:',
   manage_tokens_duplicate_currency_code: 'A token with that currency code already exists.',
-  addtoken_top_instructions: 'To add a token, please fill out the following form and press \'Save\'',
+  addtoken_top_instructions: "To add a token, please fill out the following form and press 'Save'",
   accept_button_text: 'Accept',
   addtoken_contract_address_input_text: 'Contract Address',
   addtoken_currency_code_input_text: 'Token Code',
@@ -34,7 +35,7 @@ const strings = {
   addtoken_denomination_input_text: 'Number of Decimal Places',
   addtoken_name_input_text: 'Token Name',
   addtoken_add: 'Add',
-  edittoken_top_instructions: 'Fill out token info and tap \'Save\' to edit token:',
+  edittoken_top_instructions: "Fill out token info and tap 'Save' to edit token:",
   edittoken_delete_token: 'Delete Token',
   edittoken_delete_prompt: 'Are you sure you want to delete this token?',
   edittoken_delete_title: 'Unable to Edit Token',
@@ -52,6 +53,7 @@ const strings = {
   fragmet_invalid_password: 'Invalid Password',
   fragment_request_copy_title: 'Copy',
   fragment_request_subtitle: 'Request',
+  fragment_request_address_copied: 'Request address successfully copied to clipboard',
   fragment_send_address_dialog_title: 'Send to Public Address',
   fragment_send_address: 'Address',
   fragment_send_flash: 'Flash',
@@ -73,6 +75,7 @@ const strings = {
   fragment_wallets_resync_wallet: 'Resync Wallet',
   fragment_wallets_split_wallet: 'Split Wallet',
   fragment_wallets_get_seed_wallet: 'Get Seed',
+  fragment_wallets_seed_share_title: 'Edge Wallet (%s) Seed',
   fragment_wallets_header: 'My Wallets',
   fragment_wallets_rename_wallet: 'Rename Wallet',
   fragment_wallets_resync_wallet_first_confirm_message_mobile: 'Are you sure you want to resync ',
@@ -99,6 +102,7 @@ const strings = {
   mining_fee_standard_label_choice: 'Standard',
   request_qr_email_title: '%1$s Bitcoin Request',
   request_qr_your_receiving_wallet_address: 'Your Receiving Wallet Address',
+  request_share_edge_request: 'Share Edge Request',
   select_recv_wallet: 'Select Receiving Wallet',
   select_src_wallet: 'Select Source Wallet',
   send_confirmation_fee_line: 'Fee: + %s (%s)',
@@ -214,7 +218,8 @@ const strings = {
   // OTP
   title_otp_enabled: '2FA is enabled',
   title_otp_disabled: 'Protect your account with 2FA',
-  otp_description: '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
+  otp_description:
+    '2FA prevents unauthorized access from other devices, even if your username and password is compromised. You can scan a QR code or type in an authentication code to seamlessly authorize other devices',
   otp_enabled_description: 'You can scan a QR code or type in the authentication code to seamlessly authorize other devices.',
   otp_show_code: 'Show authentication code',
   otp_hide_code: 'Hide authentication code',
@@ -222,7 +227,8 @@ const strings = {
   otp_keep: 'KEEP 2FA',
   otp_enable: 'Enable 2FA',
   otp_enabled_modal_part_one: '2FA has been enabled. A unique authentication code will be generated.',
-  otp_enabled_modal_part_two: 'If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code.',
+  otp_enabled_modal_part_two:
+    'If you lose your phone or uninstall the app, it will take 7 days to disable 2FA and access your account from another device without the authentication code.',
   otp_disabled_modal: '2FA has been disabled. You can enable it again by tapping on "Enable 2FA" at any time.',
   otp_modal_headline: 'Are you sure you want to disable 2FA?',
   otp_modal_reset_headline: '2FA reset requested by another device',

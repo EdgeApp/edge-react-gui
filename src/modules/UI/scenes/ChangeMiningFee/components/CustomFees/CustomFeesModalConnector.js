@@ -1,17 +1,16 @@
 // @flow
 
-import { connect } from 'react-redux'
-import { Actions } from 'react-native-router-flux'
 import _ from 'lodash'
-import CustomFeesModal from './CustomFeesModal.ui'
-import type { CustomFees, CustomFeesModalOwnProps } from './CustomFeesModal.ui'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
+
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import type { Dispatch, State } from '../../../../../ReduxTypes'
-import {
-  CLOSE_MODAL_VALUE
-} from '../../../WalletList/components/WalletOptions/action'
-
 import { updateMiningFees } from '../../../SendConfirmation/action'
+import { getCustomNetworkFee } from '../../../SendConfirmation/selectors.js'
+import { CLOSE_MODAL_VALUE } from '../../../WalletList/components/WalletOptions/action'
+import CustomFeesModal from './CustomFeesModal.ui'
+import type { CustomFees, CustomFeesModalOwnProps } from './CustomFeesModal.ui'
 
 const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
   const wallet = ownProps.sourceWallet
@@ -19,22 +18,26 @@ const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
   if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
     customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings
   }
-  return ({
+
+  return {
+    customNetworkFee: getCustomNetworkFee(state),
     customFeeSettings: customFeeSettings,
     visibilityBoolean: state.ui.scenes.changeMiningFee.isCustomFeeVisible
-  })
+  }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onPositive: (customNetworkFee: CustomFees) => {
-    dispatch(updateMiningFees({
-      networkFeeOption: Constants.CUSTOM_FEES,
-      customNetworkFee
-    }))
-    dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
+    dispatch(
+      updateMiningFees({
+        networkFeeOption: Constants.CUSTOM_FEES,
+        customNetworkFee
+      })
+    )
+    dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) })
     Actions.pop()
   },
-  onDone: () => dispatch({type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES)})
+  onDone: () => dispatch({ type: CLOSE_MODAL_VALUE(Constants.CUSTOM_FEES) })
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomFeesModal)

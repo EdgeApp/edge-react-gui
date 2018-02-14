@@ -52,16 +52,10 @@ export default class MenuDropDown extends Component<Props, State> {
   }
 
   renderMenuOptions (style: any) {
-    const items = this.props.data.map((item) => (
-      <MenuOption
-        style={style.menuOption}
-        value={item.value}
-        key={'ld' + (item.key || item.value)}
-      >
+    const items = this.props.data.map(item => (
+      <MenuOption style={style.menuOption} value={item.value} key={'ld' + (item.key || item.value)}>
         <View style={[style.menuOptionItem]}>
-          <Text style={[style.optionText]}>
-            {item.label}
-          </Text>
+          <Text style={[style.optionText]}>{item.label}</Text>
         </View>
       </MenuOption>
     ))
@@ -81,10 +75,7 @@ export default class MenuDropDown extends Component<Props, State> {
     }
     return (
       <View style={[style.container]}>
-        <Menu
-          style={[style.menuButton]}
-          onSelect={(value) => this.props.onSelect(value)}
-        >
+        <Menu style={[style.menuButton]} onSelect={(value) => this.props.onSelect(value)}>
           <MenuTrigger style={[style.menuTrigger]}>
             {this.renderMenuIcon(style)}
           </MenuTrigger>
@@ -99,11 +90,7 @@ export default class MenuDropDown extends Component<Props, State> {
   }
   renderMenuIcon = (style: any) => {
     if (this.props.icon) {
-      return <Icon
-        style={style.icon}
-        name={this.props.icon}
-        size={style.icon.fontSize}
-        type={this.props.iconType} />
+      return <Icon style={style.icon} name={this.props.icon} size={style.icon.fontSize} type={this.props.iconType} />
     }
   }
 }

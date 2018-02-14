@@ -1,23 +1,19 @@
 // @flow
 
-import {connect} from 'react-redux'
-import type {AbcMetadata, AbcCurrencyInfo, AbcCurrencyPlugin} from 'edge-login'
+import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcMetadata } from 'edge-login'
+import { connect } from 'react-redux'
 
-import type {Dispatch, State} from '../../../ReduxTypes'
-import type {GuiContact} from '../../../../types'
-
+import { PLATFORM } from '../../../../theme/variables/platform.js'
+import type { GuiContact } from '../../../../types'
+import type { Dispatch, State } from '../../../ReduxTypes'
+import * as UTILS from '../../../utils'
+import { displayDropdownAlert } from '../../components/DropdownAlert/actions'
+import { setContactList } from '../../contacts/action'
 import * as UI_SELECTORS from '../../selectors'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
-import * as UTILS from '../../../utils'
-import {
-  setTransactionDetails,
-  getSubcategories
-} from './action.js'
-
-import {displayDropdownAlert} from '../../components/DropdownAlert/actions'
-import {setContactList} from '../../contacts/action'
-import {TransactionDetails, type TransactionDetailsOwnProps} from './TransactionDetails.ui'
+import { getSubcategories, setTransactionDetails } from './action.js'
+import { TransactionDetails } from './TransactionDetails.ui'
+import type { TransactionDetailsOwnProps } from './TransactionDetails.ui'
 
 const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => {
   const wallets = UI_SELECTORS.getWallets(state)
@@ -42,10 +38,12 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => { dispatch(setTransactionDetails(txid, currencyCode, abcMetadata)) },
-  setContactList: (contacts) => dispatch(setContactList(contacts)),
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => {
+    dispatch(setTransactionDetails(txid, currencyCode, abcMetadata))
+  },
+  setContactList: contacts => dispatch(setContactList(contacts)),
   getSubcategories: () => dispatch(getSubcategories()),
-  displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({message, title}))
+  displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title }))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionDetails)

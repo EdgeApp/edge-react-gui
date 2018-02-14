@@ -1,14 +1,14 @@
 // @flow
 
-import React, {Component} from 'react'
-import {View} from 'react-native'
+import React, { Component } from 'react'
+import { View } from 'react-native'
 
-import {FormField} from '../../../../../../components/FormField.js'
+import { FormField } from '../../../../../../components/FormField.js'
 import styles from '../../style'
 
 type Props = {
   currentWalletBeingRenamed: string,
-  updateRenameWalletInput: (string) => any,
+  updateRenameWalletInput: string => any,
   walletName: string,
   label: string
 }
@@ -28,14 +28,14 @@ export default class WalletNameInput extends Component<Props, State> {
   _onNameInputChange = (input: string) => {
     // be aware that walletListRowOptions.ui.js also initially dispatches this action
     this.props.updateRenameWalletInput(input)
-    this.setState({currentWalletNameInput: input})
+    this.setState({ currentWalletNameInput: input })
   }
 
   render () {
     return (
       <View style={[styles.nameInputWrap]}>
         <FormField
-          autoCapitalize='words'
+          autoCapitalize="words"
           style={[styles.nameInput]}
           onChangeText={this._onNameInputChange}
           value={this.state.currentWalletNameInput}

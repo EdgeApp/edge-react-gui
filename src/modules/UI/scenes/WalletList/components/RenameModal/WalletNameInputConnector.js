@@ -1,15 +1,15 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../../../ReduxTypes'
 import WalletNameInput from './WalletNameInput.ui'
-import type {State, Dispatch} from '../../../../../ReduxTypes'
 
 export const UPDATE_RENAME_WALLET_INPUT = 'UPDATE_RENAME_WALLET_INPUT'
 
 const updateRenameWalletInput = (renameWalletInput: string) => ({
   type: UPDATE_RENAME_WALLET_INPUT,
-  data: {renameWalletInput}
+  data: { renameWalletInput }
 })
 
 const mapStateToProps = (state: State) => ({
@@ -20,7 +20,7 @@ const mapStateToProps = (state: State) => ({
   renameWalletInput: state.ui.scenes.walletList.renameWalletInput
 })
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  updateRenameWalletInput: (walletName) => dispatch(updateRenameWalletInput(walletName))
+  updateRenameWalletInput: walletName => dispatch(updateRenameWalletInput(walletName))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletNameInput)

@@ -2,9 +2,9 @@
 
 import type { AbcContext } from 'edge-login'
 
+import * as Constants from '../../../constants/indexConstants.js'
 import type { Action } from '../../ReduxTypes'
 import * as ACTION from './action.js'
-import * as Constants from '../../../constants/indexConstants.js'
 
 const initialState = {
   context: {},

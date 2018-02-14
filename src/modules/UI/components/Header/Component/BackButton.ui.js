@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {TouchableOpacity, Platform} from 'react-native'
+import { Icon } from 'native-base'
+import React, { Component } from 'react'
+import { Platform, TouchableOpacity } from 'react-native'
 
 import T from '../../../components/FormattedText'
 import styles from '../style'
-import { Icon } from 'native-base'
 
 const isIos = Platform.OS === 'ios'
 

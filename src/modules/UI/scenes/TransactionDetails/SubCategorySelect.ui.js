@@ -1,17 +1,14 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-    View,
-    TouchableHighlight
-} from 'react-native'
+import React, { Component } from 'react'
+import { TouchableHighlight, View } from 'react-native'
 
+import { colors } from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
+import type { SubcategorySearchResultData } from '../../../../types.js'
 import FormattedText from '../../components/FormattedText'
 import SearchResults from '../../components/SearchResults/index'
 import styles from './style'
-import {colors} from '../../../../theme/variables/airbitz'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type {SubcategorySearchResultData} from '../../../../types.js'
 
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
@@ -39,12 +36,14 @@ class SubCategorySelect extends Component<Props, State> {
   }
 
   render () {
-    const filteredSubcats = (!this.props.enteredSubcategory) ? this.props.subcategoriesList : this.props.subcategoriesList.filter((entry) => entry.indexOf(this.props.enteredSubcategory) >= 0)
+    const filteredSubcats = !this.props.enteredSubcategory
+      ? this.props.subcategoriesList
+      : this.props.subcategoriesList.filter(entry => entry.indexOf(this.props.enteredSubcategory) >= 0)
     let newPotentialSubCategories = []
     let newPotentialSubCategoriesFiltered = []
     if (this.props.enteredSubcategory) {
-      newPotentialSubCategories = categories.map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
-      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter((cat) => this.props.subcategoriesList.indexOf(cat) < 0)
+      newPotentialSubCategories = categories.map(cat => cat.charAt(0).toUpperCase() + cat.slice(1) + ':' + this.props.enteredSubcategory)
+      newPotentialSubCategoriesFiltered = newPotentialSubCategories.filter(cat => this.props.subcategoriesList.indexOf(cat) < 0)
     }
 
     return (
@@ -53,7 +52,7 @@ class SubCategorySelect extends Component<Props, State> {
         onRegularSelectFxn={this.props.onPressFxn}
         regularArray={filteredSubcats.concat(newPotentialSubCategoriesFiltered)}
         usableHeight={this.props.usableHeight}
-        style={[{width: PLATFORM.deviceWidth, height: PLATFORM.usableHeight}]}
+        style={[{ width: PLATFORM.deviceWidth, height: PLATFORM.usableHeight }]}
         keyExtractor={this.keyExtractor}
         height={this.props.usableHeight - 67}
         extraTopSpace={0}
@@ -74,12 +73,14 @@ class SubCategorySelect extends Component<Props, State> {
     }
 
     return (
-      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => (onRegularSelectFxn(data.item))}>
+      <TouchableHighlight delayPressIn={60} style={[styles.rowContainer]} underlayColor={colors.gray4} onPress={() => onRegularSelectFxn(data.item)}>
         <View style={[styles.rowContent]}>
           <View style={[styles.rowCategoryTextWrap]}>
-            <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>{data.item}</FormattedText>
+            <FormattedText style={[styles.rowCategoryText]} numberOfLines={1}>
+              {data.item}
+            </FormattedText>
           </View>
-          { renderAdd() }
+          {renderAdd()}
         </View>
       </TouchableHighlight>
     )

@@ -1,10 +1,10 @@
 // @flow
 
-import {combineReducers} from 'redux'
-import * as ACTION from './action'
+import { combineReducers } from 'redux'
 
-import type {GuiContact} from '../../../types'
-import type {Action} from '../../ReduxTypes'
+import type { GuiContact } from '../../../types'
+import type { Action } from '../../ReduxTypes'
+import * as ACTION from './action'
 
 type ContactListState = Array<GuiContact>
 export const contactList = (state: ContactListState = [], action: Action) => {

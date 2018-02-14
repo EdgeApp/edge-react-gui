@@ -1,11 +1,11 @@
 // @flow
 
+import type { AbcCurrencyWallet } from 'edge-login'
 import { combineReducers } from 'redux'
-import { type AbcCurrencyWallet } from 'edge-login'
 
-import * as ACTION from './action.js'
 import * as Constants from '../../../constants/indexConstants'
 import type { Action } from '../../ReduxTypes'
+import * as ACTION from './action.js'
 
 type WalletState = { [id: string]: AbcCurrencyWallet } | void
 

@@ -1,9 +1,8 @@
 // @flow
 
 import type { Action } from '../../modules/ReduxTypes'
-
-import type {Permission, PermissionStatus} from '../../modules/UI/permissions'
-import {UPDATE_PERMISSIONS} from './actions.js'
+import type { Permission, PermissionStatus } from '../../modules/UI/permissions'
+import { UPDATE_PERMISSIONS } from './actions.js'
 
 export const initialState = {
   bluetooth: 'undetermined',

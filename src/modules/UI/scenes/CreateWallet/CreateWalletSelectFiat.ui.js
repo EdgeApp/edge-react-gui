@@ -1,23 +1,19 @@
 // @flow
 
-import React, {Component} from 'react'
-import {Actions} from 'react-native-router-flux'
-import {
-  Alert,
-  View,
-  TouchableHighlight
-} from 'react-native'
+import React, { Component } from 'react'
+import { Alert, TouchableHighlight, View } from 'react-native'
+import { Actions } from 'react-native-router-flux'
 
-import SafeAreaView from '../../components/SafeAreaView'
-import Text from '../../components/FormattedText'
-import {FormField} from '../../../../components/FormField.js'
-import SearchResults from '../../components/SearchResults'
+import { FormField } from '../../../../components/FormField.js'
 import * as Constants from '../../../../constants/indexConstants.js'
-import styles, {styles as stylesRaw} from './style.js'
 import s from '../../../../locales/strings.js'
-import Gradient from '../../components/Gradient/Gradient.ui.js'
+import type { DeviceDimensions, FlatListItem, GuiFiatType } from '../../../../types'
 import * as UTILS from '../../../utils'
-import type {GuiFiatType, FlatListItem, DeviceDimensions} from '../../../../types'
+import Text from '../../components/FormattedText'
+import Gradient from '../../components/Gradient/Gradient.ui.js'
+import SafeAreaView from '../../components/SafeAreaView'
+import SearchResults from '../../components/SearchResults'
+import styles, { styles as stylesRaw } from './style.js'
 
 export type CreateWalletSelectFiatOwnProps = {
   selectedWalletType: string,
@@ -47,16 +43,14 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
   }
 
   isValidFiatType = (): boolean => {
-    const {selectedFiat} = this.state
-    const fiatTypeIndex = this.props.supportedFiats
-      .findIndex((fiatType) => fiatType.value === selectedFiat)
+    const { selectedFiat } = this.state
+    const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === selectedFiat)
     const isValid = fiatTypeIndex >= 0
     return isValid
   }
 
   getFiatType = (fiatKey: string): GuiFiatType => {
-    const fiatTypeIndex = this.props.supportedFiats
-      .findIndex((fiatType) => fiatType.value === fiatKey)
+    const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === fiatKey)
 
     return this.props.supportedFiats[fiatTypeIndex]
   }
@@ -79,13 +73,16 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
   }
 
   handleSelectFiatType = (item: GuiFiatType): void => {
-    const selectedFiat = this.props.supportedFiats.find((type) => type.value === item.value)
+    const selectedFiat = this.props.supportedFiats.find(type => type.value === item.value)
 
     if (selectedFiat) {
-      this.setState({
-        selectedFiat: selectedFiat.value,
-        searchTerm: selectedFiat.label
-      }, this.onNext)
+      this.setState(
+        {
+          selectedFiat: selectedFiat.value,
+          searchTerm: selectedFiat.label
+        },
+        this.onNext
+      )
     }
   }
 
@@ -98,8 +95,8 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
   }
 
   render () {
-    const filteredArray = this.props.supportedFiats.filter((entry) => {
-      return (entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0)
+    const filteredArray = this.props.supportedFiats.filter(entry => {
+      return entry.label.toLowerCase().indexOf(this.state.searchTerm.toLowerCase()) >= 0
     })
     const keyboardHeight = this.props.dimensions.keyboardHeight || 0
     const searchResultsHeight = stylesRaw.usableHeight - keyboardHeight - 36 // substract button area height and FormField height
@@ -108,7 +105,8 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
         <View style={styles.scene}>
           <Gradient style={styles.gradient} />
           <View style={styles.view}>
-            <FormField style={styles.picker}
+            <FormField
+              style={styles.picker}
               autoFocus
               clearButtonMode={'while-editing'}
               onFocus={this.handleOnFocus}
@@ -125,7 +123,7 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
               onRegularSelectFxn={this.handleSelectFiatType}
               regularArray={filteredArray}
               style={[styles.SearchResults]}
-              containerStyle={[styles.searchContainer, {height: searchResultsHeight}]}
+              containerStyle={[styles.searchContainer, { height: searchResultsHeight }]}
               keyExtractor={this.keyExtractor}
               initialNumToRender={30}
               scrollRenderAheadDistance={1600}
@@ -138,10 +136,8 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
 
   renderFiatTypeResult = (data: FlatListItem, onRegularSelect: Function) => {
     return (
-      <View style={[styles.singleCryptoTypeWrap, (data.item.value === this.state.selectedFiat) && styles.selectedItem]}>
-        <TouchableHighlight style={[styles.singleCryptoType]}
-          onPress={() => onRegularSelect(data.item)}
-          underlayColor={stylesRaw.underlayColor.color}>
+      <View style={[styles.singleCryptoTypeWrap, data.item.value === this.state.selectedFiat && styles.selectedItem]}>
+        <TouchableHighlight style={[styles.singleCryptoType]} onPress={() => onRegularSelect(data.item)} underlayColor={stylesRaw.underlayColor.color}>
           <View style={[styles.cryptoTypeInfoWrap]}>
             <View style={styles.cryptoTypeLeft}>
               <View style={[styles.cryptoTypeLeftTextWrap]}>

@@ -1,9 +1,8 @@
 // @flow
 
-import * as ACTION from './action.js'
 import * as Constants from '../../constants/indexConstants'
-
 import type { Action } from '../ReduxTypes'
+import * as ACTION from './action.js'
 
 const initialState = 0
 

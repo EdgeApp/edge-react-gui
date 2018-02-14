@@ -1,17 +1,16 @@
 // @flow
 
-import {Actions} from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux'
 
-import * as UTILS from '../../../utils.js'
+import type { CustomTokenInfo } from '../../../../types.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as WALLET_ACTIONS from '../../Wallets/action.js'
+import * as WALLET_API from '../../../Core/Wallets/api.js'
+import type { Dispatch, GetState, State } from '../../../ReduxTypes'
+import * as UTILS from '../../../utils.js'
+import { displayErrorAlert } from '../../components/ErrorAlert/actions'
 import * as UI_WALLET_SELECTORS from '../../selectors.js'
-import type {Dispatch, State, GetState} from '../../../ReduxTypes'
-import type {CustomTokenInfo} from '../../../../types.js'
-
-import {displayErrorAlert} from '../../components/ErrorAlert/actions'
+import * as WALLET_ACTIONS from '../../Wallets/action.js'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 export const ADD_TOKEN_START = 'ADD_TOKEN_START'
@@ -25,16 +24,16 @@ export const addNewToken = (walletId: string, currencyName: string, currencyCode
     dispatch(addTokenStart())
     const state = getState()
     addTokenAsync(walletId, currencyName, currencyCode, contractAddress, denomination, state)
-    .then((addedWalletInfo) => {
-      const {walletId, newTokenObj, setSettings, enabledTokensOnWallet} = addedWalletInfo
-      dispatch(addNewTokenSuccess(walletId, newTokenObj, setSettings, enabledTokensOnWallet))
-      dispatch(WALLET_ACTIONS.refreshWallet(walletId))
-      Actions.pop()
-    })
-    .catch((e) => {
-      dispatch(addNewTokenFailure(e.message))
-      dispatch(displayErrorAlert(e.message))
-    })
+      .then(addedWalletInfo => {
+        const { walletId, newTokenObj, setSettings, enabledTokensOnWallet } = addedWalletInfo
+        dispatch(addNewTokenSuccess(walletId, newTokenObj, setSettings, enabledTokensOnWallet))
+        dispatch(WALLET_ACTIONS.refreshWallet(walletId))
+        Actions.pop()
+      })
+      .catch(e => {
+        dispatch(addNewTokenFailure(e.message))
+        dispatch(displayErrorAlert(e.message))
+      })
   }
 }
 
@@ -51,7 +50,8 @@ export async function addTokenAsync (walletId: string, currencyName: string, cur
   const setSettings = settingsOnFile
   const customTokens = settingsOnFile.customTokens
   let newCustomTokens = []
-  if (!customTokens || customTokens.length === 0) { // if customTokens array is empty
+  if (!customTokens || customTokens.length === 0) {
+    // if customTokens array is empty
     newCustomTokens = [newTokenObj]
   } else {
     newCustomTokens = UTILS.mergeTokens([newTokenObj], customTokens) // otherwise merge metaTokens and customTokens
@@ -64,7 +64,7 @@ export async function addTokenAsync (walletId: string, currencyName: string, cur
     newEnabledTokens.push(newTokenObj.currencyCode)
   }
   await WALLET_API.setEnabledTokens(coreWallet, newEnabledTokens)
-  return {walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens}
+  return { walletId, newTokenObj, setSettings, enabledTokensOnWallet: newEnabledTokens }
 }
 
 export const addTokenStart = () => ({
@@ -76,7 +76,7 @@ export const addTokenSuccess = () => ({
 })
 
 export function addNewTokenSuccess (walletId: string, tokenObj: CustomTokenInfo, settings: Object, enabledTokens: Array<string>) {
-  const data = {walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode}
+  const data = { walletId, tokenObj, settings, enabledTokens, newCurrencyCode: tokenObj.currencyCode }
   return {
     type: ADD_NEW_CUSTOM_TOKEN_SUCCESS,
     data
@@ -84,7 +84,7 @@ export function addNewTokenSuccess (walletId: string, tokenObj: CustomTokenInfo,
 }
 
 export function addNewTokenFailure (errorMessage: string) {
-  const data = {errorMessage}
+  const data = { errorMessage }
   return {
     type: ADD_NEW_CUSTOM_TOKEN_FAILURE,
     data

@@ -2,8 +2,8 @@
 
 import type { AbcAccount } from 'edge-login'
 
-import type { Action } from '../../ReduxTypes.js'
 import * as Constants from '../../../constants/indexConstants.js'
+import type { Action } from '../../ReduxTypes.js'
 
 type AccountReducerState = AbcAccount | {} | void
 

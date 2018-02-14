@@ -1,7 +1,7 @@
 import color from 'color';
-import { isIphoneX } from '../../lib/isIphoneX.js'
+import { Dimensions, PixelRatio, Platform } from 'react-native';
 
-import { Platform, Dimensions, PixelRatio } from 'react-native';
+import { isIphoneX } from '../../lib/isIphoneX.js'
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;

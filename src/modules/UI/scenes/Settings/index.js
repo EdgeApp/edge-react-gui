@@ -1,3 +1,3 @@
 import SettingsOverview from './SettingsOverviewConnector'
 
-export {SettingsOverview}
+export { SettingsOverview }

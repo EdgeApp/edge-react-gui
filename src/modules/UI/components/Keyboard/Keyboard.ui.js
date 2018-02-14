@@ -1,10 +1,7 @@
-import React, {Component} from 'react'
-import {
-  TextInput,
-  View
-} from 'react-native'
-import KeyboardButton from '../KeyboardButton/index.js'
+import React, { Component } from 'react'
+import { TextInput, View } from 'react-native'
 
+import KeyboardButton from '../KeyboardButton/index.js'
 import styles from './styles'
 
 export default class Keyboard extends Component {
@@ -16,13 +13,10 @@ export default class Keyboard extends Component {
     }
   }
 
-  inputDigit = (value) => {
-    const {displayValue} = this.state
+  inputDigit = value => {
+    const { displayValue } = this.state
 
-    const newDisplayValue =
-        displayValue === '0'
-        ? value
-        : this.state.displayValue + value
+    const newDisplayValue = displayValue === '0' ? value : this.state.displayValue + value
 
     this.setState({
       displayValue: newDisplayValue
@@ -30,7 +24,7 @@ export default class Keyboard extends Component {
   }
 
   inputDot = () => {
-    const {displayValue} = this.state
+    const { displayValue } = this.state
 
     if (displayValue.indexOf('.') === -1) {
       this.setState({
@@ -40,8 +34,7 @@ export default class Keyboard extends Component {
   }
 
   doBackspace = () => {
-    const displayValue =
-        this.state.displayValue.substring(0, this.state.displayValue.length - 1) || '0'
+    const displayValue = this.state.displayValue.substring(0, this.state.displayValue.length - 1) || '0'
 
     this.setState({
       displayValue
@@ -54,17 +47,15 @@ export default class Keyboard extends Component {
     })
   }
 
-  doOperation = () => {
-
-  }
+  doOperation = () => {}
 
   actions = (action, payload) => {
     const operations = {
-      '+': (previousValue) => previousValue,
-      '-': (previousValue) => previousValue,
-      '*': (previousValue) => previousValue,
-      '/': (previousValue) => previousValue,
-      '%': (previousValue) => previousValue
+      '+': previousValue => previousValue,
+      '-': previousValue => previousValue,
+      '*': previousValue => previousValue,
+      '/': previousValue => previousValue,
+      '%': previousValue => previousValue
     }
 
     return operations[action] || payload
@@ -75,12 +66,7 @@ export default class Keyboard extends Component {
 
     return (
       <View style={styles.view}>
-
-        <TextInput
-          style={styles.calculation}
-          value={this.state.displayValue}
-          editable={false}
-          />
+        <TextInput style={styles.calculation} value={this.state.displayValue} editable={false} />
 
         <View style={styles.keyboard}>
           <View style={styles.row}>
@@ -108,19 +94,13 @@ export default class Keyboard extends Component {
           </View>
 
           <View style={styles.row}>
-            <KeyboardButton
-              style={styles.KeyboardButton}
-              character={'<|'}
-              onPress={this.doBackspace}
-              onLongPress={this.clearScreen}
-              />
+            <KeyboardButton style={styles.KeyboardButton} character={'<|'} onPress={this.doBackspace} onLongPress={this.clearScreen} />
             <KeyboardButton style={styles.KeyboardButton} character={'0'} onPress={this.inputDigit} />
             <KeyboardButton style={styles.KeyboardButton} character={'.'} onPress={this.inputDot} />
             <KeyboardButton style={styles.KeyboardButton} character={'%'} onPress={this.onPress} />
             <KeyboardButton style={styles.KeyboardButton} character={'Done'} onPress={this.onPress} />
           </View>
         </View>
-
       </View>
     )
   }

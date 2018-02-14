@@ -6,15 +6,7 @@ class PasswordComponent extends Component {
     secureTextEntry: false
   } */
   render () {
-    const {
-      container,
-      baseColor,
-      tintColor,
-      textColor,
-      errorColor,
-      titleTextStyle
-
-    } = this.props.style
+    const { container, baseColor, tintColor, textColor, errorColor, titleTextStyle } = this.props.style
     return (
       <TextField
         label={this.props.label}

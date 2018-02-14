@@ -1,19 +1,21 @@
 // @flow
 
-import type {Dispatch, State} from '../../modules/ReduxTypes'
-import {connect} from 'react-redux'
-import {
-  CryptoExchangeSceneComponent,
-  type CryptoExchangeSceneComponentStateProps,
-  type CryptoExchangeSceneComponentDispatchProps
-} from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
+import { bns } from 'biggystring'
+import { connect } from 'react-redux'
+
+import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
-import { getExchangeRate } from '../../modules/Core/selectors.js'
 import s from '../../locales/strings.js'
-import { bns } from 'biggystring'
-import { emptyCurrencyInfo, emptyGuiWallet, type GuiCurrencyInfo } from '../../types.js'
-import type { SetNativeAmountInfo } from '../../actions/CryptoExchangeActions'
+import { getExchangeRate } from '../../modules/Core/selectors.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes'
+import { CryptoExchangeSceneComponent } from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
+import type {
+  CryptoExchangeSceneComponentDispatchProps,
+  CryptoExchangeSceneComponentStateProps
+} from '../../modules/UI/scenes/CryptoExchange/CryptoExchangeSceneComponent'
+import { emptyCurrencyInfo, emptyGuiWallet } from '../../types.js'
+import type { GuiCurrencyInfo } from '../../types.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -22,23 +24,14 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
   const toWallet = state.cryptoExchange.toWallet
 
   let exchangeRate = 1
-  let fromCurrencyCode,
-    fromPrimaryInfo: GuiCurrencyInfo,
-    fromButtonText: string,
-    fromNativeAmount: string,
-    fromExchangeAmount: string,
-    fromFiatToCrypto: number
+  let fromCurrencyCode, fromPrimaryInfo: GuiCurrencyInfo, fromButtonText: string, fromNativeAmount: string, fromExchangeAmount: string, fromFiatToCrypto: number
   if (fromWallet) {
     fromCurrencyCode = state.cryptoExchange.fromWalletPrimaryInfo.displayDenomination.name
     fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     fromNativeAmount = state.cryptoExchange.fromNativeAmount
     fromButtonText = fromWallet.name + ':' + fromCurrencyCode
     fromExchangeAmount = bns.div(fromNativeAmount, fromPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-    fromFiatToCrypto = getExchangeRate(
-      state,
-      fromPrimaryInfo.exchangeCurrencyCode,
-      fromWallet.isoFiatCurrencyCode
-    )
+    fromFiatToCrypto = getExchangeRate(state, fromPrimaryInfo.exchangeCurrencyCode, fromWallet.isoFiatCurrencyCode)
   } else {
     fromCurrencyCode = ''
     fromExchangeAmount = ''
@@ -47,23 +40,14 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     fromFiatToCrypto = 1
   }
 
-  let toCurrencyCode,
-    toPrimaryInfo: GuiCurrencyInfo,
-    toButtonText: string,
-    toNativeAmount: string,
-    toExchangeAmount: string,
-    toFiatToCrypto: number
+  let toCurrencyCode, toPrimaryInfo: GuiCurrencyInfo, toButtonText: string, toNativeAmount: string, toExchangeAmount: string, toFiatToCrypto: number
   if (toWallet) {
     toCurrencyCode = state.cryptoExchange.toWalletPrimaryInfo.displayDenomination.name
     toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
     toNativeAmount = state.cryptoExchange.toNativeAmount
     toButtonText = toWallet.name + ':' + toCurrencyCode
     toExchangeAmount = bns.div(toNativeAmount, toPrimaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
-    toFiatToCrypto = getExchangeRate(
-      state,
-      toPrimaryInfo.exchangeCurrencyCode,
-      toWallet.isoFiatCurrencyCode
-    )
+    toFiatToCrypto = getExchangeRate(state, toPrimaryInfo.exchangeCurrencyCode, toWallet.isoFiatCurrencyCode)
   } else {
     toCurrencyCode = ''
     toExchangeAmount = ''

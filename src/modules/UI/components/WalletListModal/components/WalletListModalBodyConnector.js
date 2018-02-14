@@ -1,25 +1,19 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import WalletListModalBody from './WalletListModalBody.ui'
-import {
-  toggleScanToWalletListModal,
-  disableWalletListModalVisibility
-} from '../action'
-import * as UI_ACTIONS from '../../../Wallets/action.js'
+import * as actions from '../../../../../actions/indexActions'
 import * as Constants from '../../../../../constants/indexConstants'
-import {getTransactionsRequest} from '../../../../UI/scenes/TransactionList/action.js'
+import type { Dispatch, State } from '../../../../ReduxTypes'
+import { getTransactionsRequest } from '../../../../UI/scenes/TransactionList/action.js'
+import { updateReceiveAddress } from '../../../scenes/Request/action.js'
 import * as UI_SELECTORS from '../../../selectors'
 import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
-import * as actions from '../../../../../actions/indexActions'
-import {updateReceiveAddress} from '../../../scenes/Request/action.js'
-import type {
-  State,
-  Dispatch
-} from '../../../../ReduxTypes'
+import * as UI_ACTIONS from '../../../Wallets/action.js'
+import { disableWalletListModalVisibility, toggleScanToWalletListModal } from '../action'
+import WalletListModalBody from './WalletListModalBody.ui'
 
-const mapStateToProps = (state: State, ownProps: {type: string}): {} => ({
+const mapStateToProps = (state: State, ownProps: { type: string }): {} => ({
   type: ownProps.type,
   walletList: UI_SELECTORS.getWallets(state),
   activeWalletIds: UI_SELECTORS.getActiveWalletIds(state),

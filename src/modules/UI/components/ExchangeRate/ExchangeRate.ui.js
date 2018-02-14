@@ -1,11 +1,9 @@
 // @flow
-import React, {Component} from 'react'
-import {
-  Text,
-  View
-} from 'react-native'
+import React, { Component } from 'react'
+import { Text, View } from 'react-native'
+
+import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import {intl} from '../../../../locales/intl'
 import * as UTILS from '../../../utils'
 import styles from './styles'
 
@@ -20,24 +18,15 @@ type Props = {
 
 export default class ExchangeRate extends Component<Props> {
   render () {
-    const {
-      primaryInfo,
-      primaryDisplayAmount,
-      secondaryInfo,
-      secondaryDisplayAmount
-    } = this.props
+    const { primaryInfo, primaryDisplayAmount, secondaryInfo, secondaryDisplayAmount } = this.props
 
-    const primaryDisplayName :string =
-      primaryInfo.displayDenomination.name
+    const primaryDisplayName: string = primaryInfo.displayDenomination.name
 
-    const secondaryDisplaySymbol :string =
-      secondaryInfo.displayDenomination.symbol
+    const secondaryDisplaySymbol: string = secondaryInfo.displayDenomination.symbol
 
-    const formattedSecondaryDisplayAmount :string =
-      parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
+    const formattedSecondaryDisplayAmount: string = parseFloat(secondaryDisplayAmount).toFixed(secondaryInfo.displayDenomination.precision)
 
-    const secondaryCurrencyCode :string =
-      secondaryInfo.displayDenomination.currencyCode
+    const secondaryCurrencyCode: string = secondaryInfo.displayDenomination.currencyCode
 
     const exchangeData = {
       primaryDisplayAmount: primaryDisplayAmount || '1',
@@ -48,19 +37,17 @@ export default class ExchangeRate extends Component<Props> {
     }
 
     const formattedPrimaryAmount = intl.formatNumber(primaryDisplayAmount || '1')
-    const formattedSecondaryAmount = intl.formatNumber(formattedSecondaryDisplayAmount, {toFixed: secondaryInfo.displayDenomination.precision})
+    const formattedSecondaryAmount = intl.formatNumber(formattedSecondaryDisplayAmount, { toFixed: secondaryInfo.displayDenomination.precision })
 
     return (
       <View style={styles.view}>
-        {
-          !UTILS.isCompleteExchangeData(exchangeData)
-          ? <Text style={styles.text}>
-              {EXCHANGE_RATE_LOADING_TEXT}
-            </Text>
-          : <Text style={styles.text}>
-              {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}
-            </Text>
-        }
+        {!UTILS.isCompleteExchangeData(exchangeData) ? (
+          <Text style={styles.text}>{EXCHANGE_RATE_LOADING_TEXT}</Text>
+        ) : (
+          <Text style={styles.text}>
+            {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}
+          </Text>
+        )}
       </View>
     )
   }

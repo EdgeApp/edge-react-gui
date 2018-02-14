@@ -1,11 +1,12 @@
+import { Actions } from 'react-native-router-flux'
+
+import * as Constants from '../../../../constants/indexConstants.js'
 // @flow
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import {Actions} from 'react-native-router-flux'
+import type { Dispatch, GetState } from '../../../ReduxTypes'
+import { displayErrorAlert } from '../../components/ErrorAlert/actions'
 import * as WALLET_ACTIONS from '../../Wallets/action'
-import * as Constants from '../../../../constants/indexConstants.js'
-import {displayErrorAlert} from '../../components/ErrorAlert/actions'
-import type {Dispatch, GetState} from '../../../ReduxTypes'
 
 export const UPDATE_WALLET_NAME = 'UPDATE_WALLET_NAME'
 export const SELECT_WALLET_TYPE = 'SELECT_WALLET_TYPE'
@@ -13,17 +14,17 @@ export const SELECT_FIAT = 'SELECT_FIAT'
 
 export const updateWalletName = (walletName: string) => ({
   type: UPDATE_WALLET_NAME,
-  data: {walletName}
+  data: { walletName }
 })
 
 export const selectWalletType = (walletType: string) => ({
   type: SELECT_WALLET_TYPE,
-  data: {walletType}
+  data: { walletType }
 })
 
 export const selectFiat = (fiat: string) => ({
   type: SELECT_FIAT,
-  data: {fiat}
+  data: { fiat }
 })
 
 export const createCurrencyWallet = (
@@ -42,14 +43,14 @@ export const createCurrencyWallet = (
     name: walletName,
     fiatCurrencyCode
   })
-  .then((abcWallet) => {
-    Actions.popTo(Constants.WALLET_LIST_SCENE)
-    dispatch(WALLET_ACTIONS.createWalletSuccess())
-    if (selectWallet) {
-      dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
-    }
-  })
-  .catch((e) => {
-    dispatch(displayErrorAlert(e.message))
-  })
+    .then(abcWallet => {
+      Actions.popTo(Constants.WALLET_LIST_SCENE)
+      dispatch(WALLET_ACTIONS.createWalletSuccess())
+      if (selectWallet) {
+        dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
+      }
+    })
+    .catch(e => {
+      dispatch(displayErrorAlert(e.message))
+    })
 }

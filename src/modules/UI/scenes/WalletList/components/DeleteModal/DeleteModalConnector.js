@@ -1,11 +1,11 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
-import DeleteModal from './DeleteModal.ui'
 import * as Constants from '../../../../../../constants/indexConstants.js'
-import type {Dispatch, State} from '../../../../../ReduxTypes'
-import { VISIBLE_MODAL_NAME, CLOSE_MODAL_VALUE } from '../WalletOptions/action'
+import type { Dispatch, State } from '../../../../../ReduxTypes'
+import { CLOSE_MODAL_VALUE, VISIBLE_MODAL_NAME } from '../WalletOptions/action'
+import DeleteModal from './DeleteModal.ui'
 
 const mapStateToProps = (state: State) => ({
   visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.DELETE_VALUE)]

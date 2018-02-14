@@ -1,6 +1,7 @@
 // @flow
-import React, {Component, type Node} from 'react'
-import {View} from 'react-native'
+import React, { Component } from 'react'
+import type { Node } from 'react'
+import { View } from 'react-native'
 
 type Props = {
   style?: Object,
@@ -9,10 +10,8 @@ type Props = {
 
 export default class AlertHeader extends Component<Props> {
   render () {
-    const {children, style} = this.props
+    const { children, style } = this.props
 
-    return <View style={style}>
-      {children}
-    </View>
+    return <View style={style}>{children}</View>
   }
 }

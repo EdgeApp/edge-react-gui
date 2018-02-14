@@ -1,8 +1,9 @@
 // @flow
 
-import {StyleSheet} from 'react-native'
-import THEME from '../../../../theme/variables/airbitz'
+import { StyleSheet } from 'react-native'
+
 import * as Styles from '../../../../styles/indexStyles'
+import THEME from '../../../../theme/variables/airbitz'
 
 export default StyleSheet.create({
   headerRoot: {
@@ -46,6 +47,6 @@ export default StyleSheet.create({
 
 export const walletSelectorStyles = {
   ...Styles.TextAndIconButtonStyle,
-  content: {...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%'},
-  centeredContent: {...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%'}
+  content: { ...Styles.TextAndIconButtonStyle.content, position: 'relative', width: '80%' },
+  centeredContent: { ...Styles.TextAndIconButtonStyle.centeredContent, position: 'relative', width: '80%' }
 }

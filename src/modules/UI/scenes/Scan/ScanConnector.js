@@ -1,23 +1,20 @@
 // @flow
 
-import { connect } from 'react-redux'
-import type { AbcParsedUri, AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-login'
 import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
-import Scan from './Scan.ui'
+import { loginWithEdge } from '../../../../actions/EdgeLoginActions.js'
 import * as Constants from '../../../../constants/indexConstants'
-import * as UI_SELECTORS from '../../selectors.js'
+import { getCameraPermission } from '../../../../reducers/permissions/selectors'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-
-import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import { loginWithEdge } from '../../../../actions/indexActions'
-import { toggleEnableTorch, toggleAddressModal, disableScan, enableScan } from './action'
-import { updateParsedURI, updateLabel } from '../SendConfirmation/action.js'
-
-import { toggleWalletListModal } from '../WalletTransferList/action'
-
 import type { Dispatch, State } from '../../../ReduxTypes'
-import {getCameraPermission} from '../../../../reducers/permissions/selectors'
+import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
+import * as UI_SELECTORS from '../../selectors.js'
+import { updateLabel, updateParsedURI } from '../SendConfirmation/action.js'
+import { toggleWalletListModal } from '../WalletTransferList/action'
+import { disableScan, enableScan, toggleAddressModal, toggleEnableTorch } from './action'
+import Scan from './Scan.ui'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)

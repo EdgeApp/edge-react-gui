@@ -1,16 +1,15 @@
 // @flow
 
-import type {AbcMetadata, AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, AbcParsedUri, AbcReceiveAddress} from 'edge-login'
+import type { AbcCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, AbcTransaction } from 'edge-login'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
 export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => {
-  return wallet.renameWallet(name)
-  .then(() => wallet)
+  return wallet.renameWallet(name).then(() => wallet)
 }
 
 export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<Array<AbcTransaction>> => {
-  return wallet.getTransactions ? wallet.getTransactions({currencyCode}) : Promise.resolve([])
+  return wallet.getTransactions ? wallet.getTransactions({ currencyCode }) : Promise.resolve([])
 }
 
 const dummyAbcTransaction: AbcTransaction = {
@@ -29,8 +28,8 @@ const dummyAbcTransaction: AbcTransaction = {
 const dummyAbcReceiveAddress: AbcReceiveAddress = {
   publicAddress: '',
   nativeAmount: '0',
-  'metadata': {
-    'amountFiat': 0
+  metadata: {
+    amountFiat: 0
   }
 }
 
@@ -51,7 +50,7 @@ export const getMaxSpendable = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendIn
 }
 
 export const getBalance = (wallet: AbcCurrencyWallet, currencyCode: string): string => {
-  return wallet.getBalance ? wallet.getBalance({currencyCode}) : '0'
+  return wallet.getBalance ? wallet.getBalance({ currencyCode }) : '0'
 }
 
 export const disableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) => {
@@ -63,9 +62,10 @@ export const enableTokens = (wallet: AbcCurrencyWallet, tokens: Array<string>) =
 }
 
 export const addCoreCustomToken = (wallet: AbcCurrencyWallet, tokenObj: any) => {
-  return wallet.addCustomToken(tokenObj)
-  .then(() => wallet.enableTokens([tokenObj.currencyCode]))
-  .catch((e) => console.log(e))
+  return wallet
+    .addCustomToken(tokenObj)
+    .then(() => wallet.enableTokens([tokenObj.currencyCode]))
+    .catch(e => console.log(e))
 }
 
 export const getEnabledTokensFromFile = async (wallet: AbcCurrencyWallet): Promise<Array<any>> => {
@@ -85,7 +85,8 @@ export const getEnabledTokensFile = (wallet: AbcCurrencyWallet) => {
   return file
 }
 
-export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {  // initialize array for eventual setting of file
+export async function setEnabledTokens (wallet: AbcCurrencyWallet, tokens: Array<string>, tokensToDisable?: Array<string>) {
+  // initialize array for eventual setting of file
   const finalTextArray = [...tokens]
   // now stringify the new tokens
   const stringifiedTokens = JSON.stringify(finalTextArray)
