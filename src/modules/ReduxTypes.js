@@ -223,7 +223,8 @@ export type State = {
     changeWallet: 'none',
     transaction: AbcTransaction | null,
     fee: any,
-    gettingTransaction: boolean
+    gettingTransaction: boolean,
+    availableShapeShiftTokens: Array<any>
   },
   exchangeRates: number,
   permissions: PermissionsState

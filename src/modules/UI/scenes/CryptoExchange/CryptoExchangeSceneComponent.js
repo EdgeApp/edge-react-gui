@@ -65,6 +65,7 @@ export type CryptoExchangeSceneComponentDispatchProps = {
   shift: () => any,
   closeConfirmation: () => any,
   openConfirmation: () => any,
+  getShapeShiftTokens: () => any,
   setNativeAmount: (data: SetNativeAmountInfo) => any
 }
 
@@ -89,6 +90,9 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
       toExchangeAmount: ''
     }
     this.state = newState
+  }
+  componentWillMount () {
+    this.props.getShapeShiftTokens()
   }
 
   componentDidMount () {

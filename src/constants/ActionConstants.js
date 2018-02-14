@@ -23,6 +23,7 @@ export const RECEIVED_TRANSACTION_ERROR = 'receivedTRansactionError'
 export const RECEIVED_INSUFFICIENT_FUNDS_ERROR = 'receivedInsufficentFundsError'
 export const GENERIC_SHAPE_SHIFT_ERROR = 'genericShapeShiftError'
 export const CHANGE_EXCHANGE_FEE = 'CHANGE_EXCHANGE_FEE'
+export const ON_AVAILABLE_SHAPE_SHIFT_TOKENS = 'onAvailableShapeShiftTokens'
 
 // Alert
 export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
