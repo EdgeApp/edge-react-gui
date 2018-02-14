@@ -338,3 +338,36 @@ describe('formatNumber', function () {
     })
   })
 })
+
+describe('formatNumber de_DE locale', function () {
+  describe('de_DE', function () {
+    beforeEach(function () {
+      setIntlLocale(DE_DE_LOCALE)
+    })
+
+    test('1234.56 => 1.234,56', function () {
+      const input = '1234.56'
+      const expected = '1.234,56'
+      const actual = intl.formatNumber(input)
+      expect(actual).toBe(expected)
+    })
+    test('123.56 => 123,56', function () {
+      const input = '1234.56'
+      const expected = '1.234,56'
+      const actual = intl.formatNumber(input)
+      expect(actual).toBe(expected)
+    })
+    test('1000000 => 1.000.000', function () {
+      const input = '1234.56'
+      const expected = '1.234,56'
+      const actual = intl.formatNumber(input)
+      expect(actual).toBe(expected)
+    })
+    test('100000 => 100.000.0', function () {
+      const input = '1234.56'
+      const expected = '1.234,56'
+      const actual = intl.formatNumber(input)
+      expect(actual).toBe(expected)
+    })
+  })
+})
