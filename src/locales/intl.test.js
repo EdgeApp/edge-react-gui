@@ -1,9 +1,7 @@
 import { truncateDecimals } from '../../src/modules/utils'
-/* globals describe test expect beforeEach jest */
+/* globals describe test expect beforeEach */
 /* eslint-disable import/first */
 import { intl, setIntlLocale } from './intl'
-
-jest.mock('intl-locales-supported', () => () => true)
 
 const EN_US_LOCALE = {
   localeIdentifier: 'en_US',
