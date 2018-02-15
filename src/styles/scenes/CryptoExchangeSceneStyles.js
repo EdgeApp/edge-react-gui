@@ -107,12 +107,12 @@ const CryptoExchangeSceneStyle = {
       justifyContent: 'center',
       alignSelf: 'center',
       alignItem: 'center',
-      height: 35,
-      marginBottom: 10
+      height: 35
     },
     bottomButton: {
       color: THEME.COLORS.GRAY_2,
-      fontSize: 17
+      fontSize: 17,
+      marginBottom: 10
     },
     icon: {
       color: THEME.COLORS.SECONDARY,
