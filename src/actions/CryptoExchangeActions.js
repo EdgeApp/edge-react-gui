@@ -11,7 +11,6 @@ import * as CONTEXT_API from '../modules/Core/Context/api'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
-import { checkShiftTokenAvailability } from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as UTILS from '../modules/utils'
@@ -459,18 +458,39 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
     })
 }
 
+export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
+  const response = await fetch('https://shapeshift.io/getcoins', {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  })
+  const availableTokens = []
+  if (response.status === 200) {
+    const content = JSON.parse(response._bodyText)
+    console.log(content)
+    for (const key in content) {
+      if (content[key].status === 'available') {
+        availableTokens.push(key)
+      }
+    }
+  }
+  dispatch(actions.dispatchActionArray(Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS, availableTokens))
+}
+
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   // This is a hack .. if the currecy code is not supported then we cant do the exchange
-  if (!checkShiftTokenAvailability(currencyCode)) {
+  const state = getState()
+  const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
+  if (!availableShapeShiftTokens.includes(currencyCode)) {
     setTimeout(() => {
       Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported)
     }, 1)
     return
   }
-
-  const state = getState()
+  dispatch(getShapeShiftTokens())
   const wallet = state.ui.wallets.byId[walletId]
-
   switch (state.cryptoExchange.changeWallet) {
     case Constants.TO:
       return dispatch(selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))

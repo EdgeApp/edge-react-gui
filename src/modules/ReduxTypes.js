@@ -224,6 +224,7 @@ export type State = {
     transaction: AbcTransaction | null,
     fee: any,
     gettingTransaction: boolean,
+    availableShapeShiftTokens: Array<any>,
     shiftPendingTransaction: boolean
   },
   exchangeRates: number,
