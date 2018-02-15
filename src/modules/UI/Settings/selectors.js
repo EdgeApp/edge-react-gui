@@ -201,3 +201,9 @@ export const getPinLoginEnabled = (state: State) => {
   const pinLoginEnabled = settings.pinLoginEnabled
   return pinLoginEnabled
 }
+
+export const getOtpResetPending = (state: State) => {
+  const settings = getSettings(state)
+  const otpResetPending = settings.otpResetPending
+  return otpResetPending
+}
