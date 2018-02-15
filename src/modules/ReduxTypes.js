@@ -171,6 +171,7 @@ export type State = {
       isTouchSupported: boolean,
       isTouchEnabled: boolean,
       isOtpEnabled: true,
+      otpResetPending: false,
       otpKey: string,
       [CurrencyCode]: {
         denomination: string,
