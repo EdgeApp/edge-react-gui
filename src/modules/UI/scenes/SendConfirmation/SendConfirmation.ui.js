@@ -1,30 +1,23 @@
 // @flow
 
-import React, { Component } from 'react'
-import {
-  View,
-  ActivityIndicator
-} from 'react-native'
-import SafeAreaView from '../../components/SafeAreaView'
-import Text from '../../components/FormattedText'
-import { sprintf } from 'sprintf-js'
-import s from '../../../../locales/strings.js'
-import styles from './styles.js'
 import { bns } from 'biggystring'
-import ExchangeRate from '../../components/ExchangeRate/index.js'
-import { ExchangedFlipInput, type ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
-import Recipient from '../../components/Recipient/index.js'
-import ABSlider from '../../components/Slider/index.js'
-import Gradient from '../../components/Gradient/Gradient.ui'
-import {
-  convertNativeToExchange,
-  convertAbcToGuiDenomination,
-  getDenomFromIsoCode,
-  convertNativeToDisplay,
-  border
-} from '../../../utils.js'
 import type { AbcDenomination } from 'edge-login'
+import React, { Component } from 'react'
+import { ActivityIndicator, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
+
+import s from '../../../../locales/strings.js'
 import type { CurrencyConverter, GuiCurrencyInfo, GuiDenomination } from '../../../../types'
+import { border, convertAbcToGuiDenomination, convertNativeToDisplay, convertNativeToExchange, getDenomFromIsoCode } from '../../../utils.js'
+import ExchangeRate from '../../components/ExchangeRate/index.js'
+import type { ExchangedFlipInputAmounts } from '../../components/FlipInput/ExchangedFlipInput2.js'
+import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
+import Text from '../../components/FormattedText'
+import Gradient from '../../components/Gradient/Gradient.ui'
+import Recipient from '../../components/Recipient/index.js'
+import SafeAreaView from '../../components/SafeAreaView'
+import ABSlider from '../../components/Slider/index.js'
+import styles from './styles.js'
 
 const DIVIDE_PRECISION = 18
 
@@ -49,14 +42,10 @@ export type SendConfirmationStateProps = {
 }
 
 export type SendConfirmationDispatchProps = {
-  updateSpendPending: (boolean) => any,
+  updateSpendPending: boolean => any,
   signBroadcastAndSave: () => any,
   reset: () => any,
-  updateAmount: (
-    nativeAmount: string,
-    exchangeAmount: string,
-    fiatPerCrypto: string
-  ) => any
+  updateAmount: (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => any
 }
 
 type routerParam = {
@@ -91,7 +80,7 @@ export class SendConfirmation extends Component<Props, State> {
   }
 
   componentWillMount () {
-    this.setState({keyboardVisible: this.props.data === 'fromScan'})
+    this.setState({ keyboardVisible: this.props.data === 'fromScan' })
   }
   componentDidMount () {
     const secondaryDisplayDenomination = getDenomFromIsoCode(this.props.fiatCurrencyCode)
@@ -145,9 +134,7 @@ export class SendConfirmation extends Component<Props, State> {
     if (bns.gt(this.props.networkFee, '0')) {
       const cryptoFeeSymbol = primaryInfo.displayDenomination.symbol
       const cryptoFeeMultiplier = this.props.primaryExchangeDenomination.multiplier
-      const cryptoFeeAmount = this.props.networkFee
-        ? convertNativeToDisplay(cryptoFeeMultiplier)(this.props.networkFee)
-        : ''
+      const cryptoFeeAmount = this.props.networkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(this.props.networkFee) : ''
       const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
       const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
       const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
@@ -167,16 +154,11 @@ export class SendConfirmation extends Component<Props, State> {
           <Gradient style={styles.gradient} />
           <View style={[styles.mainScrollView]}>
             <View style={[styles.exchangeRateContainer, styles.error]}>
-              {
-                this.props.errorMsg
-                  ? <Text style={[styles.error, styles.errorText]}>
-                    {this.props.errorMsg}
-                  </Text>
-                  : <ExchangeRate
-                    secondaryDisplayAmount={this.props.fiatPerCrypto}
-                    primaryInfo={primaryInfo}
-                    secondaryInfo={secondaryInfo} />
-              }
+              {this.props.errorMsg ? (
+                <Text style={[styles.error, styles.errorText]}>{this.props.errorMsg}</Text>
+              ) : (
+                <ExchangeRate secondaryDisplayAmount={this.props.fiatPerCrypto} primaryInfo={primaryInfo} secondaryInfo={secondaryInfo} />
+              )}
             </View>
             <View style={[styles.main, border('yellow')]}>
               <ExchangedFlipInput
@@ -194,9 +176,7 @@ export class SendConfirmation extends Component<Props, State> {
               <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
             </View>
             <View style={[styles.pendingSymbolArea]}>
-              {this.props.pending &&
-                <ActivityIndicator style={[{flex: 1, alignSelf: 'center'}, border()]} size={'small'} />
-              }
+              {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, border()]} size={'small'} />}
             </View>
             <View style={[styles.sliderWrap]}>
               <ABSlider
@@ -204,7 +184,8 @@ export class SendConfirmation extends Component<Props, State> {
                 resetSlider={this.props.resetSlider}
                 parentStyle={styles.sliderStyle}
                 onSlidingComplete={this.props.signBroadcastAndSave}
-                sliderDisabled={this.props.sliderDisabled} />
+                sliderDisabled={this.props.sliderDisabled}
+              />
             </View>
           </View>
         </Gradient>

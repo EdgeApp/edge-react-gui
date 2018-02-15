@@ -1,13 +1,11 @@
 // @flow
 
-import React, {Component} from 'react'
-import {
-  View,
-  ActivityIndicator
-} from 'react-native'
+import React, { Component } from 'react'
+import { ActivityIndicator, View } from 'react-native'
+
 import s from '../../../../../locales/strings.js'
+import { PrimaryButton, SecondaryButton } from '../../../components/Buttons'
 import styles from '../style.js'
-import {PrimaryButton, SecondaryButton} from '../../../components/Buttons'
 
 export type DeleteTokenButtonsProps = {
   onPressCancel: () => void,

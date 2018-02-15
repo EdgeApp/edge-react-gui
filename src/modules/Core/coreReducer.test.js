@@ -4,22 +4,22 @@ import { core as coreReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    'account': {},
-    'context': {
-      'context': {},
-      'nextUsername': '',
-      'usernames': []
+    account: {},
+    context: {
+      context: {},
+      nextUsername: '',
+      usernames: []
     },
-    'deepLinking': {
-      'passwordRecoveryLink': null
+    deepLinking: {
+      passwordRecoveryLink: null
     },
-    'edgeLogin': {
-      'error': null,
-      'isProcessing': false,
-      'lobby': null
+    edgeLogin: {
+      error: null,
+      isProcessing: false,
+      lobby: null
     },
-    'wallets': {
-      'byId': {}
+    wallets: {
+      byId: {}
     }
   }
   const actual = coreReducer(undefined, {})

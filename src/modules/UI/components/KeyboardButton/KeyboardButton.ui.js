@@ -1,10 +1,6 @@
-import React, {Component} from 'react'
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableHighlight
-} from 'react-native'
+import React, { Component } from 'react'
+import { StyleSheet, Text, TouchableHighlight, View } from 'react-native'
+
 import THEME from '../../../../theme/variables/airbitz'
 
 const styles = StyleSheet.create({
@@ -33,16 +29,20 @@ const styles = StyleSheet.create({
 
 export default class KeyboardButton extends Component {
   render () {
-    const {character, onPress, onLongPress} = this.props
-    return <View style={styles.view}>
-      <TouchableHighlight
-        style={styles.containerStyle}
-        underlayColor={styles.color}
-        onPress={() => { onPress(character) }}
-        onLongPress={onLongPress}>
-
-        <Text style={styles.keyboardButton}>{character}</Text>
-      </TouchableHighlight>
-    </View>
+    const { character, onPress, onLongPress } = this.props
+    return (
+      <View style={styles.view}>
+        <TouchableHighlight
+          style={styles.containerStyle}
+          underlayColor={styles.color}
+          onPress={() => {
+            onPress(character)
+          }}
+          onLongPress={onLongPress}
+        >
+          <Text style={styles.keyboardButton}>{character}</Text>
+        </TouchableHighlight>
+      </View>
+    )
   }
 }

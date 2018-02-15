@@ -1,14 +1,15 @@
 // @flow
-import React, {Component} from 'react'
-import {View, Image, Text, StyleSheet} from 'react-native'
-import { ExchangedFlipInput, type ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
-import {TextAndIconButton} from '../Buttons'
-import {WalletNameHeader} from '../Header/Component/WalletNameHeader.ui'
-import * as Constants from '../../../../constants/indexConstants'
-import type { GuiWallet, GuiCurrencyInfo } from '../../../../types'
+import React, { Component } from 'react'
+import { Image, StyleSheet, Text, View } from 'react-native'
 
-type State = {
-}
+import * as Constants from '../../../../constants/indexConstants'
+import type { GuiCurrencyInfo, GuiWallet } from '../../../../types'
+import { TextAndIconButton } from '../Buttons'
+import { WalletNameHeader } from '../Header/Component/WalletNameHeader.ui'
+import { ExchangedFlipInput } from './ExchangedFlipInput2.js'
+import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
+
+type State = {}
 
 export type Props = {
   style: StyleSheet.Styles,
@@ -22,7 +23,7 @@ export type Props = {
   forceUpdateGuiCounter: number,
   overridePrimaryExchangeAmount: string,
   launchWalletSelector: () => void,
-  onCryptoExchangeAmountChanged: (ExchangedFlipInputAmounts) => void
+  onCryptoExchangeAmountChanged: ExchangedFlipInputAmounts => void
 }
 
 export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, State> {
@@ -47,56 +48,51 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
 
   renderLogo = (style: StyleSheet.Styles, logo: string) => {
     if (logo) {
-      return <View style={style.iconContainer}>
-      <Image style={style.currencyIcon} source={{uri: logo}} />
-    </View>
+      return (
+        <View style={style.iconContainer}>
+          <Image style={style.currencyIcon} source={{ uri: logo }} />
+        </View>
+      )
     }
-    return <View style={style.altIconContainer}>
-    <Text style={style.altCurrencyText}>{this.props.primaryCurrencyInfo.displayCurrencyCode}</Text>
-  </View>
+    return (
+      <View style={style.altIconContainer}>
+        <Text style={style.altCurrencyText}>{this.props.primaryCurrencyInfo.displayCurrencyCode}</Text>
+      </View>
+    )
   }
 
   render () {
     const style: StyleSheet.Styles = this.props.style
-    const {
-      primaryCurrencyInfo,
-      secondaryCurrencyInfo,
-      fiatPerCrypto,
-      forceUpdateGuiCounter,
-      overridePrimaryExchangeAmount
-    } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount } = this.props
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
-      return <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
-        <View style={style.topRow}>
-              <TextAndIconButton
-                style={style.noWalletSelected}
-                onPress={this.launchSelector}
-                icon={Constants.KEYBOARD_ARROW_DOWN}
-                title={this.props.buttonText}
-              />
-            </View>
+      return (
+        <View style={[style.containerNoFee, style.containerNoWalletSelected, this.props.fee && style.container]}>
+          <View style={style.topRow}>
+            <TextAndIconButton
+              style={style.noWalletSelected}
+              onPress={this.launchSelector}
+              icon={Constants.KEYBOARD_ARROW_DOWN}
+              title={this.props.buttonText}
+            />
+          </View>
         </View>
+      )
     }
     const guiWalletName = this.props.guiWallet.name
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
     const titleComp = function (styles) {
-      return (<WalletNameHeader name={guiWalletName} denomination={displayDenomination} styles={styles}/>)
+      return <WalletNameHeader name={guiWalletName} denomination={displayDenomination} styles={styles} />
     }
 
     return (
       <View style={[style.containerNoFee, this.props.fee && style.container]}>
         <View style={style.topRow}>
-            <TextAndIconButton
-              style={style.walletSelector}
-              onPress={this.launchSelector}
-              icon={Constants.KEYBOARD_ARROW_DOWN}
-              title={titleComp}
-            />
-          </View>
-          {this.renderLogo(style, this.props.currencyLogo)}
+          <TextAndIconButton style={style.walletSelector} onPress={this.launchSelector} icon={Constants.KEYBOARD_ARROW_DOWN} title={titleComp} />
+        </View>
+        {this.renderLogo(style, this.props.currencyLogo)}
 
-        <View style={style.flipInput} >
+        <View style={style.flipInput}>
           <ExchangedFlipInput
             primaryCurrencyInfo={primaryCurrencyInfo}
             secondaryCurrencyInfo={secondaryCurrencyInfo}

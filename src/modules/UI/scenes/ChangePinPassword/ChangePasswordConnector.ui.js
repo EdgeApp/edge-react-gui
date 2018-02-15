@@ -1,15 +1,12 @@
 // @flow
 
-import {connect} from 'react-redux'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import {Actions} from 'react-native-router-flux'
-import ChangePasswordComponent, {
-  type ChangePasswordDispatchProps,
-  type ChangePasswordStateProps,
-  type ChangePasswordOwnProps
-} from './ChangePasswordComponent.ui'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
-import type {State} from '../../../ReduxTypes'
+import * as CORE_SELECTORS from '../../../Core/selectors.js'
+import type { State } from '../../../ReduxTypes'
+import ChangePasswordComponent from './ChangePasswordComponent.ui'
+import type { ChangePasswordDispatchProps, ChangePasswordOwnProps, ChangePasswordStateProps } from './ChangePasswordComponent.ui'
 
 export const mapStateToProps = (state: State, ownProps: ChangePasswordOwnProps): ChangePasswordStateProps => ({
   context: CORE_SELECTORS.getContext(state),

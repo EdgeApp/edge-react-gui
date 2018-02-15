@@ -1,15 +1,13 @@
 // @flow
 
-import {connect} from 'react-redux'
-import {
-  CreateWalletReview as CreateWalletReviewConnector,
-  type CreateWalletReviewDispatchProps
-} from './CreateWalletReview.ui'
+import { connect } from 'react-redux'
 
-import {createCurrencyWallet} from './action'
-import type {State, Dispatch} from '../../../ReduxTypes'
-import {getSupportedFiats} from '../../../utils.js'
-import {getSupportedWalletTypes} from '../../Settings/selectors.js'
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { getSupportedFiats } from '../../../utils.js'
+import { getSupportedWalletTypes } from '../../Settings/selectors.js'
+import { createCurrencyWallet } from './action'
+import { CreateWalletReview as CreateWalletReviewConnector } from './CreateWalletReview.ui'
+import type { CreateWalletReviewDispatchProps } from './CreateWalletReview.ui'
 
 const mapStateToProps = (state: State) => ({
   isCreatingWallet: state.ui.scenes.createWallet.isCreatingWallet,

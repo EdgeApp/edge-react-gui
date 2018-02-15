@@ -1,12 +1,12 @@
 /* globals test expect */
 
-import { permissionsReducer, initialState } from './permissionsReducer.js'
-import { updatePermissions } from './actions.js'
 import { AUTHORIZED, DENIED, RESTRICTED } from '../../modules/UI/permissions.js'
+import { updatePermissions } from './actions.js'
+import { initialState, permissionsReducer } from './permissionsReducer.js'
 
 test('initialState', () => {
   const expected = initialState
-  const actual = permissionsReducer(undefined, {type: 'UNKNOWN'})
+  const actual = permissionsReducer(undefined, { type: 'UNKNOWN' })
 
   expect(actual).toEqual(expected)
 })

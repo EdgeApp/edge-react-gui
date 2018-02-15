@@ -25,7 +25,7 @@ type Props = {
   onFocus(): void,
   onSubmitEditing(): void,
   onBlur(): void,
-  onChangeText(string): void,
+  onChangeText(string): void
 }
 
 type State = {
@@ -76,16 +76,7 @@ class Input extends Component<Props, State> {
   render () {
     const value = this.props.value ? this.props.value : ''
     const error = this.props.error ? this.props.error : ''
-    const {
-      containerStyle,
-      baseColor,
-      tintColor,
-      textColor,
-      errorColor,
-      titleTextStyle,
-      secureTextEntry,
-      returnKeyType
-    } = this.props
+    const { containerStyle, baseColor, tintColor, textColor, errorColor, titleTextStyle, secureTextEntry, returnKeyType } = this.props
     return (
       <TextField
         ref={this.addRef}

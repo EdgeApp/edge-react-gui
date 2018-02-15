@@ -1,12 +1,13 @@
 // @flow
 
-import React, {Component} from 'react'
-import {Text, View} from 'react-native'
-import styles from './styles.js'
+import React, { Component } from 'react'
+import { Text, View } from 'react-native'
 import Slider from 'react-native-slider'
+
+import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
 import * as UTILS from '../../../utils.js'
-import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
+import styles from './styles.js'
 
 const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
 
@@ -41,15 +42,12 @@ export default class ABSlider extends Component<Props, State> {
     if (value <= 1) {
       this.props.onSlidingComplete()
     } else {
-      this.setState({value: 10})
+      this.setState({ value: 10 })
     }
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (
-      nextProps.resetSlider &&
-      nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter
-    ) {
+    if (nextProps.resetSlider && nextProps.forceUpdateGuiCounter !== this.state.forceUpdateGuiCounter) {
       this.setState({
         value: 10,
         forceUpdateGuiCounter: nextProps.forceUpdateGuiCounter
@@ -58,7 +56,7 @@ export default class ABSlider extends Component<Props, State> {
   }
 
   onValueChange = (value: number) => {
-    this.setState({value})
+    this.setState({ value })
   }
 
   render () {
@@ -75,13 +73,11 @@ export default class ABSlider extends Component<Props, State> {
           trackStyle={styles.track}
           thumbStyle={styles.thumb}
           thumbImage={leftArrowImg}
-          minimumTrackTintColor='transparent'
-          maximumTrackTintColor='transparent'
-          thumbTouchSize={{width: 160, height: 160}}
+          minimumTrackTintColor="transparent"
+          maximumTrackTintColor="transparent"
+          thumbTouchSize={{ width: 160, height: 160 }}
         />
-        <Text style={styles.textOverlay}>
-          {SLIDE_TO_COMPLETE_TEXT}
-        </Text>
+        <Text style={styles.textOverlay}>{SLIDE_TO_COMPLETE_TEXT}</Text>
       </View>
     )
   }

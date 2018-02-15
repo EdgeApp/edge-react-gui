@@ -1,10 +1,10 @@
 // @flow
 
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../ReduxTypes.js'
+import { closeSideMenu, openSideMenu } from './action'
 import SideMenu from './SideMenu.ui'
-import {openSideMenu, closeSideMenu} from './action'
-import type {State, Dispatch} from '../../../ReduxTypes.js'
 
 const mapStateToProps = (state: State) => ({
   view: state.ui.scenes.sideMenu.view

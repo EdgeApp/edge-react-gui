@@ -1,2 +1,4 @@
-const noop = () => { return undefined }
+const noop = () => {
+  return undefined
+}
 export default noop

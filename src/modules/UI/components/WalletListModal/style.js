@@ -1,8 +1,9 @@
 // @flow
 
-import {StyleSheet} from 'react-native'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
+import { StyleSheet } from 'react-native'
+
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export const styles = {
   topLevel: {
@@ -86,7 +87,7 @@ export const styles = {
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
   }
-    // end of token rows //
+  // end of token rows //
 }
 
 export default StyleSheet.create(styles)

@@ -1,9 +1,10 @@
-// @flow
-import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {View, TouchableHighlight} from 'react-native'
-import {Icon} from '../Icon/Icon.ui'
+// @flow
+import React, { Component } from 'react'
+import { TouchableHighlight, View } from 'react-native'
+
 import * as Constants from '../../../../constants/indexConstants'
+import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   icon: string,
@@ -48,21 +49,11 @@ class IconButton extends Component<Props, State> {
     if (this.state.pressed) {
       style = iconPressed
     }
-    return <Icon
-      style={style}
-      name={this.props.icon}
-      size={iconSize}
-      type={this.props.iconType}/>
+    return <Icon style={style} name={this.props.icon} size={iconSize} type={this.props.iconType} />
   }
 
   render () {
-    const {
-      container,
-      icon,
-      iconPressed,
-      iconSize,
-      underlayColor
-    } = this.props.style
+    const { container, icon, iconPressed, iconSize, underlayColor } = this.props.style
     return (
       <TouchableHighlight
         style={container}
@@ -71,12 +62,10 @@ class IconButton extends Component<Props, State> {
         onHideUnderlay={this._onHideUnderlay}
         underlayColor={underlayColor}
       >
-      <View>
-        {this.renderIcon(icon, iconPressed, iconSize)}
-      </View>
+        <View>{this.renderIcon(icon, iconPressed, iconSize)}</View>
       </TouchableHighlight>
     )
   }
 }
 
-export {IconButton}
+export { IconButton }

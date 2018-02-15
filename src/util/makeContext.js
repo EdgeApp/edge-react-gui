@@ -1,19 +1,12 @@
 // @flow
-import type {
-  AbcContext,
-  AbcContextCallbacks,
-  EdgeCorePluginFactory,
-  AbcContextOptions
-} from 'edge-login'
+import type { AbcContext, AbcContextCallbacks, AbcContextOptions, EdgeCorePluginFactory } from 'edge-login'
+import { makeEdgeContext, makeFakeContexts } from 'edge-login'
 
-import {makeFakeContexts, makeEdgeContext} from 'edge-login'
 import ENV from '../../env.json'
-const {AIRBITZ_API_KEY, SHAPESHIFT_API_KEY} = ENV
 
-function makeCoreContext (
-  callbacks: AbcContextCallbacks = {},
-  pluginFactories: Array<EdgeCorePluginFactory> = []
-): Promise<AbcContext> {
+const { AIRBITZ_API_KEY, SHAPESHIFT_API_KEY } = ENV
+
+function makeCoreContext (callbacks: AbcContextCallbacks = {}, pluginFactories: Array<EdgeCorePluginFactory> = []): Promise<AbcContext> {
   const opts: AbcContextOptions = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,
@@ -22,11 +15,11 @@ function makeCoreContext (
   }
 
   if (ENV.USE_FAKE_CORE) {
-    const [context] = makeFakeContexts({...opts, localFakeUser: true})
+    const [context] = makeFakeContexts({ ...opts, localFakeUser: true })
     return Promise.resolve(context)
   }
 
   return makeEdgeContext(opts)
 }
 
-export {makeCoreContext}
+export { makeCoreContext }

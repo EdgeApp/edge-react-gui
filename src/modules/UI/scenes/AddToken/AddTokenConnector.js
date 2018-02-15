@@ -1,17 +1,12 @@
 // @flow
 
-import {connect} from 'react-redux'
-import {AddToken,
-  type AddTokenOwnProps,
-  type AddTokenDispatchProps,
-  type AddTokenStateProps}
-from './AddToken.ui'
+import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { getWallet } from '../../selectors'
 import * as ADD_TOKEN_ACTIONS from './action.js'
-import {
-  getWallet
-} from '../../selectors'
-import type {Dispatch, State} from '../../../ReduxTypes'
+import { AddToken } from './AddToken.ui'
+import type { AddTokenDispatchProps, AddTokenOwnProps, AddTokenStateProps } from './AddToken.ui'
 
 const mapStateToProps = (state: State, ownProps: AddTokenOwnProps): AddTokenStateProps => ({
   addTokenPending: state.ui.wallets.addTokenPending,

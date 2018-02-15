@@ -1,13 +1,12 @@
 // @flow
 
-import {connect} from 'react-redux'
-import {Actions} from 'react-native-router-flux'
+import { Actions } from 'react-native-router-flux'
+import { connect } from 'react-redux'
 
 import * as actions from '../../actions/indexActions'
-import LinkedComponent
-  from '../../modules/UI/scenes/EdgeLogin/EdgeLoginSceneComponent'
-import {EdgeLoginScreen} from '../../styles/indexStyles'
-import type {State, Dispatch} from '../../modules/ReduxTypes.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes.js'
+import LinkedComponent from '../../modules/UI/scenes/EdgeLogin/EdgeLoginSceneComponent'
+import { EdgeLoginScreen } from '../../styles/indexStyles'
 
 export const mapStateToProps = (state: State) => ({
   style: EdgeLoginScreen,
@@ -17,8 +16,11 @@ export const mapStateToProps = (state: State) => ({
 })
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
-  // $FlowFixMe
-  accept: () => dispatch(actions.lobbyLogin()).catch((e) => { console.log(e) }),
+  accept: () =>
+    // $FlowFixMe
+    dispatch(actions.lobbyLogin()).catch(e => {
+      console.log(e)
+    }),
   decline: () => Actions.pop()
 })
 

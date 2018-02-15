@@ -1,11 +1,11 @@
 // @flow
 /* global window __DEV__ */
-import {createStore, applyMiddleware, compose} from 'redux'
-
-import rootReducer from './rootReducer'
+import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
+
 // import createLogger from 'redux-logger'
 import loginStatusChecker from './loginStatusChecker'
+import rootReducer from './rootReducer'
 import soundsMiddleware from './soundsMiddleware'
 
 let middleware = [loginStatusChecker, thunk, soundsMiddleware]
@@ -21,14 +21,8 @@ if (__DEV__) {
 }
 
 const composeEnhancers =
-  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui' })
-    : compose
+  typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui' }) : compose
 
 export default function configureStore (initialState: Object) {
-  return createStore(
-    rootReducer,
-    initialState,
-    composeEnhancers(applyMiddleware(...middleware))
-  )
+  return createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middleware)))
 }

@@ -1,7 +1,7 @@
 // @flow
 
-import THEME from '../theme/variables/airbitz'
 import s from '../locales/strings.js'
+import THEME from '../theme/variables/airbitz'
 
 export const WALLET_OPTIONS = {
   SORT: {

@@ -1,20 +1,13 @@
 // @flow
 
-import * as UTILS from '../../../utils'
+import type { AbcTransaction } from 'edge-login'
+
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
-
-import {displayTransactionAlert} from '../../components/TransactionAlert/actions'
-
-import type {
-  Dispatch,
-  GetState
-} from '../../../ReduxTypes'
-
-import type {
-  AbcTransaction
-} from 'edge-login'
+import type { Dispatch, GetState } from '../../../ReduxTypes'
+import * as UI_SELECTORS from '../../../UI/selectors.js'
+import * as UTILS from '../../../utils'
+import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
 
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
@@ -38,8 +31,7 @@ export const getTransactionsRequest = (walletId: string, currencyCode) => (dispa
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
 
   if (wallet) {
-    WALLET_API.getTransactions(wallet, currencyCode)
-    .then((transactions) => {
+    WALLET_API.getTransactions(wallet, currencyCode).then(transactions => {
       dispatch(updateTransactions(transactions))
     })
   }
@@ -64,7 +56,7 @@ export const newTransactionsRequest = (walletId: string, abcTransactions: Array<
 
 export const newTransactions = (transactions: Array<AbcTransaction>) => ({
   type: NEW_TRANSACTIONS,
-  data: {transactions}
+  data: { transactions }
 })
 
 export const changedTransactionsRequest = (transactions: Array<AbcTransaction>, walletId: string) => (dispatch: Dispatch, getState: GetState) => {
@@ -78,12 +70,12 @@ export const changedTransactionsRequest = (transactions: Array<AbcTransaction>, 
 
 export const changedTransactions = (transactions: Array<AbcTransaction>) => ({
   type: CHANGED_TRANSACTIONS,
-  data: {transactions}
+  data: { transactions }
 })
 
 export const updateTransactions = (transactions: Array<AbcTransaction>) => ({
   type: UPDATE_TRANSACTIONS,
-  data: {transactions}
+  data: { transactions }
 })
 
 export const updateBalance = () => ({

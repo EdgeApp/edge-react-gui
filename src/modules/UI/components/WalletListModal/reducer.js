@@ -1,5 +1,6 @@
-import * as ACTION from './action'
 import { combineReducers } from 'redux'
+
+import * as ACTION from './action'
 
 const walletListModalVisible = (state = false, action) => {
   switch (action.type) {

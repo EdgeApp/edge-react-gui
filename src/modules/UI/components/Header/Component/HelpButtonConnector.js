@@ -3,9 +3,8 @@
 import { connect } from 'react-redux'
 
 import type { Dispatch } from '../../../../ReduxTypes'
-
-import HelpButton from './HelpButton.ui'
 import { openHelpModal } from '../../HelpModal/actions'
+import HelpButton from './HelpButton.ui'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({

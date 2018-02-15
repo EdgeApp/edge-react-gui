@@ -1,8 +1,8 @@
 // @flow
 
-import type { State } from '../modules/ReduxTypes'
 import * as Constants from '../constants/indexConstants'
 import s from '../locales/strings.js'
+import type { State } from '../modules/ReduxTypes'
 
 const initialState = {
   exchangeRate: 1,
@@ -108,7 +108,10 @@ function cryptoExchangerReducer (state = initialState, action) {
       return {
         ...state,
         transaction: action.data.abcTransaction,
-        fee: action.data.networkFee && state.fromCurrencyCode ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name : ' ',
+        fee:
+          action.data.networkFee && state.fromCurrencyCode
+            ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name
+            : ' ',
         insufficientError: false,
         genericShapeShiftError: null
       }
@@ -166,10 +169,11 @@ function cryptoExchangerReducer (state = initialState, action) {
       return {
         ...state,
         feeSetting: action.data.feeSetting,
-        forceUpdateGuiCounter: (state.forceUpdateGuiCounter + 1)
+        forceUpdateGuiCounter: state.forceUpdateGuiCounter + 1
       }
     case Constants.START_MAKE_SPEND:
-      return { ...state,
+      return {
+        ...state,
         gettingTransaction: true,
         insufficientError: false,
         genericShapeShiftError: null
@@ -245,7 +249,7 @@ function deepCopyState (state) {
 // Nuke the state on logout:
 export const cryptoExchanger = (state: $PropertyType<State, 'cryptoExchange'>, action: any) => {
   if (action.type === Constants.LOGOUT || action.type === Constants.DEEP_LINK_RECEIVED) {
-    return cryptoExchangerReducer(undefined, ({ type: 'DUMMY_ACTION_PLEASE_IGNORE' }))
+    return cryptoExchangerReducer(undefined, { type: 'DUMMY_ACTION_PLEASE_IGNORE' })
   }
 
   return cryptoExchangerReducer(state, action)

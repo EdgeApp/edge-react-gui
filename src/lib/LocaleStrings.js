@@ -1,6 +1,7 @@
+import DeviceInfo from 'react-native-device-info'
+
 import defaultLang from '../locales/default'
 import enPH from '../locales/es'
-import DeviceInfo from 'react-native-device-info'
 
 const supportedLocales = {
   en_PH: enPH

@@ -1,94 +1,76 @@
 // @flow
 
-import type {
-  AbcContext,
-  AbcContextCallbacks,
-  EdgeCorePluginFactory,
-  AbcCurrencyPlugin
-} from 'edge-login'
-import SplashScreen from 'react-native-smart-splash-screen'
-import s, { selectLocale } from '../locales/strings.js'
-import { setIntlLocale } from '../locales/intl'
-
+import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
+import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
+import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import type { AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-login'
+import React, { Component } from 'react'
+import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
-import React, {Component} from 'react'
-import {Keyboard, Platform, StatusBar, Image, TouchableWithoutFeedback, Linking} from 'react-native'
-import T from './UI/components/FormattedText'
-import { connect } from 'react-redux'
-import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
-
-import { Scene, Router, Actions, Overlay, Tabs, Modal, Drawer, Stack } from 'react-native-router-flux'
-import { MenuContext } from 'react-native-menu'
 import Locale from 'react-native-locale'
-import * as Constants from '../constants/indexConstants'
-import LoginConnector from './UI/scenes/Login/LoginConnector'
-import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
-import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
-import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
-import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
-import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
-import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
-import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
-import BackButton from './UI/components/Header/Component/BackButton.ui'
-import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
-
-import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
-import Request from './UI/scenes/Request/index'
-import SendConfirmation from './UI/scenes/SendConfirmation/index'
-import Scan from './UI/scenes/Scan/ScanConnector'
-import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
-import WalletList from './UI/scenes/WalletList/WalletListConnector'
-import {CreateWalletName} from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
-import { CreateWalletSelectCrypto } from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
-import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
-import { CreateWalletReview } from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
-import ManageTokens from './UI/scenes/ManageTokens'
-
-import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
-import EditToken from './UI/scenes/EditToken'
-import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
-import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
-import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
-import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
-import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
-import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
-import {HwBackButtonHandler} from './UI/scenes/WalletList/components/HwBackButtonHandler'
-
+import { MenuContext } from 'react-native-menu'
+import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
+import SplashScreen from 'react-native-smart-splash-screen'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
-import HelpModal from './UI/components/HelpModal'
-import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
-import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import MenuIcon from '../assets/images/MenuButton/menu.png'
-import Header from './UI/components/Header/Header.ui'
-import walletIcon from '../assets/images/tabbar/wallets.png'
-import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
-import receiveIcon from '../assets/images/tabbar/receive.png'
-import receiveIconSelected from '../assets/images/tabbar/receive_selected.png'
-import scanIcon from '../assets/images/tabbar/scan.png'
-import scanIconSelected from '../assets/images/tabbar/scan_selected.png'
-import exchangeIcon from '../assets/images/tabbar/exchange.png'
-import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
-import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
-
-import { styles } from './style.js'
-
-import * as CONTEXT_API from './Core/Context/api'
-
-import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import {
-  bitcoinCurrencyPluginFactory,
-  bitcoincashCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory,
-  dashCurrencyPluginFactory
-} from 'edge-currency-bitcoin'
-import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
-
-import ENV from '../../env.json'
-import {makeCoreContext} from '../util/makeContext.js'
+import { connect } from 'react-redux'
 import * as URI from 'uri-js'
 
-import {CAMERA, type Permission} from './UI/permissions.js'
+import ENV from '../../env.json'
+import MenuIcon from '../assets/images/MenuButton/menu.png'
+import exchangeIconSelected from '../assets/images/tabbar/exchange_selected.png'
+import exchangeIcon from '../assets/images/tabbar/exchange.png'
+import receiveIconSelected from '../assets/images/tabbar/receive_selected.png'
+import receiveIcon from '../assets/images/tabbar/receive.png'
+import scanIconSelected from '../assets/images/tabbar/scan_selected.png'
+import scanIcon from '../assets/images/tabbar/scan.png'
+import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
+import walletIcon from '../assets/images/tabbar/wallets.png'
+import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
+import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
+import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
+import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
+import PasswordRecoveryConnector from '../connectors/scene/PasswordRecoveryConnector.js'
+import * as Constants from '../constants/indexConstants'
+import { setIntlLocale } from '../locales/intl'
+import s, { selectLocale } from '../locales/strings.js'
+import { makeCoreContext } from '../util/makeContext.js'
+import * as CONTEXT_API from './Core/Context/api'
+import { styles } from './style.js'
+import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
+import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
+import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
+import T from './UI/components/FormattedText'
+import BackButton from './UI/components/Header/Component/BackButton.ui'
+import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
+import Header from './UI/components/Header/Header.ui'
+import HelpModal from './UI/components/HelpModal'
+import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
+import { CAMERA } from './UI/permissions.js'
+import type { Permission } from './UI/permissions.js'
+import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
+import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
+import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
+import ChangePasswordConnector from './UI/scenes/ChangePinPassword/ChangePasswordConnector.ui'
+import ChangePinConnector from './UI/scenes/ChangePinPassword/ChangePinConnector.ui'
+import { CreateWalletName } from './UI/scenes/CreateWallet/CreateWalletName.ui.js'
+import { CreateWalletReview } from './UI/scenes/CreateWallet/CreateWalletReviewConnector'
+import { CreateWalletSelectCrypto } from './UI/scenes/CreateWallet/CreateWalletSelectCryptoConnector'
+import { CreateWalletSelectFiat } from './UI/scenes/CreateWallet/CreateWalletSelectFiatConnector'
+import EditToken from './UI/scenes/EditToken'
+import LoginConnector from './UI/scenes/Login/LoginConnector'
+import ManageTokens from './UI/scenes/ManageTokens'
+import Request from './UI/scenes/Request/index'
+import Scan from './UI/scenes/Scan/ScanConnector'
+import SendConfirmation from './UI/scenes/SendConfirmation/index'
+import SendConfirmationOptions from './UI/scenes/SendConfirmation/SendConfirmationOptionsConnector.js'
+import CurrencySettings from './UI/scenes/Settings/CurrencySettingsConnector'
+import DefaultFiatSettingConnector from './UI/scenes/Settings/DefaultFiatSettingConnector'
+import SettingsOverview from './UI/scenes/Settings/SettingsOverviewConnector'
+import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetailsConnector.js'
+import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
+import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
+import WalletList from './UI/scenes/WalletList/WalletListConnector'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -204,12 +186,14 @@ export default class Main extends Component<Props, State> {
         delay: 500
       })
     })
-    Linking.getInitialURL().then(url => {
-      if (url) {
-        this.doDeepLink(url)
-      }
-      // this.navigate(url);
-    }).catch(e => console.log(e))
+    Linking.getInitialURL()
+      .then(url => {
+        if (url) {
+          this.doDeepLink(url)
+        }
+        // this.navigate(url);
+      })
+      .catch(e => console.log(e))
     Linking.addEventListener('url', this.handleOpenURL)
   }
   doDeepLink (url: string) {
@@ -230,264 +214,277 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-        <MenuContext style={styles.mainMenuContext}>
-          <RouterWithRedux backAndroidHandler={this.handleBack}>
-            <Overlay>
-              <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
-                {/* <Lightbox> */}
-                <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
-                  <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
+      <MenuContext style={styles.mainMenuContext}>
+        <RouterWithRedux backAndroidHandler={this.handleBack}>
+          <Overlay>
+            <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
+              {/* <Lightbox> */}
+              <Stack key={Constants.ROOT} hideNavBar panHandlers={null}>
+                <Scene key={Constants.LOGIN} initial component={LoginConnector} username={this.props.username} />
 
-                  <Scene
-                    key={Constants.TRANSACTION_DETAILS}
-                    navTransparent={true}
-                    clone
-                    component={TransactionDetails}
-                    renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
-                    renderLeftButton={this.renderBackButton()}
-                    renderRightButton={this.renderMenuButton()}
-                  />
+                <Scene
+                  key={Constants.TRANSACTION_DETAILS}
+                  navTransparent={true}
+                  clone
+                  component={TransactionDetails}
+                  renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
+                  renderLeftButton={this.renderBackButton()}
+                  renderRightButton={this.renderMenuButton()}
+                />
 
-                  <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
-                    {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
-                    <Scene hideNavBar>
-                      <Tabs key={Constants.EDGE} swipeEnabled={true} navTransparent={true} tabBarPosition={'bottom'} showLabel={true} tabBarStyle={styles.footerTabStyles}>
-                        <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
-                          <Scene
-                            key={Constants.WALLET_LIST_SCENE}
-                            navTransparent={true}
-                            component={WalletList}
-                            renderTitle={this.renderTitle(WALLETS)}
-                            renderLeftButton={this.renderHelpButton()}
-                            renderRightButton={this.renderMenuButton()}
-                          />
-
-                          <Scene
-                            key={Constants.CREATE_WALLET_NAME}
-                            navTransparent={true}
-                            component={CreateWalletName}
-                            renderTitle={this.renderTitle(CREATE_WALLET)}
-                            renderLeftButton={this.renderBackButton(WALLETS)}
-                            renderRightButton={this.renderEmptyButton()}
-                          />
-
-                          <Scene
-                            key={Constants.CREATE_WALLET_SELECT_CRYPTO}
-                            navTransparent={true}
-                            component={CreateWalletSelectCrypto}
-                            renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
-                            renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton()}
-                          />
-
-                          <Scene
-                            key={Constants.CREATE_WALLET_SELECT_FIAT}
-                            navTransparent={true}
-                            component={CreateWalletSelectFiat}
-                            renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
-                            renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton()}
-                          />
-
-                          <Scene
-                            key={Constants.CREATE_WALLET_REVIEW}
-                            navTransparent={true}
-                            component={CreateWalletReview}
-                            renderTitle={this.renderTitle(CREATE_WALLET)}
-                            renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton()}
-                          />
-
-                          <Scene
-                            key={Constants.TRANSACTION_LIST}
-                            navTransparent={true}
-                            component={TransactionListConnector}
-                            renderTitle={this.renderWalletListNavBar()}
-                            renderLeftButton={this.renderBackButton(WALLETS)}
-                            renderRightButton={this.renderMenuButton()}
-                          />
-
-                          <Scene
-                            key={Constants.MANAGE_TOKENS}
-                            renderLeftButton={this.renderBackButton()}
-                            navTransparent={true}
-                            component={ManageTokens}
-                            renderTitle={this.renderTitle(MANAGE_TOKENS)}
-                            renderRightButton={this.renderEmptyButton()}
-                            animation={'fade'}
-                            duration={600}
-                          />
-                          <Scene
-                            key={Constants.ADD_TOKEN}
-                            component={AddToken}
-                            navTransparent={true}
-                            onLeft={Actions.pop}
-                            renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton()}
-                            renderTitle={this.renderTitle(ADD_TOKEN)}
-                          />
-                          <Scene
-                            key={Constants.EDIT_TOKEN}
-                            component={EditToken}
-                            navTransparent={true}
-                            renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderEmptyButton()}
-                            renderTitle={this.renderTitle(EDIT_TOKEN)}
-                          />
-                        </Stack>
-
+                <Drawer key={Constants.EDGE} hideNavBar contentComponent={ControlPanel} hideDrawerButton={true} drawerPosition="right">
+                  {/* Wrapper Scene needed to fix a bug where the tabs would reload as a modal ontop of itself */}
+                  <Scene hideNavBar>
+                    <Tabs
+                      key={Constants.EDGE}
+                      swipeEnabled={true}
+                      navTransparent={true}
+                      tabBarPosition={'bottom'}
+                      showLabel={true}
+                      tabBarStyle={styles.footerTabStyles}
+                    >
+                      <Stack key={Constants.WALLET_LIST} icon={this.icon(Constants.WALLET_LIST)} tabBarLabel={WALLETS}>
                         <Scene
-                          key={Constants.REQUEST}
+                          key={Constants.WALLET_LIST_SCENE}
                           navTransparent={true}
-                          icon={this.icon(Constants.REQUEST)}
-                          tabBarLabel={REQUEST}
-                          component={Request}
-                          renderTitle={this.renderWalletListNavBar()}
+                          component={WalletList}
+                          renderTitle={this.renderTitle(WALLETS)}
                           renderLeftButton={this.renderHelpButton()}
                           renderRightButton={this.renderMenuButton()}
                         />
 
-                        <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
-                          <Scene
-                            key={Constants.SCAN_NOT_USED}
-                            navTransparent={true}
-                            onEnter={() => {
-                              this.props.requestPermission(CAMERA)
-                              this.props.dispatchEnableScan()
-                            }}
-                            onExit={this.props.dispatchDisableScan}
-                            component={Scan}
-                            renderTitle={this.renderWalletListNavBar()}
-                            renderLeftButton={this.renderHelpButton()}
-                            renderRightButton={this.renderMenuButton()}
-                          />
-                          <Scene
-                            key={Constants.EDGE_LOGIN}
-                            navTransparent={true}
-                            component={EdgeLoginSceneConnector}
-                            renderTitle={this.renderTitle(EDGE_LOGIN)}
-                            renderLeftButton={this.renderHelpButton()}
-                            renderRightButton={this.renderEmptyButton()}
-                          />
-                        </Stack>
-
-                        <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
-                          <Scene
-                            key={Constants.EXCHANGE_NOT_USED}
-                            navTransparent={true}
-                            component={ExchangeConnector}
-                            renderTitle={this.renderTitle(EXCHANGE)}
-                            renderLeftButton={this.renderExchangeButton()}
-                            renderRightButton={this.renderMenuButton()}
-                          />
-                          <Scene
-                            key={Constants.CHANGE_MINING_FEE_EXCHANGE}
-                            navTransparent={true}
-                            component={ChangeMiningFeeExchange}
-                            renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
-                            renderLeftButton={this.renderBackButton()}
-                            renderRightButton={this.renderHelpButton()}
-                          />
-                        </Stack>
-                      </Tabs>
-
-                      <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
                         <Scene
-                          key={Constants.SEND_CONFIRMATION_NOT_USED}
+                          key={Constants.CREATE_WALLET_NAME}
                           navTransparent={true}
-                          hideTabBar
-                          panHandlers={null}
-                          component={SendConfirmation}
-                          renderTitle={this.renderTitle(SEND_CONFIRMATION)}
+                          component={CreateWalletName}
+                          renderTitle={this.renderTitle(CREATE_WALLET)}
+                          renderLeftButton={this.renderBackButton(WALLETS)}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_SELECT_CRYPTO}
+                          navTransparent={true}
+                          component={CreateWalletSelectCrypto}
+                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_CRYPTO)}
                           renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderSendConfirmationButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_SELECT_FIAT}
+                          navTransparent={true}
+                          component={CreateWalletSelectFiat}
+                          renderTitle={this.renderTitle(CREATE_WALLET_SELECT_FIAT)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.CREATE_WALLET_REVIEW}
+                          navTransparent={true}
+                          component={CreateWalletReview}
+                          renderTitle={this.renderTitle(CREATE_WALLET)}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+
+                        <Scene
+                          key={Constants.TRANSACTION_LIST}
+                          navTransparent={true}
+                          component={TransactionListConnector}
+                          renderTitle={this.renderWalletListNavBar()}
+                          renderLeftButton={this.renderBackButton(WALLETS)}
+                          renderRightButton={this.renderMenuButton()}
+                        />
+
+                        <Scene
+                          key={Constants.MANAGE_TOKENS}
+                          renderLeftButton={this.renderBackButton()}
+                          navTransparent={true}
+                          component={ManageTokens}
+                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                          renderRightButton={this.renderEmptyButton()}
+                          animation={'fade'}
+                          duration={600}
                         />
                         <Scene
-                          key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+                          key={Constants.ADD_TOKEN}
+                          component={AddToken}
                           navTransparent={true}
-                          component={ChangeMiningFeeSendConfirmation}
+                          onLeft={Actions.pop}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                          renderTitle={this.renderTitle(ADD_TOKEN)}
+                        />
+                        <Scene
+                          key={Constants.EDIT_TOKEN}
+                          component={EditToken}
+                          navTransparent={true}
+                          renderLeftButton={this.renderBackButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                          renderTitle={this.renderTitle(EDIT_TOKEN)}
+                        />
+                      </Stack>
+
+                      <Scene
+                        key={Constants.REQUEST}
+                        navTransparent={true}
+                        icon={this.icon(Constants.REQUEST)}
+                        tabBarLabel={REQUEST}
+                        component={Request}
+                        renderTitle={this.renderWalletListNavBar()}
+                        renderLeftButton={this.renderHelpButton()}
+                        renderRightButton={this.renderMenuButton()}
+                      />
+
+                      <Stack key={Constants.SCAN} icon={this.icon(Constants.SCAN)} tabBarLabel={SEND}>
+                        <Scene
+                          key={Constants.SCAN_NOT_USED}
+                          navTransparent={true}
+                          onEnter={() => {
+                            this.props.requestPermission(CAMERA)
+                            this.props.dispatchEnableScan()
+                          }}
+                          onExit={this.props.dispatchDisableScan}
+                          component={Scan}
+                          renderTitle={this.renderWalletListNavBar()}
+                          renderLeftButton={this.renderHelpButton()}
+                          renderRightButton={this.renderMenuButton()}
+                        />
+                        <Scene
+                          key={Constants.EDGE_LOGIN}
+                          navTransparent={true}
+                          component={EdgeLoginSceneConnector}
+                          renderTitle={this.renderTitle(EDGE_LOGIN)}
+                          renderLeftButton={this.renderHelpButton()}
+                          renderRightButton={this.renderEmptyButton()}
+                        />
+                      </Stack>
+
+                      <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
+                        <Scene
+                          key={Constants.EXCHANGE_NOT_USED}
+                          navTransparent={true}
+                          component={ExchangeConnector}
+                          renderTitle={this.renderTitle(EXCHANGE)}
+                          renderLeftButton={this.renderExchangeButton()}
+                          renderRightButton={this.renderMenuButton()}
+                        />
+                        <Scene
+                          key={Constants.CHANGE_MINING_FEE_EXCHANGE}
+                          navTransparent={true}
+                          component={ChangeMiningFeeExchange}
                           renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
                           renderLeftButton={this.renderBackButton()}
                           renderRightButton={this.renderHelpButton()}
                         />
                       </Stack>
+                    </Tabs>
 
-                      <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
-                        <Scene key={Constants.MANAGE_TOKENS_NOT_USED} navTransparent={true}
-                          component={ManageTokens}
-                          renderTitle={this.renderTitle(MANAGE_TOKENS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()} />
+                    <Stack key={Constants.SEND_CONFIRMATION} hideTabBar>
+                      <Scene
+                        key={Constants.SEND_CONFIRMATION_NOT_USED}
+                        navTransparent={true}
+                        hideTabBar
+                        panHandlers={null}
+                        component={SendConfirmation}
+                        renderTitle={this.renderTitle(SEND_CONFIRMATION)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderSendConfirmationButton()}
+                      />
+                      <Scene
+                        key={Constants.CHANGE_MINING_FEE_SEND_CONFIRMATION}
+                        navTransparent={true}
+                        component={ChangeMiningFeeSendConfirmation}
+                        renderTitle={this.renderTitle(CHANGE_MINING_FEE)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderHelpButton()}
+                      />
+                    </Stack>
 
-                        <Scene key={Constants.ADD_TOKEN} navTransparent={true}
-                          component={AddToken}
-                          renderTitle={this.renderTitle(ADD_TOKEN)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()} />
-                      </Stack>
+                    <Stack key={Constants.MANAGE_TOKENS} hideTabBar>
+                      <Scene
+                        key={Constants.MANAGE_TOKENS_NOT_USED}
+                        navTransparent={true}
+                        component={ManageTokens}
+                        renderTitle={this.renderTitle(MANAGE_TOKENS)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
 
-                      <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
-                        <Scene
-                          key={Constants.SETTINGS_OVERVIEW}
-                          navTransparent={true}
-                          component={SettingsOverview}
-                          renderTitle={this.renderTitle(SETTINGS)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                        <Scene
-                          key={Constants.CHANGE_PASSWORD}
-                          navTransparent={true}
-                          component={ChangePasswordConnector}
-                          renderTitle={this.renderTitle(CHANGE_PASSWORD)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                        <Scene
-                          key={Constants.CHANGE_PIN}
-                          navTransparent={true}
-                          component={ChangePinConnector}
-                          renderTitle={this.renderTitle(CHANGE_PIN)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                        <Scene
-                          key={Constants.OTP_SETUP}
-                          navTransparent={true}
-                          component={OtpSettingsSceneConnector}
-                          renderTitle={this.renderTitle(OTP)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                        <Scene
-                          key={Constants.RECOVER_PASSWORD}
-                          navTransparent={true}
-                          component={PasswordRecoveryConnector}
-                          renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                        {this.renderCurrencySettings()}
-                        <Scene
-                          key={Constants.DEFAULT_FIAT_SETTING}
-                          navTransparent={true}
-                          component={DefaultFiatSettingConnector}
-                          renderTitle={this.renderTitle(DEFAULT_FIAT)}
-                          renderLeftButton={this.renderBackButton()}
-                          renderRightButton={this.renderEmptyButton()}
-                        />
-                      </Stack>
-                    </Scene>
-                  </Drawer>
-                </Stack>
-              </Modal>
-            </Overlay>
-          </RouterWithRedux>
-          <HelpModal style={{ flex: 1 }} />
-          <ErrorAlert />
-          <TransactionAlert />
-          <AutoLogout />
-        </MenuContext>
+                      <Scene
+                        key={Constants.ADD_TOKEN}
+                        navTransparent={true}
+                        component={AddToken}
+                        renderTitle={this.renderTitle(ADD_TOKEN)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                    </Stack>
+
+                    <Stack key={Constants.SETTINGS_OVERVIEW_TAB} hideDrawerButton={true}>
+                      <Scene
+                        key={Constants.SETTINGS_OVERVIEW}
+                        navTransparent={true}
+                        component={SettingsOverview}
+                        renderTitle={this.renderTitle(SETTINGS)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      <Scene
+                        key={Constants.CHANGE_PASSWORD}
+                        navTransparent={true}
+                        component={ChangePasswordConnector}
+                        renderTitle={this.renderTitle(CHANGE_PASSWORD)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      <Scene
+                        key={Constants.CHANGE_PIN}
+                        navTransparent={true}
+                        component={ChangePinConnector}
+                        renderTitle={this.renderTitle(CHANGE_PIN)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      <Scene
+                        key={Constants.OTP_SETUP}
+                        navTransparent={true}
+                        component={OtpSettingsSceneConnector}
+                        renderTitle={this.renderTitle(OTP)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      <Scene
+                        key={Constants.RECOVER_PASSWORD}
+                        navTransparent={true}
+                        component={PasswordRecoveryConnector}
+                        renderTitle={this.renderTitle(PASSWORD_RECOVERY)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                      {this.renderCurrencySettings()}
+                      <Scene
+                        key={Constants.DEFAULT_FIAT_SETTING}
+                        navTransparent={true}
+                        component={DefaultFiatSettingConnector}
+                        renderTitle={this.renderTitle(DEFAULT_FIAT)}
+                        renderLeftButton={this.renderBackButton()}
+                        renderRightButton={this.renderEmptyButton()}
+                      />
+                    </Stack>
+                  </Scene>
+                </Drawer>
+              </Stack>
+            </Modal>
+          </Overlay>
+        </RouterWithRedux>
+        <HelpModal style={{ flex: 1 }} />
+        <ErrorAlert />
+        <TransactionAlert />
+        <AutoLogout />
+      </MenuContext>
     )
   }
 
@@ -533,9 +530,11 @@ export default class Main extends Component<Props, State> {
   }
 
   renderMenuButton = () => {
-    return <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
-      <Image source={MenuIcon} />
-    </TouchableWithoutFeedback>
+    return (
+      <TouchableWithoutFeedback onPress={Actions.drawerOpen}>
+        <Image source={MenuIcon} />
+      </TouchableWithoutFeedback>
+    )
   }
 
   renderExchangeButton = () => {
@@ -546,7 +545,7 @@ export default class Main extends Component<Props, State> {
     return <SendConfirmationOptions />
   }
 
-  icon = (tabName: string) => (props: {focused: boolean}) => {
+  icon = (tabName: string) => (props: { focused: boolean }) => {
     if (typeof tabBarIconFiles[tabName] === 'undefined' || typeof tabBarIconFilesSelected[tabName] === 'undefined') {
       throw new Error('Invalid tabbar name')
     }
