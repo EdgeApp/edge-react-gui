@@ -79,11 +79,11 @@ export default class MenuDropDown extends Component<Props, State> {
           <MenuTrigger style={[style.menuTrigger]}>
             {this.renderMenuIcon(style)}
           </MenuTrigger>
-            <MenuOptions ref='menuInteriorParent' optionsContainerStyle={[optionsStyle]}>
-              <View ref='menuInterior' onLayout={this._onInternalLayout}>
-                {this.renderMenuOptions(style)}
-              </View>
-            </MenuOptions>
+          <MenuOptions ref='menuInteriorParent' optionsContainerStyle={[optionsStyle]}>
+            <View ref='menuInterior' onLayout={this._onInternalLayout}>
+              {this.renderMenuOptions(style)}
+            </View>
+          </MenuOptions>
         </Menu>
       </View>
     )
