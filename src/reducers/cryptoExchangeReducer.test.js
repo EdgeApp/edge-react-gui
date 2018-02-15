@@ -39,7 +39,8 @@ test('initialState', () => {
     forceUpdateGuiCounter: 0,
     transaction: null,
     gettingTransaction: false,
-    availableShapeShiftTokens: []
+    availableShapeShiftTokens: [],
+    shiftPendingTransaction: false
   }
   const actual = cryptoExchangerReducer(undefined, {})
 

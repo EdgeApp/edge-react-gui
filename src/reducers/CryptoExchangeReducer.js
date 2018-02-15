@@ -40,7 +40,8 @@ const initialState = {
   forceUpdateGuiCounter: 0,
   transaction: null,
   gettingTransaction: false,
-  availableShapeShiftTokens: []
+  availableShapeShiftTokens: [],
+  shiftPendingTransaction: false
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
@@ -185,6 +186,10 @@ function cryptoExchangerReducer (state = initialState, action) {
       return {...state, availableShapeShiftTokens: action.data}
     case Constants.DONE_MAKE_SPEND:
       return { ...state, gettingTransaction: false }
+    case Constants.START_SHIFT_TRANSACTION:
+      return { ...state, shiftPendingTransaction: true }
+    case Constants.DONE_SHIFT_TRANSACTION:
+      return { ...state, shiftPendingTransaction: false }
     default:
       return state
   }

@@ -216,22 +216,27 @@ const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
 }
 
 export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch(actions.dispatchAction(Constants.START_SHIFT_TRANSACTION))
   const state = getState()
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
   if (!fromWallet || !toWallet) {
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
   if (!srcWallet) {
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   if (!state.cryptoExchange.transaction) {
     getShiftTransaction(fromWallet, toWallet)
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   if (holderObject.status !== 'finished') {
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   if (srcWallet) {
@@ -267,14 +272,12 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
 
       dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
-      setTimeout(() => {
-        Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
-      }, 1)
+      dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
+      setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
-      setTimeout(() => {
-        Alert.alert(s.strings.exchange_failed, error.message)
-      }, 1)
+      dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
+      setTimeout(() => { Alert.alert(s.strings.exchange_failed, error.message) }, 1)
     }
   }
 }

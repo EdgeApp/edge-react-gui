@@ -24,6 +24,8 @@ export const RECEIVED_INSUFFICIENT_FUNDS_ERROR = 'receivedInsufficentFundsError'
 export const GENERIC_SHAPE_SHIFT_ERROR = 'genericShapeShiftError'
 export const CHANGE_EXCHANGE_FEE = 'CHANGE_EXCHANGE_FEE'
 export const ON_AVAILABLE_SHAPE_SHIFT_TOKENS = 'onAvailableShapeShiftTokens'
+export const START_SHIFT_TRANSACTION = 'START_SHIFT_TRANSACTION'
+export const DONE_SHIFT_TRANSACTION = 'DONE_SHIFT_TRANSACTION'
 
 // Alert
 export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
