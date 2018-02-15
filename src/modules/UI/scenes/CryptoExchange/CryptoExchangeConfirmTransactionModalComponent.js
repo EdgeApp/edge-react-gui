@@ -79,19 +79,6 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
           <View style={shim} />
           <View style={shim} />
         </View>
-        <Slider
-          onSlidingComplete={this.props.confirmFunction}
-          sliderDisabled={false}
-          parentStyle={{
-            backgroundColor: THEME.COLORS.SECONDARY,
-            borderRadius: 40,
-            marginBottom: 10,
-            marginLeft: 0,
-            marginRight: 0,
-            width: 270,
-            alignSelf: 'center'
-          }}
-        />
         <Slider onSlidingComplete={this.props.confirmFunction}
           sliderDisabled={this.props.pending}
           parentStyle={{
