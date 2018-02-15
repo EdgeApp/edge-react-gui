@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, TouchableHighlight, View } from 'react-native'
+import { Alert, TouchableHighlight, View, Keyboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { FormField } from '../../../../components/FormField.js'
@@ -57,6 +57,7 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
 
   onNext = (): void => {
     if (this.isValidFiatType()) {
+      Keyboard.dismiss()
       Actions[Constants.CREATE_WALLET_NAME]({
         selectedWalletType: this.props.selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat)

@@ -41,6 +41,7 @@ export class CreateWalletName extends Component<CreateWalletNameOwnProps, State>
 
   onNext = (): void => {
     if (this.isValidWalletName()) {
+      Keyboard.dismiss()
       Actions[Constants.CREATE_WALLET_REVIEW]({
         walletName: this.state.walletName,
         selectedFiat: this.props.selectedFiat,

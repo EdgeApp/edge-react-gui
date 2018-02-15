@@ -59,6 +59,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
 
   onNext = (): void => {
     if (this.isValidWalletType()) {
+      Keyboard.dismiss()
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
         selectedWalletType: this.getWalletType(this.state.selectedWalletType)
       })
@@ -114,6 +115,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
           <Gradient style={styles.gradient} />
           <View style={styles.view}>
             <FormField
+              autoFocus
               style={styles.picker}
               clearButtonMode={'while-editing'}
               onFocus={this.handleOnFocus}
