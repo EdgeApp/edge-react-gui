@@ -1,6 +1,6 @@
 /* globals test expect */
 
-import { core, cryptoExchange, exchangeRates, permissions, rootReducer, ui } from './rootReducer.js'
+import { core, cryptoExchange, exchangeRates, permissions, rootReducer, ui, contacts } from './rootReducer.js'
 
 test('initialState', () => {
   const expected = {
@@ -8,7 +8,8 @@ test('initialState', () => {
     ui: ui(undefined, {}),
     cryptoExchange: cryptoExchange(undefined, {}),
     exchangeRates: exchangeRates(undefined, {}),
-    permissions: permissions(undefined, {})
+    permissions: permissions(undefined, {}),
+    contacts: contacts(undefined, {})
   }
   const actual = rootReducer(undefined, {})
 

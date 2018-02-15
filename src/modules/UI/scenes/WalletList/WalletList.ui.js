@@ -2,8 +2,6 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
-import Contacts from 'react-native-contacts'
-import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -13,7 +11,6 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type { GuiContact } from '../../../../types'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -49,7 +46,6 @@ type Props = {
   walletName: string,
   wallets: any,
   renameWalletInput: string,
-  setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void
@@ -68,21 +64,6 @@ export default class WalletList extends Component<Props, State> {
       fullListExists: true,
       balanceBoxVisible: true
     }
-  }
-
-  componentDidMount () {
-    Permissions.request('contacts').then(response => {
-      if (response === 'authorized') {
-        Contacts.getAll((err, contacts) => {
-          if (err === 'denied') {
-            // error
-          } else {
-            contacts.sort((a, b) => a.givenName > b.givenName)
-            this.props.setContactList(contacts)
-          }
-        })
-      }
-    })
   }
 
   executeWalletRowOption = (walletId: string, option: string) => {

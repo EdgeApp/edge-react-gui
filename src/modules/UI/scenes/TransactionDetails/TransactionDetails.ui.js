@@ -4,8 +4,6 @@ import { bns } from 'biggystring'
 import type { AbcCurrencyInfo, AbcDenomination, AbcMetadata, AbcTransaction } from 'edge-login'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
-import Contacts from 'react-native-contacts'
-import Permissions from 'react-native-permissions'
 import { sprintf } from 'sprintf-js'
 
 import s from '../../../../locales/strings.js'
@@ -40,7 +38,6 @@ export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
   setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
-  setContactList: (Array<GuiContact>) => void,
   getSubcategories: () => void,
   displayDropdownAlert: (message: string, title: string) => void
 }
@@ -369,22 +366,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   componentDidMount () {
-    if (!this.props.contacts) {
-      Permissions.check('contacts').then(response => {
-        if (response === 'authorized') {
-          Contacts.getAll((err, contacts) => {
-            if (err === 'denied') {
-              // error
-            } else {
-              const filteredContacts = contacts
-                .filter(item => item.givenName)
-                .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
-              this.props.setContactList(filteredContacts)
-            }
-          })
-        }
-      })
-    }
     this.props.getSubcategories()
   }
 
