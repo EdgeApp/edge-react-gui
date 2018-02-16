@@ -62,37 +62,6 @@ export default class MenuDropDown extends Component<Props, State> {
     return items
   }
 
-  // -- MenuOptions component should be followed by MenuOption component because MenuOptions pass props into its children,
-  // -- this case props is inherited by View and not MenuOption. Workaround is to create a new React class witht the View and custom style
-  // -- and pass the props to MenuOption component
-  //
-  // render () {
-  //   const deviceHeight = PLATFORM.deviceHeight
-  //   const verticalBuffer = ((this.state.pageY + this.state.height - 8) > PLATFORM.deviceHeight) ? 12 : 0
-  //   const lowerLimitOfMenu = this.state.pageY + this.state.height
-  //   const offset = lowerLimitOfMenu - deviceHeight
-  //   const newPageY = this.state.pageY - offset - verticalBuffer
-  //   const optionsStyle = {}
-  //   const style = this.props.style
-  //   if (lowerLimitOfMenu > deviceHeight) {
-  //     optionsStyle.top = newPageY
-  //   }
-  //   return (
-  //     <View style={[style.container]}>
-  //       <Menu style={[style.menuButton]} onSelect={(value) => this.props.onSelect(value)}>
-  //         <MenuTrigger style={[style.menuTrigger]}>
-  //           {this.renderMenuIcon(style)}
-  //         </MenuTrigger>
-  //         <MenuOptions ref='menuInteriorParent' optionsContainerStyle={[optionsStyle]}>
-  //           <View ref='menuInterior' onLayout={this._onInternalLayout}>
-  //             {this.renderMenuOptions(style)}
-  //           </View>
-  //         </MenuOptions>
-  //       </Menu>
-  //     </View>
-  //   )
-  // }
-
   render () {
     const deviceHeight = PLATFORM.deviceHeight
     const verticalBuffer = ((this.state.pageY + this.state.height - 8) > PLATFORM.deviceHeight) ? 12 : 0
@@ -110,7 +79,7 @@ export default class MenuDropDown extends Component<Props, State> {
           <MenuTrigger style={[style.menuTrigger]}>
             {this.renderMenuIcon(style)}
           </MenuTrigger>
-          <MenuOptions ref='menuInteriorParent' optionsContainerStyle={[optionsStyle]}>
+          <MenuOptions optionsContainerStyle={optionsStyle} ref='menuInterior' onLayout={this._onInternalLayout}>
             {this.renderMenuOptions(style)}
           </MenuOptions>
         </Menu>
