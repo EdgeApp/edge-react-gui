@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edgesecure.co",
@@ -77,7 +77,7 @@
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
     "edge-currency-bitcoin": "2.14.4",
-    "edge-currency-ethereum": "0.7.12",
+    "edge-currency-ethereum": "0.8.0",
     "edge-exchange-plugins": "^0.1.1",
     "edge-login": "^0.5.5",
     "https-browserify": "0.0.1",
