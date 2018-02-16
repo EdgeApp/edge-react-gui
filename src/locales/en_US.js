@@ -139,7 +139,7 @@ const strings = {
   string_custom_fee: 'Set Fees',
   satPerByte: 'Satoshi Per Byte',
   gasLimit: 'Gas Limit',
-  gasPrice: 'Gas Price',
+  gasPrice: 'Gas Price (Gwei)',
   string_disable: 'DISABLE',
   string_done_cap: 'Done',
   string_fee_with_colon: 'Fee: ',
