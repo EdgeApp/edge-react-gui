@@ -23,16 +23,14 @@ export type CreateWalletSelectCryptoStateProps = {
   supportedWalletTypes: Array<GuiWalletType>,
   dimensions: DeviceDimensions
 }
-
+type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
 type State = {
   selectedWalletType: string,
   searchTerm: string
 }
 
-export type CreateWalletSelectCryptoProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
-
-export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCryptoProps, State> {
-  constructor (props: CreateWalletSelectCryptoProps & State) {
+export class CreateWalletSelectCrypto extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       selectedWalletType: '',
@@ -40,7 +38,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
     }
   }
 
-  isValidWalletType = (): boolean => {
+  isValidWalletType = () => {
     const { selectedWalletType } = this.state
     const { supportedWalletTypes } = this.props
     const walletTypeValue = supportedWalletTypes.findIndex(walletType => walletType.value === selectedWalletType)
@@ -57,7 +55,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
     return foundValue
   }
 
-  onNext = (): void => {
+  onNext = () => {
     if (this.isValidWalletType()) {
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
         selectedWalletType: this.getWalletType(this.state.selectedWalletType)
@@ -67,7 +65,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
     }
   }
 
-  onBack = (): void => {
+  onBack = () => {
     Keyboard.dismiss()
     Actions.pop() // redirect to the list of wallets
   }
@@ -114,6 +112,7 @@ export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCrypto
           <Gradient style={styles.gradient} />
           <View style={styles.view}>
             <FormField
+              autoFocus
               style={styles.picker}
               clearButtonMode={'while-editing'}
               onFocus={this.handleOnFocus}
