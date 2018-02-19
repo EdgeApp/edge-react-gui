@@ -19,29 +19,28 @@ export type CreateWalletNameOwnProps = {
   selectedFiat: GuiFiatType,
   selectedWalletType: GuiWalletType
 }
-
+type Props = CreateWalletNameOwnProps
 type State = {
   walletName: string
 }
 
-export class CreateWalletName extends Component<CreateWalletNameOwnProps, State> {
-  constructor (props: CreateWalletNameOwnProps) {
+export class CreateWalletName extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       walletName: sprintf(s.strings.my_crypto_wallet_name, this.props.selectedWalletType.label)
     }
   }
 
-  isValidWalletName = (): boolean => {
+  isValidWalletName = () => {
     const { walletName } = this.state
-    const isValid: boolean = walletName.length > 0
+    const isValid = walletName.length > 0
 
     return isValid
   }
 
-  onNext = (): void => {
+  onNext = () => {
     if (this.isValidWalletName()) {
-      Keyboard.dismiss()
       Actions[Constants.CREATE_WALLET_REVIEW]({
         walletName: this.state.walletName,
         selectedFiat: this.props.selectedFiat,

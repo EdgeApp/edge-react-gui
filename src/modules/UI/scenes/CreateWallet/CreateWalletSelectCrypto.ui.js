@@ -23,16 +23,14 @@ export type CreateWalletSelectCryptoStateProps = {
   supportedWalletTypes: Array<GuiWalletType>,
   dimensions: DeviceDimensions
 }
-
+type Props = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
 type State = {
   selectedWalletType: string,
   searchTerm: string
 }
 
-export type CreateWalletSelectCryptoProps = CreateWalletSelectCryptoOwnProps & CreateWalletSelectCryptoStateProps
-
-export class CreateWalletSelectCrypto extends Component<CreateWalletSelectCryptoProps, State> {
-  constructor (props: CreateWalletSelectCryptoProps & State) {
+export class CreateWalletSelectCrypto extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       selectedWalletType: '',

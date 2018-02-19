@@ -20,21 +20,18 @@ export type CreateWalletSelectFiatOwnProps = {
   supportedFiats: Array<GuiFiatType>,
   dimensions: DeviceDimensions
 }
-
+export type CreateWalletSelectFiatStateProps = {
+  dimensions: DeviceDimensions,
+  supportedFiats: Array<GuiFiatType>
+}
+export type Props = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
 type State = {
   searchTerm: string,
   selectedFiat: string
 }
 
-export type CreateWalletSelectFiatStateProps = {
-  dimensions: DeviceDimensions,
-  supportedFiats: Array<GuiFiatType>
-}
-
-export type CreateWalletSelectFiatProps = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
-
-export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProps, State> {
-  constructor (props: CreateWalletSelectFiatProps & State) {
+export class CreateWalletSelectFiat extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
