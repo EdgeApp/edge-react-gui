@@ -24,6 +24,7 @@ export default class ControlPanel extends Component {
 
   render () {
     const {
+      currencyLogo,
       primaryDisplayCurrencyCode,
       primaryDisplayDenomination,
       primaryExchangeDenomination,
@@ -50,16 +51,15 @@ export default class ControlPanel extends Component {
       <SafeAreaView>
         <Gradient style={styles.container}>
           <View style={styles.bitcoin.container}>
-            <T style={styles.bitcoin.icon} />
+            {this.renderCryptoIcon(currencyLogo)}
             <ExchangedExchangeRate
               primaryCurrencyInfo={primaryInfo}
               secondaryCurrencyInfo={secondaryInfo}
               exchangeSecondaryToPrimaryRatio={secondaryToPrimaryRatio}
             />
           </View>
-
-          <TouchableHighlight style={styles.user.container} onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
-            <View style={{ flexDirection: 'row' }}>
+          <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
+            <View style={styles.user.container}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={person} />
               </View>
@@ -67,10 +67,16 @@ export default class ControlPanel extends Component {
               <MDIcon style={styles.icon} name={arrowIcon} />
             </View>
           </TouchableHighlight>
-
           <Main />
         </Gradient>
       </SafeAreaView>
     )
+  }
+
+  renderCryptoIcon = currencyLogo => {
+    if (currencyLogo) {
+      return <Image style={styles.bitcoin.icon} source={{ uri: currencyLogo }} />
+    }
+    return <Image style={styles.bitcoin.icon} />
   }
 }

@@ -7,7 +7,8 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   text: {
-    color: THEME.COLORS.ACCENT_MINT
+    color: THEME.COLORS.WHITE,
+    fontSize: 16
   }
 })
 
