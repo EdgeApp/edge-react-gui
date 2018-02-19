@@ -1,12 +1,14 @@
 // @flow
+
 import React from 'react'
+import type { Node } from 'react'
 import { SafeAreaView } from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 type props = {
-  style: any,
-  children: any
+  style?: Object,
+  children: Node
 }
 
 // The Gradient Component is a hack to make the upper and lower portion of the safe area view have the edge gradient
