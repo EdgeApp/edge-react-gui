@@ -79,7 +79,7 @@
     "edge-currency-bitcoin": "2.14.3",
     "edge-currency-ethereum": "0.7.12",
     "edge-exchange-plugins": "^0.1.1",
-    "edge-login": "^0.5.5",
+    "edge-login": "^0.5.6",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
     "native-base": "^2.2.1",
