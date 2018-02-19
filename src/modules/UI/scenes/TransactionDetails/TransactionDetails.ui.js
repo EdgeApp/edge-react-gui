@@ -464,7 +464,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                   style={[{ width: '100%' }]}
                   usableHeight={PLATFORM.usableHeight}
                   currentPayeeText={this.state.name || ''}
-                  dimensions={PLATFORM.dimensions}
                   onSelectPayee={this.onSelectPayee}
                   blurOnSubmit
                   onBlur={this.onBlurPayee}
@@ -569,7 +568,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     onExitCategories={this.onExitCategories}
                     usableHeight={PLATFORM.usableHeight}
                     onSubcategoryKeyboardReturn={this.onSubcategoriesKeyboardReturn}
-                    dimensions={PLATFORM.dimensions}
                     onNotesKeyboardReturn={this.onNotesKeyboardReturn}
                     onFocusNotes={this.onFocusNotes}
                     onBlurNotes={this.onBlurNotes}

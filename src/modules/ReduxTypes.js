@@ -172,6 +172,7 @@ export type State = {
       isTouchSupported: boolean,
       isTouchEnabled: boolean,
       isOtpEnabled: true,
+      otpResetPending: false,
       otpKey: string,
       [CurrencyCode]: {
         denomination: string,
@@ -224,7 +225,8 @@ export type State = {
     changeWallet: 'none',
     transaction: AbcTransaction | null,
     fee: any,
-    gettingTransaction: boolean
+    gettingTransaction: boolean,
+    shiftPendingTransaction: boolean
   },
   exchangeRates: number,
   permissions: PermissionsState,

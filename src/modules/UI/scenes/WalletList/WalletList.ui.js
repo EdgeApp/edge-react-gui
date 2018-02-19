@@ -2,6 +2,9 @@
 
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { TwoButtonTextModalComponent, StaticModalComponent } from '../../../../components/indexComponents'
+import Contacts from 'react-native-contacts'
+import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -14,11 +17,13 @@ import { PLATFORM } from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
+import styles from './style'
+import {TwoButtonModalStyle} from '../../../../styles/indexStyles.js'
 import SafeAreaView from '../../components/SafeAreaView/index.js'
 import FullWalletListRow from './components/WalletListRow/FullWalletListRowConnector'
 import SortableWalletListRow from './components/WalletListRow/SortableWalletListRow.ui.js'
 import WalletOptions from './components/WalletOptions/WalletOptionsConnector.ui.js'
-import styles from './style'
+import iconImage from '../../../../assets/images/otp/OTP-badge_sm.png'
 
 const DONE_TEXT = s.strings.string_done_cap
 const WALLETS_HEADER_TEXT = s.strings.fragment_wallets_header
@@ -34,7 +39,10 @@ type State = {
   sortableListExists: boolean,
   fullListZIndex: number,
   fullListExists: boolean,
-  balanceBoxVisible: boolean
+  balanceBoxVisible: boolean,
+  showOtpResetModal: boolean,
+  showMessageModal: boolean,
+  messageModalMessage: ?string
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -46,9 +54,13 @@ type Props = {
   walletName: string,
   wallets: any,
   renameWalletInput: string,
+  otpResetPending: boolean,
+  setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
-  walletRowOption: (walletId: string, option: string, archived: boolean) => void
+  walletRowOption: (walletId: string, option: string, archived: boolean) => void,
+  disableOtp: () => void,
+  keepOtp: () => void
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -62,7 +74,32 @@ export default class WalletList extends Component<Props, State> {
       fullListOpacity: new Animated.Value(1),
       fullListZIndex: new Animated.Value(100),
       fullListExists: true,
-      balanceBoxVisible: true
+      balanceBoxVisible: true,
+      showOtpResetModal: this.props.otpResetPending,
+      showMessageModal: false,
+      messageModalMessage: null
+    }
+  }
+
+  componentDidMount () {
+    Permissions.request('contacts').then(response => {
+      if (response === 'authorized') {
+        Contacts.getAll((err, contacts) => {
+          if (err === 'denied') {
+            // error
+          } else {
+            contacts.sort((a, b) => a.givenName > b.givenName)
+            this.props.setContactList(contacts)
+          }
+        })
+      }
+    })
+  }
+  componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
+      this.setState({
+        showOtpResetModal: true
+      })
     }
   }
 
@@ -168,9 +205,53 @@ export default class WalletList extends Component<Props, State> {
               <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
             )}
           </View>
+          {this.showModal()}
         </View>
       </SafeAreaView>
     )
+  }
+  showModal = () => {
+    if (this.state.showOtpResetModal) {
+      return <TwoButtonTextModalComponent
+        style={TwoButtonModalStyle}
+        headerText={s.strings.otp_modal_reset_headline}
+        showModal
+        middleText={s.strings.otp_modal_reset_description}
+        iconImage={iconImage}
+        cancelText={s.strings.otp_disable}
+        doneText={s.strings.otp_keep}
+        onCancel={this.disableOtp}
+        onDone={this.keepOtp}
+      />
+    }
+    if (this.state.showMessageModal) {
+      return <StaticModalComponent
+        cancel={this.cancelStatic}
+        body={this.state.messageModalMessage}
+        modalDismissTimerSeconds={8} />
+    }
+    return null
+  }
+  disableOtp = () => {
+    this.props.disableOtp()
+    this.setState({
+      showMessageModal: true,
+      showOtpResetModal: false,
+      messageModalMessage: s.strings.otp_disabled_modal
+    })
+  }
+
+  keepOtp = () => {
+    this.props.keepOtp()
+    this.setState({
+      showOtpResetModal: false
+    })
+  }
+
+  cancelStatic = () => {
+    this.setState({
+      showMessageModal: false
+    })
   }
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
