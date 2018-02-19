@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { ActivityIndicator, Alert, Keyboard, View } from 'react-native'
+import { ActivityIndicator, Alert, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { sprintf } from 'sprintf-js'
 
@@ -51,9 +51,8 @@ export class CreateWalletName extends Component<Props, State> {
     }
   }
 
-  onBack = (): void => {
-    Keyboard.dismiss()
-    Actions.pop() // redirect to the list of wallets
+  onBack = () => {
+    Actions.pop()
   }
 
   handleChangeWalletName = (walletName: string) => {

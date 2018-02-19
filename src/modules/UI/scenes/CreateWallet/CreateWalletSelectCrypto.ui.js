@@ -38,7 +38,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     }
   }
 
-  isValidWalletType = (): boolean => {
+  isValidWalletType = () => {
     const { selectedWalletType } = this.state
     const { supportedWalletTypes } = this.props
     const walletTypeValue = supportedWalletTypes.findIndex(walletType => walletType.value === selectedWalletType)
@@ -55,9 +55,8 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     return foundValue
   }
 
-  onNext = (): void => {
+  onNext = () => {
     if (this.isValidWalletType()) {
-      Keyboard.dismiss()
       Actions[Constants.CREATE_WALLET_SELECT_FIAT]({
         selectedWalletType: this.getWalletType(this.state.selectedWalletType)
       })
@@ -66,7 +65,7 @@ export class CreateWalletSelectCrypto extends Component<Props, State> {
     }
   }
 
-  onBack = (): void => {
+  onBack = () => {
     Keyboard.dismiss()
     Actions.pop() // redirect to the list of wallets
   }

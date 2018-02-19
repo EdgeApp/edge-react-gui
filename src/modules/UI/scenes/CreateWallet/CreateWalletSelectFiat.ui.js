@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Alert, TouchableHighlight, View, Keyboard } from 'react-native'
+import { Alert, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 
 import { FormField } from '../../../../components/FormField.js'
@@ -39,22 +39,21 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     }
   }
 
-  isValidFiatType = (): boolean => {
+  isValidFiatType = () => {
     const { selectedFiat } = this.state
     const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === selectedFiat)
     const isValid = fiatTypeIndex >= 0
     return isValid
   }
 
-  getFiatType = (fiatKey: string): GuiFiatType => {
+  getFiatType = (fiatKey: string) => {
     const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === fiatKey)
 
     return this.props.supportedFiats[fiatTypeIndex]
   }
 
-  onNext = (): void => {
+  onNext = () => {
     if (this.isValidFiatType()) {
-      Keyboard.dismiss()
       Actions[Constants.CREATE_WALLET_NAME]({
         selectedWalletType: this.props.selectedWalletType,
         selectedFiat: this.getFiatType(this.state.selectedFiat)
@@ -64,13 +63,13 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     }
   }
 
-  handleSearchTermChange = (searchTerm: string): void => {
+  handleSearchTermChange = (searchTerm: string) => {
     this.setState({
       searchTerm
     })
   }
 
-  handleSelectFiatType = (item: GuiFiatType): void => {
+  handleSelectFiatType = (item: GuiFiatType) => {
     const selectedFiat = this.props.supportedFiats.find(type => type.value === item.value)
 
     if (selectedFiat) {
@@ -84,11 +83,11 @@ export class CreateWalletSelectFiat extends Component<Props, State> {
     }
   }
 
-  handleOnFocus = (): void => {
+  handleOnFocus = () => {
     UTILS.noOp()
   }
 
-  handleOnBlur = (): void => {
+  handleOnBlur = () => {
     UTILS.noOp()
   }
 
