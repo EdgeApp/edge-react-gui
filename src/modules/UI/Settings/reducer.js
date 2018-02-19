@@ -196,17 +196,14 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
           [currencyCode]: key
         }
       })
+
       return newState
     }
     case Constants.SET_CONFIRM_PASSWORD_ERROR: {
       const { confirmPasswordError } = data
-      return { ...state, confirmPasswordError: confirmPasswordError }
-    }
-    case ACTION.SET_LOGIN_STATUS: {
-      const { loginStatus } = data
       return {
         ...state,
-        loginStatus
+        confirmPasswordError: confirmPasswordError
       }
     }
 
@@ -480,10 +477,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         ...state,
         isTouchEnabled: data.isTouchEnabled
       }
-    }
-
-    case ACTION.ADD_CURRENCY_PLUGIN: {
-      return currencyPLuginUtil(state, data)
     }
 
     default:

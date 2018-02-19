@@ -10,7 +10,6 @@ import Main from './Main.ui'
 import type { Dispatch } from './ReduxTypes'
 import { setKeyboardHeight } from './UI/dimensions/action'
 import { disableScan, enableScan } from './UI/scenes/Scan/action'
-import { addCurrencyPlugin } from './UI/Settings/action'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -22,9 +21,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   dispatchDisableScan: () => {
     return dispatch(disableScan())
-  },
-  addCurrencyPlugin: plugin => {
-    return dispatch(addCurrencyPlugin(plugin))
   },
   setKeyboardHeight: keyboardHeight => {
     return dispatch(setKeyboardHeight(keyboardHeight))
