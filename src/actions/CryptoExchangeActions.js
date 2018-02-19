@@ -335,13 +335,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
         await dispatch(getShiftTransaction(fromWallet, toWallet))
       } catch (e) {
         dispatch(processMakeSpendError(e))
-        /* console.log(e)
-        if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
-          holderObject.status = 'finished'
-          dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
-          return
-        }
-        dispatch(actions.dispatchActionString(Constants.GENERIC_SHAPE_SHIFT_ERROR, e.message)) */
       }
       return
     }
@@ -459,24 +452,14 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
 }
 
 export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
-  const response = await fetch('https://shapeshift.io/getcoins', {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
-  })
-  const availableTokens = []
-  if (response.status === 200) {
-    const content = JSON.parse(response._bodyText)
-    console.log(content)
-    for (const key in content) {
-      if (content[key].status === 'available') {
-        availableTokens.push(key)
-      }
-    }
+  const state = getState()
+  const context = CORE_SELECTORS.getContext(state)
+  try {
+    const response = await context.getAvailableExchangeTokens() // await fetch('https://shapeshift.io/getcoins',
+    dispatch(actions.dispatchActionArray(Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS, response))
+  } catch (e) {
+    dispatch(actions.dispatchActionArray(Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS, []))
   }
-  dispatch(actions.dispatchActionArray(Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS, availableTokens))
 }
 
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
