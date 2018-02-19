@@ -29,13 +29,16 @@ export type CreateWalletReviewDispatchProps = {
 export type CreateWalletReviewProps = CreateWalletReviewOwnProps & CreateWalletReviewDispatchProps
 
 export class CreateWalletReview extends Component<CreateWalletReviewProps> {
-  onSubmit = (): void => {
+  componentDidMount () {
+    Keyboard.dismiss()
+  }
+
+  onSubmit = () => {
     const { walletName, selectedWalletType, selectedFiat } = this.props
     this.props.createCurrencyWallet(walletName, selectedWalletType.value, fixFiatCurrencyCode(selectedFiat.value))
   }
 
-  onBack = (): void => {
-    Keyboard.dismiss()
+  onBack = () => {
     Actions.pop()
   }
 
