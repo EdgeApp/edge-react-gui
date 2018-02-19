@@ -1,3 +1,5 @@
+// @flow
+
 import { Platform } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
