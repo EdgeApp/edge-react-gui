@@ -4,8 +4,6 @@ import { bns } from 'biggystring'
 import type { AbcDenomination, AbcTransaction } from 'edge-login'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, Image, ListView, ScrollView, TouchableHighlight, TouchableOpacity, View } from 'react-native'
-import Contacts from 'react-native-contacts'
-import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
@@ -16,7 +14,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type { GuiWallet } from '../../../../types'
+import type { GuiWallet, GuiContact } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -29,9 +27,8 @@ import styles, { styles as styleRaw } from './style'
 type Props = {
   getTransactions: (walletId: string, currencyCode: string) => void,
   updateExchangeRates: () => void,
-  setContactList: (contacts: Array<any>) => void,
   transactionsSearchHidden: () => void,
-  contacts: Array<any>,
+  contacts: Array<GuiContact>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   loading: boolean,
@@ -88,23 +85,6 @@ export default class TransactionList extends Component<Props, State> {
     const currencyCode = this.props.selectedCurrencyCode
     this.props.updateExchangeRates()
     this.props.getTransactions(walletId, currencyCode)
-
-    if (!this.props.contact) {
-      Permissions.check('contacts').then(response => {
-        if (response === 'authorized') {
-          Contacts.getAll((err, contacts) => {
-            if (err === 'denied') {
-              // error
-            } else {
-              const filteredContacts = contacts
-                .filter(item => item.givenName)
-                .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
-              this.props.setContactList(filteredContacts)
-            }
-          })
-        }
-      })
-    }
   }
 
   _onSearchChange = () => {
