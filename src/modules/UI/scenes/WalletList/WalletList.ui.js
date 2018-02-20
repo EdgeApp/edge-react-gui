@@ -208,7 +208,7 @@ export default class WalletList extends Component<Props, State> {
           </View>
           {this.showModal()}
         </View>
-    </SafeAreaView>
+      </SafeAreaView>
     )
   }
   showModal = () => {
