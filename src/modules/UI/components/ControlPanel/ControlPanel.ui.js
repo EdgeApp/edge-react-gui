@@ -53,8 +53,8 @@ export default class ControlPanel extends Component<Props, State> {
 
     const primaryCurrencyInfo = {
       displayCurrencyCode: primaryDisplayCurrencyCode,
-      displayDenomination: primaryDisplayDenomination,
-      exchangeDenomination: primaryExchangeDenomination,
+      displayDenomination: primaryDisplayDenomination || emptyGuiDenomination,
+      exchangeDenomination: primaryExchangeDenomination || emptyGuiDenomination,
       exchangeCurrencyCode: primaryDisplayCurrencyCode
     }
     const secondaryCurrencyInfo = {
