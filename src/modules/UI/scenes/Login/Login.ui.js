@@ -1,6 +1,6 @@
 // @flow
 
-import { LoginScreen } from 'airbitz-core-js-ui'
+import { LoginScreen } from 'edge-login-ui-rn'
 import type { AbcAccount, AbcContext } from 'edge-login'
 import React, { Component } from 'react'
 import { Actions } from 'react-native-router-flux'

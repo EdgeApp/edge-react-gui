@@ -1,4 +1,4 @@
-import { disableTouchId, enableTouchId } from 'airbitz-core-js-ui'
+import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import type { AbcAccount } from 'edge-login'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
