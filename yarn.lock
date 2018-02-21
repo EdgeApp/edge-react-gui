@@ -167,7 +167,7 @@ after@0.8.2:
 
 "airbitz-core-js-ui@git://github.com/Airbitz/airbitz-core-js-ui.git#react-native":
   version "0.1.5"
-  resolved "git://github.com/Airbitz/airbitz-core-js-ui.git#f3eb52fe96dbfae790415840f38cf371515681e6"
+  resolved "git://github.com/Airbitz/airbitz-core-js-ui.git#f9c2bbade95710e19ef68388f37caa1cd21c6416"
   dependencies:
     async "~2.0.1"
     babel-preset-stage-2 "^6.24.1"
