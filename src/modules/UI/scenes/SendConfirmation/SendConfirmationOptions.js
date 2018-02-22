@@ -2,9 +2,9 @@
 
 import type { EdgeCurrencyWallet } from 'edge-login'
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
-
+import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
 import { border } from '../../../utils'
 import styles from './styles'
