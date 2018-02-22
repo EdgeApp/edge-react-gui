@@ -8,9 +8,9 @@ import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
 import Locale from 'react-native-locale'
-import { MenuContext } from 'react-native-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import SplashScreen from 'react-native-smart-splash-screen'
+import { MenuProvider } from 'react-native-popup-menu'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import { connect } from 'react-redux'
@@ -214,7 +214,7 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <MenuContext style={styles.mainMenuContext}>
+      <MenuProvider style={styles.mainMenuContext}>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Overlay>
             <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
@@ -484,7 +484,7 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
-      </MenuContext>
+      </MenuProvider>
     )
   }
 
