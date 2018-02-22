@@ -6141,9 +6141,9 @@ react-native-easy-grid@0.1.17:
   dependencies:
     lodash "^4.11.1"
 
-react-native-fast-crypto@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.5.3.tgz#d53e03a4ec8c8f0fe7fae61ccf441fcd7aaa8a65"
+react-native-fast-crypto@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.5.4.tgz#125a6689e05fd7f4b1d6bb9eb1c8335f4a358067"
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"

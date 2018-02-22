@@ -104,7 +104,7 @@
     "react-native-drawer": "^2.3.0",
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
-    "react-native-fast-crypto": "^1.5.3",
+    "react-native-fast-crypto": "^1.5.4",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
     "react-native-fs": "^2.9.7",
     "react-native-hockeyapp": "0.5.1",
