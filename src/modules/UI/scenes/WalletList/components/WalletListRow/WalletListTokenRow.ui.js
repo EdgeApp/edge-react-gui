@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -35,9 +34,4 @@ export default class WalletListTokenRow extends Component {
       </TouchableHighlight>
     )
   }
-}
-
-WalletListTokenRow.propTypes = {
-  currencyCode: PropTypes.string,
-  balance: PropTypes.string
 }
