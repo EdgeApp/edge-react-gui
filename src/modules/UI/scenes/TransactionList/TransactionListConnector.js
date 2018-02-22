@@ -7,7 +7,6 @@ import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
 import * as UTILS from '../../../utils'
 import { updateExchangeRates } from '../../components/ExchangeRate/action'
-import { setContactList } from '../../contacts/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { getTransactionsRequest } from './action'
@@ -70,7 +69,7 @@ const mapStateToProps = (state: State) => {
     balanceInFiat,
     currencyConverter,
     multiplier,
-    contacts: state.ui.contacts.contactList,
+    contacts: state.contacts,
     fiatSymbol,
     showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
@@ -78,10 +77,7 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
-  updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactList: contacts => dispatch(setContactList(contacts))
-  // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
-  // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
+  updateExchangeRates: () => dispatch(updateExchangeRates())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

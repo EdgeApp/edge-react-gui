@@ -46,8 +46,7 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA } from './UI/permissions.js'
-import type { Permission } from './UI/permissions.js'
+import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -71,6 +70,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
+import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -225,6 +225,7 @@ export default class Main extends Component<Props, State> {
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}
+                  onEnter={() => this.props.requestPermission(CONTACTS)}
                   clone
                   component={TransactionDetails}
                   renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
@@ -291,6 +292,7 @@ export default class Main extends Component<Props, State> {
 
                         <Scene
                           key={Constants.TRANSACTION_LIST}
+                          onEnter={() => this.props.requestPermission(CONTACTS)}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}
@@ -484,6 +486,7 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
+        <ContactsLoader />
       </MenuContext>
     )
   }
