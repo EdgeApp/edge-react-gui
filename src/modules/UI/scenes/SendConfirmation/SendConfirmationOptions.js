@@ -2,7 +2,7 @@
 
 import type { EdgeCurrencyWallet } from 'edge-login'
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Keyboard, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
 import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
@@ -42,7 +42,7 @@ export default class SendConfirmationOptions extends Component<Props, State> {
     const defaultMenuStyle = MenuDropDownStyle
     return (
       <View>
-        <Menu onSelect={value => this.handleMenuOptions(value)}>
+        <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={ () => Keyboard.dismiss() }>
           <MenuTrigger style={[styles.menuTrigger]}>
             <Text style={[styles.trigger]}>&#8942;</Text>
           </MenuTrigger>
