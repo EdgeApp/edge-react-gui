@@ -238,6 +238,9 @@ export const styles = {
     position: 'relative',
     top: 16
   },
+  rowMenuTrigger: {
+    width: 46
+  },
 
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS

@@ -61,7 +61,11 @@ export default class MenuDropDown extends Component<Props, State> {
   }
   renderMenuIcon = (style: any) => {
     if (this.props.icon) {
-      return <Icon style={style.icon} name={this.props.icon} size={style.icon.fontSize} type={this.props.iconType} />
+      return (
+        <View style={style.menuIconWrap}>
+          <Icon style={style.icon} name={this.props.icon} size={style.icon.fontSize} type={this.props.iconType} />
+        </View>
+      )
     }
   }
 }

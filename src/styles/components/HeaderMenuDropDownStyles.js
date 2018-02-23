@@ -54,6 +54,12 @@ const MenuDropDownStyle = {
 
     }
   },
+  menuIconWrap: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   menuOptions: {
 
   },
