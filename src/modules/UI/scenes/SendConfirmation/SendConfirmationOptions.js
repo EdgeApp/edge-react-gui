@@ -10,12 +10,12 @@ import { MenuDropDownStyle } from '../../../../styles/indexStyles'
 import styles from './styles'
 
 const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
-const CHANGE_CURRENCY_TEXT = s.strings.change_currency_fee
+// const CHANGE_CURRENCY_TEXT = s.strings.change_currency_fee
 const SEND_MAX_TEXT = s.strings.send_confirmation_max_button_title
 const HELP_TEXT = s.strings.string_help
 
 const CHANGE_MINING_FEE = 'CHANGE_MINING_FEE'
-const CHANGE_CURRENCY = 'CHANGE_CURRENCY'
+// const CHANGE_CURRENCY = 'CHANGE_CURRENCY'
 const SEND_MAX = 'SEND_MAX'
 const HELP = 'HELP'
 
@@ -52,11 +52,11 @@ export default class SendConfirmationOptions extends Component<Props, State> {
                 <Text style={defaultMenuStyle.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
               </View>
             </MenuOption>
-            <MenuOption value={CHANGE_CURRENCY} style={defaultMenuStyle.menuOption}>
-              <View style={[defaultMenuStyle.menuOptionItem]}>
-                <Text style={defaultMenuStyle.optionText}>{CHANGE_CURRENCY_TEXT}</Text>
-              </View>
-            </MenuOption>
+            {/* <MenuOption value={CHANGE_CURRENCY} style={defaultMenuStyle.menuOption}> */}
+            {/*   <View style={[defaultMenuStyle.menuOptionItem]}> */}
+            {/*     <Text style={defaultMenuStyle.optionText}>{CHANGE_CURRENCY_TEXT}</Text> */}
+            {/*   </View> */}
+            {/* </MenuOption> */}
             <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
               <View style={[defaultMenuStyle.menuOptionItem]}>
                 <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
