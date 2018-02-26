@@ -27,6 +27,7 @@
     "cover": "jest --coverage",
     "flow": "flow",
     "flow:0": "flow; exit 0",
+    "flow-coverage": "flow-coverage-report",
     "format": "import-sort -l --write '*.js' 'src/**/*.js'; prettier-eslint --write '*.js' 'src/**/*.js'",
     "postinstall": "sh ./postinstall.sh",
     "ios:run": "react-native run-ios",
@@ -157,6 +158,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.2",
     "flow-bin": "^0.54.1",
+    "flow-coverage-report": "^0.4.1",
     "husky": "^0.12.0",
     "import-sort-cli": "^4.2.0",
     "import-sort-parser-babylon": "^3.2.0",
@@ -167,6 +169,17 @@
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
     "updot": "^1.1.6"
+  },
+  "flow-coverage-report": {
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "importSort": {
     ".js, .es": {
