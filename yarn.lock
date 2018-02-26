@@ -7667,9 +7667,9 @@ unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
 
-updot@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/updot/-/updot-1.1.5.tgz#3348b3648a29ff0d95e437b68a6b482a128423e0"
+updot@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/updot/-/updot-1.1.6.tgz#b97304120852b8203bacedaa87469dadd32a2db0"
   dependencies:
     fs-extra "^4.0.1"
 
