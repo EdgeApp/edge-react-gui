@@ -10,8 +10,8 @@ include ':react-native-background-task'
 project(':react-native-background-task').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-background-task/android')
 include ':react-native-picker'
 project(':react-native-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-picker/android')
-include ':airbitz-core-js-ui'
-project(':airbitz-core-js-ui').projectDir = new File(rootProject.projectDir, '../node_modules/airbitz-core-js-ui/android')
+include ':edge-login-ui-rn'
+project(':edge-login-ui-rn').projectDir = new File(rootProject.projectDir, '../node_modules/edge-login-ui-rn/android')
 include ':react-native-sound'
 project(':react-native-sound').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-sound/android')
 include ':react-native-share'

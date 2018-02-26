@@ -77,10 +77,13 @@ export default StyleSheet.create({
     width: 165
   },
   optionRow: {
-    paddingVertical: 17
+    paddingVertical: 7,
+    borderBottomColor: THEME.COLORS.GRAY_3,
+    borderBottomWidth: 1
   },
   optionText: {
-    fontSize: 16
+    fontSize: 16,
+    color: THEME.COLORS.GRAY_1
   },
   maxSpend: {
     color: THEME.COLORS.ACCENT_ORANGE

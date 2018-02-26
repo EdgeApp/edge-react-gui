@@ -67,7 +67,6 @@
     "zlib": "browserify-zlib"
   },
   "dependencies": {
-    "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",
     "biggystring": "^3.0.1",
     "browserify-zlib": "^0.1.4",
     "buffer": "^5.0.8",
@@ -81,6 +80,7 @@
     "edge-currency-ethereum": "0.8.0",
     "edge-exchange-plugins": "^0.1.1",
     "edge-login": "^0.5.5",
+    "edge-login-ui-rn": "^0.2.1",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
     "native-base": "^2.2.1",
@@ -103,7 +103,7 @@
     "react-native-drawer": "^2.3.0",
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
-    "react-native-fast-crypto": "^1.5.3",
+    "react-native-fast-crypto": "^1.5.4",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
     "react-native-fs": "^2.9.7",
     "react-native-hockeyapp": "0.5.1",
@@ -115,7 +115,7 @@
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git#fix-threadpool",
     "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
-    "react-native-menu": "git://github.com/Airbitz/react-native-menu.git#adjust-menu",
+    "react-native-popup-menu": "git://github.com/instea/react-native-popup-menu#147aeb728d0f23699d9c5ff3da9e9c2e7d83ac07",
     "react-native-modal": "^2.2.0",
     "react-native-permissions": "1.0.6",
     "react-native-picker": "^4.3.0",
@@ -168,7 +168,7 @@
     "nyc": "^10.0.0",
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
-    "updot": "^1.1.5"
+    "updot": "^1.1.6"
   },
   "flow-coverage-report": {
     "includeGlob": [

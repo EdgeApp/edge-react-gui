@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, State } from '../../../ReduxTypes'
-import { setContactList } from '../../contacts/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import { updateActiveWalletsOrder, updateArchivedWalletsOrder } from './action'
@@ -46,7 +45,6 @@ const mapStateToProps = (state: State) => {
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   updateActiveWalletsOrder: activeWalletIds => dispatch(updateActiveWalletsOrder(activeWalletIds)),
   updateArchivedWalletsOrder: archivedWalletIds => dispatch(updateArchivedWalletsOrder(archivedWalletIds)),
-  setContactList: contacts => dispatch(setContactList(contacts)),
   // $FlowFixMe
   walletRowOption: (walletId, option, archived) => dispatch(walletRowOption(walletId, option, archived)),
   disableOtp: () => dispatch(disableOtp()),

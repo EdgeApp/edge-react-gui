@@ -1,6 +1,6 @@
 // @flow
 
-import { ChangePinScreen } from 'airbitz-core-js-ui'
+import { ChangePinScreen } from 'edge-login-ui-rn'
 import type { AbcAccount, AbcContext } from 'edge-login'
 import React, { Component } from 'react'
 import { View } from 'react-native'
