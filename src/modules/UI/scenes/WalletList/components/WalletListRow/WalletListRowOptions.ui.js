@@ -37,6 +37,13 @@ export default class WalletListRowOptions extends Component<Props, State> {
   }
 
   render () {
-    return <MenuDropDown style={MenuDropDownStyle} onSelect={this.optionAction} data={this.options} />
+    const modifiedMenuDropDownStyle = { // manually overwrite width
+      ...MenuDropDownStyle,
+      menuIconWrap: {
+        ...MenuDropDownStyle.menuIconWrap,
+        width: 46
+      }
+    }
+    return <MenuDropDown style={modifiedMenuDropDownStyle} onSelect={this.optionAction} data={this.options} />
   }
 }

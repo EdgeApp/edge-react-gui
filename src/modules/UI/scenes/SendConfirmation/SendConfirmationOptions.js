@@ -2,11 +2,11 @@
 
 import type { EdgeCurrencyWallet } from 'edge-login'
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-menu'
-
+import { Keyboard, View } from 'react-native'
+import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+import Text from '../../components/FormattedText'
 import s from '../../../../locales/strings.js'
-import { border } from '../../../utils'
+import { MenuDropDownStyle } from '../../../../styles/indexStyles'
 import styles from './styles'
 
 const CHANGE_MINING_FEE_TEXT = s.strings.title_change_mining_fee
@@ -39,24 +39,33 @@ export default class SendConfirmationOptions extends Component<Props, State> {
   }
 
   render () {
+    const defaultMenuStyle = MenuDropDownStyle
     return (
       <View>
-        <Menu onSelect={value => this.handleMenuOptions(value)}>
-          <MenuTrigger style={[border(), styles.menuTrigger]}>
-            <Text style={[styles.trigger, border()]}>&#8942;</Text>
+        <Menu onSelect={value => this.handleMenuOptions(value)} onOpen={ () => Keyboard.dismiss() }>
+          <MenuTrigger style={[styles.menuTrigger]}>
+            <Text style={[styles.trigger]}>&#8942;</Text>
           </MenuTrigger>
           <MenuOptions optionsContainerStyle={styles.optionContainer}>
-            <MenuOption value={CHANGE_MINING_FEE} style={styles.optionRow}>
-              <Text style={styles.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
+            <MenuOption value={CHANGE_MINING_FEE} style={defaultMenuStyle.menuOption}>
+              <View style={[defaultMenuStyle.menuOptionItem]}>
+                <Text style={defaultMenuStyle.optionText}>{CHANGE_MINING_FEE_TEXT}</Text>
+              </View>
             </MenuOption>
-            <MenuOption value={CHANGE_CURRENCY} style={styles.optionRow}>
-              <Text style={styles.optionText}>{CHANGE_CURRENCY_TEXT}</Text>
+            <MenuOption value={CHANGE_CURRENCY} style={defaultMenuStyle.menuOption}>
+              <View style={[defaultMenuStyle.menuOptionItem]}>
+                <Text style={defaultMenuStyle.optionText}>{CHANGE_CURRENCY_TEXT}</Text>
+              </View>
             </MenuOption>
-            <MenuOption value={SEND_MAX} style={styles.optionRow}>
-              <Text style={[styles.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
+            <MenuOption value={SEND_MAX} style={defaultMenuStyle.menuOption}>
+              <View style={[defaultMenuStyle.menuOptionItem]}>
+                <Text style={[defaultMenuStyle.optionText, styles.maxSpend]}>{SEND_MAX_TEXT}</Text>
+              </View>
             </MenuOption>
-            <MenuOption value={HELP} style={styles.optionRow}>
-              <Text style={styles.optionText}>{HELP_TEXT}</Text>
+            <MenuOption value={HELP} style={defaultMenuStyle.menuOption}>
+              <View style={[defaultMenuStyle.menuOptionItem]}>
+                <Text style={defaultMenuStyle.optionText}>{HELP_TEXT}</Text>
+              </View>
             </MenuOption>
           </MenuOptions>
         </Menu>

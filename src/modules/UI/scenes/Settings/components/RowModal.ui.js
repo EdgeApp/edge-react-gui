@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -20,9 +19,4 @@ export default class RowModal extends Component {
       </TouchableHighlight>
     )
   }
-}
-
-RowModal.propTypes = {
-  modal: PropTypes.string,
-  leftText: PropTypes.string
 }
