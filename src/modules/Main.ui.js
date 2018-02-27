@@ -8,9 +8,9 @@ import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
 import Locale from 'react-native-locale'
-import { MenuContext } from 'react-native-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import SplashScreen from 'react-native-smart-splash-screen'
+import { MenuProvider } from 'react-native-popup-menu'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import { connect } from 'react-redux'
@@ -46,8 +46,7 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA } from './UI/permissions.js'
-import type { Permission } from './UI/permissions.js'
+import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -214,7 +213,7 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <MenuContext style={styles.mainMenuContext}>
+      <MenuProvider style={styles.mainMenuContext}>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Overlay>
             <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
@@ -225,6 +224,7 @@ export default class Main extends Component<Props, State> {
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}
+                  onEnter={() => this.props.requestPermission(CONTACTS)}
                   clone
                   component={TransactionDetails}
                   renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
@@ -291,6 +291,7 @@ export default class Main extends Component<Props, State> {
 
                         <Scene
                           key={Constants.TRANSACTION_LIST}
+                          onEnter={() => this.props.requestPermission(CONTACTS)}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}
@@ -484,7 +485,7 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
-      </MenuContext>
+      </MenuProvider>
     )
   }
 

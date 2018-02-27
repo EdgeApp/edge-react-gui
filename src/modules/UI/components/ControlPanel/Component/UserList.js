@@ -1,10 +1,11 @@
 // @flow
 
 import _ from 'lodash'
-import { Icon, Text } from 'native-base'
+import { Icon } from 'native-base'
 import React, { Component } from 'react'
 import { Alert, ScrollView, TouchableHighlight, View } from 'react-native'
 
+import T from '../../../components/FormattedText'
 import styles from '../style'
 
 type Props = {
@@ -21,8 +22,8 @@ export default class UserList extends Component<Props, State> {
   rows = () =>
     _.map(this.props.usernames, (username, index) => (
       <View key={index} style={styles.userList.row}>
-        <TouchableHighlight style={styles.userList.text} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
-          <Text>{username}</Text>
+        <TouchableHighlight style={styles.userList.textContainer} underlayColor={styles.underlay.color} onPress={this.handlePressUserSelect(username)}>
+          <T style={styles.userList.text}>{username}</T>
         </TouchableHighlight>
 
         <TouchableHighlight style={styles.userList.icon} underlayColor={styles.underlay.color} onPress={this.handlePressDeleteLocalAccount(username)}>

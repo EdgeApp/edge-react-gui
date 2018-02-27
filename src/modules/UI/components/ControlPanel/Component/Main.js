@@ -1,6 +1,5 @@
 // @flow
 
-import { Text } from 'native-base'
 import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'
@@ -9,6 +8,7 @@ import { sprintf } from 'sprintf-js'
 import logoutImage from '../../../../../assets/images/sidenav/logout.png'
 import settings from '../../../../../assets/images/sidenav/settings.png'
 import s from '../../../../../locales/strings.js'
+import T from '../../../components/FormattedText'
 import styles from '../style'
 import UserList from './UserListConnector'
 
@@ -42,7 +42,7 @@ export default class Main extends Component<Props, State> {
                 <Image style={styles.iconImage} source={logoutImage} />
               </View>
               <View style={styles.others.textContainer}>
-                <Text style={styles.others.text}>{LOGOUT_TEXT}</Text>
+                <T style={styles.others.text}>{LOGOUT_TEXT}</T>
               </View>
             </View>
           </TouchableHighlight>
@@ -56,7 +56,7 @@ export default class Main extends Component<Props, State> {
                 <Image style={styles.iconImage} source={settings} />
               </View>
               <View style={styles.others.textContainer}>
-                <Text style={styles.others.text}>{SETTINGS_TEXT}</Text>
+                <T style={styles.others.text}>{SETTINGS_TEXT}</T>
               </View>
             </View>
           </TouchableHighlight>

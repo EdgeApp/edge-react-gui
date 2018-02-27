@@ -1,3 +1,5 @@
+// @flow
+
 import { Platform } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
@@ -6,7 +8,7 @@ const platform = Platform.OS
 
 export default {
   iconImageContainer: {
-    paddingHorizontal: 23
+    marginHorizontal: 20
   },
   iconImage: {
     width: 25,
@@ -26,17 +28,17 @@ export default {
       backgroundColor: THEME.COLORS.ACCENT_GREEN,
       height: 48,
       flexDirection: 'row',
-      justifyContent: 'center',
+      justifyContent: 'flex-start',
       alignItems: 'center'
     },
     icon: {
-      color: THEME.COLORS.GRAY_4,
-      paddingHorizontal: 23,
-      fontSize: 26
+      marginHorizontal: 20,
+      width: 25,
+      height: 25
     },
     value: {
       flex: 1,
-      fontSize: 16,
+      fontSize: 17,
       color: THEME.COLORS.WHITE,
       justifyContent: 'center',
       alignItems: 'center'
@@ -44,7 +46,7 @@ export default {
   },
   user: {
     container: {
-      backgroundColor: `${THEME.COLORS.WHITE}${THEME.ALPHA.LOW}`,
+      backgroundColor: THEME.COLORS.PRIMARY,
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
@@ -87,7 +89,7 @@ export default {
     icon: {
       flex: 1,
       fontSize: platform !== 'ios' ? 26 : 32,
-      paddingHorizontal: 23,
+      marginHorizontal: 11,
       backgroundColor: THEME.COLORS.TRANSPARENT,
       color: '#FFF'
     },
@@ -145,7 +147,7 @@ export default {
       backgroundColor: THEME.COLORS.TRANSPARENT
     },
     text: {
-      fontSize: 15,
+      fontSize: 16,
       color: THEME.COLORS.WHITE
     },
     textItalic: {
@@ -167,9 +169,13 @@ export default {
       borderColor: THEME.COLORS.GRAY_4,
       borderBottomWidth: 0.5
     },
+    textContainer: {
+      flex: 1,
+      paddingVertical: 13,
+      marginLeft: 20
+    },
     text: {
-      padding: 13,
-      flex: 1
+      fontSize: 16
     },
     icon: {
       padding: 13
