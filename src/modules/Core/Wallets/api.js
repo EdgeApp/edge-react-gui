@@ -8,7 +8,7 @@ export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => 
   return wallet.renameWallet(name).then(() => wallet)
 }
 
-export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<Array<AbcTransaction>> => {
+export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<AbcTransaction>> => {
   return wallet.getTransactions ? wallet.getTransactions({ currencyCode }) : Promise.resolve([])
 }
 

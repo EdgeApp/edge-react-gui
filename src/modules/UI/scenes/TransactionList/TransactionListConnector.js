@@ -10,7 +10,7 @@ import { updateExchangeRates } from '../../components/ExchangeRate/action'
 import { setContactList } from '../../contacts/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { getTransactionsRequest } from './action'
+import { getTransactionsRequest, fetchTransactions } from './action'
 import TransactionList from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
@@ -72,14 +72,16 @@ const mapStateToProps = (state: State) => {
     multiplier,
     contacts: state.ui.contacts.contactList,
     fiatSymbol,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    visibleTransactions: state.ui.scenes.transactionList.visibleTransactions
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
-  setContactList: contacts => dispatch(setContactList(contacts))
+  setContactList: contacts => dispatch(setContactList(contacts)),
+  fetchTransactions: (walletId: string, currencyCode: string, options: Object, multiplier: string) => dispatch(fetchTransactions(walletId, currencyCode, options, multiplier))
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })

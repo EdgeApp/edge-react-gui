@@ -101,7 +101,9 @@ test('initialState', () => {
       searchVisible: false,
       transactions: [],
       transactionsWalletListModalVisibility: false,
-      updatingBalance: true
+      updatingBalance: true,
+      loadingTransactions: false, // needs to be changed later
+      visibleTransactions: []
     },
     walletList: {
       deleteWalletModalVisible: false,

@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type { AbcDenomination, AbcMetaToken, EdgeMetadata } from 'edge-login'
+import type { AbcDenomination, AbcMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-login'
 
 export type GuiWallet = {
   id: string,
@@ -80,6 +80,13 @@ export type GuiWalletType = {
 export type GuiFiatType = {
   label: string,
   value: string
+}
+
+export type TransactionListTx = {
+  ...EdgeTransaction,
+  dateString?: string,
+  multiplier?: string,
+  key: number
 }
 
 export type FlatListItem = {
@@ -197,4 +204,16 @@ export type ComponentLayoutMeasurements = {
   height: Number,
   pageX: Number,
   pageY: Number
+}
+
+export type DateTransactionGroup = {
+  data: Array<EdgeTransaction>,
+  title: string
+}
+
+export type TransactionListSection = {
+  index: number,
+  item: Object,
+  section: DateTransactionGroup,
+  separators: Object
 }
