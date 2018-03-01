@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { AbcDenomination, AbcTransaction } from 'edge-login'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, FlatList } from 'react-native'
+import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, VirtualizedList } from 'react-native'
 import Contacts from 'react-native-contacts'
 import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -327,12 +327,14 @@ export default class TransactionList extends Component<Props, State> {
                 </Gradient>
               </Animated.View>
               <View style={[styles.transactionsWrap]}>
-                <FlatList
+                <VirtualizedList
                   style={[styles.transactionsScrollWrap]}
                   data={completedTxList}
-                  renderItem={this.renderTx}
+                  renderItem={(data) => this.renderTx(data, completedTxList)}
                   initialNumToRender={12}
                   removeClippedSubviews={true}
+                  getItemCount={(data) => data ? data.length : 0}
+                  getItem={(data: any, index: number) => data[index]}
                   /* onEndReached={this.loadMoreTransactions}
                   onEndReachedThreshold={60}
                   enableEmptySections
@@ -429,11 +431,13 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <View style={[styles.singleTransactionWrap]}>
-        <View style={styles.singleDateArea}>
-          <View style={styles.leftDateArea}>
-            <T style={styles.formattedDate}>{tx.dateString}</T>
+        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
+          <View style={styles.singleDateArea}>
+            <View style={styles.leftDateArea}>
+              <T style={styles.formattedDate}>{tx.dateString}</T>
+            </View>
           </View>
-        </View>
+        )}
         <TouchableHighlight
           onPress={() => this._goToTxDetail(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
