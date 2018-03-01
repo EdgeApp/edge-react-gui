@@ -6235,6 +6235,14 @@ react-native-mail@^3.0.5:
   dependencies:
     prop-types "^15.5.9"
 
+"react-native-menu@git://github.com/Airbitz/react-native-menu.git#adjust-menu":
+  version "0.23.0"
+  resolved "git://github.com/Airbitz/react-native-menu.git#f17279f0b473c70726d0daefdca02a4195386646"
+  dependencies:
+    create-react-class "^15.6.0"
+    prop-types "^15.5.10"
+    react-timer-mixin "^0.13.3"
+
 react-native-modal@^2.2.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-2.5.0.tgz#a24018ac028e84e6eb8294278fa02720d9f7f320"
@@ -6256,10 +6264,6 @@ react-native-permissions@1.0.6:
 react-native-picker@^4.3.0:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/react-native-picker/-/react-native-picker-4.3.5.tgz#bf791dde6908028a11aacb3fdc7c6b2bdb2cd3f3"
-
-"react-native-popup-menu@git://github.com/instea/react-native-popup-menu#147aeb728d0f23699d9c5ff3da9e9c2e7d83ac07":
-  version "0.12.1"
-  resolved "git://github.com/instea/react-native-popup-menu#147aeb728d0f23699d9c5ff3da9e9c2e7d83ac07"
 
 react-native-push-notification@^3.0.2:
   version "3.0.2"
@@ -6466,7 +6470,7 @@ react-router@~2.6.0:
     loose-envify "^1.2.0"
     warning "^3.0.0"
 
-react-timer-mixin@^0.13.2:
+react-timer-mixin@^0.13.2, react-timer-mixin@^0.13.3:
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/react-timer-mixin/-/react-timer-mixin-0.13.3.tgz#0da8b9f807ec07dc3e854d082c737c65605b3d22"
 

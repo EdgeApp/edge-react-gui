@@ -18,41 +18,22 @@ const HeaderMenuRightSideStyle = {
   iconButton: { ...Styles.IconButtonStyle, iconSize: 15 }
 }
 
-const dropdownTriggerWidth = 46
-
 const MenuDropDownStyle = {
   container: {
-    flexDirection: 'column',
-    width: dropdownTriggerWidth,
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'row',
+    width: 46
   },
-  menuButton: {
-    width: dropdownTriggerWidth,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
+  menuButton: {},
   menuOption: {
     borderBottomColor: THEME.COLORS.GRAY_3,
     borderBottomWidth: 1,
     justifyContent: 'center'
   },
   menuTrigger: {
-    triggerTouchable: {
-      underlayColor: THEME.COLORS.TRANSPARENT,
-      activeOpacity: 1,
-      style: {
-        width: dropdownTriggerWidth,
-        justifyContent: 'center',
-        alignSelf: 'center',
-        height: '100%',
-        alignItems: 'center'
-      }
-    },
-    menuTriggerUnderlay: {
-
-    }
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: 14,
+    paddingRight: 10
   },
   menuOptionItem: {
     flexDirection: 'row'
@@ -71,7 +52,11 @@ const MenuDropDownStyle = {
 }
 
 const MenuDropDownStyleHeader = {
-  ...MenuDropDownStyle
+  ...MenuDropDownStyle,
+  menuTrigger: {
+    paddingLeft: 14,
+    paddingRight: 10
+  }
 }
 
 export { HeaderMenuRightSideStyle }

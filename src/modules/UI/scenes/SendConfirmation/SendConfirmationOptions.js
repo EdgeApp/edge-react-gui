@@ -3,7 +3,7 @@
 import type { EdgeCurrencyWallet } from 'edge-login'
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
-import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'
+import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-menu'
 
 import s from '../../../../locales/strings.js'
 import { border } from '../../../utils'

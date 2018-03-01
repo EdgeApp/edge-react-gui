@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -38,6 +39,10 @@ class PrimaryButton extends Component {
       </TouchableHighlight>
     )
   }
+}
+PrimaryButton.propTypes = {
+  text: PropTypes.string,
+  onPressFunction: PropTypes.func
 }
 
 const CANCEL_TEXT = s.strings.string_cancel
