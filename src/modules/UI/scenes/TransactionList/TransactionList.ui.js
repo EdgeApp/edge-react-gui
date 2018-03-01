@@ -202,13 +202,7 @@ export default class TransactionList extends Component<Props, State> {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
-    const renderableTransactionList = transactions.sort(function (a: any, b: any) {
-      a = new Date(a.date)
-      b = new Date(b.date)
-      return a > b ? -1 : a < b ? 1 : 0
-    })
-
-    const completedTxList = renderableTransactionList.map((x, i) => {
+    const completedTxList = transactions.map((x, i) => {
       const newValue: TransactionListTx = x
       newValue.key = i
       newValue.multiplier = multiplier
@@ -222,7 +216,7 @@ export default class TransactionList extends Component<Props, State> {
       newValue.time = time
       return newValue
     })
-
+    completedTxList.reverse() // reverse array to put into chronological order (rather than use unshift)
     let logo
 
     if (uiWallet.currencyCode !== selectedCurrencyCode) {
