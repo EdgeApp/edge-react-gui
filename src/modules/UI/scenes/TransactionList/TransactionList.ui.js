@@ -3,7 +3,9 @@
 import { bns } from 'biggystring'
 import type { AbcDenomination, AbcTransaction } from 'edge-login'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, ListView, ScrollView, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, VirtualizedList } from 'react-native'
+import Contacts from 'react-native-contacts'
+import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
@@ -14,7 +16,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type { GuiWallet, GuiContact } from '../../../../types'
+import type { GuiWallet } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -27,8 +29,9 @@ import styles, { styles as styleRaw } from './style'
 type Props = {
   getTransactions: (walletId: string, currencyCode: string) => void,
   updateExchangeRates: () => void,
+  setContactList: (contacts: Array<any>) => void,
   transactionsSearchHidden: () => void,
-  contacts: Array<GuiContact>,
+  contacts: Array<any>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   loading: boolean,
@@ -85,6 +88,23 @@ export default class TransactionList extends Component<Props, State> {
     const currencyCode = this.props.selectedCurrencyCode
     this.props.updateExchangeRates()
     this.props.getTransactions(walletId, currencyCode)
+
+    if (!this.props.contact) {
+      Permissions.check('contacts').then(response => {
+        if (response === 'authorized') {
+          Contacts.getAll((err, contacts) => {
+            if (err === 'denied') {
+              // error
+            } else {
+              const filteredContacts = contacts
+                .filter(item => item.givenName)
+                .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
+              this.props.setContactList(filteredContacts)
+            }
+          })
+        }
+      })
+    }
   }
 
   _onSearchChange = () => {
@@ -182,13 +202,7 @@ export default class TransactionList extends Component<Props, State> {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
-    const renderableTransactionList = transactions.sort(function (a: any, b: any) {
-      a = new Date(a.date)
-      b = new Date(b.date)
-      return a > b ? -1 : a < b ? 1 : 0
-    })
-
-    const completedTxList = renderableTransactionList.map((x, i) => {
+    const completedTxList = transactions.reverse().map((x, i) => {
       const newValue: TransactionListTx = x
       newValue.key = i
       newValue.multiplier = multiplier
@@ -202,8 +216,7 @@ export default class TransactionList extends Component<Props, State> {
       newValue.time = time
       return newValue
     })
-    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    const dataSrc = ds.cloneWithRows(completedTxList)
+
     let logo
 
     if (uiWallet.currencyCode !== selectedCurrencyCode) {
@@ -308,15 +321,20 @@ export default class TransactionList extends Component<Props, State> {
                 </Gradient>
               </Animated.View>
               <View style={[styles.transactionsWrap]}>
-                <ListView
+                <VirtualizedList
                   style={[styles.transactionsScrollWrap]}
-                  dataSource={dataSrc}
-                  renderRow={tx => this.renderTx(tx, completedTxList)}
-                  onEndReached={this.loadMoreTransactions}
+                  data={completedTxList}
+                  renderItem={(data) => this.renderTx(data, completedTxList)}
+                  initialNumToRender={12}
+                  removeClippedSubviews={true}
+                  getItemCount={(data) => data ? data.length : 0}
+                  getItem={(data: any, index: number) => data[index]}
+                  /* onEndReached={this.loadMoreTransactions}
                   onEndReachedThreshold={60}
                   enableEmptySections
                   initialIterator={-1}
                   removeClippedSubviews={false}
+                  */
                 />
               </View>
             </View>
@@ -339,8 +357,9 @@ export default class TransactionList extends Component<Props, State> {
     return !this.isReceivedTransaction(tx)
   }
 
-  renderTx = (tx: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
-    let txColorStyle, txImage, lastOfDate, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
+  renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
+    const tx = transaction.item
+    let txColorStyle, txImage, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
     let txName = ''
 
     let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
@@ -372,12 +391,12 @@ export default class TransactionList extends Component<Props, State> {
       }
     }
 
-    if (completedTxList[tx.key + 1]) {
+    /* if (completedTxList[tx.key + 1]) {
       // is there a subsequent transaction?
       lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
     } else {
       lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
-    }
+    } */
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
     const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
@@ -403,10 +422,10 @@ export default class TransactionList extends Component<Props, State> {
     } else {
       transactionPartner = txName
     }
-
+    const previousDateString = completedTxList[tx.key - 1] ? completedTxList[tx.key - 1].dateString : ''
     return (
       <View style={[styles.singleTransactionWrap]}>
-        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
+        {(tx.key === 0 || tx.dateString !== previousDateString) && (
           <View style={styles.singleDateArea}>
             <View style={styles.leftDateArea}>
               <T style={styles.formattedDate}>{tx.dateString}</T>
@@ -416,23 +435,23 @@ export default class TransactionList extends Component<Props, State> {
         <TouchableHighlight
           onPress={() => this._goToTxDetail(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
+          style={[styles.singleTransaction]}
         >
-          <View style={[styles.transactionInfoWrap, UTILS.border()]}>
+          <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo, UTILS.border()]} source={{ uri: thumbnailPath }} />
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
               ) : (
                 <Image style={styles.transactionLogo} source={txImage} />
               )}
 
-              <View style={[styles.transactionLeftTextWrap, UTILS.border()]}>
+              <View style={[styles.transactionLeftTextWrap]}>
                 <T style={[styles.transactionPartner]}>{transactionPartner}</T>
                 <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>{pendingTimeSyntax}</T>
               </View>
             </View>
 
-            <View style={[styles.transactionRight, UTILS.border()]}>
+            <View style={[styles.transactionRight]}>
               <T style={[styles.transactionBitAmount, txColorStyle, styles.symbol]}>
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
