@@ -124,7 +124,7 @@ function cryptoExchangerReducer (state = initialState, action) {
         genericShapeShiftError: null
       }
     case Constants.SHIFT_COMPLETE:
-      return initialState
+      return { ...initialState, availableShapeShiftTokens: state.availableShapeShiftTokens }
     case Constants.SHIFT_ERROR:
       return {
         ...state,
