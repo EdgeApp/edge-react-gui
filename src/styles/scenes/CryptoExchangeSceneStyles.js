@@ -62,6 +62,16 @@ const CryptoExchangeSceneStyle = {
       container: {
         width: '100%'
       },
+      sliderParent: {
+        position: 'relative',
+        backgroundColor: THEME.COLORS.SECONDARY,
+        borderRadius: 40,
+        marginBottom: 10,
+        marginLeft: 0,
+        marginRight: 0,
+        width: '100%',
+        alignSelf: 'center'
+      },
       currencyIcon: {
         height: 25,
         width: 25,
