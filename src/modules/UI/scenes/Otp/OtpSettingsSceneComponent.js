@@ -56,7 +56,7 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     }
     this.setState({
       showMessageModal: true,
-      messageModalMessage: s.strings.otp_enabled_modal_part_one + '' + s.strings.otp_enabled_modal_part_two,
+      messageModalMessage: null,
       messageModalComponent: <Text style={{textAlign: 'center'}}><T>{s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T></T></Text>
     })
     this.props.enableOtp()
