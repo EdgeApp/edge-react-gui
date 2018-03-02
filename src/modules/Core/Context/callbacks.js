@@ -1,5 +1,5 @@
 // @flow
-import type { AbcContextCallbacks } from 'edge-login'
+import type { AbcContextCallbacks } from 'edge-core-js'
 
 import { updateExchangeRates } from '../../ExchangeRates/action'
 import type { Dispatch } from '../../ReduxTypes'

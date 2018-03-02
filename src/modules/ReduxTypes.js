@@ -11,7 +11,7 @@ import type {
   AbcReceiveAddress,
   AbcTransaction,
   EdgeReceiveAddress
-} from 'edge-login'
+} from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
 import type { ContactsState } from '../reducers/contacts/contactsReducer.js'

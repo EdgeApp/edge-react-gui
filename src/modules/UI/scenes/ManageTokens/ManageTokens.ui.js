@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-login'
+import type { AbcMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, FlatList, View } from 'react-native'

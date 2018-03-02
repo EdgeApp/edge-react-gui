@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetadata } from 'edge-login'
+import type { AbcMetadata } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'

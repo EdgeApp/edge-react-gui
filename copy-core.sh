@@ -14,5 +14,5 @@ copy_build () {
   cp -r $path/$1/lib/ node_modules/$1/lib/
 }
 
-copy_build edge-login
+copy_build edge-core-js
 npm run postinstall

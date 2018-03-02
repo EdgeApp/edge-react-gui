@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcMetadata } from 'edge-login'
+import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcMetadata } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'

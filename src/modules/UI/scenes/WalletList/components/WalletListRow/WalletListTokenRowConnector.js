@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcDenomination } from 'edge-login'
+import type { AbcDenomination } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes'
