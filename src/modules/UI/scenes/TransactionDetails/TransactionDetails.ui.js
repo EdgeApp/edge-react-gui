@@ -343,6 +343,11 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
   }
 
   onFocusFiatAmount = () => {
+    if (this.state.amountFiat === '0.00') {
+      this.setState({
+        amountFiat: ''
+      })
+    }
     this.refs._scrollView.scrollTo({ x: 0, y: 90, animated: true })
   }
 
