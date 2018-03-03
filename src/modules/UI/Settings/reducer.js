@@ -156,6 +156,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         denominationKeys,
         customTokensSettings
       } = data
+
       let newState = {
         ...state,
         loginStatus,
@@ -174,6 +175,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpMode,
         otpResetDate: account.otpResetDate
       }
+
       denominationKeys.forEach(key => {
         const currencyCode = key.currencyCode
         const denomination = key.denominationKey
@@ -186,9 +188,11 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
           }
         }
       })
+
       currencyPlugins.forEach(key => {
         newState = currencyPLuginUtil(newState, key)
       })
+
       customTokensSettings.forEach(key => {
         const { currencyCode } = key
         newState = {
@@ -196,17 +200,14 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
           [currencyCode]: key
         }
       })
+
       return newState
     }
     case Constants.SET_CONFIRM_PASSWORD_ERROR: {
       const { confirmPasswordError } = data
-      return { ...state, confirmPasswordError: confirmPasswordError }
-    }
-    case ACTION.SET_LOGIN_STATUS: {
-      const { loginStatus } = data
       return {
         ...state,
-        loginStatus
+        confirmPasswordError: confirmPasswordError
       }
     }
 
@@ -252,15 +253,27 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       const customTokenSettings = state.customTokens
       const tokenSettingsWithUpdatedToken = customTokenSettings.map(item => {
         // overwrite receiver token
-        if (item.currencyCode === receiverCode) return { ...item, ...tokenObj, isVisible: true }
+        if (item.currencyCode === receiverCode) {
+          return {
+            ...item,
+            ...tokenObj,
+            isVisible: true
+          }
+        }
         return item
       })
       const tokenSettingsWithUpdatedAndDeleted = tokenSettingsWithUpdatedToken.map(item => {
         // make sender token invisible
-        if (item.currencyCode === senderCode) return { ...item, isVisible: false }
+        if (item.currencyCode === senderCode) {
+          return {
+            ...item,
+            isVisible: false
+          }
+        }
         return item
       })
-      const updatedSettings = {
+
+      return {
         ...state,
         [receiverCode]: {
           ...state[receiverCode],
@@ -273,16 +286,21 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         },
         customTokens: tokenSettingsWithUpdatedAndDeleted
       }
-      return updatedSettings
     }
 
     case WALLET_ACTION.DELETE_CUSTOM_TOKEN_SUCCESS: {
       const { currencyCode } = data
       const customTokenSettings = state.customTokens
       const newCustomTokenSettings = customTokenSettings.map(item => {
-        if (item.currencyCode === currencyCode) return { ...item, isVisible: false }
+        if (item.currencyCode === currencyCode) {
+          return {
+            ...item,
+            isVisible: false
+          }
+        }
         return item
       })
+
       return {
         ...state,
         [currencyCode]: {
@@ -315,10 +333,12 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       const { tokenObj, code, setSettings, oldCurrencyCode } = data
       const customTokens = setSettings.customTokens
       const oldCurrencyCodeIndex = _.findIndex(customTokens, item => item.currencyCode === oldCurrencyCode)
+
       customTokens[oldCurrencyCodeIndex] = {
         ...state.customTokens[oldCurrencyCodeIndex],
         isVisible: false
       }
+
       return {
         ...state,
         [code]: tokenObj,
@@ -349,6 +369,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         otpResetPending: false
       }
     }
+
     case ACTION.UPDATE_SETTINGS: {
       const { settings } = data
       return settings
@@ -455,7 +476,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         isOtpEnabled: data.enabled,
         otpKey: data.otpKey,
         otpResetPending: data.otpResetPending
-
       }
     }
 
@@ -480,10 +500,6 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         ...state,
         isTouchEnabled: data.isTouchEnabled
       }
-    }
-
-    case ACTION.ADD_CURRENCY_PLUGIN: {
-      return currencyPLuginUtil(state, data)
     }
 
     default:

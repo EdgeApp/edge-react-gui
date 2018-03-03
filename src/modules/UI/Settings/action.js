@@ -1,10 +1,7 @@
 // @flow
 
-import type { EdgeCurrencyPlugin } from 'edge-login'
 import type { CustomTokenInfo, GuiTouchIdInfo } from '../../../types.js'
 const PREFIX = 'UI/Settings/'
-
-export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
 
 export const ADD_EXCHANGE_TIMER = PREFIX + 'ADD_EXCHANGE_TIMER'
 
@@ -115,18 +112,7 @@ export const setDenominationKey = (currencyCode: string, denominationKey: string
   data: { currencyCode, denominationKey }
 })
 
-// Plugins
-export const addCurrencyPlugin = (plugin: EdgeCurrencyPlugin) => {
-  const pluginName = plugin.pluginName
-  const walletTypes = plugin.currencyInfo.walletTypes
-  return {
-    type: ADD_CURRENCY_PLUGIN,
-    data: { pluginName, plugin, walletTypes }
-  }
-}
-
 // tokens
-
 export const setCustomTokens = (customTokens: Array<CustomTokenInfo>) => {
   return {
     type: SET_CUSTOM_TOKENS,
