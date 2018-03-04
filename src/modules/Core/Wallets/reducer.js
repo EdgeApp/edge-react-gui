@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import * as Constants from '../../../constants/indexConstants'

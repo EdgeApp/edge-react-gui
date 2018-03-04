@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccount, AbcCurrencyWallet } from 'edge-login'
+import type { AbcAccount, AbcCurrencyWallet } from 'edge-core-js'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
