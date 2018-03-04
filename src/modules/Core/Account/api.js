@@ -1,6 +1,6 @@
 // @flow
 // Core/Account/api.js
-import type { AbcAccount, AbcCreateCurrencyWalletOptions } from 'edge-login'
+import type { AbcAccount, AbcCreateCurrencyWalletOptions } from 'edge-core-js'
 
 export const logoutRequest = (account: AbcAccount) => {
   return account.logout()

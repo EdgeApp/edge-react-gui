@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-login'
+import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 

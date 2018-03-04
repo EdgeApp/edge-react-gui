@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccount } from 'edge-login'
+import type { AbcAccount } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, ScrollView, Text, View } from 'react-native'
 import { Actions } from 'react-native-router-flux'

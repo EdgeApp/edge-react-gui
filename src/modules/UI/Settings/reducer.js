@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin } from 'edge-login'
+import type { AbcCurrencyPlugin } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'

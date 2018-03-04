@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-login'
+import type { AbcTransaction } from 'edge-core-js'
 
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'

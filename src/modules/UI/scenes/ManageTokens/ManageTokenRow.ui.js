@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-login'
+import type { AbcMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'

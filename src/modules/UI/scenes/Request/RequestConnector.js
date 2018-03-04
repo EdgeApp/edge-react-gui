@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import type { GuiCurrencyInfo, GuiDenomination, GuiReceiveAddress, GuiWallet } from '../../../../types'
