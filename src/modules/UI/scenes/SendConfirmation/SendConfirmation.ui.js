@@ -31,6 +31,8 @@ export type SendConfirmationStateProps = {
   pending: boolean,
   keyboardIsVisible: boolean,
   label: string,
+  parentDisplayDenomination: AbcDenomination,
+  parentExchangeDenomination: GuiDenomination,
   primaryDisplayDenomination: AbcDenomination,
   primaryExchangeDenomination: GuiDenomination,
   secondaryeExchangeCurrencyCode: string,
@@ -108,6 +110,7 @@ export class SendConfirmation extends Component<Props, State> {
 
   render () {
     const primaryDisplayDenomination = convertAbcToGuiDenomination(this.props.primaryDisplayDenomination)
+    const parentDisplayDenomination = convertAbcToGuiDenomination(this.props.parentDisplayDenomination)
 
     const primaryInfo: GuiCurrencyInfo = {
       displayCurrencyCode: this.props.currencyCode,
@@ -135,7 +138,7 @@ export class SendConfirmation extends Component<Props, State> {
       const { networkFee, parentNetworkFee } = this.props
 
       if (parentNetworkFee && bns.gt(parentNetworkFee, '0')) {
-        const cryptoFeeSymbol = this.props.parentDisplayDenomination.symbol
+        const cryptoFeeSymbol = parentDisplayDenomination.symbol
         const cryptoFeeMultiplier = this.props.parentExchangeDenomination.multiplier
         const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
         const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`

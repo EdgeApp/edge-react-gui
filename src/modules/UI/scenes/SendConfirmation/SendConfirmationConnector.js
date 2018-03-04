@@ -16,7 +16,7 @@ import {
   getLabel,
   getNativeAmount,
   getNetworkFee,
-  // getParentNetworkFee,
+  getParentNetworkFee,
   getPending,
   getPublicAddress,
   getTransaction
@@ -28,8 +28,10 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let secondaryeExchangeCurrencyCode = ''
   const guiWallet: GuiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
-  // const parentNetworkFee = getParentNetworkFee(state)
-  const parentNetworkFee = getNetworkFee(state) === '0' ? '123400000000000' : ''
+  const parentNetworkFee = getParentNetworkFee(state)
+  // const parentNetworkFee = getNetworkFee(state) === '0' ? '123400000000000' : ''
+  console.log(getTransaction(state))
+  console.log(parentNetworkFee)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
