@@ -23,7 +23,7 @@ type OtpSettingsSceneProps = {
 
 type State = {
   showMessageModal: boolean,
-  messageModalMessage?: string,
+  messageModalMessage: string | null,
   messageModalComponent?: any,
   showConfirmationModal: boolean
 }
