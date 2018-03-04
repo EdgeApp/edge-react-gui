@@ -16,6 +16,7 @@ import {
   getLabel,
   getNativeAmount,
   getNetworkFee,
+  // getParentNetworkFee,
   getPending,
   getPublicAddress,
   getTransaction
@@ -27,6 +28,8 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let secondaryeExchangeCurrencyCode = ''
   const guiWallet: GuiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
+  // const parentNetworkFee = getParentNetworkFee(state)
+  const parentNetworkFee = getNetworkFee(state) === '0' ? '123400000000000' : ''
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
@@ -58,12 +61,15 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryeExchangeCurrencyCode,
     resetSlider,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+    parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
+    parentExchangeDenomination: getExchangeDenomination(state, guiWallet.currencyCode),
     primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
     forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
+    parentNetworkFee,
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)

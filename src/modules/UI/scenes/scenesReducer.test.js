@@ -62,6 +62,7 @@ test('initialState', () => {
         blockHeight: -1,
         nativeAmount: '0',
         networkFee: '',
+        parentNetworkFee: '',
         ourReceiveAddresses: [],
         signedTx: '',
         metadata: {},

@@ -2302,7 +2302,7 @@ edge-login-ui-rn@^0.2.1:
     sprintf-js "^1.0.3"
     zxcvbn "^4.4.2"
 
-edge-login@^0.5.0, edge-login@^0.5.5:
+edge-login@^0.5.0:
   version "0.5.5"
   resolved "https://registry.yarnpkg.com/edge-login/-/edge-login-0.5.5.tgz#58906b01673841c45e847bb724f3b6b333a24769"
   dependencies:
@@ -2324,6 +2324,32 @@ edge-login@^0.5.0, edge-login@^0.5.5:
     redux-thunk "^2.2.0"
     regenerator-runtime "^0.11.1"
     rfc4648 "^1.0.0"
+    scrypt-js "^2.0.3"
+    utf8 "^2.1.2"
+
+edge-login@^0.5.6:
+  version "0.5.6"
+  resolved "https://registry.yarnpkg.com/edge-login/-/edge-login-0.5.6.tgz#d7f142758e848df625f2fe3057731433c37394ae"
+  dependencies:
+    aes-js "^3.1.0"
+    base-x "^1.0.4"
+    biggystring "^1.0.7"
+    chai "^4.1.2"
+    currency-codes "^1.1.2"
+    detect-bundler "^1.0.0"
+    disklet "^0.2.2"
+    elliptic "^6.4.0"
+    hash.js "^1.0.3"
+    hmac-drbg "^1.0.1"
+    mocha "^3.5.0"
+    node-fetch "^1.7.3"
+    redux "^3.6.0"
+    redux-keto "^0.3.2"
+    redux-pixies "^0.3.4"
+    redux-thunk "^2.2.0"
+    regenerator-runtime "^0.11.1"
+    rfc4648 "^1.0.0"
+    rollup-plugin-alias "^1.4.0"
     scrypt-js "^2.0.3"
     utf8 "^2.1.2"
 
@@ -6799,6 +6825,12 @@ rn-nodeify@^7.0.1:
 rndm@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rndm/-/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
+
+rollup-plugin-alias@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-alias/-/rollup-plugin-alias-1.4.0.tgz#120cba7c46621c03138f0ca6fd5dd2ade9872db9"
+  dependencies:
+    slash "^1.0.0"
 
 run-async@^2.2.0:
   version "2.3.0"
