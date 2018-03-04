@@ -7,15 +7,15 @@ const screenDimensions = {
   height: Dimensions.get('window').height,
   width: Dimensions.get('window').width
 }
-const OFFSET_HACK = -19
+const OFFSET_HACK = -((screenDimensions.width * 0.1) - 18.5)
 
 const StaticModalStyle = {
   container: {
     position: 'absolute',
     top: OFFSET_HACK,
     left: OFFSET_HACK,
-    width: '100%',
-    height: '100%',
+    width: screenDimensions.width * 2,
+    height: screenDimensions.height * 2,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.MODAL_BOX
