@@ -10,11 +10,16 @@ import { updateMiningFees } from '../../../SendConfirmation/action'
 import { getCustomNetworkFee } from '../../../SendConfirmation/selectors.js'
 import { CLOSE_MODAL_VALUE } from '../../../WalletList/components/WalletOptions/action'
 import CustomFeesModal from './CustomFeesModal.ui'
-import type { CustomFees, CustomFeesModalOwnProps } from './CustomFeesModal.ui'
+import type {
+  CustomFees,
+  CustomFeesModalStateProps,
+  CustomFeesModalOwnProps,
+  CustomFeesModalDispatchProps
+} from './CustomFeesModal.ui'
 
-const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
+const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps): CustomFeesModalStateProps => {
   const wallet = ownProps.sourceWallet
-  let customFeeSettings = []
+  let customFeeSettings: Array<string> = []
   if (_.has(wallet, 'currencyInfo.defaultSettings.customFeeSettings')) {
     customFeeSettings = wallet.currencyInfo.defaultSettings.customFeeSettings
   }
@@ -26,7 +31,7 @@ const mapStateToProps = (state: State, ownProps: CustomFeesModalOwnProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch): CustomFeesModalDispatchProps => ({
   onPositive: (customNetworkFee: CustomFees) => {
     dispatch(
       updateMiningFees({
