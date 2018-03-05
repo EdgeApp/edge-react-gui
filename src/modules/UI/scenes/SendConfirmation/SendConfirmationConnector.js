@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcTransaction } from 'edge-login'
+import type { AbcTransaction } from 'edge-core-js'
 // @flow
 import { connect } from 'react-redux'
 

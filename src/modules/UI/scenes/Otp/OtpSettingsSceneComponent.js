@@ -11,6 +11,7 @@ import { PrimaryButton, TertiaryButton } from '../../components/Buttons/index'
 import Gradient from '../../components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import OtpHeroComponent from './OtpHeroComponent.js'
+import T from '../../components/FormattedText'
 
 type OtpSettingsSceneProps = {
   isOtpEnabled: boolean,
@@ -22,7 +23,8 @@ type OtpSettingsSceneProps = {
 
 type State = {
   showMessageModal: boolean,
-  messageModalMessage?: string,
+  messageModalMessage: string | null,
+  messageModalComponent?: any,
   showConfirmationModal: boolean
 }
 
@@ -54,7 +56,8 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     }
     this.setState({
       showMessageModal: true,
-      messageModalMessage: s.strings.otp_enabled_modal_part_one + '' + s.strings.otp_enabled_modal_part_two
+      messageModalMessage: null,
+      messageModalComponent: <Text style={{textAlign: 'center'}}><T>{s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T></T></Text>
     })
     this.props.enableOtp()
   }
@@ -63,7 +66,8 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     this.setState({
       showMessageModal: true,
       messageModalMessage: s.strings.otp_disabled_modal,
-      showConfirmationModal: false
+      showConfirmationModal: false,
+      messageModalComponent: null
     })
     this.props.disableOtp()
   }
@@ -96,7 +100,12 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
   }
   renderModals (styles: Object) {
     if (this.state.showMessageModal) {
-      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
+      return <StaticModalComponent
+        cancel={this.cancelStatic}
+        body={this.state.messageModalMessage}
+        bodyComponent={this.state.messageModalComponent}
+        modalDismissTimerSeconds={8}
+      />
     }
     if (this.state.showConfirmationModal) {
       return (

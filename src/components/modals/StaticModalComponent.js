@@ -12,7 +12,8 @@ import THEME from '../../theme/variables/airbitz'
 
 type Props = {
   modalDismissTimerSeconds: number,
-  body: string,
+  body?: string,
+  bodyComponent?: any,
   cancel(): void
 }
 class StaticModalComponent extends Component<Props> {
@@ -26,6 +27,12 @@ class StaticModalComponent extends Component<Props> {
   }
   componentWillUnmount () {
     clearInterval(this.reset)
+  }
+  renderMiddle = (styles: Object) => {
+    if (this.props.bodyComponent) {
+      return this.props.bodyComponent
+    }
+    return <Text style={styles.bodyText}>{this.props.body}</Text>
   }
   render () {
     const styles = StaticModalStyle
@@ -43,7 +50,7 @@ class StaticModalComponent extends Component<Props> {
             </LinearGradient>
             <View style={styles.bottom}>
               <View style={styles.bodyRow}>
-                <Text style={styles.bodyText}>{this.props.body}</Text>
+                {this.renderMiddle(styles)}
               </View>
             </View>
           </View>

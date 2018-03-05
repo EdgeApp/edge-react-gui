@@ -52,7 +52,7 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
   }
 
   renderMiddle = (style: Object) => {
-    const { container, top, topRight, topLeft, shim, bottom, bottomLeft, bottomRight, text } = style.middle
+    const { container, top, topRight, topLeft, shim, bottom, bottomLeft, bottomRight, text, sliderParent } = style.middle
     const fromCurrencyAmount = this.props.fromCurrencyAmount ? this.props.fromCurrencyAmount : ''
     const fromCurrencyCode = this.props.fromCurrencyCode ? this.props.fromCurrencyCode : ''
     const fee = this.props.fee || ''
@@ -81,15 +81,7 @@ export default class CryptoExchangeConfirmTransactionModal extends Component<Cry
         </View>
         <Slider onSlidingComplete={this.props.confirmFunction}
           sliderDisabled={this.props.pending}
-          parentStyle={{
-            backgroundColor: THEME.COLORS.SECONDARY,
-            borderRadius: 40,
-            marginBottom: 10,
-            marginLeft: 0,
-            marginRight: 0,
-            width: 270,
-            alignSelf: 'center'
-          }} />
+          parentStyle={sliderParent} />
       </View>
     )
   }

@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, EdgeMetadata } from 'edge-login'
+import type { AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, EdgeMetadata } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 

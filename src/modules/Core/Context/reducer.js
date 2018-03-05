@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcContext } from 'edge-login'
+import type { AbcContext } from 'edge-core-js'
 
 import * as Constants from '../../../constants/indexConstants.js'
 import type { Action } from '../../ReduxTypes'

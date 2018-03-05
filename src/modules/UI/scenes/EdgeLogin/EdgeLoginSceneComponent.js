@@ -1,4 +1,4 @@
-import type { AbcLobby } from 'edge-login'
+import type { AbcLobby } from 'edge-core-js'
 // @flow
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Text, View } from 'react-native'

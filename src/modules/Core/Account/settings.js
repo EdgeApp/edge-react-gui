@@ -1,5 +1,5 @@
 // @flow
-import type { AbcAccount } from 'edge-login'
+import type { AbcAccount } from 'edge-core-js'
 
 import { categories } from './subcategories.js'
 

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-login'
+import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-core-js'
 
 import type { State } from '../../ReduxTypes'
 import isoFiatDenominations from './IsoFiatDenominations.js'

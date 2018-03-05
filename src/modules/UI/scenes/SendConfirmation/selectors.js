@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetadata, AbcSpendInfo, AbcSpendTarget, AbcTransaction } from 'edge-login'
+import type { AbcMetadata, AbcSpendInfo, AbcSpendTarget, AbcTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
