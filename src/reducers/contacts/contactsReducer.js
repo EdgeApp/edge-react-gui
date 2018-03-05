@@ -6,7 +6,7 @@ import type { GuiContact } from '../../types.js'
 import type { Action } from '../../modules/ReduxTypes.js'
 
 export const initialState = []
-export type ContactsState = Array<GuiContact> | []
+export type ContactsState = Array<GuiContact>
 
 export const contactsReducer = (state: ContactsState = initialState, action: Action) => {
   switch (action.type) {
