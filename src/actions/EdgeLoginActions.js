@@ -1,4 +1,4 @@
-import type { AbcLobby } from 'edge-login'
+import type { AbcLobby } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../constants/indexConstants'

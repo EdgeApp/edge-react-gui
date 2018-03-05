@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcMetadata, AbcParsedUri, AbcTransaction } from 'edge-login'
+import type { AbcMetadata, AbcParsedUri, AbcTransaction } from 'edge-core-js'
 // @flow
 import { Actions } from 'react-native-router-flux'
 

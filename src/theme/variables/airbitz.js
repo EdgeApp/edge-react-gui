@@ -64,6 +64,7 @@ export default {
   },
   FONTS: {
     DEFAULT: 'SourceSansPro-Black',
+    BOLD: 'SourceSansPro-Bold',
     SYMBOLS: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black'
   },
 

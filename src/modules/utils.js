@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcDenomination, AbcMetaToken, AbcTransaction } from 'edge-login'
+import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcDenomination, AbcMetaToken, AbcTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 

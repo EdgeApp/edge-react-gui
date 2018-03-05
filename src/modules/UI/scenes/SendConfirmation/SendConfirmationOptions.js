@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-login'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Keyboard, View } from 'react-native'
 import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-popup-menu'

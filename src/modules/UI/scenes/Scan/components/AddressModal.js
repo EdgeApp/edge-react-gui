@@ -1,4 +1,4 @@
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-login'
+import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
 // @flow
 import React, { Component } from 'react'
 import { Alert, Clipboard } from 'react-native'

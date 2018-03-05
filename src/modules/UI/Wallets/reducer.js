@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-login'
+import type { AbcCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
