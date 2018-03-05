@@ -68,7 +68,7 @@ matrix:
         - npm install -g yarn@1.3.2
       install:
         - travis_retry gem install xcpretty
-        - travis_wait yarn
+        - travis_retry yarn install --child-concurrency 1
       xcode_project: ios/edge.xcworkspace
       xcode_scheme: ios/edge
       script:
