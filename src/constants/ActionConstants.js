@@ -31,6 +31,11 @@ export const DONE_SHIFT_TRANSACTION = 'DONE_SHIFT_TRANSACTION'
 export const OPEN_AB_ALERT = 'OPEN_AB_ALERT'
 export const CLOSE_AB_ALERT = 'CLOSE_AB_ALERT'
 
+// Request
+export const USE_LEGACY_REQUEST_ADDRESS = 'useLegacyRequestAddress'
+export const USE_REGULAR_REQUEST_ADDRESS = 'useRegularRequestAddress'
+export const UPDATE_RECEIVE_ADDRESS_SUCCESS = 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
+
 // edgelogin
 export const SAVE_ABC_LOBBY = 'saveAbcLobby'
 export const INVALIDATE_ABC_LOBBY = 'invalidateAbcLobby'

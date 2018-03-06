@@ -1,0 +1,59 @@
+// @flow
+import { connect } from 'react-redux'
+
+import * as actions from '../../actions/indexActions'
+import * as Constants from '../../constants/indexConstants'
+import s from '../../locales/strings.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes.js'
+import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
+import LinkedComponent from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
+import * as Styles from '../../styles/indexStyles'
+import THEME from '../../theme/variables/airbitz'
+
+export const mapStateToProps = (state: State) => {
+  const useLegacyAddress = state.ui.scenes.requestType.useLegacyAddress
+  const uniqueLegacyAddress = state.ui.scenes.requestType.uniqueLegacyAddress
+
+  const addressToggle = {
+    label: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address, // tie into,
+    key: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address,
+    value: {
+      title: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address
+    }
+  }
+  const help = {
+    label: s.strings.string_help,
+    key: s.strings.string_help,
+    value: {
+      title: Constants.HELP_VALUE
+    }
+  }
+  const data = uniqueLegacyAddress ? [addressToggle, help] : [help]
+  return {
+    style: {
+      ...Styles.MenuDropDownStyleHeader,
+      icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
+    },
+    data,
+    rightSide: true
+  }
+}
+
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
+  onSelect: (value: Object) => {
+    switch (value.title) {
+      case s.strings.title_use_regular_address:
+        dispatch(actions.dispatchAction(Constants.USE_REGULAR_REQUEST_ADDRESS))
+        break
+      case s.strings.title_use_legacy_address:
+        dispatch(actions.dispatchAction(Constants.USE_LEGACY_REQUEST_ADDRESS))
+        break
+      case Constants.HELP_VALUE:
+        dispatch(openHelpModal())
+        break
+    }
+  }
+  // nextScreen: () => dispatch(actions.nextScreen())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)

@@ -1,5 +1,5 @@
 import * as ACTION from './action'
-
+import * as Constants from '../../../../constants/indexConstants.js'
 const initialState = {
   inputCurrencySelected: 'fiat',
   receiveAddress: {
@@ -19,7 +19,7 @@ const initialState = {
 export const request = (state = initialState, action) => {
   const { type, data = {} } = action
   switch (type) {
-    case ACTION.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
+    case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
       const { receiveAddress } = data
       return {
         ...state,

@@ -42,6 +42,11 @@ test('initialState', () => {
         publicAddress: ''
       }
     },
+    requestType: {
+      useLegacyAddress: false,
+      receiveAddress: {},
+      uniqueLegacyAddress: false
+    },
     scan: {
       addressModalVisible: false,
       recipientAddress: '',

@@ -27,6 +27,7 @@ import scanIcon from '../assets/images/tabbar/scan.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
+import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
@@ -335,7 +336,7 @@ export default class Main extends Component<Props, State> {
                         tabBarLabel={REQUEST}
                         component={Request}
                         renderTitle={this.renderWalletListNavBar()}
-                        renderLeftButton={this.renderHelpButton()}
+                        renderLeftButton={this.renderRequestMenuButton()}
                         renderRightButton={this.renderMenuButton()}
                       />
 
@@ -540,6 +541,10 @@ export default class Main extends Component<Props, State> {
 
   renderExchangeButton = () => {
     return <ExchangeDropMenu />
+  }
+
+  renderRequestMenuButton = () => {
+    return <RequestDropMenu />
   }
 
   renderSendConfirmationButton = () => {

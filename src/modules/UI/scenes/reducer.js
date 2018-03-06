@@ -14,6 +14,7 @@ import changeMiningFee from './ChangeMiningFee/reducer'
 import createWallet from './CreateWallet/reducer'
 import editToken from './EditToken/reducer'
 import request from './Request/reducer.js'
+import requestType from '../../../reducers/RequestTypeReducer.js'
 import scan from './Scan/reducer'
 import sendConfirmation from './SendConfirmation/reducer'
 import transactionDetails from './TransactionDetails/reducer'
@@ -35,6 +36,7 @@ export const scenes = combineReducers({
   createWallet,
   editToken,
   request,
+  requestType,
   dimensions,
   helpModal,
   transactionAlert,

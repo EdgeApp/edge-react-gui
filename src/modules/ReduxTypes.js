@@ -144,6 +144,11 @@ export type State = {
           message: string,
           buttons: Array<{ title: string, message: string }>
         }
+      },
+      requestType: {
+        useLegacyAddress: boolean,
+        receiveAddress: {},
+        uniqueLegacyAddress: boolean
       }
     },
     wallets: {
