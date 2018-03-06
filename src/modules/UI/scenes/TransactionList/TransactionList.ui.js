@@ -29,11 +29,11 @@ import styles, { styles as styleRaw } from './style'
 const TRANSACTION_BATCH_NUMBER = 30
 
 type Props = {
-  getTransactions: (walletId: string, currencyCode: string) => void,
+  getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
   updateExchangeRates: () => void,
   setContactList: (contacts: Array<any>) => void,
   transactionsSearchHidden: () => void,
-  fetchTransactions: (walletId: string, currencyCode: string, options: Object, multiplier: string) => void,
+  fetchTransactions: (walletId: string, currencyCode: string, options: Object) => void,
   contacts: Array<any>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
@@ -89,7 +89,7 @@ export default class TransactionList extends Component<Props, State> {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
     this.props.updateExchangeRates()
-    this.fetchTransactions(walletId, currencyCode)
+    this.fetchListOfTransactions(walletId, currencyCode)
   }
 
   componentDidMount () {
@@ -112,18 +112,18 @@ export default class TransactionList extends Component<Props, State> {
     }
   }
 
-  fetchTransactions = (walletId: string, currencyCode: string) => {
+  fetchListOfTransactions = (walletId: string, currencyCode: string) => {
     const options = {
       numEntries: this.state.currentEndIndex + TRANSACTION_BATCH_NUMBER
     }
 
-    this.props.fetchTransactions(walletId, currencyCode, options, this.props.multiplier)
+    this.props.fetchTransactions(walletId, currencyCode, options)
   }
 
   handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    this.setState(state => ({currentEndIndex: state.currentEndIndex + TRANSACTION_BATCH_NUMBER}), () => this.fetchTransactions(walletId, currencyCode))
+    this.setState(state => ({currentEndIndex: state.currentEndIndex + TRANSACTION_BATCH_NUMBER}), () => this.fetchListOfTransactions(walletId, currencyCode))
   }
 
   _onSearchChange = () => {

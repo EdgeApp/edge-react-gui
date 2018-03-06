@@ -85,7 +85,6 @@ export type GuiFiatType = {
 export type TransactionListTx = {
   ...EdgeTransaction,
   dateString?: string,
-  multiplier?: string,
   key: number
 }
 

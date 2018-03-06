@@ -10,7 +10,7 @@ import { updateExchangeRates } from '../../components/ExchangeRate/action'
 import { setContactList } from '../../contacts/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { getTransactionsRequest, fetchTransactions } from './action'
+import { fetchTransactions } from './action'
 import TransactionList from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
@@ -78,10 +78,9 @@ const mapStateToProps = (state: State) => {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   updateExchangeRates: () => dispatch(updateExchangeRates()),
   setContactList: contacts => dispatch(setContactList(contacts)),
-  fetchTransactions: (walletId: string, currencyCode: string, options: Object, multiplier: string) => dispatch(fetchTransactions(walletId, currencyCode, options, multiplier))
+  fetchTransactions: (walletId: string, currencyCode: string, options: Object) => dispatch(fetchTransactions(walletId, currencyCode, options))
   // transactionsSearchVisible: () => dispatch(transactionsSearchVisible()),
   // transactionsSearchHidden: () => dispatch(transactionsSearchHidden())
 })

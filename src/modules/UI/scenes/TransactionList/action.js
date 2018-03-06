@@ -26,29 +26,17 @@ export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 export const START_TRANSACTIONS_LOADING = PREFIX + 'START_TRANSACTIONS_LOADING'
 export const END_TRANSACTIONS_LOADING = PREFIX + 'END_TRANSACTIONS_LOADING'
 
-export const NEW_TRANSACTIONS = PREFIX + 'NEW_TRANSACTIONS'
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 
-export const getTransactionsRequest = (walletId: string, currencyCode) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const wallet = CORE_SELECTORS.getWallet(state, walletId)
-
-  if (wallet) {
-    WALLET_API.getTransactions(wallet, currencyCode).then(transactions => {
-      dispatch(updateTransactions(transactions))
-    })
-  }
-}
-
-export const fetchTransactions = (walletId: string, currencyCode: string, options: Object = {}, multiplier: string) => (dispatch: Dispatch, getState: GetState) => {
+export const fetchTransactions = (walletId: string, currencyCode: string, options: Object = {}) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   if (wallet) {
     WALLET_API.getTransactions(wallet, currencyCode, options).then(transactions => {
       const correctedTransactionsOrder = transactions.reverse()
       const subArrayOfNewTransactions = correctedTransactionsOrder.slice(0, options.numEntries)
-      const newGroupedTransactionsByDate = groupTransactionsByDate(subArrayOfNewTransactions, multiplier)
-      dispatch(updateVisibleTransactions(newGroupedTransactionsByDate))
+      const newGroupedTransactionsByDate = groupTransactionsByDate(subArrayOfNewTransactions)
+      dispatch(updateTransactions(transactions, newGroupedTransactionsByDate))
     }).catch((e) => {
       console.warn('Issue with getTransactions: ', e.message)
     })
@@ -61,7 +49,7 @@ export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispa
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
 
   if (walletId === selectedWalletId) {
-    return dispatch(getTransactionsRequest(walletId, currencyCode))
+    return dispatch(fetchTransactions(walletId, currencyCode))
   }
 }
 
@@ -72,33 +60,9 @@ export const newTransactionsRequest = (walletId: string, abcTransactions: Array<
   dispatch(displayTransactionAlert(abcTransaction))
 }
 
-export const updateVisibleTransactions = (groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
-  type: UPDATE_WALLET_TRANSACTIONS,
-  data: { groupedTransactionsByDate }
-})
-
-export const newTransactions = (transactions: Array<AbcTransaction>) => ({
-  type: NEW_TRANSACTIONS,
-  data: { transactions }
-})
-
-export const changedTransactionsRequest = (transactions: Array<AbcTransaction>, walletId: string) => (dispatch: Dispatch, getState: GetState) => {
-  const state = getState()
-  const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
-
-  if (walletId === selectedWalletId) {
-    return dispatch(changedTransactions(transactions))
-  }
-}
-
-export const changedTransactions = (transactions: Array<AbcTransaction>) => ({
-  type: CHANGED_TRANSACTIONS,
-  data: { transactions }
-})
-
-export const updateTransactions = (transactions: Array<AbcTransaction>) => ({
+export const updateTransactions = (transactions: Array<AbcTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
   type: UPDATE_TRANSACTIONS,
-  data: { transactions }
+  data: { transactions, groupedTransactionsByDate }
 })
 
 export const updateBalance = () => ({
@@ -145,14 +109,13 @@ export function toggleTransactionsWalletListModal () {
   }
 }
 
-export function groupTransactionsByDate (transactions: Array<AbcTransaction>, multiplier: string) {
+export function groupTransactionsByDate (transactions: Array<AbcTransaction>) {
   const sectionedTransactionList = []
   let previousDateString: string = ''
   let currentSectionData = {title: '', data: []}
   transactions.map((x, i) => {
     const newValue: any = {...x}
     newValue.key = i
-    newValue.multiplier = multiplier
     const txDate = new Date(x.date * 1000)
 
     // let time = formatAMPM(txDate)

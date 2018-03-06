@@ -10,17 +10,10 @@ export type TransactionsState = Array<AbcTransaction>
 export type ContactsListState = Array<any>
 
 const transactions = (state: TransactionsState = [], action: Action) => {
-  let transactions
   if (!action.data) return state
   switch (action.type) {
     case ACTION.UPDATE_TRANSACTIONS:
       return action.data.transactions
-    case ACTION.NEW_TRANSACTIONS:
-      transactions = action.data.transactions
-      return [...state, ...transactions]
-    case ACTION.CHANGED_TRANSACTIONS:
-      transactions = action.data.transactions
-      return [...state, ...transactions]
     default:
       return state
   }
@@ -29,7 +22,7 @@ const transactions = (state: TransactionsState = [], action: Action) => {
 const visibleTransactions = (state: Array<any> = [], action: Action) => {
   if (!action.data) return state
   switch (action.type) {
-    case ACTION.UPDATE_WALLET_TRANSACTIONS:
+    case ACTION.UPDATE_TRANSACTIONS:
       return action.data.groupedTransactionsByDate
     default:
       return state
