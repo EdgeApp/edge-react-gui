@@ -114,7 +114,8 @@ export default class TransactionList extends Component<Props, State> {
 
   fetchListOfTransactions = (walletId: string, currencyCode: string) => {
     const options = {
-      numEntries: this.state.currentEndIndex + TRANSACTION_BATCH_NUMBER
+      numEntries: this.state.currentEndIndex + TRANSACTION_BATCH_NUMBER,
+      numIndex: 0
     }
 
     this.props.fetchTransactions(walletId, currencyCode, options)

@@ -41,7 +41,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
         console.log(`${walletId} - onTransactionsChanged: No transactions`)
       }
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId))
+      dispatch(refreshTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
     },
 
@@ -57,7 +57,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(newTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId))
+      dispatch(refreshTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (walletId: string, blockHeight: number) {

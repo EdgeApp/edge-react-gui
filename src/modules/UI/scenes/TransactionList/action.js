@@ -5,9 +5,11 @@ import type { DateTransactionGroup } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
+import { Actions } from 'react-native-router-flux'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
+import * as SCENE_KEYS from '../../../../constants/SceneKeys.js'
 // import type { TransactionListTx } from './TransactionList.ui.js'
 const PREFIX = 'UI/Scenes/TransactionList/'
 export const UPDATE_TRANSACTIONS_LIST = PREFIX + 'UPDATE_TRANSACTIONS_LIST'
@@ -43,12 +45,12 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   }
 }
 
-export const refreshTransactionsRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
+export const refreshTransactionsRequest = (walletId: string, transactions: Array<AbcTransaction>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const currencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
 
-  if (walletId === selectedWalletId) {
+  if ((walletId === selectedWalletId) && (Actions.currentScene === SCENE_KEYS.TRANSACTION_LIST)) {
     return dispatch(fetchTransactions(walletId, currencyCode))
   }
 }
