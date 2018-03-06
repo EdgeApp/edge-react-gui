@@ -14,6 +14,7 @@ type Props = {
   modalDismissTimerSeconds: number,
   body?: string,
   bodyComponent?: any,
+  isVisible: boolean,
   cancel(): void
 }
 class StaticModalComponent extends Component<Props> {
@@ -37,7 +38,7 @@ class StaticModalComponent extends Component<Props> {
   render () {
     const styles = StaticModalStyle
     return (
-      <Modal style={styles.container} animationType={'slide'} transparent visible>
+      <Modal style={styles.container} animationType={'slide'} isVisible={this.props.isVisible}>
         <TouchableOpacity style={styles.touchOut} onPress={this.props.cancel}>
           <View style={styles.modalBox}>
             <LinearGradient
