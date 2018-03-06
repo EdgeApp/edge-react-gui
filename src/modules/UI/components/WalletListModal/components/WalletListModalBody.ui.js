@@ -69,7 +69,6 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
         underlayColor={styleRaw.underlay.color}
         key={currencyCode}
         onPress={() => {
-          this.props.fetchTransactions(parentId, currencyCode, {})
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(walletId, currencyCode, this.props.type)
           this.props.updateReceiveAddress(parentId, currencyCode)
@@ -112,7 +111,6 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
           style={styles.rowContainer}
           underlayColor={styleRaw.underlay.color}
           onPress={() => {
-            this.props.fetchTransactions(guiWallet.id, guiWallet.currencyCode, {})
             this.props.disableWalletListModalVisibility()
             this.props.selectWallet(walletId, currencyCode, this.props.type)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
