@@ -28,10 +28,6 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
   let secondaryeExchangeCurrencyCode = ''
   const guiWallet: GuiWallet = getSelectedWallet(state)
   const currencyCode = getSelectedCurrencyCode(state)
-  const parentNetworkFee = getParentNetworkFee(state)
-  // const parentNetworkFee = getNetworkFee(state) === '0' ? '123400000000000' : ''
-  console.log(getTransaction(state))
-  console.log(parentNetworkFee)
 
   if (guiWallet) {
     const isoFiatCurrencyCode = guiWallet.isoFiatCurrencyCode
@@ -71,7 +67,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
-    parentNetworkFee,
+    parentNetworkFee: getParentNetworkFee(state),
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)

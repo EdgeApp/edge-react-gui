@@ -143,9 +143,9 @@ export class SendConfirmation extends Component<Props, State> {
         const cryptoFeeAmount = parentNetworkFee ? convertNativeToDisplay(cryptoFeeMultiplier)(parentNetworkFee) : ''
         const cryptoFeeString = `${cryptoFeeSymbol} ${cryptoFeeAmount}`
         const fiatFeeSymbol = secondaryInfo.displayDenomination.symbol
-        const exchangeConvertor = convertNativeToExchange(primaryInfo.exchangeDenomination.multiplier)
-        const cryptoFeeExchangeAmount = exchangeConvertor(networkFee)
-        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.currencyCode, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
+        const exchangeConvertor = convertNativeToExchange(this.props.parentExchangeDenomination.multiplier)
+        const cryptoFeeExchangeAmount = exchangeConvertor(parentNetworkFee)
+        const fiatFeeAmount = this.props.currencyConverter.convertCurrency(this.props.parentExchangeDenomination.name, secondaryInfo.exchangeCurrencyCode, cryptoFeeExchangeAmount)
         const fiatFeeAmountString = fiatFeeAmount.toFixed(2)
         const fiatFeeAmountPretty = bns.toFixed(fiatFeeAmountString, 2, 2)
         const fiatFeeString = `${fiatFeeSymbol} ${fiatFeeAmountPretty}`
