@@ -2202,9 +2202,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.1.tgz#b3d7c9d879ca369181f6ecd7a20fc11e9c4abba4"
+edge-core-js@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.3.tgz#d2657afeb86cf2f1e000822f272e07e8b79dd5f0"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2225,22 +2225,24 @@ edge-core-js@^0.6.1:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
 
-edge-currency-bitcoin@2.14.5:
-  version "2.14.5"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.14.5.tgz#240233da7341ca96d0fcd504f6fc752276a1f7f8"
+edge-currency-bitcoin@2.14.9:
+  version "2.14.9"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.14.9.tgz#95470d4ca4fbfff8a6ef30722be81be0d7a40cd1"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
     bn.js "^4.11.8"
     buffer "^5.0.8"
     coinselect "^3.1.11"
+    eventemitter3 "^3.0.1"
     jsonschema "^1.2.0"
+    stable "^0.1.6"
     unorm "^1.4.1"
     uri-js "^3.0.2"
 
-edge-currency-ethereum@0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.8.0.tgz#4123b155ab4f5b10635213aed87bc658d62d1e48"
+edge-currency-ethereum@0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.8.1.tgz#3b391e7a2bfb10a4fd932e5996bf86f804d027a0"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"
@@ -2654,6 +2656,10 @@ ethjs-util@^0.1.3:
 event-target-shim@^1.0.5:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-1.1.1.tgz#a86e5ee6bdaa16054475da797ccddf0c55698491"
+
+eventemitter3@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-3.0.1.tgz#4ce66c3fc5b5a6b9f2245e359e1938f1ab10f960"
 
 events@^1.0.2:
   version "1.1.1"
@@ -7164,6 +7170,10 @@ sshpk@^1.7.0:
     ecc-jsbn "~0.1.1"
     jsbn "~0.1.0"
     tweetnacl "~0.14.0"
+
+stable@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.6.tgz#910f5d2aed7b520c6e777499c1f32e139fdecb10"
 
 stacktrace-parser@^0.1.3:
   version "0.1.4"
