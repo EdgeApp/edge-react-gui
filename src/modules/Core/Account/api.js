@@ -51,3 +51,7 @@ export const updateArchivedWalletsOrderRequest = (account: AbcAccount, archivedW
 
   return account.changeWalletStates(newKeyStates).then(() => account.archivedWalletIds)
 }
+
+export const checkPassword = (account: AbcAccount, password: string) => {
+  return account.checkPassword(password)
+}
