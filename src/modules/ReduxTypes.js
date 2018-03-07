@@ -19,6 +19,8 @@ import type { Permission, PermissionStatus } from './UI/permissions.js'
 import type { RequestState } from './UI/Request/reducer.js'
 import type { RequestSceneState } from './UI/scenes/Request/reducer.js'
 
+import type { PasswordReminderModalState } from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import type { PasswordReminderState } from '../reducers/passwordReminder/indexPasswordReminder.js'
 export type Action = { type: string, data?: any }
 
 export type CurrencyCode = string
@@ -49,6 +51,7 @@ export type State = {
     }
   },
   ui: {
+    passwordReminder: PasswordReminderState,
     errorAlert: {
       displayAlert: boolean,
       message: string
@@ -58,6 +61,7 @@ export type State = {
       edgeTransaction: EdgeTransaction
     },
     scenes: {
+      passwordReminderModal: PasswordReminderModalState,
       scan: {
         parsedUri: EdgeParsedUri | null,
         torchEnabled: boolean,
@@ -176,12 +180,12 @@ export type State = {
       otpMode: boolean,
       pinMode: boolean,
       pinLoginEnabled: boolean,
-      changesLocked: true,
-      loginStatus: true,
+      changesLocked: boolean,
+      loginStatus: boolean,
       isTouchSupported: boolean,
       isTouchEnabled: boolean,
-      isOtpEnabled: true,
-      otpResetPending: false,
+      isOtpEnabled: boolean,
+      otpResetPending: boolean,
       otpKey: string,
       [CurrencyCode]: {
         denomination: string,
@@ -242,6 +246,8 @@ export type State = {
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A
+
+export type Reducer<S, A: Action> = (S, A) => S
 
 export type Store = ReduxStore<State, Action>
 export type GetState = () => State

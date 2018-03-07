@@ -82,7 +82,7 @@ export const setBluetoothModeRequest = (account: EdgeAccount, bluetoothMode: boo
     return setLocalSettings(account, updatedSettings)
   })
 
-export const setPasswordReminderRequest = (account: AbcAccount, passwordReminder: Object) =>
+export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: Object) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { passwordReminder })
     return setLocalSettings(account, updatedSettings)
