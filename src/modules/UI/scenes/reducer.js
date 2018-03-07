@@ -1,7 +1,7 @@
 // @flow
 
 import { combineReducers } from 'redux'
-
+import type { Action } from '../../ReduxTypes.js'
 import ABAlert from '../components/ABAlert/reducer'
 import controlPanel from '../components/ControlPanel/reducer.js'
 import exchangeRate from '../components/ExchangeRate/reducer.js'
@@ -22,7 +22,8 @@ import walletList from './WalletList/reducer'
 import { walletTransferListReducer as walletTransferList } from './WalletTransferList/reducer'
 import * as TRANSACTION_LIST_ACTION from './action.js'
 
-export const currentScene = (state: string = '', action) => {
+export const currentScene = (state: string = '', action: Action) => {
+  if (!action.data) return state
   switch (action.type) {
     case TRANSACTION_LIST_ACTION.UPDATE_CURRENT_SCENE_KEY:
       return action.data.sceneKey

@@ -17,7 +17,7 @@ import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
-import type { GuiWallet, DateTransactionGroup, TransactionListTx, TransactionListSection } from '../../../../types'
+import type { GuiWallet, DateTransactionGroup, TransactionListTx, TransactionListSection, GuiContact } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'

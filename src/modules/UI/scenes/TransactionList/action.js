@@ -45,7 +45,7 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
 
 export const refreshTransactionsRequest = (walletId: string, transactions: Array<AbcTransaction>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
-  const currentScene = state.ui.scenes.currentScene
+  const currentScene: string = state.ui.scenes.currentScene
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   // Check if this is the selected wallet and we are on the transaction list scene
   if ((walletId === selectedWalletId) && (currentScene === SCENE_KEYS.TRANSACTION_LIST)) {
@@ -53,7 +53,7 @@ export const refreshTransactionsRequest = (walletId: string, transactions: Array
     // 2. Disptach an "updateTransactionList" event, want to re-render if on txList
     const currentUngroupedTransactions = state.ui.scenes.transactionList.transactions
     for (const transaction of transactions) {
-      const indexInUngrouped = _.indexOf(currentUngroupedTransactions, (tx) => tx.txid === transaction.txid)
+      const indexInUngrouped = _.findIndex(currentUngroupedTransactions, (tx) => tx.txid === transaction.txid)
       if (indexInUngrouped > -1) { // if exists
         currentUngroupedTransactions[indexInUngrouped] = _.merge(currentUngroupedTransactions[indexInUngrouped], transaction)
       } else { // if the changed txid doesn't exist in current ungrouped
