@@ -40,7 +40,8 @@ export const sendLogs = text => (dispatch, getState) => {
     }
   }
 
-  LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text)
+  LOGGER.prepareLogs()
+    .then(LOGGER.log('SENDING LOGS WITH MESSAGE: ' + text))
     .then(LOGGER.log(walletDump))
     .then(LOGGER.readLogs)
     .then(LOGS_API.sendLogs)

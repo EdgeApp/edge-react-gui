@@ -10,8 +10,6 @@ const path2 = RNFS.DocumentDirectoryPath + '/logs2.txt'
 const path3 = RNFS.DocumentDirectoryPath + '/logs3.txt'
 const path = path1
 
-let newBoot = true
-
 const getTime = () => new Date().toISOString()
 
 const isObject = (item: any) => typeof item === 'object' && item !== null
@@ -29,6 +27,53 @@ const normalize = (...info: Array<any>) => `${getTime()} | ${info.map(item => (i
 //   return logs
 // }
 //
+const MAX_BYTE_SIZE_PER_FILE = 1000000
+
+async function isLogFileLimitExceeded (filePath) {
+  const stats = await RNFS.stat(filePath)
+
+  const size = stats.size
+  return size > MAX_BYTE_SIZE_PER_FILE
+}
+
+async function initLogFiles () {
+  try {
+    const exists1 = await RNFS.exists(path1)
+    if (!exists1) {
+      await RNFS.writeFile(path1, '')
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+async function rotateLogs () {
+  try {
+    if (await RNFS.exists(path3)) {
+      await RNFS.unlink(path3)
+    }
+    if (await RNFS.exists(path2)) {
+      await renameFile(path2, path3)
+    }
+    if (await RNFS.exists(path1)) {
+      await renameFile(path1, path2)
+    }
+    await RNFS.writeFile(path1, '')
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+async function renameFile (oldName, newName) {
+  try {
+    const content = await RNFS.readFile(oldName)
+    await RNFS.writeFile(newName, content)
+    await RNFS.unlink(oldName)
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 async function writeLog (content) {
   try {
     const exists = await RNFS.exists(path)
@@ -66,17 +111,15 @@ export async function readLogs () {
   }
 }
 
-export async function log (...info: Array<number | string | null | {}>) {
-  if (newBoot) {
-    try {
-      newBoot = false
-      await RNFS.unlink(path3)
-      await RNFS.moveFile(path2, path3)
-      await RNFS.moveFile(path1, path2)
-    } catch (e) {
-      newBoot = false
-    }
+export async function prepareLogs () {
+  await initLogFiles()
+  const isLimitExceeded = await isLogFileLimitExceeded(path)
+  if (isLimitExceeded) {
+    await rotateLogs()
   }
+}
+
+export async function log (...info: Array<number | string | null | {}>) {
   const logs = normalize(...info)
 
   const now = Date.now()
