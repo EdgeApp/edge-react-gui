@@ -123,7 +123,10 @@ test('initialState', () => {
       walletListModalVisible: false,
       walletTransferList: []
     },
-    currentScene: ''
+    currentScene: '',
+    passwordReminderModal: {
+      status: null
+    }
   }
   const actual = scenesReducer(undefined, {})
 
