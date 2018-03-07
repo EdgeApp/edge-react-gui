@@ -17,7 +17,8 @@ import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 import type { PermissionsState } from '../reducers/permissions/permissionsReducer.js'
 import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet } from '../types'
 import type { Permission, PermissionStatus } from './UI/permissions.js'
-
+import type {PasswordReminderModalState} from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import type {PasswordReminderState} from '../reducers/passwordReminder/indexPasswordReminder.js'
 export type Action = { type: string, data?: any }
 
 export type CurrencyCode = string
@@ -48,6 +49,7 @@ export type State = {
     }
   },
   ui: {
+    passwordReminder: PasswordReminderState,
     errorAlert: {
       displayAlert: boolean,
       message: string
@@ -57,6 +59,7 @@ export type State = {
       abcTransaction: AbcTransaction
     },
     scenes: {
+      passwordReminderModal: PasswordReminderModalState,
       scan: {
         torchEnabled: boolean,
         addressModalVisible: boolean,
@@ -166,12 +169,12 @@ export type State = {
       otpMode: boolean,
       pinMode: boolean,
       pinLoginEnabled: boolean,
-      changesLocked: true,
-      loginStatus: true,
+      changesLocked: boolean,
+      loginStatus: boolean,
       isTouchSupported: boolean,
       isTouchEnabled: boolean,
-      isOtpEnabled: true,
-      otpResetPending: false,
+      isOtpEnabled: boolean,
+      otpResetPending: boolean,
       otpKey: string,
       [CurrencyCode]: {
         denomination: string,
@@ -232,6 +235,8 @@ export type State = {
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A
+
+export type Reducer<S, A: Action> = (S, A) => S
 
 export type Store = ReduxStore<State, Action>
 export type GetState = () => State
