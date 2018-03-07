@@ -17,20 +17,14 @@ const StaticModalStyle = {
     left: 0,
     right: 0
   },
-  touchOut: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
   modalBox: {
-    marginHorizontal: screenDimensions.width / 8,
+    paddingHorizontal: screenDimensions.width / 8,
     width: screenDimensions.width,
     flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'stretch',
+    alignItems: 'stretch'
+  },
+  innerBox: {
     backgroundColor: THEME.COLORS.WHITE
   },
   header: {
