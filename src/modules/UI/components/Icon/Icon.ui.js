@@ -12,7 +12,7 @@ import * as Constants from '../../../../constants/indexConstants'
 type Props = {
   style: any,
   name: string,
-  size: number,
+  size?: number,
   type: string
 }
 
