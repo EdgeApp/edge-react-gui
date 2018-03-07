@@ -252,9 +252,31 @@ const strings = {
   word_to_in_convert_from_to_string: 'to',
 
   legacy_address_modal_title: 'Legacy Address Detected',
-  legacy_address_modal_warning: 'Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
+  legacy_address_modal_warning:
+    'Warning: You have scanned a legacy format address that may not be for %1$s as it is indistinguishable from other currency addresses.\n\nDo you want to continue sending to this address?',
   legacy_address_modal_continue: 'Continue',
-  legacy_address_modal_cancel: 'Cancel'
+  legacy_address_modal_cancel: 'Cancel',
+
+  password_reminder_remember_your_password: 'Remember your password?',
+  password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
+  password_reminder_enter_password_below: 'Enter it below to make sure:',
+  password_reminder_check_password: 'Check Password',
+  password_reminder_forgot_password: 'I forgot, change password',
+  password_reminder_postpone: 'Later',
+
+  password_check_check_later: 'Later',
+  password_check_check_my_password: 'Check MY Password',
+  password_check_checking: 'Checking password…',
+  password_check_current_password: 'Current password',
+  password_check_great_job: 'Great job remembering your password.',
+  password_check_incorrect_password_message: 'Incorrect Password. Try again?',
+  password_check_incorrect_password_title: 'Incorrect Password.',
+
+  password_check_skip_formatted:
+    'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
+  password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
+
+  password: 'Password'
 }
 
 export default strings
