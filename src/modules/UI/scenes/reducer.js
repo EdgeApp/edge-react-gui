@@ -20,6 +20,7 @@ import transactionDetails from './TransactionDetails/reducer'
 import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
 import { walletTransferListReducer as walletTransferList } from './WalletTransferList/reducer'
+import {passwordReminderModalReducer as passwordReminderModal} from '../components/PasswordReminderModal/indexPasswordReminderModal.js'
 
 export const scenes = combineReducers({
   scan,
@@ -39,5 +40,6 @@ export const scenes = combineReducers({
   helpModal,
   transactionAlert,
   exchangeRate,
-  ABAlert
+  ABAlert,
+  passwordReminderModal
 })
