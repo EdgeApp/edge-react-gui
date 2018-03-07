@@ -1,11 +1,11 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcDenomination, AbcTransaction } from 'edge-login'
+import type { AbcDenomination, AbcTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, SectionList } from 'react-native'
-import Contacts from 'react-native-contacts'
-import Permissions from 'react-native-permissions'
+// import Contacts from 'react-native-contacts'
+// import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
@@ -31,10 +31,9 @@ const TRANSACTION_BATCH_NUMBER = 30
 type Props = {
   getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
   updateExchangeRates: () => void,
-  setContactList: (contacts: Array<any>) => void,
   transactionsSearchHidden: () => void,
   fetchTransactions: (walletId: string, currencyCode: string, options: Object) => void,
-  contacts: Array<any>,
+  contacts: Array<GuiContact>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   loading: boolean,
@@ -90,26 +89,6 @@ export default class TransactionList extends Component<Props, State> {
     const currencyCode = this.props.selectedCurrencyCode
     this.props.updateExchangeRates()
     this.fetchListOfTransactions(walletId, currencyCode)
-  }
-
-  componentDidMount () {
-    if (this.props.loading) return
-    if (!this.props.contact) {
-      Permissions.check('contacts').then(response => {
-        if (response === 'authorized') {
-          Contacts.getAll((err, contacts) => {
-            if (err === 'denied') {
-              // error
-            } else {
-              const filteredContacts = contacts
-                .filter(item => item.givenName)
-                .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
-              this.props.setContactList(filteredContacts)
-            }
-          })
-        }
-      })
-    }
   }
 
   fetchListOfTransactions = (walletId: string, currencyCode: string) => {

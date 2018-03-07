@@ -1,5 +1,5 @@
 // @flow
-import type { AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet } from 'edge-core-js'
 
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'

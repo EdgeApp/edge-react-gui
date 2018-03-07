@@ -6,6 +6,9 @@ module.exports =
     'plugin:react/recommended',
     'plugin:react-native/all'
   ],
+  "globals": {
+    "fetch": true
+  },
   'parser': 'babel-eslint',
   'plugins': ['flowtype', 'standard', 'react', 'react-native'],
   'rules': {

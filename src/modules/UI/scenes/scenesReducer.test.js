@@ -97,7 +97,6 @@ test('initialState', () => {
       subcategories: []
     },
     transactionList: {
-      contactsList: [],
       searchVisible: false,
       transactions: [],
       transactionsWalletListModalVisibility: false,
@@ -123,7 +122,8 @@ test('initialState', () => {
     walletTransferList: {
       walletListModalVisible: false,
       walletTransferList: []
-    }
+    },
+    currentScene: ''
   }
   const actual = scenesReducer(undefined, {})
 

@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcDenomination } from 'edge-login'
+import type { AbcDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { sprintf } from 'sprintf-js'

@@ -24,5 +24,6 @@ const composeEnhancers =
   typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ name: 'ui' }) : compose
 
 export default function configureStore (initialState: Object) {
+  // $FlowFixMe
   return createStore(rootReducer, initialState, composeEnhancers(applyMiddleware(...middleware)))
 }

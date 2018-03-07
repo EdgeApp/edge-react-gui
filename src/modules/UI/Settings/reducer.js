@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin } from 'edge-login'
+import type { AbcCurrencyPlugin } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
@@ -29,6 +29,7 @@ export const initialState = {
   isOtpEnabled: false,
   otpKey: null,
   otpResetDate: null,
+  otpResetPending: false,
   confirmPasswordError: '',
   sendLogsStatus: Constants.REQUEST_STATUS.PENDING
 }
@@ -67,6 +68,7 @@ type SettingsState = {
   loginStatus: null,
   merchantMode: boolean,
   otpKey: null,
+  otpResetPending: boolean,
   otpMode: boolean,
   pinMode: boolean,
   pinLoginEnabled: boolean,
@@ -159,6 +161,7 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
         loginStatus,
         isOtpEnabled: otpInfo.enabled,
         otpKey: otpInfo.otpKey,
+        otpResetPending: otpInfo.otpResetPending,
         autoLogoutTimeInSeconds,
         isTouchEnabled: touchIdInfo ? touchIdInfo.isTouchEnabled : false,
         isTouchSupported: touchIdInfo ? touchIdInfo.isTouchSupported : false,
@@ -342,7 +345,8 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
     case Constants.DISABLE_OTP_RESET: {
       return {
         ...state,
-        otpResetDate: null
+        otpResetDate: null,
+        otpResetPending: false
       }
     }
     case ACTION.UPDATE_SETTINGS: {
@@ -449,7 +453,9 @@ export const settings = (state: SettingsState = initialState, action: Action) =>
       return {
         ...state,
         isOtpEnabled: data.enabled,
-        otpKey: data.otpKey
+        otpKey: data.otpKey,
+        otpResetPending: data.otpResetPending
+
       }
     }
 

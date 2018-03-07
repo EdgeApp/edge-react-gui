@@ -11,34 +11,29 @@ import { PrimaryButton, TertiaryButton } from '../../components/Buttons/index'
 import Gradient from '../../components/Gradient/Gradient.ui.js'
 import SafeAreaView from '../../components/SafeAreaView'
 import OtpHeroComponent from './OtpHeroComponent.js'
+import T from '../../components/FormattedText'
 
 type OtpSettingsSceneProps = {
   isOtpEnabled: boolean,
   otpKey?: string,
   otpResetDate?: string,
   enableOtp(): void,
-  disableOtp(): void,
-  keepOtp(): void
+  disableOtp(): void
 }
 
 type State = {
   showMessageModal: boolean,
-  messageModalMessage?: string,
-  showConfirmationModal: boolean,
-  showResetDialog: boolean
+  messageModalMessage: string | null,
+  messageModalComponent?: any,
+  showConfirmationModal: boolean
 }
 
 export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, State> {
   componentWillMount () {
-    let showResetDialog = false
-    if (this.props.otpResetDate) {
-      showResetDialog = true
-    }
     this.setState({
       showMessageModal: false,
       messageModalMessage: '',
-      showConfirmationModal: false,
-      showResetDialog
+      showConfirmationModal: false
     })
   }
   cancelStatic = () => {
@@ -61,7 +56,8 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     }
     this.setState({
       showMessageModal: true,
-      messageModalMessage: s.strings.otp_enabled_modal_part_one + '' + s.strings.otp_enabled_modal_part_two
+      messageModalMessage: null,
+      messageModalComponent: <Text style={{textAlign: 'center'}}><T>{s.strings.otp_enabled_modal_part_one} <T isBold>{s.strings.otp_enabled_modal_part_two}</T></T></Text>
     })
     this.props.enableOtp()
   }
@@ -71,16 +67,9 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
       showMessageModal: true,
       messageModalMessage: s.strings.otp_disabled_modal,
       showConfirmationModal: false,
-      showResetDialog: false
+      messageModalComponent: null
     })
     this.props.disableOtp()
-  }
-
-  keepOtp = () => {
-    this.setState({
-      showResetDialog: false
-    })
-    this.props.keepOtp()
   }
 
   renderButton = () => {
@@ -111,7 +100,12 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
   }
   renderModals (styles: Object) {
     if (this.state.showMessageModal) {
-      return <StaticModalComponent cancel={this.cancelStatic} body={this.state.messageModalMessage} modalDismissTimerSeconds={8} />
+      return <StaticModalComponent
+        cancel={this.cancelStatic}
+        body={this.state.messageModalMessage}
+        bodyComponent={this.state.messageModalComponent}
+        modalDismissTimerSeconds={8}
+      />
     }
     if (this.state.showConfirmationModal) {
       return (
@@ -126,21 +120,6 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
           doneText={s.strings.otp_disable}
           onCancel={this.cancelConfirmModal}
           onDone={this.disableOtp}
-        />
-      )
-    }
-    if (this.state.showResetDialog) {
-      return (
-        <TwoButtonTextModalComponent
-          style={styles.showConfirmationModal}
-          headerText={s.strings.otp_modal_reset_headline}
-          showModal
-          middleText={''}
-          iconImage={iconImage}
-          cancelText={s.strings.otp_disable}
-          doneText={s.strings.otp_keep}
-          onCancel={this.disableOtp}
-          onDone={this.keepOtp}
         />
       )
     }

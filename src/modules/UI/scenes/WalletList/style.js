@@ -174,7 +174,7 @@ export const styles = {
   rowContainer: {
     padding: 6,
     paddingLeft: 16,
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: THEME.COLORS.WHITE
   },
   rowContent: {
@@ -237,6 +237,9 @@ export const styles = {
   rowDragIcon: {
     position: 'relative',
     top: 16
+  },
+  rowMenuTrigger: {
+    width: 46
   },
 
   symbol: {

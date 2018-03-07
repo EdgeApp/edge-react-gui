@@ -4,7 +4,6 @@ import { transactionList as transactionListReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    contactsList: [],
     searchVisible: false,
     transactions: [],
     transactionsWalletListModalVisibility: false,

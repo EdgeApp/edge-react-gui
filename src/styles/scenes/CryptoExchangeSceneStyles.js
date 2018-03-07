@@ -37,7 +37,7 @@ const CryptoExchangeSceneStyle = {
       backgroundColor: THEME.COLORS.GRAY_4
     },
     text: {
-      color: THEME.COLORS.WHITE,
+      color: THEME.COLORS.ACCENT_MINT,
       textAlign: 'center',
       marginRight: '2%',
       marginLeft: '2%'
@@ -61,6 +61,16 @@ const CryptoExchangeSceneStyle = {
     middle: {
       container: {
         width: '100%'
+      },
+      sliderParent: {
+        position: 'relative',
+        backgroundColor: THEME.COLORS.SECONDARY,
+        borderRadius: 40,
+        marginBottom: 10,
+        marginLeft: 0,
+        marginRight: 0,
+        width: '100%',
+        alignSelf: 'center'
       },
       currencyIcon: {
         height: 25,
@@ -126,11 +136,13 @@ const CryptoExchangeSceneStyle = {
     container: {
       width: '90%',
       height: 176,
-      backgroundColor: THEME.COLORS.SECONDARY
+      backgroundColor: THEME.COLORS.OPACITY_WHITE,
+      borderRadius: 3
     },
     containerNoFee: {
       width: '90%',
-      backgroundColor: THEME.COLORS.SECONDARY
+      backgroundColor: THEME.COLORS.OPACITY_WHITE,
+      borderRadius: 3
     },
     containerNoWalletSelected: {
       paddingVertical: 10,

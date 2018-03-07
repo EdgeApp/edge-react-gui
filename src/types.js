@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type { AbcDenomination, AbcMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-login'
+import type { AbcDenomination, AbcMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,

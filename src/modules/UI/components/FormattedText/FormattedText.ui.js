@@ -6,7 +6,7 @@ import styles from './style'
 export default class FormattedText extends Component {
   constructor (props) {
     super(props)
-    this.style = [styles.defaultStyle]
+    this.style = this.props.isBold ? [styles.boldStyle] : [styles.defaultStyle]
 
     if (props.style) {
       if (Array.isArray(props.style)) {

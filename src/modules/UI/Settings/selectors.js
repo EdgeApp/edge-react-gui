@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-login'
+import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-core-js'
 
 import type { State } from '../../ReduxTypes'
 import isoFiatDenominations from './IsoFiatDenominations.js'
@@ -200,4 +200,10 @@ export const getPinLoginEnabled = (state: State) => {
   const settings = getSettings(state)
   const pinLoginEnabled = settings.pinLoginEnabled
   return pinLoginEnabled
+}
+
+export const getOtpResetPending = (state: State) => {
+  const settings = getSettings(state)
+  const otpResetPending = settings.otpResetPending
+  return otpResetPending
 }

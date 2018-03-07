@@ -1,6 +1,6 @@
 {
   "name": "edge-react-gui",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "private": true,
   "description": "Edge Wallet React GUI",
   "homepage": "https://edgesecure.co",
@@ -27,6 +27,7 @@
     "cover": "jest --coverage",
     "flow": "flow",
     "flow:0": "flow; exit 0",
+    "flow-coverage": "flow-coverage-report",
     "format": "import-sort -l --write '*.js' 'src/**/*.js'; prettier-eslint --write '*.js' 'src/**/*.js'",
     "postinstall": "sh ./postinstall.sh",
     "ios:run": "react-native run-ios",
@@ -66,7 +67,6 @@
     "zlib": "browserify-zlib"
   },
   "dependencies": {
-    "airbitz-core-js-ui": "git://github.com/Airbitz/airbitz-core-js-ui.git#react-native",
     "biggystring": "^3.0.1",
     "browserify-zlib": "^0.1.4",
     "buffer": "^5.0.8",
@@ -76,10 +76,11 @@
     "currency-symbol-map": "^4.0.1",
     "dns.js": "^1.0.1",
     "domain-browser": "^1.1.7",
-    "edge-currency-bitcoin": "2.14.3",
-    "edge-currency-ethereum": "0.7.12",
+    "edge-core-js": "^0.6.3",
+    "edge-currency-bitcoin": "2.14.9",
+    "edge-currency-ethereum": "0.8.1",
     "edge-exchange-plugins": "^0.1.1",
-    "edge-login": "^0.5.5",
+    "edge-login-ui-rn": "^0.2.1",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.2",
     "native-base": "^2.2.1",
@@ -102,7 +103,7 @@
     "react-native-drawer": "^2.3.0",
     "react-native-dropdown": "git://github.com/g6ling/react-native-dropdown.git",
     "react-native-dropdownalert": "git://github.com/Airbitz/react-native-dropdownalert.git",
-    "react-native-fast-crypto": "^1.5.3",
+    "react-native-fast-crypto": "^1.5.4",
     "react-native-flip-view": "git://github.com/Airbitz/react-native-flip-view.git",
     "react-native-fs": "^2.9.7",
     "react-native-hockeyapp": "0.5.1",
@@ -114,10 +115,10 @@
     "react-native-locale": "^0.0.17",
     "react-native-material-kit": "git://github.com/Airbitz/react-native-material-kit.git#fix-threadpool",
     "react-native-material-textfield": "git://github.com/Airbitz/react-native-material-textfield.git",
-    "react-native-menu": "git://github.com/Airbitz/react-native-menu.git#adjust-menu",
     "react-native-modal": "^2.2.0",
     "react-native-permissions": "1.0.6",
     "react-native-picker": "^4.3.0",
+    "react-native-popup-menu": "git://github.com/instea/react-native-popup-menu#147aeb728d0f23699d9c5ff3da9e9c2e7d83ac07",
     "react-native-push-notification": "^3.0.2",
     "react-native-qrcode": "^0.2.3",
     "react-native-randombytes": "git://github.com/Airbitz/react-native-randombytes.git",
@@ -156,7 +157,8 @@
     "eslint-plugin-react-native": "^3.0.1",
     "eslint-plugin-standard": "^3.0.1",
     "express": "^4.16.2",
-    "flow-bin": "^0.54.1",
+    "flow-bin": "^0.62.0",
+    "flow-coverage-report": "^0.4.1",
     "husky": "^0.12.0",
     "import-sort-cli": "^4.2.0",
     "import-sort-parser-babylon": "^3.2.0",
@@ -166,7 +168,18 @@
     "nyc": "^10.0.0",
     "prettier-eslint-cli": "^4.7.0",
     "rn-nodeify": "^7.0.1",
-    "updot": "^1.1.5"
+    "updot": "^1.1.6"
+  },
+  "flow-coverage-report": {
+    "includeGlob": [
+      "src/**/*.js",
+      "*.js"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
   },
   "importSort": {
     ".js, .es": {

@@ -20,6 +20,16 @@ import transactionDetails from './TransactionDetails/reducer'
 import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
 import { walletTransferListReducer as walletTransferList } from './WalletTransferList/reducer'
+import * as TRANSACTION_LIST_ACTION from './action.js'
+
+export const currentScene = (state: string = '', action) => {
+  switch (action.type) {
+    case TRANSACTION_LIST_ACTION.UPDATE_CURRENT_SCENE_KEY:
+      return action.data.sceneKey
+    default:
+      return state
+  }
+}
 
 export const scenes = combineReducers({
   scan,
@@ -39,5 +49,6 @@ export const scenes = combineReducers({
   helpModal,
   transactionAlert,
   exchangeRate,
-  ABAlert
+  ABAlert,
+  currentScene
 })

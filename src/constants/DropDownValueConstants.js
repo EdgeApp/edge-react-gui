@@ -26,19 +26,19 @@ export const WALLET_OPTIONS = {
   },
   GET_SEED: {
     value: 'getSeed',
-    label: s.strings.string_get_seed,
+    label: s.strings.string_master_private_key,
     modalVisible: true
   },
   SPLIT: {
     value: 'split',
     currencyCode: 'BTC',
-    label: s.strings.string_split,
+    label: s.strings.string_split_bitcoin_cash,
     modalVisible: true
   },
   MANAGE_TOKENS: {
     value: 'manageTokens',
     currencyCode: 'ETH',
-    label: s.strings.fragmet_wallets_managetokens_option,
+    label: s.strings.string_add_edit_tokens,
     modalVisible: false
   }
 }

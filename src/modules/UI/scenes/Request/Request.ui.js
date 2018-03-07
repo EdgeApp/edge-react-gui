@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyWallet, AbcEncodeUri } from 'edge-login'
+import type { AbcCurrencyWallet, AbcEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, Share, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'

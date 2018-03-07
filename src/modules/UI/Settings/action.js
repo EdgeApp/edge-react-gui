@@ -1,3 +1,7 @@
+// @flow
+
+import type { EdgeCurrencyPlugin } from 'edge-core-js'
+import type { CustomTokenInfo, GuiTouchIdInfo } from '../../../types.js'
 const PREFIX = 'UI/Settings/'
 
 export const SET_LOGIN_STATUS = PREFIX + 'SET_LOGIN_STATUS'
@@ -40,79 +44,79 @@ export const ADD_CURRENCY_PLUGIN = PREFIX + 'ADD_CURRENCY_PLUGIN'
 // tokens
 export const SET_CUSTOM_TOKENS = PREFIX + 'SET_CUSTOM_TOKENS'
 
-export const updateSettings = settings => ({
+export const updateSettings = (settings: Object) => ({
   type: UPDATE_SETTINGS,
   data: { settings }
 })
 
-export const loadSettings = settings => ({
+export const loadSettings = (settings: Object) => ({
   type: LOAD_SETTINGS,
   data: { settings }
 })
 
-export const setPINMode = pinMode => ({
+export const setPINMode = (pinMode: boolean) => ({
   type: SET_PIN_MODE,
   data: { pinMode }
 })
 
-export const setPIN = pin => ({
+export const setPIN = (pin: string | number) => ({
   type: SET_PIN,
   data: { pin }
 })
 
-export const setOTPMode = otpMode => ({
+export const setOTPMode = (otpMode: boolean) => ({
   type: SET_OTP_MODE,
   data: { otpMode }
 })
 
-export const setOTP = otp => ({
+export const setOTP = (otp: string) => ({
   type: SET_OTP,
   data: { otp }
 })
 
-export const setAutoLogoutTimeInSeconds = autoLogoutTimeInSeconds => ({
+export const setAutoLogoutTimeInSeconds = (autoLogoutTimeInSeconds: number) => ({
   type: SET_AUTO_LOGOUT_TIME,
   data: { autoLogoutTimeInSeconds }
 })
 
-export const setDefaultFiat = defaultFiat => ({
+export const setDefaultFiat = (defaultFiat: string) => ({
   type: SET_DEFAULT_FIAT,
   data: { defaultFiat }
 })
 
-export const togglePinLoginEnabled = pinLoginEnabled => ({
+export const togglePinLoginEnabled = (pinLoginEnabled: boolean) => ({
   type: TOGGLE_PIN_LOGIN_ENABLED,
   data: { pinLoginEnabled }
 })
 
-export const setMerchantMode = merchantMode => ({
+export const setMerchantMode = (merchantMode: boolean) => ({
   type: SET_MERCHANT_MODE,
   data: { merchantMode }
 })
 
-export const setBluetoothMode = bluetoothMode => ({
+export const setBluetoothMode = (bluetoothMode: boolean) => ({
   type: SET_BLUETOOTH_MODE,
   data: { bluetoothMode }
 })
 // settings lock
-export const setSettingsLock = bool => ({
+export const setSettingsLock = (bool: boolean) => ({
   type: SET_SETTINGS_LOCK,
   data: bool
 })
 // BTC Settings
-export const setBitcoinOverrideServer = overrideServer => ({
+export const setBitcoinOverrideServer = (overrideServer: string) => ({
   type: SET_BITCOIN_OVERRIDE_SERVER,
   data: { overrideServer }
 })
 
 // Denomination
-export const setDenominationKey = (currencyCode, denominationKey) => ({
+export const setDenominationKey = (currencyCode: string, denominationKey: string) => ({
   type: SET_DENOMINATION_KEY,
   data: { currencyCode, denominationKey }
 })
 
 // Plugins
-export const addCurrencyPlugin = plugin => {
+export const addCurrencyPlugin = (plugin: EdgeCurrencyPlugin) => {
   const pluginName = plugin.pluginName
   const walletTypes = plugin.currencyInfo.walletTypes
   return {
@@ -123,7 +127,7 @@ export const addCurrencyPlugin = plugin => {
 
 // tokens
 
-export const setCustomTokens = customTokens => {
+export const setCustomTokens = (customTokens: Array<CustomTokenInfo>) => {
   return {
     type: SET_CUSTOM_TOKENS,
     data: { customTokens }
@@ -131,21 +135,21 @@ export const setCustomTokens = customTokens => {
 }
 
 // touch id settings
-export const addTouchIdInfo = touchIdInfo => {
+export const addTouchIdInfo = (touchIdInfo: GuiTouchIdInfo) => {
   return {
     type: TOUCH_ID_SETTINGS,
     data: touchIdInfo
   }
 }
 
-export const updateTouchIdEnabled = bool => {
+export const updateTouchIdEnabled = (bool: boolean) => {
   return {
     type: CHANGE_TOUCH_ID_SETTINGS,
     data: { isTouchEnabled: bool }
   }
 }
 
-export const updateOtpInfo = otpInfo => {
+export const updateOtpInfo = (otpInfo: { enabled: boolean, otpKey: ?string }) => {
   // {enabled}
   return {
     type: OTP_SETTINGS,

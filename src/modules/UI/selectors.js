@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-login'
+import type { AbcTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
 import type { GuiDenomination, GuiWallet } from '../../types'

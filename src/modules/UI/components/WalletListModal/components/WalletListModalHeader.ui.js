@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 // @flow
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
@@ -34,8 +33,4 @@ export default class WalletListModalHeader extends Component<any> {
       </View>
     )
   }
-}
-
-WalletListModalHeader.propTypes = {
-  type: PropTypes.string
 }

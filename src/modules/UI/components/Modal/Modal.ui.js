@@ -1,6 +1,5 @@
 // @flow
 
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import type { Node } from 'react'
 import { Platform, TouchableOpacity, View } from 'react-native'
@@ -75,8 +74,4 @@ export default class StylizedModal extends Component<Props, State> {
       </Modal>
     )
   }
-}
-
-StylizedModal.propTypes = {
-  visibilityBoolean: PropTypes.bool
 }

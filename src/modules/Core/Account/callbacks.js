@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccountCallbacks, AbcTransaction } from 'edge-login'
+import type { AbcAccountCallbacks, AbcTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
