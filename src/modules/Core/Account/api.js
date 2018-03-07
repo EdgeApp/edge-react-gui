@@ -52,3 +52,7 @@ export const updateArchivedWalletsOrderRequest = (account: EdgeAccount, archived
 
   return account.changeWalletStates(newKeyStates).then(() => account.archivedWalletIds)
 }
+
+export const checkPassword = (account: AbcAccount, password: string) => {
+  return account.checkPassword(password)
+}
