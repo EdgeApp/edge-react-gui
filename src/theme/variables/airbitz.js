@@ -44,7 +44,7 @@ if (Platform.OS !== 'ios') {
 }
 
 // https://projects.invisionapp.com/d/main#/console/10954562/239168414/inspect
-export default {
+export const THEME = {
   BUTTONS: {
     HEIGHT: 44
   },
@@ -62,6 +62,7 @@ export default {
       HIGHLIGHT: '#f03a47'
     }
   },
+
   FONTS: {
     DEFAULT: 'SourceSansPro-Black',
     SYMBOLS: Platform.OS === 'android' ? 'SF-UI-Text-Regular' : 'SourceSansPro-Black'
@@ -119,3 +120,5 @@ export default {
     ROW_PRESSED: '#D9E3ED', // same as GRAY_3
   }
 }
+
+export default THEME
