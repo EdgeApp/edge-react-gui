@@ -38,14 +38,14 @@ describe('PasswordReminder', () => {
     describe('Decrement nonPasswordDaysRemaining', () => {
       test('PIN_LOGIN', () => {
         const days = 1
-        const testDate = new Date(MILLISECONDS_PER_DAY * days)
+        const testDate = MILLISECONDS_PER_DAY * days
         const expected = initialState.nonPasswordDaysRemaining - days
         const action = {
-          type: 'LOGIN',
+          type: 'NON_PASSWORD_LOGIN',
           data: {
+            ...initialState,
             currentDate: testDate
-          },
-          lastPasswordUse: testDate
+          }
         }
         const actual = uut(initialState, action).nonPasswordDaysRemaining
 
@@ -166,7 +166,7 @@ describe('PasswordReminder', () => {
     })
 
     describe('Respect MAX_NON_PASSWORD_DAYS_LIMIT', () => {
-      test.only('PASSWORD_LOGIN', () => {
+      test('PASSWORD_LOGIN', () => {
         const testDate = Date.now()
         const previousState = {
           ...initialState,

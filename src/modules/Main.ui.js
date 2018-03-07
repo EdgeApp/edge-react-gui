@@ -70,6 +70,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
+import {passwordReminderModalConnector as PasswordReminderModal} from './UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -485,6 +486,7 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
+        <PasswordReminderModal />
       </MenuProvider>
     )
   }
