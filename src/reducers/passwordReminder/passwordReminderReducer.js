@@ -5,22 +5,22 @@ import { daysBetween } from '../../modules/utils.js'
 import { ACCOUNT_INIT_COMPLETE } from '../../constants/indexConstants.js'
 import { SET_SETTINGS_LOCK } from '../../modules/UI/Settings/action.js'
 import { UNLOCK as UNLOCK_WALLET_SEED } from '../../modules/UI/scenes/WalletList/components/GetSeedModal/GetSeedModalConnector.js'
-import { CHECK_PASSWORD_SUCCESS } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
+import { CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD } from '../../modules/UI/components/PasswordReminderModal/indexPasswordReminderModal.js'
 import { PASSWORD_REMINDER_POSTPONED } from './indexPasswordReminder.js'
 
-export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 2
-export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 2
-export const INITIAL_NON_PASSWORD_DAYS_REMAINING = 2
-export const INITIAL_NON_PASSWORD_LOGINS_REMAINING = 2
+export const INITIAL_NON_PASSWORD_DAYS_LIMIT = 8
+export const INITIAL_NON_PASSWORD_LOGINS_LIMIT = 8
+export const INITIAL_NON_PASSWORD_DAYS_REMAINING = 8
+export const INITIAL_NON_PASSWORD_LOGINS_REMAINING = 8
 
-export const MAX_NON_PASSWORD_DAYS_LIMIT = 64 // max number of consecutive non password days
+export const MAX_NON_PASSWORD_DAYS_LIMIT = 32 // max number of consecutive non password days
 export const MAX_NON_PASSWORD_LOGINS_LIMIT = 128 // max number of consecutive non password logins
 
 export const NON_PASSWORD_DAYS_GROWTH_RATE = 2
 export const NON_PASSWORD_LOGINS_GROWTH_RATE = 2
 
-export const NON_PASSWORD_DAYS_POSTPONEMENT = 2
-export const NON_PASSWORD_LOGINS_POSTPONMENT = 2
+export const NON_PASSWORD_DAYS_POSTPONEMENT = 4
+export const NON_PASSWORD_LOGINS_POSTPONEMENT = 4
 
 export type PasswordReminderReducerAction =
   | {
@@ -66,6 +66,11 @@ export type PasswordReminderReducerAction =
       }
     }
   | {
+    type: 'REQUEST_CHANGE_PASSWORD',
+    data: {
+      currentDate: number
+    }
+  } | {
       type: 'default',
       data: {}
     }
@@ -105,6 +110,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
       const nonPasswordLoginsLimit = Math.min(action.data.nonPasswordLoginsLimit * NON_PASSWORD_LOGINS_GROWTH_RATE, MAX_NON_PASSWORD_LOGINS_LIMIT)
       const nonPasswordDaysRemaining = nonPasswordDaysLimit
       const nonPasswordLoginsRemaining = nonPasswordLoginsLimit
+      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
 
       return {
         ...state,
@@ -112,7 +118,8 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
         nonPasswordDaysRemaining,
         nonPasswordLoginsRemaining,
         nonPasswordDaysLimit,
-        nonPasswordLoginsLimit
+        nonPasswordLoginsLimit,
+        needsPasswordCheck
       }
     }
 
@@ -141,6 +148,7 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
       const nonPasswordLoginsLimit = Math.min(state.nonPasswordLoginsLimit * NON_PASSWORD_LOGINS_GROWTH_RATE, MAX_NON_PASSWORD_LOGINS_LIMIT)
       const nonPasswordDaysRemaining = nonPasswordDaysLimit
       const nonPasswordLoginsRemaining = nonPasswordLoginsLimit
+      const needsPasswordCheck = nonPasswordLoginsRemaining <= 0 || nonPasswordDaysRemaining <= 0
 
       return {
         ...state,
@@ -148,15 +156,16 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
         nonPasswordDaysRemaining,
         nonPasswordLoginsRemaining,
         nonPasswordDaysLimit,
-        nonPasswordLoginsLimit
+        nonPasswordLoginsLimit,
+        needsPasswordCheck
       }
     }
 
     case 'PASSWORD_REMINDER_POSTPONED': {
       const lastPasswordUse = action.data.currentDate // fake to prevent recalulation using older date
+      const nonPasswordDaysRemaining = NON_PASSWORD_DAYS_POSTPONEMENT
+      const nonPasswordLoginsRemaining = NON_PASSWORD_LOGINS_POSTPONEMENT
       const needsPasswordCheck = false
-      const nonPasswordDaysRemaining = Math.max(state.nonPasswordDaysRemaining, NON_PASSWORD_DAYS_POSTPONEMENT)
-      const nonPasswordLoginsRemaining = Math.max(state.nonPasswordLoginsRemaining, NON_PASSWORD_LOGINS_POSTPONMENT)
 
       return {
         ...state,
@@ -164,6 +173,15 @@ export const untranslatedReducer = (state: PasswordReminderState = initialState,
         needsPasswordCheck,
         nonPasswordDaysRemaining,
         nonPasswordLoginsRemaining
+      }
+    }
+
+    case 'REQUEST_CHANGE_PASSWORD': {
+      const lastPasswordUse = action.data.currentDate // fake to prevent recalulation using older date
+
+      return {
+        ...initialState,
+        lastPasswordUse
       }
     }
 
@@ -240,6 +258,15 @@ export const translate = (reducer: typeof untranslatedReducer) => (state: Passwo
   if (action.type === PASSWORD_REMINDER_POSTPONED) {
     translatedAction = {
       type: 'PASSWORD_REMINDER_POSTPONED',
+      data: {
+        currentDate: Date.now()
+      }
+    }
+  }
+
+  if (action.type === REQUEST_CHANGE_PASSWORD) {
+    translatedAction = {
+      type: 'REQUEST_CHANGE_PASSWORD',
       data: {
         currentDate: Date.now()
       }
