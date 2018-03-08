@@ -11,6 +11,7 @@ import { Icon } from '../Icon/Icon.ui'
 import { Modal, SecondaryButton, TertiaryButton, Title } from './components'
 import { PasswordInput } from './components/PasswordInput.ui.js'
 import { styles } from './styles.js'
+import type { PasswordReminder } from '../../../../types.js'
 
 type Props = {
   status: 'IS_CHECKING' | 'VERIFIED' | 'INVALID' | null,
@@ -20,14 +21,7 @@ type Props = {
   onRequestChangePassword: () => void,
   onPostpone: () => void,
   setPasswordReminder: (passwordReminder: Object) => void,
-  passwordReminder: {
-    needsPasswordCheck: boolean,
-    lastPasswordUse: Date,
-    nonPasswordDaysRemaining: number,
-    nonPasswordLoginsRemaining: number,
-    nonPasswordDaysLimit: number,
-    nonPasswordLoginsLimit: number
-  }
+  passwordReminder: PasswordReminder
 }
 
 type State = {

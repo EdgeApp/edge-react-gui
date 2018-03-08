@@ -3,6 +3,7 @@
 import type { EdgeAccount } from 'edge-core-js'
 
 import { categories } from './subcategories.js'
+import type { PasswordReminder } from '../../../types.js'
 
 // Default Core Settings
 export const CORE_DEFAULTS = {
@@ -82,7 +83,7 @@ export const setBluetoothModeRequest = (account: EdgeAccount, bluetoothMode: boo
     return setLocalSettings(account, updatedSettings)
   })
 
-export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: Object) =>
+export const setPasswordReminderRequest = (account: EdgeAccount, passwordReminder: PasswordReminder) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { passwordReminder })
     return setLocalSettings(account, updatedSettings)
