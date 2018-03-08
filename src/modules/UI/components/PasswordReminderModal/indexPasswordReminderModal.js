@@ -4,7 +4,7 @@ import {passwordReminderModalConnector} from './passwordReminderModalConnector.j
 import {PasswordReminderModal} from './PasswordReminderModal.ui.js'
 import {initialState, passwordReminderModalReducer, IS_CHECKING, VERIFIED, INVALID} from './passwordReminderModalReducer.js'
 import type {PasswordReminderModalState} from './passwordReminderModalReducer.js'
-import {checkPasswordStart, checkPassword, checkPasswordSuccess, checkPasswordFail, CHECK_PASSWORD_SUCCESS, requestChangePassword, postponePasswordReminder, setPasswordReminder} from './actions.js'
+import {checkPasswordStart, checkPassword, checkPasswordSuccess, checkPasswordFail, CHECK_PASSWORD_SUCCESS, REQUEST_CHANGE_PASSWORD, requestChangePassword, postponePasswordReminder, setPasswordReminder} from './actions.js'
 
 export {
   initialState,
@@ -21,7 +21,8 @@ export {
   setPasswordReminder,
   IS_CHECKING,
   VERIFIED,
-  INVALID
+  INVALID,
+  REQUEST_CHANGE_PASSWORD
 }
 
 export type {PasswordReminderModalState}
