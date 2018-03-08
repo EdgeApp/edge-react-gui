@@ -20,10 +20,8 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(updateWalletsRequest())
     },
 
-    onAddressesChecked (walletId: string, progressRatio: number) {
-      if (progressRatio === 1) {
-        console.log(`${walletId} - onAddressesChecked with ratio: ${progressRatio}`)
-      }
+    onAddressesChecked (walletId: string, transactionCount: number) {
+      console.log(`${walletId} - onAddressesChecked with ratio: ${transactionCount}`)
     },
 
     onBalanceChanged (walletId: string, currencyCode: string, balance: string) {

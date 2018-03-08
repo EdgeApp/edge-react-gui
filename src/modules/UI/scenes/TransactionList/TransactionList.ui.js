@@ -26,7 +26,8 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 
 // import SearchBar from './components/SearchBar.ui'
-const TRANSACTION_BATCH_NUMBER = 30
+const INITIAL_TRANSACTION_BATCH_NUMBER = 1
+const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 
 type Props = {
   getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
@@ -93,7 +94,7 @@ export default class TransactionList extends Component<Props, State> {
 
   fetchListOfTransactions = (walletId: string, currencyCode: string) => {
     const options = {
-      numEntries: this.state.currentEndIndex + TRANSACTION_BATCH_NUMBER,
+      numEntries: this.state.currentEndIndex + INITIAL_TRANSACTION_BATCH_NUMBER,
       numIndex: 0
     }
 
@@ -103,7 +104,7 @@ export default class TransactionList extends Component<Props, State> {
   handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    this.setState(state => ({currentEndIndex: state.currentEndIndex + TRANSACTION_BATCH_NUMBER}), () => this.fetchListOfTransactions(walletId, currencyCode))
+    this.setState(state => ({currentEndIndex: state.currentEndIndex + SUBSEQUENT_TRANSACTION_BATCH_NUMBER}), () => this.fetchListOfTransactions(walletId, currencyCode))
   }
 
   _onSearchChange = () => {
@@ -339,11 +340,11 @@ export default class TransactionList extends Component<Props, State> {
                   style={[styles.transactionsScrollWrap]}
                   sections={this.props.visibleTransactions}
                   renderItem={this.renderTx}
-                  initialNumToRender={TRANSACTION_BATCH_NUMBER}
+                  initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                   stickySectionHeadersEnabled={true}
                   onEndReached={() => this.handleScrollEnd()}
-                  onEndReachedThreshold={10}
+                  onEndReachedThreshold={0.5}
                 />
               </View>
             </View>
