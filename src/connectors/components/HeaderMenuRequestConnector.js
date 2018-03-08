@@ -1,7 +1,7 @@
 // @flow
 import { connect } from 'react-redux'
 
-import * as actions from '../../actions/indexActions'
+import { dispatchActionOnly } from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
@@ -43,10 +43,10 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: Object) => {
     switch (value.title) {
       case s.strings.title_use_regular_address:
-        dispatch(actions.dispatchAction(Constants.USE_REGULAR_REQUEST_ADDRESS))
+        dispatch(dispatchActionOnly(Constants.USE_REGULAR_REQUEST_ADDRESS))
         break
       case s.strings.title_use_legacy_address:
-        dispatch(actions.dispatchAction(Constants.USE_LEGACY_REQUEST_ADDRESS))
+        dispatch(dispatchActionOnly(Constants.USE_LEGACY_REQUEST_ADDRESS))
         break
       case Constants.HELP_VALUE:
         dispatch(openHelpModal())
