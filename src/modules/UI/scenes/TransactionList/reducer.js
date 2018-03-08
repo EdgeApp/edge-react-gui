@@ -13,6 +13,8 @@ const transactions = (state: TransactionsState = [], action: Action) => {
   switch (action.type) {
     case ACTION.UPDATE_TRANSACTIONS:
       return action.data.transactions
+    case ACTION.EXIT_TRANSACTION_LIST_SCENE:
+      return action.data.transactions
     default:
       return state
   }
@@ -23,6 +25,8 @@ const visibleTransactions = (state: Array<any> = [], action: Action) => {
   switch (action.type) {
     case ACTION.UPDATE_TRANSACTIONS:
       return action.data.groupedTransactionsByDate
+    case ACTION.EXIT_TRANSACTION_LIST_SCENE:
+      return action.data.visibleTransactions
     default:
       return state
   }

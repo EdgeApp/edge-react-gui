@@ -140,7 +140,8 @@ type Props = {
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   contextCallbacks: AbcContextCallbacks,
-  updateCurrentSceneKey: (string) => void
+  updateCurrentSceneKey: (string) => void,
+  onExitTransactionListScene: () => void
 }
 type State = {
   context: ?AbcContext
@@ -296,7 +297,7 @@ export default class Main extends Component<Props, State> {
                             this.props.requestPermission(CONTACTS)
                             this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
                           }}
-                          onExit={() => this.props.updateCurrentSceneKey('')}
+                          onExit={() => this.props.onExitTransactionListScene()}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}

@@ -27,6 +27,7 @@ export const UPDATE_TRANSACTIONS = PREFIX + 'UPDATE_TRANSACTIONS'
 export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 export const START_TRANSACTIONS_LOADING = PREFIX + 'START_TRANSACTIONS_LOADING'
 export const END_TRANSACTIONS_LOADING = PREFIX + 'END_TRANSACTIONS_LOADING'
+export const EXIT_TRANSACTION_LIST_SCENE = 'EXIT_TRANSACTION_LIST_SCENE'
 
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
 
@@ -118,6 +119,18 @@ export function updateSearchResults (data) {
 export function toggleTransactionsWalletListModal () {
   return {
     type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
+  }
+}
+
+export function exitTransactionListScene () {
+  const data = {
+    currentScene: '',
+    visibleTransactions: [],
+    transactions: []
+  }
+  return {
+    type: EXIT_TRANSACTION_LIST_SCENE,
+    data
   }
 }
 
