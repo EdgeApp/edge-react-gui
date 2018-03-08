@@ -6,7 +6,7 @@ import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
-import LinkedComponent from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
+import {MenuDropDown} from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 
@@ -56,4 +56,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   // nextScreen: () => dispatch(actions.nextScreen())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuDropDown)

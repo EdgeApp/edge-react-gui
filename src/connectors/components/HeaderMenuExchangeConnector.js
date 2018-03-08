@@ -3,13 +3,13 @@
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as actions from '../../actions/indexActions'
+import { exchangeMax } from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
 import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
-import LinkedComponent from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
+import {MenuDropDown} from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 
@@ -66,7 +66,7 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
         dispatch(openHelpModal())
         break
       case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
-        dispatch(actions.exchangeMax())
+        dispatch(exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
         Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({ sourceWallet: value.sourceWallet })
@@ -76,4 +76,4 @@ export const mapDispatchToProps = (dispatch: Dispatch) => ({
   // nextScreen: () => dispatch(actions.nextScreen())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuDropDown)

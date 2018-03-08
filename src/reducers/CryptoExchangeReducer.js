@@ -106,7 +106,6 @@ function cryptoExchangerReducer (state = initialState, action) {
       return result
     }
     case Constants.UPDATE_SHIFT_TRANSACTION:
-      console.log('What')
       return {
         ...state,
         transaction: action.data.abcTransaction,

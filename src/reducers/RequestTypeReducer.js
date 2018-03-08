@@ -5,7 +5,7 @@ const initialState = {
   receiveAddress: {},
   uniqueLegacyAddress: false
 }
-export const requestType = (state = initialState, action) => {
+const requestType = (state = initialState, action) => {
   switch (action.type) {
     case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS:
       let uniqueLegacy = true
@@ -27,4 +27,4 @@ export const requestType = (state = initialState, action) => {
   }
 }
 
-export default requestType
+export { requestType }
