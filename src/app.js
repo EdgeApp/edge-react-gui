@@ -28,6 +28,8 @@ console.log('***********************')
 console.log('App directory: ' + RNFS.DocumentDirectoryPath)
 console.log('***********************')
 
+global.clog = console.log
+
 // $FlowFixMe
 global.OS = Platform.OS
 

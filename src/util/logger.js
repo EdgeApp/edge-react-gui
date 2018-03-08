@@ -2,7 +2,7 @@
 
 import dateFormat from 'dateformat'
 import RNFS from 'react-native-fs'
-
+import AsyncLock from 'async-lock'
 import ENV from '../../env.json'
 
 const path1 = RNFS.DocumentDirectoryPath + '/logs1.txt'
@@ -16,6 +16,7 @@ const isObject = (item: any) => typeof item === 'object' && item !== null
 
 const normalize = (...info: Array<any>) => `${getTime()} | ${info.map(item => (isObject(item) ? JSON.stringify(item) : item)).join(' ')}`
 
+const lock = new AsyncLock({maxPending: 100000})
 // function saveToBuffer (log: string) {
 //   buffer = buffer !== '' ? buffer + '\n' + log : log
 // }
@@ -28,6 +29,9 @@ const normalize = (...info: Array<any>) => `${getTime()} | ${info.map(item => (i
 // }
 //
 const MAX_BYTE_SIZE_PER_FILE = 1000000
+const NUM_WRITES_BEFORE_ROTATE_CHECK = 100
+
+let numWrites = 0
 
 async function isLogFileLimitExceeded (filePath) {
   const stats = await RNFS.stat(filePath)
@@ -36,41 +40,20 @@ async function isLogFileLimitExceeded (filePath) {
   return size > MAX_BYTE_SIZE_PER_FILE
 }
 
-async function initLogFiles () {
-  try {
-    const exists1 = await RNFS.exists(path1)
-    if (!exists1) {
-      await RNFS.writeFile(path1, '')
-    }
-  } catch (e) {
-    console.log(e)
-  }
-}
-
 async function rotateLogs () {
   try {
     if (await RNFS.exists(path3)) {
       await RNFS.unlink(path3)
     }
     if (await RNFS.exists(path2)) {
-      await renameFile(path2, path3)
+      await RNFS.moveFile(path2, path3)
     }
     if (await RNFS.exists(path1)) {
-      await renameFile(path1, path2)
+      await RNFS.moveFile(path1, path2)
     }
     await RNFS.writeFile(path1, '')
   } catch (e) {
-    console.log(e)
-  }
-}
-
-async function renameFile (oldName, newName) {
-  try {
-    const content = await RNFS.readFile(oldName)
-    await RNFS.writeFile(newName, content)
-    await RNFS.unlink(oldName)
-  } catch (e) {
-    console.log(e)
+    global.clog(e)
   }
 }
 
@@ -79,12 +62,19 @@ async function writeLog (content) {
     const exists = await RNFS.exists(path)
 
     if (exists) {
+      numWrites++
+      if (numWrites > NUM_WRITES_BEFORE_ROTATE_CHECK) {
+        if (await isLogFileLimitExceeded(path)) {
+          await rotateLogs()
+          numWrites = 0
+        }
+      }
       return await RNFS.appendFile(path, '\n' + content)
     } else {
       return await RNFS.writeFile(path, content)
     }
   } catch (e) {
-    console.log((e && e.message) || e)
+    global.clog((e && e.message) || e)
   }
 }
 
@@ -107,15 +97,7 @@ export async function readLogs () {
     }
     return log
   } catch (err) {
-    console.log((err && err.message) || err)
-  }
-}
-
-export async function prepareLogs () {
-  await initLogFiles()
-  const isLimitExceeded = await isLogFileLimitExceeded(path)
-  if (isLimitExceeded) {
-    await rotateLogs()
+    global.clog((err && err.message) || err)
   }
 }
 
@@ -124,7 +106,15 @@ export async function log (...info: Array<number | string | null | {}>) {
 
   const now = Date.now()
   const d = dateFormat(now, 'HH:MM:ss:l')
-  await writeLog(d + ': ' + logs)
+
+  try {
+    await lock.acquire('logger', async () => {
+      return writeLog(d + ': ' + logs)
+    })
+  } catch (e) {
+    global.clog(e)
+  }
+  global.clog(logs)
 }
 
 async function request (data: string) {
