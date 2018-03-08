@@ -26,7 +26,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 
 // import SearchBar from './components/SearchBar.ui'
-const INITIAL_TRANSACTION_BATCH_NUMBER = 1
+const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 const SCROLL_THRESHOLD = 0.5
 
