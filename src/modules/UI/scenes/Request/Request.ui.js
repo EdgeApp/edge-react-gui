@@ -94,7 +94,6 @@ export class Request extends Component<Props, State> {
 
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then(receiveAddress => {
-        console.log(receiveAddress)
         const { publicAddress } = receiveAddress
         const abcEncodeUri: AbcEncodeUri = { publicAddress }
         const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
