@@ -263,6 +263,8 @@ const strings = {
   password_reminder_check_password: 'Check Password',
   password_reminder_forgot_password: 'I forgot, change password',
   password_reminder_postpone: 'Later',
+  password_reminder_great_job: 'Great job remembering your password.',
+  password_reminder_verified: 'Password Verified',
 
   password_check_check_later: 'Later',
   password_check_check_my_password: 'Check MY Password',
