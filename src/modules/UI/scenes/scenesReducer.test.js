@@ -44,7 +44,6 @@ test('initialState', () => {
     },
     requestType: {
       useLegacyAddress: false,
-      receiveAddress: {},
       uniqueLegacyAddress: false
     },
     scan: {

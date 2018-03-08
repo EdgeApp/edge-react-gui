@@ -2,7 +2,6 @@ import * as Constants from '../constants/indexConstants.js'
 
 const initialState = {
   useLegacyAddress: false,
-  receiveAddress: {},
   uniqueLegacyAddress: false
 }
 const requestType = (state = initialState, action) => {
@@ -15,7 +14,6 @@ const requestType = (state = initialState, action) => {
       return {
         ...state,
         useLegacyAddress: false,
-        receiveAddress: action.data.receiveAddress,
         uniqueLegacyAddress: !uniqueLegacy
       }
     case Constants.USE_REGULAR_REQUEST_ADDRESS:
