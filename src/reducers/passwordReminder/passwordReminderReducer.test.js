@@ -8,7 +8,9 @@ import {
   MAX_NON_PASSWORD_DAYS_LIMIT,
   MAX_NON_PASSWORD_LOGINS_LIMIT,
   NON_PASSWORD_DAYS_GROWTH_RATE,
-  NON_PASSWORD_LOGINS_GROWTH_RATE
+  NON_PASSWORD_LOGINS_GROWTH_RATE,
+  NON_PASSWORD_LOGINS_POSTPONEMENT,
+  NON_PASSWORD_DAYS_POSTPONEMENT
 } from './indexPasswordReminder.js'
 import { MILLISECONDS_PER_DAY } from '../../modules/utils.js'
 
@@ -193,7 +195,7 @@ describe('PasswordReminder', () => {
     test('Days since last password use', () => {
       const nonPasswordDaysLimit = 32
       const lastPasswordUse = 0 // 1970-01-01T00:00:00.000Z
-      const testDate = 86400000 * nonPasswordDaysLimit + 1
+      const testDate = MILLISECONDS_PER_DAY * nonPasswordDaysLimit + 1
       const previousState = {
         ...initialState,
         lastPasswordUse,
@@ -235,7 +237,7 @@ describe('PasswordReminder', () => {
 
   describe('Password Reminder skipped', () => {
     describe('PASSWORD_REMINDER_POSTPONED', () => {
-      test('Set nonPasswordDaysRemaining >= 2', () => {
+      test('Set nonPasswordDaysRemaining = 4', () => {
         const action = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {
@@ -243,13 +245,13 @@ describe('PasswordReminder', () => {
           }
         }
 
-        const expected = 2
+        const expected = NON_PASSWORD_DAYS_POSTPONEMENT
         const actual = uut(initialState, action).nonPasswordDaysRemaining
 
         expect(actual).toEqual(expected)
       })
 
-      test('Set nonPasswordLoginsRemaining >= 2', () => {
+      test('Set nonPasswordLoginsRemaining = 4', () => {
         const action = {
           type: 'PASSWORD_REMINDER_POSTPONED',
           data: {
@@ -257,7 +259,7 @@ describe('PasswordReminder', () => {
           }
         }
 
-        const expected = 2
+        const expected = NON_PASSWORD_LOGINS_POSTPONEMENT
         const actual = uut(initialState, action).nonPasswordLoginsRemaining
 
         expect(actual).toEqual(expected)
