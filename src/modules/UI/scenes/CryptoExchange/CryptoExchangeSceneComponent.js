@@ -158,7 +158,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <CryptoExchangeConnector style={style.exchangeRateBanner} />
             <View style={style.shim} />
             <CryptoExchangeFlipInputWrapperComponent
-              walletDirectionString={s.strings.fragment_exchange_from}
               style={style.flipWrapper}
               guiWallet={this.props.fromWallet}
               fee={this.props.fee}
@@ -177,7 +176,6 @@ export class CryptoExchangeSceneComponent extends Component<Props, State> {
             <View style={style.shim} />
             <CryptoExchangeFlipInputWrapperComponent
               style={style.flipWrapper}
-              walletDirectionString={s.strings.fragment_exchange_to}
               guiWallet={this.props.toWallet}
               fee={null}
               buttonText={this.props.toButtonText}

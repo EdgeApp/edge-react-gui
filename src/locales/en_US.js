@@ -19,8 +19,6 @@ const strings = {
   edge_description: 'This application would like to create or access its wallet in your Edge account.\n\n It will not have access to any other wallets.',
   exchange_failed: 'Exchange Failed',
   exchange_succeeded: 'Exchange Succeeded',
-  fragment_exchange_from: 'From:',
-  fragment_exchange_to: 'To:',
   exchanges_may_take_minutes: 'Exchanges may take several minutes to process. Please check your destination wallet after a few minutes',
   fragment_wallets_addwallet_blockchain_hint: 'Choose a blockchain',
   fragment_wallets_addwallet_fiat_hint: 'Choose a fiat currency',
