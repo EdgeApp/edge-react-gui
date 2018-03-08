@@ -7,9 +7,6 @@ import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
 import s from '../../../../locales/strings.js'
 
-const PASSWORD_VERIFIED_TEXT = s.strings.password_reminder_verified
-const GREAT_JOB_TEXT = s.strings.password_reminder_great_job
-
 export const PREFIX = 'PasswordReminderModal/'
 
 export const CHECK_PASSWORD_START = PREFIX + 'CHECK_PASSWORD_START'
@@ -26,8 +23,8 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
   ACCOUNT_API.checkPassword(account, password).then(isValidPassword => {
     if (isValidPassword) {
       Alert.alert(
-        PASSWORD_VERIFIED_TEXT,
-        GREAT_JOB_TEXT
+        s.strings.password_reminder_verified,
+        s.strings.password_reminder_great_job
       )
       dispatch(checkPasswordSuccess())
     } else {

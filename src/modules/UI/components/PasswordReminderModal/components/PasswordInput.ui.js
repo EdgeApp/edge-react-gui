@@ -12,8 +12,6 @@ const DEFAULTS = {
   baseColor: THEME.COLORS.GRAY_2
 }
 
-const PASSWORD_TEXT = s.strings.password
-
 export type Props = {
   tintColor?: string,
   baseColor?: string,
@@ -97,7 +95,7 @@ export class PasswordInput extends Component<Props, State> {
         secureTextEntry={secureTextEntry || DEFAULTS.secureTextEntry}
         tintColor={tintColor || DEFAULTS.tintColor}
         baseColor={baseColor || DEFAULTS.baseColor}
-        label={label || PASSWORD_TEXT}
+        label={label || s.strings.password}
         inputContainerStyle={inputContainerStyle}
         textColor={textColor}
         fontSize={fontSize}
