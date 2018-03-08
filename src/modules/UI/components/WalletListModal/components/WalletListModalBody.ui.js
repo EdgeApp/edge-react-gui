@@ -20,7 +20,6 @@ const DIVIDE_PRECISION = 18
   disableWalletListModalVisibility(): void,
   toggleSelectedWalletListModal(): void,
   toggleScanToWalletListModal(): void,
-  getTransactions(string, string): void,
   selectWallet(string, string, string): void,
   updateReceiveAddress(string, string): void
 } */
@@ -70,7 +69,6 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
         underlayColor={styleRaw.underlay.color}
         key={currencyCode}
         onPress={() => {
-          this.props.getTransactions(parentId, currencyCode)
           this.props.disableWalletListModalVisibility()
           this.props.selectWallet(walletId, currencyCode, this.props.type)
           this.props.updateReceiveAddress(parentId, currencyCode)
@@ -113,7 +111,6 @@ export default class WalletListModalBody extends Component<$FlowFixMeProps> {
           style={styles.rowContainer}
           underlayColor={styleRaw.underlay.color}
           onPress={() => {
-            this.props.getTransactions(guiWallet.id, guiWallet.currencyCode)
             this.props.disableWalletListModalVisibility()
             this.props.selectWallet(walletId, currencyCode, this.props.type)
             this.props.updateReceiveAddress(guiWallet.id, guiWallet.currencyCode)
