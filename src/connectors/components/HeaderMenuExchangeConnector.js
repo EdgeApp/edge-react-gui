@@ -13,6 +13,10 @@ import {MenuDropDown} from '../../modules/UI/components/MenuDropDown/MenuDropDow
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 
+export const dropDownStyle = {
+  ...Styles.MenuDropDownStyleHeader,
+  icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
+}
 export const mapStateToProps = (state: State) => {
   let sourceWalletId, sourceWallet
   if (state.cryptoExchange && state.cryptoExchange.fromWallet) {
@@ -48,10 +52,7 @@ export const mapStateToProps = (state: State) => {
     }
   ]
   return {
-    style: {
-      ...Styles.MenuDropDownStyleHeader,
-      icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
-    },
+    style: dropDownStyle,
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,
     rightSide: true,

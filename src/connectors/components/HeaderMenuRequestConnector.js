@@ -10,6 +10,10 @@ import {MenuDropDown} from '../../modules/UI/components/MenuDropDown/MenuDropDow
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 
+export const dropDownStyle = {
+  ...Styles.MenuDropDownStyleHeader,
+  icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
+}
 export const mapStateToProps = (state: State) => {
   const useLegacyAddress = state.ui.scenes.requestType.useLegacyAddress
   const uniqueLegacyAddress = state.ui.scenes.requestType.uniqueLegacyAddress
@@ -18,34 +22,33 @@ export const mapStateToProps = (state: State) => {
     label: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address, // tie into,
     key: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address,
     value: {
-      title: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address
+      title: useLegacyAddress ? s.strings.title_use_regular_address : s.strings.title_use_legacy_address,
+      value: useLegacyAddress ? Constants.USE_REGULAR_REQUEST_ADDRESS : Constants.USE_LEGACY_REQUEST_ADDRESS
     }
   }
   const help = {
     label: s.strings.string_help,
     key: s.strings.string_help,
     value: {
-      title: Constants.HELP_VALUE
+      title: Constants.HELP_VALUE,
+      value: Constants.HELP_VALUE
     }
   }
-  const data = uniqueLegacyAddress ? [addressToggle, help] : [help]
+  const dropDownButtons = uniqueLegacyAddress ? [addressToggle, help] : [help]
   return {
-    style: {
-      ...Styles.MenuDropDownStyleHeader,
-      icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
-    },
-    data,
+    style: dropDownStyle,
+    dropDownButtons,
     rightSide: true
   }
 }
 
 export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: Object) => {
-    switch (value.title) {
-      case s.strings.title_use_regular_address:
+    switch (value.value) {
+      case Constants.USE_REGULAR_REQUEST_ADDRESS:
         dispatch(dispatchActionOnly(Constants.USE_REGULAR_REQUEST_ADDRESS))
         break
-      case s.strings.title_use_legacy_address:
+      case Constants.USE_LEGACY_REQUEST_ADDRESS:
         dispatch(dispatchActionOnly(Constants.USE_LEGACY_REQUEST_ADDRESS))
         break
       case Constants.HELP_VALUE:
