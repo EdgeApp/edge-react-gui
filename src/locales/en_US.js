@@ -242,7 +242,30 @@ const strings = {
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
 
-  word_to_in_convert_from_to_string: 'to'
+  word_to_in_convert_from_to_string: 'to',
+
+  password_reminder_remember_your_password: 'Remember your password?',
+  password_reminder_you_will_need_your_password: 'You will need your password if your device gets lost or stolen, or if you uninstall the app.',
+  password_reminder_enter_password_below: 'Enter it below to make sure:',
+  password_reminder_check_password: 'Check Password',
+  password_reminder_forgot_password: 'I forgot, change password',
+  password_reminder_postpone: 'Later',
+  password_reminder_great_job: 'Great job remembering your password.',
+  password_reminder_verified: 'Password Verified',
+
+  password_check_check_later: 'Later',
+  password_check_check_my_password: 'Check MY Password',
+  password_check_checking: 'Checking password…',
+  password_check_current_password: 'Current password',
+  password_check_great_job: 'Great job remembering your password.',
+  password_check_incorrect_password_message: 'Incorrect Password. Try again?',
+  password_check_incorrect_password_title: 'Incorrect Password.',
+
+  password_check_skip_formatted:
+    'Please create a new account and transfer your funds if you forgot your password. Your password CANNOT BE RECOVERED by %1$s and you will lose access to your funds without your password.',
+  password_check_skip: 'Please create a new account and transfer your funds if you forgot your password.',
+
+  password: 'Password'
 }
 
 export default strings

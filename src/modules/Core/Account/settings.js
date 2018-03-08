@@ -25,7 +25,17 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   customTokens: []
 }
 
-export const LOCAL_ACCOUNT_DEFAULTS = { bluetoothMode: false }
+export const LOCAL_ACCOUNT_DEFAULTS = {
+  bluetoothMode: false,
+  passwordReminder: {
+    needsPasswordCheck: false,
+    lastPasswordUse: 0,
+    nonPasswordDaysRemaining: 8,
+    nonPasswordLoginsRemaining: 8,
+    nonPasswordDaysLimit: 8,
+    nonPasswordLoginsLimit: 8
+  }
+}
 
 const SYNCHED_SETTINGS_FILENAME = 'Settings.json'
 const LOCAL_SETTINGS_FILENAME = 'Settings.json'
@@ -64,6 +74,12 @@ export const setMerchantModeRequest = (account: AbcAccount, merchantMode: boolea
 export const setBluetoothModeRequest = (account: AbcAccount, bluetoothMode: boolean) =>
   getLocalSettings(account).then(settings => {
     const updatedSettings = updateSettings(settings, { bluetoothMode })
+    return setLocalSettings(account, updatedSettings)
+  })
+
+export const setPasswordReminderRequest = (account: AbcAccount, passwordReminder: Object) =>
+  getLocalSettings(account).then(settings => {
+    const updatedSettings = updateSettings(settings, { passwordReminder })
     return setLocalSettings(account, updatedSettings)
   })
 
