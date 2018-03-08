@@ -198,3 +198,12 @@ export type ComponentLayoutMeasurements = {
   pageX: Number,
   pageY: Number
 }
+
+export type PasswordReminder = {
+  needsPasswordCheck: boolean,
+  lastPasswordUse: Date,
+  nonPasswordDaysRemaining: number,
+  nonPasswordLoginsRemaining: number,
+  nonPasswordDaysLimit: number,
+  nonPasswordLoginsLimit: number
+}
