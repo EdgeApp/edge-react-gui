@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import * as actions from '../../../../../actions/indexActions'
 import * as Constants from '../../../../../constants/indexConstants'
 import type { Dispatch, State } from '../../../../ReduxTypes'
-import { getTransactionsRequest } from '../../../../UI/scenes/TransactionList/action.js'
 import { updateReceiveAddress } from '../../../scenes/Request/action.js'
 import * as UI_SELECTORS from '../../../selectors'
 import * as SETTINGS_SELECTORS from '../../../Settings/selectors'
@@ -30,7 +29,6 @@ const mapDispatchToProps = (dispatch: Dispatch): {} => ({
     // $FlowFixMe
     dispatch(actions.selectWalletForExchange(walletId, currencyCode))
   },
-  getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
   disableWalletListModalVisibility: () => dispatch(disableWalletListModalVisibility()),
   toggleSelectedWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),

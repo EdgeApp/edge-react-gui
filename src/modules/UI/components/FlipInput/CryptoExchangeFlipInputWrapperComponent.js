@@ -12,7 +12,6 @@ import type { ExchangedFlipInputAmounts } from './ExchangedFlipInput2.js'
 type State = {}
 
 export type Props = {
-  walletDirectionString: string,
   style: StyleSheet.Styles,
   guiWallet: GuiWallet,
   fee: string | null,
@@ -64,7 +63,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
 
   render () {
     const style: StyleSheet.Styles = this.props.style
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount, walletDirectionString } = this.props
+    const { primaryCurrencyInfo, secondaryCurrencyInfo, fiatPerCrypto, forceUpdateGuiCounter, overridePrimaryExchangeAmount } = this.props
 
     if (!this.props.guiWallet || this.props.guiWallet.id === '' || !primaryCurrencyInfo || !secondaryCurrencyInfo) {
       return (
@@ -83,7 +82,7 @@ export class CryptoExchangeFlipInputWrapperComponent extends Component<Props, St
     const guiWalletName = this.props.guiWallet.name
     const displayDenomination = this.props.primaryCurrencyInfo.displayCurrencyCode
     const titleComp = function (styles) {
-      return <WalletNameHeader walletDirectionString={walletDirectionString} name={guiWalletName} denomination={displayDenomination} styles={styles} />
+      return <WalletNameHeader name={guiWalletName} denomination={displayDenomination} styles={styles} />
     }
 
     return (
