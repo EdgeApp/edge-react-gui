@@ -27,14 +27,17 @@ export const UPDATE_TRANSACTIONS = PREFIX + 'UPDATE_TRANSACTIONS'
 export const GET_TRANSACTIONS = PREFIX + 'GET_TRANSACTIONS'
 export const START_TRANSACTIONS_LOADING = PREFIX + 'START_TRANSACTIONS_LOADING'
 export const END_TRANSACTIONS_LOADING = PREFIX + 'END_TRANSACTIONS_LOADING'
-export const EXIT_TRANSACTION_LIST_SCENE = 'EXIT_TRANSACTION_LIST_SCENE'
+export const SET_TRANSACTION_END_INDEX = PREFIX + 'SET_TRANSACTION_END_INDEX'
 
 export const CHANGED_TRANSACTIONS = PREFIX + 'CHANGED_TRANSACTIONS'
+export const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 
 export const fetchTransactions = (walletId: string, currencyCode: string, options: Object = {}) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
+  const currentEndIndex = state.ui.scenes.transactionList.currentEndIndex
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   if (wallet) {
+    dispatch(setTransactionEndIndex(currentEndIndex + SUBSEQUENT_TRANSACTION_BATCH_NUMBER))
     WALLET_API.getTransactions(wallet, currencyCode, options).then(transactions => {
       const newGroupedTransactionsByDate = groupTransactionsByDate(transactions)
       dispatch(updateTransactions(transactions, newGroupedTransactionsByDate))
@@ -122,15 +125,10 @@ export function toggleTransactionsWalletListModal () {
   }
 }
 
-export function exitTransactionListScene () {
-  const data = {
-    currentScene: '',
-    visibleTransactions: [],
-    transactions: []
-  }
+export function setTransactionEndIndex (endIndex: number) {
   return {
-    type: EXIT_TRANSACTION_LIST_SCENE,
-    data
+    type: SET_TRANSACTION_END_INDEX,
+    data: { endIndex }
   }
 }
 

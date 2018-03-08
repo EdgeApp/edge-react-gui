@@ -26,8 +26,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 
 // import SearchBar from './components/SearchBar.ui'
-const INITIAL_TRANSACTION_BATCH_NUMBER = 10
-const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
+export const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SCROLL_THRESHOLD = 0.5
 
 type Props = {
@@ -49,7 +48,8 @@ type Props = {
   balanceInFiat: number,
   fiatCurrencyCode: string,
   isoFiatCurrencyCode: string,
-  visibleTransactions: Array<DateTransactionGroup>
+  visibleTransactions: Array<DateTransactionGroup>,
+  currentEndIndex: number
 }
 type State = {
   focused: boolean,
@@ -59,8 +59,7 @@ type State = {
   balanceBoxOpacity: any,
   balanceBoxHeight: any,
   width: ?number,
-  showBalance: boolean,
-  currentEndIndex: number
+  showBalance: boolean
 }
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
@@ -82,8 +81,7 @@ export default class TransactionList extends Component<Props, State> {
     renderedTxCount: 0,
     completedTx: [],
     dataSrc: [],
-    width: undefined,
-    currentEndIndex: 0
+    width: undefined
   }
 
   componentWillMount () {
@@ -93,9 +91,16 @@ export default class TransactionList extends Component<Props, State> {
     this.fetchListOfTransactions(walletId, currencyCode)
   }
 
+  componentWillReceiveProps (nextProps: Props) {
+    if ((nextProps.selectedWalletId !== this.props.selectedWalletId) ||
+        (nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode)) {
+      this.fetchListOfTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
+    }
+  }
+
   fetchListOfTransactions = (walletId: string, currencyCode: string) => {
     const options = {
-      numEntries: this.state.currentEndIndex + INITIAL_TRANSACTION_BATCH_NUMBER,
+      numEntries: this.props.currentEndIndex + INITIAL_TRANSACTION_BATCH_NUMBER,
       numIndex: 0
     }
 
@@ -105,7 +110,8 @@ export default class TransactionList extends Component<Props, State> {
   handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    this.setState(state => ({currentEndIndex: state.currentEndIndex + SUBSEQUENT_TRANSACTION_BATCH_NUMBER}), () => this.fetchListOfTransactions(walletId, currencyCode))
+    // this.props.setTransactionEndIndex(this.props.currentEndIndex + SUBSEQUENT_TRANSACTION_BATCH_NUMBER)
+    this.fetchListOfTransactions(walletId, currencyCode)
   }
 
   _onSearchChange = () => {
@@ -201,38 +207,6 @@ export default class TransactionList extends Component<Props, State> {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
-    /* const renderableTransactionList = transactions.sort(function (a: any, b: any) {
-      a = new Date(a.date)
-      b = new Date(b.date)
-      return a > b ? -1 : a < b ? 1 : 0
-    })
-    const sectionedTransactionList = []
-    let previousDateString: string = ''
-    let currentSectionData = {title: '', data: []}
-    console.log('start processing dates: ', Date.now())
-    transactions.map((x, i) => {
-      const newValue: TransactionListTx = x
-      newValue.key = i
-      newValue.multiplier = multiplier
-      const txDate = new Date(x.date * 1000)
-
-      // let time = formatAMPM(txDate)
-      // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
-      const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-      const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-      newValue.dateString = dateString
-      newValue.time = time
-      if (previousDateString === dateString) { // if it's still in the same date
-        currentSectionData.data.unshift(newValue)
-      } else { // if it is not the same date
-        currentSectionData = {title: dateString, data: [newValue]}
-        sectionedTransactionList.unshift(currentSectionData)
-      }
-      previousDateString = dateString
-      return newValue
-    })
-    console.log('end   processing dates: ', Date.now())
-    */
     let logo
 
     if (uiWallet.currencyCode !== selectedCurrencyCode) {
@@ -404,12 +378,6 @@ export default class TransactionList extends Component<Props, State> {
       }
     }
 
-    /* if (completedTxList[tx.key + 1]) {
-      // is there a subsequent transaction?
-      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
-    } else {
-      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
-    } */
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
     const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)

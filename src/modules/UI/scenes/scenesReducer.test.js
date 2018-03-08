@@ -103,7 +103,8 @@ test('initialState', () => {
       transactionsWalletListModalVisibility: false,
       updatingBalance: true,
       loadingTransactions: false, // needs to be changed later
-      visibleTransactions: []
+      visibleTransactions: [],
+      currentEndIndex: 0
     },
     walletList: {
       deleteWalletModalVisible: false,

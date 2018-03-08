@@ -21,15 +21,12 @@ import transactionList from './TransactionList/reducer'
 import walletList from './WalletList/reducer'
 import { walletTransferListReducer as walletTransferList } from './WalletTransferList/reducer'
 import * as SCENES_ACTION from './action.js'
-import * as TRANSACTION_LIST_ACTION from './TransactionList/action.js'
 
 export const currentScene = (state: string = '', action: Action) => {
   if (!action.data) return state
   switch (action.type) {
     case SCENES_ACTION.UPDATE_CURRENT_SCENE_KEY:
       return action.data.sceneKey
-    case TRANSACTION_LIST_ACTION.EXIT_TRANSACTION_LIST_SCENE:
-      return action.data.currentScene
     default:
       return state
   }
