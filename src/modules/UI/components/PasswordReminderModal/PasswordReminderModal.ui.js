@@ -84,7 +84,7 @@ export class PasswordReminderModal extends Component<Props, State> {
             </Modal.Item>
 
             <Modal.Item style={styles.buttonContainer}>
-              <TertiaryButton onPress={this.onSubmit} disabled={this.isChecking()}>
+              <TertiaryButton onPress={this.onRequestChangePassword} disabled={this.isChecking()}>
                 <TertiaryButton.Text>{FORGOT_PASSWORD_TEXT}</TertiaryButton.Text>
               </TertiaryButton>
             </Modal.Item>
@@ -116,6 +116,14 @@ export class PasswordReminderModal extends Component<Props, State> {
 
   onSubmit = () => {
     this.props.onSubmit(this.state.password)
+  }
+
+  verified = () => {
+    return this.props.status === 'VERIFIED'
+  }
+
+  onRequestChangePassword = () => {
+    this.props.onRequestChangePassword()
   }
 
   onPostpone = () => {
