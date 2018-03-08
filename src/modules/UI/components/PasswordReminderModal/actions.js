@@ -1,5 +1,7 @@
 // @flow
 
+import {Alert} from 'react-native'
+
 import type { GetState, Dispatch } from '../../../ReduxTypes.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
@@ -18,7 +20,12 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
 
   dispatch(checkPasswordStart())
   ACCOUNT_API.checkPassword(account, password).then(isValidPassword => {
-    return isValidPassword ? dispatch(checkPasswordSuccess()) : dispatch(checkPasswordFail())
+    if (isValidPassword) {
+      Alert.alert('Password Verified', 'Good job remembering your password')
+      dispatch(checkPasswordSuccess())
+    } else {
+      dispatch(checkPasswordFail())
+    }
   })
 }
 
