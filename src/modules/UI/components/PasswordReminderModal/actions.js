@@ -1,10 +1,14 @@
 // @flow
 
-import {Alert} from 'react-native'
+import { Alert } from 'react-native'
 
 import type { GetState, Dispatch } from '../../../ReduxTypes.js'
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as SETTINGS_API from '../../../Core/Account/settings.js'
+import s from '../../../../locales/strings.js'
+
+const PASSWORD_VERIFIED_TEXT = s.strings.password_reminder_verified
+const GREAT_JOB_TEXT = s.strings.password_reminder_great_job
 
 export const PREFIX = 'PasswordReminderModal/'
 
@@ -21,7 +25,10 @@ export const checkPassword = (password: string) => (dispatch: Dispatch, getState
   dispatch(checkPasswordStart())
   ACCOUNT_API.checkPassword(account, password).then(isValidPassword => {
     if (isValidPassword) {
-      Alert.alert('Password Verified', 'Good job remembering your password')
+      Alert.alert(
+        PASSWORD_VERIFIED_TEXT,
+        GREAT_JOB_TEXT
+      )
       dispatch(checkPasswordSuccess())
     } else {
       dispatch(checkPasswordFail())
