@@ -16,7 +16,7 @@ import type { PasswordReminder } from '../../../../types.js'
 type Props = {
   status: 'IS_CHECKING' | 'VERIFIED' | 'INVALID' | null,
   isVisible: boolean,
-  style: Object,
+  style?: Object,
   onSubmit: (password: string) => void,
   onRequestChangePassword: () => void,
   onPostpone: () => void,
@@ -27,14 +27,6 @@ type Props = {
 type State = {
   password: string
 }
-
-const REMEMBER_YOUR_PASSWORD_TEXT = s.strings.password_reminder_remember_your_password
-const YOU_WILL_NEED_YOUR_PASSWORD_TEXT = s.strings.password_reminder_you_will_need_your_password
-const ENTER_PASSWORD_BELOW_TEXT = s.strings.password_reminder_enter_password_below
-const INVALID_PASSWORD_TEXT = 'Invalid Password'
-const CHECK_PASSWORD_TEXT = s.strings.password_reminder_check_password
-const FORGOT_PASSWORD_TEXT = s.strings.password_reminder_forgot_password
-const POSTPONE_TEXT = s.strings.password_reminder_postpone
 
 export class PasswordReminderModal extends Component<Props, State> {
   constructor (props: Props) {
@@ -58,12 +50,12 @@ export class PasswordReminderModal extends Component<Props, State> {
           </Modal.FeaturedIcon>
 
           <Modal.Header>
-            <Title>{REMEMBER_YOUR_PASSWORD_TEXT}</Title>
+            <Title>{s.strings.password_reminder_remember_your_password}</Title>
           </Modal.Header>
 
           <Modal.Body>
-            <Modal.Description style={styles.descriptionTop}>{YOU_WILL_NEED_YOUR_PASSWORD_TEXT}</Modal.Description>
-            <Modal.Description style={styles.descriptionBottom}>{ENTER_PASSWORD_BELOW_TEXT}</Modal.Description>
+            <Modal.Description style={styles.descriptionTop}>{s.strings.password_reminder_you_will_need_your_password}</Modal.Description>
+            <Modal.Description style={styles.descriptionBottom}>{s.strings.password_reminder_enter_password_below}</Modal.Description>
 
             <Modal.Item>
               <PasswordInput onChangeText={this.onChangeText} error={this.error()} />
@@ -73,19 +65,19 @@ export class PasswordReminderModal extends Component<Props, State> {
           <Modal.Footer style={styles.footer}>
             <Modal.Item style={styles.buttonContainer}>
               <TertiaryButton onPress={this.onSubmit} disabled={this.isChecking()}>
-                {this.isChecking() ? <ActivityIndicator /> : <TertiaryButton.Text>{CHECK_PASSWORD_TEXT}</TertiaryButton.Text>}
+                {this.isChecking() ? <ActivityIndicator /> : <TertiaryButton.Text>{s.strings.password_reminder_check_password}</TertiaryButton.Text>}
               </TertiaryButton>
             </Modal.Item>
 
             <Modal.Item style={styles.buttonContainer}>
               <TertiaryButton onPress={this.onRequestChangePassword} disabled={this.isChecking()}>
-                <TertiaryButton.Text>{FORGOT_PASSWORD_TEXT}</TertiaryButton.Text>
+                <TertiaryButton.Text>{s.strings.password_reminder_forgot_password}</TertiaryButton.Text>
               </TertiaryButton>
             </Modal.Item>
 
             <Modal.Item style={styles.buttonContainer}>
               <SecondaryButton onPress={this.onPostpone} disabled={this.isChecking()}>
-                <SecondaryButton.Text>{POSTPONE_TEXT}</SecondaryButton.Text>
+                <SecondaryButton.Text>{s.strings.password_reminder_postpone}</SecondaryButton.Text>
               </SecondaryButton>
             </Modal.Item>
           </Modal.Footer>
@@ -99,7 +91,7 @@ export class PasswordReminderModal extends Component<Props, State> {
   }
 
   error = () => {
-    return this.props.status === 'INVALID' ? INVALID_PASSWORD_TEXT : ''
+    return this.props.status === 'INVALID' ? s.strings.password_reminder_invalid : ''
   }
 
   onChangeText = (password: string) => {
