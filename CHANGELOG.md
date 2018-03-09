@@ -1,5 +1,11 @@
 # edge-react-gui
 
+## 1.0.8
+
+* Fix unconfirmed transactions having incorrect date
+* Fix incorrect sort order of unconfirmed transactions
+* Fix Request screen Copy button when using legacy addresses for BCH/LTC
+
 ## 1.0.7
 
 * Significantly improved performance for accounts with large wallets
