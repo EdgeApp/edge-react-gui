@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyInfo, EdgeDenomination, AbcMetadata, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeDenomination, AbcMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -29,7 +29,7 @@ export type TransactionDetailsOwnProps = {
   settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
-  currencyInfo: AbcCurrencyInfo | null,
+  currencyInfo: EdgeCurrencyInfo | null,
   currencyCode: string,
   wallets: { [walletId: string]: GuiWallet }
 }

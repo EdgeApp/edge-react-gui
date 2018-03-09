@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { AbcCurrencyInfo, EdgeCurrencyPlugin, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -271,7 +271,7 @@ export const unspacedLowercase = (input: string) => {
   return newInput
 }
 
-export const getCurrencyInfo = (plugins: Array<EdgeCurrencyPlugin>, currencyCode: string): AbcCurrencyInfo | void => {
+export const getCurrencyInfo = (plugins: Array<EdgeCurrencyPlugin>, currencyCode: string): EdgeCurrencyInfo | void => {
   for (const plugin of plugins) {
     const info = plugin.currencyInfo
     for (const denomination of info.denominations) {

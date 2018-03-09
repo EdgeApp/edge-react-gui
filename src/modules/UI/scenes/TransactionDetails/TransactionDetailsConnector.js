@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyInfo, EdgeCurrencyPlugin, AbcMetadata } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, AbcMetadata } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
@@ -22,7 +22,7 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const currencyCode: string = ownProps.edgeTransaction.currencyCode
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const arrayPlugins: Array<EdgeCurrencyPlugin> = plugins.arrayPlugins
-  const currencyInfo: AbcCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
+  const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
 
   return {
     contacts,
