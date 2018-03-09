@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-core-js'
+import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, ScrollView, View } from 'react-native'
@@ -45,7 +45,7 @@ export type EditTokenOwnProps = {
   walletId: string,
   addTokenPending: boolean,
   currencyCode: string,
-  metaTokens: Array<AbcMetaToken>
+  metaTokens: Array<EdgeMetaToken>
 }
 
 type State = {

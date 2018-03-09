@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, AbcMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
@@ -258,7 +258,7 @@ function schema (wallet: EdgeCurrencyWallet): GuiWallet {
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage = wallet.currencyInfo.symbolImage
   const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
-  const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
+  const metaTokens: Array<EdgeMetaToken> = wallet.currencyInfo.metaTokens
   const denominations: Array<EdgeDenomination> = wallet.currencyInfo.denominations
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: Array<string> = []

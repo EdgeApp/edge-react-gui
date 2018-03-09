@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { AbcCurrencyInfo, EdgeCurrencyPlugin, EdgeDenomination, AbcMetaToken, EdgeTransaction } from 'edge-core-js'
+import type { AbcCurrencyInfo, EdgeCurrencyPlugin, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -91,8 +91,8 @@ export const inputBottomPadding = () => {
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
-export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken | CustomTokenInfo>, abcMetaTokens: Array<CustomTokenInfo>) => {
-  const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | CustomTokenInfo>, abcMetaTokens: Array<CustomTokenInfo>) => {
+  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   for (const x of abcMetaTokens) {
     // loops through the account-level array
     let found = false // assumes it is not present in the currencyInfo from plugin
@@ -107,8 +107,8 @@ export const mergeTokens = (preferredAbcMetaTokens: Array<AbcMetaToken | CustomT
   return tokensEnabled
 }
 
-export const mergeTokensRemoveInvisible = (preferredAbcMetaTokens: Array<AbcMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
-  const tokensEnabled = [...preferredAbcMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
+export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
+  const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   const tokensToAdd = []
   for (const x of abcMetaTokens) {
     // loops through the account-level array
