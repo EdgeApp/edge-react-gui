@@ -92,7 +92,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
 
-  const abcSpendInfo: EdgeSpendInfo = {
+  const edgeSpendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode,
     spendTargets: [
@@ -101,7 +101,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
       }
     ]
   }
-  const primaryNativeAmount = await wallet.getMaxSpendable(abcSpendInfo)
+  const primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
   const primaryExchangeAmount = bns.div(primaryNativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
   const setNativeAmountInfo: SetNativeAmountInfo = {
     whichWallet: Constants.FROM,
