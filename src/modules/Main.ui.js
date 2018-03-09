@@ -3,7 +3,7 @@
 import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import type { AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
+import type { EdgeContext, EdgeContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
@@ -135,17 +135,17 @@ type Props = {
   username?: string,
   addCurrencyPlugin: AbcCurrencyPlugin => void,
   setKeyboardHeight: number => void,
-  addContext: AbcContext => void,
+  addContext: EdgeContext => void,
   addUsernames: (Array<string>) => void,
   setDeviceDimensions: any => void,
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
   updateCurrentSceneKey: (string) => void,
-  contextCallbacks: AbcContextCallbacks
+  contextCallbacks: EdgeContextCallbacks
 }
 type State = {
-  context: ?AbcContext
+  context: ?EdgeContext
 }
 export default class Main extends Component<Props, State> {
   keyboardDidShowListener: any

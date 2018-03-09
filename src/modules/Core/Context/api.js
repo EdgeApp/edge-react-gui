@@ -1,24 +1,24 @@
 // @flow
 
-import type { AbcContext } from 'edge-core-js'
+import type { EdgeContext } from 'edge-core-js'
 
-export const getCurrencyPlugins = (context: AbcContext) => {
+export const getCurrencyPlugins = (context: EdgeContext) => {
   return context.getCurrencyPlugins()
 }
 
-export const deleteLocalAccount = (context: AbcContext, username: string) => {
+export const deleteLocalAccount = (context: EdgeContext, username: string) => {
   return context.deleteLocalAccount(username)
 }
 
-export const listUsernames = (context: AbcContext) => {
+export const listUsernames = (context: EdgeContext) => {
   return context.listUsernames()
 }
 
-export const getExchangeSwapRate = (context: AbcContext, sourceCurrencyCode: string, targetCurrencyCode: string) => {
+export const getExchangeSwapRate = (context: EdgeContext, sourceCurrencyCode: string, targetCurrencyCode: string) => {
   return context.getExchangeSwapRate(sourceCurrencyCode, targetCurrencyCode)
 }
 
-export const getExchangeSwapInfo = (context: AbcContext, sourceCurrencyCode: string, targetCurrencyCode: string) => {
+export const getExchangeSwapInfo = (context: EdgeContext, sourceCurrencyCode: string, targetCurrencyCode: string) => {
   // $FlowExpectedError
   return context.getExchangeSwapInfo(sourceCurrencyCode, targetCurrencyCode)
 }

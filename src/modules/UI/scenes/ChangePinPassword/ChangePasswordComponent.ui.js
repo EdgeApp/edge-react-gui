@@ -1,7 +1,7 @@
 // @flow
 
 import { ChangePasswordScreen } from 'edge-login-ui-rn'
-import type { EdgeAccount, AbcContext } from 'edge-core-js'
+import type { EdgeAccount, EdgeContext } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
@@ -11,7 +11,7 @@ import styles from '../Settings/style.js'
 
 export type ChangePasswordOwnProps = {
   account: EdgeAccount,
-  context: AbcContext,
+  context: EdgeContext,
   showHeader: boolean
 }
 
@@ -20,7 +20,7 @@ export type ChangePasswordDispatchProps = {
 }
 
 export type ChangePasswordStateProps = {
-  context: AbcContext,
+  context: EdgeContext,
   account: EdgeAccount,
   showHeader: boolean
 }

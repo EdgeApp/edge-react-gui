@@ -2,7 +2,7 @@
 
 import type {
   EdgeAccount,
-  AbcContext,
+  EdgeContext,
   AbcCurrencyPlugin,
   AbcCurrencyWallet,
   AbcDenomination,
@@ -30,7 +30,7 @@ export type State = {
   core: {
     account: EdgeAccount,
     context: {
-      context: AbcContext,
+      context: EdgeContext,
       usernames: Array<Username>,
       nextUsername: Username
     },
