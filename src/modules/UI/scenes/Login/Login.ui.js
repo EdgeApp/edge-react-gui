@@ -1,7 +1,7 @@
 // @flow
 
 import { LoginScreen } from 'edge-login-ui-rn'
-import type { AbcAccount, AbcContext } from 'edge-core-js'
+import type { EdgeAccount, AbcContext } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Actions } from 'react-native-router-flux'
 
@@ -11,10 +11,10 @@ import * as CONTEXT_API from '../../../Core/Context/api'
 import type { Dispatch } from '../../../ReduxTypes'
 
 type Props = {
-  initializeAccount: (AbcAccount, touchIdInfo: ?Object) => void,
+  initializeAccount: (EdgeAccount, touchIdInfo: ?Object) => void,
   context: AbcContext,
   addUsernames: (Array<string>) => void,
-  account: ?AbcAccount,
+  account: ?EdgeAccount,
   recoveryLogin: boolean,
   dispatch: Dispatch,
   username?: string
@@ -26,7 +26,7 @@ export default class Login extends Component<Props, State> {
     this.state = { key: 0 }
   }
 
-  onLogin = (error: ?Error = null, account: ?AbcAccount, touchIdInfo: ?Object = null) => {
+  onLogin = (error: ?Error = null, account: ?EdgeAccount, touchIdInfo: ?Object = null) => {
     if (error || !account) return
     Actions.edge()
     this.props.initializeAccount(account, touchIdInfo)

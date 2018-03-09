@@ -1,13 +1,13 @@
 // @flow
 
-import type { AbcAccountCallbacks, EdgeTransaction } from 'edge-core-js'
+import type { EdgeAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
 import { refreshWallet } from '../../UI/Wallets/action.js'
 import { updateWalletsRequest } from '../Wallets/action.js'
 
-const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
+const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
   const callbacks = {
     onDataChanged: () => console.log('onDataChanged'),
     onLoggedOut: () => console.log('onLoggedOut'),

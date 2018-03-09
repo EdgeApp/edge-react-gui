@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccount, AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, AbcCurrencyWallet } from 'edge-core-js'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
@@ -19,7 +19,7 @@ import type { Dispatch, GetState } from '../ReduxTypes'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const accounts = await context.fetchLoginMessages()

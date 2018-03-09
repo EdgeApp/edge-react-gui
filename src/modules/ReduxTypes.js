@@ -1,7 +1,7 @@
 // @flow
 
 import type {
-  AbcAccount,
+  EdgeAccount,
   AbcContext,
   AbcCurrencyPlugin,
   AbcCurrencyWallet,
@@ -28,7 +28,7 @@ export type { PermissionsState, PermissionStatus, Permission }
 
 export type State = {
   core: {
-    account: AbcAccount,
+    account: EdgeAccount,
     context: {
       context: AbcContext,
       usernames: Array<Username>,

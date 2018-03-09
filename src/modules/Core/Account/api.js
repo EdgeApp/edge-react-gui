@@ -1,12 +1,12 @@
 // @flow
 // Core/Account/api.js
-import type { AbcAccount, AbcCreateCurrencyWalletOptions } from 'edge-core-js'
+import type { EdgeAccount, AbcCreateCurrencyWalletOptions } from 'edge-core-js'
 
-export const logoutRequest = (account: AbcAccount) => {
+export const logoutRequest = (account: EdgeAccount) => {
   return account.logout()
 }
 
-export const getFirstActiveWalletInfo = (account: AbcAccount, currencyCodes: { [string]: string }) => {
+export const getFirstActiveWalletInfo = (account: EdgeAccount, currencyCodes: { [string]: string }) => {
   const walletId = account.activeWalletIds[0]
   const walletKey = account.allKeys.find(key => key.id === walletId)
   if (!walletKey) {
@@ -19,23 +19,23 @@ export const getFirstActiveWalletInfo = (account: AbcAccount, currencyCodes: { [
   }
 }
 
-export const createCurrencyWalletRequest = (account: AbcAccount, walletType: string, opts: AbcCreateCurrencyWalletOptions) => {
+export const createCurrencyWalletRequest = (account: EdgeAccount, walletType: string, opts: AbcCreateCurrencyWalletOptions) => {
   return account.createCurrencyWallet(walletType, opts)
 }
 
-export const activateWalletRequest = (account: AbcAccount, walletId: string) => {
+export const activateWalletRequest = (account: EdgeAccount, walletId: string) => {
   return account.changeWalletStates({ [walletId]: { archived: false } })
 }
 
-export const archiveWalletRequest = (account: AbcAccount, walletId: string) => {
+export const archiveWalletRequest = (account: EdgeAccount, walletId: string) => {
   return account.changeWalletStates({ [walletId]: { archived: true } })
 }
 
-export const deleteWalletRequest = (account: AbcAccount, walletId: string) => {
+export const deleteWalletRequest = (account: EdgeAccount, walletId: string) => {
   return account.changeWalletStates({ [walletId]: { deleted: true } })
 }
 
-export const updateActiveWalletsOrderRequest = (account: AbcAccount, activeWalletIds: Array<string>) => {
+export const updateActiveWalletsOrderRequest = (account: EdgeAccount, activeWalletIds: Array<string>) => {
   const newKeyStates = activeWalletIds.reduce((keyStates, id, index) => {
     keyStates[id] = { sortIndex: index }
     return keyStates
@@ -43,7 +43,7 @@ export const updateActiveWalletsOrderRequest = (account: AbcAccount, activeWalle
   return account.changeWalletStates(newKeyStates).then(() => account.activeWalletIds)
 }
 
-export const updateArchivedWalletsOrderRequest = (account: AbcAccount, archivedWalletIds: Array<string>) => {
+export const updateArchivedWalletsOrderRequest = (account: EdgeAccount, archivedWalletIds: Array<string>) => {
   const newKeyStates = archivedWalletIds.reduce((keyStates, id, index) => {
     keyStates[id] = { sortIndex: index }
     return keyStates

@@ -1,7 +1,7 @@
 // @flow
 
 import { ChangePinScreen } from 'edge-login-ui-rn'
-import type { AbcAccount, AbcContext } from 'edge-core-js'
+import type { EdgeAccount, AbcContext } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
@@ -10,7 +10,7 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles from '../Settings/style.js'
 
 export type ChangePinOwnProps = {
-  account: AbcAccount,
+  account: EdgeAccount,
   context: AbcContext,
   showHeader: boolean
 }
@@ -21,7 +21,7 @@ export type ChangePinDispatchProps = {
 
 export type ChangePinStateProps = {
   context: AbcContext,
-  account: AbcAccount,
+  account: EdgeAccount,
   showHeader: boolean
 }
 
