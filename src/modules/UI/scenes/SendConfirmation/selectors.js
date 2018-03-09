@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetadata, EdgeSpendInfo, AbcSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeSpendInfo, AbcSpendTarget, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
@@ -73,7 +73,7 @@ export const getForceUpdateGuiCounter = (state: State): number => getScene(state
 
 export const getNetworkFeeOption = (state: State): string => getParsedUri(state).networkFeeOption || initialState.parsedUri.networkFeeOption || ''
 export const getCustomNetworkFee = (state: State): any => getParsedUri(state).customNetworkFee || initialState.parsedUri.customNetworkFee || {}
-export const getMetadata = (state: State): AbcMetadata => getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
+export const getMetadata = (state: State): EdgeMetadata => getParsedUri(state).metadata || initialState.parsedUri.metadata || {}
 export const getPublicAddress = (state: State): string => getParsedUri(state).publicAddress || initialState.parsedUri.publicAddress || ''
 export const getNativeAmount = (state: State): string => getParsedUri(state).nativeAmount || initialState.parsedUri.nativeAmount || ''
 

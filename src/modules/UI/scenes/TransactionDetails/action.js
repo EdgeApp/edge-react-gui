@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetadata } from 'edge-core-js'
+import type { EdgeMetadata } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'
@@ -12,7 +12,7 @@ export const SET_TRANSACTION_DETAILS = 'SET_TRANSACTION_DETAILS'
 export const SET_TRANSACTION_SUBCATEGORIES_START = 'SET_TRANSACTION_SUBCATEGORIES_START'
 export const SET_TRANSACTION_SUBCATEGORIES = 'SET_TRANSACTION_SUBCATEGORIES'
 
-export const setTransactionDetails = (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => (dispatch: Dispatch, getState: GetState) => {
+export const setTransactionDetails = (txid: string, currencyCode: string, abcMetadata: EdgeMetadata) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const wallet = getSelectedWallet(state)
   const onSuccess = () => {

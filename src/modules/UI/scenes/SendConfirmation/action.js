@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 // @flow
 import { Actions } from 'react-native-router-flux'
 
@@ -22,7 +22,7 @@ export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => (dispatch: Dispatch, getState: GetState) => {
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
-  const metadata: AbcMetadata = { amountFiat }
+  const metadata: EdgeMetadata = { amountFiat }
   dispatch(createTX({ nativeAmount, metadata }, false))
 }
 

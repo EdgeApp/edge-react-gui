@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyInfo, EdgeDenomination, AbcMetadata, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -37,7 +37,7 @@ export type TransactionDetailsOwnProps = {
 export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
+  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: EdgeMetadata) => void,
   getSubcategories: () => void,
   displayDropdownAlert: (message: string, title: string) => void
 }
@@ -366,7 +366,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const txid = this.props.edgeTransaction.txid
     const newAmountFiat = this.state.amountFiat
     const amountFiat: number = !newAmountFiat ? 0.0 : Number.parseFloat(newAmountFiat)
-    const abcMetadata: AbcMetadata = { name, category, notes, amountFiat, bizId, miscJson }
+    const abcMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
     this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, abcMetadata)
   }
 
