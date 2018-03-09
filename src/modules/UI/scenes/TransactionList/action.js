@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-login'
+import type { EdgeTransaction } from 'edge-login'
 import type { DateTransactionGroup } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -44,7 +44,7 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   }
 }
 
-export const refreshTransactionsRequest = (walletId: string, transactions: Array<AbcTransaction>) => (dispatch: Dispatch, getState: GetState) => {
+export const refreshTransactionsRequest = (walletId: string, transactions: Array<EdgeTransaction>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentScene: string = state.ui.scenes.currentScene
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
@@ -66,14 +66,14 @@ export const refreshTransactionsRequest = (walletId: string, transactions: Array
   }
 }
 
-export const newTransactionsRequest = (walletId: string, abcTransactions: Array<AbcTransaction>) => (dispatch: Dispatch) => {
-  const abcTransaction: AbcTransaction = abcTransactions[0]
+export const newTransactionsRequest = (walletId: string, abcTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch) => {
+  const abcTransaction: EdgeTransaction = abcTransactions[0]
   if (!UTILS.isReceivedTransaction(abcTransaction)) return
 
   dispatch(displayTransactionAlert(abcTransaction))
 }
 
-export const updateTransactions = (transactions: Array<AbcTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
+export const updateTransactions = (transactions: Array<EdgeTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
   type: UPDATE_TRANSACTIONS,
   data: { transactions, groupedTransactionsByDate }
 })
@@ -122,7 +122,7 @@ export function toggleTransactionsWalletListModal () {
   }
 }
 
-export function groupTransactionsByDate (transactions: Array<AbcTransaction>) {
+export function groupTransactionsByDate (transactions: Array<EdgeTransaction>) {
   const sectionedTransactionList = []
   let previousDateString: string = ''
   let currentSectionData = {title: '', data: []}

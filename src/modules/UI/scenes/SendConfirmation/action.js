@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcMetadata, AbcParsedUri, AbcTransaction } from 'edge-core-js'
+import type { AbcMetadata, AbcParsedUri, EdgeTransaction } from 'edge-core-js'
 // @flow
 import { Actions } from 'react-native-router-flux'
 
@@ -93,7 +93,7 @@ export const reset = () => ({
   data: {}
 })
 
-export const updateTransaction = (transaction: ?AbcTransaction, parsedUri: ?AbcParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
+export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?AbcParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
   type: UPDATE_TRANSACTION,
   data: { transaction, parsedUri, forceUpdateGui, error }
 })

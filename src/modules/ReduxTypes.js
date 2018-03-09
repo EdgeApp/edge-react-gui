@@ -9,7 +9,7 @@ import type {
   AbcLobby,
   AbcParsedUri,
   AbcReceiveAddress,
-  AbcTransaction,
+  EdgeTransaction,
   EdgeReceiveAddress
 } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
@@ -55,7 +55,7 @@ export type State = {
     },
     transactionAlert: {
       displayAlert: boolean,
-      abcTransaction: AbcTransaction
+      abcTransaction: EdgeTransaction
     },
     scenes: {
       scan: {
@@ -67,7 +67,7 @@ export type State = {
         scanToWalletListModalVisibility: boolean
       },
       sendConfirmation: {
-        transaction: AbcTransaction | null,
+        transaction: EdgeTransaction | null,
         parsedUri: AbcParsedUri,
         error: Error | null,
         label: string,
@@ -81,7 +81,7 @@ export type State = {
         isCustomFeeVisible: boolean
       },
       transactionList: {
-        transactions: Array<AbcTransaction>,
+        transactions: Array<EdgeTransaction>,
         contactsList: Array<GuiContact>,
         updatingBalance: boolean,
         searchVisible: boolean,
@@ -133,7 +133,7 @@ export type State = {
       helpModal: boolean,
       transactionAlert: {
         displayAlert: boolean,
-        abcTransaction: AbcTransaction
+        abcTransaction: EdgeTransaction
       },
       exchangeRate: {
         exchangeRates: {}
@@ -231,7 +231,7 @@ export type State = {
     shiftTransactionError: Error | null,
     genericShapeShiftError: Error | null,
     changeWallet: 'none',
-    transaction: AbcTransaction | null,
+    transaction: EdgeTransaction | null,
     fee: any,
     gettingTransaction: boolean,
     availableShapeShiftTokens: Array<any>,

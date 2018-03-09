@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, AbcTransaction } from 'edge-core-js'
+import type { AbcCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -8,11 +8,11 @@ export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => 
   return wallet.renameWallet(name).then(() => wallet)
 }
 
-export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<AbcTransaction>> => {
+export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<EdgeTransaction>> => {
   return wallet.getTransactions ? wallet.getTransactions({ ...options, currencyCode }) : Promise.resolve([])
 }
 
-const dummyAbcTransaction: AbcTransaction = {
+const dummyEdgeTransaction: EdgeTransaction = {
   txid: '',
   date: 0,
   currencyCode: '',
@@ -41,8 +41,8 @@ export const getReceiveAddress = (wallet: AbcCurrencyWallet, currencyCode: strin
   return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyAbcReceiveAddress)
 }
 
-export const makeSpend = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<AbcTransaction> => {
-  return wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyAbcTransaction)
+export const makeSpend = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<EdgeTransaction> => {
+  return wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyEdgeTransaction)
 }
 
 export const getMaxSpendable = (wallet: AbcCurrencyWallet, spendInfo: AbcSpendInfo): Promise<string> => {
@@ -119,15 +119,15 @@ export const parseURI = (wallet: AbcCurrencyWallet, uri: string): AbcParsedUri =
   return wallet.parseUri(uri)
 }
 
-export const signTransaction = (wallet: AbcCurrencyWallet, unsignedTransaction: AbcTransaction): Promise<AbcTransaction> => {
+export const signTransaction = (wallet: AbcCurrencyWallet, unsignedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.signTx(unsignedTransaction)
 }
 
-export const broadcastTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<AbcTransaction> => {
+export const broadcastTransaction = (wallet: AbcCurrencyWallet, signedTransaction: EdgeTransaction): Promise<EdgeTransaction> => {
   return wallet.broadcastTx(signedTransaction)
 }
 
-export const saveTransaction = (wallet: AbcCurrencyWallet, signedTransaction: AbcTransaction): Promise<void> => {
+export const saveTransaction = (wallet: AbcCurrencyWallet, signedTransaction: EdgeTransaction): Promise<void> => {
   return wallet.saveTx(signedTransaction)
 }
 

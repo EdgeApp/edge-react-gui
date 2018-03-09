@@ -1,13 +1,13 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
 import * as ACTION from './action'
 import * as WALLET_ACTION from '../../Wallets/action.js'
 
-export type TransactionsState = Array<AbcTransaction>
+export type TransactionsState = Array<EdgeTransaction>
 
 const transactions = (state: TransactionsState = [], action: Action) => {
   if (!action.data) return state

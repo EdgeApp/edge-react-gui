@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcDenomination, AbcMetaToken, AbcTransaction } from 'edge-core-js'
+import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcDenomination, AbcMetaToken, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -306,8 +306,8 @@ export const decimalPlacesToDenomination = (decimalPlaces: string): string => {
   return denomination
 }
 
-export const isReceivedTransaction = (abcTransaction: AbcTransaction): boolean => gte(abcTransaction.nativeAmount, '0')
-export const isSentTransaction = (abcTransaction: AbcTransaction): boolean => !isReceivedTransaction(abcTransaction)
+export const isReceivedTransaction = (abcTransaction: EdgeTransaction): boolean => gte(abcTransaction.nativeAmount, '0')
+export const isSentTransaction = (abcTransaction: EdgeTransaction): boolean => !isReceivedTransaction(abcTransaction)
 
 export const getTimeMeasurement = (inMinutes: number): string => {
   switch (true) {

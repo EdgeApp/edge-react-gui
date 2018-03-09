@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'
@@ -18,9 +18,9 @@ const displayAlert = (state: boolean = false, action: Action) => {
   }
 }
 
-type AbcTransactionState = AbcTransaction | ''
+type EdgeTransactionState = EdgeTransaction | ''
 
-const abcTransaction = (state: AbcTransactionState = '', action: Action) => {
+const abcTransaction = (state: EdgeTransactionState = '', action: Action) => {
   switch (action.type) {
     case ACTIONS.DISPLAY_TRANSACTION_ALERT:
       if (action.data) {

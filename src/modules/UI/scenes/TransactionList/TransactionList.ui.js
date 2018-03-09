@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcDenomination, AbcTransaction } from 'edge-core-js'
+import type { AbcDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, SectionList } from 'react-native'
 // import Contacts from 'react-native-contacts'
@@ -40,7 +40,7 @@ type Props = {
   selectedCurrencyCode: string,
   loading: boolean,
   updatingBalance: boolean,
-  transactions: Array<AbcTransaction>,
+  transactions: Array<EdgeTransaction>,
   multiplier: string,
   uiWallet: GuiWallet,
   displayDenomination: AbcDenomination,

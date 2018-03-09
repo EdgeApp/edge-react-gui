@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccountCallbacks, AbcTransaction } from 'edge-core-js'
+import type { AbcAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
@@ -29,7 +29,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(refreshWallet(walletId))
     },
 
-    onTransactionsChanged (walletId: string, transactions: Array<AbcTransaction>) {
+    onTransactionsChanged (walletId: string, transactions: Array<EdgeTransaction>) {
       if (transactions && transactions.length) {
         console.log(`${walletId} - onTransactionsChanged, num of tx's changed: ${transactions.length}`)
         for (const tx of transactions) {
@@ -43,7 +43,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(refreshWallet(walletId))
     },
 
-    onNewTransactions (walletId: string, transactions: Array<AbcTransaction>) {
+    onNewTransactions (walletId: string, transactions: Array<EdgeTransaction>) {
       if (transactions && transactions.length) {
         console.log(`${walletId} - onNewTransactions, num of new tx's: ${transactions.length}`)
         for (const tx of transactions) {
