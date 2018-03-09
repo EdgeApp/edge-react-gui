@@ -110,13 +110,19 @@ export default class TransactionList extends Component<Props, State> {
   handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    let { currentEndIndex } = this.state
+    const { currentEndIndex } = this.state
+    let newEndIndex = currentEndIndex
 
     const txLength = this.props.transactions.length
-    if (!txLength || txLength === currentEndIndex) {
-      currentEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
+    if (!txLength) {
+      newEndIndex = INITIAL_TRANSACTION_BATCH_NUMBER
+    } else if (txLength === currentEndIndex) {
+      newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
+    }
+
+    if (newEndIndex !== currentEndIndex) {
       this.setState(
-        state => ({ currentEndIndex }),
+        state => ({ currentEndIndex: newEndIndex }),
         () => this.fetchListOfTransactions(walletId, currencyCode)
       )
     }
@@ -326,7 +332,10 @@ export default class TransactionList extends Component<Props, State> {
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                   stickySectionHeadersEnabled={true}
-                  onEndReached={() => this.handleScrollEnd()}
+                  onEndReached={(distanceFromEnd) => {
+                    console.log(distanceFromEnd)
+                    this.handleScrollEnd()
+                  }}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
                 />
               </View>
