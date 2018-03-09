@@ -8,9 +8,8 @@ import type {
   EdgeDenomination,
   EdgeLobby,
   EdgeParsedUri,
-  AbcReceiveAddress,
-  EdgeTransaction,
-  EdgeReceiveAddress
+  EdgeReceiveAddress,
+  EdgeTransaction
 } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
@@ -164,7 +163,7 @@ export type State = {
       manageTokensPending: boolean
     },
     request: {
-      receiveAddress: AbcReceiveAddress
+      receiveAddress: EdgeReceiveAddress
     },
     settings: {
       autoLogoutTimeInSeconds: number,

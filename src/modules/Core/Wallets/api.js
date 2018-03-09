@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, AbcMetadata, EdgeParsedUri, AbcReceiveAddress, AbcSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcMetadata, EdgeParsedUri, EdgeReceiveAddress, AbcSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -25,7 +25,7 @@ const dummyEdgeTransaction: EdgeTransaction = {
   otherParams: {}
 }
 
-const dummyAbcReceiveAddress: AbcReceiveAddress = {
+const dummyEdgeReceiveAddress: EdgeReceiveAddress = {
   publicAddress: '',
   nativeAmount: '0',
   metadata: {
@@ -37,8 +37,8 @@ export const setTransactionDetailsRequest = (wallet: EdgeCurrencyWallet, txid: s
   return wallet.saveTxMetadata ? wallet.saveTxMetadata(txid, currencyCode, abcMetadata) : Promise.resolve()
 }
 
-export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<AbcReceiveAddress> => {
-  return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyAbcReceiveAddress)
+export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: string): Promise<EdgeReceiveAddress> => {
+  return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyEdgeReceiveAddress)
 }
 
 export const makeSpend = (wallet: EdgeCurrencyWallet, spendInfo: AbcSpendInfo): Promise<EdgeTransaction> => {
