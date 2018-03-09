@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcMetadata, AbcParsedUri, EdgeTransaction } from 'edge-core-js'
+import type { AbcMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 // @flow
 import { Actions } from 'react-native-router-flux'
 
@@ -26,7 +26,7 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
   dispatch(createTX({ nativeAmount, metadata }, false))
 }
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
+export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
   const abcWallet = getWallet(state, walletId)
@@ -46,7 +46,7 @@ export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => 
   const spendInfo = getSpendInfo(state)
   getMaxSpendable(abcWallet, spendInfo)
     .then(nativeAmount => {
-      const amount: AbcParsedUri = { nativeAmount }
+      const amount: EdgeParsedUri = { nativeAmount }
       dispatch(createTX(amount, true))
     })
     .catch(e => console.log(e))
@@ -93,7 +93,7 @@ export const reset = () => ({
   data: {}
 })
 
-export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?AbcParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
+export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
   type: UPDATE_TRANSACTION,
   data: { transaction, parsedUri, forceUpdateGui, error }
 })

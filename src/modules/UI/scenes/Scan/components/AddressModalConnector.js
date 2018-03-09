@@ -1,4 +1,4 @@
-import type { EdgeCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 // @flow
 import { connect } from 'react-redux'
@@ -26,7 +26,7 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleAddressModal: () => dispatch(toggleAddressModal()),
-  updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
+  updateParsedURI: (parsedURI: EdgeParsedUri) => dispatch(updateParsedURI(parsedURI)),
   loginWithEdge: (url: string) => {
     Actions[Constants.EDGE_LOGIN]()
     dispatch(loginWithEdge(url))

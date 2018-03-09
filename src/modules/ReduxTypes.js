@@ -7,7 +7,7 @@ import type {
   EdgeCurrencyWallet,
   EdgeDenomination,
   EdgeLobby,
-  AbcParsedUri,
+  EdgeParsedUri,
   AbcReceiveAddress,
   EdgeTransaction,
   EdgeReceiveAddress
@@ -68,7 +68,7 @@ export type State = {
       },
       sendConfirmation: {
         transaction: EdgeTransaction | null,
-        parsedUri: AbcParsedUri,
+        parsedUri: EdgeParsedUri,
         error: Error | null,
         label: string,
         networkFeeOption: 'low' | 'standard' | 'high' | 'custom',

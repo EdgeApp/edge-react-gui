@@ -1,4 +1,4 @@
-import type { EdgeCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 // @flow
 import React, { Component } from 'react'
 import { Alert, Clipboard } from 'react-native'
@@ -20,7 +20,7 @@ type Props = {
   currencyCode: string,
   addressModalVisible: boolean,
   toggleAddressModal(): void,
-  updateParsedURI(AbcParsedUri): void,
+  updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
   onExitButtonFxn: void
 }

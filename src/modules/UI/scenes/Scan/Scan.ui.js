@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
@@ -39,7 +39,7 @@ type Props = {
   toggleAddressModal(): void,
   toggleWalletListModal(): void,
   toggleScanToWalletListModal(): void,
-  updateParsedURI(AbcParsedUri): void,
+  updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
   toggleScanToWalletListModal: () => void
 }

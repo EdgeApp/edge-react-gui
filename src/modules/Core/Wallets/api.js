@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcMetadata, EdgeParsedUri, AbcReceiveAddress, AbcSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -115,7 +115,7 @@ export async function updateEnabledTokens (wallet: EdgeCurrencyWallet, tokensToE
   }
 }
 
-export const parseURI = (wallet: EdgeCurrencyWallet, uri: string): AbcParsedUri => {
+export const parseURI = (wallet: EdgeCurrencyWallet, uri: string): EdgeParsedUri => {
   return wallet.parseUri(uri)
 }
 
