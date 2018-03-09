@@ -20,7 +20,7 @@ type Props = {
   onSubmit: (password: string) => void,
   onRequestChangePassword: () => void,
   onPostpone: () => void,
-  setPasswordReminder: (passwordReminder: Object) => void,
+  setPasswordReminder: (passwordReminder: PasswordReminder) => void,
   passwordReminder: PasswordReminder
 }
 
