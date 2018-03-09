@@ -39,10 +39,17 @@ export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 
-export const selectWallet = (walletId: string, currencyCode: string) => ({
-  type: SELECT_WALLET,
-  data: { walletId, currencyCode }
-})
+export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const currentWalletId = state.ui.wallets.selectedWalletId
+  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  if ((walletId !== currentWalletId) || (currencyCode !== currentWalletCurrencyCode)) {
+    dispatch({
+      type: SELECT_WALLET,
+      data: { walletId, currencyCode }
+    })
+  }
+}
 
 function dispatchUpsertWallet (dispatch, wallet, walletId) {
   dispatch(upsertWallet(wallet))
