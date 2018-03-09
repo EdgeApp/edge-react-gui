@@ -5,7 +5,7 @@ import type {
   EdgeContext,
   EdgeCurrencyPlugin,
   EdgeCurrencyWallet,
-  AbcDenomination,
+  EdgeDenomination,
   AbcLobby,
   AbcParsedUri,
   AbcReceiveAddress,
@@ -186,7 +186,7 @@ export type State = {
         denomination: string,
         currencyName: string,
         currencyCode: string,
-        denominations: Array<AbcDenomination>,
+        denominations: Array<EdgeDenomination>,
         symbolImage: string,
         symbolImageDarkMono: string
       },

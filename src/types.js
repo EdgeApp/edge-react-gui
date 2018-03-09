@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type { AbcDenomination, AbcMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import type { EdgeDenomination, AbcMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,
@@ -15,8 +15,8 @@ export type GuiWallet = {
   currencyCode: string,
   isoFiatCurrencyCode: string,
   fiatCurrencyCode: string,
-  denominations: Array<AbcDenomination>,
-  allDenominations: { [currencyCode: string]: { [denomination: string]: AbcDenomination } },
+  denominations: Array<EdgeDenomination>,
+  allDenominations: { [currencyCode: string]: { [denomination: string]: EdgeDenomination } },
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
   metaTokens: Array<AbcMetaToken>,
@@ -66,7 +66,7 @@ export type CustomTokenInfo = {
   multiplier: string,
   denomination: string, // eventually change to mandatory
   isVisible?: boolean, // eventually change to mandatory,
-  denominations: Array<AbcDenomination>
+  denominations: Array<EdgeDenomination>
 }
 
 export type GuiWalletType = {

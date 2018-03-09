@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcDenomination } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -31,9 +31,9 @@ export type SendConfirmationStateProps = {
   pending: boolean,
   keyboardIsVisible: boolean,
   label: string,
-  parentDisplayDenomination: AbcDenomination,
+  parentDisplayDenomination: EdgeDenomination,
   parentExchangeDenomination: GuiDenomination,
-  primaryDisplayDenomination: AbcDenomination,
+  primaryDisplayDenomination: EdgeDenomination,
   primaryExchangeDenomination: GuiDenomination,
   secondaryeExchangeCurrencyCode: string,
   errorMsg: string | null,

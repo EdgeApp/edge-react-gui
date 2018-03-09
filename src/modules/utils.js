@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { AbcCurrencyInfo, EdgeCurrencyPlugin, AbcDenomination, AbcMetaToken, EdgeTransaction } from 'edge-core-js'
+import type { AbcCurrencyInfo, EdgeCurrencyPlugin, EdgeDenomination, AbcMetaToken, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -21,7 +21,7 @@ export const cutOffText = (str: string, lng: number) => {
   }
 }
 
-export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: string) => {
+export const findDenominationSymbol = (denoms: Array<EdgeDenomination>, value: string) => {
   for (const v of denoms) {
     if (v.name === value) {
       return v.symbol
@@ -29,7 +29,7 @@ export const findDenominationSymbol = (denoms: Array<AbcDenomination>, value: st
   }
 }
 
-export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): AbcDenomination => {
+export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object, currencyCode?: string /* for metaTokens */): EdgeDenomination => {
   const allWalletDenoms = wallet.allDenominations
   let walletCurrencyCode
   if (currencyCode) {
@@ -40,7 +40,7 @@ export const getWalletDefaultDenomProps = (wallet: Object, settingsState: Object
     walletCurrencyCode = wallet.currencyCode
   }
   const currencySettings = settingsState[walletCurrencyCode] // includes 'denomination', currencyName, and currencyCode
-  let denomProperties: AbcDenomination
+  let denomProperties: EdgeDenomination
   if (allWalletDenoms[walletCurrencyCode]) {
     denomProperties = allWalletDenoms[walletCurrencyCode][currencySettings.denomination] // includes name, multiplier, and symbol
   } else {
@@ -383,7 +383,7 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   return strategy(value)
 }
 
-export const convertAbcToGuiDenomination = (abcDenomination: AbcDenomination): GuiDenomination => {
+export const convertAbcToGuiDenomination = (abcDenomination: EdgeDenomination): GuiDenomination => {
   const guiDenomination: GuiDenomination = {
     name: abcDenomination.name,
     currencyCode: abcDenomination.name,

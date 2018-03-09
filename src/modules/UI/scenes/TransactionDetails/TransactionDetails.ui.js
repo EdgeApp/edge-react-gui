@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyInfo, AbcDenomination, AbcMetadata, EdgeTransaction } from 'edge-core-js'
+import type { AbcCurrencyInfo, EdgeDenomination, AbcMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -62,7 +62,7 @@ type State = {
   payeeZIndex: number,
   subcatZIndex: number,
   type: string,
-  walletDefaultDenomProps: AbcDenomination
+  walletDefaultDenomProps: EdgeDenomination
 }
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps

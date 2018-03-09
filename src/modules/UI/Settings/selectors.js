@@ -1,11 +1,11 @@
 // @flow
 
-import type { EdgeCurrencyPlugin, AbcDenomination } from 'edge-core-js'
+import type { EdgeCurrencyPlugin, EdgeDenomination } from 'edge-core-js'
 
 import type { State } from '../../ReduxTypes'
 import isoFiatDenominations from './IsoFiatDenominations.js'
 
-const emptyAbcDenom: AbcDenomination = {
+const emptyAbcDenom: EdgeDenomination = {
   name: '',
   multiplier: '',
   symbol: ''
@@ -67,10 +67,10 @@ export const getDisplayDenominationFull = (state: State, currencyCode: string) =
   return selectedDenomination
 }
 
-export const getDisplayDenomination = (state: State, currencyCode: string): AbcDenomination => {
+export const getDisplayDenomination = (state: State, currencyCode: string): EdgeDenomination => {
   const selectedDenominationKey = getDisplayDenominationKey(state, currencyCode)
   const denominations = getDenominations(state, currencyCode)
-  let selectedDenomination: AbcDenomination = emptyAbcDenom
+  let selectedDenomination: EdgeDenomination = emptyAbcDenom
   for (const d of denominations) {
     if (d.multiplier === selectedDenominationKey) {
       selectedDenomination = d
