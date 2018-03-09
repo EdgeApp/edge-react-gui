@@ -123,6 +123,7 @@ export type GuiReceiveAddressMetadata = {
 export type GuiReceiveAddress = {
   metadata: EdgeMetadata,
   publicAddress: string,
+  legacyAddress?: string,
   segwitAddress?: string,
   nativeAmount: string
 }

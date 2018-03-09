@@ -35,6 +35,7 @@ const mapStateToProps = (state: State): RequestStateProps => {
     return {
       loading: true,
       request: {},
+      useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
       abcWallet: null,
       guiWallet: null,
       exchangeSecondaryToPrimaryRatio: 0,
@@ -74,6 +75,7 @@ const mapStateToProps = (state: State): RequestStateProps => {
   return {
     loading: false,
     request: state.ui.scenes.request,
+    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
     abcWallet,
     exchangeSecondaryToPrimaryRatio,
     guiWallet,

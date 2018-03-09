@@ -199,6 +199,8 @@ const strings = {
   title_transaction_details: 'Transaction Details',
   title_transactions: 'Transactions',
   title_wallets: 'Wallets',
+  title_use_legacy_address: 'Use Legacy Address',
+  title_use_regular_address: 'Use Regular Address',
   token_not_supported: 'Token is not supported by exchange',
   amount_above_limit: 'Transaction amount is above the max limit of %1$s',
   amount_below_limit: 'Transaction amount is below the min limit of %1$s',

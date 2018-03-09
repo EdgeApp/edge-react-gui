@@ -34,6 +34,7 @@ export type RequestStateProps = {
   currencyCode: string,
   // next line will need review
   request: GuiTransactionRequest | Object,
+  useLegacyAddress: boolean,
   abcWallet: AbcCurrencyWallet | null,
   guiWallet: GuiWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
@@ -62,18 +63,21 @@ export class Request extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id)) {
+    const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
+    if (changeLegacyPublic || (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id))) {
       const abcWallet: AbcCurrencyWallet | null = nextProps.abcWallet
       const { currencyCode } = nextProps
       if (!abcWallet) return
+
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
         .then(receiveAddress => {
-          const { publicAddress } = receiveAddress
-          const abcEncodeUri: AbcEncodeUri = { publicAddress }
+          const { publicAddress, legacyAddress } = receiveAddress
+          const abcEncodeUri: AbcEncodeUri = nextProps.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
           const encodedURI = nextProps.abcWallet ? nextProps.abcWallet.encodeUri(abcEncodeUri) : ''
+
           this.setState({
             encodedURI,
-            publicAddress
+            publicAddress: nextProps.useLegacyAddress && legacyAddress ? legacyAddress : publicAddress
           })
         })
         .catch(e => {

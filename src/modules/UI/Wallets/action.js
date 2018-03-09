@@ -8,6 +8,7 @@ import type { CustomTokenInfo } from '../../../types.js'
 import * as SETTINGS_API from '../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import * as Constants from '../../../constants/indexConstants'
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import { displayErrorAlert } from '../../UI/components/ErrorAlert/actions'
 import * as UTILS from '../../utils'
@@ -15,7 +16,7 @@ import { addTokenAsync } from '../scenes/AddToken/action'
 import * as UI_SELECTORS from '../selectors.js'
 import { updateSettings } from '../Settings/action'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
-
+import * as actions from '../../../actions/indexActions'
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -48,6 +49,14 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
       type: SELECT_WALLET,
       data: { walletId, currencyCode }
     })
+    const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    WALLET_API.getReceiveAddress(wallet, currencyCode)
+      .then(receiveAddress => {
+        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
+      })
+      .catch(e => {
+        console.log('error on getting wallet receive address')
+      })
   }
 }
 

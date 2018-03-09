@@ -18,7 +18,7 @@ type State = {
   pageY: number
 }
 
-export default class MenuDropDown extends Component<Props, State> {
+class MenuDropDown extends Component<Props, State> {
   static defaultProps = {
     iconType: Constants.ENTYPO,
     icon: Constants.THREE_DOT_MENU
@@ -69,3 +69,4 @@ export default class MenuDropDown extends Component<Props, State> {
     }
   }
 }
+export { MenuDropDown }
