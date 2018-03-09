@@ -6,7 +6,7 @@ import type {
   EdgeCurrencyPlugin,
   EdgeCurrencyWallet,
   EdgeDenomination,
-  AbcLobby,
+  EdgeLobby,
   AbcParsedUri,
   AbcReceiveAddress,
   EdgeTransaction,
@@ -40,7 +40,7 @@ export type State = {
       }
     },
     edgeLogin: {
-      lobby: AbcLobby | null,
+      lobby: EdgeLobby | null,
       error: Error | null,
       isProcessing: boolean
     },
