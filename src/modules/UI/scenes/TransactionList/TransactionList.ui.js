@@ -60,6 +60,8 @@ type State = {
   balanceBoxHeight: any,
   width: ?number,
   showBalance: boolean,
+  currentCurrencyCode: string,
+  currentWalletId: string,
   currentEndIndex: number
 }
 
@@ -83,14 +85,14 @@ export default class TransactionList extends Component<Props, State> {
     completedTx: [],
     dataSrc: [],
     width: undefined,
-    currentEndIndex: INITIAL_TRANSACTION_BATCH_NUMBER
+    currentCurrencyCode: '',
+    currentWalletId: '',
+    currentEndIndex: 0
   }
 
   componentWillMount () {
-    const walletId = this.props.selectedWalletId
-    const currencyCode = this.props.selectedCurrencyCode
     this.props.updateExchangeRates()
-    this.fetchListOfTransactions(walletId, currencyCode)
+    this.handleScrollEnd()
   }
 
   componentWillReceiveProps (nextProps: Props) {
@@ -110,7 +112,7 @@ export default class TransactionList extends Component<Props, State> {
   handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    const { currentEndIndex } = this.state
+    const { currentEndIndex, currentWalletId, currentCurrencyCode } = this.state
     let newEndIndex = currentEndIndex
 
     const txLength = this.props.transactions.length
@@ -120,9 +122,17 @@ export default class TransactionList extends Component<Props, State> {
       newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
     }
 
-    if (newEndIndex !== currentEndIndex) {
+    if (
+      newEndIndex !== currentEndIndex ||
+      (currentWalletId !== '' && currentWalletId !== walletId) ||
+      (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)
+    ) {
       this.setState(
-        state => ({ currentEndIndex: newEndIndex }),
+        state => ({
+          currentCurrencyCode: currencyCode,
+          currentEndIndex: newEndIndex,
+          currentWalletId: walletId
+        }),
         () => this.fetchListOfTransactions(walletId, currencyCode)
       )
     }
