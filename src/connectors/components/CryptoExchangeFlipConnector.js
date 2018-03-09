@@ -1,7 +1,7 @@
 // // @flow
 //
 // import {connect} from 'react-redux'
-// import type {AbcCurrencyWallet} from 'airbitz-core-types'
+// import type {EdgeCurrencyWallet} from 'airbitz-core-types'
 //
 // import type {Dispatch, State} from '../../modules/ReduxTypes'
 // import type { GuiDenomination, GuiCurrencyInfo } from '../../types'
@@ -33,7 +33,7 @@
 //       nativeAmount: ''
 //     }
 //   }
-//   const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+//   const abcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
 //   const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 //   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
 //

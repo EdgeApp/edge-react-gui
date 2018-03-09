@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyWallet, AbcEncodeUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, Share, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
@@ -36,7 +36,7 @@ export type RequestStateProps = {
   // next line will need review
   request: GuiTransactionRequest | Object,
   useLegacyAddress: boolean,
-  abcWallet: AbcCurrencyWallet | null,
+  abcWallet: EdgeCurrencyWallet | null,
   guiWallet: GuiWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
   currencyCode: string,
@@ -67,7 +67,7 @@ export class Request extends Component<Props, State> {
   componentWillReceiveProps (nextProps: Props) {
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
     if (changeLegacyPublic || (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id))) {
-      const abcWallet: AbcCurrencyWallet | null = nextProps.abcWallet
+      const abcWallet: EdgeCurrencyWallet | null = nextProps.abcWallet
       const { currencyCode } = nextProps
       if (!abcWallet) return
 
@@ -92,7 +92,7 @@ export class Request extends Component<Props, State> {
 
   componentDidMount () {
     const { currencyCode } = this.props
-    const abcWallet: AbcCurrencyWallet | null = this.props.abcWallet
+    const abcWallet: EdgeCurrencyWallet | null = this.props.abcWallet
     if (!abcWallet || this.props.loading) return
 
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)

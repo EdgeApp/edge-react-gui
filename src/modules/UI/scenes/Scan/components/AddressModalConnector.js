@@ -1,4 +1,4 @@
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcParsedUri } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 // @flow
 import { connect } from 'react-redux'
@@ -14,7 +14,7 @@ import AddressModal from './AddressModal'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const coreWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const coreWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
 
   return {

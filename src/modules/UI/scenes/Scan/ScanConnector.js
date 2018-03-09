@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcParsedUri } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -18,7 +18,7 @@ import Scan from './Scan.ui'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const abcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
 
   return {
     cameraPermission: getCameraPermission(state),

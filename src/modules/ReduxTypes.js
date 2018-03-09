@@ -4,7 +4,7 @@ import type {
   EdgeAccount,
   EdgeContext,
   EdgeCurrencyPlugin,
-  AbcCurrencyWallet,
+  EdgeCurrencyWallet,
   AbcDenomination,
   AbcLobby,
   AbcParsedUri,
@@ -36,7 +36,7 @@ export type State = {
     },
     wallets: {
       byId: {
-        [Id]: AbcCurrencyWallet
+        [Id]: EdgeCurrencyWallet
       }
     },
     edgeLogin: {

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
@@ -26,7 +26,7 @@ import styles, { styles as styleRaw } from './style'
 
 type Props = {
   cameraPermission: PermissionStatus,
-  abcWallet: AbcCurrencyWallet,
+  abcWallet: EdgeCurrencyWallet,
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,

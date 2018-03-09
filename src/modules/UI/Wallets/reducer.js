@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
@@ -248,7 +248,7 @@ const manageTokensPending = (state: boolean = false, action: Action) => {
   }
 }
 
-function schema (wallet: AbcCurrencyWallet): GuiWallet {
+function schema (wallet: EdgeCurrencyWallet): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'

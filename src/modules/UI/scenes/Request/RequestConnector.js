@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import type { GuiCurrencyInfo, GuiDenomination, GuiReceiveAddress, GuiWallet } from '../../../../types'
@@ -46,7 +46,7 @@ const mapStateToProps = (state: State): RequestStateProps => {
     }
   }
 
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+  const abcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
   // $FlowFixMe
   const primaryDisplayDenomination: GuiDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
   const primaryExchangeDenomination: GuiDenomination = UI_SELECTORS.getExchangeDenomination(state, currencyCode)

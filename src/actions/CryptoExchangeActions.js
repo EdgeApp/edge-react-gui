@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyWallet, AbcSpendInfo, EdgeTransaction, EdgeMetadata } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcSpendInfo, EdgeTransaction, EdgeMetadata } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -87,7 +87,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const receiveAddress = await wallet.getReceiveAddress()
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
@@ -224,7 +224,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
     dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
-  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
   if (!srcWallet) {
     dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
@@ -285,7 +285,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
 const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
-  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const { fromNativeAmount, nativeMax, nativeMin } = state.cryptoExchange
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
