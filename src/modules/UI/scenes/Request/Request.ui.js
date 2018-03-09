@@ -36,7 +36,7 @@ export type RequestStateProps = {
   // next line will need review
   request: GuiTransactionRequest | Object,
   useLegacyAddress: boolean,
-  abcWallet: EdgeCurrencyWallet | null,
+  edgeWallet: EdgeCurrencyWallet | null,
   guiWallet: GuiWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
   currencyCode: string,
@@ -66,16 +66,16 @@ export class Request extends Component<Props, State> {
 
   componentWillReceiveProps (nextProps: Props) {
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
-    if (changeLegacyPublic || (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id))) {
-      const abcWallet: EdgeCurrencyWallet | null = nextProps.abcWallet
+    if (changeLegacyPublic || (nextProps.edgeWallet && (!this.props.edgeWallet || nextProps.edgeWallet.id !== this.props.edgeWallet.id))) {
+      const edgeWallet: EdgeCurrencyWallet | null = nextProps.edgeWallet
       const { currencyCode } = nextProps
-      if (!abcWallet) return
+      if (!edgeWallet) return
 
-      WALLET_API.getReceiveAddress(abcWallet, currencyCode)
+      WALLET_API.getReceiveAddress(edgeWallet, currencyCode)
         .then(receiveAddress => {
           const { publicAddress, legacyAddress } = receiveAddress
-          const abcEncodeUri: AbcEncodeUri = nextProps.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-          const encodedURI = nextProps.abcWallet ? nextProps.abcWallet.encodeUri(abcEncodeUri) : ''
+          const edgeEncodeUri: AbcEncodeUri = nextProps.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+          const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(edgeEncodeUri) : ''
 
           this.setState({
             encodedURI,
@@ -92,14 +92,14 @@ export class Request extends Component<Props, State> {
 
   componentDidMount () {
     const { currencyCode } = this.props
-    const abcWallet: EdgeCurrencyWallet | null = this.props.abcWallet
-    if (!abcWallet || this.props.loading) return
+    const edgeWallet: EdgeCurrencyWallet | null = this.props.edgeWallet
+    if (!edgeWallet || this.props.loading) return
 
-    WALLET_API.getReceiveAddress(abcWallet, currencyCode)
+    WALLET_API.getReceiveAddress(edgeWallet, currencyCode)
       .then(receiveAddress => {
         const { publicAddress, legacyAddress } = receiveAddress
-        const abcEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-        const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
+        const edgeEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+        const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
         this.setState({
           encodedURI,
           publicAddress: publicAddress,
@@ -114,11 +114,11 @@ export class Request extends Component<Props, State> {
 
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
-    const abcEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    const edgeEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     if (bns.gt(amounts.nativeAmount, '0')) {
-      abcEncodeUri.nativeAmount = amounts.nativeAmount
+      edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
-    const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
+    const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
 
     this.setState({
       encodedURI

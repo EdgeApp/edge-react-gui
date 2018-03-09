@@ -37,7 +37,7 @@ export type TransactionDetailsOwnProps = {
 export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: EdgeMetadata) => void,
+  setTransactionDetails: (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => void,
   getSubcategories: () => void,
   displayDropdownAlert: (message: string, title: string) => void
 }
@@ -366,8 +366,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const txid = this.props.edgeTransaction.txid
     const newAmountFiat = this.state.amountFiat
     const amountFiat: number = !newAmountFiat ? 0.0 : Number.parseFloat(newAmountFiat)
-    const abcMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
-    this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, abcMetadata)
+    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
+    this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, edgeMetadata)
   }
 
   componentDidMount () {

@@ -18,11 +18,11 @@ import Scan from './Scan.ui'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const abcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
 
   return {
     cameraPermission: getCameraPermission(state),
-    abcWallet,
+    edgeWallet,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,

@@ -30,11 +30,11 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
   const { activeWalletIds, archivedWalletIds, currencyWallets } = account
 
   for (const walletId: string of Object.keys(currencyWallets)) {
-    const abcWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-    if (abcWallet.type === 'wallet:ethereum') {
+    const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    if (edgeWallet.type === 'wallet:ethereum') {
       if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
         const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-        abcWallet.enableTokens(enabledTokens)
+        edgeWallet.enableTokens(enabledTokens)
       }
     }
   }

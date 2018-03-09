@@ -26,7 +26,7 @@ import styles, { styles as styleRaw } from './style'
 
 type Props = {
   cameraPermission: PermissionStatus,
-  abcWallet: EdgeCurrencyWallet,
+  edgeWallet: EdgeCurrencyWallet,
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,
@@ -127,7 +127,7 @@ export default class Scan extends Component<Props> {
         this.props.loginWithEdge(uri)
         return
       }
-      const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
+      const parsedURI = WALLET_API.parseURI(this.props.edgeWallet, uri)
       this.props.updateParsedURI(parsedURI)
       Actions.sendConfirmation('fromScan')
     } catch (error) {

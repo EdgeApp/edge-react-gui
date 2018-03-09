@@ -91,9 +91,9 @@ export const inputBottomPadding = () => {
 
 // will take the metaTokens property on the wallet (that comes from currencyInfo), merge with account-level custom tokens added, and only return if enabled (wallet-specific)
 // $FlowFixMe
-export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | CustomTokenInfo>, abcMetaTokens: Array<CustomTokenInfo>) => {
+export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | CustomTokenInfo>, edgeMetaTokens: Array<CustomTokenInfo>) => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
-  for (const x of abcMetaTokens) {
+  for (const x of edgeMetaTokens) {
     // loops through the account-level array
     let found = false // assumes it is not present in the currencyInfo from plugin
     for (const val of tokensEnabled) {
@@ -107,10 +107,10 @@ export const mergeTokens = (preferredEdgeMetaTokens: Array<EdgeMetaToken | Custo
   return tokensEnabled
 }
 
-export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, abcMetaTokens: Array<CustomTokenInfo>) => {
+export const mergeTokensRemoveInvisible = (preferredEdgeMetaTokens: Array<EdgeMetaToken>, edgeMetaTokens: Array<CustomTokenInfo>) => {
   const tokensEnabled = [...preferredEdgeMetaTokens] // initially set the array to currencyInfo (from plugin), since it takes priority
   const tokensToAdd = []
-  for (const x of abcMetaTokens) {
+  for (const x of edgeMetaTokens) {
     // loops through the account-level array
     if (x.isVisible !== false && _.findIndex(tokensEnabled, walletToken => walletToken.currencyCode === x.currencyCode) === -1) {
       tokensToAdd.push(x)
@@ -383,12 +383,12 @@ export const getTimeInMinutes = (params: { measurement: string, value: number })
   return strategy(value)
 }
 
-export const convertAbcToGuiDenomination = (abcDenomination: EdgeDenomination): GuiDenomination => {
+export const convertAbcToGuiDenomination = (edgeDenomination: EdgeDenomination): GuiDenomination => {
   const guiDenomination: GuiDenomination = {
-    name: abcDenomination.name,
-    currencyCode: abcDenomination.name,
-    symbol: abcDenomination.symbol ? abcDenomination.symbol : '',
-    multiplier: abcDenomination.multiplier,
+    name: edgeDenomination.name,
+    currencyCode: edgeDenomination.name,
+    symbol: edgeDenomination.symbol ? edgeDenomination.symbol : '',
+    multiplier: edgeDenomination.multiplier,
     precision: 0
   }
   return guiDenomination

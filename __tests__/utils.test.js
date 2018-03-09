@@ -347,7 +347,7 @@ describe('mergeTokens', function () {
     const tokenD = {currencyCode: 'TD', currencyName: 'TD'}
 
     const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
-    const abcMetaTokens = [tokenA, tokenD]
+    const edgeMetaTokens = [tokenA, tokenD]
 
     const expected = [
       preferredTokenA, // from preferredAbcTokens
@@ -355,7 +355,7 @@ describe('mergeTokens', function () {
       tokenD
     ]
     // $FlowExpectedError
-    const actual = UTILS.mergeTokens(preferredEdgeMetaTokens, abcMetaTokens)
+    const actual = UTILS.mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
   })
 
@@ -364,11 +364,11 @@ describe('mergeTokens', function () {
     const tokenD = {currencyCode: 'TD', currencyName: 'TD'}
 
     const preferredEdgeMetaTokens = []
-    const abcMetaTokens = [tokenA, tokenD]
+    const edgeMetaTokens = [tokenA, tokenD]
 
     const expected = [tokenA, tokenD]
     // $FlowExpectedError
-    const actual = UTILS.mergeTokens(preferredEdgeMetaTokens, abcMetaTokens)
+    const actual = UTILS.mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
   })
 
@@ -377,11 +377,11 @@ describe('mergeTokens', function () {
     const preferredTokenB = {currencyCode: 'TB', currencyName: 'TB', preferred: true}
 
     const preferredEdgeMetaTokens = [preferredTokenA, preferredTokenB]
-    const abcMetaTokens = []
+    const edgeMetaTokens = []
 
     const expected = [preferredTokenA, preferredTokenB]
     // $FlowExpectedError
-    const actual = UTILS.mergeTokens(preferredEdgeMetaTokens, abcMetaTokens)
+    const actual = UTILS.mergeTokens(preferredEdgeMetaTokens, edgeMetaTokens)
     expect(actual).toEqual(expected)
   })
 })

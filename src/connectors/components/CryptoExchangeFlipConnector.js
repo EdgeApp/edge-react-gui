@@ -33,7 +33,7 @@
 //       nativeAmount: ''
 //     }
 //   }
-//   const abcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
+//   const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, guiWallet.id)
 //   const secondaryExchangeDenomination: GuiDenomination = UTILS.getDenomFromIsoCode(guiWallet.fiatCurrencyCode)
 //   const secondaryDisplayDenomination: GuiDenomination = secondaryExchangeDenomination
 //
@@ -62,7 +62,7 @@
 //   // let currencyLogo = ownProps.whichWallet === Constants.FROM ? state.cryptoExchange.fromCurrencyIcon : state.cryptoExchange.toCurrencyIcon
 //   currencyLogo = currencyLogo || ''
 //   return {
-//     abcWallet,
+//     edgeWallet,
 //     currencyLogo,
 //     primaryInfo,
 //     secondaryInfo,

@@ -29,10 +29,10 @@ export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatP
 export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
-  const abcWallet = getWallet(state, walletId)
+  const edgeWallet = getWallet(state, walletId)
   const parsedUriClone = { ...parsedUri }
   const spendInfo = getSpendInfo(state, parsedUriClone)
-  makeSpend(abcWallet, spendInfo)
+  makeSpend(edgeWallet, spendInfo)
     .then(edgeTransaction => {
       dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null))
     })
@@ -42,9 +42,9 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdat
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
-  const abcWallet = getWallet(state, walletId)
+  const edgeWallet = getWallet(state, walletId)
   const spendInfo = getSpendInfo(state)
-  getMaxSpendable(abcWallet, spendInfo)
+  getMaxSpendable(edgeWallet, spendInfo)
     .then(nativeAmount => {
       const amount: EdgeParsedUri = { nativeAmount }
       dispatch(createTX(amount, true))
@@ -56,13 +56,13 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const state = getState()
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
-  const abcUnsignedTransaction = getTransaction(state)
-  let abcSignedTransaction = abcUnsignedTransaction
+  const edgeUnsignedTransaction = getTransaction(state)
+  let edgeSignedTransaction = edgeUnsignedTransaction
   dispatch(updateSpendPending(true))
   try {
-    abcSignedTransaction = await signTransaction(wallet, abcUnsignedTransaction)
-    abcSignedTransaction = await broadcastTransaction(wallet, abcSignedTransaction)
-    await saveTransaction(wallet, abcSignedTransaction)
+    edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
+    edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
+    await saveTransaction(wallet, edgeSignedTransaction)
     dispatch(updateSpendPending(false))
     Actions.pop()
     const successInfo = {
@@ -78,7 +78,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       title: 'Transaction Failure',
       message: e.message
     }
-    dispatch(updateTransaction(abcSignedTransaction, null, true, new Error('broadcastError')))
+    dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch(openABAlert(OPEN_AB_ALERT, errorInfo))
   }
 }

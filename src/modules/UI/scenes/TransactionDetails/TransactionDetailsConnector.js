@@ -36,8 +36,8 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: EdgeMetadata) => {
-    dispatch(setTransactionDetails(txid, currencyCode, abcMetadata))
+  setTransactionDetails: (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => {
+    dispatch(setTransactionDetails(txid, currencyCode, edgeMetadata))
   },
   getSubcategories: () => dispatch(getSubcategories()),
   displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title }))

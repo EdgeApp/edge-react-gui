@@ -80,10 +80,10 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
         fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
       }
-      const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
+      const edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
       await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
-      accountInitObject.walletId = abcWallet.id
-      accountInitObject.currencyCode = abcWallet.currencyInfo.currencyCode
+      accountInitObject.walletId = edgeWallet.id
+      accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
@@ -92,11 +92,11 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     }
     const { activeWalletIds, archivedWalletIds, currencyWallets } = account
     for (const walletId of Object.keys(currencyWallets)) {
-      const abcWallet: EdgeCurrencyWallet = currencyWallets[walletId]
-      if (abcWallet.type === 'wallet:ethereum') {
+      const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+      if (edgeWallet.type === 'wallet:ethereum') {
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-          abcWallet.enableTokens(enabledTokens)
+          edgeWallet.enableTokens(enabledTokens)
         }
       }
     }
