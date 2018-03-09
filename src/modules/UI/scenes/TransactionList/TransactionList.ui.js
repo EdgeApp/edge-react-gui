@@ -332,10 +332,7 @@ export default class TransactionList extends Component<Props, State> {
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
                   renderSectionHeader={({section}) => this.renderSectionHeader(section)}
                   stickySectionHeadersEnabled={true}
-                  onEndReached={(distanceFromEnd) => {
-                    console.log(distanceFromEnd)
-                    this.handleScrollEnd()
-                  }}
+                  onEndReached={() => this.handleScrollEnd()}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
                 />
               </View>
