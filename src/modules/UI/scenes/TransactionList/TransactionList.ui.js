@@ -354,8 +354,8 @@ export default class TransactionList extends Component<Props, State> {
     )
   }
 
-  _goToTxDetail = (abcTransaction, thumbnailPath) => {
-    Actions.transactionDetails({ abcTransaction, thumbnailPath })
+  _goToTxDetail = (edgeTransaction, thumbnailPath) => {
+    Actions.transactionDetails({ edgeTransaction, thumbnailPath })
   }
 
   isReceivedTransaction (tx: TransactionListTx) {

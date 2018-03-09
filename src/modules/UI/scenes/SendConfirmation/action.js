@@ -33,8 +33,8 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdate
   const parsedUriClone = { ...parsedUri }
   const spendInfo = getSpendInfo(state, parsedUriClone)
   makeSpend(abcWallet, spendInfo)
-    .then(abcTransaction => {
-      dispatch(updateTransaction(abcTransaction, parsedUriClone, forceUpdateGui, null))
+    .then(edgeTransaction => {
+      dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null))
     })
     .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
 }

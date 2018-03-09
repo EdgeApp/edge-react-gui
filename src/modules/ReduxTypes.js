@@ -55,7 +55,7 @@ export type State = {
     },
     transactionAlert: {
       displayAlert: boolean,
-      abcTransaction: EdgeTransaction
+      edgeTransaction: EdgeTransaction
     },
     scenes: {
       scan: {
@@ -133,7 +133,7 @@ export type State = {
       helpModal: boolean,
       transactionAlert: {
         displayAlert: boolean,
-        abcTransaction: EdgeTransaction
+        edgeTransaction: EdgeTransaction
       },
       exchangeRate: {
         exchangeRates: {}

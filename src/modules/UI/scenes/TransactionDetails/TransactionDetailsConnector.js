@@ -19,7 +19,7 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const usableHeight: number = PLATFORM.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
   const settings = SETTINGS_SELECTORS.getSettings(state)
-  const currencyCode: string = ownProps.abcTransaction.currencyCode
+  const currencyCode: string = ownProps.edgeTransaction.currencyCode
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
   const arrayPlugins: Array<AbcCurrencyPlugin> = plugins.arrayPlugins
   const currencyInfo: AbcCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)

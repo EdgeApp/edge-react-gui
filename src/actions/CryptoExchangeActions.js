@@ -57,7 +57,7 @@ function setCryptoExchangeAmounts (setAmounts: SetCryptoExchangeAmounts) {
 function setShapeTransaction (
   type: string,
   data: {
-    abcTransaction: EdgeTransaction,
+    edgeTransaction: EdgeTransaction,
     networkFee: string,
     displayAmount: string
   }
@@ -323,7 +323,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
     holderObject.status = 'pending'
     holderObject.processingAmount = fromNativeAmount
     dispatch(actions.dispatchAction(Constants.START_MAKE_SPEND))
-    const abcTransaction = await srcWallet.makeSpend(spendInfo)
+    const edgeTransaction = await srcWallet.makeSpend(spendInfo)
     holderObject.status = 'finished'
     dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
     if (holderObject.newAmount !== holderObject.processingAmount) {
@@ -340,11 +340,11 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
     }
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     const ratio = primaryInfo.displayDenomination.multiplier.toString()
-    const networkFee = UTILS.convertNativeToDenomination(ratio)(abcTransaction.networkFee)
-    let displayAmount = UTILS.convertNativeToDenomination(ratio)(abcTransaction.nativeAmount)
+    const networkFee = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.networkFee)
+    let displayAmount = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.nativeAmount)
     displayAmount = bns.toFixed(displayAmount, 0, 0)
     const returnObject = {
-      abcTransaction,
+      edgeTransaction,
       networkFee,
       displayAmount
     }

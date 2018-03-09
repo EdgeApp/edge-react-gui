@@ -66,11 +66,11 @@ export const refreshTransactionsRequest = (walletId: string, transactions: Array
   }
 }
 
-export const newTransactionsRequest = (walletId: string, abcTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch) => {
-  const abcTransaction: EdgeTransaction = abcTransactions[0]
-  if (!UTILS.isReceivedTransaction(abcTransaction)) return
+export const newTransactionsRequest = (walletId: string, edgeTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch) => {
+  const edgeTransaction: EdgeTransaction = edgeTransactions[0]
+  if (!UTILS.isReceivedTransaction(edgeTransaction)) return
 
-  dispatch(displayTransactionAlert(abcTransaction))
+  dispatch(displayTransactionAlert(edgeTransaction))
 }
 
 export const updateTransactions = (transactions: Array<EdgeTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({

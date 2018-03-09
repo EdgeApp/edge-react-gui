@@ -108,7 +108,7 @@ function cryptoExchangerReducer (state = initialState, action) {
     case Constants.UPDATE_SHIFT_TRANSACTION:
       return {
         ...state,
-        transaction: action.data.abcTransaction,
+        transaction: action.data.edgeTransaction,
         fee:
           action.data.networkFee && state.fromCurrencyCode
             ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name
