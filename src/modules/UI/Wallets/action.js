@@ -41,19 +41,23 @@ export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 
 export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
-  dispatch({
-    type: SELECT_WALLET,
-    data: { walletId, currencyCode }
-  })
   const state = getState()
-  const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-  WALLET_API.getReceiveAddress(wallet, currencyCode)
-    .then(receiveAddress => {
-      dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
+  const currentWalletId = state.ui.wallets.selectedWalletId
+  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  if ((walletId !== currentWalletId) || (currencyCode !== currentWalletCurrencyCode)) {
+    dispatch({
+      type: SELECT_WALLET,
+      data: { walletId, currencyCode }
     })
-    .catch(e => {
-      console.log('error on getting wallet receive address')
-    })
+    const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    WALLET_API.getReceiveAddress(wallet, currencyCode)
+      .then(receiveAddress => {
+        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
+      })
+      .catch(e => {
+        console.log('error on getting wallet receive address')
+      })
+  }
 }
 
 function dispatchUpsertWallet (dispatch, wallet, walletId) {

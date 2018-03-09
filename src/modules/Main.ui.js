@@ -71,6 +71,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
+import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -140,9 +141,7 @@ type Props = {
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
-  contextCallbacks: AbcContextCallbacks,
-  updateCurrentSceneKey: (string) => void,
-  onExitTransactionListScene: () => void
+  contextCallbacks: AbcContextCallbacks
 }
 type State = {
   context: ?AbcContext
@@ -294,11 +293,7 @@ export default class Main extends Component<Props, State> {
 
                         <Scene
                           key={Constants.TRANSACTION_LIST}
-                          onEnter={() => {
-                            this.props.requestPermission(CONTACTS)
-                            this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
-                          }}
-                          onExit={() => this.props.onExitTransactionListScene()}
+                          onEnter={() => this.props.requestPermission(CONTACTS)}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}
@@ -492,6 +487,7 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
+        <ContactsLoader />
       </MenuProvider>
     )
   }

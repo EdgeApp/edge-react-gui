@@ -85,7 +85,8 @@ export type State = {
         contactsList: Array<GuiContact>,
         updatingBalance: boolean,
         searchVisible: boolean,
-        visibleTransactions: Array<DateTransactionGroup>
+        visibleTransactions: Array<DateTransactionGroup>,
+        currentEndIndex: number
       },
       transactionDetails: {
         subcategories: Array<any>

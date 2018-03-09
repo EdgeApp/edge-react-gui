@@ -67,6 +67,7 @@
     "zlib": "browserify-zlib"
   },
   "dependencies": {
+    "async-lock": "^1.1.2",
     "biggystring": "^3.0.1",
     "browserify-zlib": "^0.1.4",
     "buffer": "^5.0.8",

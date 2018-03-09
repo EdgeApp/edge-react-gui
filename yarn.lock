@@ -389,6 +389,10 @@ async-limiter@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
 
+async-lock@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/async-lock/-/async-lock-1.1.2.tgz#d552b3f8fe93018bf917efcf66d3154b9035282a"
+
 async@^1.4.0:
   version "1.5.2"
   resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
