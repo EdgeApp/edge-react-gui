@@ -22,12 +22,14 @@ const checkCurrentPassword = (password: string) => async (dispatch: Dispatch, ge
 const mapStateToProps = (state: State): GetSeedModalStateProps => {
   const wallet = CORE_SELECTORS.getWallet(state, state.ui.scenes.walletList.walletId)
   const walletId = state.ui.scenes.walletList.walletId
+  const walletName = CORE_SELECTORS.getWalletName(state, walletId)
 
   return {
     visibilityBoolean: state.ui.scenes.walletList[VISIBLE_MODAL_NAME(Constants.GET_SEED_VALUE)],
-    getSeed: wallet ? wallet.getDisplayPrivateSeed : () => {},
+    getSeed: wallet ? wallet.getDisplayPrivateSeed : () => null,
     walletId: walletId,
-    privateSeedUnlocked: state.ui.scenes.walletList.privateSeedUnlocked
+    privateSeedUnlocked: state.ui.scenes.walletList.privateSeedUnlocked,
+    walletName
   }
 }
 

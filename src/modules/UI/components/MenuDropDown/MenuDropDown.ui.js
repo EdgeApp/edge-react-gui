@@ -1,10 +1,9 @@
 // @flow
-import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import Menu, { MenuOption, MenuOptions, MenuTrigger } from 'react-native-menu'
-
+import React, {Component} from 'react'
+import {View, Text} from 'react-native'
+import Menu, {MenuOptions, MenuOption, MenuTrigger} from 'react-native-popup-menu'
+import {Icon} from '../Icon/Icon.ui'
 import * as Constants from '../../../../constants/indexConstants'
-import { Icon } from '../Icon/Icon.ui'
 
 type Props = {
   style: any,
@@ -14,11 +13,25 @@ type Props = {
   onSelect: Function
 }
 
-export default class MenuDropDown extends Component<Props> {
+type State = {
+  height: number,
+  pageY: number
+}
+
+class MenuDropDown extends Component<Props, State> {
   static defaultProps = {
     iconType: Constants.ENTYPO,
     icon: Constants.THREE_DOT_MENU
   }
+
+  constructor (props: Props) {
+    super(props)
+    this.state = {
+      height: 0,
+      pageY: 0
+    }
+  }
+
   renderMenuOptions (style: any) {
     const items = this.props.data.map(item => (
       <MenuOption style={style.menuOption} value={item.value} key={'ld' + (item.key || item.value)}>
@@ -31,23 +44,29 @@ export default class MenuDropDown extends Component<Props> {
   }
 
   render () {
-    let optionsStyle = {}
-    if (this.props.rightSide) {
-      optionsStyle = { left: '1%' }
-    }
     const style = this.props.style
+
     return (
       <View style={[style.container]}>
-        <Menu style={[style.menuButton]} onSelect={value => this.props.onSelect(value)}>
-          <MenuTrigger style={[style.menuTrigger]}>{this.renderMenuIcon(style)}</MenuTrigger>
-          <MenuOptions optionsContainerStyle={optionsStyle}>{this.renderMenuOptions(style)}</MenuOptions>
+        <Menu style={[style.menuButton]} onSelect={(value) => this.props.onSelect(value)}>
+          <MenuTrigger customStyles={style.menuTrigger}>
+            {this.renderMenuIcon(style)}
+          </MenuTrigger>
+          <MenuOptions customStyles={style.menuOptions}>
+            {this.renderMenuOptions(style)}
+          </MenuOptions>
         </Menu>
       </View>
     )
   }
   renderMenuIcon = (style: any) => {
     if (this.props.icon) {
-      return <Icon style={style.icon} name={this.props.icon} size={style.icon.fontSize} type={this.props.iconType} />
+      return (
+        <View style={style.menuIconWrap}>
+          <Icon style={style.icon} name={this.props.icon} size={style.icon.fontSize} type={this.props.iconType} />
+        </View>
+      )
     }
   }
 }
+export { MenuDropDown }

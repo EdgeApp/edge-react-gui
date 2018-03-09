@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-login'
+import type { AbcTransaction } from 'edge-core-js'
 import { combineReducers } from 'redux'
 
 import type { Action } from '../../../ReduxTypes.js'

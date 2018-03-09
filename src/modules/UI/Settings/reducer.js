@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin } from 'edge-login'
+import type { AbcCurrencyPlugin } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
@@ -12,7 +12,7 @@ import * as ADD_TOKEN_ACTION from '../scenes/AddToken/action.js'
 import * as WALLET_ACTION from '../Wallets/action'
 import * as ACTION from './action.js'
 
-const initialState = {
+export const initialState = {
   ...SYNCED_ACCOUNT_DEFAULTS,
   ...LOCAL_ACCOUNT_DEFAULTS,
   ...CORE_DEFAULTS,

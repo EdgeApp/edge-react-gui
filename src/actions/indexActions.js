@@ -15,7 +15,19 @@ export function dispatchAction (type: string) {
   }
 }
 
+export function dispatchActionOnly (type: string) {
+  return {
+    type
+  }
+}
+
 export function dispatchActionObject (type: string, data: Object) {
+  return {
+    type,
+    data
+  }
+}
+export function dispatchActionArray (type: string, data: Array<any>) {
   return {
     type,
     data

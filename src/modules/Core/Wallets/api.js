@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, AbcTransaction } from 'edge-login'
+import type { AbcCurrencyWallet, AbcMetadata, AbcParsedUri, AbcReceiveAddress, AbcSpendInfo, AbcTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -8,8 +8,8 @@ export const renameWalletRequest = (wallet: AbcCurrencyWallet, name: string) => 
   return wallet.renameWallet(name).then(() => wallet)
 }
 
-export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string): Promise<Array<AbcTransaction>> => {
-  return wallet.getTransactions ? wallet.getTransactions({ currencyCode }) : Promise.resolve([])
+export const getTransactions = (wallet: AbcCurrencyWallet, currencyCode: string, options?: Object): Promise<Array<AbcTransaction>> => {
+  return wallet.getTransactions ? wallet.getTransactions({ ...options, currencyCode }) : Promise.resolve([])
 }
 
 const dummyAbcTransaction: AbcTransaction = {

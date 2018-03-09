@@ -189,9 +189,8 @@ class AmountArea extends Component {
               underlineColorAndroid={'transparent'}
               onChangeText={this.props.onChangeNotesFxn}
               multiline
-              numberOfLines={3}
               defaultValue={notes}
-              style={[styles.notesInput, UTILS.inputBottomPadding()]}
+              style={[styles.notesInput]}
               placeholderTextColor={THEME.COLORS.GRAY_}
               placeholder={s.strings.transaction_details_notes_title}
               autoCapitalize="sentences"

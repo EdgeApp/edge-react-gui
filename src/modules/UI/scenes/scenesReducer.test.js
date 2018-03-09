@@ -42,6 +42,10 @@ test('initialState', () => {
         publicAddress: ''
       }
     },
+    requestType: {
+      useLegacyAddress: false,
+      uniqueLegacyAddress: false
+    },
     scan: {
       addressModalVisible: false,
       recipientAddress: '',
@@ -62,6 +66,7 @@ test('initialState', () => {
         blockHeight: -1,
         nativeAmount: '0',
         networkFee: '',
+        parentNetworkFee: '',
         ourReceiveAddresses: [],
         signedTx: '',
         metadata: {},
@@ -97,11 +102,12 @@ test('initialState', () => {
       subcategories: []
     },
     transactionList: {
-      contactsList: [],
       searchVisible: false,
       transactions: [],
       transactionsWalletListModalVisibility: false,
-      updatingBalance: true
+      updatingBalance: true,
+      loadingTransactions: false, // needs to be changed later
+      visibleTransactions: []
     },
     walletList: {
       deleteWalletModalVisible: false,
@@ -121,7 +127,8 @@ test('initialState', () => {
     walletTransferList: {
       walletListModalVisible: false,
       walletTransferList: []
-    }
+    },
+    currentScene: ''
   }
   const actual = scenesReducer(undefined, {})
 

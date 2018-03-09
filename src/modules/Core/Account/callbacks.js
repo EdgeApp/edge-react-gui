@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccountCallbacks, AbcTransaction } from 'edge-login'
+import type { AbcAccountCallbacks, AbcTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
@@ -20,10 +20,8 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(updateWalletsRequest())
     },
 
-    onAddressesChecked (walletId: string, progressRatio: number) {
-      if (progressRatio === 1) {
-        console.log(`${walletId} - onAddressesChecked with ratio: ${progressRatio}`)
-      }
+    onAddressesChecked (walletId: string, transactionCount: number) {
+      console.log(`${walletId} - onAddressesChecked with ratio: ${transactionCount}`)
     },
 
     onBalanceChanged (walletId: string, currencyCode: string, balance: string) {
@@ -41,7 +39,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
         console.log(`${walletId} - onTransactionsChanged: No transactions`)
       }
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId))
+      dispatch(refreshTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
     },
 
@@ -57,7 +55,7 @@ const makeAccountCallbacks = (dispatch: Dispatch): AbcAccountCallbacks => {
       dispatch(newTransactionsRequest(walletId, transactions))
       dispatch(refreshWallet(walletId))
       // $FlowFixMe
-      dispatch(refreshTransactionsRequest(walletId))
+      dispatch(refreshTransactionsRequest(walletId, transactions))
     },
 
     onBlockHeightChanged (walletId: string, blockHeight: number) {

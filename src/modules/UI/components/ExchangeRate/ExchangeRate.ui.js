@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
+import T from '../../components/FormattedText'
 
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
@@ -42,11 +43,11 @@ export default class ExchangeRate extends Component<Props> {
     return (
       <View style={styles.view}>
         {!UTILS.isCompleteExchangeData(exchangeData) ? (
-          <Text style={styles.text}>{EXCHANGE_RATE_LOADING_TEXT}</Text>
+          <T style={styles.text}>{EXCHANGE_RATE_LOADING_TEXT}</T>
         ) : (
-          <Text style={styles.text}>
+          <T style={styles.text}>
             {formattedPrimaryAmount} {primaryDisplayName} = {secondaryDisplaySymbol} {formattedSecondaryAmount} {secondaryCurrencyCode}
-          </Text>
+          </T>
         )}
       </View>
     )

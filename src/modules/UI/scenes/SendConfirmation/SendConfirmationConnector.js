@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcTransaction } from 'edge-login'
+import type { AbcTransaction } from 'edge-core-js'
 // @flow
 import { connect } from 'react-redux'
 
@@ -16,6 +16,7 @@ import {
   getLabel,
   getNativeAmount,
   getNetworkFee,
+  getParentNetworkFee,
   getPending,
   getPublicAddress,
   getTransaction
@@ -58,12 +59,15 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryeExchangeCurrencyCode,
     resetSlider,
     fiatCurrencyCode: guiWallet.fiatCurrencyCode,
+    parentDisplayDenomination: getDisplayDenomination(state, guiWallet.currencyCode),
+    parentExchangeDenomination: getExchangeDenomination(state, guiWallet.currencyCode),
     primaryDisplayDenomination: getDisplayDenomination(state, currencyCode),
     primaryExchangeDenomination: getExchangeDenomination(state, currencyCode),
     forceUpdateGuiCounter: getForceUpdateGuiCounter(state),
     publicAddress: getPublicAddress(state),
     keyboardIsVisible: getKeyboardIsVisible(state),
     label: getLabel(state),
+    parentNetworkFee: getParentNetworkFee(state),
     networkFee: getNetworkFee(state),
     sliderDisabled: !transaction || !!error || !!pending,
     currencyConverter: getCurrencyConverter(state)

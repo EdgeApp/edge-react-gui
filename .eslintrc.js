@@ -6,11 +6,15 @@ module.exports =
     'plugin:react/recommended',
     'plugin:react-native/all'
   ],
+  "globals": {
+    "fetch": true
+  },
   'parser': 'babel-eslint',
   'plugins': ['flowtype', 'standard', 'react', 'react-native'],
   'rules': {
     'camelcase': 'error',
     'flowtype/generic-spacing': 'off',
+    'flowtype/semi': [2, 'never'],
     'no-throw-literal': 'error',
     'no-var': 'error',
     'prefer-const': 'error',

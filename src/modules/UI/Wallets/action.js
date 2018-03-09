@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-login'
+import type { AbcCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 
@@ -8,6 +8,7 @@ import type { CustomTokenInfo } from '../../../types.js'
 import * as SETTINGS_API from '../../Core/Account/settings.js'
 import * as CORE_SELECTORS from '../../Core/selectors.js'
 import * as WALLET_API from '../../Core/Wallets/api.js'
+import * as Constants from '../../../constants/indexConstants'
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import { displayErrorAlert } from '../../UI/components/ErrorAlert/actions'
 import * as UTILS from '../../utils'
@@ -15,7 +16,7 @@ import { addTokenAsync } from '../scenes/AddToken/action'
 import * as UI_SELECTORS from '../selectors.js'
 import { updateSettings } from '../Settings/action'
 import * as SETTINGS_SELECTORS from '../Settings/selectors'
-
+import * as actions from '../../../actions/indexActions'
 export const PREFIX = 'UI/Wallets/'
 
 export const UPSERT_WALLET = PREFIX + 'UPSERT_WALLET'
@@ -39,10 +40,25 @@ export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 
-export const selectWallet = (walletId: string, currencyCode: string) => ({
-  type: SELECT_WALLET,
-  data: { walletId, currencyCode }
-})
+export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const currentWalletId = state.ui.wallets.selectedWalletId
+  const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
+  if ((walletId !== currentWalletId) || (currencyCode !== currentWalletCurrencyCode)) {
+    dispatch({
+      type: SELECT_WALLET,
+      data: { walletId, currencyCode }
+    })
+    const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    WALLET_API.getReceiveAddress(wallet, currencyCode)
+      .then(receiveAddress => {
+        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
+      })
+      .catch(e => {
+        console.log('error on getting wallet receive address')
+      })
+  }
+}
 
 function dispatchUpsertWallet (dispatch, wallet, walletId) {
   dispatch(upsertWallet(wallet))

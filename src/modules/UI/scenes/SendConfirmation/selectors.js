@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetadata, AbcSpendInfo, AbcSpendTarget, AbcTransaction } from 'edge-login'
+import type { AbcMetadata, AbcSpendInfo, AbcSpendTarget, AbcTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
@@ -38,6 +38,7 @@ export const initialState = {
     blockHeight: -1,
     nativeAmount: '0',
     networkFee: '',
+    parentNetworkFee: '',
     ourReceiveAddresses: [],
     signedTx: '',
     metadata: {},
@@ -77,6 +78,7 @@ export const getPublicAddress = (state: State): string => getParsedUri(state).pu
 export const getNativeAmount = (state: State): string => getParsedUri(state).nativeAmount || initialState.parsedUri.nativeAmount || ''
 
 export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
+export const getParentNetworkFee = (state: State): ?string => getTransaction(state).parentNetworkFee
 
 export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): AbcSpendInfo => ({
   currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),

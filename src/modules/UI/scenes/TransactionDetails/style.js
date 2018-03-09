@@ -4,6 +4,7 @@ import { Platform, StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
+import { isIphoneX } from '../../../../lib/isIphoneX.js'
 
 export const styles = {
   container: {
@@ -216,18 +217,19 @@ export const styles = {
     borderWidth: 1,
     borderColor: '#CCCCCC',
     borderRadius: 3,
-    height: 50,
+    height: PLATFORM.deviceHeight * 0.13 - (PLATFORM.platform === 'android' ? 23 : 0) + (isIphoneX ? 60 : 0),
     padding: 3
   },
   notesInput: {
     color: THEME.COLORS.GRAY_2,
-    fontSize: 12,
-    fontFamily: THEME.FONTS.DEFAULT
+    fontSize: 15,
+    fontFamily: THEME.FONTS.DEFAULT,
+    paddingVertical: 0
   },
   footerArea: {
     backgroundColor: THEME.COLORS.GRAY_4,
     paddingTop: 20,
-    height: PLATFORM.deviceHeight * 1 / 3,
+    height: PLATFORM.deviceHeight * 1 / 3 + 40,
     paddingLeft: 15,
     paddingRight: 15
   },

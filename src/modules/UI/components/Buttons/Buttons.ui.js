@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 
@@ -33,16 +32,12 @@ class PrimaryButton extends Component {
         underlayColor={styleRaw.primaryUnderlay.color}
         style={[styles.primaryButtonWrap, styles.stylizedButton, this.props.style]}
       >
-        <View style={styles.stylizedButtonTextWrap}>
+        <View>
           {this.props.processingFlag ? this.props.processingElement : <T style={[styles.primaryButtonText, styles.stylizedButtonText]}>{this.props.text}</T>}
         </View>
       </TouchableHighlight>
     )
   }
-}
-PrimaryButton.propTypes = {
-  text: PropTypes.string,
-  onPressFunction: PropTypes.func
 }
 
 const CANCEL_TEXT = s.strings.string_cancel
@@ -56,7 +51,7 @@ class SecondaryButton extends Component {
         disabled={this.props.disabled}
         underlayColor={styleRaw.secondaryUnderlay.color}
       >
-        <View style={styles.stylizedButtonTextWrap}>
+        <View>
           <T style={[styles.secondaryButtonText, styles.stylizedButtonText]}>{this.props.text || CANCEL_TEXT}</T>
         </View>
       </TouchableHighlight>
@@ -73,7 +68,7 @@ class TertiaryButton extends Component {
         disabled={this.props.disabled}
         underlayColor={styleRaw.tertiaryUnderlay.color}
       >
-        <View style={[styles.stylizedButtonTextWrap]}>
+        <View>
           <T style={[styles.tertiaryButtonText, this.props.textStyle]} {...this.props}>
             {this.props.text}
           </T>

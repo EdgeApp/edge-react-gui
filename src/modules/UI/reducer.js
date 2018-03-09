@@ -5,11 +5,12 @@ import * as Constants from '../../constants/indexConstants'
 import type { State } from '../ReduxTypes'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
-import contacts from './contacts/reducer'
 import { request } from './Request/reducer.js'
 import { scenes } from './scenes/reducer.js'
 import { settings } from './Settings/reducer.js'
 import { wallets } from './Wallets/reducer.js'
+
+export { errorAlert, transactionAlert, scenes, wallets, request, settings }
 
 export const uiReducer = combineReducers({
   errorAlert,
@@ -17,8 +18,7 @@ export const uiReducer = combineReducers({
   scenes,
   wallets,
   request,
-  settings,
-  contacts
+  settings
 })
 
 export const ui = (state: $PropertyType<State, 'ui'>, action: any) => {

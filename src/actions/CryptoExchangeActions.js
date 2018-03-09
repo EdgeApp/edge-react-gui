@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, EdgeMetadata } from 'edge-login'
+import type { AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, EdgeMetadata } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -11,7 +11,6 @@ import * as CONTEXT_API from '../modules/Core/Context/api'
 import * as CORE_SELECTORS from '../modules/Core/selectors'
 import * as WALLET_API from '../modules/Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../modules/ReduxTypes'
-import { checkShiftTokenAvailability } from '../modules/UI/scenes/CryptoExchange/CryptoExchangeSupportedTokens'
 import * as UI_SELECTORS from '../modules/UI/selectors'
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors.js'
 import * as UTILS from '../modules/utils'
@@ -217,22 +216,27 @@ const processMakeSpendError = e => (dispatch: Dispatch, getState: GetState) => {
 }
 
 export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: GetState) => {
+  dispatch(actions.dispatchAction(Constants.START_SHIFT_TRANSACTION))
   const state = getState()
   const fromWallet = state.cryptoExchange.fromWallet
   const toWallet = state.cryptoExchange.toWallet
   if (!fromWallet || !toWallet) {
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
   if (!srcWallet) {
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   if (!state.cryptoExchange.transaction) {
     getShiftTransaction(fromWallet, toWallet)
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   if (holderObject.status !== 'finished') {
+    dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
   if (srcWallet) {
@@ -268,14 +272,12 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
 
       dispatch(actions.dispatchAction(Constants.SHIFT_COMPLETE))
       console.log(broadcastedTransaction)
-      setTimeout(() => {
-        Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes)
-      }, 1)
+      dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
+      setTimeout(() => { Alert.alert(s.strings.exchange_succeeded, s.strings.exchanges_may_take_minutes) }, 1)
     } catch (error) {
       dispatch(actions.dispatchActionString(Constants.SHIFT_ERROR, error.message))
-      setTimeout(() => {
-        Alert.alert(s.strings.exchange_failed, error.message)
-      }, 1)
+      dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
+      setTimeout(() => { Alert.alert(s.strings.exchange_failed, error.message) }, 1)
     }
   }
 }
@@ -333,13 +335,6 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
         await dispatch(getShiftTransaction(fromWallet, toWallet))
       } catch (e) {
         dispatch(processMakeSpendError(e))
-        /* console.log(e)
-        if (e.name === Constants.INSUFFICIENT_FUNDS || e.message === Constants.INSUFFICIENT_FUNDS) {
-          holderObject.status = 'finished'
-          dispatch(actions.dispatchAction(Constants.RECEIVED_INSUFFICIENT_FUNDS_ERROR))
-          return
-        }
-        dispatch(actions.dispatchActionString(Constants.GENERIC_SHAPE_SHIFT_ERROR, e.message)) */
       }
       return
     }
@@ -456,18 +451,29 @@ export const getCryptoExchangeRate = (fromCurrencyCode: string, toCurrencyCode: 
     })
 }
 
+export const getShapeShiftTokens = () => async (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const context = CORE_SELECTORS.getContext(state)
+  try {
+    const response = await context.getAvailableExchangeTokens() // await fetch('https://shapeshift.io/getcoins',
+    dispatch(actions.dispatchActionArray(Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS, response))
+  } catch (e) {
+    dispatch(actions.dispatchActionArray(Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS, []))
+  }
+}
+
 export const selectWalletForExchange = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   // This is a hack .. if the currecy code is not supported then we cant do the exchange
-  if (!checkShiftTokenAvailability(currencyCode)) {
+  const state = getState()
+  const availableShapeShiftTokens = state.cryptoExchange.availableShapeShiftTokens
+  if (!availableShapeShiftTokens.includes(currencyCode)) {
     setTimeout(() => {
       Alert.alert(s.strings.could_not_select, currencyCode + ' ' + s.strings.token_not_supported)
     }, 1)
     return
   }
-
-  const state = getState()
+  dispatch(getShapeShiftTokens())
   const wallet = state.ui.wallets.byId[walletId]
-
   switch (state.cryptoExchange.changeWallet) {
     case Constants.TO:
       return dispatch(selectToFromWallet(Constants.SELECT_TO_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))

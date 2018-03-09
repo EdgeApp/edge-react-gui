@@ -1,15 +1,18 @@
+// @flow
+
 import { connect } from 'react-redux'
 
+import type { Dispatch, State } from '../../../ReduxTypes.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors'
 import { setDenominationKeyRequest } from './action'
 import CurrencySettings from './CurrencySettings.ui'
 
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = (state: State, ownProps) => ({
   logo: SETTINGS_SELECTORS.getPlugin(state, ownProps.pluginName).currencyInfo.symbolImage,
   denominations: SETTINGS_SELECTORS.getDenominations(state, ownProps.currencyCode),
   selectedDenominationKey: SETTINGS_SELECTORS.getDisplayDenominationKey(state, ownProps.currencyCode)
 })
-const mapDispatchToProps = (dispatch, ownProps) => ({
+const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({
   selectDenomination: denominationKey => {
     dispatch(setDenominationKeyRequest(ownProps.currencyCode, denominationKey))
   }

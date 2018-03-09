@@ -1,6 +1,7 @@
+// @flow
+
 import React from 'react'
 import { Text, View } from 'react-native'
-import { connect } from 'react-redux'
 
 import s from '../../../../locales/strings.js'
 import { border as b } from '../../../utils.js'
@@ -10,7 +11,12 @@ import styles from './styles'
 const REMAINING_TEXT = s.strings.bitcoin_remaining
 const RECEIVED_TEXT = s.strings.bitcoin_received
 
-const RequestStatus = props => {
+type RequestStateProps = {
+  amountSatoshi: number,
+  requestAddress: string
+}
+
+const RequestStatus = (props: RequestStateProps) => {
   const amountRequestedInCrypto = props.amountSatoshi
   const amountReceivedInCrypto = props.amountSatoshi
   const requestAddress = props.requestAddress
@@ -68,8 +74,4 @@ const RequestStatus = props => {
   return <View style={styles.view}>{getDisplayRequestStatus()}</View>
 }
 
-const mapStateToProps = state => ({
-  request: state.request
-})
-
-export default connect(mapStateToProps)(RequestStatus)
+export default RequestStatus

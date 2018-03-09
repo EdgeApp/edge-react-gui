@@ -1,17 +1,23 @@
-import { Actions } from 'react-native-router-flux'
 // @flow
+
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import * as actions from '../../actions/indexActions'
+import { exchangeMax } from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
+import type { Dispatch, State } from '../../modules/ReduxTypes.js'
 import { openHelpModal } from '../../modules/UI/components/HelpModal/actions'
-import LinkedComponent from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui'
+import {MenuDropDown} from '../../modules/UI/components/MenuDropDown/MenuDropDown.ui.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz'
 
-export const mapStateToProps = (state: any) => {
+export const dropDownStyle = {
+  ...Styles.MenuDropDownStyleHeader,
+  icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
+}
+export const mapStateToProps = (state: State) => {
   let sourceWalletId, sourceWallet
   if (state.cryptoExchange && state.cryptoExchange.fromWallet) {
     sourceWalletId = state.cryptoExchange.fromWallet.id
@@ -46,10 +52,7 @@ export const mapStateToProps = (state: any) => {
     }
   ]
   return {
-    style: {
-      ...Styles.MenuDropDownStyleHeader,
-      icon: { ...Styles.MenuDropDownStyle.icon, color: THEME.COLORS.WHITE }
-    },
+    style: dropDownStyle,
     exchangeRate: state.cryptoExchange.exchangeRate,
     data,
     rightSide: true,
@@ -57,14 +60,14 @@ export const mapStateToProps = (state: any) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: any) => ({
+export const mapDispatchToProps = (dispatch: Dispatch) => ({
   onSelect: (value: Object) => {
     switch (value.title) {
       case Constants.HELP_VALUE:
         dispatch(openHelpModal())
         break
       case Constants.EXCHANGE_MAX_AMOUNT_VALUE:
-        dispatch(actions.exchangeMax())
+        dispatch(exchangeMax())
         break
       case Constants.CHANGE_MINING_FEE_VALUE:
         Actions[Constants.CHANGE_MINING_FEE_EXCHANGE]({ sourceWallet: value.sourceWallet })
@@ -74,4 +77,4 @@ export const mapDispatchToProps = (dispatch: any) => ({
   // nextScreen: () => dispatch(actions.nextScreen())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(LinkedComponent)
+export default connect(mapStateToProps, mapDispatchToProps)(MenuDropDown)

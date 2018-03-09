@@ -3,8 +3,6 @@
 import React, { Component } from 'react'
 import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { TwoButtonTextModalComponent, StaticModalComponent } from '../../../../components/indexComponents'
-import Contacts from 'react-native-contacts'
-import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
@@ -14,7 +12,6 @@ import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type { GuiContact } from '../../../../types'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -56,7 +53,6 @@ type Props = {
   wallets: any,
   renameWalletInput: string,
   otpResetPending: boolean,
-  setContactList: (Array<GuiContact>) => void,
   updateArchivedWalletsOrder: (Array<string>) => void,
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
@@ -82,20 +78,6 @@ export default class WalletList extends Component<Props, State> {
     }
   }
 
-  componentDidMount () {
-    Permissions.request('contacts').then(response => {
-      if (response === 'authorized') {
-        Contacts.getAll((err, contacts) => {
-          if (err === 'denied') {
-            // error
-          } else {
-            contacts.sort((a, b) => a.givenName > b.givenName)
-            this.props.setContactList(contacts)
-          }
-        })
-      }
-    })
-  }
   componentWillReceiveProps (nextProps: Props) {
     if (nextProps.otpResetPending && nextProps.otpResetPending !== this.props.otpResetPending) {
       this.setState({

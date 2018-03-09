@@ -1,12 +1,14 @@
 // @flow
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { Share, View } from 'react-native'
+import { sprintf } from 'sprintf-js'
 
 import { FormField } from '../../../../../../components/indexComponents'
 import * as Constants from '../../../../../../constants/indexConstants.js'
 import s from '../../../../../../locales/strings.js'
 import { ConfirmPasswordModalStyle, MaterialInputOnWhite } from '../../../../../../styles/indexStyles'
+import { TertiaryButton } from '../../../../components/Buttons'
 import T from '../../../../components/FormattedText/FormattedText.ui'
 import StylizedModal from '../../../../components/Modal/Modal.ui'
 import OptionButtons from '../../../../components/OptionButtons/OptionButtons.ui.js'
@@ -22,14 +24,15 @@ type GetSeedModalOwnProps = {
   onNegative: () => void,
   onDone: () => void,
   walletId: string,
-  getSeed: () => void,
   visibilityBoolean: boolean,
   onExitButtonFxn: () => void,
   privateSeedUnlocked: boolean
 }
 
 export type GetSeedModalStateProps = {
-  walletId: string
+  walletId: string,
+  getSeed: () => string | null,
+  walletName: string
 }
 
 export type GetSeedModalDispatchProps = {
@@ -107,6 +110,33 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     )
   }
 
+  shareSeed = (shareText: string) => {
+    const shareTitle = sprintf(s.strings.fragment_wallets_seed_share_title, this.props.walletName)
+    Share.share(
+      {
+        message: shareText,
+        title: shareTitle,
+        url: undefined
+      },
+      { dialogTitle: shareTitle }
+    )
+      .then(() => {
+        this.onDismiss()
+      })
+      .catch(() => {})
+  }
+
+  renderRevealedSeedArea = (seed: string) => {
+    return (
+      <View style={styles.seedTopLayer}>
+        <T style={styles.seedText}>{seed}</T>
+        <View style={styles.seedSecondLayer}>
+          <TertiaryButton onPressFunction={() => this.shareSeed(seed)} text={s.strings.string_share} style={styles.copyButton} />
+        </View>
+      </View>
+    )
+  }
+
   render () {
     let modalMiddle = (
       <View style={[styles.container, { flexDirection: 'column' }]}>
@@ -119,10 +149,10 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     )
 
     let modalBottom = <OptionButtons positiveText={s.strings.string_get_seed} onPositive={this.onPositive} onNegative={this.onNegative} />
-
+    const seed = this.props.getSeed() || ''
     if (this.props.privateSeedUnlocked) {
       modalBottom = null
-      modalMiddle = <T style={styles.seedText}>{this.props.getSeed()}</T>
+      modalMiddle = this.renderRevealedSeedArea(seed)
     }
 
     return (

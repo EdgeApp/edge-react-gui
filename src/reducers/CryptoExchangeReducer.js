@@ -39,7 +39,9 @@ const initialState = {
   changeWallet: Constants.NONE,
   forceUpdateGuiCounter: 0,
   transaction: null,
-  gettingTransaction: false
+  gettingTransaction: false,
+  availableShapeShiftTokens: [],
+  shiftPendingTransaction: false
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
@@ -122,7 +124,7 @@ function cryptoExchangerReducer (state = initialState, action) {
         genericShapeShiftError: null
       }
     case Constants.SHIFT_COMPLETE:
-      return initialState
+      return { ...initialState, availableShapeShiftTokens: state.availableShapeShiftTokens }
     case Constants.SHIFT_ERROR:
       return {
         ...state,
@@ -156,13 +158,15 @@ function cryptoExchangerReducer (state = initialState, action) {
         ...state,
         transaction: null,
         insufficientError: true,
-        genericShapeShiftError: null
+        genericShapeShiftError: null,
+        shiftTransactionError: null
       }
     case Constants.GENERIC_SHAPE_SHIFT_ERROR:
       return {
         ...state,
         transaction: null,
-        genericShapeShiftError: action.data
+        genericShapeShiftError: action.data,
+        shiftTransactionError: null
       }
     case Constants.CHANGE_EXCHANGE_FEE:
       return {
@@ -175,10 +179,17 @@ function cryptoExchangerReducer (state = initialState, action) {
         ...state,
         gettingTransaction: true,
         insufficientError: false,
-        genericShapeShiftError: null
+        genericShapeShiftError: null,
+        shiftTransactionError: null
       }
+    case Constants.ON_AVAILABLE_SHAPE_SHIFT_TOKENS:
+      return {...state, availableShapeShiftTokens: action.data}
     case Constants.DONE_MAKE_SPEND:
       return { ...state, gettingTransaction: false }
+    case Constants.START_SHIFT_TRANSACTION:
+      return { ...state, shiftPendingTransaction: true }
+    case Constants.DONE_SHIFT_TRANSACTION:
+      return { ...state, shiftPendingTransaction: false }
     default:
       return state
   }

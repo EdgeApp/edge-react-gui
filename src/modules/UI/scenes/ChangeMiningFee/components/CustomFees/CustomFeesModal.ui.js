@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-login'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 
@@ -16,19 +16,25 @@ export type CustomFees = {
   [feeSetting: string]: string
 }
 
-export type CustomFeesModalOwnProps = {
+export type CustomFeesModalStateProps = {
   customFeeSettings: Array<string>,
-  visibilityBoolean: boolean,
-  onPositive: (customFees: CustomFees) => void,
-  onDone: () => void,
+  customNetworkFee: Object,
+  visibilityBoolean: boolean
+}
+export type CustomFeesModalDispatchProps = {
+  onPositive: (customFees: CustomFees) => any,
+  onDone: () => any
+}
+export type CustomFeesModalOwnProps = {
   handlePress: Function,
   sourceWallet: EdgeCurrencyWallet
 }
 
+type Props = CustomFeesModalOwnProps & CustomFeesModalDispatchProps & CustomFeesModalStateProps
 type State = CustomFees
 
-export default class CustomFeesModal extends Component<CustomFeesModalOwnProps, State> {
-  constructor (props: CustomFeesModalOwnProps) {
+export default class CustomFeesModal extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {}
   }
@@ -47,7 +53,9 @@ export default class CustomFeesModal extends Component<CustomFeesModalOwnProps, 
 
   _initState = () => {
     for (const feeSetting of this.props.customFeeSettings) {
-      this.setState({ [feeSetting]: '0' })
+      this.setState({
+        [feeSetting]: this.props.customNetworkFee[feeSetting] || '0'
+      })
     }
   }
 

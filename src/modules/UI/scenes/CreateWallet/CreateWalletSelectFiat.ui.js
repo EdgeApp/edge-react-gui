@@ -20,21 +20,18 @@ export type CreateWalletSelectFiatOwnProps = {
   supportedFiats: Array<GuiFiatType>,
   dimensions: DeviceDimensions
 }
-
+export type CreateWalletSelectFiatStateProps = {
+  dimensions: DeviceDimensions,
+  supportedFiats: Array<GuiFiatType>
+}
+export type Props = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
 type State = {
   searchTerm: string,
   selectedFiat: string
 }
 
-export type CreateWalletSelectFiatStateProps = {
-  dimensions: DeviceDimensions,
-  supportedFiats: Array<GuiFiatType>
-}
-
-export type CreateWalletSelectFiatProps = CreateWalletSelectFiatOwnProps & CreateWalletSelectFiatStateProps
-
-export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProps, State> {
-  constructor (props: CreateWalletSelectFiatProps & State) {
+export class CreateWalletSelectFiat extends Component<Props, State> {
+  constructor (props: Props) {
     super(props)
     this.state = {
       searchTerm: '',
@@ -42,20 +39,20 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
     }
   }
 
-  isValidFiatType = (): boolean => {
+  isValidFiatType = () => {
     const { selectedFiat } = this.state
     const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === selectedFiat)
     const isValid = fiatTypeIndex >= 0
     return isValid
   }
 
-  getFiatType = (fiatKey: string): GuiFiatType => {
+  getFiatType = (fiatKey: string) => {
     const fiatTypeIndex = this.props.supportedFiats.findIndex(fiatType => fiatType.value === fiatKey)
 
     return this.props.supportedFiats[fiatTypeIndex]
   }
 
-  onNext = (): void => {
+  onNext = () => {
     if (this.isValidFiatType()) {
       Actions[Constants.CREATE_WALLET_NAME]({
         selectedWalletType: this.props.selectedWalletType,
@@ -66,13 +63,13 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
     }
   }
 
-  handleSearchTermChange = (searchTerm: string): void => {
+  handleSearchTermChange = (searchTerm: string) => {
     this.setState({
       searchTerm
     })
   }
 
-  handleSelectFiatType = (item: GuiFiatType): void => {
+  handleSelectFiatType = (item: GuiFiatType) => {
     const selectedFiat = this.props.supportedFiats.find(type => type.value === item.value)
 
     if (selectedFiat) {
@@ -86,11 +83,11 @@ export class CreateWalletSelectFiat extends Component<CreateWalletSelectFiatProp
     }
   }
 
-  handleOnFocus = (): void => {
+  handleOnFocus = () => {
     UTILS.noOp()
   }
 
-  handleOnBlur = (): void => {
+  handleOnBlur = () => {
     UTILS.noOp()
   }
 

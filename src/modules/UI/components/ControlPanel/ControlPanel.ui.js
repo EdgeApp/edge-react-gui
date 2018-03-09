@@ -1,9 +1,12 @@
+// @flow
+
 import React, { Component } from 'react'
 import { Image, TouchableHighlight, View } from 'react-native'
 import MDIcon from 'react-native-vector-icons/MaterialIcons'
 
 import person from '../../../../assets/images/sidenav/accounts.png'
 import { emptyGuiDenomination } from '../../../../types'
+import type { GuiDenomination } from '../../../../types'
 import { getDenomFromIsoCode } from '../../../utils.js'
 import T from '../../components/FormattedText'
 import ExchangedExchangeRate from '../ExchangeRate/ExchangedExchangeRate.ui.js'
@@ -12,7 +15,21 @@ import SafeAreaView from '../SafeAreaView/SafeAreaViewDrawer.ui.js'
 import Main from './Component/MainConnector'
 import styles from './style'
 
-export default class ControlPanel extends Component {
+export type Props = {
+  currencyLogo: string,
+  primaryDisplayCurrencyCode: string,
+  primaryDisplayDenomination: GuiDenomination,
+  primaryExchangeDenomination: GuiDenomination,
+  secondaryDisplayCurrencyCode: string,
+  secondaryToPrimaryRatio: number,
+  styles: Object,
+  username: string,
+  openSelectUser: () => void,
+  closeSelectUser: () => void
+}
+type State = {}
+
+export default class ControlPanel extends Component<Props, State> {
   _handlePressUserList = () => {
     if (!this.props.usersView) {
       return this.props.openSelectUser()
@@ -24,6 +41,7 @@ export default class ControlPanel extends Component {
 
   render () {
     const {
+      currencyLogo,
       primaryDisplayCurrencyCode,
       primaryDisplayDenomination,
       primaryExchangeDenomination,
@@ -33,33 +51,34 @@ export default class ControlPanel extends Component {
 
     const secondaryExchangeDenomination = secondaryDisplayCurrencyCode ? getDenomFromIsoCode(secondaryDisplayCurrencyCode) : ''
 
-    const primaryInfo = {
+    const primaryCurrencyInfo = {
       displayCurrencyCode: primaryDisplayCurrencyCode,
       displayDenomination: primaryDisplayDenomination || emptyGuiDenomination,
-      exchangeDenomination: primaryExchangeDenomination || emptyGuiDenomination
+      exchangeDenomination: primaryExchangeDenomination || emptyGuiDenomination,
+      exchangeCurrencyCode: primaryDisplayCurrencyCode
     }
-    const secondaryInfo = {
+    const secondaryCurrencyInfo = {
       displayCurrencyCode: secondaryDisplayCurrencyCode,
       displayDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
-      exchangeDenomination: secondaryExchangeDenomination || emptyGuiDenomination
+      exchangeDenomination: secondaryExchangeDenomination || emptyGuiDenomination,
+      exchangeCurrencyCode: secondaryDisplayCurrencyCode
     }
 
     const arrowIcon = this.props.usersView ? 'keyboard-arrow-up' : 'keyboard-arrow-down'
 
     return (
       <SafeAreaView>
-        <Gradient style={styles.container}>
+        <Gradient reverse style={styles.container}>
           <View style={styles.bitcoin.container}>
-            <T style={styles.bitcoin.icon} />
+            {this.renderCryptoIcon(currencyLogo)}
             <ExchangedExchangeRate
-              primaryCurrencyInfo={primaryInfo}
-              secondaryCurrencyInfo={secondaryInfo}
+              primaryCurrencyInfo={primaryCurrencyInfo}
+              secondaryCurrencyInfo={secondaryCurrencyInfo}
               exchangeSecondaryToPrimaryRatio={secondaryToPrimaryRatio}
             />
           </View>
-
-          <TouchableHighlight style={styles.user.container} onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
-            <View style={{ flexDirection: 'row' }}>
+          <TouchableHighlight onPress={this._handlePressUserList} underlayColor={styles.underlay.color}>
+            <View style={styles.user.container}>
               <View style={styles.iconImageContainer}>
                 <Image style={styles.iconImage} source={person} />
               </View>
@@ -67,10 +86,16 @@ export default class ControlPanel extends Component {
               <MDIcon style={styles.icon} name={arrowIcon} />
             </View>
           </TouchableHighlight>
-
           <Main />
         </Gradient>
       </SafeAreaView>
     )
+  }
+
+  renderCryptoIcon = (currencyLogo: string) => {
+    if (currencyLogo) {
+      return <Image style={styles.bitcoin.icon} source={{ uri: currencyLogo }} />
+    }
+    return <Image style={styles.bitcoin.icon} />
   }
 }

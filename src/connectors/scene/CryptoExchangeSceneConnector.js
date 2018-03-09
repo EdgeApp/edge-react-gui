@@ -86,7 +86,8 @@ export const mapStateToProps = (state: State): CryptoExchangeSceneComponentState
     showWalletSelectModal: state.cryptoExchange.walletListModalVisible,
     showConfirmShiftModal: state.cryptoExchange.confirmTransactionModalVisible,
     showNextButton,
-    gettingTransaction: state.cryptoExchange.gettingTransaction
+    gettingTransaction: state.cryptoExchange.gettingTransaction,
+    shiftPendingTransaction: state.cryptoExchange.shiftPendingTransaction
   }
 }
 
@@ -96,7 +97,8 @@ export const mapDispatchToProps = (dispatch: Dispatch): CryptoExchangeSceneCompo
   shift: () => dispatch(actions.shiftCryptoCurrency()),
   closeConfirmation: () => dispatch(actions.dispatchAction(Constants.CLOSE_CRYPTO_EXC_CONF_MODAL)),
   openConfirmation: () => dispatch(actions.dispatchAction(Constants.OPEN_CRYPTO_EXC_CONF_MODAL)),
-  setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data))
+  setNativeAmount: (data: SetNativeAmountInfo) => dispatch(actions.setNativeAmount(data)),
+  getShapeShiftTokens: () => dispatch(actions.getShapeShiftTokens())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(CryptoExchangeSceneComponent)

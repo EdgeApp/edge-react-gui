@@ -1,11 +1,11 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcDenomination, AbcTransaction } from 'edge-login'
+import type { AbcDenomination, AbcTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, ListView, ScrollView, TouchableHighlight, TouchableOpacity, View } from 'react-native'
-import Contacts from 'react-native-contacts'
-import Permissions from 'react-native-permissions'
+import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, SectionList } from 'react-native'
+// import Contacts from 'react-native-contacts'
+// import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
 
 import receivedTypeImage from '../../../../assets/images/transactions/transaction-type-received.png'
@@ -16,7 +16,8 @@ import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
-import type { GuiWallet } from '../../../../types'
+
+import type { GuiWallet, DateTransactionGroup, TransactionListTx, TransactionListSection, GuiContact } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -25,13 +26,16 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 
 // import SearchBar from './components/SearchBar.ui'
+const INITIAL_TRANSACTION_BATCH_NUMBER = 10
+const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
+const SCROLL_THRESHOLD = 0.5
 
 type Props = {
-  getTransactions: (walletId: string, currencyCode: string) => void,
+  getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
   updateExchangeRates: () => void,
-  setContactList: (contacts: Array<any>) => void,
   transactionsSearchHidden: () => void,
-  contacts: Array<any>,
+  fetchTransactions: (walletId: string, currencyCode: string, options: Object) => void,
+  contacts: Array<GuiContact>,
   selectedWalletId: string,
   selectedCurrencyCode: string,
   loading: boolean,
@@ -44,7 +48,8 @@ type Props = {
   fiatSymbol: string,
   balanceInFiat: number,
   fiatCurrencyCode: string,
-  isoFiatCurrencyCode: string
+  isoFiatCurrencyCode: string,
+  visibleTransactions: Array<DateTransactionGroup>
 }
 type State = {
   focused: boolean,
@@ -54,10 +59,11 @@ type State = {
   balanceBoxOpacity: any,
   balanceBoxHeight: any,
   width: ?number,
-  showBalance: boolean
+  showBalance: boolean,
+  currentCurrencyCode: string,
+  currentWalletId: string,
+  currentEndIndex: number
 }
-
-type TransactionListTx = any
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
 const REQUEST_TEXT = s.strings.fragment_request_subtitle
@@ -78,32 +84,57 @@ export default class TransactionList extends Component<Props, State> {
     renderedTxCount: 0,
     completedTx: [],
     dataSrc: [],
-    width: undefined
+    width: undefined,
+    currentCurrencyCode: '',
+    currentWalletId: '',
+    currentEndIndex: 0
   }
 
-  componentDidMount () {
-    if (this.props.loading) return
+  componentWillMount () {
+    this.props.updateExchangeRates()
+    this.handleScrollEnd()
+  }
 
+  componentWillReceiveProps (nextProps: Props) {
+    if ((nextProps.selectedWalletId !== this.props.selectedWalletId) ||
+        (nextProps.selectedCurrencyCode !== this.props.selectedCurrencyCode)) {
+      this.fetchListOfTransactions(nextProps.selectedWalletId, nextProps.selectedCurrencyCode)
+    }
+  }
+
+  fetchListOfTransactions = (walletId: string, currencyCode: string) => {
+    this.props.fetchTransactions(walletId, currencyCode, {
+      numEntries: this.state.currentEndIndex,
+      numIndex: 0
+    })
+  }
+
+  handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    this.props.updateExchangeRates()
-    this.props.getTransactions(walletId, currencyCode)
+    const { currentEndIndex, currentWalletId, currentCurrencyCode } = this.state
+    let newEndIndex = currentEndIndex
 
-    if (!this.props.contact) {
-      Permissions.check('contacts').then(response => {
-        if (response === 'authorized') {
-          Contacts.getAll((err, contacts) => {
-            if (err === 'denied') {
-              // error
-            } else {
-              const filteredContacts = contacts
-                .filter(item => item.givenName)
-                .sort((a, b) => a.givenName.toUpperCase().localeCompare(b.givenName.toUpperCase()))
-              this.props.setContactList(filteredContacts)
-            }
-          })
-        }
-      })
+    const txLength = this.props.transactions.length
+    if (!txLength) {
+      newEndIndex = INITIAL_TRANSACTION_BATCH_NUMBER
+    } else if (txLength === currentEndIndex) {
+      newEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
+    }
+
+    if (
+      newEndIndex !== currentEndIndex ||
+      (currentWalletId !== '' && currentWalletId !== walletId) ||
+      (currentCurrencyCode !== '' && currentCurrencyCode !== currencyCode)
+    ) {
+      this.setState(
+        state => ({
+          currentCurrencyCode: currencyCode,
+          currentEndIndex: newEndIndex,
+          currentWalletId: walletId
+        }),
+        () => this.fetchListOfTransactions(walletId, currencyCode)
+      )
     }
   }
 
@@ -187,8 +218,6 @@ export default class TransactionList extends Component<Props, State> {
     const {
       loading,
       updatingBalance,
-      transactions,
-      multiplier,
       uiWallet,
       selectedCurrencyCode,
       displayDenomination,
@@ -202,28 +231,6 @@ export default class TransactionList extends Component<Props, State> {
       return <ActivityIndicator style={{ flex: 1, alignSelf: 'center' }} size={'large'} />
     }
 
-    const renderableTransactionList = transactions.sort(function (a: any, b: any) {
-      a = new Date(a.date)
-      b = new Date(b.date)
-      return a > b ? -1 : a < b ? 1 : 0
-    })
-
-    const completedTxList = renderableTransactionList.map((x, i) => {
-      const newValue: TransactionListTx = x
-      newValue.key = i
-      newValue.multiplier = multiplier
-      const txDate = new Date(x.date * 1000)
-
-      // let time = formatAMPM(txDate)
-      // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
-      const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-      const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-      newValue.dateString = dateString
-      newValue.time = time
-      return newValue
-    })
-    const ds = new ListView.DataSource({ rowHasChanged: (row1, row2) => row1 !== row2 })
-    const dataSrc = ds.cloneWithRows(completedTxList)
     let logo
 
     if (uiWallet.currencyCode !== selectedCurrencyCode) {
@@ -328,15 +335,15 @@ export default class TransactionList extends Component<Props, State> {
                 </Gradient>
               </Animated.View>
               <View style={[styles.transactionsWrap]}>
-                <ListView
+                <SectionList
                   style={[styles.transactionsScrollWrap]}
-                  dataSource={dataSrc}
-                  renderRow={tx => this.renderTx(tx, completedTxList)}
-                  onEndReached={this.loadMoreTransactions}
-                  onEndReachedThreshold={60}
-                  enableEmptySections
-                  initialIterator={-1}
-                  removeClippedSubviews={false}
+                  sections={this.props.visibleTransactions}
+                  renderItem={this.renderTx}
+                  initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
+                  renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                  stickySectionHeadersEnabled={true}
+                  onEndReached={() => this.handleScrollEnd()}
+                  onEndReachedThreshold={SCROLL_THRESHOLD}
                 />
               </View>
             </View>
@@ -352,15 +359,18 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   isReceivedTransaction (tx: TransactionListTx) {
-    return bns.gt(tx.nativeAmount, '0')
+    if (tx.nativeAmount) {
+      return bns.gt(tx.nativeAmount, '0')
+    }
   }
 
   isSentTransaction (tx: TransactionListTx) {
     return !this.isReceivedTransaction(tx)
   }
 
-  renderTx = (tx: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
-    let txColorStyle, txImage, lastOfDate, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
+  renderTx = (transaction: TransactionListSection, completedTxList: Array<TransactionListTx>) => {
+    const tx = transaction.item
+    let txColorStyle, txImage, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
     let txName = ''
 
     let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
@@ -392,12 +402,6 @@ export default class TransactionList extends Component<Props, State> {
       }
     }
 
-    if (completedTxList[tx.key + 1]) {
-      // is there a subsequent transaction?
-      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
-    } else {
-      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
-    }
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
     const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
@@ -426,33 +430,26 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <View style={[styles.singleTransactionWrap]}>
-        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
-          <View style={styles.singleDateArea}>
-            <View style={styles.leftDateArea}>
-              <T style={styles.formattedDate}>{tx.dateString}</T>
-            </View>
-          </View>
-        )}
         <TouchableHighlight
           onPress={() => this._goToTxDetail(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
+          style={[styles.singleTransaction]}
         >
-          <View style={[styles.transactionInfoWrap, UTILS.border()]}>
+          <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo, UTILS.border()]} source={{ uri: thumbnailPath }} />
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
               ) : (
                 <Image style={styles.transactionLogo} source={txImage} />
               )}
 
-              <View style={[styles.transactionLeftTextWrap, UTILS.border()]}>
+              <View style={[styles.transactionLeftTextWrap]}>
                 <T style={[styles.transactionPartner]}>{transactionPartner}</T>
                 <T style={[styles.transactionTimePendingArea, pendingTimeStyle]}>{pendingTimeSyntax}</T>
               </View>
             </View>
 
-            <View style={[styles.transactionRight, UTILS.border()]}>
+            <View style={[styles.transactionRight]}>
               <T style={[styles.transactionBitAmount, txColorStyle, styles.symbol]}>
                 {this.props.displayDenomination.symbol} {amountString}
               </T>
@@ -460,6 +457,16 @@ export default class TransactionList extends Component<Props, State> {
             </View>
           </View>
         </TouchableHighlight>
+      </View>
+    )
+  }
+
+  renderSectionHeader = (sectionData: {data: Array<any>, title: string}) => {
+    return (
+      <View style={styles.singleDateArea}>
+        <View style={styles.leftDateArea}>
+          <T style={styles.formattedDate}>{sectionData.title}</T>
+        </View>
       </View>
     )
   }

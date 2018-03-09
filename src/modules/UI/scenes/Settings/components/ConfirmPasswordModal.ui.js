@@ -59,7 +59,7 @@ export default class ConfirmPasswordModal extends Component<ConfirmPasswordModal
   renderMiddle = (style: Object) => {
     const formStyle = {
       ...MaterialInputOnWhite,
-      container: { ...MaterialInputOnWhite.container, width: 244 }
+      container: { ...MaterialInputOnWhite.container }
     }
     return (
       <View style={style.middle.container}>

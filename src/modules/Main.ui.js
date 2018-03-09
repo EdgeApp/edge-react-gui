@@ -3,14 +3,14 @@
 import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import type { AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-login'
+import type { AbcContext, AbcContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
 import Locale from 'react-native-locale'
-import { MenuContext } from 'react-native-menu'
 import { Actions, Drawer, Modal, Overlay, Router, Scene, Stack, Tabs } from 'react-native-router-flux'
 import SplashScreen from 'react-native-smart-splash-screen'
+import { MenuProvider } from 'react-native-popup-menu'
 // $FlowFixMe
 import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 import { connect } from 'react-redux'
@@ -27,6 +27,7 @@ import scanIcon from '../assets/images/tabbar/scan.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
+import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
@@ -46,8 +47,7 @@ import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
 import Header from './UI/components/Header/Header.ui'
 import HelpModal from './UI/components/HelpModal'
 import TransactionAlert from './UI/components/TransactionAlert/TransactionAlertConnector'
-import { CAMERA } from './UI/permissions.js'
-import type { Permission } from './UI/permissions.js'
+import { CAMERA, CONTACTS, type Permission } from './UI/permissions.js'
 import AddToken from './UI/scenes/AddToken/AddTokenConnector.js'
 import ChangeMiningFeeExchange from './UI/scenes/ChangeMiningFee/ChangeMiningFeeExchangeConnector.ui'
 import ChangeMiningFeeSendConfirmation from './UI/scenes/ChangeMiningFee/ChangeMiningFeeSendConfirmationConnector.ui'
@@ -71,6 +71,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
+import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -140,6 +141,7 @@ type Props = {
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
+  updateCurrentSceneKey: (string) => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -214,7 +216,7 @@ export default class Main extends Component<Props, State> {
 
   render () {
     return (
-      <MenuContext style={styles.mainMenuContext}>
+      <MenuProvider style={styles.mainMenuContext}>
         <RouterWithRedux backAndroidHandler={this.handleBack}>
           <Overlay>
             <Modal hideNavBar transitionConfig={() => ({ screenInterpolator: CardStackStyleInterpolator.forFadeFromBottomAndroid })}>
@@ -225,6 +227,7 @@ export default class Main extends Component<Props, State> {
                 <Scene
                   key={Constants.TRANSACTION_DETAILS}
                   navTransparent={true}
+                  onEnter={() => this.props.requestPermission(CONTACTS)}
                   clone
                   component={TransactionDetails}
                   renderTitle={this.renderTitle(TRANSACTION_DETAILS)}
@@ -291,6 +294,10 @@ export default class Main extends Component<Props, State> {
 
                         <Scene
                           key={Constants.TRANSACTION_LIST}
+                          onEnter={() => {
+                            this.props.requestPermission(CONTACTS)
+                            this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
+                          }}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}
@@ -334,7 +341,7 @@ export default class Main extends Component<Props, State> {
                         tabBarLabel={REQUEST}
                         component={Request}
                         renderTitle={this.renderWalletListNavBar()}
-                        renderLeftButton={this.renderHelpButton()}
+                        renderLeftButton={this.renderRequestMenuButton()}
                         renderRightButton={this.renderMenuButton()}
                       />
 
@@ -484,7 +491,8 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
-      </MenuContext>
+        <ContactsLoader />
+      </MenuProvider>
     )
   }
 
@@ -539,6 +547,10 @@ export default class Main extends Component<Props, State> {
 
   renderExchangeButton = () => {
     return <ExchangeDropMenu />
+  }
+
+  renderRequestMenuButton = () => {
+    return <RequestDropMenu />
   }
 
   renderSendConfirmationButton = () => {

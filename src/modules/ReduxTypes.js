@@ -11,11 +11,12 @@ import type {
   AbcReceiveAddress,
   AbcTransaction,
   EdgeReceiveAddress
-} from 'edge-login'
+} from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
+import type { ContactsState } from '../reducers/contacts/contactsReducer.js'
 import type { PermissionsState } from '../reducers/permissions/permissionsReducer.js'
-import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet } from '../types'
+import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet, DateTransactionGroup } from '../types'
 import type { Permission, PermissionStatus } from './UI/permissions.js'
 
 export type Action = { type: string, data?: any }
@@ -83,7 +84,9 @@ export type State = {
         transactions: Array<AbcTransaction>,
         contactsList: Array<GuiContact>,
         updatingBalance: boolean,
-        searchVisible: boolean
+        searchVisible: boolean,
+        visibleTransactions: Array<DateTransactionGroup>,
+        currentEndIndex: number
       },
       transactionDetails: {
         subcategories: Array<any>
@@ -143,7 +146,13 @@ export type State = {
           message: string,
           buttons: Array<{ title: string, message: string }>
         }
-      }
+      },
+      requestType: {
+        useLegacyAddress: boolean,
+        receiveAddress: {},
+        uniqueLegacyAddress: boolean
+      },
+      currentScene: string
     },
     wallets: {
       byId: { [walletId: Id]: GuiWallet },
@@ -224,10 +233,13 @@ export type State = {
     changeWallet: 'none',
     transaction: AbcTransaction | null,
     fee: any,
-    gettingTransaction: boolean
+    gettingTransaction: boolean,
+    availableShapeShiftTokens: Array<any>,
+    shiftPendingTransaction: boolean
   },
   exchangeRates: number,
-  permissions: PermissionsState
+  permissions: PermissionsState,
+  contacts: ContactsState
 }
 
 type ThunkDispatch<A> = ((Dispatch, GetState) => Promise<void> | void) => A

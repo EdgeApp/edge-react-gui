@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcContext } from 'edge-login'
+import type { AbcContext } from 'edge-core-js'
 
 const PREFIX = 'Core/Context/'
 

@@ -1,7 +1,6 @@
 // @flow
 import { toFixed } from 'biggystring'
 
-const decimalSeparatorNative = '.'
 const EN_US_LOCALE = {
   localeIdentifier: 'en_US',
   decimalSeparator: '.',
@@ -9,6 +8,8 @@ const EN_US_LOCALE = {
   quotationEndDelimiterKey: '”',
   groupingSeparator: ','
 }
+const NATIVE_DECIMAL_SEPARATOR = '.'
+const NUMBER_GROUP_SIZE = 3
 let locale = EN_US_LOCALE
 
 type IntlLocaleType = any
@@ -27,11 +28,11 @@ const intlHandler = {
   formatNumberInput (input: string, options?: IntlNumberFormatOptionsType): string {
     const _options = {}
 
-    if (input.slice(-1) === '.') {
-      return input.replace('.', locale.decimalSeparator)
+    if (input.endsWith('.')) {
+      return intlHandler.formatNumber(input.slice(0, -1)) + locale.decimalSeparator
     }
-    if (input.includes(decimalSeparatorNative)) {
-      const decimalPart = input.split(decimalSeparatorNative)[1]
+    if (input.includes(NATIVE_DECIMAL_SEPARATOR)) {
+      const decimalPart = input.split(NATIVE_DECIMAL_SEPARATOR)[1]
       if (decimalPart) {
         _options.toFixed = decimalPart.length
       }
@@ -47,11 +48,21 @@ const intlHandler = {
    * @return {string}
    */
   formatNumber (number: number | string, options?: IntlNumberFormatOptionsType): string {
+    let i
+    let intPart
     let stringify = String(number)
     if (options && options.toFixed) {
       stringify = toFixed(stringify, options.toFixed, options.toFixed)
     }
-    return stringify.replace('.', locale.decimalSeparator)
+    const [integers, decimals] = stringify.split(NATIVE_DECIMAL_SEPARATOR)
+    const len = integers.length
+    i = len % NUMBER_GROUP_SIZE || NUMBER_GROUP_SIZE
+    intPart = integers.substr(0, i)
+    for (; i < len; i += NUMBER_GROUP_SIZE) {
+      intPart += locale.groupingSeparator + integers.substr(i, NUMBER_GROUP_SIZE)
+    }
+    stringify = decimals ? intPart + locale.decimalSeparator + decimals : intPart
+    return stringify
   },
 
   /**

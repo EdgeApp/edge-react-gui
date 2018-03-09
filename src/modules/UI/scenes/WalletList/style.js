@@ -174,7 +174,7 @@ export const styles = {
   rowContainer: {
     padding: 6,
     paddingLeft: 16,
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: THEME.COLORS.WHITE
   },
   rowContent: {
@@ -237,6 +237,9 @@ export const styles = {
   rowDragIcon: {
     position: 'relative',
     top: 16
+  },
+  rowMenuTrigger: {
+    width: 46
   },
 
   symbol: {
@@ -363,6 +366,17 @@ export const styles = {
   },
   seedText: {
     textAlign: 'center'
+  },
+  copyButton: {
+    backgroundColor: THEME.COLORS.TRANSPARENT,
+    color: THEME.COLORS.SECONDARY
+  },
+  seedSecondLayer: {
+    marginTop: 12,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
   }
 }
 

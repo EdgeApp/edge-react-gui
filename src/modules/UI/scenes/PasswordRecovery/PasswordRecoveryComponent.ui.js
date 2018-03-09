@@ -1,6 +1,6 @@
 // @flow
 
-import { PasswordRecoveryScreen } from 'airbitz-core-js-ui'
+import { PasswordRecoveryScreen } from 'edge-login-ui-rn'
 import React, { Component } from 'react'
 import { View } from 'react-native'
 

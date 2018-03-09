@@ -1,6 +1,6 @@
 // @flow
-import type { AbcContext, AbcContextCallbacks, AbcContextOptions, EdgeCorePluginFactory } from 'edge-login'
-import { makeEdgeContext, makeFakeContexts } from 'edge-login'
+import type { AbcContext, AbcContextCallbacks, AbcContextOptions, EdgeCorePluginFactory } from 'edge-core-js'
+import { makeEdgeContext, makeFakeContexts } from 'edge-core-js'
 
 import ENV from '../../env.json'
 
