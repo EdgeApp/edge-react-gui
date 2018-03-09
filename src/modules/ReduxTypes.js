@@ -3,7 +3,7 @@
 import type {
   EdgeAccount,
   EdgeContext,
-  AbcCurrencyPlugin,
+  EdgeCurrencyPlugin,
   AbcCurrencyWallet,
   AbcDenomination,
   AbcLobby,
@@ -191,9 +191,9 @@ export type State = {
         symbolImageDarkMono: string
       },
       plugins: {
-        arrayPlugins: Array<AbcCurrencyPlugin>,
+        arrayPlugins: Array<EdgeCurrencyPlugin>,
         supportedWalletTypes: Array<string>,
-        [pluginName: string]: AbcCurrencyPlugin
+        [pluginName: string]: EdgeCurrencyPlugin
       }
     },
     contacts: {

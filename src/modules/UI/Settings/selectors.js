@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin, AbcDenomination } from 'edge-core-js'
+import type { EdgeCurrencyPlugin, AbcDenomination } from 'edge-core-js'
 
 import type { State } from '../../ReduxTypes'
 import isoFiatDenominations from './IsoFiatDenominations.js'
@@ -96,19 +96,19 @@ export const getPlugins = (state: State) => {
   return plugins
 }
 
-export const getPlugin = (state: State, type: string): AbcCurrencyPlugin => {
+export const getPlugin = (state: State, type: string): EdgeCurrencyPlugin => {
   const plugins = getPlugins(state)
-  const plugin: AbcCurrencyPlugin = plugins[type.toLowerCase()]
+  const plugin: EdgeCurrencyPlugin = plugins[type.toLowerCase()]
   return plugin
 }
 
-export const getBitcoinPlugin = (state: State): AbcCurrencyPlugin => {
-  const bitcoinPlugin: AbcCurrencyPlugin = getPlugin(state, 'bitcoin')
+export const getBitcoinPlugin = (state: State): EdgeCurrencyPlugin => {
+  const bitcoinPlugin: EdgeCurrencyPlugin = getPlugin(state, 'bitcoin')
   return bitcoinPlugin
 }
 
-export const getEthereumPlugin = (state: State): AbcCurrencyPlugin => {
-  const ethereumPlugin: AbcCurrencyPlugin = getPlugin(state, 'ethereum')
+export const getEthereumPlugin = (state: State): EdgeCurrencyPlugin => {
+  const ethereumPlugin: EdgeCurrencyPlugin = getPlugin(state, 'ethereum')
   return ethereumPlugin
 }
 

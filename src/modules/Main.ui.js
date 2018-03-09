@@ -3,7 +3,7 @@
 import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
-import type { EdgeContext, EdgeContextCallbacks, AbcCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
+import type { EdgeContext, EdgeContextCallbacks, EdgeCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
 import HockeyApp from 'react-native-hockeyapp'
@@ -133,7 +133,7 @@ const DEFAULT_FIAT = s.strings.title_default_fiat
 type Props = {
   requestPermission: (permission: Permission) => void,
   username?: string,
-  addCurrencyPlugin: AbcCurrencyPlugin => void,
+  addCurrencyPlugin: EdgeCurrencyPlugin => void,
   setKeyboardHeight: number => void,
   addContext: EdgeContext => void,
   addUsernames: (Array<string>) => void,
