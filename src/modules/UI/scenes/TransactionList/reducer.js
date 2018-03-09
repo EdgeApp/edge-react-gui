@@ -6,7 +6,6 @@ import { combineReducers } from 'redux'
 import type { Action } from '../../../ReduxTypes.js'
 import * as ACTION from './action'
 import * as WALLET_ACTION from '../../Wallets/action.js'
-import {INITIAL_TRANSACTION_BATCH_NUMBER} from './TransactionList.ui.js'
 
 export type TransactionsState = Array<AbcTransaction>
 
@@ -29,18 +28,6 @@ const visibleTransactions = (state: Array<any> = [], action: Action) => {
       return action.data.groupedTransactionsByDate
     case WALLET_ACTION.SELECT_WALLET:
       return []
-    default:
-      return state
-  }
-}
-
-const currentEndIndex = (state: number = 0, action: Action) => {
-  if (!action.data) return state
-  switch (action.type) {
-    case ACTION.SET_TRANSACTION_END_INDEX:
-      return action.data.endIndex
-    case WALLET_ACTION.SELECT_WALLET:
-      return INITIAL_TRANSACTION_BATCH_NUMBER
     default:
       return state
   }
@@ -96,8 +83,7 @@ export const transactionList = combineReducers({
   updatingBalance,
   transactionsWalletListModalVisibility,
   visibleTransactions,
-  loadingTransactions,
-  currentEndIndex
+  loadingTransactions
 })
 
 export default transactionList

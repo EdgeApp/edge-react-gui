@@ -26,7 +26,8 @@ import SafeAreaView from '../../components/SafeAreaView'
 import styles, { styles as styleRaw } from './style'
 
 // import SearchBar from './components/SearchBar.ui'
-export const INITIAL_TRANSACTION_BATCH_NUMBER = 10
+const INITIAL_TRANSACTION_BATCH_NUMBER = 10
+const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
 const SCROLL_THRESHOLD = 0.5
 
 type Props = {
@@ -48,8 +49,7 @@ type Props = {
   balanceInFiat: number,
   fiatCurrencyCode: string,
   isoFiatCurrencyCode: string,
-  visibleTransactions: Array<DateTransactionGroup>,
-  currentEndIndex: number
+  visibleTransactions: Array<DateTransactionGroup>
 }
 type State = {
   focused: boolean,
@@ -59,7 +59,8 @@ type State = {
   balanceBoxOpacity: any,
   balanceBoxHeight: any,
   width: ?number,
-  showBalance: boolean
+  showBalance: boolean,
+  currentEndIndex: number
 }
 
 const SHOW_BALANCE_TEXT = s.strings.string_show_balance
@@ -81,7 +82,8 @@ export default class TransactionList extends Component<Props, State> {
     renderedTxCount: 0,
     completedTx: [],
     dataSrc: [],
-    width: undefined
+    width: undefined,
+    currentEndIndex: INITIAL_TRANSACTION_BATCH_NUMBER
   }
 
   componentWillMount () {
@@ -99,19 +101,25 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   fetchListOfTransactions = (walletId: string, currencyCode: string) => {
-    const options = {
-      numEntries: this.props.currentEndIndex + INITIAL_TRANSACTION_BATCH_NUMBER,
+    this.props.fetchTransactions(walletId, currencyCode, {
+      numEntries: this.state.currentEndIndex,
       numIndex: 0
-    }
-
-    this.props.fetchTransactions(walletId, currencyCode, options)
+    })
   }
 
   handleScrollEnd = () => {
     const walletId = this.props.selectedWalletId
     const currencyCode = this.props.selectedCurrencyCode
-    // this.props.setTransactionEndIndex(this.props.currentEndIndex + SUBSEQUENT_TRANSACTION_BATCH_NUMBER)
-    this.fetchListOfTransactions(walletId, currencyCode)
+    let { currentEndIndex } = this.state
+
+    const txLength = this.props.transactions.length
+    if (!txLength || txLength === currentEndIndex) {
+      currentEndIndex += SUBSEQUENT_TRANSACTION_BATCH_NUMBER
+      this.setState(
+        state => ({ currentEndIndex }),
+        () => this.fetchListOfTransactions(walletId, currencyCode)
+      )
+    }
   }
 
   _onSearchChange = () => {
