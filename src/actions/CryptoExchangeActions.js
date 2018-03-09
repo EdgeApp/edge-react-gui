@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, AbcSpendInfo, EdgeTransaction, EdgeMetadata } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, EdgeMetadata } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -92,7 +92,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
 
-  const abcSpendInfo: AbcSpendInfo = {
+  const abcSpendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode,
     spendTargets: [
@@ -292,7 +292,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
   if (!fromCurrencyCode || !toCurrencyCode) {
     return
   }
-  const spendInfo: AbcSpendInfo = {
+  const spendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
     nativeAmount: fromNativeAmount,

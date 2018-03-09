@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetadata, AbcSpendInfo, AbcSpendTarget, EdgeTransaction } from 'edge-core-js'
+import type { AbcMetadata, EdgeSpendInfo, AbcSpendTarget, EdgeTransaction } from 'edge-core-js'
 
 import { STANDARD_FEE } from '../../../../constants/indexConstants'
 import type { State } from '../../../ReduxTypes'
@@ -80,7 +80,7 @@ export const getNativeAmount = (state: State): string => getParsedUri(state).nat
 export const getNetworkFee = (state: State): string => getTransaction(state).networkFee
 export const getParentNetworkFee = (state: State): ?string => getTransaction(state).parentNetworkFee
 
-export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): AbcSpendInfo => ({
+export const getSpendInfo = (state: State, newSpendInfo?: GuiMakeSpendInfo = {}): EdgeSpendInfo => ({
   currencyCode: newSpendInfo.currencyCode || getSelectedCurrencyCode(state),
   metadata: newSpendInfo.metadata ? { ...getMetadata(state), ...newSpendInfo.metadata } : getMetadata(state),
   spendTargets: [

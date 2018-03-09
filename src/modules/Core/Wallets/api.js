@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, AbcMetadata, EdgeParsedUri, EdgeReceiveAddress, AbcSpendInfo, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyWallet, AbcMetadata, EdgeParsedUri, EdgeReceiveAddress, EdgeSpendInfo, EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 const ENABLED_TOKENS_FILENAME = 'EnabledTokens.json'
 
@@ -41,11 +41,11 @@ export const getReceiveAddress = (wallet: EdgeCurrencyWallet, currencyCode: stri
   return wallet.getReceiveAddress ? wallet.getReceiveAddress(currencyCode) : Promise.resolve(dummyEdgeReceiveAddress)
 }
 
-export const makeSpend = (wallet: EdgeCurrencyWallet, spendInfo: AbcSpendInfo): Promise<EdgeTransaction> => {
+export const makeSpend = (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<EdgeTransaction> => {
   return wallet.makeSpend ? wallet.makeSpend(spendInfo) : Promise.resolve(dummyEdgeTransaction)
 }
 
-export const getMaxSpendable = (wallet: EdgeCurrencyWallet, spendInfo: AbcSpendInfo): Promise<string> => {
+export const getMaxSpendable = (wallet: EdgeCurrencyWallet, spendInfo: EdgeSpendInfo): Promise<string> => {
   return wallet.getMaxSpendable ? wallet.getMaxSpendable(spendInfo) : Promise.resolve('0')
 }
 
