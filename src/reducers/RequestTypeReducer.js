@@ -12,6 +12,7 @@ const initialState: RequestType = {
 }
 const requestType = (state: RequestType = initialState, action: Action): RequestType => {
   switch (action.type) {
+    case Constants.NEW_RECEIVE_ACCRESS:
     case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS:
       if (!action.data) return state
       let uniqueLegacy = true

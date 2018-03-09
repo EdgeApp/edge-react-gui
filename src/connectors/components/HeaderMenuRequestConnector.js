@@ -37,7 +37,7 @@ export const mapStateToProps = (state: State) => {
   const dropDownButtons = uniqueLegacyAddress ? [addressToggle, help] : [help]
   return {
     style: dropDownStyle,
-    dropDownButtons,
+    data: dropDownButtons,
     rightSide: true
   }
 }
