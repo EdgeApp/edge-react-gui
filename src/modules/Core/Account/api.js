@@ -1,6 +1,6 @@
 // @flow
 // Core/Account/api.js
-import type { EdgeAccount, AbcCreateCurrencyWalletOptions } from 'edge-core-js'
+import type { EdgeAccount, EdgeCreateCurrencyWalletOptions } from 'edge-core-js'
 
 export const logoutRequest = (account: EdgeAccount) => {
   return account.logout()
@@ -19,7 +19,7 @@ export const getFirstActiveWalletInfo = (account: EdgeAccount, currencyCodes: { 
   }
 }
 
-export const createCurrencyWalletRequest = (account: EdgeAccount, walletType: string, opts: AbcCreateCurrencyWalletOptions) => {
+export const createCurrencyWalletRequest = (account: EdgeAccount, walletType: string, opts: EdgeCreateCurrencyWalletOptions) => {
   return account.createCurrencyWallet(walletType, opts)
 }
 
