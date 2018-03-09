@@ -1,7 +1,11 @@
 # edge-react-gui
 
-## 1.0.7-pending
+## 1.0.7
 
+* Significantly improved performance for accounts with large wallets
+* Fix occasional crash when uploading logs
+* Reduce disk storage requirements for app logs
+* Allow displaying of legacy address formats for BCH and LTC
 * Use new popup menu library to fix offscreen visibility issues
 * Dynamic check of token availability from ShapeShift
 * Change wording in wallet option popup
@@ -37,7 +41,7 @@ edge-core-js:
 
 * Fix Wallet List dropdown selector on iPhone X
 * Use correct Bitcoin Cash logo
- 
+
 ## 1.0.3
 
 Improvements
