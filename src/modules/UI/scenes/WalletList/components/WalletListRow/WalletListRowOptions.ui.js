@@ -5,7 +5,7 @@ import React, { Component } from 'react'
 import * as Constants from '../../../../../../constants/indexConstants'
 import s from '../../../../../../locales/strings.js'
 import { MenuDropDownStyle } from '../../../../../../styles/indexStyles'
-import MenuDropDown from '../../../../components/MenuDropDown/MenuDropDown.ui'
+import {MenuDropDown} from '../../../../components/MenuDropDown/MenuDropDown.ui.js'
 
 type Props = {
   walletKey: string,

@@ -27,6 +27,7 @@ import scanIcon from '../assets/images/tabbar/scan.png'
 import walletIconSelected from '../assets/images/tabbar/wallets_selected.png'
 import walletIcon from '../assets/images/tabbar/wallets.png'
 import ExchangeDropMenu from '../connectors/components/HeaderMenuExchangeConnector'
+import RequestDropMenu from '../connectors/components/HeaderMenuRequestConnector'
 import ExchangeConnector from '../connectors/scene/CryptoExchangeSceneConnector'
 import EdgeLoginSceneConnector from '../connectors/scene/EdgeLoginSceneConnector'
 import OtpSettingsSceneConnector from '../connectors/scene/OtpSettingsSceneConnector.js'
@@ -70,6 +71,7 @@ import TransactionDetails from './UI/scenes/TransactionDetails/TransactionDetail
 import TransactionListConnector from './UI/scenes/TransactionList/TransactionListConnector'
 import { HwBackButtonHandler } from './UI/scenes/WalletList/components/HwBackButtonHandler'
 import WalletList from './UI/scenes/WalletList/WalletListConnector'
+import { ContactsLoaderConnecter as ContactsLoader } from './UI/components/ContactsLoader/indexContactsLoader.js'
 
 const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
@@ -139,6 +141,7 @@ type Props = {
   dispatchEnableScan: () => void,
   dispatchDisableScan: () => void,
   urlReceived: string => void,
+  updateCurrentSceneKey: (string) => void,
   contextCallbacks: AbcContextCallbacks
 }
 type State = {
@@ -291,7 +294,10 @@ export default class Main extends Component<Props, State> {
 
                         <Scene
                           key={Constants.TRANSACTION_LIST}
-                          onEnter={() => this.props.requestPermission(CONTACTS)}
+                          onEnter={() => {
+                            this.props.requestPermission(CONTACTS)
+                            this.props.updateCurrentSceneKey(Constants.TRANSACTION_LIST)
+                          }}
                           navTransparent={true}
                           component={TransactionListConnector}
                           renderTitle={this.renderWalletListNavBar()}
@@ -335,7 +341,7 @@ export default class Main extends Component<Props, State> {
                         tabBarLabel={REQUEST}
                         component={Request}
                         renderTitle={this.renderWalletListNavBar()}
-                        renderLeftButton={this.renderHelpButton()}
+                        renderLeftButton={this.renderRequestMenuButton()}
                         renderRightButton={this.renderMenuButton()}
                       />
 
@@ -485,6 +491,7 @@ export default class Main extends Component<Props, State> {
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
+        <ContactsLoader />
       </MenuProvider>
     )
   }
@@ -540,6 +547,10 @@ export default class Main extends Component<Props, State> {
 
   renderExchangeButton = () => {
     return <ExchangeDropMenu />
+  }
+
+  renderRequestMenuButton = () => {
+    return <RequestDropMenu />
   }
 
   renderSendConfirmationButton = () => {

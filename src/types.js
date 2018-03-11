@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type { AbcDenomination, AbcMetaToken, EdgeMetadata } from 'edge-core-js'
+import type { AbcDenomination, AbcMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,
@@ -82,6 +82,12 @@ export type GuiFiatType = {
   value: string
 }
 
+export type TransactionListTx = {
+  ...EdgeTransaction,
+  dateString?: string,
+  key: number
+}
+
 export type FlatListItem = {
   key: number,
   item: any
@@ -117,6 +123,7 @@ export type GuiReceiveAddressMetadata = {
 export type GuiReceiveAddress = {
   metadata: EdgeMetadata,
   publicAddress: string,
+  legacyAddress?: string,
   segwitAddress?: string,
   nativeAmount: string
 }
@@ -197,4 +204,16 @@ export type ComponentLayoutMeasurements = {
   height: Number,
   pageX: Number,
   pageY: Number
+}
+
+export type DateTransactionGroup = {
+  data: Array<EdgeTransaction>,
+  title: string
+}
+
+export type TransactionListSection = {
+  index: number,
+  item: Object,
+  section: DateTransactionGroup,
+  separators: Object
 }

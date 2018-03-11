@@ -24,6 +24,7 @@ import styles from './styles.js'
 
 type State = {
   publicAddress: string,
+  legacyAddress: string,
   encodedURI: string,
   loading: boolean,
   result: string
@@ -34,6 +35,7 @@ export type RequestStateProps = {
   currencyCode: string,
   // next line will need review
   request: GuiTransactionRequest | Object,
+  useLegacyAddress: boolean,
   abcWallet: AbcCurrencyWallet | null,
   guiWallet: GuiWallet | null,
   exchangeSecondaryToPrimaryRatio: number,
@@ -54,6 +56,7 @@ export class Request extends Component<Props, State> {
     super(props)
     const newState: State = {
       publicAddress: '',
+      legacyAddress: '',
       encodedURI: '',
       loading: props.loading,
       result: ''
@@ -62,18 +65,22 @@ export class Request extends Component<Props, State> {
   }
 
   componentWillReceiveProps (nextProps: Props) {
-    if (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id)) {
+    const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
+    if (changeLegacyPublic || (nextProps.abcWallet && (!this.props.abcWallet || nextProps.abcWallet.id !== this.props.abcWallet.id))) {
       const abcWallet: AbcCurrencyWallet | null = nextProps.abcWallet
       const { currencyCode } = nextProps
       if (!abcWallet) return
+
       WALLET_API.getReceiveAddress(abcWallet, currencyCode)
         .then(receiveAddress => {
-          const { publicAddress } = receiveAddress
-          const abcEncodeUri: AbcEncodeUri = { publicAddress }
+          const { publicAddress, legacyAddress } = receiveAddress
+          const abcEncodeUri: AbcEncodeUri = nextProps.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
           const encodedURI = nextProps.abcWallet ? nextProps.abcWallet.encodeUri(abcEncodeUri) : ''
+
           this.setState({
             encodedURI,
-            publicAddress
+            publicAddress: publicAddress,
+            legacyAddress: legacyAddress
           })
         })
         .catch(e => {
@@ -90,28 +97,28 @@ export class Request extends Component<Props, State> {
 
     WALLET_API.getReceiveAddress(abcWallet, currencyCode)
       .then(receiveAddress => {
-        const { publicAddress } = receiveAddress
-        const abcEncodeUri: AbcEncodeUri = { publicAddress }
+        const { publicAddress, legacyAddress } = receiveAddress
+        const abcEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
         const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
         this.setState({
           encodedURI,
-          publicAddress
+          publicAddress: publicAddress,
+          legacyAddress: legacyAddress
         })
       })
       .catch(e => {
-        this.setState({ encodedURI: '', publicAddress: '' })
+        this.setState({ encodedURI: '', publicAddress: '', legacyAddress: '' })
         console.log(e)
       })
   }
 
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
-    const parsedURI: AbcEncodeUri = {
-      publicAddress: this.state.publicAddress
-    }
+    const { publicAddress, legacyAddress } = this.state
+    const abcEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     if (bns.gt(amounts.nativeAmount, '0')) {
-      parsedURI.nativeAmount = amounts.nativeAmount
+      abcEncodeUri.nativeAmount = amounts.nativeAmount
     }
-    const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(parsedURI) : ''
+    const encodedURI = this.props.abcWallet ? this.props.abcWallet.encodeUri(abcEncodeUri) : ''
 
     this.setState({
       encodedURI
@@ -132,6 +139,7 @@ export class Request extends Component<Props, State> {
 
     const color = 'white'
     const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
+    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
@@ -158,7 +166,7 @@ export class Request extends Component<Props, State> {
             />
 
             <QRCode value={this.state.encodedURI} />
-            <RequestStatus requestAddress={this.state.publicAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
+            <RequestStatus requestAddress={requestAddress} amountRequestedInCrypto={0} amountReceivedInCrypto={0} />
           </View>
 
           <View style={styles.shareButtonsContainer}>
@@ -177,7 +185,8 @@ export class Request extends Component<Props, State> {
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.state.publicAddress)
+    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    Clipboard.setString(requestAddress)
     Alert.alert(s.strings.fragment_request_address_copied)
   }
 

@@ -9,8 +9,7 @@ type Props = {
     textStyles: Array<{}>
   },
   name: string,
-  denomination: string,
-  walletDirectionString?: string
+  denomination: string
 }
 
 class WalletNameHeader extends React.Component<Props> {
@@ -19,13 +18,12 @@ class WalletNameHeader extends React.Component<Props> {
     const textStyles = styles.textStyles || []
     const name = this.props.name
     const denomination = this.props.denomination
-    const directionPrefix = this.props.walletDirectionString ? this.props.walletDirectionString : ''
 
     return (
       <View style={style.headerNameContainer}>
         <Text style={textStyles} ellipsizeMode={'middle'} numberOfLines={1}>
-          {directionPrefix + ' ' + name}
-          <Text style={[style.cCode, ...textStyles]}> ({denomination})</Text>
+          {name}:
+          <Text style={[style.cCode, ...textStyles]}>{denomination}</Text>
         </Text>
       </View>
     )

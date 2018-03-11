@@ -9,7 +9,7 @@ import * as UTILS from '../../../utils'
 import { updateExchangeRates } from '../../components/ExchangeRate/action'
 import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
-import { getTransactionsRequest } from './action'
+import { fetchTransactions } from './action'
 import TransactionList from './TransactionList.ui'
 
 const mapStateToProps = (state: State) => {
@@ -53,6 +53,7 @@ const mapStateToProps = (state: State) => {
   const balanceInCryptoDisplay = UTILS.convertNativeToExchange(exchangeDenomination.multiplier)(balanceInCrypto)
   const balanceInFiat = currencyConverter.convertCurrency(currencyCode, isoFiatCurrencyCode, balanceInCryptoDisplay)
   const displayDenomination = SETTINGS_SELECTORS.getDisplayDenomination(state, currencyCode)
+
   return {
     displayDenomination,
     updatingBalance: false,
@@ -71,13 +72,15 @@ const mapStateToProps = (state: State) => {
     multiplier,
     contacts: state.contacts,
     fiatSymbol,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    visibleTransactions: state.ui.scenes.transactionList.visibleTransactions
   }
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  getTransactions: (walletId, currencyCode) => dispatch(getTransactionsRequest(walletId, currencyCode)),
-  updateExchangeRates: () => dispatch(updateExchangeRates())
+  updateExchangeRates: () => dispatch(updateExchangeRates()),
+  fetchTransactions: (walletId: string, currencyCode: string, options: Object) =>
+    dispatch(fetchTransactions(walletId, currencyCode, options))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(TransactionList)

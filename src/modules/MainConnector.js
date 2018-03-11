@@ -11,6 +11,7 @@ import type { Dispatch } from './ReduxTypes'
 import { setKeyboardHeight } from './UI/dimensions/action'
 import { disableScan, enableScan } from './UI/scenes/Scan/action'
 import { addCurrencyPlugin } from './UI/Settings/action'
+import { updateCurrentSceneKey } from './UI/scenes/action.js'
 
 const mapStateToProps = () => ({})
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -34,6 +35,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   },
   addUsernames: usernames => {
     return dispatch(addUsernames(usernames))
+  },
+  updateCurrentSceneKey: (sceneKey) => {
+    return dispatch(updateCurrentSceneKey(sceneKey))
   },
   // commented out since it was blowing up flow && doesnt seem to be called.. TODO remove
   /* setLocaleInfo: (localeInfo) => {
