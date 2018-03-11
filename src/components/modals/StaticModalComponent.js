@@ -2,13 +2,12 @@
 
 import React, { Component } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
 import Modal from 'react-native-modal'
+import Gradient from '../../modules/UI/components/Gradient/Gradient.ui.js'
 
 import * as Constants from '../../constants/indexConstants.js'
 import { Icon } from '../../modules/UI/components/Icon/Icon.ui'
 import { StaticModalStyle } from '../../styles/indexStyles.js'
-import THEME from '../../theme/variables/airbitz'
 
 type Props = {
   modalDismissTimerSeconds: number,
@@ -42,14 +41,9 @@ class StaticModalComponent extends Component<Props> {
         <TouchableOpacity onPress={this.props.cancel}>
           <View style={styles.modalBox}>
             <View style={styles.innerBox}>
-              <LinearGradient
-                style={styles.header}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={[THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]}
-              >
+              <Gradient style={styles.header}>
                 <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />
-              </LinearGradient>
+              </Gradient>
               <View style={styles.bottom}>
                 <View style={styles.bodyRow}>
                   {this.renderMiddle(styles)}
