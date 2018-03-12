@@ -33,7 +33,7 @@ global.clog = console.log
 // $FlowFixMe
 global.OS = Platform.OS
 
-// Disable the font scaling on iOS
+// Disable the font scaling
 Text.defaultProps.allowFontScaling = false
 TextInput.defaultProps.allowFontScaling = false
 
