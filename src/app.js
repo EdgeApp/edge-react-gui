@@ -4,7 +4,7 @@
 import './util/polyfills'
 
 import React, { Component } from 'react'
-import { AsyncStorage, Platform } from 'react-native'
+import { AsyncStorage, Platform, Text, TextInput } from 'react-native'
 import BackgroundTask from 'react-native-background-task'
 import RNFS from 'react-native-fs'
 import PushNotification from 'react-native-push-notification'
@@ -32,6 +32,10 @@ global.clog = console.log
 
 // $FlowFixMe
 global.OS = Platform.OS
+
+// Disable the font scaling on iOS
+Text.defaultProps.allowFontScaling = false
+TextInput.defaultProps.allowFontScaling = false
 
 if (!__DEV__) {
   // TODO: Fix logger to append data vs read/modify/write
