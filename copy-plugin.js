@@ -27,7 +27,7 @@ function copyAssets (plugin) {
     if (!fs.existsSync(pluginDir)) {
       fs.mkdirSync(pluginDir)
     }
-    fs.copyFileSync(`./node_modules/${plugin}/target/index.html`, `${pluginDir}/index.html`)
+    fs.copyFile(`./node_modules/${plugin}/target/index.html`, `${pluginDir}/index.html`, () => { })
   })
   return manifest
 }

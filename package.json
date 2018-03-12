@@ -156,6 +156,7 @@
     "eslint-plugin-react": "^7.3.0",
     "eslint-plugin-react-native": "^3.0.1",
     "eslint-plugin-standard": "^3.0.1",
+    "edge-plugin-simplex": "https://github.com/teneighty/edge-plugin-simplex.git#master",
     "express": "^4.16.2",
     "flow-bin": "^0.62.0",
     "flow-coverage-report": "^0.4.1",
@@ -220,5 +221,9 @@
     "assets": ["./src/assets/fonts"]
   },
   "plugins": {
+    "buysell": [
+      "edge-plugin-simplex"
+    ],
+    "spend": [ ]
   }
 }
