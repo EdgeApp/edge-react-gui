@@ -218,5 +218,7 @@
   },
   "rnpm": {
     "assets": ["./src/assets/fonts"]
+  },
+  "plugins": {
   }
 }

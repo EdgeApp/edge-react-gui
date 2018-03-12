@@ -34,6 +34,9 @@ export const SETTINGS_OVERVIEW_TAB = 'settingsOverviewTab'
 export const DEFAULT_FIAT_SETTING = 'defaultFiatSetting'
 export const EXCHANGE_SCENE = 'exchangeScene'
 export const CREATE_WALLET = 'createWallet'
+export const BUYSELL = 'buysell'
+export const SPEND = 'spend'
+export const PLUGIN = 'plugin'
 
 export const CURRENCY_SETTINGS = {
   btcSettings: {
