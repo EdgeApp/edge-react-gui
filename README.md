@@ -23,6 +23,10 @@ Edge Wallet is:
 
     https://nodejs.org/en/download/
 
+### (MacOS users) update Xcode (requires Xcode >= 9)
+
+    softwareupdate --install xcode
+    
 ### Install React Native CLI
 
     npm install -g react-native-cli
