@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
@@ -22,8 +22,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     case Constants.ACCOUNT_INIT_COMPLETE: {
       const wallets = action.data.currencyWallets
       const out = {}
+
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
+        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -40,7 +41,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
+        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -48,7 +49,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
           })
         }
-        out[walletId] = tempWallet
+        out[walletId] = {
+          ...state[walletId],
+          ...tempWallet
+        }
       }
 
       return out
@@ -136,7 +140,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case ACTION.UPSERT_WALLET: {
       const { data } = action
-      const guiWallet = schema(data.wallet)
+      const guiWallet = schema(data.wallet, data.receiveAddress)
       const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
       guiWallet.enabledTokens = enabledTokensOnWallet
       enabledTokensOnWallet.forEach(customToken => {
@@ -144,7 +148,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       })
       return {
         ...state,
-        [data.wallet.id]: guiWallet
+        [data.wallet.id]: {
+          ...state[data.wallet.id],
+          ...guiWallet
+        }
       }
     }
 
@@ -248,7 +255,7 @@ const manageTokensPending = (state: boolean = false, action: Action) => {
   }
 }
 
-function schema (wallet: EdgeCurrencyWallet): GuiWallet {
+function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -320,7 +327,8 @@ function schema (wallet: EdgeCurrencyWallet): GuiWallet {
     symbolImage,
     symbolImageDarkMono,
     metaTokens,
-    enabledTokens
+    enabledTokens,
+    receiveAddress
   }
 
   return newWallet

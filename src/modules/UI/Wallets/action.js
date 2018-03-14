@@ -44,7 +44,7 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  if ((walletId !== currentWalletId) || (currencyCode !== currentWalletCurrencyCode)) {
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
     dispatch({
       type: SELECT_WALLET,
       data: { walletId, currencyCode }
@@ -52,7 +52,7 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
     const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
     WALLET_API.getReceiveAddress(wallet, currencyCode)
       .then(receiveAddress => {
-        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
+        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, { receiveAddress }))
       })
       .catch(e => {
         console.log('error on getting wallet receive address')
@@ -105,10 +105,15 @@ export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch,
     return
   }
 
-  dispatch({
-    type: UPSERT_WALLET,
-    data: { wallet }
-  })
+  wallet.getReceiveAddress().then((receiveAddress) =>
+    dispatch({
+      type: UPSERT_WALLET,
+      data: {
+        wallet,
+        receiveAddress
+      }
+    })
+  )
 }
 
 // adds to core and enables in core
