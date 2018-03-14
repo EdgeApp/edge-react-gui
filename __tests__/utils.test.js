@@ -166,6 +166,14 @@ describe('truncateDecimals', function () {
     const actual = UTILS.truncateDecimals(input, precision)
     expect(actual).toBe(expected)
   })
+
+  test('1.123456789 to 0 => 1', function () {
+    const input = '1.123456789'
+    const precision = 0
+    const expected = '1'
+    const actual = UTILS.truncateDecimals(input, precision)
+    expect(actual).toBe(expected)
+  })
 })
 
 describe('getNewArrayWithItem', function () {

@@ -140,7 +140,7 @@ export const truncateDecimals = (input: string, precision: number, allowBlank: b
     return input
   }
   const [integers, decimals] = input.split('.')
-  return `${integers}.${decimals.slice(0, precision)}`
+  return precision > 0 ? `${integers}.${decimals.slice(0, precision)}` : integers
 }
 
 /**

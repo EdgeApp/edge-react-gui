@@ -185,7 +185,8 @@ export class Request extends Component<Props, State> {
   }
 
   copyToClipboard = () => {
-    Clipboard.setString(this.state.publicAddress)
+    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    Clipboard.setString(requestAddress)
     Alert.alert(s.strings.fragment_request_address_copied)
   }
 
