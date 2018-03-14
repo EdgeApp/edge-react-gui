@@ -3,8 +3,13 @@
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 export const styles = {
+  scene: {
+    width: '100%',
+    height: PLATFORM.usableHeight + PLATFORM.toolbarHeight
+  },
   gradient: {
     height: THEME.HEADER
   },
@@ -13,57 +18,17 @@ export const styles = {
     alignItems: 'stretch'
   },
 
-  // searchbar stuff
-
   scrollView: {
     flex: 1
   },
-  searchContainer: {
-    backgroundColor: THEME.COLORS.PRIMARY,
-    height: 44,
-    paddingTop: 8,
-    paddingBottom: 8,
-    paddingRight: 10,
-    paddingLeft: 10,
-    flexDirection: 'row'
-  },
-  innerSearch: {
-    backgroundColor: THEME.COLORS.WHITE,
-    height: 28,
-    borderRadius: 3,
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 8,
-    paddingRight: 8
-  },
-  searchIcon: {
-    color: THEME.COLORS.GRAY_2
-  },
-  searchInput: {
-    height: 18,
-    flex: 1,
-    alignSelf: 'center',
-    textAlign: 'center'
-  },
-  cancelButton: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingLeft: 6,
-    paddingRight: 6,
-    height: 28
-  },
-  cancelButtonText: {
-    color: THEME.COLORS.WHITE,
-    backgroundColor: THEME.COLORS.TRANSPARENT
-  },
-
-  // end of searchbar stuff
-
   currentBalanceBox: {
-    flex: 1,
+    height: 208,
     justifyContent: 'center'
+  },
+  balanceBox: {
+    height: 208,
+    paddingTop: 10,
+    paddingBottom: 20
   },
   updatingBalanceWrap: {
     alignItems: 'center',
@@ -77,7 +42,7 @@ export const styles = {
   },
   currentBalanceWrap: {
     // one
-    flex: 3,
+    height: 128,
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
@@ -87,13 +52,13 @@ export const styles = {
   },
   iconWrap: {
     // two
-    flex: 3,
+    height: 28,
     justifyContent: 'flex-start',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxBitssWrap: {
     // two
-    flex: 4,
+    height: 40,
     justifyContent: 'flex-start',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
@@ -104,7 +69,7 @@ export const styles = {
   },
   currentBalanceBoxDollarsWrap: {
     justifyContent: 'flex-start',
-    flex: 4,
+    height: 24,
     paddingTop: 4
   },
   currentBalanceBoxDollars: {
@@ -295,7 +260,51 @@ export const styles = {
   },
   symbol: {
     fontFamily: THEME.FONTS.SYMBOLS
+  },
+
+  // searchbar stuff
+  searchContainer: {
+    backgroundColor: THEME.COLORS.PRIMARY,
+    height: 44,
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingRight: 10,
+    paddingLeft: 10,
+    flexDirection: 'row'
+  },
+  innerSearch: {
+    backgroundColor: THEME.COLORS.WHITE,
+    height: 28,
+    borderRadius: 3,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 8,
+    paddingRight: 8
+  },
+  searchIcon: {
+    color: THEME.COLORS.GRAY_2
+  },
+  searchInput: {
+    height: 18,
+    flex: 1,
+    alignSelf: 'center',
+    textAlign: 'center'
+  },
+  cancelButton: {
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingLeft: 6,
+    paddingRight: 6,
+    height: 28
+  },
+  cancelButtonText: {
+    color: THEME.COLORS.WHITE,
+    backgroundColor: THEME.COLORS.TRANSPARENT
   }
+
+  // end of searchbar stuff
 }
 
 export default StyleSheet.create(styles)
