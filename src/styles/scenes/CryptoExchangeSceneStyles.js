@@ -157,12 +157,12 @@ const CryptoExchangeSceneStyle = {
     noWalletSelected: {
       ...Styles.TextAndIconButtonStyle,
       textContainer: {
-        paddingLeft: 32
+        // paddingLeft: 32
       },
       inner: {
         ...Styles.TextAndIconButtonStyle.inner,
         width: '100%',
-        justifyContent: 'space-around'
+        justifyContent: 'center'
       }
     },
     iconContainer: {
