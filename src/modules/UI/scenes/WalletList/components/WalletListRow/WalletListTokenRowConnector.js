@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcDenomination } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../../../ReduxTypes'
@@ -11,7 +11,7 @@ import WalletListTokenRow from './WalletListTokenRow.ui'
 const mapStateToProps = (state: State, ownProps) => {
   const currencyCode: string = ownProps.currencyCode
   // $FlowFixMe
-  const displayDenomination: AbcDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
+  const displayDenomination: EdgeDenomination = SETTINGS_SELECTORS.getDisplayDenominationFull(state, currencyCode)
 
   return {
     displayDenomination

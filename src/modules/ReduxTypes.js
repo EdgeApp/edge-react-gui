@@ -1,16 +1,15 @@
 // @flow
 
 import type {
-  AbcAccount,
-  AbcContext,
-  AbcCurrencyPlugin,
-  AbcCurrencyWallet,
-  AbcDenomination,
-  AbcLobby,
-  AbcParsedUri,
-  AbcReceiveAddress,
-  AbcTransaction,
-  EdgeReceiveAddress
+  EdgeAccount,
+  EdgeContext,
+  EdgeCurrencyPlugin,
+  EdgeCurrencyWallet,
+  EdgeDenomination,
+  EdgeLobby,
+  EdgeParsedUri,
+  EdgeReceiveAddress,
+  EdgeTransaction
 } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
@@ -28,19 +27,19 @@ export type { PermissionsState, PermissionStatus, Permission }
 
 export type State = {
   core: {
-    account: AbcAccount,
+    account: EdgeAccount,
     context: {
-      context: AbcContext,
+      context: EdgeContext,
       usernames: Array<Username>,
       nextUsername: Username
     },
     wallets: {
       byId: {
-        [Id]: AbcCurrencyWallet
+        [Id]: EdgeCurrencyWallet
       }
     },
     edgeLogin: {
-      lobby: AbcLobby | null,
+      lobby: EdgeLobby | null,
       error: Error | null,
       isProcessing: boolean
     },
@@ -55,7 +54,7 @@ export type State = {
     },
     transactionAlert: {
       displayAlert: boolean,
-      abcTransaction: AbcTransaction
+      edgeTransaction: EdgeTransaction
     },
     scenes: {
       scan: {
@@ -67,8 +66,8 @@ export type State = {
         scanToWalletListModalVisibility: boolean
       },
       sendConfirmation: {
-        transaction: AbcTransaction | null,
-        parsedUri: AbcParsedUri,
+        transaction: EdgeTransaction | null,
+        parsedUri: EdgeParsedUri,
         error: Error | null,
         label: string,
         networkFeeOption: 'low' | 'standard' | 'high' | 'custom',
@@ -81,7 +80,7 @@ export type State = {
         isCustomFeeVisible: boolean
       },
       transactionList: {
-        transactions: Array<AbcTransaction>,
+        transactions: Array<EdgeTransaction>,
         contactsList: Array<GuiContact>,
         updatingBalance: boolean,
         searchVisible: boolean,
@@ -133,7 +132,7 @@ export type State = {
       helpModal: boolean,
       transactionAlert: {
         displayAlert: boolean,
-        abcTransaction: AbcTransaction
+        edgeTransaction: EdgeTransaction
       },
       exchangeRate: {
         exchangeRates: {}
@@ -164,7 +163,7 @@ export type State = {
       manageTokensPending: boolean
     },
     request: {
-      receiveAddress: AbcReceiveAddress
+      receiveAddress: EdgeReceiveAddress
     },
     settings: {
       autoLogoutTimeInSeconds: number,
@@ -186,14 +185,14 @@ export type State = {
         denomination: string,
         currencyName: string,
         currencyCode: string,
-        denominations: Array<AbcDenomination>,
+        denominations: Array<EdgeDenomination>,
         symbolImage: string,
         symbolImageDarkMono: string
       },
       plugins: {
-        arrayPlugins: Array<AbcCurrencyPlugin>,
+        arrayPlugins: Array<EdgeCurrencyPlugin>,
         supportedWalletTypes: Array<string>,
-        [pluginName: string]: AbcCurrencyPlugin
+        [pluginName: string]: EdgeCurrencyPlugin
       }
     },
     contacts: {
@@ -213,14 +212,14 @@ export type State = {
     fromCurrencyCode: string | null,
     fromNativeAmount: string,
     fromDisplayAmount: string,
-    fromWalletPrimaryInfo: GuiCurrencyInfo, // AbcCurrencyInfo | null,
+    fromWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
     fromCurrencyIcon: string | null,
     fromCurrencyIconDark: string | null,
     toWallet: GuiWallet | null,
     toCurrencyCode: string | null,
     toNativeAmount: string,
     toDisplayAmount: string,
-    toWalletPrimaryInfo: GuiCurrencyInfo, // AbcCurrencyInfo | null,
+    toWalletPrimaryInfo: GuiCurrencyInfo, // EdgeCurrencyInfo | null,
     toCurrencyIcon: string | null,
     toCurrencyIconDark: string | null,
     insufficientError: boolean,
@@ -231,7 +230,7 @@ export type State = {
     shiftTransactionError: Error | null,
     genericShapeShiftError: Error | null,
     changeWallet: 'none',
-    transaction: AbcTransaction | null,
+    transaction: EdgeTransaction | null,
     fee: any,
     gettingTransaction: boolean,
     availableShapeShiftTokens: Array<any>,
