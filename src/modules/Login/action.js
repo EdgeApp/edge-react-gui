@@ -22,12 +22,16 @@ const localeInfo = Locale.constants() // should likely be moved to login system 
 export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
-  const accounts = await context.fetchLoginMessages()
   let otpResetPending = false
-  for (const key in accounts) {
-    if (key === account.username) {
-      otpResetPending = accounts[key].otpResetPending
+  try {
+    const accounts = await context.fetchLoginMessages()
+    for (const key in accounts) {
+      if (key === account.username) {
+        otpResetPending = accounts[key].otpResetPending
+      }
     }
+  } catch (e) {
+    console.log(e)
   }
   const currencyCodes = {}
   if (Platform.OS === Constants.IOS) {
