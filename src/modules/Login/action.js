@@ -74,14 +74,17 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
       // lets create the wallet
       const ethWalletName = s.strings.string_first_ethereum_wallet_name
       const btcWalletName = s.strings.string_first_bitcoin_wallet_name
+      const bchWalletName = s.strings.string_first_bitcoincash_wallet_name
       const ethWalletType = Constants.ETHEREUM_WALLET
       const btcWalletType = Constants.BITCOIN_WALLET
+      const bchWalletType = Constants.BITCOINCASH_WALLET
       let fiatCurrencyCode = Constants.USD_FIAT
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
         fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
       }
       const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
       await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
+      await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
       accountInitObject.walletId = abcWallet.id
       accountInitObject.currencyCode = abcWallet.currencyInfo.currencyCode
     } else {
