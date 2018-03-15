@@ -4,7 +4,7 @@ import { transactionAlert as transactionAlertReducer } from './reducer.js'
 
 test('initialState', () => {
   const expected = {
-    abcTransaction: '',
+    edgeTransaction: '',
     displayAlert: false
   }
   const actual = transactionAlertReducer(undefined, {})

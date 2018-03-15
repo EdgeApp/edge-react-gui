@@ -1,11 +1,11 @@
 // @flow
 
-import type { AbcContext } from 'edge-core-js'
+import type { EdgeContext } from 'edge-core-js'
 
 const PREFIX = 'Core/Context/'
 
 export const ADD_CONTEXT = PREFIX + 'ADD_CONTEXT'
-export const addContext = (context: AbcContext) => ({
+export const addContext = (context: EdgeContext) => ({
   type: ADD_CONTEXT,
   data: { context }
 })

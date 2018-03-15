@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcAccount, AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
@@ -19,7 +19,7 @@ import type { Dispatch, GetState } from '../ReduxTypes'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
-export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
+export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const context = CORE_SELECTORS.getContext(state)
   const accounts = await context.fetchLoginMessages()
@@ -82,11 +82,11 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
       if (localeInfo.currencyCode && typeof localeInfo.currencyCode === 'string' && localeInfo.currencyCode.length >= 3) {
         fiatCurrencyCode = 'iso:' + localeInfo.currencyCode
       }
-      const abcWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
+      const edgeWallet = await ACCOUNT_API.createCurrencyWalletRequest(account, ethWalletType, { name: ethWalletName, fiatCurrencyCode })
       await ACCOUNT_API.createCurrencyWalletRequest(account, btcWalletType, { name: btcWalletName, fiatCurrencyCode })
       await ACCOUNT_API.createCurrencyWalletRequest(account, bchWalletType, { name: bchWalletName, fiatCurrencyCode })
-      accountInitObject.walletId = abcWallet.id
-      accountInitObject.currencyCode = abcWallet.currencyInfo.currencyCode
+      accountInitObject.walletId = edgeWallet.id
+      accountInitObject.currencyCode = edgeWallet.currencyInfo.currencyCode
     } else {
       // We have a wallet
       const { walletId, currencyCode } = ACCOUNT_API.getFirstActiveWalletInfo(account, currencyCodes)
@@ -95,11 +95,11 @@ export const initializeAccount = (account: AbcAccount, touchIdInfo: Object) => a
     }
     const { activeWalletIds, archivedWalletIds, currencyWallets } = account
     for (const walletId of Object.keys(currencyWallets)) {
-      const abcWallet: AbcCurrencyWallet = currencyWallets[walletId]
-      if (abcWallet.type === 'wallet:ethereum') {
+      const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+      if (edgeWallet.type === 'wallet:ethereum') {
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-          abcWallet.enableTokens(enabledTokens)
+          edgeWallet.enableTokens(enabledTokens)
         }
       }
     }

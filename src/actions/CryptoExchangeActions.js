@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyWallet, AbcSpendInfo, AbcTransaction, EdgeMetadata } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeSpendInfo, EdgeTransaction, EdgeMetadata } from 'edge-core-js'
 import { Alert } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
@@ -57,7 +57,7 @@ function setCryptoExchangeAmounts (setAmounts: SetCryptoExchangeAmounts) {
 function setShapeTransaction (
   type: string,
   data: {
-    abcTransaction: AbcTransaction,
+    edgeTransaction: EdgeTransaction,
     networkFee: string,
     displayAmount: string
   }
@@ -87,12 +87,12 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
   if (!fromWallet) {
     return
   }
-  const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const receiveAddress = await wallet.getReceiveAddress()
   const currencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
 
-  const abcSpendInfo: AbcSpendInfo = {
+  const edgeSpendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode,
     spendTargets: [
@@ -101,7 +101,7 @@ export const exchangeMax = () => async (dispatch: Dispatch, getState: GetState) 
       }
     ]
   }
-  const primaryNativeAmount = await wallet.getMaxSpendable(abcSpendInfo)
+  const primaryNativeAmount = await wallet.getMaxSpendable(edgeSpendInfo)
   const primaryExchangeAmount = bns.div(primaryNativeAmount, primaryInfo.exchangeDenomination.multiplier, DIVIDE_PRECISION)
   const setNativeAmountInfo: SetNativeAmountInfo = {
     whichWallet: Constants.FROM,
@@ -224,7 +224,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
     dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
     return
   }
-  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
 
   if (!srcWallet) {
     dispatch(actions.dispatchAction(Constants.DONE_SHIFT_TRANSACTION))
@@ -285,14 +285,14 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
 const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
-  const srcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
+  const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
   const { fromNativeAmount, nativeMax, nativeMin } = state.cryptoExchange
   const fromCurrencyCode = state.cryptoExchange.fromCurrencyCode ? state.cryptoExchange.fromCurrencyCode : undefined
   const toCurrencyCode = state.cryptoExchange.toCurrencyCode ? state.cryptoExchange.toCurrencyCode : undefined
   if (!fromCurrencyCode || !toCurrencyCode) {
     return
   }
-  const spendInfo: AbcSpendInfo = {
+  const spendInfo: EdgeSpendInfo = {
     networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
     nativeAmount: fromNativeAmount,
@@ -323,7 +323,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
     holderObject.status = 'pending'
     holderObject.processingAmount = fromNativeAmount
     dispatch(actions.dispatchAction(Constants.START_MAKE_SPEND))
-    const abcTransaction = await srcWallet.makeSpend(spendInfo)
+    const edgeTransaction = await srcWallet.makeSpend(spendInfo)
     holderObject.status = 'finished'
     dispatch(actions.dispatchAction(Constants.DONE_MAKE_SPEND))
     if (holderObject.newAmount !== holderObject.processingAmount) {
@@ -340,11 +340,11 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet) => asyn
     }
     const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
     const ratio = primaryInfo.displayDenomination.multiplier.toString()
-    const networkFee = UTILS.convertNativeToDenomination(ratio)(abcTransaction.networkFee)
-    let displayAmount = UTILS.convertNativeToDenomination(ratio)(abcTransaction.nativeAmount)
+    const networkFee = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.networkFee)
+    let displayAmount = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.nativeAmount)
     displayAmount = bns.toFixed(displayAmount, 0, 0)
     const returnObject = {
-      abcTransaction,
+      edgeTransaction,
       networkFee,
       displayAmount
     }

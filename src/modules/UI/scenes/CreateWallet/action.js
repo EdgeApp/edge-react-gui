@@ -43,11 +43,11 @@ export const createCurrencyWallet = (
     name: walletName,
     fiatCurrencyCode
   })
-    .then(abcWallet => {
+    .then(edgeWallet => {
       Actions.popTo(Constants.WALLET_LIST_SCENE)
       dispatch(WALLET_ACTIONS.createWalletSuccess())
       if (selectWallet) {
-        dispatch(WALLET_ACTIONS.selectWallet(abcWallet.id, abcWallet.currencyInfo.currencyCode))
+        dispatch(WALLET_ACTIONS.selectWallet(edgeWallet.id, edgeWallet.currencyInfo.currencyCode))
       }
     })
     .catch(e => {

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcDenomination, AbcMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
@@ -248,7 +248,7 @@ const manageTokensPending = (state: boolean = false, action: Action) => {
   }
 }
 
-function schema (wallet: AbcCurrencyWallet): GuiWallet {
+function schema (wallet: EdgeCurrencyWallet): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -258,13 +258,13 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
   const isoFiatCurrencyCode: string = wallet.fiatCurrencyCode
   const symbolImage = wallet.currencyInfo.symbolImage
   const symbolImageDarkMono = wallet.currencyInfo.symbolImageDarkMono
-  const metaTokens: Array<AbcMetaToken> = wallet.currencyInfo.metaTokens
-  const denominations: Array<AbcDenomination> = wallet.currencyInfo.denominations
+  const metaTokens: Array<EdgeMetaToken> = wallet.currencyInfo.metaTokens
+  const denominations: Array<EdgeDenomination> = wallet.currencyInfo.denominations
   // TODO: Fetch the token list asynchonously before dispatching `schema`:
   const enabledTokens: Array<string> = []
 
   const allDenominations: {
-    [currencyCode: string]: { [denomination: string]: AbcDenomination }
+    [currencyCode: string]: { [denomination: string]: EdgeDenomination }
   } = {}
 
   // Add all parent currency denominations to allDenominations
@@ -290,7 +290,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
     const currencyCode: string = metaToken.currencyCode
     const currencyName: string = metaToken.currencyName
     const balance: string = wallet.getBalance({ currencyCode })
-    const denominations: Array<AbcDenomination> = metaToken.denominations
+    const denominations: Array<EdgeDenomination> = metaToken.denominations
 
     // Add token balance to allBalances
     nativeBalances[currencyCode] = balance
@@ -298,7 +298,7 @@ function schema (wallet: AbcCurrencyWallet): GuiWallet {
 
     // Add all token denominations to allDenominations
     const tokenDenominations: {
-      [denomination: string]: AbcDenomination
+      [denomination: string]: EdgeDenomination
     } = denominations.reduce((denominations, denomination) => ({ ...denominations, [denomination.multiplier]: denomination }), {})
     allDenominations[currencyCode] = tokenDenominations
   })
