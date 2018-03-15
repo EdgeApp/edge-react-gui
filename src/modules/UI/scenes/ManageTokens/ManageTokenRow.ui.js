@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-core-js'
+import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { TouchableHighlight, TouchableWithoutFeedback, View } from 'react-native'
@@ -21,7 +21,7 @@ export type State = {
 export type Props = {
   toggleToken: string => void,
   // this is an stange case that needs to be looked at later
-  metaToken: AbcMetaToken & {
+  metaToken: EdgeMetaToken & {
     item: any
   },
   enabled?: boolean,
