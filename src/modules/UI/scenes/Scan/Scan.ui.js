@@ -196,7 +196,7 @@ export default class Scan extends Component<Props> {
       }
       const decimalPlaces = parseInt(parameters.decimal).toString() || ''
       const currencyName = parameters.name || ''
-      const currencyCode = parameters.symbol.toUpperCase().substring(0, 4) || ''
+      const currencyCode = parameters.symbol.toUpperCase().substring(0, 5) || ''
       // const type = parameters.type || 'erc20'
       const tokenData = {
         contractAddress,
