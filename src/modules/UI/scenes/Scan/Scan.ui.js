@@ -1,10 +1,11 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { AbcCurrencyWallet, AbcParsedUri, EdgeTokenInfo } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
-import { parse as uriParse } from 'uri-js'
+import type { GuiWallet } from '../../../../types'
+
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
@@ -34,6 +35,8 @@ type Props = {
   scanToWalletListModalVisibility: boolean,
   scanFromWalletListModalVisibility: boolean,
   scanToWalletListModalVisibility: boolean,
+  walletId: string,
+  guiWallet: GuiWallet,
   dispatchEnableScan(): void,
   dispatchDisableScan(): void,
   toggleEnableTorch(): void,
@@ -42,7 +45,8 @@ type Props = {
   toggleScanToWalletListModal(): void,
   updateParsedURI(AbcParsedUri): void,
   loginWithEdge(string): void,
-  toggleScanToWalletListModal: () => void
+  toggleScanToWalletListModal: () => void,
+  routeToAddToken: (EdgeTokenInfo) => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -123,20 +127,31 @@ export default class Scan extends Component<Props> {
   }
 
   parseURI = (uri: string) => {
-    const substringIndex = uri.indexOf('ethereum:token')
-    if (substringIndex !== -1) { // is ethereum token URI
-      const tokenData = uriParse(uri)
-      this.checkAddTokenURI(tokenData)
-      return
-    }
     try {
       if (/^airbitz:\/\/edge\//.test(uri)) {
         this.props.loginWithEdge(uri)
         return
       }
       const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
-      this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation('fromScan')
+      if (parsedURI.token) { // token URI, not pay
+        const { contractAddress, currencyCode, currencyName, multiplier } = parsedURI.token
+        const walletId = this.props.walletId
+        const wallet = this.props.guiWallet
+        const decimalPlaces = UTILS.denominationToDecimalPlaces(multiplier)
+        const parameters = {
+          contractAddress,
+          currencyCode,
+          currencyName,
+          multiplier,
+          decimalPlaces,
+          walletId,
+          wallet
+        }
+        Actions.addToken(parameters)
+      } else { // assume pay URI
+        this.props.updateParsedURI(parsedURI)
+        Actions.sendConfirmation('fromScan')
+      }
     } catch (error) {
       this.props.dispatchDisableScan()
       Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [
@@ -179,37 +194,6 @@ export default class Scan extends Component<Props> {
           <ActivityIndicator size="large" style={{ flex: 1, alignSelf: 'center' }} />
         </View>
       )
-    }
-  }
-
-  checkAddTokenURI = (tokenUri: any) => {
-    if (tokenUri.path) {
-      const contractAddress = tokenUri.path.replace('token-', '').split('@')[0]
-      // const walletType = tokenUri.scheme // not token code but eg 'ethereum'
-      const parameters = UTILS.parseQueryString(tokenUri.query)
-      if (parameters.decimal && !UTILS.isStringInteger(parameters.decimal)) {
-        this.props.dispatchDisableScan()
-        Alert.alert(s.strings.addtoken_invalid_info_title, s.strings.addtoken_invalid_decimal_places, [
-          { text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan() }
-        ])
-        return
-      }
-      const decimalPlaces = parseInt(parameters.decimal).toString() || ''
-      const currencyName = parameters.name || ''
-      const currencyCode = parameters.symbol.toUpperCase().substring(0, 5) || ''
-      // const type = parameters.type || 'erc20'
-      const tokenData = {
-        contractAddress,
-        decimalPlaces,
-        currencyName,
-        currencyCode
-      }
-      Actions.addToken(tokenData)
-    } else {
-      this.props.dispatchDisableScan()
-      Alert.alert(s.strings.addtoken_invalid_info_title, s.strings.addtoken_invalid_contract_address, [
-        { text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan() }
-      ])
     }
   }
 }
