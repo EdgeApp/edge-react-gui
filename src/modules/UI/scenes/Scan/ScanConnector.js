@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcParsedUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
@@ -19,12 +19,12 @@ import type { GuiWallet } from '../../../../types'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const abcWallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
   const guiWallet: GuiWallet = UI_SELECTORS.getWallet(state, walletId)
 
   return {
     cameraPermission: getCameraPermission(state),
-    abcWallet,
+    edgeWallet,
     guiWallet,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
@@ -40,7 +40,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
   toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-  updateParsedURI: (parsedURI: AbcParsedUri) => dispatch(updateParsedURI(parsedURI)),
+  updateParsedURI: (parsedURI: EdgeParsedUri) => dispatch(updateParsedURI(parsedURI)),
   updateWalletTransfer: wallet => dispatch(updateLabel(wallet)),
   toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
   loginWithEdge: (url: string) => {

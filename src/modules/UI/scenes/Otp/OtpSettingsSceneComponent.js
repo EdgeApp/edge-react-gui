@@ -99,14 +99,6 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
     )
   }
   renderModals (styles: Object) {
-    if (this.state.showMessageModal) {
-      return <StaticModalComponent
-        cancel={this.cancelStatic}
-        body={this.state.messageModalMessage}
-        bodyComponent={this.state.messageModalComponent}
-        modalDismissTimerSeconds={8}
-      />
-    }
     if (this.state.showConfirmationModal) {
       return (
         <TwoButtonTextModalComponent
@@ -138,6 +130,13 @@ export default class OtpSettingsScene extends Component<OtpSettingsSceneProps, S
           </View>
           {this.renderModals(styles)}
         </View>
+        <StaticModalComponent
+          cancel={this.cancelStatic}
+          body={this.state.messageModalMessage}
+          bodyComponent={this.state.messageModalComponent}
+          isVisible={this.state.showMessageModal}
+          modalDismissTimerSeconds={8}
+        />
       </SafeAreaView>
     )
   }

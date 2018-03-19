@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcMetadata, AbcParsedUri, AbcTransaction } from 'edge-core-js'
+import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
 // @flow
 import { Actions } from 'react-native-router-flux'
 
@@ -22,19 +22,19 @@ export const UPDATE_TRANSACTION = PREFIX + 'UPDATE_TRANSACTION'
 export const updateAmount = (nativeAmount: string, exchangeAmount: string, fiatPerCrypto: string) => (dispatch: Dispatch, getState: GetState) => {
   const amountFiatString: string = bns.mul(exchangeAmount, fiatPerCrypto)
   const amountFiat: number = parseFloat(amountFiatString)
-  const metadata: AbcMetadata = { amountFiat }
+  const metadata: EdgeMetadata = { amountFiat }
   dispatch(createTX({ nativeAmount, metadata }, false))
 }
 
-export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
+export const createTX = (parsedUri: GuiMakeSpendInfo | EdgeParsedUri, forceUpdateGui?: boolean = true) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
-  const abcWallet = getWallet(state, walletId)
+  const edgeWallet = getWallet(state, walletId)
   const parsedUriClone = { ...parsedUri }
   const spendInfo = getSpendInfo(state, parsedUriClone)
-  makeSpend(abcWallet, spendInfo)
-    .then(abcTransaction => {
-      dispatch(updateTransaction(abcTransaction, parsedUriClone, forceUpdateGui, null))
+  makeSpend(edgeWallet, spendInfo)
+    .then(edgeTransaction => {
+      dispatch(updateTransaction(edgeTransaction, parsedUriClone, forceUpdateGui, null))
     })
     .catch(e => dispatch(updateTransaction(null, parsedUriClone, forceUpdateGui, e)))
 }
@@ -42,11 +42,11 @@ export const createTX = (parsedUri: GuiMakeSpendInfo | AbcParsedUri, forceUpdate
 export const updateMaxSpend = () => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const walletId = getSelectedWalletId(state)
-  const abcWallet = getWallet(state, walletId)
+  const edgeWallet = getWallet(state, walletId)
   const spendInfo = getSpendInfo(state)
-  getMaxSpendable(abcWallet, spendInfo)
+  getMaxSpendable(edgeWallet, spendInfo)
     .then(nativeAmount => {
-      const amount: AbcParsedUri = { nativeAmount }
+      const amount: EdgeParsedUri = { nativeAmount }
       dispatch(createTX(amount, true))
     })
     .catch(e => console.log(e))
@@ -56,13 +56,13 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
   const state = getState()
   const selectedWalletId = getSelectedWalletId(state)
   const wallet = getWallet(state, selectedWalletId)
-  const abcUnsignedTransaction = getTransaction(state)
-  let abcSignedTransaction = abcUnsignedTransaction
+  const edgeUnsignedTransaction = getTransaction(state)
+  let edgeSignedTransaction = edgeUnsignedTransaction
   dispatch(updateSpendPending(true))
   try {
-    abcSignedTransaction = await signTransaction(wallet, abcUnsignedTransaction)
-    abcSignedTransaction = await broadcastTransaction(wallet, abcSignedTransaction)
-    await saveTransaction(wallet, abcSignedTransaction)
+    edgeSignedTransaction = await signTransaction(wallet, edgeUnsignedTransaction)
+    edgeSignedTransaction = await broadcastTransaction(wallet, edgeSignedTransaction)
+    await saveTransaction(wallet, edgeSignedTransaction)
     dispatch(updateSpendPending(false))
     Actions.pop()
     const successInfo = {
@@ -78,7 +78,7 @@ export const signBroadcastAndSave = () => async (dispatch: Dispatch, getState: G
       title: 'Transaction Failure',
       message: e.message
     }
-    dispatch(updateTransaction(abcSignedTransaction, null, true, new Error('broadcastError')))
+    dispatch(updateTransaction(edgeSignedTransaction, null, true, new Error('broadcastError')))
     dispatch(openABAlert(OPEN_AB_ALERT, errorInfo))
   }
 }
@@ -93,7 +93,7 @@ export const reset = () => ({
   data: {}
 })
 
-export const updateTransaction = (transaction: ?AbcTransaction, parsedUri: ?AbcParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
+export const updateTransaction = (transaction: ?EdgeTransaction, parsedUri: ?EdgeParsedUri, forceUpdateGui: ?boolean, error: ?Error) => ({
   type: UPDATE_TRANSACTION,
   data: { transaction, parsedUri, forceUpdateGui, error }
 })

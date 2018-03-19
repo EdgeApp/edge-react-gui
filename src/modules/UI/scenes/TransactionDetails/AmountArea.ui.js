@@ -66,7 +66,7 @@ class AmountArea extends Component {
   render () {
     let feeSyntax, leftData, convertedAmount, amountString, symbolString
 
-    const absoluteAmount = abs(this.props.abcTransaction.nativeAmount)
+    const absoluteAmount = abs(this.props.edgeTransaction.nativeAmount)
 
     if (this.props.direction === 'receive') {
       convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert to correct denomiation
@@ -78,10 +78,10 @@ class AmountArea extends Component {
       }
     } else {
       // send tx
-      if (this.props.abcTransaction.networkFee) {
+      if (this.props.edgeTransaction.networkFee) {
         // stub, check BTC vs. ETH (parent currency)
         convertedAmount = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(absoluteAmount) // convert the native amount to correct *denomination*
-        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.abcTransaction.networkFee) // convert fee to correct denomination
+        const convertedFee = UTILS.convertNativeToDisplay(this.props.walletDefaultDenomProps.multiplier)(this.props.edgeTransaction.networkFee) // convert fee to correct denomination
         const amountMinusFee = sub(convertedAmount, convertedFee) // for outgoing tx substract fee from total amount
         const amountTruncatedDecimals = UTILS.truncateDecimals(amountMinusFee.toString(), 6) // limit to 6 decimals, at most
         amountString = UTILS.decimalOrZero(amountTruncatedDecimals, 6) // change infinitesimal values to zero, otherwise cut off insignificant zeroes (at end of decimal)
@@ -102,8 +102,8 @@ class AmountArea extends Component {
       }
     }
 
-    let notes = this.props.abcTransaction.metadata ? this.props.abcTransaction.metadata.notes : ''
-    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.abcTransaction.currencyCode)) {
+    let notes = this.props.edgeTransaction.metadata ? this.props.edgeTransaction.metadata.notes : ''
+    if (UTILS.isCryptoParentCurrency(this.props.guiWallet, this.props.edgeTransaction.currencyCode)) {
       // if it is the parent crypto
       symbolString = this.props.walletDefaultDenomProps.symbol ? this.props.walletDefaultDenomProps.symbol + ' ' : ''
     } else {

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet, AbcParsedUri, EdgeTokenInfo } from 'edge-core-js'
+import type { EdgeTokenInfo, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
@@ -28,7 +28,7 @@ import styles, { styles as styleRaw } from './style'
 
 type Props = {
   cameraPermission: PermissionStatus,
-  abcWallet: AbcCurrencyWallet,
+  edgeWallet: EdgeCurrencyWallet,
   torchEnabled: boolean,
   scanEnabled: boolean,
   walletListModalVisible: boolean,
@@ -43,7 +43,7 @@ type Props = {
   toggleAddressModal(): void,
   toggleWalletListModal(): void,
   toggleScanToWalletListModal(): void,
-  updateParsedURI(AbcParsedUri): void,
+  updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
   toggleScanToWalletListModal: () => void,
   routeToAddToken: (EdgeTokenInfo) => void
@@ -132,11 +132,12 @@ export default class Scan extends Component<Props> {
         this.props.loginWithEdge(uri)
         return
       }
-      const parsedURI = WALLET_API.parseURI(this.props.abcWallet, uri)
+      const parsedURI = WALLET_API.parseURI(this.props.edgeWallet, uri)
       if (parsedURI.token) { // token URI, not pay
-        const { contractAddress, currencyCode, currencyName, multiplier } = parsedURI.token
-        const walletId = this.props.walletId
+        const { contractAddress, currencyName, multiplier } = parsedURI.token
+        const currencyCode = parsedURI.token.currencyCode.toUpperCase()
         const wallet = this.props.guiWallet
+        const walletId = this.props.guiWallet.id
         const decimalPlaces = UTILS.denominationToDecimalPlaces(multiplier)
         const parameters = {
           contractAddress,

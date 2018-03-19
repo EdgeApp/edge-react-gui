@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyPlugin } from 'edge-core-js'
+import type { EdgeCurrencyPlugin } from 'edge-core-js'
 import _ from 'lodash'
 
 import * as Constants from '../../../constants/indexConstants.js'
@@ -74,7 +74,7 @@ type SettingsState = {
   pinLoginEnabled: boolean,
   otpResetDate: ?string,
   plugins: {
-    arrayPlugins: Array<AbcCurrencyPlugin>,
+    arrayPlugins: Array<EdgeCurrencyPlugin>,
     supportedWalletTypes: Array<string>
   },
   confirmPasswordError: string,
