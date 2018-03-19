@@ -38,8 +38,8 @@ export const UPDATE_RECEIVE_ADDRESS_SUCCESS = 'UPDATE_RECEIVE_ADDRESS_SUCCESS'
 export const NEW_RECEIVE_ACCRESS = 'newReceiveAddress'
 
 // edgelogin
-export const SAVE_ABC_LOBBY = 'saveAbcLobby'
-export const INVALIDATE_ABC_LOBBY = 'invalidateAbcLobby'
+export const SAVE_ABC_LOBBY = 'saveEdgeLobby'
+export const INVALIDATE_ABC_LOBBY = 'invalidateEdgeLobby'
 export const SET_LOBBY_ERROR = 'setLobbyError'
 export const PROCESS_ABC_LOGIN = 'setLobbyError'
 

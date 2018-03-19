@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 
@@ -49,7 +49,7 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
       type: SELECT_WALLET,
       data: { walletId, currencyCode }
     })
-    const wallet: AbcCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+    const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
     WALLET_API.getReceiveAddress(wallet, currencyCode)
       .then(receiveAddress => {
         dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
@@ -97,7 +97,7 @@ export const refreshWallet = (walletId: string) => (dispatch: Dispatch, getState
   }
 }
 
-export const upsertWallet = (wallet: AbcCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
+export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
@@ -407,7 +407,7 @@ export function updateExistingTokenSuccess (tokenObj: CustomTokenInfo) {
   }
 }
 
-export function overwriteThenDeleteTokenSuccess (tokenObj: CustomTokenInfo, oldCurrencyCode: string, coreWalletsToUpdate: Array<AbcCurrencyWallet>) {
+export function overwriteThenDeleteTokenSuccess (tokenObj: CustomTokenInfo, oldCurrencyCode: string, coreWalletsToUpdate: Array<EdgeCurrencyWallet>) {
   return {
     type: OVERWRITE_THEN_DELETE_TOKEN_SUCCESS,
     data: { tokenObj, oldCurrencyCode, coreWalletsToUpdate }

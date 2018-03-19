@@ -1,11 +1,11 @@
 // @flow
 
-import type { AbcAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import * as Constants from '../../../constants/indexConstants.js'
 import type { Action } from '../../ReduxTypes.js'
 
-type AccountReducerState = AbcAccount | {} | void
+type AccountReducerState = EdgeAccount | {} | void
 
 export const initialState: AccountReducerState = {}
 

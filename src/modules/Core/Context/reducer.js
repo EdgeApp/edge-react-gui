@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcContext } from 'edge-core-js'
+import type { EdgeContext } from 'edge-core-js'
 
 import * as Constants from '../../../constants/indexConstants.js'
 import type { Action } from '../../ReduxTypes'
@@ -12,7 +12,7 @@ const initialState = {
   nextUsername: ''
 }
 export type State = {
-  context: AbcContext | {},
+  context: EdgeContext | {},
   usernames: Array<string>,
   nextUsername: string
 }
@@ -21,7 +21,7 @@ export const context = (state: State = initialState, action: Action) => {
 
   switch (type) {
     case ACTION.ADD_CONTEXT: {
-      const context: AbcContext = data.context
+      const context: EdgeContext = data.context
       return {
         ...state,
         context

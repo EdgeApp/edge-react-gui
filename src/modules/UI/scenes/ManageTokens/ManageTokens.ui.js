@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcMetaToken } from 'edge-core-js'
+import type { EdgeMetaToken } from 'edge-core-js'
 import _ from 'lodash'
 import React, { Component } from 'react'
 import { ActivityIndicator, FlatList, View } from 'react-native'
@@ -33,7 +33,7 @@ export type ManageTokensProps = ManageTokensOwnProps & ManageTokensDispatchProps
 
 export type State = {
   enabledList: Array<string>,
-  combinedCurrencyInfos: Array<AbcMetaToken>
+  combinedCurrencyInfos: Array<EdgeMetaToken>
 }
 
 export default class ManageTokens extends Component<ManageTokensProps, State> {

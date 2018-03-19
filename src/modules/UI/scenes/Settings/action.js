@@ -1,5 +1,5 @@
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
-import type { AbcAccount } from 'edge-core-js'
+import type { EdgeAccount } from 'edge-core-js'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
 import * as actions from '../../../../actions/indexActions.js'
@@ -136,7 +136,7 @@ export const setBitcoinOverrideServerRequest = (overrideServer: string) => (disp
 }
 
 // touch id interaction
-export const updateTouchIdEnabled = (arg: boolean, account: AbcAccount) => async (dispatch: Dispatch, getState: GetState) => {
+export const updateTouchIdEnabled = (arg: boolean, account: EdgeAccount) => async (dispatch: Dispatch, getState: GetState) => {
   const context = CORE_SELECTORS.getContext(getState())
   // dispatch the update for the new state for
   dispatch(SETTINGS_ACTIONS.updateTouchIdEnabled(arg))
