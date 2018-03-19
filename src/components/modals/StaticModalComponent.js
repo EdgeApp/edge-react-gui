@@ -14,6 +14,7 @@ type Props = {
   modalDismissTimerSeconds: number,
   body?: string,
   bodyComponent?: any,
+  isVisible: boolean,
   cancel(): void
 }
 class StaticModalComponent extends Component<Props> {
@@ -37,20 +38,22 @@ class StaticModalComponent extends Component<Props> {
   render () {
     const styles = StaticModalStyle
     return (
-      <Modal style={styles.container} animationType={'slide'} transparent visible>
-        <TouchableOpacity style={styles.touchOut} onPress={this.props.cancel}>
+      <Modal style={styles.container} animationType={'slide'} isVisible={this.props.isVisible}>
+        <TouchableOpacity onPress={this.props.cancel}>
           <View style={styles.modalBox}>
-            <LinearGradient
-              style={styles.header}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              colors={[THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]}
-            >
-              <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />
-            </LinearGradient>
-            <View style={styles.bottom}>
-              <View style={styles.bodyRow}>
-                {this.renderMiddle(styles)}
+            <View style={styles.innerBox}>
+              <LinearGradient
+                style={styles.header}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={[THEME.COLORS.GRADIENT.DARK, THEME.COLORS.GRADIENT.LIGHT]}
+              >
+                <Icon style={styles.icon} name={Constants.CHECK_CIRCLE} size={styles.iconSize} type={Constants.SIMPLE_ICONS} />
+              </LinearGradient>
+              <View style={styles.bottom}>
+                <View style={styles.bodyRow}>
+                  {this.renderMiddle(styles)}
+                </View>
               </View>
             </View>
           </View>

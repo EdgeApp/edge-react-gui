@@ -17,7 +17,8 @@ export const styles = {
     alignItems: 'center',
     position: 'absolute',
     top: PLATFORM.deviceHeight * 1 / 8,
-    left: PLATFORM.deviceWidth * 1 / 8 - 20,
+    left: 0,
+    right: 0,
     backgroundColor: 'transparent'
   },
   visibleModal: {
