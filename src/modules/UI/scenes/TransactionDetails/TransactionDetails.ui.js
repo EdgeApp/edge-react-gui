@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { AbcCurrencyInfo, AbcDenomination, AbcMetadata, AbcTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeDenomination, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Animated, Easing, Keyboard, ScrollView, TextInput, TouchableOpacity, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
@@ -23,13 +23,13 @@ import SubCategorySelect from './SubCategorySelect.ui.js'
 const categories = ['income', 'expense', 'exchange', 'transfer']
 
 export type TransactionDetailsOwnProps = {
-  abcTransaction: AbcTransaction,
+  edgeTransaction: EdgeTransaction,
   contacts: Array<GuiContact>,
   subcategoriesList: Array<string>,
   settings: Object, // TODO: This badly needs to get typed but it is a huge dynamically generated object with embedded maps -paulvp,
   direction: string,
   thumbnailPath: string,
-  currencyInfo: AbcCurrencyInfo | null,
+  currencyInfo: EdgeCurrencyInfo | null,
   currencyCode: string,
   wallets: { [walletId: string]: GuiWallet }
 }
@@ -37,7 +37,7 @@ export type TransactionDetailsOwnProps = {
 export type TransactionDetailsDispatchProps = {
   setNewSubcategory: (string, Array<string>) => void,
   openHelpModal: () => void,
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => void,
+  setTransactionDetails: (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => void,
   getSubcategories: () => void,
   displayDropdownAlert: (message: string, title: string) => void
 }
@@ -62,7 +62,7 @@ type State = {
   payeeZIndex: number,
   subcatZIndex: number,
   type: string,
-  walletDefaultDenomProps: AbcDenomination
+  walletDefaultDenomProps: EdgeDenomination
 }
 
 type TransactionDetailsProps = TransactionDetailsOwnProps & TransactionDetailsDispatchProps
@@ -78,7 +78,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   constructor (props: TransactionDetailsProps) {
     super(props)
-    const dateTime = new Date(props.abcTransaction.date * 1000)
+    const dateTime = new Date(props.edgeTransaction.date * 1000)
     const dateString = dateTime.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
     const timeString = dateTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', second: 'numeric' })
     let type = ''
@@ -87,19 +87,19 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     let name = ''
     let amountFiat = '0.00'
     let notes = ''
-    if (props.abcTransaction.wallet) {
-      this.guiWallet = props.wallets[props.abcTransaction.wallet.id]
+    if (props.edgeTransaction.wallet) {
+      this.guiWallet = props.wallets[props.edgeTransaction.wallet.id]
       this.fiatSymbol = UTILS.getFiatSymbol(this.guiWallet.fiatCurrencyCode)
     } else {
       this.props.displayDropdownAlert(s.strings.transaction_detail_no_wallet, s.strings.transaction_detail_unable_to_load_transaction)
     }
 
-    if (props.abcTransaction && props.abcTransaction.metadata) {
-      cat = props.abcTransaction.metadata.category ? props.abcTransaction.metadata.category : ''
-      name = props.abcTransaction.metadata.name ? props.abcTransaction.metadata.name : '' // remove commenting once metaData in Redux
-      notes = props.abcTransaction.metadata.notes ? props.abcTransaction.metadata.notes : ''
-      if (props.abcTransaction.metadata.amountFiat) {
-        const initial = props.abcTransaction.metadata.amountFiat.toFixed(2)
+    if (props.edgeTransaction && props.edgeTransaction.metadata) {
+      cat = props.edgeTransaction.metadata.category ? props.edgeTransaction.metadata.category : ''
+      name = props.edgeTransaction.metadata.name ? props.edgeTransaction.metadata.name : '' // remove commenting once metaData in Redux
+      notes = props.edgeTransaction.metadata.notes ? props.edgeTransaction.metadata.notes : ''
+      if (props.edgeTransaction.metadata.amountFiat) {
+        const initial = props.edgeTransaction.metadata.amountFiat.toFixed(2)
         amountFiat = bns.abs(initial)
         amountFiat = bns.toFixed(amountFiat, 2, 2)
       }
@@ -121,8 +121,8 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       category: cat,
       amountFiat,
       bizId: 0,
-      direction: parseInt(props.abcTransaction.nativeAmount) >= 0 ? 'receive' : 'send',
-      miscJson: props.abcTransaction.metadata ? props.abcTransaction.metadata.miscJson : '',
+      direction: parseInt(props.edgeTransaction.nativeAmount) >= 0 ? 'receive' : 'send',
+      miscJson: props.edgeTransaction.metadata ? props.edgeTransaction.metadata.miscJson : '',
       dateTimeSyntax: dateString + ' ' + timeString,
       subCategorySelectVisibility: false,
       categorySelectVisibility: false,
@@ -363,11 +363,11 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
       category = undefined
     }
     const { name, notes, bizId, miscJson } = this.state
-    const txid = this.props.abcTransaction.txid
+    const txid = this.props.edgeTransaction.txid
     const newAmountFiat = this.state.amountFiat
     const amountFiat: number = !newAmountFiat ? 0.0 : Number.parseFloat(newAmountFiat)
-    const abcMetadata: AbcMetadata = { name, category, notes, amountFiat, bizId, miscJson }
-    this.props.setTransactionDetails(txid, this.props.abcTransaction.currencyCode, abcMetadata)
+    const edgeMetadata: EdgeMetadata = { name, category, notes, amountFiat, bizId, miscJson }
+    this.props.setTransactionDetails(txid, this.props.edgeTransaction.currencyCode, edgeMetadata)
   }
 
   componentDidMount () {
@@ -376,10 +376,10 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
 
   componentWillMount () {
     // check if metaToken, is not then do not set walletDefaultProps to anything other than initial blank values
-    if (UTILS.isCryptoParentCurrency(this.guiWallet, this.props.abcTransaction.currencyCode)) {
+    if (UTILS.isCryptoParentCurrency(this.guiWallet, this.props.edgeTransaction.currencyCode)) {
       this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings) })
     } else {
-      this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings, this.props.abcTransaction.currencyCode) })
+      this.setState({ walletDefaultDenomProps: UTILS.getWalletDefaultDenomProps(this.guiWallet, this.props.settings, this.props.edgeTransaction.currencyCode) })
     }
   }
 
@@ -423,7 +423,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     const sortedSubcategories = this.props.subcategoriesList.length > 0 ? this.props.subcategoriesList.sort() : []
     let txExplorerLink = null
     if (this.props.currencyInfo) {
-      txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.abcTransaction.txid)
+      txExplorerLink = sprintf(this.props.currencyInfo.transactionExplorer, this.props.edgeTransaction.txid)
     }
     return (
       <SafeAreaView>
@@ -553,14 +553,14 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
                     <FormattedText style={[styles.date]}>{this.state.dateTimeSyntax}</FormattedText>
                   </View>
                   <AmountArea
-                    abcTransaction={this.props.abcTransaction}
+                    edgeTransaction={this.props.edgeTransaction}
                     onChangeNotesFxn={this.onChangeNotes}
                     onChangeCategoryFxn={this.onChangeCategory}
                     onChangeFiatFxn={this.onChangeFiat}
                     onBlurFiatFxn={this.onBlurFiat}
                     onPressFxn={this.onSaveTxDetails}
                     fiatCurrencyCode={this.guiWallet.fiatCurrencyCode}
-                    cryptoCurrencyCode={this.props.abcTransaction.currencyCode}
+                    cryptoCurrencyCode={this.props.edgeTransaction.currencyCode}
                     fiatCurrencySymbol={this.fiatSymbol}
                     fiatAmount={this.state.amountFiat}
                     onEnterSubcategories={this.onEnterSubcategories}

@@ -95,7 +95,7 @@ test('initialState', () => {
       view: false
     },
     transactionAlert: {
-      abcTransaction: '',
+      edgeTransaction: '',
       displayAlert: false
     },
     transactionDetails: {

@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
 import type { GuiDenomination, GuiWallet } from '../../types'
@@ -45,7 +45,7 @@ export const getArchivedWalletIds = (state: State): Array<string> => {
   return archivedWalletIds
 }
 
-export const getTransactions = (state: State): Array<AbcTransaction> => {
+export const getTransactions = (state: State): Array<EdgeTransaction> => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
 }

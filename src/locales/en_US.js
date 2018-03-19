@@ -108,7 +108,7 @@ const strings = {
   send_confirmation_fee_line: 'Fee: + %s (%s)',
   send_confirmation_max_button_title: 'Send Max Amount',
   send_confirmation_slide_to_confirm: 'Slide to Confirm',
-  send_scan_header_text: 'Scan, to Send, import, or Edge Login',
+  send_scan_header_text: 'Scan to Send, Import, or Edge Login',
   send_to_title: 'To:',
   settings_account_title_cap: 'Account',
   settings_button_change_password: 'Change Password',
@@ -149,6 +149,7 @@ const strings = {
   string_fee_with_colon: 'Fee: ',
   string_first_ethereum_wallet_name: 'My Ether',
   string_first_bitcoin_wallet_name: 'My Bitcoin',
+  string_first_bitcoincash_wallet_name: 'My BitcoinCash',
   my_crypto_wallet_name: 'My %s',
 
   // Exchange

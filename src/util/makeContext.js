@@ -1,13 +1,13 @@
 // @flow
-import type { AbcContext, AbcContextCallbacks, AbcContextOptions, EdgeCorePluginFactory } from 'edge-core-js'
+import type { EdgeContext, EdgeContextCallbacks, EdgeContextOptions, EdgeCorePluginFactory } from 'edge-core-js'
 import { makeEdgeContext, makeFakeContexts } from 'edge-core-js'
 
 import ENV from '../../env.json'
 
 const { AIRBITZ_API_KEY, SHAPESHIFT_API_KEY } = ENV
 
-function makeCoreContext (callbacks: AbcContextCallbacks = {}, pluginFactories: Array<EdgeCorePluginFactory> = []): Promise<AbcContext> {
-  const opts: AbcContextOptions = {
+function makeCoreContext (callbacks: EdgeContextCallbacks = {}, pluginFactories: Array<EdgeCorePluginFactory> = []): Promise<EdgeContext> {
+  const opts: EdgeContextOptions = {
     apiKey: AIRBITZ_API_KEY,
     callbacks,
     plugins: pluginFactories,
