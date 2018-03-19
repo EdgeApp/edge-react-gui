@@ -225,7 +225,7 @@ export const selectedCurrencyCode = (state: string = '', action: Action) => {
   }
 }
 
-const addTokenPending = (state: boolean = false, action: Action) => {
+export const addTokenPending = (state: boolean = false, action: Action) => {
   // if (!action.data) return state
   const type = action.type
   switch (type) {
@@ -242,7 +242,7 @@ const addTokenPending = (state: boolean = false, action: Action) => {
   }
 }
 
-const manageTokensPending = (state: boolean = false, action: Action) => {
+export const manageTokensPending = (state: boolean = false, action: Action) => {
   if (!action.data) return state
   const type = action.type
   switch (type) {
