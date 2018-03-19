@@ -202,7 +202,7 @@ export const logout = (username?: string) => ({
   data: { username }
 })
 
-const getReceiveAddresses = (currencyWallets: { [id: string]: AbcCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
+const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
   const ids = Object.keys(currencyWallets)
   const promises = ids.map(id => {
     return currencyWallets[id].getReceiveAddress()

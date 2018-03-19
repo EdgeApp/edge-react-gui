@@ -1,7 +1,7 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeCurrencyWallet, AbcEncodeUri } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeEncodeUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Clipboard, Share, View } from 'react-native'
 import ContactsWrapper from 'react-native-contacts-wrapper'
@@ -10,7 +10,6 @@ import { sprintf } from 'sprintf-js'
 import * as Constants from '../../../../constants/indexConstants'
 import s from '../../../../locales/strings.js'
 import type { GuiCurrencyInfo, GuiReceiveAddress, GuiTransactionRequest, GuiWallet } from '../../../../types.js'
-import * as WALLET_API from '../../../Core/Wallets/api.js'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import ExchangedExchangeRate from '../../components/ExchangeRate/ExchangedExchangeRate.ui.js'
 import { ExchangedFlipInput } from '../../components/FlipInput/ExchangedFlipInput2.js'
@@ -22,114 +21,91 @@ import SafeAreaView from '../../components/SafeAreaView/index.js'
 import ShareButtons from '../../components/ShareButtons/index.js'
 import styles from './styles.js'
 
-type State = {
-  publicAddress: string,
-  legacyAddress: string,
-  encodedURI: string,
-  loading: boolean,
-  result: string
-}
-
 export type RequestStateProps = {
-  loading: boolean,
+  loading: false,
   currencyCode: string,
-  // next line will need review
-  request: GuiTransactionRequest | Object,
+  request: GuiTransactionRequest,
   useLegacyAddress: boolean,
-  edgeWallet: EdgeCurrencyWallet | null,
-  guiWallet: GuiWallet | null,
+  edgeWallet: EdgeCurrencyWallet,
+  guiWallet: GuiWallet,
   exchangeSecondaryToPrimaryRatio: number,
   currencyCode: string,
   primaryCurrencyInfo: GuiCurrencyInfo,
   secondaryCurrencyInfo: GuiCurrencyInfo,
   showToWalletModal: boolean
 }
-
-export type RequestDispatchProps = {
-  saveReceiveAddress(GuiReceiveAddress): any
+export type RequestLoadingProps = {
+  edgeWallet: null,
+  currencyCode: null,
+  exchangeSecondaryToPrimaryRatio: null,
+  guiWallet: null,
+  loading: true,
+  primaryCurrencyInfo: null,
+  request: Object,
+  secondaryCurrencyInfo: null,
+  showToWalletModal: null,
+  useLegacyAddress: null
 }
 
-type Props = RequestStateProps & RequestDispatchProps
+export type RequestDispatchProps = {
+  saveReceiveAddress(GuiReceiveAddress): void
+}
+
+type LoadingProps = RequestLoadingProps & RequestDispatchProps
+type LoadedProps = RequestStateProps & RequestDispatchProps
+type Props = LoadingProps | LoadedProps
+type State = {
+  publicAddress: string,
+  legacyAddress: string,
+  encodedURI: string,
+  result: string
+}
 
 export class Request extends Component<Props, State> {
   constructor (props: Props) {
     super(props)
-    const newState: State = {
+    this.state = {
       publicAddress: '',
       legacyAddress: '',
       encodedURI: '',
-      loading: props.loading,
       result: ''
     }
-    this.state = newState
   }
 
   componentWillReceiveProps (nextProps: Props) {
+    if (nextProps.loading) return
+
+    const didAddressChange = this.state.publicAddress !== nextProps.guiWallet.receiveAddress.publicAddress
     const changeLegacyPublic = nextProps.useLegacyAddress !== this.props.useLegacyAddress
-    if (changeLegacyPublic || (nextProps.edgeWallet && (!this.props.edgeWallet || nextProps.edgeWallet.id !== this.props.edgeWallet.id))) {
-      const edgeWallet: EdgeCurrencyWallet | null = nextProps.edgeWallet
-      const { currencyCode } = nextProps
-      if (!edgeWallet) return
+    const didWalletChange = this.props.edgeWallet && nextProps.edgeWallet.id !== this.props.edgeWallet.id
 
-      WALLET_API.getReceiveAddress(edgeWallet, currencyCode)
-        .then(receiveAddress => {
-          const { publicAddress, legacyAddress } = receiveAddress
-          const edgeEncodeUri: AbcEncodeUri = nextProps.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-          const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(edgeEncodeUri) : ''
+    if (didAddressChange || changeLegacyPublic || didWalletChange) {
+      const publicAddress = nextProps.guiWallet.receiveAddress.publicAddress
+      const legacyAddress = nextProps.guiWallet.receiveAddress.legacyAddress
 
-          this.setState({
-            encodedURI,
-            publicAddress: publicAddress,
-            legacyAddress: legacyAddress
-          })
-        })
-        .catch(e => {
-          this.setState({ encodedURI: '', publicAddress: '' })
-          console.log(e)
-        })
+      const abcEncodeUri = nextProps.useLegacyAddress
+        ? { publicAddress, legacyAddress }
+        : { publicAddress }
+
+      const encodedURI = nextProps.edgeWallet ? nextProps.edgeWallet.encodeUri(abcEncodeUri) : ''
+
+      this.setState({
+        encodedURI,
+        publicAddress: publicAddress,
+        legacyAddress: legacyAddress
+      })
     }
-  }
-
-  componentDidMount () {
-    const { currencyCode } = this.props
-    const edgeWallet: EdgeCurrencyWallet | null = this.props.edgeWallet
-    if (!edgeWallet || this.props.loading) return
-
-    WALLET_API.getReceiveAddress(edgeWallet, currencyCode)
-      .then(receiveAddress => {
-        const { publicAddress, legacyAddress } = receiveAddress
-        const edgeEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
-        const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
-        this.setState({
-          encodedURI,
-          publicAddress: publicAddress,
-          legacyAddress: legacyAddress
-        })
-      })
-      .catch(e => {
-        this.setState({ encodedURI: '', publicAddress: '', legacyAddress: '' })
-        console.log(e)
-      })
   }
 
   onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
     const { publicAddress, legacyAddress } = this.state
-    const edgeEncodeUri: AbcEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
     if (bns.gt(amounts.nativeAmount, '0')) {
       edgeEncodeUri.nativeAmount = amounts.nativeAmount
     }
     const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
 
-    this.setState({
-      encodedURI
-    })
-  }
-
-  renderDropUp = () => {
-    if (this.props.showToWalletModal) {
-      return <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />
-    }
-    return null
+    this.setState({ encodedURI })
   }
 
   render () {
@@ -138,8 +114,15 @@ export class Request extends Component<Props, State> {
     }
 
     const color = 'white'
-    const { primaryCurrencyInfo, secondaryCurrencyInfo, exchangeSecondaryToPrimaryRatio } = this.props
-    const requestAddress = this.props.useLegacyAddress ? this.state.legacyAddress : this.state.publicAddress
+    const {
+      primaryCurrencyInfo,
+      secondaryCurrencyInfo,
+      exchangeSecondaryToPrimaryRatio
+    } = this.props
+    const requestAddress = this.props.useLegacyAddress
+      ? this.state.legacyAddress
+      : this.state.publicAddress
+
     return (
       <SafeAreaView>
         <Gradient style={styles.view}>
@@ -178,10 +161,25 @@ export class Request extends Component<Props, State> {
               copyToClipboard={this.copyToClipboard}
             />
           </View>
-          {this.renderDropUp()}
+
+          {this.props.showToWalletModal &&
+          <WalletListModal topDisplacement={Constants.REQUEST_WALLET_DIALOG_TOP} type={Constants.TO} />}
         </Gradient>
       </SafeAreaView>
     )
+  }
+
+  onExchangeAmountChanged = (amounts: ExchangedFlipInputAmounts) => {
+    const { publicAddress, legacyAddress } = this.state
+    const edgeEncodeUri: EdgeEncodeUri = this.props.useLegacyAddress && legacyAddress ? { publicAddress, legacyAddress } : { publicAddress }
+    if (bns.gt(amounts.nativeAmount, '0')) {
+      edgeEncodeUri.nativeAmount = amounts.nativeAmount
+    }
+    const encodedURI = this.props.edgeWallet ? this.props.edgeWallet.encodeUri(edgeEncodeUri) : ''
+
+    this.setState({
+      encodedURI
+    })
   }
 
   copyToClipboard = () => {
