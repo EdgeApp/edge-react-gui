@@ -15,7 +15,6 @@ import sendImage from '../../../../assets/images/transactions/transactions-send.
 import * as Constants from '../../../../constants/indexConstants'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 import type { GuiWallet, DateTransactionGroup, TransactionListTx, TransactionListSection, GuiContact } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
@@ -258,14 +257,14 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <SafeAreaView>
-        <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }, UTILS.border()]}>
+        <View style={[styles.scene]}>
           <Gradient style={styles.gradient} />
-          <ScrollView style={[UTILS.border(), styles.scrollView]}>
-            <View style={[styles.container, UTILS.border()]}>
-              <Animated.View style={[{ height: this.state.balanceBoxHeight }, UTILS.border()]}>
-                <Gradient style={[styles.currentBalanceBox, UTILS.border()]}>
+          <ScrollView style={[styles.scrollView]}>
+            <View style={[styles.container]}>
+              <Animated.View style={[{ height: this.state.balanceBoxHeight }]}>
+                <Gradient style={[styles.currentBalanceBox]}>
                   {this.state.balanceBoxVisible && (
-                    <Animated.View style={{ flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity }}>
+                    <Animated.View style={[styles.balanceBox, { opacity: this.state.balanceBoxOpacity }]}>
                       {updatingBalance ? (
                         <View style={[styles.currentBalanceWrap]}>
                           <View style={[styles.updatingBalanceWrap]}>
@@ -273,17 +272,17 @@ export default class TransactionList extends Component<Props, State> {
                           </View>
                         </View>
                       ) : (
-                        <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap, UTILS.border()]}>
+                        <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap]}>
                           {this.state.showBalance ? (
                             <View style={styles.balanceShownContainer}>
-                              <View style={[styles.iconWrap, UTILS.border()]}>
+                              <View style={[styles.iconWrap]}>
                                 {logo ? (
-                                  <Image style={[{ height: 28, width: 28, resizeMode: Image.resizeMode.contain }, UTILS.border()]} source={{ uri: logo }} />
+                                  <Image style={[{ height: 28, width: 28, resizeMode: Image.resizeMode.contain }]} source={{ uri: logo }} />
                                 ) : (
                                   <T style={[styles.request]}>{displayDenomination.symbol}</T>
                                 )}
                               </View>
-                              <View style={[styles.currentBalanceBoxBitsWrap, UTILS.border()]}>
+                              <View style={[styles.currentBalanceBoxBitsWrap]}>
                                 <View style={{ flexDirection: 'row' }}>
                                   {displayDenomination.symbol ? (
                                     <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
@@ -302,20 +301,20 @@ export default class TransactionList extends Component<Props, State> {
                                   )}
                                 </View>
                               </View>
-                              <View style={[styles.currentBalanceBoxDollarsWrap, UTILS.border()]}>
-                                <T numberOfLines={1} style={[styles.currentBalanceBoxDollars, UTILS.border()]}>
+                              <View style={[styles.currentBalanceBoxDollarsWrap]}>
+                                <T numberOfLines={1} style={[styles.currentBalanceBoxDollars]}>
                                   {fiatBalanceString}
                                 </T>
                               </View>
                             </View>
                           ) : (
-                            <View style={[UTILS.border(), styles.balanceHiddenContainer]}>
+                            <View style={[styles.balanceHiddenContainer]}>
                               <T style={[styles.balanceHiddenText]}>{SHOW_BALANCE_TEXT}</T>
                             </View>
                           )}
                         </TouchableOpacity>
                       )}
-                      <View style={[styles.requestSendRow, UTILS.border()]}>
+                      <View style={[styles.requestSendRow]}>
                         <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
                           <View style={[styles.requestWrap]}>
                             <Image style={{ width: 25, height: 25 }} source={requestImage} />
