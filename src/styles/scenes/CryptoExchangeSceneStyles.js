@@ -69,7 +69,7 @@ const CryptoExchangeSceneStyle = {
         marginBottom: 10,
         marginLeft: 0,
         marginRight: 0,
-        width: '100%',
+        width: 270,
         alignSelf: 'center'
       },
       currencyIcon: {
@@ -157,12 +157,11 @@ const CryptoExchangeSceneStyle = {
     noWalletSelected: {
       ...Styles.TextAndIconButtonStyle,
       textContainer: {
-        paddingLeft: 32
       },
       inner: {
         ...Styles.TextAndIconButtonStyle.inner,
         width: '100%',
-        justifyContent: 'space-around'
+        justifyContent: 'center'
       }
     },
     iconContainer: {

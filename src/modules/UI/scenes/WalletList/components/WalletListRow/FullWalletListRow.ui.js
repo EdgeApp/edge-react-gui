@@ -8,7 +8,6 @@ import { connect } from 'react-redux'
 
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
-import { PLATFORM } from '../../../../../../theme/variables/platform.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
 import { border as b, cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
@@ -108,7 +107,7 @@ class FullWalletListRow extends Component<Props, State> {
     }
 
     return (
-      <View style={[{ width: PLATFORM.deviceWidth }, b()]}>
+      <View style={[{ width: '100%' }, b()]}>
         <View>
           <TouchableHighlight
             style={[styles.rowContainer]}
