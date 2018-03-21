@@ -8,7 +8,7 @@ import { PLATFORM } from '../../../../theme/variables/platform.js'
 export const styles = {
   topLevel: {
     zIndex: 10,
-    width: PLATFORM.deviceWidth,
+    width: '100%',
     backgroundColor: THEME.COLORS.WHITE,
     alignSelf: 'stretch'
   },
