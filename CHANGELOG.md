@@ -1,5 +1,18 @@
 # edge-react-gui
 
+## 1.0.9
+
+* Add BCH to default wallets for new accounts
+* Fix hang for offline login
+* Enable landscape mode for iOS tablets
+* Fix rendering issues in landscape mode
+
+edge-currency-bitcoin:
+* Improve networking code to save server status/states more often. Fixes LTC connectivity issues
+
+edge-core-js
+* Remove dropped transactions from being reported to GUI
+
 ## 1.0.8
 
 * Fix unconfirmed transactions having incorrect date
