@@ -1,5 +1,5 @@
 import { bns } from 'biggystring'
-import type { AbcTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 // @flow
 import { connect } from 'react-redux'
 
@@ -35,7 +35,7 @@ const mapStateToProps = (state: State): SendConfirmationStateProps => {
     secondaryeExchangeCurrencyCode = isoFiatCurrencyCode
   }
 
-  const transaction: AbcTransaction = getTransaction(state)
+  const transaction: EdgeTransaction = getTransaction(state)
   const pending = getPending(state)
   const nativeAmount = getNativeAmount(state)
   let error = getError(state)

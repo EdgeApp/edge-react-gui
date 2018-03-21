@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcTransaction } from 'edge-core-js'
+import type { EdgeTransaction } from 'edge-core-js'
 import type { DateTransactionGroup } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
@@ -42,7 +42,7 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   }
 }
 
-export const refreshTransactionsRequest = (walletId: string, transactions: Array<AbcTransaction>) => (dispatch: Dispatch, getState: GetState) => {
+export const refreshTransactionsRequest = (walletId: string, transactions: Array<EdgeTransaction>) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const selectedWalletId = UI_SELECTORS.getSelectedWalletId(state)
   const selectedCurrencyCode = UI_SELECTORS.getSelectedCurrencyCode(state)
@@ -59,14 +59,14 @@ export const refreshTransactionsRequest = (walletId: string, transactions: Array
   }
 }
 
-export const newTransactionsRequest = (walletId: string, abcTransactions: Array<AbcTransaction>) => (dispatch: Dispatch) => {
-  const abcTransaction: AbcTransaction = abcTransactions[0]
-  if (!UTILS.isReceivedTransaction(abcTransaction)) return
+export const newTransactionsRequest = (walletId: string, edgeTransactions: Array<EdgeTransaction>) => (dispatch: Dispatch) => {
+  const edgeTransaction: EdgeTransaction = edgeTransactions[0]
+  if (!UTILS.isReceivedTransaction(edgeTransaction)) return
 
-  dispatch(displayTransactionAlert(abcTransaction))
+  dispatch(displayTransactionAlert(edgeTransaction))
 }
 
-export const updateTransactions = (transactions: Array<AbcTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
+export const updateTransactions = (transactions: Array<EdgeTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
   type: UPDATE_TRANSACTIONS,
   data: { transactions, groupedTransactionsByDate }
 })
@@ -115,7 +115,7 @@ export function toggleTransactionsWalletListModal () {
   }
 }
 
-export function groupTransactionsByDate (transactions: Array<AbcTransaction>) {
+export function groupTransactionsByDate (transactions: Array<EdgeTransaction>) {
   const sectionedTransactionList = []
   let previousDateString: string = ''
   let currentSectionData = {title: '', data: []}

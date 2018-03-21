@@ -1,5 +1,5 @@
 // @flow
-import type { AbcCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet } from 'edge-core-js'
 
 import type { Dispatch, GetState } from '../../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'
@@ -8,7 +8,7 @@ import * as CORE_SELECTORS from '../selectors'
 export const PREFIX = 'Core/Wallets/'
 export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'
 
-export const updateWallets = (activeWalletIds: Array<string>, archivedWalletIds: Array<string>, currencyWallets: { [id: string]: AbcCurrencyWallet }) => ({
+export const updateWallets = (activeWalletIds: Array<string>, archivedWalletIds: Array<string>, currencyWallets: { [id: string]: EdgeCurrencyWallet }) => ({
   type: UPDATE_WALLETS,
   data: {
     activeWalletIds,
@@ -30,11 +30,11 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
   const { activeWalletIds, archivedWalletIds, currencyWallets } = account
 
   for (const walletId: string of Object.keys(currencyWallets)) {
-    const abcWallet: AbcCurrencyWallet = currencyWallets[walletId]
-    if (abcWallet.type === 'wallet:ethereum') {
+    const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
+    if (edgeWallet.type === 'wallet:ethereum') {
       if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
         const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-        abcWallet.enableTokens(enabledTokens)
+        edgeWallet.enableTokens(enabledTokens)
       }
     }
   }

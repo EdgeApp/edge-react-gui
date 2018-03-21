@@ -1,6 +1,6 @@
 // @flow
 
-import type { AbcCurrencyInfo, AbcCurrencyPlugin, AbcMetadata } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeMetadata } from 'edge-core-js'
 import { connect } from 'react-redux'
 
 import { PLATFORM } from '../../../../theme/variables/platform.js'
@@ -19,10 +19,10 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
   const usableHeight: number = PLATFORM.usableHeight
   const subcategoriesList: Array<string> = state.ui.scenes.transactionDetails.subcategories
   const settings = SETTINGS_SELECTORS.getSettings(state)
-  const currencyCode: string = ownProps.abcTransaction.currencyCode
+  const currencyCode: string = ownProps.edgeTransaction.currencyCode
   const plugins: Object = SETTINGS_SELECTORS.getPlugins(state)
-  const arrayPlugins: Array<AbcCurrencyPlugin> = plugins.arrayPlugins
-  const currencyInfo: AbcCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
+  const arrayPlugins: Array<EdgeCurrencyPlugin> = plugins.arrayPlugins
+  const currencyInfo: EdgeCurrencyInfo | void = UTILS.getCurrencyInfo(arrayPlugins, currencyCode)
 
   return {
     contacts,
@@ -36,8 +36,8 @@ const mapStateToProps = (state: State, ownProps: TransactionDetailsOwnProps) => 
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  setTransactionDetails: (txid: string, currencyCode: string, abcMetadata: AbcMetadata) => {
-    dispatch(setTransactionDetails(txid, currencyCode, abcMetadata))
+  setTransactionDetails: (txid: string, currencyCode: string, edgeMetadata: EdgeMetadata) => {
+    dispatch(setTransactionDetails(txid, currencyCode, edgeMetadata))
   },
   getSubcategories: () => dispatch(getSubcategories()),
   displayDropdownAlert: (message: string, title: string) => dispatch(displayDropdownAlert({ message, title }))
