@@ -6,7 +6,7 @@ export default StyleSheet.create({
   container: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
     marginVertical: 15,
     marginHorizontal: 35
   },

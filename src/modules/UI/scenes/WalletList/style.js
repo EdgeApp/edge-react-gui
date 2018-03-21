@@ -144,6 +144,10 @@ export const styles = {
     justifyContent: 'center',
     alignItems: 'center'
   },
+  sortableWalletListContainer: {
+    flex: 1,
+    width: '100%'
+  },
   sortableWalletList: {
     flexDirection: 'column',
     alignContent: 'stretch'
