@@ -14,11 +14,6 @@ export const toggleAddressModal = () => ({
   type: TOGGLE_ADDRESS_MODAL_VISIBILITY
 })
 
-export const updateRecipientAddress = (data: any) => ({
-  type: UPDATE_RECIPIENT_ADDRESS,
-  data
-})
-
 export const enableScan = () => {
   return {
     type: ENABLE_SCAN
