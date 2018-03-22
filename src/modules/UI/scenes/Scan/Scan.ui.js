@@ -138,7 +138,7 @@ export default class Scan extends Component<Props> {
         const currencyCode = parsedURI.token.currencyCode.toUpperCase()
         const wallet = this.props.guiWallet
         const walletId = this.props.guiWallet.id
-        const decimalPlaces = UTILS.denominationToDecimalPlaces(multiplier)
+        const decimalPlaces = UTILS.denominationToDecimalPlaces(parsedURI.token.multiplier)
         const parameters = {
           contractAddress,
           currencyCode,
