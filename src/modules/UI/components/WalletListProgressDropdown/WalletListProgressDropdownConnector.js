@@ -16,7 +16,7 @@ const mapStateToProps = (state: State) => {
     progress += itemWeightedProgress
   }
   const progressSyntax = parseInt(progress * 100).toString() + '%'
-  const displayDropdown = progress === 1 ? false : state.ui.walletListProgressDropdown.displayDropdown
+  const displayDropdown = (progress === 1) ? false : state.ui.walletListProgressDropdown.displayDropdown
   return {
     wallets,
     walletKeys,
