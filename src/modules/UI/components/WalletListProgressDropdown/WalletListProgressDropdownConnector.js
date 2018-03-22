@@ -10,13 +10,20 @@ const mapStateToProps = (state: State) => {
   const walletKeys = Object.keys(wallets)
   const ethWalletKeys = walletKeys.filter(wallet => wallets[wallet].currencyCode === 'ETH')
   const numberOfWallets = ethWalletKeys.length
-  const displayDropdown = state.ui.walletListProgressDropdown.displayDropdown
+  let progress = 0
+  for (const walletId of ethWalletKeys) {
+    const itemWeightedProgress = (wallets[walletId].addressLoadingProgress || 0) / numberOfWallets
+    progress += itemWeightedProgress
+  }
+  const progressSyntax = parseInt(progress * 100).toString() + '%'
+  const displayDropdown = progress === 1 ? false : state.ui.walletListProgressDropdown.displayDropdown
   return {
     wallets,
     walletKeys,
     ethWalletKeys,
     numberOfWallets,
-    displayDropdown
+    displayDropdown,
+    progressSyntax
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch) => ({

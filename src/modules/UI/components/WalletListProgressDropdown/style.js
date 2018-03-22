@@ -14,10 +14,18 @@ export default StyleSheet.create({
   dropdownHeader: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: THEME.COLORS.GRAY_3
+    alignItems: 'center'
   },
   dropdownHeaderText: {
-    color: THEME.COLORS.GRAY_1
+    color: THEME.COLORS.WHITE
+  },
+  dropdownBody: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  dropdownBodyText: {
+    color: THEME.COLORS.WHITE,
+    lineHeight: 24
   }
 })

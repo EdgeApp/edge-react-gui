@@ -153,7 +153,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       const { data } = action
       const guiWallet = schema(data.wallet)
       const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
+      const addressLoadingProgress = state[data.wallet.id].addressLoadingProgress || 0
       guiWallet.enabledTokens = enabledTokensOnWallet
+      guiWallet.addressLoadingProgress = addressLoadingProgress
       enabledTokensOnWallet.forEach(customToken => {
         guiWallet.nativeBalances[customToken] = data.wallet.getBalance({ currencyCode: customToken })
       })

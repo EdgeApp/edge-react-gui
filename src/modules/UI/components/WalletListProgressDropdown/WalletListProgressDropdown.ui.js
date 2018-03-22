@@ -13,25 +13,21 @@ export type Props = {
   progressPercentage: string,
   dismissAlert: Function,
   wallets: Array<GuiWallet>,
-  dismissAlert: Function
+  dismissAlert: Function,
+  progressSyntax: string
 }
 
 export default class WalletListProgressDropdown extends Component<Props> {
   render () {
-    /* const wallets = this.props.wallets
-    const numberOfWallets = this.props.numberOfWallets
-
-    let progress = 0
-    for (const walletId of this.props.ethWalletKeys) {
-      progress += (wallets[walletId].addressLoadingProgress / numberOfWallets)
-    } */
     return (
-      <DropdownAlert visible={this.props.displayDropdown} onClose={this.props.dismissAlert} >
+      <DropdownAlert closeInterval={0} replaceEnabled={true} tapToClose={true} visible={this.props.displayDropdown} onClose={this.props.dismissAlert} >
         <View>
           <AlertContainer style={styles.dropdownContainer}>
-            <AlertHeader style={styles.dropdownHeader}><Text style={styles.dropdownHeaderText}>Wallet Loading Progress...</Text></AlertHeader>
+            <AlertHeader style={styles.dropdownHeader}>
+              <Text style={styles.dropdownHeaderText}>Wallet Loading Progress...</Text>
+            </AlertHeader>
             <AlertBody>
-              <Text>Hello, progress is: </Text>
+              <Text style={styles.dropdownBodyText}>{this.props.progressSyntax}</Text>
             </AlertBody>
           </AlertContainer>
         </View>
