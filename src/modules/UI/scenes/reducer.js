@@ -8,6 +8,7 @@ import exchangeRate from '../components/ExchangeRate/reducer.js'
 import { helpModal } from '../components/HelpModal/reducer.js'
 import sideMenu from '../components/SideMenu/reducer'
 import transactionAlert from '../components/TransactionAlert/reducer.js'
+import walletListProgressDropdown from '../components/WalletListProgressDropdown/reducer.js'
 import walletListModal from '../components/WalletListModal/reducer'
 import dimensions from '../dimensions/reducer'
 import changeMiningFee from './ChangeMiningFee/reducer'
@@ -51,6 +52,7 @@ export const scenes = combineReducers({
   dimensions,
   helpModal,
   transactionAlert,
+  walletListProgressDropdown,
   exchangeRate,
   ABAlert,
   currentScene

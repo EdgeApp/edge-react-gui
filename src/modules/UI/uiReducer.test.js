@@ -1,11 +1,12 @@
 /* globals test expect */
 
-import { errorAlert, request, scenes, settings, transactionAlert, uiReducer, wallets } from './reducer.js'
+import { errorAlert, request, scenes, settings, walletListProgressDropdown, transactionAlert, uiReducer, wallets } from './reducer.js'
 
 test('initialState', () => {
   const initialState = {
     errorAlert: errorAlert(undefined, {}),
     transactionAlert: transactionAlert(undefined, {}),
+    walletListProgressDropdown: walletListProgressDropdown(undefined, {}),
     scenes: scenes(undefined, {}),
     wallets: wallets(undefined, {}),
     request: request(undefined, {}),

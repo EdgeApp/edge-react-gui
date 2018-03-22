@@ -20,7 +20,8 @@ export type GuiWallet = {
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
   metaTokens: Array<EdgeMetaToken>,
-  enabledTokens: Array<string>
+  enabledTokens: Array<string>,
+  addressLoadingProgress?: number
 }
 
 export type GuiDenomination = {
@@ -180,7 +181,8 @@ export const emptyGuiWallet: GuiWallet = {
   symbolImage: '',
   symbolImageDarkMono: '',
   metaTokens: [],
-  enabledTokens: []
+  enabledTokens: [],
+  addressLoadingProgress: 0
 }
 
 export const emptyGuiDenomination: GuiDenomination = {

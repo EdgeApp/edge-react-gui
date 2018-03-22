@@ -69,6 +69,21 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
     }
 
+    case ACTION.UPDATE_WALLET_LOADING_PROGRESS: {
+      const { walletId, addressLoadingProgress } = action.data
+      if (state[walletId] !== undefined) {
+        return {
+          ...state,
+          [walletId]: {
+            ...state[walletId],
+            addressLoadingProgress
+          }
+        }
+      } else {
+        return state
+      }
+    }
+
     case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
       const { enabledTokens, walletId } = action.data
       if (state[walletId] !== undefined) {
