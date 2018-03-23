@@ -2244,9 +2244,9 @@ edge-currency-bitcoin@2.14.11:
     unorm "^1.4.1"
     uri-js "^3.0.2"
 
-"edge-currency-ethereum@git://github.com/Airbitz/edge-currency-ethereum.git#cd96db14c2508e2c97c5bf0e32a533530caaae81":
+"edge-currency-ethereum@git://github.com/Airbitz/edge-currency-ethereum.git":
   version "0.8.1"
-  resolved "git://github.com/Airbitz/edge-currency-ethereum.git#cd96db14c2508e2c97c5bf0e32a533530caaae81"
+  resolved "git://github.com/Airbitz/edge-currency-ethereum.git#ab5e37501afeaeb25fa4a2a7d022ec107347af39"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"

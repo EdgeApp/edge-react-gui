@@ -22,10 +22,10 @@ export type AddTokenOwnProps = {
   wallet: GuiWallet,
   onAddToken: Function,
   // adding properties in case coming from Scan scene (scan QR code to add token)
-  currencyName?: string,
-  currencyCode?: string,
-  contractAddress?: string,
-  decimalPlaces?: string
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string
 }
 
 export type AddTokenDispatchProps = {
