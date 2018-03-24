@@ -12,7 +12,6 @@ import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import * as Constants from '../../../../constants/indexConstants.js'
 import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
-import { PLATFORM } from '../../../../theme/variables/platform.js'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
 import Gradient from '../../components/Gradient/Gradient.ui'
@@ -240,7 +239,6 @@ export default class WalletList extends Component<Props, State> {
   }
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
-    const { width } = PLATFORM.deviceWidth
     return (
       <View style={[styles.listsContainer, UTILS.border()]}>
         {this.state.sortableListExists && (
@@ -254,7 +252,7 @@ export default class WalletList extends Component<Props, State> {
             ]}
           >
             <SortableListView
-              style={{ flex: 1, width }}
+              style={styles.sortableWalletListContainer}
               data={activeWalletsObject}
               order={this.props.activeWalletIds}
               onRowMoved={this.onActiveRowMoved}
@@ -268,7 +266,7 @@ export default class WalletList extends Component<Props, State> {
         {this.state.fullListExists && (
           <Animated.View testID={'fullList'} style={[{ flex: 1, opacity: this.state.fullListOpacity, zIndex: this.state.fullListZIndex }, styles.fullList]}>
             <FlatList
-              style={{ flex: 1, width }}
+              style={styles.sortableWalletListContainer}
               data={activeWalletsArray}
               extraData={this.props.wallets}
               renderItem={item => <FullWalletListRow data={item} settings={this.props.settings} customTokens={this.props.customTokens} />}

@@ -2206,9 +2206,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.6.tgz#803c57a72f11967bcb3db381ace0a039c1898b8f"
+edge-core-js@0.6.7:
+  version "0.6.7"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.7.tgz#75f08eaa07db7678983b0c567c81a383288b4597"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2229,9 +2229,9 @@ edge-core-js@0.6.6:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
 
-edge-currency-bitcoin@2.14.10:
-  version "2.14.10"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.14.10.tgz#de42e7f7337023879fc02c2e57bd3c220b4ae401"
+edge-currency-bitcoin@2.14.11:
+  version "2.14.11"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.14.11.tgz#d16a9dbd0f3db47750535a6a7f4b213c4da56664"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
@@ -4234,6 +4234,10 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
+jsc-android@216113.0.3:
+  version "216113.0.3"
+  resolved "https://registry.yarnpkg.com/jsc-android/-/jsc-android-216113.0.3.tgz#fd655b06cacb84b57abe281641d44a39ac54480f"
+
 jsdom@^9.12.0:
   version "9.12.0"
   resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-9.12.0.tgz#e8c546fffcb06c00d4833ca84410fed7f8a097d4"
@@ -5999,9 +6003,9 @@ react-native-easy-grid@0.1.17:
   dependencies:
     lodash "^4.11.1"
 
-react-native-fast-crypto@^1.5.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.5.4.tgz#125a6689e05fd7f4b1d6bb9eb1c8335f4a358067"
+react-native-fast-crypto@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/react-native-fast-crypto/-/react-native-fast-crypto-1.5.5.tgz#300bf9ffea0a7e245f09bb440a230b5c12c0a0b1"
   dependencies:
     buffer "^5.0.8"
     rfc4648 "^1.0.0"
