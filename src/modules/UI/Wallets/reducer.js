@@ -140,7 +140,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case ACTION.UPSERT_WALLET: {
       const { data } = action
-      const guiWallet = schema(data.wallet, data.receiveAddress)
+      const guiWallet = schema(data.wallet, state[data.wallet.id].receiveAddress)
       const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
       guiWallet.enabledTokens = enabledTokensOnWallet
       enabledTokensOnWallet.forEach(customToken => {
@@ -151,6 +151,17 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
         [data.wallet.id]: {
           ...state[data.wallet.id],
           ...guiWallet
+        }
+      }
+    }
+
+    case ACTION.REFRESH_RECEIVE_ADDRESS: {
+      const { data: { walletId, receiveAddress } } = action
+      return {
+        ...state,
+        [walletId]: {
+          ...state[walletId],
+          receiveAddress
         }
       }
     }
