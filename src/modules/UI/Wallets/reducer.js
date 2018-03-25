@@ -72,6 +72,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     case ACTION.UPDATE_WALLET_LOADING_PROGRESS: {
       const { walletId, addressLoadingProgress } = action.data
       if (state[walletId] !== undefined) {
+        if (addressLoadingProgress < state[walletId].addressLoadingProgress) return state
         return {
           ...state,
           [walletId]: {
