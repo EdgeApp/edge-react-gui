@@ -16,6 +16,7 @@ import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
 import styles, { styles as styleRaw } from '../../style.js'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
+import _ from 'lodash'
 
 const DIVIDE_PRECISION = 18
 
@@ -100,8 +101,17 @@ class FullWalletListRow extends Component<Props, State> {
     const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
 
+    const customTokens = this.props.settings.customTokens
+    const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+      let isVisible = true // assume we will enable token
+      const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+      // if token is not supposed to be visible, not point in enabling it
+      if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+      return isVisible
+    })
+
     for (const prop in walletData.nativeBalances) {
-      if (prop !== currencyCode && enabledTokens.indexOf(prop) >= 0) {
+      if (prop !== currencyCode && enabledNotHiddenTokens.indexOf(prop) >= 0) {
         enabledNativeBalances[prop] = walletData.nativeBalances[prop]
       }
     }
