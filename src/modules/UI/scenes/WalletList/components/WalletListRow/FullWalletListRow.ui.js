@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import { border as b, cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals } from '../../../../../utils.js'
+import { cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
@@ -107,7 +107,7 @@ class FullWalletListRow extends Component<Props, State> {
     }
 
     return (
-      <View style={[{ width: '100%' }, b()]}>
+      <View style={[{ width: '100%' }]}>
         <View>
           <TouchableHighlight
             style={[styles.rowContainer]}
@@ -116,21 +116,21 @@ class FullWalletListRow extends Component<Props, State> {
             onPress={() => this._onPressSelectWallet(id, currencyCode)}
           >
             <View style={[styles.rowContent]}>
-              <View style={[styles.rowNameTextWrap, b()]}>
+              <View style={[styles.rowNameTextWrap]}>
                 {Platform.OS === 'ios' && (
-                  <View style={[styles.rowNameTextWrapIOS, b()]}>
-                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                  <View style={[styles.rowNameTextWrapIOS]}>
+                    <T style={[styles.rowNameText]} numberOfLines={1}>
                       {symbolImageDarkMono && (
-                        <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
+                        <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
                       )}{' '}
                       {cutOffText(name, 34)}
                     </T>
                   </View>
                 )}
                 {Platform.OS === 'android' && (
-                  <View style={[styles.rowNameTextWrapAndroid, b()]}>
-                    {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
-                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                  <View style={[styles.rowNameTextWrapAndroid]}>
+                    {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+                    <T style={[styles.rowNameText]} numberOfLines={1}>
                       {cutOffText(name, 34)}
                     </T>
                   </View>
