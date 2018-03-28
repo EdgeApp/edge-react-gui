@@ -441,9 +441,9 @@ export default class TransactionList extends Component<Props, State> {
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} />
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} resizeMode='cover' />
               ) : (
-                <Image style={styles.transactionLogo} source={txImage} />
+                <Image style={styles.transactionLogo} source={txImage} resizeMode='cover' />
               )}
 
               <View style={[styles.transactionLeftTextWrap]}>
