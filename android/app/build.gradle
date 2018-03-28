@@ -152,6 +152,12 @@ if (hasProperty('storeFile')) {
     android.signingConfigs.release.keyPassword   = "password"
 }
 
+configurations.all {
+    resolutionStrategy {
+        force 'org.webkit:android-jsc:r216113'
+    }
+}
+
 dependencies {
     compile project(':react-native-mail')
     compile project(':react-native-smart-splash-screen')
