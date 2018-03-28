@@ -278,7 +278,7 @@ export default class TransactionList extends Component<Props, State> {
                             <View style={styles.balanceShownContainer}>
                               <View style={[styles.iconWrap]}>
                                 {logo ? (
-                                  <Image style={[{ height: '100%' }]} source={{ uri: logo }} />
+                                  <Image style={[{ height: '100%' }]} source={{ uri: logo }} resizeMode={'cover'} />
                                 ) : (
                                   <T style={[styles.request]}>{displayDenomination.symbol}</T>
                                 )}
@@ -441,9 +441,9 @@ export default class TransactionList extends Component<Props, State> {
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
               {thumbnailPath ? (
-                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }} resizeMode='cover' />
+                <Image style={[styles.transactionLogo]} source={{ uri: thumbnailPath }}/>
               ) : (
-                <Image style={styles.transactionLogo} source={txImage} resizeMode='cover' />
+                <Image style={styles.transactionLogo} source={txImage}/>
               )}
 
               <View style={[styles.transactionLeftTextWrap]}>
