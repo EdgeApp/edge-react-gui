@@ -278,7 +278,7 @@ export default class TransactionList extends Component<Props, State> {
                             <View style={styles.balanceShownContainer}>
                               <View style={[styles.iconWrap, UTILS.border()]}>
                                 {logo ? (
-                                  <Image style={[{ height: 28, width: 28, resizeMode: Image.resizeMode.contain }, UTILS.border()]} source={{ uri: logo }} />
+                                  <Image style={[{ height: '100%' }, UTILS.border()]} source={{ uri: logo }} />
                                 ) : (
                                   <T style={[styles.request]}>{displayDenomination.symbol}</T>
                                 )}
@@ -288,12 +288,15 @@ export default class TransactionList extends Component<Props, State> {
                                   {displayDenomination.symbol ? (
                                     <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
                                       {displayDenomination.symbol + ' '}
+                                      <T numberOfLines={1} >
+                                        {cryptoAmountString}
+                                      </T>
                                     </T>
-                                  ) : null}
-
-                                  <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                                    {cryptoAmountString}
-                                  </T>
+                                  ) : (
+                                    <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                                      {cryptoAmountString}
+                                    </T>
+                                  )}
 
                                   {!displayDenomination.symbol && (
                                     <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
