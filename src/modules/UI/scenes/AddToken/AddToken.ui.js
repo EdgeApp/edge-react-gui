@@ -20,7 +20,12 @@ export type AddTokenOwnProps = {
   addNewToken: Function,
   currentCustomTokens: Array<CustomTokenInfo>,
   wallet: GuiWallet,
-  onAddToken: string => void
+  onAddToken: Function,
+  // adding properties in case coming from Scan scene (scan QR code to add token)
+  currencyName: string,
+  currencyCode: string,
+  contractAddress: string,
+  decimalPlaces: string
 }
 
 export type AddTokenDispatchProps = {
@@ -47,10 +52,10 @@ export class AddToken extends Component<AddTokenProps, State> {
   constructor (props: AddTokenProps) {
     super(props)
     this.state = {
-      currencyName: '',
-      currencyCode: '',
-      contractAddress: '',
-      decimalPlaces: '',
+      currencyName: this.props.currencyName || '',
+      currencyCode: this.props.currencyCode || '',
+      contractAddress: this.props.contractAddress || '',
+      decimalPlaces: this.props.decimalPlaces || '',
       multiplier: ''
     }
   }
