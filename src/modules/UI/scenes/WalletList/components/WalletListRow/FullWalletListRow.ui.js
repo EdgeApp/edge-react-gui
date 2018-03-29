@@ -9,13 +9,14 @@ import { connect } from 'react-redux'
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
 import type { CustomTokenInfo, GuiDenomination } from '../../../../../../types'
-import { border as b, cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals } from '../../../../../utils.js'
+import { cutOffText, decimalOrZero, mergeTokensRemoveInvisible, truncateDecimals } from '../../../../../utils.js'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import { getEnabledTokens, selectWallet } from '../../../../Wallets/action.js'
 import styles, { styles as styleRaw } from '../../style.js'
 import RowOptions from './WalletListRowOptions.ui'
 import WalletListTokenRow from './WalletListTokenRowConnector.js'
+import _ from 'lodash'
 
 const DIVIDE_PRECISION = 18
 
@@ -100,14 +101,23 @@ class FullWalletListRow extends Component<Props, State> {
     const enabledNativeBalances = {}
     const enabledTokens = walletData.enabledTokens
 
+    const customTokens = this.props.settings.customTokens
+    const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+      let isVisible = true // assume we will enable token
+      const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+      // if token is not supposed to be visible, not point in enabling it
+      if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+      return isVisible
+    })
+
     for (const prop in walletData.nativeBalances) {
-      if (prop !== currencyCode && enabledTokens.indexOf(prop) >= 0) {
+      if (prop !== currencyCode && enabledNotHiddenTokens.indexOf(prop) >= 0) {
         enabledNativeBalances[prop] = walletData.nativeBalances[prop]
       }
     }
 
     return (
-      <View style={[{ width: '100%' }, b()]}>
+      <View style={[{ width: '100%' }]}>
         <View>
           <TouchableHighlight
             style={[styles.rowContainer]}
@@ -116,21 +126,21 @@ class FullWalletListRow extends Component<Props, State> {
             onPress={() => this._onPressSelectWallet(id, currencyCode)}
           >
             <View style={[styles.rowContent]}>
-              <View style={[styles.rowNameTextWrap, b()]}>
+              <View style={[styles.rowNameTextWrap]}>
                 {Platform.OS === 'ios' && (
-                  <View style={[styles.rowNameTextWrapIOS, b()]}>
-                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                  <View style={[styles.rowNameTextWrapIOS]}>
+                    <T style={[styles.rowNameText]} numberOfLines={1}>
                       {symbolImageDarkMono && (
-                        <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
+                        <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
                       )}{' '}
                       {cutOffText(name, 34)}
                     </T>
                   </View>
                 )}
                 {Platform.OS === 'android' && (
-                  <View style={[styles.rowNameTextWrapAndroid, b()]}>
-                    {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
-                    <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                  <View style={[styles.rowNameTextWrapAndroid]}>
+                    {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} resizeMode="cover" />}
+                    <T style={[styles.rowNameText]} numberOfLines={1}>
                       {cutOffText(name, 34)}
                     </T>
                   </View>
