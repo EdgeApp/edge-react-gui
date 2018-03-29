@@ -47,7 +47,7 @@ class SortableWalletListRow extends Component<Props, State> {
                 <View style={[styles.rowNameTextWrapIOS]}>
                   <T style={[styles.rowNameText]} numberOfLines={1}>
                     {symbolImageDarkMono && (
-                      <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
+                      <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 3 }]} source={{ uri: symbolImageDarkMono }} />
                     )}{' '}
                     {cutOffText(name, 34)}
                   </T>

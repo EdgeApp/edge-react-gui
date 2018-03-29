@@ -216,9 +216,9 @@ export const styles = {
   },
   rowCurrencyLogoIOS: {
     height: 22,
-    width: 22,
+    width: 26,
     resizeMode: Image.resizeMode.contain,
-    alignSelf: 'center'
+    alignSelf: 'flex-start'
   },
   rowNameText: {
     fontSize: 18,
