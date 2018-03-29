@@ -11,38 +11,24 @@ import * as UI_SELECTORS from '../../selectors.js'
 import * as SETTINGS_SELECTORS from '../../Settings/selectors.js'
 import { saveReceiveAddress } from './action.js'
 import { Request } from './Request.ui'
-import type { RequestDispatchProps, RequestStateProps } from './Request.ui'
+import type { RequestDispatchProps, RequestStateProps, RequestLoadingProps } from './Request.ui'
 
-const emptyDenomination: GuiDenomination = {
-  name: '',
-  symbol: '',
-  multiplier: '',
-  precision: 0,
-  currencyCode: ''
-}
-const emptyInfo: GuiCurrencyInfo = {
-  displayCurrencyCode: '',
-  exchangeCurrencyCode: '',
-  displayDenomination: emptyDenomination,
-  exchangeDenomination: emptyDenomination
-}
-
-const mapStateToProps = (state: State): RequestStateProps => {
+const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps => {
   let exchangeSecondaryToPrimaryRatio: number = 0
   const guiWallet: GuiWallet = UI_SELECTORS.getSelectedWallet(state)
   const currencyCode: string = UI_SELECTORS.getSelectedCurrencyCode(state)
   if (!guiWallet || !currencyCode) {
     return {
-      loading: true,
-      request: {},
-      useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
+      currencyCode: null,
       edgeWallet: null,
+      exchangeSecondaryToPrimaryRatio: null,
       guiWallet: null,
-      exchangeSecondaryToPrimaryRatio: 0,
-      currencyCode: '',
-      primaryCurrencyInfo: emptyInfo,
-      secondaryCurrencyInfo: emptyInfo,
-      showToWalletModal: false
+      loading: true,
+      primaryCurrencyInfo: null,
+      request: {},
+      secondaryCurrencyInfo: null,
+      showToWalletModal: null,
+      useLegacyAddress: null
     }
   }
 
@@ -86,7 +72,9 @@ const mapStateToProps = (state: State): RequestStateProps => {
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({
-  saveReceiveAddress: (receiveAddress: GuiReceiveAddress) => dispatch(saveReceiveAddress(receiveAddress))
+  saveReceiveAddress: (receiveAddress: GuiReceiveAddress) => {
+    dispatch(saveReceiveAddress(receiveAddress))
+  }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Request)
