@@ -5,7 +5,7 @@ import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
-
+import _ from 'lodash'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -103,7 +103,15 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       if (edgeWallet.type === 'wallet:ethereum') {
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-          edgeWallet.enableTokens(enabledTokens)
+          const customTokens = state.ui.settings.customTokens
+          const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+            let isVisible = true // assume we will enable token
+            const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+            // if token is not supposed to be visible, not point in enabling it
+            if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+            return isVisible
+          })
+          edgeWallet.enableTokens(enabledNotHiddenTokens)
         }
       }
     }
