@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import sort from '../../../../../../assets/images/walletlist/sort.png'
 import { intl } from '../../../../../../locales/intl'
 import s from '../../../../../../locales/strings.js'
-import { border as b, cutOffText, decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../../../../utils'
+import { cutOffText, decimalOrZero, findDenominationSymbol, truncateDecimals } from '../../../../../utils'
 import T from '../../../../components/FormattedText'
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'
 import styles, { styles as styleRaw } from '../../style.js'
@@ -38,32 +38,32 @@ class SortableWalletListRow extends Component<Props, State> {
         {...this.props.sortHandlers}
       >
         {walletData.currencyCode ? (
-          <View style={[styles.rowContent, styles.sortableRowContent, b()]}>
-            <View style={[styles.rowDragArea, b()]}>
+          <View style={[styles.rowContent, styles.sortableRowContent]}>
+            <View style={[styles.rowDragArea]}>
               <Image source={sort} style={{ height: 15, width: 15 }} />
             </View>
             <View style={[styles.rowNameTextWrap]}>
               {Platform.OS === 'ios' && (
-                <View style={[styles.rowNameTextWrapIOS, b()]}>
-                  <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                <View style={[styles.rowNameTextWrapIOS]}>
+                  <T style={[styles.rowNameText]} numberOfLines={1}>
                     {symbolImageDarkMono && (
-                      <Image style={[styles.rowCurrencyLogoIOS, b()]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
+                      <Image style={[styles.rowCurrencyLogoIOS]} transform={[{ translateY: 6 }]} source={{ uri: symbolImageDarkMono }} />
                     )}{' '}
                     {cutOffText(name, 34)}
                   </T>
                 </View>
               )}
               {Platform.OS === 'android' && (
-                <View style={[styles.rowNameTextWrapAndroid, b()]}>
-                  {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid, b()]} source={{ uri: symbolImageDarkMono }} />}
-                  <T style={[styles.rowNameText, b()]} numberOfLines={1}>
+                <View style={[styles.rowNameTextWrapAndroid]}>
+                  {symbolImageDarkMono && <Image style={[styles.rowCurrencyLogoAndroid]} source={{ uri: symbolImageDarkMono }} />}
+                  <T style={[styles.rowNameText]} numberOfLines={1}>
                     {cutOffText(name, 34)}
                   </T>
                 </View>
               )}
             </View>
-            <View style={[styles.rowBalanceTextWrap, b()]}>
-              <T style={[styles.rowBalanceAmountText, b()]}>{finalCryptoAmount}</T>
+            <View style={[styles.rowBalanceTextWrap]}>
+              <T style={[styles.rowBalanceAmountText]}>{finalCryptoAmount}</T>
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                 <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}</T>
                 <T> (</T>
