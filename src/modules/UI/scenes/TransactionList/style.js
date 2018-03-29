@@ -87,14 +87,15 @@ export const styles = {
   },
   iconWrap: {
     // two
-    flex: 3,
+    height: 28,
+    width: 28,
     justifyContent: 'flex-start',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxBitssWrap: {
     // two
     flex: 4,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
