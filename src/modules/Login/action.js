@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeAccount, EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
+import type { EdgeAccount, EdgeCurrencyWallet } from 'edge-core-js'
 import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
@@ -16,6 +16,7 @@ import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
+import { getReceiveAddresses } from '../utils.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -201,21 +202,3 @@ export const logout = (username?: string) => ({
   type: Constants.LOGOUT,
   data: { username }
 })
-
-const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
-  const ids = Object.keys(currencyWallets)
-  const promises = ids.map(id => {
-    return currencyWallets[id].getReceiveAddress()
-  })
-  return Promise.all(promises).then(receiveAddresses => {
-    return ids.reduce(
-      (result, id, index) => {
-        return {
-          ...result,
-          [id]: receiveAddresses[index]
-        }
-      },
-      {}
-    )
-  })
-}

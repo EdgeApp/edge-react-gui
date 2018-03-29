@@ -5,6 +5,7 @@ import type { Dispatch, GetState } from '../../ReduxTypes'
 import * as SETTINGS_SELECTORS from '../../UI/Settings/selectors'
 import * as CORE_SELECTORS from '../selectors'
 import _ from 'lodash'
+import { getReceiveAddresses } from '../../utils.js'
 
 export const PREFIX = 'Core/Wallets/'
 export const UPDATE_WALLETS = PREFIX + 'UPDATE_WALLETS'
@@ -56,20 +57,5 @@ export const updateWalletsRequest = () => (dispatch: Dispatch, getState: GetStat
     }
 
     return dispatch(updateWallets(activeWalletIds, archivedWalletIds, currencyWallets, receiveAddresses))
-  })
-}
-
-const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
-  const ids = Object.keys(currencyWallets)
-  const promises = ids.map(id => {
-    return currencyWallets[id].getReceiveAddress()
-  })
-  return Promise.all(promises).then(receiveAddresses => {
-    return ids.reduce((result, id, index) => {
-      return {
-        ...result,
-        [id]: receiveAddresses[index]
-      }
-    }, {})
   })
 }
