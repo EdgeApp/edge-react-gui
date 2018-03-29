@@ -5,7 +5,7 @@ import { Platform } from 'react-native'
 import Locale from 'react-native-locale'
 import PushNotification from 'react-native-push-notification'
 import { Actions } from 'react-native-router-flux'
-
+import _ from 'lodash'
 import * as actions from '../../actions/indexActions'
 import * as Constants from '../../constants/indexConstants'
 import s from '../../locales/strings.js'
@@ -16,6 +16,7 @@ import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
+import { getReceiveAddresses } from '../utils.js'
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
 
@@ -48,7 +49,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     walletId: '',
     currencyCode: '',
     currencyPlugins: [],
-    otpInfo: {enabled: account.otpEnabled, otpKey: account.otpKey, otpResetPending},
+    otpInfo: { enabled: account.otpEnabled, otpKey: account.otpKey, otpResetPending },
     autoLogoutTimeInSeconds: '',
     bluetoothMode: '',
     pinLoginEnabled: false,
@@ -97,19 +98,31 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.walletId = walletId
       accountInitObject.currencyCode = currencyCode
     }
-    const { activeWalletIds, archivedWalletIds, currencyWallets } = account
+    const activeWalletIds = account.activeWalletIds
+    const archivedWalletIds = account.archivedWalletIds
+    const currencyWallets = account.currencyWallets
+
+    accountInitObject.activeWalletIds = activeWalletIds
+    accountInitObject.archivedWalletIds = archivedWalletIds
+    accountInitObject.currencyWallets = currencyWallets
+
     for (const walletId of Object.keys(currencyWallets)) {
       const edgeWallet: EdgeCurrencyWallet = currencyWallets[walletId]
       if (edgeWallet.type === 'wallet:ethereum') {
         if (state.ui.wallets && state.ui.wallets.byId && state.ui.wallets.byId[walletId]) {
           const enabledTokens = state.ui.wallets.byId[walletId].enabledTokens
-          edgeWallet.enableTokens(enabledTokens)
+          const customTokens = state.ui.settings.customTokens
+          const enabledNotHiddenTokens = enabledTokens.filter((token) => {
+            let isVisible = true // assume we will enable token
+            const tokenIndex = _.findIndex(customTokens, (item) => item.currencyCode === token)
+            // if token is not supposed to be visible, not point in enabling it
+            if (tokenIndex > -1 && (customTokens[tokenIndex].isVisible === false)) isVisible = false
+            return isVisible
+          })
+          edgeWallet.enableTokens(enabledNotHiddenTokens)
         }
       }
     }
-    accountInitObject.activeWalletIds = activeWalletIds
-    accountInitObject.archivedWalletIds = archivedWalletIds
-    accountInitObject.currencyWallets = currencyWallets
 
     const settings = await SETTINGS_API.getSyncedSettings(account)
     const syncDefaults = SETTINGS_API.SYNCED_ACCOUNT_DEFAULTS
@@ -142,7 +155,15 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
     const coreFinal = { ...coreDefaults, ...coreSettings }
     accountInitObject.pinMode = coreFinal.pinMode
     accountInitObject.otpMode = coreFinal.otpMode
-    dispatch(actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, accountInitObject))
+
+    const receiveAddresses = await getReceiveAddresses(currencyWallets)
+
+    dispatch(
+      actions.dispatchActionObject(Constants.ACCOUNT_INIT_COMPLETE, {
+        ...accountInitObject,
+        receiveAddresses
+      })
+    )
     // $FlowFixMe
     dispatch(updateWalletsRequest())
   } catch (e) {

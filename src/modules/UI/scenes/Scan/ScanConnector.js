@@ -15,14 +15,17 @@ import { updateLabel, updateParsedURI } from '../SendConfirmation/action.js'
 import { toggleWalletListModal } from '../WalletTransferList/action'
 import { disableScan, enableScan, toggleAddressModal, toggleEnableTorch } from './action'
 import Scan from './Scan.ui'
+import type { GuiWallet } from '../../../../types'
 
 const mapStateToProps = (state: State) => {
   const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
   const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
+  const guiWallet: GuiWallet = UI_SELECTORS.getWallet(state, walletId)
 
   return {
     cameraPermission: getCameraPermission(state),
     edgeWallet,
+    guiWallet,
     torchEnabled: state.ui.scenes.scan.torchEnabled,
     scanEnabled: state.ui.scenes.scan.scanEnabled,
     walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
