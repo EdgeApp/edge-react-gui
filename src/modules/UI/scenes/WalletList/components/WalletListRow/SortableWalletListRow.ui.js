@@ -38,7 +38,10 @@ class SortableWalletListRow extends Component<Props, State> {
         {...this.props.sortHandlers}
       >
         {walletData.currencyCode ? (
-          <View style={[styles.rowContent, b()]}>
+          <View style={[styles.rowContent, styles.sortableRowContent, b()]}>
+            <View style={[styles.rowDragArea, b()]}>
+              <Image source={sort} style={{ height: 15, width: 15 }} />
+            </View>
             <View style={[styles.rowNameTextWrap]}>
               {Platform.OS === 'ios' && (
                 <View style={[styles.rowNameTextWrapIOS, b()]}>
@@ -61,16 +64,12 @@ class SortableWalletListRow extends Component<Props, State> {
             </View>
             <View style={[styles.rowBalanceTextWrap, b()]}>
               <T style={[styles.rowBalanceAmountText, b()]}>{finalCryptoAmount}</T>
-
               <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                 <T style={[styles.rowBalanceDenominationText]}>{cryptoCurrencyName}</T>
                 <T> (</T>
                 <T style={[styles.rowBalanceDenominationText, styles.symbol]}>{symbol || ''}</T>
                 <T>)</T>
               </View>
-            </View>
-            <View style={[styles.rowDragArea, b()]}>
-              <Image source={sort} style={{ height: 15, width: 15 }} />
             </View>
           </View>
         ) : (
