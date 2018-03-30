@@ -1,18 +1,29 @@
-/* globals test expect */
+/* globals describe test expect */
 
-import { wallets as walletsReducer } from './reducer.js'
+import {
+  wallets,
+  byId,
+  activeWalletIds,
+  archivedWalletIds,
+  selectedWalletId,
+  selectedCurrencyCode,
+  addTokenPending,
+  manageTokensPending
+} from './reducer.js'
 
-test('initialState', () => {
-  const expected = {
-    activeWalletIds: [],
-    addTokenPending: false,
-    archivedWalletIds: [],
-    byId: {},
-    manageTokensPending: false,
-    selectedCurrencyCode: '',
-    selectedWalletId: ''
-  }
-  const actual = walletsReducer(undefined, {})
+describe('WalletsReducer', () => {
+  test('initialState', () => {
+    const expected = {
+      byId: byId(undefined, {}),
+      activeWalletIds: activeWalletIds(undefined, {}),
+      archivedWalletIds: archivedWalletIds(undefined, {}),
+      selectedWalletId: selectedWalletId(undefined, {}),
+      selectedCurrencyCode: selectedCurrencyCode(undefined, {}),
+      manageTokensPending: manageTokensPending(undefined, {}),
+      addTokenPending: addTokenPending(undefined, {})
+    }
+    const actual = wallets(undefined, {})
 
-  expect(actual).toEqual(expected)
+    expect(actual).toEqual(expected)
+  })
 })

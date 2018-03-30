@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { combineReducers } from 'redux'
 
@@ -22,8 +22,9 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
     case Constants.ACCOUNT_INIT_COMPLETE: {
       const wallets = action.data.currencyWallets
       const out = {}
+
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
+        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -40,7 +41,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       const wallets = action.data.currencyWallets
       const out = {}
       for (const walletId of Object.keys(wallets)) {
-        const tempWallet = schema(wallets[walletId])
+        const tempWallet = schema(wallets[walletId], action.data.receiveAddresses[walletId])
         if (state[walletId]) {
           const enabledTokensOnWallet = state[walletId].enabledTokens
           tempWallet.enabledTokens = enabledTokensOnWallet
@@ -48,7 +49,10 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
             tempWallet.nativeBalances[customToken] = wallets[walletId].getBalance({ currencyCode: customToken })
           })
         }
-        out[walletId] = tempWallet
+        out[walletId] = {
+          ...state[walletId],
+          ...tempWallet
+        }
       }
 
       return out
@@ -152,7 +156,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
 
     case ACTION.UPSERT_WALLET: {
       const { data } = action
-      const guiWallet = schema(data.wallet)
+      const guiWallet = schema(data.wallet, state[data.wallet.id].receiveAddress)
       const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
       const addressLoadingProgress = state[data.wallet.id].addressLoadingProgress || 0
       guiWallet.enabledTokens = enabledTokensOnWallet
@@ -162,7 +166,21 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       })
       return {
         ...state,
-        [data.wallet.id]: guiWallet
+        [data.wallet.id]: {
+          ...state[data.wallet.id],
+          ...guiWallet
+        }
+      }
+    }
+
+    case ACTION.REFRESH_RECEIVE_ADDRESS: {
+      const { data: { walletId, receiveAddress } } = action
+      return {
+        ...state,
+        [walletId]: {
+          ...state[walletId],
+          receiveAddress
+        }
       }
     }
 
@@ -236,7 +254,7 @@ export const selectedCurrencyCode = (state: string = '', action: Action) => {
   }
 }
 
-const addTokenPending = (state: boolean = false, action: Action) => {
+export const addTokenPending = (state: boolean = false, action: Action) => {
   // if (!action.data) return state
   const type = action.type
   switch (type) {
@@ -253,7 +271,7 @@ const addTokenPending = (state: boolean = false, action: Action) => {
   }
 }
 
-const manageTokensPending = (state: boolean = false, action: Action) => {
+export const manageTokensPending = (state: boolean = false, action: Action) => {
   if (!action.data) return state
   const type = action.type
   switch (type) {
@@ -266,7 +284,7 @@ const manageTokensPending = (state: boolean = false, action: Action) => {
   }
 }
 
-function schema (wallet: EdgeCurrencyWallet): GuiWallet {
+function schema (wallet: EdgeCurrencyWallet, receiveAddress: EdgeReceiveAddress): GuiWallet {
   const id: string = wallet.id
   const type: string = wallet.type
   const name: string = wallet.name || 'no wallet name'
@@ -338,7 +356,8 @@ function schema (wallet: EdgeCurrencyWallet): GuiWallet {
     symbolImage,
     symbolImageDarkMono,
     metaTokens,
-    enabledTokens
+    enabledTokens,
+    receiveAddress
   }
 
   return newWallet

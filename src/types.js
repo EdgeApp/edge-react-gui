@@ -3,7 +3,7 @@
  */
 // @flow
 // trying to trigger a build. .. will remove this line
-import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,
@@ -21,7 +21,7 @@ export type GuiWallet = {
   symbolImageDarkMono: string | void,
   metaTokens: Array<EdgeMetaToken>,
   enabledTokens: Array<string>,
-  addressLoadingProgress?: number
+  receiveAddress: EdgeReceiveAddress
 }
 
 export type GuiDenomination = {
@@ -182,7 +182,12 @@ export const emptyGuiWallet: GuiWallet = {
   symbolImageDarkMono: '',
   metaTokens: [],
   enabledTokens: [],
-  addressLoadingProgress: 0
+  receiveAddress: {
+    nativeAmount: '',
+    metadata: {},
+    publicAddress: '',
+    legacyAddress: ''
+  }
 }
 
 export const emptyGuiDenomination: GuiDenomination = {

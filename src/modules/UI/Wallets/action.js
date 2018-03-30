@@ -1,6 +1,6 @@
 // @flow
 
-import type { EdgeCurrencyWallet } from 'edge-core-js'
+import type { EdgeCurrencyWallet, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { Actions } from 'react-native-router-flux'
 
@@ -41,11 +41,32 @@ export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
 
+export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const currentWalletId = state.ui.wallets.selectedWalletId
+
+  if (walletId === currentWalletId) {
+    const wallet = state.core.wallets.byId[walletId]
+    wallet.getReceiveAddress().then(receiveAddress => {
+      dispatch(refreshReceiveAddress(walletId, receiveAddress))
+    })
+  }
+}
+
+export const REFRESH_RECEIVE_ADDRESS = PREFIX + 'REFRESH_RECEIVE_ADDRESS'
+export const refreshReceiveAddress = (walletId: string, receiveAddress: EdgeReceiveAddress) => ({
+  type: REFRESH_RECEIVE_ADDRESS,
+  data: {
+    walletId,
+    receiveAddress
+  }
+})
+
 export const selectWallet = (walletId: string, currencyCode: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const currentWalletId = state.ui.wallets.selectedWalletId
   const currentWalletCurrencyCode = state.ui.wallets.selectedCurrencyCode
-  if ((walletId !== currentWalletId) || (currencyCode !== currentWalletCurrencyCode)) {
+  if (walletId !== currentWalletId || currencyCode !== currentWalletCurrencyCode) {
     dispatch({
       type: SELECT_WALLET,
       data: { walletId, currencyCode }
@@ -53,7 +74,7 @@ export const selectWallet = (walletId: string, currencyCode: string) => (dispatc
     const wallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
     WALLET_API.getReceiveAddress(wallet, currencyCode)
       .then(receiveAddress => {
-        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, {receiveAddress}))
+        dispatch(actions.dispatchActionObject(Constants.NEW_RECEIVE_ACCRESS, { receiveAddress }))
       })
       .catch(e => {
         console.log('error on getting wallet receive address')
@@ -103,13 +124,7 @@ export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch,
   const loginStatus = SETTINGS_SELECTORS.getLoginStatus(state)
   if (!loginStatus) {
     dispatch({ type: 'LOGGED_OUT' })
-    return
   }
-
-  dispatch({
-    type: UPSERT_WALLET,
-    data: { wallet }
-  })
 }
 
 // adds to core and enables in core
@@ -431,6 +446,10 @@ export function updateWalletLoadingProgress (walletId: string, addressLoadingPro
     type: UPDATE_WALLET_LOADING_PROGRESS,
     data
   }
+}
+
+export function insertWalletIdsForProgress (activeWalletIds) {
+  
 }
 
 export const CREATE_WALLET_START = PREFIX + 'CREATE_WALLET_START'
