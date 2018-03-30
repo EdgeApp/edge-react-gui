@@ -69,7 +69,8 @@ const CryptoExchangeSceneStyle = {
         marginBottom: 10,
         marginLeft: 0,
         marginRight: 0,
-        width: 270,
+        width: '100%',
+        maxWidth: 270,
         alignSelf: 'center'
       },
       currencyIcon: {
@@ -116,7 +117,6 @@ const CryptoExchangeSceneStyle = {
     bottom: {
       justifyContent: 'center',
       alignSelf: 'center',
-      alignItem: 'center',
       height: 35
     },
     bottomButton: {
