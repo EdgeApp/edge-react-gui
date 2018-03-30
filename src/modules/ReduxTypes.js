@@ -160,7 +160,8 @@ export type State = {
       selectedWalletId: string,
       selectedCurrencyCode: string,
       addTokenPending: boolean,
-      manageTokensPending: boolean
+      manageTokensPending: boolean,
+      walletLoadingProgress: Object
     },
     request: {
       receiveAddress: EdgeReceiveAddress

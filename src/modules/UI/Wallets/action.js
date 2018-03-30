@@ -40,6 +40,7 @@ export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
 export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
+export const INSERT_WALLET_IDS_FOR_PROGRESS = 'INSERT_WALLET_IDS_FOR_PROGRESS'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -448,8 +449,17 @@ export function updateWalletLoadingProgress (walletId: string, addressLoadingPro
   }
 }
 
-export function insertWalletIdsForProgress (activeWalletIds) {
-  
+export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
+  const activeWalletIdList = activeWalletIds
+  const activeWalletIdProgress = {}
+  activeWalletIdList.map((item) => {
+    activeWalletIdProgress[item] = 0
+  })
+
+  return {
+    type: INSERT_WALLET_IDS_FOR_PROGRESS,
+    data: activeWalletIdProgress
+  }
 }
 
 export const CREATE_WALLET_START = PREFIX + 'CREATE_WALLET_START'

@@ -15,6 +15,7 @@ import * as SETTINGS_API from '../Core/Account/settings.js'
 import * as CONTEXT_API from '../Core/Context/api'
 import * as CORE_SELECTORS from '../Core/selectors'
 import { updateWalletsRequest } from '../Core/Wallets/action.js'
+import { insertWalletIdsForProgress } from '../UI/Wallets/action.js'
 import type { Dispatch, GetState } from '../ReduxTypes'
 import { getReceiveAddresses } from '../utils.js'
 
@@ -99,7 +100,7 @@ export const initializeAccount = (account: EdgeAccount, touchIdInfo: Object) => 
       accountInitObject.currencyCode = currencyCode
     }
     const activeWalletIds = account.activeWalletIds
-    // dispatch(insertWalletIdsForProgress())
+    dispatch(insertWalletIdsForProgress(activeWalletIds))
     const archivedWalletIds = account.archivedWalletIds
     const currencyWallets = account.currencyWallets
 
