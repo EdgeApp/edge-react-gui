@@ -6,7 +6,6 @@ import Slider from 'react-native-slider'
 
 import leftArrowImg from '../../../../assets/images/slider/keyboard-arrow-left.png'
 import s from '../../../../locales/strings.js'
-import * as UTILS from '../../../utils.js'
 import styles from './styles.js'
 
 const SLIDE_TO_COMPLETE_TEXT = s.strings.send_confirmation_slide_to_confirm
@@ -61,7 +60,7 @@ export default class ABSlider extends Component<Props, State> {
 
   render () {
     return (
-      <View style={[styles.container, this.props.parentStyle, UTILS.border()]}>
+      <View style={[styles.container, this.props.parentStyle]}>
         <Slider
           disabled={this.props.sliderDisabled}
           onValueChange={this.onValueChange}

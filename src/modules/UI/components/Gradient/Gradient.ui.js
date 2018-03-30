@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import type { Node } from 'react'
+import { StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
 import THEME from '../../../../theme/variables/airbitz'
@@ -9,7 +10,7 @@ import THEME from '../../../../theme/variables/airbitz'
 export type Props = {
   children?: Node,
   reverse?: boolean,
-  style?: Array<Object> | Object
+  style?: StyleSheet.Styles
 }
 type State = {}
 export default class Gradient extends Component<Props, State> {
