@@ -59,7 +59,7 @@ type Props = {
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
   keepOtp: () => void,
-  progressPercentage: Number
+  progressPercentage: number
 }
 
 export default class WalletList extends Component<Props, State> {

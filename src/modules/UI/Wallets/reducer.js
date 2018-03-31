@@ -186,8 +186,13 @@ export const walletLoadingProgress = (state: Object = {}, action: Action) => {
   if (!action.data) return state
   const {type, data} = action
   switch (type) {
-    case ACTION.INSERT_WALLET_IDS_FOR_PROGRESS:
-      return data
+    case Constants.ACCOUNT_INIT_COMPLETE:
+      const activeWalletIdList = action.data.activeWalletIds
+      const activeWalletIdProgress = {}
+      activeWalletIdList.map((item) => {
+        activeWalletIdProgress[item] = 0
+      })
+      return activeWalletIdProgress
     case ACTION.UPDATE_WALLET_LOADING_PROGRESS:
       return {
         ...state,

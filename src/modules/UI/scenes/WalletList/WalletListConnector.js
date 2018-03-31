@@ -25,22 +25,7 @@ const mapStateToProps = (state: State) => {
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
-  const walletsForProgress = state.ui.wallets.walletLoadingProgress
-  const walletKeys = Object.keys(walletsForProgress)
-  const numberOfWallets = walletKeys.length
-  let progressBeforeDivision = 0
-  for (const walletId in walletsForProgress) {
-    progressBeforeDivision += walletsForProgress[walletId]
-  }
-  const progressAfterDivision = progressBeforeDivision / numberOfWallets
-  let progressPercentage = 0
-  if (numberOfWallets > 0) {
-    if (progressAfterDivision > 0.99999) {
-      progressPercentage = 100
-    } else {
-      progressPercentage = parseInt(progressAfterDivision * 100)
-    }
-  }
+  const progressPercentage = UI_SELECTORS.getWalletLoadingPercent(state)
 
   return {
     settings,
