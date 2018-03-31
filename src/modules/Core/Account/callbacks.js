@@ -4,7 +4,7 @@ import type { EdgeAccountCallbacks, EdgeTransaction } from 'edge-core-js'
 
 import type { Dispatch } from '../../ReduxTypes'
 import { newTransactionsRequest, refreshTransactionsRequest } from '../../UI/scenes/TransactionList/action.js'
-import { refreshWallet, refreshReceiveAddressRequest } from '../../UI/Wallets/action.js'
+import { refreshWallet, updateWalletLoadingProgress, refreshReceiveAddressRequest } from '../../UI/Wallets/action.js'
 import { updateWalletsRequest } from '../Wallets/action.js'
 
 const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
@@ -21,7 +21,10 @@ const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
     },
 
     onAddressesChecked (walletId: string, transactionCount: number) {
-      console.log(`${walletId} - onAddressesChecked with ratio: ${transactionCount}`)
+      console.log(`${walletId} - onAddressesChecked with progress ratio: ${transactionCount}`)
+      if (transactionCount > 0) {
+        dispatch(updateWalletLoadingProgress(walletId, transactionCount))
+      }
     },
 
     onBalanceChanged (walletId: string, currencyCode: string, balance: string) {

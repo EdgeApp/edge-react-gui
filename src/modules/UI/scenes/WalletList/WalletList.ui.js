@@ -6,6 +6,7 @@ import { TwoButtonTextModalComponent, StaticModalComponent } from '../../../../c
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import SimplifiedDropdown from '../../components/SimpleDropdown/SimpleDropdown.ui.js'
 
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import * as Constants from '../../../../constants/indexConstants.js'
@@ -39,7 +40,8 @@ type State = {
   balanceBoxVisible: boolean,
   showOtpResetModal: boolean,
   showMessageModal: boolean,
-  messageModalMessage: ?string
+  messageModalMessage: ?string,
+  isWalletProgressVisible: boolean
 }
 type Props = {
   activeWalletIds: Array<string>,
@@ -56,7 +58,8 @@ type Props = {
   updateActiveWalletsOrder: (Array<string>) => void,
   walletRowOption: (walletId: string, option: string, archived: boolean) => void,
   disableOtp: () => void,
-  keepOtp: () => void
+  keepOtp: () => void,
+  progressPercentage: number
 }
 
 export default class WalletList extends Component<Props, State> {
@@ -73,7 +76,9 @@ export default class WalletList extends Component<Props, State> {
       balanceBoxVisible: true,
       showOtpResetModal: this.props.otpResetPending,
       showMessageModal: false,
-      messageModalMessage: null
+      messageModalMessage: null,
+      isWalletProgressVisible: true,
+      progressPercentage: 0
     }
   }
 
@@ -131,8 +136,8 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
-
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
+            {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
 
@@ -192,6 +197,29 @@ export default class WalletList extends Component<Props, State> {
       </SafeAreaView>
     )
   }
+
+  onDismissProgressDropdown = () => {
+    this.setState({
+      isWalletProgressVisible: false
+    })
+  }
+
+  renderWalletListProgressDropdown = () => {
+    if (this.props.progressPercentage === 100) {
+      setTimeout(() => {
+        this.setState({
+          isWalletProgressVisible: false
+        })
+      }, 2000)
+    }
+    const heightOfDropdown = 100 // pixels
+    return (
+      <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
+        <T style={styles.walletListProgressDropdownTopText}>Loading Wallets... {this.props.progressPercentage}%</T>
+      </SimplifiedDropdown>
+    )
+  }
+
   showModal = () => {
     if (this.state.showOtpResetModal) {
       return <TwoButtonTextModalComponent

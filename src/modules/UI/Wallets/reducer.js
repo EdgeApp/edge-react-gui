@@ -182,6 +182,27 @@ export const walletEnabledTokens = (state: any = {}, action: Action) => {
   return state
 }
 
+export const walletLoadingProgress = (state: Object = {}, action: Action) => {
+  if (!action.data) return state
+  const {type, data} = action
+  switch (type) {
+    case Constants.ACCOUNT_INIT_COMPLETE:
+      const activeWalletIdList = action.data.activeWalletIds
+      const activeWalletIdProgress = {}
+      activeWalletIdList.map((item) => {
+        activeWalletIdProgress[item] = 0
+      })
+      return activeWalletIdProgress
+    case ACTION.UPDATE_WALLET_LOADING_PROGRESS:
+      return {
+        ...state,
+        [data.walletId]: data.addressLoadingProgress
+      }
+    default:
+      return state
+  }
+}
+
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
   if (!action.data) return state
   if (action.type === Constants.ACCOUNT_INIT_COMPLETE) {
@@ -352,5 +373,6 @@ export const wallets = combineReducers({
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,
-  manageTokensPending
+  manageTokensPending,
+  walletLoadingProgress
 })
