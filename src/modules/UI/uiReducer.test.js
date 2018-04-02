@@ -1,6 +1,6 @@
 /* globals test expect */
 
-import { errorAlert, request, scenes, settings, transactionAlert, uiReducer, wallets } from './reducer.js'
+import { errorAlert, privateKeyModal, request, scenes, settings, transactionAlert, uiReducer, wallets } from './reducer.js'
 
 test('initialState', () => {
   const initialState = {
@@ -9,7 +9,8 @@ test('initialState', () => {
     scenes: scenes(undefined, {}),
     wallets: wallets(undefined, {}),
     request: request(undefined, {}),
-    settings: settings(undefined, {})
+    settings: settings(undefined, {}),
+    privateKeyModal: privateKeyModal(undefined, {})
   }
   const expected = initialState
   const actual = uiReducer(undefined, {})

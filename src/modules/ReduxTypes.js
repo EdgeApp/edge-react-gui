@@ -56,6 +56,12 @@ export type State = {
       displayAlert: boolean,
       edgeTransaction: EdgeTransaction
     },
+    privateKeyModal: {
+      isPrimaryModalVisible: boolean,
+      isSecondaryModalVisible: boolean,
+      publicAddress: string | null,
+      error: Error | null
+    },
     scenes: {
       scan: {
         torchEnabled: boolean,
@@ -63,7 +69,8 @@ export type State = {
         recipientAddress: string,
         scanEnabled: boolean,
         selectedWalletListModalVisibility: boolean,
-        scanToWalletListModalVisibility: boolean
+        scanToWalletListModalVisibility: boolean,
+        parsedUri: EdgeParsedUri | null
       },
       sendConfirmation: {
         transaction: EdgeTransaction | null,
@@ -194,9 +201,6 @@ export type State = {
         supportedWalletTypes: Array<string>,
         [pluginName: string]: EdgeCurrencyPlugin
       }
-    },
-    contacts: {
-      contactList: Array<GuiContact>
     }
   },
   cryptoExchange: {
