@@ -6,6 +6,7 @@ import FAIcon from 'react-native-vector-icons/FontAwesome'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons'
 import SimpleIcon from 'react-native-vector-icons/SimpleLineIcons'
+import FeatherIcon from 'react-native-vector-icons/Feather'
 
 import * as Constants from '../../../../constants/indexConstants'
 
@@ -28,6 +29,8 @@ const Icon = ({ style, name, size, type }: Props) => {
       return <IonIcon style={style} name={name} size={size} />
     case Constants.SIMPLE_ICONS:
       return <SimpleIcon style={style} name={name} size={size} />
+    case 'feather':
+      return <FeatherIcon style={style} name={name} size={size} />
   }
   return null
 }
