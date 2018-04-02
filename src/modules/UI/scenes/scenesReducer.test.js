@@ -30,21 +30,7 @@ test('initialState', () => {
       exchangeRates: {}
     },
     helpModal: false,
-    request: {
-      inputCurrencySelected: 'fiat',
-      receiveAddress: {
-        amountSatoshi: 0,
-        metadata: {
-          amountFiat: 0,
-          bizId: null,
-          category: '',
-          miscJson: '',
-          notes: '',
-          payeeName: ''
-        },
-        publicAddress: ''
-      }
-    },
+    request: request(undefined, {}),
     requestType: {
       useLegacyAddress: false,
       uniqueLegacyAddress: false

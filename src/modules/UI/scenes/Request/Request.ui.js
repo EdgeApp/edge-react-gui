@@ -22,17 +22,16 @@ import ShareButtons from '../../components/ShareButtons/index.js'
 import styles from './styles.js'
 
 export type RequestStateProps = {
-  loading: false,
   currencyCode: string,
-  request: GuiTransactionRequest,
-  useLegacyAddress: boolean,
   edgeWallet: EdgeCurrencyWallet,
-  guiWallet: GuiWallet,
   exchangeSecondaryToPrimaryRatio: number,
-  currencyCode: string,
+  guiWallet: GuiWallet,
+  loading: false,
   primaryCurrencyInfo: GuiCurrencyInfo,
+  request: GuiTransactionRequest,
   secondaryCurrencyInfo: GuiCurrencyInfo,
-  showToWalletModal: boolean
+  showToWalletModal: boolean,
+  useLegacyAddress: boolean
 }
 export type RequestLoadingProps = {
   edgeWallet: null,
@@ -51,10 +50,10 @@ export type RequestDispatchProps = {
   saveReceiveAddress(GuiReceiveAddress): void
 }
 
-type LoadingProps = RequestLoadingProps & RequestDispatchProps
-type LoadedProps = RequestStateProps & RequestDispatchProps
-type Props = LoadingProps | LoadedProps
-type State = {
+export type LoadingProps = RequestLoadingProps & RequestDispatchProps
+export type LoadedProps = RequestStateProps & RequestDispatchProps
+export type Props = LoadingProps | LoadedProps
+export type State = {
   publicAddress: string,
   legacyAddress: string,
   encodedURI: string,

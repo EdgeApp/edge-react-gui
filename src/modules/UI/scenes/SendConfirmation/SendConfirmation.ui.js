@@ -25,7 +25,7 @@ export type SendConfirmationStateProps = {
   fiatCurrencyCode: string,
   currencyCode: string,
   nativeAmount: string,
-  parentNetworkFee: string,
+  parentNetworkFee: ?string,
   networkFee: string,
   publicAddress: string,
   pending: boolean,

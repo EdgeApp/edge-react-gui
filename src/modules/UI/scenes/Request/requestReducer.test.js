@@ -8,15 +8,8 @@ test('initialState', () => {
   const expected = {
     inputCurrencySelected: 'fiat',
     receiveAddress: {
-      amountSatoshi: 0,
-      metadata: {
-        amountFiat: 0,
-        bizId: null,
-        category: '',
-        miscJson: '',
-        notes: '',
-        payeeName: ''
-      },
+      nativeAmount: '0',
+      metadata: {},
       publicAddress: ''
     }
   }

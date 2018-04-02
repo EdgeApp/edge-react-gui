@@ -53,22 +53,20 @@ const mapStateToProps = (state: State): RequestStateProps | RequestLoadingProps 
     exchangeCurrencyCode: secondaryExchangeCurrencyCode,
     exchangeDenomination: secondaryExchangeDenomination
   }
-  if (guiWallet) {
-    const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
-    exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
-  }
+  const isoFiatCurrencyCode: string = guiWallet.isoFiatCurrencyCode
+  exchangeSecondaryToPrimaryRatio = CORE_SELECTORS.getExchangeRate(state, currencyCode, isoFiatCurrencyCode)
 
   return {
-    loading: false,
-    request: state.ui.scenes.request,
-    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress,
+    currencyCode,
     edgeWallet,
     exchangeSecondaryToPrimaryRatio,
     guiWallet,
-    currencyCode,
+    loading: false,
     primaryCurrencyInfo,
+    request: state.ui.scenes.request,
     secondaryCurrencyInfo,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
+    useLegacyAddress: state.ui.scenes.requestType.useLegacyAddress
   }
 }
 const mapDispatchToProps = (dispatch: Dispatch): RequestDispatchProps => ({

@@ -3,7 +3,7 @@
 import type { Action } from '../../ReduxTypes'
 import * as ACTION from './action'
 
-type DimensionsState = {
+export type DimensionsState = {
   keyboardHeight: number
 }
 
