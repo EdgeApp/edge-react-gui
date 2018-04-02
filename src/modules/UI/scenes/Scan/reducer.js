@@ -4,7 +4,7 @@ import * as Constants from '../../../../constants/indexConstants'
 import * as WALLET_LIST_MODAL_ACTION from '../../components/WalletListModal/action'
 import * as ACTION from './action'
 
-const torchEnabled = (state = false, action) => {
+export const torchEnabled = (state = false, action) => {
   switch (action.type) {
     case ACTION.TOGGLE_ENABLE_TORCH:
       return !state
@@ -13,7 +13,7 @@ const torchEnabled = (state = false, action) => {
   }
 }
 
-const addressModalVisible = (state = false, action) => {
+export const addressModalVisible = (state = false, action) => {
   switch (action.type) {
     case Constants.SAVE_ABC_LOBBY:
     case Constants.SET_LOBBY_ERROR:
@@ -25,7 +25,7 @@ const addressModalVisible = (state = false, action) => {
   }
 }
 
-const recipientAddress = (state = '', action) => {
+export const recipientAddress = (state = '', action) => {
   switch (action.type) {
     case ACTION.UPDATE_RECIPIENT_ADDRESS:
       return action.data
@@ -34,7 +34,7 @@ const recipientAddress = (state = '', action) => {
   }
 }
 
-const scanEnabled = (state = false, action) => {
+export const scanEnabled = (state = false, action) => {
   switch (action.type) {
     case ACTION.ENABLE_SCAN:
       return true
@@ -45,7 +45,7 @@ const scanEnabled = (state = false, action) => {
   }
 }
 
-const selectedWalletListModalVisibility = (state = false, action) => {
+export const selectedWalletListModalVisibility = (state = false, action) => {
   switch (action.type) {
     case WALLET_LIST_MODAL_ACTION.TOGGLE_SELECTED_WALLET_LIST_MODAL:
       return !state
@@ -62,7 +62,7 @@ const selectedWalletListModalVisibility = (state = false, action) => {
   }
 }
 
-const scanToWalletListModalVisibility = (state = false, action) => {
+export const scanToWalletListModalVisibility = (state = false, action) => {
   switch (action.type) {
     case WALLET_LIST_MODAL_ACTION.TOGGLE_SCAN_TO_WALLET_LIST_MODAL:
       return !state
@@ -83,13 +83,24 @@ const scanToWalletListModalVisibility = (state = false, action) => {
   }
 }
 
+export const parsedUri = (state = null, action) => {
+  switch (action.type) {
+    case ACTION.PRIVATE_KEY_SCANNED: {
+      return action.data.parsedUri
+    }
+    default:
+      return state
+  }
+}
+
 export const scan = combineReducers({
   torchEnabled,
   addressModalVisible,
   recipientAddress,
   scanEnabled,
   selectedWalletListModalVisibility,
-  scanToWalletListModalVisibility
+  scanToWalletListModalVisibility,
+  parsedUri
 })
 
 export default scan

@@ -48,6 +48,7 @@ test('initialState', () => {
     },
     scan: {
       addressModalVisible: false,
+      parsedUri: null,
       recipientAddress: '',
       scanEnabled: false,
       scanToWalletListModalVisibility: false,
