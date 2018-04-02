@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import * as Constants from '../constants/indexConstants.js'
 import * as SETTINGS_SELECTORS from '../modules/UI/Settings/selectors'
 export default store => next => action => {

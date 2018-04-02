@@ -1,6 +1,9 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { scenes as scenesReducer } from './reducer.js'
+import { request } from './Request/reducer.js'
 
 test('initialState', () => {
   const expected = {

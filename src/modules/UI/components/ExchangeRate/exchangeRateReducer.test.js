@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { exchangeRate as exchangeRateReducer } from './reducer.js'

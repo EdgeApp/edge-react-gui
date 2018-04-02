@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { ToastAndroid } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 

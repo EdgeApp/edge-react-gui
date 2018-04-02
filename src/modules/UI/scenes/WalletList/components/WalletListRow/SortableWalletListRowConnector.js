@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { connect } from 'react-redux'
 
 import * as SETTINGS_SELECTORS from '../../../../Settings/selectors'

@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import React, { Component } from 'react'
 import { Switch, TouchableHighlight, View } from 'react-native'
 

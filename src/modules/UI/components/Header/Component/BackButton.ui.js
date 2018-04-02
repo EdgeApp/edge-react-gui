@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { Icon } from 'native-base'
 import React, { Component } from 'react'
 import { Platform, TouchableOpacity } from 'react-native'
