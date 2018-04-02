@@ -243,7 +243,14 @@ const strings = {
   otp_notif_title: '2FA disable has been requested by another device',
   otp_notif_body: 'If you did not create this request, log in as %1$s and change your password',
 
-  word_to_in_convert_from_to_string: 'to'
+  word_to_in_convert_from_to_string: 'to',
+
+  private_key_import_private_key: 'Private Key',
+  private_key_import_public_address: 'with Public Address:',
+  private_key_import_sweep: 'Sweep Funds From Private Key',
+  private_key_import_send_to: 'Send Funds to Public Address',
+  private_key_import_cancel: 'Cancel',
+  private_key_import_importing_private_key: 'Importing Private Key'
 }
 
 export default strings

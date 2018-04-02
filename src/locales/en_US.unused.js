@@ -247,7 +247,6 @@ const strings = {
   fragment_forgot_no_recovery_questions_text: 'This user does not have any recovery questions set!',
   fragment_forgot_no_recovery_questions_title: 'No Recovery Questions',
   fragment_forgot_no_username_title: 'User Name Required',
-  fragment_import_address_dialog_title: 'Sweep Funds From Private Key',
   fragment_landing_account_delete_message:
     'Delete %1$s on this device only? This will remove the 2FA and PIN access from this device. If 2FA is enabled on this account, you will be unable to access this account for 7 days from new devices',
   fragment_landing_account_delete_title: 'Delete Account',
