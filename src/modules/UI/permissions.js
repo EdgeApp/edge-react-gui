@@ -17,16 +17,27 @@ export const DENIED = 'denied'
 export const RESTRICTED = 'restricted'
 export const UNDETERMINED = 'undetermined'
 
-export const request = (permissions: Permissions): Promise<boolean> => {
+export const request = (permissions: Permissions): Promise<PermissionStatus> => {
   return Array.isArray(permissions)
     ? permissions.reduce((requests, permission) => {
-      return requests.then(singleRequest(permission))
+      return requests.then(() => singleRequest(permission))
     }, Promise.resolve())
     : singleRequest(permissions)
 }
 
-const singleRequest = permission => {
-  return RNPermissions.request(permission).catch(console.log)
+const singleRequest = (permission): Promise<PermissionStatus> => {
+  return RNPermissions.check(permission).then(status => {
+    switch (status) {
+      case 'authorized': {
+        return Promise.resolve('authorized')
+      }
+      case 'denied': {
+        return Promise.resolve('denied')
+      }
+      default:
+        return RNPermissions.request(permission)
+    }
+  }).catch(console.error)
 }
 
 export const isAuthorized = (permissionStatus: PermissionStatus) => {
