@@ -24,6 +24,8 @@ import { AUTHORIZED, DENIED } from '../../permissions'
 import AddressModal from './components/AddressModalConnector'
 import styles, { styles as styleRaw } from './style'
 
+import { PrivateKeyModal } from '../../components/Modals/PrivateKeyModal/indexPrivateKeyModal.js'
+
 type Props = {
   cameraPermission: PermissionStatus,
   edgeWallet: EdgeCurrencyWallet,
@@ -41,7 +43,13 @@ type Props = {
   toggleScanToWalletListModal(): void,
   updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
-  toggleScanToWalletListModal: () => void
+  toggleScanToWalletListModal: () => void,
+  privateKeyScanned: (EdgeParsedUri) => void
+}
+type State = {
+  parsedURI: EdgeParsedUri | null,
+  isVisible: boolean,
+  isVisible: boolean
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -52,7 +60,16 @@ const ADDRESS_TEXT = s.strings.fragment_send_address
 // const PHOTOS_TEXT   = s.strings.fragment_send_photos
 const FLASH_TEXT = s.strings.fragment_send_flash
 
-export default class Scan extends Component<Props> {
+export default class Scan extends Component<Props, State> {
+  constructor (props: Props) {
+    super(props)
+
+    this.state = {
+      parsedURI: null,
+      isVisible: false
+    }
+  }
+
   render () {
     return (
       <SafeAreaView>
@@ -92,6 +109,8 @@ export default class Scan extends Component<Props> {
           </View>
           {this.renderDropUp()}
         </View>
+
+        <PrivateKeyModal />
       </SafeAreaView>
     )
   }
@@ -122,20 +141,30 @@ export default class Scan extends Component<Props> {
   }
 
   parseURI = (uri: string) => {
-    try {
-      if (/^airbitz:\/\/edge\//.test(uri)) {
-        this.props.loginWithEdge(uri)
-        return
-      }
-      const parsedURI = WALLET_API.parseURI(this.props.edgeWallet, uri)
-      this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation('fromScan')
-    } catch (error) {
-      this.props.dispatchDisableScan()
-      Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [
-        { text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan() }
-      ])
+    if (/^airbitz:\/\/edge\//.test(uri)) {
+      this.props.loginWithEdge(uri)
+      return
     }
+
+    WALLET_API.parseURIAsync(this.props.edgeWallet, uri).then(
+      parsedURI => {
+        if (this.isFromPrivateKey(parsedURI)) {
+          this.props.privateKeyScanned(parsedURI)
+        } else {
+          this.props.updateParsedURI(parsedURI)
+          Actions.sendConfirmation('fromScan')
+        }
+      }, error => {
+        this.props.dispatchDisableScan()
+        Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [
+          { text: s.strings.string_ok, onPress: () => this.props.dispatchEnableScan() }
+        ])
+      })
+  }
+
+  isFromPrivateKey = (parsedUri: EdgeParsedUri) => {
+    return true
+    // return !!parsedUri.privateKey
   }
 
   selectPhotoTapped = () => {

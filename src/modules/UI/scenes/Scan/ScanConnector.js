@@ -13,7 +13,7 @@ import { toggleScanToWalletListModal } from '../../components/WalletListModal/ac
 import * as UI_SELECTORS from '../../selectors.js'
 import { updateLabel, updateParsedURI } from '../SendConfirmation/action.js'
 import { toggleWalletListModal } from '../WalletTransferList/action'
-import { disableScan, enableScan, toggleAddressModal, toggleEnableTorch } from './action'
+import { disableScan, enableScan, toggleAddressModal, toggleEnableTorch, privateKeyScanned } from './action'
 import Scan from './Scan.ui'
 
 const mapStateToProps = (state: State) => {
@@ -43,6 +43,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   loginWithEdge: (url: string) => {
     Actions[Constants.EDGE_LOGIN]()
     dispatch(loginWithEdge(url))
+  },
+  privateKeyScanned: (parsedUri) => {
+    dispatch(privateKeyScanned(parsedUri))
   }
 })
 
