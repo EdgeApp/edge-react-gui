@@ -1,5 +1,6 @@
-import { Actions } from 'react-native-router-flux'
 // @flow
+
+import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
 import * as CORE_SELECTORS from '../../modules/Core/selectors.js'
