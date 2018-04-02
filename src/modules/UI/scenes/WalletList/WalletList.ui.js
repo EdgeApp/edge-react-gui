@@ -136,8 +136,8 @@ export default class WalletList extends Component<Props, State> {
         <View style={styles.container}>
           <WalletOptions />
           <Gradient style={styles.gradient} />
+          {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
           <TouchableOpacity onPress={this.handleOnBalanceBoxPress}>
-            {this.state.isWalletProgressVisible && this.renderWalletListProgressDropdown()}
             {this.state.balanceBoxVisible ? this.balanceBox(fiatBalanceString) : this.hiddenBalanceBox()}
           </TouchableOpacity>
 
@@ -213,7 +213,7 @@ export default class WalletList extends Component<Props, State> {
     const heightOfDropdown = 100 // pixels
     return (
       <SimplifiedDropdown onPress={this.onDismissProgressDropdown} containerHeight={heightOfDropdown} containerStyle={styles.walletListProgressDropdown}>
-        <T style={styles.walletListProgressDropdownTopText}>Loading Wallets... {this.props.progressPercentage}%</T>
+        <T style={styles.walletListProgressDropdownTopText}>{s.strings.fragment_wallets_syncing_wallet_txs} {this.props.progressPercentage}%</T>
       </SimplifiedDropdown>
     )
   }
