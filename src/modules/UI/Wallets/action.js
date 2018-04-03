@@ -445,15 +445,21 @@ export function addNewTokenThenDeleteOldSuccess (data: any) {
   }
 }
 
-export function updateWalletLoadingProgress (walletId: string, addressLoadingProgress: number) {
+export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {
   const data = {
     walletId,
-    addressLoadingProgress
+    addressLoadingProgress: newWalletProgress
   }
-  return {
+  const state = getState()
+  const currentWalletProgress = state.ui.wallets.walletLoadingProgress[walletId]
+  const marginalProgress = newWalletProgress - currentWalletProgress
+
+  if (newWalletProgress !== 1 && marginalProgress < 0.1) return
+
+  dispatch({
     type: UPDATE_WALLET_LOADING_PROGRESS,
     data
-  }
+  })
 }
 
 export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
