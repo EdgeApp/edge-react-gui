@@ -2244,9 +2244,9 @@ edge-currency-bitcoin@2.15.0:
     unorm "^1.4.1"
     uri-js "^3.0.2"
 
-edge-currency-ethereum@0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.8.1.tgz#3b391e7a2bfb10a4fd932e5996bf86f804d027a0"
+edge-currency-ethereum@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.9.0.tgz#5a11be8af9f45c036cb0f683acf3bd290ff74c4d"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"

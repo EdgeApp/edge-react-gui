@@ -137,20 +137,19 @@ export default class WalletList extends Component<Props, State> {
           </TouchableOpacity>
 
           <View style={[styles.walletsBox]}>
-            <Gradient style={[styles.walletsBoxHeaderWrap, UTILS.border()]}>
-              <View style={[styles.walletsBoxHeaderTextWrap, UTILS.border()]}>
+            <Gradient style={[styles.walletsBoxHeaderWrap]}>
+              <View style={[styles.walletsBoxHeaderTextWrap]}>
                 <View style={styles.leftArea}>
                   <Image source={WalletIcon} style={[styles.walletIcon]} />
                   <T style={styles.walletsBoxHeaderText}>{WALLETS_HEADER_TEXT}</T>
                 </View>
               </View>
 
-              <View style={[styles.donePlusContainer, UTILS.border()]}>
+              <View style={[styles.donePlusContainer]}>
                 {this.state.sortableListExists && (
                   <Animated.View
                     style={[
                       styles.doneContainer,
-                      UTILS.border(),
                       {
                         opacity: this.state.sortableListOpacity,
                         zIndex: this.state.sortableListZIndex
@@ -166,7 +165,6 @@ export default class WalletList extends Component<Props, State> {
                   <Animated.View
                     style={[
                       styles.plusContainer,
-                      UTILS.border(),
                       {
                         opacity: this.state.fullListOpacity,
                         zIndex: this.state.fullListZIndex
@@ -238,15 +236,13 @@ export default class WalletList extends Component<Props, State> {
 
   renderActiveSortableList = (activeWalletsArray: any, activeWalletsObject: any) => {
     return (
-      <View style={[styles.listsContainer, UTILS.border()]}>
+      <View style={[styles.listsContainer]}>
         {this.state.sortableListExists && (
           <Animated.View
             testID={'sortableList'}
             style={[
-              UTILS.border(),
               { flex: 1, opacity: this.state.sortableListOpacity, zIndex: this.state.sortableListZIndex },
-              styles.sortableList,
-              UTILS.border()
+              styles.sortableList
             ]}
           >
             <SortableListView
