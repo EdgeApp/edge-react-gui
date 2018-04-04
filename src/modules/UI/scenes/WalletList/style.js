@@ -179,11 +179,16 @@ export const styles = {
     padding: 6,
     paddingLeft: 16,
     flexDirection: 'column',
-    backgroundColor: THEME.COLORS.WHITE
+    backgroundColor: THEME.COLORS.WHITE,
+    borderBottomWidth: 1,
+    borderBottomColor: THEME.COLORS.GRAY_3
   },
   rowContent: {
     flex: 1,
     flexDirection: 'row'
+  },
+  sortableRowContent: {
+    paddingRight: 32
   },
   rowNameTextWrap: {
     flex: 1,
@@ -211,9 +216,9 @@ export const styles = {
   },
   rowCurrencyLogoIOS: {
     height: 22,
-    width: 22,
+    width: 26,
     resizeMode: Image.resizeMode.contain,
-    alignSelf: 'center'
+    alignSelf: 'flex-start'
   },
   rowNameText: {
     fontSize: 18,
@@ -234,9 +239,9 @@ export const styles = {
   },
 
   rowDragArea: {
-    paddingLeft: 16,
     justifyContent: 'center',
-    marginRight: 14
+    marginRight: 20,
+    marginLeft: 4
   },
   rowDragIcon: {
     position: 'relative',

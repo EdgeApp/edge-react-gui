@@ -241,7 +241,7 @@ export default class Main extends Component<Props, State> {
                   <Scene hideNavBar>
                     <Tabs
                       key={Constants.EDGE}
-                      swipeEnabled={true}
+                      swipeEnabled={false}
                       navTransparent={true}
                       tabBarPosition={'bottom'}
                       showLabel={true}
