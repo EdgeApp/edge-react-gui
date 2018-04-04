@@ -68,7 +68,7 @@ export default class Scan extends Component<Props> {
           <View style={styles.container}>
             {this.renderCamera()}
 
-            <View style={[styles.overlay, UTILS.border()]}>
+            <View style={[styles.overlay]}>
               <AddressModal onExitButtonFxn={this._onToggleAddressModal} />
 
               <View style={[styles.overlayTop]}>
@@ -189,7 +189,7 @@ export default class Scan extends Component<Props> {
       return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
     } else if (this.props.cameraPermission === DENIED) {
       return (
-        <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }, UTILS.border()]}>
+        <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
           <Text>{DENIED_PERMISSION_TEXT}</Text>
         </View>
       )

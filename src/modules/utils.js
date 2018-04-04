@@ -2,7 +2,7 @@
 
 import { bns, div, eq, gte, mul, toFixed } from 'biggystring'
 import getSymbolFromCurrency from 'currency-symbol-map'
-import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeDenomination, EdgeMetaToken, EdgeTransaction } from 'edge-core-js'
+import type { EdgeCurrencyInfo, EdgeCurrencyPlugin, EdgeCurrencyWallet, EdgeDenomination, EdgeMetaToken, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 import _ from 'lodash'
 import { Platform } from 'react-native'
 
@@ -422,4 +422,22 @@ export function precisionAdjust (params: PrecisionAdjustParams): number {
 
 export const noOp = (optionalArgument: any = null) => {
   return optionalArgument
+}
+
+export const getReceiveAddresses = (currencyWallets: { [id: string]: EdgeCurrencyWallet }): Promise<{ [id: string]: EdgeReceiveAddress }> => {
+  const ids = Object.keys(currencyWallets)
+  const promises = ids.map(id => {
+    return currencyWallets[id].getReceiveAddress()
+  })
+  return Promise.all(promises).then(receiveAddresses => {
+    return ids.reduce(
+      (result, id, index) => {
+        return {
+          ...result,
+          [id]: receiveAddresses[index]
+        }
+      },
+      {}
+    )
+  })
 }

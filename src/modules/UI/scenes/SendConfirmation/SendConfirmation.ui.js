@@ -197,7 +197,7 @@ export class SendConfirmation extends Component<Props, State> {
               <Recipient label={this.props.label} link={''} publicAddress={this.props.publicAddress} style={styles.recipient} />
             </View>
             <View style={[styles.pendingSymbolArea]}>
-              {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }, border()]} size={'small'} />}
+              {this.props.pending && <ActivityIndicator style={[{ flex: 1, alignSelf: 'center' }]} size={'small'} />}
             </View>
             <View style={[styles.sliderWrap]}>
               <ABSlider

@@ -2,7 +2,7 @@
 
 import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
-import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import { coinbasePlugin, shapeshiftPlugin, coincapPlugin } from 'edge-exchange-plugins'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
@@ -77,6 +77,7 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
   coinbasePlugin,
   shapeshiftPlugin,
+  coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
