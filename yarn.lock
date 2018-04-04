@@ -2259,9 +2259,9 @@ edge-currency-ethereum@0.9.0:
     sprintf-js "^1.1.1"
     uri-js "^3.0.2"
 
-edge-exchange-plugins@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.1.1.tgz#09fea02535529a7569a2c61b99b7177ff3b90a63"
+edge-exchange-plugins@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/edge-exchange-plugins/-/edge-exchange-plugins-0.2.0.tgz#1cc9fc9f25e6fe4c17137fc88395102bb2233ae0"
   dependencies:
     iso4217 "^0.2.0"
 
