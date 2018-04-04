@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 import IonIcon from 'react-native-vector-icons/Ionicons'
 
-import { border as debugBorder } from '../../../../utils'
 import styles, { styles as styleRaw } from './styles'
 
 type Props = {
@@ -19,15 +18,15 @@ class Row extends Component<Props, State> {
     const { left, isSelected, onPress } = this.props
 
     const icon = isSelected ? (
-      <IonIcon style={[styles.radioButton, debugBorder()]} name="ios-radio-button-on" />
+      <IonIcon style={[styles.radioButton]} name="ios-radio-button-on" />
     ) : (
-      <IonIcon style={[styles.radioButton, styles.radioButtonSelected, debugBorder()]} name="ios-radio-button-off" />
+      <IonIcon style={[styles.radioButton, styles.radioButtonSelected]} name="ios-radio-button-off" />
     )
 
     return (
-      <TouchableHighlight style={[styles.rowContainer, debugBorder()]} underlayColor={styleRaw.underlay.color} onPress={onPress}>
-        <View style={[styles.rowTextRow, debugBorder()]}>
-          <View style={[styles.rowLeftContainer, debugBorder()]}>{left}</View>
+      <TouchableHighlight style={[styles.rowContainer]} underlayColor={styleRaw.underlay.color} onPress={onPress}>
+        <View style={[styles.rowTextRow]}>
+          <View style={[styles.rowLeftContainer]}>{left}</View>
           {icon}
         </View>
       </TouchableHighlight>

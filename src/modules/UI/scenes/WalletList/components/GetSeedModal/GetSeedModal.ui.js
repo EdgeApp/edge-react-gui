@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import { Share, View } from 'react-native'
+import { Share, StyleSheet, View } from 'react-native'
 import { sprintf } from 'sprintf-js'
 
 import { FormField } from '../../../../../../components/indexComponents'
@@ -90,7 +90,7 @@ export default class GetSeed extends Component<GetSeedModalComponentProps, State
     this.props.onExitButtonFxn()
   }
 
-  renderPasswordInput = (style?: Object) => {
+  renderPasswordInput = (style?: StyleSheet.Styles) => {
     const formStyle = {
       ...MaterialInputOnWhite,
       container: { ...MaterialInputOnWhite.container }
