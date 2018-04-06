@@ -2206,9 +2206,9 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.6.7:
-  version "0.6.7"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.7.tgz#75f08eaa07db7678983b0c567c81a383288b4597"
+edge-core-js@0.6.9:
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.9.tgz#52d1878054bb43645e41b2b0cca714f8d4f581cb"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
@@ -2229,9 +2229,9 @@ edge-core-js@0.6.7:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
 
-edge-currency-bitcoin@2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.15.0.tgz#b15386fe569501656c31e81344f0664640429341"
+edge-currency-bitcoin@2.16.1:
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.16.1.tgz#d6ab6a281ca7cddfabb7a82ed33e68c72b833fbc"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
