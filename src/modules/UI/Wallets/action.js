@@ -465,7 +465,7 @@ export const updateWalletLoadingProgress = (walletId: string, newWalletProgress:
 export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
   return {
     type: INSERT_WALLET_IDS_FOR_PROGRESS,
-    data: activeWalletIds
+    data: { activeWalletIds }
   }
 }
 

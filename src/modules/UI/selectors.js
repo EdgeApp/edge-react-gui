@@ -47,8 +47,8 @@ export const getArchivedWalletIds = (state: State): Array<string> => {
 
 export const getWalletLoadingPercent = (state: State) => {
   const walletsForProgress = state.ui.wallets.walletLoadingProgress
-  const walletKeys = Object.keys(walletsForProgress)
-  const numberOfWallets = walletKeys.length
+  const walletIds = Object.keys(walletsForProgress)
+  const numberOfWallets = walletIds.length
   let progressBeforeDivision = 0
   for (const walletId in walletsForProgress) {
     progressBeforeDivision += walletsForProgress[walletId]
