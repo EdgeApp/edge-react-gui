@@ -1,6 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
+import type { Node } from 'react'
 import { TouchableWithoutFeedback, StylesSheet, View, Platform } from 'react-native'
 import Ionicon from 'react-native-vector-icons/Ionicons'
 import styles, { rawStyle } from './style.js'
@@ -8,7 +9,7 @@ import * as Animatable from 'react-native-animatable'
 
 export type Props = {
   height?: number,
-  children: any,
+  children?: Node,
   onPress: () => void,
   containerStyle: StylesSheet.Styles
 }
