@@ -17,7 +17,8 @@ export type GuiWallet = {
   symbolImageDarkMono: string | void,
   metaTokens: Array<EdgeMetaToken>,
   enabledTokens: Array<string>,
-  receiveAddress: EdgeReceiveAddress
+  receiveAddress: EdgeReceiveAddress,
+  addressLoadingProgress?: number
 }
 
 export type GuiDenomination = {
@@ -183,7 +184,8 @@ export const emptyGuiWallet: GuiWallet = {
     metadata: {},
     publicAddress: '',
     legacyAddress: ''
-  }
+  },
+  addressLoadingProgress: 0
 }
 
 export const emptyGuiDenomination: GuiDenomination = {

@@ -6,6 +6,7 @@ import { TwoButtonTextModalComponent, StaticModalComponent } from '../../../../c
 import { Actions } from 'react-native-router-flux'
 import SortableListView from 'react-native-sortable-listview'
 import Ionicon from 'react-native-vector-icons/Ionicons'
+import WalletListProgressDropdown from '../../components/WalletListProgressDropdown/WalletListProgressDropdownConnector.js'
 
 import WalletIcon from '../../../../assets/images/walletlist/my-wallets.png'
 import * as Constants from '../../../../constants/indexConstants.js'
@@ -187,6 +188,7 @@ export default class WalletList extends Component<Props, State> {
           </View>
           {this.showModal()}
         </View>
+        <WalletListProgressDropdown />
       </SafeAreaView>
     )
   }
@@ -458,4 +460,19 @@ export default class WalletList extends Component<Props, State> {
       </View>
     )
   }
+
+  /* showWalletLoadingProgress () {
+    const wallets = this.props.wallets
+    const walletKeys = Object.keys(wallets)
+    const ethWalletKeys = walletKeys.filter(wallet => wallets[wallet].currencyCode === 'ETH')
+    const numberOfWallets = ethWalletKeys.length
+    let progress = 0
+    for (const walletId of ethWalletKeys) {
+      progress += (wallets[walletId].addressLoadingProgress / numberOfWallets)
+    }
+    return (
+
+    )
+  }
+  */
 }

@@ -57,6 +57,9 @@ export type State = {
       displayAlert: boolean,
       edgeTransaction: EdgeTransaction
     },
+    walletListProgressDropdown: {
+      displayDropdown: boolean
+    },
     scenes: {
       scan: {
         torchEnabled: boolean,
