@@ -193,6 +193,7 @@ export const getEnabledTokens = (walletId: string) => async (dispatch: Dispatch,
     await Promise.all(promiseArray)
     // now reflect that change in Redux's version of the wallet
     dispatch(updateWalletEnabledTokens(walletId, tokensToEnable))
+    dispatch(refreshWallet(walletId))
   } catch (e) {
     dispatch(displayErrorAlert(e.message))
   }
