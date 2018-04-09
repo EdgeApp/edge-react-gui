@@ -386,6 +386,18 @@ export const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row'
+  },
+
+  // beginning of wallet list progress dropdown //
+  walletListProgressDropdown: {
+    width: '100%',
+    top: THEME.HEADER
+  },
+  walletListProgressDropdownTopText: {
+    color: THEME.COLORS.WHITE
+  },
+  walletListProgressDropdownBottomText: {
+    color: THEME.COLORS.WHITE
   }
 }
 

@@ -158,7 +158,8 @@ export type State = {
       selectedWalletId: string,
       selectedCurrencyCode: string,
       addTokenPending: boolean,
-      manageTokensPending: boolean
+      manageTokensPending: boolean,
+      walletLoadingProgress: { [walletId: string]: number }
     },
     request: RequestState,
     settings: {
