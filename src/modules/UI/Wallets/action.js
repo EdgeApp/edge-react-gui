@@ -124,6 +124,12 @@ export const upsertWallet = (wallet: EdgeCurrencyWallet) => (dispatch: Dispatch,
   if (!loginStatus) {
     dispatch({ type: 'LOGGED_OUT' })
   }
+  dispatch({
+    type: UPSERT_WALLET,
+    data: {
+      wallet
+    }
+  })
 }
 
 // adds to core and enables in core
