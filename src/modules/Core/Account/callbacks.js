@@ -25,9 +25,6 @@ const makeAccountCallbacks = (dispatch: Dispatch): EdgeAccountCallbacks => {
       if (transactionCount > 0) {
         dispatch(updateWalletLoadingProgress(walletId, transactionCount))
       }
-      if (walletId === 'a5k6uWpAFMbyWHKdMcs0kKXdoQ2RJ6mpVabzQe6fM6Y=') {
-        console.log('howdy')
-      }
     },
 
     onBalanceChanged (walletId: string, currencyCode: string, balance: string) {

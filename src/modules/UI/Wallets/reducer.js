@@ -73,22 +73,6 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       }
     }
 
-    case ACTION.UPDATE_WALLET_LOADING_PROGRESS: {
-      const { walletId, addressLoadingProgress } = action.data
-      if (state[walletId] !== undefined) {
-        if (addressLoadingProgress < state[walletId].addressLoadingProgress) return state
-        return {
-          ...state,
-          [walletId]: {
-            ...state[walletId],
-            addressLoadingProgress
-          }
-        }
-      } else {
-        return state
-      }
-    }
-
     case ADD_TOKEN_ACTION.ADD_NEW_CUSTOM_TOKEN_SUCCESS: {
       const { enabledTokens, walletId } = action.data
       if (state[walletId] !== undefined) {
@@ -158,9 +142,7 @@ export const byId = (state: WalletByIdState = {}, action: Action) => {
       const { data } = action
       const guiWallet = schema(data.wallet, state[data.wallet.id].receiveAddress)
       const enabledTokensOnWallet = state[data.wallet.id].enabledTokens
-      const addressLoadingProgress = state[data.wallet.id].addressLoadingProgress || 0
       guiWallet.enabledTokens = enabledTokensOnWallet
-      guiWallet.addressLoadingProgress = addressLoadingProgress
       enabledTokensOnWallet.forEach(customToken => {
         guiWallet.nativeBalances[customToken] = data.wallet.getBalance({ currencyCode: customToken })
       })
@@ -198,6 +180,29 @@ export const walletEnabledTokens = (state: any = {}, action: Action) => {
   }
 
   return state
+}
+
+export const walletLoadingProgress = (state: Object = {}, action: Action) => {
+  if (!action.data) return state
+  const {type, data} = action
+  switch (type) {
+    case ACTION.INSERT_WALLET_IDS_FOR_PROGRESS:
+      const activeWalletIdList = action.data
+      const activeWalletIdProgress = {}
+      activeWalletIdList.map((item) => {
+        activeWalletIdProgress[item] = 0
+      })
+      return activeWalletIdProgress
+    case ACTION.UPDATE_WALLET_LOADING_PROGRESS:
+      // prevent backwards progress
+      if (data.addressLoadingProgress < state[data.walletId]) return state
+      return {
+        ...state,
+        [data.walletId]: data.addressLoadingProgress
+      }
+    default:
+      return state
+  }
 }
 
 export const activeWalletIds = (state: WalletIds = [], action: Action) => {
@@ -370,5 +375,6 @@ export const wallets = combineReducers({
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,
-  manageTokensPending
+  manageTokensPending,
+  walletLoadingProgress
 })
