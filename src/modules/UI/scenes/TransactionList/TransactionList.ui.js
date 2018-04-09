@@ -3,7 +3,7 @@
 import { bns } from 'biggystring'
 import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, ScrollView, TouchableHighlight, TouchableOpacity, View, SectionList } from 'react-native'
+import { ActivityIndicator, Animated, Image, TouchableHighlight, TouchableOpacity, View, SectionList } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -215,6 +215,34 @@ export default class TransactionList extends Component<Props, State> {
   }
 
   render () {
+    return (
+      <SafeAreaView>
+        <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
+          <Gradient style={styles.gradient} />
+          <View style={[styles.scrollView]}>
+            <View style={[styles.container]}>
+              <View style={[styles.transactionsWrap]}>
+                <SectionList
+                  ListHeaderComponent={this.renderBalanceBox}
+                  style={[styles.transactionsScrollWrap]}
+                  sections={this.props.visibleTransactions}
+                  renderItem={this.renderTx}
+                  initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
+                  renderSectionHeader={({section}) => this.renderSectionHeader(section)}
+                  stickySectionHeadersEnabled={true}
+                  onEndReached={() => this.handleScrollEnd()}
+                  onEndReachedThreshold={SCROLL_THRESHOLD}
+                />
+              </View>
+            </View>
+          </View>
+          {this.renderDropUp()}
+        </View>
+      </SafeAreaView>
+    )
+  }
+
+  renderBalanceBox = () => {
     const {
       loading,
       updatingBalance,
@@ -254,106 +282,81 @@ export default class TransactionList extends Component<Props, State> {
     } else {
       fiatBalanceString = receivedFiatSymbol + ' ' + intl.formatNumber(balanceInFiat || 0, { toFixed: 2 }) + ' ' + fiatCurrencyCode
     }
-    // end of fiat balance
-
     return (
-      <SafeAreaView>
-        <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
-          <Gradient style={styles.gradient} />
-          <ScrollView style={[styles.scrollView]}>
-            <View style={[styles.container]}>
-              <Animated.View style={[{ height: this.state.balanceBoxHeight }]}>
-                <Gradient style={[styles.currentBalanceBox]}>
-                  {this.state.balanceBoxVisible && (
-                    <Animated.View style={{ flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity }}>
-                      {updatingBalance ? (
-                        <View style={[styles.currentBalanceWrap]}>
-                          <View style={[styles.updatingBalanceWrap]}>
-                            <ActivityIndicator animating={updatingBalance} style={[styles.updatingBalance, { height: 40 }]} size="small" />
-                          </View>
-                        </View>
-                      ) : (
-                        <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap]}>
-                          {this.state.showBalance ? (
-                            <View style={styles.balanceShownContainer}>
-                              <View style={[styles.iconWrap]}>
-                                {logo ? (
-                                  <Image style={[{ height: '100%' }]} source={{ uri: logo }} resizeMode={'cover'} />
-                                ) : (
-                                  <T style={[styles.request]}>{displayDenomination.symbol}</T>
-                                )}
-                              </View>
-                              <View style={[styles.currentBalanceBoxBitsWrap]}>
-                                <View style={{ flexDirection: 'row' }}>
-                                  {displayDenomination.symbol ? (
-                                    <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
-                                      {displayDenomination.symbol + ' '}
-                                      <T numberOfLines={1} >
-                                        {cryptoAmountString}
-                                      </T>
-                                    </T>
-                                  ) : (
-                                    <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                                      {cryptoAmountString}
-                                    </T>
-                                  )}
-
-                                  {!displayDenomination.symbol && (
-                                    <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
-                                      {' ' + selectedCurrencyCode}
-                                    </T>
-                                  )}
-                                </View>
-                              </View>
-                              <View style={[styles.currentBalanceBoxDollarsWrap]}>
-                                <T numberOfLines={1} style={[styles.currentBalanceBoxDollars]}>
-                                  {fiatBalanceString}
-                                </T>
-                              </View>
-                            </View>
-                          ) : (
-                            <View style={[styles.balanceHiddenContainer]}>
-                              <T style={[styles.balanceHiddenText]}>{SHOW_BALANCE_TEXT}</T>
-                            </View>
-                          )}
-                        </TouchableOpacity>
-                      )}
-                      <View style={[styles.requestSendRow]}>
-                        <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
-                          <View style={[styles.requestWrap]}>
-                            <Image style={{ width: 25, height: 25 }} source={requestImage} />
-                            <T style={[styles.request]}>{REQUEST_TEXT}</T>
-                          </View>
-                        </TouchableHighlight>
-
-                        <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.scan}>
-                          <View style={[styles.sendWrap]}>
-                            <Image style={{ width: 25, height: 25 }} source={sendImage} />
-                            <T style={styles.send}>{SEND_TEXT}</T>
-                          </View>
-                        </TouchableHighlight>
+      <Animated.View style={[{ height: this.state.balanceBoxHeight }]}>
+        <Gradient style={[styles.currentBalanceBox]}>
+          {this.state.balanceBoxVisible && (
+            <Animated.View style={{ flex: 1, paddingTop: 10, paddingBottom: 20, opacity: this.state.balanceBoxOpacity }}>
+              {updatingBalance ? (
+                <View style={[styles.currentBalanceWrap]}>
+                  <View style={[styles.updatingBalanceWrap]}>
+                    <ActivityIndicator animating={updatingBalance} style={[styles.updatingBalance, { height: 40 }]} size="small" />
+                  </View>
+                </View>
+              ) : (
+                <TouchableOpacity onPress={this.toggleShowBalance} style={[styles.currentBalanceWrap]}>
+                  {this.state.showBalance ? (
+                    <View style={styles.balanceShownContainer}>
+                      <View style={[styles.iconWrap]}>
+                        {logo ? (
+                          <Image style={[{ height: '100%' }]} source={{ uri: logo }} resizeMode={'cover'} />
+                        ) : (
+                          <T style={[styles.request]}>{displayDenomination.symbol}</T>
+                        )}
                       </View>
-                    </Animated.View>
+                      <View style={[styles.currentBalanceBoxBitsWrap]}>
+                        <View style={{ flexDirection: 'row' }}>
+                          {displayDenomination.symbol ? (
+                            <T numberOfLines={1} style={[styles.currentBalanceBoxBits, styles.symbol]}>
+                              {displayDenomination.symbol + ' '}
+                              <T numberOfLines={1} >
+                                {cryptoAmountString}
+                              </T>
+                            </T>
+                          ) : (
+                            <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                              {cryptoAmountString}
+                            </T>
+                          )}
+
+                          {!displayDenomination.symbol && (
+                            <T numberOfLines={1} style={styles.currentBalanceBoxBits}>
+                              {' ' + selectedCurrencyCode}
+                            </T>
+                          )}
+                        </View>
+                      </View>
+                      <View style={[styles.currentBalanceBoxDollarsWrap]}>
+                        <T numberOfLines={1} style={[styles.currentBalanceBoxDollars]}>
+                          {fiatBalanceString}
+                        </T>
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={[styles.balanceHiddenContainer]}>
+                      <T style={[styles.balanceHiddenText]}>{SHOW_BALANCE_TEXT}</T>
+                    </View>
                   )}
-                </Gradient>
-              </Animated.View>
-              <View style={[styles.transactionsWrap]}>
-                <SectionList
-                  style={[styles.transactionsScrollWrap]}
-                  sections={this.props.visibleTransactions}
-                  renderItem={this.renderTx}
-                  initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-                  renderSectionHeader={({section}) => this.renderSectionHeader(section)}
-                  stickySectionHeadersEnabled={true}
-                  onEndReached={() => this.handleScrollEnd()}
-                  onEndReachedThreshold={SCROLL_THRESHOLD}
-                />
+                </TouchableOpacity>
+              )}
+              <View style={[styles.requestSendRow]}>
+                <TouchableHighlight style={[styles.requestBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.request}>
+                  <View style={[styles.requestWrap]}>
+                    <Image style={{ width: 25, height: 25 }} source={requestImage} />
+                    <T style={[styles.request]}>{REQUEST_TEXT}</T>
+                  </View>
+                </TouchableHighlight>
+                <TouchableHighlight style={[styles.sendBox, styles.button]} underlayColor={styleRaw.underlay.color} onPress={Actions.scan}>
+                  <View style={[styles.sendWrap]}>
+                    <Image style={{ width: 25, height: 25 }} source={sendImage} />
+                    <T style={styles.send}>{SEND_TEXT}</T>
+                  </View>
+                </TouchableHighlight>
               </View>
-            </View>
-          </ScrollView>
-          {this.renderDropUp()}
-        </View>
-      </SafeAreaView>
+            </Animated.View>
+          )}
+        </Gradient>
+      </Animated.View>
     )
   }
 
