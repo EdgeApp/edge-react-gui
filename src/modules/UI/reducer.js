@@ -1,7 +1,8 @@
+// @flow
+
 import { combineReducers } from 'redux'
 
 import * as Constants from '../../constants/indexConstants'
-// @flow
 import type { State } from '../ReduxTypes'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
@@ -26,5 +27,6 @@ export const ui = (state: $PropertyType<State, 'ui'>, action: any) => {
     return uiReducer(undefined, ({ type: 'DUMMY_ACTION_PLEASE_IGNORE' }: any))
   }
 
+  // $FlowFixMe
   return uiReducer(state, action)
 }

@@ -1,10 +1,10 @@
+// @flow
+
 import { disableTouchId, enableTouchId } from 'edge-login-ui-rn'
 import type { EdgeAccount } from 'edge-core-js'
 
 import type { Dispatch, GetState } from '../../../../../src/modules/ReduxTypes.js'
 import * as actions from '../../../../actions/indexActions.js'
-// @flow
-// UI/Scenes/Settings
 import * as Constants from '../../../../constants/indexConstants.js'
 import s from '../../../../locales/strings.js'
 import * as ACCOUNT_SETTINGS from '../../../Core/Account/settings.js'

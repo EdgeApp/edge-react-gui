@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types'
 // @flow
+
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { TouchableHighlight, View } from 'react-native'
 

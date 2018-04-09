@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import React, { Component } from 'react'
 import { Animated, Text, TextInput, TouchableHighlight, View } from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'

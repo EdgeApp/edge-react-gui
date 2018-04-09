@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { core, cryptoExchange, exchangeRates, permissions, rootReducer, ui, contacts } from './rootReducer.js'

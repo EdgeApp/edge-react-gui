@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* global __DEV__ */
 
 // In production mode, `process.env.NODE_ENV` starts out as "production",

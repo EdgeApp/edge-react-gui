@@ -1,5 +1,6 @@
-import type { EdgeAccount } from 'edge-core-js'
 // @flow
+
+import type { EdgeAccount } from 'edge-core-js'
 // import HockeyApp from 'react-native-hockeyapp'
 import { connect } from 'react-redux'
 
