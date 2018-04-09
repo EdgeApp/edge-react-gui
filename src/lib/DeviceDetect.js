@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { Dimensions, PixelRatio, Platform } from 'react-native'
 
 const windowSize = Dimensions.get('window')

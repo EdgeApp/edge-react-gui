@@ -1,8 +1,4 @@
-/**
- * Created by paul on 8/16/17.
- */
 // @flow
-// trying to trigger a build. .. will remove this line
 import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 
 export type GuiWallet = {
@@ -95,7 +91,7 @@ export type FlatListItem = {
 }
 
 export type DeviceDimensions = {
-  keyboardHeight?: number
+  keyboardHeight: number
 }
 
 export type ExchangePair = {

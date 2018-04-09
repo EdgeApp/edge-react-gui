@@ -1,40 +1,27 @@
 // @flow
+
 import * as ACTION from './action'
 import type { Action } from '../../../ReduxTypes.js'
+import type { GuiReceiveAddress } from '../../../../types.js'
 import * as Constants from '../../../../constants/indexConstants.js'
 
-export type SceneRequestState = {
+export type RequestSceneState = {
   inputCurrencySelected: string,
-  receiveAddress: {
-    publicAddress: string,
-    amountSatoshi: number,
-    metadata: {
-      payeeName?: string,
-      category?: string,
-      notes?: string,
-      amountFiat?: number,
-      bizId?: string | null,
-      miscJson?: string
-    }
-  }
-}
-const initialState: SceneRequestState = {
-  inputCurrencySelected: 'fiat',
-  receiveAddress: {
-    publicAddress: '',
-    amountSatoshi: 0,
-    metadata: {
-      payeeName: '',
-      category: '',
-      notes: '',
-      amountFiat: 0,
-      bizId: null,
-      miscJson: ''
-    }
-  }
+  receiveAddress: GuiReceiveAddress
 }
 
-export const request = (state: SceneRequestState = initialState, action: Action): SceneRequestState => {
+const receiveAddress: GuiReceiveAddress = {
+  publicAddress: '',
+  nativeAmount: '0',
+  metadata: {}
+}
+
+const initialState: RequestSceneState = {
+  inputCurrencySelected: 'fiat',
+  receiveAddress
+}
+
+export const request = (state: RequestSceneState = initialState, action: Action): RequestSceneState => {
   switch (action.type) {
     case Constants.UPDATE_RECEIVE_ADDRESS_SUCCESS: {
       if (!action.data) {

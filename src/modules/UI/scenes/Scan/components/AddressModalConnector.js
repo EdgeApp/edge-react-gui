@@ -1,6 +1,7 @@
+// @flow
+
 import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
-// @flow
 import { connect } from 'react-redux'
 
 import { loginWithEdge } from '../../../../../actions/indexActions'

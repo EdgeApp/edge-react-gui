@@ -1,5 +1,6 @@
-import AlertBody from './AlertBody.ui'
 // @flow
+
+import AlertBody from './AlertBody.ui'
 import AlertContainer from './AlertContainer.ui'
 import AlertFooter from './AlertFooter.ui'
 import AlertHeader from './AlertHeader.ui'

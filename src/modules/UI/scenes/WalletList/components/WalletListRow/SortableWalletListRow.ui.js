@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { bns } from 'biggystring'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Platform, TouchableHighlight, View } from 'react-native'

@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { AUTHORIZED, DENIED, RESTRICTED } from '../../modules/UI/permissions.js'

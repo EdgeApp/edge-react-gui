@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 // import { StyleSheet } from 'react-native'
 
 // Can't access sub-properties if using Stylesheet.create({})
