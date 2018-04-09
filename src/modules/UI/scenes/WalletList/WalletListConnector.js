@@ -25,6 +25,22 @@ const mapStateToProps = (state: State) => {
   const dimensions = state.ui.scenes.dimensions
   const customTokens = state.ui.settings.customTokens
   const otpResetPending = SETTINGS_SELECTORS.getOtpResetPending(state)
+  const walletKeys = Object.keys(wallets)
+  const numberOfWallets = walletKeys.length
+  let progress = 0
+  for (const walletId of walletKeys) {
+    const itemWeightedProgress = (wallets[walletId].addressLoadingProgress || 0) / numberOfWallets
+    progress += itemWeightedProgress
+  }
+  let progressPercentage = 0
+  if (numberOfWallets > 0) {
+    if (progress > 0.99999) {
+      progressPercentage = 100
+    } else {
+      progressPercentage = parseInt(progress * 100)
+    }
+  }
+
   return {
     settings,
     coreWallets,
@@ -38,7 +54,8 @@ const mapStateToProps = (state: State) => {
     currencyConverter,
     dimensions,
     customTokens,
-    otpResetPending
+    otpResetPending,
+    progressPercentage
   }
 }
 

@@ -6,18 +6,16 @@ import * as Constants from '../../constants/indexConstants'
 import type { State } from '../ReduxTypes'
 import errorAlert from './components/ErrorAlert/reducer'
 import transactionAlert from './components/TransactionAlert/reducer'
-import walletListProgressDropdown from './components/WalletListProgressDropdown/reducer.js'
 import { request } from './Request/reducer.js'
 import { scenes } from './scenes/reducer.js'
 import { settings } from './Settings/reducer.js'
 import { wallets } from './Wallets/reducer.js'
 
-export { errorAlert, walletListProgressDropdown, transactionAlert, scenes, wallets, request, settings }
+export { errorAlert, transactionAlert, scenes, wallets, request, settings }
 
 export const uiReducer = combineReducers({
   errorAlert,
   transactionAlert,
-  walletListProgressDropdown,
   scenes,
   wallets,
   request,

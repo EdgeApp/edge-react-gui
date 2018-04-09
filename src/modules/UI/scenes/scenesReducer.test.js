@@ -87,9 +87,6 @@ test('initialState', () => {
       edgeTransaction: '',
       displayAlert: false
     },
-    walletListProgressDropdown: {
-      displayDropdown: false
-    },
     transactionDetails: {
       subcategories: []
     },

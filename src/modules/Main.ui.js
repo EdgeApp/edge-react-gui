@@ -41,7 +41,6 @@ import { styles } from './style.js'
 import AutoLogout from './UI/components/AutoLogout/AutoLogoutConnector'
 import ControlPanel from './UI/components/ControlPanel/ControlPanelConnector'
 import ErrorAlert from './UI/components/ErrorAlert/ErrorAlertConnector'
-import WalletListProgressDropdown from './UI/components/WalletListProgressDropdown/WalletListProgressDropdownConnector'
 import T from './UI/components/FormattedText'
 import BackButton from './UI/components/Header/Component/BackButton.ui'
 import HelpButton from './UI/components/Header/Component/HelpButtonConnector'
@@ -490,7 +489,6 @@ export default class Main extends Component<Props, State> {
           </Overlay>
         </RouterWithRedux>
         <HelpModal style={{ flex: 1 }} />
-        <WalletListProgressDropdown />
         <ErrorAlert />
         <TransactionAlert />
         <AutoLogout />
