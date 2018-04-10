@@ -55,5 +55,9 @@ export const CURRENCY_SETTINGS = {
   dashSettings: {
     pluginName: 'dash',
     currencyCode: 'DASH'
+  },
+  ftcSettings: {
+    pluginName: 'feathercoin',
+    currencyCode: 'FTC'
   }
 }

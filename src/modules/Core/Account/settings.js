@@ -19,6 +19,7 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   BCH: { denomination: '100' },
   DASH: { denomination: '100000000' },
   LTC: { denomination: '100000000' },
+  FTC: { denomination: '100000000' },
   ETH: { denomination: '1000000000000000000' },
   REP: { denomination: '1000000000000000000' },
   WINGS: { denomination: '1000000000000000000' },
