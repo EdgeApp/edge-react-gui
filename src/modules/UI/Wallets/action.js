@@ -39,6 +39,8 @@ export const EDIT_CUSTOM_TOKEN_FAILURE = 'EDIT_CUSTOM_TOKEN_FAILURE'
 export const UPDATE_EXISTING_TOKEN_SUCCESS = 'UPDATE_EXISTING_TOKEN_SUCCESS'
 export const OVERWRITE_THEN_DELETE_TOKEN_SUCCESS = 'OVERWRITE_THEN_DELETE_TOKEN_SUCCESS'
 export const ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS = 'ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS'
+export const UPDATE_WALLET_LOADING_PROGRESS = 'UPDATE_WALLET_LOADING_PROGRESS'
+export const INSERT_WALLET_IDS_FOR_PROGRESS = 'INSERT_WALLET_IDS_FOR_PROGRESS'
 
 export const refreshReceiveAddressRequest = (walletId: string) => (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
@@ -440,6 +442,30 @@ export function addNewTokenThenDeleteOldSuccess (data: any) {
   return {
     type: ADD_NEW_TOKEN_THEN_DELETE_OLD_SUCCESS,
     data
+  }
+}
+
+export const updateWalletLoadingProgress = (walletId: string, newWalletProgress: number) => (dispatch: Dispatch, getState: GetState) => {
+  const data = {
+    walletId,
+    addressLoadingProgress: newWalletProgress
+  }
+  const state = getState()
+  const currentWalletProgress = state.ui.wallets.walletLoadingProgress[walletId]
+  const marginalProgress = newWalletProgress - currentWalletProgress
+
+  if (newWalletProgress !== 1 && marginalProgress < 0.1) return
+
+  dispatch({
+    type: UPDATE_WALLET_LOADING_PROGRESS,
+    data
+  })
+}
+
+export function insertWalletIdsForProgress (activeWalletIds: Array<string>) {
+  return {
+    type: INSERT_WALLET_IDS_FOR_PROGRESS,
+    data: { activeWalletIds }
   }
 }
 
