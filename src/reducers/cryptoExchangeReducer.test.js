@@ -40,7 +40,8 @@ test('initialState', () => {
     transaction: null,
     gettingTransaction: false,
     availableShapeShiftTokens: [],
-    shiftPendingTransaction: false
+    shiftPendingTransaction: false,
+    quoteExpireDate: null
   }
   const actual = cryptoExchangerReducer(undefined, {})
 

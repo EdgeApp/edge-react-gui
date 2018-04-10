@@ -41,7 +41,8 @@ const initialState = {
   transaction: null,
   gettingTransaction: false,
   availableShapeShiftTokens: [],
-  shiftPendingTransaction: false
+  shiftPendingTransaction: false,
+  quoteExpireDate: null
 }
 
 function cryptoExchangerReducer (state = initialState, action) {
@@ -109,6 +110,11 @@ function cryptoExchangerReducer (state = initialState, action) {
       return {
         ...state,
         transaction: action.data.edgeTransaction,
+        toNativeAmount: action.data.toNativeAmount,
+        toDisplayAmount: action.data.toDisplayAmount,
+        fromNativeAmount: action.data.fromNativeAmount,
+        fromDisplayAmount: action.data.fromDisplayAmount,
+        quoteExpireDate: action.data.quoteExpireDate,
         fee:
           action.data.networkFee && state.fromCurrencyCode
             ? s.strings.string_fee_with_colon + ' ' + action.data.networkFee + ' ' + state.fromWalletPrimaryInfo.displayDenomination.name
