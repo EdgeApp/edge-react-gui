@@ -407,7 +407,7 @@ export default class TransactionList extends Component<Props, State> {
 
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
-    const amountString = UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6)
+    const amountString = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
     const fiatSymbol = this.props.fiatSymbol ? UTILS.getFiatSymbol(this.props.isoFiatCurrencyCode) : ''
     let fiatAmountString
     if (tx.metadata && tx.metadata.amountFiat) {
