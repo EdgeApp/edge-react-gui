@@ -234,7 +234,8 @@ export type State = {
     fee: any,
     gettingTransaction: boolean,
     availableShapeShiftTokens: Array<any>,
-    shiftPendingTransaction: boolean
+    shiftPendingTransaction: boolean,
+    quoteExpireDate: number | null
   },
   exchangeRates: number,
   permissions: PermissionsState,

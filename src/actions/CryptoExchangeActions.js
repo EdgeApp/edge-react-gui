@@ -287,7 +287,7 @@ export const shiftCryptoCurrency = () => async (dispatch: Dispatch, getState: Ge
   }
 }
 
-const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWallet: string = Constants.FROM) => async (dispatch: Dispatch, getState: GetState) => {
+const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWallet: string = Constants.FROM, reQuote: boolean = false) => async (dispatch: Dispatch, getState: GetState) => {
   const state = getState()
   const destWallet = CORE_SELECTORS.getWallet(state, toWallet.id)
   const srcWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, fromWallet.id)
@@ -326,7 +326,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     //  we are still waiting on the previous make spend to return
     return
   }
-  if (holderObject.newAmount === holderObject.processingAmount) {
+  if (holderObject.newAmount === holderObject.processingAmount && !reQuote) {
     //  there is no new typing from when we returned.
     return
   }
@@ -350,17 +350,23 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
       }
       return
     }
-    const primaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
-    const ratio = primaryInfo.displayDenomination.multiplier.toString()
+    const fromPrimaryInfo = state.cryptoExchange.fromWalletPrimaryInfo
+    const toPrimaryInfo = state.cryptoExchange.toWalletPrimaryInfo
+    const ratio = fromPrimaryInfo.displayDenomination.multiplier.toString()
     const networkFee = UTILS.convertNativeToDenomination(ratio)(edgeTransaction.networkFee)
+
+    const fromDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.depositAmountNative, fromPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+    const fromDisplayAmount = bns.toFixed(fromDisplayAmountTemp, 0, 8)
+    const toDisplayAmountTemp = bns.div(edgeCoinExchangeQuote.withdrawalAmountNative, toPrimaryInfo.displayDenomination.multiplier, DIVIDE_PRECISION)
+    const toDisplayAmount = bns.toFixed(toDisplayAmountTemp, 0, 8)
     const returnObject = {
       edgeTransaction,
       networkFee,
       fromNativeAmount: edgeCoinExchangeQuote.depositAmountNative, // This needs to be calculated
-      fromDisplayAmount: edgeCoinExchangeQuote.depositAmount,
+      fromDisplayAmount: fromDisplayAmount,
       toNativeAmount: edgeCoinExchangeQuote.withdrawalAmountNative,
-      toDisplayAmount: edgeCoinExchangeQuote.withdrawalAmount,
-      quoteExpireDate: new Date(edgeCoinExchangeQuote.expiration)
+      toDisplayAmount: toDisplayAmount,
+      quoteExpireDate: edgeCoinExchangeQuote.expiration
 
     }
     const isAboveLimit = bns.gt(fromNativeAmount, nativeMax)
@@ -495,5 +501,14 @@ export const selectWalletForExchange = (walletId: string, currencyCode: string) 
     case Constants.FROM:
       return dispatch(selectToFromWallet(Constants.SELECT_FROM_WALLET_CRYPTO_EXCHANGE, wallet, currencyCode))
     default:
+  }
+}
+
+export const exchangeTimerExpired = () => (dispatch: Dispatch, getState: GetState) => {
+  const state = getState()
+  const hasFrom = state.cryptoExchange.fromWallet ? state.cryptoExchange.fromWallet : null
+  const hasTo = state.cryptoExchange.toWallet ? state.cryptoExchange.toWallet : null
+  if (hasFrom && hasTo) {
+    dispatch(getShiftTransaction(hasFrom, hasTo, Constants.FROM, true))
   }
 }
