@@ -1,9 +1,9 @@
 // @flow
 
 import { bns } from 'biggystring'
-import type { EdgeDenomination, EdgeTransaction } from 'edge-core-js'
+import type { EdgeDenomination } from 'edge-core-js'
 import React, { Component } from 'react'
-import { ActivityIndicator, Animated, Image, TouchableHighlight, TouchableOpacity, View, SectionList } from 'react-native'
+import { ActivityIndicator, Animated, Image, TouchableHighlight, TouchableOpacity, View, FlatList } from 'react-native'
 // import Contacts from 'react-native-contacts'
 // import Permissions from 'react-native-permissions'
 import { Actions } from 'react-native-router-flux'
@@ -17,7 +17,7 @@ import { intl } from '../../../../locales/intl'
 import s from '../../../../locales/strings.js'
 import { PLATFORM } from '../../../../theme/variables/platform.js'
 
-import type { GuiWallet, DateTransactionGroup, TransactionListTx, TransactionListSection, GuiContact } from '../../../../types'
+import type { GuiWallet, TransactionListTx, GuiContact } from '../../../../types'
 import WalletListModal from '../../../UI/components/WalletListModal/WalletListModalConnector'
 import * as UTILS from '../../../utils'
 import T from '../../components/FormattedText'
@@ -40,7 +40,7 @@ type Props = {
   selectedCurrencyCode: string,
   loading: boolean,
   updatingBalance: boolean,
-  transactions: Array<EdgeTransaction>,
+  transactions: Array<TransactionListTx>,
   multiplier: string,
   uiWallet: GuiWallet,
   displayDenomination: EdgeDenomination,
@@ -48,8 +48,7 @@ type Props = {
   fiatSymbol: string,
   balanceInFiat: number,
   fiatCurrencyCode: string,
-  isoFiatCurrencyCode: string,
-  visibleTransactions: Array<DateTransactionGroup>
+  isoFiatCurrencyCode: string
 }
 type State = {
   focused: boolean,
@@ -222,14 +221,12 @@ export default class TransactionList extends Component<Props, State> {
           <View style={[styles.scrollView]}>
             <View style={[styles.container]}>
               <View style={[styles.transactionsWrap]}>
-                <SectionList
+                <FlatList
                   ListHeaderComponent={this.renderBalanceBox}
                   style={[styles.transactionsScrollWrap]}
-                  sections={this.props.visibleTransactions}
-                  renderItem={this.renderTx}
+                  data={this.props.transactions}
+                  renderItem={(tx) => this.renderTx(tx, this.props.transactions)}
                   initialNumToRender={INITIAL_TRANSACTION_BATCH_NUMBER}
-                  renderSectionHeader={({section}) => this.renderSectionHeader(section)}
-                  stickySectionHeadersEnabled={true}
                   onEndReached={() => this.handleScrollEnd()}
                   onEndReachedThreshold={SCROLL_THRESHOLD}
                 />
@@ -374,9 +371,10 @@ export default class TransactionList extends Component<Props, State> {
     return !this.isReceivedTransaction(tx)
   }
 
-  renderTx = (transaction: TransactionListSection, completedTxList: Array<TransactionListTx>) => {
+  renderTx = (transaction: TransactionListTx, completedTxList: Array<TransactionListTx>) => {
+    // $FlowFixMe
     const tx = transaction.item
-    let txColorStyle, txImage, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
+    let txColorStyle, lastOfDate, txImage, thumbnailPath, pendingTimeStyle, pendingTimeSyntax, transactionPartner
     let txName = ''
 
     let currencyName = this.props.uiWallet.currencyNames[this.props.selectedCurrencyCode]
@@ -408,6 +406,13 @@ export default class TransactionList extends Component<Props, State> {
       }
     }
 
+    if (completedTxList[tx.key + 1]) {
+      // is there a subsequent transaction?
+      lastOfDate = tx.dateString !== completedTxList[tx.key + 1].dateString
+    } else {
+      lastOfDate = false // 'lasteOfDate' may be a misnomer since the very last transaction in the list should have a bottom border
+    }
+
     const stepOne = UTILS.convertNativeToDisplay(this.props.displayDenomination.multiplier)(bns.abs(tx.nativeAmount))
 
     const amountString = intl.formatNumber(UTILS.decimalOrZero(UTILS.truncateDecimals(stepOne, 6), 6))
@@ -436,10 +441,17 @@ export default class TransactionList extends Component<Props, State> {
 
     return (
       <View style={[styles.singleTransactionWrap]}>
+        {(tx.key === 0 || tx.dateString !== completedTxList[tx.key - 1].dateString) && (
+          <View style={styles.singleDateArea}>
+            <View style={styles.leftDateArea}>
+              <T style={styles.formattedDate}>{tx.dateString}</T>
+            </View>
+          </View>
+        )}
         <TouchableHighlight
           onPress={() => this._goToTxDetail(tx, thumbnailPath)}
           underlayColor={styleRaw.transactionUnderlay.color}
-          style={[styles.singleTransaction]}
+          style={[styles.singleTransaction, { borderBottomWidth: lastOfDate ? 0 : 1 }]}
         >
           <View style={[styles.transactionInfoWrap]}>
             <View style={styles.transactionLeft}>
@@ -463,16 +475,6 @@ export default class TransactionList extends Component<Props, State> {
             </View>
           </View>
         </TouchableHighlight>
-      </View>
-    )
-  }
-
-  renderSectionHeader = (sectionData: {data: Array<any>, title: string}) => {
-    return (
-      <View style={styles.singleDateArea}>
-        <View style={styles.leftDateArea}>
-          <T style={styles.formattedDate}>{sectionData.title}</T>
-        </View>
       </View>
     )
   }
