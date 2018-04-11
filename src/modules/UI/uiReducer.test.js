@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { errorAlert, request, scenes, settings, transactionAlert, uiReducer, wallets } from './reducer.js'

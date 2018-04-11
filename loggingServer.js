@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 const os = require('os')
 const express = require('express')
 const bodyParser = require('body-parser')

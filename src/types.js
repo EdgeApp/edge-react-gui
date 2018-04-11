@@ -1,8 +1,4 @@
-/**
- * Created by paul on 8/16/17.
- */
 // @flow
-// trying to trigger a build. .. will remove this line
 import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 
 export type GuiWallet = {
@@ -21,7 +17,8 @@ export type GuiWallet = {
   symbolImageDarkMono: string | void,
   metaTokens: Array<EdgeMetaToken>,
   enabledTokens: Array<string>,
-  receiveAddress: EdgeReceiveAddress
+  receiveAddress: EdgeReceiveAddress,
+  addressLoadingProgress?: number
 }
 
 export type GuiDenomination = {
@@ -95,7 +92,7 @@ export type FlatListItem = {
 }
 
 export type DeviceDimensions = {
-  keyboardHeight?: number
+  keyboardHeight: number
 }
 
 export type ExchangePair = {
@@ -187,7 +184,8 @@ export const emptyGuiWallet: GuiWallet = {
     metadata: {},
     publicAddress: '',
     legacyAddress: ''
-  }
+  },
+  addressLoadingProgress: 0
 }
 
 export const emptyGuiDenomination: GuiDenomination = {

@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 // import * as Constants from '../../constants/indexConstants.js'
 import * as Styles from '../../styles/indexStyles'
 import THEME from '../../theme/variables/airbitz.js'

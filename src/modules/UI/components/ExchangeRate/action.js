@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 export const UPDATE_EXCHANGE_RATES = 'UPDATE_EXCHANGE_RATES'
 
 const randomSeed = Math.random() / 10 // produces random number between 0 and 1

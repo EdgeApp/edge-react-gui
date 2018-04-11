@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 const SceneContainer = {
   flex: 1,
   flexDirection: 'column',
