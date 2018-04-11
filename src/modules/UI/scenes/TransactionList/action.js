@@ -1,10 +1,10 @@
 // @flow
 
 import type { EdgeTransaction } from 'edge-core-js'
-import type { DateTransactionGroup } from '../../../../types.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import * as WALLET_API from '../../../Core/Wallets/api.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'
+import type { TransactionListTx } from '../../../../types.js'
 import * as UI_SELECTORS from '../../../UI/selectors.js'
 import * as UTILS from '../../../utils'
 import { displayTransactionAlert } from '../../components/TransactionAlert/actions'
@@ -34,8 +34,20 @@ export const fetchTransactions = (walletId: string, currencyCode: string, option
   const wallet = CORE_SELECTORS.getWallet(state, walletId)
   if (wallet) {
     WALLET_API.getTransactions(wallet, currencyCode, options).then(transactions => {
-      const newGroupedTransactionsByDate = groupTransactionsByDate(transactions)
-      dispatch(updateTransactions(transactions, newGroupedTransactionsByDate))
+      let key = -1
+      const transactionsWithKeys = transactions.map((tx) => {
+        const txDate = new Date(tx.date * 1000)
+        const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+        const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
+        key++
+        return {
+          ...tx,
+          dateString,
+          time,
+          key
+        }
+      })
+      dispatch(updateTransactions(transactionsWithKeys))
     }).catch((e) => {
       console.warn('Issue with getTransactions: ', e.message)
     })
@@ -66,9 +78,9 @@ export const newTransactionsRequest = (walletId: string, edgeTransactions: Array
   dispatch(displayTransactionAlert(edgeTransaction))
 }
 
-export const updateTransactions = (transactions: Array<EdgeTransaction>, groupedTransactionsByDate: Array<DateTransactionGroup>) => ({
+export const updateTransactions = (transactions: Array<TransactionListTx>) => ({
   type: UPDATE_TRANSACTIONS,
-  data: { transactions, groupedTransactionsByDate }
+  data: { transactions }
 })
 
 export const updateBalance = () => ({
@@ -113,31 +125,4 @@ export function toggleTransactionsWalletListModal () {
   return {
     type: TOGGLE_TRANSACTIONS_WALLET_LIST_MODAL
   }
-}
-
-export function groupTransactionsByDate (transactions: Array<EdgeTransaction>) {
-  const sectionedTransactionList = []
-  let previousDateString: string = ''
-  let currentSectionData = {title: '', data: []}
-  transactions.map((x, i) => {
-    const newValue: any = {...x}
-    newValue.key = i
-    const txDate = new Date(x.date * 1000)
-
-    // let time = formatAMPM(txDate)
-    // let dateString = monthNames[month] + ' ' + day + ', ' + year // will we need to change date format based on locale?
-    const dateString = txDate.toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
-    const time = txDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' })
-    newValue.dateString = dateString
-    newValue.time = time
-    if (previousDateString === dateString) { // if it's still in the same date
-      currentSectionData.data.push(newValue)
-    } else { // if it is not the same date
-      currentSectionData = {title: dateString, data: [newValue]}
-      sectionedTransactionList.push(currentSectionData)
-    }
-    previousDateString = dateString
-    return newValue
-  })
-  return sectionedTransactionList
 }

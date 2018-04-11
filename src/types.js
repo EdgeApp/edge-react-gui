@@ -83,7 +83,8 @@ export type GuiFiatType = {
 export type TransactionListTx = {
   ...EdgeTransaction,
   dateString?: string,
-  key: number
+  key: number,
+  time: string
 }
 
 export type FlatListItem = {
@@ -209,16 +210,4 @@ export type ComponentLayoutMeasurements = {
   height: Number,
   pageX: Number,
   pageY: Number
-}
-
-export type DateTransactionGroup = {
-  data: Array<EdgeTransaction>,
-  title: string
-}
-
-export type TransactionListSection = {
-  index: number,
-  item: Object,
-  section: DateTransactionGroup,
-  separators: Object
 }

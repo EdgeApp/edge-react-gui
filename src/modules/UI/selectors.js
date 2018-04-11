@@ -1,9 +1,8 @@
 // @flow
 
-import type { EdgeTransaction } from 'edge-core-js'
 import _ from 'lodash'
 
-import type { GuiDenomination, GuiWallet } from '../../types'
+import type { GuiDenomination, GuiWallet, TransactionListTx } from '../../types'
 import type { State } from '../ReduxTypes'
 import * as SETTINGS_SELECTORS from './Settings/selectors'
 
@@ -65,7 +64,7 @@ export const getWalletLoadingPercent = (state: State) => {
   return progressPercentage
 }
 
-export const getTransactions = (state: State): Array<EdgeTransaction> => {
+export const getTransactions = (state: State): Array<TransactionListTx> => {
   const transactions = state.ui.scenes.transactionList.transactions
   return transactions
 }
