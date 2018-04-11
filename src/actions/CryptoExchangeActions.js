@@ -307,6 +307,7 @@ const getShiftTransaction = (fromWallet: GuiWallet, toWallet: GuiWallet, whichWa
     spendTarget = {...spendTarget, nativeAmount: toNativeAmount}
   }
   const spendInfo: EdgeSpendInfo = {
+    networkFeeOption: state.cryptoExchange.feeSetting,
     currencyCode: fromCurrencyCode,
     nativeAmount: fromNativeAmount,
     quoteFor: whichWallet,
