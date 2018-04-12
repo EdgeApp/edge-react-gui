@@ -381,7 +381,7 @@ export default class Main extends Component<Props, State> {
 
                       <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
                         <Scene
-                          key={Constants.EXCHANGE_NOT_USED}
+                          key={Constants.EXCHANGE_SCENE}
                           navTransparent={true}
                           component={ExchangeConnector}
                           renderTitle={this.renderTitle(EXCHANGE)}
