@@ -27,7 +27,7 @@ import styles, { styles as styleRaw } from './style'
 // import SearchBar from './components/SearchBar.ui'
 const INITIAL_TRANSACTION_BATCH_NUMBER = 10
 const SUBSEQUENT_TRANSACTION_BATCH_NUMBER = 30
-const SCROLL_THRESHOLD = 0.5
+const SCROLL_THRESHOLD = 2
 
 type Props = {
   getTransactions: (walletId: string, currencyCode: string) => void, // getting transactions from Redux
