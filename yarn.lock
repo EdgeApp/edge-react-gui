@@ -1240,12 +1240,6 @@ big-integer@^1.6.7:
   version "1.6.27"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.27.tgz#8e56c6f8b2dd6c4fe8d32102b83d4f25868e4b3a"
 
-biggystring@^1.0.7:
-  version "1.1.10"
-  resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-1.1.10.tgz#90cd3410802699b2605c443f6f13c52259a3cc61"
-  dependencies:
-    bn.js "^4.11.7"
-
 biggystring@^3.0.0, biggystring@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/biggystring/-/biggystring-3.0.1.tgz#7ba82b7d0cca3331beeeb9d252cb44e2c74068e9"
@@ -2344,13 +2338,13 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
 
-edge-core-js@0.6.9:
-  version "0.6.9"
-  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.6.9.tgz#52d1878054bb43645e41b2b0cca714f8d4f581cb"
+edge-core-js@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/edge-core-js/-/edge-core-js-0.7.0.tgz#67b11bc327caa8f94b4508eba2120044abf1d304"
   dependencies:
     aes-js "^3.1.0"
     base-x "^1.0.4"
-    biggystring "^1.0.7"
+    biggystring "^3.0.1"
     currency-codes "^1.1.2"
     detect-bundler "^1.0.0"
     disklet "^0.2.2"
