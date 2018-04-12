@@ -192,6 +192,7 @@ const strings = {
   title_ethereum_settings: 'Ethereum Settings',
   title_exchange: 'Exchange',
   title_litecoin_settings: 'Litecoin Settings',
+  title_feathercoin_settings: 'Feathercoin Settings',
   title_manage_tokens: 'Manage Tokens',
   title_edit_token: 'Edit Token',
   title_add_token: 'Add Token',

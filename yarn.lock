@@ -2367,9 +2367,9 @@ edge-core-js@0.6.9:
     scrypt-js "^2.0.3"
     utf8 "^3.0.0"
 
-edge-currency-bitcoin@2.16.1:
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.16.1.tgz#d6ab6a281ca7cddfabb7a82ed33e68c72b833fbc"
+edge-currency-bitcoin@2.17.0:
+  version "2.17.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-bitcoin/-/edge-currency-bitcoin-2.17.0.tgz#2afbfc992ee568469a4413d400537904f8abe054"
   dependencies:
     bcoin "git+https://github.com/Airbitz/bcoin.git#primitiveBuild"
     biggystring "^3.0.0"
@@ -2382,9 +2382,9 @@ edge-currency-bitcoin@2.16.1:
     unorm "^1.4.1"
     uri-js "^3.0.2"
 
-edge-currency-ethereum@0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.9.0.tgz#5a11be8af9f45c036cb0f683acf3bd290ff74c4d"
+edge-currency-ethereum@0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/edge-currency-ethereum/-/edge-currency-ethereum-0.10.0.tgz#5ea59971497bf0294a9d64071f4cd6110501f3f7"
   dependencies:
     biggystring "^3.0.0"
     bn.js "^4.11.7"

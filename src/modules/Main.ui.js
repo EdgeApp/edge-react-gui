@@ -1,6 +1,13 @@
 // @flow
 
-import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
+import {
+  bitcoinCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
 import { coinbasePlugin, shapeshiftPlugin, coincapPlugin } from 'edge-exchange-plugins'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
@@ -83,7 +90,9 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory
+  litecoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
