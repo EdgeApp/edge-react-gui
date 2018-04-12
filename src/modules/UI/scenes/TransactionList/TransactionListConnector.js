@@ -72,8 +72,7 @@ const mapStateToProps = (state: State) => {
     multiplier,
     contacts: state.contacts,
     fiatSymbol,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    visibleTransactions: state.ui.scenes.transactionList.visibleTransactions
+    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
   }
 }
 

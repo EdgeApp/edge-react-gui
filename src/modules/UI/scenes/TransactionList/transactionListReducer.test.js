@@ -10,8 +10,7 @@ test('initialState', () => {
     transactions: [],
     transactionsWalletListModalVisibility: false,
     updatingBalance: true,
-    loadingTransactions: false, // needs to be changed later
-    visibleTransactions: []
+    loadingTransactions: false
   }
   const actual = transactionListReducer(undefined, {})
 
