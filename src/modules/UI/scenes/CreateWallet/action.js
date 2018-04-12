@@ -1,7 +1,8 @@
+// @flow
+
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../../../../constants/indexConstants.js'
-// @flow
 import * as ACCOUNT_API from '../../../Core/Account/api.js'
 import * as CORE_SELECTORS from '../../../Core/selectors.js'
 import type { Dispatch, GetState } from '../../../ReduxTypes'

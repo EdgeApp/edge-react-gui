@@ -1,5 +1,5 @@
-/* globals describe test expect */
 // @flow
+/* globals describe test expect */
 
 import * as UTILS from '../src/modules/utils.js'
 

@@ -1,5 +1,6 @@
-import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 // @flow
+
+import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Alert, Clipboard } from 'react-native'
 import { Actions } from 'react-native-router-flux'

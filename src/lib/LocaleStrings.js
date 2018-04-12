@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import DeviceInfo from 'react-native-device-info'
 
 import defaultLang from '../locales/default'

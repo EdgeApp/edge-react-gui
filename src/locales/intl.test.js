@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { truncateDecimals } from '../../src/modules/utils'
 /* globals describe test expect beforeEach */
 /* eslint-disable import/first */

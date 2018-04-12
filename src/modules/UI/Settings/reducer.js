@@ -44,6 +44,9 @@ type SettingsState = {
   DASH: {
     denomination: string
   },
+  FTC: {
+    denomination: string
+  },
   ETH: {
     denomination: string
   },

@@ -427,7 +427,7 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
     }
     return (
       <SafeAreaView>
-        <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }, UTILS.border()]}>
+        <View style={[{ width: '100%', height: PLATFORM.usableHeight + PLATFORM.toolbarHeight }]}>
           <Gradient style={styles.headerGradient} />
           <View style={{ position: 'relative', top: 66 }}>
             {this.state.contactSearchVisibility && (
@@ -522,7 +522,6 @@ export class TransactionDetails extends Component<TransactionDetailsProps, State
             )}
             <ScrollView
               keyboardShouldPersistTaps="handled"
-              style={UTILS.border()}
               ref="_scrollView"
               scrollEnabled={!this.state.subCategorySelectVisibility}
               overScrollMode="never"

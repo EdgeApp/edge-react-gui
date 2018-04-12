@@ -1,6 +1,9 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { scenes as scenesReducer } from './reducer.js'
+import { request } from './Request/reducer.js'
 
 test('initialState', () => {
   const expected = {
@@ -27,21 +30,7 @@ test('initialState', () => {
       exchangeRates: {}
     },
     helpModal: false,
-    request: {
-      inputCurrencySelected: 'fiat',
-      receiveAddress: {
-        amountSatoshi: 0,
-        metadata: {
-          amountFiat: 0,
-          bizId: null,
-          category: '',
-          miscJson: '',
-          notes: '',
-          payeeName: ''
-        },
-        publicAddress: ''
-      }
-    },
+    request: request(undefined, {}),
     requestType: {
       useLegacyAddress: false,
       uniqueLegacyAddress: false
@@ -106,8 +95,7 @@ test('initialState', () => {
       transactions: [],
       transactionsWalletListModalVisibility: false,
       updatingBalance: true,
-      loadingTransactions: false, // needs to be changed later
-      visibleTransactions: []
+      loadingTransactions: false
     },
     walletList: {
       deleteWalletModalVisible: false,

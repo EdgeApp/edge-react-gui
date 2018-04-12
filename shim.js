@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* global localStorage __DEV__ */
 
 require('core-js')

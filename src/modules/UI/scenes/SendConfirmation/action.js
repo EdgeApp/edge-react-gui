@@ -1,6 +1,7 @@
+// @flow
+
 import { bns } from 'biggystring'
 import type { EdgeMetadata, EdgeParsedUri, EdgeTransaction } from 'edge-core-js'
-// @flow
 import { Actions } from 'react-native-router-flux'
 
 import { OPEN_AB_ALERT } from '../../../../constants/indexConstants'
@@ -9,7 +10,8 @@ import { broadcastTransaction, getMaxSpendable, makeSpend, saveTransaction, sign
 import type { Dispatch, GetState } from '../../../ReduxTypes'
 import { openABAlert } from '../../components/ABAlert/action'
 import { getSelectedWalletId } from '../../selectors.js'
-import { GuiMakeSpendInfo, getSpendInfo, getTransaction } from './selectors'
+import { getSpendInfo, getTransaction } from './selectors'
+import type { GuiMakeSpendInfo } from './selectors'
 
 const PREFIX = 'UI/SendConfimation/'
 

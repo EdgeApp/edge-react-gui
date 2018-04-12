@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals describe test expect */
 
 import {
@@ -8,7 +10,8 @@ import {
   selectedWalletId,
   selectedCurrencyCode,
   addTokenPending,
-  manageTokensPending
+  manageTokensPending,
+  walletLoadingProgress
 } from './reducer.js'
 
 describe('WalletsReducer', () => {
@@ -20,7 +23,8 @@ describe('WalletsReducer', () => {
       selectedWalletId: selectedWalletId(undefined, {}),
       selectedCurrencyCode: selectedCurrencyCode(undefined, {}),
       manageTokensPending: manageTokensPending(undefined, {}),
-      addTokenPending: addTokenPending(undefined, {})
+      addTokenPending: addTokenPending(undefined, {}),
+      walletLoadingProgress: walletLoadingProgress(undefined, {})
     }
     const actual = wallets(undefined, {})
 

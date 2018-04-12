@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { abs, sub } from 'biggystring'
 import React, { Component } from 'react'
 import { Keyboard, Linking, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'

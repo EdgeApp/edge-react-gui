@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { changeMiningFee as changeMiningFeeReducer } from './reducer.js'

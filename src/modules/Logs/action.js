@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import * as LOGGER from '../../util/logger'
 import * as LOGS_API from './api'
 
