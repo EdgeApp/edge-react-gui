@@ -91,6 +91,7 @@ export class AddToken extends Component<AddTokenProps, State> {
                   label={s.strings.addtoken_currency_code_input_text}
                   returnKeyType={'done'}
                   autoCorrect={false}
+                  maxLength={5}
                 />
               </View>
               <View style={[styles.contractAddressArea]}>
@@ -139,7 +140,7 @@ export class AddToken extends Component<AddTokenProps, State> {
 
   onChangeCurrencyCode = (input: string) => {
     this.setState({
-      currencyCode: input.substring(0, 5)
+      currencyCode: input
     })
   }
 

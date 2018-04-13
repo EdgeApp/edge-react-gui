@@ -73,6 +73,8 @@ class FormField extends Component {
         onSubmitEditing={this.onSubmitEditing.bind(this)}
         value={this.props.value}
         keyboardType={this.props.keyboardType}
+        maxLength={this.props.maxLength}
+        autoCorrect={this.props.autoCorrect}
       />
     )
   }
