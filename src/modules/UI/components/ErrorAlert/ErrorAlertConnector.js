@@ -1,8 +1,9 @@
+// @flow
+
 import { connect } from 'react-redux'
 
 import type { Dispatch, State } from '../../../ReduxTypes'
 import { dismissErrorAlert } from './actions.js'
-// @flow
 import ErrorAlert from './ErrorAlert.ui'
 
 const mapStateToProps = (state: State) => ({

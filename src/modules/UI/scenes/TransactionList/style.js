@@ -3,10 +3,14 @@
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
-
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 export const styles = {
   gradient: {
     height: THEME.HEADER
+  },
+  scene: {
+    width: '100%',
+    height: PLATFORM.usableHeight + PLATFORM.toolbarHeight
   },
   container: {
     flex: 1,
@@ -65,6 +69,11 @@ export const styles = {
     flex: 1,
     justifyContent: 'center'
   },
+  balanceBoxContents: {
+    flex: 1,
+    paddingTop: 10,
+    paddingBottom: 20
+  },
   updatingBalanceWrap: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -87,14 +96,15 @@ export const styles = {
   },
   iconWrap: {
     // two
-    flex: 3,
+    height: 28,
+    width: 28,
     justifyContent: 'flex-start',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },
   currentBalanceBoxBitssWrap: {
     // two
     flex: 4,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: THEME.COLORS.TRANSPARENT
   },

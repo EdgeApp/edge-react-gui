@@ -2,12 +2,12 @@
 
 import React from 'react'
 import type { Node } from 'react'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 
 import Gradient from '../../components/Gradient/Gradient.ui'
 
 type props = {
-  style?: Object,
+  style?: StyleSheet.Styles,
   children: Node
 }
 

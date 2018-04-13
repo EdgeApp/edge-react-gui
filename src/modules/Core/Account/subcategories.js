@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 export const categories = [
   'Exchange:Buy Bitcoin',
   'Income:Sell Bitcoin',

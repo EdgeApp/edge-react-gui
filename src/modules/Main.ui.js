@@ -1,8 +1,15 @@
 // @flow
 
-import { bitcoinCurrencyPluginFactory, bitcoincashCurrencyPluginFactory, dashCurrencyPluginFactory, litecoinCurrencyPluginFactory } from 'edge-currency-bitcoin'
+import {
+  bitcoinCurrencyPluginFactory,
+  bitcoincashCurrencyPluginFactory,
+  dashCurrencyPluginFactory,
+  litecoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory
+} from 'edge-currency-bitcoin'
 import { ethereumCurrencyPluginFactory } from 'edge-currency-ethereum'
-import { coinbasePlugin, shapeshiftPlugin } from 'edge-exchange-plugins'
+import { coinbasePlugin, shapeshiftPlugin, coincapPlugin } from 'edge-exchange-plugins'
 import type { EdgeContext, EdgeContextCallbacks, EdgeCurrencyPlugin, EdgeCorePluginFactory } from 'edge-core-js'
 import React, { Component } from 'react'
 import { Image, Keyboard, Linking, Platform, StatusBar, TouchableWithoutFeedback } from 'react-native'
@@ -77,12 +84,15 @@ const pluginFactories: Array<EdgeCorePluginFactory> = [
   // Exchanges:
   coinbasePlugin,
   shapeshiftPlugin,
+  coincapPlugin,
   // Currencies:
   bitcoincashCurrencyPluginFactory,
   bitcoinCurrencyPluginFactory,
   dashCurrencyPluginFactory,
   ethereumCurrencyPluginFactory,
-  litecoinCurrencyPluginFactory
+  litecoinCurrencyPluginFactory,
+  feathercoinCurrencyPluginFactory,
+  zcoinCurrencyPluginFactory
 ]
 
 const localeInfo = Locale.constants() // should likely be moved to login system and inserted into Redux
@@ -240,7 +250,7 @@ export default class Main extends Component<Props, State> {
                   <Scene hideNavBar>
                     <Tabs
                       key={Constants.EDGE}
-                      swipeEnabled={true}
+                      swipeEnabled={false}
                       navTransparent={true}
                       tabBarPosition={'bottom'}
                       showLabel={true}
@@ -371,7 +381,7 @@ export default class Main extends Component<Props, State> {
 
                       <Stack key={Constants.EXCHANGE} icon={this.icon(Constants.EXCHANGE)} tabBarLabel={EXCHANGE}>
                         <Scene
-                          key={Constants.EXCHANGE_NOT_USED}
+                          key={Constants.EXCHANGE_SCENE}
                           navTransparent={true}
                           component={ExchangeConnector}
                           renderTitle={this.renderTitle(EXCHANGE)}

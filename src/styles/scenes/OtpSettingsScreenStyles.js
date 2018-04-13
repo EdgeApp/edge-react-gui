@@ -1,5 +1,6 @@
-import THEME from '../../theme/variables/airbitz'
 // @flow
+
+import THEME from '../../theme/variables/airbitz'
 import * as Styles from '../indexStyles.js'
 // import {Image} from 'react-native'
 

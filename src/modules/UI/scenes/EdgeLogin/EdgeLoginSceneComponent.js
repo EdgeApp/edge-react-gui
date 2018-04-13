@@ -1,5 +1,6 @@
-import type { EdgeLobby } from 'edge-core-js'
 // @flow
+
+import type { EdgeLobby } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Image, Text, View } from 'react-native'
 

@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 // import * as Constants from '../../constants/'
 import { Dimensions } from 'react-native'
 

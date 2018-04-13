@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { transactionList as transactionListReducer } from './reducer.js'
@@ -8,8 +10,7 @@ test('initialState', () => {
     transactions: [],
     transactionsWalletListModalVisibility: false,
     updatingBalance: true,
-    loadingTransactions: false, // needs to be changed later
-    visibleTransactions: []
+    loadingTransactions: false
   }
   const actual = transactionListReducer(undefined, {})
 

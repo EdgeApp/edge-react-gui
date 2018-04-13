@@ -1,9 +1,5 @@
-/**
- * Created by paul on 8/16/17.
- */
 // @flow
-// trying to trigger a build. .. will remove this line
-import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction } from 'edge-core-js'
+import type { EdgeDenomination, EdgeMetaToken, EdgeMetadata, EdgeTransaction, EdgeReceiveAddress } from 'edge-core-js'
 
 export type GuiWallet = {
   id: string,
@@ -20,7 +16,9 @@ export type GuiWallet = {
   symbolImage: string | void,
   symbolImageDarkMono: string | void,
   metaTokens: Array<EdgeMetaToken>,
-  enabledTokens: Array<string>
+  enabledTokens: Array<string>,
+  receiveAddress: EdgeReceiveAddress,
+  addressLoadingProgress?: number
 }
 
 export type GuiDenomination = {
@@ -85,7 +83,8 @@ export type GuiFiatType = {
 export type TransactionListTx = {
   ...EdgeTransaction,
   dateString?: string,
-  key: number
+  key: number,
+  time: string
 }
 
 export type FlatListItem = {
@@ -94,7 +93,7 @@ export type FlatListItem = {
 }
 
 export type DeviceDimensions = {
-  keyboardHeight?: number
+  keyboardHeight: number
 }
 
 export type ExchangePair = {
@@ -180,7 +179,14 @@ export const emptyGuiWallet: GuiWallet = {
   symbolImage: '',
   symbolImageDarkMono: '',
   metaTokens: [],
-  enabledTokens: []
+  enabledTokens: [],
+  receiveAddress: {
+    nativeAmount: '',
+    metadata: {},
+    publicAddress: '',
+    legacyAddress: ''
+  },
+  addressLoadingProgress: 0
 }
 
 export const emptyGuiDenomination: GuiDenomination = {
@@ -204,16 +210,4 @@ export type ComponentLayoutMeasurements = {
   height: Number,
   pageX: Number,
   pageY: Number
-}
-
-export type DateTransactionGroup = {
-  data: Array<EdgeTransaction>,
-  title: string
-}
-
-export type TransactionListSection = {
-  index: number,
-  item: Object,
-  section: DateTransactionGroup,
-  separators: Object
 }

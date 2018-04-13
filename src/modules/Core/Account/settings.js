@@ -15,13 +15,17 @@ export const SYNCED_ACCOUNT_DEFAULTS = {
   autoLogoutTimeInSeconds: 3600,
   defaultFiat: 'USD',
   merchantMode: false,
-  BTC: { denomination: '100000000' },
-  BCH: { denomination: '100000000' },
+  BTC: { denomination: '100' },
+  BCH: { denomination: '100' },
   DASH: { denomination: '100000000' },
   LTC: { denomination: '100000000' },
+  FTC: { denomination: '100000000' },
+  XZC: { denomination: '100000000' },
   ETH: { denomination: '1000000000000000000' },
   REP: { denomination: '1000000000000000000' },
   WINGS: { denomination: '1000000000000000000' },
+  IND: { denomination: '1000000000000000000' },
+  HUR: { denomination: '1000000000000000000' },
   customTokens: []
 }
 

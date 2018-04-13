@@ -1,9 +1,11 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
+import type { EdgeTokenInfo, EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
 import React, { Component } from 'react'
 import { ActivityIndicator, Alert, Text, TouchableHighlight, View } from 'react-native'
 import Camera from 'react-native-camera'
+import type { GuiWallet } from '../../../../types'
+
 // $FlowFixMe
 import ImagePicker from 'react-native-image-picker'
 import { Actions } from 'react-native-router-flux'
@@ -33,6 +35,8 @@ type Props = {
   scanToWalletListModalVisibility: boolean,
   scanFromWalletListModalVisibility: boolean,
   scanToWalletListModalVisibility: boolean,
+  walletId: string,
+  guiWallet: GuiWallet,
   dispatchEnableScan(): void,
   dispatchDisableScan(): void,
   toggleEnableTorch(): void,
@@ -41,7 +45,8 @@ type Props = {
   toggleScanToWalletListModal(): void,
   updateParsedURI(EdgeParsedUri): void,
   loginWithEdge(string): void,
-  toggleScanToWalletListModal: () => void
+  toggleScanToWalletListModal: () => void,
+  routeToAddToken: (EdgeTokenInfo) => void
 }
 
 const HEADER_TEXT = s.strings.send_scan_header_text
@@ -63,7 +68,7 @@ export default class Scan extends Component<Props> {
           <View style={styles.container}>
             {this.renderCamera()}
 
-            <View style={[styles.overlay, UTILS.border()]}>
+            <View style={[styles.overlay]}>
               <AddressModal onExitButtonFxn={this._onToggleAddressModal} />
 
               <View style={[styles.overlayTop]}>
@@ -128,8 +133,30 @@ export default class Scan extends Component<Props> {
         return
       }
       const parsedURI = WALLET_API.parseURI(this.props.edgeWallet, uri)
-      this.props.updateParsedURI(parsedURI)
-      Actions.sendConfirmation('fromScan')
+      if (parsedURI.token) { // token URI, not pay
+        const { contractAddress, currencyName, multiplier } = parsedURI.token
+        const currencyCode = parsedURI.token.currencyCode.toUpperCase()
+        const wallet = this.props.guiWallet
+        const walletId = this.props.guiWallet.id
+        let decimalPlaces = 18
+        if (parsedURI.token && parsedURI.token.multiplier) {
+          decimalPlaces = UTILS.denominationToDecimalPlaces(parsedURI.token.multiplier)
+        }
+        const parameters = {
+          contractAddress,
+          currencyCode,
+          currencyName,
+          multiplier,
+          decimalPlaces,
+          walletId,
+          wallet,
+          onAddToken: UTILS.noOp
+        }
+        Actions.addToken(parameters)
+      } else { // assume pay URI
+        this.props.updateParsedURI(parsedURI)
+        Actions.sendConfirmation('fromScan')
+      }
     } catch (error) {
       this.props.dispatchDisableScan()
       Alert.alert(s.strings.fragment_send_send_bitcoin_unscannable, error.toString(), [
@@ -162,7 +189,7 @@ export default class Scan extends Component<Props> {
       return <Camera style={styles.preview} ref="cameraCapture" torchMode={torchMode} onBarCodeRead={this.onBarCodeRead} />
     } else if (this.props.cameraPermission === DENIED) {
       return (
-        <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }, UTILS.border()]}>
+        <View style={[styles.preview, { justifyContent: 'center', alignItems: 'center' }]}>
           <Text>{DENIED_PERMISSION_TEXT}</Text>
         </View>
       )

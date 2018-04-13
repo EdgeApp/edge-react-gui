@@ -1,6 +1,9 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 import { StyleSheet } from 'react-native'
 
 import THEME from '../../../../theme/variables/airbitz'
+import { PLATFORM } from '../../../../theme/variables/platform.js'
 
 const styles = StyleSheet.create({
   container: {
@@ -22,12 +25,11 @@ const styles = StyleSheet.create({
   },
   textOverlay: {
     backgroundColor: THEME.COLORS.TRANSPARENT,
-    fontSize: 16,
+    fontSize: PLATFORM.deviceWidth >= 320 ? 13 : 16,
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: 15,
-    zIndex: -100
+    top: PLATFORM.deviceWidth >= 320 ? 19 : 16
   }
 })
 

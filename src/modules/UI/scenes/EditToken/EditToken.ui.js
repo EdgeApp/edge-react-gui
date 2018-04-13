@@ -45,7 +45,8 @@ export type EditTokenOwnProps = {
   walletId: string,
   addTokenPending: boolean,
   currencyCode: string,
-  metaTokens: Array<EdgeMetaToken>
+  metaTokens: Array<EdgeMetaToken>,
+  onDeleteToken: string => void
 }
 
 type State = {
@@ -175,6 +176,7 @@ export default class EditToken extends Component<EditTokenComponentProps, State>
   deleteToken = () => {
     const { walletId, currencyCode } = this.props
     this.props.deleteCustomToken(walletId, currencyCode)
+    this.props.onDeleteToken(currencyCode)
   }
 
   onChangeName = (input: string) => {

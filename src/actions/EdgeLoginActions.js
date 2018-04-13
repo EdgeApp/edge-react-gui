@@ -1,8 +1,9 @@
+// @flow
+
 import type { EdgeLobby } from 'edge-core-js'
 import { Actions } from 'react-native-router-flux'
 
 import * as Constants from '../constants/indexConstants'
-// @flow
 import * as actions from './indexActions'
 
 export function storeLobby (type: string, data: EdgeLobby) {

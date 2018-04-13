@@ -8,15 +8,16 @@ import type {
   EdgeDenomination,
   EdgeLobby,
   EdgeParsedUri,
-  EdgeReceiveAddress,
   EdgeTransaction
 } from 'edge-core-js'
 import type { Dispatch as ReduxDispatch, Store as ReduxStore } from 'redux'
 
 import type { ContactsState } from '../reducers/contacts/contactsReducer.js'
 import type { PermissionsState } from '../reducers/permissions/permissionsReducer.js'
-import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet, DateTransactionGroup } from '../types'
+import type { DeviceDimensions, GuiContact, GuiCurrencyInfo, GuiWallet, TransactionListTx } from '../types'
 import type { Permission, PermissionStatus } from './UI/permissions.js'
+import type { RequestState } from './UI/Request/reducer.js'
+import type { RequestSceneState } from './UI/scenes/Request/reducer.js'
 
 export type Action = { type: string, data?: any }
 
@@ -80,11 +81,10 @@ export type State = {
         isCustomFeeVisible: boolean
       },
       transactionList: {
-        transactions: Array<EdgeTransaction>,
+        transactions: Array<TransactionListTx>,
         contactsList: Array<GuiContact>,
         updatingBalance: boolean,
         searchVisible: boolean,
-        visibleTransactions: Array<DateTransactionGroup>,
         currentEndIndex: number
       },
       transactionDetails: {
@@ -124,10 +124,7 @@ export type State = {
         deleteCustomTokenProcessing: boolean,
         editCustomTokenProcessing: boolean
       },
-      request: {
-        inputCurrencySelected: string,
-        receiveAddress: EdgeReceiveAddress
-      },
+      request: RequestSceneState,
       dimensions: DeviceDimensions,
       helpModal: boolean,
       transactionAlert: {
@@ -160,11 +157,10 @@ export type State = {
       selectedWalletId: string,
       selectedCurrencyCode: string,
       addTokenPending: boolean,
-      manageTokensPending: boolean
+      manageTokensPending: boolean,
+      walletLoadingProgress: { [walletId: string]: number }
     },
-    request: {
-      receiveAddress: EdgeReceiveAddress
-    },
+    request: RequestState,
     settings: {
       autoLogoutTimeInSeconds: number,
       defaultFiat: string,
@@ -194,9 +190,6 @@ export type State = {
         supportedWalletTypes: Array<string>,
         [pluginName: string]: EdgeCurrencyPlugin
       }
-    },
-    contacts: {
-      contactList: Array<GuiContact>
     }
   },
   cryptoExchange: {
@@ -234,7 +227,8 @@ export type State = {
     fee: any,
     gettingTransaction: boolean,
     availableShapeShiftTokens: Array<any>,
-    shiftPendingTransaction: boolean
+    shiftPendingTransaction: boolean,
+    quoteExpireDate: number | null
   },
   exchangeRates: number,
   permissions: PermissionsState,

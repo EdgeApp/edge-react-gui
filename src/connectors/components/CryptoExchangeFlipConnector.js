@@ -1,4 +1,5 @@
-// // @flow
+// @flow
+
 //
 // import {connect} from 'react-redux'
 // import type {EdgeCurrencyWallet} from 'airbitz-core-types'

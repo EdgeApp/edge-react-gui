@@ -1,6 +1,7 @@
+// @flow
+
 import { bns } from 'biggystring'
 import _ from 'lodash'
-// @flow
 import React, { Component } from 'react'
 import { LayoutAnimation, TouchableHighlight, View } from 'react-native'
 

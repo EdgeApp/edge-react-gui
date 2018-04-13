@@ -1,3 +1,5 @@
+/* eslint-disable flowtype/require-valid-file-annotation */
+
 /* globals test expect */
 
 import { cryptoExchanger as cryptoExchangerReducer } from './CryptoExchangeReducer.js'
@@ -40,7 +42,8 @@ test('initialState', () => {
     transaction: null,
     gettingTransaction: false,
     availableShapeShiftTokens: [],
-    shiftPendingTransaction: false
+    shiftPendingTransaction: false,
+    quoteExpireDate: null
   }
   const actual = cryptoExchangerReducer(undefined, {})
 
