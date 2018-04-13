@@ -29,8 +29,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     color: THEME.COLORS.WHITE,
     alignSelf: 'center',
-    top: PLATFORM.deviceWidth >= 320 ? 19 : 16,
-    zIndex: -100
+    top: PLATFORM.deviceWidth >= 320 ? 19 : 16
   }
 })
 
