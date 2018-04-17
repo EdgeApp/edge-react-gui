@@ -1,52 +1,24 @@
 // @flow
 
-import type { EdgeCurrencyWallet, EdgeParsedUri } from 'edge-core-js'
-import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux'
 
-import { loginWithEdge } from '../../../../actions/EdgeLoginActions.js'
-import * as Constants from '../../../../constants/indexConstants'
-import { getCameraPermission } from '../../../../reducers/permissions/selectors'
-import type { GuiWallet } from '../../../../types'
-import * as CORE_SELECTORS from '../../../Core/selectors.js'
-import type { Dispatch, State } from '../../../ReduxTypes'
-import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
-import * as UI_SELECTORS from '../../selectors.js'
-import { updateLabel, updateParsedURI } from '../SendConfirmation/action.js'
-import { toggleWalletListModal } from '../WalletTransferList/action'
-import { disableScan, enableScan, toggleAddressModal, toggleEnableTorch } from './action'
 import Scan from './Scan.ui'
+import type { Dispatch, State } from '../../../ReduxTypes'
+import { getCameraPermission } from '../../../../reducers/permissions/selectors'
+import { toggleScanToWalletListModal } from '../../components/WalletListModal/action'
+import { toggleAddressModal, toggleEnableTorch, parseUri } from './action'
 
-const mapStateToProps = (state: State) => {
-  const walletId: string = UI_SELECTORS.getSelectedWalletId(state)
-  const edgeWallet: EdgeCurrencyWallet = CORE_SELECTORS.getWallet(state, walletId)
-  const guiWallet: GuiWallet = UI_SELECTORS.getWallet(state, walletId)
-
-  return {
-    cameraPermission: getCameraPermission(state),
-    edgeWallet,
-    guiWallet,
-    torchEnabled: state.ui.scenes.scan.torchEnabled,
-    scanEnabled: state.ui.scenes.scan.scanEnabled,
-    walletListModalVisible: state.ui.scenes.walletTransferList.walletListModalVisible,
-    scanToWalletListModalVisibility: state.ui.scenes.scan.scanToWalletListModalVisibility,
-    showToWalletModal: state.ui.scenes.scan.scanToWalletListModalVisibility
-  }
-}
+const mapStateToProps = (state: State) => ({
+  cameraPermission: getCameraPermission(state),
+  torchEnabled: state.ui.scenes.scan.torchEnabled,
+  scanEnabled: state.ui.scenes.scan.scanEnabled
+})
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  dispatchEnableScan: () => dispatch(enableScan()),
-  dispatchDisableScan: () => dispatch(disableScan()),
+  parseUri: data => dispatch(parseUri(data)),
   toggleEnableTorch: () => dispatch(toggleEnableTorch()),
   toggleAddressModal: () => dispatch(toggleAddressModal()),
-  toggleWalletListModal: () => dispatch(toggleWalletListModal()),
-  updateParsedURI: (parsedURI: EdgeParsedUri) => dispatch(updateParsedURI(parsedURI)),
-  updateWalletTransfer: wallet => dispatch(updateLabel(wallet)),
-  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal()),
-  loginWithEdge: (url: string) => {
-    Actions[Constants.EDGE_LOGIN]()
-    dispatch(loginWithEdge(url))
-  }
+  toggleScanToWalletListModal: () => dispatch(toggleScanToWalletListModal())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Scan)
