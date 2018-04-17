@@ -18,7 +18,7 @@ export type Props = {
   style?: StyleSheet.Styles
 }
 
-export default class Gradient extends Component<Props> {
+export class Gradient extends Component<Props> {
   render () {
     const { reverse, style } = this.props
     return (
@@ -28,3 +28,5 @@ export default class Gradient extends Component<Props> {
     )
   }
 }
+
+export default Gradient
