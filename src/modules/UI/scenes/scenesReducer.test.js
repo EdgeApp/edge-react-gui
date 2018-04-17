@@ -37,7 +37,6 @@ test('initialState', () => {
     },
     scan: {
       addressModalVisible: false,
-      recipientAddress: '',
       scanEnabled: false,
       scanToWalletListModalVisibility: false,
       selectedWalletListModalVisibility: false,

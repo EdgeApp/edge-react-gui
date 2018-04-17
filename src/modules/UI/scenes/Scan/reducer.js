@@ -4,7 +4,6 @@ import { combineReducers } from 'redux'
 
 import {
   addressModalVisible,
-  recipientAddress,
   scanEnabled,
   scanToWalletListModalVisibility,
   selectedWalletListModalVisibility,
@@ -14,7 +13,6 @@ import {
 export const scan = combineReducers({
   torchEnabled,
   addressModalVisible,
-  recipientAddress,
   scanEnabled,
   selectedWalletListModalVisibility,
   scanToWalletListModalVisibility
